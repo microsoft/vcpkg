@@ -1,6 +1,12 @@
 # vcpkg_from_sourceforge
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_sourceforge.md).
+
 Download and extract a project from sourceforge.
+
+This function automatically checks a set of sourceforge mirrors.
+Additional mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
+list variable in the triplet.
 
 ## Usage:
 ```cmake
@@ -52,9 +58,6 @@ A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
-### DISABLE_SSL
-Disable ssl when downloading source.
-
 ### NO_REMOVE_ONE_LEVEL
 Specifies that the default removal of the top level folder should not occur.
 
@@ -65,4 +68,4 @@ Specifies that the default removal of the top level folder should not occur.
 * [tinyfiledialogs](https://github.com/Microsoft/vcpkg/blob/master/ports/tinyfiledialogs/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_sourceforge.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_sourceforge.cmake)
+[scripts/cmake/vcpkg\_from\_sourceforge.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_sourceforge.cmake)

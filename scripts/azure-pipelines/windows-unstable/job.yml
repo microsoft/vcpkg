@@ -14,6 +14,9 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - task: DownloadBuildArtifacts@0
@@ -83,3 +86,18 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: always()
+  - task: PowerShell@2
+    displayName: 'Build a file list for all packages'
+    condition: always()
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'

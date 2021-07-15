@@ -1,5 +1,0 @@
-Source: fizz
-Version: 2020.10.19.00
-Homepage: https://github.com/facebookincubator/fizz
-Build-Depends: folly, openssl, libsodium, zlib, fmt
-Description: a TLS 1.3 implementation by Facebook

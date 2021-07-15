@@ -21,11 +21,18 @@ the compiler rather than for testing vcpkg. Differences:
 * The machine prefix is changed to VcpkgUnstable instead of PrWin.
 * No storage account or "archives" share is provisioned.
 * The firewall is not opened to allow communication with Azure Storage.
+
+.PARAMETER CudnnPath
+The path to a CUDNN zip file downloaded from NVidia official sources
+(e.g. https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.1.1.33/11.2_20210301/cudnn-11.2-windows-x64-v8.1.1.33.zip
+downloaded in a browser with an NVidia account logged in.)
 #>
 
 [CmdLetBinding()]
 Param(
-  [switch]$Unstable = $false
+  [switch]$Unstable = $false,
+  [parameter(Mandatory=$true)]
+  [string]$CudnnPath
 )
 
 $Location = 'westus2'
@@ -36,21 +43,23 @@ if ($Unstable) {
 }
 
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D16a_v4'
+$VMSize = 'Standard_D32_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
+$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 12
-if ($Unstable) {
-  $TotalProgress -= 1 # skipping the archives share part
-}
-
+$TotalProgress = 21
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
+
+if (-Not $CudnnPath.EndsWith('.zip')) {
+  Write-Error 'Expected CudnnPath to be a zip file.'
+  return
+}
 
 ####################################################################################################
 Write-Progress `
@@ -155,57 +164,85 @@ $VirtualNetwork = New-AzVirtualNetwork `
   -Subnet $Subnet
 
 ####################################################################################################
-if (-Not $Unstable) {
-  Write-Progress `
-    -Activity $ProgressActivity `
-    -Status 'Creating archives storage account' `
-    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating storage account' `
+  -CurrentOperation 'Initial setup' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $StorageAccountName = Sanitize-Name $ResourceGroupName
+$StorageAccountName = Sanitize-Name $ResourceGroupName
 
-  New-AzStorageAccount `
-    -ResourceGroupName $ResourceGroupName `
-    -Location $Location `
-    -Name $StorageAccountName `
-    -SkuName 'Standard_LRS' `
-    -Kind StorageV2
+New-AzStorageAccount `
+  -ResourceGroupName $ResourceGroupName `
+  -Location $Location `
+  -Name $StorageAccountName `
+  -SkuName 'Standard_LRS' `
+  -Kind StorageV2 `
+  -MinimumTlsVersion TLS1_2
 
-  $StorageAccountKeys = Get-AzStorageAccountKey `
-    -ResourceGroupName $ResourceGroupName `
-    -Name $StorageAccountName
+$StorageAccountKeys = Get-AzStorageAccountKey `
+  -ResourceGroupName $ResourceGroupName `
+  -Name $StorageAccountName
 
-  $StorageAccountKey = $StorageAccountKeys[0].Value
+$StorageAccountKey = $StorageAccountKeys[0].Value
 
-  $StorageContext = New-AzStorageContext `
-    -StorageAccountName $StorageAccountName `
-    -StorageAccountKey $StorageAccountKey
+$StorageContext = New-AzStorageContext `
+  -StorageAccountName $StorageAccountName `
+  -StorageAccountKey $StorageAccountKey
 
-  New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
-  $StartTime = [DateTime]::Now
-  $ExpiryTime = $StartTime.AddMonths(6)
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating storage account' `
+  -CurrentOperation 'Uploading cudnn.zip' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress) # note no ++
 
-  $SasToken = New-AzStorageAccountSASToken `
-    -Service Blob `
-    -Permission "racwdlup" `
-    -Context $StorageContext `
-    -StartTime $StartTime `
-    -ExpiryTime $ExpiryTime `
-    -ResourceType Service,Container,Object `
-    -Protocol HttpsOnly
+New-AzStorageContainer -Name setup -Context $storageContext -Permission blob
 
-  $SasToken = $SasToken.Substring(1) # strip leading ?
+Set-AzStorageBlobContent -File $CudnnPath `
+  -Container 'setup' `
+  -Blob 'cudnn.zip' `
+  -Context $StorageContext
 
-  # Note that we put the storage account into the firewall after creating the above SAS token or we
-  # would be denied since the person running this script isn't one of the VMs we're creating here.
-  Set-AzStorageAccount `
-    -ResourceGroupName $ResourceGroupName `
-    -AccountName $StorageAccountName `
-    -NetworkRuleSet ( `
-      @{bypass="AzureServices"; `
-      virtualNetworkRules=( `
-        @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
-      defaultAction="Deny"})
-}
+$CudnnBlobUrl = "https://$StorageAccountName.blob.core.windows.net/setup/cudnn.zip"
+
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating storage account' `
+  -CurrentOperation 'Creating archives container' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress) # note no ++
+
+New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
+
+$StartTime = [DateTime]::Now
+$ExpiryTime = $StartTime.AddMonths(6)
+
+$SasToken = New-AzStorageAccountSASToken `
+  -Service Blob `
+  -Permission "racwdlup" `
+  -Context $StorageContext `
+  -StartTime $StartTime `
+  -ExpiryTime $ExpiryTime `
+  -ResourceType Service,Container,Object `
+  -Protocol HttpsOnly
+
+$SasToken = $SasToken.Substring(1) # strip leading ?
+
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating storage account' `
+  -CurrentOperation 'Locking down network' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress) # note no ++
+
+# Note that we put the storage account into the firewall after creating the above SAS token or we
+# would be denied since the person running this script isn't one of the VMs we're creating here.
+Set-AzStorageAccount `
+  -ResourceGroupName $ResourceGroupName `
+  -AccountName $StorageAccountName `
+  -NetworkRuleSet ( `
+    @{bypass="AzureServices"; `
+    virtualNetworkRules=( `
+      @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
+    defaultAction="Deny"})
 
 ####################################################################################################
 Write-Progress `
@@ -236,6 +273,16 @@ $VM = Set-AzVMSourceImage `
   -Skus $WindowsServerSku `
   -Version latest
 
+$InstallDiskName = $ProtoVMName + "InstallDisk"
+$VM = Add-AzVMDataDisk `
+  -Vm $VM `
+  -Name $InstallDiskName `
+  -Lun 0 `
+  -Caching ReadWrite `
+  -CreateOption Empty `
+  -DiskSizeInGB $InstalledDiskSizeInGB `
+  -StorageAccountType 'StandardSSD_LRS'
+
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
@@ -245,30 +292,152 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
+  -Status 'Running provisioning script deploy-tlssettings.ps1 in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$provisionParameters = @{AdminUserPassword = $AdminPW;}
-if (-Not $Unstable) {
-  $provisionParameters['StorageAccountName'] = $StorageAccountName
-  $provisionParameters['StorageAccountSasToken'] = $SasToken
-}
 
 $ProvisionImageResult = Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.txt" `
-  -Parameter $provisionParameters
+  -ScriptPath "$PSScriptRoot\deploy-tlssettings.ps1"
 
-Write-Host "provision-image.ps1 output: $($ProvisionImageResult.value.Message)"
+Write-Host "deploy-tlssettings.ps1 output: $($ProvisionImageResult.value.Message)"
+Write-Host 'Waiting 1 minute for VM to reboot...'
+Start-Sleep -Seconds 60
 
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Restarting VM' `
+  -Status 'Running provisioning script deploy-psexec.ps1 in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
+$DeployPsExecResult = Invoke-AzVMRunCommand `
+  -ResourceGroupName $ResourceGroupName `
+  -VMName $ProtoVMName `
+  -CommandId 'RunPowerShellScript' `
+  -ScriptPath "$PSScriptRoot\deploy-psexec.ps1"
+
+Write-Host "deploy-psexec.ps1 output: $($DeployPsExecResult.value.Message)"
+
+####################################################################################################
+function Invoke-ScriptWithPrefix {
+  param(
+    [string]$ScriptName,
+    [switch]$AddAdminPw,
+    [switch]$AddCudnnUrl
+  )
+
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status "Running provisioning script $ScriptName in VM" `
+    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+  $DropToAdminUserPrefix = Get-Content "$PSScriptRoot\drop-to-admin-user-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content "$PSScriptRoot\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+
+  $tempScriptFilename = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".txt"
+  try {
+    $script = Get-Content "$PSScriptRoot\$ScriptName" -Encoding utf8NoBOM -Raw
+    if ($AddAdminPw) {
+      $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
+    }
+
+    if ($AddCudnnUrl) {
+      $script = $script.Replace('# REPLACE WITH $CudnnUrl', "`$CudnnUrl = '$CudnnBlobUrl'")
+    }
+
+    $script = $script.Replace('# REPLACE WITH UTILITY-PREFIX.ps1', $UtilityPrefixContent);
+    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+
+    $parameter = $null
+    if ($AddAdminPw) {
+      $parameter = @{AdminUserPassword = $AdminPW;}
+    }
+
+    $InvokeResult = Invoke-AzVMRunCommand `
+      -ResourceGroupName $ResourceGroupName `
+      -VMName $ProtoVMName `
+      -CommandId 'RunPowerShellScript' `
+      -ScriptPath $tempScriptFilename `
+      -Parameter $parameter
+
+    Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
+  } finally {
+    Remove-Item $tempScriptFilename -Force
+  }
+}
+
+Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-wdk.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1' -AddAdminPw -AddCudnnUrl
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Running provisioning script deploy-settings.txt (as a .ps1) in VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$ProvisionImageResult = Invoke-AzVMRunCommand `
+  -ResourceGroupName $ResourceGroupName `
+  -VMName $ProtoVMName `
+  -CommandId 'RunPowerShellScript' `
+  -ScriptPath "$PSScriptRoot\deploy-settings.txt"
+
+Write-Host "deploy-settings.txt output: $($ProvisionImageResult.value.Message)"
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Deploying SAS token into VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$tempScriptFilename = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".txt"
+try {
+  $script = "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' " `
+    + "-Name PROVISIONED_AZURE_STORAGE_NAME " `
+    + "-Value '$StorageAccountName'`r`n" `
+    + "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' " `
+    + "-Name PROVISIONED_AZURE_STORAGE_SAS_TOKEN " `
+    + "-Value '$SasToken'`r`n"
+
+  Write-Host "Script content is:"
+  Write-Host $script
+
+  Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+  $InvokeResult = Invoke-AzVMRunCommand `
+    -ResourceGroupName $ResourceGroupName `
+    -VMName $ProtoVMName `
+    -CommandId 'RunPowerShellScript' `
+    -ScriptPath $tempScriptFilename
+
+  Write-Host "Deploy SAS token output: $($InvokeResult.value.Message)"
+} finally {
+  Remove-Item $tempScriptFilename -Force
+}
+
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-install-disk.ps1'
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
@@ -322,6 +491,7 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
+Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
 
 ####################################################################################################
 Write-Progress `

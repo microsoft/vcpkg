@@ -8,9 +8,9 @@ set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
-    REF 33
-    FILENAME "ngspice-33.tar.gz"
-    SHA512 895e39f7de185df18bf443a9fa5691cdb3bf0a5091d9860d20ccb02254ef396a4cca5a1c8bf4ba19a03783fc89bb86649218cee977b0fe4565d3c84548943c09
+    REF 34
+    FILENAME "ngspice-34.tar.gz"
+    SHA512 5e90727f3f6b8675b83f71e1961d33cd498081a7f3bea5d081521f12ecb3979775159f083f84a5856233529505262c399f75d305758af51894a1245603476cf8
     PATCHES
         use-winbison-sharedspice.patch
         use-winbison-vngspice.patch
@@ -55,15 +55,25 @@ if("codemodels" IN_LIST FEATURES)
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         TARGET Build
     )
-    
+
+    # ngspice oddly has solution configs of x64 and x86 but
+    # output folders of x64 and win32
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+        set(OUT_ARCH  x64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        set(OUT_ARCH  Win32)
+    else()
+        message(FATAL_ERROR "Unsupported target architecture")
+    endif()
+        
     #put the code models in the intended location
     file(GLOB NGSPICE_CODEMODELS_DEBUG
-        ${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Debug/*.cm
+        ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Debug/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
     
     file(GLOB NGSPICE_CODEMODELS_RELEASE
-        ${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Release/*.cm
+        ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Release/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
     
@@ -78,3 +88,6 @@ vcpkg_copy_pdbs()
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
 file(GLOB NGSPICE_INCLUDES ${SOURCE_PATH}/visualc/src/include/ngspice/*)
 file(COPY ${NGSPICE_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ngspice)
+
+# This gets copied by install_msbuild but should not be shared
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/cppduals)

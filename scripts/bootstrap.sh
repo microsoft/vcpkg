@@ -219,7 +219,9 @@ fetchTool()
 selectCXX()
 {
     if [ "x$CXX" = "x" ]; then
-        if which g++-10 >/dev/null 2>&1; then
+        if which g++-11 >/dev/null 2>&1; then
+            CXX=g++-11
+        elif which g++-10 >/dev/null 2>&1; then
             CXX=g++-10
         elif which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
@@ -276,11 +278,29 @@ else
 fi
 
 # Do the build
-buildDir="$vcpkgRootDir/toolsrc/build.rel"
-rm -rf "$buildDir"
-mkdir -p "$buildDir"
+vcpkgToolReleaseTag="2021-06-29"
+vcpkgToolReleaseSha="ffaa649cdb996946deff538ed0df192dffff41eb838179566aa77f91cdaaeadea7cd058bb4b230057f4b14703fbcd3c557b398ec7388d94177d3fc31073e7b6b"
+vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+buildDir="$baseBuildDir/build"
+tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+srcBaseDir="$baseBuildDir/src"
+srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+if [ -e "$tarballPath" ]; then
+    vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+else
+    echo "Downloading vcpkg tool sources"
+    vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+fi
+
+echo "Building vcpkg-tool..."
+rm -rf "$baseBuildDir"
+mkdir -p "$buildDir"
+vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
+
+(cd "$buildDir" && CXX="$CXX" "$cmakeExe" "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"

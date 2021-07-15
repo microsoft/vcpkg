@@ -1,5 +1,7 @@
 # vcpkg_from_gitlab
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_gitlab.md).
+
 Download and extract a project from Gitlab instances. Enables support for `install --head`.
 
 ## Usage:
@@ -66,4 +68,4 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 
 ## Source
-[scripts/cmake/vcpkg_from_gitlab.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_gitlab.cmake)
+[scripts/cmake/vcpkg\_from\_gitlab.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_gitlab.cmake)

@@ -1,0 +1,24 @@
+{
+  "name": "mlpack",
+  "version": "3.4.1",
+  "port-version": 1,
+  "description": "mlpack is a fast, flexible machine learning library, written in C++, that aims to provide fast, extensible implementations of cutting-edge machine learning algorithms.",
+  "homepage": "https://github.com/mlpack/mlpack",
+  "supports": "uwp",
+  "dependencies": [
+    "armadillo",
+    "boost-heap",
+    "boost-math",
+    "boost-program-options",
+    "boost-random",
+    "boost-serialization",
+    "boost-serialization",
+    "ensmallen",
+    "stb"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build command-line executables."
+    }
+  }
+}

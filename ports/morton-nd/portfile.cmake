@@ -3,9 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kevinhartman/morton-nd
-    REF v3.0.0
-    SHA512 659c903c0c4a4ee4179d01950a952fe0c40d2c426063c10515ae5d2ad13ec8ca6b83d8de50c9eb86dd3c2c3747e1594d832f0c28cd6d414703baf9a7ab2f1f36
-    HEAD_REF master
+    REF v4.0.0
+    SHA512 19dc51ae5d7fc868625a9c9f0dddec95a77fdeac714300033008f096bc3a83f146738e525e8a0ec541903263355a7fec84b1873d8eacfca4b93d3cd8945653da
+    HEAD_REF main
 )
 
 vcpkg_configure_cmake(

@@ -27,6 +27,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
+        rel_path.patch
+        android.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
@@ -41,9 +43,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
                         # Left here for future reference. 
                         gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
                         ac_cv_func_memset=yes #not detected in release builds 
+                        ac_cv_header_pthread_h=no
+                        ac_cv_header_dirent_h=no
                         )
 endif()
-vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
+set(ADDITIONAL_CONFIGURE_OPTIONS)
+set(ADDITIONAL_INSTALL_OPTIONS)
+if("tools" IN_LIST FEATURES)
+    set(BUILD_SOURCE_PATH ${SOURCE_PATH})
+    set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
+else()
+    set(BUILD_SOURCE_PATH ${SOURCE_PATH}/gettext-runtime) # Could be its own port
+    set(ADDITIONAL_INSTALL_OPTIONS SUBPATH "/intl")
+endif()
+vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
                      DETERMINE_BUILD_TRIPLET
                      USE_WRAPPERS
                      ADD_BIN_TO_PATH    # So configure can check for working iconv
@@ -51,14 +64,9 @@ vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should pr
                              --enable-c++
                              --disable-java
                              ${OPTIONS}
+                     ${ADDITIONAL_CONFIGURE_OPTIONS}
                     )
-                    
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_install_make(SUBPATH "/intl") # Could make a port intl or libintl or have features in Gettext
-else()
-    vcpkg_install_make(SUBPATH "/intl")
-endif()
-
+vcpkg_install_make(${ADDITIONAL_INSTALL_OPTIONS})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)

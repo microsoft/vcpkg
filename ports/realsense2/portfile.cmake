@@ -1,19 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF aae6f315ce80ff80df5bc9439b4ee852187533c1 #v2.40.0
-    SHA512 6d8d0837bd2d502a84e4a8193a9bf5f2cb27c1ca97fceffc9d5bc81c6ed5a2d2b5c79e2fc3446f34425d3db0693de02c561b9ba276e59598b33d928f0799fba4
+    REF bc0910f8ba3c33307ff247a29dd2b9e9ef1b269d #v2.42.0
+    SHA512 b2a2d24df4bdf4853df626942b1931bbe011a4e3faaa4e3c4bcb3f76506ae8edb955a458219fdc300018e640e2ffe4cd34f459786b909cf9aab71a767d691178
     HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
+        fix_config_osx.patch
 )
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tm2   BUILD_WITH_TM2
+    FEATURES
+        tm2   BUILD_WITH_TM2
 )
 
 set(BUILD_TOOLS OFF)
