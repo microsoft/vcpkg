@@ -31,12 +31,6 @@ if("dav1d" IN_LIST FEATURES)
     endif()
 endif()
 
-if("fdk-aac" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'fdk-aac' does not support 'uwp | arm'")
-    endif()
-endif()
-
 if("fontconfig" IN_LIST FEATURES)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
         message(FATAL_ERROR "Feature 'fontconfig' does not support 'uwp | arm | (windows & static)'")
