@@ -4086,7 +4086,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "modp-base64": {
       "baseline": "2020-09-26",
