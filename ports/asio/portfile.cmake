@@ -3,11 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-18-1
-    SHA512 c84e6fca448ed419a976756840f3f4543291a5a7d4f62d4de7c06945b2cd9ececca6633049ad5e36367d60f67a4f2735be017445514ae9fa9497d4af2a4d48f8
+    REF asio-1-18-2
+    SHA512 5a2312f1a14106e3109a9f02e8ac65a1d639b411834f0aa301767a4dd30d8384f6f1a94034b6016ef989c7d7880fd4c8de11c7be0cb58b4dc64a49ec335a7113
     HEAD_REF master
-    PATCHES
-        inline_dummy_return.patch
 )
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency
@@ -30,4 +28,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/asio/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-

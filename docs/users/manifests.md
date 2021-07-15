@@ -425,6 +425,12 @@ Defaults to `OFF`.
 This variable can be set to a list of additional command line parameters to pass to the vcpkg tool during automatic
 installation.
 
+#### `VCPKG_PREFER_SYSTEM_LIBS`
+
+This variable controls whether vcpkg will appends instead of prepends its paths to `CMAKE_PREFIX_PATH`, `CMAKE_LIBRARY_PATH` and `CMAKE_FIND_ROOT_PATH` so that vcpkg libraries/packages are found after toolchain/system libraries/packages.
+
+Defaults to `OFF`.
+
 #### `VCPKG_FEATURE_FLAGS`
 
 This variable can be set to a list of feature flags to pass to the vcpkg tool during automatic installation to opt-in to
