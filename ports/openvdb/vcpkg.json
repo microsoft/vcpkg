@@ -15,7 +15,15 @@
     "boost-uuid",
     "ilmbase",
     "openexr",
-    "tbb"
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "ax": {

@@ -26,14 +26,14 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 if ("ax" IN_LIST FEATURES)
-  if(!WIN32)
+  if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(OPENVDB_BUILD_AX ON)
   else()
     message(FATAL_ERROR "Currently no support for building OpenVDB AX on Windows.")  
   endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -51,9 +51,9 @@ vcpkg_configure_cmake(
         ${OPENVDB_BUILD_AX}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenVDB TARGET_PATH share/openvdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenVDB)
 
 vcpkg_copy_pdbs()
 
@@ -63,6 +63,6 @@ if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
 endif()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
