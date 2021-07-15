@@ -3,7 +3,6 @@
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_bitbucket.md).
 
 Download and extract a project from Bitbucket.
-Enables support for installing HEAD `vcpkg.exe install --head <port>`.
 
 ## Usage:
 ```cmake
