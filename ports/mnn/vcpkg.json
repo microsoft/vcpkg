@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "supports": "!(arm | uwp | ios | android)",
   "dependencies": [
+    "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
