@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 project(presentmon)
 
-set(PRESENTMON_VERSION 1.6.0)
-
 option(INSTALL_HEADERS "Install presentmon headers" ON)
 option(BUILD_TOOLS "Build tool PresentMon" OFF)
 
@@ -26,7 +24,7 @@ set(PRESENTDATA_HDRS
 
 file(GLOB EXTRA_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/PresentData/ETW/*.h)
 
-file(WRITE ${CMAKE_BINARY_DIR}/generated/version.h "char const* PRESENT_MON_VERSION = \"1.6.0\";")
+file(WRITE ${CMAKE_BINARY_DIR}/generated/version.h "char const* PRESENT_MON_VERSION = \"1.7.0\";")
 
 add_library(PresentData STATIC ${PRESENTDATA_SRCS} ${PRESENTDATA_HDRS} ${EXTRA_INCLUDES})
 
