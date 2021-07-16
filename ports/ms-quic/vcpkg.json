@@ -15,13 +15,7 @@
       "host": true
     }
   ],
-  "default-features": [
-    "quictls"
-  ],
   "features": {
-    "quictls": {
-      "description": "Build with a vendored copy of quictls/OpenSSL"
-    },
     "tools": {
       "description": "Install the tools after build"
     }
