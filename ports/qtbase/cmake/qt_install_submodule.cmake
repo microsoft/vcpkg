@@ -60,7 +60,7 @@ function(qt_cmake_configure)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()
 
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(CMAKE_HOST_WIN32)
         if(NOT ${PORT} MATCHES "qtbase")
             list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
         endif()
