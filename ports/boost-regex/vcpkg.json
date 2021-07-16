@@ -1,7 +1,6 @@
 {
   "name": "boost-regex",
-  "version-string": "1.75.0",
-  "port-version": 2,
+  "version": "1.76.0",
   "description": "Boost regex module",
   "homepage": "https://github.com/boostorg/regex",
   "dependencies": [
@@ -10,7 +9,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-concept-check",
     "boost-config",
     "boost-container-hash",
