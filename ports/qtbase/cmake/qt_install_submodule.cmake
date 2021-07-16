@@ -24,14 +24,15 @@ function(qt_download_submodule)
                       "PATCHES")
 
     if(QT_UPDATE_VERSION)
+        set(VCPKG_USE_HEAD_VERSION)
         set(UPDATE_PORT_GIT_OPTIONS
-                X_OUT_REF NEW_REF)
+                HEAD_REF ${QT_GIT_TAG})
     endif()
 
     vcpkg_from_git(
         OUT_SOURCE_PATH SOURCE_PATH
         URL git://code.qt.io/qt/${PORT}.git
-        TAG ${${PORT}_TAG}
+        #TAG ${${PORT}_TAG}
         REF ${${PORT}_REF}
         ${UPDATE_PORT_GIT_OPTIONS}
         PATCHES ${_qarg_PATCHES}
@@ -39,7 +40,7 @@ function(qt_download_submodule)
 
     if(QT_UPDATE_VERSION)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${NEW_REF})\n")
+        file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${VCPKG_HEAD_VERSION})\n")
     endif()
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
@@ -59,7 +60,7 @@ function(qt_cmake_configure)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()
 
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         if(NOT ${PORT} MATCHES "qtbase")
             list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
         endif()
