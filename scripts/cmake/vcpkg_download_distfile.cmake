@@ -12,6 +12,7 @@ vcpkg_download_distfile(
     URLS <http://mainUrl> <http://mirror1>...
     FILENAME <output.zip>
     SHA512 <5981de...>
+    [ALWAYS_REDOWNLOAD]
 )
 ```
 ## Parameters
@@ -37,6 +38,11 @@ Skip SHA512 hash check for file.
 
 This switch is only valid when building with the `--head` command line flag.
 
+### ALWAYS_REDOWNLOAD
+Avoid caching; this is a REST call or otherwise unstable.
+
+Requires `SKIP_SHA512`.
+
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
 
@@ -55,7 +61,7 @@ The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downlo
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_download_distfile VAR)
-    set(options SKIP_SHA512 SILENT_EXIT QUIET)
+    set(options SKIP_SHA512 SILENT_EXIT QUIET ALWAYS_REDOWNLOAD)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
@@ -70,6 +76,9 @@ function(vcpkg_download_distfile VAR)
     if(vcpkg_download_distfile_SILENT_EXIT)
         message(WARNING "SILENT_EXIT has been deprecated as an argument to vcpkg_download_distfile -- remove the argument to resolve this warning")
     endif()
+    if(vcpkg_download_distfile_ALWAYS_REDOWNLOAD AND NOT vcpkg_download_distfile_SKIP_SHA512)
+        message(FATAL_ERROR "ALWAYS_REDOWNLOAD option requires SKIP_SHA512 as well")
+    endif()
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         set(vcpkg_download_distfile_SKIP_SHA512 1)
     else()
@@ -80,12 +89,14 @@ function(vcpkg_download_distfile VAR)
             message(FATAL_ERROR "vcpkg_download_distfile must not be passed both SHA512 and SKIP_SHA512.")
         endif()
     endif()
-    if(vcpkg_download_distfile_SHA512 STREQUAL "0")
-        string(REPEAT "0" 128 vcpkg_download_distfile_SHA512)
-    endif()
-    string(LENGTH "${vcpkg_download_distfile_SHA512}" vcpkg_download_distfile_SHA512_length)
-    if(NOT vcpkg_download_distfile_SHA512_length EQUAL "128")
-        message(FATAL_ERROR "Invalid SHA512: ${vcpkg_download_distfile_SHA512}. If you do not know the file's SHA512, set this to \"0\".")
+    if(NOT vcpkg_download_distfile_SKIP_SHA512)
+        if(vcpkg_download_distfile_SHA512 STREQUAL "0")
+            string(REPEAT "0" 128 vcpkg_download_distfile_SHA512)
+        endif()
+        string(LENGTH "${vcpkg_download_distfile_SHA512}" vcpkg_download_distfile_SHA512_length)
+        if(NOT vcpkg_download_distfile_SHA512_length EQUAL "128")
+            message(FATAL_ERROR "Invalid SHA512: ${vcpkg_download_distfile_SHA512}. If you do not know the file's SHA512, set this to \"0\".")
+        endif()
     endif()
 
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
@@ -123,7 +134,9 @@ function(vcpkg_download_distfile VAR)
         endif()
     endfunction()
 
-    if(EXISTS "${downloaded_file_path}")
+    # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
+    # this could be de-morgan'd out but it's more clear this way
+    if(EXISTS "${downloaded_file_path}" AND NOT (vcpkg_download_distfile_ALWAYS_REDOWNLOAD AND NOT _VCPKG_NO_DOWNLOADS))
         if(NOT vcpkg_download_distfile_QUIET)
             message(STATUS "Using ${downloaded_file_path}")
         endif()
