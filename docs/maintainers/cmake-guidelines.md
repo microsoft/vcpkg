@@ -58,11 +58,9 @@ We hope that they will make both forwards and backwards compatibility easier.
       passed to a function as multiple arguments. In this case, the argument
       should simply be `${foo}`:
       ```cmake
-      set(working_directory "")
+      vcpkg_list(SET working_directory)
       if(DEFINED "arg_WORKING_DIRECTORY")
-        # note: when vcpkg_list is merged, this should be
-        # vcpkg_list(SET working_directory WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
-        set(working_directory WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
+        vcpkg_list(SET working_directory WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
       endif()
       # calls do_the_thing() if NOT DEFINED arg_WORKING_DIRECTORY,
       # else calls do_the_thing(WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
@@ -97,9 +95,13 @@ We hope that they will make both forwards and backwards compatibility easier.
   except for simple out-parameters.
 - Variables are not assumed to be empty.
   If the variable is intended to be used locally,
-  it must be explicitly initialized to empty with `set(foo "")`.
+  it must be explicitly initialized to empty with `set(foo "")` if it is a string variable,
+  and `vcpkg_list(SET foo)` if it is a list variable.
 - `set(var)` should not be used. Use `unset(var)` to unset a variable,
-  and `set(var "")` to set it to the empty value. _Note: this works for use as a list and as a string_
+  `set(var "")` to set it to the empty string,
+  and `vcpkg_list(SET var)` to set it to the empty list.
+  _Note: the empty string and the empty list are the same value;_
+  _this is a semantic difference rather than a difference in result_
 - All variables expected to be inherited from the parent scope across an API boundary
   (i.e. not a file-local function) should be documented.
   Note that all variables mentioned in triplets.md are considered documented.
