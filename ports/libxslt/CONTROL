@@ -1,6 +1,0 @@
-Source: libxslt
-Version: 1.1.34
-Homepage: https://github.com/GNOME/libxslt
-Description: Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT
-Build-Depends: libxml2, liblzma
-Supports: !uwp

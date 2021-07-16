@@ -1,0 +1,12 @@
+{
+  "name": "libxslt",
+  "version": "1.1.34",
+  "port-version": 1,
+  "description": "Libxslt is a XSLT library implemented in C for XSLT 1.0 and most of EXSLT",
+  "homepage": "https://github.com/GNOME/libxslt",
+  "supports": "!uwp",
+  "dependencies": [
+    "liblzma",
+    "libxml2"
+  ]
+}

@@ -1,0 +1,56 @@
+diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
+index f803a747c..f43a54f51 100644
+--- a/win32/Makefile.msvc
++++ b/win32/Makefile.msvc
+@@ -163,7 +163,11 @@ _VC_MANIFEST_EMBED_EXE=
+ _VC_MANIFEST_EMBED_DLL=
+ !endif
+ 
+-all : libxslt libxslta libexslt libexslta utils
++!if "$(STATIC)" == "1"
++all : libxslta libexslta utils
++!else
++all : libxslt libexslt utils
++!endif
+ 
+ libxslt : $(BINDIR)\$(XSLT_SO) 
+ 
+@@ -196,12 +200,15 @@ install-libs : all
+ 	if not exist $(LIBPREFIX) mkdir $(LIBPREFIX)
+ 	copy $(XSLT_SRCDIR)\*.h $(INCPREFIX)\$(XSLT_BASENAME)
+ 	copy $(EXSLT_SRCDIR)\*.h $(INCPREFIX)\$(EXSLT_BASENAME)
++!if "$(STATIC)" != "1"
+ 	copy $(BINDIR)\$(XSLT_SO) $(SOPREFIX)
+-	copy $(BINDIR)\$(XSLT_A) $(LIBPREFIX)
+ 	copy $(BINDIR)\$(XSLT_IMP) $(LIBPREFIX)
+ 	copy $(BINDIR)\$(EXSLT_SO) $(SOPREFIX)
+-	copy $(BINDIR)\$(EXSLT_A) $(LIBPREFIX)
+ 	copy $(BINDIR)\$(EXSLT_IMP) $(LIBPREFIX)
++!else
++	copy $(BINDIR)\$(XSLT_A) $(LIBPREFIX)
++	copy $(BINDIR)\$(EXSLT_A) $(LIBPREFIX)
++!endif
+ 
+ install : install-libs
+ 	copy $(BINDIR)\*.exe $(BINPREFIX)
+@@ -313,7 +320,6 @@ $(BINDIR)\$(EXSLT_SO) : $(BINDIR) $(EXSLT_OBJS) $(EXSLT_INTDIR)\$(EXSLT_DEF) lib
+ $(BINDIR)\$(EXSLT_A) : $(BINDIR) $(EXSLT_OBJS_A) libxslta
+ 	$(AR) $(ARFLAGS) /OUT:$(BINDIR)\$(EXSLT_A) $(EXSLT_OBJS_A)
+ 
+-
+ # Creates the utils intermediate directory.
+ $(UTILS_INTDIR) :
+ 	if not exist $(UTILS_INTDIR) mkdir $(UTILS_INTDIR)
+@@ -336,7 +342,11 @@ APPLIBS = $(LIBS) libxml2.lib
+ !endif
+ 
+ # Builds xsltproc and friends. Uses the implicit rule for commands.
+-$(UTILS) : $(UTILS_INTDIR) $(BINDIR) libxslt libxslta libexslt libexslta
++!if "$(STATIC)" == "1"
++$(UTILS) : $(UTILS_INTDIR) $(BINDIR) libxslta libexslta
++!else
++$(UTILS) : $(UTILS_INTDIR) $(BINDIR) libxslt libexslt
++!endif
+ 
+ # plugins only work with non-static builds currently.
+ !if "$(STATIC)" == "0"
