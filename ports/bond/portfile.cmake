@@ -21,13 +21,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
     # Clear the generator to prevent it from updating
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/tools/)
     # Extract the precompiled gbc
-    vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe)
+    vcpkg_extract_source_archive(extracted_tool_dir ARCHIVE "${GBC_ARCHIVE}" NO_REMOVE_ONE_LEVEL)
+    file(RENAME "${extracted_tool_dir}" "${CURRENT_BUILDTREES_DIR}/tools")
 
-    if (NOT EXISTS "${FETCHED_GBC_PATH}")
-        message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
+    set(FETCHED_GBC_PATH "${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe")
+    if(NOT EXISTS "${FETCHED_GBC_PATH}")
+        message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exist, but it doesn't.")
     endif()
-
 else()
     # According to the readme on https://github.com/microsoft/bond/
     # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
