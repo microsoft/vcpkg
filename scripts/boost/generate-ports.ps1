@@ -27,6 +27,7 @@ else
 # Clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
+    "python" = 1;
 }
 
 $per_port_data = @{
@@ -57,7 +58,7 @@ $per_port_data = @{
         "supports" = "!uwp&!(arm&windows)&!emscripten";
         "features" = @{
             python2=@{
-                dependencies=@(@{name="python2"; platform="windows"})
+                dependencies=@("python2")
                 description="Build with Python2 support"
             }
         }
