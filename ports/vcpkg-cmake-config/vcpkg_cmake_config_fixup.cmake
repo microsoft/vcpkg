@@ -9,7 +9,7 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 vcpkg_cmake_config_fixup(
     [PACKAGE_NAME <name>]
     [CONFIG_PATH <config-directory>]
-    [DO_NOT_DELETE_CONFIG_PATH_PARENT]
+    [DO_NOT_DELETE_PARENT_CONFIG_PATH]
     [NO_PREFIX_CORRECTION]
 )
 ```
