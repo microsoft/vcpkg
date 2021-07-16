@@ -146,14 +146,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "modplug"
-          ],
-          "platform": "!(windows & static) & !uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "tensorflow"
           ],
           "platform": "!(x86 | arm | uwp) & !static"
