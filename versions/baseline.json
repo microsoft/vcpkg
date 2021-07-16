@@ -3124,6 +3124,10 @@
       "baseline": "1.2.6",
       "port-version": 0
     },
+    "libe57": {
+      "baseline": "1.1.312",
+      "port-version": 0
+    },
     "libepoxy": {
       "baseline": "1.5.5",
       "port-version": 0
