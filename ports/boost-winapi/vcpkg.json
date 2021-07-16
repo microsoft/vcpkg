@@ -1,6 +1,6 @@
 {
   "name": "boost-winapi",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost winapi module",
   "homepage": "https://github.com/boostorg/winapi",
   "dependencies": [
