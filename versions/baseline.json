@@ -4649,8 +4649,8 @@
       "port-version": 1
     },
     "openvdb": {
-      "baseline": "7.1.0",
-      "port-version": 2
+      "baseline": "8.0.0",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.4.1-1",
