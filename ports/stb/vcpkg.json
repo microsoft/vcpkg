@@ -4,7 +4,13 @@
   "description": "public domain header-only libraries",
   "homepage": "https://github.com/nothings/stb",
   "dependencies": [
-    "vcpkg-cmake",
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
