@@ -20,7 +20,7 @@
   ],
   "features": {
     "quictls": {
-      "description": "Build with quictls/OpenSSL"
+      "description": "Build with a vendored copy of quictls/OpenSSL"
     },
     "tools": {
       "description": "Install the tools after build"
