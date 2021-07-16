@@ -1,4 +1,4 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 0b670cf..f94f4c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt

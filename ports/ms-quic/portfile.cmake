@@ -7,9 +7,9 @@ vcpkg_from_github(
     SHA512 6f63d42d950cbba88764332b31818a8627e7d3ecf7393cdef77daedd35a7bb04ac39c642991afb7cca502a346999233023e3b36011916c67e348179838aa7042
     HEAD_REF master
     PATCHES
-        fix-cmakelists.patch # Adjust install path of build outputs
-        fix-warnings.patch   # Remove /WX, -Werror
-        fix-platform.patch   # Make OpenSSL build use VCPKG_TARGET_ARCHITECTURE
+        fix-warnings.patch  # Remove /WX, -Werror
+        fix-platform.patch  # Make OpenSSL build use VCPKG_TARGET_ARCHITECTURE
+        fix-install.patch   # Adjust install path of build outputs
 )
 
 if("quictls" IN_LIST FEATURES)
