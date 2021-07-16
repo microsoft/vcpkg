@@ -34,7 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
-set(NINJA_OPTION PREFER_NINJA) 
+set(NINJA_OPTION PREFER_NINJA)
 if("cuda" IN_LIST FEATURES)
     unset(NINJA_OPTION)
 endif()
@@ -46,7 +46,7 @@ endif()
 
 # regenerate some code files by schemes and flatbuffers
 vcpkg_execute_build_process(
-    COMMAND ${FLATC_EXEC} "-c" "-b" "--gen-object-api" "--reflect-names"
+    COMMAND "${FLATC_EXEC}" "-c" "-b" "--gen-object-api" "--reflect-names"
         "../default/BasicOptimizer.fbs"
         "../default/CaffeOp.fbs"
         "../default/GpuLibrary.fbs"
@@ -56,7 +56,7 @@ vcpkg_execute_build_process(
         "../default/TFQuantizeOp.fbs"
         "../default/Type.fbs"
         "../default/UserDefine.fbs"
-    WORKING_DIRECTORY ${SOURCE_PATH}/schema/current/
+    WORKING_DIRECTORY "${SOURCE_PATH}/schema/current/"
     LOGNAME flatc-${TARGET_TRIPLET}
   )
 
@@ -82,7 +82,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH
-    URLS "https://apache.org/licenses/LICENSE-2.0.txt" 
+    URLS "https://apache.org/licenses/LICENSE-2.0.txt"
     FILENAME 98f6b79b778f7b0a1541.txt
     SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
 )
