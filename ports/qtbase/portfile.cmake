@@ -261,7 +261,7 @@ file(COPY
 qt_stop_on_update()
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
