@@ -304,8 +304,10 @@ foreach(_config debug release)
     endforeach()
 endforeach()
 
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_CROSSCOMPILING)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
+    endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
