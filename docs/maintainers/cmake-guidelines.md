@@ -71,7 +71,6 @@ We hope that they will make both forwards and backwards compatibility easier.
     - For example: `"foo\nbar"` must be quoted.
   - Otherwise, if the argument contains a `\`, a `"`, or a `$`,
     that argument should be bracketed.
-    - The brackets should contain the least amount of `=` possible.
     - Example:
       ```cmake
       set(x [[foo\bar]])
@@ -80,15 +79,21 @@ We hope that they will make both forwards and backwards compatibility easier.
   - Otherwise, if the argument contains characters that are
     not alphanumeric or `_`, that argument should be quoted.
   - Otherwise, the argument should be unquoted.
-  - Exception: arguments to `if()` that are not operators must always be quoted.
-    - operators should be unquoted.
+  - Exception: arguments to `if()` of type `<variable|string>`,
+    or raw conditions, should always be quoted:
+    - Both arguments to the comparison operators -
+      `EQUAL`, `STREQUAL`, `VERSION_LESS`, etc.
+    - The first argument to `MATCHES` and `IN_LIST`
+    - As well as a variable or constant by itself:
     - Example:
       ```cmake
-      if("${FOO}" STREQUAL "BAR")
-      endif()
-
-      if("${BAZ}" EQUAL "0")
-      endif()
+      if("${FOO}" STREQUAL "BAR") # ...
+      if("${BAZ}" EQUAL "0") # ...
+      if("${BOOLEAN}") # ...
+      if("FOO" IN_LIST list_variable) # ...
+      if("${bar}" MATCHES [[a[bcd]+\.[bcd]+]]) # ...
+      if(DEFINED arg_UNPARSED_ARGUMENTS) # ...
+      if(COMMAND blah) # ...
       ```
 - There are no "pointer" or "in-out" parameters
   (where a user passes a variable name rather than the contents),
@@ -101,7 +106,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   `set(var "")` to set it to the empty string,
   and `vcpkg_list(SET var)` to set it to the empty list.
   _Note: the empty string and the empty list are the same value;_
-  _this is a semantic difference rather than a difference in result_
+  _this is a notational difference rather than a difference in result_
 - All variables expected to be inherited from the parent scope across an API boundary
   (i.e. not a file-local function) should be documented.
   Note that all variables mentioned in triplets.md are considered documented.
