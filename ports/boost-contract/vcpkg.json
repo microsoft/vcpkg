@@ -1,7 +1,6 @@
 {
   "name": "boost-contract",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost contract module",
   "homepage": "https://github.com/boostorg/contract",
   "dependencies": [
