@@ -85,7 +85,7 @@ list(APPEND SDL_RELATED_HEADERS
     "${CURRENT_PACKAGES_DIR}/include/Urho3D/Input/NamedPipe.h"
     "${CURRENT_PACKAGES_DIR}/include/Urho3D/Input/RWOpsWrapper.h"
 )
-foreach (SDL_RELATED_HEADER IN_LIST ${SDL_RELATED_HEADERS})
+foreach (SDL_RELATED_HEADER IN LISTS ${SDL_RELATED_HEADERS})
     vcpkg_replace_string("${SDL_RELATED_HEADER}"
         "#include <SDL\/"
         "#include <Urho3D\/ThirdParty\/SDL\/"
