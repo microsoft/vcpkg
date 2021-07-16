@@ -1,13 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f2e8c2a..749e12c 100644
+index 93a65c7..24ec864 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -353,14 +353,10 @@ endif()
+@@ -338,13 +338,9 @@ endif()
  
  if(OPENVDB_INSTALL_CMAKE_MODULES)
    set(OPENVDB_CMAKE_MODULES
 -    cmake/FindBlosc.cmake
-     cmake/FindCppUnit.cmake
      cmake/FindJemalloc.cmake
 -    cmake/FindIlmBase.cmake
      cmake/FindLog4cplus.cmake
@@ -18,22 +17,10 @@ index f2e8c2a..749e12c 100644
      cmake/OpenVDBHoudiniSetup.cmake
      cmake/OpenVDBMayaSetup.cmake
 diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
-index b065192..7549843 100644
+index 219b90a..b280f85 100644
 --- a/cmake/FindOpenVDB.cmake
 +++ b/cmake/FindOpenVDB.cmake
-@@ -224,8 +224,9 @@ foreach(COMPONENT ${OpenVDB_FIND_COMPONENTS})
-     ${OPENVDB_${COMPONENT}_ROOT}
-     ${OPENVDB_${COMPONENT}_INCLUDEDIR}
-   )
--  list(REMOVE_DUPLICATES _VDB_COMPONENT_SEARCH_DIRS)
--
-+  if(_VDB_COMPONENT_SEARCH_DIRS)
-+	list(REMOVE_DUPLICATES _VDB_COMPONENT_SEARCH_DIRS)
-+  endif()
-   # Look for a standard header files.
-   if(${COMPONENT} STREQUAL "openvdb")
-     # Look for a standard OpenVDB header file.
-@@ -429,8 +430,8 @@ endif()
+@@ -448,8 +448,8 @@ endif()
  
  # Add standard dependencies
  
@@ -44,7 +31,7 @@ index b065192..7549843 100644
  find_package(ZLIB REQUIRED)
  
  if(NOT OPENVDB_USE_STATIC_LIBS AND NOT Boost_USE_STATIC_LIBS)
-@@ -540,7 +541,7 @@ if(NOT OPENVDB_USE_STATIC_LIBS)
+@@ -588,7 +588,7 @@ else()
  endif()
  
  if(OpenVDB_USES_BLOSC)
@@ -52,31 +39,29 @@ index b065192..7549843 100644
 +  find_package(blosc CONFIG REQUIRED)
  endif()
  
- if(OpenVDB_USES_LOG4CPLUS)
-@@ -548,8 +549,8 @@ if(OpenVDB_USES_LOG4CPLUS)
- endif()
- 
+ if(OpenVDB_USES_ZLIB)
+@@ -602,6 +602,8 @@ endif()
  if(OpenVDB_USES_EXR)
--  find_package(IlmBase REQUIRED)
--  find_package(OpenEXR REQUIRED)
+   find_package(IlmBase REQUIRED)
+   find_package(OpenEXR REQUIRED)
 +  find_package(IlmBase CONFIG REQUIRED)
 +  find_package(OpenEXR CONFIG REQUIRED)
  endif()
  
  if(UNIX)
-@@ -610,7 +611,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
+@@ -662,7 +664,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
  
  if(NOT OPENVDB_USE_STATIC_LIBS)
    if(OpenVDB_USES_BLOSC)
 -    list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES Blosc::blosc)
 +    list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES blosc)
    endif()
- 
-   list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
-diff --git a/openvdb/CMakeLists.txt b/openvdb/CMakeLists.txt
-index 45b302c..d75cfd1 100644
---- a/openvdb/CMakeLists.txt
-+++ b/openvdb/CMakeLists.txt
+   if(OpenVDB_USES_ZLIB)
+     list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
+diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
+index 536bf1e..568fec1 100644
+--- a/openvdb/openvdb/CMakeLists.txt
++++ b/openvdb/openvdb/CMakeLists.txt
 @@ -47,7 +47,7 @@ message(STATUS "----------------------------------------------------")
  ##########################################################################
  
@@ -111,7 +96,7 @@ index 45b302c..d75cfd1 100644
  
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
    if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
-@@ -84,14 +90,7 @@ if(USE_LOG4CPLUS)
+@@ -82,14 +88,7 @@ if(USE_LOG4CPLUS)
  endif()
  
  if(USE_BLOSC)
@@ -127,7 +112,7 @@ index 45b302c..d75cfd1 100644
  else()
    message(WARNING "Blosc support is disabled. It is strongly recommended to "
      "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -163,7 +162,7 @@ endif()
+@@ -165,7 +164,7 @@ endif()
  # See FindOpenVDB.cmake
  
  if(USE_BLOSC)
@@ -135,11 +120,11 @@ index 45b302c..d75cfd1 100644
 +  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc)
  endif()
  
- list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
-diff --git a/openvdb/cmd/CMakeLists.txt b/openvdb/cmd/CMakeLists.txt
-index 2b831bb..a13b63b 100644
---- a/openvdb/cmd/CMakeLists.txt
-+++ b/openvdb/cmd/CMakeLists.txt
+ if(USE_BLOSC OR USE_ZLIB)
+diff --git a/openvdb/openvdb/cmd/CMakeLists.txt b/openvdb/openvdb/cmd/CMakeLists.txt
+index ba78f4b..461fd2f 100644
+--- a/openvdb/openvdb/cmd/CMakeLists.txt
++++ b/openvdb/openvdb/cmd/CMakeLists.txt
 @@ -50,7 +50,7 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
    find_package(Jemalloc REQUIRED)
    list(APPEND OPENVDB_BINARIES_DEPENDENT_LIBS Jemalloc::jemalloc)
