@@ -9,9 +9,10 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        exceptions    SIMDJSON_EXCEPTIONS
-        no-deprecated SIMDJSON_DISABLE_DEPRECATED_API
-        threads       SIMDJSON_ENABLE_THREADS
+        exceptions SIMDJSON_EXCEPTIONS
+        threads    SIMDJSON_ENABLE_THREADS
+    INVERTED_FEATURES
+        deprecated SIMDJSON_DISABLE_DEPRECATED_API
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)

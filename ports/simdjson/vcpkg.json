@@ -19,11 +19,11 @@
     "threads"
   ],
   "features": {
+    "deprecated": {
+      "description": "Enable deprecated APIs"
+    },
     "exceptions": {
       "description": "Enable exception-throwing interface"
-    },
-    "no-deprecated": {
-      "description": "Disable deprecated APIs"
     },
     "threads": {
       "description": "Link with thread support"
