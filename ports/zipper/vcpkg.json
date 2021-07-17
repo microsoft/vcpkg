@@ -1,0 +1,8 @@
+{
+	"name": "zipper",
+	"version-string": "1.0.2",
+	"description": "C++ wrapper around minizip compression library",
+	"dependencies": [
+		"minizip"
+	]
+}
