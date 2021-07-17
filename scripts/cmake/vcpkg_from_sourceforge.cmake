@@ -47,6 +47,8 @@ The REPO is `soxr`, REF is not exist, and the FILENAME is `soxr-0.1.3-Source.tar
 ### SHA512
 The SHA512 hash that should match the archive.
 
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+
 ### WORKING_DIRECTORY
 If specified, the archive will be extracted into the working directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
 

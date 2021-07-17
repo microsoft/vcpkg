@@ -854,7 +854,7 @@
     },
     "boost-python": {
       "baseline": "1.76.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-qvm": {
       "baseline": "1.76.0",
@@ -1097,7 +1097,7 @@
       "port-version": 1
     },
     "c4core": {
-      "baseline": "2021-01-14",
+      "baseline": "2021-06-26",
       "port-version": 0
     },
     "caf": {
@@ -1110,7 +1110,7 @@
     },
     "cairo": {
       "baseline": "1.17.4",
-      "port-version": 1
+      "port-version": 2
     },
     "cairomm": {
       "baseline": "1.16.0",
@@ -1266,7 +1266,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 18
+      "port-version": 19
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1589,7 +1589,11 @@
       "port-version": 0
     },
     "czmq": {
-      "baseline": "2019-06-10-4",
+      "baseline": "4.2.1",
+      "port-version": 0
+    },
+    "d3d12-memory-allocator": {
+      "baseline": "2021-05-05",
       "port-version": 0
     },
     "d3dx12": {
@@ -1922,7 +1926,7 @@
     },
     "faiss": {
       "baseline": "1.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "fakeit": {
       "baseline": "2.0.7",
@@ -1986,7 +1990,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 7
+      "port-version": 9
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -2333,8 +2337,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "2019-03-05",
-      "port-version": 3
+      "baseline": "11.5.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2521,7 +2525,7 @@
       "port-version": 1
     },
     "hpx": {
-      "baseline": "1.6.0",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "http-parser": {
@@ -2962,7 +2966,7 @@
     },
     "lapack-reference": {
       "baseline": "3.8.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -3118,6 +3122,10 @@
     },
     "libebur128": {
       "baseline": "1.2.6",
+      "port-version": 0
+    },
+    "libe57": {
+      "baseline": "1.1.312",
       "port-version": 0
     },
     "libepoxy": {
@@ -3660,6 +3668,10 @@
       "baseline": "4.3-0",
       "port-version": 0
     },
+    "liburing": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "libusb": {
       "baseline": "1.0.24",
       "port-version": 4
@@ -3721,8 +3733,8 @@
       "port-version": 0
     },
     "libxml2": {
-      "baseline": "2.9.10",
-      "port-version": 8
+      "baseline": "2.9.12",
+      "port-version": 0
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -3738,7 +3750,7 @@
     },
     "libxslt": {
       "baseline": "1.1.34",
-      "port-version": 0
+      "port-version": 1
     },
     "libyaml": {
       "baseline": "0.2.5",
@@ -4070,7 +4082,7 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mman": {
       "baseline": "git-f5ff813-3",
@@ -4286,7 +4298,7 @@
     },
     "nativefiledialog": {
       "baseline": "2019-08-28",
-      "port-version": 0
+      "port-version": 1
     },
     "nccl": {
       "baseline": "2.4.6",
@@ -4390,7 +4402,7 @@
     },
     "nuklear": {
       "baseline": "2021-03-18",
-      "port-version": 0
+      "port-version": 1
     },
     "numactl": {
       "baseline": "2.0.12",
@@ -4622,7 +4634,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 6
+      "port-version": 7
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -4645,8 +4657,8 @@
       "port-version": 1
     },
     "openvdb": {
-      "baseline": "7.1.0",
-      "port-version": 2
+      "baseline": "8.0.0",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.4.1-1",
@@ -4849,7 +4861,7 @@
       "port-version": 0
     },
     "pistache": {
-      "baseline": "2019-08-05",
+      "baseline": "2021-03-31",
       "port-version": 0
     },
     "pixel": {
@@ -4985,7 +4997,7 @@
       "port-version": 0
     },
     "presentmon": {
-      "baseline": "1.6.0",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "proj": {
@@ -5609,7 +5621,7 @@
       "port-version": 0
     },
     "ryml": {
-      "baseline": "2021-05-27",
+      "baseline": "2021-06-29",
       "port-version": 0
     },
     "ryu": {
@@ -5753,8 +5765,8 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2019-06-26",
-      "port-version": 2
+      "baseline": "2021.1",
+      "port-version": 0
     },
     "shaderwriter": {
       "baseline": "1.1.0",
@@ -5946,7 +5958,7 @@
     },
     "spdlog": {
       "baseline": "1.8.5",
-      "port-version": 3
+      "port-version": 4
     },
     "spectra": {
       "baseline": "0.9.0",
