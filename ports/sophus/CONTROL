@@ -1,5 +1,0 @@
-Source: sophus
-Version: 1.0.0-6
-Build-Depends: eigen3, ceres, suitesparse
-Homepage: https://github.com/strasdat/Sophus
-Description: Lie group library for C++

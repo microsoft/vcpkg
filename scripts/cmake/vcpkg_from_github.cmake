@@ -37,7 +37,7 @@ If `REF` is specified, `SHA512` must also be specified.
 ### SHA512
 The SHA512 hash that should match the archive (https://github.com/${REPO}/archive/${REF}.tar.gz).
 
-This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
 ### HEAD_REF
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
@@ -73,159 +73,115 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 #]===]
 
 function(vcpkg_from_github)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF GITHUB_HOST AUTHORIZATION_TOKEN FILE_DISAMBIGUATOR)
-    set(multipleValuesArgs PATCHES)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+        ""
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "PATCHES")
 
-    if(NOT DEFINED _vdud_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "vcpkg_from_github was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if((DEFINED _vdud_REF AND NOT DEFINED _vdud_SHA512) OR (NOT DEFINED _vdud_REF AND DEFINED _vdud_SHA512))
+    if(DEFINED arg_REF AND NOT DEFINED arg_SHA512)
         message(FATAL_ERROR "SHA512 must be specified if REF is specified.")
     endif()
+    if(NOT DEFINED arg_REF AND DEFINED arg_SHA512)
+        message(FATAL_ERROR "REF must be specified if SHA512 is specified.")
+    endif()
 
-    if(NOT DEFINED _vdud_REPO)
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
+        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
+    endif()
+    if(NOT DEFINED arg_REPO)
         message(FATAL_ERROR "The GitHub repository must be specified.")
     endif()
 
-    if(NOT DEFINED _vdud_REF AND NOT DEFINED _vdud_HEAD_REF)
-        message(FATAL_ERROR "At least one of REF and HEAD_REF must be specified.")
-    endif()
-
-    if(NOT DEFINED _vdud_GITHUB_HOST)
-        set(GITHUB_HOST https://github.com)
-        set(GITHUB_API_URL https://api.github.com)
+    if(NOT DEFINED arg_GITHUB_HOST)
+        set(github_host "https://github.com")
+        set(github_api_url "https://api.github.com")
     else()
-        set(GITHUB_HOST "${_vdud_GITHUB_HOST}")
-        set(GITHUB_API_URL "${_vdud_GITHUB_HOST}/api/v3")
+        set(github_host "${arg_GITHUB_HOST}")
+        set(github_api_url "${arg_GITHUB_HOST}/api/v3")
     endif()
 
-    if(DEFINED _vdud_AUTHORIZATION_TOKEN)
-        set(HEADERS "HEADERS" "Authorization: token ${_vdud_AUTHORIZATION_TOKEN}")
+    set(headers_param "")
+    if(DEFINED arg_AUTHORIZATION_TOKEN)
+        set(headers_param "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
+    endif()
+
+
+    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
+        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
+    endif()
+
+    if(NOT arg_REPO MATCHES "^([^/]*)/([^/]*)$")
+        message(FATAL_ERROR "REPO (${arg_REPO}) is not a valid repo name:
+    must be an organization name followed by a repository name separated by a single slash.")
+    endif()
+    set(org_name "${CMAKE_MATCH_1}")
+    set(repo_name "${CMAKE_MATCH_2}")
+
+    set(redownload_param "")
+    set(working_directory_param "")
+    set(sha512_param "SHA512" "${arg_SHA512}")
+    set(ref_to_use "${arg_REF}")
+    if(VCPKG_USE_HEAD_VERSION)
+        if(DEFINED arg_HEAD_REF)
+            set(redownload_param "ALWAYS_REDOWNLOAD")
+            set(sha512_param "SKIP_SHA512")
+            set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            set(ref_to_use "${arg_HEAD_REF}")
+        else()
+            message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
+        endif()
+    elseif(NOT DEFINED arg_REF)
+        message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+    endif()
+
+    # avoid using either - or _, to allow both `foo/bar` and `foo-bar` to coexist
+    # we assume that no one will name a ref "foo_-bar"
+    string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
+    if(DEFINED arg_FILE_DISAMBIGUATOR AND NOT VCPKG_USE_HEAD_VERSION)
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
     else()
-        set(HEADERS)
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
     endif()
 
-    string(REGEX REPLACE ".*/" "" REPO_NAME "${_vdud_REPO}")
-    string(REGEX REPLACE "/.*" "" ORG_NAME "${_vdud_REPO}")
-
-    macro(set_TEMP_SOURCE_PATH BASE BASEREF)
-        set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${BASEREF}")
-        if(NOT EXISTS "${TEMP_SOURCE_PATH}")
-            # Sometimes GitHub strips a leading 'v' off the REF.
-            string(REGEX REPLACE "^v" "" REF "${BASEREF}")
-            string(REPLACE "/" "-" REF "${REF}")
-            set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${REF}")
-            if(NOT EXISTS "${TEMP_SOURCE_PATH}")
-                message(FATAL_ERROR "Could not determine source path: '${BASE}/${REPO_NAME}-${BASEREF}' does not exist")
-            endif()
-        endif()
-    endmacro()
-
-    if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_HEAD_REF)
-        message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
-        set(VCPKG_USE_HEAD_VERSION OFF)
-    endif()
-
-    # Handle --no-head scenarios
-    if(NOT VCPKG_USE_HEAD_VERSION)
-        if(NOT _vdud_REF)
-            message(FATAL_ERROR "Package does not specify REF. It must built using --head.")
-        endif()
-
-        string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-
-        set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}")
-        if (_vdud_FILE_DISAMBIGUATOR)
-            set(downloaded_file_name "${downloaded_file_name}-${_vdud_FILE_DISAMBIGUATOR}")
-        endif()
-
-        set(downloaded_file_name "${downloaded_file_name}.tar.gz")
-
-        vcpkg_download_distfile(ARCHIVE
-            URLS "${GITHUB_HOST}/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_REF}.tar.gz"
-            SHA512 "${_vdud_SHA512}"
-            FILENAME "${downloaded_file_name}"
-            ${HEADERS}
-        )
-
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE "${ARCHIVE}"
-            REF "${SANITIZED_REF}"
-            PATCHES ${_vdud_PATCHES}
-        )
-
-        set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-        return()
-    endif()
-
-    # The following is for --head scenarios
-    set(URL "${GITHUB_HOST}/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_HEAD_REF}.tar.gz")
-    string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
-    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}")
-    if (_vdud_FILE_DISAMBIGUATOR)
-        set(downloaded_file_name "${downloaded_file_name}-${_vdud_FILE_DISAMBIGUATOR}")
-    endif()
-
-    set(downloaded_file_name "${downloaded_file_name}.tar.gz")
-
-    set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
-
-    if(_VCPKG_NO_DOWNLOADS)
-        if(NOT EXISTS "${downloaded_file_path}" OR NOT EXISTS "${downloaded_file_path}.version")
-            message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
-        endif()
-        message(STATUS "Using cached ${downloaded_file_path}")
-    else()
-        if(EXISTS "${downloaded_file_path}")
-            message(STATUS "Purging cached ${downloaded_file_path} to fetch latest (use --no-downloads to suppress)")
-            file(REMOVE "${downloaded_file_path}")
-        endif()
-        if(EXISTS "${downloaded_file_path}.version")
-            file(REMOVE "${downloaded_file_path}.version")
-        endif()
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/head")
-            file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src/head")
-        endif()
-
-        # Try to download the file and version information from github.
-        vcpkg_download_distfile(ARCHIVE_VERSION
-            URLS "${GITHUB_API_URL}/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
-            FILENAME "${downloaded_file_name}.version"
-            SKIP_SHA512
-            ${HEADERS}
-        )
-
-        vcpkg_download_distfile(ARCHIVE
-            URLS ${URL}
-            FILENAME "${downloaded_file_name}"
-            SKIP_SHA512
-            ${HEADERS}
-        )
-    endif()
-
-    # Parse the github refs response with regex.
-    # TODO: use some JSON swiss-army-knife utility instead.
-    file(READ "${downloaded_file_path}.version" _contents)
-    string(REGEX MATCH "\"sha\": \"[a-f0-9]+\"" x "${_contents}")
-    string(REGEX REPLACE "\"sha\": \"([a-f0-9]+)\"" "\\1" _version ${x})
 
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
-    # When multiple vcpkg_from_github's are used after each other, only use the version from the first (hopefully the primary one).
-    if(NOT DEFINED VCPKG_HEAD_VERSION)
-        set(VCPKG_HEAD_VERSION "${_version}" PARENT_SCOPE)
+    if(VCPKG_USE_HEAD_VERSION)
+        vcpkg_download_distfile(archive_version
+            URLS "${github_api_url}/repos/${org_name}/${repo_name}/git/refs/heads/${arg_HEAD_REF}"
+            FILENAME "${downloaded_file_name}.version"
+            SKIP_SHA512
+            ALWAYS_REDOWNLOAD
+        )
+        # Parse the github refs response with regex.
+        # TODO: add json-pointer support to vcpkg
+        file(READ "${archive_version}" version_contents)
+        if(NOT version_contents MATCHES [["sha": "([a-f0-9]+)"]])
+            message(FATAL_ERROR "Failed to parse API response from '${version_url}':
+
+${version_contents}
+")
+        endif()
+        set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_1}" PARENT_SCOPE)
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        SKIP_PATCH_CHECK
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE "${downloaded_file_path}"
-        REF "${SANITIZED_HEAD_REF}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
-        PATCHES ${_vdud_PATCHES}
+    # Try to download the file information from github
+    vcpkg_download_distfile(archive
+        URLS "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        FILENAME "${downloaded_file_name}"
+        ${headers_param}
+        ${sha512_param}
+        ${redownload_param}
     )
-    set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE "${archive}"
+        REF "${sanitized_ref}"
+        PATCHES ${arg_PATCHES}
+        ${working_directory_param}
+    )
+    set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
