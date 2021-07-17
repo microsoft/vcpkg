@@ -15,6 +15,7 @@
     }
   ],
   "default-features": [
+    "deprecated",
     "exceptions",
     "threads"
   ],
