@@ -1266,7 +1266,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 18
+      "port-version": 19
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1926,7 +1926,7 @@
     },
     "faiss": {
       "baseline": "1.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "fakeit": {
       "baseline": "2.0.7",
@@ -2966,7 +2966,7 @@
     },
     "lapack-reference": {
       "baseline": "3.8.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -3668,6 +3668,10 @@
       "baseline": "4.3-0",
       "port-version": 0
     },
+    "liburing": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "libusb": {
       "baseline": "1.0.24",
       "port-version": 4
@@ -4078,7 +4082,7 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mman": {
       "baseline": "git-f5ff813-3",
@@ -4294,7 +4298,7 @@
     },
     "nativefiledialog": {
       "baseline": "2019-08-28",
-      "port-version": 0
+      "port-version": 1
     },
     "nccl": {
       "baseline": "2.4.6",
@@ -4398,7 +4402,7 @@
     },
     "nuklear": {
       "baseline": "2021-03-18",
-      "port-version": 0
+      "port-version": 1
     },
     "numactl": {
       "baseline": "2.0.12",
@@ -4630,7 +4634,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 6
+      "port-version": 7
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
