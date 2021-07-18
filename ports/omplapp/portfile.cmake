@@ -3,9 +3,9 @@ vcpkg_buildpath_length_warning(37)
 set(OMPL_VERSION 1.5.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ompl/ompl/archive/1.5.1.tar.gz"
-    FILENAME "ompl-${OMPL_VERSION}.tar.gz"
-    SHA512 2f28d29f32f3bb03e67b29ce251e4786364847a25e3c4cf66d7663ed38dca4da71d4e03cf9ce647710d9524a3907c76c09795e77f041cb8822f695d28f5ca570
+    URLS "https://github.com/ompl/omplapp/releases/download/1.5.1/omplapp-1.5.1-Source.tar.gz"
+    FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
+    SHA512 83b1b09d6be776f7e15a748402f0c2f072459921de61a92731daf5171bd1f91a829fbeb6e10a489b92fba0297f6272e7bb6b8f07830c387bb29ccdbc7b3731f3
 )
 
 vcpkg_extract_source_archive_ex(
@@ -13,8 +13,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
     PATCHES
-        0001_Export_targets.patch
-        0002_Fix_config.patch
+        fix_dependency.patch
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
@@ -41,13 +40,19 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/ompl/cmake)
 
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ompl_benchmark.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/ompl_benchmark.exe)
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/include/ompl
+    ${CURRENT_PACKAGES_DIR}/bin
+    ${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles
+    ${CURRENT_PACKAGES_DIR}/lib/ompl.lib
+    ${CURRENT_PACKAGES_DIR}/share/ompl
     ${CURRENT_PACKAGES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/share/ompl/demos
-    ${CURRENT_PACKAGES_DIR}/share/ompl/ompl.conf
-    ${CURRENT_PACKAGES_DIR}/share/ompl/plannerarena
+    ${CURRENT_PACKAGES_DIR}/debug/bin
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib
+    ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

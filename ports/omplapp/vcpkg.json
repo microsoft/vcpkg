@@ -1,0 +1,11 @@
+{
+  "name": "omplapp",
+  "version-string": "1.5.1",
+  "homepage": "https://ompl.kavrakilab.org/",
+  "description": "Use OMPL for reading meshes and performing collision checking",
+  "dependencies": [
+    "assimp",
+    "fcl",
+    "ompl"
+  ]
+}
