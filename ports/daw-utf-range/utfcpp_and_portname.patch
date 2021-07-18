@@ -1,3 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04b9ac6..eb19fe3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,7 @@
+ 
+ cmake_minimum_required( VERSION 3.10 ) 
+ 
+-project( "utf_range"
++project( "utf-range"
+ 	VERSION "1.2.2" 
+ 	DESCRIPTION "UTF8 Iterator/Range for traversing utf8 text"
+ 	HOMEPAGE_URL "https://github.com/beached/utf_range"
+@@ -18,8 +18,6 @@ set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are req
+ set( CMAKE_CXX_STANDARD_REQUIRED ON)
+ set( CMAKE_CXX_EXTENSIONS OFF)
+ 
+-add_subdirectory(extern)
+-
+ include( GNUInstallDirs)
+ set( utf_range_INSTALL_CMAKEDIR
+ 	"${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake"
+@@ -49,31 +47,31 @@ install( TARGETS ${PROJECT_NAME}
+ include( CMakePackageConfigHelpers)
+ 
+ configure_package_config_file( 
+-	"${PROJECT_SOURCE_DIR}/cmake/daw_${PROJECT_NAME}Config.cmake.in"
+-	"${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+-	INSTALL_DESTINATION lib/cmake/daw_${PROJECT_NAME}
++	"${PROJECT_SOURCE_DIR}/cmake/daw-${PROJECT_NAME}Config.cmake.in"
++	"${PROJECT_BINARY_DIR}/daw-${PROJECT_NAME}Config.cmake"
++	INSTALL_DESTINATION lib/cmake/daw-${PROJECT_NAME}
+ 	#	INSTALL_DESTINATION
+ 	#	${utf_range_INSTALL_CMAKEDIR} 
+ )
+ 
+-write_basic_package_version_file( "${PROJECT_NAME}ConfigVersion.cmake"
++write_basic_package_version_file( "daw-${PROJECT_NAME}ConfigVersion.cmake"
+ 	VERSION ${PROJECT_VERSION}
+ 	COMPATIBILITY SameMajorVersion)
+ 
+ install( EXPORT ${PROJECT_NAME}_Targets
+-	FILE ${PROJECT_NAME}Targets.cmake
++	FILE daw-${PROJECT_NAME}Targets.cmake
+ 	NAMESPACE daw::
+-	DESTINATION lib/cmake/daw_${PROJECT_NAME}
++	DESTINATION lib/cmake/daw-${PROJECT_NAME}
+ 	#DESTINATION ${utf_range_INSTALL_CMAKEDIR}
+ )
+ 
+-install( FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+-	"${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+-	DESTINATION lib/cmake/daw_${PROJECT_NAME}
++install( FILES "${PROJECT_BINARY_DIR}/daw-${PROJECT_NAME}Config.cmake"
++	"${PROJECT_BINARY_DIR}/daw-${PROJECT_NAME}ConfigVersion.cmake"
++	DESTINATION lib/cmake/daw-${PROJECT_NAME}
+ 	#	${utf_range_INSTALL_CMAKEDIR}$ 
+ )	
+ 
+ install( DIRECTORY ${PROJECT_SOURCE_DIR}/include/daw DESTINATION include )
+-install( DIRECTORY ${PROJECT_SOURCE_DIR}/include/utf8 DESTINATION include )
+-install( FILES ${PROJECT_SOURCE_DIR}/include/utf8.h DESTINATION include )
++install( DIRECTORY ${PROJECT_SOURCE_DIR}/include/utf8 DESTINATION include/daw )
++install( FILES ${PROJECT_SOURCE_DIR}/include/utf8.h DESTINATION include/daw )
+ 			
 diff --git a/include/daw/utf_range/daw_utf_range.h b/include/daw/utf_range/daw_utf_range.h
 index 36fe70d..c794934 100644
 --- a/include/daw/utf_range/daw_utf_range.h
@@ -117,3 +182,6 @@ index 7f00df9..b48397a 100644
  	} // namespace unchecked
 -} // namespace utf8
 +} // namespace daw::utf8
+diff --git a/cmake/daw_utf_rangeConfig.cmake.in b/cmake/daw-utf-rangeConfig.cmake.in
+rename from cmake/daw_utf_rangeConfig.cmake.in
+rename to cmake/daw-utf-rangeConfig.cmake.in

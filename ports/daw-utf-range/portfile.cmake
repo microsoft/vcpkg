@@ -4,16 +4,14 @@ vcpkg_from_github(
     REF 6069d058c48f7b98ee2999929c146eb60a3b1313
     SHA512 6a9f3abdf4c2b9569ebf3d5937a0671df33eaecc3cfc328c22dc0802a7f864f5556c50fcf31aea7e558025c801c8be693276106a7020fad951d52b67c8e5e7e5
     HEAD_REF master
-    PATCHES my_utfcpp.patch
+    PATCHES utfcpp_and_portname.patch
 )
 
-file(
-    COPY 
-        ${SOURCE_PATH}/include/utf8.h
-        ${SOURCE_PATH}/include/utf8
-        ${SOURCE_PATH}/include/daw/utf_range
-    DESTINATION 
-        ${CURRENT_PACKAGES_DIR}/include/daw
-)
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
