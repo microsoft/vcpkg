@@ -1,6 +1,7 @@
 {
   "name": "boost-python",
   "version": "1.76.0",
+  "port-version": 1,
   "description": "Boost python module",
   "homepage": "https://github.com/boostorg/python",
   "supports": "!uwp & !(arm & windows) & !emscripten",
@@ -41,10 +42,7 @@
     "python2": {
       "description": "Build with Python2 support",
       "dependencies": [
-        {
-          "name": "python2",
-          "platform": "windows"
-        }
+        "python2"
       ]
     }
   }
