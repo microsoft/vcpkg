@@ -2520,6 +2520,10 @@
       "baseline": "0.7.0",
       "port-version": 2
     },
+    "graphviz": {
+      "baseline": "2.47.3",
+      "port-version": 0
+    },
     "greatest": {
       "baseline": "1.4.2",
       "port-version": 1
