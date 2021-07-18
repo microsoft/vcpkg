@@ -134,3 +134,9 @@ if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/wind
     string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
     file(WRITE "${configfile}" "${_contents}")
 endif()
+
+file(GLOB_RECURSE debug_dir "${CURRENT_PACKAGES_DIR}/debug/*")
+list(LENGTH debug_dir debug_dir_elements)
+if(debug_dir_elements EQUAL 0)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
