@@ -25,6 +25,7 @@ vcpkg_extract_source_archive_ex(
     REF ${OMPL_VERSION}
     PATCHES
         0001_Export_targets.patch
+        0002_Fix_config.patch
         ${FEATURE_PATCHES}
 )
 
