@@ -1750,7 +1750,6 @@ libmicrohttpd:x64-windows-static-md=fail
 libspatialite:x64-windows-static-md=fail
 linenoise-ng:x64-windows-static-md=fail
 mmloader:x64-windows-static-md=fail
-mpg123:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
