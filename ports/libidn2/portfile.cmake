@@ -41,6 +41,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
+        OPTIONS
+            "-DPACKAGE_VERSION=${IDN2_VERSION}"
     )
     
     vcpkg_install_cmake()
@@ -62,10 +64,10 @@ else()
     
     vcpkg_install_make()
     
-    vcpkg_fixup_pkgconfig()
-    
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 # License and man
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libidn2 RENAME copyright)

@@ -105,3 +105,13 @@ install(TARGETS libidn2
         ARCHIVE DESTINATION lib)
 
 install(FILES lib/idn2.h DESTINATION include)
+
+# Install pc file
+set(prefix      "\${pcfiledir}/../..")
+set(exec_prefix "\${prefix}")
+set(includedir  "\${prefix}/include")
+set(libdir      "\${prefix}/lib")
+set(LTLIBICONV  "")
+set(LTLIBUNISTRING "")
+configure_file("libidn2.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libidn2.pc")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libidn2.pc" DESTINATION "lib/pkgconfig")
