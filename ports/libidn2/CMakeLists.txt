@@ -89,6 +89,12 @@ set(GL_SRC gl/rawmemchr.c
 )
 
 add_library(libidn2 ${LIB_SRC} ${UNISTR_SRC} ${GL_SRC})
+set_target_properties(libidn2
+    PROPERTIES
+        OUTPUT_NAME idn2
+        PREFIX lib
+        IMPORT_PREFIX lib
+)
 
 target_include_directories(libidn2 PRIVATE . ./unistring ./gl)
 target_link_libraries(libidn2 PRIVATE Iconv::Iconv)

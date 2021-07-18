@@ -17,6 +17,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/string.h DESTINATION ${SOURCE_PATH}/gl)
     
+    set(HAVE_ALLOCA_H 0)
+    
     configure_file(${CMAKE_CURRENT_LIST_DIR}/config.h ${SOURCE_PATH})
     
     function(simple_copy_template_header FILE_PATH BASE_NAME)
