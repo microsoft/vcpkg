@@ -11,7 +11,7 @@ endif()
 # config variables for ffi.h.in
 set(VERSION 3.4.2)
 
-set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 armv7l armv7-a aarch64)
+set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
 
