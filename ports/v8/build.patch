@@ -1,8 +1,27 @@
+diff --git a/config/BUILDCONFIG.gn b/config/BUILDCONFIG.gn
+index 725894d05..c4536336c 100644
+--- a/config/BUILDCONFIG.gn
++++ b/config/BUILDCONFIG.gn
+@@ -131,11 +131,12 @@ declare_args() {
+   is_official_build = false
+
+   # Set to true when compiling with the Clang compiler.
+-  is_clang = current_os != "linux" ||
++  is_clang = (current_os != "linux" ||
+              (current_cpu != "s390x" && current_cpu != "s390" &&
+               current_cpu != "ppc64" && current_cpu != "ppc" &&
+               current_cpu != "mips" && current_cpu != "mips64" &&
+-              current_cpu != "riscv64")
++              current_cpu != "riscv64")) &&
++             (current_os == "win" && getenv("CXX") == "clang")
+
+   # Allows the path to a custom target toolchain to be injected as a single
+   # argument, and set as the default toolchain.
 diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
-index 0c8743726..e6a5ae0b4 100644
+index 1904a2559..e66586c88 100644
 --- a/config/compiler/BUILD.gn
 +++ b/config/compiler/BUILD.gn
-@@ -1545,6 +1545,7 @@ config("default_warnings") {
+@@ -1571,6 +1571,7 @@ config("default_warnings") {
        # Disables.
        "-Wno-missing-field-initializers",  # "struct foo f = {0};"
        "-Wno-unused-parameter",  # Unused function parameters.
@@ -10,7 +29,7 @@ index 0c8743726..e6a5ae0b4 100644
      ]
    }
 
-@@ -1969,8 +1970,17 @@ config("no_incompatible_pointer_warnings") {
+@@ -1987,8 +1988,17 @@ config("no_incompatible_pointer_warnings") {
  # Shared settings for both "optimize" and "optimize_max" configs.
  # IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
  if (is_win) {
@@ -170,10 +189,10 @@ index 428e44ac0..a0d2175ee 100644
    assert(defined(invoker.packages),
           "Variable |packages| must be defined to be a list in pkg_config.")
 diff --git a/util/lastchange.py b/util/lastchange.py
-index 874870ad5..a4fc0be8d 100644
+index 02a36642b..78934f1b0 100644
 --- a/util/lastchange.py
 +++ b/util/lastchange.py
-@@ -191,7 +191,10 @@ def GetGitTopDirectory(source_dir):
+@@ -192,7 +192,10 @@ def GetGitTopDirectory(source_dir):
    Returns:
      The output of "git rev-parse --show-toplevel" as a string
    """

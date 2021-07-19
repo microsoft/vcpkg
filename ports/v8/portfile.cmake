@@ -1,5 +1,5 @@
 
-set(pkgver "9.0.257.17")
+set(pkgver "9.1.269.39")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
@@ -71,7 +71,7 @@ endfunction()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 462fc27a2892702a4d42ffd647789c58ffcee747
+    REF 7d3d62c91f69a702e5aa54c6b4dbbaa883683717
     PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
@@ -79,7 +79,7 @@ message(STATUS "Fetching submodules")
 v8_fetch(
         DESTINATION build
         URL https://chromium.googlesource.com/chromium/src/build.git
-        REF acacc4cc0668cb4dc7f44a3f4430635f438d7478 
+        REF fd86d60f33cbc794537c4da2ef7e298d7f81138e 
         SOURCE ${SOURCE_PATH}
         PATCHES ${CURRENT_PORT_DIR}/build.patch)
 v8_fetch(
@@ -107,7 +107,12 @@ v8_fetch(
         URL https://chromium.googlesource.com/chromium/src/third_party/markupsafe.git
         REF 8f45f5cfa0009d2a70589bcda0349b8cb2b72783
         SOURCE ${SOURCE_PATH})
-
+v8_fetch(
+          DESTINATION tools/clang
+          URL https://chromium.googlesource.com/chromium/src/tools/clang.git
+          REF ba668f13d135f1d01faf9b03c9a05f5877ac3f51
+          SOURCE ${SOURCE_PATH})
+  
 vcpkg_execute_required_process(
         COMMAND ${PYTHON2} build/util/lastchange.py -o build/util/LASTCHANGE
         WORKING_DIRECTORY ${SOURCE_PATH}
@@ -127,6 +132,8 @@ if(UNIX)
     set(UNIX_CURRENT_INSTALLED_DIR ${CURRENT_INSTALLED_DIR})
     set(LIBS "-ldl -lpthread")
     set(REQUIRES ", gmodule-2.0, gobject-2.0, gthread-2.0")
+    set(custom_toolchain "custom_toolchain=\"//build/toolchain/linux/unbundle:default\"")
+    set(host_toolchain "host_toolchain=\"//build/toolchain/linux/unbundle:default\"")
 elseif(WIN32)
     execute_process(COMMAND cygpath "${CURRENT_INSTALLED_DIR}" OUTPUT_VARIABLE UNIX_CURRENT_INSTALLED_DIR)
     string(STRIP ${UNIX_CURRENT_INSTALLED_DIR} UNIX_CURRENT_INSTALLED_DIR)
@@ -149,7 +156,7 @@ message(STATUS "Generating v8 build files. Please wait...")
 
 vcpkg_configure_gn(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS "is_component_build=${is_component_build} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" v8_monolithic=${v8_monolithic} v8_use_external_startup_data=${v8_use_external_startup_data} use_sysroot=false is_clang=false use_custom_libcxx=false v8_enable_verify_heap=false icu_use_data_file=false" 
+    OPTIONS "is_component_build=${is_component_build} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" v8_monolithic=${v8_monolithic} v8_use_external_startup_data=${v8_use_external_startup_data} use_sysroot=false ${custom_toolchain} ${host_toolchain} use_custom_libcxx=false v8_enable_verify_heap=false icu_use_data_file=false" 
     OPTIONS_DEBUG "is_debug=true enable_iterator_debugging=true pkg_config_libdir=\"${UNIX_CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig\""
     OPTIONS_RELEASE "is_debug=false enable_iterator_debugging=false pkg_config_libdir=\"${UNIX_CURRENT_INSTALLED_DIR}/lib/pkgconfig\""
 )
