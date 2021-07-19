@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/embree/embree",
+  "supports": "windows",
   "dependencies": [
     "tbb"
   ]
