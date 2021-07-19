@@ -55,32 +55,32 @@ index 394132a..ebceabe 100644
 -  )
 -endif()
 -source_group(minizip FILES ${MINIZIP_SOURCES})
-+# file(GLOB MINIZIP_SOURCES 
-+#   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/*.c
-+#   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/*.h
-+#   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/aes/*.c
-+#   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/aes/*.h
-+# )
-+
-+# FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/minizip/zip.h
-+#           ${CMAKE_CURRENT_SOURCE_DIR}/minizip/unzip.h
-+#           ${CMAKE_CURRENT_SOURCE_DIR}/minizip/ioapi_mem.h
-+#      DESTINATION
-+#           ${CMAKE_CURRENT_BINARY_DIR}/zipper
-+# )
-+
-+# list(REMOVE_ITEM MINIZIP_SOURCES
-+# ${CMAKE_CURRENT_SOURCE_DIR}/minizip/minizip.c
-+# ${CMAKE_CURRENT_SOURCE_DIR}/minizip/miniunz.c
-+# )
-+
-+# if(UNIX AND NOT CYGWIN)
-+#   list(REMOVE_ITEM MINIZIP_SOURCES
-+#   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/iowin32.c
-+#   )
-+# endif()
-+# source_group(minizip FILES ${MINIZIP_SOURCES})
-
+if(0)
+	+ file(GLOB MINIZIP_SOURCES 
+	+   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/*.c
+	+   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/*.h
+	+   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/aes/*.c
+	+   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/aes/*.h
+	+ )
+	+
+	+ FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/minizip/zip.h
+	+           ${CMAKE_CURRENT_SOURCE_DIR}/minizip/unzip.h
+	+           ${CMAKE_CURRENT_SOURCE_DIR}/minizip/ioapi_mem.h
+	+      DESTINATION
+	+           ${CMAKE_CURRENT_BINARY_DIR}/zipper
+	+ )
+	+
+	+ list(REMOVE_ITEM MINIZIP_SOURCES
+	+ ${CMAKE_CURRENT_SOURCE_DIR}/minizip/minizip.c
+	+ ${CMAKE_CURRENT_SOURCE_DIR}/minizip/miniunz.c
+	+ )
+	+
+	+ if(UNIX AND NOT CYGWIN)
+	+   list(REMOVE_ITEM MINIZIP_SOURCES
+	+   ${CMAKE_CURRENT_SOURCE_DIR}/minizip/iowin32.c
+	+   )
+	+ endif()
+	+ source_group(minizip FILES ${MINIZIP_SOURCES})
 
  file(GLOB ZIPPER_SOURCES
 @@ -332,7 +341,7 @@ file(GLOB TEST_SOURCES
@@ -88,7 +88,7 @@ index 394132a..ebceabe 100644
  option(BUILD_SHARED_VERSION "Build the shared version of the library." OFF)
  if (BUILD_SHARED_VERSION)
 -  add_library (${ZIPPER_LIBRARY} SHARED ${ZIPPER_SOURCES} ${MINIZIP_SOURCES} )
-+  add_library (${ZIPPER_LIBRARY} SHARED ${ZIPPER_SOURCES} ) #${MINIZIP_SOURCES} )
++  add_library (${ZIPPER_LIBRARY} SHARED ${ZIPPER_SOURCES} )
 
    if (UNIX)
      SET_TARGET_PROPERTIES(${ZIPPER_LIBRARY} PROPERTIES
@@ -97,6 +97,6 @@ index 394132a..ebceabe 100644
  option(BUILD_STATIC_VERSION "Build the static version of the library." ON)
  if (BUILD_STATIC_VERSION)
 -  add_library (${ZIPPER_LIBRARY}-static STATIC ${ZIPPER_SOURCES} ${MINIZIP_SOURCES})
-+  add_library (${ZIPPER_LIBRARY}-static STATIC ${ZIPPER_SOURCES}) #${MINIZIP_SOURCES})
++  add_library (${ZIPPER_LIBRARY}-static STATIC ${ZIPPER_SOURCES})
 
    target_link_libraries(${ZIPPER_LIBRARY}-static ${LIBZ_LIBRARY} ${EXTRA_LIBS})
