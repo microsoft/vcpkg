@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e051efa..9d65174 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,6 @@ project (pistache
+ 
+ include(GNUInstallDirs)
+ 
+-add_compile_options(-Wall -Wconversion -pedantic -Wextra -Wno-missing-field-initializers)
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/CMakeModules)
+ 
+ include(CheckAtomic)
