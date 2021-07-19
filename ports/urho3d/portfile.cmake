@@ -49,7 +49,7 @@ endif()
 # Handle tools
 if ("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
     vcpkg_copy_tools(TOOL_NAMES AssetImporter OgreImporter PackageTool RampGenerator ScriptCompiler SpritePacker
-        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/tool"
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/urho3d"
         AUTO_CLEAN
     )
     
@@ -78,7 +78,16 @@ if ("examples" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
+if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/luajit${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    list(APPEND LUA_EXES "luajit")
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/lua${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    list(APPEND LUA_EXES "lua")
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/luac${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    list(APPEND LUA_EXES "luac")
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${lua} AUTO_CLEAN)
 
 # Cleanup
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
