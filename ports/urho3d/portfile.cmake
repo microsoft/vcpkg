@@ -87,7 +87,7 @@ endif()
 if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/luac${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     list(APPEND LUA_EXES "luac")
 endif()
-vcpkg_copy_tools(TOOL_NAMES ${lua} AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES ${LUA_EXES} AUTO_CLEAN)
 
 # Cleanup
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
