@@ -55,7 +55,7 @@ if ("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/tool" "${CURRENT_PACKAGES_DIR}/debug/bin/tool")
     
-    vcpkg_copy_tools(TOOL_NAMES luajit Urho3DPlayer AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES Urho3DPlayer AUTO_CLEAN)
     
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/Urho3DPlayer_d${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 endif()
@@ -77,6 +77,8 @@ if ("examples" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
         endforeach()
     endif()
 endif()
+
+vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 
 # Cleanup
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
