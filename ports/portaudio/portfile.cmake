@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/PortAudio/portaudio.git
+    REPO PortAudio/portaudio
     REF 147dd722548358763a8b649b3e4b41dfffbcfbb6
-    TAG v19.7.0
+    SHA512 0f56e5f5b004f51915f29771b8fc1fe886f1fef5d65ab5ea1db43f43c49917476b9eec14b36aa54d3e9fb4d8bdf61e68c79624d00b7e548d4c493395a758233a
     PATCHES
         fix-library-can-not-be-found.patch
 )
@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    	-DPA_USE_DS=ON
+        -DPA_USE_DS=ON
         -DPA_USE_WASAPI=ON
         -DPA_USE_WDMKS=ON
         -DPA_USE_WMME=ON
