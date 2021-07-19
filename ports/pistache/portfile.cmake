@@ -1,29 +1,30 @@
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(NOT VCPKG_TARGET_IS_LINUX)
     message(FATAL_ERROR "${PORT} currently only supports Linux platform.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oktal/pistache
-    REF 4dc9e3ef9a1b953a62e5fadbed88e72b4b3734de
-    SHA512 427b6a6e7200e5f91ce8737cd1cc5d6cd689025033c85979c96f0ece64ae05d9c6839a936d7d6015b0e1065dc72362f6f70ab588ea7cae7aa718dfe5cd288554
+    REPO pistacheio/pistache
+    REF 9dc080b9ebbe6fc1726b45e9db1550305938313e #2021-03-31
+    SHA512 b55c395fb98af85317590ed2502564af5e92e30a35618132568c6ab589a6d0971570ad20ddbd1f49d9dd8cf54692866c69cfc1350c6fdccf9efb039aacf153b4
     HEAD_REF master
+    PATCHES
+        fix-debug-empty.patch
+        disable-warnings.patch
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
+    SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/RapidJSON)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
