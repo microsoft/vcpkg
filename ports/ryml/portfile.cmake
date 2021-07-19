@@ -1,7 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_fail_port_install(
-    ON_ARCH "arm" "arm64"
     ON_TARGET "OSX"
 )
 
@@ -9,19 +8,19 @@ vcpkg_fail_port_install(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/rapidyaml
-    REF ec23e87007ccc39c6132345c154b267de9381706
-    SHA512 7d349c0dd58da814dad02de88a5c54394ef8d77e7db3014fb5fb684d519e35604d45f5d16db5ed6ed8ccb52b1ed4a4dbc91e717a091b54b04dc18901800e12c1
+    REF a1d5ed7c8ace0ab14340ba19dfed60f280eddac0
+    SHA512 27a7b7a3ee2f6bb63600907fbc2307b7da13a13b88605c0e7b628fe26878b120d0df9bc221d7d495c5212543db00f0b570f351e7e3e3bebb0c785a676a4d2469
     HEAD_REF master
     PATCHES cmake-fix.patch
 )
 
-set(COMMIT_HASH a0f0c17bfc9a9a91cc72891539b513c129c6d122)
+set(CM_COMMIT_HASH c6de791cd37ea3dc6bcb967819cb74b4f054a8f2)
 
 # Get cmake scripts for rapidyaml
 vcpkg_download_distfile(CMAKE_ARCHIVE
-    URLS "https://github.com/biojppm/cmake/archive/${COMMIT_HASH}.zip"
-    FILENAME "cmake-${COMMIT_HASH}.zip"
-    SHA512 4fbc711f3120501fa40733c3b66e34cd6a7e1b598b1378fbb59d1a87c88290a03d021f5176634089da41682fd918d7e27c6c146052dec54d7e956be15f12744f
+    URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
+    FILENAME "cmake-${CM_COMMIT_HASH}.zip"
+    SHA512 2d3f2d8d207f7d9c583b1f0bb35a1f4e0ed571ecdf7d5e745467f4f39cd82b860fc84d220c48a2d01e0ab805ce750133b73006b2f19920c95b1f85c7431459e3
 )
 
 vcpkg_extract_source_archive_ex(
@@ -67,4 +66,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL
     "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/ryml" RENAME copyright)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

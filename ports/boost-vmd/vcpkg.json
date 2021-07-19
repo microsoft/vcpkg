@@ -1,6 +1,6 @@
 {
   "name": "boost-vmd",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost vmd module",
   "homepage": "https://github.com/boostorg/vmd",
   "dependencies": [

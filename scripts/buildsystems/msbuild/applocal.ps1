@@ -90,8 +90,10 @@ function resolve([string]$targetBinary) {
         $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
     } elseif (Get-Command "llvm-objdump" -ErrorAction SilentlyContinue) {
         $a = $(llvm-objdump -p $targetBinary| ? { $_ -match "^ {4}DLL Name: .*\.dll" } | % { $_ -replace "^ {4}DLL Name: ","" })
+    } elseif (Get-Command "objdump" -ErrorAction SilentlyContinue) {
+        $a = $(objdump -p $targetBinary| ? { $_ -match "^\tDLL Name: .*\.dll" } | % { $_ -replace "^\tDLL Name: ","" })
     } else {
-        Write-Error "Neither dumpbin nor llvm-objdump could be found. Can not take care of dll dependencies."
+        Write-Error "Neither dumpbin, llvm-objdump nor objdump could be found. Can not take care of dll dependencies."
     }
     $a | % {
         if ([string]::IsNullOrEmpty($_)) {

@@ -1,6 +1,6 @@
 {
   "name": "boost-compute",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost compute module",
   "homepage": "https://github.com/boostorg/compute",
   "dependencies": [
