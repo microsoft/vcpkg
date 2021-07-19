@@ -2,7 +2,12 @@
 	"name": "zipper",
 	"version-semver": "1.0.2",
 	"description": "C++ wrapper around minizip compression library",
+       "homepage": "https://github.com/sebastiandev/zipper",
 	"dependencies": [
+	{
+	  "name": "vcpkg-cmake",
+	  "host": true
+	},
 		"minizip"
 	]
 }
