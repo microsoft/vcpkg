@@ -8,7 +8,6 @@ vcpkg_from_github(
         add-gcc-version-check.patch
         fix-check-sse.patch
         fix-find-qhull.patch
-        fix-link-libpng.patch
         fix-numeric-literals-flag.patch
         pcl_config.patch
         pcl_utils.patch
