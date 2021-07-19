@@ -10,6 +10,7 @@ vcpkg_from_github(
         shared_libs.patch
         externalproject.patch
         add_options.patch
+        fix-install.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -77,37 +78,16 @@ if ("examples" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
-# Handle jit
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/jit" "${CURRENT_PACKAGES_DIR}/share/${PORT}/jit")
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/jit")
-
-# Handle batches
-if (VCPKG_TARGET_IS_WINDOWS)
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB URHO3D_BATCHES "${CURRENT_PACKAGES_DIR}/bin/*.bat")
-        foreach (URHO3D_BATCH ${URHO3D_BATCHES})
-            file(COPY "${URHO3D_BATCH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-            file(REMOVE "${URHO3D_BATCH}")
-        endforeach()
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB URHO3D_BATCHES "${CURRENT_PACKAGES_DIR}/debug/bin/*.bat")
-        foreach (URHO3D_BATCH ${URHO3D_BATCHES})
-            file(REMOVE "${URHO3D_BATCH}")
-        endforeach()
-    endif()
-endif()
-
+# Cleanup
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+# Fix includes
 list(APPEND SDL_RELATED_HEADERS
     "${CURRENT_PACKAGES_DIR}/include/Urho3D/Input/InputConstants.h"
-    "${CURRENT_PACKAGES_DIR}/include/Urho3D/Input/NamedPipe.h"
-    "${CURRENT_PACKAGES_DIR}/include/Urho3D/Input/RWOpsWrapper.h"
+    "${CURRENT_PACKAGES_DIR}/include/Urho3D/IO/NamedPipe.h"
+    "${CURRENT_PACKAGES_DIR}/include/Urho3D/IO/RWOpsWrapper.h"
 )
 foreach (SDL_RELATED_HEADER ${SDL_RELATED_HEADERS})
     vcpkg_replace_string("${SDL_RELATED_HEADER}"
@@ -116,27 +96,8 @@ foreach (SDL_RELATED_HEADER ${SDL_RELATED_HEADERS})
     )
 endforeach()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Urho3D/Resources")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Urho3D/Resources/Autoload" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Autoload")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Urho3D/Resources/CoreData" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/CoreData")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Urho3D/Resources/Data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Data")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Urho3D/Resources")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Resources")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Resources/Autoload" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Autoload")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Resources/CoreData" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/CoreData")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Resources/Data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Data")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Resources")
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Urho3D/LuaScript/pkgs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Urho3D/ThirdParty/LuaJIT/jit")
-
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/docs" "${CURRENT_PACKAGES_DIR}/share/${PORT}/docs")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/scripts" "${CURRENT_PACKAGES_DIR}/share/${PORT}/scripts")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/rakefile" "${CURRENT_PACKAGES_DIR}/share/${PORT}/rakefile")
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
