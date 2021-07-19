@@ -44,6 +44,27 @@
         "nghttp2"
       ]
     },
+    "idn": {
+      "description": "Default IDN support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "winidn"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "idn2"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
     "idn2": {
       "description": "idn2 support (libidn2)",
       "dependencies": [
@@ -134,6 +155,9 @@
     },
     "tool": {
       "description": "Builds curl executable"
+    },
+    "winidn": {
+      "description": "WinIDN support"
     },
     "winssl": {
       "description": "Legacy name for schannel",

@@ -13,6 +13,7 @@ vcpkg_from_github(
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
         0020-fix-pc-file.patch
+        0021-normaliz.patch # for mingw on case-sensitive file system
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -26,6 +27,10 @@ endforeach()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+endif()
+
+if("winidn" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature winidn is not supported on non-Windows platforms.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -42,6 +47,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         schannel    CMAKE_USE_SCHANNEL
         sectransp   CMAKE_USE_SECTRANSP
         idn2        USE_LIBIDN2
+        winidn      USE_WIN32_IDN
 
     INVERTED_FEATURES
         non-http    HTTP_ONLY
