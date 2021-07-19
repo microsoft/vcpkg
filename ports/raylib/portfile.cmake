@@ -30,6 +30,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         use-audio USE_AUDIO
 )
 
+if(VCPKG_TARGET_IS_MINGW)
+    set(DEBUG_ENABLE_SANITIZERS OFF)
+else()
+    set(DEBUG_ENABLE_SANITIZERS ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -41,8 +47,8 @@ vcpkg_configure_cmake(
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DENABLE_ASAN=ON
-        -DENABLE_UBSAN=ON
+        -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
+        -DENABLE_UBSAN=${DEBUG_ENABLE_SANITIZERS}
         -DENABLE_MSAN=OFF
     OPTIONS_RELEASE
         -DENABLE_ASAN=OFF
