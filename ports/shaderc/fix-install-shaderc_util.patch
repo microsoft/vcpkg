@@ -1,12 +1,12 @@
 diff --git a/libshaderc_util/CMakeLists.txt b/libshaderc_util/CMakeLists.txt
-index ec0e8fb..53e6fe7 100644
+index 99ce3c4..4926203 100644
 --- a/libshaderc_util/CMakeLists.txt
 +++ b/libshaderc_util/CMakeLists.txt
-@@ -31,6 +31,13 @@ target_link_libraries(shaderc_util PRIVATE
+@@ -49,6 +49,13 @@ target_link_libraries(shaderc_util PRIVATE
    glslang OSDependent OGLCompiler HLSL glslang SPIRV
    SPIRV-Tools-opt ${CMAKE_THREAD_LIBS_INIT})
  
-+if(SHADERC_ENABLE_INSTALL)
++if(SHADERC_ENABLE_INSTALL AND NOT BUILD_SHARED_LIBS)
 +  install(TARGETS shaderc_util
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
