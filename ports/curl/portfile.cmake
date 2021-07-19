@@ -12,6 +12,7 @@ vcpkg_from_github(
         0007_disable_tool_export_curl_target.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
+        0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
 )
@@ -53,6 +54,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         non-http    HTTP_ONLY
 )
 
+set(OPTIONS_RELEASE "")
+set(OPTIONS_DEBUG "")
+if("idn2" IN_LIST FEATURES)
+    x_vcpkg_pkgconfig_get_modules(PREFIX libidn2 MODULES libidn2 LIBS)
+    list(APPEND OPTIONS_RELEASE "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_RELEASE}")
+    list(APPEND OPTIONS_DEBUG   "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_DEBUG}")
+endif()
+
 set(SECTRANSP_OPTIONS "")
 if("sectransp" IN_LIST FEATURES)
     set(SECTRANSP_OPTIONS -DCURL_CA_PATH=none)
@@ -81,6 +90,10 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
         -DCURL_CA_FALLBACK=ON
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
