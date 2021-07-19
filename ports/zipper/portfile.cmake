@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
