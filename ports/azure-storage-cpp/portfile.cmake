@@ -1,4 +1,4 @@
-message(WARNING "azure-storage-cpp is no longer actively developed. Instead, users should migrate to the new sdk: https://github.com/Azure/azure-sdk-for-cpp/releases")
+message(WARNING "azure-storage-cpp is no longer actively developed. Instead, users should migrate to the new sdk:azure-core-cpp")
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
