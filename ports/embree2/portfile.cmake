@@ -10,11 +10,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/common/cmake/FindTBB.cmake")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(EMBREE_STATIC_LIB ON)
-else()
-    set(EMBREE_STATIC_LIB OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EMBREE_STATIC_LIB)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(EMBREE_STATIC_RUNTIME ON)
