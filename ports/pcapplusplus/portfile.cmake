@@ -6,11 +6,6 @@ vcpkg_from_github(
     REF v21.05
     SHA512 35227707a48f0e41469247e0993c4aabef7f168a285354e19386b554e0e3d51dc6bf8b128658e16d50e0b6e6e0a029322dee1b4b241e84b8603e2cf73c7f3532
     HEAD_REF master
-    PATCHES
-        Common++.vcxproj.template.patch
-        Packet++.vcxproj.template.patch
-        Pcap++.vcxproj.template.patch
-        LightPcapNg.vcxproj.template.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -55,6 +50,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LICENSE_SUBPATH LICENSE
     )
 
+    # Lib
+    file(GLOB LIB_FILES_RELEASE "${SOURCE_PATH}/Dist/**/Release/*")
+    file(
+        INSTALL ${LIB_FILES_RELEASE}
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+    file(GLOB LIB_FILES_RELEASE "${SOURCE_PATH}/Dist/**/Debug/*")
+    file(
+        INSTALL ${LIB_FILES_RELEASE}
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+
     file(
         REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/tools" "${CURRENT_PACKAGES_DIR}/lib/LightPcapNg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/LightPcapNg.lib"
     )
@@ -80,14 +87,14 @@ else()
     # Lib
     file(GLOB LIB_FILES "${SOURCE_PATH}/Dist/*.a")
     file(
-	INSTALL ${LIB_FILES}
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+        INSTALL ${LIB_FILES}
+	    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 
     # Include
     file(GLOB HEADER_FILES "${SOURCE_PATH}/Dist/header/*.h")
     file(
-	INSTALL ${HEADER_FILES}
+        INSTALL ${HEADER_FILES}
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 
