@@ -9,6 +9,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF

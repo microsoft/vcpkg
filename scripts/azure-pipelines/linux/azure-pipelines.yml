@@ -14,6 +14,9 @@ jobs:
     value: /mnt/vcpkg-ci
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - bash: df -h

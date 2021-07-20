@@ -1,11 +1,10 @@
 {
   "name": "boost-crc",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost crc module",
   "homepage": "https://github.com/boostorg/crc",
   "dependencies": [
     "boost-array",
-    "boost-compatibility",
     "boost-config",
     "boost-integer",
     "boost-type-traits",

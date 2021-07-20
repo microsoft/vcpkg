@@ -12,6 +12,26 @@
   "features": {
     "dynamic-arch": {
       "description": "Support for multiple targets in a single library"
+    },
+    "simplethread": {
+      "description": "Use simple thread",
+      "dependencies": [
+        {
+          "name": "openblas",
+          "features": [
+            "threads"
+          ]
+        }
+      ]
+    },
+    "threads": {
+      "description": "Use a threading backend",
+      "dependencies": [
+        {
+          "name": "pthread",
+          "platform": "!windows & !uwp"
+        }
+      ]
     }
   }
 }
