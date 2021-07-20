@@ -8,12 +8,17 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 83b1b09d6be776f7e15a748402f0c2f072459921de61a92731daf5171bd1f91a829fbeb6e10a489b92fba0297f6272e7bb6b8f07830c387bb29ccdbc7b3731f3
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(STATIC_PATCH fix_boost_static_link.patch)
+endif()
+
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
     PATCHES
         fix_dependency.patch
+        ${STATIC_PATCH}
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
