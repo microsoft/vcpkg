@@ -51,7 +51,8 @@ else()
         list(APPEND configs "debug")
         execute_process(
             COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug"
-            WORKING_DIRECTORY ${BUILDTREE_PATH}
+            WORKING_DIRECTORY "${BUILDTREE_PATH}"
+
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
             RESULT_VARIABLE CHAKRA_BUILD_SH_RES
