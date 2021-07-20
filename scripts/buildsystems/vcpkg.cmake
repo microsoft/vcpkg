@@ -389,11 +389,11 @@ function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
         list(REVERSE vcpkg_paths) # Debug build: Put Debug paths before Release paths.
     endif()
     if(VCPKG_PREFER_SYSTEM_LIBS)
-        list(APPEND ${list} ${vcpkg_paths})
+        list(APPEND "${list}" "${vcpkg_paths}")
     else()
-        list(INSERT ${list} 0 ${vcpkg_paths}) # CMake 3.15 is required for list(PREPEND ...).
+        list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
     endif()
-    set(${list} "${${list}}" PARENT_SCOPE)
+    set("${list}" "${${list}}" PARENT_SCOPE)
 endfunction()
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_PREFIX_PATH "")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
