@@ -46,10 +46,6 @@ else()
         message(WARNING "This port requires Clang to build.")
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE)
-        message(FATAL_ERROR "VCPKG_BUILD_TYPE is not defined")
-    endif()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND configs "debug")
         execute_process(
