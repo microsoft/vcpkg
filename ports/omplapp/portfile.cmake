@@ -47,16 +47,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/ompl/cmake)
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
 vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/include/ompl
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles
-    ${CURRENT_PACKAGES_DIR}/lib/ompl.lib
-    ${CURRENT_PACKAGES_DIR}/share/ompl
-    ${CURRENT_PACKAGES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/debug/bin
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/include/ompl"
+    "${CURRENT_PACKAGES_DIR}/bin"
+    "${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/lib/ompl.lib"
+    "${CURRENT_PACKAGES_DIR}/share/ompl"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
