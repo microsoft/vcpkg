@@ -51,7 +51,8 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    amalgamation BOTAN_AMALGAMATION
+    FEATURES
+        amalgamation BOTAN_AMALGAMATION
 )
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)

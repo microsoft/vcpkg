@@ -7,10 +7,11 @@ vcpkg_from_bitbucket(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cpprestjson-archive"  BUILD_CPPRESTJSON_ARCHIVE
-    "rapidjson-archive"    BUILD_RAPIDJSON_ARCHIVE
-    "pugixml-archive"      BUILD_PUGIXML_ARCHIVE
-    "rapidyaml-archive"    BUILD_RAPIDYAML_ARCHIVE
+    FEATURES
+        "cpprestjson-archive"  BUILD_CPPRESTJSON_ARCHIVE
+        "rapidjson-archive"    BUILD_RAPIDJSON_ARCHIVE
+        "pugixml-archive"      BUILD_PUGIXML_ARCHIVE
+        "rapidyaml-archive"    BUILD_RAPIDYAML_ARCHIVE
 )
 
 vcpkg_configure_cmake(

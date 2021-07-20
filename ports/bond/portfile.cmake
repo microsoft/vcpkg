@@ -13,9 +13,9 @@ vcpkg_from_github(
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
-    URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
-    FILENAME "gbc-${BOND_VER}-amd64.zip"
-    SHA512 41a4e01a9a0f6246a3c07f516f2c0cfc8a837eff2166c2bb787877e409d6f55eeb6084e63aabc3502492775a3fa7e381bf37fde0bdfced50a9d0b39dfaca7dfd
+        URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
+        FILENAME "gbc-${BOND_VER}-amd64.zip"
+        SHA512 41a4e01a9a0f6246a3c07f516f2c0cfc8a837eff2166c2bb787877e409d6f55eeb6084e63aabc3502492775a3fa7e381bf37fde0bdfced50a9d0b39dfaca7dfd
     )
 
     # Clear the generator to prevent it from updating
@@ -37,20 +37,21 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  bond-over-grpc BOND_ENABLE_GRPC
+    FEATURES
+        bond-over-grpc BOND_ENABLE_GRPC
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    -DBOND_LIBRARIES_ONLY=TRUE
-    -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
-    -DBOND_SKIP_GBC_TESTS=TRUE
-    -DBOND_ENABLE_COMM=FALSE
-    -DBOND_FIND_RAPIDJSON=TRUE
-    -DBOND_STACK_OPTIONS=--allow-different-user
-    ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBOND_LIBRARIES_ONLY=TRUE
+        -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
+        -DBOND_SKIP_GBC_TESTS=TRUE
+        -DBOND_ENABLE_COMM=FALSE
+        -DBOND_FIND_RAPIDJSON=TRUE
+        -DBOND_STACK_OPTIONS=--allow-different-user
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

@@ -15,26 +15,33 @@ vcpkg_build_ninja(
 Only build the specified targets.
 #]===]
 
+function(z_vcpkg_build_ninja_build config targets)
+    message(STATUS "Building (${config})...")
+    vcpkg_execute_build_process(
+        COMMAND "${NINJA}" -C "${CURRENT_BUILDTREES_DIR}/${config}" ${targets}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "build-${config}"
+    )
+endfunction()
+
+
 function(vcpkg_build_ninja)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vbn "" "" "TARGETS")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "TARGETS")
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    if(NOT DEFINED arg_TARGETS)
+        set(arg_TARGETS "")
+    endif()
 
     vcpkg_find_acquire_program(NINJA)
 
-    function(build CONFIG)
-        message(STATUS "Building (${CONFIG})...")
-        vcpkg_execute_build_process(
-            COMMAND "${NINJA}" -C "${CURRENT_BUILDTREES_DIR}/${CONFIG}" ${_vbn_TARGETS}
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME build-${CONFIG}
-        )
-    endfunction()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        build(${TARGET_TRIPLET}-dbg)
+        z_vcpkg_build_ninja_build("${TARGET_TRIPLET}-dbg" "${arg_TARGETS}")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        build(${TARGET_TRIPLET}-rel)
+        z_vcpkg_build_ninja_build("${TARGET_TRIPLET}-rel" "${arg_TARGETS}")
     endif()
 endfunction()

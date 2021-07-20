@@ -1,0 +1,13 @@
+{
+  "name": "dmlc",
+  "version-date": "2019-08-12",
+  "port-version": 6,
+  "description": "DMLC-Core is the backbone library to support all DMLC projects, offers the bricks to build efficient and scalable distributed machine learning libraries.",
+  "homepage": "https://github.com/dmlc/dmlc-core",
+  "supports": "!uwp",
+  "features": {
+    "openmp": {
+      "description": "Build with openmp"
+    }
+  }
+}

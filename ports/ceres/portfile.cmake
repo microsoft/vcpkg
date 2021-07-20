@@ -27,11 +27,12 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "suitesparse"       SUITESPARSE
-    "cxsparse"          CXSPARSE
-    "lapack"            LAPACK
-    "eigensparse"       EIGENSPARSE
-    "tools"             GFLAGS
+    FEATURES
+        "suitesparse"       SUITESPARSE
+        "cxsparse"          CXSPARSE
+        "lapack"            LAPACK
+        "eigensparse"       EIGENSPARSE
+        "tools"             GFLAGS
 )
 
 vcpkg_configure_cmake(

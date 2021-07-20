@@ -1,9 +1,0 @@
-Source: cppzmq
-Version: 4.7.1
-Port-Version: 1
-Build-Depends: zeromq
-Homepage: https://github.com/zeromq/cppzmq
-Description: lightweight messaging kernel, C++ bindings
-
-Feature: draft
-Description: Build and install draft
