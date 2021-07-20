@@ -68,7 +68,7 @@ function(vcpkg_copy_tools)
     endforeach()
 
     if(arg_AUTO_CLEAN)
-        vcpkg_clean_executables_in_bin(FILE_NAMES "${arg_TOOL_NAMES}")
+        vcpkg_clean_executables_in_bin(FILE_NAMES ${arg_TOOL_NAMES})
     endif()
 
     vcpkg_copy_tool_dependencies("${arg_DESTINATION}")
