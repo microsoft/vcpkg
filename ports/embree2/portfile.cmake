@@ -11,12 +11,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/common/cmake/FindTBB.cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EMBREE_STATIC_LIB)
-
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(EMBREE_STATIC_RUNTIME ON)
-else()
-    set(EMBREE_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EMBREE_STATIC_RUNTIME)
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -54,5 +49,4 @@ endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/embree2")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/embree2/doc")
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
