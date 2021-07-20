@@ -130,6 +130,7 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_install_nmake.cmake")
     include("${SCRIPTS}/cmake/vcpkg_install_qmake.cmake")
     include("${SCRIPTS}/cmake/vcpkg_internal_get_cmake_vars.cmake")
+    include("${SCRIPTS}/cmake/vcpkg_list.cmake")
     include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 

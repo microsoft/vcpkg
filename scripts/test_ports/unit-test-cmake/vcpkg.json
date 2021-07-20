@@ -1,0 +1,18 @@
+{
+  "name": "unit-test-cmake",
+  "version-string": "0",
+  "description": "Ensures that the CMake scripts are unit tested.",
+  "supports": "x64",
+  "default-features": [
+    "function-arguments",
+    "list"
+  ],
+  "features": {
+    "function-arguments": {
+      "description": "Test the z_vcpkg_function_arguments function"
+    },
+    "list": {
+      "description": "Test the vcpkg_list function"
+    }
+  }
+}

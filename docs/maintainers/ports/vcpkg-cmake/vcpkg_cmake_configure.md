@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
+    [MAYBE_UNUSED_VARIABLES
+        <variable-name>...]
 )
 ```
 
@@ -55,6 +57,11 @@ This also disables the `CMAKE_DISABLE_SOURCE_CHANGES` option.
 By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
+
+This function makes certain that all options passed in are used by the
+underlying CMake build system. If there are options that might be unused,
+perhaps on certain platforms, pass those variable names to
+`MAYBE_UNUSED_VARIABLES`.
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
