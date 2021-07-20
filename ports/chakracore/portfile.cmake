@@ -72,7 +72,6 @@ else()
             ECHO_ERROR_VARIABLE
         )
     endif()
-    
 endif()
 
 file(INSTALL
