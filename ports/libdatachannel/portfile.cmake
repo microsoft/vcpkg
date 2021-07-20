@@ -34,4 +34,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libdatachannel)
 vcpkg_fixup_pkgconfig()
 
+file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake DATACHANNEL_CONFIG)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(OpenSSL)
+find_dependency(libjuice)
+${DATACHANNEL_CONFIG}")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
