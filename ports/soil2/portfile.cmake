@@ -11,7 +11,6 @@ file(
     ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
     ${CMAKE_CURRENT_LIST_DIR}/LICENSE
     ${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/soil2ConfigVersion.cmake.in
     DESTINATION ${SOURCE_PATH}
 )
 
