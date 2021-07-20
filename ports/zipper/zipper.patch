@@ -8,12 +8,9 @@ index 394132a..ebceabe 100644
 
 +set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 +
-+find_package(MiniZip REQUIRED)
++find_package(minizip CONFIG REQUIRED)
 +
-+message("yop: ${MINIZIP_INCLUDE_DIR}")
-+
-+include_directories(${MINIZIP_INCLUDE_DIR})
-+link_libraries(${MINIZIP_LIBRARIES})
++target_link_libraries(main PRIVATE minizip::minizip)
 +
  include (CMakeTestCCompiler)
  include (CheckCSourceCompiles)
@@ -22,8 +19,6 @@ index 394132a..ebceabe 100644
  include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/zipper)
--include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/minizip)
-You can remove this line directly if it is not needed.
 
  # allow definition of extra include dirs
  if (EXTRA_INCLUDE_DIRS)
@@ -81,6 +76,7 @@ if(0)
 	+   )
 	+ endif()
 	+ source_group(minizip FILES ${MINIZIP_SOURCES})
+endif()
 
  file(GLOB ZIPPER_SOURCES
 @@ -332,7 +341,7 @@ file(GLOB TEST_SOURCES
