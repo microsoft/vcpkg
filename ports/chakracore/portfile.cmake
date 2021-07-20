@@ -42,9 +42,8 @@ else()
         set(CHAKRACORE_TARGET_ARCH x86)
     endif()
 
-    vcpkg_find_acquire_program(CLANG)
-    if(CLANG MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Clang is required.")
+    if (VCPKG_TARGET_IS_LINUX)
+        message(WARNING "This port requires Clang to build.")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE)
