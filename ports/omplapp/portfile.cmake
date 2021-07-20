@@ -45,8 +45,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/ompl/cmake)
 
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ompl_benchmark.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/ompl_benchmark.exe)
+vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/ompl
     ${CURRENT_PACKAGES_DIR}/bin
