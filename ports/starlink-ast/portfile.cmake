@@ -11,7 +11,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}    
 )
 
-set(CONFIGURE_OPTIONS "--disable-shared --without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
+set(CONFIGURE_OPTIONS "--without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
 
 if ("yaml" IN_LIST FEATURES)
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-yaml")
@@ -24,9 +24,6 @@ if ("pthreads" IN_LIST FEATURES)
 else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-pthreads")
 endif()
-
-list( APPEND CONFIGURE_OPTIONS -DCMINPACK_NO_DLL)
-
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=x86_64-w64-mingw32")
