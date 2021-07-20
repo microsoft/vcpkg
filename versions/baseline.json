@@ -77,8 +77,8 @@
       "port-version": 0
     },
     "angle": {
-      "baseline": "2020-05-15",
-      "port-version": 2
+      "baseline": "chromium_4472",
+      "port-version": 0
     },
     "antlr4": {
       "baseline": "4.9.1",
