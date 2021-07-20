@@ -81,8 +81,7 @@
           "features": [
             "orm"
           ]
-        },
-        "redis"
+        }
       ]
     },
     "sqlite3": {
