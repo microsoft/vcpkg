@@ -8,21 +8,19 @@ vcpkg_from_github(
         cmake_policy.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
+file(REMOVE "${SOURCE_PATH}/common/cmake/FindTBB.cmake")
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(EMBREE_STATIC_RUNTIME ON)
-else()
-    set(EMBREE_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EMBREE_STATIC_LIB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EMBREE_STATIC_RUNTIME)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
+        -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         "-DTBB_LIBRARIES=TBB::tbb"
         "-DTBB_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include"
@@ -34,19 +32,21 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 # these cmake files do not seem to contain helpful configuration for find libs, just remove them
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/embree-config.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/embree-config-version.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/embree-config.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/embree-config-version.cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/embree-config.cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/embree-config-version.cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/embree-config.cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/embree-config-version.cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/models)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/models)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/models")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/models")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/embree2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree2/doc)
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/embree2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/embree2/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/embree2/copyright)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/embree2")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/embree2/doc")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
