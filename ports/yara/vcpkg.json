@@ -6,5 +6,10 @@
   "dependencies": [
     "jansson",
     "openssl"
-  ]
+  ],
+  "features": {
+    "spectre": {
+      "description" : "Enables spectre mitigation"
+    }
+  }
 }

@@ -5,11 +5,13 @@ if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
 endif()
 
+if(${YARA_ENABLE_SPECTRE_MITIGATION})
+  add_compile_options(/Qspectre)
+endif()
 
 find_package(OpenSSL REQUIRED)
 find_path(JANSSON_INCLUDE_DIR NAMES jansson.h)
 find_library(JANSSON_LIBRARY NAMES jansson)
-
 
 include_directories(
   .

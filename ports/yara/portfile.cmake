@@ -8,12 +8,23 @@ vcpkg_from_github(
   HEAD_REF dev
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        spectre YARA_ENABLE_SPECTRE_MITIGATION
+)
+
+if("spectre" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature 'spectre' is only supported on windows.")
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS_DEBUG 
+  OPTIONS
+      ${FEATURE_OPTIONS}
+  OPTIONS_DEBUG
       -DDISABLE_INSTALL_HEADERS=ON 
       -DDISABLE_INSTALL_TOOLS=ON
 )
