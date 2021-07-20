@@ -6,8 +6,6 @@ get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui
     INTERFACE_INCLUDE_DIRECTORIES
 )
 
-set(CMAKE_DEBUG_POSTFIX d)
-
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
