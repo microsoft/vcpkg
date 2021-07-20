@@ -41,7 +41,9 @@
       "dependencies": [
         {
           "name": "drogon",
-          "features": [ "orm" ]
+          "features": [
+            "orm"
+          ]
         },
         {
           "name": "libmariadb",
@@ -64,7 +66,9 @@
       "dependencies": [
         {
           "name": "drogon",
-          "features": [ "orm" ]
+          "features": [
+            "orm"
+          ]
         },
         "libpq"
       ]
@@ -74,7 +78,9 @@
       "dependencies": [
         {
           "name": "drogon",
-          "features": [ "orm" ]
+          "features": [
+            "orm"
+          ]
         },
         "redis"
       ]
@@ -84,7 +90,9 @@
       "dependencies": [
         {
           "name": "drogon",
-          "features": [ "orm" ]
+          "features": [
+            "orm"
+          ]
         },
         "sqlite3"
       ]
