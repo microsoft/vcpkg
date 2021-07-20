@@ -14,6 +14,9 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - task: PowerShell@2
@@ -22,9 +25,15 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: D: is the Azure machines' temporary disk.
+  # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
+  - script: |
+      dir ${{ variables.VCPKG_DOWNLOADS }} 2>&1 || (call )
+      dir ${{ variables.VCPKG_DOWNLOADS }}\tools 2>&1 || (call )
+      dir ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
+      rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
+    displayName: 'Clean msys2 downloads'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:

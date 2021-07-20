@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
-    REF 3.0.1
-    SHA512 98c9bdcea79a88a2dd69cec6c49f8565edf78ab9cddbf0e85e08b049b300b187f176bf57d5a894bf777bec0a097e46ecc05f78dab9cd5726fd473ffd8718dce0
+    REF 3.0.2
+    SHA512 eee4d35d273ab0a32972b119c8faabd8c242e2d9f506fab0dd21fdd24c78b932c01bf7f15e9cf7c452776fc4c2e27a5ff09e376adb7a706336d11114929182fc
     HEAD_REF master
-    PATCHES Modify-header-file-path.patch
+    PATCHES 
+        Modify-header-file-path.patch
 )
 
 vcpkg_cmake_configure(
