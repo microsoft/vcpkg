@@ -1,6 +1,6 @@
 {
   "name": "boost-geometry",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost geometry module",
   "homepage": "https://github.com/boostorg/geometry",
   "dependencies": [

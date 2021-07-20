@@ -1,14 +1,11 @@
-set(VERSION 3.3)
+set(VERSION 3.4.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v3.3
-    SHA512 62798fb31ba65fa2a0e1f71dd3daca30edcf745dc562c6f8e7126e54db92572cc63f5aa36d927dd08375bb6f38a2380ebe6c5735f35990681878fc78fc9dbc83
+    REF v${VERSION}
+    SHA512 d399319efcca375fe901b05722e25eca31d11a4261c6a5d5079480bbc552d4e4b42de2026912689d3b2f886ebb3c8bebbea47102e38a2f6acbc526b8d5bba388
     HEAD_REF master
-    PATCHES
-        win64-disable-stackframe-check.patch
-        win32-disable-stackframe-check.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
