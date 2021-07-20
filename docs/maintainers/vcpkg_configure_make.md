@@ -1,6 +1,6 @@
 # vcpkg_configure_make
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_configure_make.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_make.md).
 
 Configure configure for Debug and Release builds of a project.
 

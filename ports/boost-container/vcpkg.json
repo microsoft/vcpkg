@@ -1,20 +1,26 @@
 {
   "name": "boost-container",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost container module",
   "homepage": "https://github.com/boostorg/container",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
-    "boost-container-hash",
     "boost-core",
-    "boost-integer",
+    "boost-detail",
     "boost-intrusive",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    "boost-winapi"
   ]
 }

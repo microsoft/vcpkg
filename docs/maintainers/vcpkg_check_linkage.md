@@ -1,6 +1,6 @@
 # vcpkg_check_linkage
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_check_linkage.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_check_linkage.md).
 
 Asserts the available library and CRT linkage options for the port.
 

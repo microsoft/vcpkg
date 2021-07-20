@@ -1,12 +1,14 @@
 # Triplet files
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
+
 Triplet is a standard term used in cross compiling as a way to completely capture the target environment (cpu, os, compiler, runtime, etc) in a single convenient name.
 
 In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
-We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily add your own by creating a new file in the `triplets\` directory. The new triplet will immediately be available for use in commands, such as `vcpkg install boost:x86-windows-custom`.
+We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use overlay triplets (such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake Manifest Mode](manifests.md#vcpkg_overlay_triplets), or [MSBuild Manifest Mode](manifests.md#vcpkgadditionalinstalloptions-additional-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project, such as to enable static linking, see our [Integration Document](integration.md#triplet-selection).
+To change the triplet used by your project away from the default, see our [Integration Document](integration.md#triplet-selection).
 
 ## Community triplets
 
@@ -86,6 +88,25 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS`
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
+
+### VCPKG_CMAKE_CONFIGURE_OPTIONS
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE` variables.
+
+### VCPKG_MAKE_CONFIGURE_OPTIONS
+Set additional automake / autoconf configure options that are appended to the configure command (in [`vcpkg_configure_make`](../maintainers/vcpkg_configure_make.md)).
+
+This field is optional.
+
+For example, to skip certain libtool checks that may errantly fail:
+```cmake
+set(VCPKG_MAKE_CONFIGURE_OPTIONS "lt_cv_deplibs_check_method=pass_all")
+```
+
+Also available as build-type specific `VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE` variables.
 
 <a name="VCPKG_DEP_INFO_OVERRIDE_VARS"></a>
 ### VCPKG_DEP_INFO_OVERRIDE_VARS
@@ -187,3 +208,6 @@ We recommend using a systematic naming scheme when creating new triplets. The An
 
 ## Android triplets
 See [android.md](android.md)
+
+## Mingw-w64 triplets
+See [mingw.md](mingw.md)

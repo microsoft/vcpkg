@@ -1,5 +1,5 @@
-diff --git a/DirectXTex/DirectXTexEXR.cpp b/DirectXTex/DirectXTexEXR.cpp
-index c78f1d1..e073539 100644
+diff --git a/DirectXTexEXR.cpp b/DirectXTexEXR.cpp
+index 9ac601f..204bde2 100644
 --- a/DirectXTex/DirectXTexEXR.cpp
 +++ b/DirectXTex/DirectXTexEXR.cpp
 @@ -8,7 +8,7 @@
@@ -11,10 +11,10 @@ index c78f1d1..e073539 100644
  
  #include "DirectXTexEXR.h"
  
-@@ -55,7 +55,7 @@ using namespace DirectX;
+@@ -56,7 +56,7 @@ using namespace DirectX;
  using PackedVector::XMHALF4;
  
- // Comment out this anonymous namespace if you add the include of DirectXTexP.h above
+ // Comment out this first anonymous namespace if you add the include of DirectXTexP.h above
 -#ifdef WIN32
 +#if 0
  namespace

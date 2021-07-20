@@ -1,6 +1,6 @@
 # vcpkg_configure_gn
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_configure_gn.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_gn.md).
 
 Generate Ninja (GN) targets
 

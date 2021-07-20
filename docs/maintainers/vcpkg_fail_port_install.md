@@ -1,6 +1,6 @@
 # vcpkg_fail_port_install
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_fail_port_install.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fail_port_install.md).
 
 Checks common requirements and fails the current portfile with a (default) error message
 

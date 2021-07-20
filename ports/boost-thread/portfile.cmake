@@ -3,12 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/thread
-    REF boost-1.75.0
-    SHA512 b5fb6aed2ff3dd59f8b91c3e2758e27264f2bbb40636371f6b0aa130a6dad8b4dba93eeaa37ec960d56ea30fa28f9559a98349c9b7e40d08f6b7273a1aa49246
+    REF boost-1.76.0
+    SHA512 ed833316025be8a52ccfb620b874f9b9956c778e453de01a657745563184efc123f461dd54dc048946df3319c1b512810a9ce1fb8940fd75771a171c95349e28
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-thread requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
     BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"

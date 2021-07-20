@@ -1,6 +1,6 @@
 # vcpkg_download_distfile
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_download_distfile.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_download_distfile.md).
 
 Download and cache a file needed for this port.
 
@@ -13,6 +13,7 @@ vcpkg_download_distfile(
     URLS <http://mainUrl> <http://mirror1>...
     FILENAME <output.zip>
     SHA512 <5981de...>
+    [ALWAYS_REDOWNLOAD]
 )
 ```
 ## Parameters
@@ -37,6 +38,11 @@ Suppress output on cache hit
 Skip SHA512 hash check for file.
 
 This switch is only valid when building with the `--head` command line flag.
+
+### ALWAYS_REDOWNLOAD
+Avoid caching; this is a REST call or otherwise unstable.
+
+Requires `SKIP_SHA512`.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.

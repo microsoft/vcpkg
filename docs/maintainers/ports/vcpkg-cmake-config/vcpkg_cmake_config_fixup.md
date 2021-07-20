@@ -1,6 +1,6 @@
 # vcpkg_cmake_config_fixup
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md).
 
 Merge release and debug CMake targets and configs to support multiconfig generators.
 
@@ -10,7 +10,7 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 vcpkg_cmake_config_fixup(
     [PACKAGE_NAME <name>]
     [CONFIG_PATH <config-directory>]
-    [DO_NOT_DELETE_CONFIG_PATH_PARENT]
+    [DO_NOT_DELETE_PARENT_CONFIG_PATH]
     [NO_PREFIX_CORRECTION]
 )
 ```

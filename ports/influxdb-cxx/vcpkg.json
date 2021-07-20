@@ -1,0 +1,19 @@
+{
+  "name": "influxdb-cxx",
+  "version": "0.6.6",
+  "description": "InfluxDB C++ client library",
+  "homepage": "https://github.com/offa/influxdb-cxx",
+  "dependencies": [
+    "curl"
+  ],
+  "features": {
+    "boost": {
+      "description": "Enables UDP and Unix sockets as Transport Layer",
+      "dependencies": [
+        "boost-asio",
+        "boost-conversion",
+        "boost-property-tree"
+      ]
+    }
+  }
+}

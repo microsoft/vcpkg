@@ -85,13 +85,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
       file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
       file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
   endif()
-elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
+else () # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
       set(STDLIB stdc++)
   else()
       set(STDLIB c++)
   endif()
-
+  if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    SET(EXTRALIBS "-lpthread")
+  endif()
   list(APPEND OPTIONS_RELEASE
       "LIBXML2_LIBS=-lxml2 -llzma"
       "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
@@ -105,8 +107,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       SOURCE_PATH ${SOURCE_PATH}
       AUTOCONFIG
       OPTIONS
-          "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
-          "LIBS=-lpthread -ldl -lm -l${STDLIB}"
+          "LIBS=${EXTRALIBS} -ldl -lm -l${STDLIB}"
           "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
           "--enable-rttopo"
           "--enable-gcp"

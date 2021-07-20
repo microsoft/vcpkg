@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v5.2
-    SHA512 09f46c531365697968a9d9521eb9f3b5af5da9971be7fa86db990199f046c5a16dec821ca8a8ce1a2619b3ec44634e7426e39e997e8df783aa13552bc3d86064
+    REF v5.2.2
+    SHA512 48c6f44f41d6cf4fead878d9e5d62325ec90fc1f744d547b2f5683e41e48b25d19db2606804ac302c24520600d1f5b37a1649c19891cd9e87e227480ef410dbc
     HEAD_REF master
 )
 
@@ -40,8 +40,6 @@ else()
         )
     endforeach()
 endif()
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
 
 file(INSTALL ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

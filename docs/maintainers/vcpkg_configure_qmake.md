@@ -1,6 +1,6 @@
 # vcpkg_configure_qmake
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_configure_qmake.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_qmake.md).
 
 Configure a qmake-based project.
 

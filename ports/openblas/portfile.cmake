@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-redefinition-function.patch
         fix-pkg-config.patch
         fix-uwp-build.patch
+        fix-marco-conflict.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -24,6 +25,12 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(PATH_BACKUP "$ENV{PATH}")
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_add_to_path("${SED_EXE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        threads         USE_THREAD
+        simplethread    USE_SIMPLE_THREADED_LEVEL3
+)
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
@@ -40,7 +47,7 @@ if(VCPKG_TARGET_IS_UWP)
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
+        OPTIONS ${FEATURE_OPTIONS}
             ${COMMON_OPTIONS}
             -DTARGET=NEHALEM
     )
@@ -69,7 +76,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            ${COMMON_OPTIONS})
+            ${COMMON_OPTIONS}
+    )
 else()
     list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")

@@ -1,6 +1,6 @@
 # vcpkg_execute_build_process
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_execute_build_process.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_execute_build_process.md).
 
 Execute a required build process
 
@@ -10,7 +10,7 @@ vcpkg_execute_build_process(
     COMMAND <cmd> [<args>...]
     [NO_PARALLEL_COMMAND <cmd> [<args>...]]
     WORKING_DIRECTORY </path/to/dir>
-    LOGNAME <log_name>)
+    LOGNAME <log_name>
 )
 ```
 ## Parameters
