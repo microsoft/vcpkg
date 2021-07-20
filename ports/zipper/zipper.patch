@@ -23,7 +23,7 @@ index 394132a..ebceabe 100644
  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/zipper)
 -include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/minizip)
-+# include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/minizip)
+You can remove this line directly if it is not needed.
 
  # allow definition of extra include dirs
  if (EXTRA_INCLUDE_DIRS)
