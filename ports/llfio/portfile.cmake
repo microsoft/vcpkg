@@ -6,8 +6,8 @@ LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versi
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF a74411eddb6401ab884c5f92cccc24b9a64a9e6f
-    SHA512 e0f8b030ac995c24135aae89450f05ad75e5fed10caec254b327f1fc0d4c23eaeb53b7859e5e5b4731ffeace9fdfc75cd04a66025243e7f35c7dea37dc0d1b6c
+    REF 565f27555d13ce2a37346d838f32e03e1972aac1
+    SHA512 386007d03c3923e79bb1b80b1b750ae738bbc22aa5124c606cc5e7818f57a4b819bb920257c9aca39765a4a8b93d2528b4a956c53b96bd8db3b8d4a54a851e41
     HEAD_REF develop
 )
 

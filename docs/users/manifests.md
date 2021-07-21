@@ -88,7 +88,7 @@ You shouldn't need to worry about this at all.
 
 **Experimental behind the `versions` feature flag**
 
-See [versioning.md](versioning.md#version%20schemes) for additional version types.
+See [versioning](versioning.md#version-schemes) for additional version types.
 
 ### `"description"`
 
@@ -189,7 +189,7 @@ A minimum version constraint on the dependency.
 
 This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
-See also [versioning](versioning.md#constraints) for more semantic details.
+See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 
@@ -424,6 +424,12 @@ Defaults to `OFF`.
 
 This variable can be set to a list of additional command line parameters to pass to the vcpkg tool during automatic
 installation.
+
+#### `VCPKG_PREFER_SYSTEM_LIBS`
+
+This variable controls whether vcpkg will appends instead of prepends its paths to `CMAKE_PREFIX_PATH`, `CMAKE_LIBRARY_PATH` and `CMAKE_FIND_ROOT_PATH` so that vcpkg libraries/packages are found after toolchain/system libraries/packages.
+
+Defaults to `OFF`.
 
 #### `VCPKG_FEATURE_FLAGS`
 

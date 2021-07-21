@@ -1,16 +1,8 @@
 diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
-index 82474eee8..4b22319e3 100644
+index 0c8743726..e6a5ae0b4 100644
 --- a/config/compiler/BUILD.gn
 +++ b/config/compiler/BUILD.gn
-@@ -12,7 +12,6 @@ import("//build/config/clang/clang.gni")
- import("//build/config/compiler/compiler.gni")
- import("//build/config/coverage/coverage.gni")
- import("//build/config/dcheck_always_on.gni")
--import("//build/config/gclient_args.gni")
- import("//build/config/host_byteorder.gni")
- import("//build/config/sanitizers/sanitizers.gni")
- import("//build/config/ui.gni")
-@@ -1501,6 +1500,7 @@ config("default_warnings") {
+@@ -1545,6 +1545,7 @@ config("default_warnings") {
        # Disables.
        "-Wno-missing-field-initializers",  # "struct foo f = {0};"
        "-Wno-unused-parameter",  # Unused function parameters.
@@ -18,7 +10,7 @@ index 82474eee8..4b22319e3 100644
      ]
    }
 
-@@ -1924,8 +1924,17 @@ config("no_incompatible_pointer_warnings") {
+@@ -1969,8 +1970,17 @@ config("no_incompatible_pointer_warnings") {
  # Shared settings for both "optimize" and "optimize_max" configs.
  # IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
  if (is_win) {
@@ -177,32 +169,6 @@ index 428e44ac0..a0d2175ee 100644
  template("pkg_config") {
    assert(defined(invoker.packages),
           "Variable |packages| must be defined to be a list in pkg_config.")
-diff --git a/toolchain/win/tool_wrapper.py b/toolchain/win/tool_wrapper.py
-index 18986986c..cf409216c 100644
---- a/toolchain/win/tool_wrapper.py
-+++ b/toolchain/win/tool_wrapper.py
-@@ -141,9 +141,9 @@ class WinTool(object):
-     # Read output one line at a time as it shows up to avoid OOM failures when
-     # GBs of output is produced.
-     for line in link.stdout:
--      if (not line.startswith('   Creating library ') and
--          not line.startswith('Generating code') and
--          not line.startswith('Finished generating code')):
-+      if (not line.startswith(b'   Creating library ') and
-+          not line.startswith(b'Generating code') and
-+          not line.startswith(b'Finished generating code')):
-         print(line)
-     return link.wait()
-
-@@ -159,7 +159,7 @@ class WinTool(object):
-                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-     out, _ = popen.communicate()
-     for line in out.splitlines():
--      if not line.startswith(' Assembling: '):
-+      if not line.startswith(b' Assembling: '):
-         print(line)
-     return popen.returncode
-
 diff --git a/util/lastchange.py b/util/lastchange.py
 index 874870ad5..a4fc0be8d 100644
 --- a/util/lastchange.py

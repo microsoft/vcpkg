@@ -1,14 +1,15 @@
 {
   "name": "gdal",
-  "version-string": "3.1.3",
-  "port-version": 4,
-  "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data.",
-  "homepage": "hhttps://gdal.org/",
+  "version-semver": "3.2.2",
+  "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
+  "homepage": "https://gdal.org",
+  "supports": "!arm",
   "dependencies": [
     "cfitsio",
     "curl",
     "expat",
     "geos",
+    "giflib",
     "hdf5",
     {
       "name": "json-c",
@@ -24,7 +25,8 @@
     "openjpeg",
     "proj4",
     "sqlite3",
-    "zlib"
+    "zlib",
+    "zstd"
   ],
   "features": {
     "libspatialite": {
