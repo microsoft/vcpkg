@@ -77,8 +77,8 @@
       "port-version": 0
     },
     "angle": {
-      "baseline": "2020-05-15",
-      "port-version": 2
+      "baseline": "chromium_4472",
+      "port-version": 0
     },
     "antlr4": {
       "baseline": "4.9.1",
@@ -102,7 +102,7 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "apr-util": {
       "baseline": "1.6.1",
@@ -274,11 +274,11 @@
     },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-macro-utils-c": {
       "baseline": "2020-06-17",
@@ -390,7 +390,7 @@
     },
     "bitserializer": {
       "baseline": "0.10",
-      "port-version": 0
+      "port-version": 1
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -434,7 +434,7 @@
     },
     "bond": {
       "baseline": "9.0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "boolinq": {
       "baseline": "3.0.1",
@@ -1038,7 +1038,7 @@
     },
     "botan": {
       "baseline": "2.16.0",
-      "port-version": 1
+      "port-version": 2
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1126,7 +1126,7 @@
     },
     "capstone": {
       "baseline": "4.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "cartographer": {
       "baseline": "1.0.0",
@@ -1182,7 +1182,7 @@
     },
     "ceres": {
       "baseline": "2.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1190,7 +1190,7 @@
     },
     "cgal": {
       "baseline": "5.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "cgicc": {
       "baseline": "3.2.19-4",
@@ -1254,11 +1254,11 @@
     },
     "civetweb": {
       "baseline": "1.13",
-      "port-version": 1
+      "port-version": 2
     },
     "cjson": {
-      "baseline": "2019-11-30-1",
-      "port-version": 0
+      "baseline": "2019-11-30",
+      "port-version": 2
     },
     "clamav": {
       "baseline": "0.103.0",
@@ -1314,7 +1314,7 @@
     },
     "clue": {
       "baseline": "1.0.0-alpha.7",
-      "port-version": 0
+      "port-version": 1
     },
     "cmark": {
       "baseline": "0.29.0",
@@ -1474,7 +1474,7 @@
     },
     "cppzmq": {
       "baseline": "4.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "cpr": {
       "baseline": "1.6.2",
@@ -1502,7 +1502,7 @@
     },
     "crashrpt": {
       "baseline": "1.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "crc32c": {
       "baseline": "1.1.1",
@@ -1726,11 +1726,11 @@
     },
     "dlib": {
       "baseline": "19.21",
-      "port-version": 4
+      "port-version": 5
     },
     "dmlc": {
       "baseline": "2019-08-12",
-      "port-version": 5
+      "port-version": 6
     },
     "docopt": {
       "baseline": "2018-11-01",
@@ -6538,7 +6538,7 @@
     },
     "vcpkg-cmake": {
       "baseline": "2021-06-25",
-      "port-version": 4
+      "port-version": 5
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",
