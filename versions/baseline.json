@@ -29,7 +29,7 @@
       "port-version": 1
     },
     "advobfuscator": {
-      "baseline": "2020.06.26",
+      "baseline": "2020-06-26",
       "port-version": 0
     },
     "aixlog": {
