@@ -77,8 +77,8 @@
       "port-version": 0
     },
     "angle": {
-      "baseline": "2020-05-15",
-      "port-version": 2
+      "baseline": "chromium_4472",
+      "port-version": 0
     },
     "antlr4": {
       "baseline": "4.9.1",
@@ -102,7 +102,7 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "apr-util": {
       "baseline": "1.6.1",
@@ -274,7 +274,7 @@
     },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
@@ -390,7 +390,7 @@
     },
     "bitserializer": {
       "baseline": "0.10",
-      "port-version": 0
+      "port-version": 1
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -434,7 +434,7 @@
     },
     "bond": {
       "baseline": "9.0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "boolinq": {
       "baseline": "3.0.1",
@@ -1038,7 +1038,7 @@
     },
     "botan": {
       "baseline": "2.16.0",
-      "port-version": 1
+      "port-version": 2
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1126,7 +1126,7 @@
     },
     "capstone": {
       "baseline": "4.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "cartographer": {
       "baseline": "1.0.0",
@@ -1182,7 +1182,7 @@
     },
     "ceres": {
       "baseline": "2.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1190,7 +1190,7 @@
     },
     "cgal": {
       "baseline": "5.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "cgicc": {
       "baseline": "3.2.19-4",
@@ -1254,11 +1254,11 @@
     },
     "civetweb": {
       "baseline": "1.13",
-      "port-version": 1
+      "port-version": 2
     },
     "cjson": {
-      "baseline": "2019-11-30-1",
-      "port-version": 0
+      "baseline": "2019-11-30",
+      "port-version": 2
     },
     "clamav": {
       "baseline": "0.103.0",
@@ -1266,7 +1266,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 18
+      "port-version": 19
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1314,7 +1314,7 @@
     },
     "clue": {
       "baseline": "1.0.0-alpha.7",
-      "port-version": 0
+      "port-version": 1
     },
     "cmark": {
       "baseline": "0.29.0",
@@ -1474,7 +1474,7 @@
     },
     "cppzmq": {
       "baseline": "4.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "cpr": {
       "baseline": "1.6.2",
@@ -1502,7 +1502,7 @@
     },
     "crashrpt": {
       "baseline": "1.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "crc32c": {
       "baseline": "1.1.1",
@@ -1726,11 +1726,11 @@
     },
     "dlib": {
       "baseline": "19.21",
-      "port-version": 4
+      "port-version": 5
     },
     "dmlc": {
       "baseline": "2019-08-12",
-      "port-version": 5
+      "port-version": 6
     },
     "docopt": {
       "baseline": "2018-11-01",
@@ -1862,7 +1862,7 @@
     },
     "embree2": {
       "baseline": "2.17.7",
-      "port-version": 1
+      "port-version": 2
     },
     "embree3": {
       "baseline": "3.12.2",
@@ -1898,7 +1898,7 @@
     },
     "exiv2": {
       "baseline": "0.27.4",
-      "port-version": 0
+      "port-version": 1
     },
     "expat": {
       "baseline": "2.4.1",
@@ -1926,7 +1926,7 @@
     },
     "faiss": {
       "baseline": "1.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "fakeit": {
       "baseline": "2.0.7",
@@ -2966,7 +2966,7 @@
     },
     "lapack-reference": {
       "baseline": "3.8.0",
-      "port-version": 4
+      "port-version": 5
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -3120,12 +3120,12 @@
       "baseline": "0.6.0-1",
       "port-version": 0
     },
-    "libebur128": {
-      "baseline": "1.2.6",
-      "port-version": 0
-    },
     "libe57": {
       "baseline": "1.1.312",
+      "port-version": 0
+    },
+    "libebur128": {
+      "baseline": "1.2.6",
       "port-version": 0
     },
     "libepoxy": {
@@ -3149,8 +3149,8 @@
       "port-version": 0
     },
     "libffi": {
-      "baseline": "3.3",
-      "port-version": 9
+      "baseline": "3.4.2",
+      "port-version": 0
     },
     "libfido2": {
       "baseline": "1.7.0",
@@ -3668,6 +3668,10 @@
       "baseline": "4.3-0",
       "port-version": 0
     },
+    "liburing": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "libusb": {
       "baseline": "1.0.24",
       "port-version": 4
@@ -4078,7 +4082,7 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mman": {
       "baseline": "git-f5ff813-3",
@@ -4294,7 +4298,7 @@
     },
     "nativefiledialog": {
       "baseline": "2019-08-28",
-      "port-version": 0
+      "port-version": 1
     },
     "nccl": {
       "baseline": "2.4.6",
@@ -4398,7 +4402,7 @@
     },
     "nuklear": {
       "baseline": "2021-03-18",
-      "port-version": 0
+      "port-version": 1
     },
     "numactl": {
       "baseline": "2.0.12",
@@ -4630,7 +4634,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 6
+      "port-version": 7
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -4858,7 +4862,7 @@
     },
     "pistache": {
       "baseline": "2021-03-31",
-      "port-version": 0
+      "port-version": 1
     },
     "pixel": {
       "baseline": "0.3-1",
@@ -5801,8 +5805,8 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "0.9.2",
-      "port-version": 1
+      "baseline": "0.9.6",
+      "port-version": 0
     },
     "simple-fft": {
       "baseline": "2020-06-14",
@@ -6534,7 +6538,7 @@
     },
     "vcpkg-cmake": {
       "baseline": "2021-06-25",
-      "port-version": 4
+      "port-version": 5
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",
