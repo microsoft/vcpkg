@@ -43,7 +43,7 @@ else()
     endif()
 
     if (VCPKG_TARGET_IS_LINUX)
-        message(WARNING"${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
+        message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
