@@ -22,13 +22,12 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party")
 file(RENAME "${XHOOK_SOURCE_PATH}" "${SOURCE_PATH}/third_party/xhook")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook")
