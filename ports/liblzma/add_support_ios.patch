@@ -1,12 +1,3 @@
-From 07578f8ce006f5592e1d2fb10a91f0c346d0995c Mon Sep 17 00:00:00 2001
-From: feima <l02n20l@qq.com>
-Date: Tue, 6 Jul 2021 16:24:23 +0800
-Subject: [PATCH] temp
-
----
- CMakeLists.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 52439b3..0b5e371 100644
 --- a/CMakeLists.txt
