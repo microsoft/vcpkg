@@ -68,6 +68,7 @@ function(vcpkg_internal_get_cmake_vars)
         TRIPLET ${_gcv_TRIPLET}
         TARGET_ARCHITECTURE ${_gcv_TARGET_ARCHITECTURE}
         LOGNAME get-cmake-vars-${_gcv_TRIPLET}
+        Z_VCPKG_IGNORE_UNUSED_VARIABLES
     )
 
     set(_include_string)

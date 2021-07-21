@@ -7,7 +7,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    draft ENABLE_DRAFTS
+    FEATURES
+        draft ENABLE_DRAFTS
 )
 
 vcpkg_configure_cmake(
