@@ -6,7 +6,8 @@ set(GDAL_PATCHES
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
     0007-Control-tools.patch
-    )
+    0008-Fix-absl-string_view.patch
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
 endif()
