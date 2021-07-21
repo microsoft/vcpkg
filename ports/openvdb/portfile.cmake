@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF 2a7966ccb184092a49355c04bccb014d84956ff7 # v7.1.0
-    SHA512 6d3d2481fd116c5fd8fdf84a5139cd6e6986e188c3a5def05ec3bee47bd31bee3099a1d317a330b10c2cf93094f305eeeea02cadcabfc81f8ffc60bf8acdb84e
+    REF 587c9ae84c2822bbc03d0d7eceb52898582841b9 # v8.0.0
+    SHA512 4abc442a86dd0614492edf70e887886b755102f04d44eebd1a154df24e05e53a80de8e9b47b370946bcc3888ab7a94ae331a3addac8d784e25ae5da7523afca9
     HEAD_REF master
     PATCHES
         0003-fix-cmake.patch
@@ -25,9 +25,16 @@ if ("tools" IN_LIST FEATURES)
   endif()
 endif()
 
-vcpkg_configure_cmake(
+if ("ax" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(OPENVDB_BUILD_AX ON)
+  else()
+    message(FATAL_ERROR "Currently no support for building OpenVDB AX on Windows.")  
+  endif()
+endif()
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOPENVDB_BUILD_UNITTESTS=OFF
         -DOPENVDB_BUILD_PYTHON_MODULE=OFF
@@ -40,11 +47,12 @@ vcpkg_configure_cmake(
         -DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_LOD=${OPENVDB_BUILD_TOOLS}
         -DUSE_PKGCONFIG=OFF
+        ${OPENVDB_BUILD_AX}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenVDB TARGET_PATH share/openvdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenVDB)
 
 vcpkg_copy_pdbs()
 
@@ -55,5 +63,5 @@ if (OPENVDB_BUILD_TOOLS)
 endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
