@@ -1,0 +1,13 @@
+diff --git a/XML/src/ParserEngine.cpp b/XML/src/ParserEngine.cpp
+index 82d4774..be15f80 100644
+--- a/XML/src/ParserEngine.cpp
++++ b/XML/src/ParserEngine.cpp
+@@ -11,7 +11,7 @@
+ // SPDX-License-Identifier:	BSL-1.0
+ //
+ 
+-
++#include "Poco/XML/expat.h"
+ #include "Poco/XML/ParserEngine.h"
+ #include "Poco/XML/NamespaceStrategy.h"
+ #include "Poco/XML/XMLException.h"

@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 3fc3e5f5b8462f7666952b43381383a79b8b5d92 # poco-1.10.1-release
-    SHA512 4c53a24a2ab9c57f4bf94e233da65cbb144c101b7d8d422d7e687d6c90ce0b53cb7bcfae63205ff30cade0fd07319e44a32035c1b15637ea2958986efc4ad5df
+    REF f81a38057f1d240fe7b7a069612776f788bc88ea # poco-1.11.0-release
+    SHA512 c5f39aca8b5464959b9337b0cbd8ee86d81f195f5a5ba864692c71b2bdbffdecef0537b6e6a2d9f41829bcd58f78825b10565d0c4ee7b3c856a4886a9e328118
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -13,6 +13,7 @@ vcpkg_from_github(
         arm64_pcre.patch
         fix_dependency.patch
         fix-feature-sqlite3.patch
+        fix-error-c3861.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
@@ -26,12 +27,13 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    pdf         ENABLE_PDF
-    netssl      ENABLE_NETSSL
-    netssl      ENABLE_NETSSL_WIN
-    netssl      ENABLE_CRYPTO
-    sqlite3     ENABLE_DATA_SQLITE
-    postgresql  ENABLE_DATA_POSTGRESQL
+    FEATURES
+        pdf         ENABLE_PDF
+        netssl      ENABLE_NETSSL
+        netssl      ENABLE_NETSSL_WIN
+        netssl      ENABLE_CRYPTO
+        sqlite3     ENABLE_DATA_SQLITE
+        postgresql  ENABLE_DATA_POSTGRESQL
 )
 
 if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
@@ -39,6 +41,9 @@ if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
 else()
     set(POCO_USE_MYSQL OFF)
 endif()
+
+set(VCPKG_CXX_FLAGS "/DXML_DTD ${VCPKG_CXX_FLAGS}")
+set(VCPKG_C_FLAGS "/DXML_DTD ${VCPKG_C_FLAGS}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -50,7 +55,6 @@ vcpkg_configure_cmake(
         -DPOCO_STATIC=${POCO_STATIC}
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
-        -DENABLE_SAMPLES=OFF
         # Allow enabling and disabling components
         # POCO_ENABLE_SQL_ODBC, POCO_ENABLE_SQL_MYSQL and POCO_ENABLE_SQL_POSTGRESQL are
         # defined on the fly if the required librairies are present
@@ -77,6 +81,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tools(TOOL_NAMES arc AUTO_CLEAN)
 
 # Move apps to the tools folder
 vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec AUTO_CLEAN)
