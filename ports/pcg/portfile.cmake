@@ -9,4 +9,4 @@ vcpkg_from_github(
 file(INSTALL ${SOURCE_PATH}/include/pcg_extras.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/include/pcg_random.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/include/pcg_uint128.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE-MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcg RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE-MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
