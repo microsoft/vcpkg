@@ -1,16 +1,14 @@
 {
   "name": "boost-uuid",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost uuid module",
   "homepage": "https://github.com/boostorg/uuid",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-container-hash",
     "boost-conversion",
     "boost-core",
-    "boost-integer",
     "boost-io",
     "boost-move",
     "boost-numeric-conversion",
