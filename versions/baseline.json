@@ -5569,7 +5569,7 @@
       "port-version": 0
     },
     "robin-hood-hashing": {
-      "baseline": "3.11.2",
+      "baseline": "3.11.3",
       "port-version": 0
     },
     "robin-map": {
