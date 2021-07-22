@@ -4,13 +4,11 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
-    REF v0.9.1
-    SHA512 15fa857ee40aeae2ee077d244c6e11a34193f2348e922b5dfa8579a91fa6ceff05c7146e85f9222ebaa6ef2d76e876ea050e8056990cad80850fb4d9581de9a5
+    REF v0.9.2
+    SHA512 04400ae76214d2f0361a14897d6ee97be675375865bb96c8d237e9a4a1152ac1a966db903c11df82da71b0bc68599a5857e038cc90d63c5d3bc77b13169a3e75
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch
-        fix-assigning-size_t.patch
-        always-install-configs.patch
 )
 
 vcpkg_cmake_configure(
