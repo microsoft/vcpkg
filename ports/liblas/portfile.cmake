@@ -14,6 +14,8 @@ vcpkg_extract_source_archive_ex(
         fix-boost-headers.patch
         fix-geotiff.patch
         fix-gdal.patch
+        fix-static.patch
+        fix-linux-osx.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
