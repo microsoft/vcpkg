@@ -6361,7 +6361,7 @@
       "port-version": 0
     },
     "tool-meson": {
-      "baseline": "0.58.0",
+      "baseline": "0.58.1",
       "port-version": 0
     },
     "torch-th": {
