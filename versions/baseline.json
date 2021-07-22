@@ -3330,7 +3330,7 @@
     },
     "liblzma": {
       "baseline": "5.2.5",
-      "port-version": 2
+      "port-version": 3
     },
     "libmad": {
       "baseline": "0.15.1-8",
