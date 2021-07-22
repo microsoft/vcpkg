@@ -165,7 +165,7 @@
       "port-version": 1
     },
     "ashes": {
-      "baseline": "2021-02-09",
+      "baseline": "2021-06-18",
       "port-version": 0
     },
     "asio": {
@@ -6605,15 +6605,15 @@
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.2.157",
+      "baseline": "1.2.184",
       "port-version": 0
     },
     "vulkan-hpp": {
-      "baseline": "2019-05-11-1",
+      "baseline": "1.2.184",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
-      "baseline": "2.3.0",
+      "baseline": "2021-07-07",
       "port-version": 0
     },
     "vxl": {
