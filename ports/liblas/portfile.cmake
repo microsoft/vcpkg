@@ -27,7 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
+    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_OSGEO4W=OFF # Disable osgeo4w
         -DWITH_TESTS=OFF
