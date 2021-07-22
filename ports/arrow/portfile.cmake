@@ -8,6 +8,20 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         all.patch
+        fix-dependencies.patch
+)
+
+file(REMOVE ${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindLz4.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindSnappy.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindThrift.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindGLOG.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/Findutf8proc.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindRapidJSONAlt.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindgRPCAlt.cmake
+            ${SOURCE_PATH}/cpp/cmake_modules/FindgflagsAlt.cmake
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
