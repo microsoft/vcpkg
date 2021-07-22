@@ -4,10 +4,14 @@
   "description": "C++ wrapper around minizip compression library",
   "homepage": "https://github.com/sebastiandev/zipper",
   "dependencies": [
-    "minizip",
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
   ]
 }
