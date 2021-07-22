@@ -1,0 +1,13 @@
+{
+  "name": "nuspell",
+  "version-semver": "5.0.0",
+  "description": [
+    "Nuspell is a fast and safe spelling checker software program.",
+    "It is designed for languages with rich morphology and complex word compounding.",
+    "Nuspell is written in modern C++ and it supports Hunspell dictionaries."
+  ],
+  "homepage": "https://nuspell.github.io/",
+  "dependencies": [
+    "icu"
+  ]
+}

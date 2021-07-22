@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 345df69b..cb891034 100644
+index eb08bd48..88552153 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -196,6 +196,11 @@ else ()
@@ -74,23 +74,10 @@ index 345df69b..cb891034 100644
    if (GEOGRAPHICLIB_PRECISION EQUAL 2)
      set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index cbc21961..69c923bc 100644
+index fd0669f2..4744e08d 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -33,10 +33,10 @@ configure_file (project-config.cmake.in
- configure_file (project-config-version.cmake.in
-   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
- export (TARGETS
--  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
-+  ${PROJECT_ALL_LIBRARIES}
-   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
- export (TARGETS
--  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
-+  ${PROJECT_ALL_LIBRARIES}
-   NAMESPACE ${PROJECT_NAME}::
-   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
- 
-@@ -44,13 +44,7 @@ export (TARGETS
+@@ -56,13 +56,7 @@ export (TARGETS
  # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
  # path to the root from there.  (Note that the whole install tree can
  # be relocated.)
