@@ -2664,6 +2664,10 @@
       "baseline": "2.1-2",
       "port-version": 0
     },
+    "imguizmo": {
+      "baseline": "1.83",
+      "port-version": 0
+    },
     "immer": {
       "baseline": "2019-06-07",
       "port-version": 0
