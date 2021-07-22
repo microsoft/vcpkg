@@ -14,6 +14,9 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - task: DownloadBuildArtifacts@0
@@ -69,7 +72,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -PassingIsPassing'
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'

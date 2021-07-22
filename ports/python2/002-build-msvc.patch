@@ -1,38 +1,5 @@
-From e6a1f39d2d876bbfc8b02e628dfd1d0fef4a0651 Mon Sep 17 00:00:00 2001
-From: Jean-Christophe Fillion-Robin <jchris.fillionr@kitware.com>
-Date: Tue, 1 Aug 2017 15:40:29 -0400
-Subject: [PATCH 2/3] VS2015 Support: Backport "Issue #22919: Windows build
- updated to support VC 14.0 (Visual Studio 2015), which will be used for the
- official 3.5 release."
-
-This commit is a partial backport of python/cpython@65e4cb1. It was
-originally designed to work with python-cmake-buildsystem.
-
-This patch do not backport the define "timezone" as "_timezone" as it was done in Python 3.x.
-Keeping "timezone" is required in Python 2.7.x to avoid the following build issue
-``error C2032: '__timezone': function cannot be member of struct '__timeb64'``
-associated with `sys/timeb.h`. The need for `sys/timeb.h` was removed in Python 3.x in python/cpython@6fc4ade and python/cpython@0011124
-but is still used in Python 2.7.x.
-
-The following modules have NOT been backported:
-
-* Lib/distutils/sysconfig
-* Modules/socketmodule.c .... : Not required since changes related to WSA have been introduced in Python 3.x (see python/cpython@6b4883d)
-* Tools/buildbot
-* PCBuild
----
- Lib/ctypes/util.py                 |  6 +++++-
- Lib/distutils/command/build_ext.py |  2 +-
- Lib/distutils/msvc9compiler.py     |  3 +++
- Lib/distutils/msvccompiler.py      |  3 +++
- Modules/posixmodule.c              | 22 ++++++++++++++++++++--
- Modules/timemodule.c               |  4 ++--
- PC/bdist_wininst/install.c         | 29 ++++++-----------------------
- PC/pyconfig.h                      |  7 +++++++
- 8 files changed, 47 insertions(+), 29 deletions(-)
-
 diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
-index ab10ec5..a163239 100644
+index ab10ec5..6c43d82 100644
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
 @@ -19,6 +19,8 @@ if os.name == "nt":
@@ -57,7 +24,7 @@ index ab10ec5..a163239 100644
          # If python was built with in debug mode
          import imp
 diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
-index f1d184b..0851690 100644
+index 65a60b5..b2ee260 100644
 --- a/Lib/distutils/command/build_ext.py
 +++ b/Lib/distutils/command/build_ext.py
 @@ -196,7 +196,7 @@ class build_ext (Command):
@@ -70,7 +37,7 @@ index f1d184b..0851690 100644
                      # win-amd64 or win-ia64
                      suffix = self.plat_name[4:]
 diff --git a/Lib/distutils/msvc9compiler.py b/Lib/distutils/msvc9compiler.py
-index f6de11c..ee61ac2 100644
+index 9fe6417..57d42b7 100644
 --- a/Lib/distutils/msvc9compiler.py
 +++ b/Lib/distutils/msvc9compiler.py
 @@ -182,6 +182,9 @@ def get_build_version():
@@ -98,7 +65,7 @@ index 0e69fd3..77025c6 100644
      # I don't think paths are affected by minor version in version 6
      if majorVersion == 6:
 diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
-index e73805f..90d5318 100644
+index 7a1a694..7d07150 100644
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c
 @@ -558,15 +558,33 @@ _PyInt_FromDev(PY_LONG_LONG v)
@@ -138,7 +105,7 @@ index e73805f..90d5318 100644
  #define FOPEN 0x01
  #define _NO_CONSOLE_FILENO (intptr_t)-2
 diff --git a/Modules/timemodule.c b/Modules/timemodule.c
-index 12c43b0..db190b8 100644
+index 61b8d61..7678283 100644
 --- a/Modules/timemodule.c
 +++ b/Modules/timemodule.c
 @@ -808,7 +808,7 @@ inittimezone(PyObject *m) {
@@ -160,10 +127,10 @@ index 12c43b0..db190b8 100644
  #endif
      PyModule_AddIntConstant(m, "daylight", daylight);
 diff --git a/PC/bdist_wininst/install.c b/PC/bdist_wininst/install.c
-index f1cc7fe..5b11dcc 100644
+index e3b52a8..a7d1c2c 100644
 --- a/PC/bdist_wininst/install.c
 +++ b/PC/bdist_wininst/install.c
-@@ -1184,7 +1184,7 @@ static void CenterWindow(HWND hwnd)
+@@ -1185,7 +1185,7 @@ static void CenterWindow(HWND hwnd)
  
  #include <prsht.h>
  
@@ -172,7 +139,7 @@ index f1cc7fe..5b11dcc 100644
  IntroDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  {
      LPNMHDR lpnm;
-@@ -1533,7 +1533,7 @@ SCHEME *GetScheme(int major, int minor)
+@@ -1534,7 +1534,7 @@ SCHEME *GetScheme(int major, int minor)
      return old_scheme;
  }
  
@@ -181,7 +148,7 @@ index f1cc7fe..5b11dcc 100644
  SelectPythonDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  {
      LPNMHDR lpnm;
-@@ -1835,7 +1835,7 @@ static void CloseLogfile(void)
+@@ -1836,7 +1836,7 @@ static void CloseLogfile(void)
          fclose(logfile);
  }
  
@@ -190,7 +157,7 @@ index f1cc7fe..5b11dcc 100644
  InstallFilesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  {
      LPNMHDR lpnm;
-@@ -1990,7 +1990,7 @@ InstallFilesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+@@ -1991,7 +1991,7 @@ InstallFilesDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  }
  
  
@@ -199,7 +166,7 @@ index f1cc7fe..5b11dcc 100644
  FinishedDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
  {
      LPNMHDR lpnm;
-@@ -2166,23 +2166,6 @@ BOOL NeedAutoUAC()
+@@ -2167,23 +2167,6 @@ BOOL NeedAutoUAC()
      return TRUE;
  }
  
@@ -223,7 +190,7 @@ index f1cc7fe..5b11dcc 100644
  // Spawn ourself as an elevated application.  On failure, a message is
  // displayed to the user - but this app will always terminate, even
  // on error.
-@@ -2238,7 +2221,7 @@ int DoInstall(void)
+@@ -2239,7 +2222,7 @@ int DoInstall(void)
  
      // See if we need to do the Vista UAC magic.
      if (strcmp(user_access_control, "force")==0) {
@@ -232,7 +199,7 @@ index f1cc7fe..5b11dcc 100644
              SpawnUAC();
              return 0;
          }
-@@ -2246,7 +2229,7 @@ int DoInstall(void)
+@@ -2247,7 +2230,7 @@ int DoInstall(void)
      } else if (strcmp(user_access_control, "auto")==0) {
          // Check if it looks like we need UAC control, based
          // on how Python itself was installed.
@@ -242,12 +209,12 @@ index f1cc7fe..5b11dcc 100644
              return 0;
          }
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index b60af1e..b517146 100644
+index 0cbd236..d896a38 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
-@@ -231,6 +231,13 @@ typedef int pid_t;
- #define hypot _hypot
- #endif
+@@ -226,6 +226,13 @@ typedef int pid_t;
+ #define Py_IS_FINITE(X) _finite(X)
+ #define copysign _copysign
  
 +/* VS 2015 defines these names with a leading underscore */
 +#if _MSC_VER >= 1900
@@ -259,6 +226,3 @@ index b60af1e..b517146 100644
  /* Side by Side assemblies supported in VS 2005 and VS 2008 but not 2010*/
  #if _MSC_VER >= 1400 && _MSC_VER < 1600
  #define HAVE_SXS 1
--- 
-2.5.0
-

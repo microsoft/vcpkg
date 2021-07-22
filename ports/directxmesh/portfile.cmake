@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF apr2021
-    SHA512 9e125c1b00c03cb0ff2f5297567e3d5c885acf5c3309208b7f846543eb4114129733676fe6f77b9c33adeb2ad50504927fff9fe48b7fe3f2c042432d0737564c
+    REF jun2021
+    SHA512 ed61e14bb217bdff803ad95bfffe31aac7ff0a3f78b963aac183c61233374def4c0b052d1bf9b0d03900fc5be052e1d8fe8de00e81f01349eff1a564d55be610
     HEAD_REF master
 )
 
@@ -38,9 +38,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/apr2021/meshconvert.exe"
-    FILENAME "meshconvert-apr2021.exe"
-    SHA512 0b2dd64f89d884734ad0c58690f50b84acbcd3ab61db79a5b2edf8effb9a756e38862cf599da9969cd30adc9a8f8fe6c8a3c0a3a4b4beef9be87dee8ad496871
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jun2021/meshconvert.exe"
+    FILENAME "meshconvert-jun2021.exe"
+    SHA512 2a5e1eb69f24fd321d372dcd790970a15957757eacd0a861001299409ff56372bc890c2d8baba32368c81eeb63cdd7aef514c57bca1e7e4e3f7bdf494c3453a0
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
@@ -49,7 +49,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-jun2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 
