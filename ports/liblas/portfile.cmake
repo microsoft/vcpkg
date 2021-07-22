@@ -13,20 +13,25 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-boost-headers.patch
         fix-geotiff.patch
+        fix-gdal.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindGDAL.cmake)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        gdal WITH_GDAL
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS 
+    #PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_OSGEO4W=OFF # Disable osgeo4w
         -DWITH_TESTS=OFF
         -DWITH_UTILITIES=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
-        -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=${CMAKE_DISABLE_FIND_PACKAGE_JPEG}
 )
 
 vcpkg_install_cmake()

@@ -23,3 +23,39 @@ index beb83e2..650bc0c 100644
      set (LIBLAS_UTILS_RPATH ${LIBLAS_UTILS_RPATH} ${GEOTIFF_LIBRARY_DIRS})
    endif()
    if(GDAL_FOUND)
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index c7f583d8d..cf03096b8 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -7,12 +7,16 @@
+ # is the relative path to the root from there.
+ if (NOT WIN32)
+   set(INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
+-  set (PROJECT_ROOT_DIR "../../..")
++  set (PROJECT_ROOT_DIR "../..")
+ else ()
+   set(INSTALL_CMAKE_DIR "cmake")
+-  set (PROJECT_ROOT_DIR "..")
++  set (PROJECT_ROOT_DIR "../..")
+ endif ()
+ 
++if (WITH_GEOTIFF)
++  set(FIND_GEOTIFF "find_package (geotiff CONFIG REQUIRED)")
++endif()
++
+ # Now create the liblas-config files using the .in templates
+ configure_file (liblas-config.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/liblas-config.cmake @ONLY)
+diff --git a/cmake/liblas-config.cmake.in b/cmake/liblas-config.cmake.in
+index 175e99748..1d3db3afa 100644
+--- a/cmake/liblas-config.cmake.in
++++ b/cmake/liblas-config.cmake.in
+@@ -12,6 +12,8 @@ message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
+ # libLAS_VERSION is set by version file
+ message (STATUS "libLAS configuration, version " ${libLAS_VERSION})
+ 
++@FIND_GEOTIFF@
++
+ # Tell the user project where to find our headers and libraries
+ get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+ get_filename_component (PROJECT_ROOT_DIR "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)

@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b125bb11a..8405e3776 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -228,9 +228,9 @@ endif()
+ set(WITH_GDAL FALSE CACHE BOOL "Choose if GDAL support should be built")
+ 
+ if (WITH_GDAL)
+-  find_package (GDAL 1.7.0 NO_MODULE QUIET)
++  find_package (GDAL NO_MODULE QUIET)
+   if (NOT GDAL_FOUND)
+-    find_package (GDAL 1.7.0)
++    find_package (GDAL)
+   endif ()
+ endif ()
+ if (GDAL_FOUND)
+diff --git a/src/gt_citation.cpp b/src/gt_citation.cpp
+index b11a22538..8e6b451da 100644
+--- a/src/gt_citation.cpp
++++ b/src/gt_citation.cpp
+@@ -387,10 +387,10 @@ void SetGeogCSCitation(GTIF * psGTIF, OGRSpatialReference *poSRS, char* angUnitN
+         osCitation += primemName;
+         bRewriteGeogCitation = TRUE;
+ 
+-        double primemValue = poSRS->GetPrimeMeridian(NULL);
++        double primemValue = poSRS->GetPrimeMeridian();
+         if(angUnitName && !EQUAL(angUnitName, "Degree"))
+         {
+-            double aUnit = poSRS->GetAngularUnits(NULL);
++            double aUnit = poSRS->GetAngularUnits();
+             primemValue *= aUnit;
+         }
+         GTIFKeySet( psGTIF, GeogPrimeMeridianLongGeoKey, TYPE_DOUBLE, 1, 
+diff --git a/src/gt_wkt_srs.cpp b/src/gt_wkt_srs.cpp
+index 4ef3c4212..d4295a6da 100644
+--- a/src/gt_wkt_srs.cpp
++++ b/src/gt_wkt_srs.cpp
+@@ -95,16 +95,22 @@ static void* hMutex = NULL;
+ void LibgeotiffOneTimeInit() 
+ {
+     static int bOneTimeInitDone = FALSE;
+-    CPLMutexHolder oHolder( &hMutex);
++    CPLCreateOrAcquireMutexEx(&hMutex, 1000.0, CPL_MUTEX_RECURSIVE);
+ 
+     if (bOneTimeInitDone)
++    {
++        if (hMutex != NULL)
++            CPLReleaseMutex(hMutex);
+         return;
++    }
+ 
+     bOneTimeInitDone = TRUE;
+ 
+     // If linking with an external libgeotiff we hope this will call the
+     // SetCSVFilenameHook() in libgeotiff, not the one in gdal/port!
+     // SetCSVFilenameHook( GDALDefaultCSVFilename );
++    if (hMutex != NULL)
++        CPLReleaseMutex(hMutex);
+ }
+ 
+ /************************************************************************/
+@@ -489,7 +495,6 @@ char *GTIFGetOGISDefn( GTIF *hGTIF, GTIFDefn * psDefn )
+         {
+             char	*pszWKT;
+             oSRS.morphFromESRI();
+-            oSRS.FixupOrdering();
+             if( oSRS.exportToWkt( &pszWKT ) == OGRERR_NONE )
+                 return pszWKT;
+         }
+@@ -1090,7 +1095,6 @@ char *GTIFGetOGISDefn( GTIF *hGTIF, GTIFDefn * psDefn )
+ /* ==================================================================== */
+     char	*pszWKT;
+ 
+-    oSRS.FixupOrdering();
+ 
+     if( oSRS.exportToWkt( &pszWKT ) == OGRERR_NONE )
+         return pszWKT;
