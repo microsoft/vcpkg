@@ -1,6 +1,6 @@
 {
   "name": "robin-hood-hashing",
-  "version": "3.11.2",
+  "version": "3.11.3",
   "description": "Fast & memory efficient hashtable based on robin hood hashing for C++11/14/17/20",
   "homepage": "https://github.com/martinus/robin-hood-hashing",
   "dependencies": [
