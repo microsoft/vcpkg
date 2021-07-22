@@ -82,6 +82,7 @@ file(INSTALL
 if(WIN32)
     file(INSTALL
         "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommonWindows.h"
+        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
