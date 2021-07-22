@@ -184,11 +184,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
     # See https://github.com/microsoft/vcpkg/issues/16990
-    vcpkg_execute_required_process(
-        COMMAND "${CMAKE_COMMAND}" -E touch config.rpath
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME touch-${TARGET_TRIPLET}
-    )
+    file(TOUCH "${SOURCE_PATH}/config.rpath")
     
     set(CONF_OPTS
         --with-hide-internal-symbols=yes
