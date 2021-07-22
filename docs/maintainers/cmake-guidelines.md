@@ -79,22 +79,23 @@ We hope that they will make both forwards and backwards compatibility easier.
   - Otherwise, if the argument contains characters that are
     not alphanumeric or `_`, that argument should be quoted.
   - Otherwise, the argument should be unquoted.
-  - Exception: arguments to `if()` of type `<variable|string>`,
-    or raw conditions, should always be quoted:
+  - Exception: arguments to `if()` of type `<variable|string>` should always be quoted:
     - Both arguments to the comparison operators -
       `EQUAL`, `STREQUAL`, `VERSION_LESS`, etc.
     - The first argument to `MATCHES` and `IN_LIST`
-    - As well as a variable or constant by itself:
     - Example:
       ```cmake
       if("${FOO}" STREQUAL "BAR") # ...
       if("${BAZ}" EQUAL "0") # ...
-      if("${BOOLEAN}") # ...
+      if(BOOLEAN) # ...
       if("FOO" IN_LIST list_variable) # ...
       if("${bar}" MATCHES [[a[bcd]+\.[bcd]+]]) # ...
       if(DEFINED arg_UNPARSED_ARGUMENTS) # ...
       if(COMMAND blah) # ...
       ```
+    - Note that booleans by themselves (e.g., `if(FOO)`) should be unquoted;
+      there isn't any weird behavior around expansion with these, and
+      the normal way of doing this in CMake is to use unquoted arguments.
 - There are no "pointer" or "in-out" parameters
   (where a user passes a variable name rather than the contents),
   except for simple out-parameters.
