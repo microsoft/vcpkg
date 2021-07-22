@@ -4800,6 +4800,10 @@
       "baseline": "0.5.14",
       "port-version": 4
     },
+    "pcapplusplus": {
+      "baseline": "21.05",
+      "port-version": 0
+    },
     "pcg": {
       "baseline": "2021-04-06",
       "port-version": 0
