@@ -8,15 +8,15 @@ vcpkg_from_github(
         enable-uwp-builds.patch
         fix_config_include.patch
         win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
+        add_support_ios.patch # add install bundle info for support ios 
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_DEBUG_POSTFIX=d" # This was in the old vcpkg CMakeLists.txt and I don't intend to fix it all over vcpkg 
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 set(exec_prefix "\${prefix}")
@@ -39,7 +39,7 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblzma)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/liblzma)
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzma-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/liblzmaConfig.cmake\")")
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake"
@@ -100,9 +100,9 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzma.h "${_contents}")
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include")
 else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -113,7 +113,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 set(TOOLS xz xzdec)
@@ -130,5 +130,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
