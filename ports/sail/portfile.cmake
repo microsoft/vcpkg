@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO smoked-herring/sail
-    REF v0.9.0-pre12
-    SHA512 2082c9715b101fd15b698bc85dd3af2c47233325ddea2852fe3abcd0c456a8fd9e915fbec5c30e4c2c53bf159f843ecebf88f80f23fe0b5365a0b030f36ede5c
+    REF v0.9.0-pre13
+    SHA512 cce4e4f3316c9cc65f2026d0734e1f962079febfcf51c59a673899dace60b71604440c647652769db97e9b253d1eb9667921da2c76ff8c2d453e768eb49585fb
     HEAD_REF master
 )
 
@@ -44,11 +44,17 @@ endif()
 
 # Move C++ configs
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT}c++)
-
 file(GLOB SAIL_CPP_CONFIGS "${CURRENT_PACKAGES_DIR}/share/${PORT}/SailC++*")
 foreach(SAIL_CPP_CONFIG IN LISTS SAIL_CPP_CONFIGS)
     get_filename_component(SAIL_CPP_CONFIG_NAME "${SAIL_CPP_CONFIG}" NAME)
     file(RENAME ${SAIL_CPP_CONFIG} ${CURRENT_PACKAGES_DIR}/share/${PORT}c++/${SAIL_CPP_CONFIG_NAME})
+endforeach()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT}manip)
+file(GLOB SAIL_MANIP_CONFIGS "${CURRENT_PACKAGES_DIR}/share/${PORT}/SailManip*")
+foreach(SAIL_MANIP_CONFIG IN LISTS SAIL_MANIP_CONFIGS)
+    get_filename_component(SAIL_MANIP_CONFIG_NAME "${SAIL_MANIP_CONFIG}" NAME)
+    file(RENAME ${SAIL_MANIP_CONFIG} ${CURRENT_PACKAGES_DIR}/share/${PORT}manip/${SAIL_MANIP_CONFIG_NAME})
 endforeach()
 
 # Handle copyright

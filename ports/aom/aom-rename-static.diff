@@ -1,0 +1,12 @@
+diff -pruN aom-3.0.0.o/CMakeLists.txt aom-3.0.0/CMakeLists.txt
+--- aom-3.0.0.o/CMakeLists.txt	2021-04-15 20:05:52.695181200 +0300
++++ aom-3.0.0/CMakeLists.txt	2021-04-15 22:34:16.147522600 +0300
+@@ -249,7 +249,7 @@ endif()
+ add_library(aom ${AOM_SOURCES} $<TARGET_OBJECTS:aom_rtcd>)
+ if(BUILD_SHARED_LIBS)
+   add_library(aom_static STATIC ${AOM_SOURCES} $<TARGET_OBJECTS:aom_rtcd>)
+-  set_target_properties(aom_static PROPERTIES OUTPUT_NAME aom)
++  set_target_properties(aom_static PROPERTIES OUTPUT_NAME aom_static)
+ 
+   if(NOT MSVC)
+     # Extract version string and set VERSION/SOVERSION for the aom target.

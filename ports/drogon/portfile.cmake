@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.5.1
-    SHA512 fe9c6b11c176ee5ae76ab96f1f2fcfef1b1868f23eac2bd17d39e11293cbf990e50c88d9da9412b85ca780226906ba5ced0032f0a354291c6f056a49d41f6f8a
+    REF v1.7.1
+    SHA512 8a7cb8aa87cc48b130a5b47558b3c9e2a0af13cd8b76681e42d14a366dac75c88e389f2e2fe03b4f0f1e0e31971a47eee2bf5df8fcb4b79f8ed00d2a592315b6
     HEAD_REF master
     PATCHES
         vcpkg.patch
@@ -29,6 +29,9 @@ vcpkg_install_cmake()
 
 # Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Drogon)
+
+vcpkg_fixup_pkgconfig()
+
 # Copy drogon_ctl
 if("ctl" IN_LIST FEATURES)
     message("copying tools")

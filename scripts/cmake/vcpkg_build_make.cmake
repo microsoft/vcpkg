@@ -38,7 +38,7 @@ The underlying buildsystem will be instructed to not parallelize
 Additional subdir to invoke make in. Useful if only parts of a port should be built. 
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
+This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
@@ -144,9 +144,9 @@ function(vcpkg_build_make)
             _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
 
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             else() # dynamic
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
             if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link")
