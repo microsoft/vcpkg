@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/soil2
-    REF 7dc42acee2302780c1e100bf864aa2bdb2221a2b #release-1.11
-    SHA512 13f1716a3766cb4fa8d5b90eae5f3795ed3c86fc4463ca1cd68f4fa6b7fd96c24ec5098673c1d7253c94bdd491854b9359f8ccb8bd5b5640eeff3605f52e17a5
+    REF 51023d551d895fb4beb576d726d798ccfe358d34
+    SHA512 5ce8b3f04eea674cdef7ee58778e81bcefa5df7afb1013ad28dcd2d502e26915529da8bf06b751b8c350165172866e4f99d4b1081bb6c7ba04ac83a78faba83c
     HEAD_REF master
 )
 
@@ -11,7 +11,6 @@ file(
     ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
     ${CMAKE_CURRENT_LIST_DIR}/LICENSE
     ${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/soil2ConfigVersion.cmake.in
     DESTINATION ${SOURCE_PATH}
 )
 
