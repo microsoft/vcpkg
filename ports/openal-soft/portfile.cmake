@@ -25,6 +25,8 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ALSOFT_REQUIRE_WINDOWS ON)
+    set(_set_winsdk_to_10 -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10 -DCMAKE_SYSTEM_VERSION=10)
+    message(WARNING "The openal-soft requires at least Windows SDK 10, as it doesn't build with earlier SDKs due to `/permissive-` flag. See https://github.com/microsoft/vcpkg/issues/10825 for details.")
 endif()
 if(VCPKG_TARGET_IS_OSX)
     set(ALSOFT_REQUIRE_OSX ON)
@@ -55,6 +57,7 @@ vcpkg_configure_cmake(
         -DALSOFT_REQUIRE_WASAPI=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_CPUEXT_NEON=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_WindowsSDK=ON
+        ${_set_winsdk_to_10}
     MAYBE_UNUSED_VARIABLES
         ALSOFT_AMBDEC_PRESETS
         ALSOFT_BACKEND_ALSA
