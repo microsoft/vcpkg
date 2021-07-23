@@ -3,6 +3,7 @@
   "version-semver": "1.0.2",
   "description": "C++ wrapper around minizip compression library",
   "homepage": "https://github.com/sebastiandev/zipper",
+  "supports": "!(uwp | arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,6 +14,5 @@
       "host": true
     },
     "zlib"
-  ],
-  "supports": "!(uwp | arm)"
+  ]
 }
