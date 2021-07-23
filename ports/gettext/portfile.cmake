@@ -1,11 +1,13 @@
-if(VCPKG_TARGET_IS_LINUX AND NOT "tools" IN_LIST FEATURES)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+if(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/libintl.h")
         message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
                             "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
         )
     endif()
-    return()
+    if(NOT "tools" IN_LIST FEATURES)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        return()
+    endif()
 endif()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
@@ -19,13 +21,14 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
     SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
 )
+set(PATCHES "")
 if(VCPKG_TARGET_IS_UWP)
     set(PATCHES uwp_remove_localcharset.patch)
 endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${GETTEXT_VERSION}
+    REF "${GETTEXT_VERSION}"
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
@@ -61,6 +64,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
+# These functions scope any changes to VCPKG_BUILD_TYPE
 function(build_libintl_and_tools)
     cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
     if(DEFINED arg_BUILD_TYPE)
@@ -69,13 +73,12 @@ function(build_libintl_and_tools)
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
-        ADD_BIN_TO_PATH    # So configure can check for working iconv
+        ADD_BIN_TO_PATH # So configure can check for working iconv
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
             ${OPTIONS}
     )
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile-${TARGET_TRIPLET}" COPYONLY)
-    vcpkg_install_make(MAKEFILE "../Makefile-${TARGET_TRIPLET}")
+    vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
 endfunction()
 
 function(build_libintl_only)
@@ -86,7 +89,7 @@ function(build_libintl_only)
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
-        ADD_BIN_TO_PATH    # So configure can check for working iconv
+        ADD_BIN_TO_PATH # So configure can check for working iconv
         OPTIONS
             ${OPTIONS}
     )
@@ -107,13 +110,13 @@ if("tools" IN_LIST FEATURES)
         "${CURRENT_PACKAGES_DIR}/bin/*"
         "${CURRENT_PACKAGES_DIR}/lib/*"
     )
-    list(FILTER tool_libs EXCLUDE REGEX "intl[^/]*$")
+    list(FILTER tool_libs EXCLUDE REGEX "intl[^/\\\\]*$")
     file(REMOVE ${tool_libs})
     file(GLOB tool_includes
         LIST_DIRECTORIES true
         "${CURRENT_PACKAGES_DIR}/include/*"
     )
-    list(FILTER tool_includes EXCLUDE REGEX "intl[^/]*$")
+    list(FILTER tool_includes EXCLUDE REGEX "intl[^/\\\\]*$")
     file(REMOVE_RECURSE ${tool_includes})
     if(VCPKG_TARGET_IS_LINUX)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
@@ -136,14 +139,15 @@ else()
 endif()
 
 # Handle copyright
-file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/gettext/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright")
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright" COPYONLY)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
+if(NOT VCPKG_TARGET_IS_LINUX)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
+endif()
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 endif()
