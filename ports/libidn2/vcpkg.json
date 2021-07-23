@@ -7,6 +7,10 @@
   "dependencies": [
     "libiconv",
     {
+      "name": "libunistring",
+      "platform": "!(windows | mingw)"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true,
       "platform": "windows | mingw"
