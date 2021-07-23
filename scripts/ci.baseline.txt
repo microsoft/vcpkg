@@ -100,6 +100,7 @@ cfitsio:arm-uwp=fail
 cfitsio:x64-uwp=fail
 cgicc:arm-uwp=fail
 cgicc:x64-uwp=fail
+chakracore:x64-linux=skip
 # DCMTK currently has a vendored copy of libcharls.a, which causes conflicts with charls (TODO: use charls' copy)
 charls:arm64-windows=skip
 charls:arm-uwp=skip

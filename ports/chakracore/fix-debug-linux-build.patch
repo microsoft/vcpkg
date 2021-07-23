@@ -1,0 +1,13 @@
+diff --git a/lib/Common/Memory/RecyclerObjectGraphDumper.cpp b/lib/Common/Memory/RecyclerObjectGraphDumper.cpp
+index 0885df3fb..12bdfb96e 100644
+--- a/lib/Common/Memory/RecyclerObjectGraphDumper.cpp
++++ b/lib/Common/Memory/RecyclerObjectGraphDumper.cpp
+@@ -58,7 +58,7 @@ void RecyclerObjectGraphDumper::BeginDumpObject(void * objectAddress)
+         {
+             Assert(false);
+             this->dumpObjectTypeInfo = nullptr;
+-            this->dumpObjectIsArray = nullptr;
++            this->dumpObjectIsArray = 0;
+         }
+     }
+ #endif
