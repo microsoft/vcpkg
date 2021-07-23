@@ -1,6 +1,7 @@
 {
   "name": "shaderc",
   "version": "2021.1",
+  "port-version": 1,
   "description": "A collection of tools, libraries and tests for shader compilation.",
   "homepage": "https://github.com/google/shaderc",
   "dependencies": [
