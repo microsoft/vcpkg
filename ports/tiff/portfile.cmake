@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         cmakelists.patch
         fix-pkgconfig.patch
+        FindCMath.patch
 )
 
 set(EXTRA_OPTIONS "")
