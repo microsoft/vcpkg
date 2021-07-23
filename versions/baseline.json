@@ -2285,7 +2285,7 @@
       "port-version": 0
     },
     "giflib": {
-      "baseline": "5.1.4-6",
+      "baseline": "5.2.1",
       "port-version": 0
     },
     "ginkgo": {
