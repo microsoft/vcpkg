@@ -1,0 +1,13 @@
+diff --git a/port/cpl_port.h b/port/cpl_port.h
+index 9e3ebbb..130af04 100644
+--- a/port/cpl_port.h
++++ b/port/cpl_port.h
+@@ -343,7 +343,7 @@ typedef unsigned int  GUIntptr_t;
+ #endif
+ 
+ #ifndef CPL_DLL
+-#if defined(_MSC_VER) && !defined(CPL_DISABLE_DLL)
++#if defined(WIN32) && !defined(CPL_DISABLE_DLL)
+ #  ifdef GDAL_COMPILATION
+ #    define CPL_DLL __declspec(dllexport)
+ #  else
