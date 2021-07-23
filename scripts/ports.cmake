@@ -1,5 +1,5 @@
 # rebuild: 1
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
@@ -26,7 +26,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
-vcpkg_minimum_required(VERSION 2021-01-13)
+vcpkg_minimum_required(VERSION 2021-05-05)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
@@ -130,10 +130,12 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_install_nmake.cmake")
     include("${SCRIPTS}/cmake/vcpkg_install_qmake.cmake")
     include("${SCRIPTS}/cmake/vcpkg_internal_get_cmake_vars.cmake")
+    include("${SCRIPTS}/cmake/vcpkg_list.cmake")
     include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
     include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
