@@ -8,5 +8,13 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "tool"
+  ],
+  "features": {
+    "tool": {
+      "description": "crunch executable"
+    }
+  }
 }

@@ -8,20 +8,25 @@ vcpkg_from_github(
     HEAD_REF build_fixes
     PATCHES
         osx.patch
-        uwp.patch
+        arm-uwp.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tool BUILD_TOOL
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
-vcpkg_copy_tools(TOOL_NAMES crunch AUTO_CLEAN)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
-
 vcpkg_copy_pdbs()
 
+vcpkg_copy_tools(TOOL_NAMES crunch_exe AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
