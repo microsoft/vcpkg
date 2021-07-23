@@ -13,5 +13,6 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "supports": "!(uwp | arm)"
 }
