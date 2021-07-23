@@ -20,9 +20,11 @@ This script assumes you have installed the OpenSSH Client optional Windows compo
 
 $Location = 'westus2'
 $Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32_v4'
+$VMSize = 'Standard_D32ds_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
+$MakeInstalledDisk = $false
+$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
@@ -189,6 +191,12 @@ $SasToken = New-AzStorageAccountSASToken `
 
 $SasToken = $SasToken.Substring(1) # strip leading ?
 
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating storage account' `
+  -CurrentOperation 'Locking down network' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress) # note no ++
+
 # Note that we put the storage account into the firewall after creating the above SAS token or we
 # would be denied since the person running this script isn't one of the VMs we're creating here.
 Set-AzStorageAccount `
@@ -225,8 +233,8 @@ $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
   -VM $VM `
   -PublisherName 'Canonical' `
-  -Offer 'UbuntuServer' `
-  -Skus '18.04-LTS' `
+  -Offer '0001-com-ubuntu-server-focal' `
+  -Skus '20_04-lts' `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
@@ -292,7 +300,8 @@ Set-AzVM `
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 $PrototypeOSDiskName = $VM.StorageProfile.OsDisk.Name
 $ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
-$Image = New-AzImage -Image $ImageConfig -ImageName $ProtoVMName -ResourceGroupName $ResourceGroupName
+$ImageName = "$Prefix-BaseImage"
+$Image = New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName $ResourceGroupName
 
 ####################################################################################################
 Write-Progress `
@@ -333,28 +342,41 @@ $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
 $VmssPublicKey = New-Object -TypeName 'Microsoft.Azure.Management.Compute.Models.SshPublicKey' `
   -ArgumentList @('/home/AdminUser/.ssh/authorized_keys', $sshPublicKey)
 
-$Vmss = Set-AzVmssOsProfile `
-  -VirtualMachineScaleSet $Vmss `
-  -ComputerNamePrefix $LiveVMPrefix `
-  -AdminUsername AdminUser `
-  -AdminPassword $AdminPW `
-  -LinuxConfigurationDisablePasswordAuthentication $true `
-  -PublicKey @($VmssPublicKey) `
-  -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
+if ($MakeInstalledDisk) {
+  $Vmss = Set-AzVmssOsProfile `
+    -VirtualMachineScaleSet $Vmss `
+    -ComputerNamePrefix $LiveVMPrefix `
+    -AdminUsername AdminUser `
+    -AdminPassword $AdminPW `
+    -LinuxConfigurationDisablePasswordAuthentication $true `
+    -PublicKey @($VmssPublicKey) `
+    -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
+} else {
+  $Vmss = Set-AzVmssOsProfile `
+    -VirtualMachineScaleSet $Vmss `
+    -ComputerNamePrefix $LiveVMPrefix `
+    -AdminUsername AdminUser `
+    -AdminPassword $AdminPW `
+    -LinuxConfigurationDisablePasswordAuthentication $true `
+    -PublicKey @($VmssPublicKey)
+}
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
-  -OsDiskCaching ReadWrite `
+  -OsDiskCaching ReadOnly `
+  -DiffDiskSetting Local `
   -ImageReferenceId $Image.Id
 
-$Vmss = Add-AzVmssDataDisk `
-  -VirtualMachineScaleSet $Vmss `
-  -Lun 0 `
-  -Caching 'ReadWrite' `
-  -CreateOption Empty `
-  -DiskSizeGB 1024 `
-  -StorageAccountType 'StandardSSD_LRS'
+if ($MakeInstalledDisk) {
+  $Vmss = Add-AzVmssDataDisk `
+    -VirtualMachineScaleSet $Vmss `
+    -Lun 0 `
+    -Caching 'ReadWrite' `
+    -CreateOption Empty `
+    -DiskSizeGB $InstalledDiskSizeInGB `
+    -StorageAccountType 'StandardSSD_LRS'
+}
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `

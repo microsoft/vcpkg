@@ -1,6 +1,6 @@
 {
   "name": "boost-metaparse",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost metaparse module",
   "homepage": "https://github.com/boostorg/metaparse",
   "dependencies": [

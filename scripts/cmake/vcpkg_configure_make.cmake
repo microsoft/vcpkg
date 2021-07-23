@@ -148,7 +148,9 @@ endmacro()
 
 macro(_vcpkg_determine_autotools_target_arch_mac out_var)
     list(LENGTH VCPKG_OSX_ARCHITECTURES _num_osx_archs)
-    if(_num_osx_archs GREATER_EQUAL 2)
+    if(_num_osx_archs EQUAL 0)
+        set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+    elseif(_num_osx_archs GREATER_EQUAL 2)
         set(${out_var} "universal")
     else()
         # Better match the arch behavior of config.guess
