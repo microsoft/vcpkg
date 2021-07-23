@@ -3701,8 +3701,8 @@
       "port-version": 0
     },
     "libuuid": {
-      "baseline": "1.0.3-7",
-      "port-version": 0
+      "baseline": "1.0.3",
+      "port-version": 8
     },
     "libuv": {
       "baseline": "1.41.0",
