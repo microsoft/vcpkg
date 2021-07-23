@@ -7,7 +7,7 @@ vcpkg_from_sourceforge(
 )
 
 vcpkg_configure_qmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         CONFIG+=${VCPKG_LIBRARY_LINKAGE}
 )
@@ -29,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 #Install the header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/src/*.h)
+file(GLOB HEADER_FILES "${SOURCE_PATH}/src/*.h")
 file(INSTALL "${HEADER_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
