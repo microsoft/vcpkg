@@ -11,7 +11,6 @@
     "boost-coroutine",
     "boost-date-time",
     "boost-filesystem",
-    "boost-log",
     "boost-program-options",
     "boost-system",
     "boost-uuid",
