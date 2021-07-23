@@ -79,8 +79,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
             ${COMMON_OPTIONS}
     )
 else()
-    list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
-    list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
+    string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
+    string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
