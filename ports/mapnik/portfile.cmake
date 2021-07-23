@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathisloge/mapnik
-    REF 03b1f18c89dfa77befd63344682ad3cd7a36efe1
-    SHA512 325ef7927960a5b5e7dfe9908bebfd01dc0406150fa5baf823e42ea17e5b388ade0f49ebf562c6dbf2cd021281baae4d29d0235cb35e851366a1b589bce2c6e2
+    REF a8d6bdcac1be7f8b7fb2ee584f3115ca875d8c96
+    SHA512 08e1bfacd1bf5416b4f75cbeb0f63e327af1d14c64f67c431682494deb92fb53c111f9c1c36c61a745b3a6c5d615f7ccbe59279f1d1bc94574db92f87260152a
     HEAD_REF master
     PATCHES
       "use-proj4.patch"
@@ -42,7 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "utility-svg2png" BUILD_UTILITY_SVG2PNG
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS   
@@ -61,7 +61,7 @@ vcpkg_configure_cmake(
         -DFONTS_INSTALL_DIR=share/${PORT}/fonts
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/plugins)
@@ -104,7 +104,7 @@ if("utility-svg2png" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES svg2png AUTO_CLEAN)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
