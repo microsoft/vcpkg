@@ -20,20 +20,14 @@ if("ass" IN_LIST FEATURES)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS))
-        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp'")
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp | static'")
     endif()
 endif()
 
 if("dav1d" IN_LIST FEATURES)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
         message(FATAL_ERROR "Feature 'dav1d' does not support 'uwp | arm | x86 | osx'")
-    endif()
-endif()
-
-if("fdk-aac" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'fdk-aac' does not support 'uwp | arm'")
     endif()
 endif()
 
@@ -56,8 +50,8 @@ if("ilbc" IN_LIST FEATURES)
 endif()
 
 if("modplug" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp | (windows & static)'")
+    if (VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp'")
     endif()
 endif()
 
@@ -72,8 +66,8 @@ if("opencl" IN_LIST FEATURES)
 endif()
 
 if("opengl" IN_LIST FEATURES)
-    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
-        message(FATAL_ERROR "Feature 'opengl' does not support 'uwp | (windows & arm) | osx'")
+    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'opengl' does not support 'uwp | (windows & arm)")
     endif()
 endif()
 
@@ -550,8 +544,22 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
+set(CMAKE_VARS_FILE "${CURRENT_BUILDTREES_DIR}/vars.cmake")
+vcpkg_internal_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
+include("${CMAKE_VARS_FILE}")
+
 if (VCPKG_TARGET_IS_OSX)
+    # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us
+    if ("${VCPKG_OSX_SYSROOT}" STREQUAL "")
+        set(VCPKG_OSX_SYSROOT ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT})
+    endif()
+
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+    set(OPTIONS "${OPTIONS} --extra-cflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
+
+    list(JOIN VCPKG_OSX_ARCHITECTURES " " OSX_ARCHS)
+    LIST(LENGTH VCPKG_OSX_ARCHITECTURES OSX_ARCH_COUNT)
 endif()
 
 set(OPTIONS_CROSS "")
@@ -564,8 +572,17 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
-    elseif(VCPKG_TARGET_IS_OSX) # VCPKG_TARGET_ARCHITECTURE = arm64
-        set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
+    elseif(VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}") # VCPKG_TARGET_ARCHITECTURE = arm64
+        # get the number of architectures requested
+        list(LENGTH VCPKG_OSX_ARCHITECTURES ARCHITECTURE_COUNT)
+
+        # ideally we should check the CMAKE_HOST_SYSTEM_PROCESSOR, but that seems to be
+        # broken when inside a vcpkg port, so we only set it when doing a simple build
+        # for a single platform. multi-platform builds use a different script
+        if (ARCHITECTURE_COUNT LESS 2)
+            message(STATUS "Building on host: ${CMAKE_SYSTEM_PROCESSOR}")
+            set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
+        endif()
     endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")

@@ -1,6 +1,6 @@
 {
   "name": "boost-ratio",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost ratio module",
   "homepage": "https://github.com/boostorg/ratio",
   "dependencies": [

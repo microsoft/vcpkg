@@ -46,7 +46,9 @@ mark_as_advanced(VCPKG_VERBOSE)
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
-option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables." OFF)
+
+# requires CMake 3.14
+option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
 option(VCPKG_PREFER_SYSTEM_LIBS "Appends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found after toolchain/system libraries/packages." OFF)
 
 # Manifest options and settings
@@ -151,7 +153,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
         message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
     endif()
 
-    set("${OUT_VAR}")
+    set("${OUT_VAR}" "")
 
     # this allows us to get the value of the enclosing function's ARGC
     set(z_vcpkg_function_arguments_ARGC_NAME "ARGC")
@@ -162,8 +164,11 @@ macro(z_vcpkg_function_arguments OUT_VAR)
     if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
-            list(APPEND "${OUT_VAR}" "${z_vcpkg_function_arguments_ESCAPED_ARG}")
+            # adds an extra `;` on the first time through
+            set("${OUT_VAR}" "${${OUT_VAR}};${z_vcpkg_function_arguments_ESCAPED_ARG}")
         endforeach()
+        # remove leading `;`
+        string(SUBSTRING "${${OUT_VAR}}" 1 -1 "${OUT_VAR}")
     endif()
 endmacro()
 
@@ -609,29 +614,48 @@ endfunction()
 #
 # Note that this function requires CMake 3.14 for policy CMP0087
 function(x_vcpkg_install_local_dependencies)
-    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION;COMPONENT" "TARGETS")
+    if(CMAKE_VERSION VERSION_LESS "3.14")
+        message(FATAL_ERROR "x_vcpkg_install_local_dependencies and X_VCPKG_APPLOCAL_DEPS_INSTALL require at least CMake 3.14
+(current version: ${CMAKE_VERSION})"
+        )
+    endif()
+
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        ""
+        "DESTINATION;COMPONENT"
+        "TARGETS"
+    )
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    if(NOT DEFINED arg_DESTINATION)
+        message(FATAL_ERROR "DESTINATION must be specified")
+    endif()
+
+    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
+        # Install CODE|SCRIPT allow the use of generator expressions
+        cmake_policy(SET CMP0087 NEW)
+
         z_vcpkg_set_powershell_path()
-        if(NOT IS_ABSOLUTE "${__VCPKG_APPINSTALL_DESTINATION}")
-            set(__VCPKG_APPINSTALL_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}")
+        if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
+            set(arg_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${arg_DESTINATION}")
         endif()
-        if(__VCPKG_APPINSTALL_COMPONENT)
-            set(__VCPKG_APPINSTALL_COMPONENT COMPONENT ${__VCPKG_APPINSTALL_COMPONENT})
+
+        set(component_param "")
+        if(DEFINED arg_COMPONENT)
+            set(component_param COMPONENT "${arg_COMPONENT}")
         endif()
-        foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
-            get_target_property(TARGETTYPE "${TARGET}" TYPE)
-            if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
-                # Install CODE|SCRIPT allow the use of generator expressions
-                if(POLICY CMP0087)
-                    cmake_policy(SET CMP0087 NEW)
-                endif()
-                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+
+        foreach(target IN LISTS arg_TARGETS)
+            get_target_property(target_type "${target}" TYPE)
+            if(NOT target_type STREQUAL "INTERFACE_LIBRARY")
+                install(CODE "message(\"-- Installing app dependencies for ${target}...\")
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
                         -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                         -OutVariable out)"
-                    ${__VCPKG_APPINSTALL_COMPONENT}
-                    )
+                    ${component_param}
+                )
             endif()
         endforeach()
     endif()
@@ -644,41 +668,43 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
 
         if(ARGV0 STREQUAL "TARGETS")
             # Will contain the list of targets
-            set(PARSED_TARGETS "")
+            set(parsed_targets "")
 
             # Destination - [RUNTIME] DESTINATION argument overrides this
-            set(DESTINATION "bin")
+            set(destination "bin")
+
+            set(component_param "")
 
             # Parse arguments given to the install function to find targets and (runtime) destination
-            set(MODIFIER "") # Modifier for the command in the argument
-            set(LAST_COMMAND "") # Last command we found to process
-            foreach(ARG IN LISTS ARGS)
-                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES")
-                    set(MODIFIER "${ARG}")
+            set(modifier "") # Modifier for the command in the argument
+            set(last_command "") # Last command we found to process
+            foreach(arg IN LISTS ARGS)
+                if(arg MATCHES "^(ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES)$")
+                    set(modifier "${arg}")
                     continue()
                 endif()
-                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT")
-                    set(LAST_COMMAND "${ARG}")
+                if(arg MATCHES "^(TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT)$")
+                    set(last_command "${arg}")
                     continue()
                 endif()
 
-                if(LAST_COMMAND STREQUAL "TARGETS")
-                    list(APPEND PARSED_TARGETS "${ARG}")
+                if(last_command STREQUAL "TARGETS")
+                    list(APPEND parsed_targets "${arg}")
                 endif()
 
-                if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
-                    set(DESTINATION "${ARG}")
+                if(last_command STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
+                    set(destination "${arg}")
                 endif()
-                if(LAST_COMMAND STREQUAL "COMPONENT")
-                    set(COMPONENT "${ARG}")
+                if(last_command STREQUAL "COMPONENT")
+                    set(component_param "COMPONENT" "${arg}")
                 endif()
             endforeach()
 
-            # COMPONENT is optional only set it when it's been set by the install rule
-            if(COMPONENT)
-                set(COMPONENT "COMPONENT" ${COMPONENT})
-            endif()
-            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}" ${COMPONENT})
+            x_vcpkg_install_local_dependencies(
+                TARGETS ${parsed_targets}
+                DESTINATION "${destination}"
+                ${component_param}
+            )
         endif()
     endfunction()
 endif()
