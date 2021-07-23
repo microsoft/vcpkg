@@ -46,7 +46,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_copy_pdbs()
     
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 else()
     set(ENV{GTKDOCIZE} true)
@@ -57,6 +57,7 @@ else()
         OPTIONS
             "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
             --disable-gtk-doc
+            --disable-doc
     )
     
     vcpkg_install_make()
