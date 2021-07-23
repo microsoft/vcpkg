@@ -17,8 +17,6 @@ subject to change without notice and should be considered highly unstable.
 Non-exhaustive list of off-by-default features:
 
 - `manifest`
-- `versions`
-- `registries`
 
 #### EDITOR
 
@@ -49,7 +47,7 @@ This environment variable can be set to a triplet name which will be used for un
 
 This environment variable allows users to override ports with alternate versions according to the
 [ports overlay](../specifications/ports-overlay.md) specification. List paths to overlays using
-the platform dependent PATH seperator (Windows `;` | others `:`)
+the platform dependent PATH separator (Windows `;` | others `:`)
 
 Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
@@ -57,7 +55,7 @@ Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
 This environment variable allows users to add directories to search for triplets.
 [Example: overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
-List paths to overlays using the platform dependent PATH seperator (Windows `;`, others `:`)
+List paths to overlays using the platform dependent PATH separator (Windows `;`, others `:`)
 
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
@@ -89,3 +87,9 @@ This environment variable changes the metadata of produced NuGet packages. See [
 #### VCPKG_USE_NUGET_CACHE
 
 This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+
+#### X_VCPKG_ASSET_SOURCES
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.

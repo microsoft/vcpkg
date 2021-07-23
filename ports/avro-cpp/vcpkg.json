@@ -1,0 +1,30 @@
+{
+  "name": "avro-cpp",
+  "version-date": "2021-06-01",
+  "description": "Apache Avro is a data serialization system",
+  "homepage": "https://github.com/apache/avro",
+  "supports": "!(windows & static)",
+  "dependencies": [
+    "boost-crc",
+    "boost-filesystem",
+    "boost-format",
+    "boost-iostreams",
+    "boost-program-options",
+    "boost-random",
+    "boost-test",
+    "boost-thread",
+    "bzip2",
+    "liblzma",
+    "libzip",
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "snappy": {
+      "description": "Support Snappy for compression",
+      "dependencies": [
+        "snappy"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+diff --git a/msvc/Hunspell.sln b/msvc/Hunspell.sln
+index 5607c8d..dabd755 100644
+--- a/msvc/Hunspell.sln
++++ b/msvc/Hunspell.sln
+@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
+ MinimumVisualStudioVersion = 10.0.40219.1
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhunspell", "libhunspell.vcxproj", "{53609BB3-D874-465C-AF7B-DF626DB0D89B}"
+ EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testparser", "testparser.vcxproj", "{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}"
+-EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hunspell", "hunspell.vcxproj", "{6A0453F4-B12A-4810-B9A2-8AB059316ED7}"
+ EndProject
+ Global
+@@ -37,22 +35,6 @@ Global
+ 		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|Win32.Build.0 = Release|Win32
+ 		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|x64.ActiveCfg = Release|x64
+ 		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|x64.Build.0 = Release|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug_dll|Win32.ActiveCfg = Debug|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug_dll|Win32.Build.0 = Debug|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug_dll|x64.ActiveCfg = Debug|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug_dll|x64.Build.0 = Debug|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug|Win32.ActiveCfg = Debug|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug|Win32.Build.0 = Debug|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug|x64.ActiveCfg = Debug|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Debug|x64.Build.0 = Debug|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release_dll|Win32.ActiveCfg = Release|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release_dll|Win32.Build.0 = Release|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release_dll|x64.ActiveCfg = Release|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release_dll|x64.Build.0 = Release|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release|Win32.ActiveCfg = Release|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release|Win32.Build.0 = Release|Win32
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release|x64.ActiveCfg = Release|x64
+-		{611BF6C7-332A-49BB-B2A3-80AFD5B785D9}.Release|x64.Build.0 = Release|x64
+ 		{6A0453F4-B12A-4810-B9A2-8AB059316ED7}.Debug_dll|Win32.ActiveCfg = Debug|Win32
+ 		{6A0453F4-B12A-4810-B9A2-8AB059316ED7}.Debug_dll|Win32.Build.0 = Debug|Win32
+ 		{6A0453F4-B12A-4810-B9A2-8AB059316ED7}.Debug_dll|x64.ActiveCfg = Debug|x64

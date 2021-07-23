@@ -3,11 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/concept_check
-    REF boost-1.75.0
-    SHA512 823e3af47881c98f864c70686a3a2f6c9b7d5e6bf0ae61f2983f6c2ba26a70aaa888b683a74ef504ec7f5f479609731e35fad3518f1731954e01e7d67636e5d4
+    REF boost-1.76.0
+    SHA512 f10bcd81ed88a036078188647a0b8aa2245d0c343fe29d4c13c16fe8dc551d843281bbe1fb903c71026c8183f02f57bbad2cbbf3eb6c3f4f885ec8773afb8bde
     HEAD_REF master
-    PATCHES
-        fix-warning-c4834.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
