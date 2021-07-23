@@ -2986,7 +2986,7 @@
     },
     "laszip": {
       "baseline": "3.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "lazy-importer": {
       "baseline": "2019-08-10",
