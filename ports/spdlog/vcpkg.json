@@ -1,7 +1,7 @@
 {
   "name": "spdlog",
-  "version-semver": "1.8.5",
-  "port-version": 4,
+  "version-semver": "1.9.0",
+  "port-version": 1,
   "description": "Very fast, header only, C++ logging library",
   "homepage": "https://github.com/gabime/spdlog",
   "license": "MIT",
