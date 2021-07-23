@@ -263,6 +263,7 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_SET_CHARSET_FLAG=${vcpkg_set_charset_flag}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
@@ -403,7 +404,7 @@ function(vcpkg_configure_cmake)
         endforeach()
     endforeach()
 
-    if(DEFINED all_unused_variables)
+    if(NOT "${all_unused_variables}" STREQUAL "")
         vcpkg_list(REMOVE_DUPLICATES all_unused_variables)
         vcpkg_list(JOIN all_unused_variables "\n    " all_unused_variables)
         message(WARNING "The following variables are not used in CMakeLists.txt:
