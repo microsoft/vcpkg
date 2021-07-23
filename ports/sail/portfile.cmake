@@ -35,8 +35,9 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME sailcommon CONFIG_PATH lib/cmake/sailcommo
 vcpkg_cmake_config_fixup(PACKAGE_NAME sailc++    CONFIG_PATH lib/cmake/sailc++    DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME sailmanip  CONFIG_PATH lib/cmake/sailmanip  DO_NOT_DELETE_PARENT_CONFIG_PATH)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+
 
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
