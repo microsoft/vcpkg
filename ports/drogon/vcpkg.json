@@ -17,22 +17,6 @@
     "zlib"
   ],
   "features": {
-    "all": {
-      "description": "Build with all options",
-      "dependencies": [
-        {
-          "name": "drogon",
-          "features": [
-            "ctl",
-            "mysql",
-            "orm",
-            "postgres",
-            "redis",
-            "sqlite3"
-          ]
-        }
-      ]
-    },
     "ctl": {
       "description": "Build drogon_ctl tool."
     },
