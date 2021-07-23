@@ -10,7 +10,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7 
+    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -53,6 +53,7 @@ vcpkg_configure_make(
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
+    DETERMINE_BUILD_TRIPLET
 )
 
 if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release"))
@@ -76,7 +77,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
     )
 
     message(STATUS "setting rpath prefix for macOS dynamic libraries")
-    
+
     # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
     foreach(LIB_NAME libicudata libicui18n libicuio libicutu libicuuc)
         vcpkg_execute_build_process(
@@ -86,7 +87,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
             LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
         )
     endforeach()
-    
+
     # add ID_PREFIX to libicui18n libicuio libicutu dependencies
     foreach(LIB_NAME libicui18n libicuio)
         vcpkg_execute_build_process(
@@ -131,7 +132,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
         LOGNAME "make-install-${RELEASE_TRIPLET}")
     message(STATUS "Package ${RELEASE_TRIPLET} done")
-    
+
 else()
     vcpkg_install_make()
 endif()

@@ -1,23 +1,37 @@
+From 6a3e539ea26eec1bfc2a6e722e923bd5221f8d26 Mon Sep 17 00:00:00 2001
+From: "Matthias C. M. Troffaes" <matthias.troffaes@gmail.com>
+Date: Thu, 8 Jul 2021 10:47:30 +0100
+Subject: [PATCH] Fix Libs.private in .pc file.
+
+---
+ CMakeLists.txt   | 7 +++++--
+ libmodplug.pc.in | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 468f1a3..8e94458 100644
+index 468f1a3..3164fc6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,6 +142,8 @@ if(HAVE_SINF)
+@@ -141,7 +141,11 @@ if(HAVE_SINF)
+   add_definitions(-DHAVE_SINF)
  endif(HAVE_SINF)
  
- if (NOT WIN32)
-+  set(UNIXLIBS "-lstdc++ -lm")
-+endif (NOT WIN32)
+-if (NOT WIN32)
++if(WIN32)
++  set(LIBS_PRIVATE "-luser32")
++else(WIN32)
++  set(LIBS_PRIVATE "-lstdc++ -lm")
++endif(WIN32)
    set(prefix "${CMAKE_INSTALL_PREFIX}")
    set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
    set(libdir "${CMAKE_INSTALL_PREFIX}/lib")
-@@ -152,4 +154,3 @@ if (NOT WIN32)
+@@ -152,4 +156,3 @@ if (NOT WIN32)
    install(FILES "${PROJECT_BINARY_DIR}/libmodplug.pc"
      DESTINATION lib/pkgconfig
    )
 -endif (NOT WIN32)
 diff --git a/libmodplug.pc.in b/libmodplug.pc.in
-index bbf05f9..1699d76 100644
+index bbf05f9..e4a43cc 100644
 --- a/libmodplug.pc.in
 +++ b/libmodplug.pc.in
 @@ -8,5 +8,5 @@ Description: The ModPlug mod file playing library.
@@ -25,6 +39,8 @@ index bbf05f9..1699d76 100644
  Requires: 
  Libs: -L${libdir} -lmodplug 
 -Libs.private: -lstdc++ -lm
-+Libs.private: @UNIXLIBS@
++Libs.private: @LIBS_PRIVATE@
  Cflags: -I${includedir}
+-- 
+2.21.0.windows.1
 
