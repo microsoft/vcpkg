@@ -100,6 +100,7 @@ cfitsio:arm-uwp=fail
 cfitsio:x64-uwp=fail
 cgicc:arm-uwp=fail
 cgicc:x64-uwp=fail
+chakracore:x64-linux=skip
 # DCMTK currently has a vendored copy of libcharls.a, which causes conflicts with charls (TODO: use charls' copy)
 charls:arm64-windows=skip
 charls:arm-uwp=skip
@@ -208,8 +209,6 @@ devicenameresolver:x64-windows-static=fail
 dimcli:arm-uwp=fail
 dimcli:x64-osx=fail
 dimcli:x64-uwp=fail
-# directxtex requires GCC 9 or later for linux support
-directxtex:x64-linux=fail
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
@@ -270,10 +269,6 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
-embree2:x64-linux=fail
-embree2:x64-osx=fail
-embree2:x64-windows-static=fail
-embree2:x64-windows-static-md=fail
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
@@ -353,9 +348,6 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
-
-# Requires a more recent gcc than we have in the test lab
-gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
@@ -1393,8 +1385,6 @@ rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-rxspencer:x64-uwp=fail
-rxspencer:arm-uwp=fail
 ryml:x64-osx=fail
 ryu:arm-uwp=fail
 ryu:x64-uwp=fail
@@ -1611,8 +1601,6 @@ v8:arm64-windows=fail
 v8:arm-uwp=fail
 v8:x64-osx=fail
 v8:x64-uwp=fail
-# The domain hosting vamp-sdk uses a newer root cert than is available in our linux CI
-vamp-sdk:x64-linux=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
 vlpp:x64-osx=fail
@@ -1750,7 +1738,6 @@ libmicrohttpd:x64-windows-static-md=fail
 libspatialite:x64-windows-static-md=fail
 linenoise-ng:x64-windows-static-md=fail
 mmloader:x64-windows-static-md=fail
-mpg123:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
