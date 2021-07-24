@@ -1,0 +1,31 @@
+{
+  "name": "kealib",
+  "version": "1.4.11",
+  "port-version": 3,
+  "description": "kealib is gdal model using HDF5 standard.",
+  "homepage": "https://bitbucket.org/chchrsc/kealib",
+  "dependencies": [
+    {
+      "name": "hdf5",
+      "features": [
+        "cpp"
+      ]
+    },
+    "szip",
+    "zlib"
+  ],
+  "features": {
+    "parallel": {
+      "description": "Use parallel support for HDF5",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "features": [
+            "parallel"
+          ]
+        },
+        "mpi"
+      ]
+    }
+  }
+}
