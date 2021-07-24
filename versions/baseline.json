@@ -1625,15 +1625,15 @@
       "port-version": 1
     },
     "daw-header-libraries": {
-      "baseline": "2021-06-28",
+      "baseline": "1.21.1",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "2021-05-16",
+      "baseline": "2.9.11",
       "port-version": 0
     },
     "daw-utf-range": {
-      "baseline": "2021-06-15",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "dbg-macro": {
@@ -3132,12 +3132,12 @@
       "baseline": "0.6.0-1",
       "port-version": 0
     },
-    "libebur128": {
-      "baseline": "1.2.6",
-      "port-version": 0
-    },
     "libe57": {
       "baseline": "1.1.312",
+      "port-version": 0
+    },
+    "libebur128": {
+      "baseline": "1.2.6",
       "port-version": 0
     },
     "libepoxy": {
