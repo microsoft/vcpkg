@@ -1,20 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
-    REF 37ecbfe7cd9d0ba660ef77998228c827ab407ff3
-    SHA512 0ed32115e0e51fa008c02ada9def131b699332f0765718333c2d02707b985cd5a1f558d63e40e72d290f6a9329946cdde101b2b33d50b04bf54a715efd5c3e40
+    REF d8cb3a25a545b27b6ab5e68f4480b92ad0dc78fe
+    SHA512 19f486c6782f6134db0f7c8a1a4031b69aeae7f64846f186bccfa37927c8a688545fe5825de841e5ec5408267922b0334db3727d00fcb96b1a36eee81a05eae9
     HEAD_REF master
-    PATCHES thirdparty_and_portname.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-    -DDAW_ENABLE_TESTING=OFF
+    -DDAW_USE_PACKAGE_MANAGEMENT=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
