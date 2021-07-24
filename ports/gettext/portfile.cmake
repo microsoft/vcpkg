@@ -1,12 +1,16 @@
 if(VCPKG_TARGET_IS_LINUX)
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     if (NOT EXISTS "/usr/include/libintl.h")
-        message(FATAL_ERROR "Please use command \"sudo apt-get install gettext\" to install gettext on linux.")
+        message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
+                            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+        )
     endif()
-    return()
-else()
-    set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+    if(NOT "tools" IN_LIST FEATURES)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        return()
+    endif()
 endif()
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 #Based on https://github.com/winlibs/gettext
 
@@ -17,13 +21,14 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "gettext-${GETTEXT_VERSION}.tar.gz"
     SHA512 bbe590c5dd3580c75bf30ff768da99a88eb8d466ec1ac9eea20be4cab4357ecf72448e6b81b47425e39d50fa6320ba426632914d7898dfebb4f159abc39c31d1
 )
+set(PATCHES "")
 if(VCPKG_TARGET_IS_UWP)
     set(PATCHES uwp_remove_localcharset.patch)
 endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GETTEXT_VERSION}
+    ARCHIVE "${ARCHIVE}"
+    REF "${GETTEXT_VERSION}"
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
@@ -32,59 +37,117 @@ vcpkg_extract_source_archive_ex(
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_PATH ${BISON} DIRECTORY)
-vcpkg_add_to_path(${BISON_PATH})
+get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
+vcpkg_add_to_path("${BISON_PATH}")
 
+set(OPTIONS
+    --enable-relocatable #symbol duplication with glib-init.c?
+    --enable-c++
+    --disable-acl
+    --disable-csharp
+    --disable-curses
+    --disable-java
+    --disable-openmp
+)
 if(VCPKG_TARGET_IS_WINDOWS)
-    # This is required. For some reason these do not get correctly identified for release builds. 
-    list(APPEND OPTIONS ac_cv_func_wcslen=yes
-                        ac_cv_func_memmove=yes
-                        #The following are required for a full gettext built.
-                        # Left here for future reference. 
-                        gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
-                        ac_cv_func_memset=yes #not detected in release builds 
-                        ac_cv_header_pthread_h=no
-                        ac_cv_header_dirent_h=no
-                        )
+    list(APPEND OPTIONS
+        # Avoid unnecessary test.
+        --with-included-glib
+        # This is required. For some reason these do not get correctly identified for release builds.
+        ac_cv_func_wcslen=yes
+        ac_cv_func_memmove=yes
+        # The following are required for a full gettext built (libintl and tools).
+        gl_cv_func_printf_directive_n=no  # segfaults otherwise with popup window
+        ac_cv_func_memset=yes             # not detected in release builds
+        ac_cv_header_pthread_h=no
+        ac_cv_header_dirent_h=no
+    )
 endif()
-set(ADDITIONAL_CONFIGURE_OPTIONS)
-set(ADDITIONAL_INSTALL_OPTIONS)
+
+# These functions scope any changes to VCPKG_BUILD_TYPE
+function(build_libintl_and_tools)
+    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
+    if(DEFINED arg_BUILD_TYPE)
+        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
+    endif()
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
+        DETERMINE_BUILD_TRIPLET
+        USE_WRAPPERS
+        ADD_BIN_TO_PATH # So configure can check for working iconv
+        ADDITIONAL_MSYS_PACKAGES gzip
+        OPTIONS
+            ${OPTIONS}
+    )
+    vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
+endfunction()
+
+function(build_libintl_only)
+    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
+    if(DEFINED arg_BUILD_TYPE)
+        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
+    endif()
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
+        DETERMINE_BUILD_TRIPLET
+        USE_WRAPPERS
+        ADD_BIN_TO_PATH # So configure can check for working iconv
+        OPTIONS
+            ${OPTIONS}
+    )
+    vcpkg_install_make(SUBPATH "/intl")
+endfunction()
+
 if("tools" IN_LIST FEATURES)
-    set(BUILD_SOURCE_PATH ${SOURCE_PATH})
-    set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
+    # Minimization of gettext tools build time by:
+    # - building tools only for release configuration
+    # - custom top-level Makefile
+    # - configuration cache
+    list(APPEND OPTIONS "--cache-file=../config.cache-${TARGET_TRIPLET}")
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}")
+    build_libintl_and_tools(BUILD_TYPE "release")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    file(GLOB tool_libs
+        LIST_DIRECTORIES false
+        "${CURRENT_PACKAGES_DIR}/bin/*"
+        "${CURRENT_PACKAGES_DIR}/lib/*"
+    )
+    list(FILTER tool_libs EXCLUDE REGEX "intl[^/\\\\]*$")
+    file(REMOVE ${tool_libs})
+    file(GLOB tool_includes
+        LIST_DIRECTORIES true
+        "${CURRENT_PACKAGES_DIR}/include/*"
+    )
+    list(FILTER tool_includes EXCLUDE REGEX "intl[^/\\\\]*$")
+    file(REMOVE_RECURSE ${tool_includes})
+    if(VCPKG_TARGET_IS_LINUX)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+    elseif(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}.release")
+        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}.release")
+        file(READ "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}" config_cache)
+        string(REGEX REPLACE "\nac_cv_env[^\n]*" "" config_cache "${config_cache}") # Eliminate build type flags
+        file(WRITE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}" "${config_cache}")
+        build_libintl_only(BUILD_TYPE "debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}.release/debug")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}.release" "${CURRENT_PACKAGES_DIR}")
+    endif()
 else()
-    set(BUILD_SOURCE_PATH ${SOURCE_PATH}/gettext-runtime) # Could be its own port
-    set(ADDITIONAL_INSTALL_OPTIONS SUBPATH "/intl")
+    list(APPEND OPTIONS "--config-cache")
+    build_libintl_only()
 endif()
-vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
-                     DETERMINE_BUILD_TRIPLET
-                     USE_WRAPPERS
-                     ADD_BIN_TO_PATH    # So configure can check for working iconv
-                     OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
-                             --enable-c++
-                             --disable-java
-                             ${OPTIONS}
-                     ${ADDITIONAL_CONFIGURE_OPTIONS}
-                    )
-vcpkg_install_make(${ADDITIONAL_INSTALL_OPTIONS})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gettext/COPYING ${CURRENT_PACKAGES_DIR}/share/gettext/copyright)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright" COPYONLY)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-set(GNU_DLL_PATHS lib/ debug/lib/)
-set(GNU_DLL_NAME GNU.Gettext.dll) #C# dll?
-foreach(DLL_PATH IN LISTS GNU_DLL_PATHS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
-       file(REMOVE "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
-    endif()
-endforeach()
-
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
+if(NOT VCPKG_TARGET_IS_LINUX)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
+endif()
+if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+endif()
