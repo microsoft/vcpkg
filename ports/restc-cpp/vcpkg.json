@@ -6,6 +6,7 @@
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
   "dependencies": [
+    "boost-asio",
     "boost-chrono",
     "boost-context",
     "boost-coroutine",
