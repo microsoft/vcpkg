@@ -11,18 +11,5 @@
         "cpp"
       ]
     }
-  ],
-  "features": {
-    "parallel": {
-      "description": "Use parallel support for HDF5",
-      "dependencies": [
-        {
-          "name": "hdf5",
-          "features": [
-            "parallel"
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }

@@ -7,12 +7,6 @@ vcpkg_from_github(
     PATCHES hdf5_include.patch
 )
 
-if ("parallel" IN_LIST FEATURES)
-    set(ENABLE_PARALLEL ON)
-else()
-    set(ENABLE_PARALLEL OFF)
-endif()
-
 if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
     set(HDF5_USE_STATIC_LIBRARIES ON)
 endif()
@@ -21,7 +15,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-      -DHDF5_PREFER_PARALLEL=${ENABLE_PARALLEL}
       -DLIBKEA_WITH_GDAL=OFF
       -DDISABLE_TESTS=ON
       -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
