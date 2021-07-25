@@ -1,9 +1,8 @@
 {
   "name": "kealib",
-  "version": "1.4.11",
-  "port-version": 4,
-  "description": "kealib is gdal model using HDF5 standard.",
-  "homepage": "https://bitbucket.org/chchrsc/kealib",
+  "version": "1.4.14",
+  "description": "KEALib provides an implementation of the GDAL data model using HDF5.",
+  "homepage": "https://github.com/ubarsc/kealib",
   "dependencies": [
     {
       "name": "hdf5",
