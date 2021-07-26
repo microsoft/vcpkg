@@ -66,6 +66,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "modplug"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "opencl"
           ],
           "platform": "!uwp"
@@ -133,14 +141,6 @@
             "dav1d"
           ],
           "platform": "!(uwp | arm | x86 | osx)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "modplug"
-          ],
-          "platform": "!(windows & static) & !uwp"
         },
         {
           "name": "ffmpeg",

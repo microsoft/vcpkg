@@ -1,0 +1,12 @@
+{
+  "name": "clue",
+  "version-string": "1.0.0-alpha.7",
+  "port-version": 1,
+  "description": "clue is a C++03 header-only library to log messages with a severity and optional module identifier.",
+  "homepage": "https://github.com/martinmoene/clue",
+  "features": {
+    "test": {
+      "description": "Build test"
+    }
+  }
+}

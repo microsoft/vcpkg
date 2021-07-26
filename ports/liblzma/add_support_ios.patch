@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52439b3..0b5e371 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -526,6 +526,7 @@ if(HAVE_GETOPT_LONG)
+ 
+     install(TARGETS xzdec
+             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                     COMPONENT xzdec)
+ 
+     if(UNIX)
+@@ -653,6 +654,7 @@ if(NOT MSVC AND HAVE_GETOPT_LONG)
+ 
+     install(TARGETS xz
+             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                     COMPONENT xz)
+ 
+     install(FILES src/xz/xz.1
+-- 
+2.30.1 (Apple Git-130)
+

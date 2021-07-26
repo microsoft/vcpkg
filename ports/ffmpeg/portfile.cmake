@@ -50,8 +50,8 @@ if("ilbc" IN_LIST FEATURES)
 endif()
 
 if("modplug" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp | (windows & static)'")
+    if (VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp'")
     endif()
 endif()
 

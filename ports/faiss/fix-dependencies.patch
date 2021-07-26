@@ -1,0 +1,34 @@
+diff --git a/cmake/faiss-config.cmake.in b/cmake/faiss-config.cmake.in
+index 43ea9d4c..437a7f81 100644
+--- a/cmake/faiss-config.cmake.in
++++ b/cmake/faiss-config.cmake.in
+@@ -4,4 +4,7 @@
+ # This source code is licensed under the BSD-style license found in the
+ # LICENSE file in the root directory of this source tree.
+ 
++find_dependency(OpenMP REQUIRED)
++find_dependency(BLAS REQUIRED)
++find_dependency(LAPACK REQUIRED)
+ include("${CMAKE_CURRENT_LIST_DIR}/faiss-targets.cmake")
+diff --git a/faiss/CMakeLists.txt b/faiss/CMakeLists.txt
+index 51680fd1..691f52c2 100644
+--- a/faiss/CMakeLists.txt
++++ b/faiss/CMakeLists.txt
+@@ -148,14 +148,14 @@ find_package(OpenMP REQUIRED)
+ target_link_libraries(faiss PRIVATE OpenMP::OpenMP_CXX)
+ 
+ find_package(MKL)
+-if(MKL_FOUND)
++if(0)
+   target_link_libraries(faiss PRIVATE ${MKL_LIBRARIES})
+ else()
+   find_package(BLAS REQUIRED)
+-  target_link_libraries(faiss PRIVATE ${BLAS_LIBRARIES})
++  target_link_libraries(faiss PRIVATE BLAS::BLAS)
+ 
+   find_package(LAPACK REQUIRED)
+-  target_link_libraries(faiss PRIVATE ${LAPACK_LIBRARIES})
++  target_link_libraries(faiss PRIVATE LAPACK::LAPACK)
+ endif()
+ 
+ install(TARGETS faiss
