@@ -8,6 +8,7 @@ vcpkg_from_github(
         cmakelists.patch
         fix-configure-error.patch
         fix-test-dependency.patch
+        fix-dependencies.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACML.cmake)
@@ -22,7 +23,9 @@ file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindArmadillo.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools     BUILD_CLI_EXECUTABLES
+    FEATURES
+        tools   BUILD_CLI_EXECUTABLES
+        openmp  USE_OPENMP
 )
 
 vcpkg_configure_cmake(
