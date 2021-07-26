@@ -30,7 +30,7 @@ endif()
 
 #Install the header files
 file(GLOB HEADER_FILES "${SOURCE_PATH}/src/*.h")
-file(INSTALL "${HEADER_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
