@@ -3258,7 +3258,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 8
+      "port-version": 9
     },
     "libics": {
       "baseline": "1.6.4",
