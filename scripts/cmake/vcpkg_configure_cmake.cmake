@@ -78,7 +78,7 @@ function(vcpkg_configure_cmake)
 
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG;Z_VCPKG_IGNORE_UNUSED_VARIABLES"
-        "SOURCE_PATH;GENERATOR;LOGNAME"
+        "SOURCE_PATH;GENERATOR;LOGNAME;TRIPLET;TARGET_ARCHITECTURE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
 
@@ -87,8 +87,16 @@ function(vcpkg_configure_cmake)
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
     endif()
 
+    if(NOT arg_TRIPLET)
+        set(arg_TRIPLET ${TARGET_TRIPLET})
+    endif()
+
+    if(NOT arg_TARGET_ARCHITECTURE)
+        set(arg_TARGET_ARCHITECTURE ${VCPKG_TARGET_ARCHITECTURE})
+    endif()
+
     if(NOT arg_LOGNAME)
-        set(arg_LOGNAME config-${TARGET_TRIPLET})
+        set(arg_LOGNAME config-${arg_TRIPLET})
     endif()
 
     set(manually_specified_variables "")
@@ -134,40 +142,40 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT _TARGETTING_UWP))
         set(GENERATOR "Ninja")
 
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
         set(GENERATOR "Visual Studio 12 2013")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
         set(GENERATOR "Visual Studio 12 2013 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
         set(GENERATOR "Visual Studio 12 2013 ARM")
 
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
         set(GENERATOR "Visual Studio 14 2015")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
         set(GENERATOR "Visual Studio 14 2015 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
         set(GENERATOR "Visual Studio 14 2015 ARM")
 
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
         set(GENERATOR "Visual Studio 15 2017")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
         set(GENERATOR "Visual Studio 15 2017 Win64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
         set(GENERATOR "Visual Studio 15 2017 ARM")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
         set(GENERATOR "Visual Studio 15 2017")
         set(ARCH "ARM64")
 
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
         set(GENERATOR "Visual Studio 16 2019")
         set(ARCH "Win32")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
         set(GENERATOR "Visual Studio 16 2019")
         set(ARCH "x64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
         set(GENERATOR "Visual Studio 16 2019")
         set(ARCH "ARM")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+    elseif(arg_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
         set(GENERATOR "Visual Studio 16 2019")
         set(ARCH "ARM64")
 
@@ -176,7 +184,7 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CMAKE_SYSTEM_NAME Windows)
         endif()
         message(FATAL_ERROR "Unable to determine appropriate generator for: "
-            "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
+            "${VCPKG_CMAKE_SYSTEM_NAME}-${arg_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
     # If we use Ninja, make sure it's on PATH
@@ -187,7 +195,7 @@ function(vcpkg_configure_cmake)
         list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-dbg)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
@@ -247,10 +255,11 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
-    list(JOIN VCPKG_TARGET_ARCHITECTURE "\;" target_architecure_string)
+    list(JOIN arg_TARGET_ARCHITECTURE "\;" target_architecure_string)
     list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
-        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_TARGET_TRIPLET=${arg_TRIPLET}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${target_architecure_string}"
         "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
@@ -270,8 +279,7 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
         "-DVCPKG_LINKER_FLAGS_RELEASE=${VCPKG_LINKER_FLAGS_RELEASE}"
-        "-DVCPKG_LINKER_FLAGS_DEBUG=${VCPKG_LINKER_FLAGS_DEBUG}"
-        "-DVCPKG_TARGET_ARCHITECTURE=${target_architecure_string}"
+	"-DVCPKG_LINKER_FLAGS_DEBUG=${VCPKG_LINKER_FLAGS_DEBUG}"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
@@ -326,20 +334,20 @@ function(vcpkg_configure_cmake)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE)
             _build_cmakecache(".." "rel")
-            _build_cmakecache("../../${TARGET_TRIPLET}-dbg" "dbg")
+            _build_cmakecache("../../${arg_TRIPLET}-dbg" "dbg")
         elseif(VCPKG_BUILD_TYPE STREQUAL "release")
             _build_cmakecache(".." "rel")
         elseif(VCPKG_BUILD_TYPE STREQUAL "debug")
-            _build_cmakecache("../../${TARGET_TRIPLET}-dbg" "dbg")
+            _build_cmakecache("../../${arg_TRIPLET}-dbg" "dbg")
         endif()
 
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
-        file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel/vcpkg-parallel-configure)
+        file(WRITE ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}")
+        message(STATUS "Configuring ${arg_TRIPLET}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel/vcpkg-parallel-configure
             LOGNAME ${arg_LOGNAME}
         )
         
@@ -348,11 +356,11 @@ function(vcpkg_configure_cmake)
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+            message(STATUS "Configuring ${arg_TRIPLET}-dbg")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-dbg)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-dbg
                 LOGNAME ${arg_LOGNAME}-dbg
             )
             list(APPEND config_logs
@@ -361,11 +369,11 @@ function(vcpkg_configure_cmake)
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+            message(STATUS "Configuring ${arg_TRIPLET}-rel")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${arg_TRIPLET}-rel
                 LOGNAME ${arg_LOGNAME}-rel
             )
             list(APPEND config_logs

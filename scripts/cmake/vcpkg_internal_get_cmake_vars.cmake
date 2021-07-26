@@ -28,10 +28,18 @@ If possible avoid usage in portfiles.
 #]===]
 
 function(vcpkg_internal_get_cmake_vars)
-    cmake_parse_arguments(PARSE_ARGV 0 _gcv "" "OUTPUT_FILE" "OPTIONS")
+    cmake_parse_arguments(PARSE_ARGV 0 _gcv "" "OUTPUT_FILE;TRIPLET;TARGET_ARCHITECTURE;VAR_PREFIX" "OPTIONS")
 
     if(_gcv_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed unparsed arguments: '${_gcv_UNPARSED_ARGUMENTS}'")
+    endif()
+
+    if(NOT _gcv_TRIPLET)
+        set(_gcv_TRIPLET ${TARGET_TRIPLET})
+    endif()
+
+    if(NOT _gcv_TARGET_ARCHITECTURE)
+        set(_gcv_TARGET_ARCHITECTURE ${VCPKG_TARGET_ARCHITECTURE})
     endif()
 
     if(NOT _gcv_OUTPUT_FILE)
@@ -41,27 +49,34 @@ function(vcpkg_internal_get_cmake_vars)
     if(${_gcv_OUTPUT_FILE})
         debug_message("OUTPUT_FILE ${${_gcv_OUTPUT_FILE}}")
     else()
-        set(DEFAULT_OUT "${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}.cmake.log") # So that the file gets included in CI artifacts.
+        set(DEFAULT_OUT "${CURRENT_BUILDTREES_DIR}/cmake-vars-${_gcv_TRIPLET}.cmake.log") # So that the file gets included in CI artifacts.
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}" PARENT_SCOPE)
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}")
     endif()
 
+    if(_gcv_VAR_PREFIX)
+        list(APPEND _gcv_OPTIONS "-DVCPKG_VAR_PREFIX=${_gcv_VAR_PREFIX}")
+    endif()
+
+
     vcpkg_configure_cmake(
         SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
         OPTIONS ${_gcv_OPTIONS} "-DVCPKG_BUILD_TYPE=${VCPKG_BUILD_TYPE}"
-        OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log"
-        OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
+        OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${_gcv_TRIPLET}-dbg.cmake.log"
+        OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${_gcv_TRIPLET}-rel.cmake.log"
         PREFER_NINJA
-        LOGNAME get-cmake-vars-${TARGET_TRIPLET}
+        TRIPLET ${_gcv_TRIPLET}
+        TARGET_ARCHITECTURE ${_gcv_TARGET_ARCHITECTURE}
+        LOGNAME get-cmake-vars-${_gcv_TRIPLET}
         Z_VCPKG_IGNORE_UNUSED_VARIABLES
     )
 
     set(_include_string)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log\")\n")
+        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${_gcv_TRIPLET}-rel.cmake.log\")\n")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log\")\n")
+        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${_gcv_TRIPLET}-dbg.cmake.log\")\n")
     endif()
     file(WRITE "${${_gcv_OUTPUT_FILE}}" "${_include_string}")
 

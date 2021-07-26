@@ -55,7 +55,16 @@ function(vcpkg_build_make)
         # vcpkg_build_make called without using vcpkg_configure_make before
         vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
     endif()
+
     include("${_VCPKG_CMAKE_VARS_FILE}")
+
+    if(VCPKG_CROSSCOMPILING)
+        if(NOT _VCPKG_HOST_CMAKE_VARS_FILE)
+            _vcpkg_cmake_to_vcpkg_arch(${CMAKE_HOST_SYSTEM_PROCESSOR} _host_arch)
+            vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_HOST_CMAKE_VARS_FILE TRIPLET ${_HOST_TRIPLET} VAR_PREFIX VCPKG_DETECTED_FOR_BUILD TARGET_ARCHITECTURE ${_host_arch})
+        endif()
+        include("${_VCPKG_HOST_CMAKE_VARS_FILE}")
+    endif()
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
@@ -79,9 +88,11 @@ function(vcpkg_build_make)
     if(WIN32)
         set(_VCPKG_PREFIX ${CURRENT_PACKAGES_DIR})
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+        set(_VCPKG_HOST_INSTALLED ${CURRENT_HOST_INSTALLED_DIR})
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
         string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
+        string(REPLACE " " "\ " _VCPKG_HOST_INSTALLED "${CURRENT_HOST_INSTALLED_DIR}")
     endif()
 
     set(MAKE )
@@ -141,18 +152,40 @@ function(vcpkg_build_make)
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
-            _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
+            _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE} FALSE)
+            _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE} TRUE)
 
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                _vcpkg_select_for_build_detected(
+                    CMAKE_STATIC_LINKER_FLAGS_${CMAKE_BUILDTYPE} 
+                    FALSE 
+                    LINKER_FLAGS_${CMAKE_BUILDTYPE})
+                _vcpkg_select_for_build_detected(
+                    CMAKE_STATIC_LINKER_FLAGS_${CMAKE_BUILDTYPE} 
+                    TRUE 
+                    LINKER_FLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD)
             else() # dynamic
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+                _vcpkg_select_for_build_detected(
+                    CMAKE_SHARED_LINKER_FLAGS_${CMAKE_BUILDTYPE} 
+                    FALSE 
+                    LINKER_FLAGS_${CMAKE_BUILDTYPE})
+                _vcpkg_select_for_build_detected(
+                    CMAKE_SHARED_LINKER_FLAGS_${CMAKE_BUILDTYPE} 
+                    TRUE 
+                    LINKER_FLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD)
             endif()
+
             if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link")
                 set(LINK_ENV_${CMAKE_BUILDTYPE} "$ENV{_LINK_} ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             else()
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
+            endif()
+
+            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_FOR_BUILD_C_COMPILER MATCHES "cl.exe")
+                set(LDFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD "-L${_VCPKG_HOST_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_HOST_INSTALLED}${PATH_SUFFIX}/lib/manual-link")
+            else()
+                set(LDFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD "-L${_VCPKG_HOST_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_HOST_INSTALLED}${PATH_SUFFIX}/lib/manual-link ${LINKER_FLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD}")
             endif()
             
             # Setup environment
@@ -164,6 +197,12 @@ function(vcpkg_build_make)
             set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIBPATH_PATHLIKE_CONCAT}")
             set(ENV{LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIBRARY_PATH_PATHLIKE_CONCAT}")
+
+            set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD}")
+            set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD}")
+            set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD}")
+            set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${CMAKE_BUILDTYPE}_FOR_BUILD}")
+
             #set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${BUILDTYPE}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
 
             if(LINK_ENV_${_VAR_SUFFIX})
