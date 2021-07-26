@@ -677,7 +677,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                     list(APPEND parsed_targets "${arg}")
                 endif()
 
-                if(last_command STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
+                if(last_command STREQUAL "DESTINATION" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(destination "${arg}")
                 endif()
                 if(last_command STREQUAL "COMPONENT")
