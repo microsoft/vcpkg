@@ -15,7 +15,7 @@ endif()
 target_include_directories(cspice PUBLIC "${INCLUDE_PATH}")
 
 if (WIN32)
-    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO")
+    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
     set_target_properties(cspice PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 elseif (UNIX)
     target_compile_definitions(cspice PUBLIC "NON_UNIX_STDIO")
@@ -29,7 +29,7 @@ endif ()
 
 if (NOT _SKIP_HEADERS)
     file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
-    install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
+    install(FILES ${SPICE_HEADERS} DESTINATION include)
 endif()
 
 set_target_properties(
