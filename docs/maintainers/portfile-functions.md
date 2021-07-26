@@ -69,6 +69,7 @@
 
 - [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
 - [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
+- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake/vcpkg_cmake_get_vars.md)
 - [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
 
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
