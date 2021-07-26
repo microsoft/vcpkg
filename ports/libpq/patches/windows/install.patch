@@ -2,6 +2,25 @@ diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
 index d109b2c90..75c7446e6 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
+@@ -63,8 +63,16 @@ sub Install
+ 		do "./config.pl" if (-f "config.pl");
+ 	}
+ 
+-	chdir("../../..")    if (-f "../../../configure");
+-	chdir("../../../..") if (-f "../../../../configure");
++	# Move to the root path depending on the current location.
++	if (-f "../../../configure")
++	{
++		chdir("../../..");
++	}
++	elsif (-f "../../../../configure")
++	{
++		chdir("../../../..");
++	}
++
+ 	my $conf = "";
+ 	if (-d "debug")
+ 	{
 @@ -106,7 +106,7 @@ sub Install
  			}
  		},
