@@ -772,6 +772,14 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXXFLAGS_${_buildtype}}")
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${_buildtype}}")
+
+        # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
+        # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
+        # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
+        if(VCPKG_TARGET_IS_ANDROID)
+            set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+        endif()
+
         if(LINK_ENV_${_VAR_SUFFIX})
             set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
