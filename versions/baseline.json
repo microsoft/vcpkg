@@ -5762,7 +5762,7 @@
     },
     "sentry-native": {
       "baseline": "0.4.11",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-sx": {
       "baseline": "2019-05-07-2",
@@ -6894,7 +6894,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 10
+      "port-version": 11
     },
     "zlib-ng": {
       "baseline": "2.0.3",
