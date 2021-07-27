@@ -20,6 +20,9 @@ file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
 file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
+file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
+
+
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
 # define Poco linkage type
@@ -41,9 +44,6 @@ if ("mysql" IN_LIST FEATURES OR "mariadb" IN_LIST FEATURES)
 else()
     set(POCO_USE_MYSQL OFF)
 endif()
-
-set(VCPKG_CXX_FLAGS "/DXML_DTD ${VCPKG_CXX_FLAGS}")
-set(VCPKG_C_FLAGS "/DXML_DTD ${VCPKG_C_FLAGS}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
