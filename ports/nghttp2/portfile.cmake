@@ -35,6 +35,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
+    file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp2/nghttp2ver.h" [[
+#ifndef NGHTTP2_STATICLIB
+#  define NGHTTP2_STATICLIB
+#endif
+]])
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
