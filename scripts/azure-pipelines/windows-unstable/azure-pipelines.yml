@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  unstable-pool: 'VcpkgUnstable-2020-09-01'
+  unstable-pool: 'VcpkgUnstable1ES'
 
 jobs:
 - template: job.yml

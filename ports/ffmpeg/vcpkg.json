@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
   "version": "4.4",
-  "port-version": 5,
+  "port-version": 10,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -28,7 +28,12 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
+            "avcodec",
+            "avdevice",
+            "avfilter",
+            "avformat",
             "avresample",
             "bzip2",
             "freetype",
@@ -40,6 +45,8 @@
             "snappy",
             "soxr",
             "speex",
+            "swresample",
+            "swscale",
             "theora",
             "vorbis",
             "vpx",
@@ -49,6 +56,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "sdl2"
           ],
@@ -56,6 +64,15 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "modplug"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "opencl"
           ],
@@ -63,6 +80,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "openh264"
           ],
@@ -70,6 +88,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "xml2"
           ],
@@ -77,6 +96,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "ilbc"
           ],
@@ -84,6 +104,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "ass"
           ],
@@ -91,6 +112,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "fribidi"
           ],
@@ -98,6 +120,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "ssh"
           ],
@@ -105,6 +128,15 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!uwp & !(windows & arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "dav1d"
           ],
@@ -112,13 +144,7 @@
         },
         {
           "name": "ffmpeg",
-          "features": [
-            "modplug"
-          ],
-          "platform": "!(windows & static) & !uwp"
-        },
-        {
-          "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "tensorflow"
           ],
@@ -126,13 +152,7 @@
         },
         {
           "name": "ffmpeg",
-          "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(windows & arm) & !osx"
-        },
-        {
-          "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "nvcodec"
           ],
@@ -140,6 +160,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "tesseract"
           ],
@@ -147,6 +168,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "fontconfig"
           ],
@@ -159,13 +181,16 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "all",
-            "gpl"
+            "gpl",
+            "postproc"
           ]
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "x264"
           ],
@@ -173,6 +198,7 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "x265"
           ],
@@ -180,10 +206,11 @@
         },
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "avisynthplus"
           ],
-          "platform": "windows & !arm & !uwp"
+          "platform": "windows & !arm & !uwp & !static"
         }
       ]
     },
@@ -192,18 +219,13 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "all-gpl",
+            "fdk-aac",
             "nonfree",
             "openssl"
           ]
-        },
-        {
-          "name": "ffmpeg",
-          "features": [
-            "fdk-aac"
-          ],
-          "platform": "!arm & !uwp"
         }
       ]
     },
