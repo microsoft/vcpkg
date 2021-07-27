@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-wx-config-path.patch
         fix-install-path.patch
         export-targets.patch
+        fix-wxconfig-libs-output.patch # Remove this patch in the next update
         fix-file-generate.patch # https://github.com/wxWidgets/wxWidgets/pull/2404
 )
 
