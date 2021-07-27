@@ -50,7 +50,7 @@
     },
     "alembic": {
       "baseline": "1.7.16",
-      "port-version": 0
+      "port-version": 1
     },
     "aliyun-oss-c-sdk": {
       "baseline": "3.10.0",
