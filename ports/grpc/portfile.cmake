@@ -20,6 +20,7 @@ vcpkg_from_github(
         snprintf.patch
         00012-fix-use-cxx17.patch
         00013-build-upbdefs.patch
+        00014-pkgconfig-upbdefs.patch
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
