@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
         fix-warningC5105.patch
         fix-config-cmake.patch
         fix-libcurl.patch
+        use-zlib-target.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -37,6 +38,7 @@ vcpkg_configure_cmake(
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
+        -DCRASHPAD_ZLIB_SYSTEM=ON
 )
 
 vcpkg_install_cmake()
