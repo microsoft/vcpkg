@@ -3258,7 +3258,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 9
+      "port-version": 10
     },
     "libics": {
       "baseline": "1.6.4",
@@ -3750,7 +3750,7 @@
     },
     "libxml2": {
       "baseline": "2.9.12",
-      "port-version": 1
+      "port-version": 2
     },
     "libxmlmm": {
       "baseline": "0.6.0",
