@@ -50,7 +50,7 @@
     },
     "alembic": {
       "baseline": "1.7.16",
-      "port-version": 0
+      "port-version": 1
     },
     "aliyun-oss-c-sdk": {
       "baseline": "3.10.0",
@@ -1825,7 +1825,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "ecos": {
@@ -1998,7 +1998,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 10
+      "port-version": 11
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -2418,7 +2418,7 @@
     },
     "grpc": {
       "baseline": "1.37.0",
-      "port-version": 2
+      "port-version": 3
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2861,71 +2861,71 @@
       "port-version": 0
     },
     "kf5archive": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5auth": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5codecs": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5completion": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5config": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5coreaddons": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5crash": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5dbusaddons": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5guiaddons": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5holidays": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5i18n": {
-      "baseline": "5.81.0",
-      "port-version": 2
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5itemmodels": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5itemviews": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5plotting": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5syntaxhighlighting": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kf5widgetsaddons": {
-      "baseline": "5.81.0",
-      "port-version": 1
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5windowsystem": {
-      "baseline": "5.81.0",
+      "baseline": "5.84.0",
       "port-version": 0
     },
     "kfr": {
@@ -5437,7 +5437,7 @@
       "port-version": 2
     },
     "qwt": {
-      "baseline": "6.1.5",
+      "baseline": "6.2.0",
       "port-version": 0
     },
     "qwtw": {
@@ -6541,8 +6541,8 @@
       "port-version": 1
     },
     "v8": {
-      "baseline": "9.0.257.17",
-      "port-version": 1
+      "baseline": "9.1.269.39",
+      "port-version": 0
     },
     "valijson": {
       "baseline": "2018-11-17-1",
