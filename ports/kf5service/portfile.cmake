@@ -1,16 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kservice
-    REF v5.75.0
-    SHA512 bdef2d6d2ac999936498e44cd2d4cc23b3187373da145073797c3d5c6e8fa3ff26c4d61fa3b233338ac104143fff1e0b6498f68e7c0da1cd886c2f2b33d4d353
+    REF v5.84.0
+    SHA512 3867da989c8f70fccba63d91aeb0038ad6345e66ca7df6003f968628e4a54e076e9686acb501940ef8f540c39d5f1a70a949cbfdd1caa34e6c4d51daebff418d
     HEAD_REF master
-    PATCHES
-        "add-missing-kf5windowsystem-dependency.patch"
 )
 
-if (VCPKG_TARGET_IS_OSX)
-     message(WARNING "${PORT} requires bison version greater than one provided by macOS, please use \`brew install bison\` to install a newer bison.")
+if(VCPKG_TARGET_IS_OSX)
+    # In Darwin platform, there can be an old version of `bison`, 
+    # Which can't be used for `gst-build`. It requires 2.4+
+    vcpkg_find_acquire_program(BISON)
+    execute_process(
+        COMMAND ${BISON} --version
+        OUTPUT_VARIABLE BISON_OUTPUT
+    )
+    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
+    set(BISON_MAJOR ${CMAKE_MATCH_1})
+    set(BISON_MINOR ${CMAKE_MATCH_2})
+    message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
+    if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
+        message(WARNING "${PORT} requires bison version greater than one provided by macOS, please use \`brew install bison\` to install a newer bison.")
+    endif()
 endif()
+
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
@@ -40,10 +52,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

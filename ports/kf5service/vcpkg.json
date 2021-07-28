@@ -1,0 +1,17 @@
+{
+  "name": "kf5service",
+  "version-string": "5.84.0",
+  "description": "Plugin framework for desktop services",
+  "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5coreaddons",
+    "kf5crash",
+    "kf5dbusaddons",
+    "kf5i18n",
+    "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
