@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         xmp     EXIV2_ENABLE_XMP
         video   EXIV2_ENABLE_VIDEO
         png     EXIV2_ENABLE_PNG
+        nls     EXIV2_ENABLE_NLS
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" EXIV2_CRT_DYNAMIC)
@@ -35,7 +36,6 @@ vcpkg_configure_cmake(
         -DEXIV2_BUILD_SAMPLES=OFF
         -DEXIV2_BUILD_DOC=OFF
         -DEXIV2_ENABLE_EXTERNAL_XMP=OFF
-        -DEXIV2_ENABLE_NLS=OFF
         -DEXIV2_ENABLE_PRINTUCS2=OFF
         -DEXIV2_ENABLE_LENSDATA=ON
         -DEXIV2_ENABLE_DYNAMIC_RUNTIME=${EXIV2_CRT_DYNAMIC}
@@ -53,6 +53,11 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/exiv2)
 vcpkg_fixup_pkgconfig()
 
+if("nls" IN_LIST FEATURES)
+    set(EXIV2_ENABLE_NLS ON)
+else()
+    set(EXIV2_ENABLE_NLS OFF)
+endif()
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
     ${CURRENT_PACKAGES_DIR}/share/${PORT}

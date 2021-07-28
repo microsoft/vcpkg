@@ -1,6 +1,6 @@
 {
   "name": "ecm",
-  "version": "5.81.0",
+  "version": "5.84.0",
   "description": "Extra CMake Modules (ECM), extra modules and scripts for CMake",
   "homepage": "https://github.com/KDE/extra-cmake-modules"
 }
