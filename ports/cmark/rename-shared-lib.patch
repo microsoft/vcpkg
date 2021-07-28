@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 026fd79..345bdd1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -73,7 +73,6 @@ if (CMARK_SHARED)
+   add_library(${LIBRARY} SHARED ${LIBRARY_SOURCES})
+   set_target_properties(${LIBRARY} PROPERTIES
+     MACOSX_RPATH TRUE
+-    OUTPUT_NAME "cmark"
+     # Avoid name clash between PROGRAM and LIBRARY pdb files.
+     PDB_NAME cmark_dll
+     # Include minor version and patch level in soname for now.

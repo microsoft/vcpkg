@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 8800e66010214384e75f933830ca5585e1ae3060    #0.30.0
     SHA512 9055eb13212034fe1a819ae697a74fa927a5094dc38da9548758b7a2b07834f6b85b71718f5c96cef9676b244243b0c0b5173f672f8d823df1bdff318bfd0ebf
     HEAD_REF master
+    PATCHES
+        rename-shared-lib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
