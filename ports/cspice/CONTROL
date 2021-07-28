@@ -1,6 +1,5 @@
 Source: cspice
 Version: 66
-Port-Version: 3
+Port-Version: 4
 Homepage: https://naif.jpl.nasa.gov/naif/toolkit_C.html
 Description: NASA C SPICE toolkit
-Supports: !uwp

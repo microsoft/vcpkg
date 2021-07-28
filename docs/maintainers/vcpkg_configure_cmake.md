@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+    [MAYBE_UNUSED_VARIABLES <option-name>...]
 )
 ```
 
@@ -54,6 +55,9 @@ Additional options passed to CMake during the Release configuration. These are i
 
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
+
+### MAYBE_UNUSED_VARIABLES
+Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
