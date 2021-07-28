@@ -12,12 +12,12 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    bzip2 ENABLE_BZIP2   
-    liblzma ENABLE_LZMA    
-    openssl ENABLE_OPENSSL   
-    wincrypto ENABLE_WINDOWS_CRYPTO    
-    commoncrypto ENABLE_COMMONCRYPTO   
-    mbedtls ENABLE_MBEDTLS
+        bzip2 ENABLE_BZIP2   
+        liblzma ENABLE_LZMA    
+        openssl ENABLE_OPENSSL   
+        wincrypto ENABLE_WINDOWS_CRYPTO    
+        commoncrypto ENABLE_COMMONCRYPTO   
+        mbedtls ENABLE_MBEDTLS
 )
 
 vcpkg_configure_cmake(
