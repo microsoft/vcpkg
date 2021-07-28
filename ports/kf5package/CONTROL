@@ -1,5 +1,5 @@
 Source: kf5package
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kpackage/html/index.html
 Description: Installation and loading of additional content (ex: scripts, images...) as packages
 Build-Depends: ecm, qt5-base[core], qt5-tools, kf5coreaddons, kf5i18n, kf5archive
