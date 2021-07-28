@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 017f7cf0..9770c158 100644
+index 93b46a6..e18d4d4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -437,10 +437,10 @@ export(TARGETS zip
- if(LIBZIP_DO_INSTALL)
+@@ -437,10 +437,10 @@ if(LIBZIP_DO_INSTALL)
+   # installation
    install(FILES ${PROJECT_BINARY_DIR}/zipconf.h DESTINATION include)
    install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
 -    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
