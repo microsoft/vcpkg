@@ -21,8 +21,6 @@ file(REMOVE "${SOURCE_PATH}/cmake/V39/FindEXPAT.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/V313/FindSQLite3.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
 file(REMOVE "${SOURCE_PATH}/XML/src/expat_config.h")
-
-
 file(REMOVE "${SOURCE_PATH}/cmake/FindMySQL.cmake")
 
 # define Poco linkage type
@@ -45,9 +43,8 @@ else()
     set(POCO_USE_MYSQL OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         # force to use dependencies as external
         -DPOCO_UNBUNDLED=ON
@@ -78,13 +75,12 @@ vcpkg_configure_cmake(
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES arc AUTO_CLEAN)
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
 
 # Copy additional include files not part of any libraries
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")
@@ -105,11 +101,12 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+  vcpkg_cmake_configure_fixup(CONFIG_PATH cmake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Poco)
+  vcpkg_cmake_configure_fixup(CONFIG_PATH lib/cmake/Poco)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
