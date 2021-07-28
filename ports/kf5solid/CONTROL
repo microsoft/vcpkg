@@ -1,5 +1,5 @@
 Source: kf5solid
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/solid/html/index.html
 Description: Desktop hardware abstraction
 Build-Depends: ecm, qt5-base, qt5-tools
