@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kplotting
-    REF v5.81.0
-    SHA512 bdeb55a3949abfe9673f3b799ba157c27aade2860bfd5db4588dcedd580f4be5f452434a8c56af25bceec1391c05a9e0d522b398f38c3acf5a3bfdb8f5d7c77d
+    REF v5.84.0
+    SHA512 4007e90bc2505cfcfb14d5b40d922cf72ffcc6898da3ffed5ce5493484fe36c1f0f697f2b8319a7fd95909aada489d57be7a8dceb66b2cbba2746ed4aa93e5a5
     HEAD_REF master
 )
 
@@ -10,10 +10,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
+    OPTIONS 
+        -DBUILD_TESTING=OFF
+    MAYBE_UNUSED_VARIABLES
+        -DBUILD_HTML_DOCS=OFF
+        -DBUILD_MAN_DOCS=OFF
+        -DBUILD_QTHELP_DOCS=OFF
 )
 
 vcpkg_install_cmake()

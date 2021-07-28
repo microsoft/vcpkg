@@ -1,7 +1,6 @@
 {
   "name": "kf5holidays",
-  "version": "5.81.0",
-  "port-version": 1,
+  "version": "5.84.0",
   "description": "Holiday calculation library",
   "dependencies": [
     "ecm",
