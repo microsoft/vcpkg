@@ -294,7 +294,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
 
     string(APPEND CROSS "[host_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
         set(MESON_SYSTEM_NAME "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" MESON_SYSTEM_NAME)
