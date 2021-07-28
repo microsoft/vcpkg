@@ -155,18 +155,18 @@ Run the following commands:
 ```sh
 $ cd ~/Parallels
 $ echo '{ "provider": "parallels" }' >metadata.json
-$ tar zcvf <current date>.box ./metadata.json ./<name of VM>.pvm
+$ tar zcvf <macos version>.box ./metadata.json ./<name of VM>.pvm
 ```
 
 This will create a box file which contains all the necessary data.
 You can delete the `metadata.json` file after.
 
 Once you've done that, you can upload it to the fileshare,
-under `share/boxes/macos-ci-base`, add it to `share/boxes/macos-ci-base.json`,
+under `share/boxes/macos-base`, add it to `share/boxes/macos-base.json`,
 and finally add it to vagrant:
 
 ```sh
-$ vagrant box add ~/vagrant/share/boxes/macos-ci-base.json
+$ vagrant box add ~/vagrant/share/boxes/macos-base.json
 ```
 
 Then, we'll create the final box,
