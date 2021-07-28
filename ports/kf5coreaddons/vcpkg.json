@@ -1,7 +1,6 @@
 {
   "name": "kf5coreaddons",
-  "version": "5.81.0",
-  "port-version": 1,
+  "version": "5.84.0",
   "description": "Addons to QtCore",
   "homepage": "https://api.kde.org/frameworks/kcoreaddons/html/index.html",
   "dependencies": [

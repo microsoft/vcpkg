@@ -1,6 +1,6 @@
 {
   "name": "kf5syntaxhighlighting",
-  "version": "5.81.0",
+  "version": "5.84.0",
   "description": "Syntax highlighting engine for Kate syntax definitions",
   "homepage": "https://github.com/KDE/syntax-highlighting",
   "dependencies": [

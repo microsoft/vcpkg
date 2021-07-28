@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.81.0
-    SHA512 fce5b646199ee895f2c8ed17382cb4b7f0265a87558ba3b7bb094cbfa92327b8fb910e4af95f1d3793c1908151eefd59783b31fe43c0743ea872632bb78d98f0
+    REF v5.84.0
+    SHA512 cef640da611ead5fc002f365a9918db1bebe494d7dc456dca8a239873b7f53c1aee81d122cbc15d88cb1deeae1ab7db8c2a79a2847deb87f29c5f1c19a46ab46
     HEAD_REF master
 )
 
@@ -10,10 +10,11 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DBUILD_TESTING=OFF
+    MAYBE_UNUSED_VARIABLES
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
-        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
