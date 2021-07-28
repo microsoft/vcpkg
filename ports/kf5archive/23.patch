@@ -1,0 +1,46 @@
+From 5dc3f846c27ee6d55131db475975e3c24cd0c19c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 28 Jul 2021 11:39:30 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5ArchiveConfig.cmake.in | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/KF5ArchiveConfig.cmake.in b/KF5ArchiveConfig.cmake.in
+index 3d32642..0a738c2 100644
+--- a/KF5ArchiveConfig.cmake.in
++++ b/KF5ArchiveConfig.cmake.in
+@@ -4,9 +4,29 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Core @REQUIRED_QT_VERSION@)
+ 
+ 
++set(KArchive_HAVE_ZLIB  "@ZLIB_FOUND@")
+ set(KArchive_HAVE_BZIP2 "@BZIP2_FOUND@")
+ set(KArchive_HAVE_LZMA  "@LIBLZMA_FOUND@")
+ set(KArchive_HAVE_ZSTD  "@LibZstd_FOUND@")
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    if (@ZLIB_FOUND@)
++        find_dependency(ZLIB)
++    endif()
++
++    if (@BZIP2_FOUND@)
++        find_dependency(BZip2)
++    endif()
++
++    if (@LIBLZMA_FOUND@)
++        find_dependency(LibLZMA)
++    endif()
++
++    if (@LibZstd_FOUND@)
++        find_package(PkgConfig)
++        pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++    endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5ArchiveTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+
