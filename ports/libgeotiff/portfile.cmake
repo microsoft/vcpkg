@@ -21,11 +21,14 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DGEOTIFF_BIN_SUBDIR=bin
+        -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
         -DWITH_PROJ4=1
         -DWITH_ZLIB=1
         -DWITH_JPEG=1
         -DWITH_UTILITIES=1
+        -DCMAKE_MACOSX_BUNDLE=0
 )
 
 vcpkg_install_cmake()
@@ -44,4 +47,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)

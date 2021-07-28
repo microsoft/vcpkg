@@ -1,0 +1,29 @@
+{
+  "name": "libe57",
+  "version-semver": "1.1.312",
+  "description": "An open source implementation of the ASTM E2807 Standard Specification for 3D Imaging Data Exchange in the C++ language.",
+  "homepage": "http://www.libe57.org/",
+  "dependencies": [
+    "boost-crc",
+    "boost-filesystem",
+    "boost-format",
+    "boost-program-options",
+    "boost-system",
+    "boost-thread",
+    "boost-uuid",
+    "boost-variant",
+    {
+      "name": "icu",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "xerces-c"
+  ]
+}

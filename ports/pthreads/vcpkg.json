@@ -1,0 +1,7 @@
+{
+  "name": "pthreads",
+  "version": "3.0.0",
+  "port-version": 10,
+  "description": "pthreads for windows",
+  "homepage": "https://sourceware.org/pub/pthreads-win32/"
+}

@@ -10,26 +10,39 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${GNUTLS_VERSION}
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    set(LDFLAGS "-framework CoreFoundation")
+else()
+    set(LDFLAGS "")
+endif()
+
+if ("openssl" IN_LIST FEATURES)
+  set(OPENSSL_COMPATIBILITY "--enable-openssl-compatibility")
+endif()
+
 vcpkg_configure_make(
-    AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-doc
         --disable-silent-rules
         --disable-tests
         --disable-maintainer-mode
         --disable-rpath
+        --disable-libdane
         --with-included-unistring
         --without-p11-kit
+        --without-tpm
+        ${OPENSSL_COMPATIBILITY}
+        "LDFLAGS=${LDFLAGS}"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

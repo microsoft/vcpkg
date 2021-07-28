@@ -1,6 +1,6 @@
 {
   "name": "workflow",
-  "version-string": "0.9.3",
+  "version": "0.9.5",
   "port-version": 1,
   "description": "About C++ Parallel Computing and Asynchronous Networking Engine",
   "homepage": "https://github.com/sogou/workflow",

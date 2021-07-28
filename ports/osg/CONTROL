@@ -1,6 +1,6 @@
 Source: osg
 Version: 3.6.5
-Port-Version: 6
+Port-Version: 7
 Homepage: https://github.com/openscenegraph/OpenSceneGraph
 Description:  The OpenSceneGraph is an open source high performance 3D graphics toolkit.
 Build-Depends: zlib, fontconfig (!windows), expat (windows), openimageio (osx)

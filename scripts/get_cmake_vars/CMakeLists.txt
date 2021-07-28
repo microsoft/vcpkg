@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.20)
 
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
@@ -79,7 +79,7 @@ foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
-    IF(WIN32)
+    if(CMAKE_HOST_WIN32)
         string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
     else()

@@ -1,6 +1,6 @@
 {
   "name": "boost-math",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost math module",
   "homepage": "https://github.com/boostorg/math",
   "dependencies": [
@@ -8,25 +8,26 @@
     "boost-array",
     "boost-assert",
     "boost-atomic",
-    "boost-build",
-    "boost-compatibility",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-concept-check",
     "boost-config",
     "boost-core",
     "boost-detail",
-    "boost-fusion",
     "boost-integer",
     "boost-lambda",
     "boost-lexical-cast",
-    "boost-modular-build-helper",
-    "boost-mp11",
-    "boost-mpl",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-predef",
     "boost-range",
     "boost-smart-ptr",
     "boost-static-assert",
     "boost-throw-exception",
-    "boost-tuple",
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers"
