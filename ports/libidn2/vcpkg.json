@@ -1,10 +1,19 @@
 {
   "name": "libidn2",
   "version": "2.3.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "GNU Libidn is an implementation of the Stringprep, Punycode and IDNA 2003 specifications. Libidn's purpose is to encode and decode internationalized domain names.",
   "homepage": "https://www.gnu.org/software/libidn/",
   "dependencies": [
-    "libiconv"
+    "libiconv",
+    {
+      "name": "libunistring",
+      "platform": "!(windows | mingw)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows | mingw"
+    }
   ]
 }
