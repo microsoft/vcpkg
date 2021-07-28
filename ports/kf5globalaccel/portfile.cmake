@@ -1,24 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.75.0
-    SHA512 be6a9def63032996d0fb60cba065f5490cad998fe1f55228f6b416b54e07c8e14c70dd76b6c2bbc4bf977cecf6f96e4f5ffdc28734563c6ae4c79ea9401a3aba
+    REF v5.84.0
+    SHA512 2b18c708175572dd9787fde799f6dc01ab2e0006dfb75ef95d357ae91cf4dda6c719c58e4b08fd10038ad5b6e404adeb359f63371ec7ee0887e349e8ce469c51
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5GlobalAccel)
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5GlobalAccel)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
