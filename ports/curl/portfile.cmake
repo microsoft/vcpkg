@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
-        0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
