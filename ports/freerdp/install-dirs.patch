@@ -11,25 +11,3 @@ index 5e67ef9..4ef3e8e 100644
  
  project(FreeRDP C CXX)
  
-@@ -38,6 +38,21 @@ set(CMAKE_COLOR_MAKEFILE ON)
- 
- set(CMAKE_POSITION_INDEPENDENT_CODE ON)
- 
-+include(GNUInstallDirs)
-+
-+function(install)
-+	cmake_parse_arguments(PARSE_ARGV 0 arg "RUNTIME;LIBRARY;ARCHIVE" "EXPORT" "TARGETS;DESTINATION")
-+	if(DEFINED arg_TARGETS)
-+		if(DEFINED arg_EXPORT)
-+			_install(TARGETS ${arg_TARGETS} EXPORT ${arg_EXPORT})
-+		else()
-+			_install(TARGETS ${arg_TARGETS})
-+		endif()
-+	else()
-+		_install(${ARGN})
-+	endif()
-+endfunction()
-+
- # Include our extra modules
- set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
- 
