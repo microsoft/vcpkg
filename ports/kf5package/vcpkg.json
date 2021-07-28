@@ -1,0 +1,22 @@
+{
+  "name": "kf5package",
+  "version-string": "5.84.0",
+  "description": "Installation and loading of additional content (ex: scripts, images...) as packages",
+  "homepage": "https://api.kde.org/frameworks/kpackage/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5archive",
+    "kf5coreaddons",
+    "kf5i18n",
+    "libiconv",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}

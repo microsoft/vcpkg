@@ -1,24 +1,18 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4fa85aa..7dccdb4 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1,4 +1,4 @@
--cmake_minimum_required(VERSION 3.5)
-+cmake_minimum_required(VERSION 3.11)
+diff --git a/src/kpackage/CMakeLists.txt b/src/kpackage/CMakeLists.txt
+index c5aca02..5f87cc9 100644
+--- a/src/kpackage/CMakeLists.txt
++++ b/src/kpackage/CMakeLists.txt
+@@ -49,9 +49,13 @@ ecm_generate_export_header(KF5Package
+     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+ )
  
- set(KF5_VERSION "5.75.0") # handled by release scripts
- set(KF5_DEP_VERSION "5.75.0") # handled by release scripts
-@@ -10,6 +10,13 @@ find_package(ECM 5.75.0  NO_MODULE)
- set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
- feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
- 
-+if(APPLE)
-+  find_library(LIBINTL_LIBRARY NAMES intl)
-+endif()
++find_package(Iconv REQUIRED)
++include_directories(${Iconv_INCLUDE_DIRS})
 +
-+find_package(unofficial-iconv REQUIRED)
-+link_libraries(${LIBINTL_LIBRARY} unofficial::iconv::libiconv)
-+
- set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
- 
- include(KDEInstallDirs)
+ target_link_libraries(KF5Package
+ PUBLIC
+      KF5::CoreAddons
++     ${Iconv_LIBRARIES}
+ PRIVATE
+      Qt5::DBus
+      KF5::Archive
