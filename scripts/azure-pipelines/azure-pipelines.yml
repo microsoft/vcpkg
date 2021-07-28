@@ -4,7 +4,7 @@
 variables:
   windows-pool: 'PrWin-2021-07-14'
   linux-pool: 'PrLin-2021-07-14'
-  osx-pool: 'PrOsx-2021-04-16'
+  osx-pool: 'PrOsx-2021-07-27'
 
 stages:
 - stage: FormatChecks
