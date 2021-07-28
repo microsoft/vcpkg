@@ -54,6 +54,7 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     foreach(prog IN LISTS compiler)
         if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
             string(REPLACE "CXX" "CPP" mesonprog "${prog}")
+            string(REPLACE "RC" "windres" mesonprog "${mesonprog}") # https://mesonbuild.com/Windows-module.html
             string(TOLOWER "${mesonprog}" proglower)
             string(APPEND NATIVE "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
@@ -278,6 +279,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     foreach(prog IN LISTS compiler)
         if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
             string(REPLACE "CXX" "CPP" mesonprog "${prog}")
+            string(REPLACE "RC" "windres" mesonprog "${mesonprog}") # https://mesonbuild.com/Windows-module.html
             string(TOLOWER "${mesonprog}" proglower)
             string(APPEND CROSS "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
