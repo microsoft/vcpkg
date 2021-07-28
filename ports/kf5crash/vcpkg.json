@@ -1,7 +1,6 @@
 {
   "name": "kf5crash",
-  "version": "5.81.0",
-  "port-version": 1,
+  "version": "5.84.0",
   "description": "KCrash provides support for intercepting and handling application crashes.",
   "homepage": "https://api.kde.org/frameworks/kcrash/html/index.html",
   "supports": "linux",
