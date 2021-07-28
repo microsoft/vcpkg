@@ -101,9 +101,9 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_cmake_configure_fixup(CONFIG_PATH cmake)
+  vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-  vcpkg_cmake_configure_fixup(CONFIG_PATH lib/cmake/Poco)
+  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Poco)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
