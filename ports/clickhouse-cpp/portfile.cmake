@@ -2,25 +2,22 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO artpaul/clickhouse-cpp
-    REF 08ad35895f732a27fea82590dc9d05017e312146 #v1.2.2
-    SHA512 4bdbb0d701cab03d39036c75b817bc5e43b7444d7874d156891cf746178fc2c6ef350bf72ac83e2a398357bb9ca263f85f449579cd9aae7d2126e92d3ddc4da2
+    REPO ClickHouse/clickhouse-cpp
+    REF 1415b5936a2ac2f084850b09057e05fb5798b2f1    #v1.5.0
+    SHA512 222b31b16744af64f0a874ec956568adcecb553e43f8d4a2d16c00d55b31015d917a4dc7bb30d5430a894459b1be5e05b292e2d0918bf6f5609046a60539f80f
     HEAD_REF master
-    PATCHES 00001-fix-build.patch
+    PATCHES 
+        fix-error-c2668.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/clickhouse-cpp)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

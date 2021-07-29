@@ -1,11 +1,18 @@
 {
   "name": "clickhouse-cpp",
-  "version": "1.2.2",
+  "version": "1.5.0",
   "description": "C++ client for Yandex ClickHouse",
-  "homepage": "https://github.com/artpaul/clickhouse-cpp",
+  "homepage": "https://github.com/ClickHouse/clickhouse-cpp",
   "dependencies": [
-    "abseil",
     "cityhash",
-    "lz4"
+    "lz4",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
