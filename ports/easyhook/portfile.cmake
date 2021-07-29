@@ -57,4 +57,4 @@ endif()
 file(INSTALL "${SOURCE_PATH}/Public/easyhook.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/easyhook")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/easyhook" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
