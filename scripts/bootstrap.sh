@@ -119,7 +119,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
+    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" --silent --show-error --fail || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
@@ -278,8 +278,8 @@ else
 fi
 
 # Do the build
-vcpkgToolReleaseTag="2021-05-05-9f849c4c43e50d1b16186ae76681c27b0c1be9d9"
-vcpkgToolReleaseSha="2b85eb0da65221d207a5023eda0d4da74258d7fb5db9e211718efb2573673daa3fa98a75af4a570595f12467a8f7e7759a3be01b33598a4fb6d4203bf83949ef"
+vcpkgToolReleaseTag="2021-07-26"
+vcpkgToolReleaseSha="e5252df535a75e1b776e057811a2913b0508d0a387a781815e353c23d0a33ec8bf8982a121adc6b711243bf0981843a435a0e53facf274ac7c38c3f571c26766"
 vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
 vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
 baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
@@ -299,8 +299,13 @@ echo "Building vcpkg-tool..."
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
 vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
+cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe'"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
+    cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+fi
+
+(cd "$buildDir" && eval CXX="$CXX" "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"

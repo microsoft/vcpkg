@@ -10,6 +10,9 @@ vcpkg_from_github(
         mac-fix.patch
 )
 
+# Workaround for https://github.com/tfhe/tfhe/issues/246
+vcpkg_replace_string("${SOURCE_PATH}/src/CMakeLists.txt" "-Wall -Werror" "")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
     PREFER_NINJA

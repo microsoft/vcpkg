@@ -14,9 +14,9 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
-  - group: azblob-test-sas-group
+  - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(azblob-root-url),$(azblob-test-sas),readwrite"
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - task: PowerShell@2
@@ -25,7 +25,7 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: D: is the Azure machines' temporary disk.
+  # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
@@ -47,7 +47,35 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose |
+        ForEach-Object -Begin {
+          $long_error = ''
+        } -Process {
+          if ($long_error -ne '' -and $_ -match '^$|^       ') {
+             # Extend multi-line message
+             $long_error = -join($long_error, "%0D%0A", $_ -replace '^       ','' `
+               -replace '(git add) [^ ]*\\ports\\([^ ]*)', '$1 ports/$2' )
+          } else {
+            if ($long_error -ne '') {
+              # Flush multi-line message
+              $long_error
+              $long_error = ''
+            }
+            if ($_ -match '^Error: ') {
+              # Start multi-line message
+              $long_error = $_ -replace '^Error: ', '##vso[task.logissue type=error]' `
+                -replace '(^##vso[^\]]*)](.*) [^ ]*\\versions\\(.-)\\(.*.json)(.*)', '$1;sourcepath=versions/$3/$4;linenumber=2]$2 version/$3/$4$5'
+            } else {
+              # Normal line
+              $_
+            }
+          }
+        } -End {
+          if ($long_error -ne '') {
+            # Flush multi-line message
+            $long_error
+          }
+        }
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
