@@ -544,9 +544,8 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
-set(CMAKE_VARS_FILE "${CURRENT_BUILDTREES_DIR}/vars.cmake")
-vcpkg_internal_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
-include("${CMAKE_VARS_FILE}")
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
 
 if (VCPKG_TARGET_IS_OSX)
     # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us

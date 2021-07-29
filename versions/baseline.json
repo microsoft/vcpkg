@@ -1998,7 +1998,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 11
+      "port-version": 12
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -6569,8 +6569,8 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2021-06-25",
-      "port-version": 5
+      "baseline": "2021-07-26",
+      "port-version": 0
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",

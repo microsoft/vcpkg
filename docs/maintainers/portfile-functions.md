@@ -57,10 +57,10 @@
 
 ## Internal Functions
 
-- [vcpkg\_internal\_get\_cmake\_vars](internal/vcpkg_internal_get_cmake_vars.md)
 - [z\_vcpkg\_apply\_patches](internal/z_vcpkg_apply_patches.md)
 - [z\_vcpkg\_forward\_output\_variable](internal/z_vcpkg_forward_output_variable.md)
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
+- [z\_vcpkg\_get\_cmake\_vars](internal/z_vcpkg_get_cmake_vars.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
 
 ## Scripts from Ports
@@ -69,6 +69,7 @@
 
 - [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
 - [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
+- [vcpkg\_cmake\_get\_vars](ports/vcpkg-cmake/vcpkg_cmake_get_vars.md)
 - [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
 
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
