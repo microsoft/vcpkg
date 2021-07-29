@@ -1756,3 +1756,6 @@ cppgraphqlgen:x64-osx=fail
 # Changes in Python have broken tensorflow on our osx hardware
 tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
+
+# Upgraded Bazel version breaks tensorflow-cc
+tensorflow-cc:x64-windows-static=fail
