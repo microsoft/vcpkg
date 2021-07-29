@@ -37,16 +37,17 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -DBUILD_TESTING=OFF
-    MAYBE_UNUSED_VARIABLES
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
+    MAYBE_UNUSED_VARIABLES
+        BUILD_HTML_DOCS
+        BUILD_MAN_DOCS
+        BUILD_QTHELP_DOCS
 )
 
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Solid)
-
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
