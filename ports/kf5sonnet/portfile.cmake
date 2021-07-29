@@ -6,9 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
@@ -23,13 +22,13 @@ vcpkg_configure_cmake(
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gentrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Sonnet)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Sonnet)
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/data")
