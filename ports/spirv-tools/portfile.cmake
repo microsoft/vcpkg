@@ -1,6 +1,3 @@
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
@@ -10,6 +7,7 @@ vcpkg_from_github(
         cmake-install.patch
         install-config-typo.patch
         0001-don-t-use-MP4.patch
+        fix-build-type.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -25,9 +23,8 @@ else()
     set(SKIP_EXECUTABLES OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DSPIRV-Headers_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DSPIRV_WERROR=OFF
@@ -36,22 +33,22 @@ vcpkg_configure_cmake(
         -DSPIRV_TOOLS_BUILD_STATIC=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SPIRV-Tools TARGET_PATH share/SPIRV-Tools) # the directory name is capitalized as opposed to the package name
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SPIRV-Tools-link TARGET_PATH share/SPIRV-Tools-link)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SPIRV-Tools-opt TARGET_PATH share/SPIRV-Tools-opt)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/SPIRV-Tools-reduce TARGET_PATH share/SPIRV-Tools-reduce)
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-link)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-opt)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-reduce)
+
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin") # only static linkage, i.e. no need to preserve .dll/.so files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/SPIRV-Tools-shared.dll")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libSPIRV-Tools-shared.so")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libSPIRV-Tools-shared.so")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
 if(TOOLS_INSTALL)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/spirv-lesspipe.sh" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    
+    vcpkg_copy_tools(TOOL_NAMES spirv-as spirv-cfg spirv-dis spirv-link spirv-opt spirv-reduce spirv-val AUTO_CLEAN)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
