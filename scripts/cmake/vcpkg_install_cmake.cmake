@@ -25,19 +25,20 @@ parameter.
 #]===]
 
 function(vcpkg_install_cmake)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "" "")
+
     if(Z_VCPKG_CMAKE_INSTALL_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_install_cmake in the same port is unsupported.")
     endif()
 
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(args)
+    vcpkg_list(SET args)
     foreach(arg IN ITEMS DISABLE_PARALLEL ADD_BIN_TO_PATH)
         if(arg_${arg})
-            list(APPEND args "${arg}")
+            vcpkg_list(APPEND args "${arg}")
         endif()
     endforeach()
 
