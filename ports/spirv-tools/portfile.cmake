@@ -31,14 +31,15 @@ vcpkg_cmake_configure(
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
         -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
         -DSPIRV_TOOLS_BUILD_STATIC=ON
+        -DCMAKE_INSTALL_DATADIR=lib/cmake # Avoid calling config_fixup multiple times to cause debug/share to be deleted in first call
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools)
-vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-link)
-vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-opt)
-vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-reduce)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools CONFIG_PATH lib/cmake/SPIRV-Tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-link CONFIG_PATH lib/cmake/SPIRV-Tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-opt CONFIG_PATH lib/cmake/SPIRV-Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SPIRV-Tools-reduce CONFIG_PATH lib/cmake/SPIRV-Tools-reduce)
 
 vcpkg_fixup_pkgconfig()
 
