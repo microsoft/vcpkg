@@ -15,10 +15,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
-    MAYBE_UNUSED_VARIABLES    
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
+    MAYBE_UNUSED_VARIABLES 
+        BUILD_HTML_DOCS
+        BUILD_MAN_DOCS
+        BUILD_QTHELP_DOCS
 )
 
 vcpkg_install_cmake()
