@@ -9,5 +9,19 @@
     "ecm",
     "qt5-base",
     "zlib"
-  ]
+  ],
+  "features": {
+    "lzma": {
+      "description": "Support for xz compressed files and data streams",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "zstd": {
+      "description": "Support for zstd compressed files and data streams",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }
