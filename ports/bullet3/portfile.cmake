@@ -21,7 +21,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
-        -DBUILD_DEMOS=OFF
         -DBUILD_CPU_DEMOS=OFF
         -DBUILD_BULLET2_DEMOS=OFF
         -DBUILD_BULLET3=OFF
@@ -33,7 +32,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/bullet3")
+vcpkg_fixup_cmake_targets()
 
 # Clean up unneeded files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

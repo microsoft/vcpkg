@@ -5,7 +5,8 @@ index f5dc7bdbb..8fb38ce06 100644
 +++ b/BulletConfig.cmake.in
 @@ -15,11 +15,20 @@
  #  BULLET_VERSION_STRING     - A human-readable string containing the version
- 
+-
++@PACKAGE_INIT@
  set ( BULLET_FOUND 1 )
 -set ( BULLET_USE_FILE     "@BULLET_USE_FILE@" )
 +set_and_check ( BULLET_USE_FILE     "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/UseBullet.cmake" )
@@ -26,7 +27,7 @@ index f5dc7bdbb..8fb38ce06 100644
 +# Load targets
 +if(NOT TARGET Bullet3Common)
 +  file(GLOB CONFIG_FILES "@PACKAGE_BULLET_CONFIG_CMAKE_PATH@/*Targets.cmake")
-+  foreach(f ${CONFIG_FILES})
++  foreach(f IN LISTS CONFIG_FILES)
 +    include(${f})
 +  endforeach()
 +  set(_DIR)
