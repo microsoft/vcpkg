@@ -8,6 +8,14 @@
     "bzip2",
     "ecm",
     "qt5-base",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
