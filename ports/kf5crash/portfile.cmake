@@ -13,6 +13,13 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DBUILD_HTML_DOCS=OFF
+        -DBUILD_MAN_DOCS=OFF
+        -DBUILD_QTHELP_DOCS=OFF
+    MAYBE_UNUSED_VARIABLES
+        BUILD_HTML_DOCS
+        BUILD_MAN_DOCS
+        BUILD_QTHELP_DOCS
 )
 
 vcpkg_cmake_install()
