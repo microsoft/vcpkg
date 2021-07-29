@@ -93,12 +93,12 @@ endmacro()
 
 function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
 
-    if(DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
+    if(NOT arg_Z_CMAKE_GET_VARS_USAGE AND DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
         message(WARNING "vcpkg_cmake_configure already called; this function should only be called once.")
     endif()
 
@@ -113,14 +113,21 @@ function(vcpkg_cmake_configure)
     endif()
 
     set(manually_specified_variables "")
-    foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
-        if(option MATCHES "^-D([^:=]*)[:=]")
-            list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
-        endif()
-    endforeach()
-    list(REMOVE_DUPLICATES manually_specified_variables)
-    list(REMOVE_ITEM manually_specified_variables ${arg_MAYBE_UNUSED_VARIABLES})
-    debug_message("manually specified variables: ${manually_specified_variables}")
+
+    if(arg_Z_CMAKE_GET_VARS_USAGE)
+        set(configuring_message "Getting CMake variables for ${TARGET_TRIPLET}")
+    else()
+        set(configuring_message "Configuring ${TARGET_TRIPLET}")
+
+        foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
+            if(option MATCHES "^-D([^:=]*)[:=]")
+                list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
+            endif()
+        endforeach()
+        list(REMOVE_DUPLICATES manually_specified_variables)
+        list(REMOVE_ITEM manually_specified_variables ${arg_MAYBE_UNUSED_VARIABLES})
+        debug_message("manually specified variables: ${manually_specified_variables}")
+    endif()
 
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -377,7 +384,7 @@ function(vcpkg_cmake_configure)
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure")
         file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}")
+        message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
@@ -388,7 +395,7 @@ function(vcpkg_cmake_configure)
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+            message(STATUS "${configuring_message}-dbg")
             file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND
@@ -407,7 +414,7 @@ function(vcpkg_cmake_configure)
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+            message(STATUS "${configuring_message}-rel")
             file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
                 COMMAND
@@ -458,5 +465,7 @@ Please recheck them and remove the unnecessary options from the `vcpkg_cmake_con
 If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_VARIABLES` argument.")
     endif()
 
-    set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
+    if(NOT arg_Z_CMAKE_GET_VARS_USAGE)
+        set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
+    endif()
 endfunction()
