@@ -38,7 +38,7 @@ index b5a39bf33..af1e16a9b 100644
  endif()
  
 diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
-index e6852d9c2..4d7cd0a76 100644
+index e6852d9c2..fc0973ffa 100644
 --- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
 @@ -53,7 +53,7 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
@@ -193,17 +193,19 @@ index e6852d9c2..4d7cd0a76 100644
                       libzstd
                       REQUIRED_VERSION
                       1.4.0)
-@@ -2262,7 +2280,8 @@ macro(build_utf8proc)
+@@ -2262,9 +2280,8 @@ macro(build_utf8proc)
  endmacro()
  
  if(ARROW_WITH_UTF8PROC)
 -  resolve_dependency(utf8proc
+-                     REQUIRED_VERSION
+-                     "2.2.0"
 +  resolve_dependency(unofficial-utf8proc
 +                     USE_CONFIG TRUE
-                      REQUIRED_VERSION
-                      "2.2.0"
                       PC_PACKAGE_NAMES
-@@ -2272,7 +2291,7 @@ if(ARROW_WITH_UTF8PROC)
+                      libutf8proc)
+ 
+@@ -2272,7 +2289,7 @@ if(ARROW_WITH_UTF8PROC)
  
    # TODO: Don't use global definitions but rather
    # target_compile_definitions or target_link_libraries
@@ -212,7 +214,7 @@ index e6852d9c2..4d7cd0a76 100644
                        INTERFACE_COMPILER_DEFINITIONS)
    if(UTF8PROC_COMPILER_DEFINITIONS)
      add_definitions(-D${UTF8PROC_COMPILER_DEFINITIONS})
-@@ -2280,7 +2299,7 @@ if(ARROW_WITH_UTF8PROC)
+@@ -2280,7 +2297,7 @@ if(ARROW_WITH_UTF8PROC)
  
    # TODO: Don't use global includes but rather
    # target_include_directories or target_link_libraries
@@ -221,7 +223,7 @@ index e6852d9c2..4d7cd0a76 100644
                        INTERFACE_INCLUDE_DIRECTORIES)
    include_directories(SYSTEM ${UTF8PROC_INCLUDE_DIR})
  endif()
-@@ -2335,7 +2354,7 @@ endmacro()
+@@ -2335,7 +2352,7 @@ endmacro()
  
  macro(build_grpc)
    resolve_dependency(c-ares
@@ -230,7 +232,7 @@ index e6852d9c2..4d7cd0a76 100644
                       TRUE
                       PC_PACKAGE_NAMES
                       libcares)
-@@ -2600,7 +2619,7 @@ endmacro()
+@@ -2600,7 +2617,7 @@ endmacro()
  if(ARROW_WITH_GRPC)
    set(ARROW_GRPC_REQUIRED_VERSION "1.17.0")
    resolve_dependency(gRPC
@@ -239,7 +241,7 @@ index e6852d9c2..4d7cd0a76 100644
                       TRUE
                       REQUIRED_VERSION
                       ${ARROW_GRPC_REQUIRED_VERSION}
-@@ -2610,6 +2629,10 @@ if(ARROW_WITH_GRPC)
+@@ -2610,6 +2627,10 @@ if(ARROW_WITH_GRPC)
    # TODO: Don't use global includes but rather target_include_directories
    get_target_property(GRPC_INCLUDE_DIR gRPC::grpc++ INTERFACE_INCLUDE_DIRECTORIES)
    include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
