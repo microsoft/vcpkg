@@ -1,0 +1,13 @@
+diff --git a/src/include/uthenticode.h b/src/include/uthenticode.h
+index 8422cc3..b104ddb 100644
+--- a/src/include/uthenticode.h
++++ b/src/include/uthenticode.h
+@@ -4,7 +4,7 @@
+ #include <openssl/asn1t.h>
+ #include <openssl/crypto.h>
+ #include <openssl/x509.h>
+-#include <parser-library/parse.h>
++#include <pe-parse/parse.h>
+ 
+ #include <cstdint>
+ #include <exception>
