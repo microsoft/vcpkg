@@ -34,7 +34,7 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -DBUILD_TESTING=OFF
     MAYBE_UNUSED_VARIABLES
