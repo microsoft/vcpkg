@@ -37,7 +37,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libogg RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+```
+
+Should your project contain more than a single license file, e.g. SPDX licenses located in a `LICENSES` folder, you can instead copy them all with:
+
+```
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 ```
 
 Check the documentation for [`vcpkg_configure_cmake`](../maintainers/vcpkg_configure_cmake.md) and [`vcpkg_install_cmake`](../maintainers/vcpkg_install_cmake.md) if your package needs additional options. 
