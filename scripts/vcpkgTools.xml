@@ -15,11 +15,11 @@
         <archiveName>cmake-3.21.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.21.0</version>
-        <exeRelativePath>cmake-3.21.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.21.0/cmake-3.21.0-macos-universal.tar.gz</url>
+        <version>3.21.1</version>
+        <exeRelativePath>cmake-3.21.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-macos-universal.tar.gz</url>
         <sha512>90251c1f29cd55b961b1520df08aec464f487cf3071e33b526f2fde7c2e876dcf9228da2b1206eacf45d63745ccae3c67bb23ab1506746d879b32192f175ac3d</sha512>
-        <archiveName>cmake-3.21.0-macos-universal.tar.gz</archiveName>
+        <archiveName>cmake-3.21.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
         <version>3.21.0</version>
