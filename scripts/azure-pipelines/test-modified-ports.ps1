@@ -142,6 +142,27 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
 
+$LogSkippedPorts = $true # Maybe parameter
+$changedPorts = @()
+$skippedPorts = @()
+if ($LogSkippedPorts) {
+    $diffFile = Join-Path $WorkingRoot 'changed-ports.diff'
+    Start-Process -FilePath 'git' -ArgumentList 'diff --name-only HEAD~1 -- versions ports' `
+        -NoNewWindow -Wait `
+        -RedirectStandardOutput $diffFile
+    $changedPorts = (Get-Content -Path $diffFile) `
+        -match '^ports/|^versions/.-/' `
+        -replace '^(ports/|versions/.-/)([^/]*)(/.*|[.]json$)','$2' `
+        | Sort-Object -Unique
+    $skippedPorts = $skipList -Split ','
+    $changedPorts | ForEach-Object {
+        if ($skippedPorts -contains $_) {
+            $port = $_
+            Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: CI baseline file."
+        }
+    }
+}
+
 $hostArgs = @()
 if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
@@ -150,7 +171,14 @@ if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
     $hostArgs = @("--host-exclude=$skipList")
 }
 
-& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs
+& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs `
+    | ForEach-Object {
+        $_
+        if ($LogSkippedPorts -and $_ -match '^ *([^ :]+):[^:]*: *cascade:' -and $changedPorts -contains $Matches[1]) {
+            $port = $Matches[1]
+            Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: cascade."
+        }
+    }
 
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
