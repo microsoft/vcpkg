@@ -5,12 +5,11 @@ vcpkg_from_github(
     SHA512 1acf9936a559839b5605452cc8ae26632614a5936e6504d2f8f23cfa0715f39238d0f8b664e3a4962a2df97191cba15330af4f6ee358018800feb07b50e56f18
     HEAD_REF master
     PATCHES
-        fix-warning4189.patch
         fix-write-batch.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
@@ -18,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -35,7 +34,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         endif()
     endif()
 
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/fmt/core.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fmt/core.h"
         "defined(FMT_SHARED)"
         "1"
     )
@@ -53,14 +52,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake"
             "lib/fmt.dll"
             "bin/fmt.dll"
         )
     endif()
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle post-build CMake instructions
 vcpkg_copy_pdbs()
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
