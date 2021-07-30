@@ -1,6 +1,7 @@
 {
   "name": "kf5sonnet",
   "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "Multi-language spell checker",
   "homepage": "https://api.kde.org/frameworks/sonnet/html/index.html",
   "dependencies": [
