@@ -5,8 +5,16 @@ vcpkg_from_github(
     SHA512 82926f62424446df0f4fc300f57ae9bd5baf8e13da2ce4135ac56c0c52a0307bffb06f84ac7e8e658e96ace2ae3d530f27e232061284ac87271404f218e9fdd4
     HEAD_REF master
     PATCHES
+        9ab5f2bf.patch # https://invent.kde.org/frameworks/karchive/-/commit/9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e
         5a79756f.patch # https://invent.kde.org/frameworks/karchive/-/commit/5a79756f381e1a1843cb2171bdc151dad53fb7db
         23.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/23
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    INVERTED_FEATURES
+        "lzma"  CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
+        "zstd"  CMAKE_DISABLE_FIND_PACKAGE_PkgConfig
 )
 
 vcpkg_cmake_configure(
@@ -14,13 +22,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS 
         -DBUILD_TESTING=OFF
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
-    MAYBE_UNUSED_VARIABLES 
-        BUILD_HTML_DOCS
-        BUILD_MAN_DOCS
-        BUILD_QTHELP_DOCS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
