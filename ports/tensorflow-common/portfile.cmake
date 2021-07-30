@@ -18,6 +18,7 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-static.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-dll.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-lib.cmake.in"
+    "${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
     )
 
 file(COPY ${TENSORFLOW_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
