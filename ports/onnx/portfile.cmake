@@ -34,7 +34,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DPython_EXECUTABLE=${PYTHON3} # for Windows
+        -DPYTHON_EXECUTABLE=${PYTHON3} # for configure_file of protoc-gen-mypy.py
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_LITE_PROTO=OFF
         -DONNX_BUILD_TESTS=OFF
