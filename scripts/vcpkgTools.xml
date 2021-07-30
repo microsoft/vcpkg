@@ -18,7 +18,7 @@
         <version>3.21.1</version>
         <exeRelativePath>cmake-3.21.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-macos-universal.tar.gz</url>
-        <sha512>90251c1f29cd55b961b1520df08aec464f487cf3071e33b526f2fde7c2e876dcf9228da2b1206eacf45d63745ccae3c67bb23ab1506746d879b32192f175ac3d</sha512>
+        <sha512>0e5d3781101d6f54d916066719a0ff27d052b40e999dfd8e1f53d8d22d99e45cad22fc28b5d2a9e810b0cc8237e640d7747aff2a2c0896571c8a69ecdd0a9e41</sha512>
         <archiveName>cmake-3.21.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
