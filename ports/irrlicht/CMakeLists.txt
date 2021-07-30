@@ -1,11 +1,11 @@
 #
 # Irrlicht 3D engine
 #
-cmake_minimum_required(VERSION 3.8)
-project(Irrlicht)
+cmake_minimum_required(VERSION 3.16)
+project(Irrlicht LANGUAGES C CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
+
 # Irrlicht directories
 # -------------------------------------------------------------------------------------------------
 set(IRR_SRC_DIR "source/Irrlicht")
@@ -48,7 +48,15 @@ glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_TOOL_DIR}/FileToHeader
 glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_TOOL_DIR}/GUIEditor/)
 glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_TOOL_DIR}/IrrFontTool/newFontTool/)
 glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_TOOL_DIR}/MeshConverter/)
-    
+
+if(APPLE)
+    file(GLOB IRR_SRC_FILES_OSX
+        "${IRR_SRC_DIR}/MacOSX/*.mm"
+        "${IRR_SRC_DIR}/MacOSX/*.h")
+
+    set(IRR_SRC_FILES ${IRR_SRC_FILES} ${IRR_SRC_FILES_OSX})
+endif()
+
 # Group files
 # -------------------------------------------------------------------------------------------------
 source_group(Irrlicht\\engine           FILES ${IRR_SRC_FILES})
@@ -79,11 +87,29 @@ else()
     add_library(Irrlicht STATIC ${IRR_ALL_SRC_FILES})
 endif()
 
-target_link_libraries(Irrlicht PRIVATE 
-    ${PNG_LIBRARY} 
-    ${JPEG_LIBRARY} 
+if(APPLE)
+    target_include_directories(Irrlicht PRIVATE ${IRR_SRC_DIR}/MacOSX)
+
+    target_compile_definitions(Irrlicht PRIVATE SYSTEM=MacOSX)
+
+    target_link_libraries(Irrlicht ${OSX_LIBRARIES})
+
+    target_compile_options(Irrlicht PRIVATE "-ObjC++")
+
+    set(ADDITIONAL_LIRARIES
+        "-framework OpenGL"
+        "-framework IOKit"
+        "-framework Carbon"
+        "-framework AppKit"
+        "-framework Cocoa")
+endif()
+
+target_link_libraries(Irrlicht PRIVATE
+    ${PNG_LIBRARY}
+    ${JPEG_LIBRARY}
     ${ZLIB_LIBRARY}
     ${BZIP2_LIBRARY}
+    ${ADDITIONAL_LIRARIES}
     )
 
 if(IRR_BUILD_TOOLS)
@@ -112,7 +138,7 @@ target_include_directories(Irrlicht
     )
 
 # I dont realy understand why this is necesary or what it is doing,
-# but it is necesarry to build and export a package. 
+# but it is necesarry to build and export a package.
 # See: https://cmake.org/cmake/help/v3.8/command/target_include_directories.html
 target_include_directories(Irrlicht PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -177,7 +203,6 @@ if(WIN32)
             target_compile_options(Irrlicht PRIVATE /arch:SSE2)
         endif()
     endif()
-
 elseif(UNIX)
     # Standard mode
     target_compile_options(Irrlicht
@@ -185,7 +210,7 @@ elseif(UNIX)
         PRIVATE -pipe
         PRIVATE -fno-exceptions
         PRIVATE -fno-strict-aliasing)
-    
+
     # Disable RTTI on C++ files only (no sense for C files)
     set_source_files_properties(${IRR_SRC_FILES} ${IRR_SRC_FILES_AESGLADMAN}
         PROPERTIES COMPILE_FLAGS -fno-rtti)
@@ -194,10 +219,12 @@ elseif(UNIX)
     target_compile_options(Irrlicht PRIVATE $<$<CONFIG:Debug>:-D_DEBUG>)
 
     # X11 and OpenGL
-    target_link_libraries(Irrlicht
-        PRIVATE X11
-        PRIVATE GL
-        PRIVATE Xxf86vm)
+    if(NOT APPLE)
+        target_link_libraries(Irrlicht
+            PRIVATE X11
+            PRIVATE GL
+            PRIVATE Xxf86vm)
+    endif()
 endif()
 
 # Installation
@@ -214,7 +241,7 @@ install(FILES ${IRR_SRC_FILES_INTERFACE} DESTINATION "include/irrlicht" CONFIGUR
 
 if(IRR_BUILD_TOOLS)
     install(
-        TARGETS FileToHeader GUIEditor FontTool MeshConverter 
+        TARGETS FileToHeader GUIEditor FontTool MeshConverter
         RUNTIME DESTINATION tools/irrlicht/
         CONFIGURATIONS Release
     )

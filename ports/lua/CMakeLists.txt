@@ -53,6 +53,9 @@ ENDIF ()
 #DLL
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
 SET_PROPERTY (TARGET lua PROPERTY POSITION_INDEPENDENT_CODE ON)
+IF (COMPILE_AS_CPP)
+    SET_TARGET_PROPERTIES(lua PROPERTIES OUTPUT_NAME "lua-c++")
+ENDIF()
 
 IF (BUILD_SHARED_LIBS AND WIN32)
     TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_BUILD_AS_DLL )
@@ -107,7 +110,7 @@ IF (COMPILE_AS_CPP)
     install(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
 ENDIF()
 
-IF (NOT DEFINED SKIP_INSTALL_TOOLS)
+IF (INSTALL_TOOLS)
     ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
     ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
     TARGET_LINK_LIBRARIES ( luai lua )

@@ -6,13 +6,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.5.1")
+set(OPENCV_VERSION "4.5.2")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 d74ae3bc340639cbc8b5db41a1fec710acabf8ec828dd28ce3bacf7029d1afd23aeaf47a2273a42995de285daa8aef33a7f90d5c57ef096e2cb872e0845e92b0
+    SHA512 07788ec49801bdab963a057871e81fc2b081149c75764810197766d987e54db0d6fd142d2397bbbacefcea6a8be100235ea886ee7e5d5c07ed1156e76249dfec
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -22,6 +22,7 @@ vcpkg_from_github(
       0005-fix-eigen.patch
       0006-fix-uwp.patch
       0008-devendor-quirc.patch
+      0009-fix-qt-integration.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -41,6 +42,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+ FEATURES
  "ade"      WITH_ADE
  "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUBLAS
@@ -138,13 +140,33 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 1ebb9fec53b74039ffa2dc9f00899ab83af615f01156c0454ea7c53161256b6c9fd4548387fbfd197182c2d03db4de8c7170e2877b4648ce92531f821e81fdd7
+    SHA512 72ce91dfefc1c3e12cc8e965d90392cfed6c236daafb512aafc14cdad83242bfa0fc1adea308cd07a5483e010633e2996c3b239b2ce12cea47e6e21c36ed398b
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/WeChatCV/opencv_3rdparty/a8b69ccc738421293254aec5ddb38bd523503252/detect.caffemodel"
+    FILENAME "opencv-cache/wechat_qrcode/238e2b2d6f3c18d6c3a30de0c31e23cf-detect.caffemodel"
+    SHA512 58d62faf8679d3f568a26a1d9f7c2e88060426a440315ca8bce7b3b5a8efa34be670afd0abfd0dd5d89f89a042a2408ea602f937080abc6910c2e497b7f5a4b8
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/WeChatCV/opencv_3rdparty/a8b69ccc738421293254aec5ddb38bd523503252/sr.caffemodel"
+    FILENAME "opencv-cache/wechat_qrcode/cbfcd60361a73beb8c583eea7e8e6664-sr.caffemodel"
+    SHA512 917c6f6b84a898b8c8c85c79359e48a779c8a600de563dac2e1c5d013401e9ac9dbcd435013a4ed7a69fc936839fb189aaa3038c127d04ceb6fd3b8fd9dd67bd
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/WeChatCV/opencv_3rdparty/a8b69ccc738421293254aec5ddb38bd523503252/detect.prototxt"
+    FILENAME "opencv-cache/wechat_qrcode/6fb4976b32695f9f5c6305c19f12537d-detect.prototxt"
+    SHA512 2239d31a597049f358f09dbb4c0a7af0b384d9b67cfa3224f8c7e44329647cf19ee7929ac06199cca23bbbf431de0481b74ab51eace6aa20bb2e2fd19b536e49
+  )
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://raw.githubusercontent.com/WeChatCV/opencv_3rdparty/a8b69ccc738421293254aec5ddb38bd523503252/sr.prototxt"
+    FILENAME "opencv-cache/wechat_qrcode/69db99927a70df953b471daaba03fbef-sr.prototxt"
+    SHA512 6b715ec45c3fd081e7e113e351edcef0f3d32a75f8b5a9ca2273cb5da9a1116a1b78cba45582a9acf67a7ab76dc4fcdf123f7b3a0d3de2f5c39b26ef450058b7
+  )
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/boostdesc_bgm.i"
     FILENAME "opencv-cache/xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i"
@@ -375,7 +397,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_gapi=${DBUILD_opencv_gapi}
+        -DBUILD_opencv_gapi=${BUILD_opencv_gapi}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags

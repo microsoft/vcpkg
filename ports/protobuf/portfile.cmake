@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+        port_def.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -88,6 +89,12 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake
     "if(protobuf_MODULE_COMPATIBLE)"
     "if(ON)"
 )
+if(NOT protobuf_BUILD_LIBPROTOC)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake
+        "_protobuf_find_libraries(Protobuf_PROTOC protoc)"
+        ""
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
