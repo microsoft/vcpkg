@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09d82f1..f0d99e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1507,6 +1507,7 @@ else()
+   set(ENABLE_SHARED         "no")
+   set(ENABLE_STATIC         "yes")
+   set(LIBCURL_NO_SHARED     "${LIBCURL_LIBS}")
++  set(LIBCURL_LIBS          "")
+ endif()
+ # "a" (Linux) or "lib" (Windows)
+ string(REPLACE "." "" libext "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+diff --git a/curl-config.in b/curl-config.in
+index 8b4a29a..e756ae8 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -172,7 +172,7 @@ while test $# -gt 0; do
+ 
+     --static-libs)
+         if test "X@ENABLE_STATIC@" != "Xno" ; then
+-          echo @libdir@/libcurl.@libext@ @LDFLAGS@ @LIBCURL_LIBS@
++          echo @libdir@/libcurl.@libext@ @LDFLAGS@ @LIBCURL_NO_SHARED@
+         else
+           echo "curl was built with static libraries disabled" >&2
+           exit 1

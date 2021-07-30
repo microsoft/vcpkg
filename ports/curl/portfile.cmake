@@ -14,6 +14,7 @@ vcpkg_from_github(
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
+        0022-deduplicate-libs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
