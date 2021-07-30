@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Nemirtingas/libdatachannel
     REF cxx14
-    SHA512 982b993a0d9e12aad4bed9e307621101a1cc10df8b1443a09748bd97039a4dca4c774fe3142a41f245eb568b58ae8103fdf85130e471f07f4b1e459b5d4677d9
+    SHA512 7c20fbd308339405b5bc3c8c9d15c17f031a569849bf586eff087dea38a10c5bed84cb80cafd6b39d8ce45d78f575516bf3479bf9cc861c0d7d05afc3067eb96
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch

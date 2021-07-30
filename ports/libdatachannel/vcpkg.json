@@ -9,7 +9,9 @@
     "plog",
     "usrsctp",
     "boost-optional",
-    "boost-variant"
+    "boost-variant",
+	"boost-thread",
+	"boost-smart-ptr"
   ],
   "default-features": [
     "ws"
