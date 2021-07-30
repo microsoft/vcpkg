@@ -155,16 +155,15 @@ if ($null -ne $OnlyTest)
 }
 else
 {
+    $hostArgs = @()
     if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
     {
         # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
         # The workaround is to pass the skip list as host-excludes as well.
-        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+        $hostArgs = @("--host-exclude=$skipList")
     }
-    else
-    {
-        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
-    }
+
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs
 
     $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
