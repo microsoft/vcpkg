@@ -25,7 +25,7 @@
         <version>3.21.1</version>
         <exeRelativePath>cmake-3.21.1-linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-Linux-x86_64.tar.gz</url>
-        <sha512>fdbb373b0626f98bb66c9651d4bbf5f8eab7d807444287e6d45ebd94c1f1527ec977f94d7a9c53b3ca2738393f971223a8d59447e8d77a160dd22c5558d902d2</sha512>
+        <sha512>deb24087315bcf01d2969846246564a352b6f77521df6b235f9ef525450db9c89b32dca4ad78f93a356dd5ab7b587374d49fc1a892354760715a5ef1f88e925f</sha512>
         <archiveName>cmake-3.21.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
