@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [MAYBE_UNUSED_VARIABLES <option-name>...]
+    [MAYBE_UNUSED_VARIABLES <OPTION_NAME>...]
 )
 ```
 
@@ -56,6 +56,17 @@ Additional options passed to CMake during the Debug configuration. These are in 
 
 ### MAYBE_UNUSED_VARIABLES
 Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
+For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
