@@ -38,7 +38,7 @@ The underlying buildsystem will be instructed to not parallelize
 Additional subdir to invoke make in. Useful if only parts of a port should be built. 
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
+This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
@@ -51,11 +51,8 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function i
 #]===]
 
 function(vcpkg_build_make)
-    if(NOT _VCPKG_CMAKE_VARS_FILE)
-        # vcpkg_build_make called without using vcpkg_configure_make before
-        vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    endif()
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
@@ -97,8 +94,7 @@ function(vcpkg_build_make)
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
-        # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
@@ -145,9 +141,9 @@ function(vcpkg_build_make)
             _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
 
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             else() # dynamic
-                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
+                set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
             if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link")

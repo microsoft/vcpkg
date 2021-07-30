@@ -1,5 +1,5 @@
 
-set(pkgver "8.6.395.17")
+set(pkgver "9.1.269.39")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
@@ -71,7 +71,7 @@ endfunction()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 7565e93eb72cea4268028fc20186d415c22b1cff
+    REF 7d3d62c91f69a702e5aa54c6b4dbbaa883683717
     PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
@@ -79,7 +79,7 @@ message(STATUS "Fetching submodules")
 v8_fetch(
         DESTINATION build
         URL https://chromium.googlesource.com/chromium/src/build.git
-        REF b6be94885f567b15bcb0961298b32cdb737ae2d6
+        REF fd86d60f33cbc794537c4da2ef7e298d7f81138e 
         SOURCE ${SOURCE_PATH}
         PATCHES ${CURRENT_PORT_DIR}/build.patch)
 v8_fetch(
@@ -117,6 +117,11 @@ vcpkg_execute_required_process(
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/icu")
 configure_file(${CURRENT_PORT_DIR}/zlib.gn ${SOURCE_PATH}/third_party/zlib/BUILD.gn COPYONLY)
 configure_file(${CURRENT_PORT_DIR}/icu.gn ${SOURCE_PATH}/third_party/icu/BUILD.gn COPYONLY)
+file(WRITE ${SOURCE_PATH}/build/config/gclient_args.gni "checkout_google_benchmark = false\n")
+if(WIN32)
+	string(REGEX REPLACE "\\\\+$" "" WindowsSdkDir $ENV{WindowsSdkDir})
+	file(APPEND ${SOURCE_PATH}/build/config/gclient_args.gni "windows_sdk_path = \"${WindowsSdkDir}\"\n")
+endif()
 
 if(UNIX)
     set(UNIX_CURRENT_INSTALLED_DIR ${CURRENT_INSTALLED_DIR})

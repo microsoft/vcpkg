@@ -1,28 +1,42 @@
-set(PANGO_VERSION 1.40.11)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-${PANGO_VERSION}.tar.xz"
-    FILENAME "pango-${PANGO_VERSION}.tar.xz"
-    SHA512 e4ac40f8da9c326e1e4dfaf4b1d2070601b17f88f5a12991a9a8bbc58bb08640404e2a794a5c68c5ebb2e7e80d9c186d4b26cd417bb63a23f024ef8a38bb152a)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${PANGO_VERSION}
-    PATCHES 
-        0001-fix-static-symbols-export.diff
-        0002-remove-hb-glib.diff
-)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.unix DESTINATION ${SOURCE_PATH})
+    REPO GNOME/pango
+    REF  386639c3b118cc973f714eb485877f480391f31f #v1.48.4
+    SHA512 d7de3bc3108826de9f0b34ca888e0c1eb97c1d0723b2dd68cfb1030fb78d1367e3ac4df88e4a5dea66b08854ef85ecf562d149a58f070351768d6ac144da8520
+    HEAD_REF master # branch name
+) 
 
-vcpkg_configure_cmake(
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DPANGO_SKIP_HEADERS=ON
+    OPTIONS
+        -Dintrospection=disabled # Build the GObject introspection data for Pango
+        -Dfontconfig=enabled # Build with FontConfig support.
+        -Dsysprof=disabled # include tracing support for sysprof
+        -Dlibtahi=disabled # Build with libthai support
+        -Dcairo=enabled # Build with cairo support
+        -Dxft=disabled # Build with xft support
+        -Dfreetype=enabled # Build with freetype support
+        -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
-vcpkg_install_cmake()
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+vcpkg_copy_tools(TOOL_NAMES pango-view pango-list AUTO_CLEAN)
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pango.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pango.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
+endif()

@@ -61,7 +61,7 @@ function(x_vcpkg_pkgconfig_get_modules)
 
     set(var_suffixes)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
+        z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
         if(arg_LIBS)
             execute_process(
                 COMMAND "${PKGCONFIG}" --libs ${arg_MODULES}
@@ -96,7 +96,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         endif()
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
+        z_vcpkg_set_pkgconfig_path("${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${backup_PKG_CONFIG_PATH}")
         if(arg_LIBS)
             execute_process(
                 COMMAND "${PKGCONFIG}" --libs ${arg_MODULES}
