@@ -11,7 +11,7 @@
         <version>3.21.1</version>
         <exeRelativePath>cmake-3.21.1-windows-i386\bin\cmake.exe</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.21.1/cmake-3.21.1-windows-i386.zip</url>
-        <sha512>0c08a284b15c1a2e66ec1c53802a171ee805e8e410957becf71749348f0dba1d61c225352137142f929bc59fda4e26de8cff345ee01709d8bd97542995a6b699</sha512>
+        <sha512>3aa0e9c904bf8abfc9441c1f0fd571e613ade7bc12f36211cd9006b4a2226552815ec8b00c8ef43583769d9d90996e75d2e832b3718ac3b85d3f9fb4db1cd60a</sha512>
         <archiveName>cmake-3.21.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
