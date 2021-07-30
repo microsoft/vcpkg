@@ -29,6 +29,36 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${GDAL_PATCHES}
 )
 
+set(GDAL_EXES
+    gdal_contour
+    gdal_create
+    gdal_grid
+    gdal_rasterize
+    gdal_translate
+    gdal_viewshed
+    gdaladdo
+    gdalbuildvrt
+    gdaldem
+    gdalenhance
+    gdalinfo
+    gdallocationinfo
+    gdalmanage
+    gdalmdiminfo
+    gdalmdimtranslate
+    gdalsrsinfo
+    gdaltindex
+    gdaltransform
+    gdalwarp
+    gnmanalyse
+    gnmmanage
+    nearblack
+    ogr2ogr
+    ogrinfo
+    ogrlineref
+    ogrtindex
+    testepsg
+)
+
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
@@ -141,35 +171,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   endif()
 
   if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(GDAL_EXES
-        gdal_contour
-        gdal_create
-        gdal_grid
-        gdal_rasterize
-        gdal_translate
-        gdal_viewshed
-        gdaladdo
-        gdalbuildvrt
-        gdaldem
-        gdalenhance
-        gdalinfo
-        gdallocationinfo
-        gdalmanage
-        gdalmdiminfo
-        gdalmdimtranslate
-        gdalsrsinfo
-        gdaltindex
-        gdaltransform
-        gdalwarp
-        gnmanalyse
-        gnmmanage
-        nearblack
-        ogr2ogr
-        ogrinfo
-        ogrlineref
-        ogrtindex
-        testepsg
-    )
     vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
   else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -362,3 +363,13 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# Delete binaries unless the "tools" feature is specified
+if(NOT "tools" IN_LIST FEATURES)
+    set(GDAL_EXES_RELEASE ${GDAL_EXES})
+    set(GDAL_EXES_DEBUG ${GDAL_EXES})
+    list(TRANSFORM GDAL_EXES_RELEASE PREPEND "${CURRENT_PACKAGES_DIR}/tools/gdal/bin/")
+    list(TRANSFORM GDAL_EXES_DEBUG PREPEND "${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/")
+endif()
+
+file(REMOVE ${GDAL_EXES_RELEASE} ${GDAL_EXES_DEBUG})
