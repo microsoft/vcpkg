@@ -34,18 +34,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython_EXECUTABLE=${PYTHON3}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_LITE_PROTO=OFF
         -DONNX_BUILD_TESTS=OFF
         -DONNX_BUILD_BENCHMARKS=OFF
 )
-# These are custom targets for codegen
-# Sadly there are no add_dependency controls in the project's CMakeLists.txt
-vcpkg_cmake_build(TARGET gen_onnx_proto)
-vcpkg_cmake_build(TARGET gen_onnx_operators_proto)
-vcpkg_cmake_build(TARGET gen_onnx_data_proto)
+
 if("pybind11" IN_LIST FEATURES)
     # This target is not in install/export
     vcpkg_cmake_build(TARGET onnx_cpp2py_export)

@@ -17,7 +17,10 @@
   ],
   "features": {
     "pybind11": {
-      "description": "Build Python binaries"
+      "description": "Build Python binaries",
+      "dependencies": [
+        "pybind11"
+      ]
     }
   }
 }
