@@ -13,6 +13,12 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+# Used in cmake wrapper
+set(ENABLE_LUA_CPP 0)
+if ("cpp" IN_LIST FEATURES)
+    set(ENABLE_LUA_CPP 1)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     cpp COMPILE_AS_CPP
@@ -22,7 +28,6 @@ if(VCPKG_TARGET_IS_IOS AND "tools" IN_LIST FEATURES)
     message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
 endif()
 
-set(ENABLE_LUA_CPP 0)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
