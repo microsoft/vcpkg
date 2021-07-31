@@ -1,6 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.0.1-pv5.9.1",
+  "version-semver": "9.0.3-pv5.9.1",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "dependencies": [
