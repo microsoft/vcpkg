@@ -144,14 +144,12 @@ vcpkg_from_github(
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
         python_debug.patch
-        #hdf5-config.patch
         fix-using-hdf5.patch
         # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
         # upstream vtkm patches to make it work with vtkm 1.6
         vtkm.patch # To include an external VTKm build
-        #vtkm-update.patch # Note: !7879 changed this to <vtkm/cont/UnknownArrayHandle.h> across the code base
         1f00a0c9.patch
         156fb524.patch
         d107698a.patch
