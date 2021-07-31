@@ -1,13 +1,8 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-   list(APPEND PATCHES "prevent-cmake-failing-with-variable-notfound.patch")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.81.0
-    SHA512 8e14c429671a51b9b231f2a965f2368b019592a29a04a9e192da25a8a963042fe7478323508c097f73e2c328fd4742f8808fe68ea439e00e6667414d7f75be3e
-    PATCHES ${PATCHES}
+    REF v5.84.0
+    SHA512 611481b0d5f387b6e1201c1d38e050bd6c956607d059679c68f39d8560cdde666709f5aa1ae770e200fb81e902da85160eb3eeaf5c0bdb02c0ff13782df1d907
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -17,12 +12,13 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DPYTHON_EXECUTABLE=${PYTHON3}
+    MAYBE_UNUSED_VARIABLES
+        -DBUILD_HTML_DOCS=OFF
+        -DBUILD_MAN_DOCS=OFF
+        -DBUILD_QTHELP_DOCS=OFF
 )
 
 vcpkg_install_cmake()

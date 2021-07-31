@@ -1,7 +1,6 @@
 {
   "name": "kf5itemviews",
-  "version": "5.81.0",
-  "port-version": 1,
+  "version": "5.84.0",
   "description": "Widget addons for Qt Model/View",
   "homepage": "https://api.kde.org/frameworks/kitemviews/html/index.html",
   "dependencies": [

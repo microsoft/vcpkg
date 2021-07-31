@@ -23,6 +23,8 @@ if(NOT GDAL_INCLUDE_DIR OR NOT GDAL_LIBRARY)
     message(FATAL_ERROR "Installation of vcpkg port gdal is broken.")
 endif()
 
+set(GDAL_LIBRARY "${GDAL_LIBRARY}" CACHE STRING "")
+
 set(FindGDAL_SKIP_GDAL_CONFIG TRUE)
 
 _find_package(${ARGS})
