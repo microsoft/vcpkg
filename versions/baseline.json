@@ -2753,7 +2753,7 @@
       "port-version": 0
     },
     "jack2": {
-      "baseline": "1.9.14",
+      "baseline": "1.9.19",
       "port-version": 0
     },
     "jaeger-client-cpp": {
