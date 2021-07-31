@@ -1,0 +1,25 @@
+From e35d54f49ac2cffd71ab058a36c011fcc5657900 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Sat, 31 Jul 2021 16:21:19 -0400
+Subject: [PATCH 2/3] Fix install directories.
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7fa86be..66fea9b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -786,7 +786,7 @@ link_directories()
+ 
+ # install configuration
+ 
+-if(WIN32)
++if(0)
+ 	set(BIN_DESTINATION ".")
+ else()
+ 	set(BIN_DESTINATION "bin")
+-- 
+2.31.0.windows.1
+

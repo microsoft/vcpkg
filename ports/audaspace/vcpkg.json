@@ -1,0 +1,46 @@
+{
+  "name": "audaspace",
+  "version-date": "2021-05-27",
+  "description": "A high level and feature rich audio library written in C++ with language bindings. ",
+  "homepage": "https://github.com/neXyon/audaspace",
+  "dependencies": [
+    "fftw3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "openal",
+    "sndfile"
+  ],
+  "features": {
+    "ffmpeg": {
+      "description": "FFMPEG file input backend",
+      "dependencies": [
+        "ffmpeg"
+      ]
+    },
+    "openal": {
+      "description": "OpenAL audio output backend",
+      "dependencies": [
+        "openal-soft"
+      ]
+    },
+    "pulseaudio": {
+      "description": "pulseaudio audio output backend"
+    },
+    "sdl": {
+      "description": "SDL2 audio output backend",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sndfile": {
+      "description": "libsndfile file input backend",
+      "dependencies": [
+        "libsndfile"
+      ]
+    }
+  }
+}
