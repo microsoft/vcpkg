@@ -3,6 +3,7 @@
   "version-date": "2021-05-27",
   "description": "A high level and feature rich audio library written in C++ with language bindings. ",
   "homepage": "https://github.com/neXyon/audaspace",
+  "supports": "!static",
   "dependencies": [
     "fftw3",
     {
