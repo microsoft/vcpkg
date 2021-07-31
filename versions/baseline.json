@@ -216,6 +216,10 @@
       "baseline": "0.4.9",
       "port-version": 6
     },
+    "audaspace": {
+      "baseline": "2021-05-27",
+      "port-version": 0
+    },
     "audiofile": {
       "baseline": "1.0.7",
       "port-version": 0
