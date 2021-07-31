@@ -1,3 +1,4 @@
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/header_libraries
@@ -11,6 +12,7 @@ vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
+# remove empty lib and debug/lib directories (and duplicate files from debug/include)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

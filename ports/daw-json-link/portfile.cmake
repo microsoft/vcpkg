@@ -1,3 +1,4 @@
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
@@ -15,6 +16,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 
+# remove empty lib and debug/lib directories (and duplicate files from debug/include)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Append the json-link and dragonbox license information into a single 
