@@ -6738,7 +6738,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.5",
-      "port-version": 2
+      "port-version": 3
     },
     "x-plane": {
       "baseline": "3.0.3",
