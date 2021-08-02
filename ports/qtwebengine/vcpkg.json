@@ -6,10 +6,6 @@
   "supports": "native",
   "dependencies": [
     {
-      "name":"vcpkg-tool-nodejs"
-      "host": true
-    },
-    {
       "name": "ffmpeg",
       "platform": "!windows"
     },
@@ -89,6 +85,10 @@
     {
       "name": "snappy",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
+      "host": true
     },
     {
       "name": "zlib",

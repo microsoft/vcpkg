@@ -38,7 +38,6 @@ The current list of programs includes:
 * SCONS
 * SWIG
 * YASM
-* NODEJS
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 
