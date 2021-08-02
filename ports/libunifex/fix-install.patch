@@ -28,6 +28,6 @@ index 3f25517..3c34a54 100644
 +  DESTINATION lib
 +)
 +install(EXPORT unifex-config
-+  NAMESPACE unifex::
++  NAMESPACE unofficial::
 +  DESTINATION lib/cmake/unifex
 +)
