@@ -30,7 +30,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_DEMOS=OFF
         -DCMAKE_C_VISIBILITY_PRESET=hidden
