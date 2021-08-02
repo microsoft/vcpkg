@@ -1,0 +1,49 @@
+diff --git a/GDALmake.opt.in b/GDALmake.opt.in
+index 07955b2..0d79ac3 100644
+--- a/GDALmake.opt.in
++++ b/GDALmake.opt.in
+@@ -660,3 +660,6 @@ O_OBJ =	$(foreach file,$(OBJ),../o/$(file))
+ 
+ %-clean:
+ 	$(MAKE) -C $* clean
++
++
++BUILD_TOOLS = @BUILD_TOOLS@
+\ No newline at end of file
+diff --git a/apps/GNUmakefile b/apps/GNUmakefile
+index 9624cf7..f91403d 100644
+--- a/apps/GNUmakefile
++++ b/apps/GNUmakefile
+@@ -43,6 +43,11 @@ NON_DEFAULT_LIST = 	multireadtest$(EXE) dumpoverviews$(EXE) \
+ 	gdaltorture$(EXE) gdal2ogr$(EXE) test_ogrsf$(EXE) \
+ 	gdalasyncread$(EXE) testreprojmulti$(EXE)
+ 
++ifeq ($(BUILD_TOOLS),no)
++BIN_LIST =
++NON_DEFAULT_LIST =
++endif
++
+ default:	gdal-config-inst gdal-config $(BIN_LIST)
+ 
+ all: default $(NON_DEFAULT_LIST)
+diff --git a/configure.ac b/configure.ac
+index b88676a..0a46a9c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -6150,6 +6150,16 @@ case "${host_os}" in
+         ;;
+ esac
+ 
++BUILD_TOOLS=yes
++AC_ARG_WITH([tools], AS_HELP_STRING([--with-tools], [Build the tools]),,)
++if test "$with_tools" = "yes"; then
++    AC_MSG_RESULT([enabled])
++else
++    BUILD_TOOLS=no
++    AC_MSG_RESULT([disabled by user])
++fi
++AC_SUBST(BUILD_TOOLS,$BUILD_TOOLS)
++
+ AC_OUTPUT(GDALmake.opt)
+ 
+ dnl ---------------------------------------------------------------------------

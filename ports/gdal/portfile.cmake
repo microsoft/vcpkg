@@ -16,6 +16,7 @@ set(GDAL_PATCHES
     0002-Fix-build.patch
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
+    0007-Control-tools.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
@@ -310,6 +311,12 @@ else()
         list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
     endif()
 
+    if("tools" IN_LIST FEATURES)
+        list(APPEND CONF_OPTS "--with-tools=yes")
+    else()
+       list(APPEND CONF_OPTS "--with-tools=no")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
@@ -318,6 +325,7 @@ else()
             ${CONF_OPTS}
         OPTIONS_DEBUG
             --enable-debug
+            --with-tools=no
     )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)
