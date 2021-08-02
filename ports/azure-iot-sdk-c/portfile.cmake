@@ -10,6 +10,7 @@ if("public-preview" IN_LIST FEATURES)
         PATCHES
             improve-external-deps.patch
             fix-cmake.patch
+            remove-werror.patch
     )
 else()
     vcpkg_from_github(
@@ -21,6 +22,7 @@ else()
         PATCHES
             improve-external-deps.patch
             fix-cmake.patch
+            remove-werror.patch
     )
 endif()
 

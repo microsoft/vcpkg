@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "fix-not-found-include.patch"
+	remove-version.patch
         ${win_patch}
 )
 

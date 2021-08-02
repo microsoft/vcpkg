@@ -1,0 +1,16 @@
+--- a/VERSION
++++ /dev/null
+@@ -1,1 +0,0 @@
+-0.1.82
+--- /dev/null
++++ b/VERSION.txt
+@@ -0,0 +1,1 @@
++0.1.82
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,4 +15,4 @@
+ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+-file(STRINGS "VERSION" SPM_VERSION)
++file(STRINGS "VERSION.txt" SPM_VERSION)
+ message(STATUS "VERSION: ${SPM_VERSION}")
+ project(sentencepiece VERSION ${SPM_VERSION} LANGUAGES CXX)
