@@ -22,19 +22,19 @@
       "description": "Build Qt Assistant"
     },
     "designer": {
-      "description": "Build Qt Designer",
+      "description": "Build Qt Designer"
+    },
+    "linguist": {
+      "description": "Build Qt Linguist components",
       "dependencies": [
         {
           "name": "qttools",
           "default-features": false,
           "features": [
-            "linguist"
+            "designer"
           ]
         }
       ]
-    },
-    "linguist": {
-      "description": "Build Qt Linguist components"
     },
     "qdoc": {
       "description": "Build QDoc.",
