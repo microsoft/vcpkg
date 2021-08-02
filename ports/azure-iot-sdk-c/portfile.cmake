@@ -25,8 +25,9 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    use-prov-client hsm_type_symm_key
-    use-prov-client use_prov_client
+    FEATURES
+        use-prov-client hsm_type_symm_key
+        use-prov-client use_prov_client
 )
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
