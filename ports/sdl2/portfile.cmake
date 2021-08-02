@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -DSDL_SHARED=${SDL_SHARED}
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
+        -DHIDAPI=ON
 )
 
 vcpkg_install_cmake()
