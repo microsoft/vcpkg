@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "boost-build": {
-      "baseline": "1.75.0",
+      "baseline": "1.76.0",
       "port-version": 0
     },
     "boost-callable-traits": {
@@ -989,8 +989,8 @@
       "port-version": 0
     },
     "boost-uninstall": {
-      "baseline": "1.75.0",
-      "port-version": 1
+      "baseline": "1.76.0",
+      "port-version": 0
     },
     "boost-units": {
       "baseline": "1.76.0",
