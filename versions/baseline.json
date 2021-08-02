@@ -1105,7 +1105,7 @@
       "port-version": 1
     },
     "c4core": {
-      "baseline": "2021-06-26",
+      "baseline": "2021-07-18",
       "port-version": 0
     },
     "caf": {
@@ -5653,7 +5653,7 @@
       "port-version": 0
     },
     "ryml": {
-      "baseline": "2021-06-29",
+      "baseline": "2021-07-24",
       "port-version": 0
     },
     "ryu": {
