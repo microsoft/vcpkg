@@ -29,7 +29,7 @@ jobs:
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
-      rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
+      rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1 || (call )
     displayName: 'Clean downloads'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
