@@ -8,18 +8,18 @@ vcpkg_fail_port_install(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
-    REF 75f879f21e75e7ee42cbbce5d6d7ce75fd315433
-    SHA512 d995e7529269a3968871c48bfe4b60dac52fb863f22250674d7fa3aa45b10c9f2851db12e97799c97f1c88123863034d0545c7e68a81441292c6530806a28cd3
+    REF 636f507c33f0c79dce491aec066455ff384d49dc
+    SHA512 3282876be5883b047e8d25ee392f62d2e9ae79af8fdd65c11b1e36d2fdb0648230fe6c7fb57472a4cbced166979351f12494215aa664977a113b74c26bb6f19b
     HEAD_REF master
 )
 
-set(CM_COMMIT_HASH c6de791cd37ea3dc6bcb967819cb74b4f054a8f2)
+set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 2d3f2d8d207f7d9c583b1f0bb35a1f4e0ed571ecdf7d5e745467f4f39cd82b860fc84d220c48a2d01e0ab805ce750133b73006b2f19920c95b1f85c7431459e3
+    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
 )
 
 vcpkg_extract_source_archive_ex(
