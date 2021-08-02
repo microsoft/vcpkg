@@ -27,7 +27,7 @@ index 9624cf7..f91403d 100644
  
  all: default $(NON_DEFAULT_LIST)
 diff --git a/apps/makefile.vc b/apps/makefile.vc
-index 6e1fc9b..056b075 100644
+index 6e1fc9b..66f9b29 100644
 --- a/apps/makefile.vc
 +++ b/apps/makefile.vc
 @@ -20,6 +20,7 @@ GNM_PROGRAMS =	gnmmanage.exe gnmanalyse.exe
@@ -49,6 +49,17 @@ index 6e1fc9b..056b075 100644
  OBJ = commonutils.obj gdalinfo_lib.obj gdal_translate_lib.obj gdalwarp_lib.obj ogr2ogr_lib.obj \
  	gdaldem_lib.obj nearblack_lib.obj gdal_grid_lib.obj gdal_rasterize_lib.obj gdalbuildvrt_lib.obj \
  	gdalmdiminfo_lib.obj gdalmdimtranslate_lib.obj
+@@ -223,5 +228,9 @@ clean:
+ 	-del *.manifest
+ 	-del *.exp
+ 
++!IF "$(BUILD_TOOLS)" == "1"
+ install:	default
+ 	copy *.exe $(BINDIR)
++!ELSE
++install:
++!ENDIF
+\ No newline at end of file
 diff --git a/configure.ac b/configure.ac
 index b88676a..0a46a9c 100644
 --- a/configure.ac
