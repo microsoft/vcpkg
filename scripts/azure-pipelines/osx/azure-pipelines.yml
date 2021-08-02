@@ -25,6 +25,7 @@ jobs:
   - bash: df -h
     displayName: 'Report on Disk Space'
   - bash: |
+      sudo rm -rf ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
       exit 0
