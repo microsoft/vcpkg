@@ -11,7 +11,10 @@
     {
       "name": "qttools",
       "host": true,
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
     }
   ],
   "features": {
@@ -19,7 +22,19 @@
       "description": "Build Qt Assistant"
     },
     "designer": {
-      "description": "Build Qt Designer"
+      "description": "Build Qt Designer",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    },
+    "linguist": {
+      "description": "Build Qt Linguist components"
     },
     "qdoc": {
       "description": "Build QDoc.",

@@ -36,7 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "assistant" FEATURE_assistant
     "designer" FEATURE_designer
-    "designer" FEATURE_linguist # https://bugreports.qt.io/browse/QTBUG-95236
+    "linguist" FEATURE_linguist
     INVERTED_FEATURES
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_Clang
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
