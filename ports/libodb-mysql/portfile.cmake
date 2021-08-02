@@ -10,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         adapter_mysql_8.0.patch
         fix-redefinttion.patch
+        remove-version.patch
 )
 
 file(COPY
