@@ -38,14 +38,17 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua TARGET_PATH share/unofficial-lua)
 
 if("cpp" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua-cpp TARGET_PATH share/unofficial-lua-cpp)
 endif()
 
-vcpkg_copy_pdbs()
-#vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES lua luac SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
