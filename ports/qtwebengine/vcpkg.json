@@ -6,6 +6,10 @@
   "supports": "native",
   "dependencies": [
     {
+      "name":"vcpkg-tool-nodejs"
+      "host": true
+    },
+    {
       "name": "ffmpeg",
       "platform": "!windows"
     },

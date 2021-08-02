@@ -48,7 +48,11 @@ vcpkg_find_acquire_program(PYTHON2)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 #vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_find_acquire_program(NODEJS)
+find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" NO_DEFAULT_PATHS)
+find_program(NODEJS NAMES node)
+if(NOT NODEJS)
+    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
+endif()
 
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
