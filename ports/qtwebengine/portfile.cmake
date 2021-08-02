@@ -48,7 +48,7 @@ vcpkg_find_acquire_program(PYTHON2)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 #vcpkg_find_acquire_program(PKGCONFIG)
-find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" NO_DEFAULT_PATHS)
+find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node"  "bin" NO_DEFAULT_PATHS)
 find_program(NODEJS NAMES node)
 if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
