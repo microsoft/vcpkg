@@ -10,7 +10,11 @@
     },
     {
       "name": "qttools",
-      "default-features": false
+      "host": true,
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
     }
   ],
   "default-features": [
