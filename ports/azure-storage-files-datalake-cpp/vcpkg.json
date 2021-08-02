@@ -7,8 +7,7 @@
     "This library provides Azure Storage Files Data Lake SDK."
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-files-datalake",
-  "license": "MIT",
-  "builtin-baseline": "14c54c49b56a964ac7f2f701a6857adb02ae1bec",
+  "license": "MIT"
   "dependencies": [
     {
       "name": "azure-storage-blobs-cpp",
