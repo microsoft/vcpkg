@@ -1,6 +1,6 @@
 {
   "name": "oatpp-openssl",
-  "version": "1.2.5",
+  "version-semver": "1.2.5",
   "description": "Oat++ openssl module providing secure server and client connection providers.",
   "homepage": "https://github.com/oatpp/oatpp-openssl",
   "dependencies": [
