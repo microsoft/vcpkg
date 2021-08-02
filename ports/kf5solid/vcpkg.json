@@ -1,0 +1,19 @@
+{
+  "name": "kf5solid",
+  "version-semver": "5.84.0",
+  "description": "Desktop hardware abstraction",
+  "homepage": "https://api.kde.org/frameworks/solid/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
