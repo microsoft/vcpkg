@@ -364,12 +364,13 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Delete binaries unless the "tools" feature is specified
+# Always delete "debug" tools, and delete "release" tools unless the "tools" feature is specified
+list(TRANSFORM GDAL_EXES APPEND "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+set(GDAL_EXES_DEBUG "${GDAL_EXES}")
+list(TRANSFORM GDAL_EXES_DEBUG PREPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/")
+file(REMOVE_RECURSE ${GDAL_EXES_DEBUG})
 if(NOT "tools" IN_LIST FEATURES)
-    list(TRANSFORM GDAL_EXES APPEND "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     set(GDAL_EXES_RELEASE "${GDAL_EXES}")
-    set(GDAL_EXES_DEBUG "${GDAL_EXES}")
     list(TRANSFORM GDAL_EXES_RELEASE PREPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/")
-    list(TRANSFORM GDAL_EXES_DEBUG PREPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/")
-    file(REMOVE_RECURSE ${GDAL_EXES_RELEASE} ${GDAL_EXES_DEBUG})
+    file(REMOVE_RECURSE ${GDAL_EXES_RELEASE})
 endif()
