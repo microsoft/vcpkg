@@ -1,14 +1,18 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/GameNetworkingSockets
     REF 9875f39ad3fae8c913daa310c7ff0a7a54b1e6c2 # v1.3.0
     SHA512 edf814ef10a11b67045d90d589a3bd6471fa46bc3f16cf1e83d1806df6bb48306dcda4096a2ff80fee78b24ce36d164cd46808680c9f5f8f546455fce7bf9aa0
     HEAD_REF master
+    PATCHES
+        fix-static-build.patch
 )
 
 set(CRYPTO_BACKEND OpenSSL)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(STATIC_LIB_LINKAGE_OPTS -DBUILD_SHARED_LIBS=OFF -DProtobuf_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -18,6 +22,7 @@ vcpkg_configure_cmake(
         -DGAMENETWORKINGSOCKETS_BUILD_EXAMPLES=OFF
         -DUSE_CRYPTO=${CRYPTO_BACKEND}
         -DUSE_CRYPTO25519=${CRYPTO_BACKEND}
+        ${STATIC_LIB_LINKAGE_OPTS}
 )
 
 vcpkg_install_cmake()
