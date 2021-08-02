@@ -7,7 +7,7 @@
     "This library provides Azure Storage Files Shares SDK."
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-files-shares",
-  "license": "MIT"
+  "license": "MIT",
   "dependencies": [
     {
       "name": "azure-storage-common-cpp",

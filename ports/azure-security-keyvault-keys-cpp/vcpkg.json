@@ -7,7 +7,7 @@
     "This library provides Azure Key Vault Keys SDK."
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/keyvault/azure-security-keyvault-keys",
-  "license": "MIT"
+  "license": "MIT",
   "dependencies": [
     {
       "name": "azure-core-cpp",

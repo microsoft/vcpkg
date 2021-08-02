@@ -7,7 +7,7 @@
     "This library provides common Azure Storage-related abstractions for Azure SDK."
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-common",
-  "license": "MIT"
+  "license": "MIT",
   "dependencies": [
     {
       "name": "azure-core-cpp",
