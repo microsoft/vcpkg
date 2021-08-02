@@ -89,6 +89,17 @@ macro(FFMPEG_FIND varname shortname headername)
     list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_${varname}_INCLUDE_DIRS})
     list(APPEND FFMPEG_LIBRARIES ${FFMPEG_${varname}_LIBRARY})
     list(APPEND FFMPEG_LIBRARY_DIRS ${FFMPEG_${varname}_LIBRARY_RELEASE_DIR} ${FFMPEG_${varname}_LIBRARY_DEBUG_DIR})
+    if(NOT TARGET FFMPEG::${varname})
+      add_library(FFMPEG::${varname} INTERFACE IMPORTED)
+      set_target_properties(FFMPEG::${varname} PROPERTIES
+          INTERFACE_LINK_LIBRARIES FFMPEG_${varname}_LIBRARY
+          INTERFACE_INCLUDE_DIRECTORIES FFMPEG_${varname}_INCLUDE_DIRS
+      )
+    endif()
+    if(NOT TARGET FFMPEG::FFMPEG)
+      add_library(FFMPEG::FFMPEG INTERFACE IMPORTED)
+    endif()
+    target_link_libraries(FFMPEG::FFMPEG PUBLIC FFMPEG::${varname})
   endif()
 endmacro(FFMPEG_FIND)
 
