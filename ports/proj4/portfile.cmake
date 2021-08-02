@@ -22,14 +22,15 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  database BUILD_PROJ_DATABASE
-  tools BUILD_CCT
-  tools BUILD_CS2CS
-  tools BUILD_GEOD
-  tools BUILD_GIE
-  tools BUILD_PROJ
-  tools BUILD_PROJINFO
-  ${EXTRA_FEATURES}
+    FEATURES
+        database BUILD_PROJ_DATABASE
+        tools BUILD_CCT
+        tools BUILD_CS2CS
+        tools BUILD_GEOD
+        tools BUILD_GIE
+        tools BUILD_PROJ
+        tools BUILD_PROJINFO
+        ${EXTRA_FEATURES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -41,7 +42,7 @@ if ("database" IN_LIST FEATURES)
     set(EXE_SQLITE3 ${CURRENT_HOST_INSTALLED_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX})
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
@@ -52,8 +53,13 @@ vcpkg_configure_cmake(
     -DEXE_SQLITE3=${EXE_SQLITE3}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME proj CONFIG_PATH lib/cmake/proj DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME proj4 CONFIG_PATH lib/cmake/proj4)
+
+
+
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif ()
