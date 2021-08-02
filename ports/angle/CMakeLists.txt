@@ -679,9 +679,9 @@ if(NOT BUILD_SHARED_LIBS)
     add_definitions("-DANGLE_EXPORT=" "-DANGLE_UTIL_EXPORT=" "-DEGLAPI=" "-DGL_APICALL=" "-DGL_API=")
 endif()
 
-SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
+set_target_properties(libANGLE PROPERTIES PREFIX "")
+set_target_properties(libGLESv2 PROPERTIES PREFIX "" IMPORT_PREFIX "")
+set_target_properties(libEGL PROPERTIES PREFIX "" IMPORT_PREFIX "")
 
 install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_compression_utils angle_image_util angle_gpu_info_util angle_translator angle_preprocessor GL_VISIBILITY EXPORT ANGLEExport
     RUNTIME DESTINATION bin
