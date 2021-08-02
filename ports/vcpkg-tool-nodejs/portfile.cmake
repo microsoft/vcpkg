@@ -11,6 +11,7 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 set(BASE_URL "https://nodejs.org/dist/v${PROG_VERSION}/")
+set(ARCHIVE "")
 set(ARCHIVE_EXT "")
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^x86$|arm")
@@ -33,6 +34,7 @@ else()
     message(FATAL_ERROR "Target not yet supported by '${PORT}'")
 endif()
 set(URL "${BASE_URL}${ARCHIVE}${ARCHIVE_EXT}")
+message(STATUS "URL: '${URL}'")
 
 vcpkg_download_distfile(ARCHIVE_PATH
   URLS "${URL}"
@@ -41,8 +43,8 @@ vcpkg_download_distfile(ARCHIVE_PATH
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+message(STATUS "ARCHIVE_PATH: '${ARCHIVE_PATH}'")
 
-get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
 vcpkg_execute_in_download_mode(
     COMMAND ${CMAKE_COMMAND} -E tar xzf "${ARCHIVE_PATH}" 
     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
