@@ -1,5 +1,0 @@
-Source: tinyfiledialogs
-Version: 3.8.8
-Description: Highly portable and cross-platform dialogs for native inputbox, passwordbox, colorpicker and more
-Homepage: https://sourceforge.net/projects/tinyfiledialogs/
-Supports: !uwp
