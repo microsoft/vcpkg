@@ -1,14 +1,15 @@
-diff --git a/cmake/unifex_env.cmake b/cmake/unifex_env.cmake
-index cb99ae4..df1f4e1 100644
+﻿diff --git a/cmake/unifex_env.cmake b/cmake/unifex_env.cmake
+index cb99ae4..9825532 100644
 --- a/cmake/unifex_env.cmake
 +++ b/cmake/unifex_env.cmake
-@@ -24,5 +24,8 @@ if (MSVC)
-     add_compile_options(/W3 /WX)
+@@ -21,8 +21,8 @@ endif()
+ 
+ if (MSVC)
+     # warning level 3 and all warnings as errors
+-    add_compile_options(/W3 /WX)
++    add_compile_options(/W3)
  else()
      # lots of warnings and all warnings as errors
 -    add_compile_options(-Wall -Wextra -pedantic -Werror)
-+    add_compile_options(-Wall -Wextra -pedantic -Werror
-+      -Wno-error=pedantic # io_uring.h contains anonymous structs, flexible array member
-+      -Wno-error=sign-compare -Wno-error=maybe-uninitialized # Allow warnings to build with Google.Test
-+    )
++    add_compile_options(-Wall -Wextra -pedantic)
  endif()
