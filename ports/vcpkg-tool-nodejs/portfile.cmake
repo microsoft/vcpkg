@@ -41,9 +41,13 @@ vcpkg_download_distfile(ARCHIVE_PATH
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+
 get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} LAST_EXT)
 vcpkg_execute_in_download_mode(
     COMMAND ${CMAKE_COMMAND} -E tar xzf "${ARCHIVE_PATH}" 
     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
 )
+file(GLOB_RECURSE folders "${CURRENT_PACKAGES_DIR}/tools/*" LIST_DIRECTORIES true)
+message(STATUS "Files and Folders: '${folders}'")
+
 file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${ARCHIVE}" "${CURRENT_PACKAGES_DIR}/tools/node")
