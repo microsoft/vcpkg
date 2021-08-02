@@ -12,10 +12,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_STATIC_RUNTIME=OFF
 )
 
 vcpkg_cmake_install()

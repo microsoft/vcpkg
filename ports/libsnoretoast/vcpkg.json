@@ -3,7 +3,7 @@
   "version-semver": "0.8.0",
   "description": "A command line application capable of creating Windows Toast notifications on Windows 8 or later.",
   "homepage": "https://invent.kde.org/libraries/snoretoast",
-  "supports": "windows",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
