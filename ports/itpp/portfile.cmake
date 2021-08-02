@@ -10,7 +10,7 @@ vcpkg_from_sourceforge(
         msvc2013.patch
         fix-uwp.patch
         fix-linux.patch
-        remove-version.patch
+        rename-version.patch
 )
 
 vcpkg_configure_cmake(
