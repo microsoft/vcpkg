@@ -76,7 +76,7 @@ endif()
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(protobuf_BUILD_PROTOC_BINARIES)
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
         vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.15.8.0 AUTO_CLEAN)
