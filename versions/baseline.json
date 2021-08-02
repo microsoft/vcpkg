@@ -2714,7 +2714,7 @@
     },
     "intel-mkl": {
       "baseline": "2020.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "intelrdfpmathlib": {
       "baseline": "20U2-1",
