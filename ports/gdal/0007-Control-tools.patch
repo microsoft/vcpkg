@@ -26,6 +26,29 @@ index 9624cf7..f91403d 100644
  default:	gdal-config-inst gdal-config $(BIN_LIST)
  
  all: default $(NON_DEFAULT_LIST)
+diff --git a/apps/makefile.vc b/apps/makefile.vc
+index 6e1fc9b..056b075 100644
+--- a/apps/makefile.vc
++++ b/apps/makefile.vc
+@@ -20,6 +20,7 @@ GNM_PROGRAMS =	gnmmanage.exe gnmanalyse.exe
+ !ENDIF
+ 
+ 
++!IF "$(BUILD_TOOLS)" == "1"
+ default:	gdal_translate.exe gdalinfo.exe gdaladdo.exe gdalwarp.exe \
+ 		nearblack.exe gdalmanage.exe gdalenhance.exe gdaltransform.exe\
+ 		gdaldem.exe gdallocationinfo.exe gdalsrsinfo.exe gdalmdiminfo.exe \
+@@ -28,6 +29,10 @@ default:	gdal_translate.exe gdalinfo.exe gdaladdo.exe gdalwarp.exe \
+ all:	default multireadtest.exe \
+ 			dumpoverviews.exe gdalwarpsimple.exe gdalflattenmask.exe \
+ 			gdaltorture.exe gdal2ogr.exe test_ogrsf.exe
++!ELSE
++default:
++all:
++!ENDIF
+ OBJ = commonutils.obj gdalinfo_lib.obj gdal_translate_lib.obj gdalwarp_lib.obj ogr2ogr_lib.obj \
+ 	gdaldem_lib.obj nearblack_lib.obj gdal_grid_lib.obj gdal_rasterize_lib.obj gdalbuildvrt_lib.obj \
+ 	gdalmdiminfo_lib.obj gdalmdimtranslate_lib.obj
 diff --git a/configure.ac b/configure.ac
 index b88676a..0a46a9c 100644
 --- a/configure.ac

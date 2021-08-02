@@ -157,6 +157,13 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       DEBUG=1
   )
 
+  if("tools" IN_LIST FEATURES)
+      list(APPEND NMAKE_OPTIONS_REL "BUILD_TOOLS=1")
+  else()
+      list(APPEND NMAKE_OPTIONS_REL "BUILD_TOOLS=0")
+  endif()
+  list(APPEND NMAKE_OPTIONS_DBG "BUILD_TOOLS=0")
+
   # Begin build process
   vcpkg_install_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
