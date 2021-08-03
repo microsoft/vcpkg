@@ -1,6 +1,7 @@
 {
   "name": "kf5completion",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Text completion helpers and widgets",
   "homepage": "https://api.kde.org/frameworks/kcompletion/html/index.html",
   "dependencies": [

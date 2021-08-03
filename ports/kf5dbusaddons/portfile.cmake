@@ -11,10 +11,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_TESTING=OFF
-    MAYBE_UNUSED_VARIABLES
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
 )
 
 vcpkg_cmake_install()

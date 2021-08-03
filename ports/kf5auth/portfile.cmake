@@ -13,10 +13,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_DATAROOTDIR=data
-    MAYBE_UNUSED_VARIABLES
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
 
 )
 

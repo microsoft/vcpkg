@@ -1,6 +1,7 @@
 {
   "name": "kf5itemmodels",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Models for Qt Model/View system",
   "homepage": "https://api.kde.org/frameworks/kitemmodels/html/index.html",
   "dependencies": [

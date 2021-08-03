@@ -1,6 +1,7 @@
 {
   "name": "kf5windowsystem",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Access to the windowing system",
   "homepage": "https://api.kde.org/frameworks/kwindowsystem/html/",
   "dependencies": [

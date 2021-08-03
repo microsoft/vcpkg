@@ -1,6 +1,7 @@
 {
   "name": "kf5guiaddons",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Addons to QtGui",
   "homepage": "https://api.kde.org/frameworks/kguiaddons/html/index.html",
   "dependencies": [
