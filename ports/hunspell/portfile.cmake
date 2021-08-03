@@ -77,6 +77,14 @@ else()
 endif()
 vcpkg_copy_pdbs()
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/hunspell/hunvisapi.h"
+        "#if defined(HUNSPELL_STATIC)"
+        "#if 1"
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
