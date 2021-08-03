@@ -127,7 +127,7 @@ function(vcpkg_find_fortran out_var)
                 "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${machine_flag} ${VCPKG_Fortran_FLAGS}")
 
             # This is for private use by vcpkg-gfortran
-            set(vcpkg_find_fortran_MSYS_ROOT "${MSYS_ROOT}" PARENT_SCOPE)
+            set(vcpkg_find_fortran_MSYS_ROOT "${msys_root}" PARENT_SCOPE)
             set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
             set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
