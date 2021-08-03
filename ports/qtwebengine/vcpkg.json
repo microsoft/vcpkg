@@ -75,11 +75,11 @@
       ]
     },
     {
-      "name": "qttools",
+      "name": "qtdeclarative",
       "default-features": false
     },
     {
-      "name": "qtdeclarative",
+      "name": "qttools",
       "default-features": false
     },
     {
