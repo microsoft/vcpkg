@@ -1,6 +1,6 @@
 The package bullet3 provides CMake targets:
 
 find_package(Bullet CONFIG REQUIRED)
-include(${BULLET_USE_FILE})
 
 target_link_libraries(main PRIVATE LinearMath Bullet3Common BulletDynamics BulletSoftBody)
+target_include_directories(main PRIVATE ${BULLET_INCLUDE_DIRS})
