@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-error-c2668.patch
+        fix-error-C4996.patch
 )
 
 vcpkg_cmake_configure(
