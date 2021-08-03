@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES 
         fix_cmakelist.patch
+        fix-uwp.patch
 )
 
 if (VCPKG_TARGET_IS_UWP)
@@ -18,11 +19,10 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "tools"         LIBXML2_WITH_PROGRAMS
+        "tools"         LIBXML2_WITH_PROGRAMS
 )
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBXML2_WITH_TESTS=OFF
@@ -61,9 +61,9 @@ vcpkg_configure_cmake(
         -DLIBXML2_WITH_XPTR=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libxml2)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libxml2)
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

@@ -51,11 +51,8 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function i
 #]===]
 
 function(vcpkg_build_make)
-    if(NOT _VCPKG_CMAKE_VARS_FILE)
-        # vcpkg_build_make called without using vcpkg_configure_make before
-        vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    endif()
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
@@ -91,7 +88,7 @@ function(vcpkg_build_make)
         set(PATH_GLOBAL "$ENV{PATH}")
         vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper")
         vcpkg_acquire_msys(MSYS_ROOT)
-        find_program(MAKE make REQUIRED)
+        find_program(MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
