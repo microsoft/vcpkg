@@ -79,6 +79,10 @@
       "default-features": false
     },
     {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
       "name": "re2",
       "platform": "!windows"
     },
