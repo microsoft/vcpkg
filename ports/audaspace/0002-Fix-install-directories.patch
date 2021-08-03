@@ -1,4 +1,4 @@
-From e35d54f49ac2cffd71ab058a36c011fcc5657900 Mon Sep 17 00:00:00 2001
+From c3e520b9e1d78093f352da408ca6d1e8239b5132 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Sat, 31 Jul 2021 16:21:19 -0400
 Subject: [PATCH 2/3] Fix install directories.
@@ -8,10 +8,10 @@ Subject: [PATCH 2/3] Fix install directories.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7fa86be..66fea9b 100644
+index 8d3d714..690d485 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -786,7 +786,7 @@ link_directories()
+@@ -785,7 +785,7 @@ link_directories()
  
  # install configuration
  

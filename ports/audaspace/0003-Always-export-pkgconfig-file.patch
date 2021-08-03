@@ -1,4 +1,4 @@
-From b64dba7c2b499b976c281596ad11658a44121112 Mon Sep 17 00:00:00 2001
+From ed167905922a9090b4737d556487089d83d3b9a7 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Sat, 31 Jul 2021 16:22:01 -0400
 Subject: [PATCH 3/3] Always export pkgconfig file.
@@ -8,10 +8,10 @@ Subject: [PATCH 3/3] Always export pkgconfig file.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 66fea9b..31cba55 100644
+index 690d485..61bde71 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -810,7 +810,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include/audaspace)
+@@ -809,7 +809,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include/audaspace)
  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Audaspace.h DESTINATION include/audaspace)
  
  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packages/pkgconfig/audaspace.pc.in ${CMAKE_CURRENT_BINARY_DIR}/audaspace.pc @ONLY)
