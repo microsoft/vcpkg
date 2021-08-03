@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "osx" "linux")
+vcpkg_fail_port_install(ON_TARGET "osx" "linux" "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,14 +12,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_EXAMPLES=OFF
+        -DBUILD_STATIC_RUNTIME=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libsnoretoast")
 vcpkg_copy_tools(
     TOOL_NAMES "snoretoast"
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
     AUTO_CLEAN
 )
 
