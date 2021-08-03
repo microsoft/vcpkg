@@ -1,4 +1,4 @@
-# Selecting library features
+# Selecting Library Features
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/selecting-library-features.md).**
 

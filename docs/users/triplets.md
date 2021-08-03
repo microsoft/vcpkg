@@ -1,4 +1,4 @@
-# Triplet files
+# Triplet Files
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
 
