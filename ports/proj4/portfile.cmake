@@ -10,7 +10,6 @@ vcpkg_from_github(
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         tools-cmake.patch
-        fix-export-cmake-name.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -59,15 +58,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ CONFIG_PATH lib/cmake/proj DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ4 CONFIG_PATH lib/cmake/proj4)
 
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/proj/PROJ-config.cmake"
-    "include (\"\${_DIR}/proj4-targets.cmake\")" ""
-)
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/proj4/PROJ4-config.cmake"
-    "include (\"\${_DIR}/proj-targets.cmake\")" ""
-)
-
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif ()
@@ -75,6 +65,7 @@ endif ()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
