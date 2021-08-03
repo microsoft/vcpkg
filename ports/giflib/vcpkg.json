@@ -1,0 +1,12 @@
+{
+  "name": "giflib",
+  "version": "5.2.1",
+  "description": "A library for reading and writing gif images.",
+  "homepage": "https://sourceforge.net/projects/giflib/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
