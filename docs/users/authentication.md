@@ -1,0 +1,73 @@
+# Authentication for Source Code
+
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/authentication.md).**
+
+In addition to `vcpkg_from_git()`, registries also now directly use the git command line tools to fetch remote resources. Some of these resources may need to be protected from anonymous access, so it's important to be able to provide credentials.
+
+## Pre-seed git credentials
+
+You can pre-seed git credentials via `git credential approve`:
+Powershell:
+```powershell
+"url=https://github.com`npath=Microsoft/vcpkg`nusername=unused`npassword=$MY_PAT`n" | git credential approve
+```
+Bash:
+```sh
+echo "url=https://github.com"$'\n'"path=Microsoft/vcpkg"$'\n'"username=unused"$'\n'"password=$MY_PAT"$'\n' | git credential approve
+```
+
+## `git config --global http.<uri>.extraheader`
+
+For systems which need bearer auth, you can use `git config`:
+**Note: you must make these config changes with `--global`**
+```
+git config --global --unset-all http.<uri>.extraheader
+git config --global http.<uri>.extraheader "AUTHORIZATION: bearer <System_AccessToken>"
+```
+The `<uri>` can be filled in with a variety of options, documented in https://git-scm.com/docs/git-config#Documentation/git-config.txt-httplturlgt. For example, `https://dev.azure.com/MYORG/`.
+
+(Original Source: https://github.com/Microsoft/azure-pipelines-agent/issues/1601#issuecomment-394511048).
+
+**Note for Azure DevOps users:** You may need to enable access via Job authorization scope https://docs.microsoft.com/en-us/azure/devops/pipelines/process/access-tokens?view=azure-devops&tabs=yaml#job-authorization-scope. You may need to "reference" the repo in your yaml via:
+
+```yaml
+resources: 
+  repositories:
+    - repository: <FRIENDLYNAME>
+      type: git
+      name: <ORG>/<REPO>
+      tag: tags/<TAG>
+
+...
+
+jobs:
+ - job: Build
+   uses:
+     repositories: [<FRIENDLYNAME>]
+```
+
+## Pass credentials in an environment variable
+
+Using `VCPKG_KEEP_ENV_VARS` or `VCPKG_ENV_PASSTHROUGH_UNTRACKED`, we can smuggle credential info via another var like `MY_TOKEN_VAR`.
+```sh
+export VCPKG_KEEP_ENV_VARS=MY_TOKEN_VAR
+export MY_TOKEN_VAR=abc123
+```
+This can then be used in your private ports:
+```cmake
+# some/private/portfile.cmake
+set(MY_TOKEN_VAR "")
+if(DEFINED ENV{MY_TOKEN_VAR})
+    set(MY_TOKEN_VAR "$ENV{MY_TOKEN_VAR}@")
+endif()
+vcpkg_from_git(
+    URLS "https://${MY_TOKEN_VAR}host.com/normal/url/path"
+    ...
+)
+```
+```cmake
+# some/other/private/portfile.cmake
+vcpkg_from_github(
+    AUTHORIZATION_TOKEN "$ENV{MY_TOKEN_VAR}"
+)
+```
