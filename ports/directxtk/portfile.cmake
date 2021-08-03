@@ -65,12 +65,6 @@ elseif(NOT VCPKG_TARGET_IS_UWP)
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
 
-  vcpkg_install_msbuild(
-      SOURCE_PATH ${SOURCE_PATH}
-      PROJECT_SUBPATH MakeSpriteFont/MakeSpriteFont.csproj
-      PLATFORM AnyCPU
-  )
-
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
