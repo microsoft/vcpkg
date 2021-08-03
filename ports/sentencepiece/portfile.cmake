@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES rename-version.patch
 )
+file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

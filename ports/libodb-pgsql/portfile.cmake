@@ -7,8 +7,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES remove-version.patch
 )
+file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt

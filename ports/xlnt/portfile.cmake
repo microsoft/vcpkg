@@ -12,9 +12,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "fix-not-found-include.patch"
-        remove-version.patch
         ${win_patch}
 )
+file(REMOVE "${SOURCE_PATH}/third-party/libstudxml/version")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(STATIC OFF)

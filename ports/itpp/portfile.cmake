@@ -12,6 +12,7 @@ vcpkg_from_sourceforge(
         fix-linux.patch
         rename-version.patch
 )
+file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

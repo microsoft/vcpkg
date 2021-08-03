@@ -10,8 +10,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         adapter_mysql_8.0.patch
         fix-redefinttion.patch
-        remove-version.patch
 )
+file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
