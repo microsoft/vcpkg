@@ -7,6 +7,7 @@ In addition to `vcpkg_from_git()`, registries also now directly use the git comm
 ## Pre-seed git credentials
 
 You can pre-seed git credentials via `git credential approve`:
+
 Powershell:
 ```powershell
 "url=https://github.com`npath=Microsoft/vcpkg`nusername=unused`npassword=$MY_PAT`n" | git credential approve
@@ -19,6 +20,7 @@ echo "url=https://github.com"$'\n'"path=Microsoft/vcpkg"$'\n'"username=unused"$'
 ## `git config --global http.<uri>.extraheader`
 
 For systems which need bearer auth, you can use `git config`:
+
 **Note: you must make these config changes with `--global`**
 ```
 git config --global --unset-all http.<uri>.extraheader
@@ -28,7 +30,7 @@ The `<uri>` can be filled in with a variety of options, documented in https://gi
 
 (Original Source: https://github.com/Microsoft/azure-pipelines-agent/issues/1601#issuecomment-394511048).
 
-**Note for Azure DevOps users:** You may need to enable access via Job authorization scope https://docs.microsoft.com/en-us/azure/devops/pipelines/process/access-tokens?view=azure-devops&tabs=yaml#job-authorization-scope. You may need to "reference" the repo in your yaml via:
+**Note for Azure DevOps users:** You may need to enable access via Job authorization scope https://docs.microsoft.com/en-us/azure/devops/pipelines/process/access-tokens?view=azure-devops&tabs=yaml#job-authorization-scope. You may also need to "reference" the repo in your yaml via:
 
 ```yaml
 resources: 
@@ -46,7 +48,7 @@ jobs:
      repositories: [<FRIENDLYNAME>]
 ```
 
-## Pass credentials in an environment variable
+## Pass credentials in an environment variable (not recommended)
 
 Using `VCPKG_KEEP_ENV_VARS` or `VCPKG_ENV_PASSTHROUGH_UNTRACKED`, we can smuggle credential info via another var like `MY_TOKEN_VAR`.
 ```sh
@@ -71,3 +73,5 @@ vcpkg_from_github(
     AUTHORIZATION_TOKEN "$ENV{MY_TOKEN_VAR}"
 )
 ```
+
+For private ports, we recommend using `vcpkg_from_git()` instead of `vcpkg_from_github()` and the pre-seeding method above.
