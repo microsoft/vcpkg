@@ -50,7 +50,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 # install protobuf files together
 get_filename_component(CODEGEN_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/onnx ABSOLUTE)
 file(INSTALL ${CODEGEN_DIR}/onnx-data.proto
