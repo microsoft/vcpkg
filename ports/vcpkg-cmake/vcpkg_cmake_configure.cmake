@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
     [OPTIONS_DEBUG
         <configure-setting>...]
     [MAYBE_UNUSED_VARIABLES
-        <variable-name>...]
+        <option-name>...]
 )
 ```
 
@@ -60,7 +60,17 @@ If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 This function makes certain that all options passed in are used by the
 underlying CMake build system. If there are options that might be unused,
 perhaps on certain platforms, pass those variable names to
-`MAYBE_UNUSED_VARIABLES`.
+`MAYBE_UNUSED_VARIABLES`. For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
