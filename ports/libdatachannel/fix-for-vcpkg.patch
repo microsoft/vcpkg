@@ -35,7 +35,7 @@ index beb5000..d6c26cf 100644
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
  target_link_libraries(datachannel PUBLIC Threads::Threads)
 -target_link_libraries(datachannel PRIVATE Usrsctp::Usrsctp plog::plog)
-+target_link_libraries(datachannel PRIVATE usrsctp)
++target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
  
  target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
@@ -43,7 +43,7 @@ index beb5000..d6c26cf 100644
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
  target_link_libraries(datachannel-static PUBLIC Threads::Threads)
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::Usrsctp plog::plog)
-+target_link_libraries(datachannel-static PRIVATE usrsctp)
++target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
  
  if(WIN32)
  	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
