@@ -31,7 +31,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DPython_EXECUTABLE=${PYTHON3} # for Windows
