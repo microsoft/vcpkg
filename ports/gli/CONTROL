@@ -1,5 +1,0 @@
-Source: gli
-Version: dd17acf-1
-Build-Depends: glm
-Description: OpenGL Image (GLI)
-Homepage: https://gli.g-truc.net

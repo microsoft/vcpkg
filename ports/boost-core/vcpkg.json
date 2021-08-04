@@ -1,10 +1,11 @@
 {
   "name": "boost-core",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost core module",
   "homepage": "https://github.com/boostorg/core",
   "dependencies": [
     "boost-config",
+    "boost-static-assert",
     "boost-vcpkg-helpers"
   ]
 }
