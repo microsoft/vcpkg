@@ -1,18 +1,17 @@
 {
   "name": "azure-security-keyvault-keys-cpp",
   "version-semver": "4.0.0-beta.4",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Key Vault Keys SDK for C++",
     "This library provides Azure Key Vault Keys SDK."
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/keyvault/azure-security-keyvault-keys",
   "license": "MIT",
-  "builtin-baseline": "14c54c49b56a964ac7f2f701a6857adb02ae1bec",
   "dependencies": [
     {
       "name": "azure-core-cpp",
-      "default-features": false,
-      "version>=": "1.1.0"
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
