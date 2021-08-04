@@ -1756,6 +1756,3 @@ cppgraphqlgen:x64-osx=fail
 # Changes in Python have broken tensorflow on our osx hardware
 tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
-
-# TensorFlow x64 Windows DLL misses C++ API symbols, only C API exported; needs to be fixed upstream
-tensorflow-cc:x64-windows=fail

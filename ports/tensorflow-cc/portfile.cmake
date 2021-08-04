@@ -1,9 +1,7 @@
 vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "UWP")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		message(FATAL_ERROR "TensorFlow doesn't support the C++ API via dynamic linkage on Windows. Please consider using static linkage (x64-windows-static triplet).")
-	endif()
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 set(TF_LIB_SUFFIX "_cc")
