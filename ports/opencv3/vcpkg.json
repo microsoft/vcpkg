@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.14",
-  "port-version": 1,
+  "port-version": 2,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -68,7 +68,16 @@
     "ffmpeg": {
       "description": "ffmpeg support for opencv",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
       ]
     },
     "flann": {
