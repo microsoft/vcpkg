@@ -13,6 +13,7 @@ vcpkg_configure_make(
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
+    [ADDITIONAL_MSYS_PACKAGES <MSYS_PACKAGES>...]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
@@ -49,6 +50,9 @@ For ports having a configure script following the autotools rules for selecting 
 
 ### NO_ADDITIONAL_PATHS
 Don't pass any additional paths except for --prefix to the configure call
+
+### ADDITIONAL_MSYS_PACKAGES
+Additional msys packages required by the configuration or build process.
 
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
