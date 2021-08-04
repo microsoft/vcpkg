@@ -2,8 +2,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF e411d98144a56e2c2ffe4ee878f3b4e8a2cf9442
-        SHA512 7bdd284554697aea6845516f521d97d391280de2c6d569f466b63ce9aff174b3b40296285a852c11b890ed07101ab104e2579a86aa310c7a2787aaed51cc4f1d
+        REF v0.9.6-win
+        SHA512 ecbc641d9d7bae707387248060af91375cd0c80d50eee2ae1dd24f0f61eda0d3faf0ea835bf6a03a7d25b5708771c3e432b8ad135ae5d1620e705a1ef93bb84e
         HEAD_REF windows
     )
 else()
