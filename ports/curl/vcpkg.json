@@ -140,7 +140,7 @@
           "name": "curl",
           "default-features": false,
           "features": [
-            "winssl"
+            "schannel"
           ],
           "platform": "(windows & !uwp) | mingw"
         },
@@ -168,6 +168,7 @@
       "dependencies": [
         {
           "name": "curl",
+          "default-features": false,
           "features": [
             "schannel"
           ]
