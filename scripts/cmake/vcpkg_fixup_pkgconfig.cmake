@@ -116,15 +116,12 @@ function(vcpkg_fixup_pkgconfig)
         file(GLOB_RECURSE arg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
         file(GLOB_RECURSE arg_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/**/*.pc")
         foreach(debug_file IN LISTS arg_DEBUG_FILES)
-            list(REMOVE_ITEM arg_RELEASE_FILES "${debug_file}")
+            vcpkg_list(REMOVE_ITEM arg_RELEASE_FILES "${debug_file}")
         endforeach()
     endif()
 
-    if(VCPKG_TARGET_IS_WINDOWS)
-        # Absolute Unix like paths 
-        string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_packages_dir "${CURRENT_PACKAGES_DIR}")
-        string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_installed_dir "${CURRENT_INSTALLED_DIR}")
-    endif()
+    string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_packages_dir "${CURRENT_PACKAGES_DIR}")
+    string(REGEX REPLACE "^([a-zA-Z]):/" [[/\1/]] unix_installed_dir "${CURRENT_INSTALLED_DIR}")
 
     foreach(config IN ITEMS RELEASE DEBUG)
         debug_message("${config} Files: ${arg_${config}_FILES}")
@@ -146,12 +143,12 @@ function(vcpkg_fixup_pkgconfig)
             endif()
             #Correct *.pc file
             file(READ "${file}" contents)
+
             string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
             string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
-            if(VCPKG_TARGET_IS_WINDOWS)
-                string(REPLACE "${unix_packages_dir}" [[${prefix}]] contents "${contents}")
-                string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
-            endif()
+            string(REPLACE "${unix_packages_dir}" [[${prefix}]] contents "${contents}")
+            string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
+
             string(REGEX REPLACE "(^|\n)prefix[\t ]*=[^\n]*" "" contents "${contents}")
             if("${config}" STREQUAL "DEBUG")
                 # prefix points at the debug subfolder
@@ -171,14 +168,10 @@ function(vcpkg_fixup_pkgconfig)
             if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
                 # how this works:
                 # we want to transform:
-                #[===[.pc:
-                Libs: $1
-                Libs.private: $2
-                #]===]
+                #   Libs: $1
+                #   Libs.private: $2
                 # into
-                #[===[.pc:
-                Libs: $1 $2
-                #]===]
+                #    Libs: $1 $2
                 # and the same thing for Requires and Requires.private
 
                 set(libs_line "")
