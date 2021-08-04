@@ -29,9 +29,9 @@ index ac9e65d..be41bb6 100644
 -  find_package(Casablanca REQUIRED)
 -  find_package(LibXML2 REQUIRED)
 -
-+  find_package(libuuid CONFIG REQUIRED)
++  find_package(unofficial-libuuid CONFIG REQUIRED)
 +  find_package(LibXml2 REQUIRED)
-+  list(APPEND AZURESTORAGE_LIBRARIES "OpenSSL::SSL" "UUID::uuid" "LibXml2::LibXml2")
++  list(APPEND AZURESTORAGE_LIBRARIES "OpenSSL::SSL" "unofficial::UUID::uuid" "LibXml2::LibXml2")
    if(BUILD_TESTS)
      find_package(UnitTest++ REQUIRED)
    endif()
