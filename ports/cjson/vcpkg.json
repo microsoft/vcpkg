@@ -1,0 +1,12 @@
+{
+  "name": "cjson",
+  "version-date": "2019-11-30",
+  "port-version": 2,
+  "description": "Ultralightweight JSON parser in ANSI C",
+  "homepage": "https://github.com/DaveGamble/cJSON",
+  "features": {
+    "utils": {
+      "description": "Enable building the cJSON_Utils library"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Only static libraries are supported.
 # See https://github.com/nanodbc/nanodbc/issues/13
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-	
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
@@ -10,6 +10,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(DEFINED NANODBC_ODBC_VERSION)
+    set(NANODBC_ODBC_VERSION -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -17,6 +21,7 @@ vcpkg_configure_cmake(
         -DNANODBC_DISABLE_EXAMPLES=ON
         -DNANODBC_DISABLE_TESTS=ON
         -DNANODBC_ENABLE_UNICODE=OFF
+        ${NANODBC_ODBC_VERSION}
 )
 
 vcpkg_install_cmake()

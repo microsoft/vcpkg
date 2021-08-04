@@ -9,9 +9,9 @@ if(NOT CMAKE_SYSTEM_PROCESSOR)
 endif()
 
 # config variables for ffi.h.in
-set(VERSION 3.3)
+set(VERSION 3.4.2)
 
-set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 armv7l armv7-a aarch64)
+set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
 
@@ -74,7 +74,8 @@ endif()
 set(FFI_SOURCES
     src/closures.c
     src/prep_cif.c
-    src/types.c)
+    src/types.c
+    src/tramp.c)
 
 if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     set(FFI_SOURCES

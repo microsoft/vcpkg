@@ -1,7 +1,6 @@
 {
   "name": "boost-graph",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "dependencies": [
@@ -15,7 +14,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-concept-check",
     "boost-config",
     "boost-container-hash",

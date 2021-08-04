@@ -19,6 +19,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
+        0004-ModuleFileName.patch
 )
 
 if (NOT VCPKG_TARGET_IS_ANDROID)

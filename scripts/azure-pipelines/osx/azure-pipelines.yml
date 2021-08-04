@@ -17,11 +17,15 @@ jobs:
   - group: osx-2021-04-16
   - name: BINARY_SOURCE_STUB
     value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
+  - group: vcpkg-asset-caching-credentials
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - bash: df -h
     displayName: 'Report on Disk Space'
   - bash: |
+      sudo rm -rf ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
       exit 0
