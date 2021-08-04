@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b664afd..aafbf4a 100644
+index 4e05272..44dd7cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -82,8 +82,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
@@ -44,7 +44,7 @@ index b664afd..aafbf4a 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -200,6 +193,9 @@ include(DefinePlatformSpecifc)
+@@ -207,6 +200,9 @@ include(DefinePlatformSpecifc)
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
  
@@ -54,7 +54,7 @@ index b664afd..aafbf4a 100644
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -327,8 +323,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Redis AND ENABLE_REDIS)
+@@ -339,8 +335,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Redis AND ENABLE_REDIS)
  	list(APPEND Poco_COMPONENTS "Redis")
  endif()
  
@@ -68,7 +68,7 @@ index b664afd..aafbf4a 100644
  	list(APPEND Poco_COMPONENTS "PDF")
  endif()
  
-@@ -457,15 +456,6 @@ install(
+@@ -478,15 +477,6 @@ install(
  		Devel
  )
  
@@ -110,6 +110,19 @@ index f71b145..7034974 100644
  target_include_directories(DataMySQL
  	PUBLIC
  		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+diff --git a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+index 6ddcd39..9e50803 100644
+--- a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
++++ b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+@@ -57,8 +57,6 @@
+ 	#endif
+ 	#if defined(LIBMARIADB)
+ 		#pragma comment(lib, "libmariadb")
+-	#else
+-		#pragma comment(lib, "libmysql")
+ 	#endif
+ #endif
+ 
 diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
 index b52e2c5..0dcfae2 100644
 --- a/Data/SQLite/CMakeLists.txt
@@ -229,15 +242,3 @@ index 173eacd..936edf4 100644
  
  foreach(module ${Poco_FIND_COMPONENTS})
      find_package(Poco${module}
-diff --git a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
-index b533c9f..e2bb2d3 100644
---- a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
-+++ b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
-@@ -54,7 +54,6 @@
- 	#if !defined(MySQL_EXPORTS)
- 		#pragma comment(lib, "PocoDataMySQL" POCO_LIB_SUFFIX)
- 	#endif
--	#pragma comment(lib, "libmysql")
- #endif
- 
- 

@@ -1,6 +1,7 @@
 {
   "name": "kf5config",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Configuration system",
   "homepage": "https://api.kde.org/frameworks/kconfig/html/index.html",
   "dependencies": [

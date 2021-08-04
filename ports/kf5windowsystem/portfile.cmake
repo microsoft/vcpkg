@@ -16,10 +16,6 @@ vcpkg_configure_cmake(
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
-    MAYBE_UNUSED_VARIABLES
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
 )
 
 vcpkg_install_cmake()
