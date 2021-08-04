@@ -33,7 +33,7 @@ vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -71,7 +71,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 
     message(STATUS "Generating makefile")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -126,7 +126,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     file(
         INSTALL
-            ${LIBVPX_INCLUDE_DIR}
+            "${LIBVPX_INCLUDE_DIR}"
         DESTINATION
             "${CURRENT_PACKAGES_DIR}/include"
         RENAME
@@ -177,7 +177,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -210,7 +210,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Configuring libvpx for Debug")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -238,9 +238,12 @@ else()
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
 
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
     endif()
+    
+    vcpkg_fixup_pkgconfig()
+    
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -249,6 +252,6 @@ else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake" @ONLY)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
