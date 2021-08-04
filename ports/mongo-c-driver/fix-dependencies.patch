@@ -101,8 +101,8 @@ index 8881f5194..c366f160a 100644
  # Sets SNAPPY_LIBRARIES and SNAPPY_INCLUDE_DIRS.
 -include (FindSnappy)
 -if (SNAPPY_INCLUDE_DIRS)
-+find_package(Snappy CONFIG)
-+if (Snappy_FOUND)
++if (ENABLE_SNAPPY)
++   find_package(Snappy CONFIG REQUIRED)
     set (MONGOC_ENABLE_COMPRESSION 1)
 -   include_directories ("${SNAPPY_INCLUDE_DIRS}")
 +   set (VCPKG_SNAPPY_LIBRARIES "Snappy::snappy")
