@@ -38,7 +38,6 @@ endif()
 # substitute the ${CURRENT_INSTALLED_DIR} introduced by fix_cmake.patch
 configure_file("${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
