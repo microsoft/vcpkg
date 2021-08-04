@@ -12,6 +12,7 @@ vcpkg_configure_make(
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
+    [ADDITIONAL_MSYS_PACKAGES <MSYS_PACKAGES>...]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
@@ -48,6 +49,9 @@ For ports having a configure script following the autotools rules for selecting 
 
 ### NO_ADDITIONAL_PATHS
 Don't pass any additional paths except for --prefix to the configure call
+
+### ADDITIONAL_MSYS_PACKAGES
+Additional msys packages required by the configuration or build process.
 
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
@@ -305,7 +309,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         if(CMAKE_HOST_WIN32)
-            list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
+            list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4 make)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
         endif()
         if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT _csc_BUILD_TRIPLET)
@@ -866,4 +870,7 @@ function(vcpkg_configure_make)
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
+    if (MSYS_ROOT)
+        set(MSYS_ROOT ${MSYS_ROOT} PARENT_SCOPE)
+    endif()
 endfunction()
