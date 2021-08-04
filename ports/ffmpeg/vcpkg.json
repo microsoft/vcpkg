@@ -1,13 +1,17 @@
 {
   "name": "ffmpeg",
   "version": "4.4",
-  "port-version": 9,
+  "port-version": 12,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
   ],
   "homepage": "https://ffmpeg.org",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
@@ -61,6 +65,14 @@
             "sdl2"
           ],
           "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "modplug"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -133,14 +145,6 @@
             "dav1d"
           ],
           "platform": "!(uwp | arm | x86 | osx)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "modplug"
-          ],
-          "platform": "!(windows & static) & !uwp"
         },
         {
           "name": "ffmpeg",

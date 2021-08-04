@@ -1,7 +1,6 @@
 {
   "name": "freerdp",
-  "version-semver": "2.2.0",
-  "port-version": 1,
+  "version-semver": "2.4.0",
   "description": "A free implementation of the Remote Desktop Protocol (RDP)",
   "homepage": "https://github.com/FreeRDP/FreeRDP",
   "supports": "!(arm | uwp)",

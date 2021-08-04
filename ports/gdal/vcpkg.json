@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.2.2",
+  "port-version": 3,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "supports": "!arm",
@@ -16,6 +17,7 @@
       "platform": "!windows"
     },
     "libgeotiff",
+    "libjpeg-turbo",
     "liblzma",
     "libpng",
     "libpq",
@@ -25,6 +27,7 @@
     "openjpeg",
     "proj4",
     "sqlite3",
+    "tiff",
     "zlib",
     "zstd"
   ],
@@ -40,6 +43,10 @@
       "dependencies": [
         "libmariadb"
       ]
+    },
+    "system-libraries": {
+      "$supports": "!windows",
+      "description": "Include drivers which need additional libraries"
     }
   }
 }
