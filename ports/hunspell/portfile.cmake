@@ -78,8 +78,13 @@ endif()
 vcpkg_copy_pdbs()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(HUNSPELL_EXPORT_HDR "${CURRENT_PACKAGES_DIR}/include/hunvisapi.h")
+    else()
+        set(HUNSPELL_EXPORT_HDR "${CURRENT_PACKAGES_DIR}/include/hunspell/hunvisapi.h")
+    endif()
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/hunspell/hunvisapi.h"
+        ${HUNSPELL_EXPORT_HDR}
         "#if defined(HUNSPELL_STATIC)"
         "#if 1"
     )
