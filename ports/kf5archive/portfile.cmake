@@ -11,7 +11,6 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
     INVERTED_FEATURES
         "lzma"  CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
         "zstd"  CMAKE_DISABLE_FIND_PACKAGE_PkgConfig
