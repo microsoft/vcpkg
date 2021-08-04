@@ -1,6 +1,7 @@
 {
   "name": "tiff",
   "version": "4.3.0",
+  "port-version": 1,
   "description": "A library that supports the manipulation of TIFF image files",
   "homepage": "https://libtiff.gitlab.io/libtiff/",
   "dependencies": [

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF d2ba84a6885f57674098fe8e76c5f99d880e580d #2.2.0
-    SHA512 3f166213039358dc0cab09b8895e6cff8a7a9c7e7711ea5652604fc6070b1524aba9fec3b860f4deb1f54ea1f17709ab25ffb108116e2914800e892efb9fb9ae
+    REF 647a48dfa7b19ef6bbfa68a69b5d87717541ef21 #2.4.0
+    SHA512 c72072df6f2b3ebc1b632f2e3b40bdcc732e25e7c4ef97b93bc5c5351566b553f682b615e6383ac7c5a1b5ecf8ed0fa9a305ea8c904031d4c78d7c3179323032
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
@@ -31,6 +31,7 @@ file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     urbdrc CHANNEL_URBDRC
 )
 
@@ -88,6 +89,8 @@ endforeach()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Client2 TARGET_PATH share/FreeRDP-Client)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2 TARGET_PATH share/FreeRDP)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 TARGET_PATH share/WinPR)
+
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake
     "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"

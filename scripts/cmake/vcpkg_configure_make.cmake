@@ -148,7 +148,9 @@ endmacro()
 
 macro(_vcpkg_determine_autotools_target_arch_mac out_var)
     list(LENGTH VCPKG_OSX_ARCHITECTURES _num_osx_archs)
-    if(_num_osx_archs GREATER_EQUAL 2)
+    if(_num_osx_archs EQUAL 0)
+        set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+    elseif(_num_osx_archs GREATER_EQUAL 2)
         set(${out_var} "universal")
     else()
         # Better match the arch behavior of config.guess
@@ -234,10 +236,9 @@ function(vcpkg_configure_make)
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
-    vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
-    debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -770,6 +771,14 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXXFLAGS_${_buildtype}}")
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${_buildtype}}")
+
+        # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
+        # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
+        # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
+        if(VCPKG_TARGET_IS_ANDROID)
+            set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+        endif()
+
         if(LINK_ENV_${_VAR_SUFFIX})
             set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")

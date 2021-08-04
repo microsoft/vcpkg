@@ -1,0 +1,98 @@
+# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+
+# These "checks" are also performed as part of our critical-path azure-pipelines review,
+# however here they are better able to post back to the original PR
+name: PR Suggestions
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch-depth 2 ensures we capture both parents of the merge commit
+          fetch-depth: 2
+
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            ./vcpkg
+          key: ${{ runner.os }}-${{ hashFiles('scripts/bootstrap*') }}
+
+      - name: bootstrap
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: ./bootstrap-vcpkg.sh
+
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+
+      - name: Formatting
+        run: |
+          git config user.email github-actions
+          git config user.name github-actions@github.com
+
+          ./vcpkg format-manifest ports/*/vcpkg.json
+          git diff > .github-pr.format-manifest
+          git add -u
+          git commit -m "tmp" --allow-empty
+          # HEAD^^ refers to the "main" commit that was merged into
+          git checkout HEAD^^ -- versions
+          git restore --staged versions
+          ./vcpkg x-add-version --all --skip-formatting-check > .github-pr.x-add-version.out
+          git diff > .github-pr.x-add-version.diff
+          git reset HEAD~ --mixed
+
+      - uses: actions/github-script@v4
+        with:
+          script: |
+            const { promises: fs } = require('fs')
+            const add_version = (await fs.readFile('.github-pr.x-add-version.diff', 'utf8')).trim()
+            const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
+            const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
+
+            var output = ''
+            if (format !== "") {
+              output += "<details><summary><b>All manifest files must be formatted</b></summary>\n\n"
+              output += "`./vcpkg format-manifest ports/*/vcpkg.json`\n"
+              output += "<details><summary><b>Diff</b></summary>\n\n"
+              output += "```diff\n" + format + "\n```\n"
+              output += "</details></details>\n\n"
+            }
+            if (add_version_out !== "") {
+              output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
+              output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
+              output += "```\n" + add_version_out + "\n```\n</details>\n"
+            }
+            if (add_version !== "") {
+              output += "<details><summary><b>After committing all other changes, the version database must be updated</b></summary>\n\n"
+              output += "```sh\n"
+              output += "git add -u && git commit\n"
+              output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
+              output += "./vcpkg x-add-version --all\n"
+              output += "```\n"
+              output += "<details><summary><b>Diff</b></summary>\n\n"
+              output += "```diff\n" + add_version + "\n```\n"
+              output += "</details></details>\n\n"
+            }
+
+            if (output === "") {
+              await fs.writeFile("pr/event", "APPROVE")
+            } else {
+              output = "_This is a new experimental fast check for PR issues. Please let us know if this bot is helpful!_\n\n" + output
+              await fs.writeFile("pr/event", "REQUEST_CHANGES")
+            }
+            await fs.writeFile("pr/body", output)
+
+            console.log(output);
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: pr/
