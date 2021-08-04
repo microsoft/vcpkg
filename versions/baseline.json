@@ -5029,7 +5029,7 @@
       "port-version": 1
     },
     "portmidi": {
-      "baseline": "0.234",
+      "baseline": "0.234-1",
       "port-version": 0
     },
     "ppconsul": {
