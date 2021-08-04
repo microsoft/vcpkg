@@ -73,28 +73,33 @@ function(vcpkg_from_git)
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified")
     endif()
-
-    vcpkg_list(SET git_fetch_shallow_param --depth 1)
-    if(DEFINED arg_FETCH_REF)
-        if(NOT DEFINED arg_REF)
-            message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
-        endif()
-        vcpkg_list(SET git_fetch_shallow_param)
-        set(ref_to_use "${arg_FETCH_REF}")
-    else()
-        set(ref_to_use "${arg_REF}")
+    if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
+        message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
     endif()
 
-    vcpkg_list(SET working_directory_param)
+    vcpkg_list(SET git_fetch_shallow_param --depth 1)
+    vcpkg_list(SET extract_working_directory_param)
+    set(git_working_directory "${DOWNLOADS}/git-tmp")
     if(VCPKG_USE_HEAD_VERSION)
         if(DEFINED arg_HEAD_REF)
             vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            vcpkg_list(SET git_fetch_shallow_param --depth 1)
             set(ref_to_use "${arg_HEAD_REF}")
+            set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
         else()
             message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         endif()
-    elseif(NOT DEFINED arg_REF)
-        message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+    else()
+        if(NOT DEFINED arg_REF)
+            message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+        endif()
+
+        if(DEFINED arg_FETCH_REF)
+            set(ref_to_use "${arg_FETCH_REF}")
+            vcpkg_list(SET git_fetch_shallow_param)
+        else()
+            set(ref_to_use "${arg_REF}")
+        endif()
     endif()
 
     string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
@@ -111,14 +116,13 @@ function(vcpkg_from_git)
         # Note: git init is safe to run multiple times
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" init git-tmp
-            WORKING_DIRECTORY "${DOWNLOADS}"
+            COMMAND "${GIT}" init "${git_working_directory}"
             LOGNAME "git-init-${TARGET_TRIPLET}"
         )
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
             COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${git_fetch_shallow_param} -n
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+            WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
 
@@ -128,7 +132,7 @@ function(vcpkg_from_git)
                 OUTPUT_VARIABLE rev_parse_ref
                 ERROR_VARIABLE rev_parse_ref
                 RESULT_VARIABLE error_code
-                WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+                WORKING_DIRECTORY "${git_working_directory}"
             )
             if(error_code)
                 message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
@@ -141,7 +145,7 @@ function(vcpkg_from_git)
                 OUTPUT_VARIABLE rev_parse_ref
                 ERROR_VARIABLE rev_parse_ref
                 RESULT_VARIABLE error_code
-                WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+                WORKING_DIRECTORY "${git_working_directory}/git-tmp"
             )
             if(error_code)
                 message(FATAL_ERROR "unable to rev-parse ${arg_REF} after fetching git repository")
@@ -173,7 +177,7 @@ function(vcpkg_from_git)
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
-        ${working_directory_param}
+        ${extract_working_directory_param}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
