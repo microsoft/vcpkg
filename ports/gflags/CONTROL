@@ -4,6 +4,3 @@ Port-Version: 2
 Homepage: https://github.com/gflags/gflags
 Description: A C++ library that implements commandline flags processing
 Supports: !uwp
-
-Feature: target-namespace
-Description: Enables the gflags:: target namespace
