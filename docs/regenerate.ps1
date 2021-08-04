@@ -212,7 +212,7 @@ function ParseCmakeDocComment
         $Docs.HasError = $True
     }
 
-    if ($contents.Length -ne 0)
+    if (-not [String]::IsNullOrEmpty($contents))
     {
         $Docs.ActualDocumentation = $contents
     }
@@ -222,7 +222,7 @@ function ParseCmakeDocComment
 
 Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
     $docs = ParseCmakeDocComment $_
-    [Bool]$isInternalFunction = $_.Name.StartsWith("vcpkg_internal") -or $_.Name.StartsWith("z_vcpkg")
+    [Bool]$isInternalFunction = $_.Name.StartsWith("z_vcpkg")
 
     if ($docs.IsDeprecated -and $null -eq $docs.ActualDocumentation)
     {
@@ -311,6 +311,7 @@ function GetDeprecationMessage
     Param(
         [CMakeDocumentation]$Doc
     )
+    $message = ''
     if ($Doc.IsDeprecated)
     {
         $message = " (deprecated"

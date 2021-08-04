@@ -5,22 +5,27 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tinyfiledialogs
-    FILENAME "frozen_versions/tinyfiledialogs-3.6.3.zip"
-    SHA512 42c3bd34b0287cf2477f9ede049bea29a9306304e8fab7740065957d3737f4041899f26f29a0693e801cb0a7b63844509f86441262303ff0a4030a431ffac648
+    SHA512 d63d6dd847d6bbd1f252c8fbd228086381af7189ac71afc97bd57e06badd1d3f4d90c6aab6207191ae7253d5a71fc44636cf8e33714089d5b478dd2714f59376
+    FILENAME "tinyfiledialogs-current.zip"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_config_fixup()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h _contents)
-string(SUBSTRING "${_contents}" 0 1024 _contents)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${_contents}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(READ "${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h" _contents)
+# reads between the line "- License -" and a closing "*/"
+if (NOT _contents MATCHES [[- License -(([^*]|\*[^/])*)\*/]])
+	message(FATAL_ERROR "Failed to parse license from tinyfiledialogs.h")
+endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${CMAKE_MATCH_1}")

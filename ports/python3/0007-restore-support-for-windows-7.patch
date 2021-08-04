@@ -5,15 +5,72 @@ Subject: [PATCH 7/7] restore support for windows 7
 
 this backports the windows 7 compatible fix for bpo-39401 from gh-18234,
 originally authored by Steve Dower, and removes explicit dependencies on
-pathcch.
----
- PC/getpathp.c              | 55 +++++++++++++++++++++++++++++++++++---
- PC/pyconfig.h              |  4 +--
- PCbuild/pythoncore.vcxproj |  2 +-
- 3 files changed, 54 insertions(+), 7 deletions(-)
+pathcch. 
 
+The same mechanism is applied to fix posixmodule.c
+---
+diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
+index c984e2e..6c9787a 100644
+--- a/Modules/posixmodule.c
++++ b/Modules/posixmodule.c
+@@ -18,7 +18,7 @@
+ 
+       FSCTL_GET_REPARSE_POINT is not exported with WIN32_LEAN_AND_MEAN. */
+ #  include <windows.h>
+-#  include <pathcch.h>
++#  include <Shlwapi.h>
+ #endif
+ 
+ #include "pycore_ceval.h"         // _PyEval_ReInitThreads()
+@@ -4371,6 +4371,10 @@ os._path_splitroot
+ Removes everything after the root on Win32.
+ [clinic start generated code]*/
+ 
++static int _PathCchSkipRoot_Initialized = 0;
++typedef HRESULT (__stdcall *PPathCchSkipRoot) (PCWSTR pszPath, PCWSTR *ppszRootEnd);
++static PPathCchSkipRoot _PathCchSkipRoot;
++
+ static PyObject *
+ os__path_splitroot_impl(PyObject *module, path_t *path)
+ /*[clinic end generated code: output=ab7f1a88b654581c input=dc93b1d3984cffb6]*/
+@@ -4380,6 +4384,19 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
+     PyObject *result = NULL;
+     HRESULT ret;
+ 
++    if (_PathCchSkipRoot_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++        
++        if (pathapi) {
++            _PathCchSkipRoot = (PPathCchSkipRoot)GetProcAddress(pathapi, "PathCchSkipRoot");
++        } else {
++            _PathCchSkipRoot = NULL;
++        }
++
++        _PathCchSkipRoot_Initialized = 1;
++    }
++
+     buffer = (wchar_t*)PyMem_Malloc(sizeof(wchar_t) * (wcslen(path->wide) + 1));
+     if (!buffer) {
+         return NULL;
+@@ -4390,7 +4407,14 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
+     }
+ 
+     Py_BEGIN_ALLOW_THREADS
+-    ret = PathCchSkipRoot(buffer, &end);
++    if (_PathCchSkipRoot) {
++        ret = _PathCchSkipRoot(buffer, &end);
++    } else {
++        end = PathSkipRootW(buffer);
++        if (!end) {
++            ret = E_FAIL;
++        }
++    }
+     Py_END_ALLOW_THREADS
+     if (FAILED(ret)) {
+         result = Py_BuildValue("sO", "", path->object);
 diff --git a/PC/getpathp.c b/PC/getpathp.c
-index 53da3a6d05..3d58bbfe70 100644
+index 53da3a6..3d58bbf 100644
 --- a/PC/getpathp.c
 +++ b/PC/getpathp.c
 @@ -250,14 +250,43 @@ ismodule(wchar_t *filename, int update_filename)
@@ -92,7 +149,7 @@ index 53da3a6d05..3d58bbfe70 100644
      return _PyStatus_OK();
  }
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index 34269f0b75..812f6d9353 100644
+index d7d3cf0..6e9c090 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -136,8 +136,8 @@ WIN32 is still required for the locale module.
@@ -107,7 +164,7 @@ index 34269f0b75..812f6d9353 100644
  /* We only set these values when building Python - we don't want to force
     these values on extensions, as that will affect the prototypes and
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index d8e8d2d086..df2892b0de 100644
+index 2625d02..20e3d6e 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -106,7 +106,7 @@
@@ -119,6 +176,3 @@ index d8e8d2d086..df2892b0de 100644
      </Link>
    </ItemDefinitionGroup>
    <ItemGroup>
--- 
-2.28.0.windows.1
-
