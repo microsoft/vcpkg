@@ -6,18 +6,18 @@
       "Name": "vagrant",
       "VersionCommand": [ "vagrant", "-v" ],
       "VersionRegex": "Vagrant (.*)",
-      "Version": "2.2.15",
-      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_x86_64.dmg",
-      "Sha256": "5C2B290C4FA2371E255C56B1E96DED3D0C838D54CB7F0E8E6CF154E9F206A20E",
+      "Version": "2.2.18",
+      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.dmg",
+      "Sha256": "B4E8103AABDF29F18F592CD6DE4FA03BF182FBC192A0757B5E18156CB18FA672",
       "InstallerPath": "vagrant.pkg"
     },
     {
       "Name": "osxfuse",
       "VersionCommand": [ "cat", "/Library/Filesystems/macfuse.fs/Contents/version.plist" ],
       "VersionRegex": "<key>CFBundleVersion</key>[\\n\\t ]*<string>([0-9.]+)</string>",
-      "Version": "4.1.0",
-      "DmgUrl": "https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.1.0/macfuse-4.1.0.dmg",
-      "Sha256": "3CB6A49406FD036C50EF1B4AD717A377F4DCF182811BDE172D69F1C289791085",
+      "Version": "4.1.2",
+      "DmgUrl": "https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.1.2/macfuse-4.1.2.dmg",
+      "Sha256": "9FF344DE38BAD5AC5ECA5194DA00A2BA35DD6AFDB9039133B5446168F8EDAFDB",
       "InstallerPath": "Install macFUSE.pkg"
     },
     {
@@ -34,7 +34,7 @@
   "VagrantPlugins": [
     {
       "Name": "vagrant-parallels",
-      "Version": "2.2.1"
+      "Version": "2.2.3"
     }
   ]
 }

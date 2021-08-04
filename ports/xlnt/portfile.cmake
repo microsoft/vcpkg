@@ -14,6 +14,7 @@ vcpkg_from_github(
         "fix-not-found-include.patch"
         ${win_patch}
 )
+file(REMOVE "${SOURCE_PATH}/third-party/libstudxml/version")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(STATIC OFF)

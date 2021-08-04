@@ -1,0 +1,13 @@
+{
+  "name": "nanodbc",
+  "version": "2.13.0",
+  "port-version": 4,
+  "description": "A small C++ wrapper for the native C ODBC API.",
+  "homepage": "https://github.com/nanodbc/nanodbc",
+  "dependencies": [
+    {
+      "name": "unixodbc",
+      "platform": "!windows"
+    }
+  ]
+}
