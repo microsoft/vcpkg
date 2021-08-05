@@ -39,5 +39,9 @@ foreach(HEADER IN LISTS HEADERS)
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
 
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
+    "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
+)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

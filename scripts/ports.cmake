@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+# rebuild: 1
+cmake_minimum_required(VERSION 3.20)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
@@ -25,7 +26,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
-vcpkg_minimum_required(VERSION 2021-01-13)
+vcpkg_minimum_required(VERSION 2021-05-05)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
@@ -60,9 +61,6 @@ if(CMD MATCHES "^BUILD$")
     unset(PACKAGES_DIR)
     unset(BUILDTREES_DIR)
 
-    # NOTE: this was originally done by emptying out ${CURRENT_PACKAGES_DIR}
-    # using file(GLOB). This fails with files containing either `;` or `[`:
-    # as a best effort to support these files, this now just deletes the entire directory.
     if(EXISTS "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
         if(EXISTS "${CURRENT_PACKAGES_DIR}")
@@ -89,7 +87,6 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
     include("${SCRIPTS}/cmake/vcpkg_apply_patches.cmake")
     include("${SCRIPTS}/cmake/vcpkg_build_cmake.cmake")
-    include("${SCRIPTS}/cmake/vcpkg_build_gn.cmake")
     include("${SCRIPTS}/cmake/vcpkg_build_make.cmake")
     include("${SCRIPTS}/cmake/vcpkg_build_msbuild.cmake")
     include("${SCRIPTS}/cmake/vcpkg_build_ninja.cmake")
@@ -132,11 +129,13 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_install_msbuild.cmake")
     include("${SCRIPTS}/cmake/vcpkg_install_nmake.cmake")
     include("${SCRIPTS}/cmake/vcpkg_install_qmake.cmake")
-    include("${SCRIPTS}/cmake/vcpkg_internal_get_cmake_vars.cmake")
+    include("${SCRIPTS}/cmake/vcpkg_list.cmake")
     include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
     include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")

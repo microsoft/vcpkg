@@ -1,0 +1,13 @@
+diff --git a/src/oatpp-postgresql/mapping/Serializer.hpp b/src/oatpp-postgresql/mapping/Serializer.hpp
+index af76701..615d11b 100644
+--- a/src/oatpp-postgresql/mapping/Serializer.hpp
++++ b/src/oatpp-postgresql/mapping/Serializer.hpp
+@@ -201,7 +201,7 @@ private:
+ 
+     outData.oid = _this->getArrayTypeOid(itemType);
+     outData.dataSize = stream.getCurrentPosition();
+-    outData.dataBuffer.template reset(new char[outData.dataSize]);
++    outData.dataBuffer.reset(new char[outData.dataSize]);
+     outData.data = outData.dataBuffer.get();
+     outData.dataFormat = 1;
+ 

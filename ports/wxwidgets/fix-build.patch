@@ -1,0 +1,13 @@
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 06116384c7..f82ff941bb 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -383,7 +383,7 @@ endmacro()
+ # Enable cotire for target, use optional second argument for prec. header
+ macro(wx_target_enable_precomp target_name)
+     target_compile_definitions(${target_name} PRIVATE WX_PRECOMP)
+-    if(NOT ${ARGV1} STREQUAL "")
++    if(${ARGC} GREATER 1 AND NOT ${ARGV1} STREQUAL "")
+         set_target_properties(${target_name} PROPERTIES
+             COTIRE_CXX_PREFIX_HEADER_INIT ${ARGV1})
+     endif()

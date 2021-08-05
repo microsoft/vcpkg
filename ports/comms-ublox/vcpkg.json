@@ -1,7 +1,6 @@
 {
   "name": "comms-ublox",
-  "version-string": "0.20.0",
-  "port-version": 1,
+  "version-semver": "0.20.1",
   "description": "UBLOX (UBX) protocol definition, generated out of cc.ublox.commsdsl",
   "homepage": "https://commschamp.github.io/",
   "documentation": "https://github.com/commschamp/cc.ublox.generated",

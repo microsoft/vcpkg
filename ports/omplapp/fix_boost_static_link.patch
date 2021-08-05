@@ -1,0 +1,17 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5c3c88..3a4a7d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,10 +36,10 @@ set(OMPL_DEMO_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/ompl/demos"
+ set(OMPL_CMAKE_UTIL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ompl/CMakeModules"
+     CACHE FILEPATH "Path to directory with auxiliary CMake scripts for OMPL")
+ 
+-if(MSVC)
++if(false)
+     add_definitions(-DBOOST_ALL_NO_LIB)
+     add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
+-endif(MSVC)
++endif(false)
+ # Ensure dynamic linking with boost unit_test_framework
+ add_definitions(-DBOOST_TEST_DYN_LINK)
+ # Avoid valgrind error due to overflow error, cf. https://bitbucket.org/ompl/ompl/issues/543

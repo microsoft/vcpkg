@@ -1,10 +1,7 @@
-set(PCRE2_VERSION 10.35)
-set(EXPECTED_SHA bf1cb6ab8b1103f9503609783945b02cdc4294bb266643d0ba03656c941f07b6e183793f3bf513da950460e78cb9b429bff8ade27d8930339a63caed3a3236e3)
+set(PCRE2_VERSION 10.37)
+set(EXPECTED_SHA f91760a8e0747f52211612fb0e134d685e224d16bd884eb574718d077a586b1fd7b6435d4e3b75c879b12e02b252467ecc28cdc4bc2903c783dacab089f99c99)
 set(PATCHES
-        pcre2-10.35_fix-space.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2588
         pcre2-10.35_fix-uwp.patch
-        pcre2-10.35_fix_postfix_for_debug_Windows_builds.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2600
-        pcre2-10.35_add_check_for_Intel_CET.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2578
 )
 
 vcpkg_download_distfile(ARCHIVE

@@ -1,5 +1,5 @@
 Source: libdivide
-Version: 3.0
+Version: 4.0.0
 Homepage: https://github.com/ridiculousfish/libdivide
 Description: libdivide.h is a header-only C/C++ library for optimizing integer division.
 

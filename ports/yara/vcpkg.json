@@ -1,0 +1,10 @@
+{
+  "name": "yara",
+  "version": "4.1.1",
+  "description": "The pattern matching swiss knife",
+  "homepage": "https://github.com/VirusTotal/yara",
+  "dependencies": [
+    "jansson",
+    "openssl"
+  ]
+}

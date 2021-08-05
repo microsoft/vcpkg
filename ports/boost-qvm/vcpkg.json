@@ -1,14 +1,9 @@
 {
   "name": "boost-qvm",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost qvm module",
   "homepage": "https://github.com/boostorg/qvm",
   "dependencies": [
-    "boost-assert",
-    "boost-exception",
-    "boost-static-assert",
-    "boost-throw-exception",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

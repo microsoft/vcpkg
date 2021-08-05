@@ -1,6 +1,6 @@
 {
   "name": "pango",
-  "version": "1.48.0",
+  "version": "1.48.4",
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
   "dependencies": [

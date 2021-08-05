@@ -4,7 +4,7 @@ set(VERSION 2.3.3)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.steinberg.net/sdk_downloads/asiosdk_2.3.3_2019-06-14.zip"
-    FILENAME "asiosdk_2.3.3_2019-06-14-eac6c1a5.zip"
+    FILENAME "asiosdk_2.3.3_2019-06-14-eac6c1a57829.zip"
 	SHA512 eac6c1a57829b7f722a681c54b2f6469d54695523f08f727d0dd6744dcd7fce4f3249c57689bb15ed7a8bcb912833b226439d800913e122e0ef9ab73672f6542
 )
 

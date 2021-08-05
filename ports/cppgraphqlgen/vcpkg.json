@@ -1,6 +1,6 @@
 {
   "name": "cppgraphqlgen",
-  "version-semver": "3.5.0",
+  "version-semver": "3.6.0",
   "description": "C++ GraphQL schema service generator",
   "homepage": "https://github.com/microsoft/cppgraphqlgen",
   "dependencies": [

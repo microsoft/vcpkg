@@ -34,17 +34,18 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    libraw      USE_LIBRAW
-    opencolorio USE_OCIO
-    ffmpeg      USE_FFMPEG
-    field3d     USE_FIELD3D
-    freetype    USE_FREETYPE
-    gif         USE_GIF
-    opencv      USE_OPENCV
-    openjpeg    USE_OPENJPEG
-    webp        USE_WEBP
-    pybind11    USE_PYTHON
-    tools       OIIO_BUILD_TOOLS
+    FEATURES
+        libraw      USE_LIBRAW
+        opencolorio USE_OCIO
+        ffmpeg      USE_FFMPEG
+        field3d     USE_FIELD3D
+        freetype    USE_FREETYPE
+        gif         USE_GIF
+        opencv      USE_OPENCV
+        openjpeg    USE_OPENJPEG
+        webp        USE_WEBP
+        pybind11    USE_PYTHON
+        tools       OIIO_BUILD_TOOLS
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -77,7 +78,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/Op
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
         AUTO_CLEAN
     )
 endif()

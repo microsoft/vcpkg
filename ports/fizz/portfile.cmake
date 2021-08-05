@@ -3,11 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 1c40fde31b5eff8a05f928497429bffe7425b4fd # v2020.10.19.00
-    SHA512 9e0de756855941c377f2a52d9b751e6ae066c8d8ae4e7a06211b2537a039e533cbc782cbce947cb703d7bd4c5cb5fb4420e71eeafdcb5f1264d788ca3eb0b76d
+    REF v2021.06.14.00
+    SHA512 ff55f933d55031128b5355707fd025649ad90d261d91ec5f9d793433a77e63d3c2527a7f0111d6a3151667ab29f4117f96a505bcb80c1a4a99bd60346f05f4de
     HEAD_REF master
     PATCHES
-        find-zlib.patch
+        fix-zlib.patch
 )
 
 # Prefer installed config files
@@ -29,13 +29,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fizz)
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
-string(REPLACE "lib/cmake/fizz" "share/fizz" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
-"include(CMakeFindDependencyMacro)
-find_dependency(folly CONFIG)
-find_dependency(ZLIB)
-${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake" "lib/cmake/fizz" "share/fizz")
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

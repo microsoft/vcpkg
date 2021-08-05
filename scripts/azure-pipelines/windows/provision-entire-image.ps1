@@ -3,10 +3,12 @@
 
 . "$PSScriptRoot\utility-prefix.ps1"
 
+. "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
 . "$PSScriptRoot\deploy-visual-studio.ps1"
 . "$PSScriptRoot\deploy-windows-wdk.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
 . "$PSScriptRoot\deploy-cuda.ps1"
+. "$PSScriptRoot\deploy-inteloneapi.ps1"
 . "$PSScriptRoot\deploy-pwsh.ps1"
 try {
     Copy-Item "$PSScriptRoot\deploy-settings.txt" "$PSScriptRoot\deploy-settings.ps1"

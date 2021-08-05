@@ -1,7 +1,7 @@
 {
   "name": "yasm-tool",
-  "version-string": "2020-10-12",
-  "description": "A modular assembler. This port is intended to build other ports and should not be used directly.",
+  "version": "1.3.0",
+  "description": "A modular assembler.",
   "homepage": "http://yasm.tortall.net/",
-  "supports": "windows & x86"
+  "supports": "native & !uwp"
 }

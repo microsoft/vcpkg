@@ -370,7 +370,7 @@ platform-expression =
 | platform-expression-and
 | platform-expression-or ;
 
-platform-expression-identifier = 
+platform-expression-identifier =
 | identifier-character, { identifier-character }, optional-whitespace ;
 
 platform-expression-simple =
@@ -396,6 +396,8 @@ Ands and ors are a list of `&` or `|` separated identifiers, negated expressions
 One may not mix `&` and `|` without parentheses for grouping.
 
 These predefined identifier expressions are computed from standard triplet settings:
+- `native` - `TARGET_TRIPLET` == `HOST_TRIPLET`;
+  useful for ports which depend on their own built binaries in their build.
 - `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`

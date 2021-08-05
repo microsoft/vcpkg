@@ -1,19 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
-    REF v5.75.0
-    SHA512 d016e2e8c6fecd037cab025acd129305a3c062e0f98b537f1454dccfb13d9a6765f1974588416fcd8d23ae9c9efdb2276c3cbab15e21df62aea07059142dd12b
+    REF v5.84.0
+    SHA512 e5905c0aa5343ce3d4cd3765cb81390fc89fb78aec3c8de8b31d1dada8074d04f549ff785f3988498d2e274d7cb08a35a83ba031d18562049e6ca41d18ea52ee
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        wayland   WITH_WAYLAND
+)
+
+if("wayland" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
+    message(FATAL_ERROR "Feature wayland is only supported on Linux.")
+endif()
+
 vcpkg_configure_cmake(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
+        -DQtWaylandScanner_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

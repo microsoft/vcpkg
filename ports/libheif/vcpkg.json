@@ -1,7 +1,7 @@
 {
   "name": "libheif",
   "version": "1.10.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Open h.265 video codec implementation.",
   "homepage": "http://www.libheif.org/",
   "dependencies": [
