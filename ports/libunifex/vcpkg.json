@@ -3,7 +3,7 @@
   "version-date": "2021-08-01",
   "description": "Unified Executors",
   "homepage": "https://github.com/facebookexperimental/libunifex",
-  "supports": "linux | windows",
+  "supports": "!osx",
   "dependencies": [
     {
       "name": "liburing",
