@@ -3129,8 +3129,8 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.12.2",
-      "port-version": 1
+      "baseline": "0.14.1",
+      "port-version": 0
     },
     "libdatrie": {
       "baseline": "0.2.10-3",
@@ -3317,7 +3317,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "0.7.1",
+      "baseline": "0.8.4",
       "port-version": 0
     },
     "libkeyfinder": {
