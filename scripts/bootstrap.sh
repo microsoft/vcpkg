@@ -305,7 +305,7 @@ if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
     cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
 fi
 
-(cd "$buildDir" && eval CXX="$CXX" "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && CXX="$CXX" eval "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
