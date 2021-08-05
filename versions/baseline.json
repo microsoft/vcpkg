@@ -5528,6 +5528,10 @@
       "baseline": "2.6.0",
       "port-version": 0
     },
+    "rbdl-orb": {
+      "baseline": "3.0.0",
+      "port-version": 0
+    },
     "re2": {
       "baseline": "2020-10-01",
       "port-version": 0
