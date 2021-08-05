@@ -13,7 +13,6 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DPYBIND11_TEST=OFF"
         "-DPYBIND11_FINDPYTHON=ON"
-        "-DPython_EXECUTABLE=${PYTHON3}"
     OPTIONS_RELEASE
         "-DPYTHON_IS_DEBUG=OFF"
     OPTIONS_DEBUG
