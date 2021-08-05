@@ -5036,6 +5036,10 @@
       "baseline": "0.234",
       "port-version": 0
     },
+    "portsmf": {
+      "baseline": "0.236",
+      "port-version": 0
+    },
     "ppconsul": {
       "baseline": "0.5-1",
       "port-version": 0
