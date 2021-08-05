@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 5b8ff9665ba73621a9859a6e86717b980b67f8d79d6c78cbf5672bce66aed671f7d64fcbec457bca79eef2e17e105f136017afdf442bb430b9f4a059d7cb93c3
     HEAD_REF master
     PATCHES include-qhullcpp-shared.patch
+            fix-missing-symbols.patch # upstream https://github.com/qhull/qhull/pull/93
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

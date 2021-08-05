@@ -1,0 +1,385 @@
+diff --git a/3rdparty/find_dependencies.cmake b/3rdparty/find_dependencies.cmake
+index e0035c9..be6d801 100644
+--- a/3rdparty/find_dependencies.cmake
++++ b/3rdparty/find_dependencies.cmake
+@@ -299,15 +299,8 @@ find_package(Threads REQUIRED)
+ list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "Threads")
+ 
+ # Assimp
+-message(STATUS "Building library Assimp from source")
+-include(${Open3D_3RDPARTY_DIR}/assimp/assimp.cmake)
+-import_3rdparty_library(3rdparty_assimp
+-    INCLUDE_DIRS ${ASSIMP_INCLUDE_DIR}
+-    LIB_DIR      ${ASSIMP_LIB_DIR}
+-    LIBRARIES    ${ASSIMP_LIBRARIES}
+-)
+-set(ASSIMP_TARGET "3rdparty_assimp")
+-add_dependencies(3rdparty_assimp ext_assimp)
++find_package(assimp CONFIG REQUIRED)
++set(ASSIMP_TARGET "assimp::assimp")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${ASSIMP_TARGET}")
+ 
+ # OpenMP
+@@ -346,7 +339,7 @@ endif()
+ 
+ # Eigen3
+ if(USE_SYSTEM_EIGEN3)
+-    find_package(Eigen3)
++    find_package(Eigen3 CONFIG REQUIRED)
+     if(TARGET Eigen3::Eigen)
+         message(STATUS "Using installed third-party library Eigen3 ${EIGEN3_VERSION_STRING}")
+         # Eigen3 is a publicly visible dependency, so add it to the list of
+@@ -365,23 +358,22 @@ endif()
+ list(APPEND Open3D_3RDPARTY_PUBLIC_TARGETS "${EIGEN3_TARGET}")
+ 
+ # Flann
+-if(USE_SYSTEM_FLANN)
+-    pkg_config_3rdparty_library(3rdparty_flann flann)
+-endif()
+-if(NOT USE_SYSTEM_FLANN OR NOT 3rdparty_flann_FOUND)
+-    build_3rdparty_library(3rdparty_flann DIRECTORY flann)
++find_package(flann CONFIG REQUIRED)
++if(TARGET flann::flann_cpp_s)
++    set(FLANN_TARGET "flann::flann_cpp_s")
++else()
++    set(FLANN_TARGET "flann::flann_cpp")
+ endif()
+-set(FLANN_TARGET "3rdparty_flann")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${FLANN_TARGET}")
+ 
+ # Nanoflann
+-build_3rdparty_library(3rdparty_nanoflann DIRECTORY nanoflann INCLUDE_DIRS include/ INCLUDE_ALL)
+-set(NANOFLANN_TARGET "3rdparty_nanoflann")
++find_package(nanoflann CONFIG REQUIRED)
++set(NANOFLANN_TARGET "nanoflann::nanoflann")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${NANOFLANN_TARGET}")
+ 
+ # GLEW
+ if(USE_SYSTEM_GLEW)
+-    find_package(GLEW)
++    find_package(GLEW CONFIG REQUIRED)
+     if(TARGET GLEW::GLEW)
+         message(STATUS "Using installed third-party library GLEW ${GLEW_VERSION}")
+         list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "GLEW")
+@@ -410,7 +402,7 @@ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${GLEW_TARGET}")
+ 
+ # GLFW
+ if(USE_SYSTEM_GLFW)
+-    find_package(glfw3)
++    find_package(glfw3 CONFIG REQUIRED)
+     if(TARGET glfw)
+         message(STATUS "Using installed third-party library glfw3")
+         list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "glfw3")
+@@ -476,7 +468,7 @@ endif()
+ 
+ # JPEG
+ if(USE_SYSTEM_JPEG)
+-    find_package(JPEG)
++    find_package(JPEG REQUIRED)
+     if(TARGET JPEG::JPEG)
+         message(STATUS "Using installed third-party library JPEG")
+         if(NOT BUILD_SHARED_LIBS)
+@@ -517,7 +509,7 @@ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${JSONCPP_TARGET}")
+ 
+ # liblzf
+ if(USE_SYSTEM_LIBLZF)
+-    find_package(liblzf)
++    find_package(liblzf CONFIG REQUIRED)
+     if(TARGET liblzf::liblzf)
+         message(STATUS "Using installed third-party library liblzf")
+         if(NOT BUILD_SHARED_LIBS)
+@@ -554,7 +546,7 @@ if (BUILD_LIBREALSENSE)
+         set(USE_SYSTEM_LIBREALSENSE OFF)
+     endif()
+     if(USE_SYSTEM_LIBREALSENSE)
+-        find_package(realsense2)
++        find_package(realsense2 CONFIG REQUIRED)
+         if(TARGET realsense2::realsense2)
+             message(STATUS "Using installed third-party library librealsense")
+             if(NOT BUILD_SHARED_LIBS)
+@@ -587,7 +579,7 @@ endif()
+ 
+ # PNG
+ if(USE_SYSTEM_PNG)
+-    find_package(PNG)
++    find_package(PNG CONFIG REQUIRED)
+     if(TARGET PNG::PNG)
+         message(STATUS "Using installed third-party library libpng")
+         if(NOT BUILD_SHARED_LIBS)
+@@ -642,29 +634,15 @@ set(TINYFILEDIALOGS_TARGET "3rdparty_tinyfiledialogs")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${TINYFILEDIALOGS_TARGET}")
+ 
+ # tinygltf
+-if(USE_SYSTEM_TINYGLTF)
+-    find_package(TinyGLTF)
+-    if(TARGET TinyGLTF::TinyGLTF)
+-        message(STATUS "Using installed third-party library TinyGLTF")
+-        if(NOT BUILD_SHARED_LIBS)
+-            list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "TinyGLTF")
+-        endif()
+-        set(TINYGLTF_TARGET "TinyGLTF::TinyGLTF")
+-    else()
+-        message(STATUS "Unable to find installed third-party library TinyGLTF")
+-        set(USE_SYSTEM_TINYGLTF OFF)
+-    endif()
+-endif()
+-if(NOT USE_SYSTEM_TINYGLTF)
+-    build_3rdparty_library(3rdparty_tinygltf DIRECTORY tinygltf INCLUDE_DIRS tinygltf/)
+-    target_compile_definitions(3rdparty_tinygltf INTERFACE TINYGLTF_IMPLEMENTATION STB_IMAGE_IMPLEMENTATION STB_IMAGE_WRITE_IMPLEMENTATION)
+-    set(TINYGLTF_TARGET "3rdparty_tinygltf")
+-endif()
++find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
++build_3rdparty_library(3rdparty_tinygltf DIRECTORY tinygltf INCLUDE_DIRS ${TINYGLTF_INCLUDE_DIRS})
++target_compile_definitions(3rdparty_tinygltf INTERFACE TINYGLTF_IMPLEMENTATION STB_IMAGE_IMPLEMENTATION STB_IMAGE_WRITE_IMPLEMENTATION)
++set(TINYGLTF_TARGET "3rdparty_tinygltf")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${TINYGLTF_TARGET}")
+ 
+ # tinyobjloader
+ if(USE_SYSTEM_TINYOBJLOADER)
+-    find_package(tinyobjloader)
++    find_package(tinyobjloader CONFIG REQUIRED)
+     if(TARGET tinyobjloader::tinyobjloader)
+         message(STATUS "Using installed third-party library tinyobjloader")
+         if(NOT BUILD_SHARED_LIBS)
+@@ -685,12 +663,17 @@ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${TINYOBJLOADER_TARGET}")
+ 
+ # Qhull
+ if(USE_SYSTEM_QHULL)
+-    find_package(Qhull)
++    find_package(Qhull CONFIG REQUIRED)
+     if(TARGET Qhull::qhullcpp)
+         message(STATUS "Using installed third-party library Qhull")
+         if(NOT BUILD_SHARED_LIBS)
+             list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "Qhull")
+         endif()
++        if(TARGET Qhull::qhullstatic_r)
++            list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "Qhull::qhullstatic_r")
++        else()
++            list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "Qhull::qhull_r")
++        endif()
+         set(QHULL_TARGET "Qhull::qhullcpp")
+     else()
+         message(STATUS "Unable to find installed third-party library Qhull")
+@@ -751,7 +734,7 @@ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${QHULL_TARGET}")
+ 
+ # fmt
+ if(USE_SYSTEM_FMT)
+-    find_package(fmt)
++    find_package(fmt CONFIG REQUIRED)
+     if(TARGET fmt::fmt-header-only)
+         message(STATUS "Using installed third-party library fmt (header only)")
+         list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "fmt")
+@@ -775,7 +758,8 @@ list(APPEND Open3D_3RDPARTY_PUBLIC_TARGETS "${FMT_TARGET}")
+ 
+ # Pybind11
+ if(USE_SYSTEM_PYBIND11)
+-    find_package(pybind11)
++    find_package(Python3 COMPONENTS Development REQUIRED)
++    find_package(pybind11 CONFIG REQUIRED)
+ endif()
+ if (NOT USE_SYSTEM_PYBIND11 OR NOT TARGET pybind11::module)
+     set(USE_SYSTEM_PYBIND11 OFF)
+@@ -837,7 +821,7 @@ endif()
+ 
+ # Headless rendering
+ if (ENABLE_HEADLESS_RENDERING)
+-    find_package(OSMesa REQUIRED)
++    find_package(OSMesa CONFIG REQUIRED)
+     add_library(3rdparty_osmesa INTERFACE)
+     target_include_directories(3rdparty_osmesa INTERFACE ${OSMESA_INCLUDE_DIR})
+     target_link_libraries(3rdparty_osmesa INTERFACE ${OSMESA_LIBRARY})
+@@ -851,7 +835,7 @@ if (ENABLE_HEADLESS_RENDERING)
+     set(OPENGL_TARGET "3rdparty_osmesa")
+     list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${OPENGL_TARGET}")
+ else()
+-    find_package(OpenGL)
++    find_package(OpenGL REQUIRED)
+     if(TARGET OpenGL::GL)
+         if(NOT BUILD_SHARED_LIBS)
+             list(APPEND Open3D_3RDPARTY_EXTERNAL_MODULES "OpenGL")
+@@ -864,7 +848,7 @@ endif()
+ # imgui
+ if(BUILD_GUI)
+     if(USE_SYSTEM_IMGUI)
+-        find_package(ImGui)
++        find_package(ImGui CONFIG REQUIRED)
+         if(TARGET ImGui::ImGui)
+             message(STATUS "Using installed third-party library ImGui")
+             if(NOT BUILD_SHARED_LIBS)
+@@ -1039,26 +1023,20 @@ if(BUILD_RPC_INTERFACE)
+ endif()
+ 
+ # TBB
+-include(${Open3D_3RDPARTY_DIR}/mkl/tbb.cmake)
+-import_3rdparty_library(3rdparty_tbb
+-    INCLUDE_DIRS ${STATIC_TBB_INCLUDE_DIR}
+-    LIB_DIR      ${STATIC_TBB_LIB_DIR}
+-    LIBRARIES    ${STATIC_TBB_LIBRARIES}
+-)
+-set(TBB_TARGET "3rdparty_tbb")
+-add_dependencies(3rdparty_tbb ext_tbb)
++find_package(TBB CONFIG REQUIRED)
++set(TBB_TARGET "TBB::tbb")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${TBB_TARGET}")
+ 
+ # parallelstl
+-build_3rdparty_library(3rdparty_parallelstl DIRECTORY parallelstl INCLUDE_DIRS include/ INCLUDE_ALL)
+-set(PARALLELSTL_TARGET "3rdparty_parallelstl")
++find_package(ParallelSTL CONFIG REQUIRED)
++set(PARALLELSTL_TARGET "pstl::ParallelSTL")
+ list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${PARALLELSTL_TARGET}")
+ 
+ if(USE_BLAS)
+     # Try to locate system BLAS/LAPACK
+-    find_package(BLAS)
+-    find_package(LAPACK)
+-    find_package(LAPACKE)
++    find_package(BLAS CONFIG REQUIRED)
++    find_package(LAPACK CONFIG REQUIRED)
++    find_package(LAPACKE CONFIG REQUIRED)
+     if(BLAS_FOUND AND LAPACK_FOUND AND LAPACKE_FOUND)
+         message(STATUS "Using system BLAS/LAPACK")
+         list(APPEND Open3D_3RDPARTY_PRIVATE_TARGETS "${BLAS_LIBRARIES}")
+diff --git a/3rdparty/mkl/mkl.cmake b/3rdparty/mkl/mkl.cmake
+index df08c1b..7f2487d 100644
+--- a/3rdparty/mkl/mkl.cmake
++++ b/3rdparty/mkl/mkl.cmake
+@@ -104,7 +104,6 @@ if(WIN32)
+         mkl_core
+         mkl_sequential
+         mkl_tbb_thread
+-        tbb_static
+     )
+     list(REMOVE_ITEM MKL_LIBRARIES "$<$<CONFIG:Debug>:mkl_tbb_thread>")
+     list(REMOVE_ITEM MKL_LIBRARIES "$<$<CONFIG:Debug>:tbb_static>")
+@@ -134,7 +133,7 @@ elseif(APPLE)
+             ${STATIC_MKL_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}mkl_tbb_thread${CMAKE_STATIC_LIBRARY_SUFFIX}
+             ${STATIC_MKL_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}mkl_core${CMAKE_STATIC_LIBRARY_SUFFIX}
+     )
+-    set(STATIC_MKL_LIBRARIES mkl_intel_ilp64 mkl_tbb_thread mkl_core tbb_static)
++    set(STATIC_MKL_LIBRARIES mkl_intel_ilp64 mkl_tbb_thread mkl_core)
+ else()
+     ExternalProject_Add(
+         ext_mkl_include
+@@ -196,5 +195,5 @@ else()
+             BUILD_BYPRODUCTS ${STATIC_MKL_LIB_DIR}/libmkl_merged.a
+         )
+     endif()
+-    set(STATIC_MKL_LIBRARIES mkl_merged tbb_static)
++    set(STATIC_MKL_LIBRARIES mkl_merged)
+ endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a80c1e6..2ad73fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -215,9 +215,11 @@ string(CONCAT OPEN3D_VERSION
+ )
+ set(OPEN3D_VERSION_FULL "${OPEN3D_VERSION}${OPEN3D_VERSION_DEVHASH}")
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in
+-    ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile @ONLY)
++    ${CMAKE_CURRENT_BINARY_DIR}/docs/Doxyfile @ONLY)
++file(COPY ${CMAKE_CURRENT_BINARY_DIR}/docs/Doxyfile DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/docs)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/getting_started.rst.in
+-    ${CMAKE_CURRENT_SOURCE_DIR}/docs/getting_started.rst @ONLY)
++    ${CMAKE_CURRENT_BINARY_DIR}/docs/getting_started.rst @ONLY)
++file(COPY ${CMAKE_CURRENT_BINARY_DIR}/docs/getting_started.rst DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/docs)
+ 
+ project(Open3D VERSION ${OPEN3D_VERSION} LANGUAGES C CXX)
+ message(STATUS "Open3D ${OPEN3D_VERSION_FULL}")
+@@ -550,9 +552,6 @@ function(open3d_set_global_properties target)
+     if(ENABLE_HEADLESS_RENDERING)
+         target_compile_definitions(${target} PRIVATE HEADLESS_RENDERING)
+     endif()
+-    if(NOT WITH_OPENMP)
+-        target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:-Wno-unknown-pragmas>")
+-    endif()
+     if(BUILD_WEBRTC)
+         target_compile_definitions(${target} PRIVATE BUILD_WEBRTC)
+     endif()
+@@ -590,9 +589,6 @@ function(open3d_set_global_properties target)
+         target_compile_options(${target} PRIVATE "-Wno-deprecated-declarations" "$<$<COMPILE_LANGUAGE:CXX>:-Wno-unused-result>")
+     endif()
+     target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:--expt-extended-lambda>")
+-    # TBB static version is used
+-    # See: https://github.com/wjakob/tbb/commit/615d690c165d68088c32b6756c430261b309b79c
+-    target_compile_definitions(${target} PRIVATE __TBB_LIB_NAME=tbb_static)
+     if(WITH_FAISS)
+         target_compile_definitions(${target} PRIVATE WITH_FAISS)
+     endif()
+diff --git a/cpp/open3d/CMakeLists.txt b/cpp/open3d/CMakeLists.txt
+index 97589af..b210664 100644
+--- a/cpp/open3d/CMakeLists.txt
++++ b/cpp/open3d/CMakeLists.txt
+@@ -12,9 +12,11 @@ endfunction()
+ 
+ # Configure a header file to pass the version settings to the source code
+ configure_file("${PROJECT_SOURCE_DIR}/cpp/open3d/Open3D.h.in"
+-               "${PROJECT_SOURCE_DIR}/cpp/open3d/Open3D.h")
++               "${PROJECT_BINARY_DIR}/cpp/open3d/Open3D.h")
++file(COPY "${PROJECT_BINARY_DIR}/cpp/open3d/Open3D.h" DESTINATION "${PROJECT_SOURCE_DIR}/cpp/open3d")
+ configure_file("${PROJECT_SOURCE_DIR}/cpp/open3d/Open3DConfig.h.in"
+-               "${PROJECT_SOURCE_DIR}/cpp/open3d/Open3DConfig.h")
++               "${PROJECT_BINARY_DIR}/cpp/open3d/Open3DConfig.h")
++file(COPY "${PROJECT_BINARY_DIR}/cpp/open3d/Open3DConfig.h" DESTINATION "${PROJECT_SOURCE_DIR}/cpp/open3d")
+ 
+ # Subdirectories
+ add_subdirectory(camera)
+diff --git a/cpp/open3d/geometry/SurfaceReconstructionPoisson.cpp b/cpp/open3d/geometry/SurfaceReconstructionPoisson.cpp
+index e60697c..8ffb002 100644
+--- a/cpp/open3d/geometry/SurfaceReconstructionPoisson.cpp
++++ b/cpp/open3d/geometry/SurfaceReconstructionPoisson.cpp
+@@ -45,12 +45,12 @@
+ // 4245: signed/unsigned mismatch
+ // 4189: local variable is initialized but not referenced
+ #endif
+-#include "PoissonRecon/Src/PreProcessor.h"
+-#include "PoissonRecon/Src/MyMiscellany.h"
+-#include "PoissonRecon/Src/CmdLineParser.h"
+-#include "PoissonRecon/Src/FEMTree.h"
+-#include "PoissonRecon/Src/PPolynomial.h"
+-#include "PoissonRecon/Src/PointStreamData.h"
++#include "PoissonRecon/PreProcessor.h"
++#include "PoissonRecon/MyMiscellany.h"
++#include "PoissonRecon/CmdLineParser.h"
++#include "PoissonRecon/FEMTree.h"
++#include "PoissonRecon/PPolynomial.h"
++#include "PoissonRecon/PointStreamData.h"
+ #ifdef _MSC_VER
+ #pragma warning(pop)
+ #endif
+diff --git a/cpp/open3d/visualization/CMakeLists.txt b/cpp/open3d/visualization/CMakeLists.txt
+index 9c38ff5..77534f5 100644
+--- a/cpp/open3d/visualization/CMakeLists.txt
++++ b/cpp/open3d/visualization/CMakeLists.txt
+@@ -1,25 +1,24 @@
+ # some black magic to automatically create a header file from shader files
+ file(GLOB SHADER_FILES "shader/glsl/*.glsl")
+ 
++add_custom_target(ShaderFileTarget ALL)
+ add_custom_command(
+-    OUTPUT ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader/Shader.h
+-    COMMAND EncodeShader Shader.h
++    TARGET ShaderFileTarget PRE_BUILD
++    COMMAND EncodeShader ${PROJECT_BINARY_DIR}/Shader.h
+     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader/
+     DEPENDS ${SHADER_FILES} EncodeShader
+ )
+ 
+ foreach(file ${SHADER_FILES})
+     add_custom_command(
+-        OUTPUT ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader/Shader.h
+-        COMMAND EncodeShader Shader.h ${file}
++        TARGET ShaderFileTarget PRE_BUILD
++        COMMAND EncodeShader ${PROJECT_BINARY_DIR}/Shader.h ${file}
+         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader/
+         DEPENDS ${SHADER_FILES} EncodeShader
+-        APPEND
+     )
+ endforeach(file)
+ 
+-add_custom_target(ShaderFileTarget ALL
+-                  DEPENDS ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader/Shader.h)
++add_custom_command(TARGET ShaderFileTarget POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/Shader.h ${PROJECT_SOURCE_DIR}/cpp/open3d/visualization/shader)
+ set_target_properties(ShaderFileTarget PROPERTIES FOLDER "Custom")
+ 
+ # build
