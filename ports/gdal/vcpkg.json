@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!arm",
+  "supports": "windows",
   "dependencies": [
     "cfitsio",
     "curl",
@@ -30,6 +30,9 @@
     "tiff",
     "zlib",
     "zstd"
+  ],
+  "default-features": [
+    "tools"
   ],
   "features": {
     "libspatialite": {
