@@ -8,7 +8,7 @@ index 3f25517..3c34a54 100644
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>
 -    "${PROJECT_BINARY_DIR}/include")
 +    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    $<INSTALL_INTERFACE:include>)
  
  target_compile_features(unifex PUBLIC cxx_std_17)
  
