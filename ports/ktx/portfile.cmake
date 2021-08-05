@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86" "arm64")
 
 set(PORT_VERSION 4.0.0)
 
@@ -66,7 +66,7 @@ if(tools IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx TARGET_PATH share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
@@ -74,4 +74,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
-file(COPY ${LICENSE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSES")
+file(COPY "${LICENSE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSES")
