@@ -106,11 +106,11 @@
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>18.1.0</version>
-        <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
-        <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
-        <archiveName>7-zip.commandline.18.1.0.nupkg</archiveName>
+        <version>19.00</version>
+        <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z1900-x64.msi</url>
+        <sha512>7837a8677a01eed9c3309923f7084bc864063ba214ee169882c5b04a7a8b198ed052c15e981860d9d7952c98f459a4fab87a72fd78e7d0303004dcb86f4324c8</sha512>
+        <archiveName>7z1900-x64.msi</archiveName>
     </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>
