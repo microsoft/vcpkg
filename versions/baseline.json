@@ -5857,7 +5857,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "simple-fft": {
