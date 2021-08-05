@@ -117,6 +117,7 @@ function(vcpkg_from_git)
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
             COMMAND "${GIT}" init "${git_working_directory}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
             LOGNAME "git-init-${TARGET_TRIPLET}"
         )
         vcpkg_execute_required_process(
@@ -145,7 +146,7 @@ function(vcpkg_from_git)
                 OUTPUT_VARIABLE rev_parse_ref
                 ERROR_VARIABLE rev_parse_ref
                 RESULT_VARIABLE error_code
-                WORKING_DIRECTORY "${git_working_directory}/git-tmp"
+                WORKING_DIRECTORY "${git_working_directory}"
             )
             if(error_code)
                 message(FATAL_ERROR "unable to rev-parse ${arg_REF} after fetching git repository")
