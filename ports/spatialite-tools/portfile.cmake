@@ -25,6 +25,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
       set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib")
       set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpat.lib")
       set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatd.lib")
+      set(PROJ_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
+      set(PROJ_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
   else()
       set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
       set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
@@ -36,6 +38,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
       set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib")
       set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpatMD.lib")
       set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib")
+      set(PROJ_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib ${CURRENT_INSTALLED_DIR}/lib/tiff.lib ${CURRENT_INSTALLED_DIR}/lib/jpeg.lib ole32.lib shell32.lib")
+      set(PROJ_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ${CURRENT_INSTALLED_DIR}/debug/lib/tiffd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/jpegd.lib ole32.lib shell32.lib")
   endif()
 
   if(VCPKG_TARGET_IS_UWP)
@@ -53,7 +57,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       ${SPATIALITE_LIBS_DBG} \
       ${EXPAT_LIBS_DBG} \
       ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
+      ${PROJ_LIBS_DBG}"
   )
   set(LIBS_ALL_REL
       "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
@@ -65,7 +69,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       ${SPATIALITE_LIBS_REL} \
       ${EXPAT_LIBS_REL} \
       ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
+      ${PROJ_LIBS_REL}"
   )
 
   file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
@@ -78,8 +82,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
   vcpkg_install_nmake(
       SOURCE_PATH ${SOURCE_PATH}
-      OPTIONS
-          "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
       OPTIONS_RELEASE
           ${OPTIONS_RELEASE}
       OPTIONS_DEBUG
@@ -107,17 +109,20 @@ if (VCPKG_TARGET_IS_WINDOWS)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
       set(LIBS "-lpthread -ldl -lm -lz -lstdc++")
+      set(DEP_LIBS_EXTRA "-lstdc++")
   else()
       set(LIBS "-lpthread -ldl -lm -lz -lc++ -liconv -lc")
   endif()
 
   list(APPEND OPTIONS_RELEASE
       "LIBXML2_LIBS=-lxml2 -llzma"
-      "GEOS_LDFLAGS=-lgeos_c -lgeos"
+      "GEOS_LDFLAGS=-lgeos_c -lgeos ${DEP_LIBS_EXTRA}"
+      "LIBSPATIALITE_LIBS=-lspatialite -lproj -ltiff -ljpeg -lz -lminizip"
   )
   list(APPEND OPTIONS_DEBUG
       "LIBXML2_LIBS=-lxml2 -llzmad"
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd"
+      "GEOS_LDFLAGS=-lgeos_cd -lgeosd ${DEP_LIBS_EXTRA}"
+      "LIBSPATIALITE_LIBS=-lspatialite -lproj -ltiffd -ljpeg -lz -lminizip"
   )
 
   vcpkg_configure_make(

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 7.2.1
-    SHA512 e6e77266dcd70c939c16667c916cccab8de161221d2ef600cfca43382f50da2dc8d790561556b4416adbb4ac6fba939004e0cc936c278e0e808dc3566e9a70d4
+    REF 8.0.0
+    SHA512 353f0e14ba6c11bfcec8a30b3f322842e8a3103546e0fd40871e341c859ca7ae2b9411425be5b588eb45cc5716255d2ea81d6357407bcfb9506a0edb161376f5
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
@@ -14,14 +14,13 @@ vcpkg_from_github(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
-  set(EXTRA_FEATURES tiff ENABLE_TIFF tools BUILD_PROJSYNC tools ENABLE_CURL)
-  set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
-  set(TOOL_NAMES cct cs2cs geod gie proj projinfo)
 endif()
+set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
   database BUILD_PROJ_DATABASE
   tools BUILD_CCT
   tools BUILD_CS2CS
@@ -29,13 +28,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   tools BUILD_GIE
   tools BUILD_PROJ
   tools BUILD_PROJINFO
-  ${EXTRA_FEATURES}
+  tools BUILD_PROJSYNC
+  tools ENABLE_CURL
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(WARNING "ENABLE_TIFF ENABLE_CURL and BUILD_PROJSYNC will be off when building static")
-  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DBUILD_PROJSYNC=OFF)
-endif()
 
 if ("database" IN_LIST FEATURES)
     set(EXE_SQLITE3 ${CURRENT_HOST_INSTALLED_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX})
