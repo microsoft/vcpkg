@@ -1678,7 +1678,6 @@ zkpp:x64-windows-static-md=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
-c4core:x64-osx=fail
 
 # Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
 # Skip CI to avoid random failures

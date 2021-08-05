@@ -1,7 +1,7 @@
 {
   "name": "c4core",
   "version-date": "2021-07-18",
+  "port-version": 1,
   "description": "Library of low-level C++ utilities",
-  "homepage": "https://github.com/biojppm/c4core",
-  "supports": "!osx"
+  "homepage": "https://github.com/biojppm/c4core"
 }
