@@ -26,15 +26,15 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unifex CONFIG_PATH lib/cmake/unifex)
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/include/unifex/config.hpp.in
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/include/unifex/config.hpp.in"
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/unifex/linux)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/unifex/linux")
 elseif(VCPKG_TARGET_IS_LINUX)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/unifex/win32)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/unifex/win32")
 endif()
