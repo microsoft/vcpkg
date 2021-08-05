@@ -5525,7 +5525,7 @@
       "port-version": 0
     },
     "rexo": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "rhash": {
