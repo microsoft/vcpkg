@@ -3517,8 +3517,8 @@
       "port-version": 18
     },
     "libpqxx": {
-      "baseline": "7.3.1",
-      "port-version": 1
+      "baseline": "7.6.0",
+      "port-version": 2
     },
     "libprotobuf-mutator": {
       "baseline": "1.0",
