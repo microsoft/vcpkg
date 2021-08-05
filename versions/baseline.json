@@ -5785,8 +5785,8 @@
       "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.4.11",
-      "port-version": 1
+      "baseline": "0.4.12",
+      "port-version": 0
     },
     "septag-sx": {
       "baseline": "2019-05-07-2",
