@@ -1,7 +1,4 @@
 The package ${PORT}:${TARGET_TRIPLET} provides CMake targets:
 
     find_package(PROJ CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE PROJ::proj PROJ4::proj)
-    # Or
-    find_package(PROJ4 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE PROJ::proj PROJ4::proj)
+    target_link_libraries(main PRIVATE PROJ::proj)
