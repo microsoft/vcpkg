@@ -163,6 +163,18 @@
     "winidn": {
       "description": "WinIDN support"
     },
+    "winldap": {
+      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        }
+      ]
+    },
     "winssl": {
       "description": "Legacy name for schannel",
       "dependencies": [

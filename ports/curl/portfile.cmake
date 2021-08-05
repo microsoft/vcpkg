@@ -20,7 +20,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
-foreach(feature IN ITEMS "schannel" "sspi" "tool")
+foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
     if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
         message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
     endif()
@@ -30,9 +30,11 @@ if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
-if("winidn" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature winidn is not supported on non-Windows platforms.")
-endif()
+foreach(feature IN ITEMS "winldap" "winidn")
+    if(feature IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature ${feature} is not supported on non-Windows platforms.")
+    endif()
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -49,9 +51,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CMAKE_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-
+        winldap     USE_WIN32_LDAP
     INVERTED_FEATURES
         non-http    HTTP_ONLY
+        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS_RELEASE "")
@@ -71,7 +74,6 @@ endif()
 set(UWP_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
     set(UWP_OPTIONS
-        -DUSE_WIN32_LDAP=OFF
         -DCURL_DISABLE_TELNET=ON
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
