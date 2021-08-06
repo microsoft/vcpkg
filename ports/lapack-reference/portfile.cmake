@@ -8,7 +8,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/clapack/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if clapack is installed. Please remove clapack:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
 
-include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 set(lapack_ver 3.10.0)
@@ -49,18 +48,7 @@ endif()
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
 x_vcpkg_find_fortran(FORTRAN_CMAKE)
-# if(VCPKG_USE_INTERNAL_Fortran)
-    # if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL static) 
-    # # If openblas has been built with static crt linkage we cannot use it with gfortran!
-        # set(USE_OPTIMIZED_BLAS OFF) 
-        # #Cannot use openblas from vcpkg if we are building with gfortran here. 
-        # if("noblas" IN_LIST FEATURES)
-            # message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
-        # endif()
-    # endif()
-# else()
-    # set(USE_OPTIMIZED_BLAS ON)
-# endif()
+
 vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
@@ -120,24 +108,7 @@ vcpkg_fixup_pkgconfig()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # remove debug includes
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/lib/lapack.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/lapack.lib")
-    endif()
-    if(NOT USE_OPTIMIZED_BLAS)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libblas.lib")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/lib/blas.lib")
-        endif()
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libblas.lib")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/blas.lib")
-        endif()
-    endif()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)

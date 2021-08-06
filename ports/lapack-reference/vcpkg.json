@@ -4,8 +4,7 @@
   "description": "LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/",
   "dependencies": [
     {
-      "name": "vcpkg-fortran",
-      "platform": "windows"
+      "name": "vcpkg-fortran"
     }
   ],
   "default-features": [
@@ -20,8 +19,7 @@
           "default-features": false,
           "features": [
             "noblas"
-          ],
-          "platform": "!windows | !static"
+          ]
         }
       ]
     },
