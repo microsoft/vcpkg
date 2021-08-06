@@ -11,14 +11,15 @@ endif()
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(lapack_ver 3.8.0)
+set(lapack_ver 3.10.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${lapack_ver}"
-    SHA512 17786cb7306fccdc9b4a242de7f64fc261ebe6a10b6ec55f519deb4cb673cb137e8742aa5698fd2dc52f1cd56d3bd116af3f593a01dcf6770c4dcc86c50b2a7f
+    SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
     HEAD_REF master
+    PATCHES intel.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -47,24 +48,25 @@ if("noblas" IN_LIST FEATURES)
 endif()
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-vcpkg_find_fortran(FORTRAN_CMAKE)
-if(VCPKG_USE_INTERNAL_Fortran)
-    if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL static) 
-    # If openblas has been built with static crt linkage we cannot use it with gfortran!
-        set(USE_OPTIMIZED_BLAS OFF) 
-        #Cannot use openblas from vcpkg if we are building with gfortran here. 
-        if("noblas" IN_LIST FEATURES)
-            message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
-        endif()
-    endif()
-else()
-    set(USE_OPTIMIZED_BLAS ON)
-endif()
+x_vcpkg_find_fortran(FORTRAN_CMAKE)
+# if(VCPKG_USE_INTERNAL_Fortran)
+    # if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL static) 
+    # # If openblas has been built with static crt linkage we cannot use it with gfortran!
+        # set(USE_OPTIMIZED_BLAS OFF) 
+        # #Cannot use openblas from vcpkg if we are building with gfortran here. 
+        # if("noblas" IN_LIST FEATURES)
+            # message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
+        # endif()
+    # endif()
+# else()
+    # set(USE_OPTIMIZED_BLAS ON)
+# endif()
 vcpkg_configure_cmake(
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+            "-DBLA_VENDOR=OpenBLAS"
             "-DCBLAS=${CBLAS}"
             ${FORTRAN_CMAKE}
         )
