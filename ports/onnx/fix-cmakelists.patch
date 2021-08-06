@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 628dcaa..7ca07fb 100644
+index 628dcaa..2e30404 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -111,8 +111,8 @@ endif()
@@ -8,21 +8,29 @@ index 628dcaa..7ca07fb 100644
  # find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
 -find_package(PythonInterp ${PY_VERSION} REQUIRED)
 -find_package(PythonLibs ${PY_VERSION})
-+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
++find_package(Python3 ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
 +set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
  
  if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
    set(CMAKE_NO_SYSTEM_FROM_IMPORTED 1)
-@@ -444,7 +444,7 @@ if(BUILD_ONNX_PYTHON)
-                              ${PYTHON_INCLUDE_DIR})
- 
+@@ -441,10 +441,13 @@ if(BUILD_ONNX_PYTHON)
+                              $<BUILD_INTERFACE:${ONNX_ROOT}>
+                              $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+                              $<INSTALL_INTERFACE:include>
+-                             ${PYTHON_INCLUDE_DIR})
+-
++                             ${Python3_INCLUDE_DIRS})
++  target_link_directories(onnx_cpp2py_export PRIVATE
++                          ${Python3_LIBRARY_DIRS})
++  target_link_libraries(onnx_cpp2py_export PRIVATE
++                        ${Python3_LIBRARIES})
    # pybind11 is a header only lib
 -  find_package(pybind11 2.2)
 +  find_package(pybind11 2.2 CONFIG REQUIRED)
    if(pybind11_FOUND)
      target_include_directories(onnx_cpp2py_export PUBLIC
        ${pybind11_INCLUDE_DIRS})
-@@ -687,6 +687,27 @@ endif()
+@@ -687,6 +690,27 @@ endif()
  
  include(GNUInstallDirs)
  
@@ -50,3 +58,12 @@ index 628dcaa..7ca07fb 100644
  install(DIRECTORY ${ONNX_ROOT}/onnx
          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
          FILES_MATCHING
+@@ -714,7 +738,7 @@ install(TARGETS
+   onnx onnx_proto
+   onnxifi onnxifi_dummy onnxifi_loader
+   EXPORT ONNXTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-
++ 
+ if(NOT ANDROID AND NOT IOS)
+   install(TARGETS onnxifi_wrapper
+     EXPORT ONNXTargets DESTINATION lib)

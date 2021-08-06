@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 a3eecc74ce4f22524603fb86367d21c87a143ba27eef93ef4bd2e2868c2cadeb724b84df58a429286e7824adebdeba7fa059095b7ab29df8dcea8777bd7f4101
     PATCHES
         fix-cmakelists.patch
+        wrap-onnxifi-targets.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,10 +24,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
-# ONNX_USE_PROTOBUF_SHARED_LIBS: find the library and check its suffix
+# ONNX_USE_PROTOBUF_SHARED_LIBS: find the library and check its file extension
 find_library(PROTOBUF_LIBPATH NAMES protobuf PATHS ${CURRENT_INSTALLED_DIR}/bin ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
-get_filename_component(PROTOBUF_LIBPATH ${PROTOBUF_LIBPATH} NAME)
-string(COMPARE EQUAL "${PROTOBUF_LIBPATH}" "${CMAKE_SHARED_LIBRARY_SUFFIX}" USE_PROTOBUF_SHARED)
+get_filename_component(PROTOBUF_LIBNAME ${PROTOBUF_LIBPATH} NAME)
+if(PROTOBUF_LIBNAME MATCHES ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(USE_PROTOBUF_SHARED ON)
+else()
+    set(USE_PROTOBUF_SHARED OFF)
+endif()
+
+vcpkg_add_to_path(PREPEND ${CURRENT_INSTALLED_DIR}/tools/python3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -38,6 +45,7 @@ vcpkg_cmake_configure(
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED}
         -DONNX_USE_LITE_PROTO=OFF
+        -DONNXIFI_ENABLE_EXT=OFF
         -DONNX_BUILD_TESTS=OFF
         -DONNX_BUILD_BENCHMARKS=OFF
 )
@@ -47,7 +55,6 @@ if("pybind11" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET onnx_cpp2py_export)
 endif()
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
