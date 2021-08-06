@@ -1,0 +1,108 @@
+{
+  "PERL": [
+    { "PROGNAME": "perl" },
+    { "PROGRAM_VERSION": "5.32.1.1" },
+    { "SUBDIR": "@PROGRAM_VERSION@" },
+    { "PATHS": "@DOWNLOADS@/tools/perl/@PROGRAM_VERSION@/perl/bin" },
+    { "BREW_PACKAGE_NAME": "perl" },
+    { "APT_PACKAGE_NAME": "perl" },
+    { "URL": "https://strawberryperl.com/download/@PROGRAM_VERSION@/strawberry-perl-@PROGRAM_VERSION@-32bit.zip" },
+    { "ARCHIVE": "strawberry-perl-@PROGRAM_VERSION@-32bit.zip" },
+    { "HASH": "936381254fea2e596db6a16c23b08ced25c4081fda484e1b8c4356755016e4b956bd00f3d2ee651d5f41a7695e9998f6c1ac3f4a237212b9c55aca8c5fea14e9" }
+  ],
+  "NASM": [
+    { "PROGNAME": "nasm" },
+    { "PROGRAM_VERSION": "2.15.05" },
+    { "PATHS": "@DOWNLOADS@/tools/nasm/nasm-@PROGRAM_VERSION@" },
+    { "BREW_PACKAGE_NAME": "nasm" },
+    { "APT_PACKAGE_NAME": "nasm" },
+    {
+      "URL": [
+        "https://www.nasm.us/pub/nasm/releasebuilds/@PROGRAM_VERSION@/win32/nasm-@PROGRAM_VERSION@-win32.zip",
+        "https://fossies.org/windows/misc/nasm-@PROGRAM_VERSION@-win32.zip"
+      ]
+    },
+    { "ARCHIVE": "nasm-@PROGRAM_VERSION@-win32.zip" },
+    { "HASH": "9412b8caa07e15eac8f500f6f8fab9f038d95dc25e0124b08a80645607cf5761225f98546b52eac7b894420d64f26c3cbf22c19cd286bbe583f7c964256c97ed" }
+  ],
+  "YASM": [
+    { "PROGNAME": "yasm" },
+    { "PROGRAM_VERSION": "1.3.0.6.g1962" },
+    { "SUBDIR": "1.3.0.6" },
+    { "BREW_PACKAGE_NAME": "yasm" },
+    { "APT_PACKAGE_NAME": "yasm" },
+    { "URL": "https://tortall.net/projects/yasm/snapshots/v@PROGRAM_VERSION@/yasm-@PROGRAM_VERSION@.exe" },
+    { "ARCHIVE": "yasm-@PROGRAM_VERSION@.exe" },
+    { "final_program_name": "yasm.exe" },
+    { "NOEXTRACT": "ON" },
+    { "HASH": "c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b" }
+  ],
+  "PYTHON3": [
+    {
+      "if": {
+        "host_os": "WINDOWS",
+        "then": [
+          { "PROGNAME": "python" },
+          { "PROGRAM_VERSION": "3.9.6" },
+          {
+            "qualified": {
+              "host_architecture": "x86",
+              "if": [
+                { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
+                { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-win32.zip" },
+                { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-win32.zip" },
+                { "HASH": "4b2a0670094e639dcb2b762a02de8cdadd0af3657c463d9ff45af2541c0306496b991ae5402f119443ca891e918685bb57d18f13975f0493d349d864ff3e3a2c" }
+              ],
+              "else": [
+                { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
+                { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-amd64.zip" },
+                { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-amd64.zip" },
+                { "HASH": "f8946471ed7dbc8cbffc72298f99330794b127ce6aa60abc87e80b31bd26099a2f637db85af88ce78c06dcf6e19064184ef3768edf4b1a0f97c25898e379d121" }
+              ]
+            }
+          },
+          { "PATHS": "@DOWNLOADS@/tools/python/@SUBDIR@" },
+          {
+            "POST_INSTALL_COMMAND": [
+              "@CMAKE_COMMAND@",
+              "-E",
+              "rm",
+              "python39._pth"
+            ]
+          }
+        ],
+        "else": [
+          { "PROGNAME": "python3" },
+          { "BREW_PACKAGE_NAME": "python" },
+          { "APT_PACKAGE_NAME": "python3" }
+        ]
+      }
+    }
+  ],
+  "GIT": [
+    { "PROGNAME": "git" },
+    {
+      "if": {
+        "host_os": "WINDOWS",
+        "then": [
+          { "GIT_SHORT_VERSION": "2.32.0" },
+          { "PROGRAM_VERSION": "2.32.0.2" },
+          { "SUBDIR": "git-@PROGRAM_VERSION@-2-windows" },
+          { "URL": "https://github.com/git-for-windows/git/releases/download/v@GIT_SHORT_VERSION@.windows.2/PortableGit-@PROGRAM_VERSION@-32-bit.7z.exe" },
+          { "ARCHIVE": "PortableGit-@PROGRAM_VERSION@-32-bit.7z.exe" },
+          { "HASH": "867d8534972cbaf7a4224e25a14d484f8d17ef186f8d79e9a758afb90cf69541375cb7615a39702311f4809cb8371ef85c2b1a15bfffe9e48f0e597ac011b348" },
+          {
+            "PATHS": [
+              "@DOWNLOADS@/tools/@SUBDIR@/mingw32/bin",
+              "@DOWNLOADS@/tools/git/@SUBDIR@/mingw32/bin"
+            ]
+          }
+        ],
+        "else": [
+          { "BREW_PACKAGE_NAME": "git" },
+          { "APT_PACKAGE_NAME": "git" }
+        ]
+      }
+    }
+  ]
+}
