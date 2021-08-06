@@ -1,0 +1,24 @@
+{
+  "name": "ryml",
+  "version-date": "2021-07-24",
+  "description": "Rapid YAML library",
+  "homepage": "https://github.com/biojppm/rapidyaml",
+  "supports": "!osx",
+  "dependencies": [
+    {
+      "name": "c4core",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "def-callbacks"
+  ],
+  "features": {
+    "dbg": {
+      "description": "Enable (very verbose) ryml debug prints."
+    },
+    "def-callbacks": {
+      "description": "Enable ryml's default implementation of callbacks: allocate(), free(), error()"
+    }
+  }
+}

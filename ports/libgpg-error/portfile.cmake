@@ -67,6 +67,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/src/gpg-error.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpg-error.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
     vcpkg_copy_pdbs()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -74,8 +75,8 @@ else()
         REF libgpg-error-${PACKAGE_VERSION}
         SHA512 f5a1c1874ac1dee36ee01504f1ab0146506aa7af810879e192eac17a31ec81945fe850953ea1c57188590c023ce3ff195c7cab62af486b731fa1534546d66ba3
         HEAD_REF master
-    PATCHES
-        add_cflags_to_tools.patch
+        PATCHES
+            add_cflags_to_tools.patch
     )
 
     vcpkg_configure_make(
@@ -91,6 +92,6 @@ else()
     vcpkg_fixup_pkgconfig() 
     vcpkg_copy_pdbs()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/locale ${CURRENT_PACKAGES_DIR}/debug/share)
-    file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale" "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()

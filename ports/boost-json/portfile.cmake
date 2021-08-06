@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.75.0
-    SHA512 887a8758d247eb76b41526107e4006de7d18f107afc9692d95eb2ba7beb9cfa6d5f2e721523a8d4530aec38bd1f6eb0f6364aa05b5bf95f5428f4c9fa3d24b7c
+    REF boost-1.76.0
+    SHA512 86807c1efafc582d41d6d46b0d83f95dcb4eebe071e8b6f25cb6c2706ee4c1f5be6dc70c5a28d76877390654889b3c02a77f655a132f715690f794be0336a00e
     HEAD_REF master
 )
 
@@ -13,6 +13,7 @@ vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "import ../../config/checks/
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "\n      <library>/boost//container/<warnings-as-errors>off" "")
 
 vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "import ../config/checks/config" "import build/config/checks/config")
+vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "..//check_basic_alignas" "..//..//..//check_basic_alignas")
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)

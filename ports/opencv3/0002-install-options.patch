@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fcb4a1d..5810b0c 100644
+index f6a2da5..10aa531 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -607,7 +607,7 @@ endif()
@@ -12,10 +12,10 @@ index fcb4a1d..5810b0c 100644
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 8a3dcdb..b8b3bae 100644
+index 3cb10a1..fc81377 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -262,7 +262,6 @@ if(MSVC)
+@@ -276,7 +276,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)

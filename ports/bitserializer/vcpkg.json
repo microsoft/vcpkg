@@ -1,0 +1,42 @@
+{
+  "name": "bitserializer",
+  "version": "0.10",
+  "port-version": 1,
+  "description": "Core part of C++ 17 library for serialization to JSON, XML, YAML",
+  "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
+  "supports": "!(arm | osx)",
+  "default-features": [
+    "cpprestjson-archive",
+    "pugixml-archive",
+    "rapidjson-archive"
+  ],
+  "features": {
+    "cpprestjson-archive": {
+      "description": "Module for support JSON (implementation based on the CppRestSDK library)",
+      "dependencies": [
+        "cpprestsdk"
+      ]
+    },
+    "pugixml-archive": {
+      "description": "Module for support XML (implementation based on the PugiXml library)",
+      "dependencies": [
+        "pugixml"
+      ]
+    },
+    "rapidjson-archive": {
+      "description": "Module for support JSON (implementation based on the RapidJson library)",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "rapidyaml-archive": {
+      "description": "Module for support YAML (implementation based on the RapidYaml library)",
+      "dependencies": [
+        {
+          "name": "ryml",
+          "platform": "!arm & !arm64 & !osx"
+        }
+      ]
+    }
+  }
+}

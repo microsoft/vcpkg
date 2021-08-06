@@ -32,7 +32,8 @@ vcpkg_configure_cmake(
         -DUNIT_TESTING=OFF
         -DCLIENT_TESTING=OFF
         -DSERVER_TESTING=OFF
-        -DWITH_NACL=OFF)
+        -DWITH_NACL=OFF
+        -DWITH_GSSAPI=OFF)
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})

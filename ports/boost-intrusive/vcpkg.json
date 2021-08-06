@@ -1,6 +1,6 @@
 {
   "name": "boost-intrusive",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost intrusive module",
   "homepage": "https://github.com/boostorg/intrusive",
   "dependencies": [
@@ -8,7 +8,6 @@
     "boost-config",
     "boost-container-hash",
     "boost-core",
-    "boost-integer",
     "boost-move",
     "boost-static-assert",
     "boost-vcpkg-helpers"

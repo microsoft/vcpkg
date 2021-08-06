@@ -1,0 +1,12 @@
+diff --git a/libs/core/format/include/hpx/util/from_string.hpp b/libs/core/format/include/hpx/util/from_string.hpp
+index 07eb9b68dfb..c3d0d857143 100644
+--- a/libs/core/format/include/hpx/util/from_string.hpp
++++ b/libs/core/format/include/hpx/util/from_string.hpp
+@@ -10,6 +10,7 @@
+ #include <hpx/util/bad_lexical_cast.hpp>
+ 
+ #include <algorithm>
++#include <cctype>
+ #include <cstddef>
+ #include <limits>
+ #include <sstream>

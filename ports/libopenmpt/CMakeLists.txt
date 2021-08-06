@@ -11,21 +11,11 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-find_path(MPG123_INCLUDE_DIR NAMES mpg123.h)
-find_library(MPG123_LIBRARY  NAMES mpg123 libmpg123)
+find_package(MPG123 REQUIRED)
+find_package(Vorbis REQUIRED)
+find_package(FLAC REQUIRED)
 
-find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h)
-find_path(OGG_INCLUDE_DIR ogg/ogg.h)
-
-find_library(OGG_LIBRARY NAMES ogg)
-find_library(VORBIS_LIBRARY NAMES vorbis)
-find_library(VORBISFILE_LIBRARY NAMES vorbisfile)
-
-find_path(FLAC_INCLUDE_DIR FLAC/all.h)
-find_library(FLAC_LIBRARY NAMES FLAC flac)
-
-find_path(PORTAUDIO_INCLUDE_DIR NAMES portaudio.h)
-find_library(PORTAUDIO_LIBRARY NAMES portaudio)
+find_package(portaudio REQUIRED)
 
 set(
   lib_headers
@@ -52,11 +42,6 @@ include_directories(
   sounddsp
   soundlib
   openmpt123
-  ${MPG123_INCLUDE_DIR}
-  ${VORBIS_INCLUDE_DIR}
-  ${OGG_INCLUDE_DIR}
-  ${FLAC_INCLUDE_DIR}
-  ${PORTAUDIO_INCLUDE_DIR}
 )
 
 set(
@@ -242,28 +227,27 @@ endif()
 target_link_libraries(
   libopenmpt
   PRIVATE
-  ${OGG_LIBRARY}
-  ${MPG123_LIBRARY}
-  ${VORBISFILE_LIBRARY}
-  ${VORBIS_LIBRARY}
-  ${VORBISFILE_LIBRARY}
+  MPG123::libmpg123
+  Vorbis::vorbisfile
+  FLAC::FLAC
   ZLIB::ZLIB
 )
+
+if(BUILD_SHARED_LIBS)
+  set(PORTAUDIO_TARGET portaudio)
+else()
+  set(PORTAUDIO_TARGET portaudio_static)
+endif()
 
 target_link_libraries(
   openmpt123
   PRIVATE
   libopenmpt
-  ${OGG_LIBRARY}
-  ${MPG123_LIBRARY}
-  ${VORBISFILE_LIBRARY}
-  ${VORBIS_LIBRARY}
-  ${VORBISFILE_LIBRARY}
-  ${FLAC_LIBRARY}
-  ${PORTAUDIO_LIBRARY}
   Winmm
   ZLIB::ZLIB
+  ${PORTAUDIO_TARGET}
 )
+
 install(
   TARGETS libopenmpt
   RUNTIME DESTINATION bin

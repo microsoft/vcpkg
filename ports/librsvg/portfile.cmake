@@ -17,6 +17,7 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/config.h.linux ${SOURCE_PATH}/config.h.
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE 
     PREFER_NINJA
     OPTIONS
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}

@@ -29,6 +29,10 @@ this parameter is not set, binary caching will not be used. Example: "files,W:\"
 The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
 If BinarySourceStub is not set, this parameter has no effect. If BinarySourceStub is set and this is
 not, binary caching will default to read-write mode.
+
+.PARAMETER PassingIsPassing
+Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
+when using vcpkg to test a prerelease MSVC++ compiler)
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -47,7 +51,9 @@ Param(
     $UseEnvironmentSasToken = $false,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
-    $BuildReason = $null
+    $BuildReason = $null,
+    [switch]
+    $PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -148,4 +154,5 @@ else
 }
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
-    -baselineFile .\scripts\ci.baseline.txt
+    -baselineFile .\scripts\ci.baseline.txt `
+    -passingIsPassing:$PassingIsPassing

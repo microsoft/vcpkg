@@ -1,6 +1,6 @@
 {
   "name": "boost-heap",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost heap module",
   "homepage": "https://github.com/boostorg/heap",
   "dependencies": [
@@ -8,8 +8,8 @@
     "boost-assert",
     "boost-bind",
     "boost-concept-check",
+    "boost-config",
     "boost-core",
-    "boost-integer",
     "boost-intrusive",
     "boost-iterator",
     "boost-parameter",
