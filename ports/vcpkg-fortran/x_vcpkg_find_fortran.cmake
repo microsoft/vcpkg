@@ -38,27 +38,7 @@ function(x_vcpkg_find_fortran additional_cmake_args_out)
             z_vcpkg_load_environment_from_batch(BATCH_FILE_PATH "${SETVARS}")
             list(APPEND ARGS_OUT "-DCMAKE_Fortran_COMPILER=${IFORT}"
                                  "-DCMAKE_Fortran_FLAGS_INIT:STRING=/Z7 /names:lowercase /assume:underscore /assume:protect_parens")
-            # message(STATUS "No Fortran compiler found on the PATH. Using trying to use ifort!")
-            
-            # set(MINGW_BIN "${MSYS_ROOT}/${MINGW_PATH}/bin")
-            # vcpkg_add_to_path(PREPEND "${MINGW_BIN}")
-            # list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
-                                 # "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
-                                 # "-DCMAKE_C_COMPILER=${MINGW_BIN}/gcc.exe"
-                                 # "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
-            # # This is for private use by vcpkg-gfortran
-            # set(vcpkg_find_fortran_MSYS_ROOT "${MSYS_ROOT}" PARENT_SCOPE)
-            # set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
-            # set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
-            # set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
-            # if(VCPKG_CRT_LINKAGE STREQUAL "static")
-                # set(VCPKG_CRT_LINKAGE dynamic PARENT_SCOPE)
-                # message(STATUS "VCPKG_CRT_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic CRT linkage")
-            # endif()
-            # if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                # set(VCPKG_LIBRARY_LINKAGE dynamic PARENT_SCOPE)
-                # message(STATUS "VCPKG_LIBRARY_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic library linkage")
-            # endif()
+            set(VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")
         else()
             message(FATAL_ERROR "Unable to find a Fortran compiler using 'CMakeDetermineFortranCompiler'. Please install one (e.g. gfortran) and make it available on the PATH!")
         endif()
