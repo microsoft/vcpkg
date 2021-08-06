@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF v0.1.82
     SHA512   669d6a1e86c44587d725b1e93f11b707e510a180dec08afb79268158f5de009cb20ffccc72c501c84f032360e52e53ae227504f3538f59978629433e0d6fcf65
     HEAD_REF master
+    PATCHES rename-version.patch
 )
+file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

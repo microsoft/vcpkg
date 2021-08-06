@@ -1,0 +1,8 @@
+{
+  "name": "easyhook",
+  "version": "2.7.6789.0",
+  "port-version": 1,
+  "description": "This project supports extending (hooking) unmanaged code (APIs) with pure managed ones, from within a fully managed environment on 32- or 64-bit Windows Vista x64, Windows Server 2008 x64, Windows 7, Windows 8.1, and Windows 10.",
+  "homepage": "https://github.com/EasyHook/EasyHook",
+  "supports": "windows & !(static | arm | uwp)"
+}
