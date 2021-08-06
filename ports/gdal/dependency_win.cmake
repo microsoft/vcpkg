@@ -217,8 +217,8 @@ macro(find_dependency_win)
 
       if("mysql-libmariadb" IN_LIST FEATURES)
           set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql" )
-          set(MYSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libmariadb.lib" )
-          set(MYSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libmariadb.lib" )
+          set(MYSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libmariadb.lib ${CURRENT_INSTALLED_DIR}/lib/mariadbclient.lib" )
+          set(MYSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libmariadb.lib ${CURRENT_INSTALLED_DIR}/debug/lib/mariadbclient.lib" )
       endif()
   endif()
 

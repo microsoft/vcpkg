@@ -7,7 +7,7 @@ index 66f9b29..29c64a2 100644
  !INCLUDE ..\nmake.opt
  
 -LIBS	=	$(GDALLIB)
-+LIBS	=	$(GDALLIB) $(EXTERNAL_LIBS)
++LIBS	=	$(GDALLIB) $(MYSQL_LIB) $(SQLITE_LIB)
  
  !IFDEF INCLUDE_OGR_FRMTS
  OGR_PROGRAMS =	gdal_contour.exe gdaltindex.exe gdal_rasterize.exe \
