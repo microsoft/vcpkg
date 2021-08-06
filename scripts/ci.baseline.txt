@@ -632,8 +632,8 @@ libmariadb:arm-uwp            = skip
 libmariadb:x64-linux          = skip
 libmariadb:x64-osx            = skip
 libmariadb:x64-uwp            = skip
-libmariadb:x64-windows        = skip
-libmariadb:x64-windows-static = skip
+#libmariadb:x64-windows        = skip
+#libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
 libmariadb:x86-windows        = skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
