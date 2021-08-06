@@ -4597,8 +4597,8 @@
       "port-version": 0
     },
     "opencv2": {
-      "baseline": "2.4.13.7",
-      "port-version": 5
+      "baseline": "2.4.13.4",
+      "port-version": 6
     },
     "opencv3": {
       "baseline": "3.4.14",
