@@ -33,13 +33,13 @@ else()
     set(USE_PROTOBUF_SHARED OFF)
 endif()
 
-vcpkg_add_to_path(PREPEND ${CURRENT_INSTALLED_DIR}/tools/python3)
+vcpkg_add_to_path(PREPEND ${CURRENT_HOST_INSTALLED_DIR}/tools/python3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DPython3_ROOT_DIR=${CURRENT_HOST_INSTALLED_DIR}
         -DPY_VERSION=3.9 # see version of the 'python3' package
         -DONNX_ML=ON
         -DONNX_GEN_PB_TYPE_STUBS=ON
