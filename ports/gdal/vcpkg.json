@@ -1,7 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.2.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "supports": "windows",
@@ -32,6 +32,8 @@
     "zstd"
   ],
   "default-features": [
+    "libspatialite",
+    "mysql-libmariadb",
     "tools"
   ],
   "features": {
