@@ -18,9 +18,7 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
-else()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
 endif()
 
