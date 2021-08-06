@@ -1,6 +1,6 @@
 {
   "name": "azure-storage-cpp",
-  "version-string": "7.5.0",
+  "version-semver": "7.5.0",
   "port-version": 2,
   "description": [
     "[legacy] Microsoft Azure Storage Client SDK for C++",
