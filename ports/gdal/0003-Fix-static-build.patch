@@ -1,0 +1,13 @@
+diff --git a/apps/makefile.vc b/apps/makefile.vc
+index 66f9b29..29c64a2 100644
+--- a/apps/makefile.vc
++++ b/apps/makefile.vc
+@@ -7,7 +7,7 @@ EXTRAFLAGS =	-I..\frmts\vrt -I..\ogr\ogrsf_frmts\geojson\libjson -I..\ogr\ogrsf_
+ 
+ !INCLUDE ..\nmake.opt
+ 
+-LIBS	=	$(GDALLIB)
++LIBS	=	$(GDALLIB) $(EXTERNAL_LIBS)
+ 
+ !IFDEF INCLUDE_OGR_FRMTS
+ OGR_PROGRAMS =	gdal_contour.exe gdaltindex.exe gdal_rasterize.exe \

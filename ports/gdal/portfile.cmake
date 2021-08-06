@@ -14,6 +14,7 @@ vcpkg_download_distfile(ARCHIVE
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
+    0003-Fix-static-build.patch
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
     0007-Control-tools.patch
