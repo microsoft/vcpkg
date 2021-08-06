@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-fortran",
+  "version-string": "1",
+  "description": "Metaport to use a fortran compiler",
+  "supports": "windows & !arm"
+}
