@@ -7,6 +7,14 @@
   "dependencies": [
     "protobuf",
     {
+      "name": "protobuf",
+      "host": true
+    },
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
