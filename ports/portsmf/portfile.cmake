@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tenacityteam/portsmf
-    REF 236
-    SHA512 ede5ca770cab37822eebda7876c4fce7e786a11e15b3e173704863de97ea621b284439ebe7a14fdeadd0dc315f963c8da467ebbb7c246ebf80f5b120c35aa027
+    REF 238
+    SHA512 af619d1b0a656361af8f8b8b65d7f98047613ac8e9ea51354031629c1732ad02755f84d63ac7c4ed24cdf0ad3db46381061bf32d9afe29b7be3226dc814ef552
     HEAD_REF main
 )
 
