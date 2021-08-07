@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 set(VERSION 2.0.0)
 
