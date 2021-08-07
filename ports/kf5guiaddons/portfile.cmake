@@ -25,6 +25,8 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DQtWaylandScanner_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        QtWaylandScanner_EXECUTABLE
 )
 
 vcpkg_install_cmake()
