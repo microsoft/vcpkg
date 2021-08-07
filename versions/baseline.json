@@ -6098,7 +6098,7 @@
     },
     "starlink-ast": {
       "baseline": "9.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "status-code": {
       "baseline": "1.0.0-ab3cd821",
