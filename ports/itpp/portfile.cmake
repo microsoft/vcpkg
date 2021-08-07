@@ -7,10 +7,12 @@ vcpkg_from_sourceforge(
     FILENAME "itpp-${ITPP_VERSION}.tar.bz2"
     SHA512 b46d048fa7f33e80d2291a5e38e205c159791ea200f92c70d69e8ad8447ac2f0c847fece566a99af739853a1643cb16e226b4200c8bf115417f324e6d38c66bd
     PATCHES 
-       msvc2013.patch
-       fix-uwp.patch
-       fix-linux.patch
+        msvc2013.patch
+        fix-uwp.patch
+        fix-linux.patch
+        rename-version.patch
 )
+file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
