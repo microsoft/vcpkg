@@ -861,6 +861,15 @@ function(vcpkg_configure_make)
         endforeach()
     endforeach()
 
+    # Export matching make program for vcpkg_build_make (cache variable)
+    if(CMAKE_HOST_WIN32 AND MSYS_ROOT)
+        find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
+    elseif(VCPKG_HOST_IS_OPENBSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE make REQUIRED)
+    endif()
+
     # Restore environment
     _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
