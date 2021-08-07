@@ -4896,6 +4896,10 @@
       "baseline": "2020-12-21",
       "port-version": 0
     },
+    "phonon4qt5": {
+      "baseline": "4.11.1",
+      "port-version": 0
+    },
     "physfs": {
       "baseline": "3.0.2",
       "port-version": 5
