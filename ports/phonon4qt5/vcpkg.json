@@ -3,6 +3,7 @@
   "version-semver": "4.11.1",
   "description": "Multi-platform sound framework for application developers",
   "homepage": "https://invent.kde.org/libraries/phonon",
+  "supports": "!static",
   "dependencies": [
     "ecm",
     "qt5-base",
