@@ -1449,7 +1449,7 @@
       "port-version": 0
     },
     "cppitertools": {
-      "baseline": "2.1",
+      "baseline": "2.0",
       "port-version": 0
     },
     "cppkafka": {
