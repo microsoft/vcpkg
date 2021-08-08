@@ -14,9 +14,9 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
-  - group: osx-2021-04-16
+  - group: osx-binary-caching-credentials
   - name: BINARY_SOURCE_STUB
-    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
+    value: "x-azblob,$(root-url),$(sas)"
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
