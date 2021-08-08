@@ -1,5 +1,5 @@
 Source: kf5attica
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/attica/html/index.html
 Description: Qt library that implements the Open Collaboration Services API
 Build-Depends: ecm, qt5-base, qt5-tools
