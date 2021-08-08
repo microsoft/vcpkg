@@ -3,7 +3,7 @@
   "version-semver": "6.2.0-beta1",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
-  "supports": "native",
+  "supports": "!static",
   "dependencies": [
     {
       "name": "ffmpeg",
