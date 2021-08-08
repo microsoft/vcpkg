@@ -1,0 +1,11 @@
+{
+  "name": "kf5attica",
+  "version-string": "5.75.0",
+  "description": "Qt library that implements the Open Collaboration Services API",
+  "homepage": "https://api.kde.org/frameworks/attica/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
