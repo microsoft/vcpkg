@@ -4,8 +4,10 @@ vcpkg_from_github(
     REF v2.0.0.1
     SHA512 72c2fd4c81575b505f4851cd3820b6a2d8e78cd031a1ed138ffe5667ca711558f43b515428971966f7a73ace7c9951f1f0b39c362a59fe4691958875775cce23
     HEAD_REF master
-    PATCHES "add-cmake.patch"
+    PATCHES "windows-fix.patch"
 )
+
+file(COPY ports/libb64/CMakeLists.txt DESTINATION ${SOURCE_PATH}/)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
