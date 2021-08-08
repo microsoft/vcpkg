@@ -211,6 +211,7 @@ set(TOOL_NAMES
         tracegen 
         uic
         qtpaths
+        qtpaths6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
