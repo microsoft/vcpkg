@@ -12,11 +12,6 @@ vcpkg_from_github(
         wrap-onnxifi-targets.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        pybind11 BUILD_ONNX_PYTHON
-)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
     list(APPEND PLATFORM_OPTIONS
@@ -33,14 +28,30 @@ else()
     set(USE_PROTOBUF_SHARED OFF)
 endif()
 
-vcpkg_add_to_path(PREPEND ${CURRENT_HOST_INSTALLED_DIR}/tools/python3)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        pybind11 BUILD_ONNX_PYTHON
+)
+
+# Like protoc, python is required for codegen. Hijack the Python3_EXECUTABLE
+vcpkg_find_acquire_program(PYTHON3)
+
+# PATH for .bat scripts can find 'python'
+get_filename_component(PYTHON_DIR ${PYTHON3} PATH)
+vcpkg_add_to_path(PREPEND ${PYTHON_DIR})
+
+if("pybind11" IN_LIST FEATURES)
+    # When BUILD_ONNX_PYTHON, we need Development component. Give a hint for FindPython3
+    list(APPEND FEATURE_OPTIONS
+        -DPython3_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DPython3_ROOT_DIR=${CURRENT_HOST_INSTALLED_DIR}
-        -DPY_VERSION=3.9 # see version of the 'python3' package
+        ${FEATURE_OPTIONS} ${PLATFORM_OPTIONS}
+        -DPython3_EXECUTABLE=${PYTHON3}
         -DONNX_ML=ON
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED}
