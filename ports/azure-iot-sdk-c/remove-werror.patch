@@ -1,0 +1,18 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,14 +34,11 @@
+ if (MSVC)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /wd4232")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /wd4232")
+     # Make warning as error
+-    add_definitions(/WX)
+ else()
+     # Make warning as error
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+ endif()
+ 
+ IF(WIN32)
+     # windows needs this define
+     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
