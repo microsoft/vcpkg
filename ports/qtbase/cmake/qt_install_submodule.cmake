@@ -24,22 +24,23 @@ function(qt_download_submodule)
                       "PATCHES")
 
     if(QT_UPDATE_VERSION)
-        set(VCPKG_USE_HEAD_VERSION)
+        set(VCPKG_USE_HEAD_VERSION ON)
         set(UPDATE_PORT_GIT_OPTIONS
-                HEAD_REF ${QT_GIT_TAG})
+                HEAD_REF "${QT_GIT_TAG}")
     endif()
 
     vcpkg_from_git(
         OUT_SOURCE_PATH SOURCE_PATH
-        URL git://code.qt.io/qt/${PORT}.git
+        URL "git://code.qt.io/qt/${PORT}.git"
         #TAG ${${PORT}_TAG}
-        REF ${${PORT}_REF}
+        REF "${${PORT}_REF}"
         ${UPDATE_PORT_GIT_OPTIONS}
         PATCHES ${_qarg_PATCHES}
     )
 
     if(QT_UPDATE_VERSION)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
+        message(STATUS "VCPKG_HEAD_VERSION:${VCPKG_HEAD_VERSION}")
         file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${VCPKG_HEAD_VERSION})\n")
     endif()
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
