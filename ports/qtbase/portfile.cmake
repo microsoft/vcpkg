@@ -10,14 +10,12 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        harfbuzz.patch
-        config_install.patch 
         allow_outside_prefix.patch 
+        clang-cl_source_location.patch
+        config_install.patch
         dont_force_cmakecache.patch
         fix_cmake_build.patch
-        #buildcmake.patch # <-probably required
-        #fix_find_dep.patch # <-MAybe required
-        clang-cl_source_location.patch
+        harfbuzz.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
