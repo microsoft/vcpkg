@@ -1,0 +1,15 @@
+{
+  "name": "kf5wallet",
+  "version-string": "5.75.0",
+  "description": "Safe desktop-wide storage for passwords",
+  "homepage": "https://api.kde.org/frameworks/kwallet/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5coreaddons",
+    "kf5i18n",
+    "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
