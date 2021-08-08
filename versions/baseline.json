@@ -3080,6 +3080,10 @@
       "baseline": "0.98.1",
       "port-version": 5
     },
+    "libb64": {
+      "baseline": "2.0.0.1",
+      "port-version": 0
+    },
     "libbacktrace": {
       "baseline": "2021-03-14",
       "port-version": 0
