@@ -125,14 +125,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
         LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
     )
-
-    # make install
-    vcpkg_execute_build_process(
-        COMMAND bash --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
-        LOGNAME "make-install-${RELEASE_TRIPLET}")
-    message(STATUS "Package ${RELEASE_TRIPLET} done")
-
+    vcpkg_install_make()
 else()
     vcpkg_install_make()
 endif()
@@ -143,7 +136,9 @@ if(VCPKG_TARGET_IS_MINGW)
         ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
         ${CURRENT_PACKAGES_DIR}/bin/icu-config
         ${CURRENT_PACKAGES_DIR}/debug/bin/icu-config)
-    file(REMOVE ${ICU_TOOLS})
+    if(ICU_TOOLS)
+        file(REMOVE ${ICU_TOOLS})
+    endif()
 endif()
 
 file(REMOVE_RECURSE
@@ -156,7 +151,9 @@ file(REMOVE_RECURSE
 file(GLOB TEST_LIBS
     ${CURRENT_PACKAGES_DIR}/lib/*test*
     ${CURRENT_PACKAGES_DIR}/debug/lib/*test*)
-file(REMOVE ${TEST_LIBS})
+if(TEST_LIBS)
+    file(REMOVE ${TEST_LIBS})
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(VCPKG_TARGET_IS_WINDOWS)
