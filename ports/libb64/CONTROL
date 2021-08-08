@@ -1,4 +1,0 @@
-Source: libb64
-Version: 2.0.0.1
-Homepage: https://github.com/libb64/libb64
-Description: libb64 is a library of ANSI C routines for fast encoding/decoding data into and from a base64-encoded format.

@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES "windows-fix.patch"
 )
 
-file(COPY ports/libb64/CMakeLists.txt DESTINATION ${SOURCE_PATH}/)
+file(COPY ports/b64/CMakeLists.txt DESTINATION ${SOURCE_PATH}/)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -17,9 +17,10 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-#vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 vcpkg_copy_pdbs()
+
 
 # handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

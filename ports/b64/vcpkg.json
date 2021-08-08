@@ -1,0 +1,5 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "b64",
+  "version": "2.0.0.1"
+}
