@@ -170,12 +170,11 @@ elseif(CMD MATCHES "^CREATE$")
         message(STATUS "If this is not desired, delete the file and ${NATIVE_PORT_PATH}")
     else()
         include(vcpkg_download_distfile)
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK ON)
         vcpkg_download_distfile(ARCHIVE
             URLS "${URL}"
             FILENAME "${FILENAME}"
+            SKIP_SHA512
         )
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK OFF)
     endif()
     file(SHA512 "${DOWNLOAD_PATH}" SHA512)
 
