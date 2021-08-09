@@ -65,7 +65,7 @@ function(vcpkg_copy_pdbs)
 
         set(ENV{VSLANG} "${vslang_backup}")
 
-        if(NOT dlls_without_matching_pdbs STREQUAL "")
+        if(NOT unmatched_dlls_length STREQUAL "")
             list(JOIN dlls_without_matching_pdbs "\n    " message)
             message(WARNING "Could not find a matching pdb file for:
     ${message}\n")
