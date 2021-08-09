@@ -79,10 +79,10 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
     endif()
 endfunction()
 
-function(z_vcpkg_download_distfile_show_proxy_and_fail)
+function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
     message(FATAL_ERROR
         "    \n"
-        "    Failed to download file.\n"  
+        "    Failed to download file with error: ${error_code}\n"  
         "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
         "    \n"
         "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
@@ -265,13 +265,13 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
                 --feature-flags=-manifests # there's a bug in vcpkg x-download when it finds a manifest-root
             OUTPUT_VARIABLE output
             ERROR_VARIABLE output
-            RESULT_VARIABLE failure
+            RESULT_VARIABLE error_code
             WORKING_DIRECTORY "${DOWNLOADS}"
         )
 
-        if(NOT "${failure}" EQUAL 0)
+        if(NOT "${error_code}" EQUAL "0")
             message("${output}")
-            z_vcpkg_download_distfile_show_proxy_and_fail()
+            z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
         endif()
     endif()
 
