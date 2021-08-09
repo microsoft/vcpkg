@@ -26,7 +26,6 @@ vcpkg_copy_tools(
 
 file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ../../data")
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/desktoptojson${EXECUTABLE_SUFFIX}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/data")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
