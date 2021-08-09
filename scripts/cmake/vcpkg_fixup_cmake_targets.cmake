@@ -220,6 +220,51 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
 
+    if (VCPKG_TARGET_IS_OSX)
+        # see #16259 for details why this replacement is necessary.
+        file(GLOB targets_files "${RELEASE_SHARE}/*[Tt]argets.cmake")
+        if (targets_files STREQUAL "")
+            file(GLOB targets_files "${RELEASE_SHARE}/*[Cc]onfig.cmake")
+        endif()
+        foreach(targets_file IN LISTS targets_files)
+            file(READ "${targets_file}" targets_content)
+            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*\n" library_contents "${targets_content}")
+            foreach(line IN LISTS library_contents)
+                set(fixed_line "${line}")
+                string(REGEX MATCHALL [[/[^ ;"]+/[^ ;"/]+\.framework]] frameworks "${line}")
+                foreach(framework IN LISTS frameworks)
+                    if(NOT framework MATCHES [[^(.+)/(.+)\.framework$]])
+                        continue()
+                    endif()
+                    set(path "${CMAKE_MATCH_1}")
+                    set(name "${CMAKE_MATCH_2}")
+                    if(NOT DEFINED VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
+                        set(_saved_buildtrees_dir "${CURRENT_BUILDTREES_DIR}")
+                        set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/get-cmake-vars")
+                        vcpkg_internal_get_cmake_vars(
+                            OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE
+                            OPTIONS
+                                -DVCPKG_LANGUAGES=CXX
+                                -DVCPKG_VARS_TO_CHECK=CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES
+                                -DVCPKG_FLAGS_TO_CHECK=
+                                -DVCPKG_ENV_VARS_TO_CHECK=
+                        )
+                        debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
+                        include("${_VCPKG_CMAKE_VARS_FILE}")
+                        set(VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES}" PARENT_SCOPE)
+                        set(CURRENT_BUILDTREES_DIR "${_saved_buildtrees_dir}")
+                    endif()
+                    list(FIND VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${path}" index)
+                    if(NOT index EQUAL -1)
+                        string(REPLACE "${framework}" "-framework ${name}" fixed_line "${fixed_line}")
+                    endif()
+                endforeach()
+                string(REPLACE "${line}" "${fixed_line}" targets_content "${targets_content}")
+            endforeach()
+            file(WRITE "${targets_file}" "${targets_content}")
+        endforeach()
+    endif()
+
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
     if(NOT REMAINING_FILES)
@@ -241,5 +286,3 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CMAKE_FILE} "${_contents}")
     endforeach()
 endfunction()
-
-
