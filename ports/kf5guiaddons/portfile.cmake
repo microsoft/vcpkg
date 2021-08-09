@@ -19,10 +19,10 @@ endif()
 
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
-        -DQtWaylandScanner_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner
+        -DQtWaylandScanner_EXECUTABLE="${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         QtWaylandScanner_EXECUTABLE
@@ -43,7 +43,7 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" filed
 string(REGEX REPLACE "CURRENT_INSTALLED_DIR" "${CURRENT_INSTALLED_DIR}" filedata "${filedata}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" "${filedata}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
