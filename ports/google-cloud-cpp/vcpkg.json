@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
   "version": "1.30.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -20,5 +21,177 @@
     },
     "grpc",
     "nlohmann-json"
-  ]
+  ],
+  "default-features": [
+    "bigquery",
+    "bigtable",
+    "iam",
+    "pubsub",
+    "spanner",
+    "storage"
+  ],
+  "features": {
+    "bigquery": {
+      "description": "The Google Cloud BigQuery C++ client library",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "bigtable": {
+      "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "common": {
+      "description": "Common types and functions shared by google-cloud-cpp libraries",
+      "dependencies": [
+        "abseil"
+      ]
+    },
+    "experimental-logging": {
+      "description": "The Google Cloud Logging C++ client library (Experimental)",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "experimental-storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        "abseil",
+        "crc32c",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils",
+            "storage"
+          ]
+        },
+        "nlohmann-json"
+      ]
+    },
+    "googleapis": {
+      "description": "Selected proto and gRPC libraries from https://github.com/googleapis/googleapis",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "grpc-utils"
+          ]
+        },
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "grpc-utils": {
+      "description": "Common types and functions to implement gRPC-based libraries",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common"
+          ]
+        },
+        "grpc",
+        "protobuf"
+      ]
+    },
+    "iam": {
+      "description": "The Google Cloud IAM C++ client library",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "pubsub": {
+      "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "spanner": {
+      "description": "The Google Cloud Spanner C++ client library",
+      "dependencies": [
+        "abseil",
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common",
+            "googleapis",
+            "grpc-utils"
+          ]
+        }
+      ]
+    },
+    "storage": {
+      "description": "The Google Cloud Storage C++ client library",
+      "dependencies": [
+        "abseil",
+        "crc32c",
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common"
+          ]
+        },
+        "nlohmann-json"
+      ]
+    }
+  }
 }
