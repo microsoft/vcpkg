@@ -4069,7 +4069,7 @@
       "port-version": 0
     },
     "microsoft-signalr": {
-      "baseline": "0.1.0-alpha2",
+      "baseline": "0.1.0-alpha3",
       "port-version": 0
     },
     "mikktspace": {
