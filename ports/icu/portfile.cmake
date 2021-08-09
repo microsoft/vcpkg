@@ -125,10 +125,9 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
         LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
     )
-    vcpkg_install_make()
-else()
-    vcpkg_install_make()
 endif()
+
+vcpkg_install_make()
 
 if(VCPKG_TARGET_IS_MINGW)
     file(GLOB ICU_TOOLS
