@@ -126,7 +126,6 @@
       "default-features": false,
       "features": [
         "geolocation",
-        "qml",
         "spellchecker",
         "webchannel"
       ]
