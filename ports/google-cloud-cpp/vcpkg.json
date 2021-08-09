@@ -96,6 +96,17 @@
         "nlohmann-json"
       ]
     },
+    "firestore": {
+      "description": "Community contributions to interact with Firestore",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "features": [
+            "common"
+          ]
+        }
+      ]
+    },
     "googleapis": {
       "description": "Selected proto and gRPC libraries from https://github.com/googleapis/googleapis",
       "dependencies": [
