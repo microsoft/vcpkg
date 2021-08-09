@@ -1325,6 +1325,16 @@ rapidstring:x86-windows=fail
 raylib:arm64-windows=fail
 raylib:arm-uwp=fail
 raylib:x64-uwp=fail
+# file conflicts with rbdl
+rbdl-orb:x86-windows=skip
+rbdl-orb:x64-windows=skip
+rbdl-orb:x64-windows-static=skip
+rbdl-orb:x64-windows-static-md=skip
+rbdl-orb:x64-uwp=skip
+rbdl-orb:arm-uwp=skip
+rbdl-orb:arm64-windows=skip
+rbdl-orb:x64-linux=skip
+rbdl-orb:x64-osx=skip
 readline:arm-uwp=fail
 readline:x64-uwp=fail
 readline-win32:arm-uwp=fail
