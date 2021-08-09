@@ -17,10 +17,9 @@ if("wayland" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
     message(FATAL_ERROR "Feature wayland is only supported on Linux.")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DQtWaylandScanner_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/qt5-wayland/bin/qtwaylandscanner
@@ -29,17 +28,17 @@ vcpkg_configure_cmake(
         QtWaylandScanner_EXECUTABLE
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5GuiAddons)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5GuiAddons)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# We need to substitute the CURRENT_INSTALLED_DIR introduced by fix_cmake.patch
-# configure_file() would be too eager at this point, however, and would replace other variables, which we 
-# don't want, so do manual REGEX replace instead.
+# We need to substitute the CURRENT_INSTALLED_DIR introduced by fix_cmake.patch.
+# configure_file() would, however, be too eager at this point, and would replace other variables, 
+# which we don't want, so do manual REGEX replace instead.
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" filedata)
 string(REGEX REPLACE "CURRENT_INSTALLED_DIR" "${CURRENT_INSTALLED_DIR}" filedata "${filedata}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" "${filedata}")
