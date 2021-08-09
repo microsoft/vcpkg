@@ -1,4 +1,4 @@
-if (EXISTS ${CURRENT_INSTALLED_DIR}/share/rbdl-orb/copyright)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/rbdl-orb/copyright")
     message(FATAL_ERROR "${PORT} conflict with rbdl-orb, please remove rbdl-orb before install ${PORT}.")
 endif()
 

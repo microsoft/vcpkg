@@ -1,4 +1,4 @@
-if (EXISTS ${CURRENT_INSTALLED_DIR}/share/rbdl/copyright)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/rbdl/copyright")
     message(FATAL_ERROR "${PORT} conflict with rbdl, please remove rbdl before install ${PORT}.")
 endif()
 
