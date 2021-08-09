@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 53491f8576db8ebb48627e098fd8c3d4029c024bb9048d97daa1a8f5c39e594ca05dcd80ecb18ac591af7455457a0f14459c24cf44487727a26e34f977c5b81a
     PATCHES
         27.patch # https://invent.kde.org/frameworks/kwindowsystem/-/merge_requests/27
+        28.patch # https://invent.kde.org/frameworks/kwindowsystem/-/merge_requests/28
 )
 
 if (VCPKG_TARGET_IS_LINUX)
