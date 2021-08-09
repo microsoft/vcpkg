@@ -2876,6 +2876,10 @@
       "baseline": "5.84.0",
       "port-version": 0
     },
+    "kf5attica": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5auth": {
       "baseline": "5.84.0",
       "port-version": 1
