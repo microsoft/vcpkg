@@ -1,0 +1,7 @@
+{
+	"name": "bshoshany-thread-pool",
+	"version": "1.9",
+	"port-version":0,
+	"description": "A C++17 Thread Pool for High-Performance Scientific Computing",
+	"homepage": "https://github.com/bshoshany/thread-pool"
+}

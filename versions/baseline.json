@@ -1076,6 +1076,10 @@
       "baseline": "1.11.0",
       "port-version": 0
     },
+    "bshoshany-thread-pool": {
+      "baseline":"1.9",
+      "port-version":0
+    },
     "bsio": {
       "baseline": "1.0.0",
       "port-version": 0
