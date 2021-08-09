@@ -37,8 +37,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# substitute the ${CURRENT_INSTALLED_DIR} introduced by fix_cmake.patch
-configure_file("${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake")
+# We need to substitute the CURRENT_INSTALLED_DIR introduced by fix_cmake.patch
+# configure_file() would be too eager at this point, however, and would replace other variables, which we 
+# don't want, so do manual REGEX replace instead.
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" filedata)
+string(REGEX REPLACE "CURRENT_INSTALLED_DIR" "${CURRENT_INSTALLED_DIR}" filedata "${filedata}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/KF5GuiAddonsConfig.cmake" "${filedata}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
