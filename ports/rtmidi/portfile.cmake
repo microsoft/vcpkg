@@ -17,8 +17,8 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
   OPTIONS -DRTMIDI_API_ALSA=OFF
+  OPTIONS -DRTMIDI_API_JACK=OFF
 )
 
 vcpkg_install_cmake()
