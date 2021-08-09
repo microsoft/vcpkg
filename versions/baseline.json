@@ -2720,6 +2720,10 @@
       "baseline": "3.3.0",
       "port-version": 0
     },
+    "intel-hexl": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "intel-ipsec": {
       "baseline": "0.52-1",
       "port-version": 0
