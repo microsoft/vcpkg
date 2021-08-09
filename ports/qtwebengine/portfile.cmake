@@ -13,7 +13,6 @@ FEATURES
     "geolocation"           FEATURE_webengine-geolocation
     "webchannel"            FEATURE_webengine-webchannel
 INVERTED_FEATURES
-    "qml"                   CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
 )

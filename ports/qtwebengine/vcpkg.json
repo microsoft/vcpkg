@@ -1,6 +1,6 @@
 {
   "name": "qtwebengine",
-  "version-semver": "6.2.0-beta1",
+  "version-semver": "6.2.0-beta2",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "supports": "!static",
@@ -57,6 +57,7 @@
       "name": "minizip",
       "platform": "!windows"
     },
+    "opengl-registry",
     {
       "name": "opus",
       "platform": "!windows"
@@ -73,6 +74,10 @@
         "network",
         "widgets"
       ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
     },
     {
       "name": "qtdeclarative",
@@ -117,15 +122,6 @@
     },
     "proprietary-codecs": {
       "description": "Enables the use of proprietary codecs such as h.264/h.265 and MP3."
-    },
-    "qml": {
-      "description": "Build QML imports",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
     },
     "spellchecker": {
       "description": "Provides a spellchecker"
