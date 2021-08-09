@@ -136,9 +136,7 @@ if(VCPKG_TARGET_IS_MINGW)
         ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
         ${CURRENT_PACKAGES_DIR}/bin/icu-config
         ${CURRENT_PACKAGES_DIR}/debug/bin/icu-config)
-    if(ICU_TOOLS)
-        file(REMOVE ${ICU_TOOLS})
-    endif()
+    file(REMOVE ${ICU_TOOLS})
 endif()
 
 file(REMOVE_RECURSE
