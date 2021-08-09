@@ -6,7 +6,7 @@ index a3c3e58..66c2825 100644
  
  if (NOT @BUILD_SHARED_LIBS@)
      if (@WITH_WAYLAND@)
-+        set(QtWaylandScanner_EXECUTABLE "CURRENT_INSTALLED_DIR/tools/qt5-wayland/bin/qtwaylandscanner")
++        set(QtWaylandScanner_EXECUTABLE "${PACKAGE_PREFIX}/tools/qt5-wayland/bin/qtwaylandscanner")
          find_dependency(Wayland REQUIRED Client)
          find_dependency(Qt5WaylandClient)
          find_dependency(QtWaylandScanner)
