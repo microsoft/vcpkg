@@ -3562,7 +3562,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 4
+      "port-version": 5
     },
     "librsync": {
       "baseline": "2020-09-16",
