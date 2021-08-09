@@ -132,14 +132,15 @@ vcpkg_download_distfile(QT_NO_KEYWORDS_PATCH
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
-    SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
+    REF 5e2ca5f054de37638e7473148fddebf9a40f8c98 # v9.0.3
+    SHA512 072380730160851f066845647e42bc1676dbe1ce8f958c9a14d8ed93e41a7564eb0c74339a824a51c53caa66fe420211774a335802e138b5869a550049c714ad
     HEAD_REF master
     PATCHES
         6811.patch
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
+        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
         vtkm.patch # To include an external VTKm build (v.1.5 required)
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
@@ -149,7 +150,6 @@ vcpkg_from_github(
         module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        fix-freetype.patch # Should be fixed next version, !7367 + !7434
         # Remove these 2 official patches in the next update
         ${QT_NO_KEYWORDS_PATCH}
         0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
