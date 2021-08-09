@@ -6586,7 +6586,7 @@
     },
     "value-ptr-lite": {
       "baseline": "0.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vamp-sdk": {
       "baseline": "2.9",
