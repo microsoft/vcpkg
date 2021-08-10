@@ -8,12 +8,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 5167b11277fffcd9fe18fe4dc35b3eb2669d8c44 # 2.2.10
-    SHA512 d5812cf93bbaf8a384e8ee9f443db95a92320b4c35959a528dff40eac405355d1dec924a975bef7f367d3a2179ded0a15b4be9737d37521719739958bb7f3123
+    REF 099c8585e3add6f58fab9aa438a491fa55d3f67e # 2.2.17.0
+    SHA512 1b6a5e41607bd68590a19672ca777c953b92b347425c9fe8ca7d096959bece789d043a0fae1f7bf00a88dcb11815dd3501414c9ad979e1fe9dd1613bb9e04b0b
     HEAD_REF master
     PATCHES
         fix-config-cmake.patch
-        fix-dependency.patch
         fix_static_build.patch
 )
 
@@ -22,8 +21,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindWebp.cmake")
+            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
@@ -36,7 +34,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libraw      USE_LIBRAW
-        opencolorio USE_OCIO
+        opencolorio USE_OPENCOLORIO
         ffmpeg      USE_FFMPEG
         field3d     USE_FIELD3D
         freetype    USE_FREETYPE
@@ -57,7 +55,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
-        -DHIDE_SYMBOLS=ON
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_QT=OFF
