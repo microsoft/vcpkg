@@ -10,8 +10,9 @@ vcpkg_from_github(
 # Install headers (header-only):
 file(GLOB HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/*.hpp")
 file(INSTALL
-    ${HEADER_FILES}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    "${HEADER_FILES}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+
 )
 
 # Handle copyright
