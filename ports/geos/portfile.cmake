@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         dont-build-astyle.patch
         pc-file-libs-private.patch
         make-geos-config-relocatable.patch
+        fix-static-deps.patch
 )
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
