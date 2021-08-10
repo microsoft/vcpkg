@@ -9,8 +9,6 @@ vcpkg_from_github(
     HEAD_REF 1.2.0
 )
 
-set(VCPKG_BUILD_TYPE release)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(HEXL_SHARED OFF)
 else()
@@ -28,8 +26,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "HEXL" CONFIG_PATH "lib/cmake/hexl-1.2.0")
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
