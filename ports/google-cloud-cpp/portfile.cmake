@@ -18,7 +18,9 @@ vcpkg_check_features(
         bigquery GOOGLE_CLOUD_CPP_ENABLE_BIGQUERY
         bigtable GOOGLE_CLOUD_CPP_ENABLE_BIGTABLE
         firestore GOOGLE_CLOUD_CPP_ENABLE_FIRESTORE
+        googleapis GOOGLE_CLOUD_CPP_ENABLE_GRPC
         iam GOOGLE_CLOUD_CPP_ENABLE_IAM
+        experimental-logging GOOGLE_CLOUD_CPP_ENABLE_LOGGING
         pubsub GOOGLE_CLOUD_CPP_ENABLE_PUBSUB
         spanner GOOGLE_CLOUD_CPP_ENABLE_SPANNER
         storage GOOGLE_CLOUD_CPP_ENABLE_STORAGE

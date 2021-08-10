@@ -39,8 +39,7 @@
           "name": "google-cloud-cpp",
           "features": [
             "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
       ]
@@ -52,17 +51,9 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
-      ]
-    },
-    "common": {
-      "description": "Common types and functions shared by google-cloud-cpp libraries",
-      "dependencies": [
-        "abseil"
       ]
     },
     "experimental-logging": {
@@ -72,9 +63,7 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
       ]
@@ -87,9 +76,7 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
             "googleapis",
-            "grpc-utils",
             "storage"
           ]
         },
@@ -99,23 +86,13 @@
     "firestore": {
       "description": "Community contributions to interact with Firestore",
       "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "features": [
-            "common"
-          ]
-        }
+        "abseil"
       ]
     },
     "googleapis": {
       "description": "Selected proto and gRPC libraries from https://github.com/googleapis/googleapis",
       "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "features": [
-            "grpc-utils"
-          ]
-        },
+        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -128,20 +105,6 @@
         }
       ]
     },
-    "grpc-utils": {
-      "description": "Common types and functions to implement gRPC-based libraries",
-      "dependencies": [
-        "abseil",
-        {
-          "name": "google-cloud-cpp",
-          "features": [
-            "common"
-          ]
-        },
-        "grpc",
-        "protobuf"
-      ]
-    },
     "iam": {
       "description": "The Google Cloud IAM C++ client library",
       "dependencies": [
@@ -149,9 +112,7 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
       ]
@@ -163,9 +124,7 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
       ]
@@ -177,9 +136,7 @@
         {
           "name": "google-cloud-cpp",
           "features": [
-            "common",
-            "googleapis",
-            "grpc-utils"
+            "googleapis"
           ]
         }
       ]
@@ -193,12 +150,6 @@
           "name": "curl",
           "features": [
             "ssl"
-          ]
-        },
-        {
-          "name": "google-cloud-cpp",
-          "features": [
-            "common"
           ]
         },
         "nlohmann-json"
