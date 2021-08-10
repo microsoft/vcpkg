@@ -1,0 +1,13 @@
+diff --git a/share/cmake/modules/Findpystring.cmake b/share/cmake/modules/Findpystring.cmake
+index a3e396de..4022ddf5 100644
+--- a/share/cmake/modules/Findpystring.cmake
++++ b/share/cmake/modules/Findpystring.cmake
+@@ -50,7 +50,7 @@ if(NOT OCIO_INSTALL_EXT_PACKAGES STREQUAL ALL)
+     # Find library
+     find_library(pystring_LIBRARY
+         NAMES
+-            ${_pystring_STATIC} pystring
++            ${_pystring_STATIC} pystring libpystring
+         HINTS
+             ${_pystring_SEARCH_DIRS}
+         PATH_SUFFIXES
