@@ -9,8 +9,8 @@ vcpkg_from_github(
 
 file(COPY ports/b64/CMakeLists.txt DESTINATION ${SOURCE_PATH}/)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
