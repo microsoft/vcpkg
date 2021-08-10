@@ -14,13 +14,6 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_DATAROOTDIR=data
         -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
-    MAYBE_UNUSED_VARIABLES
-        BUILD_HTML_DOCS
-        BUILD_MAN_DOCS
-        BUILD_QTHELP_DOCS
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
