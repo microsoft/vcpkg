@@ -14,26 +14,27 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bzip2   ENABLE_BZip2
-    libxml2 ENABLE_LIBXML2
-    lz4     ENABLE_LZ4
-    lzma    ENABLE_LZMA
-    lzo     ENABLE_LZO
-    openssl ENABLE_OPENSSL
-    zstd    ENABLE_ZSTD
-    # The below features should be added to CONTROL
-    #pcre    ENABLE_PCREPOSIX
-    #nettle  ENABLE_NETTLE
-    #expat   ENABLE_EXPAT
-    #libgcc  ENABLE_LibGCC
-    #cng     ENABLE_CNG
-    #tar     ENABLE_TAR # Tool build option?
-    #cpio    ENABLE_CPIO # Tool build option?
-    #cat     ENABLE_CAT # Tool build option?
-    #xattr   ENABLE_XATTR # Tool support option?
-    #acl     ENABLE_ACL # Tool support option?
-    #iconv   ENABLE_ICONV # iconv support option?
-    #libb2   ENABLE_LIBB2
+    FEATURES
+        bzip2   ENABLE_BZip2
+        libxml2 ENABLE_LIBXML2
+        lz4     ENABLE_LZ4
+        lzma    ENABLE_LZMA
+        lzo     ENABLE_LZO
+        openssl ENABLE_OPENSSL
+        zstd    ENABLE_ZSTD
+        # The below features should be added to CONTROL
+        #pcre    ENABLE_PCREPOSIX
+        #nettle  ENABLE_NETTLE
+        #expat   ENABLE_EXPAT
+        #libgcc  ENABLE_LibGCC
+        #cng     ENABLE_CNG
+        #tar     ENABLE_TAR # Tool build option?
+        #cpio    ENABLE_CPIO # Tool build option?
+        #cat     ENABLE_CAT # Tool build option?
+        #xattr   ENABLE_XATTR # Tool support option?
+        #acl     ENABLE_ACL # Tool support option?
+        #iconv   ENABLE_ICONV # iconv support option?
+        #libb2   ENABLE_LIBB2
 )
 
 if(FEATURES MATCHES "pcre")
@@ -67,6 +68,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
