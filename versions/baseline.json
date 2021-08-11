@@ -3577,8 +3577,8 @@
       "port-version": 2
     },
     "librttopo": {
-      "baseline": "1.1.0-3",
-      "port-version": 0
+      "baseline": "1.1.0",
+      "port-version": 4
     },
     "libsamplerate": {
       "baseline": "0.2.1",
