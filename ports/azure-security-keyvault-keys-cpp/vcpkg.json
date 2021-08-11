@@ -7,12 +7,10 @@
   ],
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/keyvault/azure-security-keyvault-keys",
   "license": "MIT",
-  "builtin-baseline": "14c54c49b56a964ac7f2f701a6857adb02ae1bec",
   "dependencies": [
     {
       "name": "azure-core-cpp",
-      "default-features": false,
-      "version>=": "1.1.0"
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
