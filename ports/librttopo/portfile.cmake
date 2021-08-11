@@ -11,32 +11,32 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-makefiles.patch
         fix-geoconfig.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
   set(SRID_MAX 999999)
   set(SRID_USR_MAX 998999)
-  configure_file(${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in ${SOURCE_PATH}/src/rttopo_config.h @ONLY)
-  configure_file(${SOURCE_PATH}/headers/librttopo_geom.h.in ${SOURCE_PATH}/headers/librttopo_geom.h @ONLY)
+  configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
+  configure_file("${SOURCE_PATH}/headers/librttopo_geom.h.in" "${SOURCE_PATH}/headers/librttopo_geom.h" @ONLY)
 
   vcpkg_build_nmake(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       TARGET librttopo.lib
   )
 
-  file(GLOB LIBRTTOPO_INCLUDE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h)
-  file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+  file(GLOB LIBRTTOPO_INCLUDE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h")
+  file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-else () # Build in UNIX
+  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+else() # Build in UNIX
   vcpkg_configure_make(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       AUTOCONFIG
       OPTIONS
           "GEOS_MAJOR_VERSION=3"
@@ -51,4 +51,4 @@ else () # Build in UNIX
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
