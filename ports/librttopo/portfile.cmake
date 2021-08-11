@@ -18,7 +18,7 @@ vcpkg_extract_source_archive_ex(
         fix-geoconfig.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(SRID_MAX 999999)
   set(SRID_USR_MAX 998999)
   configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
