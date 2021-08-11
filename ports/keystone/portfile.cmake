@@ -32,10 +32,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     # Move DLLs
     file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-    file(COPY "${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DLLS})
-    file(GLOB "DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-    file(COPY "${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE ${DLLS})
 endif()
 
