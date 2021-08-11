@@ -1,10 +1,10 @@
 # NOTE: update the version and checksum for new LIBRTTOPO release
-set(LIBRTTOPO_VERSION_STR "1.1.0-2")
-set(LIBRTTOPO_PACKAGE_SUM "cc2f646dd9ac3099c77e621984cdd2baa676ed1d8e6aaa9642afe2855e6fdef585603cc052ca09084204a1325e38bb626133072fbb5080e8adc369cc4854c40e")
+set(LIBRTTOPO_VERSION_STR "1.1.0")
+set(LIBRTTOPO_PACKAGE_SUM "d9c2f4db1261cc942152d348abb7f03e6053a63b6966e081c5381d40bbebd3c7ca1963224487355f384d7562a90287fb24d7af9e7eda4a1e230ee6441cef5de9")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://salsa.debian.org/debian-gis-team/librttopo/-/archive/debian/${LIBRTTOPO_VERSION_STR}/librttopo-debian-${LIBRTTOPO_VERSION_STR}.tar.gz"
-    FILENAME "librttopo${LIBRTTOPO_VERSION_STR}.zip"
+    URLS "https://download.osgeo.org/librttopo/src/librttopo-${LIBRTTOPO_VERSION_STR}.tar.gz"
+    FILENAME "librttopo-${LIBRTTOPO_VERSION_STR}.tar.gz"
     SHA512 ${LIBRTTOPO_PACKAGE_SUM}
 )
 
@@ -20,10 +20,8 @@ vcpkg_extract_source_archive_ex(
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-  set(SRID_MAX 999999)
-  set(SRID_USR_MAX 998999)
+  file(REMOVE "${SOURCE_PATH}/src/rttopo_config.h")
   configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
-  configure_file("${SOURCE_PATH}/headers/librttopo_geom.h.in" "${SOURCE_PATH}/headers/librttopo_geom.h" @ONLY)
 
   vcpkg_build_nmake(
       SOURCE_PATH "${SOURCE_PATH}"
