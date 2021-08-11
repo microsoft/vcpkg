@@ -23,6 +23,7 @@ vcpkg_from_github(
       0006-fix-uwp.patch
       0008-devendor-quirc.patch
       0009-fix-qt-integration.patch
+      0010-fix-uwp-tiff-imgcodecs.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
