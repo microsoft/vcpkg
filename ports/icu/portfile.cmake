@@ -150,11 +150,13 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/lib/icu
+    ${CURRENT_PACKAGES_DIR}/lib64/icu
     ${CURRENT_PACKAGES_DIR}/debug/lib/icu
     ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
 
 file(GLOB TEST_LIBS
     ${CURRENT_PACKAGES_DIR}/lib/*test*
+    ${CURRENT_PACKAGES_DIR}/lib64/*test*
     ${CURRENT_PACKAGES_DIR}/debug/lib/*test*)
 file(REMOVE ${TEST_LIBS})
 
