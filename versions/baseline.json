@@ -2258,7 +2258,7 @@
     },
     "geos": {
       "baseline": "3.9.1",
-      "port-version": 1
+      "port-version": 2
     },
     "geotrans": {
       "baseline": "3.8",
