@@ -241,16 +241,9 @@ function(vcpkg_fixup_cmake_targets)
                     if(NOT DEFINED VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
                         set(_saved_buildtrees_dir "${CURRENT_BUILDTREES_DIR}")
                         set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/get-cmake-vars")
-                        vcpkg_internal_get_cmake_vars(
-                            OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE
-                            OPTIONS
-                                -DVCPKG_LANGUAGES=CXX
-                                -DVCPKG_VARS_TO_CHECK=CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES
-                                -DVCPKG_FLAGS_TO_CHECK=
-                                -DVCPKG_ENV_VARS_TO_CHECK=
-                        )
-                        debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
-                        include("${_VCPKG_CMAKE_VARS_FILE}")
+                        z_vcpkg_get_cmake_vars(cmake_vars_file)
+                        debug_message("Including cmake vars from: ${cmake_vars_file}")
+                        include("${cmake_vars_file}")
                         set(VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES}" PARENT_SCOPE)
                         set(CURRENT_BUILDTREES_DIR "${_saved_buildtrees_dir}")
                     endif()
