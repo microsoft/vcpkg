@@ -45,9 +45,9 @@
           { "PROGNAME": "python" },
           { "PROGRAM_VERSION": "3.9.6" },
           {
-            "qualified": {
+            "if": {
               "host_architecture": "x86",
-              "if": [
+              "then": [
                 { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-win32.zip" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-win32.zip" },
@@ -104,5 +104,173 @@
         ]
       }
     }
+  ],
+  "GN": [
+    { "PROGNAME": "gn" },
+    { "CIPD_DOWNLOAD_GN": "https://chrome-infra-packages.appspot.com/dl/gn/gn" },
+    {
+      "if": {
+        "host_os": "LINUX",
+        "then": [
+          { "_vfa_SUPPORTED": true },
+          { "PROGRAM_VERSION": "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC"},
+          { "GN_PLATFORM": "linux-amd64"},
+          { "HASH": "871e75d7f3597b74fb99e36bb41fe5a9f8ce8a4d9f167f4729fc6e444807a59f35ec8aca70c2274a99c79d70a1108272be1ad991678a8ceb39e30f77abb13135"}
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "OSX",
+        "then": [
+          { "_vfa_SUPPORTED": true },
+          { "PROGRAM_VERSION": "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC" },
+          { "GN_PLATFORM": "mac-amd64" },
+          { "HASH": "03ee64cb15bae7fceb412900d470601090bce147cfd45eb9b46683ac1a5dca848465a5d74c55a47df7f0e334d708151249a6d37bb021de74dd48b97ed4a07937" }
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "WINDOWS",
+        "then": [
+          { "PROGRAM_VERSION": "qUkAhy9J0P7c5racy-9wB6AHNK_btS18im8S06_ehhwC" },
+          { "GN_PLATFORM": "windows-amd64" },
+          { "HASH": "263e02bd79eee0cb7b664831b7898565c5656a046328d8f187ef7ae2a4d766991d477b190c9b425fcc960ab76f381cd3e396afb85cba7408ca9e74eb32c175db" }
+        ]
+      }
+    },
+    { "SUBDIR": "@PROGRAM_VERSION@" },
+    { "URL": "@CIPD_DOWNLOAD_GN@/@GN_PLATFORM@/+/@PROGRAM_VERSION@" },
+    { "ARCHIVE": "gn-@GN_PLATFORM@.zip" }
+  ],
+  "GO": [
+    { "PROGNAME": "go" },
+    { "SUBDIR": "1.16.6.windows-386" },
+    { "PATHS": "@DOWNLOADS@/tools/go/@SUBDIR@/go/bin" },
+    { "BREW_PACKAGE_NAME": "go" },
+    { "APT_PACKAGE_NAME": "golang-go" },
+    { "URL": "https://dl.google.com/go/go@SUBDIR@.zip" },
+    { "ARCHIVE": "go@SUBDIR@.zip" },
+    { "HASH": "2a1e539ed628c0cca5935d24d22cf3a7165f5c80e12a4003ac184deae6a6d0aa31f582f3e8257b0730adfc09aeec3a0e62f4732e658c312d5382170bcd8c94d8" }
+  ],
+  "PYTHON2": [
+    { "PROGNAME": "python2" },
+    { "APT_PACKAGE_NAME": "python" },
+    { "BREW_PACKAGE_NAME": "python2" },
+    {
+      "if": {
+        "host_os": "OSX",
+        "then": [
+          { "PROGNAME": "python" }
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "WINDOWS",
+        "then": [
+          { "PROGNAME": "python" },
+          { "PROGRAM_VERSION": "2.7.18" },
+          {
+            "if": {
+              "host_architecture": "x86",
+              "then": [
+                { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
+                { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.msi" },
+                { "ARCHIVE": "python-@PROGRAM_VERSION@.msi" },
+                { "HASH": "2c112733c777ddbf189b0a54047a9d5851ebce0564cc38b9687d79ce6c7a09006109dbad8627fb1a60c3ad55e261db850d9dfa454af0533b460b2afc316fe115" }
+              ],
+              "else": [
+                { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
+                { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.amd64.msi" },
+                { "ARCHIVE": "python-@PROGRAM_VERSION@.amd64.msi" },
+                { "HASH": "6a81a413b80fd39893e7444fd47efa455d240cbb77a456c9d12f7cf64962b38c08cfa244cd9c50a65947c40f936c6c8c5782f7236d7b92445ab3dd01e82af23e" }
+              ]
+            }
+          },
+          { "PATHS": "@DOWNLOADS@/tools/python/@SUBDIR@" }
+        ]
+      }
+    }
+  ],
+  "RUBY": [
+    { "PROGNAME": "ruby" },
+    { "PROGRAM_VERSION": "2.7.4-1" },
+    { "PATHS": "@DOWNLOADS@/tools/ruby/rubyinstaller-@PROGRAM_VERSION@-x86/bin" },
+    { "URL": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-@PROGRAM_VERSION@/rubyinstaller-@PROGRAM_VERSION@-x86.7z" },
+    { "ARCHIVE": "rubyinstaller-@PROGRAM_VERSION@-x86.7z" },
+    { "HASH": "4bf459c987b407bdda328c52d95060bf6ad48fc3e5ed5f64d4b205c5b4153c7a00cb6f9da6c0bcd5f2e001e9dc3dda0b72269ec4afdeffd658b93c085cd1d859" }
+  ],
+  "JOM": [
+    { "PROGNAME": "jom" },
+    { "SUBDIR": "jom-1.1.3" },
+    { "PATHS": "@DOWNLOADS@/tools/jom/@SUBDIR@" },
+    { 
+      "URL": [
+        "https://download.qt.io/official_releases/jom/jom_1_1_3.zip",
+        "https://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
+      ] 
+    },
+    { "ARCHIVE": "jom_1_1_3.zip" },
+    { "HASH": "5b158ead86be4eb3a6780928d9163f8562372f30bde051d8c281d81027b766119a6e9241166b91de0aa6146836cea77e5121290e62e31b7a959407840fc57b33" }
+  ],
+  "7Z": [
+    { "PROGNAME": "7z" },
+    { "PATHS": "@DOWNLOADS@/tools/7z/Files/7-Zip" },
+    { "URL": "https://7-zip.org/a/7z1900.msi" },
+    { "ARCHIVE": "7z1900.msi" },
+    { "HASH": "f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067" }
+  ],
+  "NINJA": [
+    { "PROGNAME": "ninja" },
+    { "PROGRAM_VERSION": "1.10.2" },
+    {
+      "if": {
+        "host_os": "FREEBSD",
+        "then": [
+          { "_vfa_SUPPORTED": false }
+        ],
+        "else": [
+          { "_vfa_SUPPORTED": true }
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "WINDOWS",
+        "then": [
+          { "ARCHIVE": "ninja-win-@PROGRAM_VERSION@.zip" },
+          { "SUBDIR": "@PROGRAM_VERSION@-windows" },
+          { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-win.zip" },
+          { "HASH": "6004140d92e86afbb17b49c49037ccd0786ce238f340f7d0e62b4b0c29ed0d6ad0bab11feda2094ae849c387d70d63504393714ed0a1f4d3a1f155af7a4f1ba3" }
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "OSX",
+        "then": [
+          { "ARCHIVE": "ninja-mac-@PROGRAM_VERSION@.zip" },
+          { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-mac.zip" },
+          { "SUBDIR": "@PROGRAM_VERSION@-osx" },
+          { "PATHS": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-osx" },
+          { "HASH": "bcd12f6a3337591306d1b99a7a25a6933779ba68db79f17c1d3087d7b6308d245daac08df99087ff6be8dc7dd0dcdbb3a50839a144745fa719502b3a7a07260b" }
+        ]
+      }
+    },
+    {
+      "if": {
+        "host_os": "LINUX",
+        "then": [
+          { "ARCHIVE": "ninja-linux-@PROGRAM_VERSION@.zip" },
+          { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-linux.zip" },
+          { "SUBDIR": "@PROGRAM_VERSION@-linux" },
+          { "PATHS": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-linux" },
+          { "HASH": "93e802e9c17fb59636cddde4bad1ddaadad624f4ecfee00d5c78790330a4e9d433180e795718cda27da57215ce643c3929cf72c85337ee019d868c56f2deeef3" }
+        ]
+      }
+    },
+    { "VERSION_CMD": "--version" }
   ]
 }
