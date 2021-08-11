@@ -1078,6 +1078,10 @@
     },
     "bshoshany-thread-pool": {
       "baseline": "1.9",
+	   port-version : 0
+	},
+    "bsa": {
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "bsio": {
