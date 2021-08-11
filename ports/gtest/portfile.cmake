@@ -10,9 +10,15 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-main-lib-path.patch
+        fix-cxx-standard.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cxx17 GTEST_USE_CXX17
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,6 +28,7 @@ vcpkg_configure_cmake(
         -DBUILD_GTEST=ON
         -DCMAKE_DEBUG_POSTFIX=d
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

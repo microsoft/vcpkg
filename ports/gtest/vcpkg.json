@@ -1,6 +1,12 @@
 {
   "name": "gtest",
   "version-semver": "1.11.0",
+  "port-version": 1,
   "description": "GoogleTest and GoogleMock testing frameworks",
-  "homepage": "https://github.com/google/googletest"
+  "homepage": "https://github.com/google/googletest",
+  "features": {
+    "cxx17": {
+      "description": "Enable compiler C++17."
+    }
+  }
 }
