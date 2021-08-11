@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-makefiles.patch
         geos-config.patch
+        fix-pc-file.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -44,6 +45,7 @@ else() # Build in UNIX
           "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
   )
   vcpkg_install_make()
+  vcpkg_fixup_pkgconfig()
 endif()
 
 # Handle copyright
