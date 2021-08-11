@@ -28,6 +28,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    #For windows, do not build kstool if building DLL https://github.com/keystone-engine/keystone/blob/master/CMakeLists.txt#L74
     vcpkg_copy_tools(TOOL_NAMES kstool AUTO_CLEAN)
 else()
     # Move DLLs
