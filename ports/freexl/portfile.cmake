@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
       fix-sources.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(LIBS_ALL_DBG 
       "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
       \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
@@ -54,7 +54,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       endif()
     endif()
 
-elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
+else() # Build in UNIX
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -63,8 +63,6 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
 
-else()# Other build system
-    message(FATAL_ERROR "Unsupported build system.")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
