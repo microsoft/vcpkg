@@ -313,8 +313,8 @@
       "port-version": 1
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.0.1",
-      "port-version": 1
+      "baseline": "12.1.0",
+      "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
       "baseline": "12.0.1",
