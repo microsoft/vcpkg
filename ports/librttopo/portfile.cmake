@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 # NOTE: update the version and checksum for new LIBRTTOPO release
 set(LIBRTTOPO_VERSION_STR "1.1.0-2")
 set(LIBRTTOPO_PACKAGE_SUM "cc2f646dd9ac3099c77e621984cdd2baa676ed1d8e6aaa9642afe2855e6fdef585603cc052ca09084204a1325e38bb626133072fbb5080e8adc369cc4854c40e")
@@ -15,10 +13,12 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-makefiles.patch
-        fix-geoconfig.patch
+        geos-config.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
   set(SRID_MAX 999999)
   set(SRID_USR_MAX 998999)
   configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
@@ -38,15 +38,11 @@ else() # Build in UNIX
   vcpkg_configure_make(
       SOURCE_PATH "${SOURCE_PATH}"
       AUTOCONFIG
-      OPTIONS
-          "GEOS_MAJOR_VERSION=3"
-          "GEOS_MINOR_VERSION=8"
       OPTIONS_DEBUG
-          "GEOS_LDFLAGS=-lgeos_cd -lgeosd -lm"
+          "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
       OPTIONS_RELEASE
-          "GEOS_LDFLAGS=-lgeos_c -lgeos -lm"
+          "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
   )
-
   vcpkg_install_make()
 endif()
 
