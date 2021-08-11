@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
   PATCHES
       fix-makefiles.patch
       fix-sources.patch
+      fix-pc-file.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
