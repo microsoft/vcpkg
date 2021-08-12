@@ -2693,8 +2693,8 @@
       "port-version": 0
     },
     "immer": {
-      "baseline": "2019-06-07",
-      "port-version": 0
+      "baseline": "2021-05-03",
+      "port-version": 2
     },
     "implot": {
       "baseline": "0.11",
