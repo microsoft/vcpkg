@@ -457,7 +457,6 @@ function(vcpkg_configure_make)
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(EXTRA_QUOTES)
         set(prefix_var "\${prefix}")
     endif()
 
@@ -484,8 +483,8 @@ function(vcpkg_configure_make)
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
-    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}")
-    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}")
+    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${_VCPKG_PREFIX}")
+    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${_VCPKG_PREFIX}/debug")
     if(NOT _csc_NO_ADDITIONAL_PATHS)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                             # Important: These should all be relative to prefix!
