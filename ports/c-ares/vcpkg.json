@@ -1,7 +1,6 @@
 {
   "name": "c-ares",
-  "version": "1.17.1",
-  "port-version": 2,
+  "version": "1.17.2",
   "description": "A C library for asynchronous DNS requests",
   "homepage": "https://github.com/c-ares/c-ares",
   "supports": "!uwp"
