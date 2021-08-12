@@ -17,7 +17,7 @@
       "description": "Whether to include the Elasticsearch Client in the SDK"
     },
     "etw": {
-      "description": "Whether to include the ETW Exporter in the SDK (TBD: Windows only)"
+      "description": "Whether to include the ETW Exporter in the SDK"
     },
     "jaeger": {
       "description": "Whether to include the Jaeger exporter",
