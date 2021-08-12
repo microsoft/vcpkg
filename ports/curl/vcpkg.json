@@ -1,10 +1,17 @@
 {
   "name": "curl",
-  "version": "7.74.0",
-  "port-version": 8,
+  "version": "7.78.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://github.com/curl/curl",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
@@ -37,10 +44,35 @@
         "nghttp2"
       ]
     },
+    "idn": {
+      "description": "Default IDN support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "winidn"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "idn2"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
     "idn2": {
       "description": "idn2 support (libidn2)",
       "dependencies": [
-        "libidn2"
+        "libidn2",
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        }
       ]
     },
     "mbedtls": {
@@ -108,7 +140,7 @@
           "name": "curl",
           "default-features": false,
           "features": [
-            "winssl"
+            "schannel"
           ],
           "platform": "(windows & !uwp) | mingw"
         },
@@ -128,11 +160,27 @@
     "tool": {
       "description": "Builds curl executable"
     },
+    "winidn": {
+      "description": "WinIDN support"
+    },
+    "winldap": {
+      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        }
+      ]
+    },
     "winssl": {
       "description": "Legacy name for schannel",
       "dependencies": [
         {
           "name": "curl",
+          "default-features": false,
           "features": [
             "schannel"
           ]
