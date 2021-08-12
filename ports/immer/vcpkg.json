@@ -1,0 +1,15 @@
+{
+  "name": "immer",
+  "version-string": "2021-05-03",
+  "port-version": 2,
+  "description": "Postmodern immutable and persistent data structures for C++",
+  "homepage": "https://sinusoid.es/immer/",
+  "dependencies": [
+    "vcpkg-cmake-config"
+  ],
+  "features": {
+    "docs": {
+      "description": "Build documentation"
+    }
+  }
+}
