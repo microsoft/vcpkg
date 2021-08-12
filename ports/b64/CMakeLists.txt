@@ -4,7 +4,7 @@ project(b64)
 set(SOURCE_FILES src/cdecode.c src/cencode.c)
 set(HEADER_FILES include/b64/cdecode.h include/b64/cencode.h include/b64/decode.h include/b64/encode.h)
 
-set(LIBB64_EXPORTS 1)
+add_compile_definitions(-DLIBB64_EXPORTS)
 add_library(b64 ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(b64 PRIVATE include)
 
