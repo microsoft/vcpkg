@@ -311,7 +311,9 @@ else()
                 cmake_policy(POP)
                 return()
             endif()
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "amd64")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH s390x)
