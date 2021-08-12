@@ -1,0 +1,10 @@
+{
+  "name": "zug",
+  "version-string": "2021-04-23",
+  "port-version": 1,
+  "description": "Transducers for C++",
+  "homepage": "https://sinusoid.es/zug/",
+  "dependencies": [
+    "vcpkg-cmake-config"
+  ]
+}
