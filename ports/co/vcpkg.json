@@ -1,0 +1,16 @@
+{
+  "name": "co",
+  "version-string": "2.0.1",
+  "description": "A go-style coroutine library in C++11 and more",
+  "homepage": "https://github.com/idealvin/co",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ]
+    }
+  ]
+}
