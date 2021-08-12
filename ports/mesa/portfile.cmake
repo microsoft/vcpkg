@@ -16,8 +16,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.1.2 
-    SHA512 746ef292dd93ddd23ab34e18e87196db63302defd99357f31ac24876003c75b32cfa8ed38d0292271cd9142a056f6a6549ffcd0f086d0c69c4ff83ac7195188c
+    REF mesa-21.1.6
+    SHA512 93a44c6a83c03fcf3bbcc650430f8f88f5e4ec001ac982f5359b70c840ed43980ae9734db2ad77ef9bb958187948364f32e601d5a5f0087c7adb990073c33339
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
