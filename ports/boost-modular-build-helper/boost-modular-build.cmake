@@ -300,7 +300,10 @@ function(boost_modular_build)
     endif()
 
     set(MSVC_VERSION)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v143")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.3)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
         list(APPEND _bm_OPTIONS toolset=msvc)
         set(MSVC_VERSION 14.2)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -410,6 +413,7 @@ function(boost_modular_build)
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
         string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
         string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
+        string(REPLACE "-vc143-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2022 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries

@@ -1,7 +1,7 @@
 {
   "name": "coroutine",
   "version-string": "1.5.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ 20 Coroutines helper/example library",
   "homepage": "https://github.com/luncliff/coroutine",
   "supports": "!uwp",

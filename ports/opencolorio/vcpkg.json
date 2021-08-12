@@ -1,29 +1,25 @@
 {
   "name": "opencolorio",
-  "version-semver": "1.1.1",
-  "port-version": 5,
+  "version-semver": "2.0.1",
   "description": "OpenColorIO (OCIO) is a complete color management solution geared towards motion picture production with an emphasis on visual effects and computer animation. OCIO provides a straightforward and consistent user experience across all supporting applications while allowing for sophisticated back-end configuration options suitable for high-end production usage. OCIO is compatible with the Academy Color Encoding Specification (ACES) and is LUT-format agnostic, supporting many popular formats.",
   "homepage": "https://opencolorio.org/",
   "dependencies": [
+    "expat",
+    "openexr",
+    "pystring",
     {
-      "name": "freeglut",
-      "default-features": false
+      "name": "vcpkg-cmake",
+      "host": true
     },
-    {
-      "name": "glew",
-      "default-features": false
-    },
-    {
-      "name": "lcms",
-      "default-features": false
-    },
-    {
-      "name": "tinyxml",
-      "default-features": false
-    },
-    {
-      "name": "yaml-cpp",
-      "default-features": false
+    "yaml-cpp"
+  ],
+  "features": {
+    "tools": {
+      "description": "Installs tools",
+      "dependencies": [
+        "glew",
+        "lcms"
+      ]
     }
-  ]
+  }
 }

@@ -3,6 +3,8 @@ project(tinyfiledialogs C)
 
 add_library(tinyfiledialogs tinyfiledialogs.c)
 
+target_include_directories(tinyfiledialogs INTERFACE $<INSTALL_INTERFACE:include/tinyfiledialogs>)
+
 install(
     TARGETS tinyfiledialogs
     EXPORT tinyfiledialogsConfig
