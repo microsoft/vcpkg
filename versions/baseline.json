@@ -297,8 +297,8 @@
       "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
-      "baseline": "4.0.0-beta.4",
-      "port-version": 1
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.0.1",
