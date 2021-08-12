@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8ae890373..7776e9082 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ # Generated from qtquick3d.pro.
+ 
+-cmake_minimum_required(VERSION 3.15.0)
++cmake_minimum_required(VERSION 3.17.0)
+ 
+ include(.cmake.conf)
+ project(QtQuick3D
