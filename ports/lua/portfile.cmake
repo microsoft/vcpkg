@@ -13,43 +13,42 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+# Used in cmake wrapper
+set(ENABLE_LUA_CPP 0)
+if ("cpp" IN_LIST FEATURES)
+    set(ENABLE_LUA_CPP 1)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
+    cpp COMPILE_AS_CPP
     tools INSTALL_TOOLS
 )
 if(VCPKG_TARGET_IS_IOS AND "tools" IN_LIST FEATURES)
     message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
 endif()
 
-set(ENABLE_LUA_CPP 0)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_RELEASE
-        ${FEATURE_OPTIONS}
     OPTIONS
-        -DCOMPILE_AS_CPP=OFF
+         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
 vcpkg_install_cmake()
 
-if("cpp" IN_LIST FEATURES) # lua[cpp] will create lua-c++, which uses C++ name mangling.
-    set(ENABLE_LUA_CPP 1)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS
-            ${FEATURE_OPTIONS}
-            -DCOMPILE_AS_CPP=ON
-        OPTIONS_DEBUG
-            -DSKIP_INSTALL_HEADERS=ON
-    )
-    vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua TARGET_PATH share/unofficial-lua)
+
+if("cpp" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua-cpp TARGET_PATH share/unofficial-lua-cpp)
 endif()
 
-vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES lua luac SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -59,7 +58,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endif()
 endif()
 
-# Handle post-build CMake instructions
+# Suitable for old version
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in  ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
