@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ryan-rsm-McKenzie/bsa
-    REF 2.0.2
-    SHA512 9cbb7ca890e6a05645f1f217d18f43bc2c02128d4be55973c9d252522f317af6a7798d2c6a20a2449e367cb1eeaf7ca45c5fe9f4517be2a5ae90a74e663b293e
+    REF 2.0.3
+    SHA512 b54f1cbc88e55b98b0c25ee81007dc42df736836784b2a1e2e91652b46a73054671d798cc0007ea79b7cf0c8181021bb0cbc95ae407d4a538298d668b4c8fe69
     HEAD_REF master
-	PATCHES "reduce-minimum-cmake.patch"
 )
 
 vcpkg_cmake_configure(
