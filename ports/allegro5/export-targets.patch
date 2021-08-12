@@ -1,39 +1,49 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7c5720b..d437d39 100644
+index 7c5720b..8d0bc98 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1156,6 +1156,13 @@ if(INSTALL_PKG_CONFIG_FILES)
+@@ -1156,6 +1156,17 @@ if(INSTALL_PKG_CONFIG_FILES)
      endforeach(versuffix)
  endif(INSTALL_PKG_CONFIG_FILES)
  
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-allegro5-config.cmake.in"
++file(WRITE "${CMAKE_INSTALL_PREFIX}/share/unofficial-allegro5/unofficial-allegro5-config.cmake"
 +[[
-+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-allegro5-targets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-allegroTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-allegro_audioTargets.cmake")
++file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/*Targets.cmake")
++foreach (TARGET_FILE ${TARGET_FILES})
++    include("${TARGET_FILE}")
++endforeach()
++
 +]])
-+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-allegro5-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-allegro5-config.cmake" @ONLY)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-allegro5-config.cmake DESTINATION share/unofficial-allegro5)
 +
  #-----------------------------------------------------------------------------#
  #
  #   Documentation
 diff --git a/cmake/Common.cmake b/cmake/Common.cmake
-index 74edef8..168dc8f 100644
+index 74edef8..dce1bc6 100644
 --- a/cmake/Common.cmake
 +++ b/cmake/Common.cmake
 @@ -220,6 +220,7 @@ endfunction(set_our_framework_properties)
  
  function(install_our_library target filename)
      install(TARGETS ${target}
-+            EXPORT unofficial-allegro5-targets
++            EXPORT unofficial-${target}Targets
              LIBRARY DESTINATION "lib${LIB_SUFFIX}"
              ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
              FRAMEWORK DESTINATION "${FRAMEWORK_INSTALL_PREFIX}"
-@@ -233,6 +234,8 @@ function(install_our_library target filename)
-             CONFIGURATIONS Debug RelWithDebInfo
-         )
-     endif()
-+    
-+    install(EXPORT unofficial-allegro5-targets DESTINATION share/unofficial-allegro5)
- endfunction(install_our_library)
- 
- # Unfortunately, CMake's PUBLIC_HEADER support doesn't install into nested
+@@ -227,6 +228,14 @@ function(install_our_library target filename)
+             # Doesn't work, see below.
+             # PUBLIC_HEADER DESTINATION "include"
+             )
++    export(EXPORT unofficial-${target}Targets
++           NAMESPACE unofficial-allegro5::
++           FILE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${target}Targets.cmake"
++    )
++    install(EXPORT unofficial-${target}Targets
++        NAMESPACE unofficial-allegro5::
++        DESTINATION share/unofficial-allegro5
++    )
+     if(0)
+         install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+             DESTINATION lib
