@@ -2,5 +2,16 @@
   "name": "libvpx",
   "version-semver": "1.10.0",
   "description": "The reference software implementation for the video coding formats VP8 and VP9.",
-  "homepage": "https://github.com/webmproject/libvpx"
+  "homepage": "https://github.com/webmproject/libvpx",
+  "features": {
+    "realtime": {
+      "description": "enable this option while building for real-time encoding"
+    },
+    "highbitdepth": {
+      "description": "use VP9 high bit depth (10/12) profiles"
+    },
+    "pic": {
+      "description": "generates position independent code"
+    }      
+  }  
 }

@@ -70,6 +70,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs")
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
+    if("pic" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-pic")
+    endif()  
+
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
     vcpkg_execute_required_process(
@@ -78,9 +92,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "${SOURCE_PATH}/configure"
             --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
             ${LIBVPX_CRT_LINKAGE}
-            --disable-examples
-            --disable-tools
-            --disable-docs
+            ${OPTIONS}
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME configure-${TARGET_TRIPLET})
@@ -144,6 +156,18 @@ else()
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
+    if("pic" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-pic")
+    endif()    
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
