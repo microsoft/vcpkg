@@ -9,7 +9,9 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
+    [UNADVERTISED]
     [HEAD_REF <ref>]
+    [FETCH_PARAMS <params>]
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -36,6 +38,12 @@ A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
+### UNADVERTISED
+means the given REF cannot be fetched directly but is a valid ref. 
+
+### FETCH_PARAMS
+parameters to pass to the internal fetch command. default: --depth 1 -n
+
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
 
@@ -48,9 +56,9 @@ include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "UNADVERTISED"
         "OUT_SOURCE_PATH;URL;REF;HEAD_REF;TAG"
-        "PATCHES"
+        "PATCHES;FETCH_PARAMS"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -70,10 +78,16 @@ function(vcpkg_from_git)
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
     endif()
+    if(NOT DEFINED arg_FETCH_PARAMS AND arg_UNADVERTISED)
+        set(arg_FETCH_PARAMS "")
+    endif()
+    if(NOT DEFINED arg_FETCH_PARAMS)
+        set(arg_FETCH_PARAMS --depth 1 -n)
+    endif()
 
     set(working_directory_param "")
     set(ref_to_use "${arg_REF}")
-    if(VCPKG_USE_HEAD_VERSION)
+    if(VCPKG_USE_HEAD_VERSION OR arg_UNADVERTISED)
         if(DEFINED arg_HEAD_REF)
             set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
             set(ref_to_use "${arg_HEAD_REF}")
@@ -104,17 +118,21 @@ function(vcpkg_from_git)
         )
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" --depth 1 -n
+            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${arg_FETCH_PARAMS}
             WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
-        vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" rev-parse FETCH_HEAD
-            OUTPUT_VARIABLE rev_parse_head
-            ERROR_VARIABLE rev_parse_head
-            RESULT_VARIABLE error_code
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
-        )
+        if(NOT arg_UNADVERTISED)
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" rev-parse FETCH_HEAD
+                OUTPUT_VARIABLE rev_parse_head
+                ERROR_VARIABLE rev_parse_head
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+            )
+        else()
+            set(rev_parse_head "${arg_REF}")
+        endif()
         if(error_code)
             message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
         endif()

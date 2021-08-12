@@ -10,7 +10,9 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
+    [UNADVERTISED]
     [HEAD_REF <ref>]
+    [FETCH_PARAMS <params>]
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -36,6 +38,12 @@ Example: `main`, `develop`, `HEAD`
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### UNADVERTISED
+means the given REF cannot be fetched directly but is a valid ref. 
+
+### FETCH_PARAMS
+parameters to pass to the internal fetch command. default: --depth 1 -n
 
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
