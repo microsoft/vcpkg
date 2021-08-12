@@ -6,5 +6,10 @@
   "homepage": "https://sinusoid.es/zug/",
   "dependencies": [
     "vcpkg-cmake-config"
-  ]
+  ],
+  "features": {
+    "docs": {
+      "description": "Build documentation"
+    }
+  }
 }
