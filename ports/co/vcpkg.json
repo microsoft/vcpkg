@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "A go-style coroutine library in C++11 and more",
   "homepage": "https://github.com/idealvin/co",
-  "supports": "!windows | (x86 | x64)",
+  "supports": "!uwp & (!windows | (x86 | x64))",
   "dependencies": [
     {
       "name": "curl",
