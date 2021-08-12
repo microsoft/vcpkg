@@ -63,12 +63,12 @@ blitz:arm-uwp=fail
 blosc:arm64-windows=fail
 blosc:arm-uwp=fail
 blosc:x64-uwp=fail
-bsa:arm64-windows=fail
-bsa:arm-uwp=fail
+#bsa:arm64-windows=fail
+#bsa:arm-uwp=fail
 # CI compiler does not support <compare> header
 bsa:x64-linux=fail
-bsa:x64-uwp=fail
-bsa:x86-windows=fail
+#bsa:x64-uwp=fail
+#bsa:x86-windows=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
