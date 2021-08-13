@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.5.2",
-  "port-version": 1,
+  "version": "4.5.3",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -47,12 +46,24 @@
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda",
-        "cudnn",
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
             "contrib"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cuda"
           ]
         }
       ]
