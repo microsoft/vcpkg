@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_HOST_IS_LINUX)
+    message(WARNING "rtaudio requires ALSA on Linux; this is available on ubuntu via apt install libasound2-dev")
+endif()
+
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(RTAUDIO_STATIC_MSVCRT ON)
 else()
@@ -22,7 +26,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT} ${FEATURE_OPTIONS}
+    OPTIONS
+        -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+        -DRTAUDIO_API_JACK=OFF
+        -DRTAUDIO_API_PULSE=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -31,9 +39,4 @@ vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# Version 5.1.0 has the license text embedded in the README.md, so we are including it as a standalone file in the vcpkg port
-# Current master version of rtaudio has a LICENSE file which should be used instead for ports of future releases
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
