@@ -1,5 +1,5 @@
 Source: libiconv
 Version: 1.16
-Port-Version: 9
+Port-Version: 10
 Homepage: https://www.gnu.org/software/libiconv/
 Description: GNU Unicode text conversion
