@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 08e1bfacd1bf5416b4f75cbeb0f63e327af1d14c64f67c431682494deb92fb53c111f9c1c36c61a745b3a6c5d615f7ccbe59279f1d1bc94574db92f87260152a
     HEAD_REF master
     PATCHES
-      "use-proj4.patch"
+      "use-proj.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
