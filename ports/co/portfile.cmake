@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libcurl    WITH_LIBCURL
         openssl    WITH_OPENSSL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
