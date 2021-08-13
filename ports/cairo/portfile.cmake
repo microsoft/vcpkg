@@ -44,6 +44,10 @@ else()
     list(APPEND OPTIONS -Dglib=disabled)
 endif()
 
+if("gl" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dgl-backend=gl)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
 endif()
