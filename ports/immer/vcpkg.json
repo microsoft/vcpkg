@@ -5,7 +5,14 @@
   "description": "Postmodern immutable and persistent data structures for C++",
   "homepage": "https://sinusoid.es/immer/",
   "dependencies": [
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "docs": {
