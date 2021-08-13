@@ -3290,7 +3290,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 9
+      "port-version": 10
     },
     "libics": {
       "baseline": "1.6.4",
@@ -3786,7 +3786,7 @@
     },
     "libxml2": {
       "baseline": "2.9.12",
-      "port-version": 2
+      "port-version": 3
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "opencv": {
-      "baseline": "4.5.2",
+      "baseline": "4.5.3",
       "port-version": 0
     },
     "opencv2": {
@@ -4625,12 +4625,12 @@
       "port-version": 6
     },
     "opencv3": {
-      "baseline": "3.4.14",
-      "port-version": 2
+      "baseline": "3.4.15",
+      "port-version": 0
     },
     "opencv4": {
-      "baseline": "4.5.2",
-      "port-version": 1
+      "baseline": "4.5.3",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.0",

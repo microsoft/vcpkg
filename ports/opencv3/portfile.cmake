@@ -6,13 +6,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.14")
+set(OPENCV_VERSION "3.4.15")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 b8373ead40549e3d487227947c6bd00f6eba368e48bb9356d41cb0f3bfabfb0b10b6e64712febc11ab1e5a1901b1db8b83b63ba492f4e3816c15fa7ddaaf7e69
+    SHA512 775149e56f0aa94d53eb024404866380d97ce423ef1c8343ee8f12c1377e454ae182b2528e86949b5f7250e551d464bd1a5de2e2d9f0d0e1dd3dc188a1db790d
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -116,7 +116,7 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 30f4f25e40908a9d823304197c475dc0f1ae2b24ec5b1ce0484b39959b88897d1291b5b0e12530db24af96d664e90137582e4b03e4dca7fde1319044bdec9b77
+      SHA512 639f5f869d68014fcc5041f5fe890c98635610d8b26c9964721e2fbe74ce8a12aef8f305364ff024fe0086bf2e7252c4fdd00a5de08854fdcd285c0f4916125a
       HEAD_REF master
       PATCHES
         0007-fix-hdf5.patch
@@ -351,7 +351,7 @@ vcpkg_copy_pdbs()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-find_dependency(protobuf CONFIG)
+find_dependency(Protobuf CONFIG)
 if(protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
