@@ -1,6 +1,6 @@
 {
   "name": "boost-accumulators",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost accumulators module",
   "homepage": "https://github.com/boostorg/accumulators",
   "dependencies": [
@@ -10,10 +10,8 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-fusion",
     "boost-interval",
-    "boost-iterator",
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-odeint",

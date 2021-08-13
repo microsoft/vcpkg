@@ -1,6 +1,6 @@
 {
   "name": "boost-range",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost range module",
   "homepage": "https://github.com/boostorg/range",
   "dependencies": [
@@ -8,13 +8,12 @@
     "boost-assert",
     "boost-concept-check",
     "boost-config",
-    "boost-container-hash",
     "boost-conversion",
     "boost-core",
     "boost-detail",
+    "boost-functional",
     "boost-iterator",
     "boost-mpl",
-    "boost-numeric-conversion",
     "boost-optional",
     "boost-preprocessor",
     "boost-regex",

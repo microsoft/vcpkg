@@ -1,6 +1,6 @@
 {
   "name": "boost-program-options",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost program_options module",
   "homepage": "https://github.com/boostorg/program_options",
   "dependencies": [
@@ -14,9 +14,7 @@
     "boost-core",
     "boost-detail",
     "boost-function",
-    "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true

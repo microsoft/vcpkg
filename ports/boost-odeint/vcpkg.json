@@ -1,6 +1,6 @@
 {
   "name": "boost-odeint",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "dependencies": [
@@ -12,8 +12,8 @@
     "boost-core",
     "boost-function",
     "boost-fusion",
-    "boost-iterator",
     "boost-math",
+    "boost-mpi",
     "boost-mpl",
     "boost-multi-array",
     "boost-preprocessor",

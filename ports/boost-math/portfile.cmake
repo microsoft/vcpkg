@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.76.0
-    SHA512 50967b962ac4b3cfc799733e5cbbcc15215c27135368a739d2441a70aa6e4a7ccfb617bf3ccd571201568d8bacb209d2a98acbe0593cde7714c7da9faa09ee17
+    REF boost-1.77.0
+    SHA512 8a35fff7ecb12bc8caf8951859555016caa21601d5aa21284aae83df19cde054bfe9ead4cb92341558b23794f2b7bfd37979acb9fc6b2f5546f50505adffd8d3
     HEAD_REF master
 )
 

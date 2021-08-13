@@ -1,6 +1,6 @@
 {
   "name": "boost-iostreams",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "supports": "!uwp",
@@ -22,6 +22,7 @@
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-preprocessor",
+    "boost-random",
     "boost-range",
     "boost-regex",
     "boost-smart-ptr",

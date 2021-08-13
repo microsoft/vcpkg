@@ -1,10 +1,11 @@
 {
   "name": "boost-asio",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "supports": "!emscripten",
   "dependencies": [
+    "boost-align",
     "boost-array",
     "boost-assert",
     "boost-bind",

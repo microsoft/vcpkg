@@ -1,6 +1,6 @@
 {
   "name": "boost-type-erasure",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost type_erasure module",
   "homepage": "https://github.com/boostorg/type_erasure",
   "dependencies": [
@@ -10,9 +10,8 @@
       "host": true
     },
     "boost-config",
-    "boost-detail",
+    "boost-core",
     "boost-fusion",
-    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true

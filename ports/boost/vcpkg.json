@@ -1,6 +1,6 @@
 {
   "name": "boost",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "dependencies": [
@@ -49,6 +49,7 @@
     },
     "boost-crc",
     "boost-date-time",
+    "boost-describe",
     "boost-detail",
     "boost-dll",
     "boost-dynamic-bitset",
@@ -91,6 +92,7 @@
     "boost-iterator",
     "boost-json",
     "boost-lambda",
+    "boost-lambda2",
     "boost-leaf",
     "boost-lexical-cast",
     "boost-local-function",
@@ -138,6 +140,7 @@
     },
     "boost-program-options",
     "boost-property-map",
+    "boost-property-map-parallel",
     "boost-property-tree",
     "boost-proto",
     "boost-ptr-container",

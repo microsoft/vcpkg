@@ -1,6 +1,6 @@
 {
   "name": "boost-graph",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "dependencies": [
@@ -16,12 +16,12 @@
     },
     "boost-concept-check",
     "boost-config",
-    "boost-container-hash",
     "boost-conversion",
     "boost-core",
     "boost-detail",
     "boost-foreach",
     "boost-function",
+    "boost-functional",
     "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
