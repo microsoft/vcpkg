@@ -12,17 +12,17 @@ index f6a2da5..10aa531 100644
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 3cb10a1..fc81377 100644
+index 303d4f4..b727937 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -276,7 +276,6 @@ if(MSVC)
+@@ -284,7 +284,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
 -    set(OPENCV_EXTRA_FLAGS_RELEASE "${OPENCV_EXTRA_FLAGS_RELEASE} /Zi")
      set(OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE} /debug")
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
-   endif()
+     set(OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE} /debug")
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
 index c7f9fc2..a1f657b 100644
 --- a/cmake/OpenCVGenConfig.cmake
