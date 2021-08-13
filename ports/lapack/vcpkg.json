@@ -1,0 +1,17 @@
+{
+  "name": "lapack",
+  "version-string": "3",
+  "port-version": 1,
+  "description": "Metapackage for packages which provide LAPACK",
+  "dependencies": [
+    {
+      "name": "clapack",
+      "platform": "arm & windows"
+    },
+    {
+      "name": "lapack-reference",
+      "platform": "!arm | !windows"
+    },
+    "vcpkg-fortran"
+  ]
+}
