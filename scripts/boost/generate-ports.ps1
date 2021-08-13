@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.76.0",
+    $version = "1.77.0",
     $portsDir = $null
 )
 
@@ -27,7 +27,6 @@ else
 # Clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
-    "python" = 1;
 }
 
 $per_port_data = @{
@@ -319,7 +318,8 @@ foreach ($library in $libraries)
         $groups = $groups | % {
             $_ `
                 -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
-                -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
+                -replace "boost/exception/exception.hpp","boost/throw_exception.hpp" `
+                -replace "boost/detail/workaround.hpp","boost/config/workaround.hpp" `
                 -replace "boost/detail/([^/]+)/","boost/`$1/" `
                 -replace " *# *include *[<`"]boost/([a-zA-Z0-9\._]*)[/>`"].*", "`$1" `
                 -replace "/|\.hp?p?| ","" 
@@ -327,32 +327,34 @@ foreach ($library in $libraries)
             # mappings
             Write-Verbose "${library}: $_"
             if ($_ -match "aligned_storage") { "type_traits" }
-            elseif ($_ -match "noncopyable|ref|swap|get_pointer|checked_delete|visit_each") { "core" }
+            elseif ($_ -match "checked_delete|get_pointer|non_type|noncopyable|ref|swap|visit_each") { "core" }
+            elseif ($_ -eq "iterator") { "core" }
             elseif ($_ -eq "type") { "core" }
             elseif ($_ -match "concept|concept_archetype") { "concept_check" }
-            elseif ($_ -match "unordered_") { "unordered" }
+            elseif ($_ -match "unordered_map|unordered_set") { "unordered" }
             elseif ($_ -match "integer_fwd|integer_traits") { "integer" }
-            elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior|compressed_pair") { "utility" }
-            elseif ($_ -match "^version|^workaround|^config|cstdint|cxx11_char_types|limits") { "config" }
+            elseif ($_ -match "call_traits|compressed_pair|operators|operators_v1") { "utility" }
+            elseif ($_ -match "^config|cstdint|cxx11_char_types|limits|^version") { "config" }
             elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_cast|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
-            elseif ($_ -match "iterator_adaptors|generator_iterator|pointee") { "iterator" }
+            elseif ($_ -match "function_output_iterator|generator_iterator|iterator_adaptors|pointee") { "iterator" }
             elseif ($_ -eq "regex_fwd") { "regex" }
             elseif ($_ -eq "make_default") { "convert" }
             elseif ($_ -eq "foreach_fwd") { "foreach" }
+            elseif ($_ -eq "function_equal") { "function" }
             elseif ($_ -eq "cerrno") { "system" }
             elseif ($_ -eq "circular_buffer_fwd") { "circular_buffer" }
             elseif ($_ -eq "archive") { "serialization" }
             elseif ($_ -match "none|none_t") { "optional" }
             elseif ($_ -match "cstdfloat|math_fwd") { "math" }
-            elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp>
-            elseif ($_ -match "polymorphic_cast|implicit_cast") { "conversion" }
+            elseif ($_ -eq "cast") { "numeric_conversion" }
+            elseif ($_ -match "implicit_cast|polymorphic_cast|polymorphic_pointer_cast") { "conversion" }
             elseif ($_ -eq "nondet_random") { "random" }
             elseif ($_ -eq "memory_order") { "atomic" }
-            elseif ($_ -match "blank|blank_fwd|numeric_traits|fenv") { "detail" }
+            elseif ($_ -match "blank|blank_fwd|cstdlib|numeric_traits|fenv") { "detail" }
             elseif ($_ -match "is_placeholder|mem_fn") { "bind" }
             elseif ($_ -eq "exception_ptr") { "exception" }
             elseif ($_ -match "multi_index_container|multi_index_container_fwd") { "multi_index" }
-            elseif ($_ -eq "lexical_cast") { "lexical_cast"; "math" }
+            elseif ($_ -match "basic_pointerbuf|lcast_precision") { "lexical_cast" }
             elseif ($_ -match "token_iterator|token_functions") { "tokenizer" }
             elseif ($_ -eq "numeric" -and $library -notmatch "numeric_conversion|interval|odeint|ublas") { "numeric_conversion"; "interval"; "odeint"; "ublas" }
             elseif ($_ -eq "io_fwd") { "io" }
@@ -369,31 +371,9 @@ foreach ($library in $libraries)
 
         $deps = @($deps | ? {
             # Boost contains cycles, so remove a few dependencies to break the loop.
-            (($library -notmatch "core|assert|mpl|detail|throw_exception|type_traits|^exception") -or ($_ -notmatch "utility")) `
+            (($library -notmatch "detail|type_traits") -or ($_ -notmatch "utility")) `
             -and `
-            (($library -notmatch "assert") -or ($_ -notmatch "integer"))`
-            -and `
-            (($library -notmatch "range") -or ($_ -notmatch "algorithm"))`
-            -and `
-            (($library -ne "config") -or ($_ -notmatch "integer"))`
-            -and `
-            (($library -notmatch "multiprecision") -or ($_ -notmatch "random|math"))`
-            -and `
-            (($library -notmatch "lexical_cast") -or ($_ -notmatch "math"))`
-            -and `
-            (($library -notmatch "functional") -or ($_ -notmatch "function"))`
-            -and `
-            (($library -notmatch "detail") -or ($_ -notmatch "static_assert|integer|mpl|type_traits"))`
-            -and `
-            ($_ -notmatch "mpi")`
-            -and `
-            (($library -notmatch "spirit") -or ($_ -notmatch "serialization"))`
-            -and `
-            (($library -notmatch "throw_exception") -or ($_ -notmatch "^exception"))`
-            -and `
-            (($library -notmatch "iostreams|math") -or ($_ -notmatch "random"))`
-            -and `
-            (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
+            (($library -notmatch "utility|spirit") -or ($_ -notmatch "detail"))
         } | % { $_ -replace "_","-" } | % { TransformReference $_ })
 
         $deps += @("boost-vcpkg-helpers")
