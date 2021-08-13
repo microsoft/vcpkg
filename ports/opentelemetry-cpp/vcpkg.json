@@ -10,7 +10,15 @@
   "supports": "!(windows & !static)",
   "dependencies": [
     "curl",
-    "nlohmann-json"
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "elasticsearch": {
