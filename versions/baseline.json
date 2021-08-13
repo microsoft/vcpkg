@@ -2014,7 +2014,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 13
+      "port-version": 14
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -4622,7 +4622,7 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 5
+      "port-version": 6
     },
     "opencv3": {
       "baseline": "3.4.15",
