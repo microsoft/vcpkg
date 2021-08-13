@@ -1,3 +1,4 @@
+# It's not safe to use dynamic library, as we hooked some system APIs in CO.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
