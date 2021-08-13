@@ -30,17 +30,17 @@
         "freetype"
       ]
     },
-    "gobject": {
-      "description": "build gobject module",
-      "dependencies": [
-        "glib"
-      ]
-    },
     "gl": {
       "description": "gl-backend opengl",
       "dependencies": [
         "opengl",
         "opengl-registry"
+      ]
+    },
+    "gobject": {
+      "description": "build gobject module",
+      "dependencies": [
+        "glib"
       ]
     },
     "x11": {
