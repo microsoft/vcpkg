@@ -79,9 +79,9 @@ function(z_vcpkg_find_acquire_program_set_variables variables_array out_var_out_
       endif()
 
       if(should_do_else_branch)
-        string(JSON new_variables_array GET "${variables_array}" "${index}" "qualified" "$else")
+        string(JSON new_variables_array GET "${variables_array}" "${index}" "$if" "$else")
       else()
-        string(JSON new_variables_array GET "${variables_array}" "${index}" "qualified" "$then")
+        string(JSON new_variables_array GET "${variables_array}" "${index}" "$if" "$then")
       endif()
       z_vcpkg_find_acquire_program_set_variables("${new_variables_array}" vars_set_in_subcall)
       vcpkg_list(APPEND out_variables ${vars_set_in_subcall})
