@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENSSL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
