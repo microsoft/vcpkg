@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    vcpkg_fail_port_install(ON_ARCH "arm" ON_TAREGT "uwp")
+endif()
+
 # It's not safe to use dynamic library, as we hooked some system APIs in CO.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -17,6 +21,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
