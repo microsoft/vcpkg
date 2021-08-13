@@ -58,7 +58,7 @@ function(vcpkg_find_fortran additional_cmake_args_out)
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-windows-default-manifest-6.4-3-any.pkg.tar.xz"
                         5b99abc55eaa74cf85ca64a9c91542554cb5c1098bc71effba9bd36242694cfd348503fcd3507fb9ba97486108c092c925e2f38cd744493386b3dc9ab28bc526
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zlib-1.2.11-8-any.pkg.tar.zst"
-                        459850a8c42b1d497268736629ef713beee70cd0d3161d02c7a9fad08aca4560f4e17ba02d5cabda8a19d7c614f7e0ef5a6ec13afd91dd3004057139a5469c8f
+                        46bbf0f28d9faf047221def19e6f94b9556fc6c951cad9c4fb657fde9d15303b9cb64aad11eaa57892cde49eafb43fbe2ec6da6b612449a20ae49dc8233e945b
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zstd-1.4.5-1-any.pkg.tar.zst"
                         68f431073717b59549ab0fd26be8df8afcb43f3dd85be2ffcbc7d1a629999eed924656a7fc3f50937b2e6605a5067542d016181106b7bc3408b89b268ced5d23
                 )
