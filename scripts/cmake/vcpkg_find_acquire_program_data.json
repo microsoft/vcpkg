@@ -39,21 +39,21 @@
   ],
   "PYTHON3": [
     {
-      "if": {
-        "host_os": "WINDOWS",
-        "then": [
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
           { "PROGNAME": "python" },
           { "PROGRAM_VERSION": "3.9.6" },
           {
-            "if": {
-              "host_architecture": "x86",
-              "then": [
+            "$if": {
+              "$host_architecture": "x86",
+              "$then": [
                 { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-win32.zip" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-win32.zip" },
                 { "HASH": "4b2a0670094e639dcb2b762a02de8cdadd0af3657c463d9ff45af2541c0306496b991ae5402f119443ca891e918685bb57d18f13975f0493d349d864ff3e3a2c" }
               ],
-              "else": [
+              "$else": [
                 { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-amd64.zip" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-amd64.zip" },
@@ -71,7 +71,7 @@
             ]
           }
         ],
-        "else": [
+        "$else": [
           { "PROGNAME": "python3" },
           { "BREW_PACKAGE_NAME": "python" },
           { "APT_PACKAGE_NAME": "python3" }
@@ -82,9 +82,9 @@
   "GIT": [
     { "PROGNAME": "git" },
     {
-      "if": {
-        "host_os": "WINDOWS",
-        "then": [
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
           { "GIT_SHORT_VERSION": "2.32.0" },
           { "PROGRAM_VERSION": "2.32.0.2" },
           { "SUBDIR": "git-@PROGRAM_VERSION@-2-windows" },
@@ -98,7 +98,7 @@
             ]
           }
         ],
-        "else": [
+        "$else": [
           { "BREW_PACKAGE_NAME": "git" },
           { "APT_PACKAGE_NAME": "git" }
         ]
@@ -109,9 +109,9 @@
     { "PROGNAME": "gn" },
     { "CIPD_DOWNLOAD_GN": "https://chrome-infra-packages.appspot.com/dl/gn/gn" },
     {
-      "if": {
-        "host_os": "LINUX",
-        "then": [
+      "$if": {
+        "$host_os": "LINUX",
+        "$then": [
           { "_vfa_SUPPORTED": true },
           { "PROGRAM_VERSION": "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC"},
           { "GN_PLATFORM": "linux-amd64"},
@@ -120,9 +120,9 @@
       }
     },
     {
-      "if": {
-        "host_os": "OSX",
-        "then": [
+      "$if": {
+        "$host_os": "OSX",
+        "$then": [
           { "_vfa_SUPPORTED": true },
           { "PROGRAM_VERSION": "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC" },
           { "GN_PLATFORM": "mac-amd64" },
@@ -131,9 +131,9 @@
       }
     },
     {
-      "if": {
-        "host_os": "WINDOWS",
-        "then": [
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
           { "PROGRAM_VERSION": "qUkAhy9J0P7c5racy-9wB6AHNK_btS18im8S06_ehhwC" },
           { "GN_PLATFORM": "windows-amd64" },
           { "HASH": "263e02bd79eee0cb7b664831b7898565c5656a046328d8f187ef7ae2a4d766991d477b190c9b425fcc960ab76f381cd3e396afb85cba7408ca9e74eb32c175db" }
@@ -159,29 +159,29 @@
     { "APT_PACKAGE_NAME": "python" },
     { "BREW_PACKAGE_NAME": "python2" },
     {
-      "if": {
-        "host_os": "OSX",
-        "then": [
+      "$if": {
+        "$host_os": "OSX",
+        "$then": [
           { "PROGNAME": "python" }
         ]
       }
     },
     {
-      "if": {
-        "host_os": "WINDOWS",
-        "then": [
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
           { "PROGNAME": "python" },
           { "PROGRAM_VERSION": "2.7.18" },
           {
-            "if": {
-              "host_architecture": "x86",
-              "then": [
+            "$if": {
+              "$host_architecture": "x86",
+              "$then": [
                 { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.msi" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@.msi" },
                 { "HASH": "2c112733c777ddbf189b0a54047a9d5851ebce0564cc38b9687d79ce6c7a09006109dbad8627fb1a60c3ad55e261db850d9dfa454af0533b460b2afc316fe115" }
               ],
-              "else": [
+              "$else": [
                 { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.amd64.msi" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@.amd64.msi" },
@@ -226,20 +226,20 @@
     { "PROGNAME": "ninja" },
     { "PROGRAM_VERSION": "1.10.2" },
     {
-      "if": {
-        "host_os": "FREEBSD",
-        "then": [
+      "$if": {
+        "$host_os": "FREEBSD",
+        "$then": [
           { "_vfa_SUPPORTED": false }
         ],
-        "else": [
+        "$else": [
           { "_vfa_SUPPORTED": true }
         ]
       }
     },
     {
-      "if": {
-        "host_os": "WINDOWS",
-        "then": [
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
           { "ARCHIVE": "ninja-win-@PROGRAM_VERSION@.zip" },
           { "SUBDIR": "@PROGRAM_VERSION@-windows" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-win.zip" },
@@ -248,9 +248,9 @@
       }
     },
     {
-      "if": {
-        "host_os": "OSX",
-        "then": [
+      "$if": {
+        "$host_os": "OSX",
+        "$then": [
           { "ARCHIVE": "ninja-mac-@PROGRAM_VERSION@.zip" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-mac.zip" },
           { "SUBDIR": "@PROGRAM_VERSION@-osx" },
@@ -260,9 +260,9 @@
       }
     },
     {
-      "if": {
-        "host_os": "LINUX",
-        "then": [
+      "$if": {
+        "$host_os": "LINUX",
+        "$then": [
           { "ARCHIVE": "ninja-linux-@PROGRAM_VERSION@.zip" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-linux.zip" },
           { "SUBDIR": "@PROGRAM_VERSION@-linux" },
@@ -272,5 +272,301 @@
       }
     },
     { "VERSION_CMD": "--version" }
+  ],
+  "NUGET": [
+    { "PROGNAME": "nuget" },
+    { "SUBDIR": "5.10.0" },
+    { "PATHS": "@DOWNLOADS@/tools/nuget-@SUBDIR@-windows" },
+    { "BREW_PACKAGE_NAME": "nuget" },
+    { "URL": "https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe" },
+    { "final_program_name": "nuget.exe" },
+    { "ARCHIVE": "nuget.5.10.0.exe" },
+    { "NOEXTRACT": true },
+    { "HASH": "c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e" }
+  ],
+  "MESON": [
+    { "PROGNAME": "meson" },
+    { "PROGRAM_VERSION": "0.58.1" },
+    { "REQUIRED_INTERPRETER": "PYTHON3" },
+    { "APT_PACKAGE_NAME": "meson" },
+    { "BREW_PACKAGE_NAME": "meson" },
+    { "SCRIPTNAME": [ "meson", "meson.py" ] },
+    { "REF": "aeda7f249c4a5dbbecc52e44f382246a2377b5b0" },
+    { "PATHS": "@DOWNLOADS@/tools/meson/meson-@REF@" },
+    { "URL": "https://github.com/mesonbuild/meson/archive/@REF@.tar.gz" },
+    { "ARCHIVE": "meson-@REF@.tar.gz" },
+    {
+      "$comment": [
+        { "PATHS": "@DOWNLOADS@/tools/meson/meson-@PROGRAM_VERSION@" },
+        { "URL": "https://github.com/mesonbuild/meson/releases/download/@PROGRAM_VERSION@/meson-@PROGRAM_VERSION@.tar.gz" },
+        { "ARCHIVE": "meson-@PROGRAM_VERSION@.tar.gz" }
+      ]
+    },
+    { "HASH": "18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2" },
+    { "_vfa_SUPPORTED": true },
+    { "VERSION_CMD": "--version" }
+  ],
+  "FLEX": [
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          {
+            "SOURCEFORGE_ARGS": [
+              "REPO", "winflexbison",
+              "FILENAME", "winflexbison-2.5.16.zip",
+              "SHA512", "0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123",
+              "NO_REMOVE_ONE_LEVEL",
+              "WORKING_DIRECTORY", "@DOWNLOADS@/tools/winflexbison"
+            ]
+          },
+          { "SOURCEFORGE_PATHS": "$" },
+          { "PROGNAME": "win_flex" }
+        ],
+        "$else": [
+          { "PROGNAME": "flex" },
+          { "APT_PACKAGE_NAME": "flex" },
+          { "BREW_PACKAGE_NAME": "flex" }
+        ]
+      }
+    }
+  ],
+  "BISON": [
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          { 
+            "SOURCEFORGE_ARGS": [
+              "REPO", "winflexbison",
+              "FILENAME", "winflexbison-2.5.16.zip",
+              "SHA512", "0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123",
+              "NO_REMOVE_ONE_LEVEL",
+              "WORKING_DIRECTORY", "@DOWNLOADS@/tools/winflexbison"
+            ]
+          },
+          { "SOURCEFORGE_PATHS": "$" },
+          { "PROGNAME": "win_bison" }
+        ],
+        "$else": [
+          { "PROGNAME": "bison" },
+          { "APT_PACKAGE_NAME": "bison" },
+          { "BREW_PACKAGE_NAME": "bison" }
+        ]
+      }
+    }
+  ],
+  "CLANG": [
+    { "PROGNAME": "clang" },
+    { "SUBDIR": "clang-12.0.0" },
+    { "PROGRAM_VERSION": "12.0.0" },
+    { "BREW_PACKAGE_NAME": "llvm" },
+    { "APT_PACKAGE_NAME": "clang" },
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          { 
+            "PATHS": [
+              "$ENV{LLVMInstallDir}/x64/bin",
+              "$ENV{LLVMInstallDir}/bin",
+              "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin",
+              "$ENV{VCINSTALLDIR}/Tools/Llvm/bin",
+              "@DOWNLOADS@/tools/@SUBDIR@-windows/bin",
+              "@DOWNLOADS@/tools/clang/@SUBDIR@/bin"
+            ]
+          },
+          {
+            "$if": {
+              "$host_architecture": "x86",
+              "$then": [
+                { "URL": "https://github.com/llvm/llvm-project/releases/download/llvmorg-@PROGRAM_VERSION@/LLVM-@PROGRAM_VERSION@-win32.exe" },
+                { "ARCHIVE": "LLVM-@PROGRAM_VERSION@-win32.7z.exe" },
+                { "HASH": "92fa5252fd08c1414ee6d71e2544cd2c44872124c47225f8d98b3af711d20e699f2888bc30642dfd00e005013da1607a593674fb4878951cc434694f9a119199" }
+              ],
+              "$else": [
+                { "URL": "https://github.com/llvm/llvm-project/releases/download/llvmorg-@PROGRAM_VERSION@/LLVM-@PROGRAM_VERSION@-win64.exe" },
+                { "ARCHIVE": "LLVM-@PROGRAM_VERSION@-win64.7z.exe" },
+                { "HASH": "67a9b54abad5143fa5f79f0cfc184be1394c9fc894fa9cee709943cb6ccbde8f0ea6003d8fcc20eccf035631abe4009cc0f694ac84e7879331cebba8125e4c7f" }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "GPERF": [
+    { "PROGNAME": "gperf" },
+    { "PROGRAM_VERSION": "3.0.1" },
+    { "PATHS": "@DOWNLOADS@/tools/gperf/bin" },
+    { "URL": "https://sourceforge.net/projects/gnuwin32/files/gperf/@PROGRAM_VERSION@/gperf-@PROGRAM_VERSION@-bin.zip/download" },
+    { "ARCHIVE": "gperf-@PROGRAM_VERSION@-bin.zip" },
+    { "HASH": "3f2d3418304390ecd729b85f65240a9e4d204b218345f82ea466ca3d7467789f43d0d2129fcffc18eaad3513f49963e79775b10cc223979540fa2e502fe7d4d9" }
+  ],
+  "GASPREPROCESSOR": [
+    { "NOEXTRACT": "true" },
+    { "PROGNAME": "gas-preprocessor" },
+    { "SUBDIR": "4daa6115" },
+    { "REQUIRED_INTERPRETER": "PERL" },
+    { "SCRIPTNAME": "gas-preprocessor.pl" },
+    { "PATHS": "@DOWNLOADS@/tools/gas-preprocessor/@SUBDIR@" },
+    { "final_program_name": "gas-preprocessor.pl" },
+    { "URL": "https://raw.githubusercontent.com/FFmpeg/gas-preprocessor/4daa611556a0558dfe537b4f7ad80f7e50a079c1/gas-preprocessor.pl" },
+    { "ARCHIVE": "gas-preprocessor-@SUBDIR@.pl" },
+    { "HASH": "2737ba3c1cf85faeb1fbfe015f7bad170f43a857a50a1b3d81fa93ba325d481f73f271c5a886ff8b7eef206662e19f0e9ef24861dfc608b67b8ea8a2062dc061" }
+  ],
+  "DARK": [
+    { "PROGNAME": "dark" },
+    { "SUBDIR": "wix311-binaries" },
+    { "PATHS": "@DOWNLOADS@/tools/dark/@SUBDIR@" },
+    { "URL": "https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip" },
+    { "ARCHIVE": "wix311-binaries.zip" },
+    { "HASH": "74f0fa29b5991ca655e34a9d1000d47d4272e071113fada86727ee943d913177ae96dc3d435eaf494d2158f37560cd4c2c5274176946ebdb17bf2354ced1c516" }
+  ],
+  "SCONS": [
+    { "PROGNAME": "scons" },
+    { "PROGRAM_VERSION": "4.1.0" },
+    { "SUBDIR": "@PROGRAM_VERSION@" },
+    { "REQUIRED_INTERPRETER": "PYTHON2" },
+    { "SCRIPTNAME": "scons.py" },
+    { "URL": "https://sourceforge.net/projects/scons/files/scons-local-@PROGRAM_VERSION@.zip/download" },
+    { "ARCHIVE": "scons-local-@PROGRAM_VERSION@.zip" },
+    { "HASH": "b173176ce8aca25039c64fcc68ec1b9ad31e03a926fd545e7631b3f9b374d914adffc593f505e3e7e2867b0ffe85e8deb0b39afe314edf05d02974ce5db1badb" }
+  ],
+  "SWIG": [
+    { "PROGNAME": "swig" },
+    { "PROGRAM_VERSION": "4.0.2" },
+    { "APT_PACKAGE_NAME": "swig" },
+    { "BREW_PACKAGE_NAME": "swig" },
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          { 
+            "SOURCEFORGE_ARGS": [
+              "REPO", "swig/swigwin",
+              "FILENAME", "swigwin-@PROGRAM_VERSION@.zip",
+              "SHA512", "b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d",
+              "NO_REMOVE_ONE_LEVEL",
+              "WORKING_DIRECTORY", "@DOWNLOADS@/tools/swig"
+            ]
+          },
+          { "SUBDIR": "b8f105f9b9-f0518bc3b7/swigwin-@PROGRAM_VERSION@" }
+        ]
+      }
+    }
+  ],
+  "DOXYGEN": [
+    { "PROGNAME": "doxygen" },
+    { "PROGRAM_VERSION": "1.9.1" },
+    {
+      "SOURCEFORGE_ARGS": [
+        "REPO", "doxygen",
+        "REF", "rel-@PROGRAM_VERSION@",
+        "FILENAME", "doxygen-@PROGRAM_VERSION@.windows.bin.zip",
+        "SHA512", "c3eeb6b9fa4eab70fb6b0864fbbf94fb8050f3fee38d117cf470921a80e3569cc1c8b0272604d6731e05f01790cfaa70e159bec5d0882fc4f2d8ae4a5d52a21b",
+        "NO_REMOVE_ONE_LEVEL",
+        "WORKING_DIRECTORY", "@DOWNLOADS@/tools/doxygen"
+      ]
+    },
+    { "SOURCEFORGE_PATHS": "$" }
+  ],
+  "BAZEL": [
+    { "PROGNAME": "bazel" },
+    { "PROGRAM_VERSION": "4.1.0" },
+    { "final_program_name": "bazel" },
+    {
+      "$if": {
+        "$host_os": "LINUX",
+        "$then": [
+          { "_vfa_SUPPORTED": "ON" },
+          { "SUBDIR": "@PROGRAM_VERSION@-linux" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64" },
+          { "ARCHIVE": "bazel-@SUBDIR@-x86_64" },
+          { "NOEXTRACT": "ON" },
+          { "HASH": "50aa0894dbeedb9189a56f17baa8cecfa55c5f9c1f93a61b9ab5e10984754a400884fc9802b4979f536778e15f813a72807396b4b47694e4c05eadb841361c69" }
+        ]
+      }
+    },
+    {
+      "$if": {
+        "$host_os": "OSX",
+        "$then": [
+          { "_vfa_SUPPORTED": "ON" },
+          { "SUBDIR": "@PROGRAM_VERSION@-darwin" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64" },
+          { "ARCHIVE": "bazel-@SUBDIR@-x86_64" },
+          { "NOEXTRACT": "ON" },
+          { "HASH": "3500560c9d49d37a1ead2d2777d673c6f1874582883e141ecd5b3991005b1b6b8aab5f255c187133d771497c2a956f5c1e0dfad04dc453525634537e65b649af" }
+        ]
+      }
+    },
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          { "SUBDIR": "@PROGRAM_VERSION@-windows" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64.zip" },
+          { "ARCHIVE": "bazel-@SUBDIR@-x86_64.zip" },
+          { "HASH": "3954ab54b465d62eef397767dac7ce21d06ac8ea3e1571d0e7b1f0ea8b5c2cf44eea5d252b85a63a1e1a08dbe9a219783cc23c2888673c35e2df03edfdc9e5a7" }
+        ]
+      }
+    }
+  ],
+  "ARIA2": [
+    { "PROGNAME": "aria2c" },
+    { "ARIA2_VERSION": "1.35.0" },
+    { "PATHS": "@DOWNLOADS@/tools/aria2c/aria2-@ARIA2_VERSION@-win-32bit-build1" },
+    { "URL": "https://github.com/aria2/aria2/releases/download/release-@ARIA2_VERSION@/aria2-@ARIA2_VERSION@-win-32bit-build1.zip" },
+    { "ARCHIVE": "aria2-@ARIA2_VERSION@-win-32bit-build1.zip" },
+    { "HASH": "933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4" }
+  ],
+  "PKGCONFIG": [
+    { "PROGNAME": "pkg-config" },
+    { "envvar": "PKG_CONFIG" },
+    {
+      "$if": {
+        "$host_os": "WINDOWS",
+        "$then": [
+          { "VERSION": "0.29.2-2" },
+          { "PROGRAM_VERSION": "git-8.0.0.5906.c9a21571-1" },
+          {
+            "MSYS_ARGS": [
+              "NO_DEFAULT_PACKAGES",
+              "DIRECT_PACKAGES",
+                "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-@VERSION@-any.pkg.tar.zst",
+                "54f8dad3b1a36a4515db47825a3214fbd2bd82f604aec72e7fb8d79068095fda3c836fb2296acd308522d6e12ce15f69e0c26dcf4eb0681fd105d057d912cdb7",
+                "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-@PROGRAM_VERSION@-any.pkg.tar.zst",
+                "2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c"
+            ]
+          },
+          { "MSYS_PATHS": "$/mingw32/bin" }
+        ],
+        "$else": [
+          {
+            "$if": {
+              "$host_os": "OPENBSD",
+              "$then": [
+                { "$comment": "As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}" },
+                { "_vfa_SUPPORTED": "ON" },
+                { "final_program_name": "pkg-config" },
+                { "PROGRAM_VERSION": "0.29.2.1" },
+                { "NOEXTRACT": "ON" },
+                { "ARCHIVE": "pkg-config.openbsd" },
+                { "SUBDIR": "openbsd" },
+                { "URL": "https://raw.githubusercontent.com/jgilje/pkg-config-openbsd/master/pkg-config" },
+                { "HASH": "b7ec9017b445e00ae1377e36e774cf3f5194ab262595840b449832707d11e443a102675f66d8b7e8b2e2f28cebd6e256835507b1e0c69644cc9febab8285080b" },
+                { "VERSION_CMD": "--version" }
+              ],
+              "$else": [
+                { "BREW_PACKAGE_NAME": "pkg-config" },
+                { "APT_PACKAGE_NAME": "pkg-config" },
+                { "PATHS": [ "/bin", "/usr/bin", "/usr/local/bin" ] }
+              ]
+            }
+          }
+        ]
+      }
+    }
   ]
 }
