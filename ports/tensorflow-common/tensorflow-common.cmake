@@ -274,20 +274,18 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-		if(NOT VCPKG_TARGET_IS_OSX)
-			if(VCPKG_TARGET_IS_WINDOWS)
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			else()
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			endif()
+		if(VCPKG_TARGET_IS_WINDOWS)
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+		else()
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
@@ -299,6 +297,11 @@ foreach(BUILD_TYPE dbg rel)
 			COMMAND cat "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log"
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild_debug-${TARGET_TRIPLET}-${BUILD_TYPE}
+		)
+		vcpkg_execute_build_process(
+			COMMAND cat static_link.sh
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
+			LOGNAME postbuild_debug2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
 		vcpkg_execute_build_process(
 			COMMAND ${STATIC_LINK_CMD}
