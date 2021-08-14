@@ -453,11 +453,9 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(prefix_var "\${prefix}")
     endif()
 
     # macOS - cross-compiling support
@@ -488,20 +486,20 @@ function(vcpkg_configure_make)
     if(NOT _csc_NO_ADDITIONAL_PATHS)
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                             # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/tools/${PORT}/bin"
-                            "--sbindir=${prefix_var}/tools/${PORT}/sbin"
+                            "--bindir=\\\${prefix}/tools/${PORT}/bin"
+                            "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
                             #"--libdir='\${prefix}'/lib" # already the default!
                             #"--includedir='\${prefix}'/include" # already the default!
-                            "--mandir=${prefix_var}/share/${PORT}"
-                            "--docdir=${prefix_var}/share/${PORT}"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
+                            "--mandir=\\\${prefix}/share/${PORT}"
+                            "--docdir=\\\${prefix}/share/${PORT}"
+                            "--datarootdir=\\\${prefix}/share/${PORT}")
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                             # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
-                            "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
+                            "--bindir=\\\${prefix}/../tools/${PORT}/debug/bin"
+                            "--sbindir=\\\${prefix}/../tools/${PORT}/debug/sbin"
                             #"--libdir='\${prefix}'/lib" # already the default!
-                            "--includedir=${prefix_var}/../include"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
+                            "--includedir=\\\${prefix}/../include"
+                            "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
     # Setup common options
     if(NOT DISABLE_VERBOSE_FLAGS)
