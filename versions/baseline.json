@@ -4669,7 +4669,7 @@
       "port-version": 0
     },
     "openxr-loader": {
-      "baseline": "1.0.11",
+      "baseline": "1.0.18",
       "port-version": 1
     },
     "optional-bare": {
