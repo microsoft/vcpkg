@@ -8,6 +8,15 @@
  
    set(prefix ${CMAKE_INSTALL_PREFIX})
  
+@@ -2375,7 +2375,7 @@
+     set(SDL_STATIC_LIBS ${_SDL_STATIC_LIBS})
+     listtostrrev(SDL_LIBS _SDL_LIBS)
+     set(SDL_LIBS ${_SDL_LIBS})
+-  else()
++  elseif(NOT WINDOWS_STORE)
+     listtostr(EXTRA_LIBS _EXTRA_LIBS "-l")
+     set(SDL_STATIC_LIBS ${SDL_LIBS} ${EXTRA_LDFLAGS} ${_EXTRA_LIBS})
+     list(REMOVE_DUPLICATES SDL_STATIC_LIBS)
 @@ -2403,7 +2403,6 @@
      "${SDL2_BINARY_DIR}/sdl2-config" @ONLY)
    configure_file("${SDL2_SOURCE_DIR}/SDL2.spec.in"
