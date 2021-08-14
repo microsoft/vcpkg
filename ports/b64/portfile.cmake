@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES "windows-fix.patch"
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/b64_dynamic_config.h" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/b64_static_config.h" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(

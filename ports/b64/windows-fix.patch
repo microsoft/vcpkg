@@ -1,8 +1,13 @@
 diff --git a/include/b64/ccommon.h b/include/b64/ccommon.h
-index 2b614df..6c5b52a 100644
+index 2b614df..0e46141 100644
 --- a/include/b64/ccommon.h
 +++ b/include/b64/ccommon.h
-@@ -14,11 +14,21 @@ For details, see http://sourceforge.net/projects/libb64
+@@ -10,11 +10,12 @@ For details, see http://sourceforge.net/projects/libb64
+ 
+ #define BASE64_VER_MAJOR	2
+ #define BASE64_VER_MINOR	0
++#include "b64_config.h"
+ 
  #ifndef HAVE_SIZE_T
    #ifdef _WIN32
      #include <crtdefs.h>
@@ -11,20 +16,6 @@ index 2b614df..6c5b52a 100644
      #include <stdlib.h>
    #else
      typedef unsigned long size_t;
-   #endif
- #endif
- 
-+#ifdef _WIN32
-+  #ifdef LIBB64_EXPORTS
-+    #define LIBB64 __declspec(dllexport)
-+  #else
-+    #define LIBB64 __declspec(dllimport)
-+  #endif
-+#else
-+#define LIBB64
-+#endif
-+
- #endif /* BASE64_CCOMMON_H */
 diff --git a/include/b64/cdecode.h b/include/b64/cdecode.h
 index d6ff24c..4553efc 100644
 --- a/include/b64/cdecode.h
