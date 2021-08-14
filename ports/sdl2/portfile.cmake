@@ -73,7 +73,6 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endforeach()
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 vcpkg_copy_pdbs()
 
