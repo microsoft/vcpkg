@@ -171,12 +171,25 @@ if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
     $hostArgs = @("--host-exclude=$skipList")
 }
 
+$current_port_and_features = ':'
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs `
     | ForEach-Object {
         $_
-        if ($LogSkippedPorts -and $_ -match '^ *([^ :]+):[^:]*: *cascade:' -and $changedPorts -contains $Matches[1]) {
-            $port = $Matches[1]
-            Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: cascade."
+        if ($LogSkippedPorts) {
+            if ($_ -match '^ *([^ :]+):[^:]*: *cascade:' -and $changedPorts -contains $Matches[1]) {
+                $port = $Matches[1]
+                Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: cascade from CI baseline file."
+            }
+            elseif ($_ -match '^Building package ([^ ]+)[.][.][.]') {
+                $current_port_and_features = $Matches[1]
+            }
+            elseif ($_ -match 'failed with: CASCADED_DUE_TO_MISSING_DEPENDENCIES') {
+                & "./vcpkg$executableExtension" depend-info $current_port_and_features | ForEach-Object {
+                    if ($_ -match '^([^:[]+)[:[]' -and $changedPorts -contains $Matches[1]) {
+                        Write-Host "##vso[task.logissue type=error]Not building depending port '$current_port_and_features', reason: cascade due to missing dependencies."
+                    }
+                }
+            }
         }
     }
 
