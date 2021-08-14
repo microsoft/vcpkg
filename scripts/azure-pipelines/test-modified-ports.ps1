@@ -147,7 +147,7 @@ $changedPorts = @()
 $skippedPorts = @()
 if ($LogSkippedPorts) {
     $diffFile = Join-Path $WorkingRoot 'changed-ports.diff'
-    Start-Process -FilePath 'git' -ArgumentList 'diff --name-only HEAD~1 -- versions ports' `
+    Start-Process -FilePath 'git' -ArgumentList 'diff --name-only HEAD~10 -- versions ports' `
         -NoNewWindow -Wait `
         -RedirectStandardOutput $diffFile
     $changedPorts = (Get-Content -Path $diffFile) `
