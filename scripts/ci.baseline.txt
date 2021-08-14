@@ -262,6 +262,10 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
+# embree creates common conflicting static library names when built in static mode, reported upstream:
+# https://github.com/embree/embree/issues/331
+embree2:x64-windows-static=skip
+embree2:x64-windows-static-md=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
