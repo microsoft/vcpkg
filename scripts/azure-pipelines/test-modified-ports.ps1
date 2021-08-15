@@ -158,7 +158,7 @@ if ($LogSkippedPorts) {
     $changedPorts | ForEach-Object {
         if ($skippedPorts -contains $_) {
             $port = $_
-            Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: CI baseline file."
+            Write-Host "##vso[task.logissue type=error]$port`: build skipped, reason: CI baseline file."
         }
     }
 }
@@ -178,7 +178,7 @@ $current_port_and_features = ':'
         if ($LogSkippedPorts) {
             if ($_ -match '^ *([^ :]+):[^:]*: *cascade:' -and $changedPorts -contains $Matches[1]) {
                 $port = $Matches[1]
-                Write-Host "##vso[task.logissue type=error]Not building changed port '$port`:$Triplet', reason: cascade from CI baseline file."
+                Write-Host "##vso[task.logissue type=error]$port`: build skipped, reason: cascade from CI baseline file."
             }
             elseif ($_ -match '^Building package ([^ ]+)[.][.][.]') {
                 $current_port_and_features = $Matches[1]
@@ -186,7 +186,10 @@ $current_port_and_features = ':'
             elseif ($_ -match 'failed with: CASCADED_DUE_TO_MISSING_DEPENDENCIES') {
                 & "./vcpkg$executableExtension" depend-info $current_port_and_features | ForEach-Object {
                     if ($_ -match '^([^:[]+)[:[]' -and $changedPorts -contains $Matches[1]) {
-                        Write-Host "##vso[task.logissue type=error]Not building depending port '$current_port_and_features', reason: cascade due to missing dependencies."
+                        $port = $Matches[1]
+                        if ($current_port_and_features -notmatch "^$port[:[]") {
+                            Write-Host "##vso[task.logissue type=error]$port`: build of depending port '$current_port_and_features' skipped due to missing dependencies."
+                        }
                     }
                 }
             }
