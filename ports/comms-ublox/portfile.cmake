@@ -11,7 +11,7 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DOPT_BUILD_TEST=OFF
@@ -27,4 +27,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

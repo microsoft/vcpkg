@@ -8,7 +8,7 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DCOMMSDSL_NO_COMMS_CHAMPION=ON
@@ -22,7 +22,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_tools(
     TOOL_NAMES commsdsl2comms
-    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
     AUTO_CLEAN
 )
 
@@ -36,4 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

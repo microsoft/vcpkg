@@ -17,7 +17,7 @@ if(COMMS_BUILD_TOOLS)
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DCC_INSTALL_COMMS_LIB=ON
@@ -35,13 +35,13 @@ vcpkg_install_cmake()
 if(COMMS_BUILD_TOOLS)
     vcpkg_copy_tools(
         TOOL_NAMES cc_dump cc_view
-        SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
         AUTO_CLEAN
     )
-    file(COPY ${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/)
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/LibComms/cmake TARGET_PATH share/LibComms)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
 
 
 # after moving lib/LibComms to share this lib path will be empty
@@ -55,5 +55,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
