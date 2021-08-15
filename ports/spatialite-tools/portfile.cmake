@@ -1,3 +1,5 @@
+message(FATAL_ERROR "Should not build, CASCADED_DUE_TO_MISSING_DEPENDENCIES (freexl)")
+
 set(SPATIALITE_TOOLS_VERSION_STR "5.0.0")
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
