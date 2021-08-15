@@ -43,16 +43,17 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
 
-
-# after moving lib/LibComms to share this lib path will be empty
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/LibComms")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/CommsChampion/plugin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/LibComms")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(COMMS_BUILD_TOOLS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/LibComms")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/CommsChampion/plugin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/LibComms")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
