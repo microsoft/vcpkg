@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f21cf45..691a632 100644
+index e5e2e317..fd6b3d74 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -157,7 +157,7 @@ if (MASTER_PROJECT AND CMAKE_GENERATOR MATCHES "Visual Studio")
+@@ -199,7 +199,7 @@ if (FMT_MASTER_PROJECT AND CMAKE_GENERATOR MATCHES "Visual Studio")
    join(netfxpath
         "C:\\Program Files\\Reference Assemblies\\Microsoft\\Framework\\"
         ".NETFramework\\v4.0")
