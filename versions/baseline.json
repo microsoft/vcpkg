@@ -1365,7 +1365,7 @@
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "0.20.1",
+      "baseline": "0.20.2",
       "port-version": 0
     },
     "commsdsl": {
