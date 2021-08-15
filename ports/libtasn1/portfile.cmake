@@ -19,7 +19,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 set(EXTRA_OPTS "")
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # $LIBS is an environment variable that vcpkg already pre-populated with some libraries. 
     # We need to re-purpose it when passing LIBS option to make to avoid overriding the vcpkg's own list.  
     list(APPEND EXTRA_OPTS "LIBS=-lgettimeofday -lgetopt $LIBS")

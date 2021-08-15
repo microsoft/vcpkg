@@ -8,11 +8,11 @@
   "dependencies": [
     {
       "name": "getopt",
-      "platform": "windows"
+      "platform": "windows & !mingw"
     },
     {
       "name": "gettimeofday",
-      "platform": "windows"
+      "platform": "windows & !mingw"
     }
   ]
 }
