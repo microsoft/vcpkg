@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
         "-DHEXL_COVERAGE=OFF"
         "-DHEXL_TESTING=OFF"
         "-DHEXL_SHARED_LIB=${HEXL_SHARED}"
+        -DGIT_EXECUTABLE=${GIT}
 )
 
 vcpkg_cmake_install()
