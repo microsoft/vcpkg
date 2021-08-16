@@ -33,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pybind11 BUILD_ONNX_PYTHON
 )
 
-# Like protoc, python is required for codegen. Hijack the Python3_EXECUTABLE
+# Like protoc, python is required for codegen.
 vcpkg_find_acquire_program(PYTHON3)
 
 # PATH for .bat scripts can find 'python'
