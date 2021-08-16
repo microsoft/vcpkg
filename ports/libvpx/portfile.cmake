@@ -70,7 +70,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs")
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
 
     if("realtime" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --enable-realtime-only")
@@ -79,10 +79,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if("highbitdepth" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
-
-    if("pic" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-pic")
-    endif()  
 
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
@@ -146,7 +142,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests")
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
 
     set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
@@ -164,10 +160,6 @@ else()
     if("highbitdepth" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
     endif()
-
-    if("pic" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-pic")
-    endif()    
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")

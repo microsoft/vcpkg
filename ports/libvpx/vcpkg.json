@@ -8,9 +8,6 @@
     "highbitdepth": {
       "description": "use VP9 high bit depth (10/12) profiles"
     },
-    "pic": {
-      "description": "generates position independent code"
-    },
     "realtime": {
       "description": "enable this option while building for real-time encoding"
     }
