@@ -78,8 +78,8 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
     URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
     REF 908670c5b68d3bcf4712019a028079b8b2042dd4
+    FETCH_REF master
     HEAD_REF master
-    UNADVERTISED
 )
 # port 'litehtml' is not in vcpkg!
 vcpkg_from_github(
