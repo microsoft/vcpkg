@@ -22,6 +22,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES ../tools/brotli/brotli)
+vcpkg_copy_tools(
+    TOOL_NAMES brotli
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/brotli/"
+)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-brotli TARGET_PATH share/unofficial-brotli)
 vcpkg_fixup_pkgconfig()
 
