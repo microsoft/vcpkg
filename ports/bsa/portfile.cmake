@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "x86")
+vcpkg_fail_port_install(ON_TARGET "OSX" "UWP" ON_ARCH "x86")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,6 +7,10 @@ vcpkg_from_github(
     SHA512 b54f1cbc88e55b98b0c25ee81007dc42df736836784b2a1e2e91652b46a73054671d798cc0007ea79b7cf0c8181021bb0cbc95ae407d4a538298d668b4c8fe69
     HEAD_REF master
 )
+
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "Build ${PORT} requires at least gcc 10.")
+endif()
 
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
