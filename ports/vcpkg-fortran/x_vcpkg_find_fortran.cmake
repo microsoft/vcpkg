@@ -36,8 +36,15 @@ function(x_vcpkg_find_fortran additional_cmake_args_out)
                 message(FATAL_ERROR "Batch file to setup Intel oneAPI not found! Please provide a correct ONEAPI_ROOT and make sure it contains setvars.bat!")
             endif()
             z_vcpkg_load_environment_from_batch(BATCH_FILE_PATH "${SETVARS}")
+
+            if(VCPKG_TARGET_IS_UWP)
+                set(extra_uwp_flags "/NODEFAULTLIB /Qopenmp-stubs /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__")
+                set(exta_uwp_link_flags "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/APPCONTAINER")
+            endif()
+
             list(APPEND ARGS_OUT "-DCMAKE_Fortran_COMPILER=${IFORT}"
-                                 "-DCMAKE_Fortran_FLAGS_INIT:STRING=/Z7 /names:lowercase /assume:underscore /assume:protect_parens")
+                                 "-DCMAKE_Fortran_FLAGS_INIT:STRING=/Z7 /names:lowercase /assume:underscore /assume:protect_parens ${extra_uwp_flags}"
+                                 ${exta_uwp_link_flags})
             set(VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")
         else()
             message(FATAL_ERROR "Unable to find a Fortran compiler using 'CMakeDetermineFortranCompiler'. Please install one (e.g. gfortran) and make it available on the PATH!")

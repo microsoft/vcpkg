@@ -4,7 +4,9 @@
   "description": "LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/",
   "dependencies": [
     "vcpkg-fortran",
-    "vcpkg-ifort"
+    "vcpkg-ifort",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
   ],
   "default-features": [
     "blas-select"
