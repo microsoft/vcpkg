@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
       install_pkgpc.patch
+      fix-c4703-error.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
