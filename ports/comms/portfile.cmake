@@ -12,10 +12,6 @@ vcpkg_check_features(
         tools   COMMS_BUILD_TOOLS
 )
 
-if(COMMS_BUILD_TOOLS)
-    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
