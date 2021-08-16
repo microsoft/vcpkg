@@ -2,8 +2,8 @@
   "PERL": [
     { "PROGNAME": "perl" },
     { "PROGRAM_VERSION": "5.32.1.1" },
-    { "SUBDIR": "@PROGRAM_VERSION@" },
-    { "PATHS": "@DOWNLOADS@/tools/perl/@PROGRAM_VERSION@/perl/bin" },
+    { "subdirectory": "@PROGRAM_VERSION@" },
+    { "paths": "@DOWNLOADS@/tools/perl/@PROGRAM_VERSION@/perl/bin" },
     { "BREW_PACKAGE_NAME": "perl" },
     { "APT_PACKAGE_NAME": "perl" },
     { "URL": "https://strawberryperl.com/download/@PROGRAM_VERSION@/strawberry-perl-@PROGRAM_VERSION@-32bit.zip" },
@@ -13,7 +13,7 @@
   "NASM": [
     { "PROGNAME": "nasm" },
     { "PROGRAM_VERSION": "2.15.05" },
-    { "PATHS": "@DOWNLOADS@/tools/nasm/nasm-@PROGRAM_VERSION@" },
+    { "paths": "@DOWNLOADS@/tools/nasm/nasm-@PROGRAM_VERSION@" },
     { "BREW_PACKAGE_NAME": "nasm" },
     { "APT_PACKAGE_NAME": "nasm" },
     {
@@ -28,13 +28,13 @@
   "YASM": [
     { "PROGNAME": "yasm" },
     { "PROGRAM_VERSION": "1.3.0.6.g1962" },
-    { "SUBDIR": "1.3.0.6" },
+    { "subdirectory": "1.3.0.6" },
     { "BREW_PACKAGE_NAME": "yasm" },
     { "APT_PACKAGE_NAME": "yasm" },
     { "URL": "https://tortall.net/projects/yasm/snapshots/v@PROGRAM_VERSION@/yasm-@PROGRAM_VERSION@.exe" },
     { "ARCHIVE": "yasm-@PROGRAM_VERSION@.exe" },
     { "final_program_name": "yasm.exe" },
-    { "NOEXTRACT": "ON" },
+    { "extract_download": false },
     { "HASH": "c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b" }
   ],
   "PYTHON3": [
@@ -48,22 +48,22 @@
             "$if": {
               "$host_architecture": "x86",
               "$then": [
-                { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
+                { "subdirectory": "python-@PROGRAM_VERSION@-x86" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-win32.zip" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-win32.zip" },
                 { "HASH": "4b2a0670094e639dcb2b762a02de8cdadd0af3657c463d9ff45af2541c0306496b991ae5402f119443ca891e918685bb57d18f13975f0493d349d864ff3e3a2c" }
               ],
               "$else": [
-                { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
+                { "subdirectory": "python-@PROGRAM_VERSION@-x64" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@-embed-amd64.zip" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@-embed-amd64.zip" },
                 { "HASH": "f8946471ed7dbc8cbffc72298f99330794b127ce6aa60abc87e80b31bd26099a2f637db85af88ce78c06dcf6e19064184ef3768edf4b1a0f97c25898e379d121" }
               ]
             }
           },
-          { "PATHS": "@DOWNLOADS@/tools/python/@SUBDIR@" },
+          { "paths": "@DOWNLOADS@/tools/python/@subdirectory@" },
           {
-            "POST_INSTALL_COMMAND": [
+            "post_install_command": [
               "@CMAKE_COMMAND@",
               "-E",
               "rm",
@@ -87,14 +87,14 @@
         "$then": [
           { "GIT_SHORT_VERSION": "2.32.0" },
           { "PROGRAM_VERSION": "2.32.0.2" },
-          { "SUBDIR": "git-@PROGRAM_VERSION@-2-windows" },
+          { "subdirectory": "git-@PROGRAM_VERSION@-2-windows" },
           { "URL": "https://github.com/git-for-windows/git/releases/download/v@GIT_SHORT_VERSION@.windows.2/PortableGit-@PROGRAM_VERSION@-32-bit.7z.exe" },
           { "ARCHIVE": "PortableGit-@PROGRAM_VERSION@-32-bit.7z.exe" },
           { "HASH": "867d8534972cbaf7a4224e25a14d484f8d17ef186f8d79e9a758afb90cf69541375cb7615a39702311f4809cb8371ef85c2b1a15bfffe9e48f0e597ac011b348" },
           {
-            "PATHS": [
-              "@DOWNLOADS@/tools/@SUBDIR@/mingw32/bin",
-              "@DOWNLOADS@/tools/git/@SUBDIR@/mingw32/bin"
+            "paths": [
+              "@DOWNLOADS@/tools/@subdirectory@/mingw32/bin",
+              "@DOWNLOADS@/tools/git/@subdirectory@/mingw32/bin"
             ]
           }
         ],
@@ -112,7 +112,7 @@
       "$if": {
         "$host_os": "LINUX",
         "$then": [
-          { "_vfa_SUPPORTED": true },
+          { "download_supported_on_unix": true },
           { "PROGRAM_VERSION": "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC"},
           { "GN_PLATFORM": "linux-amd64"},
           { "HASH": "871e75d7f3597b74fb99e36bb41fe5a9f8ce8a4d9f167f4729fc6e444807a59f35ec8aca70c2274a99c79d70a1108272be1ad991678a8ceb39e30f77abb13135"}
@@ -123,7 +123,7 @@
       "$if": {
         "$host_os": "OSX",
         "$then": [
-          { "_vfa_SUPPORTED": true },
+          { "download_supported_on_unix": true },
           { "PROGRAM_VERSION": "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC" },
           { "GN_PLATFORM": "mac-amd64" },
           { "HASH": "03ee64cb15bae7fceb412900d470601090bce147cfd45eb9b46683ac1a5dca848465a5d74c55a47df7f0e334d708151249a6d37bb021de74dd48b97ed4a07937" }
@@ -140,18 +140,18 @@
         ]
       }
     },
-    { "SUBDIR": "@PROGRAM_VERSION@" },
+    { "subdirectory": "@PROGRAM_VERSION@" },
     { "URL": "@CIPD_DOWNLOAD_GN@/@GN_PLATFORM@/+/@PROGRAM_VERSION@" },
     { "ARCHIVE": "gn-@GN_PLATFORM@.zip" }
   ],
   "GO": [
     { "PROGNAME": "go" },
-    { "SUBDIR": "1.16.6.windows-386" },
-    { "PATHS": "@DOWNLOADS@/tools/go/@SUBDIR@/go/bin" },
+    { "subdirectory": "1.16.6.windows-386" },
+    { "paths": "@DOWNLOADS@/tools/go/@subdirectory@/go/bin" },
     { "BREW_PACKAGE_NAME": "go" },
     { "APT_PACKAGE_NAME": "golang-go" },
-    { "URL": "https://dl.google.com/go/go@SUBDIR@.zip" },
-    { "ARCHIVE": "go@SUBDIR@.zip" },
+    { "URL": "https://dl.google.com/go/go@subdirectory@.zip" },
+    { "ARCHIVE": "go@subdirectory@.zip" },
     { "HASH": "2a1e539ed628c0cca5935d24d22cf3a7165f5c80e12a4003ac184deae6a6d0aa31f582f3e8257b0730adfc09aeec3a0e62f4732e658c312d5382170bcd8c94d8" }
   ],
   "PYTHON2": [
@@ -176,20 +176,20 @@
             "$if": {
               "$host_architecture": "x86",
               "$then": [
-                { "SUBDIR": "python-@PROGRAM_VERSION@-x86" },
+                { "subdirectory": "python-@PROGRAM_VERSION@-x86" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.msi" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@.msi" },
                 { "HASH": "2c112733c777ddbf189b0a54047a9d5851ebce0564cc38b9687d79ce6c7a09006109dbad8627fb1a60c3ad55e261db850d9dfa454af0533b460b2afc316fe115" }
               ],
               "$else": [
-                { "SUBDIR": "python-@PROGRAM_VERSION@-x64" },
+                { "subdirectory": "python-@PROGRAM_VERSION@-x64" },
                 { "URL": "https://www.python.org/ftp/python/@PROGRAM_VERSION@/python-@PROGRAM_VERSION@.amd64.msi" },
                 { "ARCHIVE": "python-@PROGRAM_VERSION@.amd64.msi" },
                 { "HASH": "6a81a413b80fd39893e7444fd47efa455d240cbb77a456c9d12f7cf64962b38c08cfa244cd9c50a65947c40f936c6c8c5782f7236d7b92445ab3dd01e82af23e" }
               ]
             }
           },
-          { "PATHS": "@DOWNLOADS@/tools/python/@SUBDIR@" }
+          { "paths": "@DOWNLOADS@/tools/python/@subdirectory@" }
         ]
       }
     }
@@ -197,15 +197,15 @@
   "RUBY": [
     { "PROGNAME": "ruby" },
     { "PROGRAM_VERSION": "2.7.4-1" },
-    { "PATHS": "@DOWNLOADS@/tools/ruby/rubyinstaller-@PROGRAM_VERSION@-x86/bin" },
+    { "paths": "@DOWNLOADS@/tools/ruby/rubyinstaller-@PROGRAM_VERSION@-x86/bin" },
     { "URL": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-@PROGRAM_VERSION@/rubyinstaller-@PROGRAM_VERSION@-x86.7z" },
     { "ARCHIVE": "rubyinstaller-@PROGRAM_VERSION@-x86.7z" },
     { "HASH": "4bf459c987b407bdda328c52d95060bf6ad48fc3e5ed5f64d4b205c5b4153c7a00cb6f9da6c0bcd5f2e001e9dc3dda0b72269ec4afdeffd658b93c085cd1d859" }
   ],
   "JOM": [
     { "PROGNAME": "jom" },
-    { "SUBDIR": "jom-1.1.3" },
-    { "PATHS": "@DOWNLOADS@/tools/jom/@SUBDIR@" },
+    { "subdirectory": "jom-1.1.3" },
+    { "paths": "@DOWNLOADS@/tools/jom/@subdirectory@" },
     { 
       "URL": [
         "https://download.qt.io/official_releases/jom/jom_1_1_3.zip",
@@ -217,7 +217,7 @@
   ],
   "7Z": [
     { "PROGNAME": "7z" },
-    { "PATHS": "@DOWNLOADS@/tools/7z/Files/7-Zip" },
+    { "paths": "@DOWNLOADS@/tools/7z/Files/7-Zip" },
     { "URL": "https://7-zip.org/a/7z1900.msi" },
     { "ARCHIVE": "7z1900.msi" },
     { "HASH": "f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067" }
@@ -229,10 +229,10 @@
       "$if": {
         "$host_os": "FREEBSD",
         "$then": [
-          { "_vfa_SUPPORTED": false }
+          { "download_supported_on_unix": false }
         ],
         "$else": [
-          { "_vfa_SUPPORTED": true }
+          { "download_supported_on_unix": true }
         ]
       }
     },
@@ -241,7 +241,7 @@
         "$host_os": "WINDOWS",
         "$then": [
           { "ARCHIVE": "ninja-win-@PROGRAM_VERSION@.zip" },
-          { "SUBDIR": "@PROGRAM_VERSION@-windows" },
+          { "subdirectory": "@PROGRAM_VERSION@-windows" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-win.zip" },
           { "HASH": "6004140d92e86afbb17b49c49037ccd0786ce238f340f7d0e62b4b0c29ed0d6ad0bab11feda2094ae849c387d70d63504393714ed0a1f4d3a1f155af7a4f1ba3" }
         ]
@@ -253,8 +253,8 @@
         "$then": [
           { "ARCHIVE": "ninja-mac-@PROGRAM_VERSION@.zip" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-mac.zip" },
-          { "SUBDIR": "@PROGRAM_VERSION@-osx" },
-          { "PATHS": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-osx" },
+          { "subdirectory": "@PROGRAM_VERSION@-osx" },
+          { "paths": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-osx" },
           { "HASH": "bcd12f6a3337591306d1b99a7a25a6933779ba68db79f17c1d3087d7b6308d245daac08df99087ff6be8dc7dd0dcdbb3a50839a144745fa719502b3a7a07260b" }
         ]
       }
@@ -265,8 +265,8 @@
         "$then": [
           { "ARCHIVE": "ninja-linux-@PROGRAM_VERSION@.zip" },
           { "URL": "https://github.com/ninja-build/ninja/releases/download/v@PROGRAM_VERSION@/ninja-linux.zip" },
-          { "SUBDIR": "@PROGRAM_VERSION@-linux" },
-          { "PATHS": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-linux" },
+          { "subdirectory": "@PROGRAM_VERSION@-linux" },
+          { "paths": "@DOWNLOADS@/tools/ninja-@PROGRAM_VERSION@-linux" },
           { "HASH": "93e802e9c17fb59636cddde4bad1ddaadad624f4ecfee00d5c78790330a4e9d433180e795718cda27da57215ce643c3929cf72c85337ee019d868c56f2deeef3" }
         ]
       }
@@ -275,35 +275,35 @@
   ],
   "NUGET": [
     { "PROGNAME": "nuget" },
-    { "SUBDIR": "5.10.0" },
-    { "PATHS": "@DOWNLOADS@/tools/nuget-@SUBDIR@-windows" },
+    { "subdirectory": "5.10.0" },
+    { "paths": "@DOWNLOADS@/tools/nuget-@subdirectory@-windows" },
     { "BREW_PACKAGE_NAME": "nuget" },
     { "URL": "https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe" },
     { "final_program_name": "nuget.exe" },
     { "ARCHIVE": "nuget.5.10.0.exe" },
-    { "NOEXTRACT": true },
+    { "extract_download": false },
     { "HASH": "c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e" }
   ],
   "MESON": [
     { "PROGNAME": "meson" },
     { "PROGRAM_VERSION": "0.58.1" },
-    { "REQUIRED_INTERPRETER": "PYTHON3" },
+    { "required_interpreter": "PYTHON3" },
     { "APT_PACKAGE_NAME": "meson" },
     { "BREW_PACKAGE_NAME": "meson" },
     { "SCRIPTNAME": [ "meson", "meson.py" ] },
     { "REF": "aeda7f249c4a5dbbecc52e44f382246a2377b5b0" },
-    { "PATHS": "@DOWNLOADS@/tools/meson/meson-@REF@" },
+    { "paths": "@DOWNLOADS@/tools/meson/meson-@REF@" },
     { "URL": "https://github.com/mesonbuild/meson/archive/@REF@.tar.gz" },
     { "ARCHIVE": "meson-@REF@.tar.gz" },
     {
       "$comment": [
-        { "PATHS": "@DOWNLOADS@/tools/meson/meson-@PROGRAM_VERSION@" },
+        { "paths": "@DOWNLOADS@/tools/meson/meson-@PROGRAM_VERSION@" },
         { "URL": "https://github.com/mesonbuild/meson/releases/download/@PROGRAM_VERSION@/meson-@PROGRAM_VERSION@.tar.gz" },
         { "ARCHIVE": "meson-@PROGRAM_VERSION@.tar.gz" }
       ]
     },
     { "HASH": "18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2" },
-    { "_vfa_SUPPORTED": true },
+    { "download_supported_on_unix": true },
     { "VERSION_CMD": "--version" }
   ],
   "FLEX": [
@@ -358,7 +358,7 @@
   ],
   "CLANG": [
     { "PROGNAME": "clang" },
-    { "SUBDIR": "clang-12.0.0" },
+    { "subdirectory": "clang-12.0.0" },
     { "PROGRAM_VERSION": "12.0.0" },
     { "BREW_PACKAGE_NAME": "llvm" },
     { "APT_PACKAGE_NAME": "clang" },
@@ -367,13 +367,13 @@
         "$host_os": "WINDOWS",
         "$then": [
           { 
-            "PATHS": [
+            "paths": [
               "$ENV{LLVMInstallDir}/x64/bin",
               "$ENV{LLVMInstallDir}/bin",
               "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin",
               "$ENV{VCINSTALLDIR}/Tools/Llvm/bin",
-              "@DOWNLOADS@/tools/@SUBDIR@-windows/bin",
-              "@DOWNLOADS@/tools/clang/@SUBDIR@/bin"
+              "@DOWNLOADS@/tools/@subdirectory@-windows/bin",
+              "@DOWNLOADS@/tools/clang/@subdirectory@/bin"
             ]
           },
           {
@@ -398,27 +398,27 @@
   "GPERF": [
     { "PROGNAME": "gperf" },
     { "PROGRAM_VERSION": "3.0.1" },
-    { "PATHS": "@DOWNLOADS@/tools/gperf/bin" },
+    { "paths": "@DOWNLOADS@/tools/gperf/bin" },
     { "URL": "https://sourceforge.net/projects/gnuwin32/files/gperf/@PROGRAM_VERSION@/gperf-@PROGRAM_VERSION@-bin.zip/download" },
     { "ARCHIVE": "gperf-@PROGRAM_VERSION@-bin.zip" },
     { "HASH": "3f2d3418304390ecd729b85f65240a9e4d204b218345f82ea466ca3d7467789f43d0d2129fcffc18eaad3513f49963e79775b10cc223979540fa2e502fe7d4d9" }
   ],
   "GASPREPROCESSOR": [
-    { "NOEXTRACT": "true" },
+    { "extract_download": false },
     { "PROGNAME": "gas-preprocessor" },
-    { "SUBDIR": "4daa6115" },
-    { "REQUIRED_INTERPRETER": "PERL" },
+    { "subdirectory": "4daa6115" },
+    { "required_interpreter": "PERL" },
     { "SCRIPTNAME": "gas-preprocessor.pl" },
-    { "PATHS": "@DOWNLOADS@/tools/gas-preprocessor/@SUBDIR@" },
+    { "paths": "@DOWNLOADS@/tools/gas-preprocessor/@subdirectory@" },
     { "final_program_name": "gas-preprocessor.pl" },
     { "URL": "https://raw.githubusercontent.com/FFmpeg/gas-preprocessor/4daa611556a0558dfe537b4f7ad80f7e50a079c1/gas-preprocessor.pl" },
-    { "ARCHIVE": "gas-preprocessor-@SUBDIR@.pl" },
+    { "ARCHIVE": "gas-preprocessor-@subdirectory@.pl" },
     { "HASH": "2737ba3c1cf85faeb1fbfe015f7bad170f43a857a50a1b3d81fa93ba325d481f73f271c5a886ff8b7eef206662e19f0e9ef24861dfc608b67b8ea8a2062dc061" }
   ],
   "DARK": [
     { "PROGNAME": "dark" },
-    { "SUBDIR": "wix311-binaries" },
-    { "PATHS": "@DOWNLOADS@/tools/dark/@SUBDIR@" },
+    { "subdirectory": "wix311-binaries" },
+    { "paths": "@DOWNLOADS@/tools/dark/@subdirectory@" },
     { "URL": "https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip" },
     { "ARCHIVE": "wix311-binaries.zip" },
     { "HASH": "74f0fa29b5991ca655e34a9d1000d47d4272e071113fada86727ee943d913177ae96dc3d435eaf494d2158f37560cd4c2c5274176946ebdb17bf2354ced1c516" }
@@ -426,8 +426,8 @@
   "SCONS": [
     { "PROGNAME": "scons" },
     { "PROGRAM_VERSION": "4.1.0" },
-    { "SUBDIR": "@PROGRAM_VERSION@" },
-    { "REQUIRED_INTERPRETER": "PYTHON2" },
+    { "subdirectory": "@PROGRAM_VERSION@" },
+    { "required_interpreter": "PYTHON2" },
     { "SCRIPTNAME": "scons.py" },
     { "URL": "https://sourceforge.net/projects/scons/files/scons-local-@PROGRAM_VERSION@.zip/download" },
     { "ARCHIVE": "scons-local-@PROGRAM_VERSION@.zip" },
@@ -451,7 +451,7 @@
               "WORKING_DIRECTORY", "@DOWNLOADS@/tools/swig"
             ]
           },
-          { "SUBDIR": "b8f105f9b9-f0518bc3b7/swigwin-@PROGRAM_VERSION@" }
+          { "subdirectory": "b8f105f9b9-f0518bc3b7/swigwin-@PROGRAM_VERSION@" }
         ]
       }
     }
@@ -479,11 +479,11 @@
       "$if": {
         "$host_os": "LINUX",
         "$then": [
-          { "_vfa_SUPPORTED": "ON" },
-          { "SUBDIR": "@PROGRAM_VERSION@-linux" },
-          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64" },
-          { "ARCHIVE": "bazel-@SUBDIR@-x86_64" },
-          { "NOEXTRACT": "ON" },
+          { "download_supported_on_unix": "ON" },
+          { "subdirectory": "@PROGRAM_VERSION@-linux" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@subdirectory@-x86_64" },
+          { "ARCHIVE": "bazel-@subdirectory@-x86_64" },
+          { "extract_download": false },
           { "HASH": "50aa0894dbeedb9189a56f17baa8cecfa55c5f9c1f93a61b9ab5e10984754a400884fc9802b4979f536778e15f813a72807396b4b47694e4c05eadb841361c69" }
         ]
       }
@@ -492,11 +492,11 @@
       "$if": {
         "$host_os": "OSX",
         "$then": [
-          { "_vfa_SUPPORTED": "ON" },
-          { "SUBDIR": "@PROGRAM_VERSION@-darwin" },
-          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64" },
-          { "ARCHIVE": "bazel-@SUBDIR@-x86_64" },
-          { "NOEXTRACT": "ON" },
+          { "download_supported_on_unix": "ON" },
+          { "subdirectory": "@PROGRAM_VERSION@-darwin" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@subdirectory@-x86_64" },
+          { "ARCHIVE": "bazel-@subdirectory@-x86_64" },
+          { "extract_download": false },
           { "HASH": "3500560c9d49d37a1ead2d2777d673c6f1874582883e141ecd5b3991005b1b6b8aab5f255c187133d771497c2a956f5c1e0dfad04dc453525634537e65b649af" }
         ]
       }
@@ -505,9 +505,9 @@
       "$if": {
         "$host_os": "WINDOWS",
         "$then": [
-          { "SUBDIR": "@PROGRAM_VERSION@-windows" },
-          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@SUBDIR@-x86_64.zip" },
-          { "ARCHIVE": "bazel-@SUBDIR@-x86_64.zip" },
+          { "subdirectory": "@PROGRAM_VERSION@-windows" },
+          { "URL": "https://github.com/bazelbuild/bazel/releases/download/@PROGRAM_VERSION@/bazel-@subdirectory@-x86_64.zip" },
+          { "ARCHIVE": "bazel-@subdirectory@-x86_64.zip" },
           { "HASH": "3954ab54b465d62eef397767dac7ce21d06ac8ea3e1571d0e7b1f0ea8b5c2cf44eea5d252b85a63a1e1a08dbe9a219783cc23c2888673c35e2df03edfdc9e5a7" }
         ]
       }
@@ -516,7 +516,7 @@
   "ARIA2": [
     { "PROGNAME": "aria2c" },
     { "ARIA2_VERSION": "1.35.0" },
-    { "PATHS": "@DOWNLOADS@/tools/aria2c/aria2-@ARIA2_VERSION@-win-32bit-build1" },
+    { "paths": "@DOWNLOADS@/tools/aria2c/aria2-@ARIA2_VERSION@-win-32bit-build1" },
     { "URL": "https://github.com/aria2/aria2/releases/download/release-@ARIA2_VERSION@/aria2-@ARIA2_VERSION@-win-32bit-build1.zip" },
     { "ARCHIVE": "aria2-@ARIA2_VERSION@-win-32bit-build1.zip" },
     { "HASH": "933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4" }
@@ -548,12 +548,12 @@
               "$host_os": "OPENBSD",
               "$then": [
                 { "$comment": "As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}" },
-                { "_vfa_SUPPORTED": "ON" },
+                { "download_supported_on_unix": "ON" },
                 { "final_program_name": "pkg-config" },
                 { "PROGRAM_VERSION": "0.29.2.1" },
-                { "NOEXTRACT": "ON" },
+                { "extract_download": false },
                 { "ARCHIVE": "pkg-config.openbsd" },
-                { "SUBDIR": "openbsd" },
+                { "subdirectory": "openbsd" },
                 { "URL": "https://raw.githubusercontent.com/jgilje/pkg-config-openbsd/master/pkg-config" },
                 { "HASH": "b7ec9017b445e00ae1377e36e774cf3f5194ab262595840b449832707d11e443a102675f66d8b7e8b2e2f28cebd6e256835507b1e0c69644cc9febab8285080b" },
                 { "VERSION_CMD": "--version" }
@@ -561,7 +561,7 @@
               "$else": [
                 { "BREW_PACKAGE_NAME": "pkg-config" },
                 { "APT_PACKAGE_NAME": "pkg-config" },
-                { "PATHS": [ "/bin", "/usr/bin", "/usr/local/bin" ] }
+                { "paths": [ "/bin", "/usr/bin", "/usr/local/bin" ] }
               ]
             }
           }
