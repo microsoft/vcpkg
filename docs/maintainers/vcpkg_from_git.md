@@ -10,9 +10,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
-    [UNADVERTISED]
     [HEAD_REF <ref>]
-    [FETCH_PARAMS <params>]
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -29,6 +27,11 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### FETCH_REF
+The git branch to fetch in non-HEAD mode. After this is fetched,
+then `REF` is checked out. This is useful in cases where the git server
+does not allow checking out non-advertised objects.
+
 ### HEAD_REF
 The git branch to use when the package is requested to be built from the latest sources.
 
@@ -38,12 +41,6 @@ Example: `main`, `develop`, `HEAD`
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
-
-### UNADVERTISED
-means the given REF cannot be fetched directly but is a valid ref. 
-
-### FETCH_PARAMS
-parameters to pass to the internal fetch command. default: --depth 1 -n
 
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
