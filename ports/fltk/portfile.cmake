@@ -3,16 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-set(FLTK_VERSION 1.3.7)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/fltk/fltk/archive/refs/tags/release-${FLTK_VERSION}.tar.gz"
-    FILENAME "FLTK-${FLTK_VERSION}.tar.gz"
-    SHA512 aad131027e88fac3fe73d7e0abfc2602cdc195388f14b29b58d654cb49b780e6ff2ef4270935730b45cd3d366f9e8c8fa3c27a4f17b1f6e8c8fd1f9a0a73c308
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO fltk/fltk
+    REF release-1.3.7
+    SHA512 aad131027e88fac3fe73d7e0abfc2602cdc195388f14b29b58d654cb49b780e6ff2ef4270935730b45cd3d366f9e8c8fa3c27a4f17b1f6e8c8fd1f9a0a73c308
     PATCHES
         findlibsfix.patch
         config-path.patch
