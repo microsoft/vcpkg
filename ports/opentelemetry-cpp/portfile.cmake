@@ -19,7 +19,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         etw WITH_ETW
-        otlp WITH_OTLP
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
