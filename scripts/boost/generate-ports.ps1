@@ -313,30 +313,90 @@ foreach ($library in $libraries)
         $groups = Get-ChildItem -Recurse -Path include,src -File `
             | ? { $_ -is [System.IO.FileInfo] } `
             | % { Get-Content -LiteralPath $_ } `
-            | ? { $_ -match 'include [<"]boost/' }
+            | ? { $_ -match '.*# *include [<"]boost/' }
 
         $groups = $groups | % {
-            $_ `
-                -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
-                -replace "boost/exception/exception.hpp","boost/throw_exception.hpp" `
-                -replace "boost/detail/workaround.hpp","boost/config/workaround.hpp" `
-                -replace "boost/detail/([^/]+)/","boost/`$1/" `
-                -replace " *# *include *[<`"]boost/([a-zA-Z0-9\._]*)[/>`"].*", "`$1" `
-                -replace "/|\.hp?p?| ","" 
+            # skip line with patterns:
+            # // #include <boost/
+            # `` #include <boost/
+            # @code #include <boost/
+            # " #include <boost/
+            if ($_ -match ' *(\/\/|``|@code|").*# *include [<"]boost\/') {
+                Write-Verbose "${library}: skipping line: $_"
+            }
+            else {
+                # Write-Verbose "${library}: processing line: $_"
+                # extract path
+                $_ -replace " *# *include *[<`"]boost\/([a-zA-Z0-9\.\-_\/]*)[>`"].*", "`$1"
+            }
         } | group | % name | % {
-            # mappings
-            Write-Verbose "${library}: $_"
+            Write-Verbose "${library}: processing path: $_"
+            # re-map path and extract name
+            $_ `
+                -replace "detail/winapi/","winapi/detail/winapi/" `
+                -replace "detail/algorithm.hpp","graph/detail/algorithm.hpp" `
+                -replace "detail/atomic_count.hpp","smart_ptr/detail/atomic_count.hpp" `
+                -replace "detail/call_traits.hpp","utility/detail/call_traits.hpp" `
+                -replace "detail/compressed_pair.hpp","utility/detail/compressed_pair.hpp" `
+                -replace "detail/interlocked.hpp","winapi/detail/interlocked.hpp" `
+                -replace "detail/iterator.hpp","core/detail/iterator.hpp" `
+                -replace "detail/lightweight_mutex.hpp","smart_ptr/detail/lightweight_mutex.hpp" `
+                -replace "detail/lightweight_test.hpp","core/detail/lightweight_test.hpp" `
+                -replace "detail/lightweight_thread.hpp","smart_ptr/detail/lightweight_thread.hpp" `
+                -replace "detail/no_exceptions_support.hpp","core/detail/no_exceptions_support.hpp" `
+                -replace "detail/scoped_enum_emulation.hpp","core/detail/scoped_enum_emulation.hpp" `
+                -replace "detail/sp_typeinfo.hpp","core/detail/sp_typeinfo.hpp" `
+                -replace "detail/ob_compressed_pair.hpp","utility/detail/ob_compressed_pair.hpp" `
+                -replace "detail/quick_allocator.hpp","smart_ptr/detail/quick_allocator.hpp" `
+                -replace "detail/workaround.hpp","config/detail/workaround.hpp" `
+                -replace "numeric/conversion/","numeric_conversion/numeric/conversion/" `
+                -replace "numeric/interval/","interval/numeric/interval/" `
+                -replace "numeric/odeint/","odeint/numeric/odeint/" `
+                -replace "numeric/ublas/","ublas/numeric/ublas/" `
+                -replace "numeric/interval.hpp","interval/numeric/interval.hpp" `
+                -replace "numeric/odeint.hpp","odeint/numeric/odeint.hpp" `
+                -replace "exception/exception.hpp","throw_exception/exception/exception.hpp" `
+                -replace "pending/detail/disjoint_sets.hpp","graph/pending/detail/disjoint_sets.hpp" `
+                -replace "pending/detail/int_iterator.hpp","iterator/pending/detail/int_iterator.hpp" `
+                -replace "pending/detail/property.hpp","graph/pending/detail/property.hpp" `
+                -replace "pending/bucket_sorter.hpp","graph/pending/bucket_sorter.hpp" `
+                -replace "pending/container_traits.hpp","graph/pending/container_traits.hpp" `
+                -replace "pending/disjoint_sets.hpp","graph/pending/disjoint_sets.hpp" `
+                -replace "pending/fenced_priority_queue.hpp","graph/pending/fenced_priority_queue.hpp" `
+                -replace "pending/fibonacci_heap.hpp","graph/pending/fibonacci_heap.hpp" `
+                -replace "pending/indirect_cmp.hpp","graph/pending/indirect_cmp.hpp" `
+                -replace "pending/integer_log2.hpp","integer/pending/integer_log2.hpp" `
+                -replace "pending/is_heap.hpp","graph/pending/is_heap.hpp" `
+                -replace "pending/iterator_adaptors.hpp","iterator/pending/iterator_adaptors.hpp" `
+                -replace "pending/iterator_tests.hpp","iterator/pending/iterator_tests.hpp" `
+                -replace "pending/mutable_heap.hpp","graph/pending/mutable_heap.hpp" `
+                -replace "pending/mutable_queue.hpp","graph/pending/mutable_queue.hpp" `
+                -replace "pending/property.hpp","graph/pending/property.hpp" `
+                -replace "pending/property_serialize.hpp","graph/pending/property_serialize.hpp" `
+                -replace "pending/queue.hpp","graph/pending/queue.hpp" `
+                -replace "pending/relaxed_heap.hpp","graph/pending/relaxed_heap.hpp" `
+                -replace "pending/stringtok.hpp","graph/pending/stringtok.hpp" `
+                -replace "utility/addressof.hpp","core/utility/addressof.hpp" `
+                -replace "utility/declval.hpp","type_traits/utility/declval.hpp" `
+                -replace "utility/enable_if.hpp","core/utility/enable_if.hpp" `
+                -replace "utility/explicit_operator_bool.hpp","core/utility/explicit_operator_bool.hpp" `
+                -replace "utility/swap.hpp","core/utility/swap.hpp" `
+                -replace "([a-zA-Z0-9\.\-_]*).*", "`$1" `
+                -replace "\.hp?p?", ""
+        } | group | % name | % {
+            Write-Verbose "${library}: processing name: $_"
+            # re-map name
             if ($_ -match "aligned_storage") { "type_traits" }
-            elseif ($_ -match "checked_delete|get_pointer|non_type|noncopyable|ref|swap|visit_each") { "core" }
-            elseif ($_ -eq "iterator") { "core" }
-            elseif ($_ -eq "type") { "core" }
+            elseif ($_ -match "checked_delete|get_pointer|^iterator$|non_type|noncopyable|^ref$|^swap$|^type$|visit_each") { "core" }
             elseif ($_ -match "concept|concept_archetype") { "concept_check" }
+            elseif ($_ -match "^config|cstdint|cxx11_char_types|^limits$|^version$") { "config" }
+            elseif ($_ -eq "current_function") { "assert" }
+            elseif ($_ -eq "dynamic_bitset_fwd") { "dynamic_bitset" }
             elseif ($_ -match "unordered_map|unordered_set") { "unordered" }
             elseif ($_ -match "integer_fwd|integer_traits") { "integer" }
             elseif ($_ -match "call_traits|compressed_pair|operators|operators_v1") { "utility" }
-            elseif ($_ -match "^config|cstdint|cxx11_char_types|limits|^version") { "config" }
             elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_cast|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
-            elseif ($_ -match "function_output_iterator|generator_iterator|iterator_adaptors|pointee") { "iterator" }
+            elseif ($_ -match "function_output_iterator|generator_iterator|indirect_reference|iterator_adaptors|^next_prior$|pointee|shared_container_iterator") { "iterator" }
             elseif ($_ -eq "regex_fwd") { "regex" }
             elseif ($_ -eq "make_default") { "convert" }
             elseif ($_ -eq "foreach_fwd") { "foreach" }
@@ -350,31 +410,24 @@ foreach ($library in $libraries)
             elseif ($_ -match "implicit_cast|polymorphic_cast|polymorphic_pointer_cast") { "conversion" }
             elseif ($_ -eq "nondet_random") { "random" }
             elseif ($_ -eq "memory_order") { "atomic" }
-            elseif ($_ -match "blank|blank_fwd|cstdlib|numeric_traits|fenv") { "detail" }
+            elseif ($_ -match "^blank$|^blank_fwd$|^cstdlib$") { "detail" }
             elseif ($_ -match "is_placeholder|mem_fn") { "bind" }
             elseif ($_ -eq "exception_ptr") { "exception" }
             elseif ($_ -match "multi_index_container|multi_index_container_fwd") { "multi_index" }
             elseif ($_ -match "basic_pointerbuf|lcast_precision") { "lexical_cast" }
-            elseif ($_ -match "token_iterator|token_functions") { "tokenizer" }
-            elseif ($_ -eq "numeric" -and $library -notmatch "numeric_conversion|interval|odeint|ublas") { "numeric_conversion"; "interval"; "odeint"; "ublas" }
+            elseif ($_ -match "token_functions|token_iterator") { "tokenizer" }
             elseif ($_ -eq "io_fwd") { "io" }
             else { $_ }
         } | group | % name | ? {
             $_ -ne $library
         }
 
-        #"`nFor ${library}:"
         "      [known] " + $($groups | ? { $libraries_found -contains $_ })
         "    [unknown] " + $($groups | ? { $libraries_found -notcontains $_ })
 
         $deps = @($groups | ? { $libraries_found -contains $_ })
 
-        $deps = @($deps | ? {
-            # Boost contains cycles, so remove a few dependencies to break the loop.
-            (($library -notmatch "detail|type_traits") -or ($_ -notmatch "utility")) `
-            -and `
-            (($library -notmatch "utility|spirit") -or ($_ -notmatch "detail"))
-        } | % { $_ -replace "_","-" } | % { TransformReference $_ })
+        $deps = @($deps | % { $_ -replace "_","-" } | % { TransformReference $_ })
 
         $deps += @("boost-vcpkg-helpers")
 
