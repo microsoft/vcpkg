@@ -5,8 +5,8 @@
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "dependencies": [
-    "lcms",
     "jasper",
+    "lcms",
     {
       "name": "vcpkg-cmake",
       "host": true
