@@ -1,7 +1,7 @@
 {
   "name": "tinyfiledialogs",
-  "version-semver": "3.8.8",
-  "port-version": 1,
+  "version": "3.8.8",
+  "port-version": 2,
   "description": "Highly portable and cross-platform dialogs for native inputbox, passwordbox, colorpicker and more",
   "homepage": "https://sourceforge.net/projects/tinyfiledialogs/",
   "supports": "!uwp",
