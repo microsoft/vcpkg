@@ -1,0 +1,16 @@
+{
+  "name": "utf8proc",
+  "version": "2.6.1",
+  "description": "Clean C library for processing UTF-8 Unicode data.",
+  "homepage": "https://github.com/JuliaLang/utf8proc",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

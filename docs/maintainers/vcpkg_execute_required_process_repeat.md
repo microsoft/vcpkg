@@ -7,10 +7,11 @@ Execute a process until the command succeeds, or until the COUNT is reached.
 ## Usage
 ```cmake
 vcpkg_execute_required_process_repeat(
-    COUNT <num>
     COMMAND <cmd> [<arguments>]
+    COUNT <num>
     WORKING_DIRECTORY <directory>
     LOGNAME <name>
+    [ALLOW_IN_DOWNLOAD_MODE]
 )
 ```
 

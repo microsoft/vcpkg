@@ -35,6 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     libvorbis SDL_MIXER_ENABLE_OGGVORBIS
     opusfile SDL_MIXER_ENABLE_OPUS
     nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
+    fluidsynth SDL_MIXER_ENABLE_FLUIDSYNTH
 )
 
 vcpkg_configure_cmake(

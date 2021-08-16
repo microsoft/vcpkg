@@ -3,9 +3,9 @@ if(NOT VCPKG_TARGET_IS_OSX)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.9/sentry-native.zip"
-    FILENAME "sentry-native-0.4.9.zip"
-    SHA512 152e3c6cfc7a72421f088f0e9853f016b62e2c22c580edb6255355648d293a31507974bc5c12ef3c0cd721d07797b9948f53ecafa1482d3264504cafac1fe8a3
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.12/sentry-native.zip"
+    FILENAME "sentry-native-0.4.12.zip"
+    SHA512 15da4407ed5e2c8d5e56e497ccc6006b29235aef6b3a81e034c93443e20a7cfdf95d55e31b88e552c55e824eb15d6f7fafe988c453a5a6f36fe45136d7268b19
 )
 
 vcpkg_extract_source_archive_ex(
@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        fix-libcurl.patch
+        use-zlib-target.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -37,6 +37,7 @@ vcpkg_configure_cmake(
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
+        -DCRASHPAD_ZLIB_SYSTEM=ON
 )
 
 vcpkg_install_cmake()

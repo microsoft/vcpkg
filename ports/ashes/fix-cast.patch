@@ -1,0 +1,39 @@
+diff --git a/source/ashes/renderer/D3D11Renderer/ash_direct3d11.cpp b/source/ashes/renderer/D3D11Renderer/ash_direct3d11.cpp
+index fb9a195a..3a97e126 100644
+--- a/source/ashes/renderer/D3D11Renderer/ash_direct3d11.cpp
++++ b/source/ashes/renderer/D3D11Renderer/ash_direct3d11.cpp
+@@ -1688,7 +1688,7 @@ namespace ashes::d3d11
+                VkPeerMemoryFeatureFlags * pPeerMemoryFeatures )
+        {
+                reportUnsupported( device, "vkGetDeviceGroupPeerMemoryFeatures" );
+-               *pPeerMemoryFeatures = VK_NULL_HANDLE;
++               *pPeerMemoryFeatures = static_cast<VkPeerMemoryFeatureFlags>(0);
+        }
+ 
+        void VKAPI_CALL vkCmdSetDeviceMask(
+diff --git a/source/ashes/renderer/GlRenderer/ash_opengl.cpp b/source/ashes/renderer/GlRenderer/ash_opengl.cpp
+index 45a17148..eec2419f 100644
+--- a/source/ashes/renderer/GlRenderer/ash_opengl.cpp
++++ b/source/ashes/renderer/GlRenderer/ash_opengl.cpp
+@@ -1700,7 +1700,7 @@ namespace ashes::gl
+                VkPeerMemoryFeatureFlags* pPeerMemoryFeatures )
+        {
+                reportUnsupported( device, "vkGetDeviceGroupPeerMemoryFeatures" );
+-               *pPeerMemoryFeatures = VK_NULL_HANDLE;
++               *pPeerMemoryFeatures = static_cast<VkPeerMemoryFeatureFlags>(0);
+        }
+ 
+        void VKAPI_CALL vkCmdSetDeviceMask(
+diff --git a/source/ashes/renderer/TestRenderer/ash_test.cpp b/source/ashes/renderer/TestRenderer/ash_test.cpp
+index 741dd75c..b34647b8 100644
+--- a/source/ashes/renderer/TestRenderer/ash_test.cpp
++++ b/source/ashes/renderer/TestRenderer/ash_test.cpp
+@@ -1735,7 +1735,7 @@ namespace ashes::test
+                VkPeerMemoryFeatureFlags* pPeerMemoryFeatures )
+        {
+                reportUnsupported( device, "vkGetDeviceGroupPeerMemoryFeatures" );
+-               *pPeerMemoryFeatures = VK_NULL_HANDLE;
++               *pPeerMemoryFeatures = static_cast<VkPeerMemoryFeatureFlags>(0);
+        }
+ 
+        void VKAPI_CALL vkCmdSetDeviceMask(
