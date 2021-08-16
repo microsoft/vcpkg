@@ -1,8 +1,8 @@
 diff --git a/cpp/cmake_modules/BuildUtils.cmake b/cpp/cmake_modules/BuildUtils.cmake
-index 2fd897b5d..b6118ad4f 100644
+index cd8290d1b..12c52c184 100644
 --- a/cpp/cmake_modules/BuildUtils.cmake
 +++ b/cpp/cmake_modules/BuildUtils.cmake
-@@ -440,7 +440,7 @@ function(ADD_ARROW_LIB LIB_NAME)
+@@ -427,7 +427,7 @@ function(ADD_ARROW_LIB LIB_NAME)
        target_include_directories(${LIB_NAME}_static PRIVATE ${ARG_PRIVATE_INCLUDES})
      endif()
  

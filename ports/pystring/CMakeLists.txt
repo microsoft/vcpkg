@@ -15,5 +15,5 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES pystring.h DESTINATION include)
+  install(FILES pystring.h DESTINATION include/pystring)
 endif()

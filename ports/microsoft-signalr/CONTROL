@@ -1,5 +1,5 @@
 Source: microsoft-signalr
-Version: 0.1.0-alpha2
+Version: 0.1.0-alpha3
 Port-Version: 0
 Description: C++ Client for ASP.NET Core SignalR.
 Default-Features: default-features
@@ -12,3 +12,7 @@ Description: Features installed by default
 Feature: cpprestsdk
 Description: Add default Http and WebSocket implementations using CppRestSDK
 Build-Depends: cpprestsdk[default-features,websockets]
+
+Feature: messagepack
+Description: Add support for the messagepack hub protocol, must enable in code still
+Build-Depends: msgpack
