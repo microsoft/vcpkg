@@ -24,7 +24,6 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ],
   "features": {

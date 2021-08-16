@@ -8,7 +8,6 @@
     "boost-config",
     "boost-conversion",
     "boost-core",
-    "boost-detail",
     "boost-exception",
     "boost-fusion",
     "boost-integer",

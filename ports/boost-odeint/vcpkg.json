@@ -21,6 +21,7 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
+    "boost-ublas",
     "boost-units",
     "boost-utility",
     "boost-vcpkg-helpers"

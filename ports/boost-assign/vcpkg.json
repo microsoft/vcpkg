@@ -6,6 +6,7 @@
   "dependencies": [
     "boost-array",
     "boost-config",
+    "boost-core",
     "boost-move",
     "boost-mpl",
     "boost-preprocessor",
@@ -15,7 +16,6 @@
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

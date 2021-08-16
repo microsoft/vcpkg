@@ -9,7 +9,6 @@
     "boost-mpl",
     "boost-range",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

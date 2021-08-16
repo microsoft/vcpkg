@@ -16,7 +16,6 @@
     "boost-mp11",
     "boost-numeric-conversion",
     "boost-preprocessor",
-    "boost-utility",
     "boost-variant2",
     "boost-vcpkg-helpers"
   ]

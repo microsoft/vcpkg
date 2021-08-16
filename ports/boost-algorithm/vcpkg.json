@@ -20,7 +20,6 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-unordered",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -22,7 +22,6 @@
     "boost-container",
     "boost-core",
     "boost-date-time",
-    "boost-detail",
     "boost-exception",
     {
       "name": "boost-filesystem",

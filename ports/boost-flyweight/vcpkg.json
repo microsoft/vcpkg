@@ -15,9 +15,9 @@
     "boost-parameter",
     "boost-preprocessor",
     "boost-serialization",
+    "boost-smart-ptr",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -4,6 +4,7 @@
   "description": "Boost core module",
   "homepage": "https://github.com/boostorg/core",
   "dependencies": [
+    "boost-assert",
     "boost-config",
     "boost-static-assert",
     "boost-vcpkg-helpers"

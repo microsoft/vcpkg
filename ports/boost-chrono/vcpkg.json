@@ -10,7 +10,7 @@
       "host": true
     },
     "boost-config",
-    "boost-detail",
+    "boost-core",
     "boost-integer",
     {
       "name": "boost-modular-build-helper",

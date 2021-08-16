@@ -8,14 +8,12 @@
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-detail",
     "boost-integer",
     "boost-intrusive",
     "boost-move",
     "boost-static-assert",
     "boost-type-traits",
     "boost-unordered",
-    "boost-utility",
     "boost-vcpkg-helpers",
     "boost-winapi"
   ]

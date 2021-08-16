@@ -18,12 +18,12 @@
     "boost-container",
     "boost-core",
     "boost-date-time",
-    "boost-detail",
     "boost-exception",
     "boost-function",
     "boost-functional",
     "boost-intrusive",
     "boost-io",
+    "boost-iterator",
     "boost-lexical-cast",
     {
       "name": "boost-modular-build-helper",

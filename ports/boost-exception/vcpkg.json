@@ -19,7 +19,6 @@
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

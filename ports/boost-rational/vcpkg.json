@@ -6,6 +6,7 @@
   "dependencies": [
     "boost-assert",
     "boost-config",
+    "boost-core",
     "boost-integer",
     "boost-static-assert",
     "boost-throw-exception",

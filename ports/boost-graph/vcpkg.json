@@ -45,10 +45,6 @@
     "boost-smart-ptr",
     "boost-spirit",
     "boost-static-assert",
-    {
-      "name": "boost-test",
-      "platform": "!uwp"
-    },
     "boost-throw-exception",
     "boost-tti",
     "boost-tuple",

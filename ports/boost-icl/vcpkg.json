@@ -11,6 +11,7 @@
     "boost-core",
     "boost-date-time",
     "boost-detail",
+    "boost-iterator",
     "boost-move",
     "boost-mpl",
     "boost-range",

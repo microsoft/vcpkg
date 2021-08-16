@@ -24,7 +24,6 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers",
     "boost-vmd"
   ]

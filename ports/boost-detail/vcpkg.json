@@ -5,6 +5,7 @@
   "homepage": "https://github.com/boostorg/detail",
   "dependencies": [
     "boost-config",
+    "boost-core",
     "boost-preprocessor",
     "boost-static-assert",
     "boost-type-traits",

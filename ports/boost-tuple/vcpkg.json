@@ -8,7 +8,6 @@
     "boost-core",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

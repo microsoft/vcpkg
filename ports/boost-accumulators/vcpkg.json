@@ -11,10 +11,8 @@
     "boost-config",
     "boost-core",
     "boost-fusion",
-    "boost-interval",
     "boost-mpl",
     "boost-numeric-conversion",
-    "boost-odeint",
     "boost-parameter",
     "boost-preprocessor",
     "boost-range",
@@ -25,7 +23,6 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-ublas",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

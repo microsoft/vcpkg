@@ -13,7 +13,6 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
-    "boost-detail",
     {
       "name": "boost-filesystem",
       "platform": "!uwp"

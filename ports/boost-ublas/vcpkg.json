@@ -8,6 +8,8 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
+    "boost-interval",
+    "boost-iterator",
     "boost-mpl",
     "boost-range",
     "boost-serialization",
@@ -15,7 +17,6 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -30,7 +30,6 @@
     "boost-static-assert",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-variant",
     "boost-vcpkg-helpers"
   ]

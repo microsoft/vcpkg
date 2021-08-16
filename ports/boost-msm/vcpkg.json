@@ -21,7 +21,6 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

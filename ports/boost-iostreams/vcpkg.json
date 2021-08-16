@@ -15,6 +15,7 @@
     "boost-detail",
     "boost-function",
     "boost-integer",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true
