@@ -1,15 +1,15 @@
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "http://www.netlib.org/blas/blas-3.10.0.tgz"
-  FILENAME "blas-3.10.0.tgz"
-  SHA512 1f243ce4f7e0974e62c03c49da2741509662e20e82d0ebb73e10a940cff6458739b9dc238125d5e1ae7c179eaba06155bb502327bd58eaf246c29a16e554eeb0
+    URLS "http://www.netlib.org/blas/blas-3.10.0.tgz"
+    FILENAME "blas-3.10.0.tgz"
+    SHA512 1f243ce4f7e0974e62c03c49da2741509662e20e82d0ebb73e10a940cff6458739b9dc238125d5e1ae7c179eaba06155bb502327bd58eaf246c29a16e554eeb0
 )
 
 vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  PATCHES
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES fix-install.patch
 )
 
 
@@ -31,13 +31,13 @@ include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    ${FEATURE_OPTIONS}
-    ${FORTRAN_CMAKE}
-    -DBUILD_INDEX64=${BUILD_X64}
-    -DBUILD_TESTING=OFF
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+      ${FEATURE_OPTIONS}
+      ${FORTRAN_CMAKE}
+      -DBUILD_INDEX64=${BUILD_X64}
+      -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
