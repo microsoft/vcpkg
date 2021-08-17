@@ -9,6 +9,10 @@
       "host": true
     }
   ],
+  "default-features": [
+    "complex",
+    "single"
+  ],
   "features": {
     "complex": {
       "description": "Build single precision complex"

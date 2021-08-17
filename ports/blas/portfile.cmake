@@ -30,9 +30,8 @@ endif()
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
       ${FEATURE_OPTIONS}
       ${FORTRAN_CMAKE}
@@ -40,7 +39,7 @@ vcpkg_configure_cmake(
       -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
