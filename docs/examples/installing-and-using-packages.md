@@ -92,6 +92,12 @@ To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as:  
 `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
 
+When using a triplet that isn't the default, like `x64-windows-static`, cmake needs to be made aware of the target triplet. This can be done with `VCPKG_TARGET_TRIPLET`.
+
+```
+-DVCPKG_TARGET_TRIPLET=[triplet]
+```
+
 If you are using CMake through Open Folder with Visual Studio you can define `CMAKE_TOOLCHAIN_FILE` by adding a "variables" section to each of your `CMakeSettings.json` configurations:
 
 ```json

@@ -288,6 +288,14 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
+### Specifying Target Triplet
+
+When using a triplet that isn't the default, like `x64-windows-static`, cmake needs to be made aware of the target triplet. This can be done with `VCPKG_TARGET_TRIPLET`.
+
+```
+-DVCPKG_TARGET_TRIPLET=[triplet]
+```
+
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
