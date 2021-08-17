@@ -37,7 +37,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libraw/libraw_types.h"
         "#ifdef LIBRAW_NODLL" "#if 1"
     )
