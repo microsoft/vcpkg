@@ -299,7 +299,7 @@ echo "Building vcpkg-tool..."
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
 vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
-cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe'"
+cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe' -DCMAKE_OSX_ARCHITECTURES='x86_64'"
 
 if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
     cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
