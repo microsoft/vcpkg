@@ -5,13 +5,7 @@
   "homepage": "https://www.kdab.com/development-resources/qt-tools/kddockwidgets",
   "dependencies": [
     "ecm",
-    "kf5coreaddons",
-    "kf5widgetsaddons",
     "qt5-base",
-    {
-      "name": "qt5-x11extras",
-      "platform": "linux"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
