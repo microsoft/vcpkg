@@ -28,22 +28,23 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
+
 if(COMMS_BUILD_TOOLS)
     vcpkg_copy_tools(
         TOOL_NAMES cc_dump cc_view
         SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
         AUTO_CLEAN
     )
-    file(COPY "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/")
-endif()
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" 
+         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/plugin")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/CommsChampion/cmake" TARGET_PATH "share/CommsChampion")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
-
-if(COMMS_BUILD_TOOLS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/LibComms")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/CommsChampion/plugin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/LibComms")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/CommsChampion")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 else()
