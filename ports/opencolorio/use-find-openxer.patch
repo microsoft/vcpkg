@@ -1,0 +1,13 @@
+diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/FindExtPackages.cmake
+index 8d9bfdd7..cce2fde2 100644
+--- a/share/cmake/modules/FindExtPackages.cmake
++++ b/share/cmake/modules/FindExtPackages.cmake
+@@ -34,7 +34,7 @@ find_package(yaml-cpp 0.6.3 REQUIRED)
+ 
+ # Half (OpenEXR/IlmBase)
+ # https://github.com/openexr/openexr
+-find_package(Half 2.4.0 REQUIRED)
++find_package(OpenEXR 2.4.0 CONFIG REQUIRED)
+ 
+ # pystring
+ # https://github.com/imageworks/pystring
