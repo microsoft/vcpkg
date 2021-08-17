@@ -1,0 +1,26 @@
+{
+  "name": "blas",
+  "version-semver": "3.10.0",
+  "description": "Metapackage for packages which provide BLAS",
+  "homepage": "http://www.netlib.org/blas/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "complex": {
+      "description": "Build single precision complex"
+    },
+    "complex16": {
+      "description": "Build double precision complex"
+    },
+    "double": {
+      "description": "Build double precision real"
+    },
+    "single": {
+      "description": "Build single precision real"
+    }
+  }
+}
