@@ -1,0 +1,16 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO buck-yeh/bux
+    REF 4636183159f74f350238e6ee59583b34f7e7aca9 # v1.4.1
+    SHA512 319cd15c73ca469849cbc364635d7147cfa3fed57d6043b0cb2b52d504a253645518ec6254ddba51fc8cc32cc89e345458530628b331629cabce5b64d8723a6a
+    HEAD_REF main
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bux RENAME copyright)
