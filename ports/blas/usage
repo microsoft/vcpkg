@@ -1,0 +1,5 @@
+Use this package via the module FindBLAS that comes with CMake. To use in your CMakeLists.txt:
+
+    find_package(BLAS REQUIRED)
+    target_compile_options(main PRIVATE ${BLAS_LINKER_FLAGS})
+    target_link_libraries(main PRIVATE ${BLAS_LIBRARIES})
