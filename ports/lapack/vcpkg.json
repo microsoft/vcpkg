@@ -1,7 +1,6 @@
 {
   "name": "lapack",
-  "version-string": "3",
-  "port-version": 1,
+  "version-date": "2021-08-18",
   "description": "Metapackage for packages which provide LAPACK",
   "dependencies": [
     {
