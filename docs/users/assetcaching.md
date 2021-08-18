@@ -7,13 +7,6 @@
 Vcpkg can utilize mirrors to cache downloaded assets, ensuring continued operation even if the original source changes
 or disappears.
 
-The general workflow of the asset cache is:
-1. Read from mirror
-2. (if #1 failed) read from original
-3. (if #2 succeeded) write to mirror
-
-You can enable/disable (1) and (3) via the read/write/readwrite specifiers, and you can disable (2) via x-block-origin.
-
 In-tool help is available via `vcpkg help assetcaching`.
 
 ## Configuration
@@ -34,15 +27,26 @@ Removes all previous sources
 
 #### `x-azurl`
 
-Syntax: `x-azurl,<url>[,<sas>[,<rw>]]` (the default for `<rw>` is `read`)
+Syntax: `x-azurl,<url>[,<sas>[,<rw>]]`
 
 Adds an Azure Blob Storage source, optionally using Shared Access Signature validation. URL should include the container
 path and be terminated with a trailing `/`. SAS, if defined, should be prefixed with a `?`. Non-Azure servers will also
-work if they respond to GET and PUT requests of the form: `<url><sha512><sas>` (if you set for example `X_VCPKG_ASSET_SOURCES` to
-`x-azurl,https://mydomain.com/vcpkg/,token=abc123,readwrite` your server should respond to GET and PUT requests of the form `https://mydomain.com/vcpkg/<sha512>?token=abc123`).
+work if they respond to GET and PUT requests of the form: `<url><sha512><sas>`. As an example, if you set
+`X_VCPKG_ASSET_SOURCES` to `x-azurl,https://mydomain.com/vcpkg/,token=abc123,readwrite` your server should respond to
+`GET` and `PUT` requests of the form `https://mydomain.com/vcpkg/<sha512>?token=abc123`.
 
 You can also use the filesystem (e.g. a network drive) via `file://` as asset cache. For example you then set
-`X_VCPKG_ASSET_SOURCES` to `x-azurl,file:///Z:/vcpkg/assetcache/,,readwrite` when you have a network folder mounted at `Z:/`.
+`X_VCPKG_ASSET_SOURCES` to `x-azurl,file:///Z:/vcpkg/assetcache/,,readwrite` when you have a network folder mounted at
+`Z:/`.
+
+The workflow of this asset source is:
+
+1. Attemp to read from the mirror
+2. (If step 1 failed) Read from the original url
+3. (If step 2 succeeded) Write back to the mirror
+
+You can enable/disable steps 1 and 3 via the [`<rw>`](#valid-source-strings) specifier and you can disable step 2 via
+`x-block-origin` below.
 
 See also the [binary caching documentation for Azure Blob Storage](binarycaching.md#azure-blob-storage-experimental) for
 more information on how to set up an `x-azurl` source.
