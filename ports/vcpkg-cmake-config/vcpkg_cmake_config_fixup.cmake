@@ -250,7 +250,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                     endif()
                     list(FIND VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${path}" index)
                     if(NOT index EQUAL -1)
-                        string(REPLACE "${framework}" "\\\"-framework ${name}\\\"" fixed_line "${fixed_line}")
+                        string(REPLACE "${framework}" "${name}.framework" fixed_line "${fixed_line}")
                     endif()
                 endforeach()
                 string(REPLACE "${line}" "${fixed_line}" targets_content "${targets_content}")
