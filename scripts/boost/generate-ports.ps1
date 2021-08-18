@@ -222,98 +222,80 @@ function Generate()
         -NoNewline
 }
 
-if (!(Test-Path "$scriptsDir/boost"))
-{
+if (!(Test-Path "$scriptsDir/boost")) {
     "Cloning boost..."
     pushd $scriptsDir
-    try
-    {
+    try {
         git clone https://github.com/boostorg/boost --branch boost-$version
     }
-    finally
-    {
+    finally {
         popd
     }
 }
-else
-{
+else {
     pushd $scriptsDir/boost
-    try
-    {
+    try {
         git fetch
         git checkout -f boost-$version
     }
-    finally
-    {
+    finally {
         popd
     }
 }
 
 $libraries_found = Get-ChildItem $scriptsDir/boost/libs -directory | % name | % {
-    if ($_ -match "numeric")
-    {
+    if ($_ -eq "numeric") {
         "numeric_conversion"
         "interval"
         "odeint"
         "ublas"
-        "safe_numerics"
     }
-    elseif ($_ -eq "headers")
-    {
+    elseif ($_ -eq "headers") {
     }
-    else
-    {
+    else {
         $_
     }
 }
 
 New-Item -ItemType "Directory" $scriptsDir/downloads -erroraction SilentlyContinue | out-null
 
-if ($libraries.Length -eq 0)
-{
+if ($libraries.Length -eq 0) {
     $libraries = $libraries_found
 }
 
 $libraries_in_boost_port = @()
 
-foreach ($library in $libraries)
-{
+foreach ($library in $libraries) {
     "Handling boost/$library..."
     $archive = "$scriptsDir/downloads/$library-boost-$version.tar.gz"
-    if (!(Test-Path $archive))
-    {
+    if (!(Test-Path $archive)) {
         "Downloading boost/$library..."
         & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
     $hash = & $vcpkg --x-wait-for-lock hash $archive
     # remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
-    if($hash -is [Object[]])
-    {
+    if ($hash -is [Object[]]) {
         $hash = $hash[1]
     }
      
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
-    if (!(Test-Path $unpacked))
-    {
+    if (!(Test-Path $unpacked)) {
         "Unpacking boost/$library..."
         New-Item -ItemType "Directory" $scriptsDir/libs -erroraction SilentlyContinue | out-null
         pushd $scriptsDir/libs
-        try
-        {
+        try {
             cmake -E tar xf $archive
         }
-        finally
-        {
+        finally {
             popd
         }
     }
     pushd $unpacked
-    try
-    {
-        $groups = Get-ChildItem -Recurse -Path include,src -File `
+    try {
+        $groups = Get-ChildItem -Recurse -Path include, src -File `
             | ? { $_ -is [System.IO.FileInfo] } `
             | % { Get-Content -LiteralPath $_ } `
-            | ? { $_ -match '.*# *include [<"]boost/' }
+            | ? { $_ -match '.*# *include [<"]boost\/' }
 
         $groups = $groups | % {
             # skip line with patterns:
@@ -325,99 +307,113 @@ foreach ($library in $libraries)
                 Write-Verbose "${library}: skipping line: $_"
             }
             else {
-                # Write-Verbose "${library}: processing line: $_"
+                Write-Verbose "${library}: processing line: $_"
                 # extract path
                 $_ -replace " *# *include *[<`"]boost\/([a-zA-Z0-9\.\-_\/]*)[>`"].*", "`$1"
             }
         } | group | % name | % {
             Write-Verbose "${library}: processing path: $_"
-            # re-map path and extract name
-            $_ `
-                -replace "detail/winapi/","winapi/detail/winapi/" `
-                -replace "detail/algorithm.hpp","graph/detail/algorithm.hpp" `
-                -replace "detail/atomic_count.hpp","smart_ptr/detail/atomic_count.hpp" `
-                -replace "detail/call_traits.hpp","utility/detail/call_traits.hpp" `
-                -replace "detail/compressed_pair.hpp","utility/detail/compressed_pair.hpp" `
-                -replace "detail/interlocked.hpp","winapi/detail/interlocked.hpp" `
-                -replace "detail/iterator.hpp","core/detail/iterator.hpp" `
-                -replace "detail/lightweight_mutex.hpp","smart_ptr/detail/lightweight_mutex.hpp" `
-                -replace "detail/lightweight_test.hpp","core/detail/lightweight_test.hpp" `
-                -replace "detail/lightweight_thread.hpp","smart_ptr/detail/lightweight_thread.hpp" `
-                -replace "detail/no_exceptions_support.hpp","core/detail/no_exceptions_support.hpp" `
-                -replace "detail/scoped_enum_emulation.hpp","core/detail/scoped_enum_emulation.hpp" `
-                -replace "detail/sp_typeinfo.hpp","core/detail/sp_typeinfo.hpp" `
-                -replace "detail/ob_compressed_pair.hpp","utility/detail/ob_compressed_pair.hpp" `
-                -replace "detail/quick_allocator.hpp","smart_ptr/detail/quick_allocator.hpp" `
-                -replace "detail/workaround.hpp","config/detail/workaround.hpp" `
-                -replace "numeric/conversion/","numeric_conversion/numeric/conversion/" `
-                -replace "numeric/interval/","interval/numeric/interval/" `
-                -replace "numeric/odeint/","odeint/numeric/odeint/" `
-                -replace "numeric/ublas/","ublas/numeric/ublas/" `
-                -replace "numeric/interval.hpp","interval/numeric/interval.hpp" `
-                -replace "numeric/odeint.hpp","odeint/numeric/odeint.hpp" `
-                -replace "exception/exception.hpp","throw_exception/exception/exception.hpp" `
-                -replace "pending/detail/disjoint_sets.hpp","graph/pending/detail/disjoint_sets.hpp" `
-                -replace "pending/detail/int_iterator.hpp","iterator/pending/detail/int_iterator.hpp" `
-                -replace "pending/detail/property.hpp","graph/pending/detail/property.hpp" `
-                -replace "pending/bucket_sorter.hpp","graph/pending/bucket_sorter.hpp" `
-                -replace "pending/container_traits.hpp","graph/pending/container_traits.hpp" `
-                -replace "pending/disjoint_sets.hpp","graph/pending/disjoint_sets.hpp" `
-                -replace "pending/fenced_priority_queue.hpp","graph/pending/fenced_priority_queue.hpp" `
-                -replace "pending/fibonacci_heap.hpp","graph/pending/fibonacci_heap.hpp" `
-                -replace "pending/indirect_cmp.hpp","graph/pending/indirect_cmp.hpp" `
-                -replace "pending/integer_log2.hpp","integer/pending/integer_log2.hpp" `
-                -replace "pending/is_heap.hpp","graph/pending/is_heap.hpp" `
-                -replace "pending/iterator_adaptors.hpp","iterator/pending/iterator_adaptors.hpp" `
-                -replace "pending/iterator_tests.hpp","iterator/pending/iterator_tests.hpp" `
-                -replace "pending/mutable_heap.hpp","graph/pending/mutable_heap.hpp" `
-                -replace "pending/mutable_queue.hpp","graph/pending/mutable_queue.hpp" `
-                -replace "pending/property.hpp","graph/pending/property.hpp" `
-                -replace "pending/property_serialize.hpp","graph/pending/property_serialize.hpp" `
-                -replace "pending/queue.hpp","graph/pending/queue.hpp" `
-                -replace "pending/relaxed_heap.hpp","graph/pending/relaxed_heap.hpp" `
-                -replace "pending/stringtok.hpp","graph/pending/stringtok.hpp" `
-                -replace "utility/addressof.hpp","core/utility/addressof.hpp" `
-                -replace "utility/declval.hpp","type_traits/utility/declval.hpp" `
-                -replace "utility/enable_if.hpp","core/utility/enable_if.hpp" `
-                -replace "utility/explicit_operator_bool.hpp","core/utility/explicit_operator_bool.hpp" `
-                -replace "utility/swap.hpp","core/utility/swap.hpp" `
-                -replace "([a-zA-Z0-9\.\-_]*).*", "`$1" `
-                -replace "\.hp?p?", ""
+            # map special path to the library name
+            if ($_ -match "^detail\/winapi\/") { "winapi" }
+            elseif ($_ -eq "detail/algorithm.hpp") { "graph" }
+            elseif ($_ -eq "detail/atomic_count.hpp") { "smart_ptr" }
+            elseif ($_ -eq "detail/basic_pointerbuf.hpp") { "lexical_cast" }
+            elseif ($_ -eq "detail/call_traits.hpp") { "utility" }
+            elseif ($_ -eq "detail/compressed_pair.hpp") { "utility" }
+            elseif ($_ -eq "detail/interlocked.hpp") { "winapi" }
+            elseif ($_ -eq "detail/iterator.hpp") { "core" }
+            elseif ($_ -eq "detail/lcast_precision.hpp") { "lexical_cast" }
+            elseif ($_ -eq "detail/lightweight_mutex.hpp") { "smart_ptr" }
+            elseif ($_ -eq "detail/lightweight_test.hpp") { "core" }
+            elseif ($_ -eq "detail/lightweight_thread.hpp") { "smart_ptr" }
+            elseif ($_ -eq "detail/no_exceptions_support.hpp") { "core" }
+            elseif ($_ -eq "detail/scoped_enum_emulation.hpp") { "core" }
+            elseif ($_ -eq "detail/sp_typeinfo.hpp") { "core" }
+            elseif ($_ -eq "detail/ob_compressed_pair.hpp") { "utility" }
+            elseif ($_ -eq "detail/quick_allocator.hpp") { "smart_ptr" }
+            elseif ($_ -eq "detail/workaround.hpp") { "config" }
+            elseif ($_ -match "^functional\/hash\/") { "container_hash" }
+            elseif ($_ -eq "functional/hash.hpp") { "container_hash" }
+            elseif ($_ -eq "functional/hash_fwd.hpp") { "container_hash" }
+            elseif ($_ -match "^graph\/distributed\/") { "graph_parallel" }
+            elseif ($_ -match "^graph\/parallel\/") { "graph_parallel" }
+            elseif ($_ -eq "graph/accounting.hpp") { "graph_parallel" }
+            elseif ($_ -eq "exception/exception.hpp") { "throw_exception" }
+            elseif ($_ -match "^numeric\/conversion\/") { "numeric_conversion" }
+            elseif ($_ -match "^numeric\/interval\/") { "interval" }
+            elseif ($_ -match "^numeric\/odeint\/") { "odeint" }
+            elseif ($_ -match "^numeric\/ublas\/") { "ublas" }
+            elseif ($_ -eq "numeric/interval.hpp") { "interval" }
+            elseif ($_ -eq "numeric/odeint.hpp") { "odeint" }
+            elseif ($_ -match "^parameter\/aux_\/python\/") { "parameter_python" }
+            elseif ($_ -eq "parameter/python.hpp") { "parameter_python" }
+            elseif ($_ -eq "pending/detail/disjoint_sets.hpp") { "graph" }
+            elseif ($_ -eq "pending/detail/int_iterator.hpp") { "iterator" }
+            elseif ($_ -eq "pending/detail/property.hpp") { "graph" }
+            elseif ($_ -eq "pending/bucket_sorter.hpp") { "graph" }
+            elseif ($_ -eq "pending/container_traits.hpp") { "graph" }
+            elseif ($_ -eq "pending/disjoint_sets.hpp") { "graph" }
+            elseif ($_ -eq "pending/fenced_priority_queue.hpp") { "graph" }
+            elseif ($_ -eq "pending/fibonacci_heap.hpp") { "graph" }
+            elseif ($_ -eq "pending/indirect_cmp.hpp") { "graph" }
+            elseif ($_ -eq "pending/integer_log2.hpp") { "integer" }
+            elseif ($_ -eq "pending/is_heap.hpp") { "graph" }
+            elseif ($_ -eq "pending/iterator_adaptors.hpp") { "iterator" }
+            elseif ($_ -eq "pending/iterator_tests.hpp") { "iterator" }
+            elseif ($_ -eq "pending/mutable_heap.hpp") { "graph" }
+            elseif ($_ -eq "pending/mutable_queue.hpp") { "graph" }
+            elseif ($_ -eq "pending/property.hpp") { "graph" }
+            elseif ($_ -eq "pending/property_serialize.hpp") { "graph" }
+            elseif ($_ -eq "pending/queue.hpp") { "graph" }
+            elseif ($_ -eq "pending/relaxed_heap.hpp") { "graph" }
+            elseif ($_ -eq "pending/stringtok.hpp") { "graph" }
+            elseif ($_ -match "^property_map\/parallel\/") { "property_map_parallel" }
+            elseif ($_ -eq "utility/addressof.hpp") { "core" }
+            elseif ($_ -eq "utility/declval.hpp") { "type_traits" }
+            elseif ($_ -eq "utility/enable_if.hpp") { "core" }
+            elseif ($_ -eq "utility/explicit_operator_bool.hpp") { "core" }
+            elseif ($_ -eq "utility/swap.hpp") { "core" }
+            # extract first name in the path
+            else { $_ -replace "([a-zA-Z0-9\.\-_]*).*", "`$1" }
         } | group | % name | % {
             Write-Verbose "${library}: processing name: $_"
-            # re-map name
-            if ($_ -match "aligned_storage") { "type_traits" }
-            elseif ($_ -match "checked_delete|get_pointer|^iterator$|non_type|noncopyable|^ref$|^swap$|^type$|visit_each") { "core" }
-            elseif ($_ -match "concept|concept_archetype") { "concept_check" }
-            elseif ($_ -match "^config|cstdint|cxx11_char_types|^limits$|^version$") { "config" }
-            elseif ($_ -eq "current_function") { "assert" }
-            elseif ($_ -eq "dynamic_bitset_fwd") { "dynamic_bitset" }
-            elseif ($_ -match "unordered_map|unordered_set") { "unordered" }
-            elseif ($_ -match "integer_fwd|integer_traits") { "integer" }
-            elseif ($_ -match "call_traits|compressed_pair|operators|operators_v1") { "utility" }
-            elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_cast|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
-            elseif ($_ -match "function_output_iterator|generator_iterator|indirect_reference|iterator_adaptors|^next_prior$|pointee|shared_container_iterator") { "iterator" }
-            elseif ($_ -eq "regex_fwd") { "regex" }
-            elseif ($_ -eq "make_default") { "convert" }
-            elseif ($_ -eq "foreach_fwd") { "foreach" }
-            elseif ($_ -eq "function_equal") { "function" }
-            elseif ($_ -eq "cerrno") { "system" }
-            elseif ($_ -eq "circular_buffer_fwd") { "circular_buffer" }
+            # map first name in the path to the library name
+            if ($_ -eq "current_function.hpp") { "assert" }
+            elseif ($_ -eq "memory_order.hpp") { "atomic" }
+            elseif ($_ -match "is_placeholder.hpp|mem_fn.hpp") { "bind" }
+            elseif ($_ -eq "circular_buffer_fwd.hpp") { "circular_buffer" }
+            elseif ($_ -match "^concept$|concept_archetype.hpp") { "concept_check" }
+            elseif ($_ -match "cstdint.hpp|cxx11_char_types.hpp|limits.hpp|version.hpp") { "config" }
+            elseif ($_ -eq "contract_macro.hpp") { "contract" }
+            elseif ($_ -match "implicit_cast.hpp|polymorphic_cast.hpp|polymorphic_pointer_cast.hpp") { "conversion" }
+            elseif ($_ -eq "make_default.hpp") { "convert" }
+            elseif ($_ -match "checked_delete.hpp|get_pointer.hpp|iterator.hpp|non_type.hpp|noncopyable.hpp|ref.hpp|swap.hpp|type.hpp|visit_each.hpp") { "core" }
+            elseif ($_ -match "blank.hpp|blank_fwd.hpp|cstdlib.hpp") { "detail" }
+            elseif ($_ -eq "dynamic_bitset_fwd.hpp") { "dynamic_bitset" }
+            elseif ($_ -eq "exception_ptr.hpp") { "exception" }
+            elseif ($_ -eq "foreach_fwd.hpp") { "foreach" }
+            elseif ($_ -eq "function_equal.hpp") { "function" }
+            elseif ($_ -match "integer_fwd.hpp|integer_traits.hpp") { "integer" }
+            elseif ($_ -eq "io_fwd.hpp") { "io" }
+            elseif ($_ -match "function_output_iterator.hpp|generator_iterator.hpp|indirect_reference.hpp|iterator_adaptors.hpp|next_prior.hpp|pointee.hpp|shared_container_iterator.hpp") { "iterator" }
+            elseif ($_ -match "cstdfloat.hpp|math_fwd.hpp") { "math" }
+            elseif ($_ -match "multi_index_container.hpp|multi_index_container_fwd.hpp") { "multi_index" }
+            elseif ($_ -eq "cast.hpp") { "numeric_conversion" }
+            elseif ($_ -match "none.hpp|none_t.hpp") { "optional" }
+            elseif ($_ -eq "qvm_lite.hpp") { "qvm" }
+            elseif ($_ -eq "nondet_random.hpp") { "random" }
+            elseif ($_ -match "cregex.hpp|regex_fwd.hpp") { "regex" }
             elseif ($_ -eq "archive") { "serialization" }
-            elseif ($_ -match "none|none_t") { "optional" }
-            elseif ($_ -match "cstdfloat|math_fwd") { "math" }
-            elseif ($_ -eq "cast") { "numeric_conversion" }
-            elseif ($_ -match "implicit_cast|polymorphic_cast|polymorphic_pointer_cast") { "conversion" }
-            elseif ($_ -eq "nondet_random") { "random" }
-            elseif ($_ -eq "memory_order") { "atomic" }
-            elseif ($_ -match "^blank$|^blank_fwd$|^cstdlib$") { "detail" }
-            elseif ($_ -match "is_placeholder|mem_fn") { "bind" }
-            elseif ($_ -eq "exception_ptr") { "exception" }
-            elseif ($_ -match "multi_index_container|multi_index_container_fwd") { "multi_index" }
-            elseif ($_ -match "basic_pointerbuf|lcast_precision") { "lexical_cast" }
-            elseif ($_ -match "token_functions|token_iterator") { "tokenizer" }
-            elseif ($_ -eq "io_fwd") { "io" }
-            else { $_ }
+            elseif ($_ -match "^signals$|last_value.hpp|signal.hpp|signals.hpp") { "signals" }
+            elseif ($_ -match "enable_shared_from_this.hpp|intrusive_ptr.hpp|make_shared.hpp|make_unique.hpp|pointer_cast.hpp|pointer_to_other.hpp|scoped_array.hpp|scoped_ptr.hpp|shared_array.hpp|shared_ptr.hpp|weak_ptr.hpp") { "smart_ptr" }
+            elseif ($_ -eq "cerrno.hpp") { "system" }
+            elseif ($_ -eq "progress.hpp") { "timer" }
+            elseif ($_ -match "token_functions.hpp|token_iterator.hpp") { "tokenizer" }
+            elseif ($_ -match "aligned_storage.hpp") { "type_traits" }
+            elseif ($_ -match "unordered_map.hpp|unordered_set.hpp") { "unordered" }
+            elseif ($_ -match "call_traits.hpp|compressed_pair.hpp|operators.hpp|operators_v1.hpp") { "utility" }
+            # remove file extension
+            else { $_ -replace "\.hp?p?", "" }
         } | group | % name | ? {
             $_ -ne $library
         }
@@ -426,44 +422,36 @@ foreach ($library in $libraries)
         "    [unknown] " + $($groups | ? { $libraries_found -notcontains $_ })
 
         $deps = @($groups | ? { $libraries_found -contains $_ })
-
-        $deps = @($deps | % { $_ -replace "_","-" } | % { TransformReference $_ })
-
+        $deps = @($deps | % { $_ -replace "_", "-" } | % { TransformReference $_ })
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "(metaparse|graph_parallel|function_types)")
-        {
+        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
             $deps += @(
-                @{ name="boost-build"; host=$True },
-                @{ name="boost-modular-build-helper"; host=$True }
+                @{ name = "boost-build"; host = $True },
+                @{ name = "boost-modular-build-helper"; host = $True }
             )
             $needsBuild = $true
         }
 
-        if ($library -eq "python")
-        {
+        if ($library -eq "python") {
             $deps += @("python3")
             $needsBuild = $true
         }
-        elseif ($library -eq "iostreams")
-        {
+        elseif ($library -eq "iostreams") {
             $deps += @("zlib", "bzip2", "liblzma", "zstd")
         }
-        elseif ($library -eq "locale")
-        {
-            $deps += @(@{ name="libiconv"; platform="!uwp&!windows&!mingw" }, "boost-system")
+        elseif ($library -eq "locale") {
+            $deps += @(@{ name = "libiconv"; platform = "!uwp&!windows&!mingw" }, "boost-system")
         }
-        elseif ($library -eq "asio")
-        {
+        elseif ($library -eq "asio") {
             $deps += @("openssl")
         }
-        elseif ($library -eq "mpi")
-        {
+        elseif ($library -eq "mpi") {
             $deps += @("mpi")
         }
 
-        $portName = $library -replace "_","-"
+        $portName = $library -replace "_", "-"
 
         Generate `
             -Name $library `
@@ -474,8 +462,7 @@ foreach ($library in $libraries)
 
         $libraries_in_boost_port += @(TransformReference $portName)
     }
-    finally
-    {
+    finally {
         popd
     }
 }
