@@ -3005,12 +3005,12 @@
       "port-version": 0
     },
     "lapack": {
-      "baseline": "3",
-      "port-version": 1
+      "baseline": "2021-08-18",
+      "port-version": 0
     },
     "lapack-reference": {
-      "baseline": "3.8.0",
-      "port-version": 5
+      "baseline": "3.10.0",
+      "port-version": 0
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -6613,15 +6613,23 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2021-07-30",
+      "baseline": "2021-08-16",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-08-11",
       "port-version": 0
     },
+    "vcpkg-fortran": {
+      "baseline": "1",
+      "port-version": 0
+    },
     "vcpkg-gfortran": {
       "baseline": "3",
+      "port-version": 0
+    },
+    "vcpkg-ifort": {
+      "baseline": "1",
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
