@@ -15,6 +15,7 @@
     "boost-function",
     "boost-graph",
     "boost-integer",
+    "boost-iterator",
     "boost-lexical-cast",
     {
       "name": "boost-modular-build-helper",

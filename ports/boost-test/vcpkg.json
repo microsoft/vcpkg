@@ -18,6 +18,7 @@
     "boost-exception",
     "boost-function",
     "boost-io",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true

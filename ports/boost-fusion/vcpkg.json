@@ -5,9 +5,9 @@
   "homepage": "https://github.com/boostorg/fusion",
   "dependencies": [
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-function-types",
-    "boost-functional",
     "boost-mpl",
     "boost-preprocessor",
     "boost-static-assert",

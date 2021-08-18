@@ -9,7 +9,6 @@
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-detail",
     "boost-integer",
     "boost-numeric-conversion",
     "boost-range",

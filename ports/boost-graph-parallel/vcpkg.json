@@ -6,8 +6,13 @@
   "dependencies": [
     "boost-algorithm",
     "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-concept-check",
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-detail",
     "boost-dynamic-bitset",
@@ -17,13 +22,18 @@
     },
     "boost-foreach",
     "boost-function",
-    "boost-functional",
     "boost-graph",
+    "boost-iterator",
     "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-mpi",
     "boost-mpl",
     "boost-optional",
     "boost-property-map",
+    "boost-property-map-parallel",
     "boost-random",
     "boost-serialization",
     "boost-smart-ptr",

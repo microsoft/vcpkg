@@ -17,6 +17,7 @@
       "platform": "!uwp"
     },
     "boost-fusion",
+    "boost-iterator",
     "boost-move",
     "boost-optional",
     "boost-system",

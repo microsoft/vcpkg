@@ -10,6 +10,7 @@
     "boost-config",
     "boost-core",
     "boost-function",
+    "boost-iterator",
     "boost-lexical-cast",
     "boost-mpl",
     "boost-smart-ptr",

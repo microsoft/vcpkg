@@ -12,6 +12,7 @@
     "boost-core",
     "boost-exception",
     "boost-function",
+    "boost-iterator",
     "boost-mpl",
     "boost-range",
     "boost-regex",

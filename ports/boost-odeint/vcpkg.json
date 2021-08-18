@@ -12,6 +12,7 @@
     "boost-core",
     "boost-function",
     "boost-fusion",
+    "boost-iterator",
     "boost-math",
     "boost-mpi",
     "boost-mpl",

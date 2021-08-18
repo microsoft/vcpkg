@@ -6,9 +6,9 @@
   "dependencies": [
     "boost-assert",
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-detail",
-    "boost-functional",
     "boost-interprocess",
     "boost-mpl",
     "boost-multi-index",

@@ -32,6 +32,7 @@
     "boost-interprocess",
     "boost-intrusive",
     "boost-io",
+    "boost-iterator",
     "boost-lexical-cast",
     {
       "name": "boost-modular-build-helper",

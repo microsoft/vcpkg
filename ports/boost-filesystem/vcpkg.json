@@ -12,10 +12,11 @@
       "host": true
     },
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-detail",
-    "boost-functional",
     "boost-io",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true

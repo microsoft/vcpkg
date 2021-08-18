@@ -6,8 +6,8 @@
   "dependencies": [
     "boost-assert",
     "boost-config",
+    "boost-container-hash",
     "boost-core",
-    "boost-functional",
     "boost-integer",
     "boost-move",
     "boost-static-assert",

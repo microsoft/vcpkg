@@ -6,6 +6,7 @@
   "dependencies": [
     "boost-config",
     "boost-core",
+    "boost-iterator",
     "boost-mpl",
     "boost-range",
     "boost-type-traits",

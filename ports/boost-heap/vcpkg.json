@@ -11,6 +11,7 @@
     "boost-config",
     "boost-core",
     "boost-intrusive",
+    "boost-iterator",
     "boost-parameter",
     "boost-static-assert",
     "boost-throw-exception",

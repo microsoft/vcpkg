@@ -11,8 +11,8 @@
       "host": true
     },
     "boost-config",
-    "boost-core",
     "boost-function",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true

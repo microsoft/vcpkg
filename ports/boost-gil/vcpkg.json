@@ -13,6 +13,7 @@
       "platform": "!uwp"
     },
     "boost-integer",
+    "boost-iterator",
     "boost-mp11",
     "boost-numeric-conversion",
     "boost-preprocessor",

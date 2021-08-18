@@ -17,6 +17,7 @@
     "boost-function",
     "boost-function-types",
     "boost-fusion",
+    "boost-iterator",
     "boost-lexical-cast",
     "boost-mpl",
     "boost-optional",
