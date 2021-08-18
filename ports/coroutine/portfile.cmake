@@ -10,7 +10,9 @@ vcpkg_from_github(
     REF             1.5.0
     SHA512          61b91fdc641b6905b884e99c5bf193ec2cf6962144ab3baafdb9432115757d96f3797f116b30356f0d21417b23082bc908f75042721caeab3329c4910b654594
     HEAD_REF        master
-    PATCHES fix-errorC7651.patch
+    PATCHES
+        fix-errorC7651.patch
+        add-noexcept-to-frame.patch
 )
 
 vcpkg_configure_cmake(

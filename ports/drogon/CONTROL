@@ -1,9 +1,0 @@
-Source: drogon
-Version: 1.7.1
-Homepage: https://github.com/an-tao/drogon
-Description:Drogon: A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows
-Build-Depends: trantor, zlib, jsoncpp, libmariadb (!osx), libmariadb[iconv] (osx), libpq, sqlite3, brotli, libuuid (!windows)
-Default-Features: ctl
-
-Feature: ctl
-Description: Build drogon_ctl tool. 
