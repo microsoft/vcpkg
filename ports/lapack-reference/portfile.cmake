@@ -60,15 +60,18 @@ if(VCPKG_USE_INTERNAL_Fortran)
 else()
     set(USE_OPTIMIZED_BLAS ON)
 endif()
-vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
-            "-DCBLAS=${CBLAS}"
-            ${FORTRAN_CMAKE}
-        )
 
-vcpkg_cmake_install()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DCBLAS=${CBLAS}"
+        ${FORTRAN_CMAKE}
+)
+
+vcpkg_install_cmake()
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${lapack_ver} CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
