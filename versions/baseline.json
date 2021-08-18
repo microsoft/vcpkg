@@ -1813,12 +1813,12 @@
       "port-version": 0
     },
     "eabase": {
-      "baseline": "2.09.12-1",
-      "port-version": 0
+      "baseline": "2.09.12",
+      "port-version": 2
     },
     "eastl": {
       "baseline": "3.17.03",
-      "port-version": 0
+      "port-version": 1
     },
     "easycl": {
       "baseline": "0.3",
