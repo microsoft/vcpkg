@@ -2,27 +2,42 @@
 # x_vcpkg_find_fortran
 
 Checks if a Fortran compiler can be found.
-Windows(x86/x64) Only: If it will try to enable the IntelOneAPI ifort compiler 
-                       and return required cmake args for building. 
+Windows(x86/x64) Only: If not it will search and enable Intel
+                       ifort compiler if available. 
 
 ## Usage
 ```cmake
-x_vcpkg_find_fortran(<additional_cmake_args_out>)
+x_vcpkg_find_fortran(<out_var>)
+```
+
+## Example
+```cmake
+x_vcpkg_find_fortran(fortran_args)
+# ...
+vcpkg_configure_cmake(...
+    OPTIONS
+        ${fortran_args}
+)
 ```
 #]===]
 
-function(x_vcpkg_find_fortran additional_cmake_args_out)
-    set(ARGS_OUT)
+
+function(x_vcpkg_find_fortran out_var)
+    if("${ARGC}" GREATER "1")
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra args: ${ARGN}")
+    endif()
+
+    vcpkg_list(SET additional_cmake_args)
+
     set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
     include(CMakeDetermineFortranCompiler)
-    if(NOT CMAKE_Fortran_COMPILER AND NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    # This intentionally breaks users with a custom toolchain which do not have a Fortran compiler setup
-    # because they either need to use a port-overlay (for e.g. lapack), remove the toolchain for the port using fortran
-    # or setup fortran in their VCPKG_CHAINLOAD_TOOLCHAIN_FILE themselfs!
+
+    if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
+        # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out Fortran on their own. 
         if(WIN32)
-            message(STATUS "No Fortran compiler found on the PATH. Trying to find ifort!")
+            message(STATUS "No Fortran compiler found on the PATH. Trying to find and use ifort!")
             set(PATH_SUFFIX "bin/intel64")
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
                 string(APPEND PATH_SUFFIX "_ia32")
@@ -36,19 +51,19 @@ function(x_vcpkg_find_fortran additional_cmake_args_out)
                 message(FATAL_ERROR "Batch file to setup Intel oneAPI not found! Please provide a correct ONEAPI_ROOT and make sure it contains setvars.bat!")
             endif()
             z_vcpkg_load_environment_from_batch(BATCH_FILE_PATH "${SETVARS}")
-
             if(VCPKG_TARGET_IS_UWP)
                 set(extra_uwp_flags "/NODEFAULTLIB /Qopenmp-stubs /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__")
                 set(exta_uwp_link_flags "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/APPCONTAINER")
             endif()
 
-            list(APPEND ARGS_OUT "-DCMAKE_Fortran_COMPILER=${IFORT}"
-                                 "-DCMAKE_Fortran_FLAGS_INIT:STRING=/Z7 /names:lowercase /assume:underscore /assume:protect_parens ${extra_uwp_flags}"
-                                 ${exta_uwp_link_flags})
+            vcpkg_list(APPEND additional_cmake_args
+                "-DCMAKE_Fortran_COMPILER=${IFORT}"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=/Z7 /names:lowercase /assume:underscore /assume:protect_parens ${extra_uwp_flags}"
+                "${exta_uwp_link_flags}")
             set(VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")
         else()
             message(FATAL_ERROR "Unable to find a Fortran compiler using 'CMakeDetermineFortranCompiler'. Please install one (e.g. gfortran) and make it available on the PATH!")
         endif()
     endif()
-    set(${additional_cmake_args_out} ${ARGS_OUT} PARENT_SCOPE)
+    set("${out_var}" "${additional_cmake_args}" PARENT_SCOPE)
 endfunction()
