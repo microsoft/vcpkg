@@ -1,6 +1,6 @@
 {
   "name": "lapack-reference",
-  "version": "3.8.0",
+  "version-semver": "3.8.0",
   "port-version": 6,
   "description": "LAPACK — Linear Algebra PACKage",
   "homepage": "http://www.netlib.org/lapack/",
