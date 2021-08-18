@@ -31,7 +31,7 @@ function(z_vcpkg_load_environment_from_batch)
 
     # Get modified envirnoment
     string (REPLACE ";" " " SPACE_SEPARATED_ARGUMENTS "${args_ARGUMENTS}")
-    message(STATUS "args_BATCH_FILE_PATH:${args_BATCH_FILE_PATH}")
+
     file(WRITE "${CURRENT_BUILDTREES_DIR}/get-modified-environment.bat" "call \"${args_BATCH_FILE_PATH}\" ${SPACE_SEPARATED_ARGUMENTS}\n\"${CMAKE_COMMAND}\" -E environment")
     vcpkg_execute_required_process(
         COMMAND "cmd" "/c" "${CURRENT_BUILDTREES_DIR}/get-modified-environment.bat"

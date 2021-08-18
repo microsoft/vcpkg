@@ -3,8 +3,7 @@
   "version-string": "1",
   "description": "Metaport to install ifort dll dependencies from Intel oneAPI",
   "supports": "windows & !arm",
-  "dependencies" : 
-  [
+  "dependencies": [
     "vcpkg-fortran"
   ]
 }

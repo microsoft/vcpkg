@@ -3,9 +3,10 @@
   "version-string": "3.10.0",
   "description": "LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/",
   "dependencies": [
-    {
-      "name": "vcpkg-fortran"
-    }
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "vcpkg-fortran",
+    "vcpkg-ifort"
   ],
   "default-features": [
     "blas-select"
