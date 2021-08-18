@@ -7,27 +7,41 @@ Windows(x86/x64) Only: If not it will switch/enable MinGW gfortran
 
 ## Usage
 ```cmake
-vcpkg_find_fortran(<additional_cmake_args_out>)
+vcpkg_find_fortran(<out_var>)
+```
+
+## Example
+```cmake
+vcpkg_find_fortran(fortran_args)
+# ...
+vcpkg_configure_cmake(...
+    OPTIONS
+        ${fortran_args}
+)
 ```
 #]===]
 
-function(vcpkg_find_fortran additional_cmake_args_out)
-    set(ARGS_OUT)
+function(vcpkg_find_fortran out_var)
+    if("${ARGC}" GREATER "1")
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra args: ${ARGN}")
+    endif()
+
+    vcpkg_list(SET additional_cmake_args)
+
     set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
     include(CMakeDetermineFortranCompiler)
-    if(NOT CMAKE_Fortran_COMPILER AND NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    # This intentionally breaks users with a custom toolchain which do not have a Fortran compiler setup
-    # because they either need to use a port-overlay (for e.g. lapack), remove the toolchain for the port using fortran
-    # or setup fortran in their VCPKG_CHAINLOAD_TOOLCHAIN_FILE themselfs!
+
+    if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
+        # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out fortran on their own.
         if(WIN32)
             message(STATUS "No Fortran compiler found on the PATH. Using MinGW gfortran!")
             # If no Fortran compiler is on the path we switch to use gfortan from MinGW within vcpkg
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(MINGW_PATH mingw32)
-                set(MACHINE_FLAG -m32)
-                vcpkg_acquire_msys(MSYS_ROOT
+            if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
+                set(mingw_path mingw32)
+                set(machine_flag -m32)
+                vcpkg_acquire_msys(msys_root
                     DIRECT_PACKAGES
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-gcc-fortran-10.2.0-1-any.pkg.tar.zst"
                         ddbdaf9ea865181e16a0931b2ec88c2dcef8add34628e479c7b9de4fa2ccb22e09c7239442e58702e0acd3adabc920565e976984f2bcd90a3668bf7f48a245f1
@@ -54,18 +68,18 @@ function(vcpkg_find_fortran additional_cmake_args_out)
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-headers-git-8.0.0.5966.f5da805f-1-any.pkg.tar.zst"
                         dbb9f8258da306a3441f9882faa472c3665a67b2ea68657f3e8a1402dcfacf9787a886a3daf0eefe4946f04557bc166eb15b21c1093ad85c909002daadba1923
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libiconv-1.16-2-any.pkg.tar.zst"
-                        ba236e1efc990cb91d459f938be6ca6fc2211be95e888d73f8de301bce55d586f9d2b6be55dacb975ec1afa7952b510906284eff70210238919e341dffbdbeb8
+                        fe48d0d3c582fee1edb178425c6daf619d86362442c729047b3c356be26491164f92be1d87950429d2faca4ed3cf76cb4aafef1af3c87b780eee85ee85a4b4c5
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-windows-default-manifest-6.4-3-any.pkg.tar.xz"
                         5b99abc55eaa74cf85ca64a9c91542554cb5c1098bc71effba9bd36242694cfd348503fcd3507fb9ba97486108c092c925e2f38cd744493386b3dc9ab28bc526
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zlib-1.2.11-8-any.pkg.tar.zst"
-                        459850a8c42b1d497268736629ef713beee70cd0d3161d02c7a9fad08aca4560f4e17ba02d5cabda8a19d7c614f7e0ef5a6ec13afd91dd3004057139a5469c8f
+                        46bbf0f28d9faf047221def19e6f94b9556fc6c951cad9c4fb657fde9d15303b9cb64aad11eaa57892cde49eafb43fbe2ec6da6b612449a20ae49dc8233e945b
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zstd-1.4.5-1-any.pkg.tar.zst"
                         68f431073717b59549ab0fd26be8df8afcb43f3dd85be2ffcbc7d1a629999eed924656a7fc3f50937b2e6605a5067542d016181106b7bc3408b89b268ced5d23
                 )
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(MINGW_PATH mingw64)
-                set(MACHINE_FLAG -m64)
-                vcpkg_acquire_msys(MSYS_ROOT
+            elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
+                set(mingw_path mingw64)
+                set(machine_flag -m64)
+                vcpkg_acquire_msys(msys_root
                     DIRECT_PACKAGES
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-gcc-fortran-10.2.0-1-any.pkg.tar.zst"
                         0de02db791e978ae21577e675ee9676f741336c9a5ceb5614dbdfc793e2c1c4749b394f41362af7b069e970302fddf8c6772ebd8445fe1c360861606b1784b4d
@@ -104,14 +118,16 @@ function(vcpkg_find_fortran additional_cmake_args_out)
                 message(FATAL_ERROR "Unknown architecture '${VCPKG_TARGET_ARCHITECTURE}' for MinGW Fortran build!")
             endif()
 
-            set(MINGW_BIN "${MSYS_ROOT}/${MINGW_PATH}/bin")
-            vcpkg_add_to_path(PREPEND "${MINGW_BIN}")
-            list(APPEND ARGS_OUT -DCMAKE_GNUtoMS=ON
-                                 "-DCMAKE_Fortran_COMPILER=${MINGW_BIN}/gfortran.exe"
-                                 "-DCMAKE_C_COMPILER=${MINGW_BIN}/gcc.exe"
-                                 "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
+            set(mingw_bin "${msys_root}/${mingw_path}/bin")
+            vcpkg_add_to_path(PREPEND "${mingw_bin}")
+            vcpkg_list(APPEND additional_cmake_args
+                -DCMAKE_GNUtoMS=ON
+                "-DCMAKE_Fortran_COMPILER=${mingw_bin}/gfortran.exe"
+                "-DCMAKE_C_COMPILER=${mingw_bin}/gcc.exe"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${machine_flag} ${VCPKG_Fortran_FLAGS}")
+
             # This is for private use by vcpkg-gfortran
-            set(vcpkg_find_fortran_MSYS_ROOT "${MSYS_ROOT}" PARENT_SCOPE)
+            set(vcpkg_find_fortran_MSYS_ROOT "${msys_root}" PARENT_SCOPE)
             set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
             set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
@@ -127,5 +143,5 @@ function(vcpkg_find_fortran additional_cmake_args_out)
             message(FATAL_ERROR "Unable to find a Fortran compiler using 'CMakeDetermineFortranCompiler'. Please install one (e.g. gfortran) and make it available on the PATH!")
         endif()
     endif()
-    set(${additional_cmake_args_out} ${ARGS_OUT} PARENT_SCOPE)
+    set("${out_var}" "${additional_cmake_args}" PARENT_SCOPE)
 endfunction()
