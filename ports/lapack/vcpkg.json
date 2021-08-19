@@ -5,11 +5,11 @@
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "arm & windows | uwp"
+      "platform": "(arm & windows) | uwp"
     },
     {
       "name": "lapack-reference",
-      "platform": "!arm | !windows"
+      "platform": "!arm | !windows | !uwp"
     },
     "vcpkg-fortran"
   ]
