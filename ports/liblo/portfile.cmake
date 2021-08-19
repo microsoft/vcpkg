@@ -17,26 +17,10 @@ vcpkg_install_cmake()
 # Install needed files into package directory
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblo)
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscsend.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscdump.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
-else()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscsend DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscdump DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
-endif()
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblo)
+vcpkg_copy_tools(TOOL_NAMES oscsend oscdump AUTO_CLEAN)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/oscsend.exe ${CURRENT_PACKAGES_DIR}/bin/oscdump.exe)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/oscsend.exe ${CURRENT_PACKAGES_DIR}/debug/bin/oscdump.exe)
-else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/oscsend ${CURRENT_PACKAGES_DIR}/bin/oscdump)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/oscsend ${CURRENT_PACKAGES_DIR}/debug/bin/oscdump)
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
