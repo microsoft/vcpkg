@@ -375,6 +375,9 @@ if(WIN32)
         "src/libANGLE/renderer/d3d/*.h"
     )
     list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "_unittest")
+    if(MINGW)
+        list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "CompositorNativeWindow11")
+    endif()
 
     ## WinRT D3D Renderer
     if(WINDOWS_STORE)
@@ -406,8 +409,12 @@ if(WIN32)
     target_compile_definitions(angle_renderer_d3d INTERFACE
         -DANGLE_ENABLE_D3D11
         "-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ \"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }"
-        -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW
-    )
+     )
+    if(NOT MINGW)
+        target_compile_definitions(angle_renderer_d3d INTERFACE
+            -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW
+        )
+    endif()
     target_link_libraries(angle_renderer_d3d INTERFACE d3d11 dxguid)
     add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
 endif()
@@ -679,9 +686,9 @@ if(NOT BUILD_SHARED_LIBS)
     add_definitions("-DANGLE_EXPORT=" "-DANGLE_UTIL_EXPORT=" "-DEGLAPI=" "-DGL_APICALL=" "-DGL_API=")
 endif()
 
-SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
-SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
+set_target_properties(libANGLE PROPERTIES PREFIX "")
+set_target_properties(libGLESv2 PROPERTIES PREFIX "" IMPORT_PREFIX "")
+set_target_properties(libEGL PROPERTIES PREFIX "" IMPORT_PREFIX "")
 
 install(TARGETS libEGL libGLESv2 libANGLE angle_common angle_compression_utils angle_image_util angle_gpu_info_util angle_translator angle_preprocessor GL_VISIBILITY EXPORT ANGLEExport
     RUNTIME DESTINATION bin
