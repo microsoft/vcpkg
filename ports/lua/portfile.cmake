@@ -16,6 +16,9 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 # Used in cmake wrapper
 set(ENABLE_LUA_CPP 0)
 if ("cpp" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature cpp does not support uwp.")
+    endif()
     set(ENABLE_LUA_CPP 1)
 endif()
 
