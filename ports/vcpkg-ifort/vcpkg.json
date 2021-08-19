@@ -2,7 +2,7 @@
   "name": "vcpkg-ifort",
   "version-string": "1",
   "description": "Metaport to install ifort dll dependencies from Intel oneAPI",
-  "supports": "windows & !arm",
+  "supports": "windows & !arm | !uwp",
   "dependencies": [
     "vcpkg-fortran"
   ]

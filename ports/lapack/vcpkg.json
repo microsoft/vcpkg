@@ -5,7 +5,7 @@
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "arm & windows"
+      "platform": "arm & windows | uwp"
     },
     {
       "name": "lapack-reference",
