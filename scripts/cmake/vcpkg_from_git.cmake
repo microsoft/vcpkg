@@ -107,7 +107,7 @@ function(vcpkg_from_git)
     set(temp_archive "${DOWNLOADS}/temp/${PORT}-${sanitized_ref}.tar.gz")
     set(archive "${DOWNLOADS}/${PORT}-${sanitized_ref}.tar.gz")
 
-    if(NOT EXISTS "${archive}")
+    if(NOT EXISTS "${archive}" OR (VCPKG_USE_HEAD_VERSION AND NOT _VCPKG_NO_DOWNLOADS))
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${archive}' does not exist.")
         endif()
