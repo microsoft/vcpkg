@@ -1,0 +1,31 @@
+From 2ee7179c17fd9bd6d8e883ea304cc050cb197834 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 29 Jul 2021 13:47:28 +0200
+Subject: [PATCH] Support static builds
+
+---
+ KF5WindowSystemConfig.cmake.in | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/KF5WindowSystemConfig.cmake.in b/KF5WindowSystemConfig.cmake.in
+index 6c1b4c0..bcb7128 100644
+--- a/KF5WindowSystemConfig.cmake.in
++++ b/KF5WindowSystemConfig.cmake.in
+@@ -4,7 +4,13 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Gui @REQUIRED_QT_VERSION@)
+ 
+ if(NOT @KWINDOWSYSTEM_NO_WIDGETS@)
+-find_dependency(Qt5Widgets @REQUIRED_QT_VERSION@)
++    find_dependency(Qt5Widgets @REQUIRED_QT_VERSION@)
++endif()
++
++if(NOT @BUILD_SHARED_LIBS@)
++    if(@WIN32@)
++        find_dependency(Qt5WinExtras @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5WindowSystemTargets.cmake")
+-- 
+GitLab
+
