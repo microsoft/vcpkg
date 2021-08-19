@@ -3890,7 +3890,7 @@
     },
     "lua": {
       "baseline": "5.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "luabridge": {
       "baseline": "2.6",
