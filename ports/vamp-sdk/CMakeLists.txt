@@ -85,21 +85,21 @@ install(
 if(NOT DISABLE_INSTALL_HEADERS)
   install(
     DIRECTORY vamp-hostsdk/
-    DESTINATION include/vamp-sdk/vamp-hostsdk
+    DESTINATION include/vamp-hostsdk
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE
     PATTERN "config.h" EXCLUDE)
   install(
     DIRECTORY vamp-sdk/
-    DESTINATION include/vamp-sdk/vamp-sdk
+    DESTINATION include/vamp-sdk
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE
     PATTERN "config.h" EXCLUDE)
   install(
     DIRECTORY vamp/
-    DESTINATION include/vamp-sdk/vamp
+    DESTINATION include/vamp
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*_priv.h" EXCLUDE

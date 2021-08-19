@@ -6601,7 +6601,7 @@
       "port-version": 1
     },
     "vamp-sdk": {
-      "baseline": "2.9",
+      "baseline": "2.10",
       "port-version": 0
     },
     "variant-lite": {
