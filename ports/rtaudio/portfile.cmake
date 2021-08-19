@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtaudio
-    REF c9bf99d414cf81d19ef0ddd00212a4a58ccd99c6
-    SHA512 6dc0025288cbf09f21862be6093ad77b950e6af03ea7e5aea3a9f6c322d957897c0d6206636225bd439c05b5a13d53df3ef9a9f1a9ea5d3012bee06c1a62c9f0
+    REF bc7ad66581947f810ff4460396bbbd1846b1e7c8
+    SHA512 ef5a41df15a8486550fb791ac21fcee4ecbf726fe9e91a56fcdd437cd554ea242f08c1061a9c6d5c261d721d86fbbcb32ce64db030976150862ed42a40137fc7
     HEAD_REF master
 )
 
@@ -23,7 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         asio  RTAUDIO_API_ASIO
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -33,9 +33,9 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
