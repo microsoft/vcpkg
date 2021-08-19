@@ -1,7 +1,7 @@
 {
   "name": "lua",
   "version-semver": "5.4.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A powerful, fast, lightweight, embeddable scripting language",
   "homepage": "https://www.lua.org",
   "features": {
