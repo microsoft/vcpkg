@@ -7,20 +7,7 @@
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "abseil",
-    "crc32c",
-    {
-      "name": "curl",
-      "features": [
-        "ssl"
-      ]
-    },
-    {
-      "name": "grpc",
-      "host": true
-    },
-    "grpc",
-    "nlohmann-json"
+    "abseil"
   ],
   "default-features": [
     "bigquery",
@@ -34,7 +21,6 @@
     "bigquery": {
       "description": "The Google Cloud BigQuery C++ client library",
       "dependencies": [
-        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -50,7 +36,6 @@
     "bigtable": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
-        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -64,15 +49,11 @@
       ]
     },
     "firestore": {
-      "description": "Community contributions to interact with Firestore",
-      "dependencies": [
-        "abseil"
-      ]
+      "description": "Community contributions to interact with Firestore"
     },
     "iam": {
       "description": "The Google Cloud IAM C++ client library",
       "dependencies": [
-        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -88,7 +69,6 @@
     "pubsub": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
-        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -104,7 +84,6 @@
     "spanner": {
       "description": "The Google Cloud Spanner C++ client library",
       "dependencies": [
-        "abseil",
         "grpc",
         {
           "name": "grpc",
@@ -120,7 +99,6 @@
     "storage": {
       "description": "The Google Cloud Storage C++ client library",
       "dependencies": [
-        "abseil",
         "crc32c",
         {
           "name": "curl",
