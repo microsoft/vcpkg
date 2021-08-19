@@ -1,18 +1,15 @@
-set(SDL2_VERSION 2.0.14)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz"
-    FILENAME "SDL2-${SDL2_VERSION}.tar.gz"
-    SHA512 ebc482585bd565bf3003fbcedd91058b2183e333b9ea566d2f386da0298ff970645d9d25c1aa4459c7c96e9ea839fd1c5f2da0242a56892865b2e456cdd027ee
-)
-
-vcpkg_extract_source_archive_ex(
+set(SDL2_VERSION 2.0.16)
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libsdl-org/SDL
+    REF release-2.0.16
+    SHA512 45ce71f77b01f5fd886f92e5b3d96f1f72c7e0f70c09e615384a900533b941cad65bf6b54a125a9eeb8499e2056e9a8e54d4e654bccfca9730584792a2b18fbc
+    HEAD_REF master
     PATCHES
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
-        0003-sdl2-fix-uwp-build.patch
-        0004-sdl2-macos-thread-detection-fix.patch
+        0003-sdl2-disable-sdlmain-target-search-on-uwp.patch
+        0004-sdl2-alias-on-static-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -77,8 +74,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endforeach()
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-configure_file(${SOURCE_PATH}/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 vcpkg_copy_pdbs()
 
 set(DYLIB_COMPATIBILITY_VERSION_REGEX "set\\(DYLIB_COMPATIBILITY_VERSION (.+)\\)")
