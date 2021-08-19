@@ -2958,7 +2958,7 @@
     },
     "kf5windowsystem": {
       "baseline": "5.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kfr": {
       "baseline": "2020-06-15",
