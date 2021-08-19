@@ -41,6 +41,7 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-variant",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    "mpi"
   ]
 }

@@ -30,7 +30,7 @@ if "@PORT@" = "boost-python"
     using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_DEBUG@" : <python-debugging>on ;
 }
 
-if "@PORT@" = "boost-mpi"
+if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
 {
     using mpi : :
         <library-path>"@CURRENT_INSTALLED_DIR@/lib"

@@ -73,7 +73,6 @@
     "boost-geometry",
     "boost-gil",
     "boost-graph",
-    "boost-graph-parallel",
     "boost-hana",
     "boost-heap",
     "boost-histogram",
@@ -201,6 +200,7 @@
     "mpi": {
       "description": "Build with MPI support",
       "dependencies": [
+        "boost-graph-parallel",
         "boost-mpi"
       ]
     }
