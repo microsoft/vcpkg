@@ -56,19 +56,19 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
     endif()
 
     vcpkg_list(SET pkg_config_path
-        "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib/pkgconfig"
+        "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${config}}/lib/pkgconfig"
         "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-        "${CURRENT_PACKAGES_DIR}${PATH_SUFFIX_${_config}}/lib/pkgconfig"
+        "${CURRENT_PACKAGES_DIR}${PATH_SUFFIX_${config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
     )
     if(DEFINED ENV{PKG_CONFIG_PATH} AND NOT ENV{PKG_CONFIG_PATH} STREQUAL "")
         vcpkg_list(APPEND pkg_config_path "$ENV{PKG_CONFIG_PATH}")
     endif()
-    vcpkg_list(JOIN pkg_config_path "${VCPKG_PATH_SEPARATOR}" pkg_config_path)
+    vcpkg_list(JOIN pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}" pkg_config_path)
     set(ENV{PKG_CONFIG_PATH} "${pkg_config_path}")
 
     # First make sure everything is ok with the package and its deps
-    cmake_path(GET file STEM package_name)
+    cmake_path(GET file STEM LAST_ONLY package_name)
     debug_message("Checking package (${config}): ${package_name}")
     execute_process(
         COMMAND "${PKGCONFIG}" --print-errors --exists "${package_name}"
@@ -174,38 +174,20 @@ function(vcpkg_fixup_pkgconfig)
                 #    Libs: $1 $2
                 # and the same thing for Requires and Requires.private
 
-                set(libs_line "")
-                set(requires_line "")
-                if("${contents}" MATCHES "Libs: *([^\n]*)")
-                    string(APPEND libs_line " ${CMAKE_MATCH_1}")
-                endif()
-                if("${contents}" MATCHES "Libs.private: *([^\n]*)")
-                    string(APPEND libs_line " ${CMAKE_MATCH_1}")
-                endif()
-                if("${contents}" MATCHES "Requires: *([^\n]*)")
-                    string(APPEND requires_line " ${CMAKE_MATCH_1}")
-                endif()
-                if("${contents}" MATCHES "Requires.private: *([^\n]*)")
-                    string(APPEND requires_line " ${CMAKE_MATCH_1}")
-                endif()
-                if("${contents}" MATCHES "Cflags: *([^\n]*)")
-                    string(APPEND cflags_line " ${CMAKE_MATCH_1}")
-                endif()
-                if("${contents}" MATCHES "Cflags.private: *([^\n]*)")
-                    string(APPEND cflags_line " ${CMAKE_MATCH_1}")
-                endif()
+                foreach(item IN ITEMS "Libs" "Requires" "Cflags")
+                    set(line "")
+                    if("${contents}" MATCHES "(^|\n)${item}: *([^\n]*)")
+                        string(APPEND line " ${CMAKE_MATCH_1}")
+                    endif()
+                    if("${contents}" MATCHES "(^|\n)${item}\\.private: *([^\n]*)")
+                        string(APPEND line " ${CMAKE_MATCH_1}")
+                    endif()
 
-                string(REGEX REPLACE "(^|\n)(Requires|Libs|Cflags)(\\.private)?:[^\n]*\n" [[\1]] contents "${contents}")
-
-                if(NOT "${libs_line}" STREQUAL "")
-                    string(APPEND contents "Libs:${libs_line}\n")
-                endif()
-                if(NOT "${requires_line}" STREQUAL "")
-                    string(APPEND contents "Requires:${requires_line}\n")
-                endif()
-                if(NOT "${cflags_line}" STREQUAL "")
-                    string(APPEND contents "Cflags:${cflags_line}\n")
-                endif()
+                    string(REGEX REPLACE "(^|\n)${item}(\\.private)?:[^\n]*\n" [[\1]] contents "${contents}")
+                    if(NOT "${line}" STREQUAL "")
+                        string(APPEND contents "${item}:${libs_line}\n")
+                    endif()
+                endforeach()
             endif()
             file(WRITE "${file}" "prefix=\${pcfiledir}/${relative_pc_path}\n${contents}")
         endforeach()
@@ -214,7 +196,7 @@ function(vcpkg_fixup_pkgconfig)
             vcpkg_find_acquire_program(PKGCONFIG)
             debug_message("Using pkg-config from: ${PKGCONFIG}")
             foreach(file IN LISTS "arg_${config}_FILES")
-                z_vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${file}" "${config}")
+                z_vcpkg_fixup_pkgconfig_check_files("${file}" "${config}")
             endforeach()
         endif()
     endforeach()
