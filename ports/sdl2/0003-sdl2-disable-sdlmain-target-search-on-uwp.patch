@@ -1,0 +1,34 @@
+--- a/SDL2Config.cmake
++++ b/SDL2Config.cmake
+@@ -32,6 +2,7 @@
+ 	endif()
+ endforeach()
+ 
++if(NOT WINDOWS_STORE)
+ foreach(prop ${relprops})
+ 	get_target_property(sdl2mainimplib SDL2::SDL2main ${prop})
+ 	if(sdl2mainimplib)
+@@ -37,6 +37,7 @@
+ 		break()
+ 	endif()
+ endforeach()
++endif()
+ 
+ foreach(prop ${dbgprops})
+ 	get_target_property(sdl2implibdbg SDL2::SDL2 ${prop})
+@@ -47,6 +47,7 @@
+ 	endif()
+ endforeach()
+ 
++if(NOT WINDOWS_STORE)
+ foreach(prop ${dbgprops})
+ 	get_target_property(sdl2mainimplibdbg SDL2::SDL2main ${prop})
+ 	if(sdl2mainimplibdbg)
+@@ -55,6 +55,7 @@
+ 		break()
+ 	endif()
+ endforeach()
++endif()
+ 
+ if( sdl2implib AND sdl2mainimplib AND sdl2implibdbg AND sdl2mainimplibdbg )
+ 	# we have both release and debug builds of SDL2 and SDL2main, so use this ugly

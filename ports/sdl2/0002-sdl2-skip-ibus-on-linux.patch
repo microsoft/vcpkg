@@ -1,8 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 06aa026..81d7645 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1240,12 +1240,6 @@ elseif(UNIX AND NOT APPLE AND NOT ANDROID AND NOT RISCOS)
+@@ -1295,12 +1295,6 @@
          set(HAVE_FCITX TRUE)
        endif()
  
