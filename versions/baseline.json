@@ -2936,6 +2936,10 @@
       "baseline": "5.84.0",
       "port-version": 0
     },
+    "kf5kirigami2": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5plotting": {
       "baseline": "5.84.0",
       "port-version": 1
