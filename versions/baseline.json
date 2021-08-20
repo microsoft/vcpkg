@@ -2005,8 +2005,8 @@
       "port-version": 0
     },
     "eigen3": {
-      "baseline": "3.3.9",
-      "port-version": 1
+      "baseline": "3.4.0",
+      "port-version": 0
     },
     "elfio": {
       "baseline": "3.9",
