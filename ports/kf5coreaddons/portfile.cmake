@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_cmake_install()
@@ -24,9 +23,8 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ../../data")
+file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ../../share")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/data")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
