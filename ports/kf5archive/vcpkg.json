@@ -1,6 +1,6 @@
 {
   "name": "kf5archive",
-  "version": "5.81.0",
+  "version": "5.84.0",
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
   "dependencies": [
