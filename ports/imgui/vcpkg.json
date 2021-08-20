@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.83",
+  "version": "1.84.1",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "features": {
@@ -55,29 +55,8 @@
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding"
     },
-    "opengl3-gl3w-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with gl3w",
-      "dependencies": [
-        "gl3w"
-      ]
-    },
-    "opengl3-glad-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with glad",
-      "dependencies": [
-        "glad"
-      ]
-    },
-    "opengl3-glbinding-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding glbinding",
-      "dependencies": [
-        "glbinding"
-      ]
-    },
-    "opengl3-glew-binding": {
-      "description": "Make available OpenGL3/ES/ES2 (modern) binding with GLEW",
-      "dependencies": [
-        "glew"
-      ]
+    "opengl3-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding"
     },
     "osx-binding": {
       "description": "Make available OSX binding"
