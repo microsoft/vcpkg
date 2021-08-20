@@ -9,8 +9,6 @@ vcpkg_from_github(
     HEAD_REF 1.2.0
 )
 
-vcpkg_find_acquire_program(GIT)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(HEXL_SHARED OFF)
 else()
@@ -20,6 +18,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
+    WINDOWS_USE_MSBUILD
     OPTIONS
         "-DHEXL_BENCHMARK=OFF"
         "-DHEXL_COVERAGE=OFF"
