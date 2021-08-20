@@ -17,7 +17,7 @@ else()
     set(HEXL_SHARED ON)
 endif()
 
-if (VCPKG_CMAKE_SYSTEM_NAME STRQUAL "WindowsStore")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(GENERATOR "MSBuild")
 else()
    set(GENERATOR "Ninja")
