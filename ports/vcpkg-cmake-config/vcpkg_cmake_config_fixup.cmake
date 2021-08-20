@@ -227,12 +227,17 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         if (targets_files STREQUAL "")
             file(GLOB targets_files "${release_share}/*[Cc]onfig.cmake")
         endif()
+        # For every targets file
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
-            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*\n" library_contents "${targets_content}")
-            foreach(line IN LISTS library_contents)
-                set(fixed_line "${line}")
-                string(REGEX MATCHALL [[/[^ ;"]+/[^ ;"/]+\.framework]] frameworks "${line}")
+            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*\n" matched_lines "${targets_content}")
+            # For every line begin with `INTERFACE_LINK_LIBRARIES`
+            string(REGEX MATCH "INTERFACE_LINK_LIBRARIES[^\n]*\n" current_line "${matched_lines}")
+            while (current_line)
+                debug_message("current_line: ${current_line}")
+                set(fixed_line "${current_line}")
+                string(REGEX MATCHALL [[/[^ ;"]+/[^ ;"/]+\.framework]] frameworks "${current_line}")
+                # For every value in this line
                 foreach(framework IN LISTS frameworks)
                     if(NOT framework MATCHES [[^(.+)/(.+)\.framework$]])
                         continue()
@@ -250,11 +255,17 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                     endif()
                     list(FIND VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${path}" index)
                     if(NOT index EQUAL -1)
-                        string(REPLACE "${framework}" "\"-framework ${name}\"" fixed_line "${fixed_line}")
+                        string(REPLACE "${framework}" "-framework ${name}" fixed_line "${fixed_line}")
                     endif()
                 endforeach()
-                string(REPLACE "${line}" "${fixed_line}" targets_content "${targets_content}")
-            endforeach()
+                # Remove this line from list
+                string(REPLACE "${current_line}" "" matched_lines "${matched_lines}")
+                # Find the next line
+                string(REGEX MATCH "INTERFACE_LINK_LIBRARIES[^\n]*\n" current_line "${matched_lines}")
+                # Replace the fixed content in target file
+                debug_message("replace \"${current_line}\" with \"${fixed_line}\"")
+                string(REPLACE "${current_line}" "${fixed_line}" targets_content "${targets_content}")
+            endwhile()
             file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
     endif()
