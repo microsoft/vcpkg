@@ -257,13 +257,13 @@ function(vcpkg_fixup_cmake_targets)
                         string(REPLACE "${framework}" "-framework ${name}" fixed_line "${fixed_line}")
                     endif()
                 endforeach()
+                # Replace the fixed content in target file
+                debug_message("replace \"${current_line}\" with \"${fixed_line}\"")
+                string(REPLACE "${current_line}" "${fixed_line}" targets_content "${targets_content}")
                 # Remove this line from list
                 string(REPLACE "${current_line}" "" matched_lines "${matched_lines}")
                 # Find the next line
                 string(REGEX MATCH "INTERFACE_LINK_LIBRARIES[^\n]*\n" current_line "${matched_lines}")
-                # Replace the fixed content in target file
-                debug_message("replace \"${current_line}\" with \"${fixed_line}\"")
-                string(REPLACE "${current_line}" "${fixed_line}" targets_content "${targets_content}")
             endwhile()
             file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
