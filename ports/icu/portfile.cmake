@@ -46,6 +46,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+if (CMAKE_HOST_WIN32)
+    vcpkg_acquire_msys(MSYS_ROOT)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH source
