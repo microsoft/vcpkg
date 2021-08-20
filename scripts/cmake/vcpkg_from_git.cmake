@@ -79,12 +79,14 @@ function(vcpkg_from_git)
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
     vcpkg_list(SET extract_working_directory_param)
+    vcpkg_list(SET skip_patch_check_param)
     set(git_working_directory "${DOWNLOADS}/git-tmp")
     set(always_redownload OFF)
 
     if(VCPKG_USE_HEAD_VERSION AND DEFINED arg_HEAD_REF)
         vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
         vcpkg_list(SET git_fetch_shallow_param --depth 1)
+        vcpkg_list(SET skip_patch_check_param SKIP_PATCH_CHECK)
         set(ref_to_use "${arg_HEAD_REF}")
         set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
         string(REPLACE "/" "_-" sanitized_ref "${arg_HEAD_REF}")
@@ -185,6 +187,7 @@ function(vcpkg_from_git)
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
         ${extract_working_directory_param}
+        ${skip_patch_check_param}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

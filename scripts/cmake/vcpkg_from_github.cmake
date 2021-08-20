@@ -123,6 +123,7 @@ function(vcpkg_from_github)
 
     set(redownload_param "")
     set(working_directory_param "")
+    set(skip_patch_check_param "")
     set(sha512_param "SHA512" "${arg_SHA512}")
     set(ref_to_use "${arg_REF}")
     if(VCPKG_USE_HEAD_VERSION)
@@ -130,6 +131,7 @@ function(vcpkg_from_github)
             set(redownload_param "ALWAYS_REDOWNLOAD")
             set(sha512_param "SKIP_SHA512")
             set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            set(skip_patch_check_param "SKIP_PATCH_CHECK")
             set(ref_to_use "${arg_HEAD_REF}")
         else()
             message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
@@ -183,6 +185,7 @@ ${version_contents}
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
+        ${skip_patch_check_param}
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

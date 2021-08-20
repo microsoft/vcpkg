@@ -18,6 +18,7 @@ The latter is suggested to use for all future `vcpkg_extract_source_archive`s.
 vcpkg_extract_source_archive(<out-var>
     ARCHIVE <path>
     [NO_REMOVE_ONE_LEVEL]
+    [SKIP_PATCH_CHECK]
     [PATCHES <patch>...]
     [SOURCE_BASE <base>]
     [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
@@ -221,7 +222,7 @@ function(vcpkg_extract_source_archive)
         endif()
     endif()
 
-    if (arg_Z_SKIP_PATCH_CHECK)
+    if (arg_SKIP_PATCH_CHECK)
         set(quiet_param QUIET)
     else()
         set(quiet_param "")
@@ -239,4 +240,3 @@ function(vcpkg_extract_source_archive)
     set("${out_source_path}" "${source_path}" PARENT_SCOPE)
     message(STATUS "Using source at ${source_path}")
 endfunction()
-

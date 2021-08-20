@@ -19,6 +19,7 @@ The latter is suggested to use for all future `vcpkg_extract_source_archive`s.
 vcpkg_extract_source_archive(<out-var>
     ARCHIVE <path>
     [NO_REMOVE_ONE_LEVEL]
+    [SKIP_PATCH_CHECK]
     [PATCHES <patch>...]
     [SOURCE_BASE <base>]
     [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
