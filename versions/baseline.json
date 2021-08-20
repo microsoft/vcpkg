@@ -1096,6 +1096,10 @@
       "baseline": "2019-05-08-1",
       "port-version": 0
     },
+    "bux": {
+      "baseline": "1.4.1",
+      "port-version": 1
+    },
     "byte-lite": {
       "baseline": "0.2.0",
       "port-version": 0
