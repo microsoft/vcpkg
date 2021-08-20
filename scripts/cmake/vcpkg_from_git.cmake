@@ -80,6 +80,7 @@ function(vcpkg_from_git)
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
     vcpkg_list(SET extract_working_directory_param)
     set(git_working_directory "${DOWNLOADS}/git-tmp")
+    set(always_redownload OFF)
 
     if(VCPKG_USE_HEAD_VERSION AND DEFINED arg_HEAD_REF)
         vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
@@ -87,6 +88,10 @@ function(vcpkg_from_git)
         set(ref_to_use "${arg_HEAD_REF}")
         set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
         string(REPLACE "/" "_-" sanitized_ref "${arg_HEAD_REF}")
+
+        if(NOT _VCPKG_NO_DOWNLOADS)
+            set(always_redownload ON)
+        endif()
     else()
         if(NOT DEFINED arg_REF)
             message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
@@ -107,7 +112,7 @@ function(vcpkg_from_git)
     set(temp_archive "${DOWNLOADS}/temp/${PORT}-${sanitized_ref}.tar.gz")
     set(archive "${DOWNLOADS}/${PORT}-${sanitized_ref}.tar.gz")
 
-    if(NOT EXISTS "${archive}" OR (VCPKG_USE_HEAD_VERSION AND NOT _VCPKG_NO_DOWNLOADS))
+    if(NOT EXISTS "${archive}" OR always_redownload)
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${archive}' does not exist.")
         endif()
@@ -165,7 +170,7 @@ function(vcpkg_from_git)
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
             COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+            WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME git-archive
         )
         file(RENAME "${temp_archive}" "${archive}")
