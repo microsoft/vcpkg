@@ -74,6 +74,7 @@ bullet3:x64-uwp=fail
 bux:x64-uwp=fail
 bux:arm-uwp=fail
 bux:x64-linux=fail
+bux:x64-osx=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
