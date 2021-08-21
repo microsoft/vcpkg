@@ -71,7 +71,7 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
     file(SHA512 "${path}" file_hash)
     if(NOT "${file_hash}" STREQUAL "${sha512}")
         message(FATAL_ERROR
-            "\nFile does not have expected hash:\n"
+            "\nFile does not have the expected hash:\n"
             "        File path: [ ${file_path} ]\n"
             "    Expected hash: [ ${sha512} ]\n"
             "      Actual hash: [ ${file_hash} ]\n"
@@ -254,6 +254,10 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         vcpkg_list(SET sha512_param "--sha512=${arg_SHA512}")
     endif()
 
+    if(_VCPKG_ONLY_WARN_SHA512_MISMATCH)
+        vcpkg_list(APPEND sha512_param "--only-warn-sha512-mismatch")
+    endif()
+
     if(NOT EXISTS "${downloaded_file_path}" OR arg_ALWAYS_REDOWNLOAD)
         vcpkg_execute_in_download_mode(
             COMMAND "$ENV{VCPKG_COMMAND}" x-download
@@ -272,6 +276,10 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         if(NOT "${error_code}" EQUAL "0")
             message("${output}")
             z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
+        endif()
+        if(_VCPKG_ONLY_WARN_SHA512_MISMATCH AND output MATCHES "File does not have the expected hash")
+            message("${output}")
+            message(WARNING "Hash mismatch")
         endif()
     endif()
 
