@@ -1,31 +1,37 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://gitlab.com
+    REPO soundtouch/soundtouch
+    REF 2.3.1
+    SHA512 1eea5c06dc5af633b5c16902c6a951593190daf75bd6aa12e00c745080f9363e9c45ab52ddc434bd905e4195b306cc38c9143e813430c15c19a275ae1a82df24
+    HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    soundstretch SOUNDSTRETCH
+    soundtouchdll SOUNDTOUCH_DLL
+)
+
+if(SOUNDTOUCH_DLL)
+  vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(VERSION 2.0.0)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.surina.net/soundtouch/soundtouch-${VERSION}.zip"
-    FILENAME "soundtouch-${VERSION}.zip"
-    SHA512 50ef36b6cd21c16e235b908c5518e29b159b11f658a014c47fe767d3d8acebaefefec0ce253b4ed322cbd26387c69c0ed464ddace0c098e61d56d55c198117a5
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS ${FEATURE_OPTIONS}
 )
+vcpkg_cmake_install()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoundTouch)
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(SOUNDSTRETCH)
+  vcpkg_copy_tools(TOOL_NAMES soundstretch AUTO_CLEAN)
+endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
-
-vcpkg_install_cmake()
-
-file(INSTALL ${SOURCE_PATH}/source/SoundTouchDLL/SoundTouchDLL.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(INSTALL ${SOURCE_PATH}/COPYING.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
