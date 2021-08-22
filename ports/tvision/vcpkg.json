@@ -4,6 +4,7 @@
   "description": "A modern port of Turbo Vision 2.0, the classical framework for text-based user interfaces.",
   "homepage": "https://github.com/magiblot/tvision",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
