@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_17_1
-    SHA512 e2a2a40118b128755571274d0cfe7cc822bc18392616378c6dd5f73f210571d7e5005a40ba0763658bdae7f2c7aadb324b2888ad8b4dcb54ad47dfaf97c2ebfc
+    REF cares-1_17_2
+    SHA512 1111f1e7eeb0e5d9e70d1a7c8566145d0a5e6e71b020f3fcaa02ecdf1931553ddeff83fdc152a1f9c5a780078e8afe3670164b631df56eecd2b638210cc59bb3
     HEAD_REF master
 )
 
