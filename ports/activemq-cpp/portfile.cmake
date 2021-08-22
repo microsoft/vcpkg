@@ -70,16 +70,15 @@ else()
 
     if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(BUILD_ARCH "Win32")
-        set(OUTPUT_DIR "Win32")
     elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(BUILD_ARCH "x64")
-        set(OUTPUT_DIR "Win64")
     else()
         message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
-    vcpkg_build_msbuild(
-         PROJECT_PATH ${ACTIVEMQCPP_MSVC_PROJ}
+    vcpkg_install_msbuild(
+         SOURCE_PATH "${SOURCE_PATH}/vs2010-build"
+         PROJECT_SUBPATH "activemq-cpp.vcxproj"
          RELEASE_CONFIGURATION ${RELEASE_CONF}
          DEBUG_CONFIGURATION   ${DEBUG_CONF}
          PLATFORM ${BUILD_ARCH}
