@@ -16,22 +16,23 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/nlohmann_json")
+vcpkg_fixup_pkgconfig()
+
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann_jsonTargets.cmake
+    "${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann_jsonTargets.cmake"
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
     "{_IMPORT_PREFIX}/share/nlohmann-json/nlohmann_json.natvis"
 )
 if(EXISTS ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis)
     file(RENAME
-        ${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis
-        ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann_json.natvis
+        "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis"
+        "${CURRENT_PACKAGES_DIR}/share/nlohmann-json/nlohmann_json.natvis"
     )
 endif()
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
-    "${CURRENT_PACKAGES_DIR}/lib"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/nlohmann_json.natvis")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
