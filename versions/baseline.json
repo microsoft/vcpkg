@@ -6882,7 +6882,7 @@
     },
     "yaml-cpp": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "yara": {
       "baseline": "4.1.1",
