@@ -1,6 +1,6 @@
 Source: vcpkg-ci-opencv
 Version: 1
-Port-Version: 2
+Port-Version: 3
 Homepage: https://github.com/microsoft/vcpkg
 Description: Port to force features of certain ports within CI
-Build-Depends: opencv[core,nonfree,ade,contrib,dnn,eigen,ffmpeg,gdcm,ipp,jasper,jpeg,lapack,openexr,opengl,openmp,png,qt,sfm,tiff,vtk,webp](!uwp&!(windows&(arm|arm64))), opencv[core,nonfree,ade,contrib,dnn,eigen,ffmpeg,jpeg,png,tiff,webp](uwp|(windows&(arm|arm64)))
+Build-Depends: opencv[cuda,cudnn,halide,ovis,tbb](windows&x64&!static&!uwp), opencv[gdcm,ipp,jasper,lapack,openexr,opengl,openmp,qt,sfm,vtk](!uwp&!(windows&(arm|arm64))), opencv[core,nonfree,ade,contrib,dnn,eigen,ffmpeg,jpeg,png,quirc,tiff,webp]
