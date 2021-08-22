@@ -1098,7 +1098,7 @@
     },
     "bux": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 0
     },
     "byte-lite": {
       "baseline": "0.2.0",
