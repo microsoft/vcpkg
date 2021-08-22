@@ -154,3 +154,20 @@ list(REMOVE_ITEM ARGS "CONFIG")
 list(REMOVE_ITEM ARGS "MODULE")
 _find_package(${ARGS} CONFIG)
 ```
+
+
+## Handling the `REQUIRED` keyword
+
+When `find_package` is called with the `REQUIRED` keyword (i.e. `REQUIRED`
+occurs in list `ARGS`), any error in setting up the configuration and transitive
+usage requirements may immediately raise a fatal error.
+
+However, a normal call to `find_package` without passing the `REQUIRED` keyword
+must not cause fatal CMake errors. It can indicate failure only by setting
+`<Pkg>_FOUND` to `FALSE`. This implies that a wrapper must not use the
+`REQUIRED` keyword when looking for transitive usage requirements via additional
+calls to `find_package`.
+
+(Normally, failures to find transitive usage requirements indicate serious
+issues with the vcpkg setup. However, users may explicitly disable finding and
+using some modules by setting `CMAKE_DISABLE_FIND_PACKAGE_<Pkg>` to `ON`.)
