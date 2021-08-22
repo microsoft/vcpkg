@@ -1,21 +1,20 @@
 ## Buildsystem Integration
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/integration.md).**
+### Table of Contents
+- [MSBuild integration](#msbuildvisualstudio-integration)
+  - [Per project integration](#per-project-integration)
+  - [Changing the triplet](#msbuild-changing-the-triplet)
+- [CMake integration](#cmake-integration)
+  - [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option)
+  - [Using multiple toolchain files](#using-multiple-toolchain-files)
+  - [Changing the triplet](#cmake-changing-the-triplet)
+- [Manual compiler setup](#manual-compiler-setup)
+- [`export` command](#export-command)
 
-Vcpkg offers many ways to integrate into your build so you can do what's right for your project. There are two main categories of integration:
+Each integration style has heuristics to deduce the correct [triplet][]. This can be overridden for [MSBuild](#msbuild-changing-the-triplet) and [CMake](#cmake-changing-the-triplet).
 
-- [`integrate` command](#integrate)
-- [`export` command](#export)
-
-Each integration style has heuristics to deduce the correct [triplet][]. This can be overridden using [a common method](#triplet-selection) based on your buildsystem.
-
-<a name="integrate-command"></a>
-### Integrate Command
-
-These link your project(s) to a specific copy of Vcpkg on your machine so any updates or new package installations will be instantly available for the next build of your project.
-
-<a name="user-wide-msbuild"></a>
-#### User-wide for MSBuild (Recommended for Open Source MSBuild projects)
+## MSBuild/VisualStudio integration
 ```no-highlight
 vcpkg integrate install
 ```
@@ -32,10 +31,40 @@ Here are some examples, though this is not an exhaustive list:
 
 To get a full list for all your installed packages, run `vcpkg owns manual-link`.
 
-<a name="cmake"></a>
-#### CMake toolchain file (Recommended for Open Source CMake projects)
+**If you are using manifest mode(`vcpkg.json`) see [here](manifests.md#msbuild-integration) for all available options.**
+
+#### Per project integration
+
+We also provide individual VS project integration through a NuGet package. This will modify the project file, so we do not recommend this approach for open source projects.
 ```no-highlight
-cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+PS D:\src\vcpkg> .\vcpkg integrate project
+Created nupkg: D:\src\vcpkg\scripts\buildsystems\vcpkg.D.src.vcpkg.1.0.0.nupkg
+
+With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
+    Install-Package vcpkg.D.src.vcpkg -Source "D:/src/vcpkg/scripts/buildsystems"
+```
+*Note: The generated NuGet package does not contain the actual libraries. It instead acts like a shortcut (or symlink) to the vcpkg install and will "automatically" update with any changes (install/remove) to the libraries. You do not need to regenerate or update the NuGet package.*
+
+#### MSBuild: Changing the triplet
+You can see the automatically deduced triplet by setting your MSBuild verbosity to Normal or higher:
+
+> *Shortcut: Ctrl+Q "build and run"*
+>
+> Tools -> Options -> Projects and Solutions -> Build and Run -> MSBuild project build output verbosity
+
+To override the automatically chosen [triplet][], you can specify the MSBuild property `VcpkgTriplet` in your `.vcxproj`. We recommend adding this to the `Globals` PropertyGroup.
+```xml
+<PropertyGroup Label="Globals">
+  <!-- .... -->
+  <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+  <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
+</PropertyGroup>
+```
+
+
+## CMake integration
+```no-highlight
+cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=[vcpkg-root]/scripts/buildsystems/vcpkg.cmake
 ```
 Projects configured with the Vcpkg toolchain file will have the appropriate Vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
 
@@ -48,7 +77,11 @@ find_path(CATCH_INCLUDE_DIR NAMES catch.hpp PATH_SUFFIXES catch2)
 include_directories(${CATCH_INCLUDE_DIR})
 ```
 
-##### Using an environment variable instead of a command line option
+**If you are using manifest mode(`vcpkg.json`) see [here](manifests.md#cmake-integration) for all available options.**
+
+For different IDE integrations see [here](../../README.md#using-vcpkg-with-cmake).
+
+#### Using an environment variable instead of a command line option
 
 The `CMAKE_TOOLCHAIN_FILE` setting simply must be set before the `project()` directive is first called. This means that you can easily read from an environment variable to avoid passing it on the configure line:
 
@@ -61,7 +94,7 @@ endif()
 project(myproject CXX)
 ```
 
-##### Using multiple toolchain files
+#### Using multiple toolchain files
 
 To use an external toolchain file with a project using vcpkg, you can set the cmake variable `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` on the configure line:
 ```no-highlight
@@ -70,21 +103,22 @@ cmake ../my/project \
    -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=../my/project/compiler-settings-toolchain.cmake
 ```
 
-#### Linking NuGet file
-
-We also provide individual VS project integration through a NuGet package. This will modify the project file, so we do not recommend this approach for open source projects.
+#### CMake: Changing the triplet
+You can set `VCPKG_TARGET_TRIPLET` on the configure line:
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg integrate project
-Created nupkg: D:\src\vcpkg\scripts\buildsystems\vcpkg.D.src.vcpkg.1.0.0.nupkg
-
-With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
-    Install-Package vcpkg.D.src.vcpkg -Source "D:/src/vcpkg/scripts/buildsystems"
+cmake ../my/project -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=...
 ```
-*Note: The generated NuGet package does not contain the actual libraries. It instead acts like a shortcut (or symlink) to the vcpkg install and will "automatically" update with any changes (install/remove) to the libraries. You do not need to regenerate or update the NuGet package.*
+If you use `VCPKG_DEFAULT_TRIPLET` [environment variable](config-environment.md) to control the unqualified triplet in vcpkg command lines you can default `VCPKG_TARGET_TRIPLET` in CMake like [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option):
 
-#### Manual compiler settings
+```cmake
+if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+  set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
+endif()
+```
 
-Libraries are installed into the `installed\` subfolder, partitioned by architecture (e.g. x86-windows):
+## Manual compiler setup
+
+Libraries are installed into the `installed\` subfolder in classic mode, partitioned by architecture (e.g. x86-windows):
 
 * The header files are installed to `installed\x86-windows\include`
 * Release `.lib` files are installed to `installed\x86-windows\lib` or `installed\x86-windows\lib\manual-link`
@@ -96,8 +130,8 @@ See your build system specific documentation for how to use prebuilt binaries.
 
 Generally, to run any produced executables you will also need to either copy the needed DLL files to the same folder as your executable or *prepend* the correct `bin\` directory to your path.
 
-<a name="export-command"></a>
-### Export Command
+
+## Export Command
 This command creates a shrinkwrapped archive containing a specific set of libraries (and their dependencies) that can be quickly and reliably shared with build servers or other users in your organization.
 
 - `--nuget`: NuGet package (Recommended for MSBuild projects)
@@ -114,43 +148,5 @@ Additionally, NuGet packages will contain a `build\native\vcpkg.targets` that in
 
 Please also see our [blog post](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/) for additional examples.
 
-<a name="triplet-selection"></a>
-### Triplet selection
-Every integration mechanism besides manually adding the folders will deduce a [triplet][] for your project as one of:
-
-- x86-windows
-- x64-windows
-- x86-uwp
-- x64-uwp
-- arm-uwp
-
-#### With MSBuild
-You can see the automatically deduced triplet by setting your MSBuild verbosity to Normal or higher:
-
-> *Shortcut: Ctrl+Q "build and run"*
->
-> Tools -> Options -> Projects and Solutions -> Build and Run -> MSBuild project build output verbosity
-
-To override the automatically chosen [triplet][], you can specify the MSBuild property `VcpkgTriplet` in your `.vcxproj`. We recommend adding this to the `Globals` PropertyGroup.
-```xml
-<PropertyGroup Label="Globals">
-  <!-- .... -->
-  <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
-  <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
-</PropertyGroup>
-```
-
-#### With CMake
-You can set `VCPKG_TARGET_TRIPLET` on the configure line:
-```no-highlight
-cmake ../my/project -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=...
-```
-If you use `VCPKG_DEFAULT_TRIPLET` [environment variable](config-environment.md) to control the unqualified triplet in vcpkg command lines you can default `VCPKG_TARGET_TRIPLET` in CMake like [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option):
-
-```cmake
-if(DEFINED ENV{VCPKG_DEFAULT_TRIPLET} AND NOT DEFINED VCPKG_TARGET_TRIPLET)
-  set(VCPKG_TARGET_TRIPLET "$ENV{VCPKG_DEFAULT_TRIPLET}" CACHE STRING "")
-endif()
-```
 
 [triplet]: triplets.md
