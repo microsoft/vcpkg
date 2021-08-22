@@ -262,6 +262,10 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
+# embree creates common conflicting static library names when built in static mode, reported upstream:
+# https://github.com/embree/embree/issues/331
+embree2:x64-windows-static=skip
+embree2:x64-windows-static-md=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
@@ -497,8 +501,6 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-keystone:arm-uwp=fail
-keystone:x64-uwp=fail
 kfr:arm64-windows=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
@@ -540,7 +542,6 @@ libbson:x64-uwp=fail
 libcds:arm64-windows=fail
 libcds:arm-uwp=fail
 libcds:x64-uwp=fail
-libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
@@ -1723,7 +1724,6 @@ clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
-keystone:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libgo:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail

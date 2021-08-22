@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
     REF 099c8585e3add6f58fab9aa438a491fa55d3f67e # 2.2.17.0
-    SHA512 1b6a5e41607bd68590a19672ca777c953b92b347425c9fe8ca7d096959bece789d043a0fae1f7bf00a88dcb11815dd3501414c9ad979e1fe9dd1613bb9e04b0b
+    SHA512 36e3aef52e082fcff64a16d10ad372a6335b3562c3d6e62aac88173476ae6c3694ac565084d50551724f47be83a7a8182e608c81c7a787392e576d9c401f65f5
     HEAD_REF master
     PATCHES
         fix-config-cmake.patch
@@ -25,11 +25,7 @@ file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(LINKSTATIC ON)
-else()
-    set(LINKSTATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -50,10 +46,10 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
@@ -67,11 +63,11 @@ vcpkg_configure_cmake(
         -DVERBOSE=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/OpenImageIO)
+vcpkg_cmake_config_fixup(PACKAGE_NAME OpenImageIO CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
@@ -81,13 +77,13 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
+file(COPY "${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
