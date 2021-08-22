@@ -1,0 +1,52 @@
+diff --git a/libass/ass_bitmap.c b/libass/ass_bitmap.c
+index d3186b4..53e4c6a 100644
+--- a/libass/ass_bitmap.c
++++ b/libass/ass_bitmap.c
+@@ -42,7 +42,7 @@
+ #undef ALIGN
+ #undef DECORATE
+ 
+-#if (defined(__i386__) || defined(__x86_64__)) && CONFIG_ASM
++#if (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) && CONFIG_ASM
+ 
+ #define ALIGN           4
+ #define DECORATE(func)  ass_##func##_sse2
+diff --git a/libass/ass_render.c b/libass/ass_render.c
+index 3b707a7..acd64b0 100644
+--- a/libass/ass_render.c
++++ b/libass/ass_render.c
+@@ -74,7 +74,7 @@ ASS_Renderer *ass_renderer_init(ASS_Library *library)
+     priv->ftlibrary = ft;
+     // images_root and related stuff is zero-filled in calloc
+ 
+-#if (defined(__i386__) || defined(__x86_64__)) && CONFIG_ASM
++#if (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) && CONFIG_ASM
+     if (has_avx2())
+         priv->engine = &ass_bitmap_engine_avx2;
+     else if (has_sse2())
+diff --git a/libass/ass_utils.c b/libass/ass_utils.c
+index 65b6f74..a0a74cc 100644
+--- a/libass/ass_utils.c
++++ b/libass/ass_utils.c
+@@ -31,7 +31,7 @@
+ #include "ass_utils.h"
+ #include "ass_string.h"
+ 
+-#if (defined(__i386__) || defined(__x86_64__)) && CONFIG_ASM
++#if (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) && CONFIG_ASM
+ 
+ #include "x86/cpuid.h"
+ 
+diff --git a/libass/ass_utils.h b/libass/ass_utils.h
+index 377d532..98f329d 100644
+--- a/libass/ass_utils.h
++++ b/libass/ass_utils.h
+@@ -48,7 +48,7 @@
+ 
+ #define ASS_PI 3.14159265358979323846
+ 
+-#if (defined(__i386__) || defined(__x86_64__)) && CONFIG_ASM
++#if (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) && CONFIG_ASM
+ int has_sse2(void);
+ int has_avx(void);
+ int has_avx2(void);

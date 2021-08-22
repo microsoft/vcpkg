@@ -1,0 +1,13 @@
+option('test', type: 'boolean', value: false, description: 'enable test program (requires libpng)')
+option('profile', type: 'boolean', value: false, description: 'enable profiling program')
+
+option('fontconfig', type: 'feature', value: 'disabled', description: 'fontconfig support')
+option('harfbuzz', type: 'feature', description: 'HarfBuzz support')
+option('directwrite', type: 'feature', description: 'DirectWrite support (win32 only)')
+option('coretext', type: 'feature', description: 'CoreText support (OSX only)')
+option('asm', type: 'feature', description: 'ASM support (better performance)')
+
+option('require-system-font-provider', type: 'boolean', value: true,
+       description: 'disallow compilation if no system font provider was found')
+option('large-tiles', type: 'boolean', value: false,
+       description: 'use larger tiles in the rasterizer (better performance, slightly worse quality)')
