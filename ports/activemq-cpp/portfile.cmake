@@ -76,6 +76,10 @@ else()
         message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
+    string(REPLACE "/" "\\" WIN_SOURCE_PATH "${SOURCE_PATH}")
+    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "ClCompile Include=\"..\\src" "ClCompile Include=\"${WIN_SOURCE_PATH}\\src")
+    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "ClInclude Include=\"..\\src" "ClInclude Include=\"${WIN_SOURCE_PATH}\\src")
+    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "../src/main" "${SOURCE_PATH}/src/main")
     vcpkg_install_msbuild(
          SOURCE_PATH "${SOURCE_PATH}/vs2010-build"
          PROJECT_SUBPATH "activemq-cpp.vcxproj"
@@ -83,6 +87,8 @@ else()
          DEBUG_CONFIGURATION   ${DEBUG_CONF}
          PLATFORM ${BUILD_ARCH}
          USE_VCPKG_INTEGRATION
+         ALLOW_ROOT_INCLUDES
+         SKIP_CLEAN
     )
 
     vcpkg_copy_pdbs()
@@ -126,6 +132,7 @@ else()
     file(COPY ${SOURCE_PATH}/src/main/activemq DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
     file(COPY ${SOURCE_PATH}/src/main/cms      DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
     file(COPY ${SOURCE_PATH}/src/main/decaf    DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
+    vcpkg_clean_msbuild()
 endif()
 
 file(INSTALL ${CURRENT_PORT_DIR}/activemq-cppConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
