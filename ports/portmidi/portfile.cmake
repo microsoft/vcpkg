@@ -8,6 +8,7 @@ vcpkg_from_sourceforge(
     PATCHES
         fix-build-install.patch
         add-feature-options.patch
+        fix-unix-build.patch
 )
 
 vcpkg_cmake_configure(
