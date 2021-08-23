@@ -1,0 +1,79 @@
+diff --git a/portmidi/trunk/pm_common/CMakeLists.txt b/portmidi/trunk/pm_common/CMakeLists.txt
+index cbeeade..01866e3 100644
+--- a/portmidi/trunk/pm_common/CMakeLists.txt
++++ b/portmidi/trunk/pm_common/CMakeLists.txt
+@@ -104,8 +104,9 @@ set(JNI_EXTRA_LIBS ${PM_NEEDED_LIBS} ${JAVA_JVM_LIBRARY})
+ # this completes the list of library sources by adding shared code
+ list(APPEND LIBSRC pmutil portmidi)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ # now add the shared files to make the complete list of library sources
+-add_library(portmidi-static ${LIBSRC})
++add_library(portmidi-static STATIC ${LIBSRC})
+ set_target_properties(portmidi-static PROPERTIES OUTPUT_NAME "portmidi_s")
+ target_link_libraries(portmidi-static ${PM_NEEDED_LIBS})
+ 
+@@ -118,11 +119,13 @@ target_link_libraries(pmjni ${JNI_EXTRA_LIBS})
+ set_target_properties(pmjni PROPERTIES EXECUTABLE_EXTENSION "jnilib")
+ 
+ # install the libraries (Linux and Mac OS X command line)
+-if(UNIX)
++if(1)
+   INSTALL(TARGETS portmidi-static pmjni
+-    LIBRARY DESTINATION /usr/local/lib
+-    ARCHIVE DESTINATION /usr/local/lib)
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib)
+ # .h files installed by pm_dylib/CMakeLists.txt, so don't need them here
+-#  INSTALL(FILES portmidi.h ../porttime/porttime.h
+-#    DESTINATION /usr/local/include)
+-endif(UNIX)
++  INSTALL(FILES portmidi.h ../porttime/porttime.h
++    DESTINATION include)
++endif(1)
++endif()
+diff --git a/portmidi/trunk/pm_common/portmidi.h b/portmidi/trunk/pm_common/portmidi.h
+index e07991e..aee6985 100644
+--- a/portmidi/trunk/pm_common/portmidi.h
++++ b/portmidi/trunk/pm_common/portmidi.h
+@@ -109,7 +109,7 @@ typedef unsigned int uint32_t;
+ #ifdef _WINDLL
+ #define PMEXPORT __declspec(dllexport)
+ #else
+-#define PMEXPORT 
++#define PMEXPORT __declspec(dllimport)
+ #endif
+ 
+ #ifndef FALSE
+diff --git a/portmidi/trunk/pm_dylib/CMakeLists.txt b/portmidi/trunk/pm_dylib/CMakeLists.txt
+index f693dd6..f2994d1 100644
+--- a/portmidi/trunk/pm_dylib/CMakeLists.txt
++++ b/portmidi/trunk/pm_dylib/CMakeLists.txt
+@@ -113,15 +113,21 @@ set(SHARED_FILES pmutil portmidi)
+ prepend_path(SHARED_PATHS ../pm_common/ ${SHARED_FILES})
+ list(APPEND LIBSRC ${SHARED_PATHS})
+ 
++if (BUILD_SHARED_LIBS)
+ add_library(portmidi-dynamic SHARED ${LIBSRC})
+ set_target_properties(portmidi-dynamic PROPERTIES OUTPUT_NAME "portmidi")
+ target_link_libraries(portmidi-dynamic ${PM_NEEDED_LIBS})
++if (MSVC)
++  target_compile_definitions(portmidi-dynamic PRIVATE _WINDLL)
++endif()
+ 
+ # install the libraries (Linux and Mac OS X command line)
+-if(UNIX)
++if(1)
+   INSTALL(TARGETS portmidi-dynamic
+-    LIBRARY DESTINATION /usr/local/lib
+-    ARCHIVE DESTINATION /usr/local/lib)
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib)
+   INSTALL(FILES ../pm_common/portmidi.h ../porttime/porttime.h
+-    DESTINATION /usr/local/include)
+-endif(UNIX)
++    DESTINATION include)
++endif(1)
++endif()
