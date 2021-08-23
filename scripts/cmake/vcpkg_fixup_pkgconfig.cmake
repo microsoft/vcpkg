@@ -46,8 +46,8 @@ Still work in progress. If there are more cases which can be handled here feel f
 #]===]
 
 function(z_vcpkg_fixup_pkgconfig_check_files file config)
-    set(path_suffix_debug /debug)
-    set(path_suffix_release "")
+    set(path_suffix_DEBUG /debug)
+    set(path_suffix_RELEASE "")
 
     if(DEFINED ENV{PKG_CONFIG_PATH})
         set(backup_env_pkg_config_path "$ENV{PKG_CONFIG_PATH}")
@@ -56,9 +56,9 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
     endif()
 
     vcpkg_list(SET pkg_config_path
-        "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${config}}/lib/pkgconfig"
+        "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-        "${CURRENT_PACKAGES_DIR}${PATH_SUFFIX_${config}}/lib/pkgconfig"
+        "${CURRENT_PACKAGES_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
     )
     if(DEFINED ENV{PKG_CONFIG_PATH} AND NOT ENV{PKG_CONFIG_PATH} STREQUAL "")
@@ -144,6 +144,13 @@ function(vcpkg_fixup_pkgconfig)
             #Correct *.pc file
             file(READ "${file}" contents)
 
+            # this normalizes all files to end with a newline, and use LF instead of CRLF;
+            # this allows us to use regex matches easier to modify these files.
+            if(NOT "${contents}" MATCHES "\n$")
+                string(APPEND contents "\n")
+            endif()
+            string(REPLACE "\r\n" "\n" contents "${contents}")
+
             string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
             string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
             string(REPLACE "${unix_packages_dir}" [[${prefix}]] contents "${contents}")
@@ -185,7 +192,7 @@ function(vcpkg_fixup_pkgconfig)
 
                     string(REGEX REPLACE "(^|\n)${item}(\\.private)?:[^\n]*\n" [[\1]] contents "${contents}")
                     if(NOT "${line}" STREQUAL "")
-                        string(APPEND contents "${item}:${libs_line}\n")
+                        string(APPEND contents "${item}:${line}\n")
                     endif()
                 endforeach()
             endif()
