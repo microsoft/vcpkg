@@ -34,18 +34,18 @@ index cbeeade..01866e3 100644
 +endif(1)
 +endif()
 diff --git a/portmidi/trunk/pm_common/portmidi.h b/portmidi/trunk/pm_common/portmidi.h
-index e07991e..aee6985 100644
+index e07991e..2187c3e 100644
 --- a/portmidi/trunk/pm_common/portmidi.h
 +++ b/portmidi/trunk/pm_common/portmidi.h
-@@ -109,7 +109,7 @@ typedef unsigned int uint32_t;
+@@ -108,6 +108,8 @@ typedef unsigned int uint32_t;
+ 
  #ifdef _WINDLL
  #define PMEXPORT __declspec(dllexport)
++#elif defined _USEDLL
++#define PMEXPORT __declspec(dllexport)
  #else
--#define PMEXPORT 
-+#define PMEXPORT __declspec(dllimport)
+ #define PMEXPORT 
  #endif
- 
- #ifndef FALSE
 diff --git a/portmidi/trunk/pm_dylib/CMakeLists.txt b/portmidi/trunk/pm_dylib/CMakeLists.txt
 index f693dd6..f2994d1 100644
 --- a/portmidi/trunk/pm_dylib/CMakeLists.txt
