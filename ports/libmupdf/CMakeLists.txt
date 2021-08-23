@@ -1,12 +1,28 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.20)
 project(libmupdf C)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
 if(WIN32)
-  execute_process(
-    COMMAND "cmd.exe" "/c" "platform\\win32\\generate.bat"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+  if (CMAKE_CL_64)
+    set(GEN_MODE "64bit")
+  else()
+    set(GEN_MODE "32bit")
+  endif()
+  set(OBJ2COFF_SRC scripts/bin2coff.c)
+
+  add_executable(obj2coff ${OBJ2COFF_SRC})
+  file(GLOB_RECURSE FONT_FILES "./resources/fonts/*.ttf" "./resources/fonts/*.ttc" "./resources/fonts/*.otf" "./resources/fonts/*.cff")
+  foreach (ONE_FILE IN LISTS FONT_FILES)
+    get_filename_component(ONE_FILE_NO_PATH ${ONE_FILE} NAME)
+	list(APPEND GEN_OBJ_FILES "${CMAKE_BINARY_DIR}/gen_objs/${ONE_FILE_NO_PATH}.obj")
+  endforeach()
+  set_source_files_properties(${GEN_OBJ_FILES} PROPERTIES GENERATED TRUE)
+  add_custom_command(
+    OUTPUT ${GEN_OBJ_FILES}
+    COMMAND "cmd.exe" "/c" "${CMAKE_SOURCE_DIR}/gen_font_objs.bat" "${CMAKE_BINARY_DIR}/obj2coff.exe" "${CMAKE_BINARY_DIR}/gen_objs" "${GEN_MODE}"
+	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	DEPENDS obj2coff
   )
 else()
   find_program(MAKE_EXE NAMES make REQUIRED)
@@ -14,7 +30,7 @@ else()
     COMMAND ${MAKE_EXE} "generate"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
   )
-endif() 
+endif()
 
 
 find_package(freetype NO_MODULE REQUIRED)
@@ -29,7 +45,13 @@ file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
 list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
 
-add_library(libmupdf ${SOURCES})
+add_library(libmupdf ${SOURCES} ${GEN_OBJ_FILES})
+if(WIN32)
+  foreach (ONE_FILE IN LISTS GEN_OBJ_FILES)
+    list(APPEND SOURCES ${ONE_FILE})
+  endforeach()
+endif()
+
 
 if(WIN32)
   target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0)

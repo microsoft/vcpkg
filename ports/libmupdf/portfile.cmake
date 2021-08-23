@@ -1,5 +1,4 @@
 vcpkg_fail_port_install(ON_TARGET "osx")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -11,6 +10,8 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/gen_font_objs.bat DESTINATION ${SOURCE_PATH})
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
