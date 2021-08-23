@@ -6,15 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DJSON_Install=ON
         -DJSON_MultipleHeaders=ON
         -DJSON_BuildTests=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "nlohmann_json" CONFIG_PATH "lib/cmake/nlohmann_json")
 vcpkg_fixup_pkgconfig()
 
@@ -35,4 +34,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/nlohmann_json.natvis")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,9 +1,16 @@
 {
   "name": "nlohmann-json",
-  "version-string": "3.10.0",
+  "version-semver": "3.10.0",
   "description": "JSON for Modern C++",
   "homepage": "https://github.com/nlohmann/json",
   "dependencies": [
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
