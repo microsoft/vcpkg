@@ -27,17 +27,33 @@ if (EXISTS "${_IMPORT_PREFIX}/bin/activemq-cpp.dll")
                 find_library(APR_LIB_DEBUG libapr-1.lib PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
                 find_library(APR_DLL_DEBUG libapr-1.dll PATHS "${_IMPORT_PREFIX}/debug/bin" NO_DEFAULT_PATH)
                 if (APR_LIB_RELEASE AND APL_DLL_RELEASE AND APR_LIB_DEBUG AND APR_DLL_DEBUG)
+                    # the APR port doesn't have a CMake config target so create one
+                    add_library(activemq-cpp::apr SHARED IMPORTED)
+                    set_target_properties(activemq-cpp::apr
+                                          PROPERTIES
+                                              MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                                              MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                                              IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/libapr-1.lib"
+                                              IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.dll"
+                                              IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/libapr-1.lib"
+                                              IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.dll"
+                                              IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                              INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                    )
+
+                    # the create the activemq-cpp CMake config target with a dependency on apr
                     add_library(activemq-cpp::activemq-cpp SHARED IMPORTED)
                     set_target_properties(activemq-cpp::activemq-cpp
                                           PROPERTIES
                                               MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                               MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                               IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/activemq-cpp.lib"
-                                              IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/activemq-cpp.dll"
+                                              IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/activemq-cpp.dll"
                                               IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib"
-                                              IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll"
-                                              IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                              INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                              IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll"
+                                              IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                              INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                              INTERFACE_LINK_LIBRARIES activemq-cpp::apr
                     )
                     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
                 else()
@@ -65,6 +81,19 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
         find_library(APR_LIB_RELEASE apr-1.lib PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
         find_library(APR_LIB_DEBUG apr-1.lib PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
         if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
+            # the APR port doesn't have a CMake config target so create one
+            add_library(activemq-cpp::apr SHARED IMPORTED)
+            set_target_properties(activemq-cpp::apr
+                                  PROPERTIES
+                                      MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                                      MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/apr-1.lib"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/apr-1.lib"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+            )
+
+            # the create the activemq-cpp CMake config target with a dependency on apr
             add_library(activemq-cpp::activemq-cpp STATIC IMPORTED)
             set_target_properties(activemq-cpp::activemq-cpp
                                   PROPERTIES
@@ -72,8 +101,9 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                       IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib"
                                       IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib"
-                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      INTERFACE_LINK_LIBRARIES activemq-cpp::apr
             )
             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
         else()
@@ -92,6 +122,19 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
         find_library(APR_LIB_RELEASE libapr-1.so PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
         find_library(APR_LIB_DEBUG libapr-1.so PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
         if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
+            # the APR port doesn't have a CMake config target so create one
+            add_library(activemq-cpp::apr SHARED IMPORTED)
+            set_target_properties(activemq-cpp::apr
+                                  PROPERTIES
+                                      MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                                      MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.so"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.so"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+            )
+
+            # the create the activemq-cpp CMake config target with a dependency on apr
             add_library(activemq-cpp::activemq-cpp SHARED IMPORTED)
             set_target_properties(activemq-cpp::activemq-cpp
                                   PROPERTIES
@@ -99,8 +142,9 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                       IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5"
                                       IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so.19.0.5"
-                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      INTERFACE_LINK_LIBRARIES activemq-cpp::apr
             )
             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
         else()
@@ -119,6 +163,19 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
         find_library(APR_LIB_RELEASE libapr-1.a PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
         find_library(APR_LIB_DEBUG libapr-1.a PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
         if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
+            # the APR port doesn't have a CMake config target so create one
+            add_library(activemq-cpp::apr SHARED IMPORTED)
+            set_target_properties(activemq-cpp::apr
+                                  PROPERTIES
+                                      MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                                      MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.a"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.a"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+            )
+
+            # the create the activemq-cpp CMake config target with a dependency on apr
             add_library(activemq-cpp::activemq-cpp STATIC IMPORTED)
             set_target_properties(activemq-cpp::activemq-cpp
                                   PROPERTIES
@@ -126,8 +183,9 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                       IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a"
                                       IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.a"
-                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                                      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+                                      INTERFACE_LINK_LIBRARIES activemq-cpp::apr
             )
             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
         else()
