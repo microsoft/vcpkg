@@ -12,6 +12,11 @@ vcpkg_check_features(
         tools   COMMS_BUILD_TOOLS
 )
 
+# check before configure
+if(COMMS_BUILD_TOOLS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY) 
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
