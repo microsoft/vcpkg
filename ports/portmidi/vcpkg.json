@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Free, cross-platform, open-source I/O library for MIDI",
   "homepage": "https://sourceforge.net/projects/portmedia/",
-  "supports": "windows & !uwp & !arm",
+  "supports": "!(uwp | arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
