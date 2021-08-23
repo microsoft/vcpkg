@@ -139,6 +139,7 @@ function(vcpkg_install_msbuild)
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/p:VCPkgLocalAppDataDisabled=true"
         "/p:UseIntelMKL=No"
+        "/p:UseMultiToolTask=true"
         "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
