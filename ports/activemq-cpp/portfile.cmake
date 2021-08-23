@@ -113,17 +113,17 @@ else()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY
-            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-deb/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
         )
     
         if (ACTIVEMQCPP_SHARED_LIB)
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-deb/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll
+                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll
                 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
             )
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-deb/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb
+                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb
                 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
             )
         endif()
