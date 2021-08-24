@@ -25,5 +25,5 @@ export(
 install(
     EXPORT tinyfiledialogsConfig
     NAMESPACE tinyfiledialogs::
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/tinyfiledialogs"
+    DESTINATION share/tinyfiledialogs
 )
