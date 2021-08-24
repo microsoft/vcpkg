@@ -140,11 +140,13 @@ function(vcpkg_install_msbuild)
         "/p:VCPkgLocalAppDataDisabled=true"
         "/p:UseIntelMKL=No"
         "/p:UseMultiToolTask=true"
+        "/p:MultiProcMaxCount:${VCPKG_MAX_CONCURRENCY}"
+        "/p:EnforceProcessCountAcrossBuilds"
         "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         "/p:VcpkgManifestInstall=false"
-        "/m"
+        "/m:${VCPKG_MAX_CONCURRENCY}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
