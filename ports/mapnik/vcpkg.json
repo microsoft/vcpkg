@@ -55,6 +55,15 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "grid-renderer",
+    "jpeg",
+    "png",
+    "proj",
+    "svg-renderer",
+    "tiff",
+    "webp"
+  ],
   "features": {
     "cairo": {
       "description": "Cairo renderer",
