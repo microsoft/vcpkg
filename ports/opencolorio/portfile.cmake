@@ -32,7 +32,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/opencolorio")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenColorIO")
 
 vcpkg_copy_pdbs()
 
