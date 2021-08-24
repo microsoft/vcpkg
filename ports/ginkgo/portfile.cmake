@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
-    REF v1.3.0
-    SHA512 40db39666730a2120d0c5e197518f784aab71655781c037fb83302a346f6bf717e5c58491e9b29b9adacb492328e11bc60960f99323c220d53505ecab6489871
+    REF v1.4.0
+    SHA512 9bfcb2c415c7a1a70cf8e49f20adf62d02cab83bb23b6fcecfeaeeb322b2d4e1ad8d8fa6582735073753f9a05eac8688b9bd1ff1d4203957c1a80702d117e807
     HEAD_REF master
     PATCHES
-        cmake-fixes.patch
-        windows-iterator.patch
+        windows-symbols.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,6 +22,8 @@ vcpkg_cmake_configure(
         -DGINKGO_BUILD_TESTS=OFF
         -DGINKGO_BUILD_EXAMPLES=OFF
         -DGINKGO_BUILD_HIP=OFF
+        -DGINKGO_BUILD_DPCPP=OFF
+        -DGINKGO_BUILD_HWLOC=OFF
         -DGINKGO_BUILD_BENCHMARKS=OFF
         -DGINKGO_DEVEL_TOOLS=OFF
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
@@ -36,5 +37,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ginkgo)
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
