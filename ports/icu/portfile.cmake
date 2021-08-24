@@ -35,7 +35,10 @@ set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
     # cross compiling
-    list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}")
+    set(TOOL_PATH "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}")
+    # convert to unix path
+    string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_TOOL_PATH "${TOOL_PATH}")
+    list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
