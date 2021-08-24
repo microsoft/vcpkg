@@ -9,8 +9,8 @@ vcpkg_from_github(
       fix-c4703-error.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARAY_LINKAGE}" "static" ZSTD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARAY_LINKAGE}" "dynamic" ZSTD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZSTD_BUILD_SHARED)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # Enable multithreaded mode. CMake build doesn't provide a multithreaded
@@ -22,8 +22,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
     OPTIONS
-        -DZSTD_BUILD_SHARED=${ZSTD_SHARED}
-        -DZSTD_BUILD_STATIC=${ZSTD_STATIC}
+        -DZSTD_BUILD_SHARED=${ZSTD_BUILD_SHARED}
+        -DZSTD_BUILD_STATIC=${ZSTD_BUILD_STATIC}
         -DZSTD_LEGACY_SUPPORT=1
         -DZSTD_BUILD_PROGRAMS=0
         -DZSTD_BUILD_TESTS=0
