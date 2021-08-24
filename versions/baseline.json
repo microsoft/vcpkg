@@ -94,7 +94,7 @@
     },
     "anyrpc": {
       "baseline": "2021-08-24",
-      "port-version": 1
+      "port-version": 0
     },
     "aom": {
       "baseline": "3.1.2",
