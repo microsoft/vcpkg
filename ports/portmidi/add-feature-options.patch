@@ -1,8 +1,8 @@
 diff --git a/portmidi/trunk/CMakeLists.txt b/portmidi/trunk/CMakeLists.txt
-index 4919b78..d387a26 100644
+index e5e01b6..483b900 100644
 --- a/portmidi/trunk/CMakeLists.txt
 +++ b/portmidi/trunk/CMakeLists.txt
-@@ -68,10 +68,14 @@ endif(UNIX)
+@@ -72,10 +72,14 @@ endif(0)
  include_directories(pm_common porttime)
  add_subdirectory(pm_common)
  
@@ -18,10 +18,10 @@ index 4919b78..d387a26 100644
 +endif()
  
 diff --git a/portmidi/trunk/pm_common/CMakeLists.txt b/portmidi/trunk/pm_common/CMakeLists.txt
-index 01866e3..915cf9f 100644
+index c829063..2597bea 100644
 --- a/portmidi/trunk/pm_common/CMakeLists.txt
 +++ b/portmidi/trunk/pm_common/CMakeLists.txt
-@@ -113,17 +113,25 @@ target_link_libraries(portmidi-static ${PM_NEEDED_LIBS})
+@@ -111,17 +111,25 @@ target_link_libraries(portmidi-static ${PM_NEEDED_LIBS})
  # define the jni library
  include_directories(${JAVA_INCLUDE_PATHS})
  
