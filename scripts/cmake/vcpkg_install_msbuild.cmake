@@ -143,20 +143,10 @@ function(vcpkg_install_msbuild)
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         "/p:VcpkgManifestInstall=false"
-    )
-    if (VCPKG_MAX_CONCURRENCY)
-        list(APPEND arg_OPTIONS
-            "/p:UseMultiToolTask=true"
-            "/p:MultiProcMaxCount:${VCPKG_MAX_CONCURRENCY}"
-            "/p:EnforceProcessCountAcrossBuilds"
-            "/m:${VCPKG_MAX_CONCURRENCY}"
-        )
-    else()
-        list(APPEND arg_OPTIONS
-            "/p:UseMultiToolTask=true"
-            "/m"
-        )
-    endif()
+        "/p:UseMultiToolTask=true"
+        "/p:MultiProcMaxCount:${VCPKG_CONCURRENCY}"
+        "/p:EnforceProcessCountAcrossBuilds"
+        "/m:${VCPKG_CONCURRENCY}"
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
