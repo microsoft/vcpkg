@@ -1778,7 +1778,7 @@
     },
     "drogon": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "dtl": {
       "baseline": "1.19",
