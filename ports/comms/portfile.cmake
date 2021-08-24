@@ -14,7 +14,7 @@ vcpkg_check_features(
 
 # check before configure
 if(COMMS_BUILD_TOOLS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY) 
+    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static" MESSAGE "Feature 'Tools' can't be built statically") 
 endif()
 
 vcpkg_configure_cmake(
