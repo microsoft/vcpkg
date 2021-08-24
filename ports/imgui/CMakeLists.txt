@@ -65,27 +65,7 @@ if(IMGUI_BUILD_OPENGL2_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.cpp)
 endif()
 
-if(IMGUI_BUILD_OPENGL3_GLEW_BINDING)
-    find_package(GLEW REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC GLEW::GLEW)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GLAD_BINDING)
-    find_package(glad CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glad::glad)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GL3W_BINDING)
-    find_package(gl3w CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC unofficial::gl3w::gl3w)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GLBINDING_BINDING)
-    find_package(glbinding CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glbinding::glbinding)
+if(IMGUI_BUILD_OPENGL3_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
 endif()
 
@@ -193,8 +173,14 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_OPENGL3_GLEW_BINDING OR IMGUI_BUILD_OPENGL3_GLAD_BINDING OR IMGUI_BUILD_OPENGL3_GL3W_BINDING OR IMGUI_BUILD_OPENGL3_GLBINDING_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.h DESTINATION include)
+    if(IMGUI_BUILD_OPENGL3_BINDING)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3_loader.h
+            DESTINATION
+                include
+        )
     endif()
 
     if(IMGUI_BUILD_OSX_BINDING)
