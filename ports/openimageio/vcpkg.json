@@ -1,6 +1,7 @@
 {
   "name": "openimageio",
   "version": "2.2.17.0",
+  "port-version": 1,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "dependencies": [
@@ -24,6 +25,14 @@
     "openexr",
     "robin-map",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
