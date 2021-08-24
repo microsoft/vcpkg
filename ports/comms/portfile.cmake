@@ -16,7 +16,7 @@ vcpkg_check_features(
 )
 
 # check before configure
-if(COMMS_BUILD_TOOLS)
+if(CC_BUILD_TOOLS)
     vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static" MESSAGE "Feature 'Tools' can't be built statically") 
 endif()
 
@@ -35,7 +35,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
 
-if(COMMS_BUILD_TOOLS)
+if(CC_BUILD_TOOLS)
     vcpkg_copy_tools(
         TOOL_NAMES cc_dump cc_view
         SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
