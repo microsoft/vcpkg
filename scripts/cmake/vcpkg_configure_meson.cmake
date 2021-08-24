@@ -285,6 +285,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
         string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
+    string(APPEND CROSS "cmake = '${CMAKE_COMMAND}'\n")
     foreach(_binary IN LISTS ${_additional_binaries})
         string(APPEND CROSS "${_binary}\n")
     endforeach()
