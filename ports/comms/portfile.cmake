@@ -9,7 +9,10 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools   COMMS_BUILD_TOOLS
+        tools   CC_BUILD_TOOLS_LIBRARY
+        tools   CC_INSTALL_TOOLS_LIBRARY
+        tools   CC_BUILD_TOOLS
+        tools   CC_INSTALL_TOOLS
 )
 
 # check before configure
@@ -17,24 +20,20 @@ if(COMMS_BUILD_TOOLS)
     vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static" MESSAGE "Feature 'Tools' can't be built statically") 
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCC_INSTALL_COMMS_LIB=ON
         -DCC_BUILD_UNIT_TESTS=OFF
         -DCC_WARN_AS_ERR=OFF
-        -DCC_BUILD_TOOLS_LIBRARY=${COMMS_BUILD_TOOLS}
-        -DCC_INSTALL_TOOLS_LIBRARY=${COMMS_BUILD_TOOLS}
-        -DCC_BUILD_TOOLS=${COMMS_BUILD_TOOLS}
-        -DCC_INSTALL_TOOLS=${COMMS_BUILD_TOOLS}
         -DCC_BUILD_DEMO_PROTOCOL=OFF
         -DCC_INSTALL_DEMO_PROTOCOL=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
 
 if(COMMS_BUILD_TOOLS)
     vcpkg_copy_tools(
@@ -44,7 +43,7 @@ if(COMMS_BUILD_TOOLS)
     )
     file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" 
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/plugin")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/CommsChampion/cmake" TARGET_PATH "share/CommsChampion")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/CommsChampion/cmake" TARGET_PATH "share/CommsChampion")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/LibComms")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion")
