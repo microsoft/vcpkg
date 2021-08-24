@@ -17,6 +17,9 @@ vcpkg_cmake_configure(
         -DJAVA_INCLUDE_PATH=
         -DJAVA_INCLUDE_PATH2=
         -DJAVA_JVM_LIBRARY=
+    MAYBE_UNUSED_VARIABLES
+        JAVA_INCLUDE_PATH
+        JAVA_INCLUDE_PATH2
 )
 
 vcpkg_cmake_install()
