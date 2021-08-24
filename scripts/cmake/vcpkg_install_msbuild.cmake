@@ -145,7 +145,7 @@ function(vcpkg_install_msbuild)
         "/p:VcpkgManifestInstall=false"
         "/p:UseMultiToolTask=true"
         "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
-        "/p:EnforceProcessCountAcrossBuilds"
+        "/p:EnforceProcessCountAcrossBuilds=true"
         "/m:${VCPKG_CONCURRENCY}"
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
