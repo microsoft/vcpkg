@@ -9,13 +9,8 @@ vcpkg_from_github(
       fix-c4703-error.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(ZSTD_STATIC 1)
-    set(ZSTD_SHARED 0)
-else()
-    set(ZSTD_STATIC 0)
-    set(ZSTD_SHARED 1)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARAY_LINKAGE}" "static" ZSTD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARAY_LINKAGE}" "dynamic" ZSTD_SHARED)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # Enable multithreaded mode. CMake build doesn't provide a multithreaded
@@ -69,6 +64,6 @@ endif()
 
 file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "ZSTD is dual licensed - see LICENSE and COPYING files\n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "ZSTD is dual licensed - see LICENSE and COPYING files\n")
 
 
