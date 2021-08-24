@@ -61,10 +61,15 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
         "${CURRENT_PACKAGES_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
     )
-    if(DEFINED ENV{PKG_CONFIG_PATH} AND NOT ENV{PKG_CONFIG_PATH} STREQUAL "")
-        vcpkg_list(APPEND pkg_config_path "$ENV{PKG_CONFIG_PATH}")
+    if("${VCPKG_HOST_PATH_SEPARATOR}" STREQUAL ";")
+        vcpkg_list(APPEND pkg_config_path $ENV{PKG_CONFIG_PATH})
+    else()
+        vcpkg_list(JOIN pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}" pkg_config_path)
+        if(NOT "$ENV{PKG_CONFIG_PATH}" STREQUAL "")
+            string(APPEND pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        endif()
     endif()
-    vcpkg_list(JOIN pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}" pkg_config_path)
+
     set(ENV{PKG_CONFIG_PATH} "${pkg_config_path}")
 
     # First make sure everything is ok with the package and its deps
