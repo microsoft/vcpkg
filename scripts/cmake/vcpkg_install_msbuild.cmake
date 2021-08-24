@@ -144,7 +144,7 @@ function(vcpkg_install_msbuild)
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         "/p:VcpkgManifestInstall=false"
         "/p:UseMultiToolTask=true"
-        "/p:MultiProcMaxCount:${VCPKG_CONCURRENCY}"
+        "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
         "/p:EnforceProcessCountAcrossBuilds"
         "/m:${VCPKG_CONCURRENCY}"
 
