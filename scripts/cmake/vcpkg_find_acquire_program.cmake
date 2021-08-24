@@ -173,7 +173,7 @@ function(vcpkg_find_acquire_program program)
 
     if(NOT "${envvar}" STREQUAL "" AND DEFINED ENV{${envvar}})
         debug_message(STATUS "${envvar} found in ENV! Using $ENV{${envvar}}")
-        set("${program}" "${ENV{${envvar}}" PARENT_SCOPE)
+        set("${program}" "$ENV{${envvar}}" PARENT_SCOPE)
         return()
     endif()
 
