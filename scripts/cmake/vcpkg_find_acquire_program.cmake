@@ -122,6 +122,23 @@ function(z_vcpkg_find_acquire_program_set_variables variables_array out_var_out_
     set("${out_var_out_variables}" "${out_variables}" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_find_acquire_program_version_check program)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "VERSION_COMMAND;VERSION" "")
+    vcpkg_execute_in_download_mode(
+        COMMAND ${${program}} ${arg_VERSION_COMMAND}
+        WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
+        OUTPUT_VARIABLE program_version_output
+    )
+    string(STRIP "${program_version_output}" program_version_output)
+    #TODO: REGEX MATCH case for more complex cases!
+    if(NOT "${program_version_output}" VERSION_GREATER_EQUAL "${arg_VERSION}")
+        message(STATUS "Found ${program_name}('${program_version_output}'), but at least version ${arg_VERSION} is required! Trying to use internal version if possible!")
+        unset("${program}" PARENT_SCOPE)
+    else()
+        message(STATUS "Found external ${program}('${program_version_output}').")
+    endif()
+endfunction()
+
 function(vcpkg_find_acquire_program program)
     if("${${program}}")
         return()
@@ -132,6 +149,8 @@ function(vcpkg_find_acquire_program program)
     set(subdirectory "")
     set(download_supported_on_unix OFF)
     set(required_interpreter "")
+    set(envvar "")
+    vcpkg_list(SET version_command)
     vcpkg_list(SET post_install_command)
     vcpkg_list(SET paths)
 
@@ -152,29 +171,11 @@ function(vcpkg_find_acquire_program program)
         message(FATAL_ERROR "unknown tool ${program} -- unable to acquire.")
     endif()
 
-    if(DEFINED envvar AND DEFINED ENV{${envvar}})
+    if(NOT "${envvar}" STREQUAL "" AND DEFINED ENV{${envvar}})
         debug_message(STATUS "${envvar} found in ENV! Using $ENV{${envvar}}")
         set("${program}" "${ENV{${envvar}}" PARENT_SCOPE)
         return()
     endif()
-
-    macro(do_version_check)
-        if(VERSION_CMD)
-                vcpkg_execute_in_download_mode(
-                        COMMAND ${${program}} ${VERSION_CMD}
-                        WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
-                        OUTPUT_VARIABLE PROGRAM_VERSION_OUTPUT
-                )
-                string(STRIP "${PROGRAM_VERSION_OUTPUT}" PROGRAM_VERSION_OUTPUT)
-                #TODO: REGEX MATCH case for more complex cases!
-                if(NOT PROGRAM_VERSION_OUTPUT VERSION_GREATER_EQUAL PROGRAM_VERSION)
-                        message(STATUS "Found ${PROGNAME}('${PROGRAM_VERSION_OUTPUT}') but at least version ${PROGRAM_VERSION} is required! Trying to use internal version if possible!")
-                        unset(${program})
-                else()
-                        message(STATUS "Found external ${PROGNAME}('${PROGRAM_VERSION_OUTPUT}').")
-                endif()
-        endif()
-    endmacro()
 
     macro(do_find)
         if(NOT "${required_interpreter}" STREQUAL "")
@@ -183,14 +184,19 @@ function(vcpkg_find_acquire_program program)
             if(NOT script)
                 find_file(script NAMES ${SCRIPTNAME})
                 if(SCRIPT_${program} AND NOT PROGRAM_VERSION_CHECKED)
-                        set(${program} ${${required_interpreter}} ${SCRIPT_${program}})
-                        do_version_check()
-                        set(PROGRAM_VERSION_CHECKED ON)
-                        if(NOT ${program})
-                                unset(SCRIPT_${program} CACHE)
-                        endif()
+                    set(${program} ${${required_interpreter}} ${SCRIPT_${program}})
+                    if(NOT "${version_command}" STREQUAL "")
+                        z_vcpkg_find_acquire_program_version_check("${program}"
+                            VERSION_COMMAND "${version_command}"
+                            REQUIRED_VERSION "${PROGRAM_VERSION}"
+                        )
+                    endif()
+                    set(PROGRAM_VERSION_CHECKED ON)
+                    if(NOT ${program})
+                        unset(SCRIPT_${program} CACHE)
+                    endif()
                 elseif(PROGRAM_VERSION_CHECKED)
-                        message(FATAL_ERROR "Unable to find ${PROGNAME} with min version of ${PROGRAM_VERSION}")
+                    message(FATAL_ERROR "Unable to find ${PROGNAME} with min version of ${PROGRAM_VERSION}")
                 endif()
             endif()
             if(SCRIPT_${program})
@@ -201,10 +207,15 @@ function(vcpkg_find_acquire_program program)
             if(NOT ${program})
                 find_program(${program} ${PROGNAME})
                 if(${program} AND NOT PROGRAM_VERSION_CHECKED)
-                        do_version_check()
-                        set(PROGRAM_VERSION_CHECKED ON)
+                    if(NOT "${version_command}" STREQUAL "")
+                        z_vcpkg_find_acquire_program_version_check("${program}"
+                            VERSION_COMMAND "${version_command}"
+                            REQUIRED_VERSION "${PROGRAM_VERSION}"
+                        )
+                    endif()
+                    set(PROGRAM_VERSION_CHECKED ON)
                 elseif(PROGRAM_VERSION_CHECKED)
-                        message(FATAL_ERROR "Unable to find ${PROGNAME} with min version of ${PROGRAM_VERSION}")
+                    message(FATAL_ERROR "Unable to find ${PROGNAME} with min version of ${PROGRAM_VERSION}")
                 endif()
             endif()
         endif()
@@ -281,8 +292,10 @@ function(vcpkg_find_acquire_program program)
                     )
                 endif()
             endif()
-        else()
-            if(DEFINED final_program_name)
+
+            if("${final_program_name}" STREQUAL "")
+                file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+            else()
                 file(INSTALL ${ARCHIVE_PATH}
                     DESTINATION ${PROG_PATH_SUBDIR}
                     RENAME "${final_program_name}"
@@ -291,8 +304,6 @@ function(vcpkg_find_acquire_program program)
                         GROUP_READ GROUP_EXECUTE
                         WORLD_READ WORLD_EXECUTE
                 )
-            else()
-                file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
             endif()
         endif()
 

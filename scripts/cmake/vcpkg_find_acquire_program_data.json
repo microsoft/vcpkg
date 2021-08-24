@@ -271,7 +271,7 @@
         ]
       }
     },
-    { "VERSION_CMD": "--version" }
+    { "version_command": "--version" }
   ],
   "NUGET": [
     { "PROGNAME": "nuget" },
@@ -304,7 +304,7 @@
     },
     { "HASH": "18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2" },
     { "download_supported_on_unix": true },
-    { "VERSION_CMD": "--version" }
+    { "version_command": "--version" }
   ],
   "FLEX": [
     {
@@ -556,7 +556,7 @@
                 { "subdirectory": "openbsd" },
                 { "URL": "https://raw.githubusercontent.com/jgilje/pkg-config-openbsd/master/pkg-config" },
                 { "HASH": "b7ec9017b445e00ae1377e36e774cf3f5194ab262595840b449832707d11e443a102675f66d8b7e8b2e2f28cebd6e256835507b1e0c69644cc9febab8285080b" },
-                { "VERSION_CMD": "--version" }
+                { "version_command": "--version" }
               ],
               "$else": [
                 { "BREW_PACKAGE_NAME": "pkg-config" },
