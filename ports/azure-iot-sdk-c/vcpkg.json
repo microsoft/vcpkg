@@ -1,6 +1,6 @@
 {
   "name": "azure-iot-sdk-c",
-  "version-date": "2021-08-18",
+  "version-string": "2021-08-18",
   "description": "A C99 SDK for connecting devices to Microsoft Azure IoT services",
   "homepage": "https://github.com/Azure/azure-iot-sdk-c",
   "dependencies": [
@@ -14,7 +14,7 @@
   ],
   "features": {
     "public-preview": {
-      "description": "A version of the azure-iot-sdk-c containing public-preview features.",
+      "description": "A version of the azure-iot-sdk-c containing public-preview features",
       "dependencies": [
         {
           "name": "azure-c-shared-utility",
