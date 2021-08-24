@@ -33,7 +33,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/LibComms/cmake" TARGET_PATH "share/LibComms")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "LibComms" CONFIG_PATH "lib/LibComms/cmake" )
 
 if(CC_BUILD_TOOLS)
     vcpkg_copy_tools(
@@ -43,7 +43,7 @@ if(CC_BUILD_TOOLS)
     )
     file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" 
          DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib/CommsChampion/plugin")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/CommsChampion/cmake" TARGET_PATH "share/CommsChampion")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "CommsChampion" CONFIG_PATH "lib/CommsChampion/cmake")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/LibComms")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CommsChampion")
