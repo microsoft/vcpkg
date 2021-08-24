@@ -147,7 +147,8 @@ function(vcpkg_install_msbuild)
         "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
         "/p:EnforceProcessCountAcrossBuilds=true"
         "/m:${VCPKG_CONCURRENCY}"
-
+    )
+    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
