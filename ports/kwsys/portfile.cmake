@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.kitware.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,9 +9,8 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 		-DKWSYS_INSTALL_INCLUDE_DIR=${CURRENT_PACKAGES_DIR}/include
     OPTIONS_RELEASE
@@ -17,10 +18,11 @@ vcpkg_configure_cmake(
 		-DKWSYS_INSTALL_LIB_DIR=${CURRENT_PACKAGES_DIR}/lib
     OPTIONS_DEBUG
 		-DKWSYS_INSTALL_BIN_DIR=${CURRENT_PACKAGES_DIR}/debug/bin
-		-DKWSYS_INSTALL_LIB_DIR=${CURRENT_PACKAGES_DIR}/debug/lib
+    -DKWSYS_INSTALL_LIB_DIR=${CURRENT_PACKAGES_DIR}/debug/lib
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
