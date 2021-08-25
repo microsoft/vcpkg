@@ -3,7 +3,7 @@
   "version": "1.4.1",
   "description": "A supplemental C++ library with functionalities not directly supported from Modern C++ standard.",
   "homepage": "https://github.com/buck-yeh/bux",
-  "supports": "!(arm|uwp|osx|linux)",
+  "supports": "!(arm | uwp | osx | linux)",
   "dependencies": [
     "fmt",
     {
