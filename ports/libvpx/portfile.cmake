@@ -131,6 +131,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "${CURRENT_PACKAGES_DIR}/include"
         RENAME
             "vpx")
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
+        message("LIBVPX_PREFIX:${LIBVPX_PREFIX}")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
+    
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)   
+    endif()
 
 else()
 
@@ -240,11 +250,10 @@ else()
 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
-    endif()
-    
-    vcpkg_fixup_pkgconfig()
-    
+    endif()    
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(LIBVPX_CONFIG_DEBUG ON)
