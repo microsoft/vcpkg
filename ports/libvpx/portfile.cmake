@@ -250,7 +250,7 @@ else()
 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
-    endif()    
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()

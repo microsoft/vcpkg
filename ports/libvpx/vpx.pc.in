@@ -9,5 +9,5 @@ Description: WebM Project VPx codec implementation
 Version: @LIBVPX_VERSION@
 Requires:
 Conflicts:
-Libs: -L"${libdir}" -lvpx -lm
+Libs: -L"${libdir}" -lvpx
 Cflags: -I"${includedir}"
