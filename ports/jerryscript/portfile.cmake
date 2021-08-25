@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jerryscript-project/jerryscript
-    REF v2.4.0
-    SHA512 e96e6c6a2207ff869474801a1f8bbd3ce453d4076e558736ebf6962ccab08540f57cf932ec43bcd40429e21f1c6453d77874dd0a467d91a15d8357257533c1ea 
+    REF 3bcd48f72d4af01d1304b754ef19fe1a02c96049
+    SHA512 98cafd99baeac6fd136c17be6786dcd152e95a7b717c60672f04f0ca240b14099317ebfdfaf0ab374a74f32e9be20a688ff3ff9d65103e1244a6af074dacdd66 
     HEAD_REF master
-    PATCHES
-        python-as-param.patch # from upstream to set python
+    #PATCHES
+    #    python-as-param.patch # from upstream to set python
 )
 
 vcpkg_find_acquire_program(PYTHON3)
