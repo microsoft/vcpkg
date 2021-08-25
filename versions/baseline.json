@@ -5884,6 +5884,10 @@
       "baseline": "0.9.7",
       "port-version": 0
     },
+    "simdutf": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "simple-fft": {
       "baseline": "2020-06-14",
       "port-version": 0
