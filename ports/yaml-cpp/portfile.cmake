@@ -22,12 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/yaml-cpp")
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/yaml-cpp)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/yaml-cpp)
 
 # Remove debug include files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
