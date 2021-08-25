@@ -3310,7 +3310,7 @@
     },
     "libigl": {
       "baseline": "2.2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libilbc": {
       "baseline": "3.0.3",
