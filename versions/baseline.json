@@ -4409,7 +4409,7 @@
       "port-version": 0
     },
     "nlohmann-json": {
-      "baseline": "3.10.0",
+      "baseline": "3.10.1",
       "port-version": 0
     },
     "nlopt": {
