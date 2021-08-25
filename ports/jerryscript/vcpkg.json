@@ -1,0 +1,21 @@
+{
+  "name": "jerryscript",
+  "version-semver": "2.4.0",
+  "description": "Ultra-lightweight JavaScript engine for the Internet of Things.",
+  "homepage": "https://github.com/jerryscript-project/jerryscript",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Builds the jerry command line tool"
+    }
+  }
+}

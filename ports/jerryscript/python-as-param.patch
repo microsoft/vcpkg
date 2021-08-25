@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 331262603e..044a2de8a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,8 +15,11 @@
+ cmake_minimum_required (VERSION 2.8.12)
+ project (Jerry C)
+ 
++if(NOT DEFINED PYTHON)
++  set(PYTHON "python")
++endif()
+ # Determining version
+-execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/tools/version.py
++execute_process(COMMAND ${PYTHON} ${CMAKE_SOURCE_DIR}/tools/version.py
+                 OUTPUT_VARIABLE JERRY_VERSION
+                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+ 
+diff --git a/jerry-core/CMakeLists.txt b/jerry-core/CMakeLists.txt
+index 9dd88684ec..bd701189a6 100644
+--- a/jerry-core/CMakeLists.txt
++++ b/jerry-core/CMakeLists.txt
+@@ -488,7 +488,7 @@ if(ENABLE_AMALGAM)
+   set(AMALGAM_CONFIG_H "${CMAKE_BINARY_DIR}/amalgam/jerryscript-config.h")
+ 
+   add_custom_command(OUTPUT ${AMALGAM_CORE_C} ${AMALGAM_CORE_H}
+-                     COMMAND python ${CMAKE_SOURCE_DIR}/tools/amalgam.py
++                     COMMAND ${PYTHON} ${CMAKE_SOURCE_DIR}/tools/amalgam.py
+                              --jerry-core
+                              --output-dir ${CMAKE_BINARY_DIR}/amalgam
+                      DEPENDS ${SOURCE_CORE_FILES}
+diff --git a/jerry-math/CMakeLists.txt b/jerry-math/CMakeLists.txt
+index 5e6b8a5f0c..4b5bba49a0 100644
+--- a/jerry-math/CMakeLists.txt
++++ b/jerry-math/CMakeLists.txt
+@@ -71,7 +71,7 @@ if(ENABLE_AMALGAM)
+   set(AMALGAM_MATH_H "${CMAKE_BINARY_DIR}/amalgam/math.h")
+ 
+   add_custom_command(OUTPUT ${AMALGAM_MATH_C} ${AMALGAM_MATH_H}
+-                     COMMAND python ${CMAKE_SOURCE_DIR}/tools/amalgam.py
++                     COMMAND ${PYTHON} ${CMAKE_SOURCE_DIR}/tools/amalgam.py
+                              --jerry-math
+                              --output-dir ${CMAKE_BINARY_DIR}/amalgam
+                      DEPENDS ${SOURCE_MATH}
+diff --git a/jerry-port/default/CMakeLists.txt b/jerry-port/default/CMakeLists.txt
+index e383fda47f..17f3d47816 100644
+--- a/jerry-port/default/CMakeLists.txt
++++ b/jerry-port/default/CMakeLists.txt
+@@ -41,7 +41,7 @@ if(ENABLE_AMALGAM)
+   set(AMALGAM_PORT_H "${CMAKE_BINARY_DIR}/amalgam/jerryscript-port-default.h")
+ 
+   add_custom_command(OUTPUT ${AMALGAM_PORT_C} ${AMALGAM_PORT_H}
+-                     COMMAND python ${CMAKE_SOURCE_DIR}/tools/amalgam.py
++                     COMMAND ${PYTHON} ${CMAKE_SOURCE_DIR}/tools/amalgam.py
+                              --jerry-port-default
+                              --output-dir ${CMAKE_BINARY_DIR}/amalgam
+                      DEPENDS ${SOURCE_PORT_DEFAULT}
