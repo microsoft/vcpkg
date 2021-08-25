@@ -11,9 +11,9 @@ vcpkg_from_sourceforge(
         add-disable-find-package.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindLAPACK.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindOpenBLAS.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindBLAS.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindLAPACK.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindOpenBLAS.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -38,7 +38,7 @@ file(GLOB SHARE_CONTENT "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 list(LENGTH SHARE_CONTENT SHARE_LEN)
 if(SHARE_LEN EQUAL 0)
     # On case sensitive file system there is an extra empty directory created that should be removed
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/Armadillo)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
