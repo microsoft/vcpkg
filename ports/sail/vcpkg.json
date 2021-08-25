@@ -1,6 +1,6 @@
 {
   "name": "sail",
-  "version-semver": "0.9.0-pre14",
+  "version-semver": "0.9.0-pre15",
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/smoked-herring/sail",
   "supports": "!uwp",
@@ -9,6 +9,7 @@
     "libavif",
     "libjpeg-turbo",
     "libpng",
+    "libwebp",
     "tiff",
     {
       "name": "vcpkg-cmake",
