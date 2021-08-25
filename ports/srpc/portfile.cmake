@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(
