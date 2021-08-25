@@ -229,6 +229,29 @@ macro(_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
     debug_message("CXXFLAGS_${_SUFFIX}: ${CXXFLAGS_${_SUFFIX}}")
 endmacro()
 
+macro(_vcpkg_convert_path_to_unix pathvar)
+    if (NOT cygpath)
+        find_program(cygpath NAMES cygpath PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
+    endif()
+    foreach (curr_option IN LISTS ${pathvar})
+        debug_message("curr_option: ${curr_option}")
+        string(REGEX REPLACE ".*=(.+)" "\\1" matched_path "${curr_option}")
+        debug_message("matched_path: ${matched_path}")
+        if (matched_path AND NOT (matched_path STREQUAL curr_option))
+            execute_process(
+                COMMAND ${cygpath} "${matched_path}"
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+                OUTPUT_VARIABLE OUT_VARS
+            )
+            string(REGEX MATCH "[^\n]+" OUT_VARS "${OUT_VARS}")
+            debug_message("Converted path: ${OUT_VARS}")
+            debug_message("replace \"${matched_path}\" with \"${OUT_VARS}\" in \"${${pathvar}}\"")
+            list(TRANSFORM ${pathvar} REPLACE "${matched_path}" "${OUT_VARS}")
+            debug_message("fixed_values: ${fixed_values}")
+        endif()
+    endforeach()
+endmacro()
+
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
@@ -307,6 +330,14 @@ function(vcpkg_configure_make)
         if(CMAKE_HOST_WIN32)
             list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
+            message(STATUS "Checking and converting options...")
+            _vcpkg_convert_path_to_unix(_csc_OPTIONS)
+            message("_csc_OPTIONS: ${_csc_OPTIONS}")
+            _vcpkg_convert_path_to_unix(_csc_OPTIONS_DEBUG)
+            message("_csc_OPTIONS_DEBUG: ${_csc_OPTIONS_DEBUG}")
+            _vcpkg_convert_path_to_unix(_csc_OPTIONS_RELEASE)
+            message("_csc_OPTIONS_RELEASE: ${_csc_OPTIONS_RELEASE}")
+            message(STATUS "Checking and converting done...")
         endif()
         if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT _csc_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
