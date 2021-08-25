@@ -1,6 +1,6 @@
 {
   "name": "boost-odeint",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "dependencies": [

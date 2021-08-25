@@ -1,9 +1,0 @@
-Source: directxmesh
-Version: apr2021
-Homepage: https://github.com/microsoft/DirectXMesh
-Description: DirectXMesh geometry processing library
-Build-Depends: directxmath, directx-headers
-Supports: windows|linux
-
-Feature: dx12
-Description: Build with DirectX12 support for Windows 10

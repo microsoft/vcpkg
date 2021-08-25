@@ -1,5 +1,5 @@
 Source: cppitertools
-Version: 2.0
+Version: 2.1
 Homepage: https://github.com/ryanhaining/cppitertools
 Description: Range-based for loop add-ons inspired by the Python builtins and itertools library
 Build-Depends: boost-optional

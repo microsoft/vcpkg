@@ -20,6 +20,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
+    set(EXTRA_ARGS
+            "-DCURL_HAS_H2_EXITCODE=0"
+            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
+            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
+            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
+            )
 elseif (VCPKG_TARGET_IS_ANDROID)
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
             "-DGIT_EXECUTABLE=--invalid-git-executable--"

@@ -6,8 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-error-4068.patch # This patch fixes dependency port compilation failure
+        disable_warnings_as_errors.patch # Ref https://github.com/awslabs/aws-c-common/pull/798
         disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
+        disable_outline_atomics.patch # Disables -moutline-atomics flag which is not supported for wasm32 and Android
 )
 
 vcpkg_configure_cmake(
@@ -21,14 +23,14 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-common/cmake)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-common
-	${CURRENT_PACKAGES_DIR}/lib/aws-c-common
-	)
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-common
+    ${CURRENT_PACKAGES_DIR}/lib/aws-c-common
+    )
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE	${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

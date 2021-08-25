@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/trantor
-    REF v1.4.1
-    SHA512 a3d23ea2f9d97a9248d05ecdac5f10bc9b7fffaf9a225e8b1dbd14ace4f7acb33758cca3321774a52d21625a21cb98bb51672f018e8a458f9fff1fb194bec0e6
+    REF v1.5.0
+    SHA512 3e9e0f15aa7e039b70141b1ede16fcfe854af961cc787a0a51d4b020581e2b4ae1b51497e3ca31cfc4b5ed11dd9028a1438339cb726d83588f656c99d9938493
     HEAD_REF master
     PATCHES
         vcpkg.patch
-        ssize_t.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,6 +17,8 @@ vcpkg_install_cmake()
 
 # Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Trantor)
+
+vcpkg_fixup_pkgconfig()
 
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,6 +1,6 @@
 {
   "name": "tool-meson",
-  "version": "0.58.0",
+  "version": "0.58.1",
   "description": "Meson build system",
   "homepage": "https://github.com/mesonbuild/meson"
 }

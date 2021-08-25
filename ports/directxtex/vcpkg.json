@@ -1,0 +1,24 @@
+{
+  "name": "directxtex",
+  "version-string": "jun2021",
+  "description": "DirectXTex texture processing library",
+  "homepage": "http://go.microsoft.com/fwlink/?LinkId=248926",
+  "documentation": "https://github.com/microsoft/DirectXTex/wiki",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "directx-headers",
+    "directxmath"
+  ],
+  "features": {
+    "dx12": {
+      "description": "Build with DirectX12 support for Windows 10"
+    },
+    "openexr": {
+      "description": "Enable OpenEXR support",
+      "dependencies": [
+        "openexr"
+      ]
+    }
+  }
+}

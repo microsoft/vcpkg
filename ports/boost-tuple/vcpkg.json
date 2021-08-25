@@ -1,6 +1,6 @@
 {
   "name": "boost-tuple",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost tuple module",
   "homepage": "https://github.com/boostorg/tuple",
   "dependencies": [
