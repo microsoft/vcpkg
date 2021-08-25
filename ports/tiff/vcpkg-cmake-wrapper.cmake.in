@@ -1,4 +1,5 @@
 cmake_policy(PUSH)
+cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0057 NEW)
 set(_tiff_find_args "${ARGS}")
 set(_tiff_link_libraries "")
