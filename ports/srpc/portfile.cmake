@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/srpc)
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(
     TOOL_NAMES srpc_generator
