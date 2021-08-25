@@ -2796,6 +2796,10 @@
       "baseline": "4.3.1-4",
       "port-version": 0
     },
+    "jerryscript": {
+      "baseline": "2.4.0",
+      "port-version": 0
+    },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
       "port-version": 0
