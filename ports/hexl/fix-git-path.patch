@@ -1,0 +1,65 @@
+diff --git a/cmake/cpu-features/CMakeLists.txt b/cmake/cpu-features/CMakeLists.txt
+index 9fbefdd..88cdb97 100644
+--- a/cmake/cpu-features/CMakeLists.txt
++++ b/cmake/cpu-features/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ 
+ # Download and unpack cpu-features at configure time
+ configure_file(CMakeLists.txt.in cpu-features-download/CMakeLists.txt)
+-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
++execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -DGIT_EXECUTABLE=${GIT}
+   RESULT_VARIABLE result
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/cpu-features-download )
+ if(result)
+diff --git a/cmake/easylogging/CMakeLists.txt b/cmake/easylogging/CMakeLists.txt
+index 26870bb..cb8d12a 100644
+--- a/cmake/easylogging/CMakeLists.txt
++++ b/cmake/easylogging/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ 
+ # Download and unpack easylogging at configure time
+ configure_file(CMakeLists.txt.in easylogging-download/CMakeLists.txt)
+-set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .)
++set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -DGIT_EXECUTABLE=${GIT})
+ execute_process(COMMAND ${CONFIGURE_COMMAND}
+   RESULT_VARIABLE result
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/easylogging-download )
+diff --git a/cmake/gbenchmark/CMakeLists.txt b/cmake/gbenchmark/CMakeLists.txt
+index 6ca9b40..c1b9f6d 100644
+--- a/cmake/gbenchmark/CMakeLists.txt
++++ b/cmake/gbenchmark/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ 
+ # Download and unpack gbenchmark at configure time
+ configure_file(CMakeLists.txt.in gbenchmark-download/CMakeLists.txt)
+-set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .)
++set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -DGIT_EXECUTABLE=${GIT})
+ execute_process(COMMAND ${CONFIGURE_COMMAND}
+   RESULT_VARIABLE result
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/gbenchmark-download )
+diff --git a/cmake/gflags/CMakeLists.txt b/cmake/gflags/CMakeLists.txt
+index a4b7850..c92fac5 100644
+--- a/cmake/gflags/CMakeLists.txt
++++ b/cmake/gflags/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ 
+ # Download and unpack gflags at configure time
+ configure_file(CMakeLists.txt.in gflags-download/CMakeLists.txt)
+-set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .)
++set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -DGIT_EXECUTABLE=${GIT})
+ execute_process(COMMAND ${CONFIGURE_COMMAND}
+   RESULT_VARIABLE result
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/gflags-download )
+diff --git a/cmake/gtest/CMakeLists.txt b/cmake/gtest/CMakeLists.txt
+index a24170f..9ffc2d8 100644
+--- a/cmake/gtest/CMakeLists.txt
++++ b/cmake/gtest/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ 
+ # Download and unpack gtest at configure time
+ configure_file(CMakeLists.txt.in gtest-download/CMakeLists.txt)
+-set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .)
++set(CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -DGIT_EXECUTABLE=${GIT})
+ execute_process(COMMAND ${CONFIGURE_COMMAND}
+   RESULT_VARIABLE result
+   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/gtest-download )

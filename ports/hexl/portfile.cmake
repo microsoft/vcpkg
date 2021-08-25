@@ -7,26 +7,16 @@ vcpkg_from_github(
     REF 2dc1db6824be3fc89d13740efd0270ec9afec77e
     SHA512 aaa80dc53a21586d763a2b84b40d60062020470988422601bc5e9c2b31c6263847a97ea8f956d002a95e2d5e843cafa96fabdfd8b8ee892c7a7b9747133adebb
     HEAD_REF 1.2.0
+    PATCHES fix-git-path.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HEXL_SHARED)
+
 vcpkg_find_acquire_program(GIT)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(HEXL_SHARED OFF)
-else()
-    set(HEXL_SHARED ON)
-endif()
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(GENERATOR "MSBuild")
-else()
-   set(GENERATOR "Ninja")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
-    GENERATOR ${GENERATOR})
     OPTIONS
         "-DHEXL_BENCHMARK=OFF"
         "-DHEXL_COVERAGE=OFF"
