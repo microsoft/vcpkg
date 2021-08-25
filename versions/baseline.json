@@ -4693,8 +4693,8 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "1.1.1k",
-      "port-version": 8
+      "baseline": "1.1.1l",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
