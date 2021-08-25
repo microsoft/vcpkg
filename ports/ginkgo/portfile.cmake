@@ -1,3 +1,9 @@
+vcpkg_download_distfile(WINDOWS_SYMBOLS_PATCH
+    URLS https://github.com/ginkgo-project/ginkgo/commit/7481b2fffb51d73492ef9017045450b29b820f81.diff
+    FILENAME 7481b2fffb51d73492ef9017045450b29b820f81.diff
+    SHA512 f81c57aacc30680383ccfb21ca08987d8ea19a23c0c7bbc5ae590c3c7eca4eed72cea84410357e080e5bb35f08f6b57834b3cdace6d91cc3fde0a1930aa4270a
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
@@ -5,7 +11,7 @@ vcpkg_from_github(
     SHA512 9bfcb2c415c7a1a70cf8e49f20adf62d02cab83bb23b6fcecfeaeeb322b2d4e1ad8d8fa6582735073753f9a05eac8688b9bd1ff1d4203957c1a80702d117e807
     HEAD_REF master
     PATCHES
-        windows-symbols.patch
+        ${WINDOWS_SYMBOLS_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
