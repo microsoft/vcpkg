@@ -19,19 +19,18 @@ set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_EXAMPLES=OFF
   -DFL_BACKEND=CUDA # this port is CUDA-backend only
   -DFL_BUILD_STANDALONE=OFF
-  -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
 )
 
 # Determine which components to build via specified feature
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    lib FL_BUILD_LIBRARIES
-    fl FL_BUILD_CORE
-    asr FL_BUILD_APP_ASR
-    imgclass FL_BUILD_APP_IMGCLASS
-    lm FL_BUILD_APP_LM
-    objdet FL_BUILD_APP_OBJDET
+        lib FL_BUILD_LIBRARIES
+        fl FL_BUILD_CORE
+        asr FL_BUILD_APP_ASR
+        imgclass FL_BUILD_APP_IMGCLASS
+        lm FL_BUILD_APP_LM
+        objdet FL_BUILD_APP_OBJDET
 )
 
 # Build and install
@@ -41,10 +40,14 @@ vcpkg_configure_cmake(
     OPTIONS 
         ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} 
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/flashlight    
+    OPTIONS_RELEASE        
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/flashlight
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight-cuda TARGET_PATH share/flashlight)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight TARGET_PATH share/flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -1,11 +1,10 @@
 {
   "name": "boost-unordered",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-container",
     "boost-container-hash",

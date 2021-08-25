@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 73111fc..a0cb3db 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,8 +9,8 @@ project(cnl)
+ 
+ cmake_minimum_required(VERSION 3.5.1)
+ 
+-include(CTest)
+-add_subdirectory("test")
++# include(CTest)
++# add_subdirectory("test")
+ 
+ # the CNL library
+ add_library(Cnl INTERFACE)

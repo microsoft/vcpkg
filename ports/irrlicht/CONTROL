@@ -1,9 +1,10 @@
 Source: irrlicht
-Version: 1.8.4-10
+Version: 1.8.4
+Port-Version: 11
 Homepage: http://irrlicht.sourceforge.net
-Description: Irrlicht lightning fast 3d engine
-Build-Depends: zlib, libpng, bzip2, libjpeg-turbo
-Supports: !(arm|uwp|osx)
+Description: The Irrlicht Engine is an open source realtime 3D engine written in C++. It is cross-platform, using D3D, OpenGL and its own software renderers.
+Build-Depends: zlib, libpng, bzip2, libjpeg-turbo, vcpkg-cmake, vcpkg-cmake-config
+Supports: !(arm|uwp)
 
 Feature: unicode
 Description: Support unicode path on windows

@@ -1,6 +1,5 @@
 Source: tomlplusplus
-Version: 2.3.0
-Port-Version: 1
+Version: 2.4.0
 Homepage: https://marzer.github.io/tomlplusplus/
 Description: Header-only TOML config file parser and serializer for modern C++.
 Supports: !(arm|uwp|osx)

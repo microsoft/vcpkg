@@ -1,7 +1,6 @@
 {
   "name": "boost-thread",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost thread module",
   "homepage": "https://github.com/boostorg/thread",
   "dependencies": [
@@ -23,7 +22,6 @@
     "boost-detail",
     "boost-exception",
     "boost-function",
-    "boost-integer",
     "boost-intrusive",
     "boost-io",
     "boost-lexical-cast",

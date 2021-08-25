@@ -85,20 +85,28 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_TARGET_IS_UWP)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/libmongoc-static-1.0.a
-            ${CURRENT_PACKAGES_DIR}/lib/libmongoc-1.0.a)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-static-1.0.a
-            ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-1.0.a)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(RENAME
+                ${CURRENT_PACKAGES_DIR}/lib/libmongoc-static-1.0.a
+                ${CURRENT_PACKAGES_DIR}/lib/libmongoc-1.0.a)
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(RENAME
+                ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-static-1.0.a
+                ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-1.0.a)
+        endif()
     else()
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/lib/mongoc-static-1.0.lib
-            ${CURRENT_PACKAGES_DIR}/lib/mongoc-1.0.lib)
-        file(RENAME
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-static-1.0.lib
-            ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-1.0.lib)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(RENAME
+                ${CURRENT_PACKAGES_DIR}/lib/mongoc-static-1.0.lib
+                ${CURRENT_PACKAGES_DIR}/lib/mongoc-1.0.lib)
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(RENAME
+                ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-static-1.0.lib
+                ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-1.0.lib)
+        endif()
     endif()
 
     # drop the __declspec(dllimport) when building static

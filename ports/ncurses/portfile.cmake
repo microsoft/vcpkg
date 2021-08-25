@@ -5,7 +5,7 @@ vcpkg_download_distfile(
     URLS
         "https://invisible-mirror.net/archives/ncurses/ncurses-6.2.tar.gz"
         "ftp://ftp.invisible-island.net/ncurses/ncurses-6.2.tar.gz"
-        "ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.2.tar.gz"
+        "https://ftp.gnu.org/gnu/ncurses/ncurses-6.2.tar.gz"
     FILENAME "ncurses-6.2.tgz"
     SHA512 4c1333dcc30e858e8a9525d4b9aefb60000cfc727bc4a1062bace06ffc4639ad9f6e54f6bdda0e3a0e5ea14de995f96b52b3327d9ec633608792c99a1e8d840d
 )

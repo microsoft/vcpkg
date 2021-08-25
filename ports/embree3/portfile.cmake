@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-path.patch
         fix-static-usage.patch
         cmake_policy.patch
+        fix-targets-file-not-found.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
@@ -22,11 +23,11 @@ if (NOT VCPKG_TARGET_IS_OSX)
 
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
-        avx     EMBREE_ISA_AVX
-        avx2    EMBREE_ISA_AVX2
-        avx512  EMBREE_ISA_AVX512
-        sse2    EMBREE_ISA_SSE2
-        sse42   EMBREE_ISA_SSE42
+            avx     EMBREE_ISA_AVX
+            avx2    EMBREE_ISA_AVX2
+            avx512  EMBREE_ISA_AVX512
+            sse2    EMBREE_ISA_SSE2
+            sse42   EMBREE_ISA_SSE42
     )
 elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(LENGTH FEATURES FEATURE_COUNT)
@@ -59,18 +60,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/embree-${EMBREE3_VERSION} TARGET_PATH share/embree)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree TARGET_PATH share/embree)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 if(APPLE)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/uninstall.command ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/uninstall.command" "${CURRENT_PACKAGES_DIR}/debug/uninstall.command")
 endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

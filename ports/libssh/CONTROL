@@ -1,6 +1,6 @@
 Source: libssh
 Version: 0.9.5
-Port-Version: 3
+Port-Version: 4
 Homepage: https://www.libssh.org/
 Build-Depends: libssh[core,mbedtls] (android)
 Description: libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side

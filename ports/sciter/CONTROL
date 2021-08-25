@@ -1,5 +1,5 @@
 Source: sciter
-Version: 4.4.3.20
+Version: 4.4.8.3
 Homepage: https://github.com/c-smile/sciter-sdk
 Description: Sciter is an embeddable HTML/CSS/scripting engine.
 Supports: !uwp

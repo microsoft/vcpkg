@@ -1,6 +1,6 @@
 {
   "name": "boost-fusion",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost fusion module",
   "homepage": "https://github.com/boostorg/fusion",
   "dependencies": [
