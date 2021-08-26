@@ -6,11 +6,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(
+     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+     FEATURES
+         designerplugin BUILD_DESIGNERPLUGIN
+ )
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DFORCE_DISABLE_KGLOBALACCEL=ON
+        -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
