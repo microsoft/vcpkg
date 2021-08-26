@@ -10,11 +10,11 @@
     "openblas",
     {
       "name": "vcpkg-cmake",
-      "host": true      
+      "host": true
     },
     {
       "name": "vcpkg-cmake-config",
-      "host": true      
+      "host": true
     }
   ],
   "features": {
