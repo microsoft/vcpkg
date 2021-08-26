@@ -1,6 +1,6 @@
 {
   "name": "kf5iconthemes",
-  "version-semver": "5.75.0",
+  "version-semver": "5.84.0",
   "description": "Icon GUI utilities",
   "homepage": "https://api.kde.org/frameworks/kiconthemes/html/index.html",
   "dependencies": [

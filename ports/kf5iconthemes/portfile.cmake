@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.75.0
-    SHA512 106c56d995193696cccb74abacf1d2553af7a0a330f3d5bbf002c893b6adb28c429b140c61fca52c62d1a29a1091a0963295ef4141b705cec57ebce1a6096477
+    REF v5.84.0
+    SHA512 ca5645d6e4fde4f60c6f16c911539f4056060cc22afae275459632bc7069352b068b1727eb75b898d319e6eef3df9ddc35d8e22d4c1d05a657b112378e56731e
     HEAD_REF master
-    PATCHES 
-        "add-missing-kf5guiaddons-dependency.patch"
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 
@@ -18,7 +16,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5IconThemes)
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kiconfinder5.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/kiconfinder5.exe")
