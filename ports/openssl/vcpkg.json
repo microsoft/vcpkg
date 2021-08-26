@@ -1,7 +1,6 @@
 {
   "name": "openssl",
-  "version-string": "1.1.1k",
-  "port-version": 8,
+  "version-string": "1.1.1l",
   "description": "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.",
   "homepage": "https://www.openssl.org"
 }
