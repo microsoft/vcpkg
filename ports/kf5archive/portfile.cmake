@@ -8,12 +8,13 @@ vcpkg_from_github(
         9ab5f2bf.patch # https://invent.kde.org/frameworks/karchive/-/commit/9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e
         5a79756f.patch # https://invent.kde.org/frameworks/karchive/-/commit/5a79756f381e1a1843cb2171bdc151dad53fb7db
         23.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/23
+        use_zstd_cmake.patch # testing only
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         "lzma"  CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
-        "zstd"  CMAKE_DISABLE_FIND_PACKAGE_PkgConfig
+        "zstd"  CMAKE_DISABLE_FIND_PACKAGE_ZSTD
 )
 
 vcpkg_cmake_configure(
