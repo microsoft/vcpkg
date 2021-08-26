@@ -80,7 +80,7 @@ endif()
 
 if("opengl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
@@ -114,8 +114,9 @@ if("all" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cuda"         VTK_USE_CUDA
-    "all"          VTK_BUILD_ALL_MODULES
+    FEATURES
+        "cuda"         VTK_USE_CUDA
+        "all"          VTK_BUILD_ALL_MODULES
 )
 
 
