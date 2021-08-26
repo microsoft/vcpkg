@@ -133,7 +133,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "vpx")
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
-        message("LIBVPX_PREFIX:${LIBVPX_PREFIX}")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
     
