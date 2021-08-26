@@ -1,0 +1,7 @@
+{
+  "name": "calceph",
+  "version-string": "3.5.0",
+  "port-version": 0,
+  "homepage": "https://www.imcce.fr/inpop/calceph/",
+  "description": "C library to access the binary planetary ephemeris files."
+}
