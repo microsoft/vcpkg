@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
         -DCC_INSTALL_DEMO_PROTOCOL=OFF
 )
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "LibComms" CONFIG_PATH "lib/LibComms/cmake" )
 
