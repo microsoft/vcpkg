@@ -8,13 +8,8 @@ vcpkg_from_github(
         "add-missing-kf5guiaddons-dependency.patch"
 )
 
-vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
-get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
-vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
@@ -24,9 +19,8 @@ vcpkg_configure_cmake(
         -DKDE_INSTALL_DATAROOTDIR=data
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5IconThemes)
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5IconThemes)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
