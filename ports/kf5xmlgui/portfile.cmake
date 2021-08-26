@@ -9,12 +9,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DFORCE_DISABLE_KGLOBALACCEL=ON
-        -DKDE_INSTALL_QTPLUGINDIR=plugins
 )
 
 vcpkg_cmake_install()
