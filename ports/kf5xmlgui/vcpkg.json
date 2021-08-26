@@ -17,6 +17,10 @@
     "kf5config",
     "kf5configwidgets",
     "kf5coreaddons",
+    {
+      "name": "kf5globalaccel",
+      "platform": "!windows & !osx & !android"
+    },
     "kf5guiaddons",
     "kf5i18n",
     "kf5iconthemes",
