@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
     REF v5.84.0
-    SHA512 89f2b0d4494cca9a95550ef08ec62fa5fc4dddfacf6b15a0679513cd1d0210411a8d9333598be5cee76fe6ff0dcd4cc45b7b36ca6cb950e04c08ba3757248117
+    SHA512 da03f4cfc2a64b3ccccfe2b6b7f392f84aba2b975edbf6a5b08a14604ccb565a4491c7eb707af7191345b55ca81e864b7ee13fe648589a56f3226c26160ed024
     HEAD_REF master
 )
 
