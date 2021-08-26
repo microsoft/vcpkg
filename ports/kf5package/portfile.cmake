@@ -9,8 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
 )
