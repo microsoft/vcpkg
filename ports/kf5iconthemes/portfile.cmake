@@ -16,13 +16,13 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5IconThemes)
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tools( 
+vcpkg_copy_tools(
     TOOL_NAMES kiconfinder5
     AUTO_CLEAN
 )
 
 if(VCPKG_TARGET_IS_OSX)
-    vcpkg_copy_tools( 
+    vcpkg_copy_tools(
         TOOL_NAMES ksvg2icns
         AUTO_CLEAN
     )
@@ -32,10 +32,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
