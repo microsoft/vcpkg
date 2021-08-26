@@ -8,11 +8,20 @@ vcpkg_from_github(
         39.patch
 )
 
+vcpkg_check_features(
+     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+     FEATURES
+         designerplugin BUILD_DESIGNERPLUGIN
+ )
+
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
+    ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
