@@ -1,3 +1,5 @@
+#header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/comms_champion
@@ -38,7 +40,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME "LibComms" CONFIG_PATH "lib/LibComms/cmake
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES cc_dump cc_view
-        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
         AUTO_CLEAN
     )
     file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/CommsChampion/plugin" 

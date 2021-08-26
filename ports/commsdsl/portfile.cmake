@@ -22,7 +22,6 @@ vcpkg_install_cmake()
 
 vcpkg_copy_tools(
     TOOL_NAMES commsdsl2comms
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
     AUTO_CLEAN
 )
 
