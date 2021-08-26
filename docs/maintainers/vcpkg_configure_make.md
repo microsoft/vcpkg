@@ -1,5 +1,7 @@
 # vcpkg_configure_make
 
+**This function has been deprecated in favor of [`vcpkg_make_configure`](ports/vcpkg-make/vcpkg_make_configure.md) from the vcpkg-make port.**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_make.md).
 
 Configure configure for Debug and Release builds of a project.
