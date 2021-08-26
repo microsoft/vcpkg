@@ -3060,6 +3060,10 @@
       "baseline": "5.84.0",
       "port-version": 3
     },
+    "kf5xmlgui": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kfr": {
       "baseline": "4.2.1",
       "port-version": 0
