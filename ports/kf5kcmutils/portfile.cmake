@@ -6,22 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
-get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
-vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5KCMUtils)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KCMUtils)
 
 vcpkg_copy_pdbs()
 
@@ -29,10 +22,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
