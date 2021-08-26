@@ -1713,15 +1713,15 @@
       "port-version": 2
     },
     "directxtex": {
-      "baseline": "jun2021",
+      "baseline": "aug2021",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "jun2021",
+      "baseline": "aug2021",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "jun2021",
+      "baseline": "aug2021",
       "port-version": 0
     },
     "dirent": {
