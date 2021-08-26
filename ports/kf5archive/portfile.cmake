@@ -8,7 +8,7 @@ vcpkg_from_github(
         9ab5f2bf.patch # https://invent.kde.org/frameworks/karchive/-/commit/9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e
         5a79756f.patch # https://invent.kde.org/frameworks/karchive/-/commit/5a79756f381e1a1843cb2171bdc151dad53fb7db
         23.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/23
-        use_zstd_cmake.patch # testing only
+        24.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/24
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
