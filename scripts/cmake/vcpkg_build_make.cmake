@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-make/vcpkg_make_build
 #[===[.md:
 # vcpkg_build_make
 
@@ -51,6 +52,10 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function i
 #]===]
 
 function(vcpkg_build_make)
+    if(Z_VCPKG_MAKE_BUILD_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-make; using both vcpkg-make and vcpkg_build_make in the same port is unsupported.")
+    endif()
+    
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
 

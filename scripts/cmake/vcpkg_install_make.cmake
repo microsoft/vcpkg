@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-make/vcpkg_make_install
 #[===[.md:
 # vcpkg_install_make
 
@@ -23,5 +24,8 @@ This command transparently forwards to [`vcpkg_build_make()`](vcpkg_build_make.m
 #]===]
 
 function(vcpkg_install_make)
+    if(Z_VCPKG_MAKE_INSTALL_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-make; using both vcpkg-make and vcpkg_install_make in the same port is unsupported.")
+    endif()
     vcpkg_build_make(${ARGN} LOGFILE_ROOT ENABLE_INSTALL)
 endfunction()
