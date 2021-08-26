@@ -13,10 +13,10 @@ index 73eee02f7..22d8bc159 100644
 -mark_as_advanced(PEGTL_INCLUDE_DIR)
 +message(STATUS "Searching for PEGTL")
 +find_package(PEGTL CONFIG NAMES PEGTL-2)
-+if(TARGET taocpp::pegtl)
++if(TARGET taocpp::pegtl AND NOT TARGET PEGTL::PEGTL)
 +    message(STATUS "Searching for PEGTL - found target taocpp::pegtl")
-+    set_target_properties(taocpp::pegtl PROPERTIES IMPORTED_GLOBAL TRUE)
-+    add_library(PEGTL::PEGTL ALIAS taocpp::pegtl)
++    add_library(PEGTL::PEGTL INTERFACE IMPORTED)
++    set_property(TARGET PEGTL::PEGTL APPEND PROPERTY INTERFACE_LINK_LIBRARIES taocpp::pegtl)
 +else()
 +    find_path(PEGTL_INCLUDE_DIR
 +      NAMES pegtl/version.hpp

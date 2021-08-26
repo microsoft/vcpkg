@@ -346,3 +346,6 @@ endforeach()
 # =============================================================================
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# This is a workaround for bug #15502: HDF5 targets are not the same between VTK and ITK, and HDF5 prevent double inclusion with a fatal error
+file(REMOVE ${CURRENT_PACKAGES_DIR}/share/${PORT}/patches/99/FindHDF5.cmake)
