@@ -19,6 +19,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
         ${FEATURE_OPTIONS}
 )
 
