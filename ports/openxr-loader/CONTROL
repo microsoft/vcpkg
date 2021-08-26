@@ -1,5 +1,5 @@
 Source: openxr-loader
-Version: 1.0.11
+Version: 1.0.18
 Port-Version: 1
 Description: Khronos API for abstracting VR/MR/AR hardware
 Build-Depends: jsoncpp

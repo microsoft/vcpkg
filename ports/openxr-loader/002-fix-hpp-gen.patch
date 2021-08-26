@@ -1,0 +1,16 @@
+diff --git a/scripts/hpp_genxr.py b/scripts/hpp_genxr.py
+index 6b95fe4..3a19058 100755
+--- a/scripts/hpp_genxr.py
++++ b/scripts/hpp_genxr.py
+@@ -80,6 +80,11 @@ def genTarget(args):
+             "XR_MSFT_controller_model",
+             # Projection of static string fails
+             "XR_MSFT_spatial_graph_bridge",
++            "XR_MSFT_spatial_anchor_persistence",
++            "XR_MSFT_holographic_window_attachment",
++            # Projection of UuidMSFT fails
++            "XR_MSFT_scene_understanding",
++            "XR_MSFT_scene_understanding_serialization",
+         ))
+ 
+     # Turn lists of names/patterns into matching regular expressions
