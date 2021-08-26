@@ -1110,7 +1110,7 @@
     },
     "c-ares": {
       "baseline": "1.17.2",
-      "port-version": 0
+      "port-version": 1
     },
     "c4core": {
       "baseline": "2021-07-18",
@@ -3182,7 +3182,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libevent": {
       "baseline": "2.1.12",
@@ -4918,7 +4918,7 @@
     },
     "physfs": {
       "baseline": "3.0.2",
-      "port-version": 5
+      "port-version": 6
     },
     "physx": {
       "baseline": "4.1.2",
