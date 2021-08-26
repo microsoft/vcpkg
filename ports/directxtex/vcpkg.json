@@ -1,8 +1,8 @@
 {
   "name": "directxtex",
-  "version-string": "jun2021",
+  "version-string": "aug2021",
   "description": "DirectXTex texture processing library",
-  "homepage": "http://go.microsoft.com/fwlink/?LinkId=248926",
+  "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
   "license": "MIT",
   "supports": "windows | linux",
