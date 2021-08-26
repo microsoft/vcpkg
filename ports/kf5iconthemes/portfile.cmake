@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         39.patch
+        fix_libiconv.patch
 )
 
 vcpkg_check_features(
