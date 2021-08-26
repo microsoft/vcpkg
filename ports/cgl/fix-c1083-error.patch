@@ -1,0 +1,30 @@
+diff --git a/Cgl/src/CglLandP/CglLandP.cpp b/Cgl/src/CglLandP/CglLandP.cpp
+index 2676790..af90a6e 100644
+--- a/Cgl/src/CglLandP/CglLandP.cpp
++++ b/Cgl/src/CglLandP/CglLandP.cpp
+@@ -22,7 +22,7 @@
+ #define CLONE_SI //Solver is cloned between two cuts
+ 
+ #include "CoinTime.hpp"
+-#include "CglGomory.hpp"
++#include "CglGomory/CglGomory.hpp"
+ #include "CoinFactorization.hpp"
+ #include <fstream>
+ namespace LAP
+diff --git a/Cgl/src/CglPreProcess/CglPreProcess.cpp b/Cgl/src/CglPreProcess/CglPreProcess.cpp
+index 17cf372..8cb738f 100644
+--- a/Cgl/src/CglPreProcess/CglPreProcess.cpp
++++ b/Cgl/src/CglPreProcess/CglPreProcess.cpp
+@@ -24,9 +24,9 @@
+ #include "CoinHelperFunctions.hpp"
+ #include "CoinWarmStartBasis.hpp"
+ 
+-#include "CglProbing.hpp"
+-#include "CglDuplicateRow.hpp"
+-#include "CglClique.hpp"
++#include "CglProbing/CglProbing.hpp"
++#include "CglDuplicateRow/CglDuplicateRow.hpp"
++#include "CglClique/CglClique.hpp"
+ //#define PRINT_DEBUG 1
+ //#define COIN_DEVELOP 1
+ #ifdef COIN_DEVELOP

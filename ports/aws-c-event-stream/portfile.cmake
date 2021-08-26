@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
-    REF v0.1.1
-    SHA512 974311cdface59bb5a95c7c249ad31cf694ebefd5c7b25f280f6817c6dc8d9ab1fdc8f75030099efe573be41a93676f199fda797d2a7bb41533f7e15f05de120
+    REF 873f1c035a5b6b4698280ee3798d1db5cc9ce86c # v0.1.6
+    SHA512 1d043b6915046498f5b94f9c23e0256ab780b11a75ad9ba3c608e26129567482a58787f4e69c4df3c21a29a6d13ed7dddc46869f695bb268e6867298b73edf30
     HEAD_REF master
+    PATCHES fix-cmake-target-path.patch
 )
 
 vcpkg_configure_cmake(
@@ -27,9 +26,7 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-c-event-stream RENAME copyright)
+file(REMOVE_RECURSE	${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/share
-)
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,15 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO miniupnp/miniupnp
     REF miniupnpc_2_1
     SHA512 f2ab5116c094982f7838ccab460d3db07a99de1094448277fc45841e0e64ea1b4216d75a7e5dd471c79ff9b0132b89e4d801c3ad1b60d55631c12c916df658f5
     HEAD_REF master
+    PATCHES
+        cmakelists.diff
 )
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmakelists.diff)
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" MINIUPNPC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" MINIUPNPC_BUILD_STATIC)
@@ -28,4 +25,3 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/miniupnpc RENAME copyright)
-

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(SYSTEMC_VERSION 2.3.3)
@@ -14,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     REF ${SYSTEMC_VERSION}
     PATCHES
         install.patch
-        tlm_correct_dependency.patch
 )
 
 vcpkg_configure_cmake(

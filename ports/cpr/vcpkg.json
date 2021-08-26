@@ -1,0 +1,12 @@
+{
+  "name": "cpr",
+  "version-semver": "1.6.2",
+  "description": "C++ Requests is a simple wrapper around libcurl inspired by the excellent Python Requests project.",
+  "homepage": "https://github.com/whoshuu/cpr",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    }
+  ]
+}

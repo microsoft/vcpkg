@@ -1,114 +1,128 @@
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libspatialite-4.3.0a)
+set(LIBSPATIALITE_VERSION_STR "5.0.0")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-4.3.0a.tar.gz"
-    FILENAME "libspatialite-4.3.0a.tar.gz"
-    SHA512 adfd63e8dde0f370b07e4e7bb557647d2bfb5549205b60bdcaaca69ff81298a3d885e7c1ca515ef56dd0aca152ae940df8b5dbcb65bb61ae0a9337499895c3c0
+    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
+    FILENAME "libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
+    SHA512 df72a3434d6e49f8836a9de2340f343a53f0673d0d17693cdb0f4971928b7c8bf40df44b21c0861945a9c81058e939acd1714b0b426ce9aa2ff7b0e8e6b196a7
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-find_program(NMAKE nmake)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
+        fix-makefiles.patch
+        fix-linux-configure.patch
 )
 
-# fix most of the problems when spacebar is in the path
-set(CURRENT_INSTALLED_DIR "\"${CURRENT_INSTALLED_DIR}\"")
-
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi")
-    set(CL_FLAGS_REL "/MD /Ox")
-    set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-    set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-    set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
-else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
-    set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib")
-    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib")
-    set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-    set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
-endif()
-
-set(LIBS_ALL_DBG
-    "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
-    ${LIBXML2_LIBS_DBG} \
-    ${GEOS_LIBS_DBG} \
-    ${CURRENT_INSTALLED_DIR}/debug/lib/projd.lib"
-   )
-set(LIBS_ALL_REL
-    "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
-    ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib \
-    ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
-    ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
-    ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
-    ${LIBXML2_LIBS_REL} \
-    ${GEOS_LIBS_REL} \
-    ${CURRENT_INSTALLED_DIR}/lib/proj.lib"
-   )
-
-################
-# Debug build
-################
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
-
-    vcpkg_execute_required_process(
-        COMMAND ${NMAKE} -f makefile.vc clean install
-        "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-    vcpkg_copy_pdbs()
-endif()
-
-################
-# Release build
-################
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-    vcpkg_execute_required_process(
-        COMMAND ${NMAKE} -f makefile.vc clean install
-        "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME nmake-build-${TARGET_TRIPLET}-release
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-endif()
-
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libspatialite RENAME copyright)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib)
-else()
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
+if (VCPKG_TARGET_IS_WINDOWS)
+  if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
+      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
+      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
+      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
+      set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
+      set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
+  else()
+      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
+      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
+      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
+      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
+      set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
+      set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
   endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+
+  set(LIBS_ALL_DBG
+      "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
+      ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
+      ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
+      ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
+      ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
+      ${LIBXML2_LIBS_DBG} \
+      ${GEOS_LIBS_DBG} \
+      ${LIBRTTOPO_LIBS_DBG} \
+      ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
+  )
+  set(LIBS_ALL_REL
+      "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
+      ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
+      ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
+      ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
+      ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
+      ${LIBXML2_LIBS_REL} \
+      ${GEOS_LIBS_REL} \
+      ${LIBRTTOPO_LIBS_REL} \
+      ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
+  )
+
+  string(REPLACE "/" "\\\\" INST_DIR ${CURRENT_PACKAGES_DIR})
+  list(APPEND OPTIONS_RELEASE
+      "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
+  )
+  list(APPEND OPTIONS_DEBUG
+      "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
+   )
+
+  vcpkg_install_nmake(
+      SOURCE_PATH ${SOURCE_PATH}
+      OPTIONS
+          "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
+      OPTIONS_RELEASE
+          ${OPTIONS_RELEASE}
+      OPTIONS_DEBUG
+          ${OPTIONS_DEBUG}
+  )
+
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib)
+      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib)
+  else()
+      file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/spatialite.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
+      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
   endif()
+else () # Build in UNIX
+  if(VCPKG_TARGET_IS_LINUX)
+      set(STDLIB stdc++)
+  else()
+      set(STDLIB c++)
+  endif()
+  if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    SET(EXTRALIBS "-lpthread")
+  endif()
+  list(APPEND OPTIONS_RELEASE
+      "LIBXML2_LIBS=-lxml2 -llzma"
+      "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
+  )
+  list(APPEND OPTIONS_DEBUG
+      "LIBXML2_LIBS=-lxml2 -llzmad"
+      "GEOS_LDFLAGS=-lgeos_cd -lgeosd -l${STDLIB}"
+  )
+
+  vcpkg_configure_make(
+      SOURCE_PATH ${SOURCE_PATH}
+      AUTOCONFIG
+      OPTIONS
+          "LIBS=${EXTRALIBS} -ldl -lm -l${STDLIB}"
+          "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
+          "--enable-rttopo"
+          "--enable-gcp"
+          "--enable-geocallbacks"
+          "--disable-examples"
+          "--disable-minizip"
+      OPTIONS_DEBUG
+          ${OPTIONS_DEBUG}
+      OPTIONS_RELEASE
+          ${OPTIONS_RELEASE}
+  )
+
+  vcpkg_install_make()
+  vcpkg_fixup_pkgconfig()
 endif()
 
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

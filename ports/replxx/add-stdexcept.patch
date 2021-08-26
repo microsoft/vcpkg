@@ -1,0 +1,17 @@
+diff --git a/src/io.cxx b/src/io.cxx
+index a098867..6159e4b 100644
+--- a/src/io.cxx
++++ b/src/io.cxx
+@@ -2,6 +2,7 @@
+ #include <cerrno>
+ #include <cstdlib>
+ #include <cstring>
++#include <stdexcept>
+ #include <array>
+ 
+ #ifdef _WIN32
+@@ -671,4 +672,3 @@ int Terminal::read_verbatim( char32_t* buffer_, int size_ ) {
+ #endif
+ 
+ }
+-

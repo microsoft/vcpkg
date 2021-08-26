@@ -13,15 +13,18 @@ else()
     set(TYPE_SUFFIX $<$<Config:Debug>:D>)
 endif()
 
-file(GLOB SOUNDTOUCH_SOURCES source/SoundTouch/*.cpp)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/include/soundtouch_config.h.in" ${CMAKE_CURRENT_BINARY_DIR}/include/soundtouch_config.h)
+
+file(GLOB SOUNDTOUCH_SOURCES "${CMAKE_CURRENT_LIST_DIR}/source/SoundTouch/*.cpp")
 add_library(libsoundtouch ${SOUNDTOUCH_SOURCES})
-target_include_directories(libsoundtouch PUBLIC include)
+target_include_directories(libsoundtouch PUBLIC "${CMAKE_CURRENT_LIST_DIR}/include")
+target_include_directories(libsoundtouch PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/include")
 set_target_properties(libsoundtouch PROPERTIES OUTPUT_NAME SoundTouch${TYPE_SUFFIX}${ARCH_SUFFIX})
-if(BUILD_SHARED_LIBS)
+if(WIN32 AND BUILD_SHARED_LIBS)
     target_compile_definitions(libsoundtouch PRIVATE -DDLL_EXPORTS)
     target_sources(libsoundtouch PRIVATE
-        source/SoundTouchDLL/SoundTouchDLL.cpp
-        source/SoundTouchDLL/SoundTouchDLL.rc
+        "${CMAKE_CURRENT_LIST_DIR}/source/SoundTouchDLL/SoundTouchDLL.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/source/SoundTouchDLL/SoundTouchDLL.rc"
     )
 endif()
 

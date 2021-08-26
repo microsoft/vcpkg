@@ -1,0 +1,29 @@
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index c51e3ceee..7f7e206b6 100644
+--- a/src/gui/configure.json	
++++ b/src/gui/configure.json
+@@ -239,9 +239,9 @@
+             "headers": "ft2build.h",
+             "sources": [
+                 { "type": "pkgConfig", "args": "freetype2" },
+-                { "type": "freetype", "libs": "-lfreetype", "condition": "!config.wasm" },
++                { "type": "freetype", "libs": "-lbreakfreetypeautofind", "condition": "!config.wasm" },
+                 { "libs": "-s USE_FREETYPE=1", "condition": "config.wasm" },
+-                { "libs": "-lfreetype" }
++                { "libs": "-lbreakfreetypeautofind" }
+             ],
+             "use": [
+                 { "lib": "zlib", "condition": "features.system-zlib" }
+@@ -262,7 +262,10 @@
+             "headers": "fontconfig/fontconfig.h",
+             "sources": [
+-                { "type": "pkgConfig", "args": "fontconfig" },
++                { "type": "pkgConfig", "args": "breakfontconfig" },
+-                { "type": "freetype", "libs": "-lfontconfig" }
++                { "type": "freetype", "libs": "-lbreakautofind" },
++                { "libs": "-lfontconfig -lexpat" },
++                { "libs": "-llibfontconfig -llibexpat" },
++                "-lfontconfig"
+             ],
+             "use": "freetype"
+         },

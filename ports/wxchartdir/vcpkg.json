@@ -1,0 +1,11 @@
+{
+  "name": "wxchartdir",
+  "version": "1.0.0",
+  "port-version": 1,
+  "description": "wxChartDir provides components for the integration and use of the commercial C++ library ChartDirector, a universal chart component developed by Advanced Software Engineering Ltd, in wxWidgets based applications.",
+  "homepage": "https://github.com/utelle/wxchartdir",
+  "dependencies": [
+    "chartdir",
+    "wxwidgets"
+  ]
+}

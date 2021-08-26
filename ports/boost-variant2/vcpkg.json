@@ -1,0 +1,12 @@
+{
+  "name": "boost-variant2",
+  "version": "1.76.0",
+  "description": "Boost variant2 module",
+  "homepage": "https://github.com/boostorg/variant2",
+  "dependencies": [
+    "boost-config",
+    "boost-detail",
+    "boost-mp11",
+    "boost-vcpkg-helpers"
+  ]
+}

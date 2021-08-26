@@ -1,16 +1,11 @@
-# header-only library
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JustasMasiulis/xorstr
-    REF 5d7371dcb70601ce9c252d475cc3dc6cf8f1e0db
-    SHA512 7625d2ebdb95a5414f0a1ac7ac8951b612d5159be5eccce4e13b88a4d17ffa3c65ff81ce5df5b64064b5712da7238ec1f564d2c213852731cad30c367ebad72e
+    REF 42464c4fc1c32cb0d15f3656b30bfb38d9b65fc7
+    SHA512 e8d6ed2ed64bbd11ca304b6c8a6c2dd14544cedc8b8f7364ef8c34af374ebee76bfddd97258b7ff024f6d9929800158d1b3897d64c2b74d8c6f6f105d2844a1c
     HEAD_REF master
 )
 
 file(COPY ${SOURCE_PATH}/include/xorstr.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

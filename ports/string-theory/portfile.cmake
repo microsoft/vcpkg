@@ -1,24 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zrax/string_theory
-    REF 2.2
-    SHA512 84b0eb645fdb302f233c162afbcea1b1b201546a60d81448a86437fe599c4184d7abe3d6ea8bd1743bdffab75bcd4e4ab296ce1fffb7da8ae6aab880d0bbda2d
+    REF 3.4
+    SHA512 36ad82c6da276b7cb66d350ceb4bed2a66f768a6604b2981331ceec6a96d03cc3a7e7e5f733de88ec15e0ea41f99f8657b959a51149c540f530d06268c5657ff
     HEAD_REF master
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(ST_BUILD_STATIC ON)
-else()
-    set(ST_BUILD_STATIC OFF)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DST_BUILD_STATIC=${ST_BUILD_STATIC}
 )
 
 vcpkg_install_cmake()
@@ -26,14 +16,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/string_theory)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/string-theory ${CURRENT_PACKAGES_DIR}/share/string_theory)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/string-theory)

@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taocpp/json
-    REF 6adce3b8e55c16e25b22ec0e33348eefa6aa4533
-    SHA512 078af33eed0bae7671f31a010ba19088d07ac4f78b834bc7565562ee75199e90338dfd450a1d592c4f4ae58eddb3a26018b571381099d22dfc7d3c4143911390
+    REF f357d7269b7503eed21d0c3b98b9075c28a98f56 # accessed on 2020-09-14
+    SHA512 4a4be970779ed0c6044c7ad40918ad6b3908ca10dbfb3738cbebb62154d437ad13ca27947119a6b1a6c8d92b22a9282477c73ddc5721ca30b8b355b77d7ce729
     HEAD_REF master
 )
 
@@ -33,6 +31,3 @@ configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copy
 file(COPY ${SOURCE_PATH}/LICENSE.double-conversion DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY ${SOURCE_PATH}/LICENSE.itoa DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(COPY ${SOURCE_PATH}/LICENSE.ryu DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

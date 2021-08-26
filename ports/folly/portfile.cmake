@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
@@ -14,14 +12,14 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 354223ec1602913667c52cee1ce0782a82cb0cad
-    SHA512 53dd401e5fe8aebf35bec7c1b49e45a7abf152ad12f7392f31653f9e644207d0926424948ad2d7974bf3e5eabaa97e3e9113f1318883bfc99b968b3700b19023
+    REF v2021.06.14.00
+    SHA512 aee5adc1a44d9b193f3f41b5fc9fa7575c677d8bf27ed3a3b612a2fbe53505f82481ce78f13fb41ae3ca81ca25446426fbdfdc578f503f919b4af5abe56ad71c
     HEAD_REF master
     PATCHES
-        missing-include-atomic.patch
-        boost-1.70.patch
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
+        boost-1.70.patch
+        fix-windows-minmax.patch
 )
 
 file(COPY
@@ -89,10 +87,11 @@ FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
 "include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(glog CONFIG)
+find_dependency(gflags CONFIG REQUIRED)
+find_dependency(ZLIB)
 ${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/folly)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/folly/LICENSE ${CURRENT_PACKAGES_DIR}/share/folly/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

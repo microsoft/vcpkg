@@ -1,5 +1,0 @@
-Source: llvm
-Version: 8.0.0
-Homepage: https://llvm.org/
-Description: The LLVM Compiler Infrastructure
-Build-Depends: atlmfc (windows)

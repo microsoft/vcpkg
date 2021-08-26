@@ -1,0 +1,8 @@
+{
+  "name": "mpir",
+  "version-string": "3.0.0",
+  "port-version": 10,
+  "description": "Multiple Precision Integers and Rationals",
+  "homepage": "https://github.com/wbhart/mpir",
+  "supports": "!(uwp | arm)"
+}

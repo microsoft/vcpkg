@@ -1,0 +1,12 @@
+--- a/modules/highgui/src/cap_ffmpeg_impl.hpp
++++ b/modules/highgui/src/cap_ffmpeg_impl.hpp
+@@ -42,6 +42,9 @@
+ 
+ #define HAVE_FFMPEG_SWSCALE
+ #define HAVE_GENTOO_FFMPEG
++#define AV_CODEC_FLAG_GLOBAL_HEADER (1 << 22)
++#define CODEC_FLAG_GLOBAL_HEADER AV_CODEC_FLAG_GLOBAL_HEADER
++#define AVFMT_RAWPICTURE 0x0020
+ 
+ #include "cap_ffmpeg_api.hpp"
+ #include <assert.h>

@@ -1,0 +1,11 @@
+{
+  "name": "openexr",
+  "version-string": "2.5.0",
+  "port-version": 3,
+  "description": "OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial Light & Magic for use in computer imaging applications",
+  "homepage": "https://www.openexr.com/",
+  "supports": "!uwp",
+  "dependencies": [
+    "zlib"
+  ]
+}

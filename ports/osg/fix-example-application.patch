@@ -1,0 +1,34 @@
+diff --git a/applications/present3D/CMakeLists.txt b/applications/present3D/CMakeLists.txt
+index df859d0..123313a 100644
+--- a/applications/present3D/CMakeLists.txt
++++ b/applications/present3D/CMakeLists.txt
+@@ -103,6 +103,11 @@ ENDIF()
+ IF   (WIN32)
+     # to support cluster code
+     SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ws2_32)
++    
++    find_package(EXPAT REQUIRED)
++    find_package(Iconv REQUIRED)
++    
++    list(APPEND TARGET_EXTERNAL_LIBRARIES EXPAT::EXPAT Iconv::Iconv)
+ ELSE()
+    CHECK_LIBRARY_EXISTS("nsl" "gethostbyname" "" LIB_NSL_HAS_GETHOSTBYNAME)
+    IF(LIB_NSL_HAS_GETHOSTBYNAME)
+diff --git a/examples/osgstaticviewer/CMakeLists.txt b/examples/osgstaticviewer/CMakeLists.txt
+index 071ab26..bf8d85f 100644
+--- a/examples/osgstaticviewer/CMakeLists.txt
++++ b/examples/osgstaticviewer/CMakeLists.txt
+@@ -19,6 +19,13 @@ IF(FREETYPE_FOUND)
+     SET(TARGET_ADDED_LIBRARIES ${TARGET_ADDED_LIBRARIES} osgdb_freetype)
+ ENDIF(FREETYPE_FOUND)
+ 
++IF (WIN32)
++    find_package(EXPAT REQUIRED)
++    find_package(Iconv REQUIRED)
++    
++    list(APPEND TARGET_EXTERNAL_LIBRARIES EXPAT::EXPAT Iconv::Iconv)
++ENDIF()
++
+ SET(TARGET_SRC osgstaticviewer.cpp )
+ #### end var setup  ###
+ SETUP_EXAMPLE(osgstaticviewer)

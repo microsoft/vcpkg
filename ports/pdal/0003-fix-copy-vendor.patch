@@ -33,6 +33,15 @@ index 43e446a..c4c7d6f 100644
  
  #
  # CPACK
+@@ -348,7 +373,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+ 
+ export(
+     TARGETS
+-        ${PDAL_BASE_LIB_NAME} ${PDAL_UTIL_LIB_NAME}
++        ${PDAL_BASE_LIB_NAME} ${PDAL_ARBITER_LIB_NAME} ${PDAL_KAZHDAN_LIB_NAME} ${PDAL_UTIL_LIB_NAME}
+     FILE
+         "${PDAL_BINARY_DIR}/PDALTargets.cmake")
+ 
 diff --git a/cmake/directories.cmake b/cmake/directories.cmake
 index f079ec7..8e366e8 100644
 --- a/cmake/directories.cmake

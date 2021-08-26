@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85c1061..684205f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,16 +232,17 @@ if (SQLITECPP_INTERNAL_SQLITE)
+     add_subdirectory(sqlite3)
+     target_link_libraries(SQLiteCpp PUBLIC sqlite3)
+ else (SQLITECPP_INTERNAL_SQLITE)
+-    find_package (SQLite3 REQUIRED)
+-    message(STATUS "Link to sqlite3 system library")
+-    target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
+-    if(SQLite3_VERSION VERSION_LESS "3.19")
+-        set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
+-    endif()
++    if(NOT SQLITE_HAS_CODEC)
++		find_package(unofficial-sqlite3 CONFIG)
++		message(STATUS "Link to sqlite3 system library")
++		target_link_libraries(SQLiteCpp PRIVATE unofficial::sqlite3::sqlite3)
++		if(SQLite3_VERSION VERSION_LESS "3.19")
++			set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
++		endif()
++	else()
++		# When using the SQLite codec, we need to link against the sqlcipher lib & include <sqlcipher/sqlite3.h>
++		# So this gets the lib & header, and links/includes everything
+ 
+-    # When using the SQLite codec, we need to link against the sqlcipher lib & include <sqlcipher/sqlite3.h>
+-    # So this gets the lib & header, and links/includes everything
+-    if(SQLITE_HAS_CODEC)
+         # Make PkgConfig optional since Windows doesn't usually have it installed.
+         find_package(PkgConfig QUIET)
+         if(PKG_CONFIG_FOUND)

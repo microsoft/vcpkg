@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
@@ -41,30 +39,12 @@ vcpkg_replace_string(
 )
 
 if(NN_ENABLE_NANOCAT)
-    if(CMAKE_HOST_WIN32)
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
-
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/nanocat${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/nanocat${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/nanocat${EXECUTABLE_SUFFIX}
-    )
+    vcpkg_copy_tools(TOOL_NAMES nanocat AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/include/nanomsg/nn.h
         "defined(NN_STATIC_LIB)"

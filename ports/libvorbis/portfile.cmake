@@ -1,14 +1,12 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/vorbis
-    REF 9eadeccdc4247127d91ac70555074239f5ce3529
-    SHA512 26d6826eba57fd47ebf426ba5a0c961c87ff62e2bb4185190e4985de9ac49aa493f77a1bd01d3d0757eb89a8494ba7de3a506f76bf5c8942ac1de3f75746a301
+    REF v1.3.7
+    SHA512 bfb6f5dbfd49ed38b2b08b3667c06d02e68f649068a050f21a3cc7e1e56b27afd546aaa3199c4f6448f03f6e66a82f9a9dc2241c826d3d1d4acbd38339b9e9fb
     HEAD_REF master
     PATCHES
         0001-Dont-export-vorbisenc-functions.patch
-        0002-Allow-deprecated-functions.patch
-        ogg.patch
+        0002-Fixup-pkgconfig-libs.patch
 )
 
 vcpkg_configure_cmake(
@@ -17,10 +15,16 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(
+    CONFIG_PATH lib/cmake/Vorbis
+    TARGET_PATH share/Vorbis
+)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/libvorbis/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-vcpkg_copy_pdbs() 
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

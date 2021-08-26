@@ -1,0 +1,40 @@
+{
+  "name": "boost-regex",
+  "version": "1.76.0",
+  "description": "Boost regex module",
+  "homepage": "https://github.com/boostorg/regex",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-concept-check",
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-detail",
+    "boost-integer",
+    "boost-iterator",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mpl",
+    "boost-predef",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ],
+  "features": {
+    "icu": {
+      "description": "ICU backend for Boost.Regex",
+      "dependencies": [
+        "icu"
+      ]
+    }
+  }
+}

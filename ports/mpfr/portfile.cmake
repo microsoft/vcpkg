@@ -1,25 +1,35 @@
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpfr-4.0.1)
+set(VERSION 4.1.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mpfr.org/mpfr-4.0.1/mpfr-4.0.1.tar.xz"
-    FILENAME "mpfr-4.0.1.tar.xz"
-    SHA512 137ad68bc1e33a155edc1247fcdba27f999cf48ed526773136584090ddf2cfdfc9ea79fbf74ea1943b835b4b1ff29b05087114738c6ad3b485848540f30cac4f
+    URLS "http://www.mpfr.org/mpfr-${VERSION}/mpfr-${VERSION}.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-${VERSION}.tar.xz"
+    FILENAME "mpfr-${VERSION}.tar.xz"
+    SHA512 1bd1c349741a6529dfa53af4f0da8d49254b164ece8a46928cdb13a99460285622d57fe6f68cef19c6727b3f9daa25ddb3d7d65c201c8f387e421c7f7bee6273
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/test_stdarg.c DESTINATION ${SOURCE_PATH})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES 
+        gmpd.patch
+        dll.patch
+)
 
-vcpkg_configure_cmake(
+file(REMOVE_RECURSE "${SOURCE_PATH}/m4")
+vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    AUTOCONFIG
+    ADDITIONAL_MSYS_PACKAGES texinfo gettext autoconf-archive
 )
 
-vcpkg_install_cmake()
+vcpkg_install_make()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mpfr.pc" AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mpfr.pc" " -lgmp" " -lgmpd")
+endif()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpfr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/mpfr/COPYING ${CURRENT_PACKAGES_DIR}/share/mpfr/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

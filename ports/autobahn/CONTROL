@@ -1,5 +1,5 @@
 Source: autobahn
-Version: 18.4.1
+Version: 20.8.1
 Build-Depends: websocketpp, msgpack, boost-asio, boost-thread
 Description: WAMP for C++ in Boost/Asio 
 Homepage: https://crossbar.io/autobahn

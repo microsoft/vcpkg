@@ -1,0 +1,13 @@
+diff --git a/zzip/conf.h b/zzip/conf.h
+index 27b834a..7f01456 100644
+--- a/zzip/conf.h
++++ b/zzip/conf.h
+@@ -203,7 +203,7 @@
+ #     endif
+
+
+-#if defined ZZIP_EXPORTS || defined ZZIPLIB_EXPORTS
++#if defined ZZIP_EXPORTS || defined ZZIPLIB_EXPORTS || defined libzzip_EXPORTS // CMake export defines
+ # undef ZZIP_DLL
+ #define ZZIP_DLL 1
+ #endif

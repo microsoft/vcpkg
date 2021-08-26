@@ -1,0 +1,27 @@
+From e2c0779de8096623be874c5fa0d275113b9d1204 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Tue, 22 Sep 2020 14:44:36 -0700
+Subject: [PATCH] remove Werror
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83197af..d27eb76 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -235,8 +235,8 @@ else()
+     if (NOT RELEASE_BUILD)
+         # -Werror is most useful during development, don't potentially break
+         # release builds
+-        set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Werror")
+-        set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -Werror")
++        #set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Werror")
++        #set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -Werror")
+     endif()
+ 
+     if (DISABLE_ASSERTS)
+-- 
+2.24.3 (Apple Git-128)
+

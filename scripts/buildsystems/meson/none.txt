@@ -1,0 +1,19 @@
+# native file used to make the build machine compiler unusable
+
+[host_machine]
+system = 'none'
+cpu_family = 'none'
+cpu = 'none'
+endian = 'little'
+
+[properties]
+
+[binaries]
+c = ['false']
+cpp = ['false']
+objc = ['false']
+objcpp = ['false']
+ar = ['false']
+pkgconfig = ['false']
+cmake = ['false']
+ninja = ['false']

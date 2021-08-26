@@ -1,58 +1,65 @@
-include(vcpkg_common_functions)
-set(VERSION 1.14.0)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}/cppunit-${VERSION})
+# UWP is not supported
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://dev-www.libreoffice.org/src/cppunit-${VERSION}.tar.gz"
-    FILENAME "cppunit-${VERSION}.tar.gz"
-    SHA512 4ea1da423c6f7ab37e4144689f593396829ce74d43872d6b10709c1ad5fbda4ee945842f7e9803592520ef81ac713e95a3fe130295bf048cd32a605d1959882e
+    URLS "http://dev-www.libreoffice.org/src/cppunit-1.15.1.tar.gz"
+    FILENAME "cppunit-1.15.1.tar.gz"
+    SHA512 0feb47faec451357bb4c4e287efa17bb60fd3ad966d5350e9f25b414aaab79e94921024b0c0497672f8d3eeb22a599213d2d71d9e1d28b243b3e37f3a9a43691
 )
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+)
 
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    vcpkg_apply_patches(
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Use a simple CMakeLists.txt to build CppUnit on windows
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+    vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            # Make sure cppunit static lib uses static CRT linkage
-            ${CMAKE_CURRENT_LIST_DIR}/0001-static-crt-linkage.patch
+        PREFER_NINJA
     )
-endif()
 
-if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-    set(BUILD_ARCH "Win32")
-    set(OUTPUT_DIR "Win32")
-elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-    set(BUILD_ARCH "x64")
+    vcpkg_install_cmake()
+
+    # Move EXE to 'tools'
+    vcpkg_copy_tools(TOOL_NAMES DllPlugInTester AUTO_CLEAN)
 else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+    # Use a configure on unix. It should be doable to use the cmake, but may require some patching
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(LINKAGE_DYNAMIC yes)
+        set(LINKAGE_STATIC no)
+    else()
+        set(LINKAGE_DYNAMIC no)
+        set(LINKAGE_STATIC yes)
+    endif()
+
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        OPTIONS
+            "--enable-shared=${LINKAGE_DYNAMIC}"
+            "--enable-static=${LINKAGE_STATIC}"
+            "--prefix=${CURRENT_INSTALLED_DIR}"
+            "--disable-doxygen"
+        OPTIONS_DEBUG
+            "--enable-debug"
+    )
+
+    vcpkg_install_make()
 endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/src/cppunit/cppunit_dll.vcxproj
-        PLATFORM ${BUILD_ARCH})
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/src/cppunit/cppunit.vcxproj
-        PLATFORM ${BUILD_ARCH})
-endif()
-
-file(COPY ${SOURCE_PATH}/include/cppunit DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(COPY ${SOURCE_PATH}/lib/cppunitd_dll.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(COPY ${SOURCE_PATH}/lib/cppunitd_dll.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${SOURCE_PATH}/lib/cppunit_dll.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${SOURCE_PATH}/lib/cppunit_dll.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(COPY ${SOURCE_PATH}/lib/cppunitd.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${SOURCE_PATH}/lib/cppunit.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-endif()
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppunit)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppunit/COPYING ${CURRENT_PACKAGES_DIR}/share/cppunit/copyright)
 
 vcpkg_copy_pdbs()
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# Install CppUnitConfig.cmake
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/CppUnitConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+# Cleanup
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)

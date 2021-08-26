@@ -1,10 +1,10 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index 5ceb11c..9d0aa12 100644
+index 249b7d5..41a31e2 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
 @@ -38,15 +38,6 @@ function(aws_set_common_properties target)
-         # Disable unknown pragma warnings
-         list(APPEND AWS_C_FLAGS /wd4068)
+             list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
+         endif()
  
 -        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
 -        if(STATIC_CRT)
@@ -16,5 +16,5 @@ index 5ceb11c..9d0aa12 100644
 -        list(APPEND AWS_C_FLAGS "${_FLAGS}")
 -
      else()
-         list(APPEND AWS_C_FLAGS -Wall -Werror -Wstrict-prototypes)
+         list(APPEND AWS_C_FLAGS -Wall -Wstrict-prototypes)
  

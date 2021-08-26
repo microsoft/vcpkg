@@ -1,4 +1,0 @@
-Source: qcustomplot
-Version: 2.0.1-1
-Description: QCustomPlot is a Qt C++ widget for plotting and data visualization.
-Build-Depends: qt5-base

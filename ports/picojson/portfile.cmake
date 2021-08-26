@@ -1,19 +1,13 @@
-
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/picojson-rel-v1.3.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/kazuho/picojson/archive/rel/v1.3.0.zip"
-    FILENAME "picojson-1.3.0.zip"
-    SHA512 d1da5748b6a03e92ca4fa475a918842f5eede955f747359fa4d9d85f9ed9efac8b3748a306c2f9f71b9924099ba5e1f8f949e50cdf6f26bc3778865121725ddf
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO kazuho/picojson
+    REF v1.3.0
+    SHA512 76d5a6b3b9e1151198eee707faffcbbba28a2842daccf03d99a5d02ae017f9517ef3ac9da4acc74a4fc1357feaf19e14a15c34698a1d4cb65acb6d23b566b284
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/picojson)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/picojson/LICENSE ${CURRENT_PACKAGES_DIR}/share/picojson/copyright)
+file(INSTALL ${SOURCE_PATH}/picojson.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
-# Copy the header files
-file(INSTALL ${SOURCE_PATH}/picojson.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/picojson)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
-

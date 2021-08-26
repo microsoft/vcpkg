@@ -1,16 +1,18 @@
-include(vcpkg_common_functions)
-
 # Download from Github
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.cpp
-  REF v1.0.1
-  SHA512 be612197fae387b9f1d8f10944d451ec9e7ebec6045beed365e642089c0a5fde882ed5c734f2b46a5008f98b8445a51114492f0f36fdc684b8a8fe4b71fe31a4
+  REF 33921c8b68b351828650c36816e7ecf936764379 #v1.2.0
+  SHA512 3f4a91987e0106e50e637d8d4fb13a4f8aca14eea168102664fdcebd1260609434e679f5986a1c4d71746735530f1b72fc29d2ac05cb35b3ce734a6aab1a0a55
   HEAD_REF master
+  PATCHES
+    fix-include-path.patch
+    fix-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
-  "ssl" PAHO_WITH_SSL
+  FEATURES
+    "ssl" PAHO_WITH_SSL
 )
 
 # Link with 'paho-mqtt3as' library
@@ -24,10 +26,8 @@ else()
 endif()
 
 # Setting the include path where MqttClient.h is present
-set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include/paho-mqtt")
+set(PAHO_C_INC "${CURRENT_INSTALLED_DIR}/include")
 
-# Set the generator to Ninja
-set(PAHO_CMAKE_GENERATOR "Ninja")
 
 # NOTE: the Paho C++ cmake files on Github are problematic. 
 # It uses two different options PAHO_BUILD_STATIC and PAHO_BUILD_SHARED instead of just using one variable.
@@ -46,13 +46,12 @@ endif()
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  GENERATOR ${PAHO_CMAKE_GENERATOR}
   OPTIONS
-  -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
-  -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
-  -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}
-  ${FEATURE_OPTIONS}
-  ${PAHO_OPTIONS}
+    -DPAHO_BUILD_STATIC=${PAHO_MQTTPP3_STATIC}
+    -DPAHO_BUILD_SHARED=${PAHO_MQTTPP3_SHARED}
+    -DPAHO_MQTT_C_INCLUDE_DIRS=${PAHO_C_INC}
+    ${FEATURE_OPTIONS}
+    ${PAHO_OPTIONS}
 )
 
 # Run the build, copy pdbs and fixup the cmake targets
@@ -65,4 +64,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Add copyright
-file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/paho-mqttpp3 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

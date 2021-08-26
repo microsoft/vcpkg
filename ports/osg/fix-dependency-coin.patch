@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 798b8b9..c975d78 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -740,7 +740,7 @@ ELSE()
+ # Common to all platforms except android:
+     FIND_PACKAGE(Freetype)
+     FIND_PACKAGE(ilmbase)
+-    FIND_PACKAGE(Inventor)
++    FIND_PACKAGE(coin CONFIG)
+     FIND_PACKAGE(Jasper)
+     FIND_PACKAGE(OpenEXR)
+     FIND_PACKAGE(OpenCascade)
+diff --git a/src/osgPlugins/Inventor/CMakeLists.txt b/src/osgPlugins/Inventor/CMakeLists.txt
+index 963a494..e34b6b8 100644
+--- a/src/osgPlugins/Inventor/CMakeLists.txt
++++ b/src/osgPlugins/Inventor/CMakeLists.txt
+@@ -17,10 +17,6 @@ SET(TARGET_HDRS
+     ShuttleCallback.h
+ )
+ 
+-ADD_DEFINITIONS(-DCOIN_DLL)
+-
+-INCLUDE_DIRECTORIES(${INVENTOR_INCLUDE_DIR})
+-
+-SET(TARGET_ADDED_LIBRARIES ${INVENTOR_LIBRARY})
++SET(TARGET_ADDED_LIBRARIES Coin::Coin)
+ 
+ SETUP_PLUGIN(iv iv)

@@ -1,13 +1,10 @@
-diff --git a/3FD/configuration.cpp b/3FD/configuration.cpp
-index b9ca804..207a397 100644
---- a/3FD/configuration.cpp
-+++ b/3FD/configuration.cpp
-@@ -2,7 +2,7 @@
- #include "configuration.h"
+--- a/3FD/xml.h
++++ b/3FD/xml.h
+@@ -4,6 +4,6 @@
  #include "exceptions.h"
- #include "utils_io.h"
+ #include "utils.h"
 -#include <rapidxml.hpp>
 +#include <rapidxml/rapidxml.hpp>
  
- #ifdef _3FD_PLATFORM_WINRT
- #    include "utils_winrt.h"
+ #include <array>
+ #include <algorithm>

@@ -1,0 +1,20 @@
+{
+  "name": "pangolin",
+  "version-string": "0.5",
+  "port-version": 15,
+  "description": "Lightweight GUI Library",
+  "homepage": "https://github.com/stevenlovegrove/Pangolin",
+  "supports": "!uwp & !osx",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "ffmpeg",
+      "features": [
+        "avformat"
+      ]
+    },
+    "glew",
+    "libjpeg-turbo",
+    "libpng"
+  ]
+}

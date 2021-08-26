@@ -1,49 +1,63 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
+set(PCRE_VERSION 8.45)
+set(EXPECTED_SHA 71f246c0abbf356222933ad1604cab87a1a2a3cd8054a0b9d6deb25e0735ce9f40f923d14cbd21f32fdac7283794270afcb0f221ad24662ac35934fcb73675cd)
+set(PATCHES
+        # Fix CMake Deprecation Warning concerning OLD behavior for policy CMP0026
+        # Suppress MSVC compiler warnings C4703, C4146, C4308, which fixes errors
+        # under x64-uwp and arm-uwp
+        pcre-8.45_suppress_cmake_and_compiler_warnings-errors.patch
+        # Modified for 8.45 from https://bugs.exim.org/show_bug.cgi?id=2600
+        pcre-8.45_fix_postfix_for_debug_Windows_builds.patch
+        export-cmake-targets.patch)
 
-set(PCRE_VERSION 8.41)
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-${PCRE_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.zip" 
-         "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.zip"
+    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
     FILENAME "pcre-${PCRE_VERSION}.zip"
-    SHA512 a3fd57090a5d9ce9d608aeecd59f42f04deea5b86a5c5899bdb25b18d8ec3a89b2b52b62e325c6485a87411eb65f1421604f80c3eaa653bd7dbab05ad22795ea
+    SHA512 ${EXPECTED_SHA}
+    SILENT_EXIT
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-option-2.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-arm-config-define.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-arm64-config-define.patch)
+if (EXISTS "${ARCHIVE}")
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES ${PATCHES}
+    )
+else()
+    vcpkg_from_sourceforge(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO pcre/pcre
+        REF ${PCRE_VERSION}
+        FILENAME "pcre-${PCRE_VERSION}.zip"
+        SHA512 ${EXPECTED_SHA}
+        PATCHES ${PATCHES}
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DPCRE_BUILD_TESTS=NO
-            -DPCRE_BUILD_PCREGREP=NO
-            -DPCRE_BUILD_PCRE32=YES
-            -DPCRE_BUILD_PCRE16=YES
-            -DPCRE_BUILD_PCRE8=YES
-            -DPCRE_SUPPORT_JIT=YES
-            -DPCRE_SUPPORT_UTF=YES
-            -DPCRE_SUPPORT_UNICODE_PROPERTIES=YES
-            # optional dependencies for PCREGREP
-            -DPCRE_SUPPORT_LIBBZ2=OFF
-            -DPCRE_SUPPORT_LIBZ=OFF
-            -DPCRE_SUPPORT_LIBEDIT=OFF
-            -DPCRE_SUPPORT_LIBREADLINE=OFF
+    OPTIONS
+        -DPCRE_BUILD_TESTS=NO
+        -DPCRE_BUILD_PCREGREP=NO
+        -DPCRE_BUILD_PCRE32=YES
+        -DPCRE_BUILD_PCRE16=YES
+        -DPCRE_BUILD_PCRE8=YES
+        -DPCRE_SUPPORT_JIT=YES
+        -DPCRE_SUPPORT_UTF=YES
+        -DPCRE_SUPPORT_UNICODE_PROPERTIES=YES
+        # optional dependencies for PCREGREP
+        -DPCRE_SUPPORT_LIBBZ2=OFF
+        -DPCRE_SUPPORT_LIBZ=OFF
+        -DPCRE_SUPPORT_LIBEDIT=OFF
+        -DPCRE_SUPPORT_LIBREADLINE=OFF
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/include/pcreposix.h)
     file(READ ${FILE} PCRE_H)
@@ -55,15 +69,20 @@ foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/incl
     file(WRITE ${FILE} "${PCRE_H}")
 endforeach()
 
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre/copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_copy_pdbs()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake @ONLY)
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

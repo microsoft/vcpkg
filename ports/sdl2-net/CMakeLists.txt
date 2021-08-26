@@ -10,7 +10,7 @@ find_package(SDL2 CONFIG REQUIRED)
 
 add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c version.rc)
 
-set_target_properties(SDL2_net PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
+set_target_properties(SDL2_net PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
 target_compile_definitions(SDL2_net PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
 target_include_directories(SDL2_net PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
 

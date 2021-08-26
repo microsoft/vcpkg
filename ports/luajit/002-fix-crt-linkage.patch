@@ -1,0 +1,42 @@
+diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
+index 6a889e1..08c4e3c 100644
+--- a/src/msvcbuild.bat
++++ b/src/msvcbuild.bat
+@@ -64,20 +64,23 @@ buildvm -m vmdef -o %SOURCEDIR%\jit\vmdef.lua %ALL_LIB%
+ buildvm -m folddef -o %SOURCEDIR%\lj_folddef.h %SOURCEDIR%\lj_opt_fold.c
+ @if errorlevel 1 goto :BAD
+ 
++@if "%2"=="static" set CRT_LINKAGE=/MT
++@if "%2"=="dynamic" set CRT_LINKAGE=/MD
+ @set LJLINK=%LJLINK% /debug
+-@if "%2" neq "debug" goto :NODEBUG
++@if "%3" neq "debug" goto :NODEBUG
+ @shift
+ @set LJCOMPILE=%LJCOMPILE% /Zi
++@set CRT_LINKAGE=%CRT_LINKAGE%d
+ :NODEBUG
+-@if "%2"=="amalg" goto :AMALGDLL
++@if "%3"=="amalg" goto :AMALGDLL
+-@if "%2"=="static" goto :STATIC
++@if "%3"=="static" goto :STATIC
+-%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
++%LJCOMPILE% %CRT_LINKAGE% /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
+ @if errorlevel 1 goto :BAD
+ %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
+ @if errorlevel 1 goto :BAD
+ @goto :MTDLL
+ :STATIC
+-%LJCOMPILE% %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c  /Fdlua51.pdb
++%LJCOMPILE% %CRT_LINKAGE% %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c  /Fdlua51.pdb
+ @if errorlevel 1 goto :BAD
+ %LJLIB% /OUT:%LJLIBNAME% lj_*.obj lib_*.obj
+ @if errorlevel 1 goto :BAD
+@@ -94,7 +94,7 @@
+ if exist %LJDLLNAME%.manifest^
+   %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
+ 
+-%LJCOMPILE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
++%LJCOMPILE% %CRT_LINKAGE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
+ @if errorlevel 1 goto :BAD
+ %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
+ @if errorlevel 1 goto :BAD

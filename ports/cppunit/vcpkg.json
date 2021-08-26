@@ -1,0 +1,7 @@
+{
+  "name": "cppunit",
+  "version-string": "1.15.1",
+  "description": "Unit testing framework module for the C++ programming language",
+  "homepage": "https://www.freedesktop.org/wiki/Software/cppunit",
+  "supports": "!uwp"
+}

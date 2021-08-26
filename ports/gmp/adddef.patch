@@ -1,0 +1,12 @@
+diff --git a/SMP/libgmp.def b/SMP/libgmp.def
+index 289f0e2d1..632274ab2 100644
+--- a/SMP/libgmp.def
++++ b/SMP/libgmp.def
+@@ -16,6 +16,7 @@ __gmp_randclear
+ __gmp_urandomb_ui
+ __gmp_urandomm_ui
+ __gmp_asprintf
++__gmp_vasprintf
+ __gmp_fprintf
+ __gmp_printf
+ __gmp_snprintf

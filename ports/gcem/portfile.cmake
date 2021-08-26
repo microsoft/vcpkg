@@ -1,9 +1,8 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kthohr/gcem
-    REF v1.12.0
-    SHA512 cb28dce44e8aac2a4369bc1dd796243f0f9ff25bdd2effcff198b6e4ad1161ed4d33d2fdc7aca0ca9b538c769c1ae36ebfd7fcfbefd289bb1a62cdbea1957f74
+    REF a20b0fc0206ff7d99a96fe4afdfe8205b01c8220 # v1.13.1
+    SHA512 baede14856ddcf8f132c7a16b19d4d646a1fc2d5e3a536a46694a8d7c656ce4ffb2fd61f50a1df78ce7ed31528828152b4e881fe10bcead553985b6103018804
     HEAD_REF master
 )
 
@@ -20,5 +19,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gcem)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gcem/LICENSE ${CURRENT_PACKAGES_DIR}/share/gcem/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

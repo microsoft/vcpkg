@@ -1,14 +1,10 @@
-include(vcpkg_common_functions)
-
-# https://github.com/json-c/json-c/issues/488
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF 2b1903cc6941fb87db7526680829486f27fb1073
-    SHA512 0ee71a0c2f75f5114b65f06ef921ac7a66173d66592fa880336896de64f3a325b251028b35396184cd7c3ffd15db3826bed83200fa80f4d11607fdf758138bf9
+    REF eae040a84a479ccad1d1c48314345c51ecf1a4a4
+    SHA512 18d8a31b341830b04676cad13fbc0608fb75a323522161ac8fd0bb5058db82c1c261d504696a1e12f4b03eb0967632885580ff81d808adf2f1dff7e32d131ba0
     HEAD_REF master
+    PATCHES pkgconfig.patch
 )
 
 vcpkg_configure_cmake(
@@ -19,7 +15,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

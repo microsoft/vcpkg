@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(pqp)
 
-include_directories(${SOURCE}/src)
+set(SOURCE_CUSTOM_DIR "PQP_v1.3")
+include_directories(${SOURCE_CUSTOM_DIR}/src)
 
 file(GLOB SRCS
-    "${SOURCE}/src/*.cpp")
+    "${SOURCE_CUSTOM_DIR}/src/*.cpp")
 file(GLOB HDRS
-    "${SOURCE}/src/*.h")
+    "${SOURCE_CUSTOM_DIR}/src/*.h")
 
 add_library(pqp STATIC ${SRCS})
 

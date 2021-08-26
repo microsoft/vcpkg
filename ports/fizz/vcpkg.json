@@ -1,0 +1,13 @@
+{
+  "name": "fizz",
+  "version-string": "2021.06.14.00",
+  "description": "a TLS 1.3 implementation by Facebook",
+  "homepage": "https://github.com/facebookincubator/fizz",
+  "dependencies": [
+    "fmt",
+    "folly",
+    "libsodium",
+    "openssl",
+    "zstd"
+  ]
+}

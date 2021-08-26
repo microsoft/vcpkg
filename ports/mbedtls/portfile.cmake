@@ -1,27 +1,41 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
-    REF mbedtls-2.16.2
-    SHA512 55af897ea3a1455ec4c16980a504a542333e8465bdf89d77b756e6d9893c394166ec880734ecdb10ec0643ddc828bf21e2dd8891b1b4a431e9c57e63a07915aa
+    REF 523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8 # mbedtls-2.24.0
+    SHA512 1ce78f34e8d87c2ce0454e0a08f4c6e5b3129d4b24cfa44162af21c2e8b5dc7feabf849e4fa547ce3781b5ce11aaf675cfed47412bae40091fbdd87bbcdbee07
     HEAD_REF master
+    PATCHES
+        enable-pthread.patch
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    pthreads ENABLE_PTHREAD
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DENABLE_TESTING=OFF
         -DENABLE_PROGRAMS=OFF
+        -DMBEDTLS_FATAL_WARNINGS=FALSE
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/mbedtls RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+if (VCPKG_TARGET_IS_WINDOWS AND pthreads IN_LIST FEATURES)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+endif ()
 
 vcpkg_copy_pdbs()

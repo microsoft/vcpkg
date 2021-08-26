@@ -1,0 +1,6 @@
+{
+  "name": "bcg729",
+  "version-string": "1.1.1",
+  "description": "Bcg729 is an open source implementation of the ITU G.729 Annex A and B codec.",
+  "homepage": "https://github.com/BelledonneCommunications/bcg729"
+}

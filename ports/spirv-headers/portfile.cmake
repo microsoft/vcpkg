@@ -1,18 +1,14 @@
-# header-only library
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF c4f8f65792d4bf2657ca751904c511bbcf2ac77b
-    SHA512 750af53a70f6f890657735ab0e2db5ae3dd8d612480efc2247753993752f687e22a0bdd65296c5751daf284604fe3dc9ee0a94feae88761a0e64adc64e6d17a4
+    REF bcf55210f13a4fa3c3d0963b509ff1070e434c79
+    SHA512 d0553b95f28b77209862059cd0a8c15ca3340f33e13d9bb75340ced07a5aa07b8b9eaa1bdc42daa0dbf78679c3b1ef3d344c73b17518061249cdc67000568c37
     HEAD_REF master
 )
 
 # This must be spirv as other spirv packages expect it there.
-# Copy header files
-file(COPY ${SOURCE_PATH}/include/spirv/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/spirv)
+file(COPY "${SOURCE_PATH}/include/spirv/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spirv")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spirv-headers)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/spirv-headers/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-headers/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

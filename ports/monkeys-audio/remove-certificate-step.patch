@@ -1,0 +1,24 @@
+--- a/Source/Projects/VS2019/Console/Console.vcxproj	2020-12-23 21:42:15.672211100 +0100
++++ b/Source/Projects/VS2019/Console/Console.vcxproj	2020-12-29 05:29:53.916306700 +0100
+@@ -180,10 +180,6 @@
+       <DataExecutionPrevention />
+       <TargetMachine>MachineX86</TargetMachine>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>C:\MAC\Current\Source\Certificate\signtool.exe sign /t http://timestamp.digicert.com /f C:\MAC\Current\Source\Certificate\MAC3.pfx /p password /v "$(TargetPath)"
+-C:\MAC\Current\Source\Certificate\signtool.exe sign /f C:\MAC\Current\Source\Certificate\MAC3.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Midl>
+@@ -273,10 +269,6 @@
+       <DataExecutionPrevention />
+       <TargetMachine>MachineX64</TargetMachine>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>C:\MAC\Current\Source\Certificate\signtool.exe sign /t http://timestamp.digicert.com /f C:\MAC\Current\Source\Certificate\MAC3.pfx /p password /v "$(TargetPath)"
+-C:\MAC\Current\Source\Certificate\signtool.exe sign /f C:\MAC\Current\Source\Certificate\MAC3.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\Console\Console.cpp">

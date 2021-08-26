@@ -1,0 +1,40 @@
+{
+  "name": "soci",
+  "version": "4.0.1",
+  "port-version": 3,
+  "description": "SOCI database access library",
+  "homepage": "https://github.com/SOCI/soci",
+  "features": {
+    "boost": {
+      "description": "Integration with Boost",
+      "dependencies": [
+        "boost-date-time",
+        "boost-fusion",
+        "boost-optional",
+        "boost-preprocessor",
+        "boost-tuple"
+      ]
+    },
+    "mysql": {
+      "description": "Build mysql backend",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "odbc": {
+      "description": "Build odbc backend"
+    },
+    "postgresql": {
+      "description": "Build postgresql backend",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sqlite3": {
+      "description": "Build sqlite3 backend",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

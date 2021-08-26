@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # No dynamic link for MSVC
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 

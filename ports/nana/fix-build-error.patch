@@ -1,12 +1,13 @@
-diff --git a/include/nana/filesystem/filesystem.hpp b/include/nana/filesystem/filesystem.hpp
-index 86b907a..ea8db75 100644
---- a/include/nana/filesystem/filesystem.hpp
-+++ b/include/nana/filesystem/filesystem.hpp
-@@ -30,6 +30,7 @@
- #ifndef NANA_FILESYSTEM_HPP
- #define NANA_FILESYSTEM_HPP
- #include <nana/push_ignore_diagnostic>
-+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+diff --git a/source/system/split_string.cpp b/source/system/split_string.cpp
+index 8269db6..c40016b 100644
+--- a/source/system/split_string.cpp
++++ b/source/system/split_string.cpp
+@@ -18,7 +18,7 @@ std::vector<split_string_type> split_string (const split_string_type& text, char
+ 		sep_pos = text.find(sep, sep_pos);
+ 		sep_pos = (text.npos == sep_pos ? text.size() : sep_pos);
+ 		const std::size_t end = sep_pos;
+-		while (sep_pos < text.size() and sep == text[sep_pos]) {
++		while (sep_pos < text.size() && sep == text[sep_pos]) {
+ 			++sep_pos;
+ 		}
  
- //Filesystem Selection
- #include <nana/config.hpp>

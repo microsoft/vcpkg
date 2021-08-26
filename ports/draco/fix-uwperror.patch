@@ -1,8 +1,8 @@
 diff --git a/src/draco/core/bit_utils.h b/src/draco/core/bit_utils.h
-index f63cd07..0f6baaf 100644
+index a102095..b6ba69b 100644
 --- a/src/draco/core/bit_utils.h
 +++ b/src/draco/core/bit_utils.h
-@@ -26,6 +26,8 @@
+@@ -27,6 +27,8 @@
  #include <intrin.h>
  #endif  // defined(_MSC_VER)
  

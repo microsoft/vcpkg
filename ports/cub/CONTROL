@@ -1,4 +1,0 @@
-Source: cub
-Version: 1.8.0
-Description: CUB is a flexible library of cooperative threadblock primitives and other utilities for CUDA kernel programming
-Build-Depends: cuda

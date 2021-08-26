@@ -1,8 +1,0 @@
-Source: plplot
-Version: 5.13.0-2
-Build-Depends: freetype, zlib, libpng, bzip2
-Description: PLplot is a cross-platform software package for creating scientific plots whose (UTF-8) plot symbols and text are limited in practice only by what Unicode-aware system fonts are installed on a user's computer.
-
-Feature: wxwidgets
-Build-Depends: wxwidgets
-Description: plplot wxwidgets module

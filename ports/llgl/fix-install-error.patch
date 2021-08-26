@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f440884..d1b0c2f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -614,6 +614,12 @@ if(LLGL_BUILD_RENDERER_OPENGL)
+         target_link_libraries(LLGL_OpenGL LLGL ${OPENGL_LIBRARIES})
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_OPENGL)
++        
++        install(TARGETS LLGL_OpenGL
++                RUNTIME DESTINATION bin
++                LIBRARY DESTINATION lib
++                ARCHIVE DESTINATION lib
++        )
+     else()
+         message("Missing OpenGL -> LLGL_OpenGL renderer will be excluded from project")
+     endif()
+@@ -681,6 +687,12 @@ if(WIN32)
+         target_link_libraries(LLGL_Direct3D11 LLGL d3d11 dxgi D3DCompiler)
+         
+         ADD_DEFINE(LLGL_BUILD_RENDERER_DIRECT3D11)
++        
++         install(TARGETS LLGL_Direct3D11
++                 RUNTIME DESTINATION bin
++                 LIBRARY DESTINATION lib
++                 ARCHIVE DESTINATION lib
++        )
+     endif()
+     
+     if(LLGL_BUILD_RENDERER_DIRECT3D12)
+@@ -821,4 +833,13 @@ if(LLGL_ENABLE_SPIRV_REFLECT)
+     message("Including Submodule: SPIRV")
+ endif()
+ 
++# Install targets
++install(TARGETS ${PROJECT_NAME}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++# Install headers
++install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION .)
++
+ 

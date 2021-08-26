@@ -1,0 +1,6 @@
+Source: vcpkg-ci-paraview
+Version: 1
+Port-Version: 2
+Homepage: https://github.com/microsoft/vcpkg
+Description: Port to force features of certain ports within CI
+Build-Depends: paraview[core,vtkm,tools](!(x86&windows)), paraview[core,tools](x86&windows)

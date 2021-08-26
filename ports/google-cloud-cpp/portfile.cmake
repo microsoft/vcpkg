@@ -1,31 +1,35 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v0.12.0
-    SHA512 14d83e099b9d425475b963b6b4fe11c1881988afc90d87a63b2a0d17cd18f3000f725fa230b6b7487e14e383e7f3c5803122dbadd9dacdeeadc541b55074a805
+    REF v1.30.1
+    SHA512 2a49c92eae39e2389bb8c765c2aa9374ae38a64f8f19a7744887d2176dc846017d8bc78c0391c55654765aaeff11bb1f3ea7e904d1e7b16580941ab74585e8bc
     HEAD_REF master
 )
+
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
         -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
-	    -DBUILD_TESTING=OFF
+        -DGOOGLE_CLOUD_CPP_ENABLE_WERROR=OFF
+        -DGOOGLE_CLOUD_CPP_ENABLE_CCACHE=OFF
+        -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/google-cloud-cpp RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

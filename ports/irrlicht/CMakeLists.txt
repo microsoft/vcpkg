@@ -1,24 +1,25 @@
 #
 # Irrlicht 3D engine
 #
-cmake_minimum_required(VERSION 3.8)
-project(Irrlicht)
+cmake_minimum_required(VERSION 3.16)
+project(Irrlicht LANGUAGES C CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
+
 # Irrlicht directories
 # -------------------------------------------------------------------------------------------------
-set(IRR_ROOT_DIR "")
 set(IRR_SRC_DIR "source/Irrlicht")
 set(IRR_INC_DIR "include")
+set(IRR_TOOL_DIR "tools")
 
 # Options
 # -------------------------------------------------------------------------------------------------
 set(DXSDK "")
 if(DEFINED ENV{DXSDK_DIR})
-    set(DXSDK "ENV{DXSDK_DIR}")
+    set(DXSDK "$ENV{DXSDK_DIR}")
 endif()
 
+set(IRR_UNICODE_PATH 0 CACHE BOOL "Whether to enable unicode path support on windows")
 set(IRR_FAST_MATH 0 CACHE BOOL "Whether to enable fast maths (at the expense of precision)")
 set(IRR_SHARED_LIB 1 CACHE BOOL "Whether to generate shared libraries instead of static libraries")
 set(IRR_DIRECTX_SDK ${DXSDK} CACHE PATH "Path to the DirectX SDK (for DirectX 9, this folder should contain /Include, /Lib)")
@@ -43,11 +44,19 @@ glob_c_cpp_sources(IRR_SRC_FILES_INTERFACE          ${IRR_INC_DIR})
 glob_c_cpp_sources(IRR_SRC_FILES_AESGLADMAN         ${IRR_SRC_DIR}/aesGladman)
 glob_c_cpp_sources(IRR_SRC_FILES_LZMA               ${IRR_SRC_DIR}/lzma)
 
-glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_ROOT_DIR}/tools/FileToHeader/)
-glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_ROOT_DIR}/tools/GUIEditor/)
-glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_ROOT_DIR}/tools/IrrFontTool/newFontTool/)
-glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_ROOT_DIR}/tools/MeshConverter/)
-    
+glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_TOOL_DIR}/FileToHeader/)
+glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_TOOL_DIR}/GUIEditor/)
+glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_TOOL_DIR}/IrrFontTool/newFontTool/)
+glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_TOOL_DIR}/MeshConverter/)
+
+if(APPLE)
+    file(GLOB IRR_SRC_FILES_OSX
+        "${IRR_SRC_DIR}/MacOSX/*.mm"
+        "${IRR_SRC_DIR}/MacOSX/*.h")
+
+    set(IRR_SRC_FILES ${IRR_SRC_FILES} ${IRR_SRC_FILES_OSX})
+endif()
+
 # Group files
 # -------------------------------------------------------------------------------------------------
 source_group(Irrlicht\\engine           FILES ${IRR_SRC_FILES})
@@ -78,18 +87,29 @@ else()
     add_library(Irrlicht STATIC ${IRR_ALL_SRC_FILES})
 endif()
 
-target_link_libraries(Irrlicht PRIVATE 
-    ${ZLIB_LIBRARY} 
-    ${PNG_LIBRARY} 
-    ${JPEG_LIBRARY} 
-    ${BZIP2_LIBRARY}
-    )
+if(APPLE)
+    target_include_directories(Irrlicht PRIVATE ${IRR_SRC_DIR}/MacOSX)
 
-target_compile_definitions(Irrlicht PRIVATE
-    NO_IRR_USE_NON_SYSTEM_ZLIB_
-    NO_IRR_USE_NON_SYSTEM_LIB_PNG_
-    NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
-    NO_IRR_USE_NON_SYSTEM_BZLIB_
+    target_compile_definitions(Irrlicht PRIVATE SYSTEM=MacOSX)
+
+    target_link_libraries(Irrlicht ${OSX_LIBRARIES})
+
+    target_compile_options(Irrlicht PRIVATE "-ObjC++")
+
+    set(ADDITIONAL_LIRARIES
+        "-framework OpenGL"
+        "-framework IOKit"
+        "-framework Carbon"
+        "-framework AppKit"
+        "-framework Cocoa")
+endif()
+
+target_link_libraries(Irrlicht PRIVATE
+    ${PNG_LIBRARY}
+    ${JPEG_LIBRARY}
+    ${ZLIB_LIBRARY}
+    ${BZIP2_LIBRARY}
+    ${ADDITIONAL_LIRARIES}
     )
 
 if(IRR_BUILD_TOOLS)
@@ -118,7 +138,7 @@ target_include_directories(Irrlicht
     )
 
 # I dont realy understand why this is necesary or what it is doing,
-# but it is necesarry to build and export a package. 
+# but it is necesarry to build and export a package.
 # See: https://cmake.org/cmake/help/v3.8/command/target_include_directories.html
 target_include_directories(Irrlicht PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -144,6 +164,14 @@ if(NOT ${IRR_SHARED_LIB})
     target_compile_definitions(Irrlicht PUBLIC _IRR_STATIC_LIB_)
 endif()
 
+# Disable Irrlicht building already provided dependencies
+target_compile_definitions(Irrlicht
+    PRIVATE NO_IRR_USE_NON_SYSTEM_ZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_LIB_PNG_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_BZLIB_
+    PRIVATE NO_IRR_USE_NON_SYSTEM_JPEG_LIB_
+    )
+
 # Per platform config
 # -------------------------------------------------------------------------------------------------
 
@@ -151,9 +179,6 @@ endif()
 target_compile_definitions(Irrlicht PRIVATE IRRLICHT_EXPORTS)
 
 if(WIN32)
-    # Unicode
-    target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
-
     # Import the symbols of bzip2
     target_compile_definitions(Irrlicht PRIVATE BZ_IMPORT)
 
@@ -162,6 +187,12 @@ if(WIN32)
 
     # Multi processor compilation
     target_compile_options(Irrlicht PRIVATE /MP)
+
+    # Unicode
+    if(${IRR_UNICODE_PATH})
+        target_compile_definitions(Irrlicht PRIVATE UNICODE _UNICODE)
+        target_compile_definitions(Irrlicht PUBLIC _IRR_WCHAR_FILESYSTEM)
+    endif()
 
     # Fast math options
     if(${IRR_FAST_MATH})
@@ -172,7 +203,6 @@ if(WIN32)
             target_compile_options(Irrlicht PRIVATE /arch:SSE2)
         endif()
     endif()
-
 elseif(UNIX)
     # Standard mode
     target_compile_options(Irrlicht
@@ -180,7 +210,7 @@ elseif(UNIX)
         PRIVATE -pipe
         PRIVATE -fno-exceptions
         PRIVATE -fno-strict-aliasing)
-    
+
     # Disable RTTI on C++ files only (no sense for C files)
     set_source_files_properties(${IRR_SRC_FILES} ${IRR_SRC_FILES_AESGLADMAN}
         PROPERTIES COMPILE_FLAGS -fno-rtti)
@@ -189,10 +219,12 @@ elseif(UNIX)
     target_compile_options(Irrlicht PRIVATE $<$<CONFIG:Debug>:-D_DEBUG>)
 
     # X11 and OpenGL
-    target_link_libraries(Irrlicht
-        PRIVATE X11
-        PRIVATE GL
-        PRIVATE Xxf86vm)
+    if(NOT APPLE)
+        target_link_libraries(Irrlicht
+            PRIVATE X11
+            PRIVATE GL
+            PRIVATE Xxf86vm)
+    endif()
 endif()
 
 # Installation
@@ -209,7 +241,7 @@ install(FILES ${IRR_SRC_FILES_INTERFACE} DESTINATION "include/irrlicht" CONFIGUR
 
 if(IRR_BUILD_TOOLS)
     install(
-        TARGETS FileToHeader GUIEditor FontTool MeshConverter 
+        TARGETS FileToHeader GUIEditor FontTool MeshConverter
         RUNTIME DESTINATION tools/irrlicht/
         CONFIGURATIONS Release
     )

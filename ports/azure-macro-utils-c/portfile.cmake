@@ -1,14 +1,24 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Azure/azure-macro-utils-c
-    REF 38729b4b7ac3ea8b7d71e394782b861ecb25193e
-    SHA512 c9c820e74aee403d45f257359318d3435e5d6534afe821da5679bc462e26ad256dd01ed253a80ba1c58343f850ef1026280533a152c4b0465527f6537b3092d3
-    HEAD_REF master
-)
+if("public-preview" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-macro-utils-c
+        REF 7523af934fc4d9423111e358f49b19314ec9c3e3
+        SHA512 441d2420be319195ef50d0b03028e44c470adedc316dc338245cbc51ec2e78863cb42a9665d84a628056d212927abb5aeaf5c489e7c36b5257b16a28b3652e6e
+        HEAD_REF master
+        FILE_DISAMBIGUATOR 1
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Azure/azure-macro-utils-c
+        REF 5926caf4e42e98e730e6d03395788205649a3ada
+        SHA512 8f9fd02012202db6cff5b647edbc8332a2c03963e80182a630af6a884f23df96b8e24d60e5412bfc2a0a7f43240a54f9597040aa28a9d3e1566755e1d52aac62
+        HEAD_REF master
+        FILE_DISAMBIGUATOR 1
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,5 +38,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/azure-macro-utils-c/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-
-

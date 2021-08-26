@@ -1,0 +1,16 @@
+diff -urN a/CMakeFilters.cmake b/CMakeFilters.cmake
+--- a/CMakeFilters.cmake	2021-05-15 19:07:48.160044927 +0200
++++ b/CMakeFilters.cmake	2021-05-15 19:22:56.993970332 +0200
+@@ -104,7 +104,11 @@
+     find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
+     if (NOT SZIP_FOUND)
+       find_package (SZIP) # Legacy find
+-      if (SZIP_FOUND)
++      if (DEFINED SZIP_SHARED_LIBRARY AND NOT DEFINED SZIP_STATIC_LIBRARY)
++          set (SZIP_STATIC_LIBRARY "${SZIP_SHARED_LIBRARY}")
++      elseif (DEFINED SZIP_STATIC_LIBRARY AND NOT DEFINED SZIP_SHARED_LIBRARY)
++          set (SZIP_SHARED_LIBRARY "${SZIP_STATIC_LIBRARY}")
++      elseif (SZIP_FOUND)
+         set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
+         set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_LIBRARIES})
+       endif ()

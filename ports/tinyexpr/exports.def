@@ -1,0 +1,6 @@
+EXPORTS 
+	te_compile
+	te_eval
+	te_free
+	te_interp
+	te_print

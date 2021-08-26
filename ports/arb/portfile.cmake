@@ -1,14 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fredrik-johansson/arb
-    REF 2.16.0
-    SHA512 171c965aeb03cd2830df8a53990403c6da480a94d44385dadfbb2d02697f7c03e8b9a217094b0ad93f796d889a1564f4b9ae9db35ef9de90f61bb2e3220911be
+    REF ae6009e3e19bd309a2433467d1b2ddb7001cd1eb # 2.18.1
+    SHA512 78e149f0d51ef8ab29afbad99fd24e3b59acfc509f626e89bdcd57d4a8478b84c3aa51e92f5e26f8a10a20c66d72d2eed50f0dfbfda4a5f5277988f9bac3fa48
     HEAD_REF master
-    PATCHES fix-build-error.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
@@ -26,4 +23,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/arb RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

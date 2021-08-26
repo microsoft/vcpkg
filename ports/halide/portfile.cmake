@@ -1,85 +1,75 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(TARGET_ARCHITECTURE 32)
-    set(FILE_HASH 4de27307f3355c318f21497a5b8641d215dbfbe2beb55472b9108e96aa9190300a5a8559f0c5e2788b56103f8284807e293ca362dee22adba62ae0f3b021766f)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(TARGET_ARCHITECTURE 64)
-    set(FILE_HASH a751c263335cbef725554b9a9b7b71811c0872d97109af5339124cb1db291a6f7e0bfb712f19982829477bf4fa2ad3c70ca5353b73697d1984504257b0894798)
-else()
-    message(FATAL_ERROR "Error: halide does not support the ${VCPKG_TARGET_ARCHITECTURE} architecture.")
-endif()
-
-set(COMMIT_HASH 46d8e9e0cdae456489f1eddfd6d829956fc3c843)
-set(RELEASE_DATE 2018_02_15)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/halide-win-${TARGET_ARCHITECTURE}-distro-trunk-${COMMIT_HASH})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/halide/Halide/releases/download/release_${RELEASE_DATE}/halide-win-${TARGET_ARCHITECTURE}-distro-trunk-${COMMIT_HASH}.zip"
-    FILENAME "halide-win-${TARGET_ARCHITECTURE}-distro-trunk-${COMMIT_HASH}.zip"
-    SHA512 ${FILE_HASH}
-)
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
-
-vcpkg_download_distfile(LICENSE
-    URLS "https://raw.githubusercontent.com/halide/Halide/release_${RELEASE_DATE}/LICENSE.txt"
-    FILENAME "halide-release_${RELEASE_DATE}-LICENSE.txt"
-    SHA512 bf11aa011ce872bcd51fe8d350f7238ad1eceb61eb7af788a2d78a6cfdfa9095abeeb2d230ead5c5299d245d6507a7b4374e3294703c126dcdae531db5a5ba7a
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO halide/Halide
+    REF 5dabcaa9effca1067f907f6c8ea212f3d2b1d99a  # v12.0.1
+    SHA512 5ab44703850885561337e23d8b538a5adfe1611e24e8daa4a1313756b4f9dfeb54e89bf8400d46a3340c00234402681b4f44ba3ed5322027fd6cb5dfbd525acd
+    HEAD_REF release/12.x
 )
 
-set(SOURCE_PATH ${SOURCE_PATH}/halide)
-
-file(
-    INSTALL
-        "${SOURCE_PATH}/include/Halide.h"
-        "${SOURCE_PATH}/include/HalideBuffer.h"
-        "${SOURCE_PATH}/include/HalideRuntime.h"
-        "${SOURCE_PATH}/include/HalideRuntimeCuda.h"
-        "${SOURCE_PATH}/include/HalideRuntimeHexagonHost.h"
-        "${SOURCE_PATH}/include/HalideRuntimeMetal.h"
-        "${SOURCE_PATH}/include/HalideRuntimeOpenCL.h"
-        "${SOURCE_PATH}/include/HalideRuntimeOpenGL.h"
-        "${SOURCE_PATH}/include/HalideRuntimeOpenGLCompute.h"
-        "${SOURCE_PATH}/include/HalideRuntimeQurt.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        target-aarch64 TARGET_AARCH64
+        target-amdgpu TARGET_AMDGPU
+        target-arm TARGET_ARM
+        target-d3d12compute TARGET_D3D12COMPUTE
+        target-hexagon TARGET_HEXAGON
+        target-metal TARGET_METAL
+        target-mips TARGET_MIPS
+        target-nvptx TARGET_NVPTX
+        target-opencl TARGET_OPENCL
+        target-powerpc TARGET_POWERPC
+        target-riscv TARGET_RISCV
+        target-x86 TARGET_X86
 )
 
-file(
-    INSTALL
-        "${SOURCE_PATH}/tools/halide_image_io.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
+        -DWITH_DOCS=NO
+        -DWITH_PYTHON_BINDINGS=NO
+        -DWITH_TESTS=NO
+        -DWITH_TUTORIALS=NO
+        -DWITH_UTILS=NO
+        -DCMAKE_INSTALL_LIBDIR=bin
+        -DCMAKE_INSTALL_DATADIR=share/${PORT}
+        -DHalide_INSTALL_CMAKEDIR=share/${PORT}
+        -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
+        -DHalide_INSTALL_PLUGINDIR=bin
 )
 
-file(
-    INSTALL
-        "${SOURCE_PATH}/Release/Halide.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
+# ADD_BIN_TO_PATH needed to compile autoschedulers, 
+# which use Halide.dll (and deps) during the build.
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
+
+vcpkg_copy_tools(
+    TOOL_NAMES
+        featurization_to_sample
+        get_host_target
+        retrain_cost_model
+        weightsdir_to_weightsfile
+    AUTO_CLEAN
 )
 
-file(
-    INSTALL
-        "${SOURCE_PATH}/Debug/Halide.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+# Release mode MODULE targets in CMake don't get PDBs.
+# Exclude those to avoid warning with default globs.
+vcpkg_copy_pdbs(
+    BUILD_PATHS
+        "${CURRENT_PACKAGES_DIR}/bin/Halide.dll" 
+        "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
 )
 
-file(
-    INSTALL
-        "${SOURCE_PATH}/Release/Halide.dll"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin
-)
+vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 
-file(
-    INSTALL
-        "${SOURCE_PATH}/Debug/Halide.dll"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
 
-file(INSTALL "${LICENSE}" DESTINATION ${CURRENT_PACKAGES_DIR}/share/halide RENAME copyright)
+file(GLOB readmes "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.md")
+file(REMOVE ${readmes})
+
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)

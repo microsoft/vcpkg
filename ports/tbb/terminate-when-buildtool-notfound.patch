@@ -1,0 +1,13 @@
+diff --git a/cmake/TBBBuild.cmake b/cmake/TBBBuild.cmake
+index a2222e3..756d85c 100644
+--- a/cmake/TBBBuild.cmake
++++ b/cmake/TBBBuild.cmake
+@@ -158,7 +158,7 @@ function(tbb_build)
+     mark_as_advanced(TBB_MAKE_TOOL)
+ 
+     if (NOT TBB_MAKE_TOOL)
+-        message(STATUS "Intel TBB can not be built: required make-tool (${make_tool_name}) was not found")
++        message(FATAL_ERROR "Intel TBB can not be built: required make-tool (${make_tool_name}) was not found")
+         set(${tbb_build_CONFIG_DIR} ${tbb_build_CONFIG_DIR}-NOTFOUND PARENT_SCOPE)
+         return()
+     endif()

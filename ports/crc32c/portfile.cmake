@@ -1,12 +1,11 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/crc32c
-  REF 1.0.7
-  SHA512 fe384ea15976b1317b7f6be3a447ae2cf25e0baa80f6c5e1231719a2af8863bc156b3d33156f24eca85504083730937f81fb624311d27e94ba3d2456bf3d34fa
+  REF ba741856254e3c6f6c7bcf0704fe1344a668a227 # 1.1.1
+  SHA512 129e7cf36a92f6d953b4545e673860b0d956aa0ecf89ae98dfcfdff03031482d03f9036d11d0546446f1e73f65548cdd87065759dc6efd39f0fd9c58234ebb24
   HEAD_REF master
-  PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001_export_symbols.patch
 )
 
 vcpkg_configure_cmake(
@@ -30,4 +29,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/crc32c RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

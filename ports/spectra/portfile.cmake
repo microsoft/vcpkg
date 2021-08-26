@@ -1,12 +1,19 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yixuan/spectra
-    REF v0.8.0
-    SHA512 186bcd8efd5dc6cf0aa81b909184e056d1df1e55870c700f0ca060f504fa997e3ce27c3d15d7b4c74422e4d18bcbd471558392a89e307693b89cc1f480fecc71
+    REF ec27cfd2210a9b2322825c4cb8e5d47f014e1ac3 # v0.9.0
+    SHA512 c383405faab851ab302ee1ccb78741c60ab250c05321eee65078f72769ced396b2c8b4a49442cb5836f659e27adbbc3b538198ee877495e49a980a185d49d420
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spectra RENAME copyright)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

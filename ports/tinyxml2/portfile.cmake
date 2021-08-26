@@ -1,11 +1,12 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
-    REF 7.0.1
-    SHA512 623cd7eff542d20b434a67111ac98110101c95a18767318bf906e5e56d8cc25622269f740f50477fe907a4c52d875b614cb6167f4760d42ab18dc55b9d4bf380
+    REF 8.0.0
+    SHA512 bcbb065c2af34ea681ec556377fd22e720b6f5d4caa73f432b1e34e08603a96f2233763f0ec5ae86b9ee71ddbe3062f58d3794cd3a162ce6903435530de0bba6
     HEAD_REF master
+    PATCHES
+        fix-symbol-exports.patch
+        fix-debug-postfix.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,14 +17,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/tinyxml2)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY
-  ${SOURCE_PATH}/readme.md
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml2
-)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyxml2/readme.md ${CURRENT_PACKAGES_DIR}/share/tinyxml2/copyright)
+file(INSTALL ${SOURCE_PATH}/readme.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

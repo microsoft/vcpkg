@@ -1,5 +1,5 @@
 Source: zookeeper
-Version: 3.5.5
+Version: 3.5.5-1
 Description: ZooKeeper C bindings
 Default-Features: sync
 

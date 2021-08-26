@@ -1,16 +1,10 @@
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/kealib-1.4.11)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/chchrsc/kealib/downloads/kealib-1.4.11.tar.gz"
-    FILENAME "kealib-1.4.11.tar.gz"
-    SHA512 e080dfd51111f85ddf8ab1bd71aaf7ec6cbe814db29ed62806362ef83718f777935347d9063cf29085f21bf09d4277fd88f5269af6555304130f50d093d28f63
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        hdf5_include.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ubarsc/kealib
+    REF  de6dabd414039dd36a1ff01243901cec3f45256e #1.4.11
+    SHA512 34032dd27aee0714cbe6b76b2f731a05408fd5ff78080343bcfbc3aa7e6eeb06a341a423cee1e7f3624f4c1f661feaf4ea3a3d2e53172933e49982df0c438a6f
+    HEAD_REF master
+    PATCHES hdf5_include.patch
 )
 
 if ("parallel" IN_LIST FEATURES)
@@ -36,9 +30,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/python/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/kealib RENAME copyright)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(INSTALL ${SOURCE_PATH}/python/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

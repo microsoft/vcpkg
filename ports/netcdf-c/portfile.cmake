@@ -1,24 +1,23 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF v4.7.0
-    SHA512 6602799780105c60ac8c873ed4055c1512dc8bebf98de01e1cce572d113ffb3bf3ca522475b93255c415340f672c55dc6785e0bdbcc39055314683da1d02141a
+    REF 26fba54a58fa02af92d84441ed90b417c1d08161 # v4.7.4
+    SHA512 7144374b5bd3574ea422de07ffb30fecc4e5f560f9b46f62762cc0cce511dd33068b8df9244fe94ae3cc7b3a9bb9fe398c7e67c3e5ac2109768e5a9b984f24fb
     HEAD_REF master
     PATCHES
         no-install-deps.patch
-        config-pkg-location.patch
-        transitive-hdf5.patch
-        hdf5.patch
-        hdf5_2.patch
-        fix-build-error-on-linux.patch
-        hdf5_3.patch
+        use_targets.patch
+        fix-dependency-libmath.patch
+        fix-linkage-error.patch
+        fix-pkgconfig.patch
+        fix-dependency-zlib.patch
+        fix-manpage-msys.patch
 )
 
 #Remove outdated find modules
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/windows/FindHDF5.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(NC_USE_STATIC_CRT ON)
@@ -26,37 +25,46 @@ else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dap       ENABLE_DAP
+        netcdf-4  ENABLE_NETCDF_4
+        netcdf-4  USE_HDF5
+        tools     BUILD_UTILITIES
+    INVERTED_FEATURES
+        dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
+        netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     OPTIONS
-        -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_FILTER_TESTING=OFF
-        -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
-        -DConfigPackageLocation=share/netcdf
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES  nccopy ncdump ncgen ncgen3
+        AUTO_CLEAN
+    )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

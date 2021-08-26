@@ -1,0 +1,13 @@
+{
+  "name": "openmama",
+  "version-semver": "6.3.1",
+  "port-version": 1,
+  "description": "OpenMAMA is a high performance vendor neutral lightweight wrapper that provides a common API interface to different middleware and messaging solutions across a variety of platforms and languages",
+  "homepage": "https://github.com/finos/OpenMAMA",
+  "supports": "windows & (x64 | x86)",
+  "dependencies": [
+    "apr",
+    "libevent",
+    "qpid-proton"
+  ]
+}

@@ -84,7 +84,7 @@ def get_dependencies(filename):
     deps = []
     if proc_out.retcode == 0:
         # some string splitting
-        deps = [s.strip().split(' ')[0] for s in proc_out.stdout.splitlines()[1:] if s]
+        deps = [s.strip().split(b' ')[0].decode('utf-8') for s in proc_out.stdout.splitlines()[1:] if s]
         # prevent infinite recursion when a binary depends on itself (seen with QtWidgets)...
         deps = [s for s in deps if os.path.basename(filename) not in s]
     return deps
@@ -257,6 +257,11 @@ def fix_dependency(binary, dep):
         qtname, dep_abspath, dep_rpath = normalize_loaderpath_name(dep)
         qtnamesrc = os.path.join(GlobalConfig.qtpath + '/lib', qtname)
     else:
+        return True
+
+    # if the source path doesn't exist it's probably not a dependency
+    # originating with vcpkg and we should leave it alone
+    if not os.path.exists(qtnamesrc):
         return True
 
     dep_ok = True

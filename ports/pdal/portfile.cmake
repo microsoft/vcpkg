@@ -1,9 +1,4 @@
-# vcpkg portfile.cmake for PDAL
-#
-# NOTE: update the version string for new PDAL release
 set(PDAL_VERSION_STR "1.7.1")
-
-include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/pdal/PDAL-${PDAL_VERSION_STR}-src.tar.gz"
@@ -18,7 +13,11 @@ vcpkg_extract_source_archive_ex(
         0001-win32_compiler_options.cmake.patch
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
-        PDALConfig.patch
+        fix-dependency.patch
+        libpq.patch
+        fix-CPL_DLL.patch
+        0004-fix-const-overloaded.patch
+        geotiff.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -34,13 +33,7 @@ foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
     )
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-  set(VCPKG_BUILD_STATIC_LIBS OFF)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-  set(VCPKG_BUILD_STATIC_LIBS ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" VCPKG_BUILD_STATIC_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -54,11 +47,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pdal/cmake)
 vcpkg_copy_pdbs()
-
-# Install copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdal RENAME copyright
-)
 
 # Install PDAL executable
 file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/bin/*.exe)
@@ -84,3 +72,5 @@ else()
     file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(REMOVE ${_pdal_apps})
 endif()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

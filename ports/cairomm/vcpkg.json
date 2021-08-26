@@ -1,0 +1,10 @@
+{
+  "name": "cairomm",
+  "version": "1.16.0",
+  "description": "A C++ wrapper for the cairo graphics library",
+  "homepage": "https://www.cairographics.org",
+  "dependencies": [
+    "cairo",
+    "libsigcpp"
+  ]
+}

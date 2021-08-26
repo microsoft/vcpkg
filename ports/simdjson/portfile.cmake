@@ -1,43 +1,41 @@
-include(vcpkg_common_functions)
-
-# https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-if(TARGET_TRIPLET MATCHES "^(x86|arm-)")
-    message(FATAL_ERROR "simdjson doesn't support x86 or 32-bit ARM architecture.")
-elseif(TARGET_TRIPLET MATCHES "^arm64")
-    message(FATAL_ERROR "simdjson doesn't support ARM64 architecture currently.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lemire/simdjson
-    REF d9a0e2b8f441c20ad46276fdb8ce24f2aebdc07b
-    SHA512 05523c59b95485b93646370ac1ef9f80a72351a5bfe76797c5bbbf249bedd81b962dad19040a7eaac80744aaec18be9bec1120da44a9a1e4328e68b3d671bdaf
+    REPO simdjson/simdjson
+    REF 33d926bd4448e2e087511f34e49461230691a503 # v0.9.7
     HEAD_REF master
+    SHA512 1c492ed4c19019abbe6743c8ad60f0a03f9171f5ece6a3b2ec6429eec610d3b0750eceba81cda11791fe6fd34881af1810ee18f1ba486f9147e188c955546cad
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        exceptions SIMDJSON_EXCEPTIONS
+        threads    SIMDJSON_ENABLE_THREADS
+    INVERTED_FEATURES
+        deprecated SIMDJSON_DISABLE_DEPRECATED_API
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
+        -DSIMDJSON_JUST_LIBRARY=ON
+        -DSIMDJSON_SANITIZE_UNDEFINED=OFF
+        -DSIMDJSON_SANITIZE=OFF
+        -DSIMDJSON_SANITIZE_THREADS=OFF
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
-    OPTIONS_DEBUG
-        -DSIMDJSON_SANITIZE=ON
+        -DSIMDJSON_DEVELOPMENT_CHECKS=OFF
+        -DSIMDJSON_VERBOSE_LOGGING=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

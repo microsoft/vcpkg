@@ -1,21 +1,16 @@
-
-# Allow use of vcpkg functions
-include(vcpkg_common_functions)
-
-# For now, io2d is always a static library.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-io2d/P0267_RefImpl
-    REF 21ae92c8be6916034e6e18f08aa57899a975dfb0
-    SHA512 5b674f98ca7705d6901af339a4189d5ce4f2c3118bfb99430734f355159602f177bc8d1b345c3a2f17947a62547553f7b91747a1f16da063707a4da7f990391d
+    REF caa0ba0cb5a421a38bc26afaf3505bee206c44dd # accessed on 2020-09-14
+    SHA512 f8e5a708f6cbda913a0492a843e1502b8d3cc615a6abda50e850be944e1484ec9087b787c54cc25d513172a7d5ab789be41a761c97df94266df4d1bcf14db17c
     HEAD_REF master
-    PATCHES find-package.patch
+    PATCHES
+        cmake.dep.patch
 )
 
-# Configure the library, using CMake
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+if (VCPKG_TARGET_IS_OSX)
     set(IO2D_DEFAULT_OPTION "-DIO2D_DEFAULT=COREGRAPHICS_MAC")
 endif()
 
@@ -29,16 +24,13 @@ vcpkg_configure_cmake(
         ${IO2D_DEFAULT_OPTION}
 )
 
-# Build + install the library, using CMake
 vcpkg_install_cmake()
 
-# Don't have duplicate header files in both include/ and debug/include/ folders
-# (within <vcpkg-root>/installed/io2d_*/, as installed by vcpkg_install_cmake()):
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/io2d)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+if (NOT VCPKG_TARGET_IS_OSX)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake ${CURRENT_PACKAGES_DIR}/share/io2d/io2dTargets.cmake)
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/io2d/io2dConfig.cmake "
     include(CMakeFindDependencyMacro)
@@ -49,6 +41,4 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     ")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/io2d RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME io2d)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

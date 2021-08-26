@@ -1,0 +1,20 @@
+{
+  "name": "libsndfile",
+  "version-string": "1.0.31",
+  "description": "Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo",
+  "homepage": "https://github.com/erikd/libsndfile",
+  "license": "LGPL-2.1",
+  "default-features": [
+    "external-libs"
+  ],
+  "features": {
+    "external-libs": {
+      "description": "Default feature. Enables Ogg Vorbis, FLAC and Ogg Opus formats support.",
+      "dependencies": [
+        "libflac",
+        "libvorbis",
+        "opus"
+      ]
+    }
+  }
+}

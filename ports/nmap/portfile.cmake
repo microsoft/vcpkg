@@ -1,134 +1,120 @@
-include(vcpkg_common_functions)
+# nmap is a tools, so ignor POST_CHECK
+SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://nmap.org/dist/nmap-7.70.tar.bz2"
     FILENAME "nmap-7.70.tar.bz2"
     SHA512 084c148b022ff6550e269d976d0077f7932a10e2ef218236fe13aa3a70b4eb6506df03329868fc68cb3ce78e4360b200f5a7a491d3145028fed679ef1c9ecae5
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
-)
 
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/detect-crypto-library.patch
-)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
-else()
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
-endif()
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
-
-set(_csc_PROJECT_PATH nmap)
-
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-		
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
-    set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
-    set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
-
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        vcpkg_find_acquire_program(GASPREPROCESSOR)
-        foreach(GAS_PATH ${GASPREPROCESSOR})
-            get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
-        endforeach(GAS_PATH)
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    else()
-        message(FATAL_ERROR "Unsupported architecture")
-    endif()
-endif()
-
-
-set(OPTIONS "--with-openssl=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/ --with-libssh2=${VCPKG_ROOT_DIR}/installed/x64-windows/bin/")
-
-message(STATUS "Building Options: ${OPTIONS}")
-
-set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
-set(OPTIONS_RELEASE "")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
-    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
-    endif()
-endif() 	 	
-
-message(STATUS "Building Options: ${OPTIONS}")
-
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-
-message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}/debug" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_DEBUG}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-
-file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(LIB_MACHINE_ARG /machine:ARM)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(LIB_MACHINE_ARG /machine:x86)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(LIB_MACHINE_ARG /machine:x64)
-else()
-    message(FATAL_ERROR "Unsupported target architecture")
-endif()
-
-foreach(DEF_FILE ${DEF_FILES})
-    get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
-    get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
-    string(REGEX REPLACE "-[0-9]*\\.def" ".lib" OUT_FILE_NAME "${DEF_FILE_NAME}")
-    file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
-    file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
-    message(STATUS "Generating ${OUT_FILE_NATIVE}")
-    vcpkg_execute_required_process(
-        COMMAND lib.exe /def:${DEF_FILE_NATIVE} /out:${OUT_FILE_NATIVE} ${LIB_MACHINE_ARG}
-        WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}
-        LOGNAME libconvert-${TARGET_TRIPLET}
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES
+            fix-snprintf.patch
+            fix-ssize_t.patch
+            fix-msvc-prj.patch
     )
-endforeach()
+    list(APPEND DEL_PROJS "libpcap" "libpcre" "libssh2" "libz")
+    foreach (DEL_PROJ ${DEL_PROJS})
+        file(REMOVE_RECURSE ${SOURCE_PATH}/${DEL_PROJ})
+    endforeach()
+    
+    # Clear
+    vcpkg_execute_required_process(
+        COMMAND "devenv.exe"
+                "nmap.sln"
+                /Clean
+        WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
+    )
+    
+    # Uprade
+    message(STATUS "Upgrade solution...")
+    vcpkg_execute_required_process(
+        COMMAND "devenv.exe"
+                "nmap.sln"
+                /Upgrade
+        WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
+        LOGNAME upgrade-Packet-${TARGET_TRIPLET}
+    )
+    # Build
+    vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/mswin32/nmap.vcxproj
+    PLATFORM ${MSBUILD_PLATFORM}
+    USE_VCPKG_INTEGRATION
+    )
+    
+    # Install
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
+        file(INSTALL ${SOURCE_PATH}/mswin32/Release/nmap.exe
+                     ${SOURCE_PATH}/mswin32/Release/nmap.pdb
+                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
+        file(INSTALL ${SOURCE_PATH}/mswin32/Debug/nmap.exe
+                     ${SOURCE_PATH}/mswin32/Debug/nmap.pdb
+                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    endif()
+else()
+    set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
+    set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
+    message(STATUS "Building Options: ${OPTIONS}")
+    
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
+        # Since nmap makefile has strong relationshop with codes, copy codes to obj path
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+	    vcpkg_extract_source_archive(source_path_release
+            ARCHIVE "${ARCHIVE}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        )
 
-file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
-file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES})
-list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
-if(FILES_TO_REMOVE_LEN GREATER 0)
-    file(REMOVE ${FILES_TO_REMOVE})
+        vcpkg_execute_required_process(
+            COMMAND "./configure" ${OPTIONS}
+	    WORKING_DIRECTORY "${source_path_release}"
+            LOGNAME config-${TARGET_TRIPLET}-rel
+        )
+        
+        message(STATUS "Building ${TARGET_TRIPLET}-rel")
+        vcpkg_execute_required_process(
+            COMMAND make
+            WORKING_DIRECTORY "${source_path_release}"
+            LOGNAME build-${TARGET_TRIPLET}-rel
+        )
+        
+        message(STATUS "Installing ${TARGET_TRIPLET}-rel")
+        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    endif()
+    
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
+        # Since nmap makefile has strong relationshop with codes, copy codes to obj path
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        vcpkg_extract_source_archive(source_path_debug
+            ARCHIVE "${ARCHIVE}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        )
+
+        vcpkg_execute_required_process(
+            COMMAND "./configure" ${OPTIONS}
+            WORKING_DIRECTORY ${source_path_debug}
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+        
+        message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND make
+            WORKING_DIRECTORY ${source_path_debug}
+            LOGNAME build-${TARGET_TRIPLET}-dbg
+        )
+        
+        message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
+        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+    endif()
+    
+    set(SOURCE_PATH "${source_path_release}")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-# TODO: Examine build log and confirm that this license matches the build output
-file(RENAME ${CURRENT_PACKAGES_DIR}/COPYING ${CURRENT_PACKAGES_DIR}/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

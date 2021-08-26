@@ -1,0 +1,13 @@
+diff --git a/src/modbus.h b/src/modbus.h
+index fbe20bc..895d05d 100644
+--- a/src/modbus.h
++++ b/src/modbus.h
+@@ -24,6 +24,8 @@
+ # if defined(DLLBUILD)
+ /* define DLLBUILD when building the DLL */
+ #  define MODBUS_API __declspec(dllexport)
++# elif defined(LIBBUILD)
++#  define MODBUS_API
+ # else
+ #  define MODBUS_API __declspec(dllimport)
+ # endif

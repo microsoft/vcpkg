@@ -1,0 +1,4 @@
+The package mp3lame provides CMake targets:
+
+    find_package(mp3lame CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mp3lame::mp3lame)

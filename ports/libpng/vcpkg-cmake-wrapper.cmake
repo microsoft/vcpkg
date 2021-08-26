@@ -1,6 +1,0 @@
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16.a")
-    set(PNG_LIBRARY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16.a" CACHE FILEPATH "")
-elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    set(PNG_LIBRARY_RELEASE "${CMAKE_CURRENT_LIST_DIR}/../../lib/libpng16${CMAKE_SHARED_LIBRARY_SUFFIX}" CACHE FILEPATH "")
-endif()
-_find_package(${ARGS})

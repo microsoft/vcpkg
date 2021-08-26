@@ -10,9 +10,10 @@
 *.user
 *.userosscache
 *.sln.docstates
+/vcpkg-configuration.json
 
-toolsrc/out*
-toolsrc/CMakeSettings.json
+# fuzzing
+sync_dir*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -286,40 +287,36 @@ __pycache__/
 /installed*/
 /packages/
 /scripts/buildsystems/tmp/
-/toolsrc/build.rel/
-/toolsrc/msbuild.x86.debug/
-/toolsrc/msbuild.x86.release/
-/toolsrc/msbuild.x64.debug/
-/toolsrc/msbuild.x64.release/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
-!triplets/arm-uwp.cmake
-!triplets/arm-windows.cmake
-!triplets/x64-uwp.cmake
-!triplets/x64-windows.cmake
-!triplets/x64-windows-static.cmake
-!triplets/x86-uwp.cmake
-!triplets/x86-windows.cmake
-!triplets/x86-windows-static.cmake
-!triplets/arm64-uwp.cmake
-!triplets/arm64-windows.cmake
-!triplets/x64-linux.cmake
-!triplets/x64-osx.cmake
+!/triplets/arm-uwp.cmake
+!/triplets/arm64-windows.cmake
+!/triplets/x64-linux.cmake
+!/triplets/x64-osx.cmake
+!/triplets/x64-uwp.cmake
+!/triplets/x64-windows-static.cmake
+!/triplets/x64-windows.cmake
+!/triplets/x86-windows.cmake
+
+!/triplets/community
+!/triplets/community/**
+
 *.exe
 *.zip
 
 ############################################################
 # vcpkg - End
 ############################################################
+vcpkg.disable-metrics
 archives
+.DS_Store
+prefab/
+*.swp
 
-############################################################
-# Maven - Start
-############################################################
+###################
+# Codespaces
+###################
+pythonenv3.8/
+.venv/
 
-target/
-
-############################################################
-# Maven - End
-############################################################

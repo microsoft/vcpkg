@@ -1,147 +1,44 @@
---- a/dlib/CMakeLists.txt
-+++ b/dlib/CMakeLists.txt
-@@ -430,70 +430,9 @@
-       endif()
+diff --git a/dlib/cmake_utils/find_libjpeg.cmake b/dlib/cmake_utils/find_libjpeg.cmake
+index 3b9e656..d741f31 100644
+--- a/dlib/cmake_utils/find_libjpeg.cmake
++++ b/dlib/cmake_utils/find_libjpeg.cmake
+@@ -14,7 +14,7 @@ if (DEFINED JPEG_FOUND)
+    return()
+ endif()
  
-       if (DLIB_PNG_SUPPORT)
--         # try to find libpng 
--         find_package(PNG QUIET)
--         # Make sure there isn't something wrong with the version of LIBPNG
--         # installed on this system.  Also never link to anything from anaconda
--         # since it's probably broken.
--         if (PNG_FOUND AND NOT ("${PNG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)") AND NOT BUILDING_PYTHON_IN_MSVC)
--            set(CMAKE_REQUIRED_LIBRARIES ${PNG_LIBRARIES})
--            CHECK_FUNCTION_EXISTS(png_create_read_struct LIBPNG_IS_GOOD)
--         endif()
--         if (PNG_FOUND AND LIBPNG_IS_GOOD)
--            include_directories(${PNG_INCLUDE_DIR})
--            set (dlib_needed_libraries ${dlib_needed_libraries} ${PNG_LIBRARIES})
--            set(REQUIRES_LIBS " libpng")
--         else()
--            # If we can't find libpng then statically compile it in.
--            include_directories(external/libpng external/zlib)
--            set(source_files ${source_files}
--               external/libpng/arm/arm_init.c
--               external/libpng/arm/filter_neon_intrinsics.c
--               external/libpng/png.c
--               external/libpng/pngerror.c
--               external/libpng/pngget.c
--               external/libpng/pngmem.c
--               external/libpng/pngpread.c
--               external/libpng/pngread.c
--               external/libpng/pngrio.c
--               external/libpng/pngrtran.c
--               external/libpng/pngrutil.c
--               external/libpng/pngset.c
--               external/libpng/pngtrans.c
--               external/libpng/pngwio.c
--               external/libpng/pngwrite.c
--               external/libpng/pngwtran.c
--               external/libpng/pngwutil.c
--               external/zlib/adler32.c
--               external/zlib/compress.c
--               external/zlib/crc32.c
--               external/zlib/deflate.c
--               external/zlib/gzclose.c
--               external/zlib/gzlib.c
--               external/zlib/gzread.c
--               external/zlib/gzwrite.c
--               external/zlib/infback.c
--               external/zlib/inffast.c
--               external/zlib/inflate.c
--               external/zlib/inftrees.c
--               external/zlib/trees.c
--               external/zlib/uncompr.c
--               external/zlib/zutil.c
--               )
--
--            include(cmake_utils/check_if_neon_available.cmake)
--            if (ARM_NEON_IS_AVAILABLE)
--               message (STATUS "NEON instructions will be used for libpng.")
--               enable_language(ASM)
--               set(source_files ${source_files}
--                  external/libpng/arm/arm_init.c
--                  external/libpng/arm/filter_neon_intrinsics.c
--                  external/libpng/arm/filter_neon.S
--                  )
--               set_source_files_properties(external/libpng/arm/filter_neon.S PROPERTIES COMPILE_FLAGS "${CMAKE_ASM_FLAGS} ${CMAKE_CXX_FLAGS} -x assembler-with-cpp")
--            endif()
--            set(REQUIRES_LIBS "")
--         endif()
-+         find_package(PNG REQUIRED)
-+         include_directories(${PNG_INCLUDE_DIR})
-+         set (dlib_needed_libraries ${dlib_needed_libraries} ${PNG_LIBRARIES})
-          set(source_files ${source_files}
-             image_loader/png_loader.cpp
-             image_saver/save_png.cpp
-@@ -501,68 +440,8 @@
-       endif()
+-find_package(JPEG QUIET)
++find_package(JPEG REQUIRED)
  
-       if (DLIB_JPEG_SUPPORT)
--         # try to find libjpeg 
--         find_package(JPEG QUIET)
--         # Make sure there isn't something wrong with the version of libjpeg 
--         # installed on this system.  Also don't use the installed libjpeg
--         # if this is an APPLE system because apparently it's broken (as of 2015/01/01).
--         if (JPEG_FOUND AND NOT ("${JPEG_INCLUDE_DIR}" MATCHES "(.*)(Ana|ana|mini)conda(.*)") AND NOT BUILDING_PYTHON_IN_MSVC)
--            set(CMAKE_REQUIRED_LIBRARIES ${JPEG_LIBRARY})
--            CHECK_FUNCTION_EXISTS(jpeg_read_header LIBJPEG_IS_GOOD)
--         endif()
--         if (JPEG_FOUND AND LIBJPEG_IS_GOOD)
--            include_directories(${JPEG_INCLUDE_DIR})
--            set (dlib_needed_libraries ${dlib_needed_libraries} ${JPEG_LIBRARY})
--         else()
--            # If we can't find libjpeg then statically compile it in.
--            add_definitions(-DDLIB_JPEG_STATIC)
--            set(source_files ${source_files}
--               external/libjpeg/jcomapi.cpp
--               external/libjpeg/jdapimin.cpp
--               external/libjpeg/jdapistd.cpp
--               external/libjpeg/jdatasrc.cpp
--               external/libjpeg/jdcoefct.cpp
--               external/libjpeg/jdcolor.cpp
--               external/libjpeg/jddctmgr.cpp
--               external/libjpeg/jdhuff.cpp
--               external/libjpeg/jdinput.cpp
--               external/libjpeg/jdmainct.cpp
--               external/libjpeg/jdmarker.cpp
--               external/libjpeg/jdmaster.cpp
--               external/libjpeg/jdmerge.cpp
--               external/libjpeg/jdphuff.cpp
--               external/libjpeg/jdpostct.cpp
--               external/libjpeg/jdsample.cpp
--               external/libjpeg/jerror.cpp
--               external/libjpeg/jidctflt.cpp
--               external/libjpeg/jidctfst.cpp
--               external/libjpeg/jidctint.cpp
--               external/libjpeg/jidctred.cpp
--               external/libjpeg/jmemmgr.cpp
--               external/libjpeg/jmemnobs.cpp
--               external/libjpeg/jquant1.cpp
--               external/libjpeg/jquant2.cpp
--               external/libjpeg/jutils.cpp  
--               external/libjpeg/jcapimin.cpp
--               external/libjpeg/jdatadst.cpp
--               external/libjpeg/jcparam.cpp
--               external/libjpeg/jcapistd.cpp
--               external/libjpeg/jcmarker.cpp
--               external/libjpeg/jcinit.cpp
--               external/libjpeg/jcmaster.cpp
--               external/libjpeg/jcdctmgr.cpp
--               external/libjpeg/jccoefct.cpp  
--               external/libjpeg/jccolor.cpp  
--               external/libjpeg/jchuff.cpp  
--               external/libjpeg/jcmainct.cpp  
--               external/libjpeg/jcphuff.cpp  
--               external/libjpeg/jcprepct.cpp  
--               external/libjpeg/jcsample.cpp
--               external/libjpeg/jfdctint.cpp
--               external/libjpeg/jfdctflt.cpp
--               external/libjpeg/jfdctfst.cpp
--               )
--         endif()
-+         find_package(JPEG REQUIRED)
-+         include_directories(${JPEG_INCLUDE_DIR})
-          set(source_files ${source_files}
-             image_loader/jpeg_loader.cpp
-             image_saver/save_jpeg.cpp
+ if(JPEG_FOUND)
+    set(JPEG_TEST_CMAKE_FLAGS 
+@@ -31,7 +31,7 @@ if(JPEG_FOUND)
+    message (STATUS "Found system copy of libjpeg: ${JPEG_LIBRARY}")
+    if(NOT test_for_libjpeg_worked)
+       set(JPEG_FOUND 0)
+-      message (STATUS "System copy of libjpeg is broken or too old.  Will build our own libjpeg and use that instead.")
++      message (FATAL_ERROR "System copy of libjpeg is broken or too old.  Will build our own libjpeg and use that instead.")
+    endif()
+ endif()
+ 
+diff --git a/dlib/cmake_utils/find_libpng.cmake b/dlib/cmake_utils/find_libpng.cmake
+index 1b35604..489a4c8 100644
+--- a/dlib/cmake_utils/find_libpng.cmake
++++ b/dlib/cmake_utils/find_libpng.cmake
+@@ -14,7 +14,7 @@ if (DEFINED PNG_FOUND)
+    return()
+ endif()
+ 
+-find_package(PNG QUIET)
++find_package(PNG REQUIRED)
+ 
+ if(PNG_FOUND)
+    set(PNG_TEST_CMAKE_FLAGS 
+@@ -31,7 +31,7 @@ if(PNG_FOUND)
+    message (STATUS "Found system copy of libpng: ${PNG_LIBRARIES}")
+    if(NOT test_for_libpng_worked)
+       set(PNG_FOUND 0)
+-      message (STATUS "System copy of libpng is broken.  Will build our own libpng and use that instead.")
++      message (FATAL_ERROR "System copy of libpng is broken.  Will build our own libpng and use that instead.")
+    endif()
+ endif()
+ 

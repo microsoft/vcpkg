@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DuffsDevice/tinyutf8
-    REF v3
-    SHA512 a11e7e7728afec7b2d9b6ed58ca20f29ca71823854a42b99b622e42b42389290f49ce7dd3bb6c5596e15fa369266a47364887bb253643440882d31f7689affec
+    REF 68eaf247a3761c324b1a3806a954d773dfe9106b
+    SHA512 e8bd51ea66a84d236be7c2028b6f3a67b5b01f0fac758729f3152542c8a6a859ddb3f72d6c5abb058c909bf84862ed816e2235cfde6bfa7edaa8026a4f7f4b2a
     HEAD_REF master
     PATCHES fixbuild.patch
 )

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(OPTIONS -DSHARED=OFF)
 
@@ -22,6 +20,8 @@ vcpkg_extract_source_archive_ex(
         fix-metis-vs14-math.patch
         fix-gklib-vs14-math.patch
         fix-linux-build-error.patch
+        install-metisConfig.patch
+        fix-INT_MIN_define.patch
 )
 
 vcpkg_configure_cmake(
@@ -32,9 +32,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/metis)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/metis)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/metis/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/metis/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

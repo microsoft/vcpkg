@@ -1,0 +1,45 @@
+diff --git a/win32/configure.js b/win32/configure.js
+index 12c99f3..0737b06 100644
+--- a/win32/configure.js
++++ b/win32/configure.js
+@@ -45,6 +45,7 @@ var withMemDebug = false;
+ var withDebugger = true;
+ var withIconv = true;
+ var withZlib = false;
++var withLzma = true;
+ var withCrypto = true;
+ var withModules = false;
+ var withProfiler = true;
+@@ -105,6 +106,7 @@ function usage()
+ 	txt += "  debugger:   Enable external debugger support (" + (withDebugger? "yes" : "no")  + ")\n";
+ 	txt += "  iconv:      Use iconv library (" + (withIconv? "yes" : "no")  + ")\n";
+ 	txt += "  zlib:       Use zlib library (" + (withZlib? "yes" : "no") + ")\n";
++	txt += "  lzma:       Use lzma library (" + (withLzma? "yes" : "no") + ")\n";
+ 	txt += "  crypto:     Enable Crypto support (" + (withCrypto? "yes" : "no") + ")\n";
+ 	txt += "  modules:    Enable Module support (" + (withModules? "yes" : "no") + ")\n";
+ 	txt += "  profiler:   Enable Profiler support (" + (withProfiler? "yes" : "no") + ")\n";
+@@ -192,6 +194,7 @@ function discoverVersion()
+ 	vf.WriteLine("WITH_DEBUGGER=" + (withDebugger? "1" : "0"));
+ 	vf.WriteLine("WITH_ICONV=" + (withIconv? "1" : "0"));
+ 	vf.WriteLine("WITH_ZLIB=" + (withZlib? "1" : "0"));
++	vf.WriteLine("WITH_LZMA=" + (withLzma? "1" : "0"));
+ 	vf.WriteLine("WITH_CRYPTO=" + (withCrypto? "1" : "0"));
+ 	vf.WriteLine("WITH_MODULES=" + (withModules? "1" : "0"));
+ 	vf.WriteLine("WITH_PROFILER=" + (withProfiler? "1" : "0"));
+@@ -344,6 +347,8 @@ for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
+ 			withIconv = strToBool(arg.substring(opt.length + 1, arg.length));
+ 		else if (opt == "zlib")
+ 			withZlib  = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "lzma")
++			withLzma  = strToBool(arg.substring(opt.length + 1, arg.length));
+ 		else if (opt == "crypto")
+ 			withCrypto = strToBool(arg.substring(opt.length + 1, arg.length));
+ 		else if (opt == "modules")
+@@ -482,6 +487,7 @@ txtOut += "  Memory debugging: " + boolToStr(withMemDebug) + "\n";
+ txtOut += "  Debugger support: " + boolToStr(withDebugger) + "\n";
+ txtOut += "         Use iconv: " + boolToStr(withIconv) + "\n";
+ txtOut += "         With zlib: " + boolToStr(withZlib) + "\n";
++txtOut += "              Lzma: " + boolToStr(withLzma) + "\n";
+ txtOut += "            Crypto: " + boolToStr(withCrypto) + "\n";
+ txtOut += "           Modules: " + boolToStr(withModules) + "\n";
+ txtOut += "          Profiler: " + boolToStr(withProfiler) + "\n";

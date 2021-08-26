@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 0.16.3
-    SHA512 f7e567264ea1686a431eacbf2a62f49c0f4467df073ec983ae622d9417c28124eb456eb40d6a70dbe062ad58333944924f04f7e3fee5a7b76917890d98bedce1
+    REF f7d4fc7ac679e18ba385f64434f8015c3cea9cb5 # 0.17.6
+    SHA512 8b4719c26dfad68eed6f2528263702e42f9865bb7a9f2d40909dc6c3fc20bb7259fe44a5f89390ba714c7f9359db2d171ff44685641962c24a70f4e2aa3f3f65
     HEAD_REF master
-	PATCHES
-		openssl-version-override.patch
+    PATCHES
+        openssl-version-override.patch
 )
 
 vcpkg_configure_cmake(
@@ -29,6 +27,7 @@ vcpkg_configure_cmake(
         -DCAF_NO_OPENSSL=OFF
         -DCAF_NO_CURL_EXAMPLES=ON
         -DCAF_OPENSSL_VERSION_OVERRIDE=ON
+        -DCAF_ENABLE_UTILITY_TARGETS=OFF
 )
 
 vcpkg_install_cmake()
@@ -37,6 +36,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/caf RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    
+file(COPY ${SOURCE_PATH}/cmake/FindCAF.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_copy_pdbs()

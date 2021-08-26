@@ -1,3 +1,0 @@
-Source: readerwriterqueue
-Version: 1.0.0-1
-Description: A single-producer, single-consumer lock-free queue

@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5d31078..b1d3634 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -43,6 +43,7 @@ target_include_directories(cppkafka PUBLIC ${PROJECT_SOURCE_DIR}/include)
+ 
+ install( 
+     TARGETS cppkafka
++    RUNTIME DESTINATION bin
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib
+     COMPONENT dev

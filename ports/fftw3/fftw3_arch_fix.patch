@@ -2,6 +2,23 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 95bd537a..245acc8f 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
+@@ -66,6 +66,8 @@
+ check_prototype_definition (sinl "long double sinl( long double arg )" "0" math.h HAVE_DECL_SINL)
+ check_prototype_definition (memalign "void *memalign(size_t alignment, size_t size)" "0" malloc.h HAVE_DECL_MEMALIGN)
+ check_prototype_definition (posix_memalign "int posix_memalign(void **memptr, size_t alignment, size_t size)" "0" stdlib.h HAVE_DECL_POSIX_MEMALIGN)
++check_prototype_definition (_aligned_malloc "void* __cdecl _aligned_malloc(size_t _Size, size_t _Alignment)" "0" malloc.h HAVE_DECL_ALIGNED_MALLOC)
++ 
+ 
+ include (CheckSymbolExists)
+ check_symbol_exists (clock_gettime time.h HAVE_CLOCK_GETTIME)
+@@ -75,6 +77,7 @@
+ check_symbol_exists (srand48 stdlib.h HAVE_SRAND48)
+ check_symbol_exists (memalign malloc.h HAVE_MEMALIGN)
+ check_symbol_exists (posix_memalign stdlib.h HAVE_POSIX_MEMALIGN)
++check_symbol_exists (_aligned_malloc malloc.h HAVE_ALIGNED_MALLOC)
+ check_symbol_exists (mach_absolute_time mach/mach_time.h HAVE_MACH_ABSOLUTE_TIME)
+ check_symbol_exists (alloca alloca.h HAVE_ALLOCA)
+ if (NOT HAVE_ALLOCA)
 @@ -131,6 +131,7 @@ endif ()
  
  include (CheckCCompilerFlag)

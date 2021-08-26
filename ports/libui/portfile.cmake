@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO andlabs/libui
@@ -9,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         "001-fix-cmake.patch"
         "002-fix-macosx-build.patch"
+        "003-fix-system-link.patch"
 )
 
 vcpkg_configure_cmake(
@@ -18,11 +17,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libui TARGET_PATH share/unofficial-libui)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/libui/copyright COPYONLY)
-
-vcpkg_copy_pdbs()
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

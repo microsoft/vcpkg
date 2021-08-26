@@ -1,67 +1,28 @@
-include(vcpkg_common_functions)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/atkmm-2.24.2)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/atkmm/2.24/atkmm-2.24.2.tar.xz"
-    FILENAME "atkmm-2.24.2.tar.xz"
-    SHA512 427714cdf3b10e3f9bc36df09c4b05608d295f5895fb1e079b9bd84afdf7bf1cfdec6794ced7f1e35bd430b76f87792df4ee63c515071a2ea6e3e51e672cdbe2
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix_properties.patch ${CMAKE_CURRENT_LIST_DIR}/fix_charset.patch
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/atkmm/2.36/atkmm-2.36.0.tar.xz"
+    FILENAME "atkmm-2.36.0.tar.xz"
+    SHA512 8527dfa50191919a7dcf6db6699767352cb0dac800d834ee39ed21694eee3136a41a7532d600b8b3c0fcea52da6129b623e8e61ada728d806aa61fdc8dc8dedf
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h DESTINATION ${SOURCE_PATH}/MSVC_Net2013)
-
-set(VS_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
-if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
-    set(VS_PLATFORM "Win32")
-endif(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/atkmm.sln
-    TARGET atkmm
-    PLATFORM ${VS_PLATFORM}
-    USE_VCPKG_INTEGRATION
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES
 )
 
-# Handle headers
-file(COPY ${SOURCE_PATH}/MSVC_Net2013/atkmm/atkmmconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/atk/atkmm.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(
-    COPY
-    ${SOURCE_PATH}/atk/atkmm
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING PATTERN *.h
-)
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH} 
+    OPTIONS 
+        -Dbuild-documentation=false
+        -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
+        -Dmsvc14x-parallel-installable=false) # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
+vcpkg_install_meson()
 
-# Handle libraries
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
-
-# Handle copyright and readme
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/atkmm RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/atkmm RENAME readme.txt)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

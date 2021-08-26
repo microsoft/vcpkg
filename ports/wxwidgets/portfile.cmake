@@ -1,16 +1,33 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.2
-    SHA512 c6f8a6065e837e145633ddbd0e10910f32009900e1f7155abe0ef53b6fc83dceb9eaf6c56369d13b6526e4b8bd6073bbcbdb790d667c0dab381b67ec5d567f6f
+    REF 9c0a8be1dc32063d91ed1901fd5fcd54f4f955a1 #v3.1.5
+    SHA512 33817f766b36d24e5e6f4eb7666f2e4c1ec305063cb26190001e0fc82ce73decc18697e8005da990a1c99dc1ccdac9b45bb2bbe5ba73e6e2aa860c768583314c
     HEAD_REF master
-    PATCHES disable-platform-lib-dir.patch
+    PATCHES
+        disable-platform-lib-dir.patch
+        fix-build.patch
 )
 
 set(OPTIONS)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+    set(OPTIONS
+        -DwxUSE_OPENGL=OFF
+        -DwxUSE_STACKWALKER=OFF
+    )
+endif()
+
+# This may be set to ON by users in a custom triplet.
+# wxUSE_STL=ON and wxUSE_STL=OFF are not API compatible which is why this must be set
+# in a custom triplet rather than a port feature.
+if(NOT DEFINED WXWIDGETS_USE_STL)
+    set(WXWIDGETS_USE_STL OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -23,14 +40,12 @@ vcpkg_configure_cmake(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
-        -DwxUSE_STL=ON
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
+        -DwxUSE_STL=${WXWIDGETS_USE_STL}
         ${OPTIONS}
 )
 
 vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
@@ -49,14 +64,48 @@ if(DLLS)
     endforeach()
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
+
+# do the copy pdbs now after the dlls got moved to the expected /bin folder above
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGES_DIR}/include/*.h)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+endif()
+foreach(INC IN LISTS INCLUDES)
+    file(READ "${INC}" _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined(WXUSINGDLL)" "0" _contents "${_contents}")
+    else()
+        string(REPLACE "defined(WXUSINGDLL)" "1" _contents "${_contents}")
+    endif()
+    # Remove install prefix from setup.h to ensure package is relocatable
+    string(REGEX REPLACE "\n#define wxINSTALL_PREFIX [^\n]*" "\n#define wxINSTALL_PREFIX \"\"" _contents "${_contents}")
+    file(WRITE "${INC}" "${_contents}")
+endforeach()
+
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+    file(GLOB_RECURSE WX_SETUP_H_FILES_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/*.h)
+    file(GLOB_RECURSE WX_SETUP_H_FILES_REL ${CURRENT_PACKAGES_DIR}/lib/*.h)
+    
+    string(REPLACE "${CURRENT_PACKAGES_DIR}/debug/lib/" "" WX_SETUP_H_FILES_DBG "${WX_SETUP_H_FILES_DBG}")
+    string(REPLACE "/setup.h" "" WX_SETUP_H_DBG_RELATIVE "${WX_SETUP_H_FILES_DBG}")
+    
+    string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/" "" WX_SETUP_H_FILES_REL "${WX_SETUP_H_FILES_REL}")
+    string(REPLACE "/setup.h" "" WX_SETUP_H_REL_RELATIVE "${WX_SETUP_H_FILES_REL}")
+    
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/setup.h.in ${CURRENT_PACKAGES_DIR}/include/wx/setup.h @ONLY)
+endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/wxwidgets/usage COPYONLY)
+file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

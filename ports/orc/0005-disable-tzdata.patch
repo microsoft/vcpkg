@@ -1,0 +1,30 @@
+diff --git a/c++/test/CMakeLists.txt b/c++/test/CMakeLists.txt
+index ea39023..599d79a 100644
+--- a/c++/test/CMakeLists.txt
++++ b/c++/test/CMakeLists.txt
+@@ -67,6 +67,7 @@ target_link_libraries (create-test-files
+   protobuf
+ )
+ 
++if (ENABLE_TEST)
+ if (TEST_VALGRIND_MEMCHECK)
+   add_test (orc-test
+           valgrind --tool=memcheck --leak-check=full --error-exitcode=1 ./orc-test)
+@@ -86,3 +87,4 @@ if (WIN32)
+       ENVIRONMENT "TZDIR=${TZDATA_DIR}"
+     )
+ endif ()
++endif()
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 3a35325..364470b 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -226,7 +226,7 @@ endif ()
+ # ----------------------------------------------------------------------
+ # IANA - Time Zone Database
+ 
+-if (WIN32)
++if (WIN32 AND TEST_VALGRIND_MEMCHECK)
+   ExternalProject_Add(tzdata_ep
+     URL "ftp://cygwin.osuosl.org/pub/cygwin/noarch/release/tzdata/tzdata-2019b-1.tar.xz"
+     URL_HASH MD5=17D8AB346BB1009D4EB35BC08040E51D

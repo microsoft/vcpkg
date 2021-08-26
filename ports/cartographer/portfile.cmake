@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -10,8 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 	PATCHES
         fix-find-packages.patch
-        disable-C2338-cartographer.patch
         fix-build-error.patch
+        fix-cmake-location.patch
 )
 
 vcpkg_configure_cmake(

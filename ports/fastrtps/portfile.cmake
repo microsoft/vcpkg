@@ -1,14 +1,9 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO eProsima/Fast-RTPS
-    REF b1779b608c7b5b2dcb101728f4213c58bdde74ee # waiting for next release
-    SHA512 9ec4a1e41296df1c0bc00926d925e0947602fabb68e9b28311e92739b0e1909a2993b15fc05eb31aeb9842ed50127f8d56571d09e57dd64ac6f37d0fed6cea73
+    REPO eProsima/Fast-DDS
+    REF 40568fa4784e846f95c461608d43a2b57eaef55b # v2.0.1
+    SHA512 a0cb48713a41ba3562c98dfc176508779e70e35b573428ac0a74c74254aa34c583bd545169f3a3961172bfc9e7bb14d08b5d56569e176fe8248d714bec5813a4
     HEAD_REF master
-    PATCHES 
-        fix-install.patch 
-        namespace_tinyxml2.patch 
 )
 
 vcpkg_configure_cmake(
@@ -19,13 +14,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/fastrtps/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/fastrtps/cmake TARGET_PATH share/fastrtps)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/examples)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/examples)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/fastrtps)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/fastrtps)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/fastrtps/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

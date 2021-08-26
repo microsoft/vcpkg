@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Mindwerks/wildmidi
@@ -8,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-add-install-target.patch
-        0002-use-ansi.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

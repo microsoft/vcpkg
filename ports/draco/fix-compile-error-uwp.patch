@@ -1,11 +1,11 @@
 diff --git a/src/draco/io/parser_utils.cc b/src/draco/io/parser_utils.cc
-index 0a22ba1..9862949 100644
+index 6e42a58..3c302b9 100644
 --- a/src/draco/io/parser_utils.cc
 +++ b/src/draco/io/parser_utils.cc
-@@ -150,7 +150,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {
-   uint32_t v;
-   if (!ParseUnsignedInt(buffer, &v))
+@@ -160,7 +160,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {
+   if (!ParseUnsignedInt(buffer, &v)) {
      return false;
+   }
 -  *value = (sign < 0) ? -v : v;
 +  if (sign < 0)
 +    v *= -1;
@@ -13,3 +13,18 @@ index 0a22ba1..9862949 100644
    return true;
  }
  
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7e79da7..c4d9880 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -153,6 +153,10 @@ if(ENABLE_EXTRA_SPEED)
+   endif()
+ endif()
+ 
++if (MSVC)
++  add_compile_options(/wd4996)
++endif()
++
+ # Generate a version file containing repository info.
+ include(FindGit)
+ find_package(Git)

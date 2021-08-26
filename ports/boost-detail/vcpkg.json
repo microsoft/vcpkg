@@ -1,0 +1,11 @@
+{
+  "name": "boost-detail",
+  "version": "1.76.0",
+  "description": "Boost detail module",
+  "homepage": "https://github.com/boostorg/detail",
+  "dependencies": [
+    "boost-config",
+    "boost-preprocessor",
+    "boost-vcpkg-helpers"
+  ]
+}

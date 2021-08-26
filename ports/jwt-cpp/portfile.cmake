@@ -1,23 +1,12 @@
-#header-only library
-include(vcpkg_common_functions)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/jwt-cpp)
-
-vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
-    REF 1d2b1bac13e54f99df4f890cd674ec149c135762
-    SHA512 a45f12104e38a8b05a0ea5b5f91034b65d85dd048664bbda4f2909df32688726d599161e3d6541fd6f36c784d21c24a4d2666f670c3281b9e9130bc8a96fce39
+    REF b45bc9994d8087c5ba7aa1f1588302f04ae84c83 # v0.5.0
+    SHA512 d2c6e2174cd86c27b8866f6ea50a379a321788e91f97a0548e694d11469c05d93b0713e0c38b37a8f14a0aded4fc4635599dcfb50142e4496fb3c8b9f7e5f8cd
     HEAD_REF master
-    PATCHES fix-picojson.patch
-            fix-warning.patch)
+)
 
 # Copy the header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/include/jwt-cpp/*)
-file(COPY ${HEADER_FILES}
-     DESTINATION ${CURRENT_PACKAGES_DIR}/include/jwt-cpp
-     REGEX "\.(gitattributes|gitignore|picojson.h)$" EXCLUDE)
-
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/jwt-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jwt-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/jwt-cpp/copyright)
+file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/jwt-cpp)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

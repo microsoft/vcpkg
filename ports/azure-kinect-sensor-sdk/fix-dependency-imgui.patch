@@ -1,0 +1,35 @@
+diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
+index 6ab38d9..f31f570 100644
+--- a/tools/k4aviewer/CMakeLists.txt
++++ b/tools/k4aviewer/CMakeLists.txt
+@@ -54,6 +54,8 @@ include_directories(
+     ${CMAKE_CURRENT_LIST_DIR}
+ )
+ 
++find_package(GLEW REQUIRED)
++
+ set(EXTERNAL_LIBRARIES
+     k4a::k4a
+     k4a::k4arecord
+@@ -65,6 +67,7 @@ set(EXTERNAL_LIBRARIES
+     glfw
+     ${OPENGL_LIBRARIES}
+     unofficial::gl3w::gl3w
++    GLEW::GLEW
+ )
+ 
+ # On Windows, we need to call into setupapi to get USB container ID information
+diff --git a/tools/k4aviewer/k4asoundio_util.h b/tools/k4aviewer/k4asoundio_util.h
+index c9c2718..011a76e 100644
+--- a/tools/k4aviewer/k4asoundio_util.h
++++ b/tools/k4aviewer/k4asoundio_util.h
+@@ -16,7 +16,7 @@
+ // This disables that behavior.
+ //
+ #define NOMINMAX
+-#include <soundio.h>
++#include <soundio/soundio.h>
+ 
+ // Project headers
+ //
+ 

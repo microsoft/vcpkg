@@ -1,0 +1,38 @@
+{
+  "name": "grpc",
+  "version-semver": "1.37.0",
+  "port-version": 3,
+  "description": "An RPC library and framework",
+  "homepage": "https://github.com/grpc/grpc",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "c-ares",
+      "platform": "!uwp"
+    },
+    {
+      "name": "grpc",
+      "host": true,
+      "features": [
+        "codegen"
+      ]
+    },
+    "openssl",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "re2",
+    "upb",
+    "zlib"
+  ],
+  "features": {
+    "absl-sync": {
+      "description": "Use abseil synchronization module"
+    },
+    "codegen": {
+      "description": "Build code generator machinery"
+    }
+  }
+}

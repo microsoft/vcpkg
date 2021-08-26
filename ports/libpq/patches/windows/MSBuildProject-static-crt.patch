@@ -1,0 +1,23 @@
+diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
+index 823357c02..faa3e336f 100644
+--- a/src/tools/msvc/MSBuildProject.pm
++++ b/src/tools/msvc/MSBuildProject.pm
+@@ -84,16 +84,16 @@ EOF
+ 			defs    => "_DEBUG;DEBUG=1",
+ 			opt     => 'Disabled',
+ 			strpool => 'false',
+-			runtime => 'MultiThreadedDebugDLL'
++			runtime => 'MultiThreadedDebug'
+ 		});
+ 	$self->WriteItemDefinitionGroup(
+ 		$f,
+ 		'Release',
+ 		{
+ 			defs    => "",
+ 			opt     => 'Full',
+ 			strpool => 'true',
+-			runtime => 'MultiThreadedDLL'
++			runtime => 'MultiThreaded'
+ 		});
+ 	return;
+ }

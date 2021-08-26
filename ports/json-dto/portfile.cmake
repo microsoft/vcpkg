@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO sobjectizerteam/json_dto-0.2
-    REF v.0.2.8
-    SHA512 50a2d8d31f4cf67bdf84a58bae5f95642f4be571e8e052a48830be119d5e3c4ddbb19c5ac97fc0f8383c9958d64ec9be4ce23019c1da4f2cbf4b8ddbf23f5ad7
+    REPO stiffstream/json_dto
+    REF 7fce92cd3bdacdcd0b41ed26d2cc981e3f70956e # v.0.2.13
+    SHA512 f678545cc60828ab76d6e8532ac9dbf8e4e68d873d0a98f17d62934dd0b3a3e255b38adf838b65a12e0d954edc7866eb6393f6783709f6f7fac29167886e7bf3
 )
 
 vcpkg_configure_cmake(
@@ -24,5 +22,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/json-dto)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/json-dto)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/json-dto/LICENSE ${CURRENT_PACKAGES_DIR}/share/json-dto/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

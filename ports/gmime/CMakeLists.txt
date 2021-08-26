@@ -5,9 +5,10 @@ project(gmime C)
 set(GMIME_DLL_SUFFIX 3)
 set(GMIME_LIB_SUFFIX 3.0)
 
-find_package(zlib REQUIRED)
-find_package(unofficial-glib CONFIG REQUIRED)
-find_package(unofficial-iconv REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
+find_package(Iconv REQUIRED)
 
 find_library(IDN_LIBRARY NAMES libidn2)
 
@@ -17,6 +18,7 @@ if(MSVC)
 endif()
 
 add_definitions(-DHAVE_CONFIG_H)
+add_definitions(-DG_DISABLE_DEPRECATED)
 add_definitions(-DG_LOG_DOMAIN="GMime")
 
 # Source files
@@ -44,8 +46,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE . ./util)
-target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::iconv::libiconv ZLIB::ZLIB ${IDN_LIBRARY})
-target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::glib::gobject unofficial::glib::gio unofficial::glib::glib)
+target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv ZLIB::ZLIB ${IDN_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::GLIB2)
 target_link_libraries(${PROJECT_NAME} PRIVATE Ws2_32.lib)
 
 install(TARGETS ${PROJECT_NAME}

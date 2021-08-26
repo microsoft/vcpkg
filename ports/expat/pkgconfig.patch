@@ -1,0 +1,13 @@
+diff --git a/expat/CMakeLists.txt b/expat/CMakeLists.txt
+index cd12a99..03c2c4d 100644
+--- a/expat/CMakeLists.txt
++++ b/expat/CMakeLists.txt
+@@ -419,6 +419,8 @@ expat_install(FILES lib/expat.h lib/expat_external.h DESTINATION ${CMAKE_INSTALL
+ #
+ # pkg-config file
+ #
++string(TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_UPPER)
++set(_EXPAT_OUTPUT_NAME ${_EXPAT_OUTPUT_NAME}${CMAKE_${BUILD_TYPE_UPPER}_POSTFIX})
+ if(EXPAT_BUILD_PKGCONFIG)
+     set(prefix ${CMAKE_INSTALL_PREFIX})
+     set(exec_prefix "\${prefix}")

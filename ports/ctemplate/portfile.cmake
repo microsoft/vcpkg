@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO OlafvdSpek/ctemplate
-  REF 4b7e6c52dc7cbb4d51c9abcebcbac91ec256a62b
-  SHA512 9317fb26f22892b0bc2ca17cbccb5b084091050aa88766b4ed673a690bc4cdb9cd882134fbcd7ed3ee156f6a6937218717765143796d7e98b532355867ed042b
+  REF 1c397b63e62dc6547054f4711c27918aedce4c2d # accessed on 2020-09-14
+  SHA512 9691393cbb89972e95dba3cb802d0a0379f8f45cddc696e4ce223eb94887b3be46a9d999cac161069261ef63ba26fbdc392c53c3f977e1a7ae51768caa7739ea
   HEAD_REF master
 )
 

@@ -1,24 +1,20 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
   REPO noloader/cryptopp-cmake
-  REF b97d72f083fefa249e46ae3c15a2c294e615fca2
-  SHA512 e6c65bb81a47009fa568c957beea65c37f2283bdc5afad6a45983f685c0b9c9c01ac4bb334d45dacbdc74f9d834b316c09cbb16d3ead7fb48737fbad76ff3f8d
+  REF CRYPTOPP_8_5_0
+  SHA512 758633786c81f5a34ade0ab99983b3262bb3a028b086e734b1f8ddb618c801453d517f67176178936f87ec36a91fca93fba9bcaec4301705138954e6eb49d136
   HEAD_REF master
   PATCHES
     cmake.patch
-    simon-speck.patch
-    missing-flags.patch
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_1_0
-  SHA512 2b09b30c53a8f95a9c3204a48867174c70a1e97171854122f4d8454b25d5af9b94cab2c210dd9857c7db66df881849183e82b6155b80bfef6e69dac8efd2ea9a
+  REF CRYPTOPP_8_5_0
+  SHA512 e8dd210c9e9d4925edc456e4d68780deaa224d85e11394ad5da835dcb1a1e6b3e899aa473acf20449f9721116960884b6d88b29335479b305bb7e29faa87e6c0
   HEAD_REF master
   PATCHES patch.patch
 )
@@ -26,13 +22,28 @@ vcpkg_from_github(
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-# disable assembly on OSX to fix broken build
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if("pem-pack" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH PEM_PACK_SOURCE_PATH
+        REPO noloader/cryptopp-pem
+        REF 095f08ff2ef9bca7b81036a59f2395e4f08ce2e8
+        SHA512 49912758a635faca1f49665ac9552b20576b46e0283aaabc19bb012bdc80586106452018e5088b9b46967717982ca6022ca968edc4cac96a7506d2b1a3e4bf13
+        HEAD_REF master
+    )
+
+    file(GLOB PEM_PACK_FILES
+        ${PEM_PACK_SOURCE_PATH}/*.h
+        ${PEM_PACK_SOURCE_PATH}/*.cpp
+    )
+    file(COPY ${PEM_PACK_FILES} DESTINATION ${SOURCE_PATH})
+endif()
+
+# disable assembly on ARM Windows to fix broken build
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     set(CRYPTOPP_DISABLE_ASM "ON")
 else()
     set(CRYPTOPP_DISABLE_ASM "OFF")
 endif()
-
 
 # Dynamic linking should be avoided for Crypto++ to reduce the attack surface,
 # so generate a static lib for both dynamic and static vcpkg targets.

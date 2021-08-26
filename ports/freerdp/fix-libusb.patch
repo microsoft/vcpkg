@@ -1,0 +1,45 @@
+diff --git a/channels/urbdrc/client/libusb/libusb_udevice.c b/channels/urbdrc/client/libusb/libusb_udevice.c
+index 814540756..56809fe45 100644
+--- a/channels/urbdrc/client/libusb/libusb_udevice.c
++++ b/channels/urbdrc/client/libusb/libusb_udevice.c
+@@ -232,7 +232,7 @@ static void async_transfer_user_data_free(ASYNC_TRANSFER_USER_DATA* user_data)
+ 	}
+ }
+ 
+-static void func_iso_callback(struct libusb_transfer* transfer)
++static void LIBUSB_CALL func_iso_callback(struct libusb_transfer* transfer)
+ {
+ 	ASYNC_TRANSFER_USER_DATA* user_data = (ASYNC_TRANSFER_USER_DATA*)transfer->user_data;
+ 	const UINT32 streamID = stream_id_from_buffer(transfer);
+@@ -331,7 +331,7 @@ static const LIBUSB_ENDPOINT_DESCEIPTOR* func_get_ep_desc(LIBUSB_CONFIG_DESCRIPT
+ 	return NULL;
+ }
+ 
+-static void func_bulk_transfer_cb(struct libusb_transfer* transfer)
++static void LIBUSB_CALL func_bulk_transfer_cb(struct libusb_transfer* transfer)
+ {
+ 	ASYNC_TRANSFER_USER_DATA* user_data;
+ 	uint32_t streamID;
+diff --git a/channels/urbdrc/client/libusb/libusb_udevman.c b/channels/urbdrc/client/libusb/libusb_udevman.c
+index 1638b8c13..b1440f300 100644
+--- a/channels/urbdrc/client/libusb/libusb_udevman.c
++++ b/channels/urbdrc/client/libusb/libusb_udevman.c
+@@ -580,7 +580,7 @@ static BOOL device_is_filtered(struct libusb_device* dev,
+ 	return filtered;
+ }
+ 
+-static int hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev,
++static int LIBUSB_CALL hotplug_callback(struct libusb_context* ctx, struct libusb_device* dev,
+                             libusb_hotplug_event event, void* user_data)
+ {
+ 	VID_PID_PAIR pair;
+@@ -859,7 +859,7 @@ static BOOL poll_libusb_events(UDEVMAN* udevman)
+ 	return rc > 0;
+ }
+ 
+-static DWORD poll_thread(LPVOID lpThreadParameter)
++static DWORD __stdcall poll_thread(LPVOID lpThreadParameter)
+ {
+ 	libusb_hotplug_callback_handle handle;
+ 	UDEVMAN* udevman = (UDEVMAN*)lpThreadParameter;
+	 

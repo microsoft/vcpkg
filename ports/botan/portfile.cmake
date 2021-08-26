@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
-
-set(BOTAN_VERSION 2.9.0)
+set(BOTAN_VERSION 2.16.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 0129d3172ec419beb90a2b3487f6385a35da0742
-    SHA512 a8328df5ad2693a96935d1d2202ddd6678a5ba9c63a8159acbe56f1c884fa5faaa71339e8f56284cfd00574a9b4f91bdb1fb22c36c8e899d9b4cbe881f4867d3
+    REF 82a20c67bd54b8c6c75f32bd31dea5b12f3d7e67 # 2.16.0
+    SHA512 42b8dac0a6b44afee14e8ba928b323790b8d90395ba70b4919b3d033e5b9073706355c2263c2a9e66357fa6d4af4c85430c93a65cfdaa79f1c83c89940619a66
     HEAD_REF master
-	PATCHES
-		fix-build_error.patch
+    PATCHES
+        fix-generate-build-path.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -44,9 +42,18 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BOTAN_FLAG_CPU x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(BOTAN_FLAG_CPU x86_64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(BOTAN_FLAG_CPU arm32)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(BOTAN_FLAG_CPU arm64)
 else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        amalgamation BOTAN_AMALGAMATION
+)
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
@@ -74,9 +81,14 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             ${BOTAN_FLAG_DEBUGMODE}
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
+                            --with-pkg-config
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()
+
+    if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --amalgamation)
     endif()
 
     vcpkg_execute_required_process(
@@ -97,13 +109,13 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py"
             --prefix=${BOTAN_FLAG_PREFIX}
-            --docdir=share
+            --bindir=${BOTAN_FLAG_PREFIX}/bin
+            --libdir=${BOTAN_FLAG_PREFIX}/lib
+            --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
+            --includedir=${BOTAN_FLAG_PREFIX}/include
+            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND CMAKE_HOST_WIN32)
-        file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_SUFFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_SUFFIX}.dll)
-    endif()
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 endfunction()

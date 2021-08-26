@@ -1,0 +1,40 @@
+diff --git a/mecab/src/common.h b/mecab/src/common.h
+index d1fc459..2951d5a 100644
+--- a/mecab/src/common.h
++++ b/mecab/src/common.h
+@@ -86,7 +86,8 @@
+ #define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
+ #define WPATH(path) (path)
+ #else
+-#define WPATH(path) WPATH_FORCE(path)
++#define WPATH_FORCE(path) (MeCab::Utf8ToWide(path).c_str())
++#define WPATH(path) (path)
+ #endif
+ #else
+ #define WPATH_FORCE(path) (path)
+diff --git a/mecab/src/feature_index.cpp b/mecab/src/feature_index.cpp
+index 051bdf8..fdd0145 100644
+--- a/mecab/src/feature_index.cpp
++++ b/mecab/src/feature_index.cpp
+@@ -353,7 +353,7 @@ bool FeatureIndex::buildUnigramFeature(LearnerPath *path,
+               if (!r) goto NEXT;
+               os_ << r;
+             } break;
+-            case 't':  os_ << (size_t)path->rnode->char_type;     break;
++            case 't':  os_ << (int)(size_t)path->rnode->char_type;     break;
+             case 'u':  os_ << ufeature; break;
+             case 'w':
+               if (path->rnode->stat == MECAB_NOR_NODE) {
+diff --git a/mecab/src/writer.cpp b/mecab/src/writer.cpp
+index 0ef6975..f068fa3 100644
+--- a/mecab/src/writer.cpp
++++ b/mecab/src/writer.cpp
+@@ -257,7 +257,7 @@ bool Writer::writeNode(Lattice *lattice,
+             // input sentence
+           case 'S': os->write(lattice->sentence(), lattice->size()); break;
+             // sentence length
+-          case 'L': *os << lattice->size(); break;
++          case 'L': *os << (int)lattice->size(); break;
+             // morph
+           case 'm': os->write(node->surface, node->length); break;
+           case 'M': os->write(reinterpret_cast<const char *>

@@ -1,5 +1,5 @@
 #pragma once
-#include "openblas_config.h"
+#include "openblas/openblas_config.h"
 
 #if defined(OPENBLAS_OS_WINNT) || defined(OPENBLAS_OS_CYGWIN_NT) || defined(OPENBLAS_OS_INTERIX)
 #define OPENBLAS_WINDOWS_ABI
@@ -13,6 +13,7 @@
 
 #ifdef NEEDBUNDERSCORE
 #define BLASFUNC(FUNC) FUNC##_
+
 #else
 #define BLASFUNC(FUNC) FUNC
 #endif
@@ -57,16 +58,3 @@ typedef int blasint;
    predefined macros with some compilers (e.g. GCC 4.7 on Linux).  This occurs
    as a side effect of including either <features.h> or <stdc-predef.h>. */
 #include <stdio.h>
-#define OPENBLAS_COMPLEX_STRUCT
-typedef struct { float real, imag; } openblas_complex_float;
-typedef struct { double real, imag; } openblas_complex_double;
-typedef struct { xdouble real, imag; } openblas_complex_xdouble;
-#define openblas_make_complex_float(real, imag)    {(real), (imag)}
-#define openblas_make_complex_double(real, imag)   {(real), (imag)}
-#define openblas_make_complex_xdouble(real, imag)  {(real), (imag)}
-#define openblas_complex_float_real(z)             ((z).real)
-#define openblas_complex_float_imag(z)             ((z).imag)
-#define openblas_complex_double_real(z)            ((z).real)
-#define openblas_complex_double_imag(z)            ((z).imag)
-#define openblas_complex_xdouble_real(z)           ((z).real)
-#define openblas_complex_xdouble_imag(z)           ((z).imag)

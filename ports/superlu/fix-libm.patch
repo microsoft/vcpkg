@@ -1,0 +1,17 @@
+diff --git a/SRC/CMakeLists.txt b/SRC/CMakeLists.txt
+index e627f06..9aa8949 100644
+--- a/SRC/CMakeLists.txt
++++ b/SRC/CMakeLists.txt
+@@ -232,7 +232,11 @@ if(enable_complex16)
+ endif()
+
+ add_library(superlu ${sources} ${HEADERS})
+-target_link_libraries(superlu PUBLIC ${BLAS_LIB} m)
++if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
++  target_link_libraries(superlu PUBLIC ${BLAS_LIB})
++else()
++  target_link_libraries(superlu PUBLIC ${BLAS_LIB} m)
++endif()
+ target_include_directories(superlu PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+   $<INSTALL_INTERFACE:include>

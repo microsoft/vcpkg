@@ -1,0 +1,50 @@
+From 9fde9124927789ca2399f99c1be9b101ed1e8550 Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio.traversaro@iit.it>
+Date: Thu, 3 Sep 2020 17:28:01 +0200
+Subject: [PATCH] CMake: Add DART_SKIP_<dep> advanced option
+
+Add DART_SKIP_<dep> option to permit to specify that
+a dependecy should not used even if it is found in the system.
+---
+ cmake/DARTMacros.cmake | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/cmake/DARTMacros.cmake b/cmake/DARTMacros.cmake
+index 8b1a89292ee..409b02bd742 100644
+--- a/cmake/DARTMacros.cmake
++++ b/cmake/DARTMacros.cmake
+@@ -127,7 +127,9 @@ endfunction()
+ 
+ #===============================================================================
+ macro(dart_check_optional_package variable component dependency)
+-  if(${${variable}_FOUND})
++  option(DART_SKIP_${variable} "If ON, do not use ${variable} even if it is found." OFF)
++  mark_as_advanced(DART_SKIP_${variable})
++  if(${${variable}_FOUND} AND NOT ${DART_SKIP_${variable}})
+     set(HAVE_${variable} TRUE CACHE BOOL "Check if ${variable} found." FORCE)
+     if(DART_VERBOSE)
+       message(STATUS "Looking for ${dependency} - version ${${variable}_VERSION}"
+@@ -135,12 +137,17 @@ macro(dart_check_optional_package variable component dependency)
+     endif()
+   else()
+     set(HAVE_${variable} FALSE CACHE BOOL "Check if ${variable} found." FORCE)
+-    if(ARGV3) # version
+-      message(STATUS "Looking for ${dependency} - NOT found, to use"
+-                      " ${component}, please install ${dependency} (>= ${ARGV3})")
+-    else()
+-      message(STATUS "Looking for ${dependency} - NOT found, to use"
+-                      " ${component}, please install ${dependency}")
++    if(NOT ${${variable}_FOUND})
++      if(ARGV3) # version
++        message(STATUS "Looking for ${dependency} - NOT found, to use"
++                        " ${component}, please install ${dependency} (>= ${ARGV3})")
++      else()
++        message(STATUS "Looking for ${dependency} - NOT found, to use"
++                        " ${component}, please install ${dependency}")
++      endif()
++    elseif(${DART_SKIP_${variable}} AND DART_VERBOSE)
++      message(STATUS "Not using ${dependency} - version ${${variable}_VERSION}"
++                     " even if found because DART_SKIP_${variable} is ON.")
+     endif()
+     return()
+   endif()

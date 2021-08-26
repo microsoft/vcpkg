@@ -1,26 +1,14 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/00d9a4ac58a52b52495736be614cb06ba102663c)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 00d9a4ac58a52b52495736be614cb06ba102663c
-    SHA512 a0d08ac2ff46bd4cc606626c8e0da18a83392722a2e40df18f9e40710e5e147c0a24800174bfdf42ed7a12be4d9679f6302c51d8409724d31ca2a29ab4972481
+    REF 350b6d7737383029573ea2cce9bd94f1b6756bbd # 5.3.0
+    SHA512 42116b41b8df179193822d25ea34d2c1d9a2af3598f7d25c6665d31aca11a3a11984cdb17b05e5d0874c94562e1b471736f6a1ae67bd3a22d018cd142676634c
     HEAD_REF master
     PATCHES
         OpenSSL.patch
+        fix-symbol-exports.patch
 )
 
 vcpkg_configure_cmake(
@@ -37,14 +25,23 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WavPack)
+endif()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wavpack RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME wavpack)
+if(WIN32 AND (NOT MINGW))
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()

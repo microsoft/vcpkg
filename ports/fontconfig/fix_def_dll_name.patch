@@ -1,0 +1,13 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 3cf93a7f8..c80f4dd83 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -218,7 +218,7 @@ fontconfig.def: $(PUBLIC_FILES) $(PUBLIC_FT_FILES)
+ 	(cat $(PUBLIC_FILES) $(PUBLIC_FT_FILES) || echo 'FcERROR ()' ) | \
+ 	$(GREP) '^Fc[^ ]* *(' | $(SED) -e 's/ *(.*$$//' -e 's/^/	/' | \
+ 	sort; \
+-	echo LIBRARY libfontconfig-@LIBT_CURRENT_MINUS_AGE@.dll; \
++	echo LIBRARY fontconfig-@LIBT_CURRENT_MINUS_AGE@.dll; \
+ 	echo VERSION @LIBT_CURRENT@.@LIBT_REVISION@) >$@
+ 	@ ! $(GREP) -q FcERROR $@ || ($(RM) $@; false)
+ 

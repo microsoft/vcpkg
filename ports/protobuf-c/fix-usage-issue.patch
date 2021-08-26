@@ -1,0 +1,36 @@
+diff --git a/build-cmake/CMakeLists.txt b/build-cmake/CMakeLists.txt
+index 7c6a04d..83534cb 100644
+--- a/build-cmake/CMakeLists.txt
++++ b/build-cmake/CMakeLists.txt
+@@ -14,6 +14,11 @@ option(BUILD_PROTO3 "BUILD_PROTO3" ON)
+ INCLUDE(TestBigEndian)
+ TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
+ 
++
++IF(CMAKE_HOST_UNIX)
++	FIND_PACKAGE(Threads REQUIRED)
++ENDIF()
++
+ SET(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+ ADD_DEFINITIONS(-DPACKAGE_VERSION="${PACKAGE_VERSION}")
+ ADD_DEFINITIONS(-DPACKAGE_STRING="${PACKAGE_STRING}")
+@@ -67,6 +72,9 @@ FILE(GLOB PROTOC_GEN_C_SRC ${MAIN_DIR}/protoc-c/*.h ${MAIN_DIR}/protoc-c/*.cc )
+ ADD_EXECUTABLE(protoc-gen-c ${PROTOC_GEN_C_SRC})
+ 
+ TARGET_LINK_LIBRARIES(protoc-gen-c ${PROTOBUF_PROTOC_LIBRARY} ${PROTOBUF_LIBRARY})
++IF(CMAKE_HOST_UNIX)
++    TARGET_LINK_LIBRARIES(protoc-gen-c ${CMAKE_THREAD_LIBS_INIT})
++ENDIF()
+ ENDIF()
+ 
+ IF(WITH_TEST AND WITH_TOOLS)
+@@ -99,6 +107,9 @@ GENERATE_TEST_SOURCES(${TEST_DIR}/test-full.proto t/test-full.pb-c.c t/test-full
+ 
+ ADD_EXECUTABLE(cxx-generate-packed-data ${TEST_DIR}/generated-code2/cxx-generate-packed-data.cc t/test-full.pb.h t/test-full.pb.cc)
+ TARGET_LINK_LIBRARIES(cxx-generate-packed-data ${PROTOBUF_LIBRARY})
++IF (CMAKE_HOST_UNIX)
++    TARGET_LINK_LIBRARIES(cxx-generate-packed-data ${CMAKE_THREAD_LIBS_INIT})
++ENDIF()
+ 
+ FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/t/generated-code2)
+ ADD_CUSTOM_COMMAND(OUTPUT t/generated-code2/test-full-cxx-output.inc

@@ -1,20 +1,23 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/libimobiledevice
-    REF d6b24aae971b990d2777a88ec3a1e31b40d6152f
-    SHA512 75e45162fecd80464846ff51c9b3e722017f738de8f6b55e9f41f5eadcd93730b12512087d427badbc0c2b54a76a66359a472ab5bc5be5fa02826db1171565d0
+    REF 348aec1f714f77c717141f70869ac7c996c3c6fb # v1.3.6 + patches
+    SHA512 fc7924667c3cb07025fd25ff94610ae57a90a8fd4502393e89993bfcd13c5e0c609efbf0343f344f59a8520ba4f7805925fea4c06d20ac1680f63f16aac12542
     HEAD_REF msvc-master
 )
 
-vcpkg_install_msbuild(
+configure_file(${CURRENT_PORT_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
+
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH libimobiledevice.sln
-    INCLUDES_SUBPATH include
-    LICENSE_SUBPATH COPYING
-    REMOVE_ROOT_INCLUDES
-    USE_VCPKG_INTEGRATION
+    PREFER_NINJA
 )
+
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphql/libgraphqlparser
@@ -9,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         win-cmake.patch
         static-compile-fix.patch
+        remove-invalid-bison-directive.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")

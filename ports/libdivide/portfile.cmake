@@ -1,0 +1,32 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ridiculousfish/libdivide
+    REF v4.0.0
+    SHA512 662b8f479c3f822563d4f1c85c77c204f47e992391cd5ca3376d6e19e4d2132c28ad59b8e3179edd706fceeabf0d1bc7be5e713eeb669523952155a2d7770326
+    HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    test BUILD_TESTS
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA 
+    OPTIONS ${FEATURE_OPTIONS}
+      -DLIBDIVIDE_SSE2=OFF
+      -DLIBDIVIDE_AVX2=OFF
+      -DLIBDIVIDE_AVX512=OFF
+      -DENABLE_VECTOR_EXTENSIONS=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright) 

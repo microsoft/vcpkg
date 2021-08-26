@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
-    REF 1967b13134308f311e6a827e616958c6a4da5bc9
-    SHA512 a63a773e339081720adb0f3260a3b21ee11cde8009b321c3f45eeb40402ff29bd580926fb44f0dd784ba8369e2597933196bdaa324517d91fa5201b11b7504c0
+    REF 6cb30bd7fb42190e0188afbd8cb961c62a6fb9c9 # DCMTK-3.6.6
+    SHA512 3fbd524bc0b9dced2cdddca850c88d8785ca5f333c5f1598ffbffb8e5c33d11eebdce9ed935245048ac45a7ccd7bd9e4ca79eaacf752cba64a5534b76e5efcdb
     HEAD_REF master
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/dcmtk.patch
 )
@@ -30,7 +28,7 @@ vcpkg_configure_cmake(
         -DDCMTK_ENABLE_CXX11=ON
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
-        -DCMAKE_DEBUG_POSTFIX="d"
+        -DCMAKE_DEBUG_POSTFIX=d
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF

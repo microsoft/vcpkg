@@ -1,11 +1,9 @@
 # header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/concurrentqueue
-    REF dea078cf5b6e742cd67a0d725e36f872feca4de4
-    SHA512 edd47bcc025ffab7ac62cea168a9672a20cdbe139267426e97553fa1c796f1547d8414915518ee6be34a68d05e8a8171291f958c5eac0434ea8ba953bff85dbe
+    REF 3747268264d0fa113e981658a99ceeae4dad05b7#  v1.0.3
+    SHA512 798d61e8e5b87cd1870df20410db18e2fcbc5e4e1d849308663cc0403a0d50d29b72428fc0a39231ae8bcb460c946559bde0f2d22584c335fe849cbcbe607ec2
     HEAD_REF master
 )
 
@@ -27,7 +25,6 @@ configure_file(
     @ONLY
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/concurrentqueue RENAME copyright)
-
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/concurrentqueue)
+file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
