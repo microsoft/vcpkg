@@ -19,8 +19,9 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    docs K4A_BUILD_DOCS
-    tool BUILD_TOOLS
+    FEATURES
+        docs K4A_BUILD_DOCS
+        tool BUILD_TOOLS
 )
 
 # .rc file needs windows.h, so do not use PREFER_NINJA here

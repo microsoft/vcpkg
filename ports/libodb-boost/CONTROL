@@ -1,4 +1,5 @@
 Source: libodb-boost
-Version: 2.4.0-3
+Version: 2.4.0
+Port-Version: 4
 Description: Description: Boost support for the ODB ORM library
 Build-Depends: libodb

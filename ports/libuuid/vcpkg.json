@@ -1,0 +1,8 @@
+{
+  "name": "libuuid",
+  "version": "1.0.3",
+  "port-version": 8,
+  "description": "Universally unique id library",
+  "homepage": "https://sourceforge.net/projects/libuuid",
+  "supports": "linux | osx"
+}

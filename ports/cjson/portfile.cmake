@@ -8,7 +8,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    utils ENABLE_CJSON_UTILS
+    FEATURES
+        utils ENABLE_CJSON_UTILS
 )
 
 if(CMAKE_HOST_WIN32)
