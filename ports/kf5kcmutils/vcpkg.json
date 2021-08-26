@@ -1,6 +1,6 @@
 {
   "name": "kf5kcmutils",
-  "version-string": "5.75.0",
+  "version-semver": "5.75.0",
   "description": "Utilities for KDE System Settings modules",
   "homepage": "https://api.kde.org/frameworks/kcmutils/html/index.html",
   "dependencies": [
