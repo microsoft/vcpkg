@@ -6,12 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        designerplugin BUILD_DESIGNERPLUGIN
+)
+
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
-        -DBUILD_DESIGNERPLUGIN=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
