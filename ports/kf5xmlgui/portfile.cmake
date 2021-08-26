@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
-    REF v5.75.0
-    SHA512 0e03e563f2093b9d13d0b9ae7f8ff52e02f8a5d78f34bf891a9a6e8fb3ebcce9c11e922a375d6908351bdac1cea5c2a5bcb18f8d379afc74edbb45e9ecea80d0
+    REF v5.84.0
+    SHA512 39657ec545c1463cadec719e7c6dc546fb6d1804b5c2b86904bfffd01be173c3ead1533ec33f749343f5575785394fe659ca0be51af706911e5176d485ef7f20
     HEAD_REF master
-    PATCHES 
-        "add-missing-kf5guiaddons-kf5archive-deps.patch"
 )
 
 vcpkg_cmake_configure(
