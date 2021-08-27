@@ -6,16 +6,9 @@ vcpkg_from_github(
     REF boost-1.77.0
     SHA512 538d749ae612b3c2e1681978d1aa9c87aed89a48ef7ce3f7cbd3caf72c4f2e2a232b86b7b089d5ddf63acf71e1a82146de370dfa8c8b881cd07db09885f421ce
     HEAD_REF master
+    PATCHES 001-remove-checks.patch
 )
 
-# see https://github.com/boostorg/json/issues/556 fore more details
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "\n      <library>/boost//container/<warnings-as-errors>off" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "import ../config/checks/config" "import build/config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "..//check_basic_alignas" "..//..//..//check_basic_alignas")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
 endif()

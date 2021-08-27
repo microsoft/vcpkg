@@ -6,14 +6,9 @@ vcpkg_from_github(
     REF boost-1.77.0
     SHA512 8a35fff7ecb12bc8caf8951859555016caa21601d5aa21284aae83df19cde054bfe9ead4cb92341558b23794f2b7bfd37979acb9fc6b2f5546f50505adffd8d3
     HEAD_REF master
+    PATCHES 001-remove-checks.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "check-target-builds ../config//has_gcc_visibility" "check-target-builds ../has_gcc_visibility.cpp")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/build/config")
-file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-math requires a newer version of vcpkg in order to build.")
 endif()
