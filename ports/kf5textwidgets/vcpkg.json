@@ -1,0 +1,17 @@
+{
+  "name": "kf5textwidgets",
+  "version-string": "5.75.0",
+  "description": "Text editing widgets",
+  "homepage": "https://api.kde.org/frameworks/ktextwidgets/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5completion",
+    "kf5config",
+    "kf5configwidgets",
+    "kf5i18n",
+    "kf5sonnet",
+    "kf5widgetsaddons",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
