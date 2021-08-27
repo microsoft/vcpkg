@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
-    REF v5.75.0
-    SHA512 1a56858698ad8e1bbaf59eb9e0b5de471299d83acce6cf8f55e33fbea834686562eb999ae0e5edab7001cf2435ba8556ff69ad18da363cbcb78677dfb8ce58fc
+    REF v5.84.0
+    SHA512 39afc3265c8aed26f78c836691548cafca05f31238e11f6d29e497c78b6e809d9dba5d3f6cbb9425cfe84d2a1d0910165e77c7841d833cccee3c7398e39bfc68
     HEAD_REF master
-    PATCHES
-        "add-missing-dependencies.patch"
 )
 
 vcpkg_cmake_configure(
