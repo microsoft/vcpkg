@@ -1,0 +1,31 @@
+diff --git a/cmake/cpu-features/CMakeLists.txt b/cmake/cpu-features/CMakeLists.txt
+index 9fbefdd..3122b6d 100644
+--- a/cmake/cpu-features/CMakeLists.txt
++++ b/cmake/cpu-features/CMakeLists.txt
+@@ -1,6 +1,9 @@
+ # Copyright (C) 2020-2021 Intel Corporation
+ # SPDX-License-Identifier: Apache-2.0
+ 
++find_package(CpuFeatures CONFIG REQUIRED)
++set(cpu_features CpuFeatures::cpu_features PARENT_SCOPE)
++if (0)
+ # Download and unpack cpu-features at configure time
+ configure_file(CMakeLists.txt.in cpu-features-download/CMakeLists.txt)
+ execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+@@ -38,3 +41,4 @@ unset(BUILD_TESTING CACHE)
+ uncache_variable(BUILD_SHARED_LIBS)
+ uncache_variable(BUILD_PIC)
+ uncache_variable(BUILD_TESTING)
++endif()
+diff --git a/hexl/CMakeLists.txt b/hexl/CMakeLists.txt
+index 7e603e3..03ab599 100644
+--- a/hexl/CMakeLists.txt
++++ b/hexl/CMakeLists.txt
+@@ -74,7 +74,6 @@ else ()
+     # For proper export of IntelHEXLConfig.cmake / IntelHEXLTargts.cmake,
+     # we avoid explicitly linking dependencies via target_link_libraries, since
+     # this would add dependencies to the exported hexl target.
+-    add_dependencies(hexl cpu_features)
+     if (HEXL_DEBUG)
+         add_dependencies(hexl gflags)
+         # Manually add logging include directory
