@@ -8,7 +8,7 @@ vcpkg_from_github(
         "add-missing-dependencies.patch"
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DBUILD_HTML_DOCS=OFF
@@ -19,8 +19,8 @@ vcpkg_configure_cmake(
             -DKDE_INSTALL_DATAROOTDIR=data
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5TextWidgets)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5TextWidgets)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
