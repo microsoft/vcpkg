@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_OSX)
-    # On Darwin platform, the bundled version of 'bison' may be too old (< 2.4).
+    # On Darwin platform, the bundled version of 'bison' may be too old (< 3.0).
     vcpkg_find_acquire_program(BISON)
     execute_process(
         COMMAND ${BISON} --version
@@ -17,11 +17,10 @@ if(VCPKG_TARGET_IS_OSX)
     set(BISON_MAJOR ${CMAKE_MATCH_1})
     set(BISON_MINOR ${CMAKE_MATCH_2})
     message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
-    if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
+    if(NOT (BISON_MAJOR GREATER_EQUAL 3 AND BISON_MINOR GREATER_EQUAL 0))
         message(WARNING "${PORT} requires bison version greater than one provided by macOS, please use \`brew install bison\` to install a newer bison.")
     endif()
 endif()
-
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
