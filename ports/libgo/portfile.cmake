@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook")
@@ -41,6 +42,3 @@ endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${CURRENT_PORT_DIR}/libgo-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
