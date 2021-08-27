@@ -33,6 +33,7 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_HTML_DOCS=OFF
