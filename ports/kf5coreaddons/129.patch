@@ -22,7 +22,7 @@ index f86b69ff..f9e0d31f 100644
 +    endif()
 +
 +    if(@Inotify_FOUND@)
-+        find_dependency(Inotify)
++        find_package(Inotify) # https://bugs.kde.org/show_bug.cgi?id=441604
 +    endif()
 +
 +    if(@Procstat_FOUND@)
