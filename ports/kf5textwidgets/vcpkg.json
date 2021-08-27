@@ -5,6 +5,13 @@
   "homepage": "https://api.kde.org/frameworks/ktextwidgets/html/index.html",
   "dependencies": [
     "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "kf5completion",
     "kf5config",
     "kf5configwidgets",
