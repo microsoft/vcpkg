@@ -1,0 +1,20 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dac2478..8330679 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -34,11 +34,15 @@ target_include_directories(KF5TextWidgets PUBLIC "$<BUILD_INTERFACE:${ktextwidge
+ 
+ target_include_directories(KF5TextWidgets INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KTextWidgets>")
+ 
++find_package(Iconv REQUIRED)
++include_directories(${Iconv_INCLUDE_DIRS})
++
+ target_link_libraries(KF5TextWidgets
+ PUBLIC
+   Qt5::Widgets
+   KF5::SonnetUi
+   KF5::I18n
++  ${Iconv_LIBRARIES}
+ PRIVATE
+   KF5::SonnetCore
+   KF5::ConfigWidgets

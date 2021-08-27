@@ -18,6 +18,7 @@
     "kf5i18n",
     "kf5sonnet",
     "kf5widgetsaddons",
+    "libiconv",
     "qt5-base",
     "qt5-tools",
     {
