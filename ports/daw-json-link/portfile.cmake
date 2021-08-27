@@ -26,7 +26,7 @@ file(APPEND "${SOURCE_PATH}/copyright" [=[+-------------------------------------
 +----------------------------------------------------------------------------+
 ]=])
 file(READ "${SOURCE_PATH}/LICENSE" json_link_copywrite)
-file(APPEND "${SOURCE_PATH}/copyright" "${json_link_copywrite}")
+file(APPEND "${SOURCE_PATH}/copyright" ${json_link_copywrite})
 file(APPEND "${SOURCE_PATH}/copyright" [=[
 
 
