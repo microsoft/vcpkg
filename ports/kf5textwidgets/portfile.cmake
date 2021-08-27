@@ -11,12 +11,10 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
-            -DKDE_INSTALL_QTPLUGINDIR=plugins
-            -DKDE_INSTALL_DATAROOTDIR=data
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DKDE_INSTALL_DATAROOTDIR=data
 )
 
 vcpkg_cmake_install()
