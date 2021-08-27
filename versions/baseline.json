@@ -2972,6 +2972,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5textwidgets": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5wallet": {
       "baseline": "5.84.0",
       "port-version": 0
