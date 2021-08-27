@@ -1,0 +1,21 @@
+diff --git a/SRC/sorhr_col.f b/SRC/sorhr_col.f
+index 38976245c..600c19fbb 100644
+--- a/SRC/sorhr_col.f
++++ b/SRC/sorhr_col.f
+@@ -282,7 +282,8 @@ SUBROUTINE SORHR_COL( M, N, NB, A, LDA, T, LDT, D, INFO )
+      $                   NPLUSONE
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           SCOPY, SLAORHR_COL_GETRFNP, SSCAL, STRSM, XERBLA
++      EXTERNAL           SCOPY, SLAORHR_COL_GETRFNP, SSCAL, STRSM,
++     $                   XERBLA
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN
+@@ -436,4 +437,4 @@ SUBROUTINE SORHR_COL( M, N, NB, A, LDA, T, LDT, D, INFO )
+ *
+ *     End of SORHR_COL
+ *
+-      END
+\ No newline at end of file
++      END
