@@ -4,33 +4,30 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/hexl
-    REF 2dc1db6824be3fc89d13740efd0270ec9afec77e
-    SHA512 aaa80dc53a21586d763a2b84b40d60062020470988422601bc5e9c2b31c6263847a97ea8f956d002a95e2d5e843cafa96fabdfd8b8ee892c7a7b9747133adebb
-    HEAD_REF 1.2.0
-    PATCHES fix-dependencies.patch
+    REF 5243647de9181dc04c8f7be317f7f2f2756e7319
+    SHA512 0b39635f8ddb4a745492ae7f97f8ebd961346e7d87f74c5d6f8ec543a083628c855db2119810fea6f151e05d4deccdd22ed9301d2c9ed38997fcbf315690a0f7
+    HEAD_REF 1.2.1
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HEXL_SHARED)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(HEXL_SHARED OFF)
+else()
+    set(HEXL_SHARED ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DHEXL_SHARED_LIB=${HEXL_SHARED}
-        -DHEXL_ENABLE_ADDRESS_SANITIZER=OFF
-        -DHEXL_ENABLE_THREAD_SANITIZER=OFF
-        -DHEXL_ENABLE_UB_SANITIZER=OFF
-        -DHEXL_BENCHMARK=OFF
-        -DHEXL_COVERAGE=OFF
-        -DHEXL_DEBUG=OFF
-        -DHEXL_DOCS=OFF
-        -DHEXL_TESTING=OFF
-        -DHEXL_EXPORT=ON
-        -DHEXL_TREAT_WARNING_AS_ERROR=OFF`
+        "-DHEXL_BENCHMARK=OFF"
+        "-DHEXL_COVERAGE=OFF"
+        "-DHEXL_TESTING=OFF"
+        "-DHEXL_SHARED_LIB=${HEXL_SHARED}"
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "HEXL" CONFIG_PATH "lib/cmake/hexl-1.2.1")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
