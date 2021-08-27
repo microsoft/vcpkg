@@ -36,5 +36,5 @@ file(APPEND "${SOURCE_PATH}/copyright" [=[
 ]=])
 
 file(READ "${SOURCE_PATH}/LICENSE_Dragonbox" dragonbox_copywrite)
-file(APPEND "${SOURCE_PATH}/copyright" "${dragonbox_copywrite}")
+file(APPEND "${SOURCE_PATH}/copyright" ${dragonbox_copywrite})
 file(INSTALL "${SOURCE_PATH}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
