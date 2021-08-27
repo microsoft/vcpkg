@@ -7,7 +7,6 @@ foreach(i RANGE 1 2)
     endif()
 endforeach()
 
-
 #
 # Since this is a CMake config file for a non-CMake project, and one that is
 # for vcpkg to as well, the config file has to cover the various products of
