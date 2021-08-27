@@ -588,6 +588,7 @@ libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
+libgo:arm64-windows=fail
 libgpod:arm64-windows=fail
 libgpod:arm-uwp=fail
 libgpod:x64-uwp=fail
