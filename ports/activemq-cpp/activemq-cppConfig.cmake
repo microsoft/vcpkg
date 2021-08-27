@@ -7,6 +7,7 @@ foreach(i RANGE 1 2)
     endif()
 endforeach()
 
+
 #
 # Since this is a CMake config file for a non-CMake project, and one that is
 # for vcpkg to as well, the config file has to cover the various products of
@@ -86,7 +87,7 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/apr-1.lib"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/apr-1.lib"
                                       IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/apr-1.lib"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
@@ -127,8 +128,8 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.so"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.so"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libapr-1.so"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libapr-1.so"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
@@ -168,8 +169,8 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.a"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.a"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libapr-1.a"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libapr-1.a"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
