@@ -10,7 +10,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DDAW_USE_PACKAGE_MANAGEMENT=ON
+        -DDAW_USE_PACKAGE_MANAGEMENT=ON
 )
 
 vcpkg_cmake_install()
