@@ -7,8 +7,7 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_OSX)
-    # In Darwin platform, there can be an old version of `bison`, 
-    # Which can't be used for `gst-build`. It requires 2.4+
+    # On Darwin platform, the bundled version of 'bison' may be too old (< 2.4).
     vcpkg_find_acquire_program(BISON)
     execute_process(
         COMMAND ${BISON} --version
@@ -27,8 +26,8 @@ endif()
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
@@ -44,11 +43,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Service)
-
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
