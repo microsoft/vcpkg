@@ -5,6 +5,13 @@
   "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
   "dependencies": [
     "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "kf5config",
     "kf5coreaddons",
     "kf5crash",
