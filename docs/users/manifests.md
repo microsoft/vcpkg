@@ -455,7 +455,14 @@ you need to use different triplets for different projects in your solution, they
 
 ### MSBuild Properties
 
-These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+When using Visual Studio 2015 integration, these properties can be set in your project file before the
+
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+line, which unfortunately requires manual editing of the `.vcxproj` or passing on the msbuild command line with `/p:`.
+With 2017 or later integration, These properties can additionally be set via the Visual Studio GUI under
+`Project Properties -> Vcpkg` or via a common `.props` file imported between `Microsoft.Cpp.props` and
+`Microsoft.Cpp.targets`.
 
 #### `VcpkgEnabled` (Use Vcpkg)
 
@@ -495,7 +502,7 @@ vcpkg.json files will be ignored. This will default to true in the future.
 This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be
 manually restored via the vcpkg command line.
 
-#### `VcpkgInstalledDirectory` (Installed Directory)
+#### `VcpkgInstalledDir` (Installed Directory)
 
 This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is
 created and populated based on your manifest.
