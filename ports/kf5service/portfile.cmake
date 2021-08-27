@@ -33,9 +33,8 @@ get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
@@ -43,8 +42,8 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Service)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Service)
 
 vcpkg_copy_pdbs()
 
