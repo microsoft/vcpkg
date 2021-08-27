@@ -48,9 +48,9 @@ if (EXISTS "${_IMPORT_PREFIX}/bin/activemq-cpp.dll")
                                               MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                               MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                               IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/activemq-cpp.lib"
-                                              IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/activemq-cpp.dll"
+                                              IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/activemq-cpp.dll"
                                               IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib"
-                                              IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.dll"
+                                              IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll"
                                               IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                               INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
                                               INTERFACE_LINK_LIBRARIES activemq-cpp::apr
@@ -82,13 +82,13 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
         find_library(APR_LIB_DEBUG apr-1.lib PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
         if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
             # the APR port doesn't have a CMake config target so create one
-            add_library(activemq-cpp::apr SHARED IMPORTED)
+            add_library(activemq-cpp::apr STATIC IMPORTED)
             set_target_properties(activemq-cpp::apr
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/apr-1.lib"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/apr-1.lib"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/apr-1.lib"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/apr-1.lib"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
@@ -128,8 +128,8 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libapr-1.so"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libapr-1.so"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.so"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.so"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
@@ -164,13 +164,13 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
         find_library(APR_LIB_DEBUG libapr-1.a PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
         if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
             # the APR port doesn't have a CMake config target so create one
-            add_library(activemq-cpp::apr SHARED IMPORTED)
+            add_library(activemq-cpp::apr STATIC IMPORTED)
             set_target_properties(activemq-cpp::apr
                                   PROPERTIES
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libapr-1.a"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libapr-1.a"
+                                      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/libapr-1.a"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/libapr-1.a"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
