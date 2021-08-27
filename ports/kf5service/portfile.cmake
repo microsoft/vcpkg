@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.84.0
     SHA512 3867da989c8f70fccba63d91aeb0038ad6345e66ca7df6003f968628e4a54e076e9686acb501940ef8f540c39d5f1a70a949cbfdd1caa34e6c4d51daebff418d
     HEAD_REF master
+    PATCHES
+        fix_libiconv.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
