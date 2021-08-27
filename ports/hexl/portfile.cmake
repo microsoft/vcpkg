@@ -13,6 +13,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HEXL_SHARED)
 
 vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_PATH ${GIT} DIRECTORY)
+vcpkg_add_to_path(${GIT_PATH})
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
