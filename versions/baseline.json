@@ -6116,6 +6116,10 @@
       "baseline": "0.6.4",
       "port-version": 0
     },
+    "srpc": {
+      "baseline": "0.9.3",
+      "port-version": 0
+    },
     "starlink-ast": {
       "baseline": "9.2.4",
       "port-version": 1
