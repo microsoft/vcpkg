@@ -5958,7 +5958,7 @@
     },
     "sockpp": {
       "baseline": "0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "soem": {
       "baseline": "1.4.0",
