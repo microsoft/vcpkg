@@ -1,6 +1,6 @@
 {
   "name": "kf5kio",
-  "version-string": "5.75.0",
+  "version-semver": "5.75.0",
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
   "dependencies": [
