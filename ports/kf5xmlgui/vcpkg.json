@@ -27,6 +27,7 @@
     "kf5itemviews",
     "kf5widgetsaddons",
     "kf5windowsystem",
+    "libiconv",
     "qt5-base",
     "qt5-tools",
     {
