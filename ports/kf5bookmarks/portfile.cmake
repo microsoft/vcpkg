@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kbookmarks
-    REF v5.75.0
-    SHA512 bb3982479ec0bf7510947c45aabb798e463d3b29453006eee67389f6001eef469c9be22a6c009f13180273709212efd4cfa3ce11d768483f0e8a76653f84fe87
+    REF v5.84.0
+    SHA512 3ba70c7fb312cd7715f0c14f78a4380150fd8716e93186302c39692609dbedda96d5e82d316ea683ffc9338cc5b4f2c689b24e06d66c3d5d735bae57f36ccad0
     HEAD_REF master
-    PATCHES
-        "add-missing-dependencies.patch"
 )
 
 vcpkg_cmake_configure(
