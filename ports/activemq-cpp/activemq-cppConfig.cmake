@@ -22,22 +22,22 @@ macro(_activemq_cpp_windows_dependencies)
         add_library(activemq-cpp::ws2 SHARED IMPORTED)
         set_target_properties(activemq-cpp::ws2 
                               PROPERTIES
-                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBWS2}" 
-                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLWS2}" 
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLWS2}" 
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBWS2}" 
                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                               )
         add_library(activemq-cpp::rpcrt4 SHARED IMPORTED)
         set_target_properties(activemq-cpp::rpcrt4
                               PROPERTIES 
-                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBRPCRT4}" 
-                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLRPCRT4}" 
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLRPCRT4}" 
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBRPCRT4}" 
                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                               )
         add_library(activemq-cpp::mswsock SHARED IMPORTED)
         set_target_properties(activemq-cpp::mswsock
                               PROPERTIES
-                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBMSWSOCK}"
-                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLMSWSOCK}"
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLMSWSOCK}"
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBMSWSOCK}"
                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                               )
         set(${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND TRUE)
