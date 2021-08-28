@@ -9,7 +9,6 @@
     "kf5config",
     "kf5configwidgets",
     "kf5coreaddons",
-    "kf5guiaddons",
     "kf5widgetsaddons",
     "kf5xmlgui",
     "qt5-base",
