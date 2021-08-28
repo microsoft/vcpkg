@@ -95,7 +95,7 @@ if (EXISTS "${_IMPORT_PREFIX}/bin/activemq-cpp.dll")
                                                   IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll"
                                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                                   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                                  INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp:ws2;activemq-cpp:rpcrt4;activemq-cpp:mswsock"
+                                                  INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
                         )
                         set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
                     endif()
@@ -160,7 +160,7 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
                                           IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib"
                                           IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                           INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp:ws2;activemq-cpp:rpcrt4;activemq-cpp:mswsock"
+                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
                 )
                 set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
             endif()
