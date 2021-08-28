@@ -171,7 +171,7 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
     if (EXISTS "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib")
         _set_if_exists("${_IMPORT_PREFIX}/lib/apr-1.lib" ACTIVEMQ_CPP_APR_LIB_RELEASE)
         _set_if_exists("${_IMPORT_PREFIX}/debug/lib/apr-1.lib" ACTIVEMQ_CPP_APR_LIB_DEBUG)
-        if (APR_LIB_RELEASE AND APR_LIB_DEBUG)
+        if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
             _activemq_cpp_windows_dependencies()
             if (${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND)
                 # the APR port doesn't have a CMake config target so create one
