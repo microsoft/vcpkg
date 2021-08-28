@@ -1,0 +1,22 @@
+{
+    "name": "stduuid",
+    "version-string": "1.0-5890c94",
+    "description": "A C++17 cross-platform single-header library implementation for universally unique identifiers, simply know as either UUID or GUID (mostly on Windows)",
+    "homepage": "https://github.com/mariusbancila/stduuid",
+    "license": "MIT",
+    "features": [
+        {
+            "name": "test",
+            "description": "Build the unit tests"
+        },
+        {
+            "name": "system-gen",
+            "description": "Enable operating system uuid generator"
+        },
+        {
+            "name": "cxx20-span",
+            "description": "Using span from std instead of gsl"
+        }
+    ]
+  }
+  
