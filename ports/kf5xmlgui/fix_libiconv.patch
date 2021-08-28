@@ -1,0 +1,20 @@
+diff --git a/src/ksendbugmail/CMakeLists.txt b/src/ksendbugmail/CMakeLists.txt
+index 22a3c873..d0795396 100644
+--- a/src/ksendbugmail/CMakeLists.txt
++++ b/src/ksendbugmail/CMakeLists.txt
+@@ -7,11 +7,15 @@ target_sources(ksendbugmail PRIVATE
+ 
+ ecm_mark_nongui_executable(ksendbugmail)
+ 
++find_package(Iconv REQUIRED)
++include_directories(${Iconv_INCLUDE_DIRS})
++
+ target_link_libraries(ksendbugmail
+    Qt5::Widgets
+    Qt5::Network
+    KF5::ConfigCore # KEmailSettings
+    KF5::I18n
++   ${Iconv_LIBRARIES}
+ )
+ if(WIN32)
+     target_link_libraries(ksendbugmail secur32) # GetUserNameEx()
