@@ -5,6 +5,13 @@
   "homepage": "https://api.kde.org/frameworks/kbookmarks/html/index.html",
   "dependencies": [
     "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "kf5codecs",
     "kf5config",
     "kf5configwidgets",
