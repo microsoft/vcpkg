@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.84.0
     SHA512 39657ec545c1463cadec719e7c6dc546fb6d1804b5c2b86904bfffd01be173c3ead1533ec33f749343f5575785394fe659ca0be51af706911e5176d485ef7f20
     HEAD_REF master
+    PATCHES
+        fix_libiconv.patch
 )
 
 vcpkg_check_features(
