@@ -13,25 +13,52 @@ endforeach()
 # Sets boolean ${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND to TRUE or FALSE to indicate success or failure.
 macro(_activemq_cpp_windows_dependencies)
     find_library(ACTIVEMQ_CPP_LIBWS2 WS2_32)
+    find_file(ACTIVEMQ_CPP_DLLWS2 WS2_32.dll)
     find_library(ACTIVEMQ_CPP_LIBRPCRT4 RpcRT4)
+    find_file(ACTIVEMQ_CPP_DLLRPCRT4 RpcRT4.dll)
     find_library(ACTIVEMQ_CPP_LIBMSWSOCK MsWsock)
-    if(ACTIVEMQ_CPP_LIBWS2 AND ACTIVEMQ_CPP_LIBRPCRT4 AND ACTIVEMQ_CPP_LIBMSWSOCK)
+    find_file(ACTIVEMQ_CPP_DLLMSWSOCK MsWsock.dll)
+    if(ACTIVEMQ_CPP_LIBWS2 AND ACTIVEMQ_CPP_DLLWS2 AND ACTIVEMQ_CPP_LIBRPCRT4 AND ACTIVEMQ_CPP_DLLRPCRT4 AND ACTIVEMQ_CPP_LIBMSWSOCK AND ACTIVEMQ_CPP_DLLMSWSOCK)
         add_library(activemq-cpp::ws2 SHARED IMPORTED)
-        set_target_properties(activemq-cpp::ws2 PROPERTIES IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBWS2}" IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+        set_target_properties(activemq-cpp::ws2 
+                              PROPERTIES
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBWS2}" 
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLWS2}" 
+                                  IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                              )
         add_library(activemq-cpp::rpcrt4 SHARED IMPORTED)
-        set_target_properties(activemq-cpp::rpcrt4 PROPERTIES IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBRPCRT4}" IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+        set_target_properties(activemq-cpp::rpcrt4
+                              PROPERTIES 
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBRPCRT4}" 
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLRPCRT4}" 
+                                  IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                              )
         add_library(activemq-cpp::mswsock SHARED IMPORTED)
-        set_target_properties(activemq-cpp::mswsock PROPERTIES IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBMSWSOCK}" IMPORTED_CONFIGURATIONS "RELEASE;DEBUG")
+        set_target_properties(activemq-cpp::mswsock
+                              PROPERTIES
+                                  IMPORTED_LOCATION "${ACTIVEMQ_CPP_LIBMSWSOCK}"
+                                  IMPORTED_IMPLIB "${ACTIVEMQ_CPP_DLLMSWSOCK}"
+                                  IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                              )
         set(${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND TRUE)
     else()
         if (NOT ACTIVEMQ_CPP_LIBWS2)
             list(APPEND _ACTIVEMQ_CPP_MISSINGS "WS2_32.lib")
         endif()
+        if (NOT ACTIVEMQ_CPP_DLLWS2)
+            list(APPEND _ACTIVEMQ_CPP_MISSINGS "WS2_32.dll")
+        endif()
         if (NOT ACTIVEMQ_CPP_LIBRPCRT4)
             list(APPEND _ACTIVEMQ_CPP_MISSINGS "RpcRT4.lib")
         endif()
+        if (NOT ACTIVEMQ_CPP_DLLRPCRT4)
+            list(APPEND _ACTIVEMQ_CPP_MISSINGS "RpcRT4.dll")
+        endif()
         if (NOT ACTIVEMQ_CPP_LIBMSWSOCK)
             list(APPEND _ACTIVEMQ_CPP_MISSINGS "MsWsock.lib")
+        endif()
+        if (NOT ACTIVEMQ_CPP_DLLMSWSOCK)
+            list(APPEND _ACTIVEMQ_CPP_MISSINGS "MsWsock.dll")
         endif()
         list(JOIN _ACTIVEMQ_CPP_MISSINGS, ", ", _ACTIVEMQ_CPP_MISSINGS_STR)
         list(LENGTH _ACTIVEMQ_CPP_MISSINGS, _ACTIVEMQ_CPP_MISSINGS_COUNT)
