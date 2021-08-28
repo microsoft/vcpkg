@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_VERBOSE_MAKEFILE=ON
         -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DKDE_INSTALL_DATAROOTDIR=data
         -DKDE_INSTALL_PLUGINDIR=plugins
 )
 
@@ -34,6 +33,8 @@ vcpkg_copy_tools(
     SEARCH_DIR "${CURRENT_PACKAGES_DIR}/lib/libexec/kf5/"
     AUTO_CLEAN
 )
+
+file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ../../share")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
