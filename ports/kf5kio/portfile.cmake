@@ -9,25 +9,19 @@ vcpkg_from_github(
         "fix_dbusmetatypes.patch"
 )
 
-vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
-get_filename_component(GETTEXT_MSGMERGE_EXE_PATH ${GETTEXT_MSGMERGE} DIRECTORY)
-vcpkg_add_to_path(${GETTEXT_MSGMERGE_EXE_PATH})
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
-            -DCMAKE_VERBOSE_MAKEFILE=ON
-            -DKDE_INSTALL_QTPLUGINDIR=plugins
-            -DKDE_INSTALL_DATAROOTDIR=data
-            -DKDE_INSTALL_PLUGINDIR=plugins
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DCMAKE_VERBOSE_MAKEFILE=ON
+        -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DKDE_INSTALL_DATAROOTDIR=data
+        -DKDE_INSTALL_PLUGINDIR=plugins
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5KIO)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KIO)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
