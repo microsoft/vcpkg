@@ -126,6 +126,14 @@ if "@PORT@" != "boost-serialization"
     explicit boost_serialization ;
 }
 
+if "@PORT@" != "boost-mpi"
+{
+    use-project /boost/mpi : . ;
+
+    lib boost_mpi : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_mpi@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ : : <library>/boost/serialization//boost_serialization ;
+    explicit boost_mpi ;
+}
+
 rule requires ( foo * )
 {
 }
