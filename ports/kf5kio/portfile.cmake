@@ -24,31 +24,24 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KIO)
 vcpkg_copy_pdbs()
 
+vcpkg_copy_tools(
+    TOOL_NAMES kcookiejar5 ktelnetservice5 ktrash5 protocoltojson
+    AUTO_CLEAN
+)
+
+vcpkg_copy_tools(
+    TOOL_NAMES kio_http_cache_cleaner kiod5 kioexec kioslave5 kpac_dhcp_helper
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/lib/libexec/kf5/"
+    AUTO_CLEAN
+)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kcookiejar5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/ktelnetservice5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/ktrash5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kio_http_cache_cleaner${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kioslave5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kioexec${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kiod5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/protocoltojson${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kcookiejar5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/ktelnetservice5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/ktrash5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/protocoltojson${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kio_http_cache_cleaner${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kioslave5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kioexec${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/kiod5${VCPKG_HOST_EXECUTABLE_SUFFIX})
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
 
 file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
