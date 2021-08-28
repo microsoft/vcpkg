@@ -88,7 +88,7 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
                                       MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                       MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
                                       IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/apr-1.lib"
-                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/apr-1.lib"
+                                      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/apr-1.lib"
                                       IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                       INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
             )
