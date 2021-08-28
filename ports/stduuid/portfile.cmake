@@ -7,9 +7,10 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    test UUID_BUILD_TESTS
-    system-gen UUID_SYSTEM_GENERATOR
-    cxx20-span UUID_USING_CXX20_SPAN
+    FEATURES
+        test UUID_BUILD_TESTS
+        system-gen UUID_SYSTEM_GENERATOR
+        cxx20-span UUID_USING_CXX20_SPAN
 )
 
 vcpkg_configure_cmake(
