@@ -1,14 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dfa9b72..922a69f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,76 +1,32 @@
+@@ -1,76 +1,34 @@
 -cmake_minimum_required(VERSION 2.8)
 +cmake_minimum_required(VERSION 3.0)
  
 -###################################################################################
  project(libgo)
 -
- enable_language(C ASM)
- 
+-enable_language(C ASM)
+-
 -if (CMAKE_BUILD_TYPE)
 -else()
 -    set(CMAKE_BUILD_TYPE RELEASE)
@@ -48,6 +50,10 @@
 -message("  CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 -message("----------------------------------")
 -
++enable_language(C CXX ASM)
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
 +set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
 +set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
 +set(INSTALL_INCLUDE_DIR  "include/${PROJECT_NAME}"  CACHE PATH "Path where headers will be installed")
@@ -92,7 +98,7 @@
  include_directories(${PROJECT_SOURCE_DIR})
  aux_source_directory(${PROJECT_SOURCE_DIR}/libgo CO_SRC_LIST)
  aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/common CO_SRC_LIST)
-@@ -88,75 +44,35 @@ if (NOT DISABLE_HOOK)
+@@ -88,75 +46,34 @@ if (NOT DISABLE_HOOK)
      if (UNIX)
          aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/netio/unix CO_SRC_LIST)
      elseif (WIN32)
@@ -117,8 +123,7 @@
 -add_library("${STATIC_T}" STATIC ${CO_SRC_LIST})
 -set_target_properties("${STATIC_T}" PROPERTIES OUTPUT_NAME "${TARGET}")
 -
-+add_library(${PROJECT_NAME} ${CO_SRC_LIST})
- if (UNIX)
+-if (UNIX)
 -    install(TARGETS ${STATIC_T} LIBRARY DESTINATION "lib" ARCHIVE DESTINATION "lib")
 -    install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/ DESTINATION "include/libgo" FILES_MATCHING PATTERN "*.h")
 -        #PATTERN "windows" EXCLUDE
@@ -148,7 +153,13 @@
 -    )
 -
 -    set(PROFILE_FLAGS "-pg ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
--
++add_library(${PROJECT_NAME} ${CO_SRC_LIST})
++target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
++if (WIN32)
++    target_link_libraries(${PROJECT_NAME} ws2_32)
++    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
++endif()
+ 
 -    #message("PROFILE_FLAGS: ${PROFILE_FLAGS}")
 -    add_custom_target(profile
 -        COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=PROFILE -DCMAKE_CXX_FLAGS_PROFILE=\\'${PROFILE_FLAGS}\\' ${CMAKE_SOURCE_DIR}
@@ -156,35 +167,30 @@
 -        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 -        COMMENT "Switch CMAKE_BUILD_TYPE to PROFILE"
 -    )
--
++install(TARGETS ${PROJECT_NAME}
++        EXPORT "${PROJECT_NAME}Config"
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++        RUNTIME DESTINATION bin)
+ 
 -    add_custom_target(uninstall
 -        COMMAND rm ${CMAKE_INSTALL_PREFIX}/lib/liblibgo.a ${CMAKE_INSTALL_PREFIX}/lib/liblibgo.so ${CMAKE_INSTALL_PREFIX}/lib/liblibgo_main.a -f
 -        COMMAND rm ${CMAKE_INSTALL_PREFIX}/include/libgo -rf
 -    )
--
-+    target_link_libraries(${PROJECT_NAME} -ldl)
- elseif (WIN32)
--    set_target_properties("${STATIC_T}" PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
-+    target_link_libraries(${PROJECT_NAME} ws2_32)
-+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
- endif()
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/
++        DESTINATION ${INSTALL_INCLUDE_DIR}
++        FILES_MATCHING PATTERN "*.h")
  
+-elseif (WIN32)
+-    set_target_properties("${STATIC_T}" PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
+-endif()
+-
 -if (WIN32)
 -    if (BOOST_ROOT)
 -	    add_subdirectory(${PROJECT_SOURCE_DIR}/test/gtest_unit)
 -	    add_subdirectory(${PROJECT_SOURCE_DIR}/tutorial)
 -    endif()
 -endif()
-+install(TARGETS ${PROJECT_NAME}
-+        EXPORT "${PROJECT_NAME}Config"
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib
-+        RUNTIME DESTINATION bin)
-+
-+install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/
-+        DESTINATION ${INSTALL_INCLUDE_DIR}
-+        FILES_MATCHING PATTERN "*.h")
-+
 +install(EXPORT "${PROJECT_NAME}Config"
 +        NAMESPACE libgo::
 +        DESTINATION "${INSTALL_CMAKE_DIR}")
