@@ -1,6 +1,6 @@
 {
   "name": "kf5bookmarks",
-  "version-string": "5.75.0",
+  "version-semver": "5.75.0",
   "description": "Bookmarks management library",
   "homepage": "https://api.kde.org/frameworks/kbookmarks/html/index.html",
   "dependencies": [
