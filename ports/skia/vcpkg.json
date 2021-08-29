@@ -8,7 +8,10 @@
     "Skia is sponsored and managed by Google, but is available for use by anyone under the BSD Free Software License. While engineering of the core components is done by the Skia development team, we consider contributions from any source."
   ],
   "homepage": "https://skia.org",
-  "supports": "osx | windows",
+  "supports": "x64 & (osx | windows)",
+  "default-features": [
+    "gl"
+  ],
   "dependencies": [
     "expat",
     {
@@ -33,7 +36,19 @@
   ],
   "features": {
     "metal": {
-      "description": "metal support for skia"
+      "description": "Metal support for skia"
+    },
+    "vulkan": {
+      "description": "Vulkan support for skia"
+    },
+    "direct3d": {
+      "description": "Direct3D support for skia"
+    },
+    "dawn": {
+      "description": "dawn support for skia"
+    },
+    "gl": {
+      "description": "OpenGL support for skia"
     }
   }
 }
