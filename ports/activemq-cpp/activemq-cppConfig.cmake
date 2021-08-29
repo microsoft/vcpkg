@@ -75,13 +75,45 @@ macro(_activemq_cpp_windows_dependencies)
     endif()
 endmacro()
 
-# Set the variable named VARNAME if the file FILE exists; clears it otherwise.
-function(_set_if_exists FILE VARNAME)
-    if (EXISTS ${FILE})
-        set(${VARNAME} ${FILE} PARENT_SCOPE)
+# Set the variable named VARNAME to "${FILE}" if the file FILE exists; clears it
+# otherwise. Opposite for VARNAME_MISSING.
+function(_set_exists VARNAME VARNAME_MISSING FILE)
+    if (EXISTS "${FILE}")
+        set(${VARNAME} "${FILE}" PARENT_SCOPE)
+        unset(${VARNAME_MISSIONG} PARENT_SCOPE)
     else()
+        set(${VARNAME_MISSING} "${FILE}" PARENT_SCOPE)
         unset(${VARNAME} PARENT_SCOPE)
     endif()
+endfunction()
+
+# Add the activemq-cpp::apr and activemq-cpp::activemq-cpp targets
+# Doesn't work for Windows DLL installs because that takes more args...
+function(_add_apr_and_amq_targets INC_PARENT LIB_TYPE APR_REL APR_DEB AMQ_REL AMQ_DEB DEPS)
+    # the APR port doesn't have a CMake config target so create one
+    add_library(activemq-cpp::apr ${LIB_TYPE} IMPORTED)
+    set_target_properties(activemq-cpp::apr
+                          PROPERTIES
+                              MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                              MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                              IMPORTED_LOCATION_RELEASE "${APR_REL}"
+                              IMPORTED_LOCATION_DEBUG "${APR_DEB}"
+                              IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                              INTERFACE_INCLUDE_DIRECTORIES "${INC_PARENT}/include"
+    )
+
+    # the create the activemq-cpp CMake config target with a dependency on apr
+    add_library(activemq-cpp::activemq-cpp ${LIB_TYPE} IMPORTED)
+    set_target_properties(activemq-cpp::activemq-cpp
+                          PROPERTIES
+                              MAP_IMPORTED_CONFIG_MINSIZEREL Release
+                              MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+                              IMPORTED_LOCATION_DEBUG "${AMQ_DEB}"
+                              IMPORTED_LOCATION_RELEASE "${AMQ_REL}"
+                              IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+                              INTERFACE_INCLUDE_DIRECTORIES "${INC_PARENT}/include"
+                              INTERFACE_LINK_LIBRARIES "${DEPS}"
+    )
 endfunction()
 
 #
@@ -91,147 +123,32 @@ endfunction()
 #
 # Below, Windows and Linux are covered for static and shared libraries.
 #
-if (EXISTS "${_IMPORT_PREFIX}/bin/activemq-cpp.dll")
+_set_exists(ACTIVEMQ_CPP_DLL_RELEASE _ACTIVEMQ_CPP_DLL_RELEASE_MISSING "${_IMPORT_PREFIX}/bin/activemq-cpp.dll")
+_set_exists(ACTIVEMQ_CPP_LIB_RELEASE _ACTIVEMQ_CPP_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/activemq-cpp.lib")
+_set_exists(ACTIVEMQ_CPP_DLL_DEBUG _ACTIVEMQ_CPP_DLL_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll")
+_set_exists(ACTIVEMQ_CPP_LIB_DEBUG _ACTIVEMQ_CPP_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib")
+if (ACTIVEMQ_CPP_DLL_RELEASE)
     #
     # Windows shared install
     #
-    if (EXISTS "${_IMPORT_PREFIX}/lib/activemq-cpp.lib")
-        if (EXISTS "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll")
-            if (EXISTS "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib")
-                _set_if_exists("${_IMPORT_PREFIX}/lib/libapr-1.lib" ACTIVEMQ_CPP_APR_LIB_RELEASE)
-                _set_if_exists("${_IMPORT_PREFIX}/lib/libapr-1.dll" ACTIVEMQ_CPP_APR_DLL_RELEASE)
-                _set_if_exists("${_IMPORT_PREFIX}/debug/lib/libapr-1.lib" ACTIVEMQ_CPP_APR_LIB_DEBUG)
-                _set_if_exists("${_IMPORT_PREFIX}/debug/lib/libapr-1.dll" ACTIVEMQ_CPP_APR_DLL_DEBUG)
-                if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_DLL_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG AND ACTIVEMQ_CPP_APR_DLL_DEBUG)
-                    _activemq_cpp_windows_dependencies()
-                    if (${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND)
-                        # the APR port doesn't have a CMake config target so create one
-                        add_library(activemq-cpp::apr SHARED IMPORTED)
-                        set_target_properties(activemq-cpp::apr
-                                              PROPERTIES
-                                                  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                                  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                                  IMPORTED_IMPLIB_RELEASE "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
-                                                  IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_APR_DLL_RELEASE}"
-                                                  IMPORTED_IMPLIB_DEBUG "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
-                                                  IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_APR_DLL_DEBUG}"
-                                                  IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                                  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                        )
-
-                        # the create the activemq-cpp CMake config target with a dependency on apr
-                        add_library(activemq-cpp::activemq-cpp SHARED IMPORTED)
-                        set_target_properties(activemq-cpp::activemq-cpp
-                                              PROPERTIES
-                                                  MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                                  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                                  IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/activemq-cpp.lib"
-                                                  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/activemq-cpp.dll"
-                                                  IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib"
-                                                  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll"
-                                                  IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                                  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                                  INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
-                        )
-                        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
-                    endif()
-                else()
-                    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
-                    if(NOT APR_LIB_RELEASE)
-                        string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/lib/libapr-1.lib\" not found.")
-                    endif()
-                    if(NOT APR_DLL_RELEASE)
-                        string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/bin/libapr-1.dll\" not found.")
-                    endif()
-                    if(NOT APR_LIB_DEBUG)
-                        string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/debug/lib/libapr-1.lib\" not found.")
-                    endif()
-                    if(NOT APR_DLL_DEBUG)
-                        string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/debug/bin/libapr-1.dll\" not found.")
-                    endif()
-                    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-                    set(activemq-cppConfig_FOUND TRUE)
-                endif()
-            else()
-                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}debug/bin/activemq-cppd.dll but not ${_IMPORT_PREFIX}/debug/lib/activemq-cppd.lib")
-                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-            endif()
-        else()
-            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}/bin/activemq-cpp.dll but not ${_IMPORT_PREFIX}/debug/bin/activemq-cppd.dll")
-            set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-        endif()
-    else()
-        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}/bin/activemq-cpp.dll but not ${_IMPORT_PREFIX}/lib/activemq-cpp.lib")
-        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-    endif()
-elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
-    #
-    # Windows static install
-    #
-    if (EXISTS "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib")
-        _set_if_exists("${_IMPORT_PREFIX}/lib/apr-1.lib" ACTIVEMQ_CPP_APR_LIB_RELEASE)
-        _set_if_exists("${_IMPORT_PREFIX}/debug/lib/apr-1.lib" ACTIVEMQ_CPP_APR_LIB_DEBUG)
-        if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
+    if (ACTIVEMQ_CPP_LIB_RELEASE AND ACTIVEMQ_CPP_DLL_DEBUG AND ACTIVEMQ_CPP_LIB_DEBUG)
+        _set_exists(ACTIVEMQ_CPP_APR_LIB_RELEASE _ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libapr-1.lib")
+        _set_exists(ACTIVEMQ_CPP_APR_DLL_RELEASE _ACTIVEMQ_CPP_APR_DLL_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libapr-1.dll")
+        _set_exists(ACTIVEMQ_CPP_APR_LIB_DEBUG _ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libapr-1.lib")
+        _set_exists(ACTIVEMQ_CPP_APR_DLL_DEBUG _ACTIVEMQ_CPP_APR_DLL_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libapr-1.dll")
+        if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_DLL_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG AND ACTIVEMQ_CPP_APR_DLL_DEBUG)
             _activemq_cpp_windows_dependencies()
             if (${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND)
-                # the APR port doesn't have a CMake config target so create one
-                add_library(activemq-cpp::apr STATIC IMPORTED)
-                set_target_properties(activemq-cpp::apr
-                                      PROPERTIES
-                                          MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                          MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
-                                          IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
-                                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                          INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                )
-
-                # the create the activemq-cpp CMake config target with a dependency on apr
-                add_library(activemq-cpp::activemq-cpp STATIC IMPORTED)
-                set_target_properties(activemq-cpp::activemq-cpp
-                                      PROPERTIES
-                                          MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                          MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib"
-                                          IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib"
-                                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                          INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
-                )
-                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
-            endif()
-        else()
-            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
-            if(NOT APR_LIB_RELEASE)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/lib/apr-1.lib\" not found.")
-            endif()
-            if(NOT APR_LIB_DEBUG)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/debug/lib/apr-1.lib\" not found.")
-            endif()
-            set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-        endif()
-    else()
-        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib but not ${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib")
-        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-    endif()
-elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
-    #
-    # Linux shared install  (this may pick up some other Unix-like installs)
-    #
-    if (EXISTS "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so.19.0.5")
-        _set_if_exists("${_IMPORT_PREFIX}/lib/libapr-1.so" ACTIVEMQ_CPP_APR_LIB_RELEASE)
-        _set_if_exists("${_IMPORT_PREFIX}/debug/lib/libapr-1.so" ACTIVEMQ_CPP_APR_LIB_DEBUG)
-        if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
-            find_package(Threads)
-            if (Threads_FOUND)
                 # the APR port doesn't have a CMake config target so create one
                 add_library(activemq-cpp::apr SHARED IMPORTED)
                 set_target_properties(activemq-cpp::apr
                                       PROPERTIES
                                           MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                           MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
-                                          IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
+                                          IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_APR_DLL_RELEASE}"
+                                          IMPORTED_IMPLIB_RELEASE "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
+                                          IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_APR_DLL_DEBUG}"
+                                          IMPORTED_IMPLIB_DEBUG "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
                                           IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                           INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
                 )
@@ -242,88 +159,161 @@ elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
                                       PROPERTIES
                                           MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                           MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5"
-                                          IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so.19.0.5"
+                                          IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_DLL_RELEASE}"
+                                          IMPORTED_IMPLIB_RELEASE "${ACTIVEMQ_CPP_LIB_RELEASE}"
+                                          IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_DLL_DEBUG}"
+                                          IMPORTED_IMPLIB_DEBUG "${ACTIVEMQ_CPP_LIB_DEBUG}"
                                           IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                           INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;Threads::Threads"
+                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
                 )
                 set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
-            else()
-                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
-                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
             endif()
         else()
             set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
-            if(NOT APR_LIB_RELEASE)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/lib/libapr-1.so\" not found.")
-            endif()
-            if(NOT APR_LIB_DEBUG)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/debug/lib/libapr-1.so\" not found.")
-            endif()
+            foreach(_MISSING 
+                        ${_ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING}
+                        ${_ACTIVEMQ_CPP_APR_DLL_RELEASE_MISSING}
+                        ${_ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING}
+                        ${_ACTIVEMQ_CPP_APR_DLL_DEBUG_MISSING}
+            )
+                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_MISSING}\" not found.")
+            endforeach()
             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+            set(activemq-cppConfig_FOUND TRUE)
         endif()
     else()
-        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}/lib/libactivemq-cpp.so but not ${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so")
+        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}debug/bin/activemq-cppd.dll.")
+        foreach(_MISSING 
+                    ${_ACTIVEMQ_CPP_LIB_RELEASE_MISSING}
+                    ${_ACTIVEMQ_CPP_DLL_DEBUG_MISSING}
+                    ${_ACTIVEMQ_CPP_LIB_DEBUG_MISSING})
+            string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_MISSING}\" not found.")
+        endforeach()
         set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
     endif()
-elseif (EXISTS "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
+else() 
     #
-    # Linux static install (this may pick up some other Unix-like installs)
+    # not Windows shared install
     #
-    if (EXISTS ${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.a)
-        _set_if_exists("${_IMPORT_PREFIX}/lib/libapr-1.a" ACTIVEMQ_CPP_APR_LIB_RELEASE)
-        _set_if_exists("${_IMPORT_PREFIX}/debug/lib/libapr-1.a" ACTIVEMQ_CPP_APR_LIB_DEBUG)
-        if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
-            find_package(Threads)
-            if (Threads_FOUND)
-                # the APR port doesn't have a CMake config target so create one
-                add_library(activemq-cpp::apr STATIC IMPORTED)
-                set_target_properties(activemq-cpp::apr
-                                      PROPERTIES
-                                          MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                          MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_RELEASE "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
-                                          IMPORTED_LOCATION_DEBUG "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
-                                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                          INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                )
-
-                # the create the activemq-cpp CMake config target with a dependency on apr
-                add_library(activemq-cpp::activemq-cpp STATIC IMPORTED)
-                set_target_properties(activemq-cpp::activemq-cpp
-                                      PROPERTIES
-                                          MAP_IMPORTED_CONFIG_MINSIZEREL Release
-                                          MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-                                          IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a"
-                                          IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.a"
-                                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                                          INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;Threads::Threads"
-                )
-                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
+    _set_exists(ACTIVEMQ_CPP_LIB_RELEASE _ACTIVEMQ_CPP_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libactivemq-cpp.lib")
+    _set_exists(ACTIVEMQ_CPP_LIB_DEBUG _ACTIVEMQ_CPP_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.lib")
+    if (ACTIVEMQ_CPP_LIB_RELEASE)
+        #
+        # Windows static install
+        #
+        if (ACTIVEMQ_CPP_LIB_DEBUG)
+            _set_exists(ACTIVEMQ_CPP_APR_LIB_RELEASE _ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/apr-1.lib")
+            _set_exists(ACTIVEMQ_CPP_APR_LIB_DEBUG _ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/apr-1.lib")
+            if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
+                _activemq_cpp_windows_dependencies()
+                if (${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND)
+                    _add_apr_and_amq_targets("${_IMPORT_PREFIX}"
+                                             STATIC
+                                             "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
+                                             "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
+                                             "${ACTIVEMQ_CPP_LIB_RELEASE}"
+                                             "${ACTIVEMQ_CPP_LIB_DEBUG}"
+                                             "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock")
+                    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
+                endif()
             else()
-                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
+                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
+                foreach(_MISSING ${_ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING} ${_ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING})
+                    string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_MISSING}\" not found.")
+                endforeach()
                 set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
             endif()
         else()
-            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
-            if(NOT APR_LIB_RELEASE)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/lib/libapr-1.a\" not found.")
-            endif()
-            if(NOT APR_LIB_DEBUG)
-                string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_IMPORT_PREFIX}/debug/lib/libapr-1.a\" not found.")
-            endif()
+            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${ACTIVEMQ_CPP_LIB_RELEASE} but not ${_ACTIVEMQ_CPP_LIB_DEBUG_MISSING}.")
             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
         endif()
     else()
-        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${_IMPORT_PREFIX}/lib/libactivemq-cpp.so but not ${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so")
-        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+        #
+        # not Windows shared or static install
+        #
+        _set_exists(ACTIVEMQ_CPP_LIB_RELEASE _ACTIVEMQ_CPP_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libactivemq-cpp.so.19.0.5")
+        _set_exists(ACTIVEMQ_CPP_LIB_DEBUG _ACTIVEMQ_CPP_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.so.19.0.5")
+        if(ACTIVEMQ_CPP_LIB_RELEASE)
+            #
+            # Linux shared install (this may pick up some other Unix-like installs)
+            #
+            if (ACTIVEMQ_CPP_LIB_DEBUG)
+                _set_exists(ACTIVEMQ_CPP_APR_LIB_RELEASE _ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libapr-1.so")
+                _set_exists(ACTIVEMQ_CPP_APR_LIB_DEBUG _ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libapr-1.so")
+                if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
+                    find_package(Threads)
+                    if (Threads_FOUND)
+                        _add_apr_and_amq_targets("${_IMPORT_PREFIX}"
+                                                 SHARED
+                                                 "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
+                                                 "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
+                                                 "${ACTIVEMQ_CPP_LIB_RELEASE}"
+                                                 "${ACTIVEMQ_CPP_LIB_DEBUG}"
+                                                 "activemq-cpp::apr;Threads::Threads")
+                        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
+                    else()
+                        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
+                        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                    endif()
+                else()
+                    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
+                    foreach(_MISSING ${_ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING} ${_ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING})
+                        string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_MISSING}\" not found.")
+                    endforeach()
+                    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                endif()
+            else()
+                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${ACTIVEMQ_CPP_LIB_RELEASE} but not ${_ACTIVEMQ_CPP_LIB_DEBUG_MISSING}")
+                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+            endif()
+        else()
+            #
+            # not Windows shared or static or Linux shared install
+            #
+            _set_exists(ACTIVEMQ_CPP_LIB_RELEASE _ACTIVEMQ_CPP_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libactivemq-cpp.a")
+            _set_exists(ACTIVEMQ_CPP_LIB_DEBUG _ACTIVEMQ_CPP_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libactivemq-cpp.a")
+            if (ACTIVEMQ_CPP_LIB_RELEASE)
+                #
+                # Linux static install (this may pick up some other Unix-like installs)
+                #
+                if (ACTIVEMQ_CPP_LIB_DEBUG)
+                    _set_exists(ACTIVEMQ_CPP_APR_LIB_RELEASE _ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING "${_IMPORT_PREFIX}/lib/libapr-1.a")
+                    _set_exists(ACTIVEMQ_CPP_APR_LIB_DEBUG _ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING "${_IMPORT_PREFIX}/debug/lib/libapr-1.a")
+                    if (ACTIVEMQ_CPP_APR_LIB_RELEASE AND ACTIVEMQ_CPP_APR_LIB_DEBUG)
+                        find_package(Threads)
+                        if (Threads_FOUND)
+                            _add_apr_and_amq_targets("${_IMPORT_PREFIX}"
+                                                     STATIC
+                                                     "${ACTIVEMQ_CPP_APR_LIB_RELEASE}"
+                                                     "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
+                                                     "${ACTIVEMQ_CPP_LIB_RELEASE}"
+                                                     "${ACTIVEMQ_CPP_LIB_DEBUG}"
+                                                     "activemq-cpp::apr;Threads::Threads")
+                            set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
+                        else()
+                            set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
+                            set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                        endif()
+                    else()
+                        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: apr vcpkg port not found in ${_IMPORT_PREFIX}.")
+                        foreach(_MISSING ${_ACTIVEMQ_CPP_APR_LIB_RELEASE_MISSING} ${_ACTIVEMQ_CPP_APR_LIB_DEBUG_MISSING})
+                            string(APPEND ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE " \"${_MISSING}\" not found.")
+                        endforeach()
+                        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                    endif()
+                else()
+                    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install error: Found ${ACTIVEMQ_CPP_LIB_RELEASE} but not ${_ACTIVEMQ_CPP_LIB_DEBUG_MISSING}")
+                    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                endif()
+            else()
+                #
+                # Some other configuration...
+                # (not Windows shared or static or Linux shared or static install)
+                #
+                set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg unexpected install: could not find any expected activemq-cpp libraries under ${_IMPORT_PREFIX}. The CMake configuration file only understands Windows and Linux static and shared installs from vcpkg.")
+                set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+            endif()
+        endif()
     endif()
-else()
-    #
-    # Some other configuration...
-    #
-    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg unexpected install: could not find any expected activemq-cpp libraries under ${_IMPORT_PREFIX}. The CMake configuration file only understands Windows and Linux static and shared installs from vcpkg.")
-    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
 endif()
