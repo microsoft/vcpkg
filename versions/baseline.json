@@ -5720,6 +5720,10 @@
       "baseline": "2.0",
       "port-version": 5
     },
+    "s2n": {
+      "baseline": "1.0.17",
+      "port-version": 0
+    },
     "safeint": {
       "baseline": "3.0.26",
       "port-version": 0
