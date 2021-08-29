@@ -244,6 +244,10 @@
       "baseline": "2021-06-01",
       "port-version": 0
     },
+    "aws-c-cal": {
+      "baseline": "0.5.11",
+      "port-version": 0
+    },
     "aws-c-common": {
       "baseline": "0.6.9",
       "port-version": 0
