@@ -19,8 +19,9 @@ endif()
 set(SKIA_DEP_DBG @SKIA_DEP_DBG@)
 set(SKIA_DEP_REL @SKIA_DEP_REL@)
 
-find_library(SKIA_LIB NAMES skia skia.dll)
-target_link_libraries(skia INTERFACE "${SKIA_LIB}")
+target_link_libraries(skia INTERFACE
+    debug "${_IMPORT_PREFIX}/debug/lib/${CMAKE_IMPORT_LIBRARY_PREFIX}skia${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    optimized "${_IMPORT_PREFIX}/lib/${CMAKE_IMPORT_LIBRARY_PREFIX}skia${CMAKE_IMPORT_LIBRARY_SUFFIX}")
 
 function(set_dependencies CONFIG LIBRARIES)
     foreach(LIB ${LIBRARIES})
