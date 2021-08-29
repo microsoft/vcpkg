@@ -44,6 +44,7 @@ function(set_dependencies CONFIG LIBRARIES)
 endfunction()
 
 set_dependencies(Debug "${SKIA_DEP_DBG}")
+set_dependencies(RelWithDebInfo "${SKIA_DEP_REL}")
 set_dependencies(Release "${SKIA_DEP_REL}")
 
 set(SKIA_DEFINITIONS_DBG
@@ -51,7 +52,6 @@ set(SKIA_DEFINITIONS_DBG
         _HAS_EXCEPTIONS=0
         WIN32_LEAN_AND_MEAN
         NOMINMAX
-        SK_GL
         SK_ENABLE_DUMP_GPU
         SK_SUPPORT_PDF
         SK_HAS_JPEG_LIBRARY
@@ -70,7 +70,6 @@ set(SKIA_DEFINITIONS_REL
         WIN32_LEAN_AND_MEAN
         NOMINMAX
         NDEBUG
-        SK_GL
         SK_SUPPORT_PDF
         SK_HAS_JPEG_LIBRARY
         SK_USE_LIBGIFCODEC
