@@ -89,7 +89,7 @@ else()
          USE_VCPKG_INTEGRATION
          ALLOW_ROOT_INCLUDES
          SKIP_CLEAN
-         OPTIONS "/p:UseMultiToolTask=true" # without this, msbuild uses one core for activemq builds (741 source files)
+         # OPTIONS "/p:UseMultiToolTask=true" # without this, msbuild uses one core for activemq builds (741 source files)
     )
 
     vcpkg_copy_pdbs()
