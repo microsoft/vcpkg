@@ -1715,7 +1715,6 @@ lapack-reference:arm-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
-activemq-cpp:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
 chromium-base:x64-windows-static-md=fail
 clockutils:x64-windows-static-md=fail
