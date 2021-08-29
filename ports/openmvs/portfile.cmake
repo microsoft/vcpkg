@@ -8,11 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-build-boost-1_77_0.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda   OpenMVS_USE_CUDA
-    openmp OpenMVS_USE_OPENMP
+    FEATURES
+        cuda   OpenMVS_USE_CUDA
+        openmp OpenMVS_USE_OPENMP
 )
 
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
