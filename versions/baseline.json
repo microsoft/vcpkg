@@ -253,7 +253,7 @@
       "port-version": 0
     },
     "aws-c-event-stream": {
-      "baseline": "0.1.6",
+      "baseline": "0.2.7",
       "port-version": 0
     },
     "aws-c-io": {
