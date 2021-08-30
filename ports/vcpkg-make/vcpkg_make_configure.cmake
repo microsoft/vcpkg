@@ -851,7 +851,7 @@ function(vcpkg_make_configure)
         if (NOT arg_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${short_name_${_buildtype}}")
             vcpkg_execute_required_process(
-                COMMAND "${command}"
+                COMMAND ${command}
                 WORKING_DIRECTORY "${target_dir}"
                 LOGNAME "config-${TARGET_TRIPLET}-${short_name_${_buildtype}}"
             )
