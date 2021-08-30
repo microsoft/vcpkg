@@ -35,7 +35,10 @@
     "kf5widgetsaddons",
     "kf5windowsystem",
     "kf5xmlgui",
-    "libiconv",
+    {
+      "name": "libiconv",
+      "platform": "windows & static"
+    },
     "qt5-base",
     {
       "name": "qt5-macextras",
