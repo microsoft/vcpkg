@@ -1,6 +1,6 @@
 {
   "name": "stduuid",
-  "version-date": "2019-02-23",
+  "version-date": "2021-08-30",
   "description": "A C++17 cross-platform single-header library implementation for universally unique identifiers, simply know as either UUID or GUID (mostly on Windows)",
   "homepage": "https://github.com/mariusbancila/stduuid",
   "license": "MIT",
