@@ -5,11 +5,11 @@
   "homepage": "https://continental.github.io/ecal/",
   "supports": "!emscripten",
   "dependencies": [
-    "pthread",
     "asio",
-    "tclap",
-    "simpleini",
     "hdf5",
-	"protobuf"
+    "protobuf",
+    "pthread",
+    "simpleini",
+    "tclap"
   ]
 }

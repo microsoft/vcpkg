@@ -1844,6 +1844,10 @@
       "baseline": "1.4.0",
       "port-version": 0
     },
+    "ecal": {
+      "baseline": "5.9.0",
+      "port-version": 0
+    },
     "ecm": {
       "baseline": "5.84.0",
       "port-version": 0
