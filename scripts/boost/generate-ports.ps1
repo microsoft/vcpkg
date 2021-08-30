@@ -23,43 +23,53 @@ else {
 
 # Clear this array when moving to a new boost version
 $portVersions = @{
-    #e.g.  "asio" = 1;
+    #e.g.  "boost-asio" = 1;
 }
 
 $portData = @{
-    "asio"             = @{ "supports" = "!emscripten" };
-    "beast"            = @{ "supports" = "!emscripten" };
-    "fiber"            = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
-    "filesystem"       = @{ "supports" = "!uwp" };
-    "iostreams"        = @{ "supports" = "!uwp" };
-    "context"          = @{ "supports" = "!uwp&!emscripten" };
-    "stacktrace"       = @{ "supports" = "!uwp" };
-    "coroutine"        = @{ "supports" = "!arm&!uwp&!emscripten" };
-    "coroutine2"       = @{ "supports" = "!emscripten" };
-    "test"             = @{ "supports" = "!uwp" };
-    "wave"             = @{ "supports" = "!uwp" };
-    "log"              = @{ "supports" = "!uwp&!emscripten" };
-    "locale"           = @{
-        "supports" = "!uwp";
-        "features" = @{
+    "boost-asio"             = @{
+        "dependencies" = @("openssl");
+        "supports"     = "!emscripten"
+    };
+    "boost-beast"            = @{ "supports" = "!emscripten" };
+    "boost-fiber"            = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
+    "boost-filesystem"       = @{ "supports" = "!uwp" };
+    "boost-iostreams"        = @{
+        "dependencies" = @("zlib", "bzip2", "liblzma", "zstd");
+        "supports"     = "!uwp";
+    };
+    "boost-context"          = @{ "supports" = "!uwp&!emscripten" };
+    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-coroutine"        = @{ "supports" = "!arm&!uwp&!emscripten" };
+    "boost-coroutine2"       = @{ "supports" = "!emscripten" };
+    "boost-test"             = @{ "supports" = "!uwp" };
+    "boost-wave"             = @{ "supports" = "!uwp" };
+    "boost-log"              = @{ "supports" = "!uwp&!emscripten" };
+    "boost-locale"           = @{
+        "dependencies" = @(@{ name = "libiconv"; platform = "!uwp&!windows&!mingw" });
+        "supports"     = "!uwp";
+        "features"     = @{
             icu = @{
                 dependencies = @("icu")
                 description  = "ICU backend for Boost.Locale"
             }
         }
     };
-    "parameter-python" = @{ "supports" = "!emscripten" };
-    "process"          = @{ "supports" = "!emscripten" };
-    "python"           = @{
-        "supports" = "!uwp&!(arm&windows)&!emscripten";
-        "features" = @{
+    "boost-mpi"              = @{ "dependencies" = @("mpi") };
+    "boost-graph-parallel"   = @{ "dependencies" = @("mpi") };
+    "boost-parameter-python" = @{ "supports" = "!emscripten" };
+    "boost-process"          = @{ "supports" = "!emscripten" };
+    "boost-python"           = @{
+        "dependencies" = @("python3");
+        "supports"     = "!uwp&!(arm&windows)&!emscripten";
+        "features"     = @{
             python2 = @{
                 dependencies = @("python2")
                 description  = "Build with Python2 support"
             }
         }
     };
-    "regex"            = @{
+    "boost-regex"            = @{
         "features" = @{
             icu = @{
                 dependencies = @("icu")
@@ -69,53 +79,86 @@ $portData = @{
     }
 }
 
-function TransformReference() {
+function GeneratePortName() {
     param (
-        [string]$library
+        [string]$Library
     )
-
-    if ($portData.Contains($library) -and $portData[$library].Contains('supports')) {
-        @{name = "boost-$library"; platform = $portData[$library]['supports'] }
-    }
-    else {
-        "boost-$library"
-    }
+    "boost-" + ($Library -replace "_", "-")
 }
 
-function Generate() {
+function GeneratePortDependency() {
     param (
-        [string]$Name,
-        [string]$PortName,
-        [string]$Hash,
-        [bool]$NeedsBuild,
-        $Depends = @()
+        [string]$Library
     )
-
-    New-Item -ItemType "Directory" "$portsDir/boost-$PortName" -erroraction SilentlyContinue | out-null
-    $controlLines = @{
-        name             = "boost-$PortName"; `
-            "version"    = $version; `
-            dependencies = $Depends; `
-            homepage     = "https://github.com/boostorg/$Name"; `
-            description  = "Boost $Name module" `
-    
+    $portName = GeneratePortName $Library
+    if ($portData.Contains($portName) -and $portData[$portName].Contains('supports')) {
+        @{name = $portName; platform = $portData[$portName]['supports'] }
+    }
+    else {
+        $portName
+    }
+}
+function GeneratePortManifest() {
+    param (
+        [string]$Library,
+        [string]$PortName,
+        [string]$Homepage,
+        [string]$Description,
+        $Dependencies = @(),
+        $Features = @()
+    )
+    if ([string]::IsNullOrEmpty($PortName)) {
+        $PortName = GeneratePortName $Library
+    }
+    $manifest = @{
+        name        = $PortName
+        "version"   = $version
+        homepage    = $Homepage
+        description = $Description
     }
     if ($portVersions.Contains($PortName)) {
-        $controlLines["port-version"] = $portVersions[$PortName]
+        $manifest["port-version"] = $portVersions[$PortName]
     }
-
     if ($portData.Contains($PortName)) {
-        $controlLines += $portData[$PortName]
+        $manifest += $portData[$PortName]
     }
-    $controlLines | ConvertTo-Json -Depth 10 -Compress | out-file -enc ascii "$portsDir/boost-$PortName/vcpkg.json"
-    & $vcpkg format-manifest "$portsDir/boost-$PortName/vcpkg.json"
+    if ($Dependencies.Count -gt 0) {
+        $manifest["dependencies"] += $Dependencies
+    }
+    if ($Features.Count -gt 0) {
+        $manifest["features"] += $Features
+    }
+    $manifest | ConvertTo-Json -Depth 10 -Compress `
+    | Out-File -Encoding UTF8 "$portsDir/$PortName/vcpkg.json"
+    & $vcpkg format-manifest "$portsDir/$PortName/vcpkg.json"
+}
+
+function GeneratePort() {
+    param (
+        [string]$Library,
+        [string]$Hash,
+        [bool]$NeedsBuild,
+        $Dependencies = @()
+    )
+
+    $portName = GeneratePortName $Library
+
+    New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
+
+    # Generate vcpkg.json
+    GeneratePortManifest `
+        -Library $Library `
+        -PortName $PortName `
+        -Homepage "https://github.com/boostorg/$Library" `
+        -Description "Boost $Library module" `
+        -Dependencies $Dependencies
 
     $portfileLines = @(
         "# Automatically generated by scripts/boost/generate-ports.ps1"
         ""
     )
 
-    if ($PortName -eq "system") {
+    if ($Library -eq "system") {
         $portfileLines += @(
             "vcpkg_buildpath_length_warning(37)"
             ""
@@ -125,12 +168,12 @@ function Generate() {
     $portfileLines += @(
         "vcpkg_from_github("
         "    OUT_SOURCE_PATH SOURCE_PATH"
-        "    REPO boostorg/$Name"
+        "    REPO boostorg/$Library"
         "    REF boost-$version"
         "    SHA512 $Hash"
         "    HEAD_REF master"
     )
-    [Array]$patches = Get-Item -Path "$portsDir/boost-$PortName/*.patch"
+    [Array]$patches = Get-Item -Path "$portsDir/$portName/*.patch"
     if ($null -eq $patches -or $patches.Count -eq 0) {
     }
     elseif ($patches.Count -eq 1) {
@@ -147,19 +190,19 @@ function Generate() {
         ""
     )
 
-    if (Test-Path "$scriptsDir/post-source-stubs/$PortName.cmake") {
-        $portfileLines += @(get-content "$scriptsDir/post-source-stubs/$PortName.cmake")
+    if (Test-Path "$scriptsDir/post-source-stubs/$Library.cmake") {
+        $portfileLines += @(get-content "$scriptsDir/post-source-stubs/$Library.cmake")
     }
 
     if ($NeedsBuild) {
         $portfileLines += @(
             "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
-            "    message(FATAL_ERROR `"boost-$PortName requires a newer version of vcpkg in order to build.`")"
+            "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg in order to build.`")"
             "endif()"
             "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
         )
         # b2-options.cmake contains port-specific build options
-        if (Test-Path "$portsDir/boost-$PortName/b2-options.cmake") {
+        if (Test-Path "$portsDir/$portName/b2-options.cmake") {
             $portfileLines += @(
                 "boost_modular_build("
                 "    SOURCE_PATH `${SOURCE_PATH}"
@@ -167,7 +210,7 @@ function Generate() {
                 ")"
             )
         }
-        elseif (Test-Path "$portsDir/boost-$PortName/b2-options.cmake.in") {
+        elseif (Test-Path "$portsDir/$portName/b2-options.cmake.in") {
             $portfileLines += @(
                 'configure_file('
                 '    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"'
@@ -192,12 +235,12 @@ function Generate() {
         "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
     )
 
-    if (Test-Path "$scriptsDir/post-build-stubs/$PortName.cmake") {
-        $portfileLines += @(get-content "$scriptsDir/post-build-stubs/$PortName.cmake")
+    if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
+        $portfileLines += @(get-content "$scriptsDir/post-build-stubs/$Library.cmake")
     }
 
     $portfileLines += @("")
-    Set-Content -LiteralPath "$portsDir/boost-$PortName/portfile.cmake" `
+    Set-Content -LiteralPath "$portsDir/$portName/portfile.cmake" `
         -Value "$($portfileLines -join "`r`n")" `
         -Encoding UTF8 `
         -NoNewline
@@ -240,11 +283,14 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
 
 New-Item -ItemType "Directory" $scriptsDir/downloads -erroraction SilentlyContinue | out-null
 
+$updateServicePorts = $false
+
 if ($libraries.Length -eq 0) {
     $libraries = $foundLibraries
+    $updateServicePorts = $true
 }
 
-$librariesInBoostPort = @()
+$boostPortDependencies = @()
 
 foreach ($library in $libraries) {
     "Handling boost/$library..."
@@ -273,7 +319,7 @@ foreach ($library in $libraries) {
     }
     Push-Location $unpacked
     try {
-        $groups = Get-ChildItem -Recurse -Path include, src -File `
+        $usedLibraries = Get-ChildItem -Recurse -Path include, src -File `
         | Where-Object { $_ -is [System.IO.FileInfo] } `
         | ForEach-Object {
             Write-Verbose "${library}: processing file: $_"
@@ -281,14 +327,14 @@ foreach ($library in $libraries) {
         } `
         | Where-Object {
             $_ -match ' *# *include *[<"]boost\/'
-        }
-        # extract path from the line
+        } `
         | ForEach-Object {
+            # extract path from the line
             Write-Verbose "${library}: processing line: $_"
             $_ -replace " *# *include *[<`"]boost\/([a-zA-Z0-9\.\-_\/]*)[>`"].*", "`$1"
-        }
-        # map the path to the library name
+        }`
         | ForEach-Object {
+            # map the path to the library name
             Write-Verbose "${library}: processing path: $_"
             if ($_ -match "^detail\/winapi\/") { "winapi" }
             elseif ($_ -eq "detail/algorithm.hpp") { "graph" }
@@ -351,9 +397,9 @@ foreach ($library in $libraries) {
             elseif ($_ -eq "utility/swap.hpp") { "core" }
             # extract first directory name or file name from the path
             else { $_ -replace "([a-zA-Z0-9\.\-_]*).*", "`$1" }
-        }
-        # map directory/file name to the library name
+        } `
         | ForEach-Object {
+            # map directory/file name to the library name
             Write-Verbose "${library}: processing name: $_"
             if ($_ -eq "current_function.hpp") { "assert" }
             elseif ($_ -eq "memory_order.hpp") { "atomic" }
@@ -391,17 +437,17 @@ foreach ($library in $libraries) {
             elseif ($_ -match "call_traits.hpp|compressed_pair.hpp|operators.hpp|operators_v1.hpp") { "utility" }
             # by dafault use the name as is, just remove the file extension if available
             else { $_ -replace "\.hp?p?", "" }
-        }
+        } `
         | Where-Object {
             $_ -ne $library
-        }
+        } `
         | Group-Object -NoElement | ForEach-Object Name
 
-        "      [known] " + $($groups | Where-Object { $foundLibraries -contains $_ })
-        "    [unknown] " + $($groups | Where-Object { $foundLibraries -notcontains $_ })
+        "      [known] " + $($usedLibraries | Where-Object { $foundLibraries -contains $_ })
+        "    [unknown] " + $($usedLibraries | Where-Object { $foundLibraries -notcontains $_ })
 
-        $deps = @($groups | Where-Object { $foundLibraries -contains $_ })
-        $deps = @($deps | ForEach-Object { $_ -replace "_", "-" } | ForEach-Object { TransformReference $_ })
+        $deps = @($usedLibraries | Where-Object { $foundLibraries -contains $_ })
+        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
@@ -413,65 +459,57 @@ foreach ($library in $libraries) {
             $needsBuild = $true
         }
 
-        if ($library -eq "python") {
-            $deps += @("python3")
-            $needsBuild = $true
-        }
-        elseif ($library -eq "iostreams") {
-            $deps += @("zlib", "bzip2", "liblzma", "zstd")
-        }
-        elseif ($library -eq "locale") {
-            $deps += @(@{ name = "libiconv"; platform = "!uwp&!windows&!mingw" }, "boost-system")
-        }
-        elseif ($library -eq "asio") {
-            $deps += @("openssl")
-        }
-        elseif ($library -match "mpi|graph_parallel") {
-            $deps += @("mpi")
-        }
-
-        $portName = $library -replace "_", "-"
-
-        Generate `
-            -Name $library `
-            -PortName $portName `
+        GeneratePort `
+            -Library $library `
             -Hash $hash `
-            -Depends $deps `
+            -Dependencies $deps `
             -NeedsBuild $needsBuild
 
-        $librariesInBoostPort += @(TransformReference $portName)
+        $boostPortDependencies += @(GeneratePortDependency $library)
     }
     finally {
         Pop-Location
     }
 }
 
-if ($librariesInBoostPort.length -gt 1) {
-    # Generate master boost control file which depends on each individual library
+if ($updateServicePorts) {
+    # Generate manifest file for master boost port which depends on each individual library
     # mpi and graph-parallel are excluded due to they having a dependency on msmpi/openmpi
-    $boostDependsList = $librariesInBoostPort | Where-Object { $_ -notmatch "boost-mpi|boost-graph-parallel" }
-
-    @{
-        name           = "boost";
-        "version"      = $version;
-        "port-version" = $portVersions.Contains('boost') ? $portVersions['boost'] : 0;
-        homepage       = "https://boost.org";
-        description    = "Peer-reviewed portable C++ source libraries";
-        dependencies   = $boostDependsList;
-        features       = @(
-            @{
-                name         = "mpi";
-                description  = "Build with MPI support";
-                dependencies = @("boost-mpi", "boost-graph-parallel");
-            }
-        );
-    } `
-    | ConvertTo-Json -Depth 10 -Compress `
-    | Out-File -Encoding UTF8 -FilePath "$portsDir/boost/vcpkg.json"
-    & $vcpkg format-manifest "$portsDir/boost/vcpkg.json"
+    $boostPortDependencies = $boostPortDependencies | Where-Object { $_ -notmatch "boost-mpi|boost-graph-parallel" }
+    $boostPortFeatures = @(
+        @{
+            name         = "mpi"
+            description  = "Build with MPI support"
+            dependencies = @("boost-mpi", "boost-graph-parallel")
+        }
+    )
+    GeneratePortManifest `
+        -PortName "boost" `
+        -Homepage "https://boost.org" `
+        -Description "Peer-reviewed portable C++ source libraries" `
+        -Dependencies $boostPortDependencies `
+        -Features $boostPortFeatures
 
     Set-Content -LiteralPath "$portsDir/boost/portfile.cmake" `
         -Value "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" `
         -Encoding UTF8 `
         -NoNewline
+    
+    # Generate manifest files for boost-uninstall
+    GeneratePortManifest `
+        -PortName "boost-uninstall" `
+        -Description "Internal vcpkg port used to uninstall Boost"
+
+    # Generate manifest files for boost-vcpkg-helpers
+    GeneratePortManifest `
+        -PortName "boost-vcpkg-helpers" `
+        -Description "Internal vcpkg port used to modularize Boost" `
+        -Dependencies @("boost-uninstall")
+
+    # Generate manifest files for boost-modular-build-helper
+    GeneratePortManifest `
+        -PortName "boost-modular-build-helper" `
+        -Description "Internal vcpkg port used to build Boost libraries" `
+        -Dependencies @("boost-build", "boost-uninstall")
+
 }
