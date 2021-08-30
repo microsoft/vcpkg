@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix_libiconv.patch
         remove_explicit_shared_argument.patch
+        add_support_for_static_builds.patch
 )
 
 vcpkg_check_features(
