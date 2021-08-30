@@ -15,7 +15,10 @@
     "kf5archive",
     "kf5coreaddons",
     "kf5i18n",
-    "libiconv",
+    {
+      "name": "libiconv",
+      "platform": "windows & static"
+    },
     "qt5-base",
     "qt5-tools",
     {
