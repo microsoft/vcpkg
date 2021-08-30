@@ -4,8 +4,8 @@ vcpkg_from_github(
     REF v5.84.0
     SHA512 58a802d03bea135c192265651540f9f87066b20ee4af620a94a874ec3992c5e734d1ab1e4ccb082de97389fa3479fd3672ec586c3dd36c9b4a5422c7be98d119
     PATCHES
-        122.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/122
-        129.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
+        fix_static_build.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/122
+        fix_cmake_config.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
 )
 
 vcpkg_cmake_configure(
