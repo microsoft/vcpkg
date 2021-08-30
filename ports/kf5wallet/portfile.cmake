@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Wallet)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Wallet CONFIG_PATH lib/cmake/KF5Wallet)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
