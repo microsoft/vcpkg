@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 db37a481e0d34e0024cabd77c22680171fa383ea300c56c73f807380fd818263d27f36fb012fc6604b462dbf9374db39bab94c4dc2c3bff488ac9812d01eb2dd
     HEAD_REF master
     PATCHES
-        23.patch # https://invent.kde.org/frameworks/kcrash/-/merge_requests/23
+        support_static_builds.patch # https://invent.kde.org/frameworks/kcrash/-/merge_requests/23
 )
 
 vcpkg_cmake_configure(
