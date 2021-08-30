@@ -1,5 +1,5 @@
 diff --git a/src/core/kssld_dbusmetatypes.h b/src/core/kssld_dbusmetatypes.h
-index 1cd98f0..bb1599a 100644
+index 2fb9fa25..958f4ff7 100644
 --- a/src/core/kssld_dbusmetatypes.h
 +++ b/src/core/kssld_dbusmetatypes.h
 @@ -17,7 +17,7 @@
@@ -28,8 +28,8 @@ index 1cd98f0..bb1599a 100644
 +inline QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &rule)
  {
      argument.beginStructure();
-     argument << rule.certificate() << rule.hostName()
-@@ -45,7 +45,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &ru
+     argument << rule.certificate() << rule.hostName() << rule.isRejected() << rule.expiryDateTime().toString(Qt::ISODate)
+@@ -44,7 +44,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &ru
      return argument;
  }
  
@@ -38,16 +38,16 @@ index 1cd98f0..bb1599a 100644
  {
      QSslCertificate cert;
      QString hostName;
-@@ -64,7 +64,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRu
+@@ -63,7 +63,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRu
      return argument;
  }
  
 -QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &error)
 +inline QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &error)
  {
-     argument.beginStructure();  //overhead ho!
+     argument.beginStructure(); // overhead ho!
      argument << static_cast<int>(error);
-@@ -72,7 +72,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &er
+@@ -71,7 +71,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &er
      return argument;
  }
  
