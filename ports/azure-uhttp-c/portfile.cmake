@@ -12,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uhttp-c
-        REF c22177c4cae57992e45e2b0db3f624c31b0f4666
-        SHA512 70c011486aaf3e5af81e781d5183dcb3b6da234f9b41af9138e726bea1fd19326979a95d59bcb4314781d7ee4ef0c7fdfa9b30928a0688024d3fd93cb4168217
+        REF 9a2295d645efc256fb794999e0855d63e9a50449
+        SHA512 c86e6495c9f4e2b973e51c2294feb34d3d814af19860ec945b0537e28a8675aec7aa8189c44b75a3a7e4db44e38072baa97af5fe0a8b77ccc6a9facfb702681d
         HEAD_REF master
     )
 endif()
@@ -39,4 +39,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-
