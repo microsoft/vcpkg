@@ -27,3 +27,11 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/hv.dll")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/hv.dll" "${CURRENT_PACKAGES_DIR}/bin/hv.dll")
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/hv.dll")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/hv.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/hv.dll")
+endif()
