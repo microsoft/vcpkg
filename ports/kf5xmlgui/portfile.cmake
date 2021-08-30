@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_libiconv.patch
+        remove_explicit_shared_argument.patch
 )
 
 vcpkg_check_features(
