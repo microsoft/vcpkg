@@ -1,15 +1,14 @@
-set(FT_VERSION 2.10.4)
+set(FT_VERSION 2.11.0)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetype/freetype2
     REF ${FT_VERSION}
     FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 827cda734aa6b537a8bcb247549b72bc1e082a5b32ab8d3cccb7cc26d5f6ee087c19ce34544fa388a1eb4ecaf97600dbabc3e10e950f2ba692617fee7081518f
+    SHA512 bf1991f3c382832586be1d21ae73c20840ee8546807ba60d0eb0215134545656c0c8de488f27357d4a4f6497d7cb540998cda98ec59061a3e640036fb209147d
     PATCHES
-        0001-Fix-install-command.patch
         0003-Fix-UWP.patch
-        pkgconfig.patch
+        fix-bzip2-pc.patch  # we have a bzip2 file that we can use - https://gitlab.freedesktop.org/freetype/freetype/-/commit/b2aeca5fda870751f3c9d645e0dca4c80fa1ae5a
         brotli-static.patch
         fix-exports.patch
 )
@@ -27,17 +26,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         brotli      CMAKE_DISABLE_FIND_PACKAGE_BrotliDec
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/freetype)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/freetype)
 
 # Rename for easy usage (VS integration; CMake and autotools will not care)
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/freetype ${CURRENT_PACKAGES_DIR}/include/freetype)
@@ -100,4 +98,4 @@ file(COPY
     ${SOURCE_PATH}/docs/GPLv2.TXT
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
-file(INSTALL ${SOURCE_PATH}/docs/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
