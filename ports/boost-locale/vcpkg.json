@@ -19,7 +19,6 @@
     },
     "boost-smart-ptr",
     "boost-static-assert",
-    "boost-system",
     "boost-thread",
     "boost-type-traits",
     "boost-unordered",
