@@ -268,7 +268,7 @@ else
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
 if [ "$os" = "osx" ]; then
-    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] || [[ $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 11 ]]; then
         CXX=clang++
     else
         selectCXX
