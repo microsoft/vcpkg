@@ -17,7 +17,7 @@
     "kf5i18n",
     {
       "name": "libiconv",
-      "platform": "windows & static"
+      "platform": "osx | (windows & static)"
     },
     "qt5-base",
     "qt5-tools",
