@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 e5905c0aa5343ce3d4cd3765cb81390fc89fb78aec3c8de8b31d1dada8074d04f549ff785f3988498d2e274d7cb08a35a83ba031d18562049e6ca41d18ea52ee
     HEAD_REF master
     PATCHES
-        25.patch # https://invent.kde.org/frameworks/kguiaddons/-/merge_requests/25
-        fix_cmake.patch # see https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
+        add_missing_static_dependencies.patch # https://invent.kde.org/frameworks/kguiaddons/-/merge_requests/25
+        fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
