@@ -1,3 +1,8 @@
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.5.1)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0012 NEW)
+endif()
+
 _find_package(${ARGS})
 
 if(@USE_ZLIB@)
@@ -62,4 +67,8 @@ if(FREETYPE_LIBRARIES)
     if(@USE_BROTLI@)
         list(APPEND FREETYPE_LIBRARIES ${BROTLIDEC_LIBRARIES} ${BROTLICOMMON_LIBRARIES})
     endif()
+endif()
+
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.5.1)   
+    cmake_policy(POP)
 endif()
