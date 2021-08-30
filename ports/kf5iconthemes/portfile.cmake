@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 ca5645d6e4fde4f60c6f16c911539f4056060cc22afae275459632bc7069352b068b1727eb75b898d319e6eef3df9ddc35d8e22d4c1d05a657b112378e56731e
     HEAD_REF master
     PATCHES
-        39.patch
+        fix_config_cmake.patch
         fix_libiconv.patch
 )
 
