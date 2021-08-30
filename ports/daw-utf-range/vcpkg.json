@@ -1,6 +1,6 @@
 {
   "name": "daw-utf-range",
-  "version-semver": "2.1.0",
+  "version-semver": "2.2.0",
   "description": "Header-only utf8 string range used by daw-json-link. Includes a constexpr/noexcept modified version of utfcpp.",
   "homepage": "https://github.com/beached/header_libraries",
   "dependencies": [
