@@ -46,8 +46,8 @@ else()
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
 	if(VCPKG_TARGET_IS_OSX)
-		# accerlation libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
-		# remove this work-around again, i.e. default to "else" branch, once accerlation libs are fixed upstream
+		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
+		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
 		set(ENV{BLAS} "None")
 		set(ENV{LAPACK} "None")
 		set(ENV{ATLAS} "None")
