@@ -2286,7 +2286,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 5
+      "port-version": 6
     },
     "gettimeofday": {
       "baseline": "2017-10-14-3",
@@ -6810,7 +6810,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",
