@@ -1,6 +1,6 @@
 {
   "name": "azure-template-cpp",
-  "version-semver": "1.0.0-beta.1072826",
+  "version-semver": "1.0.0-beta.1072865",
   "description": [
     "Microsoft Azure Template SDK for C++",
     "This is a template library meant to illustrate initial client library development process for Azure SDK.",
