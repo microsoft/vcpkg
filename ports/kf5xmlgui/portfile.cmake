@@ -1,13 +1,19 @@
+set(PATCHES 
+    remove_explicit_shared_argument.patch # https://invent.kde.org/frameworks/kxmlgui/-/commit/d12e8f6266188ce7e221dc014a56071b8a5ef706
+    add_support_for_static_builds.patch   # https://invent.kde.org/frameworks/kxmlgui/-/commit/2f1b948ad690942d4ec208c5676c11218f29181a
+)
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    list(APPEND PATCHES fix_libiconv.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
     REF v5.84.0
     SHA512 39657ec545c1463cadec719e7c6dc546fb6d1804b5c2b86904bfffd01be173c3ead1533ec33f749343f5575785394fe659ca0be51af706911e5176d485ef7f20
     HEAD_REF master
-    PATCHES
-        fix_libiconv.patch
-        remove_explicit_shared_argument.patch
-        add_support_for_static_builds.patch
+    PATCHES ${PATCHES}
 )
 
 vcpkg_check_features(
