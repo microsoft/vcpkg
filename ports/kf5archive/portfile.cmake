@@ -5,10 +5,10 @@ vcpkg_from_github(
     SHA512 82926f62424446df0f4fc300f57ae9bd5baf8e13da2ce4135ac56c0c52a0307bffb06f84ac7e8e658e96ace2ae3d530f27e232061284ac87271404f218e9fdd4
     HEAD_REF master
     PATCHES
-        9ab5f2bf.patch # https://invent.kde.org/frameworks/karchive/-/commit/9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e
-        5a79756f.patch # https://invent.kde.org/frameworks/karchive/-/commit/5a79756f381e1a1843cb2171bdc151dad53fb7db
-        23.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/23
-        24.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/24
+        only_pkg_check_modules_if_pkgconfig_found.patch # https://invent.kde.org/frameworks/karchive/-/commit/9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e
+        add_zstd_to_cmake_config.patch # https://invent.kde.org/frameworks/karchive/-/commit/5a79756f381e1a1843cb2171bdc151dad53fb7db
+        add_support_for_static_builds.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/23
+        use_cmake_to_find_zstd.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/24
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
