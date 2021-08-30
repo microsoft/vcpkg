@@ -25,9 +25,8 @@ file(COPY "${LIBRAW_CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        -DINSTALL_CMAKE_MODULE_PATH="${CURRENT_PACKAGES_DIR}/share/${PORT}"
+        -DINSTALL_CMAKE_MODULE_PATH=${CURRENT_PACKAGES_DIR}/share/${PORT}
         -DENABLE_EXAMPLES=OFF
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -38,7 +37,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libraw/libraw_types.h"
         "#ifdef LIBRAW_NODLL" "#if 1"
     )
