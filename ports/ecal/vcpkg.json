@@ -1,0 +1,15 @@
+{
+  "name": "ecal",
+  "version": "5.9.0",
+  "description": "eCAL - enhanced Communication Abstraction Layer",
+  "homepage": "https://continental.github.io/ecal/",
+  "supports": "!emscripten",
+  "dependencies": [
+    "pthread",
+    "asio",
+    "tclap",
+    "simpleini",
+    "hdf5",
+	"protobuf"
+  ]
+}
