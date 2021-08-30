@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.75.0
-    SHA512 1c40521ccac2f15fdde620269c2a34517f051edf9d14a5350c316df8f40836491b2f7b1ce914cf832217feccdc71ab211d260bdf7ba634c23fa9fc69c8341943
+    REF v5.84.0
+    SHA512 6c2d57a31e64ff1475b21d7fb2556d37b061dae319ddfe57a36f0bfc9627db624b1ac8fa4b2851681cb90d218255d0444c1403329d88f34a23e8ddffe99ca5b4
     HEAD_REF master
     PATCHES
-        "add-missing-dependencies.patch"
-        "fix_dbusmetatypes.patch"
+        fix_dbusmetatypes.patch
+        fix_libiconv.patch
 )
 
 vcpkg_cmake_configure(
