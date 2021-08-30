@@ -21,20 +21,25 @@ vcpkg_cmake_configure(
         -DCMAKE_VERBOSE_MAKEFILE=ON
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_LIBEXECDIR=bin
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KIO)
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tools(
-    TOOL_NAMES kcookiejar5 ktelnetservice5 ktrash5 protocoltojson
-    AUTO_CLEAN
-)
+set(LIBEXEC_TOOLS kio_http_cache_cleaner kiod5 kioexec kioslave5)
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_TARGET_IS_ANDROID)
+        list(APPEND LIBEXEC_TOOLS kpac_dhcp_helper)
+    endif()
+
+    list(TRANSFORM LIBEXEC_TOOLS PREPEND "kf5/")
+endif()
 
 vcpkg_copy_tools(
-    TOOL_NAMES kio_http_cache_cleaner kiod5 kioexec kioslave5 kpac_dhcp_helper
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/lib/libexec/kf5/"
+    TOOL_NAMES kcookiejar5 ktelnetservice5 ktrash5 protocoltojson ${LIBEXEC_TOOLS}
     AUTO_CLEAN
 )
 
