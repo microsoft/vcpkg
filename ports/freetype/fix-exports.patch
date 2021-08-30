@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2314c79..994c602 100644
+index cb1b9a0f2..edca5d579 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -446,7 +446,7 @@ endif ()
- set(PKG_CONFIG_REQUIRED_PRIVATE "")
+@@ -496,7 +496,7 @@ set(PKG_CONFIG_REQUIRED_PRIVATE "")
+ set(PKG_CONFIG_LIBS_PRIVATE "")
  
  if (ZLIB_FOUND)
 -  target_link_libraries(freetype PRIVATE ${ZLIB_LIBRARIES})
@@ -11,7 +11,7 @@ index 2314c79..994c602 100644
    target_include_directories(freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
    list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "zlib")
  endif ()
-@@ -560,12 +560,26 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -596,12 +596,25 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
    install(
      EXPORT freetype-targets
        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
@@ -21,7 +21,6 @@ index 2314c79..994c602 100644
      FILES ${PROJECT_BINARY_DIR}/freetype-config-version.cmake
      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
      COMPONENT headers)
-+
 +
 +  if(ZLIB_FOUND)
 +    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/freetype-config.cmake"
