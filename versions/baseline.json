@@ -3724,6 +3724,10 @@
       "baseline": "4.3-0",
       "port-version": 0
     },
+    "libunifex": {
+      "baseline": "2021-08-01",
+      "port-version": 0
+    },
     "libunistring": {
       "baseline": "0.9.10",
       "port-version": 1
