@@ -1301,7 +1301,7 @@
       "port-version": 0
     },
     "cli": {
-      "baseline": "1.2.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "cli11": {
