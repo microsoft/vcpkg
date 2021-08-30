@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mathisloge/mapnik
-    REF a8d6bdcac1be7f8b7fb2ee584f3115ca875d8c96
-    SHA512 08e1bfacd1bf5416b4f75cbeb0f63e327af1d14c64f67c431682494deb92fb53c111f9c1c36c61a745b3a6c5d615f7ccbe59279f1d1bc94574db92f87260152a
+    REPO mapnik/mapnik
+    REF 69911ad9eac59e1b495ea495b298ec854dde26b1
+    SHA512 3f4ab9091ea689ea554bf1065c29066f2d10c34ea2689b06e7e29747661af762b73b843be51d2aa6b46a80afe6d738b780fb87cf440151a87b5bd191ce1a0870
     HEAD_REF master
     PATCHES
       "use-proj.patch"
