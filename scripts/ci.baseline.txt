@@ -262,6 +262,10 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
+# embree creates common conflicting static library names when built in static mode, reported upstream:
+# https://github.com/embree/embree/issues/331
+embree2:x64-windows-static=skip
+embree2:x64-windows-static-md=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
@@ -497,8 +501,6 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-keystone:arm-uwp=fail
-keystone:x64-uwp=fail
 kfr:arm64-windows=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
@@ -540,7 +542,6 @@ libbson:x64-uwp=fail
 libcds:arm64-windows=fail
 libcds:arm-uwp=fail
 libcds:x64-uwp=fail
-libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
@@ -1325,6 +1326,16 @@ rapidstring:x86-windows=fail
 raylib:arm64-windows=fail
 raylib:arm-uwp=fail
 raylib:x64-uwp=fail
+# file conflicts with rbdl
+rbdl-orb:x86-windows=skip
+rbdl-orb:x64-windows=skip
+rbdl-orb:x64-windows-static=skip
+rbdl-orb:x64-windows-static-md=skip
+rbdl-orb:x64-uwp=skip
+rbdl-orb:arm-uwp=skip
+rbdl-orb:arm64-windows=skip
+rbdl-orb:x64-linux=skip
+rbdl-orb:x64-osx=skip
 readline:arm-uwp=fail
 readline:x64-uwp=fail
 readline-win32:arm-uwp=fail
@@ -1528,8 +1539,6 @@ tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
 tinyexif:arm-uwp=fail
 tinyexif:x64-uwp=fail
-tinyfiledialogs:arm-uwp=fail
-tinyfiledialogs:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxlite:arm-uwp=fail
@@ -1678,7 +1687,6 @@ zkpp:x64-windows-static-md=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
-c4core:x64-osx=fail
 
 # Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
 # Skip CI to avoid random failures
@@ -1714,7 +1722,6 @@ clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
-keystone:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libgo:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail

@@ -21,29 +21,29 @@ else()
     set(BUILD_STATIC_LIB ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DPTEX_VER=v${PTEX_VER}
         -DPTEX_BUILD_SHARED_LIBS=${BUILD_SHARED_LIB}
         -DPTEX_BUILD_STATIC_LIBS=${BUILD_STATIC_LIB}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Ptex)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Ptex)
 vcpkg_copy_pdbs()
 
 foreach(HEADER PtexHalf.h Ptexture.h)
-    file(READ ${CURRENT_PACKAGES_DIR}/include/${HEADER} PTEX_HEADER)
+    file(READ "${CURRENT_PACKAGES_DIR}/include/${HEADER}" PTEX_HEADER)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         string(REPLACE "ifndef PTEX_STATIC" "if 1" PTEX_HEADER "${PTEX_HEADER}")
     else()
         string(REPLACE "ifndef PTEX_STATIC" "if 0" PTEX_HEADER "${PTEX_HEADER}")
     endif()
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/${HEADER} "${PTEX_HEADER}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/include/${HEADER}" "${PTEX_HEADER}")
 endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/src/doc/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/src/doc/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
