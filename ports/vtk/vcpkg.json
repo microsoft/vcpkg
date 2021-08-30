@@ -1,0 +1,174 @@
+{
+  "name": "vtk",
+  "version-semver": "9.0.3-pv5.9.1",
+  "description": "Software system for 3D computer graphics, image processing, and visualization",
+  "homepage": "https://github.com/Kitware/VTK",
+  "dependencies": [
+    "double-conversion",
+    "eigen3",
+    "expat",
+    "freetype",
+    "glew",
+    {
+      "name": "hdf5",
+      "default-features": false
+    },
+    "jsoncpp",
+    {
+      "name": "libharu",
+      "features": [
+        "notiffsymbols"
+      ]
+    },
+    "libjpeg-turbo",
+    "liblzma",
+    "libogg",
+    "libpng",
+    "libtheora",
+    "libxml2",
+    "lz4",
+    "netcdf-c",
+    "pegtl-2",
+    "proj4",
+    "pugixml",
+    "sqlite3",
+    "tiff",
+    "utfcpp",
+    "zlib"
+  ],
+  "features": {
+    "all": {
+      "description": "Build all vtk modules",
+      "dependencies": [
+        "ffmpeg",
+        "gdal",
+        "libmysql",
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "mpi",
+            "python",
+            "qt"
+          ]
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "atlmfc",
+            "utf8"
+          ],
+          "platform": "windows"
+        }
+      ]
+    },
+    "atlmfc": {
+      "description": "Mfc functionality for vtk on Windows",
+      "dependencies": [
+        {
+          "name": "atlmfc",
+          "platform": "windows"
+        }
+      ]
+    },
+    "cuda": {
+      "description": "Support CUDA compilation",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "mpi": {
+      "description": "MPI functionality for VTK",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false,
+          "features": [
+            "parallel"
+          ]
+        },
+        "mpi",
+        {
+          "name": "vtk-m",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ]
+        }
+      ]
+    },
+    "opengl": {
+      "description": "All opengl related modules",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
+    },
+    "openvr": {
+      "description": "OpenVR functionality for VTK",
+      "dependencies": [
+        "openvr",
+        "sdl2"
+      ]
+    },
+    "paraview": {
+      "description": "Build vtk modules required by paraview",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "qt"
+          ]
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "atlmfc"
+          ],
+          "platform": "windows"
+        }
+      ]
+    },
+    "python": {
+      "description": "Python functionality for VTK",
+      "dependencies": [
+        "python3"
+      ]
+    },
+    "qt": {
+      "description": "Qt functionality for VTK",
+      "dependencies": [
+        "qt5-imageformats",
+        "qt5-tools",
+        {
+          "name": "qt5-x11extras",
+          "platform": "linux"
+        },
+        "qt5-xmlpatterns"
+      ]
+    },
+    "utf8": {
+      "description": "Enables vtk reader/writer with utf-8 path support",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
+    },
+    "vtkm": {
+      "description": "Build with vtk-m accelerator and module.",
+      "dependencies": [
+        {
+          "name": "vtk-m",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}
