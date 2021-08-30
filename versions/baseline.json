@@ -3305,7 +3305,7 @@
       "port-version": 10
     },
     "libics": {
-      "baseline": "1.6.4",
+      "baseline": "1.6.5",
       "port-version": 0
     },
     "libideviceactivation": {
