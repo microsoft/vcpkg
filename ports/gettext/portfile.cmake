@@ -1,13 +1,7 @@
-if(VCPKG_TARGET_IS_LINUX)
-    if (NOT EXISTS "/usr/include/libintl.h")
-        message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
-                            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
-        )
-    endif()
-    if(NOT "tools" IN_LIST FEATURES)
-        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-        return()
-    endif()
+if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/include/libintl.h")
+    message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
+                        "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+    )
 endif()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
@@ -134,8 +128,15 @@ if("tools" IN_LIST FEATURES)
         file(RENAME "${CURRENT_PACKAGES_DIR}.release" "${CURRENT_PACKAGES_DIR}")
     endif()
 else()
-    list(APPEND OPTIONS "--config-cache")
-    build_libintl_only()
+    if(VCPKG_TARGET_IS_LINUX)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    else()
+        list(APPEND OPTIONS "--config-cache")
+        build_libintl_only()
+    endif()
+    # A fast installation of the autopoint tool and data, needed for autotools
+    include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
+    install_autopoint()
 endif()
 
 # Handle copyright
