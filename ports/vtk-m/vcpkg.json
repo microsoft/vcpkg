@@ -1,0 +1,33 @@
+{
+  "name": "vtk-m",
+  "version-semver": "1.6.0",
+  "description": "VTK-m is a toolkit of scientific visualization algorithms for emerging processor architectures.",
+  "homepage": "https://gitlab.kitware.com/vtk/vtk-m/",
+  "supports": "x64 & !uwp",
+  "features": {
+    "cuda": {
+      "description": "Use the NVIDIA CUDA device adapter.",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "double": {
+      "description": "Use double precision in floating point calculations"
+    },
+    "mpi": {
+      "description": "Use the MPI controller.",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "omp": {
+      "description": "Use the OpenMP device adapter."
+    },
+    "tbb": {
+      "description": "Use the Intel TBB device adapter.",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}
