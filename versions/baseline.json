@@ -256,6 +256,10 @@
       "baseline": "0.1.6",
       "port-version": 0
     },
+    "aws-c-io": {
+      "baseline": "0.10.7",
+      "port-version": 0
+    },
     "aws-checksums": {
       "baseline": "0.1.11",
       "port-version": 0
