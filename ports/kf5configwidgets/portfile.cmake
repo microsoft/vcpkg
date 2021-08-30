@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 da03f4cfc2a64b3ccccfe2b6b7f392f84aba2b975edbf6a5b08a14604ccb565a4491c7eb707af7191345b55ca81e864b7ee13fe648589a56f3226c26160ed024
     HEAD_REF master
     PATCHES
-        71.patch
+        add_support_for_static_builds.patch # https://invent.kde.org/frameworks/kconfigwidgets/-/merge_requests/71
 )
 
 vcpkg_check_features(
