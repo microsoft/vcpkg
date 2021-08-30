@@ -113,10 +113,19 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 endif()
 
 # used for passing feature-specific definitions to the config file
-set(SKIA_PUBLIC_DEFINITIONS "")
+set(SKIA_PUBLIC_DEFINITIONS 
+    SK_SUPPORT_PDF
+    SK_HAS_JPEG_LIBRARY
+    SK_USE_LIBGIFCODEC
+    SK_HAS_PNG_LIBRARY
+    SK_HAS_WEBP_LIBRARY
+    SK_XML)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPTIONS "${OPTIONS} is_component_build=true")
+    if(CMAKE_HOST_WIN32)
+        set(SKIA_PUBLIC_DEFINITIONS SKIA_DLL)
+    endif()
 else()
     set(OPTIONS "${OPTIONS} is_component_build=false")
 endif()
