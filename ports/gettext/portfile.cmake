@@ -64,7 +64,7 @@ function(build_libintl_and_tools)
     if(DEFINED arg_BUILD_TYPE)
         set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     endif()
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
         ADD_BIN_TO_PATH # So configure can check for working iconv
@@ -72,7 +72,7 @@ function(build_libintl_and_tools)
         OPTIONS
             ${OPTIONS}
     )
-    vcpkg_install_make(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
+    vcpkg_make_install(MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile")
 endfunction()
 
 function(build_libintl_only)
@@ -80,14 +80,14 @@ function(build_libintl_only)
     if(DEFINED arg_BUILD_TYPE)
         set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     endif()
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
         ADD_BIN_TO_PATH # So configure can check for working iconv
         OPTIONS
             ${OPTIONS}
     )
-    vcpkg_install_make(SUBPATH "/intl")
+    vcpkg_make_install(SUBPATH "/intl")
 endfunction()
 
 if("tools" IN_LIST FEATURES)
