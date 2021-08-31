@@ -1,0 +1,7 @@
+{
+  "name": "eabase",
+  "version-string": "2.09.12",
+  "port-version": 2,
+  "description": "Electronic Arts Base. EABase is a small set of header files that define platform-independent data types and macros.",
+  "homepage": "https://github.com/electronicarts/EABase"
+}
