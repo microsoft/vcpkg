@@ -16,11 +16,10 @@ vcpkg_from_github(
         no-find-package-cmakefunctions.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/Findasio.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/Findasio.cmake")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DHAS_QT5=OFF
         -DBUILD_APPS=OFF
@@ -37,17 +36,17 @@ vcpkg_configure_cmake(
         -DCPACK_PACK_WITH_INNOSETUP=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
