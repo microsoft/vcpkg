@@ -120,34 +120,31 @@
   <PropertyGroup>
     <_ZVcpkgManifestFileLocation>$(VcpkgManifestRoot)vcpkg.json</_ZVcpkgManifestFileLocation>
     <_ZVcpkgConfigurationFileLocation>$(VcpkgManifestRoot)vcpkg-configuration.json</_ZVcpkgConfigurationFileLocation>
-
-    <!-- Note that we put these in VcpkgInstalledDir rather than somewhere like $(TLogLocation) because we want
-    multiple .vcxprojs to be able to share the same up-to-date checks. -->
     <_ZVcpkgMSBuildStampFile>$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)stamp</_ZVcpkgMSBuildStampFile>
-    <_ZVcpkgTLogFileLocation>$(VcpkgInstalledDir)VcpkgInstallManifest$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)read.1u.tlog</_ZVcpkgTLogFileLocation>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgManifestFileLocation)"/>
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
-
-    <_ZVcpkgInstallManifestDependenciesOutputs Include="$(_ZVcpkgTLogFileLocation)"/>
-    <_ZVcpkgInstallManifestDependenciesOutputs Include="$(_ZVcpkgMSBuildStampFile)"/>
   </ItemGroup>
 
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
-          Outputs="@(_ZVcpkgInstallManifestDependenciesOutputs)">
+          Outputs="$(_ZVcpkgMSBuildStampFile)">
+    <!-- This is set inside the target because $(TLogLocation) may not be set yet when parsing the .targets on VS2015 -->
+    <PropertyGroup>
+      <_ZVcpkgTLogFileLocation>$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)read.1u.tlog</_ZVcpkgTLogFileLocation>
+    </PropertyGroup>
     <Message Text="Installing vcpkg dependencies to $(VcpkgInstalledDir)" Importance="High" />
     <MakeDir Directories="$(VcpkgInstalledDir)" />
-    <Delete Files="$(_ZVcpkgMSBuildStampFile);$(_ZVcpkgTLogFileLocation)" />
+    <Delete Files="$(_ZVcpkgMSBuildStampFile)" />
     <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           Importance="High" />
     <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           StandardOutputImportance="High" />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
-                      Lines="@(_VcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
+                      Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"
                       Overwrite="true"/>
     <Touch Files="$(_ZVcpkgMSBuildStampFile)" AlwaysCreate="true" />
