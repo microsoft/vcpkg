@@ -12,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF 2c0d70152680d4d3966f5665e3d95f292cf275b4
-        SHA512 b0d62af814ad290616deea1a8e696fc1688b779db36c10ee0b0ee462c6c65cee48bc9d1d347edc4c7238a614cf4be75cc42336c26415fb4cba1f756203b6a773
+        REF cbd8d2fc396ee7aa69f65d5c6d520ec443584b59
+        SHA512 768329faf907855ae32245d7c9574e138fa4225d98938a8ec23429e9d9eb556701ee0bba9b9b69c8930ce7e0d72ca554f55415be8faaa22fd46738dbc6ad4556
         HEAD_REF master
     )
 endif()
