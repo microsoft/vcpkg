@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.84.0
     SHA512 b6452e56c6029289450850c1fcfff96da0005f8dfa03f1817754910945e3ccadd8502e330a4484a5c5e9a8d5525838c8090268bb083639062dfca7176852c159
     HEAD_REF master
+    PATCHES
+        fix_config_cmake.patch # https://invent.kde.org/frameworks/solid/-/merge_requests/53
 )
 
 if(VCPKG_TARGET_IS_OSX)
