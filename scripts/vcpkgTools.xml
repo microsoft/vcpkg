@@ -28,6 +28,13 @@
         <sha512>deb24087315bcf01d2969846246564a352b6f77521df6b235f9ef525450db9c89b32dca4ad78f93a356dd5ab7b587374d49fc1a892354760715a5ef1f88e925f</sha512>
         <archiveName>cmake-3.21.1-linux-x86_64.tar.gz</archiveName>
     </tool>
+    <tool name="cmake" os="freebsd">
+        <version>3.20.4</version>
+        <exeRelativePath>usr/local/bin/cmake</exeRelativePath>
+        <url>https://pkg.freebsd.org/FreeBSD:13:amd64/quarterly/All/cmake-3.20.4.txz</url>
+        <sha512>3e5b675d7ff924f92996d912e2365582e687375109ef99c9073fb8196bb329243a406b218cf1358d7cc518988b311ce9e5bf87de4d64f2e6377b7c2bc8894475</sha512>
+        <archiveName>cmake-3.20.4.txz</archiveName>
+    </tool>
     <tool name="git" os="windows">
         <version>2.32.0.2</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
