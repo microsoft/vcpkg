@@ -8,10 +8,13 @@
     "kf5config",
     "kf5coreaddons",
     {
+      "name": "libcanberra",
+      "platform": "!(windows | uwp)"
+    },
+    {
       "name": "libsnoretoast",
       "platform": "windows"
     },
-    "phonon4qt5",
     "qt5-base",
     {
       "name": "qt5-macextras",
