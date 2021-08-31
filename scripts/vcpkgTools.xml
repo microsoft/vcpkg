@@ -32,7 +32,7 @@
         <version>3.20.4</version>
         <exeRelativePath>usr/local/bin/cmake</exeRelativePath>
         <url>https://pkg.freebsd.org/FreeBSD:13:amd64/quarterly/All/cmake-3.20.4.txz</url>
-        <sha512>de4bab225e12261dc00b03cf88e6b601b0da1c13e82acfb4c6e8c9f99b932ac77aad0471c11dce4612ae9297e243e5d3958be7776fb149e2ba96e7359d31f12d</sha512>
+        <sha512>3e5b675d7ff924f92996d912e2365582e687375109ef99c9073fb8196bb329243a406b218cf1358d7cc518988b311ce9e5bf87de4d64f2e6377b7c2bc8894475</sha512>
         <archiveName>cmake-3.20.4.txz</archiveName>
     </tool>
     <tool name="git" os="windows">
