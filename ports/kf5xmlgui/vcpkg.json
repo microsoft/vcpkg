@@ -1,6 +1,6 @@
 {
   "name": "kf5xmlgui",
-  "version-string": "5.84.0",
+  "version-semver": "5.84.0",
   "description": "Framework for managing menu and toolbar actions",
   "homepage": "https://api.kde.org/frameworks/kxmlgui/html/index.html",
   "dependencies": [
