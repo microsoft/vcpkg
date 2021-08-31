@@ -8,6 +8,10 @@
     "kf5config",
     "kf5coreaddons",
     {
+      "name": "kf5windowsystem",
+      "platform": "!android"
+    },
+    {
       "name": "libcanberra",
       "platform": "!(windows | uwp)"
     },
