@@ -61,13 +61,26 @@
     "kf5notifications": {
       "description": "Required to have error notification support in kpac",
       "dependencies": [
-        "kf5notifications"
+        {
+          "name": "kf5kio",
+          "default-features": false,
+          "features": [
+            "unixkf5notifications"
+          ],
+          "platform": "!(windows | android)"
+        }
       ]
     },
     "kf5wallet": {
       "description": "Required to have permanent storage of passwords for kpasswdserver",
       "dependencies": [
         "kf5wallet"
+      ]
+    },
+    "unixkf5notifications": {
+      "description": "Required to have error notification support in kpac (windows only)",
+      "dependencies": [
+        "kf5notifications"
       ]
     }
   }
