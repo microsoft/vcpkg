@@ -1,0 +1,26 @@
+{
+  "name": "kf5notifications",
+  "version-string": "5.75.0",
+  "description": "Desktop notifications",
+  "homepage": "https://api.kde.org/frameworks/knotifications/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5coreaddons",
+    {
+      "name": "libsnoretoast",
+      "platform": "windows"
+    },
+    "phonon4qt5",
+    "qt5-base",
+    {
+      "name": "qt5-macextras",
+      "platform": "osx"
+    },
+    "qt5-tools",
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    }
+  ]
+}
