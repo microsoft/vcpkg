@@ -1,6 +1,6 @@
 {
   "name": "kf5notifications",
-  "version-string": "5.75.0",
+  "version-semver": "5.75.0",
   "description": "Desktop notifications",
   "homepage": "https://api.kde.org/frameworks/knotifications/html/index.html",
   "dependencies": [
