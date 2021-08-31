@@ -44,6 +44,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Solid)
 vcpkg_copy_pdbs()
 
+vcpkg_copy_tools(
+      TOOL_NAMES solid-hardware5
+      AUTO_CLEAN
+ )
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
@@ -51,9 +56,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-# solid-hardware and solid-power are a non-dev tools allowing to list hardware and power managament status of one's system. No need to keep them.
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/solid-hardware5${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/solid-hardware5${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/solid-power${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/solid-power${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/debug/qml")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
 
