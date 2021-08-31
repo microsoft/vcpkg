@@ -1,4 +1,7 @@
-set(PATCHES fix_dbusmetatypes.patch) # https://invent.kde.org/frameworks/kio/-/merge_requests/563
+set(PATCHES
+    fix_dbusmetatypes.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/563
+    fix_config_cmake.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/565
+)
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES fix_libiconv.patch)
