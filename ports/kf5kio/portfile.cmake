@@ -16,6 +16,11 @@ vcpkg_from_github(
     PATCHES ${PATCHES}
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "kf5notifications" CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
+)
+
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
@@ -25,6 +30,7 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_LIBEXECDIR=bin
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
