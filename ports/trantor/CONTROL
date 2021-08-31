@@ -1,5 +1,0 @@
-Source: trantor
-Version: 1.5.0
-Homepage: https://github.com/an-tao/trantor
-Description: A non-blocking I/O cross-platform TCP network library, using C++14.
-Build-Depends: openssl, c-ares
