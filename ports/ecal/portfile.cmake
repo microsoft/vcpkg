@@ -1,6 +1,3 @@
-# eCAL always builds both static and shared binaries because it has a plugin model
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 message(WARNING "ecal in vcpkg does not currently support find_package(eCAL) -- you will need to manually add headers and libraries via `find_library()` and `find_path()`")
 
 vcpkg_from_github(

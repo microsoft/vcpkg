@@ -1,6 +1,6 @@
 {
   "name": "ecal",
-  "version": "5.9.0",
+  "version-semver": "5.9.0",
   "description": "eCAL - enhanced Communication Abstraction Layer",
   "homepage": "https://continental.github.io/ecal/",
   "supports": "!emscripten",
