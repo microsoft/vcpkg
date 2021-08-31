@@ -19,8 +19,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
 
-[![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 # Table of Contents
 
 - [Vcpkg: Overview](#vcpkg-overview)
@@ -40,6 +38,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 - [Examples](#examples)
 - [Contributing](#contributing)
 - [License](#license)
+- [Security](#security)
 - [Telemetry](#telemetry)
 
 # Getting Started
@@ -350,7 +349,18 @@ with any additional questions or comments.
 
 # License
 
-The code in this repository is licensed under the [MIT License](LICENSE.txt).
+The code in this repository is licensed under the [MIT License](LICENSE.txt). The libraries
+provided by ports are licensed under the terms of their original authors. Where available, vcpkg
+places the associated license(s) in the location `installed/<triplet>/share/<port>/copyright`.
+
+# Security
+
+Most ports in vcpkg build the libraries in question using the original build system preferred
+by the original developers of those libraries, and download source code and build tools from their
+official distribution locations. For use behind a firewall, the specific access needed will depend
+on which ports are being installed. If you must install in in an "air gapped" environment, consider
+installing once in a non-"air gapped" environment, populating an
+[asset cache](docs/users/assetcaching.md) shared with the otherwise "air gapped" environment.
 
 # Telemetry
 
