@@ -16,8 +16,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-iot-sdk-c
-        REF a570a3dd456969a9cc402e4ed001b11139449514
-        SHA512 acfbf090c87c3a71f8d2a037d1ca9385199160b09c076ab703df6a4cfa2d079eedd143f30261f62a97e2f06c729dde907650c6d36f4317e16f4422b2db371a74
+        REF 8372cc9c1cbf2752573964af3c0bdfba614186b6
+        SHA512 832e3875afb7cdea1188adf13926243c4a2daf8d557e357d6fc5c3395dc383e512b6317b44e9182d85cb2a63456ed4785ee3ed1fb4abdcbc1d813d9ff40a64e5
         HEAD_REF master
         PATCHES
             improve-external-deps.patch
