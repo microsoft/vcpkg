@@ -7,20 +7,19 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_OSX)
-     # In Darwin platform, there can be an old version of `bison`, 
-     # Which can't be used for `gst-build`. It requires 2.4+
-     vcpkg_find_acquire_program(BISON)
-     execute_process(
-         COMMAND ${BISON} --version
-         OUTPUT_VARIABLE BISON_OUTPUT
-     )
-     string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
-     set(BISON_MAJOR ${CMAKE_MATCH_1})
-     set(BISON_MINOR ${CMAKE_MATCH_2})
-     message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
-     if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
-         message(WARNING "${PORT} requires bison version greater than one provided by macOS, please use \`brew install bison\` to install a newer bison.")
-     endif()
+    # On Darwin platform, the bundled version of 'bison' may be too old (< 3.0).
+    vcpkg_find_acquire_program(BISON)
+    execute_process(
+        COMMAND ${BISON} --version
+        OUTPUT_VARIABLE BISON_OUTPUT
+    )
+    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
+    set(BISON_MAJOR ${CMAKE_MATCH_1})
+    set(BISON_MINOR ${CMAKE_MATCH_2})
+    message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
+    if(NOT (BISON_MAJOR GREATER_EQUAL 3 AND BISON_MINOR GREATER_EQUAL 0))
+        message(WARNING "${PORT} requires bison version greater than one provided by macOS, please use \`brew install bison\` to install a newer bison.")
+    endif()
 endif()
 
 vcpkg_find_acquire_program(BISON)
