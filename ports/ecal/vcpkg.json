@@ -11,7 +11,7 @@
     "pthread",
     "simpleini",
     "tclap",
-	{
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
