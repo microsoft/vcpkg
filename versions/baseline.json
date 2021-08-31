@@ -93,8 +93,8 @@
       "port-version": 0
     },
     "anyrpc": {
-      "baseline": "2020-01-13",
-      "port-version": 2
+      "baseline": "2021-08-24",
+      "port-version": 0
     },
     "aom": {
       "baseline": "3.1.2",
@@ -1301,7 +1301,7 @@
       "port-version": 0
     },
     "cli": {
-      "baseline": "1.2.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "cli11": {
@@ -1365,15 +1365,15 @@
       "port-version": 1
     },
     "comms": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "0.20.1",
+      "baseline": "0.20.2",
       "port-version": 0
     },
     "commsdsl": {
-      "baseline": "3.6.3",
+      "baseline": "3.6.4",
       "port-version": 0
     },
     "concurrentqueue": {
@@ -1561,7 +1561,7 @@
       "port-version": 0
     },
     "ctre": {
-      "baseline": "2.10",
+      "baseline": "3.4.1",
       "port-version": 0
     },
     "cub": {
@@ -1641,15 +1641,15 @@
       "port-version": 1
     },
     "daw-header-libraries": {
-      "baseline": "1.21.1",
+      "baseline": "1.29.7",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "2.9.11",
+      "baseline": "2.10.2",
       "port-version": 0
     },
     "daw-utf-range": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "dbg-macro": {
@@ -1786,7 +1786,7 @@
     },
     "drogon": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "dtl": {
       "baseline": "1.19",
@@ -1817,12 +1817,12 @@
       "port-version": 0
     },
     "eabase": {
-      "baseline": "2.09.12-1",
-      "port-version": 0
+      "baseline": "2.09.12",
+      "port-version": 2
     },
     "eastl": {
       "baseline": "3.17.03",
-      "port-version": 0
+      "port-version": 1
     },
     "easycl": {
       "baseline": "0.3",
@@ -2189,7 +2189,7 @@
       "port-version": 0
     },
     "functions-framework-cpp": {
-      "baseline": "0.5.0",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "fuzzylite": {
@@ -2386,7 +2386,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.30.1",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2505,8 +2505,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.8.1",
-      "port-version": 1
+      "baseline": "2.8.2",
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2849,7 +2849,7 @@
       "port-version": 2
     },
     "jwt-cpp": {
-      "baseline": "0.5.0",
+      "baseline": "0.5.1",
       "port-version": 0
     },
     "jxrlib": {
@@ -2955,6 +2955,10 @@
     "kf5syntaxhighlighting": {
       "baseline": "5.84.0",
       "port-version": 1
+    },
+    "kf5wallet": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5widgetsaddons": {
       "baseline": "5.84.0",
@@ -3202,7 +3206,7 @@
     },
     "libffi": {
       "baseline": "3.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libfido2": {
       "baseline": "1.7.0",
@@ -3301,7 +3305,7 @@
       "port-version": 10
     },
     "libics": {
-      "baseline": "1.6.4",
+      "baseline": "1.6.5",
       "port-version": 0
     },
     "libideviceactivation": {
@@ -3362,7 +3366,7 @@
     },
     "liblo": {
       "baseline": "0.31",
-      "port-version": 0
+      "port-version": 1
     },
     "liblsl": {
       "baseline": "1.14.0",
@@ -3429,7 +3433,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.5.0",
+      "baseline": "2.5.3",
       "port-version": 0
     },
     "libmupdf": {
@@ -3517,7 +3521,7 @@
       "port-version": 1
     },
     "libpmemobj-cpp": {
-      "baseline": "1.12",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "libpng": {
@@ -4053,7 +4057,7 @@
       "port-version": 0
     },
     "mesa": {
-      "baseline": "21.1.6",
+      "baseline": "21.2.0",
       "port-version": 0
     },
     "meschach": {
@@ -4409,8 +4413,8 @@
       "port-version": 0
     },
     "ngspice": {
-      "baseline": "34",
-      "port-version": 1
+      "baseline": "35",
+      "port-version": 0
     },
     "nifticlib": {
       "baseline": "2020-04-30",
@@ -4965,7 +4969,7 @@
       "port-version": 6
     },
     "plf-colony": {
-      "baseline": "5.33",
+      "baseline": "6.28",
       "port-version": 0
     },
     "plf-list": {
@@ -6080,6 +6084,10 @@
       "baseline": "2021.1",
       "port-version": 0
     },
+    "spix": {
+      "baseline": "0.3",
+      "port-version": 0
+    },
     "sprout": {
       "baseline": "2019-06-20",
       "port-version": 0
@@ -6449,7 +6457,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "tre": {
@@ -6717,7 +6725,7 @@
       "port-version": 0
     },
     "wavelib": {
-      "baseline": "2020-05-29",
+      "baseline": "2021-08-10",
       "port-version": 0
     },
     "wavpack": {
