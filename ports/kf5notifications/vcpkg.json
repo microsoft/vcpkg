@@ -19,6 +19,10 @@
       "name": "libsnoretoast",
       "platform": "windows"
     },
+    {
+      "name": "qt5-androidextras",
+      "platform": "android"
+    },
     "qt5-base",
     {
       "name": "qt5-macextras",
