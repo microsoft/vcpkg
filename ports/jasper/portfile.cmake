@@ -6,11 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(JAS_ENABLE_SHARED ON)
-else()
-    set(JAS_ENABLE_SHARED OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JAS_ENABLE_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
