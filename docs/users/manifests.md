@@ -441,7 +441,7 @@ See the `--feature-flags=` command line option for more information.
 ## MSBuild Integration
 
 To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild).
-Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the
+Then, add a vcpkg.json above your project file (such as in the root of your source repository) and set the
 property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use
 Vcpkg Manifest`.
 
@@ -452,6 +452,11 @@ projects.
 Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if
 you need to use different triplets for different projects in your solution, they must consume from different
 `vcpkg.json` files.
+
+### Known issues
+
+* Visual Studio 2015 does not correctly track edits to the `vcpkg.json` and `vcpkg-configuration.json` files, and will
+not respond to changes unless a `.cpp` is edited.
 
 ### MSBuild Properties
 
