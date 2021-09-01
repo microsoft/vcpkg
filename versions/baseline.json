@@ -272,6 +272,10 @@
       "baseline": "0.10.7",
       "port-version": 0
     },
+    "aws-c-mqtt": {
+      "baseline": "0.7.6",
+      "port-version": 0
+    },
     "aws-checksums": {
       "baseline": "0.1.11",
       "port-version": 0
