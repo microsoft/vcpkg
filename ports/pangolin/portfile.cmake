@@ -26,7 +26,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         test     BUILD_TESTS
         tools    BUILD_TOOLS
         examples BUILD_EXAMPLES
-
 )
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
