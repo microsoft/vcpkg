@@ -3,7 +3,7 @@
   "version": "0.6",
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
-  "supports": "!uwp & !osx",
+  "supports": "!uwp",
   "dependencies": [
     "eigen3",
     {
@@ -23,5 +23,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "examples": {
+      "description": "Build Examples"
+    },
+    "test": {
+      "description": "Build Tests"
+    },
+    "tools": {
+      "description": "Build Tools"
+    }
+  }
 }

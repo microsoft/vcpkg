@@ -1,6 +1,11 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    set(BUILD_SHARED_LIBS OFF)
+else()
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -13,13 +18,23 @@ vcpkg_from_github(
         fix-dependency-python.patch
         add-definition.patch
         fix-cmake-version.patch
-        fix-build-error-in-vs2019.patch #upstream issue https://github.com/stevenlovegrove/Pangolin/issues/654
+        fix-build-error-in-vs2019.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        test     BUILD_TESTS
+        tools    BUILD_TOOLS
+        examples BUILD_EXAMPLES
+
 )
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake")
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -39,6 +54,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
@@ -49,7 +65,9 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_copy_tools(TOOL_NAMES Plotter VideoConvert VideoJsonPrint VideoJsonTransform VideoViewer AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES Plotter VideoConvert VideoJsonPrint VideoJsonTransform VideoViewer AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
