@@ -50,8 +50,8 @@ if("ilbc" IN_LIST FEATURES)
 endif()
 
 if("modplug" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp | (windows & static)'")
+    if (VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp'")
     endif()
 endif()
 
@@ -544,9 +544,8 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
-set(CMAKE_VARS_FILE "${CURRENT_BUILDTREES_DIR}/vars.cmake")
-vcpkg_internal_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
-include("${CMAKE_VARS_FILE}")
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
 
 if (VCPKG_TARGET_IS_OSX)
     # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us
@@ -585,6 +584,9 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
         endif()
     endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    if(VCPKG_TARGET_IS_OSX)
+        set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=x86_64 --extra-ldflags=-arch --extra-ldflags=x86_64 --extra-cflags=-arch --extra-cflags=x86_64 --extra-cxxflags=-arch --extra-cxxflags=x86_64")
+    endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 else()
     message(FATAL_ERROR "Unsupported architecture")

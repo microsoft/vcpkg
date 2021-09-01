@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
-    REF v5.81.0
-    SHA512 438b2a6fbb040e9442bdfd7f29388165ed8df3bbb676d93efd86ccaa2106c9b5d3b9561eecb10fb14f54d46dac8f0c969c424ec9e351e18ee2c742de418596b9
+    REF v5.84.0
+    SHA512 58a802d03bea135c192265651540f9f87066b20ee4af620a94a874ec3992c5e734d1ab1e4ccb082de97389fa3479fd3672ec586c3dd36c9b4a5422c7be98d119
 )
 
 vcpkg_configure_cmake(
