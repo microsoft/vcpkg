@@ -2850,7 +2850,7 @@
     },
     "jwt-cpp": {
       "baseline": "0.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "jxrlib": {
       "baseline": "2019.10.9",
