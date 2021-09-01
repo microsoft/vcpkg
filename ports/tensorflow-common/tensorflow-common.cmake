@@ -45,7 +45,16 @@ else()
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+	if(VCPKG_TARGET_IS_OSX)
+		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
+		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
+		set(ENV{BLAS} "None")
+		set(ENV{LAPACK} "None")
+		set(ENV{ATLAS} "None")
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+	else()
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+	endif()
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
@@ -265,20 +274,18 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-		if(NOT VCPKG_TARGET_IS_OSX)
-			if(VCPKG_TARGET_IS_WINDOWS)
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			else()
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			endif()
+		if(VCPKG_TARGET_IS_WINDOWS)
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+		else()
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
