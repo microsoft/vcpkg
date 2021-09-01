@@ -17,8 +17,7 @@
     <_ZVcpkgInstalledDir>$(VcpkgInstalledDir)</_ZVcpkgInstalledDir>
   </PropertyGroup>
 
-  <!-- Add trailing slashes to inputs that must have them to conform with msbuild conventions. Note that these are in
-  TreatAsLocalProperty to ensure we can add the trailing \ -->
+  <!-- Add trailing slashes to inputs that must have them to conform with msbuild conventions. -->
   <PropertyGroup>
     <_ZVcpkgRoot Condition="!$(_ZVcpkgRoot.EndsWith('\'))">$(_ZVcpkgRoot)\</_ZVcpkgRoot>
     <_ZVcpkgManifestRoot Condition="'$(_ZVcpkgManifestRoot)' != '' and !$(_ZVcpkgManifestRoot.EndsWith('\'))">$(_ZVcpkgManifestRoot)\</_ZVcpkgManifestRoot>
