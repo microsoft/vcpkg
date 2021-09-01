@@ -57,7 +57,7 @@ else()
 endif()
 
 if (USE_EXTERNAL_BLAS)
-    if (EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/blas64.pkg")
+    if (EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/blas64.pc")
         set(USED_BLAS_NAME "blas64")
     else()
         set(USED_BLAS_NAME "blas")
