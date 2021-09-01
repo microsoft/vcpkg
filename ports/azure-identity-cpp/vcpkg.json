@@ -1,11 +1,11 @@
 {
   "name": "azure-identity-cpp",
-  "version-semver": "1.0.0",
+  "version-semver": "1.1.0",
   "description": [
     "Microsoft Azure Identity SDK for C++",
     "This library provides common authentication-related abstractions for Azure SDK."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/identity/azure-identity",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/identity/azure-identity",
   "license": "MIT",
   "dependencies": [
     {
