@@ -160,7 +160,7 @@ function(vcpkg_from_github)
         # Parse the github refs response with regex.
         # TODO: add json-pointer support to vcpkg
         file(READ "${archive_version}" version_contents)
-        if(NOT version_contents MATCHES [["sha": "([a-f0-9]+)"]])
+        if(NOT version_contents MATCHES [["sha":"([a-f0-9]+)"]])
             message(FATAL_ERROR "Failed to parse API response from '${version_url}':
 
 ${version_contents}
