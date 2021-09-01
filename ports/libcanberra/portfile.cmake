@@ -62,7 +62,6 @@ if(VCPKG_TARGET_IS_OSX)
 endif()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools") # empty folder
