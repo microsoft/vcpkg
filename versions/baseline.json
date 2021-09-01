@@ -2882,7 +2882,7 @@
     },
     "kf5archive": {
       "baseline": "5.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5attica": {
       "baseline": "5.84.0",
