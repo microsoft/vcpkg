@@ -10,7 +10,6 @@ if("public-preview" IN_LIST FEATURES)
         PATCHES
             improve-external-deps.patch
             fix-cmake.patch
-            remove-werror.patch
     )
 else()
     vcpkg_from_github(
@@ -22,7 +21,6 @@ else()
         PATCHES
             improve-external-deps.patch
             fix-cmake.patch
-            remove-werror.patch
     )
 endif()
 
@@ -44,6 +42,7 @@ vcpkg_configure_cmake(
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
+        -Dwarnings_as_errors=OFF
 )
 
 vcpkg_install_cmake()
