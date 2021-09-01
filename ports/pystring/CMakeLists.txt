@@ -17,7 +17,7 @@ include(GNUInstallDirs)
 
 install(
   TARGETS pystring
-  EXPORT unofficial-pystring-config
+  EXPORT pystring-config
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
@@ -25,7 +25,7 @@ if(NOT DISABLE_INSTALL_HEADERS)
 endif()
 
 install(
-  EXPORT unofficial-pystring-config
-  NAMESPACE unofficial::pystring::
-  DESTINATION share/unofficial-pystring
+  EXPORT pystring-config
+  NAMESPACE pystring::
+  DESTINATION share/pystring
 )
