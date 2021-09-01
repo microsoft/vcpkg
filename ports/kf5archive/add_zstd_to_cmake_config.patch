@@ -1,0 +1,26 @@
+From 5a79756f381e1a1843cb2171bdc151dad53fb7db Mon Sep 17 00:00:00 2001
+From: "Friedrich W. H. Kossebau" <kossebau@kde.org>
+Date: Wed, 7 Jul 2021 03:09:38 +0200
+Subject: [PATCH] Report KArchive_HAVE_ZSTD in CMake Config file to consumers
+
+Allows users of KArchive to query whether zstd is available,
+in the same way as lzma & bzip2
+---
+ KF5ArchiveConfig.cmake.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/KF5ArchiveConfig.cmake.in b/KF5ArchiveConfig.cmake.in
+index 0d59d63..3d32642 100644
+--- a/KF5ArchiveConfig.cmake.in
++++ b/KF5ArchiveConfig.cmake.in
+@@ -6,6 +6,7 @@ find_dependency(Qt5Core @REQUIRED_QT_VERSION@)
+ 
+ set(KArchive_HAVE_BZIP2 "@BZIP2_FOUND@")
+ set(KArchive_HAVE_LZMA  "@LIBLZMA_FOUND@")
++set(KArchive_HAVE_ZSTD  "@LibZstd_FOUND@")
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5ArchiveTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+
