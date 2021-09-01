@@ -3,7 +3,7 @@
   "version-semver": "1.6.3",
   "description": "C++14 Asynchronous Low Latency Logging Library",
   "homepage": "https://github.com/odygrd/quill/",
-  "supports": "!(uwp|android)",
+  "supports": "!(uwp | android)",
   "dependencies": [
     "fmt"
   ]
