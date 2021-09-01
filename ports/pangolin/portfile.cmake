@@ -2,9 +2,6 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-    set(BUILD_SHARED_LIBS OFF)
-else()
-    set(BUILD_SHARED_LIBS ON)
 endif()
 
 vcpkg_from_github(
@@ -31,9 +28,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -53,7 +48,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
