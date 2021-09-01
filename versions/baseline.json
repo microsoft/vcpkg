@@ -4520,6 +4520,10 @@
       "baseline": "1.2.5",
       "port-version": 0
     },
+    "oatpp-openssl": {
+      "baseline": "1.2.5",
+      "port-version": 0
+    },
     "oatpp-postgresql": {
       "baseline": "1.2.5",
       "port-version": 0
