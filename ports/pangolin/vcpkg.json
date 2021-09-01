@@ -1,7 +1,6 @@
 {
   "name": "pangolin",
-  "version-string": "0.5",
-  "port-version": 15,
+  "version": "0.6",
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "supports": "!uwp & !osx",
@@ -12,6 +11,14 @@
       "features": [
         "avformat"
       ]
+    },
+    {
+        "name": "vcpkg-cmake",
+        "host": true
+    },
+    {
+       "name": "vcpkg-cmake-config",
+       "host": true
     },
     "glew",
     "libjpeg-turbo",
