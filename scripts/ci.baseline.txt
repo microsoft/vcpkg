@@ -1757,7 +1757,3 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
-
-# Changes in Python have broken tensorflow on our osx hardware
-tensorflow:x64-osx=fail
-tensorflow-cc:x64-osx=fail
