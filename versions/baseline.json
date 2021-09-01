@@ -276,6 +276,10 @@
       "baseline": "0.7.6",
       "port-version": 0
     },
+    "aws-c-s3": {
+      "baseline": "0.1.25",
+      "port-version": 0
+    },
     "aws-checksums": {
       "baseline": "0.1.11",
       "port-version": 0
