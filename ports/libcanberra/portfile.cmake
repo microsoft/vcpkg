@@ -3,7 +3,7 @@ set(VERSION 0.30)
 set(PATCHES)
 
 if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHES macos_fix.patch)
+    list(APPEND PATCHES macos_fix.patch macos_pkgconfig.patch)
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -25,6 +25,9 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${PATCHES}
 )
 
+set(EXTRA_CPPFLAGS)
+set(EXTRA_LDFLAGS)
+
 #libltdl fixes
 if(VCPKG_TARGET_IS_OSX)
     execute_process(
@@ -33,11 +36,10 @@ if(VCPKG_TARGET_IS_OSX)
     )
     string(STRIP ${BREW_LIBTOOL_PATH} BREW_LIBTOOL_PATH)
 
-    set(EXTRA_LDFLAGS "LDFLAGS=-L${BREW_LIBTOOL_PATH}/lib/")
-    set(EXTRA_CPPFLAGS "CPPFLAGS=-I${BREW_LIBTOOL_PATH}/include/")
-else()
-    set(EXTRA_CPPFLAGS)
-    set(EXTRA_LDFLAGS)
+    set(LIBS_PRIVATE "-L${BREW_LIBTOOL_PATH}/lib -lltdl")
+    set(CFLAGS_PRIVATE "-I${BREW_LIBTOOL_PATH}/include")
+    set(EXTRA_LDFLAGS "LDFLAGS=${LIBS_PRIVATE}")
+    set(EXTRA_CPPFLAGS "CPPFLAGS=${CFLAGS_PRIVATE}")
 endif()
 
 set(ENV{GTKDOCIZE} true)
@@ -53,6 +55,12 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
+if(VCPKG_TARGET_IS_OSX)
+    configure_file("${SOURCE_PATH}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
+endif()
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
