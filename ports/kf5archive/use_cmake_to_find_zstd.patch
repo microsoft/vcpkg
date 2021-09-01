@@ -1,0 +1,49 @@
+From 82fc20234d4cf8abdec1a2b4fea9823154f1aecc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Fri, 27 Aug 2021 01:48:53 +0200
+Subject: [PATCH] Use CMake to find ZSTD
+
+---
+ CMakeLists.txt            | 11 +++++------
+ KF5ArchiveConfig.cmake.in |  3 +--
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8ab85f4..ece1f77 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,12 +44,11 @@ set_package_properties(LibLZMA PROPERTIES
+     PURPOSE "Support for xz compressed files and data streams"
+ )
+ 
+-find_package(PkgConfig)
+-if (PkgConfig_FOUND)
+-    pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
+-endif()
+-add_feature_info(LibZstd LibZstd_FOUND
+-                "Support for zstd compressed files and data streams"
++find_package(ZSTD)
++set_package_properties(LibZstd PROPERTIES
++    URL "http://www.zstd.net"
++    DESCRIPTION "Support for zstd compressed files and data streams"
++    PURPOSE "Support for zstd compressed files and data streams"
+ )
+ 
+ include(ECMSetupVersion)
+diff --git a/KF5ArchiveConfig.cmake.in b/KF5ArchiveConfig.cmake.in
+index 0a738c2..d868324 100644
+--- a/KF5ArchiveConfig.cmake.in
++++ b/KF5ArchiveConfig.cmake.in
+@@ -23,8 +23,7 @@ if (NOT @BUILD_SHARED_LIBS@)
+     endif()
+ 
+     if (@LibZstd_FOUND@)
+-        find_package(PkgConfig)
+-        pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++        find_dependency(ZSTD)
+     endif()
+ endif()
+ 
+-- 
+GitLab
+
