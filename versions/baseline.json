@@ -5165,7 +5165,7 @@
       "port-version": 1
     },
     "python3": {
-      "baseline": "3.9.6",
+      "baseline": "3.9.7",
       "port-version": 0
     },
     "qca": {
