@@ -1,28 +1,24 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://nanohub.org/app/site/downloads/rappture/rappture-src-20130903.tar.gz"
-    FILENAME "rappture-src-20130903.tar.gz"
-    SHA512 3b42569d056c5e80762eada3aff23d230d4ba8f6f0078de44d8571a713dde91e31e66fe3c37ceb66e934a1410b338fb481aeb5a29ef56b53da4ad2e8a2a2ae59
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO AenBleidd/rappture
+    REF 03982392195b0d9768532a1ea7cfb9bf909a1d04
+    SHA512 9acfa5e08803016a815cf275429e0b2315f00fc17c87eb362a978c68a21138855c57bacc0b443e260e004871daef750374c47103fa16257d70628542e74eb63b
+    HEAD_REF master
     PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/rappture.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/rappture.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 

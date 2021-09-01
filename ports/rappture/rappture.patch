@@ -1,5 +1,5 @@
 diff --git a/src/core/RpBuffer.cc b/src/core/RpBuffer.cc
-index 6d439fe..ec45405 100644
+index 7bed3d5c..f680d84a 100644
 --- a/src/core/RpBuffer.cc
 +++ b/src/core/RpBuffer.cc
 @@ -16,7 +16,6 @@
@@ -13,34 +13,36 @@ index 6d439fe..ec45405 100644
 @@ -24,6 +23,11 @@
  #include "RpBuffer.h"
  #include "RpEncode.h"
- 
+
 +#if defined(_MSC_VER)
 +#include <BaseTsd.h>
 +typedef SSIZE_T ssize_t;
 +#endif
 +
  namespace Rappture {
- 
+
  /**
-@@ -109,6 +113,9 @@ Buffer::operator+=(const Buffer& b)
+@@ -104,6 +108,10 @@ Buffer::operator+=(const Buffer& b)
  Buffer::~Buffer()
  {}
- 
+
 +#ifndef _WIN32
 +#   define _fileno fileno
 +#endif
- 
++
  bool
  Buffer::load (Outcome &status, const char *path)
-@@ -123,7 +130,7 @@ Buffer::load (Outcome &status, const char *path)
+ {
+@@ -117,7 +125,7 @@ Buffer::load (Outcome &status, const char *path)
      }
- 
+
      struct stat stat;
 -    if (fstat(fileno(f), &stat) < 0) {
 +    if (fstat(_fileno(f), &stat) < 0) {
          status.addError("can't stat \"%s\": %s", path, strerror(errno));
          return false;
      }
+
 diff --git a/src/core/RpDXWriter.cc b/src/core/RpDXWriter.cc
 index e4748b3..8990c0f 100644
 --- a/src/core/RpDXWriter.cc
