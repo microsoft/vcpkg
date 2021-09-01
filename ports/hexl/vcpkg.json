@@ -6,10 +6,6 @@
   "supports": "x64 & !(windows & !static)",
   "dependencies": [
     "cpu-features",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
     "easyloggingpp",
     {
       "name": "vcpkg-cmake",
