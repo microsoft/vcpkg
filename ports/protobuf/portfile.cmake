@@ -31,6 +31,15 @@ if (VCPKG_DOWNLOAD_MODE)
     vcpkg_find_acquire_program(PKGCONFIG)
 endif()
 
+if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static") 
+    set(protobuf_VISIBILITY_FLAGS 
+        -DCMAKE_POLICY_DEFAULT_CMP0063=NEW
+        -DCMAKE_C_VISIBILITY_PRESET=hidden
+        -DCMAKE_CXX_VISIBILITY_PRESET=hidden
+        -DCMAKE_VISIBILITY_INLINES_HIDDEN=TRUE
+    )
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
     PREFER_NINJA
@@ -41,6 +50,7 @@ vcpkg_configure_cmake(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
+        ${protobuf_VISIBILITY_FLAGS}
         ${FEATURE_OPTIONS}
 )
 
