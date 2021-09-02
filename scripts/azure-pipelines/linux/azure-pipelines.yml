@@ -19,7 +19,7 @@ jobs:
     value: "x-azurl,$(root-url),$(sas),readwrite"
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-url),$(sas)"
+    value: "x-azblob,$(root-bin-url),$(sas-bin)"
 
   steps:
   - bash: df -h
