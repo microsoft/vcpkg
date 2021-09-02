@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.9.6</version>
+        <version>3.9.7</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.9.6/python-3.9.6-embed-win32.zip</url>
-        <sha512>4b2a0670094e639dcb2b762a02de8cdadd0af3657c463d9ff45af2541c0306496b991ae5402f119443ca891e918685bb57d18f13975f0493d349d864ff3e3a2c</sha512>
-        <archiveName>python-3.9.6-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.9.7/python-3.9.7-embed-win32.zip</url>
+        <sha512>5F12F693C6DF68B75F96B797740A156F2DCD471E96E7980A6E297BBFD064467BA2B2CC9D2F450296388402A8A0B716FCE1C4A25B94B50615503D528E33FEA870</sha512>
+        <archiveName>python-3.9.7-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.21.1</version>
