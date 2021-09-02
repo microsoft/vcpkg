@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commonmark/cmark
-    REF 8800e66010214384e75f933830ca5585e1ae3060    #0.30.0
-    SHA512 9055eb13212034fe1a819ae697a74fa927a5094dc38da9548758b7a2b07834f6b85b71718f5c96cef9676b244243b0c0b5173f672f8d823df1bdff318bfd0ebf
+    REF 977b128291c0cf6c5053cdcf2ac72e627f09c105    #0.30.1
+    SHA512 ff8139fbb45549d6bea70e11c35ae1d8cf6108d0141688cc2b878afa6247147e0c15ac885e6ed8fa2263534dc79e88e398b30d3d3ae800f13dcdd878114adac8
     HEAD_REF master
     PATCHES
         rename-shared-lib.patch
@@ -30,12 +30,6 @@ vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_tools(TOOL_NAMES cmark_exe AUTO_CLEAN)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/cmark.exe ${CURRENT_PACKAGES_DIR}/debug/bin/cmark.exe)
-endif()

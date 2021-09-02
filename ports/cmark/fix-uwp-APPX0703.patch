@@ -1,11 +1,11 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 345bdd1..b042f6e 100644
+index 3a78d0b..cf53188 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -53,8 +53,6 @@ include(GNUInstallDirs)
- include (GenerateExportHeader)
+@@ -54,8 +54,6 @@ include (GenerateExportHeader)
  
  add_executable(${PROGRAM} ${PROGRAM_SOURCES})
+ cmark_add_compile_options(${PROGRAM})
 -set_target_properties(${PROGRAM} PROPERTIES
 -  OUTPUT_NAME "cmark")
  

@@ -1,9 +1,9 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 026fd79..345bdd1 100644
+index 33fd578..3a78d0b 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -73,7 +73,6 @@ if (CMARK_SHARED)
-   add_library(${LIBRARY} SHARED ${LIBRARY_SOURCES})
+@@ -75,7 +75,6 @@ if (CMARK_SHARED)
+   cmark_add_compile_options(${LIBRARY})
    set_target_properties(${LIBRARY} PROPERTIES
      MACOSX_RPATH TRUE
 -    OUTPUT_NAME "cmark"
