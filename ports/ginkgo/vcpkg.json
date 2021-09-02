@@ -1,7 +1,7 @@
 {
   "name": "ginkgo",
-  "version-semver": "1.3.0",
-  "description": "Ginkgo is a high-performance linear algebra library for manycore systems, with a focus on sparse solution of linear systems. Note that the OpenMP feature is not available on Windows, and the CUDA feature on Windows requires the CUDACXX environment variable to point to the CUDA nvcc.exe compiler with VCPKG_KEEP_ENV_VARS set to CUDACXX to pass its value through to the vcpkg environment.",
+  "version-semver": "1.4.0",
+  "description": "Ginkgo is a high-performance linear algebra library for manycore systems, with a focus on sparse solution of linear systems. Note that the OpenMP feature is not available on Windows.",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

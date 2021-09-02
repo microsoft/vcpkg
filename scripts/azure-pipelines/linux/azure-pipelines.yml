@@ -28,10 +28,11 @@ jobs:
     displayName: 'Create /home/agent'
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
+      sudo rm -rf ${{ variables.VCPKG_DOWNLOADS }}
       sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
-    displayName: 'Create ${{ variables.VCPKG_DOWNLOADS }}'
+    displayName: 'Create ${{ variables.WORKING_ROOT }} and ${{ variables.VCPKG_DOWNLOADS }}'
   - task: Bash@3
     displayName: 'Bootstrap vcpkg'
     inputs:

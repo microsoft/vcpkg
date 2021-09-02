@@ -247,13 +247,6 @@ duilib:x64-uwp=fail
 duktape:x64-osx=skip
 
 eastl:arm-uwp=fail
-easyhook:arm64-windows=fail
-easyhook:arm-uwp=fail
-easyhook:x64-linux=fail
-easyhook:x64-osx=fail
-easyhook:x64-uwp=fail
-easyhook:x64-windows-static=fail
-easyhook:x64-windows-static-md=fail
 easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
 eathread:arm64-windows=fail
@@ -269,6 +262,10 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
+# embree creates common conflicting static library names when built in static mode, reported upstream:
+# https://github.com/embree/embree/issues/331
+embree2:x64-windows-static=skip
+embree2:x64-windows-static-md=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
@@ -504,8 +501,6 @@ jemalloc:x64-uwp=fail
 jemalloc:x64-windows-static=fail
 jinja2cpplight:arm-uwp=fail
 jinja2cpplight:x64-uwp=fail
-keystone:arm-uwp=fail
-keystone:x64-uwp=fail
 kfr:arm64-windows=fail
 kfr:arm-uwp=fail
 kfr:x64-linux=fail
@@ -547,7 +542,6 @@ libbson:x64-uwp=fail
 libcds:arm64-windows=fail
 libcds:arm-uwp=fail
 libcds:x64-uwp=fail
-libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
@@ -623,8 +617,6 @@ liblas:arm64-windows=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
-liblo:x64-linux=fail
-liblo:x64-osx=fail
 liblo:x64-uwp=fail
 liblsl:arm64-windows=fail
 liblsl:arm-uwp=fail
@@ -1214,14 +1206,6 @@ pfring:x64-osx=fail
 pfring:x64-linux=fail
 physx:arm64-windows=fail
 piex:x64-osx=fail
-pistache:arm64-windows=fail
-pistache:arm-uwp=fail
-pistache:x64-osx=fail
-pistache:x64-uwp=fail
-pistache:x64-windows=fail
-pistache:x64-windows-static=fail
-pistache:x64-windows-static-md=fail
-pistache:x86-windows=fail
 pixel:x64-uwp=fail
 pixel:x64-windows=fail
 pixel:x64-windows-static=fail
@@ -1309,6 +1293,14 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+# Conflicts with qt5-declarative, see https://github.com/microsoft/vcpkg/issues/19922
+qt5-activeqt:arm-uwp=skip
+qt5-activeqt:arm64-windows=skip
+qt5-activeqt:x64-uwp=skip
+qt5-activeqt:x64-windows-static-md=skip
+qt5-activeqt:x64-windows-static=skip
+qt5-activeqt:x64-windows=skip
+qt5-activeqt:x86-windows=skip
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
@@ -1340,6 +1332,16 @@ rapidstring:x86-windows=fail
 raylib:arm64-windows=fail
 raylib:arm-uwp=fail
 raylib:x64-uwp=fail
+# file conflicts with rbdl
+rbdl-orb:x86-windows=skip
+rbdl-orb:x64-windows=skip
+rbdl-orb:x64-windows-static=skip
+rbdl-orb:x64-windows-static-md=skip
+rbdl-orb:x64-uwp=skip
+rbdl-orb:arm-uwp=skip
+rbdl-orb:arm64-windows=skip
+rbdl-orb:x64-linux=skip
+rbdl-orb:x64-osx=skip
 readline:arm-uwp=fail
 readline:x64-uwp=fail
 readline-win32:arm-uwp=fail
@@ -1543,8 +1545,6 @@ tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
 tinyexif:arm-uwp=fail
 tinyexif:x64-uwp=fail
-tinyfiledialogs:arm-uwp=fail
-tinyfiledialogs:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxlite:arm-uwp=fail
@@ -1693,7 +1693,6 @@ zkpp:x64-windows-static-md=fail
 zkpp:arm64-windows=fail
 zkpp:x64-uwp=fail
 zkpp:arm-uwp=fail
-c4core:x64-osx=fail
 
 # Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
 # Skip CI to avoid random failures
@@ -1729,7 +1728,6 @@ clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
-keystone:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libgo:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail
@@ -1767,7 +1765,3 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
-
-# Changes in Python have broken tensorflow on our osx hardware
-tensorflow:x64-osx=fail
-tensorflow-cc:x64-osx=fail
