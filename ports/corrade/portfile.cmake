@@ -10,28 +10,27 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 # Handle features
-set(_COMPONENT_FLAGS "")
+set(_COMPONENTS "")
 foreach(_feature IN LISTS ALL_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
-    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-    # is in the list.
-    if(_feature IN_LIST FEATURES)
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-    else()
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
+    # Final feature is empty, ignore it
+    if(_feature)
+        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
     endif()
 endforeach()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
-        ${_COMPONENT_FLAGS}
 )
 
 vcpkg_install_cmake()
@@ -67,6 +66,5 @@ endif()
 file(INSTALL ${SOURCE_PATH}/COPYING
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright)
-
 
 vcpkg_copy_pdbs()
