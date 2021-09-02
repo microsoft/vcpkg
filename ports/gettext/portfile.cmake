@@ -87,7 +87,7 @@ function(build_libintl_only)
         OPTIONS
             ${OPTIONS}
     )
-    vcpkg_make_install(MAKEFILE "/intl/Makefile")
+    vcpkg_make_install(SUBPATH "/intl")
 endfunction()
 
 if("tools" IN_LIST FEATURES)
