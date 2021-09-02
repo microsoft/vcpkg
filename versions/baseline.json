@@ -173,7 +173,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.18.2",
+      "baseline": "1.19.2",
       "port-version": 0
     },
     "asiosdk": {
@@ -1406,7 +1406,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 1
+      "port-version": 2
     },
     "cpp-base64": {
       "baseline": "V2.rc.08",
@@ -1926,7 +1926,7 @@
     },
     "exiv2": {
       "baseline": "0.27.4",
-      "port-version": 1
+      "port-version": 2
     },
     "expat": {
       "baseline": "2.4.1",
@@ -2238,7 +2238,7 @@
     },
     "gdal": {
       "baseline": "3.2.2",
-      "port-version": 3
+      "port-version": 4
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -3086,7 +3086,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 7
+      "port-version": 8
     },
     "libass": {
       "baseline": "0.15.1",
@@ -3306,7 +3306,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 10
+      "port-version": 11
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3766,7 +3766,7 @@
     },
     "libuv": {
       "baseline": "1.41.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libuvc": {
       "baseline": "2020-11-24",
@@ -3782,7 +3782,7 @@
     },
     "libvpx": {
       "baseline": "1.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -3805,12 +3805,12 @@
       "port-version": 0
     },
     "libxlsxwriter": {
-      "baseline": "0.9.4",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "libxml2": {
       "baseline": "2.9.12",
-      "port-version": 3
+      "port-version": 4
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -3966,7 +3966,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 5
+      "port-version": 6
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -3978,7 +3978,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 5
+      "port-version": 6
     },
     "mailio": {
       "baseline": "0.20.0",
@@ -5078,7 +5078,7 @@
     },
     "portmidi": {
       "baseline": "0.234",
-      "port-version": 0
+      "port-version": 1
     },
     "portsmf": {
       "baseline": "0.238",
@@ -5394,7 +5394,7 @@
     },
     "qtbase": {
       "baseline": "6.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.1.2",
@@ -6506,6 +6506,10 @@
     },
     "turbobase64": {
       "baseline": "2020-01-12",
+      "port-version": 0
+    },
+    "tvision": {
+      "baseline": "2021-08-10",
       "port-version": 0
     },
     "tweeny": {

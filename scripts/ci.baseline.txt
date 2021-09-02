@@ -1293,6 +1293,14 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+# Conflicts with qt5-declarative, see https://github.com/microsoft/vcpkg/issues/19922
+qt5-activeqt:arm-uwp=skip
+qt5-activeqt:arm64-windows=skip
+qt5-activeqt:x64-uwp=skip
+qt5-activeqt:x64-windows-static-md=skip
+qt5-activeqt:x64-windows-static=skip
+qt5-activeqt:x64-windows=skip
+qt5-activeqt:x86-windows=skip
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
