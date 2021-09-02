@@ -1406,7 +1406,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 1
+      "port-version": 2
     },
     "cpp-base64": {
       "baseline": "V2.rc.08",
@@ -3966,7 +3966,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 5
+      "port-version": 6
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -3978,7 +3978,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 5
+      "port-version": 6
     },
     "mailio": {
       "baseline": "0.20.0",
