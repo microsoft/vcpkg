@@ -1,0 +1,128 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 21cb048..68d71dc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -348,18 +348,19 @@ if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+   list(APPEND as_subproject CMakeFunctions)
+ endif()
+ 
++if (DISABLE_FIND_PACKAGE_OVERLOAD)
+ macro(find_package)
+   if(NOT "${ARGV0}" IN_LIST as_subproject)
+     _find_package(${ARGV})
+   endif()
+ endmacro()
++endif ()
+ 
+ if (ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS)
+   add_subdirectory(thirdparty/cmake_functions)
+ endif ()
+ 
+ 
+-find_package(CMakeFunctions REQUIRED)
+ 
+ git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
+ set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
+@@ -696,4 +697,6 @@ endif()
+ # --------------------------------------------------------
+ # create package
+ # --------------------------------------------------------
++if(CPACK_PACK_WITH_INNOSETUP)
+ include(cpack/cpack_variables.cmake)
++endif()
+diff --git a/cmake/Modules/Findsimpleini.cmake b/cmake/Modules/Findsimpleini.cmake
+index 69b171a..ba4ec70 100644
+--- a/cmake/Modules/Findsimpleini.cmake
++++ b/cmake/Modules/Findsimpleini.cmake
+@@ -4,7 +4,6 @@ find_path(simpleini_INCLUDE_DIR
+     "${CONAN_SIMPLEINI_ROOT}/include"
+     "${ECAL_PROJECT_ROOT}/thirdparty/simpleini"
+   NO_DEFAULT_PATH
+-  NO_CMAKE_FIND_ROOT_PATH
+ )
+ 
+ if(simpleini_INCLUDE_DIR-NOTFOUND)
+diff --git a/cmake/Modules/Findtclap.cmake b/cmake/Modules/Findtclap.cmake
+index f6ffa6d..ee7149a 100644
+--- a/cmake/Modules/Findtclap.cmake
++++ b/cmake/Modules/Findtclap.cmake
+@@ -4,7 +4,6 @@ find_path(tclap_INCLUDE_DIR
+     "${CONAN_TCLAP_ROOT}/include"
+     "${ECAL_PROJECT_ROOT}/thirdparty/tclap/include"
+   NO_DEFAULT_PATH
+-  NO_CMAKE_FIND_ROOT_PATH
+ )
+ 
+ if(tclap_INCLUDE_DIR-NOTFOUND)
+diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
+index 49b25b4..520ab17 100644
+--- a/contrib/ecalhdf5/CMakeLists.txt
++++ b/contrib/ecalhdf5/CMakeLists.txt
+@@ -57,7 +57,11 @@ set(ecalhdf5_header_base
+     include/ecalhdf5/eh5_types.h   
+ )
+ 
++if (WIN32)
++ecal_add_static_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
++else()
+ ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
++endif()
+ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ 
+ target_include_directories(${PROJECT_NAME}
+diff --git a/contrib/ecalproto/CMakeLists.txt b/contrib/ecalproto/CMakeLists.txt
+index dd3658c..56474db 100644
+--- a/contrib/ecalproto/CMakeLists.txt
++++ b/contrib/ecalproto/CMakeLists.txt
+@@ -37,7 +37,11 @@ set(ecal_protobuf_header
+     include/ecal/protobuf/ecal_proto_visitor.h
+ )
+ 
++if (WIN32)
++ecal_add_static_library(${PROJECT_NAME} ${ecal_protobuf_src} ${ecal_protobuf_header})
++else()
+ ecal_add_library(${PROJECT_NAME} ${ecal_protobuf_src} ${ecal_protobuf_header})
++endif()
+ add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ target_include_directories(${PROJECT_NAME} PUBLIC 
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+diff --git a/thirdparty/cmake_functions/CMakeLists.txt b/thirdparty/cmake_functions/CMakeLists.txt
+index b3e9326..3ba185a 100644
+--- a/thirdparty/cmake_functions/CMakeLists.txt
++++ b/thirdparty/cmake_functions/CMakeLists.txt
+@@ -40,4 +40,6 @@ foreach (f ${file_list})
+   install( FILES ${f} DESTINATION "${cmake_functions_install_cmake_dir}/${dir}" )
+ endforeach()
+ 
++if(CPACK_PACK_WITH_INNOSETUP)
+ include(cmake/cpack_variables.cmake)
++endif()
+diff --git a/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in b/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in
+index c773417..55046e9 100644
+--- a/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in
++++ b/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in
+@@ -1,4 +1,4 @@
+ @PACKAGE_INIT@
+ 
+ # make all runtask helper functions available
+-include("@PACKAGE_cmake_functions_install_cmake_dir@/cmake_functions.cmake")
+\ No newline at end of file
++include("${CMAKE_FUNCTIONS_ROOT}/cmake_functions.cmake")
+diff --git a/thirdparty/cmake_functions/cmake_functions.cmake b/thirdparty/cmake_functions/cmake_functions.cmake
+index eda4da4..b776238 100644
+--- a/thirdparty/cmake_functions/cmake_functions.cmake
++++ b/thirdparty/cmake_functions/cmake_functions.cmake
+@@ -4,13 +4,10 @@ set (file_list_include
+   msvc_helper/msvc_sourcetree.cmake
+   protoc_functions/protoc_generate_files.cmake
+   target_definitions/targets_protobuf.cmake
+-  qt/qt_msvc_path.cmake
+-  qt/qt_windeployqt.cmake
+ )
+ 
+ set(file_list_no_include
+   protoc_functions/protoc_generate_cpp.cmake
+-  qt/qt_windeployqt_threadsafe_cmake.bat.in
+ )
+ 
+ # Set list of all files to be installed by CMake Script.

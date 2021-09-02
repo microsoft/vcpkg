@@ -1,8 +1,0 @@
---- a/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in	Tue Aug  3 09:02:51 2021
-+++ b/thirdparty/cmake_functions/cmake/CMakeFunctionsConfig.cmake.in	Tue Aug 17 13:01:17 2021
-@@ -3,2 +3,2 @@
- # make all runtask helper functions available
--include("@PACKAGE_cmake_functions_install_cmake_dir@/cmake_functions.cmake")
-\ No newline at end of file
-+include("${CMAKE_FUNCTIONS_ROOT}/cmake_functions.cmake")
-\ No newline at end of file

@@ -1,7 +1,0 @@
---- a/thirdparty/cmake_functions/CMakeLists.txt	Wed Aug 11 15:47:55 2021
-+++ b/thirdparty/cmake_functions/CMakeLists.txt	Wed Aug 25 23:17:47 2021
-@@ -42,2 +42,4 @@
- 
-+if(CPACK_PACK_WITH_INNOSETUP)
- include(cmake/cpack_variables.cmake)
-+endif()

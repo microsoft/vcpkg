@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68d71dc..a00eb62 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -510,6 +510,7 @@ if(HAS_QT5)
+   add_subdirectory(lib/QEcalParser)
+ endif(HAS_QT5)
+ 
++if (DBUILD_APPS)
+ # --------------------------------------------------------
+ # ecal mon plugin sdk
+ # --------------------------------------------------------
+@@ -520,6 +521,7 @@ add_subdirectory(app/mon/mon_plugin_lib)
+ # --------------------------------------------------------
+ add_subdirectory(app/rec/rec_addon_core)
+ add_subdirectory(app/rec/rec_addon_dummy)
++endif()
+ 
+ # --------------------------------------------------------
+ # ecal time

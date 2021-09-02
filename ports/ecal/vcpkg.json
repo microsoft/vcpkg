@@ -3,9 +3,10 @@
   "version-semver": "5.9.0",
   "description": "eCAL - enhanced Communication Abstraction Layer",
   "homepage": "https://continental.github.io/ecal/",
-  "supports": "!emscripten",
+  "supports": "!emscripten & !(windows & static)",
   "dependencies": [
     "asio",
+    "curl",
     "hdf5",
     "protobuf",
     "pthread",

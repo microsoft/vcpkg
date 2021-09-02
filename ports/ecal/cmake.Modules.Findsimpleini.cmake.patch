@@ -1,6 +1,0 @@
---- a/cmake/Modules/Findsimpleini.cmake	Tue Aug  3 09:02:51 2021
-+++ b/cmake/Modules/Findsimpleini.cmake	Mon Aug 30 14:24:54 2021
-@@ -6,3 +6,2 @@
-   NO_DEFAULT_PATH
--  NO_CMAKE_FIND_ROOT_PATH
- )
