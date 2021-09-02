@@ -1,6 +1,6 @@
 {
   "name": "opencv",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "description": "Computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -50,6 +50,18 @@
           "default-features": false,
           "features": [
             "cuda"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cudnn"
           ]
         }
       ]
