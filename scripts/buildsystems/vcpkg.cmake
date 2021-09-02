@@ -607,6 +607,9 @@ function(x_vcpkg_install_local_dependencies)
         )
     endif()
 
+    # Install CODE|SCRIPT allow the use of generator expressions
+    cmake_policy(SET CMP0087 NEW)
+
     cmake_parse_arguments(PARSE_ARGV 0 arg
         ""
         "DESTINATION;COMPONENT"
@@ -619,18 +622,15 @@ function(x_vcpkg_install_local_dependencies)
         message(FATAL_ERROR "DESTINATION must be specified")
     endif()
 
-    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
-        # Install CODE|SCRIPT allow the use of generator expressions
-        cmake_policy(SET CMP0087 NEW)
+    set(component_param "")
+    if(DEFINED arg_COMPONENT)
+        set(component_param COMPONENT "${arg_COMPONENT}")
+    endif()
 
+    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
         z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
             set(arg_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${arg_DESTINATION}")
-        endif()
-
-        set(component_param "")
-        if(DEFINED arg_COMPONENT)
-            set(component_param COMPONENT "${arg_COMPONENT}")
         endif()
 
         foreach(target IN LISTS arg_TARGETS)
@@ -643,6 +643,21 @@ function(x_vcpkg_install_local_dependencies)
                         -OutVariable out)"
                     ${component_param}
                 )
+            endif()
+        endforeach()
+    elseif(Z_VCPKG_TARGET_TRIPLET_PLAT STREQUAL "linux")
+        foreach(TARGET IN LISTS arg_TARGETS)
+            get_target_property(TARGETTYPE "${TARGET}" TYPE)
+            if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
+                install(CODE "message(\" -- Installing app dependencies for ${TARGET}...\")
+                    execute_process(COMMAND /bin/sh \"${Z_VCPKG_TOOLCHAIN_DIR}/linux/applocal.sh\"
+                        \"\$ENV{DESTDIR}\"
+                        \"\${CMAKE_INSTALL_PREFIX}\"
+                        \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        )"
+                    ${component_param}
+                    )
             endif()
         endforeach()
     endif()
