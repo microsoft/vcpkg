@@ -1,8 +1,8 @@
 {
   "name": "directxtk12",
-  "version-string": "jun2021",
+  "version-string": "aug2021",
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
-  "homepage": "http://go.microsoft.com/fwlink/?LinkID=615561",
+  "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
   "license": "MIT",
   "supports": "windows",
