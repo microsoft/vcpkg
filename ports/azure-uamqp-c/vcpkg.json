@@ -1,6 +1,6 @@
 {
   "name": "azure-uamqp-c",
-  "version-string": "2020-08-30",
+  "version-string": "2020-08-31",
   "description": "AMQP library for C",
   "homepage": "https://github.com/Azure/azure-uamqp-c",
   "dependencies": [

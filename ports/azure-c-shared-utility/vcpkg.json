@@ -1,6 +1,6 @@
 {
   "name": "azure-c-shared-utility",
-  "version-string": "2021-08-30",
+  "version-string": "2021-08-31",
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "supports": "!uwp",
