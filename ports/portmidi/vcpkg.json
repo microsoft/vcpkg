@@ -1,0 +1,8 @@
+{
+  "name": "portmidi",
+  "version-string": "0.234",
+  "port-version": 1,
+  "description": "Free, cross-platform, open-source I/O library for MIDI",
+  "homepage": "https://sourceforge.net/projects/portmedia/",
+  "supports": "windows & osx & !uwp & !arm"
+}
