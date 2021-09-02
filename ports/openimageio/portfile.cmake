@@ -20,7 +20,6 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
