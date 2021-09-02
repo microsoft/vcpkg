@@ -1,5 +1,3 @@
-message(WARNING "ecal in vcpkg does not currently support find_package(eCAL) -- you will need to manually add headers and libraries via `find_library()` and `find_path()`")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO continental/ecal
