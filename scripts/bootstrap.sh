@@ -165,10 +165,11 @@ fetchTool()
     xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ] || [[ "$toolData" == "<?xml"* ]]; then
+    case "$toolData" in
+	"" | "<!xml"*)
         echo "No entry for $toolRegexStart in $vcpkgRootDir/scripts/vcpkgTools.xml"
         return 1
-    fi
+    esac
 
     version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 
