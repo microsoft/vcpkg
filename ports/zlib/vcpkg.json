@@ -1,7 +1,7 @@
 {
   "name": "zlib",
   "version-string": "1.2.11",
-  "port-version": 11,
+  "port-version": 12,
   "description": "A compression library",
   "homepage": "https://www.zlib.net/"
 }
