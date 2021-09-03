@@ -4853,8 +4853,8 @@
       "port-version": 1
     },
     "pangolin": {
-      "baseline": "0.5",
-      "port-version": 15
+      "baseline": "0.6",
+      "port-version": 0
     },
     "pangomm": {
       "baseline": "2.48.0",
