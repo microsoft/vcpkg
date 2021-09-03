@@ -1,9 +1,17 @@
 {
   "name": "opencv4",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
@@ -38,12 +46,24 @@
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda",
-        "cudnn",
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
             "contrib"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cuda"
           ]
         }
       ]
@@ -63,7 +83,16 @@
     "ffmpeg": {
       "description": "ffmpeg support for opencv",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
       ]
     },
     "gdcm": {

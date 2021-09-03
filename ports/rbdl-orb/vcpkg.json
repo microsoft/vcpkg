@@ -1,0 +1,16 @@
+{
+  "name": "rbdl-orb",
+  "version": "3.0.0",
+  "port-version": 1,
+  "description": "Rigid Body Dynamics Library - ORB",
+  "homepage": "https://github.com/orb-hd/rbdl-orb",
+  "dependencies": [
+    "boost",
+    "eigen3",
+    "lua",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

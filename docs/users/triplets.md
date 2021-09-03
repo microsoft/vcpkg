@@ -118,6 +118,10 @@ See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file 
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
 
+### VCPKG_DISABLE_COMPILER_TRACKING
+
+When this option is set to (true|1|on), the compiler is ignored in the abi tracking.
+
 ## Windows Variables
 
 ### VCPKG_ENV_PASSTHROUGH

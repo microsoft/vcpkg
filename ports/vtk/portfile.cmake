@@ -25,7 +25,9 @@ if("atlmfc" IN_LIST FEATURES)
 endif()
 if("vtkm" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
+        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=YES
+        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel=YES
+        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters=YES
         -DVTK_MODULE_ENABLE_VTK_vtkm=YES
     )
 endif()
@@ -37,8 +39,10 @@ if("python" IN_LIST FEATURES)
         -DVTK_PYTHON_VERSION=3
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
+        -DVTK_MODULE_ENABLE_VTK_Python=YES
+        -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES
+        -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
     )
-
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
@@ -56,7 +60,9 @@ if("paraview" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistry=YES
         -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
     )
     if("python" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS
@@ -80,7 +86,7 @@ endif()
 
 if("opengl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
@@ -114,50 +120,43 @@ if("all" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cuda"         VTK_USE_CUDA
-    "all"          VTK_BUILD_ALL_MODULES
+    FEATURES
+        "cuda"         VTK_USE_CUDA
+        "all"          VTK_BUILD_ALL_MODULES
 )
 
 
 # =============================================================================
 # Clone & patch
 
-# This patch is huge, we prefer to download it on demand
-vcpkg_download_distfile(QT_NO_KEYWORDS_PATCH
-  URLS "https://github.com/Kitware/VTK/commit/64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff"
-  FILENAME 64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff
-  SHA512 08991f07b30b893b14e906017b77fb700a8298a3a8906086a0c4b67688c1c0431b3d6bf890df70bd3ebf963cbb9c035b5dbcb9d7593e8c716c3a594ccb9a0fc7
-)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
-    SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
+    REF 2959413ff190bc6e3ff40f5b6c1342edd2e5233f # v9.0.x used by ParaView 5.9.1
+    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
     HEAD_REF master
     PATCHES
-        6811.patch
-        FindLZMA.patch    # Will be fixed in 9.1?
+        FindLZMA.patch
         FindLZ4.patch
         Findproj.patch
-        vtkm.patch # To include an external VTKm build (v.1.5 required)
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
         python_debug.patch
         fix-using-hdf5.patch
-        module-name-mangling.patch
+        # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        fix-freetype.patch # Should be fixed next version, !7367 + !7434
-        # Remove these 2 official patches in the next update
-        ${QT_NO_KEYWORDS_PATCH}
-        0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
+        # upstream vtkm patches to make it work with vtkm 1.6
+        vtkm.patch # To include an external VTKm build
+        1f00a0c9.patch
+        156fb524.patch
+        d107698a.patch
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
-file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
 
@@ -172,11 +171,6 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
-        -DVTK_INSTALL_INCLUDE_DIR=include
-        -DVTK_INSTALL_DATA_DIR=share/vtk/data
-        -DVTK_INSTALL_DOC_DIR=share/vtk/doc
-        -DVTK_INSTALL_PACKAGE_DIR=share/vtk
-        -DVTK_INSTALL_RUNTIME_DIR=bin
         -DVTK_FORBID_DOWNLOADS=ON
         -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
@@ -198,44 +192,18 @@ vcpkg_copy_pdbs()
 # Fixup target files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.0)
 
-# TODO: Check if the following is still required
-# For some reason the references to the XDMF libraries in the target files do not end up
-# correctly, so we fix them here.
-# if(VTK_WITH_ALL_MODULES)
-    # file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake VTK_TARGETS_RELEASE_CONTENT)
-    # string(REPLACE "lib/../XdmfCore.lib" "lib/XdmfCore.lib" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # string(REPLACE "bin/../XdmfCore.dll" "bin/XdmfCore.dll" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # string(REPLACE "lib/../vtkxdmf3.lib" "lib/vtkxdmf3.lib" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # string(REPLACE "bin/../vtkxdmf3.dll" "bin/vtkxdmf3.dll" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake "${VTK_TARGETS_RELEASE_CONTENT}")
-
-    # file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake VTK_TARGETS_DEBUG_CONTENT)
-    # string(REPLACE "lib/../XdmfCore.lib" "lib/XdmfCore.lib" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # string(REPLACE "bin/../XdmfCore.dll" "bin/XdmfCore.dll" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # string(REPLACE "lib/../vtkxdmf3.lib" "lib/vtkxdmf3.lib" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # string(REPLACE "bin/../vtkxdmf3.dll" "bin/vtkxdmf3.dll" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGETS_DEBUG_CONTENT}")
-# endif()
-# =============================================================================
-# Remove other files and directories that are not valid for vcpkg
-# if(VTK_WITH_ALL_MODULES)
-    # file(REMOVE ${CURRENT_PACKAGES_DIR}/XdmfConfig.cmake)
-    # file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
-# endif()
-
 # =============================================================================
 # Clean-up other directories
 
-
 # Delete the debug binary TOOL_NAME that is not required
 function(_vtk_remove_debug_tool TOOL_NAME)
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(REMOVE ${filename})
+    set(filename "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS "${filename}")
+        file(REMOVE "${filename}")
     endif()
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(REMOVE ${filename})
+    set(filename "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}d${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS "${filename}")
+        file(REMOVE "${filename}")
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
@@ -250,9 +218,9 @@ endfunction()
 # Move the release binary TOOL_NAME from bin to tools
 function(_vtk_move_release_tool TOOL_NAME)
     set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    if(EXISTS ${old_filename})
-        file(INSTALL ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk" USE_SOURCE_PERMISSIONS)
-        file(REMOVE ${old_filename})
+    if(EXISTS "${old_filename}")
+        file(INSTALL "${old_filename}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk" USE_SOURCE_PERMISSIONS)
+        file(REMOVE "${old_filename}")
     endif()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
@@ -289,36 +257,31 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+                        "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
     set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType
-                         vtkSupportMacros vtkDirectories vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
+                         vtkSupportMacros vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
     foreach(module ${VTK_CMAKE_NEEDED})
         file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
     endforeach()
 
     ## Check List on UPDATE !!
     file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
+    file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Parallel/DIY/vtkDIYUtilities.txx" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 
-    file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
-
-    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRange.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRangeIterableTraits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Common/DataModel/vtkCompositeDataSetNodeReference.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    #ParaView requires some internal headers
-    file(INSTALL "${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -345,4 +308,4 @@ endforeach()
 
 # =============================================================================
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
