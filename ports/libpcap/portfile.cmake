@@ -1,4 +1,4 @@
-#vcpkg_fail_port_install(ON_TARGET "UWP" "OSX")
+vcpkg_fail_port_install(ON_TARGET "UWP" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/winpcap")
     message(FATAL_ERROR "FATAL ERROR: winpcap and libpcap are incompatible.")
@@ -25,11 +25,6 @@ vcpkg_from_github(
         install-pc-on-msvc.patch
         add-disable-packet-option.patch
 )
-
-# Only dynamic builds are currently supported on Windows
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-#endif()
 
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH ${BISON} DIRECTORY)
