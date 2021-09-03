@@ -14,6 +14,7 @@ vcpkg_from_github(
     PATCHES
         fix-config-cmake.patch
         fix_static_build.patch
+        disable-test.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
