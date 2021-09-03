@@ -4,7 +4,7 @@
         <version>3.9.7</version>
         <exeRelativePath>python.exe</exeRelativePath>
         <url>https://www.python.org/ftp/python/3.9.7/python-3.9.7-embed-win32.zip</url>
-        <sha512>5F12F693C6DF68B75F96B797740A156F2DCD471E96E7980A6E297BBFD064467BA2B2CC9D2F450296388402A8A0B716FCE1C4A25B94B50615503D528E33FEA870</sha512>
+        <sha512>5f12f693c6df68b75f96b797740a156f2dcd471e96e7980a6e297bbfd064467ba2b2cc9d2f450296388402a8a0b716fce1c4a25b94b50615503d528e33fea870</sha512>
         <archiveName>python-3.9.7-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
