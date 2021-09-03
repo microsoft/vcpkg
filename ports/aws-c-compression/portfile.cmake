@@ -7,17 +7,10 @@ vcpkg_from_github(
     PATCHES fix-cmake-target-path.patch
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL static)
-    set(STATIC_CRT_LNK ON)
-else()
-    set(STATIC_CRT_LNK OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSTATIC_CRT=${STATIC_CRT_LNK}
         -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
 )
 

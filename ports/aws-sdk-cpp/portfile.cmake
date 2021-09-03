@@ -11,8 +11,6 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
-set(BUILD_ONLY core)
-
 set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
@@ -40,24 +38,11 @@ else()
     set(rpath "\$ORIGIN")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        ${EXTRA_ARGS}
-        -DENABLE_UNITY_BUILD=ON
-        -DENABLE_TESTING=OFF
-        -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
-        -DBUILD_ONLY=${BUILD_ONLY}
-        -DBUILD_DEPS=OFF
-        -DCMAKE_INSTALL_RPATH=${rpath}
-        -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
-)
-
-set(BUILD_ONLY "")
+set(BUILD_ONLY core)
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
 foreach(TARGET IN LISTS BUILD_ONLY)
+    message(STATUS "Building ${TARGET}")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
@@ -71,13 +56,10 @@ foreach(TARGET IN LISTS BUILD_ONLY)
             -DCMAKE_INSTALL_RPATH=${rpath}
             -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
     )
+    vcpkg_install_cmake()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+    vcpkg_copy_pdbs()
 endforeach()
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
-
-vcpkg_copy_pdbs()
 
 file(GLOB_RECURSE AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/*/*-targets-*.cmake")
 foreach(AWS_TARGET IN LISTS AWS_TARGETS)

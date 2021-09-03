@@ -1,11 +1,11 @@
 {
-    "name": "aws-c-io",
-    "version": "0.10.17",
-    "description": "Handles all IO and TLS work for application protocols.",
-    "homepage": "https://github.com/awslabs/aws-c-io",
-    "dependencies": [
-        "aws-c-common",
-        "aws-c-cal",
-        "s2n"
-    ]
+  "name": "aws-c-io",
+  "version": "0.10.7",
+  "description": "Handles all IO and TLS work for application protocols.",
+  "homepage": "https://github.com/awslabs/aws-c-io",
+  "dependencies": [
+    "aws-c-cal",
+    "aws-c-common",
+    "s2n"
+  ]
 }

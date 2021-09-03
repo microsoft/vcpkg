@@ -11,7 +11,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 	OPTIONS
-        -DSTATIC_CRT=${STATIC_CRT_LNK}
         -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
 )
 

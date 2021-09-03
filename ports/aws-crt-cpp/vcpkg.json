@@ -1,18 +1,19 @@
 {
-    "name": "aws-crt-cpp",
-    "version": "0.15.0",
-    "description": "Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.",
-    "homepage": "https://github.com/awslabs/aws-crt-cpp",
-    "dependencies": [
-        "s2n",
-        "aws-c-common",
-        "aws-checksums",
-        "aws-c-cal",
-        "aws-c-io",
-        "aws-c-compression",
-        "aws-c-http",
-        "aws-c-mqtt",
-        "aws-c-auth",
-        "aws-c-s3"
-    ]
+  "name": "aws-crt-cpp",
+  "version": "0.15.0",
+  "description": "Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.",
+  "homepage": "https://github.com/awslabs/aws-crt-cpp",
+  "dependencies": [
+    "aws-c-auth",
+    "aws-c-cal",
+    "aws-c-common",
+    "aws-c-compression",
+    "aws-c-event-stream",
+    "aws-c-http",
+    "aws-c-io",
+    "aws-c-mqtt",
+    "aws-c-s3",
+    "aws-checksums",
+    "s2n"
+  ]
 }

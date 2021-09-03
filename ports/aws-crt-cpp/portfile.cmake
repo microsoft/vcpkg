@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
     REF 88b476c3be22cb46f09574389e6ecebe26c489bf # v0.15.0
-    SHA512 cb9c249496fd41fda1efb9330e823d8b965adca6c8f372a50fe97eda821e277780bf9af8f5977102c44121568993cca55edbb750967b41f323e07e06a93c50a8
+    SHA512 cfcacd81818ae3df6a608f71e314675823eddfe017783d97bb64c02f679989ccc2fb56c0af080a8c16df03df09766ecf6267371947c8c275373ce1caf5e53e70
     PATCHES
           fix-cmake-target-path.patch
 )

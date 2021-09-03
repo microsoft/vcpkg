@@ -1,12 +1,12 @@
 {
-    "name": "aws-c-http",
-    "version": "0.6.5",
-    "description": "C99 implementation of the HTTP/1.1 and HTTP/2 specifications",
-    "homepage": "https://github.com/awslabs/aws-c-http",
-    "dependencies": [
-        "aws-c-common",
-        "aws-c-cal",
-        "aws-c-io",
-        "aws-c-compression"
-    ]
+  "name": "aws-c-http",
+  "version": "0.6.5",
+  "description": "C99 implementation of the HTTP/1.1 and HTTP/2 specifications",
+  "homepage": "https://github.com/awslabs/aws-c-http",
+  "dependencies": [
+    "aws-c-cal",
+    "aws-c-common",
+    "aws-c-compression",
+    "aws-c-io"
+  ]
 }
