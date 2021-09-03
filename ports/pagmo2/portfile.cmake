@@ -1,18 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  esa/pagmo2 
-    REF v2.16.1
-    SHA512 dac85a8525316e827df809d187d40f14dc20db7119796b7384d7855f83ba37e0bb595f6d8199053aac857460816929dd599c9d43802f2ed920a6f42dd2f16a03
+    REPO esa/pagmo2
+    REF v2.18.0
+    SHA512 026f038e979bb884bdc4e465bd60ffe60d3d74d38159a70897da7c890230450a0457a943e25c8bdb3f17bafdaa388a6a21f6d44502b4d08860dae6cb4e75a477
     HEAD_REF master
     PATCHES
-        "disable-C4701.patch"
-        "disable-md-override.patch"
         "find-tbb.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES
-   nlopt  PAGMO_WITH_NLOPT
+   nlopt PAGMO_WITH_NLOPT
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAGMO_BUILD_STATIC_LIBRARY)
 vcpkg_configure_cmake(
