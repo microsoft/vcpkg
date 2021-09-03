@@ -1,11 +1,25 @@
+vcpkg_download_distfile(TBB_PATCH
+  URLS https://github.com/AcademySoftwareFoundation/openvdb/pull/1027.diff
+  FILENAME openvdb-1027.patch
+  SHA512 1e260f299fc861f7d61444c12a7115276d5242ebba936d86ce3f8cfd5b2eb95499c72a77da8c9f28e2f49e38479c677497c70bed3427dcccad082afa483e29da
+)
+
+set(FIXED_TBB_PATCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-openvdb-1027.patch")
+
+# This adjustment is needed to make the patch apply cleanly against v8.1.0
+file(READ "${TBB_PATCH}" tbb_patch_contents)
+string(REPLACE "       run: cd build && ctest -V" "       run: ./ci/test.sh" tbb_patch_contents "${tbb_patch_contents}")
+file(WRITE "${FIXED_TBB_PATCH}" "${tbb_patch_contents}")
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO AcademySoftwareFoundation/openvdb
-    REF 587c9ae84c2822bbc03d0d7eceb52898582841b9 # v8.0.0
-    SHA512 4abc442a86dd0614492edf70e887886b755102f04d44eebd1a154df24e05e53a80de8e9b47b370946bcc3888ab7a94ae331a3addac8d784e25ae5da7523afca9
-    HEAD_REF master
-    PATCHES
-        0003-fix-cmake.patch
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO AcademySoftwareFoundation/openvdb
+  REF ea786c46b7a1b5158789293d9b148b379fc9914c # v8.1.0
+  SHA512 3c4ab3db35b3eb019149ac455f0c7a262081e9866b7e49eaba05424bf837debccf0c987c2555d3c91a2cff2d1ba4b41862f544fd4684558f3a319616ef3c9eb3
+  HEAD_REF master
+  PATCHES
+    "${FIXED_TBB_PATCH}"
+    0003-fix-cmake.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
@@ -57,6 +71,19 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenVDB)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_BLOSC}" "ON")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_ZLIB}" "ON")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_LOG4CPLUS}" "OFF")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_IMATH_HALF}" "OFF")
+
+if(OPENVDB_STATIC)
+  vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake
+    "set(_OPENVDB_VISIBLE_DEPENDENCIES\n"
+    "set(_OPENVDB_VISIBLE_DEPENDENCIES blosc ZLIB::ZLIB\n"
+  )
+endif()
 
 if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)

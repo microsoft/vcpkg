@@ -20,17 +20,6 @@ diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
 index 219b90a..b280f85 100644
 --- a/cmake/FindOpenVDB.cmake
 +++ b/cmake/FindOpenVDB.cmake
-@@ -448,8 +448,8 @@ endif()
- 
- # Add standard dependencies
- 
--find_package(IlmBase REQUIRED COMPONENTS Half)
--find_package(TBB REQUIRED COMPONENTS tbb)
-+find_package(IlmBase CONFIG REQUIRED)
-+find_package(TBB CONFIG REQUIRED)
- find_package(ZLIB REQUIRED)
- 
- if(NOT OPENVDB_USE_STATIC_LIBS AND NOT Boost_USE_STATIC_LIBS)
 @@ -588,7 +588,7 @@ else()
  endif()
  
@@ -40,16 +29,7 @@ index 219b90a..b280f85 100644
  endif()
  
  if(OpenVDB_USES_ZLIB)
-@@ -602,6 +602,8 @@ endif()
- if(OpenVDB_USES_EXR)
-   find_package(IlmBase REQUIRED)
-   find_package(OpenEXR REQUIRED)
-+  find_package(IlmBase CONFIG REQUIRED)
-+  find_package(OpenEXR CONFIG REQUIRED)
- endif()
- 
- if(UNIX)
-@@ -662,7 +664,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
+@@ -662,7 +662,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
  
  if(NOT OPENVDB_USE_STATIC_LIBS)
    if(OpenVDB_USES_BLOSC)
@@ -62,57 +42,25 @@ diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
 index 536bf1e..568fec1 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
-@@ -47,7 +47,7 @@ message(STATUS "----------------------------------------------------")
- ##########################################################################
- 
- # Collect and configure lib dependencies
--
-+if(0)
- if(USE_EXR)
-   find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED)
-   find_package(OpenEXR ${MINIMUM_OPENEXR_VERSION} REQUIRED)
-@@ -57,8 +57,14 @@ if(USE_EXR)
-         "is deprecated and will be removed.")
-     endif()
-   endif()
-+endif()
-+endif()
-+
-+if(USE_EXR)
-+  find_package(IlmBase CONFIG REQUIRED)
-+  find_package(OpenEXR CONFIG REQUIRED)
- else()
--  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half)
-+  find_package(IlmBase CONFIG REQUIRED)
- endif()
- 
- if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
-@@ -68,7 +74,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
+@@ -68,7 +68,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
    endif()
  endif()
  
 -find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbb)
 +find_package(TBB CONFIG REQUIRED)
- 
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
    if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
-@@ -82,14 +88,7 @@ if(USE_LOG4CPLUS)
- endif()
+     message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
+@@ -144,7 +144,7 @@ if(USE_LOG4CPLUS)
  
  if(USE_BLOSC)
--  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
--  if(Blosc_FOUND AND Blosc_VERSION VERSION_GREATER MINIMUM_BLOSC_VERSION)
--    message(WARNING "The version of Blosc located is greater than ${MINIMUM_BLOSC_VERSION}. "
--      "There have been reported issues with using later versions of Blosc with OpenVDB. "
--      "OpenVDB has been tested fully against Blosc ${MINIMUM_BLOSC_VERSION}, it is "
--      "recommended that you use this version where possible."
--    )
--  endif()
+   # Find Blosc libraries
 +  find_package(blosc CONFIG REQUIRED)
- else()
-   message(WARNING "Blosc support is disabled. It is strongly recommended to "
-     "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -165,7 +164,7 @@ endif()
+-  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
+   if(Blosc_FOUND AND Blosc_VERSION VERSION_GREATER MINIMUM_BLOSC_VERSION)
+     message(WARNING "The version of Blosc located is greater than ${MINIMUM_BLOSC_VERSION}. "
+       "There have been reported issues with using later versions of Blosc with OpenVDB. "
+@@ -165,7 +165,7 @@ endif()
  # See FindOpenVDB.cmake
  
  if(USE_BLOSC)
