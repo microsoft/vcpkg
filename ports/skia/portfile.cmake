@@ -1,8 +1,10 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
-    REF fb0b35fed5580d49392df7ce9374551b348fffbf
-    PATCHES add-missing-tuple.patch
+    REF a40ddcd63d40d647fcc5ed3b11acd2fa8ee834ed
+    PATCHES
+        "skia-unused-variable.patch"
+        "skia-revert-5619c3af3de044c4f06892eedf5294f1c107c72a.patch"
 )
 
 function(checkout_in_path PATH URL REF)
@@ -33,7 +35,7 @@ checkout_in_path("${EXTERNALS}/dng_sdk"
 )
 checkout_in_path("${EXTERNALS}/libgifcodec"
     "https://skia.googlesource.com/libgifcodec"
-    "d06d2a6d42baf6c0c91cacc28df2542a911d05fe"
+    "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
 )
 checkout_in_path("${EXTERNALS}/piex"
     "https://android.googlesource.com/platform/external/piex"
