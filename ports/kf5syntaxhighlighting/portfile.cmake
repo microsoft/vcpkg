@@ -16,10 +16,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
-    MAYBE_UNUSED_VARIABLES
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
