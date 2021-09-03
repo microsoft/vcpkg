@@ -1,4 +1,4 @@
-Source: libipc
+Source: cpp-ipc
 Version: 1.0
 Description: C++ IPC Library: A high-performance inter-process communication using shared memory on Linux/Windows.
 Supports: !osx
