@@ -1,10 +1,13 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
+
+set(OPENSSL_SHARED no-shared)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(OPENSSL_SHARED shared)
+endif()
 
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -26,7 +29,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     no-uplink
     no-tests
     -utf-8
-    shared
+    ${OPENSSL_SHARED}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -142,6 +145,12 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    # They should be empty, only the exes deleted above were in these directories
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
+endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
 string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
