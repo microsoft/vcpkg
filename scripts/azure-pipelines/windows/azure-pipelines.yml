@@ -17,6 +17,9 @@ jobs:
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url),$(sas-bin)"
 
   steps:
   - task: PowerShell@2
@@ -36,7 +39,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
       pwsh: true
   - task: PowerShell@2
     displayName: 'Validate version files'
