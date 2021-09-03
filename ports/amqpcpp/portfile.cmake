@@ -12,7 +12,7 @@ vcpkg_from_github(
         find-openssl.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(LINUX_TCP ON)
 else()
     set(LINUX_TCP OFF)
