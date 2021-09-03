@@ -1,34 +1,41 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF v0.5
-    SHA512 7ebeec108f33f1aa8b1ad08e3ca128a837b22d33e3fc580021f981784043b023a1bf563bbfa8b51d46863db770b336d24fc84ee3d836b85e0da1848281b2a5b2
+    REF dd801d244db3a8e27b7fe8020cd751404aa818fd #v0.6
+    SHA512 8004ab6f146f319df41e4b8d4bdb6677b8faf6db725e34fea76fcbf065522fa286d334c2426dcb39faf0cfb3332946104f78393d2b2b2418fe02d91450916e78
     HEAD_REF master
     PATCHES
-        deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
         fix-dependency-python.patch
         add-definition.patch
         fix-cmake-version.patch
+        fix-build-error-in-vs2019.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        test     BUILD_TESTS
+        tools    BUILD_TOOLS
+        examples BUILD_EXAMPLES
+)
+
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_TooN=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_DC1394=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibRealSense=ON
@@ -41,38 +48,31 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
+    MAYBE_UNUSED_VARIABLES
+        MSVC_USE_STATIC_CRT
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Pangolin)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Pangolin)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${EXE})
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES Plotter VideoConvert VideoJsonPrint VideoJsonTransform VideoViewer AUTO_CLEAN)
+endif()
 
-    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE ${DEBUG_EXE})
-
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # Copy missing header file
-    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/pangolin")
 endif()
 
 # Put the license file where vcpkg expects it
-file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENCE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
