@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-build.patch
         disable-app-plugins.patch
         fix-dependencies.patch
+        fix-tools-path.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/Findasio.cmake")
@@ -58,7 +59,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME eCAL CONFIG_PATH lib/cmake/eCAL)
 # Remove unnecessary cmake functions
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cfg" "${CURRENT_PACKAGES_DIR}/debug/cfg")
 

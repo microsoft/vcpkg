@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5707e2..94bc947 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -444,7 +444,7 @@ set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+   "Installation directory for CMake files")
+ 
+ include(GNUInstallDirs)
+-set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
++set(eCAL_install_app_dir           tools/ecal)
+ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
