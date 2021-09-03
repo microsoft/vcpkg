@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 1b435ae3e07ca813eb3ef40aaabe7053f5570fae
-       SHA512 bbdbcb4e8544810a51f1d8824a248ddbe19eed4978db7a059bd9c85bb997b1f98ad3997626fd2e9ea67d0e50f1ba1e11338858ebb2cc41c116bd6fd208aac684
+       REF 47fb332fb20921658732107e115aa397e9b08cbe
+       SHA512 92bfb20c9734dc37381d24325156c149f110b53dfabaf294e4bb2b0bccd618ab421aa347fa3c7fcaa1929b5bec8885246e7f49dc5fb6e81f1a8e80ff2d980f28
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.83
-    SHA512 2150e7101f384b1c749b2e89876b2085a7ff43435f04e88602d0e5e00db7a41c1ace5176bdb0963326845d1c8303b5092a7ca1c9c8e70c522ba96f899ed5bb9c
+    REF v1.84.1
+    SHA512 054beebda9a17758a9a6b9edf075279800a314b0e255e528bb9ac248b4911fd8fd2b5160079896d116b58fe6d993281ba9082780a31197faefd9f7adf32aec51
     HEAD_REF master
     )
 endif()
@@ -37,10 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     marmalade-binding           IMGUI_COPY_MARMALADE_BINDING
     metal-binding               IMGUI_BUILD_METAL_BINDING
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
-    opengl3-glew-binding        IMGUI_BUILD_OPENGL3_GLEW_BINDING
-    opengl3-glad-binding        IMGUI_BUILD_OPENGL3_GLAD_BINDING
-    opengl3-gl3w-binding        IMGUI_BUILD_OPENGL3_GL3W_BINDING
-    opengl3-glbinding-binding   IMGUI_BUILD_OPENGL3_GLBINDING_BINDING
+    opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
     sdl2-binding                IMGUI_BUILD_SDL2_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
@@ -69,6 +66,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
+    MAYBE_UNUSED_VARIABLES
+        IMGUI_COPY_MARMALADE_BINDING
 )
 
 vcpkg_install_cmake()
