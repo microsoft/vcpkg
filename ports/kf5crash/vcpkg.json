@@ -1,9 +1,9 @@
 {
   "name": "kf5crash",
-  "version": "5.84.0",
+  "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "KCrash provides support for intercepting and handling application crashes.",
   "homepage": "https://api.kde.org/frameworks/kcrash/html/index.html",
-  "supports": "linux",
   "dependencies": [
     "ecm",
     "kf5coreaddons",
@@ -11,6 +11,14 @@
     {
       "name": "qt5-x11extras",
       "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }
