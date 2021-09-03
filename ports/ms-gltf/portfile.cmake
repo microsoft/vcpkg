@@ -6,8 +6,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/glTF-SDK
-    REF 9428f114b540fb93e6533d5ec460fc123efe0c86 # todo: r1.9.6.0
-    SHA512 900caf6d72d360bae4c7af769a8879507f7f727b40f61723ffed679ad22877fb37daed2a0dfcbf27e15ab3adc8afe3249530b95691ce489b3446e5d9a35f205a
+    REF ac3e70392feb6aef18a07314669f6af2ebc72787 # r1.9.5.4
+    SHA512 389b801ddc6f0b29269bcd1215fa9e63fe46a1f1a8778125c6439e34fe0925d5534b1cdbea30824a4a8aa008015124dc7cc4558daa9522fc6d85e00e8e41e4a9
     HEAD_REF master
     PATCHES
         fix-install.patch
