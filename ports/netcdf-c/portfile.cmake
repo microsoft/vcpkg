@@ -60,7 +60,7 @@ if("tools" IN_LIST FEATURES)
         TOOL_NAMES  nccopy ncdump ncgen ncgen3
         AUTO_CLEAN
     )
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
