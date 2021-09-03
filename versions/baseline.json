@@ -3353,7 +3353,7 @@
       "port-version": 0
     },
     "libkeyfinder": {
-      "baseline": "2.2.4",
+      "baseline": "2.2.5",
       "port-version": 0
     },
     "libkml": {
@@ -3373,7 +3373,7 @@
       "port-version": 0
     },
     "liblinear": {
-      "baseline": "241",
+      "baseline": "243",
       "port-version": 0
     },
     "liblo": {
@@ -3449,7 +3449,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.18.0",
+      "baseline": "1.18.1-so-3.11.14",
       "port-version": 0
     },
     "libmysql": {
