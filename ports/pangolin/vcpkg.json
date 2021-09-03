@@ -1,10 +1,9 @@
 {
   "name": "pangolin",
-  "version-string": "0.5",
-  "port-version": 15,
+  "version": "0.6",
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
-  "supports": "!uwp & !osx",
+  "supports": "!uwp",
   "dependencies": [
     "eigen3",
     {
@@ -15,6 +14,25 @@
     },
     "glew",
     "libjpeg-turbo",
-    "libpng"
-  ]
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "examples": {
+      "description": "Build Examples"
+    },
+    "test": {
+      "description": "Build Tests"
+    },
+    "tools": {
+      "description": "Build Tools"
+    }
+  }
 }
