@@ -1,0 +1,40 @@
+diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
+index 8029086eff..b00c685068 100644
+--- a/gn/toolchain/BUILD.gn
++++ b/gn/toolchain/BUILD.gn
+@@ -263,7 +263,7 @@ template("gcc_like_toolchain") {
+ 
+     tool("objc") {
+       depfile = "{{output}}.d"
+-      command = "$cc_wrapper $cc -MD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_objc}} -c {{source}} -o {{output}}"
++      command = "$cc_wrapper $cc -MD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_objc}} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       outputs =
+           [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+@@ -272,7 +272,7 @@ template("gcc_like_toolchain") {
+ 
+     tool("objcxx") {
+       depfile = "{{output}}.d"
+-      command = "$cc_wrapper $cxx -MD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_cc}} {{cflags_objcc}} -c {{source}} -o {{output}}"
++      command = "$cc_wrapper $cxx -MD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} {{cflags_objcc}} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       outputs =
+           [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+@@ -336,7 +336,7 @@ template("gcc_like_toolchain") {
+         _end_group = ""
+       }
+ 
+-      command = "$link -shared {{ldflags}} $_start_group @$rspfile {{frameworks}} {{solibs}} $_end_group {{libs}} $rpath -o {{output}}"
++      command = "$link -shared {{ldflags}} $_start_group @$rspfile {{solibs}} $_end_group {{libs}} $rpath -o {{output}}"
+       outputs = [ "{{root_out_dir}}/$soname" ]
+       output_prefix = "lib"
+       default_output_extension = ".so"
+@@ -363,7 +363,7 @@ template("gcc_like_toolchain") {
+         _start_group = ""
+         _end_group = ""
+       }
+-      command = "$link {{ldflags}} $_start_group @$rspfile {{frameworks}} {{solibs}} $_end_group {{libs}} -o $exe_name"
++      command = "$link {{ldflags}} $_start_group @$rspfile {{solibs}} $_end_group {{libs}} -o $exe_name"
+ 
+       outputs = [ "$exe_name" ]
+       description = "link {{output}}"
