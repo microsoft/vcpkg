@@ -18,7 +18,7 @@ index 3d940f5..322f029 100644
  
      if (MSVC)
 -        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${PROJECT_NAME}.pdb DESTINATION ${CMAKE_SOURCE_DIR}/Built/Out/${platform}/$<CONFIG>/${PROJECT_NAME})
-+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pdb DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${PROJECT_NAME}.pdb DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
      endif()
  
  endfunction(CreateGLTFInstallTargets)
