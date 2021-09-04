@@ -101,7 +101,7 @@
       "port-version": 0
     },
     "approval-tests-cpp": {
-      "baseline": "10.10.0",
+      "baseline": "10.11.0",
       "port-version": 0
     },
     "apr": {
@@ -1166,7 +1166,7 @@
     },
     "catch2": {
       "baseline": "2.13.7",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e-1",
@@ -1351,6 +1351,10 @@
     "cnl": {
       "baseline": "1.1.7",
       "port-version": 1
+    },
+    "co": {
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "coin": {
       "baseline": "4.0.0",
@@ -2098,7 +2102,7 @@
     },
     "folly": {
       "baseline": "2021.06.14.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.0.1",
@@ -2517,7 +2521,7 @@
       "port-version": 0
     },
     "hazelcast-cpp-client": {
-      "baseline": "4.1.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "hdf5": {
@@ -2590,7 +2594,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 12
+      "port-version": 13
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23-1",
@@ -2918,11 +2922,15 @@
     },
     "kf5crash": {
       "baseline": "5.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5dbusaddons": {
       "baseline": "5.84.0",
       "port-version": 1
+    },
+    "kf5globalaccel": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5guiaddons": {
       "baseline": "5.84.0",
@@ -2954,7 +2962,7 @@
     },
     "kf5solid": {
       "baseline": "5.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5sonnet": {
       "baseline": "5.84.0",
@@ -3005,8 +3013,8 @@
       "port-version": 0
     },
     "ktx": {
-      "baseline": "4.0.0-beta5",
-      "port-version": 2
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "kubazip": {
       "baseline": "0.1.19",
@@ -3330,7 +3338,7 @@
     },
     "libigl": {
       "baseline": "2.2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libilbc": {
       "baseline": "3.0.3",
@@ -3353,7 +3361,7 @@
       "port-version": 0
     },
     "libkeyfinder": {
-      "baseline": "2.2.4",
+      "baseline": "2.2.5",
       "port-version": 0
     },
     "libkml": {
@@ -3373,7 +3381,7 @@
       "port-version": 0
     },
     "liblinear": {
-      "baseline": "241",
+      "baseline": "243",
       "port-version": 0
     },
     "liblo": {
@@ -3449,7 +3457,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.18.0",
+      "baseline": "1.18.1-so-3.11.14",
       "port-version": 0
     },
     "libmysql": {
@@ -3505,7 +3513,7 @@
       "port-version": 0
     },
     "libosmium": {
-      "baseline": "2.15.5",
+      "baseline": "2.17.0",
       "port-version": 0
     },
     "libosmscout": {
@@ -3678,7 +3686,7 @@
     },
     "libssh": {
       "baseline": "0.9.5",
-      "port-version": 4
+      "port-version": 5
     },
     "libssh2": {
       "baseline": "1.9.0",
@@ -3813,7 +3821,7 @@
       "port-version": 0
     },
     "libxlsxwriter": {
-      "baseline": "0.9.4",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "libxml2": {
@@ -4666,11 +4674,11 @@
     },
     "opencv3": {
       "baseline": "3.4.15",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -5174,7 +5182,7 @@
     },
     "pystring": {
       "baseline": "1.1.3",
-      "port-version": 3
+      "port-version": 4
     },
     "python2": {
       "baseline": "2.7.18",
@@ -5513,7 +5521,7 @@
       "port-version": 0
     },
     "quill": {
-      "baseline": "1.6.2",
+      "baseline": "1.6.3",
       "port-version": 0
     },
     "quirc": {
@@ -5850,7 +5858,7 @@
     },
     "sentry-native": {
       "baseline": "0.4.12",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-sx": {
       "baseline": "2019-05-07-2",
@@ -5923,6 +5931,10 @@
     "simdjson": {
       "baseline": "0.9.7",
       "port-version": 0
+    },
+    "simdutf": {
+      "baseline": "1.0.0",
+      "port-version": 1
     },
     "simple-fft": {
       "baseline": "2020-06-14",
