@@ -1,6 +1,6 @@
 {
   "name": "hazelcast-cpp-client",
-  "version-semver": "4.1.1",
+  "version-semver": "4.2.0",
   "description": "C++ client library for Hazelcast in-memory database.",
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
