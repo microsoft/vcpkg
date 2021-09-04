@@ -1,6 +1,7 @@
 {
   "name": "simdutf",
   "version-semver": "1.0.0",
+  "port-version": 1,
   "description": "Unicode validation and transcoding at billions of characters per second",
   "homepage": "https://github.com/simdutf/simdutf",
   "dependencies": [
