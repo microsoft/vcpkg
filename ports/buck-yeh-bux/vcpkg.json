@@ -1,5 +1,5 @@
 {
-  "name": "bux",
+  "name": "buck-yeh-bux",
   "version": "1.4.1",
   "description": "A supplemental C++ library with functionalities not directly supported from Modern C++ standard.",
   "homepage": "https://github.com/buck-yeh/bux",
