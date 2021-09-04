@@ -23,7 +23,10 @@ then obviously beneficial changes like fixing typos are appreciated!
 
 A good service to check many at once is [Repology](https://repology.org/).
 If the library you are adding could be confused with another one,
-consider renaming to make it clear.
+consider renaming to make it clear. We prefer when names are longer and/or
+unlikely to conflict with any future use of the same name. If the port refers
+to a library on GitHub, a good practice is to prefix the name with the organization
+if there is any chance of confusion.
 
 ### Use GitHub Draft PRs
 
