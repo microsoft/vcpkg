@@ -1,13 +1,17 @@
 {
-  "name": "kf5crash",
+  "name": "kf5globalaccel",
   "version-semver": "5.84.0",
-  "port-version": 1,
-  "description": "KCrash provides support for intercepting and handling application crashes.",
-  "homepage": "https://api.kde.org/frameworks/kcrash/html/index.html",
+  "description": "lobal desktop keyboard shortcuts",
+  "homepage": "https://api.kde.org/frameworks/kglobalaccel/html/index.html",
   "dependencies": [
     "ecm",
+    "kf5config",
     "kf5coreaddons",
+    "kf5crash",
+    "kf5dbusaddons",
     "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools",
     {
       "name": "qt5-x11extras",
       "platform": "linux"
