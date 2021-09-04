@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b51bcde..15edc92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -803,7 +803,7 @@ if(WITH_OPENVX)
@@ -11,8 +9,6 @@ index b51bcde..15edc92 100644
    set(HAVE_QUIRC TRUE)
  endif()
  
-diff --git a/modules/objdetect/CMakeLists.txt b/modules/objdetect/CMakeLists.txt
-index 3fa0c5d..f4c0ad6 100644
 --- a/modules/objdetect/CMakeLists.txt
 +++ b/modules/objdetect/CMakeLists.txt
 @@ -2,7 +2,5 @@ set(the_description "Object Detection")
