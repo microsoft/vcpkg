@@ -1,7 +1,7 @@
 {
   "name": "exiv2",
   "version": "0.27.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Image metadata library and tools",
   "homepage": "https://www.exiv2.org",
   "supports": "!uwp",
