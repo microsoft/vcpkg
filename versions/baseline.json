@@ -3672,6 +3672,10 @@
       "baseline": "0.2.3",
       "port-version": 0
     },
+    "libspng": {
+      "baseline": "0.6.3",
+      "port-version": 0
+    },
     "libsquish": {
       "baseline": "1.15-7",
       "port-version": 0
