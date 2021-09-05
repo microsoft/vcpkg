@@ -3617,7 +3617,7 @@
       "port-version": 4
     },
     "libsamplerate": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "libsass": {
