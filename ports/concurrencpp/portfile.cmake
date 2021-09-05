@@ -5,7 +5,6 @@ vcpkg_from_github(
   SHA512 48e3acca73c7b06940d41e84334cec56e7657c45f862d53e8e4ca1fb76b792c5b136ce4eeaf8afb8db95e746442fb45031c2c695ce60fcbe92ce91e5e1e80b25
   HEAD_REF master
   PATCHES
-    enable-coroutines-flag.patch
     make-linkage-configurable.patch
     fix-include-path.patch
 )
