@@ -3,7 +3,7 @@ find_path(ZLIB_INCLUDE_DIR NAMES zlib.h PATHS "${ZLIB_ROOT}/include" NO_DEFAULT_
 find_library(ZLIB_LIBRARY_RELEASE NAMES zlib  z PATHS "${ZLIB_ROOT}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_LIBRARY_DEBUG   NAMES zlibd z PATHS "${ZLIB_ROOT}/debug/lib" NO_DEFAULT_PATH)
 if(NOT ZLIB_INCLUDE_DIR OR NOT ZLIB_LIBRARY_RELEASE OR (NOT ZLIB_LIBRARY_DEBUG AND EXISTS "${ZLIB_ROOT}/debug/lib"))
-    message("Broken installation of vcpkg port zlib")
+    message(FATAL_ERROR "Broken installation of vcpkg port zlib")
 endif()
 if(CMAKE_VERSION VERSION_LESS 3.4)
     include(SelectLibraryConfigurations)
