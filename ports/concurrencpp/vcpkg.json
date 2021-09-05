@@ -1,0 +1,7 @@
+{
+  "name": "concurrencpp",
+  "version-string": "0.1.2",
+  "homepage": "https://github.com/David-Haim/concurrencpp/",
+  "description": "concurrencpp is a tasking library for C++ allowing developers to write highly concurrent applications easily and safely by using tasks, executors and coroutines.",
+  "dependencies": []
+}
