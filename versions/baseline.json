@@ -1384,6 +1384,10 @@
       "baseline": "3.6.4",
       "port-version": 0
     },
+    "concurrencpp": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "concurrentqueue": {
       "baseline": "1.0.3",
       "port-version": 0
