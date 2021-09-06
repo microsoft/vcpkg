@@ -6,6 +6,7 @@
   "homepage": "https://github.com/libuvc/libuvc",
   "supports": "linux",
   "dependencies": [
+    "libjpeg-turbo",
     "libusb",
     {
       "name": "vcpkg-cmake",
