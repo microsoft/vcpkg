@@ -4862,7 +4862,7 @@
     },
     "pangolin": {
       "baseline": "0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "pangomm": {
       "baseline": "2.48.0",
