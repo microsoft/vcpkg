@@ -97,7 +97,7 @@
     "realsense": {
       "description": "Build support for LibRealSense2 video input",
       "dependencies": [
-        "realsense"
+        "realsense2"
       ]
     },
     "test": {
