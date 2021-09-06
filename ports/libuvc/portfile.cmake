@@ -6,21 +6,29 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build_fix.patch
+        fix-usage.patch
 )
 
-vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS -DBUILD_EXAMPLE=OFF
-)
-vcpkg_install_cmake()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(BUILD_TARGET "Shared")
+else()
+    set(BUILD_TARGET "Static")
+endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libuvc)
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DCMAKE_BUILD_TARGET=${BUILD_TARGET}
+        -DBUILD_EXAMPLE=OFF
+)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_cmake_config_fixup(PACKAGE_NAME libuvc CONFIG_PATH lib/cmake/libuvc)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
