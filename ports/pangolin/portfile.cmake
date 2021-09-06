@@ -66,7 +66,6 @@ vcpkg_cmake_configure(
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_CRT
-        BUILD_FOR_GLES_2
 )
 
 vcpkg_cmake_install()
