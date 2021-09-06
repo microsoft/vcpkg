@@ -1,0 +1,31 @@
+diff --git a/include/pangolin/gl/colour.h b/include/pangolin/gl/colour.h
+index 92bedf4..8c3e542 100644
+--- a/include/pangolin/gl/colour.h
++++ b/include/pangolin/gl/colour.h
+@@ -28,6 +28,7 @@
+ #pragma once
+ 
+ #include <cmath>
++#include <limits>
+ 
+ #include <stdexcept>
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d448928..b458cb8 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -695,7 +695,13 @@ CreateMethodCallFile(
+ option(BUILD_PYPANGOLIN_MODULE "Python wrapper for Pangolin" ON)
+ if(BUILD_PYPANGOLIN_MODULE AND HAVE_PYTHON )
+     file(GLOB pypangolin_SRC "python/pypangolin/*.hpp" "python/pypangolin/*.cpp" "python/pypangolin_module.cpp")
+-    pybind11_add_module(pypangolin ${pypangolin_SRC})
++    if (BUILD_SHARED_LIBS)
++        set(PYBIND11_MODULE_TYPE SHARED)
++    else()
++        set(PYBIND11_MODULE_TYPE STATIC)
++    endif()
++
++    pybind11_add_module(pypangolin ${PYBIND11_MODULE_TYPE} ${pypangolin_SRC})
+     target_link_libraries(pypangolin PRIVATE ${LIBRARY_NAME})
+     target_include_directories(pypangolin PRIVATE "${USER_INC}")
+ endif()
