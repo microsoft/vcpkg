@@ -11,7 +11,7 @@ index 92bedf4..8c3e542 100644
  #include <stdexcept>
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ddeb144..0b0708e 100644
+index ddeb144..ee27d57 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -299,7 +299,9 @@ if(BUILD_PANGOLIN_PYTHON AND BUILD_PANGOLIN_GUI AND BUILD_PANGOLIN_VARS AND NOT
@@ -33,7 +33,40 @@ index ddeb144..0b0708e 100644
    find_package(FFMPEG QUIET)
    if(FFMPEG_FOUND)
      set(HAVE_FFMPEG 1)
-@@ -630,6 +633,13 @@ endif()
+@@ -464,11 +467,14 @@ endif()
+ 
+ option(BUILD_PANGOLIN_LIBUVC "Build support for libuvc video input" ON)
+ if(BUILD_PANGOLIN_LIBUVC AND BUILD_PANGOLIN_VIDEO)
+-  find_package(uvc QUIET)
+-  if(uvc_FOUND)
++  find_package(libuvc CONFIG QUIET)
++  if(libuvc_FOUND)
+     set(HAVE_UVC 1)
+-    list(APPEND INTERNAL_INC  ${uvc_INCLUDE_DIRS} )
+-    list(APPEND LINK_LIBS ${uvc_LIBRARIES} )
++    if (TARGET LibUVC::UVCShared)
++        list(APPEND LINK_LIBS LibUVC::UVCShared )
++    else()
++        list(APPEND LINK_LIBS LibUVC::UVCStatic )
++    endif()
+     list(APPEND HEADERS ${INCDIR}/video/drivers/uvc.h )
+     list(APPEND SOURCES video/drivers/uvc.cpp)
+     list(APPEND VIDEO_FACTORY_REG RegisterUvcVideoFactory )
+@@ -584,11 +590,10 @@ endif()
+ 
+ option(BUILD_PANGOLIN_LIBOPENEXR "Build support for libopenexr image input" ON)
+ if(BUILD_PANGOLIN_LIBOPENEXR)
+-  find_package(OpenEXR QUIET)
++  find_package(OpenEXR CONFIG QUIET)
+   if(OpenEXR_FOUND)
+     set(HAVE_OPENEXR 1)
+-    list(APPEND INTERNAL_INC ${OpenEXR_INCLUDE_DIR} )
+-    list(APPEND LINK_LIBS ${OpenEXR_LIBRARY} )
++    list(APPEND LINK_LIBS OpenEXR::IlmImf OpenEXR::IlmImfUtil OpenEXR::IlmImfConfig )
+     message(STATUS "libopenexr Found and Enabled")
+   endif()
+ endif()
+@@ -630,6 +635,13 @@ endif()
  
  set(INSTALL_INCLUDE_DIR "include")
  
@@ -47,7 +80,7 @@ index ddeb144..0b0708e 100644
  add_library(${LIBRARY_NAME} ${SOURCES} ${HEADERS})
  # 'System' includes shield us from warnings in those includes.
  target_include_directories(${LIBRARY_NAME} SYSTEM PUBLIC ${USER_INC} PRIVATE ${INTERNAL_INC})
-@@ -692,7 +702,13 @@ CreateMethodCallFile(
+@@ -692,7 +704,13 @@ CreateMethodCallFile(
  option(BUILD_PYPANGOLIN_MODULE "Python wrapper for Pangolin" ON)
  if(BUILD_PYPANGOLIN_MODULE AND HAVE_PYTHON )
      file(GLOB pypangolin_SRC "python/pypangolin/*.hpp" "python/pypangolin/*.cpp" "python/pypangolin_module.cpp")
