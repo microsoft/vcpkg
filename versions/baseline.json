@@ -5853,8 +5853,8 @@
       "port-version": 5
     },
     "sentencepiece": {
-      "baseline": "0.1.82",
-      "port-version": 1
+      "baseline": "0.1.95",
+      "port-version": 0
     },
     "sentry-native": {
       "baseline": "0.4.12",
