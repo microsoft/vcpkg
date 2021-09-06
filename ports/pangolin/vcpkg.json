@@ -68,7 +68,7 @@
       ]
     },
     "openexr": {
-      "description": "Build support for liblz4 compression",
+      "description": "Build support for libopenexr image input",
       "dependencies": [
         "openexr"
       ]
@@ -110,7 +110,7 @@
       "description": "Build Tools"
     },
     "uvc": {
-      "description": "Build support for libtiff image input",
+      "description": "Build support for MediaFoundation UVC input",
       "dependencies": [
         "libuvc"
       ]
