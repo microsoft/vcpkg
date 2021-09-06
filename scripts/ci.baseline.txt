@@ -543,12 +543,9 @@ libcds:arm-uwp=fail
 libcds:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
-libcrafter:x86-windows=fail
-libcrafter:x64-windows=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-libcrafter:x64-windows-static-md=fail
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
 cpuid:arm64-windows=fail
