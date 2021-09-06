@@ -438,7 +438,6 @@ hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
 hunspell:x64-windows-static-md=fail
-libhsplasma:x64-windows-static=fail
 ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
