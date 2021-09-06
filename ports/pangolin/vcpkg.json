@@ -18,7 +18,6 @@
   "default-features": [
     "eigen",
     "ffmpeg",
-    "gles",
     "gui",
     "jpeg",
     "png",
