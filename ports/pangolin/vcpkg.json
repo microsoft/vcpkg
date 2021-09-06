@@ -6,6 +6,7 @@
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "supports": "!uwp",
   "dependencies": [
+    "glew",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -46,10 +47,7 @@
       ]
     },
     "gui": {
-      "description": "Build support for Pangolin GUI",
-      "dependencies": [
-        "glew"
-      ]
+      "description": "Build support for Pangolin GUI"
     },
     "jpeg": {
       "description": "Build support for libjpeg image input",

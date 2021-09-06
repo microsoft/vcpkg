@@ -12,11 +12,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-includepath-error.patch # include path has one more ../
-        fix-dependency-python.patch
-        add-definition.patch
         fix-cmake-version.patch
         fix-build-error-in-vs2019.patch
-        fix-pybind11.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -80,6 +78,14 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_CRT
         BUILD_FOR_GLES_2
+        CMAKE_DISABLE_FIND_PACKAGE_DC1394
+        CMAKE_DISABLE_FIND_PACKAGE_DepthSense
+        CMAKE_DISABLE_FIND_PACKAGE_LibRealSense
+        CMAKE_DISABLE_FIND_PACKAGE_OpenNI
+        CMAKE_DISABLE_FIND_PACKAGE_OpenNI2
+        CMAKE_DISABLE_FIND_PACKAGE_Pleora
+        CMAKE_DISABLE_FIND_PACKAGE_TeliCam
+        CMAKE_DISABLE_FIND_PACKAGE_TooN
 )
 
 vcpkg_cmake_install()
