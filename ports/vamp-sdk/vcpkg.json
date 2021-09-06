@@ -3,7 +3,7 @@
   "name": "vamp-sdk",
   "version": "2.10",
   "port-version": 1,
-  "description": "Library for VAMP plugins",
+  "description": "Library for Vamp plugins",
   "homepage": "https://www.vamp-plugins.org/develop.html",
   "supports": "!uwp",
   "dependencies": [
