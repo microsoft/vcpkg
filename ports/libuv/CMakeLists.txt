@@ -23,7 +23,6 @@ file(GLOB UV_SOURCES_UNIX
     src/unix/thread.c
     src/unix/tty.c
     src/unix/udp.c
-    src/unix/epoll.c
 )
 file(GLOB UV_SOURCES_LINUX
     src/unix/proctitle.c
@@ -33,6 +32,7 @@ file(GLOB UV_SOURCES_LINUX
     src/unix/procfs-exepath.c
     src/unix/sysinfo-loadavg.c
     src/unix/sysinfo-memory.c
+    src/unix/epoll.c
 )
 file(GLOB UV_SOURCES_DARWIN
     src/unix/proctitle.c
