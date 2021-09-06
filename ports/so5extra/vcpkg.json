@@ -5,9 +5,6 @@
   "homepage": "https://github.com/Stiffstream/so5extra",
   "license": "BSD-3-Clause",
   "dependencies": [
-    {
-      "name": "sobjectizer",
-      "version>=": "5.7.2"
-    }
+    "sobjectizer"
   ]
 }
