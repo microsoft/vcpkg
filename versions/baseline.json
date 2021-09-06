@@ -2685,7 +2685,7 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.84.1",
+      "baseline": "1.84.2",
       "port-version": 0
     },
     "imgui-sfml": {
