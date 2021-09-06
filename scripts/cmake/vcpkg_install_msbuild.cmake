@@ -87,8 +87,8 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
-* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
-* [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
+* [libirecovery](https://github.com/Microsoft/vcpkg/blob/master/ports/libirecovery/portfile.cmake)
+* [libfabric](https://github.com/Microsoft/vcpkg/blob/master/ports/libfabric/portfile.cmake)
 #]===]
 
 function(vcpkg_install_msbuild)

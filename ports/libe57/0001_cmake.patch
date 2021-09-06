@@ -1,0 +1,88 @@
+diff -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2012-04-04 13:09:12.000000000 +0800
++++ b/CMakeLists.txt	2021-06-16 01:14:35.669163100 +0800
+@@ -31,6 +31,8 @@
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+ 
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++
+ # Set a private module find path
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+ 
+@@ -81,17 +83,17 @@
+ endif(NOT Boost_FOUND)
+ 
+ set(Xerces_USE_STATIC_LIBS On)
+-find_package(Xerces QUIET)
+-if (NOT Xerces_FOUND)
++find_package(XercesC QUIET)
++if (NOT XercesC_FOUND)
+     set(XERCES_ROOT CACHE PATH "Location of the xerces library")
+     message(FATAL_ERROR
+ "Unable to find xerces library.
+ Please set the the XERCES_ROOT to point to the root of the xerces directory."
+ )
+-endif (NOT Xerces_FOUND)
++endif (NOT XercesC_FOUND)
+ 
+-set(XML_LIBRARIES ${Xerces_LIBRARY})
+-set(XML_INCLUDE_DIRS ${Xerces_INCLUDE_DIR})
++set(XML_LIBRARIES ${XercesC_LIBRARY})
++set(XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR})
+ 
+ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+     add_definitions(-DLINUX)
+@@ -187,12 +189,18 @@
+ add_executable( las2e57
+     src/tools/las2e57.cpp
+ )
++
++if (MSVC)
++    set(LAS2E57_EXTRA_LINK bcrypt)
++endif(MSVC)
++
+ target_link_libraries( las2e57
+     E57RefImpl
+     LASReader
+     time_conversion
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${LAS2E57_EXTRA_LINK}
+ )
+ add_executable( e57fields
+     src/tools/e57fields.cpp
+@@ -270,15 +270,32 @@
+ install(
+     FILES
+         include/E57Foundation.h
++        include/E57Simple.h
++        include/LASReader.h
+     DESTINATION include/e57
+ )
++install(
++    FILES
++        include/time_conversion/time_conversion.h
++        include/time_conversion/basictypes.h
++        include/time_conversion/constants.h
++        include/time_conversion/gnss_error.h
++    DESTINATION include/e57/time_conversion
++)
+ 
+ install(
+     FILES
+         CHANGES.TXT
+         README.TXT
+         src/refimpl/E57RefImplConfig.cmake
+-    DESTINATION .
++    DESTINATION share/e57refimpl
++)
++
++install(
++    FILES
++        README.TXT
++    RENAME copyright
++    DESTINATION share/libe57
+ )
+ 
+ #include (InstallRequiredSystemLibraries)
