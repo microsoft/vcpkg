@@ -1,16 +1,11 @@
-set(PATCHES fix_config_cmake.patch)
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND PATCHES fix_libiconv.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
     REF v5.84.0
     SHA512 ca5645d6e4fde4f60c6f16c911539f4056060cc22afae275459632bc7069352b068b1727eb75b898d319e6eef3df9ddc35d8e22d4c1d05a657b112378e56731e
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        fix_config_cmake.patch
 )
 
 vcpkg_check_features(

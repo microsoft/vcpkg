@@ -20,10 +20,6 @@
     "kf5i18n",
     "kf5itemviews",
     "kf5widgetsaddons",
-    {
-      "name": "libiconv",
-      "platform": "windows & static"
-    },
     "qt5-base",
     "qt5-svg",
     "qt5-tools",
