@@ -128,16 +128,8 @@ endif()
 foreach(BUILD_TYPE dbg rel)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
-	set(WINDOWS_ONLY_PATCHES)
-	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
-	endif()
-	if(VCPKG_TARGET_IS_WINDOWS)
-		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
-	endif()
-	if(VCPKG_TARGET_IS_LINUX)
-		set(LINUX_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -149,8 +141,6 @@ foreach(BUILD_TYPE dbg rel)
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
 			"${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
 			${STATIC_ONLY_PATCHES}
-			${WINDOWS_ONLY_PATCHES}
-			${LINUX_ONLY_PATCHES}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
