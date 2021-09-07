@@ -1,16 +1,9 @@
-set(PATCHES)
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND PATCHES fix_libiconv.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
     REF v5.84.0
     SHA512 39afc3265c8aed26f78c836691548cafca05f31238e11f6d29e497c78b6e809d9dba5d3f6cbb9425cfe84d2a1d0910165e77c7841d833cccee3c7398e39bfc68
     HEAD_REF master
-    PATCHES ${PATCHES}
 )
 
 vcpkg_cmake_configure(

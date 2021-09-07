@@ -18,10 +18,6 @@
     "kf5i18n",
     "kf5sonnet",
     "kf5widgetsaddons",
-    {
-      "name": "libiconv",
-      "platform": "windows & static"
-    },
     "qt5-base",
     "qt5-tools",
     {
