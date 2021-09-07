@@ -14,7 +14,7 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if (WIN32)
+if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spng.dll" "${CURRENT_PACKAGES_DIR}/bin/spng.dll")
 
