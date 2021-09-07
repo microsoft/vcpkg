@@ -133,6 +133,7 @@ diff --git a/tensorflow/c/kernels_experimental.h b/tensorflow/c/kernels_experime
 --- a/tensorflow/c/kernels_experimental.h
 +++ b/tensorflow/c/kernels_experimental.h
 @@ -25,24 +25,7 @@
+ // The API here is subject to changes in the future.
  // --------------------------------------------------------------------------
  
 -// Macro to control visibility of exported symbols in the shared library (.so,
@@ -263,9 +264,9 @@ diff --git a/tensorflow/c/tf_tensor.h b/tensorflow/c/tf_tensor.h
  #ifdef __cplusplus
  extern "C" {
 
-diff --git a/tensorflow/c/tf_string.h b/tensorflow/c/tf_string.h
---- a/tensorflow/c/tf_string.h
-+++ b/tensorflow/c/tf_string.h
+diff --git a/tensorflow/c/tf_tstring.h b/tensorflow/c/tf_tstring.h
+--- a/tensorflow/c/tf_tstring.h
++++ b/tensorflow/c/tf_tstring.h
 @@ -18,19 +18,7 @@
  #include "tensorflow/c/tf_tensor.h"
  #include "tensorflow/core/platform/ctstring.h"
