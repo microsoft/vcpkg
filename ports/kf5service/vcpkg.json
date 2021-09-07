@@ -23,7 +23,6 @@
       "platform": "!android"
     },
     "kf5i18n",
-    "libiconv",
     "qt5-base",
     "qt5-tools",
     {
