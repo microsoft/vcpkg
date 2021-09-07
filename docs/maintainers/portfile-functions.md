@@ -79,3 +79,9 @@
 ### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
 
 - [x\_vcpkg\_pkgconfig\_get\_modules](ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.md)
+
+### [vcpkg-make](ports/vcpkg-make.md)
+
+- [vcpkg\_make\_build](ports/vcpkg-make/vcpkg_make_build.md)
+- [vcpkg\_make\_configure](ports/vcpkg-make/vcpkg_make_configure.md)
+- [vcpkg\_make\_install](ports/vcpkg-make/vcpkg_make_install.md)
