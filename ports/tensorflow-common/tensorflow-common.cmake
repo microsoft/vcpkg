@@ -128,8 +128,12 @@ endif()
 foreach(BUILD_TYPE dbg rel)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
+	set(WINDOWS_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
+	endif()
+	if(VCPKG_TARGET_IS_WINDOWS)
+		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -141,6 +145,7 @@ foreach(BUILD_TYPE dbg rel)
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
 			"${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
 			${STATIC_ONLY_PATCHES}
+			${WINDOWS_ONLY_PATCHES}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -180,11 +185,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(PLATFORM_COMMAND UNIX_COMMAND)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
-		if(VCPKG_TARGET_IS_WINDOWS)
-			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
-		else()
-			set(BUILD_OPTS "--compilation_mode=dbg")
-		endif()
+		set(BUILD_OPTS "--compilation_mode=dbg")
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
