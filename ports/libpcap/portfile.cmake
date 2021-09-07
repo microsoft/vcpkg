@@ -33,6 +33,8 @@ vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_PATH ${FLEX} DIRECTORY)
 vcpkg_add_to_path(${FLEX_PATH})
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RT)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -46,6 +48,7 @@ vcpkg_cmake_configure(
         -DDISABLE_TC=ON
         -DDISABLE_PACKET=ON
         -DENABLE_REMOTE=OFF
+        -DUSE_STATIC_RT=${USE_STATIC_RT}
 )
 
 vcpkg_cmake_install()

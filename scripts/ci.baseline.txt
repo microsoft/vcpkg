@@ -667,7 +667,6 @@ libopusenc:arm-uwp=fail
 libopusenc:x64-osx=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libpcap:x64-windows-static-md=fail
 libpff:arm-uwp=fail
 libpff:x64-linux=fail
 libpff:x64-osx=fail
