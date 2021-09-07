@@ -23,7 +23,7 @@ diff --git a/tensorflow/core/kernels/depthtospace_op.cc b/tensorflow/core/kernel
 -  }
 -};
 -#endif
-}  // namespace functor
+ }  // namespace functor
  
  #define REGISTER(type)                                                \
 
@@ -52,6 +52,6 @@ diff --git a/tensorflow/core/kernels/spacetodepth_op.cc b/tensorflow/core/kernel
 -  }
 -};
 -#endif
-}  // namespace functor
+ }  // namespace functor
  
  #define REGISTER(type)                                                \
