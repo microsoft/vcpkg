@@ -5126,7 +5126,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 4
+      "port-version": 5
     },
     "prometheus-cpp": {
       "baseline": "0.12.3",
