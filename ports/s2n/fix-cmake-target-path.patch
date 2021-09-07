@@ -12,10 +12,10 @@ index 132f414..c7cfb5f 100644
          COMPONENT Development)
  
 diff --git a/cmake/s2n-config.cmake b/cmake/s2n-config.cmake
-index 6cab2bc..c4336e7 100644
+index 09d1c3a..4e76ed6 100644
 --- a/cmake/s2n-config.cmake
 +++ b/cmake/s2n-config.cmake
-@@ -8,8 +8,4 @@ endif()
+@@ -8,9 +8,5 @@ endif()
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
  find_dependency(LibCrypto)
  
@@ -25,3 +25,4 @@ index 6cab2bc..c4336e7 100644
 -    include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
 -endif()
 +include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
+ 
