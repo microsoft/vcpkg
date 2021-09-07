@@ -1,9 +1,8 @@
 #[===[.md:
 # vcpkg_make_configure
 
-Configure configure for Debug and Release builds of a project.
+Configure a Makefile buildsystem.
 
-## Usage
 ```cmake
 vcpkg_make_configure(
     SOURCE_PATH <${source_path}>
@@ -25,58 +24,42 @@ vcpkg_make_configure(
 )
 ```
 
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `configure`/`configure.ac`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+`vcpkg_make_configure` configures a Makefile build system for use with
+`vcpkg_make_buildsystem_build` and `vcpkg_make_buildsystem_install`.
+`source-path` is where the source is located; by convention,
+this is usually `${SOURCE_PATH}`, which is set by one of the `vcpkg_from_*` functions.
+Use `PROJECT_SUBPATH` if `configure`/`configure.ac` is elsewhere in the source directory.
+This function configures the build system for both Debug and Release builds by default,
+assuming that `VCPKG_BUILD_TYPE` is not set; if it is, then it will only configure for
+that build type. All default build configurations will be obtained from cmake
+configuration through `z_vcpkg_get_cmake_vars`.
 
-### PROJECT_SUBPATH
-Specifies the directory containing the ``configure`/`configure.ac`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+Use the `OPTIONS` argument to set the configure settings for both release and debug,
+and use `OPTIONS_RELEASE` and `OPTIONS_DEBUG` to set the configure settings for
+release only and debug only respectively.
 
-### SKIP_CONFIGURE
-Skip configure process
+`vcpkg_make_configure` uses [mingw] as its build system on Windows and uses [GNU Make]
+on non-Windows.
+Do not use for batch files which simply call autoconf or configure.
 
-### USE_WRAPPERS
-Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+[mingw]: https://www.mingw-w64.org/
+[GNU Make]: https://www.gnu.org/software/make/
 
-### BUILD_TRIPLET
-Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
+By default, `vcpkg_make_configure` uses the current architecture as the --build/--target/--host.
+For cross-platform construction, use `DETERMINE_BUILD_TRIPLET` to adapt to the host platform.
+You can also use `BUILD_TRIPLET` to specify --build/--target/--host, this option will overwrite
+`VCPKG_MAKE_BUILD_TRIPLET` globally.
 
-### DETERMINE_BUILD_TRIPLET
-For ports having a configure script following the autotools rules for selecting the triplet
+For some libraries, additional scripts need to be called before configure, pass `PRERUN_SHELL`
+and set the script relative path.
 
-### NO_ADDITIONAL_PATHS
-Don't pass any additional paths except for --prefix to the configure call
+Use `ADD_BIN_TO_PATH` during configuration to add the appropriate Release and Debug `bin\`
+directories to the path so that the executable file can run against the in-tree DLL.
+Use `NO_ADDITIONAL_PATHS `to not add additional paths except `--prefix` to configure.
 
-### AUTOCONFIG
-Need to use autoconfig to generate configure file.
+Use `USE_WRAPPERS` to use autotools ar-lib and compile wrappers when building Windows.
 
-### PRERUN_SHELL
-Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
-
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
-
-## DISABLE_VERBOSE_FLAGS
-do not pass '--disable-silent-rules --verbose' to configure
-
-### OPTIONS
-Additional options passed to configure during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
-
-### CONFIG_DEPENDENT_ENVIRONMENT
-List of additional configuration dependent environment variables to set. 
-Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
-General environment variables can be set from within the portfile itself. 
-
-### CONFIGURE_ENVIRONMENT_VARIABLES
-List of additional environment variables to pass via the configure call. 
+Use `DISABLE_VERBOSE_FLAGS` to not pass '--disable-silent-rules --verbose' to configure.
 
 ## Notes
 This command supplies many common arguments to configure. To see the full list, examine the source.
@@ -276,7 +259,7 @@ function(vcpkg_make_configure)
 
     set(requires_autogen FALSE) # use autogen.sh
     set(requires_autoconfig FALSE) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac") # remove configure; rerun autoconf
+    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac") # remove configure; rerun autoconf
         if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
             set(requires_autoconfig TRUE)
             file(REMOVE "${src_dir}/configure") # remove possible autodated configure scripts
