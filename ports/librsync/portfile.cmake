@@ -32,7 +32,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/librsync_export.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/librsync_export.h"
         "#  ifdef LIBRSYNC_STATIC_DEFINE"
         "#  if 1 /* LIBRSYNC_STATIC_DEFINE */"
     )
