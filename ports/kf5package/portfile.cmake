@@ -1,16 +1,9 @@
-set(PATCHES)
-
-if((VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX) AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND PATCHES fix_libiconv.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kpackage
     REF v5.84.0
     SHA512 ad6a7083d461b2e782c612a544a8f6c0493c68c98a915e3f8fd4fd7de4ce636002383869476f877ace407fdc5013ad58e297ed3fd46dcac055ce79251704bf95
     HEAD_REF master
-    PATCHES ${PATCHES}
 )
 
 vcpkg_cmake_configure(
