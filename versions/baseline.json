@@ -3070,7 +3070,7 @@
     },
     "lcms": {
       "baseline": "2.12",
-      "port-version": 0
+      "port-version": 1
     },
     "leaf": {
       "baseline": "0.2.2",
