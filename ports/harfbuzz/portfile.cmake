@@ -49,7 +49,6 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
         -Dcairo=disabled # Use Cairo graphics library
-        -Dfontconfig=disabled    # Use fontconfig
         -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
