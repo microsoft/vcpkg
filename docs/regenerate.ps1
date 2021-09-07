@@ -29,6 +29,7 @@ class CMakeDocumentation {
     'vcpkg-cmake'
     'vcpkg-cmake-config'
     'vcpkg-pkgconfig-get-modules'
+    'vcpkg-make'
 )
 
 [CMakeDocumentation[]]$tableOfContents = @()
