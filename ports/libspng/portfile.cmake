@@ -14,11 +14,13 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spng.dll" "${CURRENT_PACKAGES_DIR}/bin/spng.dll")
+if (WIN32)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spng.dll" "${CURRENT_PACKAGES_DIR}/bin/spng.dll")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spng.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/spng.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spng.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/spng.dll")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
