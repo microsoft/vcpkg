@@ -15,7 +15,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_BUILD_TARGET=${BUILD_TARGET}
         -DBUILD_EXAMPLE=OFF
