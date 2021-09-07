@@ -13,16 +13,4 @@ index 62b7b33..8a4bd71 100644
  if(WIN32)
    add_definitions(-D_USRDLL)
  endif()
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9e47967..7694f04 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -505,7 +505,7 @@ if(USE_QUICHE)
-   cmake_pop_check_state()
- endif()
- 
--if(WIN32)
-+if(WIN32 AND NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-   set(USE_WIN32_CRYPTO ON)
- endif()
  

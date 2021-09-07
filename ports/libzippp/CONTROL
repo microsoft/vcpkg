@@ -1,5 +1,5 @@
 Source: libzippp
-Version: 4.1-1.8.0
+Version: 5.0-1.8.0
 Homepage: https://github.com/ctabin/libzippp
 Description: Simple basic C++ wrapper around the libzip library. It is meant to be a portable and easy-to-use library for ZIP handling
 Build-Depends: zlib, libzip[core,bzip2]
