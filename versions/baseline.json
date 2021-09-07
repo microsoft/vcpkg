@@ -3069,7 +3069,7 @@
       "port-version": 2
     },
     "lcms": {
-      "baseline": "2.11",
+      "baseline": "2.12",
       "port-version": 0
     },
     "leaf": {
