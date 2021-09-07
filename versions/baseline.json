@@ -1309,7 +1309,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "1.9.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -3237,7 +3237,7 @@
       "port-version": 5
     },
     "libfort": {
-      "baseline": "0.4.1",
+      "baseline": "0.4.2",
       "port-version": 0
     },
     "libfreenect2": {
@@ -3265,7 +3265,7 @@
       "port-version": 3
     },
     "libgit2": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "libgnutls": {
