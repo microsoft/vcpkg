@@ -52,7 +52,7 @@ index fed8001..15e87ae 100644
  else ()
      message (WARNING "heif plugin will not be built")
 diff --git a/src/ico.imageio/CMakeLists.txt b/src/ico.imageio/CMakeLists.txt
-index 9ba76ac..182abb7 100644
+index 9ba76ac..13db4ac 100644
 --- a/src/ico.imageio/CMakeLists.txt
 +++ b/src/ico.imageio/CMakeLists.txt
 @@ -2,9 +2,15 @@
@@ -60,13 +60,13 @@ index 9ba76ac..182abb7 100644
  # https://github.com/OpenImageIO/oiio/blob/master/LICENSE.md
  
 -if (TARGET PNG::PNG)
-+if (TARGET png_static)
-+    set(PNG_TARGET png_static)
-+elseif (TARGET png)
-+    set(PNG_TARGET png)
-+endif()
-+
 +if (libpng_FOUND)
++    if (TARGET png_static)
++        set(PNG_TARGET png_static)
++    elseif (TARGET png)
++        set(PNG_TARGET png)
++    endif()
++
      add_oiio_plugin (icoinput.cpp icooutput.cpp
 -                     LINK_LIBRARIES PNG::PNG ZLIB::ZLIB)
 +                     LINK_LIBRARIES ${PNG_TARGET} ZLIB::ZLIB)
