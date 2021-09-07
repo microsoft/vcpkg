@@ -1,6 +1,6 @@
 {
   "name": "aixlog",
-  "version-semver": "1.4.0",
+  "version-semver": "1.5.0",
   "description": "Header-only C++ logging library",
   "dependencies": [
     {
