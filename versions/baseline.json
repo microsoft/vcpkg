@@ -33,7 +33,7 @@
       "port-version": 0
     },
     "aixlog": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "akali": {
@@ -89,7 +89,7 @@
       "port-version": 0
     },
     "any-lite": {
-      "baseline": "0.2.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "anyrpc": {
@@ -121,7 +121,7 @@
       "port-version": 0
     },
     "arcus": {
-      "baseline": "4.8.0",
+      "baseline": "4.10.0",
       "port-version": 0
     },
     "argagg": {
