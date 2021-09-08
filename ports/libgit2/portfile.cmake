@@ -4,8 +4,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF 7f4fa178629d559c037a1f72f79f79af9c1ef8ce#version 1.1.0
-    SHA512 2fdbbb263fe71dc6d04b64c2967e7acff1a5b6102e62d69c9a7ea1b6777ab74a1625e798438ea239d8b489648a9335833f937f893f73a66e16c658eae453ab62
+    REF 4fd32be01c79a5c003bb47674ac1d76d948518b7#version 1.2.0
+    SHA512 f9defe0dd51537ae374fe25ef3ccea74d8d05588f26b1865275067e63ad65a7cd283ee83099b97cea50ef5c367036734ba34be73a06b030be2903344b2778fff
     HEAD_REF master
 )
 
@@ -63,9 +63,8 @@ vcpkg_check_features(
         ssh USE_SSH
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_CLAR=OFF
         -DUSE_HTTP_PARSER=system
@@ -75,8 +74,8 @@ vcpkg_configure_cmake(
         ${GIT2_FEATURES}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
