@@ -20,7 +20,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME lcms2)
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup() # provides old PACKAGE_NAME lcms
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/lcms/lcms-config.cmake" [[
