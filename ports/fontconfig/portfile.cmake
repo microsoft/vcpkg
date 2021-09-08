@@ -98,13 +98,18 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
-    vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
+    if("${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
+        set(FC_CACHE_BASE "${CURRENT_PACKAGES_DIR}")
+    else()
+        set(FC_CACHE_BASE "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}")
+    endif()
+    vcpkg_execute_required_process(COMMAND "${FC_CACHE_BASE}/tools/${PORT}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
                                    WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
                                    LOGNAME fc-cache-${TARGET_TRIPLET})
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows. 
+    # Unnecessary make rule creating the fontconfig cache dir on windows.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 
