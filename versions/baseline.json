@@ -2381,7 +2381,7 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.5.0",
+      "baseline": "11.6.0",
       "port-version": 0
     },
     "glui": {
@@ -3421,7 +3421,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "20.09",
+      "baseline": "21.03",
       "port-version": 0
     },
     "libmesh": {
