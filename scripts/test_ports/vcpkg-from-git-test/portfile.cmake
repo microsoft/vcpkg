@@ -15,24 +15,29 @@ vcpkg_list(SET git ${GIT} ${git_config})
 vcpkg_execute_required_process(
     COMMAND ${git} init "${git_remote}"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-    LOGNAME "git.1"
+    LOGNAME "git-init"
+)
+vcpkg_execute_required_process(
+    COMMAND ${git} config uploadpack.allowReachableSHA1InWant true
+    WORKING_DIRECTORY "${git_remote}"
+    LOGNAME "git-config"
 )
 vcpkg_execute_required_process(
     COMMAND ${git} checkout -b main
     WORKING_DIRECTORY "${git_remote}"
-    LOGNAME "git.2"
+    LOGNAME "git-new-branch"
 )
 
 file(WRITE "${git_remote}/README.txt" "first commit")
 vcpkg_execute_required_process(
     COMMAND ${git} add "${git_remote}/README.txt"
     WORKING_DIRECTORY "${git_remote}"
-    LOGNAME "git.3"
+    LOGNAME "git-add.1"
 )
 vcpkg_execute_required_process(
     COMMAND ${git} commit -m "first commit"
     WORKING_DIRECTORY "${git_remote}"
-    LOGNAME "git.4"
+    LOGNAME "git-commit.1"
 )
 vcpkg_execute_in_download_mode(
     COMMAND ${git} rev-parse HEAD
@@ -49,12 +54,12 @@ file(WRITE "${git_remote}/README.txt" "second commit")
 vcpkg_execute_required_process(
     COMMAND ${git} add "${git_remote}/README.txt"
     WORKING_DIRECTORY "${git_remote}"
-    LOGNAME "git.5"
+    LOGNAME "git-add.2"
 )
 vcpkg_execute_required_process(
     COMMAND ${git} commit -m "second commit"
     WORKING_DIRECTORY "${git_remote}"
-    LOGNAME "git.6"
+    LOGNAME "git-commit.2"
 )
 vcpkg_execute_in_download_mode(
     COMMAND ${git} rev-parse HEAD
