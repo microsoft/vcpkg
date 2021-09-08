@@ -6049,8 +6049,8 @@
       "port-version": 0
     },
     "soundtouch": {
-      "baseline": "2.0.0-6",
-      "port-version": 0
+      "baseline": "2.0.0",
+      "port-version": 7
     },
     "soxr": {
       "baseline": "0.1.3",
