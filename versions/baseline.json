@@ -6605,7 +6605,7 @@
       "port-version": 1
     },
     "uriparser": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.5",
       "port-version": 0
     },
     "usbmuxd": {
