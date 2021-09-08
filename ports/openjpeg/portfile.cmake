@@ -9,13 +9,7 @@ vcpkg_from_github(
         fix-lrintf-to-opj_lrintf.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND OPTIONS "-DBUILD_SHARED_LIBS=OFF"
-                        "-DBUILD_STATIC_LIBS=ON")
-else()
-    list(APPEND OPTIONS "-DBUILD_SHARED_LIBS=ON"
-                        "-DBUILD_STATIC_LIBS=OFF")
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -35,7 +29,7 @@ vcpkg_cmake_configure(
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
         -DBUILD_PKGCONFIG_FILES=ON
         ${FEATURE_OPTIONS}
-        ${OPTIONS}
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
 )
 
 vcpkg_cmake_install()
@@ -52,7 +46,7 @@ else()
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
 endif()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
