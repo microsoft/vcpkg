@@ -2041,7 +2041,7 @@
       "port-version": 1
     },
     "fftw3": {
-      "baseline": "3.3.8-7",
+      "baseline": "3.3.9",
       "port-version": 0
     },
     "fftwpp": {
@@ -3821,8 +3821,8 @@
       "port-version": 3
     },
     "libwebsockets": {
-      "baseline": "4.1.6",
-      "port-version": 2
+      "baseline": "4.2.2",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -6653,7 +6653,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "19.2.0",
+      "baseline": "19.5.0",
       "port-version": 0
     },
     "v-hacd": {
