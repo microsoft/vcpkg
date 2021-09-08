@@ -7008,6 +7008,10 @@
       "baseline": "0.5.5-2",
       "port-version": 0
     },
+    "zipper": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "zkpp": {
       "baseline": "0.2.3",
       "port-version": 0
