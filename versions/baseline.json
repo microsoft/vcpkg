@@ -321,7 +321,7 @@
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.1.0",
+      "baseline": "12.2.0",
       "port-version": 0
     },
     "azure-uamqp-c": {
