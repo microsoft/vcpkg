@@ -1,5 +1,13 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+if(NOT VCPKG_HOST_IS_WINDOWS)
+    vcpkg_execute_required_process(
+        COMMAND locale
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME locale
+    )
+endif()
+
 set(ascii_tarball_directory "${CURRENT_BUILDTREES_DIR}/ascii-tarball")
 set(bmp_tarball_directory "${CURRENT_BUILDTREES_DIR}/bmp-tarball")
 set(nonbmp_tarball_directory "${CURRENT_BUILDTREES_DIR}/nonbmp-tarball")
