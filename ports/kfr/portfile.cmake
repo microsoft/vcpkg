@@ -12,7 +12,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-	FEATURES
+    FEATURES
         capi ENABLE_CAPI_BUILD
         dft ENABLE_DFT
         dft-np ENABLE_DFT_NP
