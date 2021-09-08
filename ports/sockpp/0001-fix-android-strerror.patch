@@ -1,0 +1,35 @@
+From feb6183a307482313766ec07773cc61d70cb98da Mon Sep 17 00:00:00 2001
+From: Ben Ahlbrand <bmahlbrand@gmail.com>
+Date: Tue, 29 Sep 2020 00:37:02 -0400
+Subject: [PATCH] fix: android strerror
+
+---
+ src/exception.cpp | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/src/exception.cpp b/src/exception.cpp
+index 5be94d0..7cb010d 100644
+--- a/src/exception.cpp
++++ b/src/exception.cpp
+@@ -66,8 +66,16 @@ std::string sys_error::error_str(int err)
+ 			buf, sizeof(buf), NULL);
+     #else
+     	#ifdef _GNU_SOURCE
+-			auto s = strerror_r(err, buf, sizeof(buf));
+-			return s ? std::string(s) : std::string();
++			#if !defined(__GLIBC__)
++			// use the XSI standard behavior.
++				int e = strerror_r(err, buf, sizeof(buf));
++				auto s = strerror(e);
++				return s ? std::string(s) : std::string();
++			#else
++			// assume GNU exception
++				auto s = strerror_r(err, buf, sizeof(buf));
++				return s ? std::string(s) : std::string();
++			#endif
+         #else
+             ignore_result(strerror_r(err, buf, sizeof(buf)));
+         #endif
+-- 
+2.30.2.windows.1
+
