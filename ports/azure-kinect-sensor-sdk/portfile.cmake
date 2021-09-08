@@ -8,9 +8,7 @@ vcpkg_from_github(
     PATCHES
         fix-builds.patch
         fix-dependency-imgui.patch
-        add-MATROSKA_VERSION-define.patch
         fix-linux.patch
-        fix-uvc.patch
         fix-calibration-c.patch
 )
 
