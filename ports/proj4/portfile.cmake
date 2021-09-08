@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 e6e77266dcd70c939c16667c916cccab8de161221d2ef600cfca43382f50da2dc8d790561556b4416adbb4ac6fba939004e0cc936c278e0e808dc3566e9a70d4
     HEAD_REF master
     PATCHES
+        fix-filemanager-uwp.patch
         fix-sqlite3-bin.patch
-        disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         tools-cmake.patch
@@ -44,7 +44,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
@@ -65,7 +64,7 @@ endif ()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_copy_pdbs()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -262,6 +262,10 @@ ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
+# embree creates common conflicting static library names when built in static mode, reported upstream:
+# https://github.com/embree/embree/issues/331
+embree2:x64-windows-static=skip
+embree2:x64-windows-static-md=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail
@@ -538,11 +542,12 @@ libbson:x64-uwp=fail
 libcds:arm64-windows=fail
 libcds:arm-uwp=fail
 libcds:x64-uwp=fail
-libconfig:x64-osx=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
 libcrafter:x64-windows=fail
+libgeotiff:arm-uwp=fail
+libgeotiff:x64-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
@@ -614,8 +619,6 @@ liblas:arm64-windows=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
-liblo:x64-linux=fail
-liblo:x64-osx=fail
 liblo:x64-uwp=fail
 liblsl:arm64-windows=fail
 liblsl:arm-uwp=fail
@@ -1234,8 +1237,6 @@ popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
-proj4:arm-uwp=fail
-proj4:x64-uwp=fail
 protobuf-c:x86-windows=fail
 protobuf-c:x64-windows=fail
 protobuf-c:x64-windows-static=fail
@@ -1292,6 +1293,14 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+# Conflicts with qt5-declarative, see https://github.com/microsoft/vcpkg/issues/19922
+qt5-activeqt:arm-uwp=skip
+qt5-activeqt:arm64-windows=skip
+qt5-activeqt:x64-uwp=skip
+qt5-activeqt:x64-windows-static-md=skip
+qt5-activeqt:x64-windows-static=skip
+qt5-activeqt:x64-windows=skip
+qt5-activeqt:x86-windows=skip
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
@@ -1536,8 +1545,6 @@ tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
 tinyexif:arm-uwp=fail
 tinyexif:x64-uwp=fail
-tinyfiledialogs:arm-uwp=fail
-tinyfiledialogs:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxlite:arm-uwp=fail
@@ -1758,7 +1765,3 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
-
-# Changes in Python have broken tensorflow on our osx hardware
-tensorflow:x64-osx=fail
-tensorflow-cc:x64-osx=fail
