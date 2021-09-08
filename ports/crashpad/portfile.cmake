@@ -7,7 +7,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 9a31d3f8e9815774026a753a1ff6155347cd549f
+    REF b7cf20f1714c3a22d13bc3391170c1085a8b7623
 )
 
 function(checkout_in_path PATH URL REF)
@@ -28,7 +28,7 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
-    "c426ff98e1d9e9d59777fe8b883a5c0ceeca9ca3"
+    "2470faf722b0fd259ca11c045fdb370e09037c4e"
 )
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
@@ -118,7 +118,8 @@ install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 # remove empty directories
 file(REMOVE_RECURSE 
     "${PACKAGES_INCLUDE_DIR}/util/net/testdata" 
-    "${PACKAGES_INCLUDE_DIR}/build/ios")
+    "${PACKAGES_INCLUDE_DIR}/build/ios"
+    "${PACKAGES_INCLUDE_DIR}/build/config")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/crashpadConfig.cmake" @ONLY)
