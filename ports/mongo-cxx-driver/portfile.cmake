@@ -19,7 +19,7 @@ vcpkg_from_github(
 
 if ("mnmlstc" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature mnmlstc only support UNIX")
+        message(FATAL_ERROR "Feature mnmlstc only supports UNIX")
     endif()
     set(BSONCXX_POLY MNMLSTC)
 elseif ("system-mnmlstc" IN_LIST FEATURES)
@@ -37,26 +37,23 @@ else()
   endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        -DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
-        -DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_POLY_USE_${BSONCXX_POLY}=1
         -DBUILD_VERSION=${VERSION_FULL}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME bsoncxx CONFIG_PATH "lib/cmake/bsoncxx-${VERSION_FULL}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME mongocxx CONFIG_PATH "lib/cmake/mongocxx-${VERSION_FULL}")
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libbsoncxx/libbsoncxx-config.cmake
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libbsoncxx/libbsoncxx-config.cmake"
 "
 message(WARNING \"This CMake target is deprecated.  Use mongo::bsoncxx instead.\")
 
@@ -120,7 +117,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/bin"
     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
     "${CURRENT_PACKAGES_DIR}/bin"
-    "${CURRENT_PACKAGES_DIR}/lib/cmake" 
+    "${CURRENT_PACKAGES_DIR}/lib/cmake"
 )
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
