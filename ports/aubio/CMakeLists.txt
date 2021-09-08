@@ -105,6 +105,7 @@ install(
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "@PACKAGE_INIT@\n")
 if(WITH_DEPENDENCIES)
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "
+    include(CMakeFindDependencyMacro)
     find_dependency(FFMPEG COMPONENTS avcodec avutil avformat swresample REQUIRED)
     find_dependency(BZip2 REQUIRED)
     find_dependency(LibLZMA REQUIRED)
