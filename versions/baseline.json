@@ -5586,7 +5586,7 @@
     },
     "rappture": {
       "baseline": "1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "raylib": {
       "baseline": "3.7.0",
