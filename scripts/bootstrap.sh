@@ -119,7 +119,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
+    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" --silent --show-error --fail || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
@@ -165,10 +165,11 @@ fetchTool()
     xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ]; then
-        echo "Unknown tool: $tool"
+    case "$toolData" in
+	"" | "<!xml"*)
+        echo "No entry for $toolRegexStart in $vcpkgRootDir/scripts/vcpkgTools.xml"
         return 1
-    fi
+    esac
 
     version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 
@@ -268,7 +269,7 @@ else
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
 if [ "$os" = "osx" ]; then
-    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] || [[ $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 11 ]]; then
         CXX=clang++
     else
         selectCXX
@@ -278,8 +279,8 @@ else
 fi
 
 # Do the build
-vcpkgToolReleaseTag="2021-06-29"
-vcpkgToolReleaseSha="ffaa649cdb996946deff538ed0df192dffff41eb838179566aa77f91cdaaeadea7cd058bb4b230057f4b14703fbcd3c557b398ec7388d94177d3fc31073e7b6b"
+vcpkgToolReleaseTag="2021-08-12"
+vcpkgToolReleaseSha="a8b64125fb065129f7db48b299d8868a0394aa8a5c45e7c6076773d4bab9ca4b4d6cc4459df0df3399a7241fa0d168cdd2ab6169e4d8b7e6f708a52f003265b1"
 vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
 vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
 baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
@@ -299,8 +300,13 @@ echo "Building vcpkg-tool..."
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
 vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
+cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe'"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
+    cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+fi
+
+(cd "$buildDir" && CXX="$CXX" eval "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"

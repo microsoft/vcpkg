@@ -1,6 +1,12 @@
 {
   "name": "entt",
-  "version": "3.7.1",
+  "version": "3.8.0",
+  "port-version": 1,
   "description": "Gaming meets modern C++ - a fast and reliable entity-component system and much more",
-  "homepage": "https://github.com/skypjack/entt"
+  "homepage": "https://github.com/skypjack/entt",
+  "features": {
+    "experimental": {
+      "description": "Use experimental features right away"
+    }
+  }
 }

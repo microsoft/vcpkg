@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF v1.8.5
-    SHA512 77cc9df0c40bbdbfe1f3e5818dccf121918bfceac28f2608f39e5bf944968b7e8e24a6fc29f01bc58a9bae41b8892d49cfb59c196935ec9868884320b50f130c
+    REF v1.9.0
+    SHA512 df023847e49b2ad8e5dc4cb681d31515bb7f87644a4baa946836cf3cb4114bb95ad603b746969e0e7f8220d3bfa453220c00dfde812f1e610801a5cc62e1f0f2
     HEAD_REF v1.x
     PATCHES fix-mingw-build.patch
 )

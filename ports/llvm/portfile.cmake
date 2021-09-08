@@ -1,4 +1,4 @@
-set(LLVM_VERSION "12.0.0")
+set(LLVM_VERSION "12.0.1")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${LLVM_VERSION}
-    SHA512 0cff02155c5ac0d6db2b72d60d9819d5b5dd859663b45f721b1c7540239c2fceb1f57d9173f6870c49de851c242ed8e85c5c6d6577a1f8092a7c5dcd12513b26
+    SHA512 6eb0dc18e2c25935fabfdfc48b0114be0939158dfdef7b85b395fe2e71042672446af0e68750aae003c9847d10d1f63316fe95d3df738d18f249174292b1b9e1
     HEAD_REF master
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
@@ -187,13 +187,13 @@ set(known_llvm_targets
     BPF
     Hexagon
     Lanai
-    Mips 
+    Mips
     MSP430
     NVPTX
     PowerPC
     RISCV
     Sparc
-    SystemZ 
+    SystemZ
     WebAssembly
     X86
     XCore
@@ -211,11 +211,37 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}")
+    # TODO: support more targets and OS
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        if(VCPKG_TARGET_IS_OSX)
+            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=arm64-apple-darwin20.3.0)
+            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=arm64-apple-darwin20.3.0)
+        elseif(VCPKG_TARGET_IS_WINDOWS)
+            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=arm64-pc-win32)
+            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=arm64-pc-win32)
+
+            # Remove if PR #16111 is merged
+            list(APPEND CROSS_OPTIONS -DCMAKE_CROSSCOMPILING=ON)
+            list(APPEND CROSS_OPTIONS -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64)
+            list(APPEND CROSS_OPTIONS -DCMAKE_SYSTEM_NAME:STRING=Windows)
+        endif()
+        list(APPEND CROSS_OPTIONS -DLLVM_TARGET_ARCH=AArch64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        if(VCPKG_TARGET_IS_OSX)
+            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=x86_64-apple-darwin20.3.0)
+            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-apple-darwin20.3.0)
+        endif()
+        list(APPEND CROSS_OPTIONS -DLLVM_TARGET_ARCH=X86)
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/llvm
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${CROSS_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
