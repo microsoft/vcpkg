@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.30.1
-    SHA512 2a49c92eae39e2389bb8c765c2aa9374ae38a64f8f19a7744887d2176dc846017d8bc78c0391c55654765aaeff11bb1f3ea7e904d1e7b16580941ab74585e8bc
+    REF v1.31.1
+    SHA512 c172280cc934978505524d53bc804dc9079af21a1357f347b0bd3554d25cc2d57dec3869f1ba01f9eacaa1367feede84ae158fa3e9039b0e6bb87f7c27717bb1
     HEAD_REF master
 )
 
