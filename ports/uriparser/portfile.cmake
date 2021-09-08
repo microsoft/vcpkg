@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF 25dddb16cf044a7df27884e7ad3911baaaca3d7c # uriparser-0.9.4
-    SHA512 9001649eb027d0ff4f990b20d0f05643939e2bb8ab89d158f32353d6f7c4264a551a6af7856ad13890d05f58b3d15d59e6d82ee0d95b7788c03b34bb52086cd2
+    REF 092c2ed1c1cdf2e3305f76927369a07b294eb279 # uriparser-0.9.5
+    SHA512 2d7a4e9d186389bada2a8e6b4400b628ea54d17fb8d8ba32f2f416205480a72e94c724ba04462b874b3b4b9399b7f776bcfae76a8cb96a8b896514c05d2be775
     HEAD_REF master
 )
 
@@ -12,9 +12,8 @@ else()
     set(URIPARSER_BUILD_TOOLS OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DURIPARSER_BUILD_DOCS=OFF
         -DURIPARSER_BUILD_TESTS=OFF
@@ -24,7 +23,7 @@ vcpkg_configure_cmake(
         -DURIPARSER_BUILD_TOOLS=${URIPARSER_BUILD_TOOLS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -42,18 +41,16 @@ file(STRINGS
 )
 string(REGEX REPLACE "${_package_version_re}" "\\1" _package_version ${_package_version_define})
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT}-${_package_version})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT}-${_package_version})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/include/uriparser/UriBase.h
+        "${CURRENT_PACKAGES_DIR}/include/uriparser/UriBase.h"
         "defined(URI_STATIC_BUILD)"
         "1 // defined(URI_STATIC_BUILD)"
     )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/uriparser RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Remove duplicate info
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
