@@ -214,7 +214,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 6
+      "port-version": 7
     },
     "audiofile": {
       "baseline": "1.0.7",
