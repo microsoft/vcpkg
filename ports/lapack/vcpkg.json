@@ -1,0 +1,16 @@
+{
+  "name": "lapack",
+  "version-date": "2021-08-18",
+  "description": "Metapackage for packages which provide LAPACK",
+  "dependencies": [
+    {
+      "name": "clapack",
+      "platform": "(arm & windows) | uwp"
+    },
+    {
+      "name": "lapack-reference",
+      "platform": "!arm | !windows | !uwp"
+    },
+    "vcpkg-fortran"
+  ]
+}

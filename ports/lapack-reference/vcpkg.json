@@ -1,18 +1,12 @@
 {
   "name": "lapack-reference",
-  "version-semver": "3.8.0",
-  "port-version": 6,
-  "description": "LAPACK — Linear Algebra PACKage",
-  "homepage": "http://www.netlib.org/lapack/",
+  "version-string": "3.10.0",
+  "description": "LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
-      "name": "vcpkg-gfortran",
-      "platform": "windows"
-    }
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "vcpkg-fortran",
+    "vcpkg-ifort"
   ],
   "default-features": [
     "blas-select"
@@ -26,8 +20,7 @@
           "default-features": false,
           "features": [
             "noblas"
-          ],
-          "platform": "!windows | !static"
+          ]
         }
       ]
     },

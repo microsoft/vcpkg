@@ -1,0 +1,28 @@
+diff --git a/INSTALL/dsecnd_EXT_ETIME.f b/INSTALL/dsecnd_EXT_ETIME.f
+index 35377643b..f98aad7a9 100644
+--- a/INSTALL/dsecnd_EXT_ETIME.f
++++ b/INSTALL/dsecnd_EXT_ETIME.f
+@@ -34,6 +34,9 @@
+ *
+ *  =====================================================================
+       DOUBLE PRECISION FUNCTION DSECND( )
++#if defined(__INTEL_COMPILER)
++      USE IFPORT
++#endif
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/INSTALL/second_EXT_ETIME.f b/INSTALL/second_EXT_ETIME.f
+index 43044cda7..0e2a9a331 100644
+--- a/INSTALL/second_EXT_ETIME.f
++++ b/INSTALL/second_EXT_ETIME.f
+@@ -34,6 +34,9 @@
+ *
+ *  =====================================================================
+       REAL FUNCTION SECOND( )
++#if defined(__INTEL_COMPILER)
++      USE IFPORT
++#endif
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --

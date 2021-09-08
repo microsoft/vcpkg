@@ -56,11 +56,13 @@ function(vcpkg_cmake_build)
         set(parallel_args "-j${VCPKG_CONCURRENCY}")
         set(no_parallel_args "-j1")
     elseif(Z_VCPKG_CMAKE_GENERATOR MATCHES "^Visual Studio")
-        set(build_args
-            "/p:VCPkgLocalAppDataDisabled=true"
-            "/p:UseIntelMKL=No"
-        )
-        set(parallel_args "/m")
+        if(NOT VCPKG_USE_INTERNAL_Fortran)
+            set(build_args
+                "/p:VCPkgLocalAppDataDisabled=true"
+                "/p:UseIntelMKL=No"
+            )
+            set(parallel_args "/m")
+        endif()
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
     else()
