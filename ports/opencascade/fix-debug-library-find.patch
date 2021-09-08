@@ -1,0 +1,100 @@
+diff --git a/adm/cmake/3rdparty_macro.cmake b/adm/cmake/3rdparty_macro.cmake
+index a3621f762..1bdb8aba7 100644
+--- a/adm/cmake/3rdparty_macro.cmake
++++ b/adm/cmake/3rdparty_macro.cmake
+@@ -120,7 +120,7 @@ macro (THIRDPARTY_PRODUCT PRODUCT_NAME HEADER_NAME LIBRARY_CSF_NAME LIBRARY_NAME
+ #    if (BUILD_SHARED_LIBS)
+       # library
+       if (NOT 3RDPARTY_${PRODUCT_NAME}_LIBRARY_${LIBRARY_NAME_SUFFIX} OR NOT EXISTS "${3RDPARTY_${PRODUCT_NAME}_LIBRARY_${LIBRARY_NAME_SUFFIX}}")
+-        set (CMAKE_FIND_LIBRARY_SUFFIXES .lib .so .dylib .a)
++        set (CMAKE_FIND_LIBRARY_SUFFIXES ${LIBRARY_NAME_DEBUG_SUFFIX}.lib .lib .so .dylib .a)
+ 
+         set (${PRODUCT_NAME}_PATH_SUFFIXES lib)
+         if (WIN32)
+diff --git a/adm/cmake/freetype.cmake b/adm/cmake/freetype.cmake
+index 7f6f950b2..e3bf8097f 100644
+--- a/adm/cmake/freetype.cmake
++++ b/adm/cmake/freetype.cmake
+@@ -220,7 +220,7 @@ endif()
+ # freetype library
+ #if (BUILD_SHARED_LIBS)
+   if (NOT 3RDPARTY_FREETYPE_LIBRARY OR NOT EXISTS "${3RDPARTY_FREETYPE_LIBRARY}")
+-    set (CMAKE_FIND_LIBRARY_SUFFIXES .lib .so .dylib .a)
++    set (CMAKE_FIND_LIBRARY_SUFFIXES d.lib .lib .so .dylib .a)
+ 
+     set (FREETYPE_PATH_SUFFIXES lib)
+     if (ANDROID)
+@@ -262,7 +262,7 @@ endif()
+   if (WIN32)
+     if (NOT 3RDPARTY_FREETYPE_DLL OR NOT EXISTS "${3RDPARTY_FREETYPE_DLL}")
+ 
+-      set (CMAKE_FIND_LIBRARY_SUFFIXES .dll)
++      set (CMAKE_FIND_LIBRARY_SUFFIXES d.dll .dll)
+ 
+       # set 3RDPARTY_FREETYPE_DLL as notfound, otherwise find_library can't assign a new value to 3RDPARTY_FREETYPE_DLL
+       set (3RDPARTY_FREETYPE_DLL "3RDPARTY_FREETYPE_DLL-NOTFOUND" CACHE FILEPATH "The path to freetype shared library" FORCE)
+@@ -274,7 +274,7 @@ endif()
+                                             NO_DEFAULT_PATH)
+       else()
+         find_library (3RDPARTY_FREETYPE_DLL ${CSF_FREETYPE}
+-                                            PATH_SUFFIXES bin)
++                                            PATH_SUFFIXES bind bin)
+       endif()
+ 
+       if (3RDPARTY_FREETYPE_DLL AND EXISTS "${3RDPARTY_FREETYPE_DLL}")
+diff --git a/adm/cmake/tbb.cmake b/adm/cmake/tbb.cmake
+index 670fa4d33..efae3fa62 100644
+--- a/adm/cmake/tbb.cmake
++++ b/adm/cmake/tbb.cmake
+@@ -129,7 +129,7 @@ macro (TBB_PRODUCT_SEARCH PRODUCT_LIBRARY_NAME)
+   # tbb/tbbmalloc library
+   if (NOT 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_LIBRARY OR NOT EXISTS "${3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_LIBRARY}")
+     
+-    set (CMAKE_FIND_LIBRARY_SUFFIXES .lib .so .dylib .a)
++    set (CMAKE_FIND_LIBRARY_SUFFIXES _debug.lib .lib .so .dylib .a)
+     set (PRODUCT_PATH_SUFFIXES lib ${PRODUCT_LIBRARY_NAME})
+ 
+     # set 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_LIBRARY as notfound, otherwise find_library can't assign a new value to 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_LIBRARY
+@@ -181,7 +181,7 @@ macro (TBB_PRODUCT_SEARCH PRODUCT_LIBRARY_NAME)
+   # tbb/tbbmalloc shared library
+   if (WIN32)
+     if (NOT 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_DLL OR NOT EXISTS "${3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_DLL}")
+-      set (CMAKE_FIND_LIBRARY_SUFFIXES .dll)
++      set (CMAKE_FIND_LIBRARY_SUFFIXES _debug.dll .dll)
+       set (PRODUCT_PATH_SUFFIXES bin)
+ 
+       # set 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_DLL as notfound, otherwise find_library can't assign a new value to 3RDPARTY_${upper_PRODUCT_LIBRARY_NAME}_DLL
+diff --git a/src/Font/Font_FontMgr.cxx b/src/Font/Font_FontMgr.cxx
+index fabb06dff..6951a599b 100644
+--- a/src/Font/Font_FontMgr.cxx
++++ b/src/Font/Font_FontMgr.cxx
+@@ -40,7 +40,11 @@ IMPLEMENT_STANDARD_RTTIEXT(Font_FontMgr,Standard_Transient)
+   #include <stdlib.h>
+ 
+   #ifdef _MSC_VER
+-    #pragma comment (lib, "freetype.lib")
++    #ifdef _DEBUG
++        #pragma comment (lib, "freetyped.lib")
++    #else
++        #pragma comment (lib, "freetype.lib")
++    #endif
+   #endif
+ 
+   namespace
+diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
+index 291938dc0..26bc58a06 100644
+--- a/src/Image/Image_AlienPixMap.cxx
++++ b/src/Image/Image_AlienPixMap.cxx
+@@ -21,7 +21,11 @@
+   #include <FreeImage.h>
+ 
+   #ifdef _MSC_VER
+-    #pragma comment( lib, "FreeImage.lib" )
++    #ifdef _DEBUG
++        #pragma comment( lib, "FreeImaged.lib" )
++    #else
++        #pragma comment( lib, "FreeImage.lib" )
++    #endif
+   #endif
+ #elif defined(HAVE_WINCODEC)
+   #include <wincodec.h>
