@@ -10,11 +10,10 @@ index f5553e5..5cffa0c 100644
 +  find_package(irrlicht CONFIG REQUIRED)
  
  # polyclipping
-   find_package(polyclipping CONFIG REQUIRED)
-@@ -1033,7 +1033,7 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+   SET( Clipper_SRCS
+@@ -1032,6 +1032,6 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
  
    TARGET_LINK_LIBRARIES(assimp
-       polyclipping::polyclipping
 -      irrXML::irrXML
 +      Irrlicht
        minizip::minizip
