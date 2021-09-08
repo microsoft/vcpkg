@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 54fe7d9..65f47fd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -281,11 +281,12 @@ install (EXPORT OIIO_EXPORTED_TARGETS
+         FILE ${OIIO_TARGETS_EXPORT_NAME}
+         NAMESPACE ${PROJECT_NAME}::)
+ 
+-
++if (0)
+ if (NOT ${PROJECT_NAME}_IS_SUBPROJECT)
+     oiio_setup_test_data()
+     oiio_add_all_tests()
+ endif ()
++endif ()
+ 
+ if (NOT ${PROJECT_NAME}_IS_SUBPROJECT)
+     include (packaging)
