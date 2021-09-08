@@ -3305,8 +3305,8 @@
       "port-version": 0
     },
     "libharu": {
-      "baseline": "2017-08-15-9",
-      "port-version": 0
+      "baseline": "2017-08-15",
+      "port-version": 10
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
