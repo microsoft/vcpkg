@@ -1,5 +1,0 @@
-Source: mecab
-Version: 2019-09-25
-Port-Version: 1
-Description: A morphological analysis engine based on CRF
-Supports: !(uwp|arm|arm64)
