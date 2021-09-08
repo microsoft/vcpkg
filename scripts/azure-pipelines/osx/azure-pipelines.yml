@@ -10,6 +10,8 @@ jobs:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
   variables:
+  - name: LC_ALL
+    value: en_US.UTF-8
   - name: WORKING_ROOT
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
