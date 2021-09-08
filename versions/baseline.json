@@ -33,7 +33,7 @@
       "port-version": 0
     },
     "aixlog": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "akali": {
@@ -89,7 +89,7 @@
       "port-version": 0
     },
     "any-lite": {
-      "baseline": "0.2.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "anyrpc": {
@@ -121,7 +121,7 @@
       "port-version": 0
     },
     "arcus": {
-      "baseline": "4.8.0",
+      "baseline": "4.10.0",
       "port-version": 0
     },
     "argagg": {
@@ -214,7 +214,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 6
+      "port-version": 7
     },
     "audiofile": {
       "baseline": "1.0.7",
@@ -277,7 +277,7 @@
       "port-version": 1
     },
     "azure-core-cpp": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -290,7 +290,7 @@
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-macro-utils-c": {
       "baseline": "2020-06-17",
@@ -1313,7 +1313,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "1.9.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -2041,7 +2041,7 @@
       "port-version": 1
     },
     "fftw3": {
-      "baseline": "3.3.8-7",
+      "baseline": "3.3.9",
       "port-version": 0
     },
     "fftwpp": {
@@ -2345,8 +2345,8 @@
       "port-version": 3
     },
     "glew": {
-      "baseline": "2.1.0",
-      "port-version": 11
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "glfw3": {
       "baseline": "3.3.4",
@@ -2381,7 +2381,7 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.5.0",
+      "baseline": "11.6.0",
       "port-version": 0
     },
     "glui": {
@@ -2401,7 +2401,7 @@
       "port-version": 6
     },
     "google-cloud-cpp": {
-      "baseline": "1.31.0",
+      "baseline": "1.31.1",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2505,7 +2505,7 @@
       "port-version": 0
     },
     "h3": {
-      "baseline": "3.6.3",
+      "baseline": "3.7.2",
       "port-version": 0
     },
     "h5py-lzf": {
@@ -2521,7 +2521,7 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.8.2",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "hayai": {
@@ -2701,7 +2701,7 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.84.1",
+      "baseline": "1.84.2",
       "port-version": 0
     },
     "imgui-sfml": {
@@ -2793,7 +2793,7 @@
       "port-version": 0
     },
     "jaeger-client-cpp": {
-      "baseline": "0.5.1-1",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "jansson": {
@@ -3138,7 +3138,7 @@
     },
     "libbson": {
       "baseline": "1.16.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libcbor": {
       "baseline": "0.8.0",
@@ -3165,8 +3165,8 @@
       "port-version": 0
     },
     "libcrafter": {
-      "baseline": "0.3",
-      "port-version": 2
+      "baseline": "1.0",
+      "port-version": 0
     },
     "libcroco": {
       "baseline": "0.6.13",
@@ -3245,7 +3245,7 @@
       "port-version": 5
     },
     "libfort": {
-      "baseline": "0.4.1",
+      "baseline": "0.4.2",
       "port-version": 0
     },
     "libfreenect2": {
@@ -3273,7 +3273,7 @@
       "port-version": 3
     },
     "libgit2": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "libgnutls": {
@@ -3305,8 +3305,8 @@
       "port-version": 0
     },
     "libharu": {
-      "baseline": "2017-08-15-9",
-      "port-version": 0
+      "baseline": "2017-08-15",
+      "port-version": 10
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
@@ -3317,7 +3317,7 @@
       "port-version": 3
     },
     "libhsplasma": {
-      "baseline": "2020.08.30",
+      "baseline": "2021.06.08",
       "port-version": 0
     },
     "libhv": {
@@ -3362,7 +3362,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "0.8.4",
@@ -3421,7 +3421,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "20.09",
+      "baseline": "21.03",
       "port-version": 0
     },
     "libmesh": {
@@ -3537,7 +3537,7 @@
       "port-version": 0
     },
     "libpcap": {
-      "baseline": "1.9.1-2",
+      "baseline": "1.10.1",
       "port-version": 0
     },
     "libpff": {
@@ -3585,7 +3585,7 @@
       "port-version": 0
     },
     "libqrencode": {
-      "baseline": "4.1.0",
+      "baseline": "4.1.1",
       "port-version": 0
     },
     "librabbitmq": {
@@ -3613,8 +3613,8 @@
       "port-version": 5
     },
     "librsync": {
-      "baseline": "2020-09-16",
-      "port-version": 1
+      "baseline": "2.3.2",
+      "port-version": 0
     },
     "librtmp": {
       "baseline": "2019-11-11",
@@ -3625,7 +3625,7 @@
       "port-version": 4
     },
     "libsamplerate": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "libsass": {
@@ -3789,8 +3789,8 @@
       "port-version": 8
     },
     "libuv": {
-      "baseline": "1.41.0",
-      "port-version": 1
+      "baseline": "1.42.0",
+      "port-version": 0
     },
     "libuvc": {
       "baseline": "2020-11-24",
@@ -3821,8 +3821,8 @@
       "port-version": 3
     },
     "libwebsockets": {
-      "baseline": "4.1.6",
-      "port-version": 2
+      "baseline": "4.2.2",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -3961,7 +3961,7 @@
       "port-version": 0
     },
     "lv2": {
-      "baseline": "1.18.0",
+      "baseline": "1.18.2",
       "port-version": 0
     },
     "lz4": {
@@ -4206,7 +4206,7 @@
     },
     "mongo-c-driver": {
       "baseline": "1.16.1",
-      "port-version": 5
+      "port-version": 6
     },
     "mongo-cxx-driver": {
       "baseline": "3.4.0-5",
@@ -4289,7 +4289,7 @@
       "port-version": 0
     },
     "ms-gltf": {
-      "baseline": "r1.9.5.0",
+      "baseline": "r1.9.5.4",
       "port-version": 0
     },
     "ms-gsl": {
@@ -4713,8 +4713,8 @@
       "port-version": 1
     },
     "openimageio": {
-      "baseline": "2.2.17.0",
-      "port-version": 1
+      "baseline": "2.3.7.2",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.3.1",
@@ -4777,7 +4777,7 @@
       "port-version": 1
     },
     "openvdb": {
-      "baseline": "8.0.0",
+      "baseline": "8.1.0",
       "port-version": 0
     },
     "openvpn3": {
@@ -5134,7 +5134,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 4
+      "port-version": 5
     },
     "prometheus-cpp": {
       "baseline": "0.12.3",
@@ -5586,7 +5586,7 @@
     },
     "rappture": {
       "baseline": "1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "raylib": {
       "baseline": "3.7.0",
@@ -5937,7 +5937,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "0.9.7",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "simdutf": {
@@ -5993,7 +5993,7 @@
       "port-version": 0
     },
     "so5extra": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.1.1",
       "port-version": 0
     },
     "sobjectizer": {
@@ -6605,7 +6605,7 @@
       "port-version": 1
     },
     "uriparser": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.5",
       "port-version": 0
     },
     "usbmuxd": {
@@ -6653,7 +6653,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "19.2.0",
+      "baseline": "19.5.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -6674,7 +6674,7 @@
     },
     "vamp-sdk": {
       "baseline": "2.10",
-      "port-version": 0
+      "port-version": 1
     },
     "variant-lite": {
       "baseline": "1.2.2",
@@ -6937,8 +6937,8 @@
       "port-version": 0
     },
     "xtensor-io": {
-      "baseline": "0.9.0",
-      "port-version": 1
+      "baseline": "0.12.8",
+      "port-version": 0
     },
     "xtl": {
       "baseline": "0.7.2",
