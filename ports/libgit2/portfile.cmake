@@ -7,6 +7,7 @@ vcpkg_from_github(
     REF 7f4fa178629d559c037a1f72f79f79af9c1ef8ce#version 1.1.0
     SHA512 2fdbbb263fe71dc6d04b64c2967e7acff1a5b6102e62d69c9a7ea1b6777ab74a1625e798438ea239d8b489648a9335833f937f893f73a66e16c658eae453ab62
     HEAD_REF master
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-libssh2.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)

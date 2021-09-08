@@ -1,0 +1,25 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 45dec2796..313af3af6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -231,15 +231,14 @@ ENDIF()
+ 
+ # Optional external dependency: libssh2
+ IF (USE_SSH)
+-       FIND_PKGLIBRARIES(LIBSSH2 libssh2)
++       FIND_PACKAGE(Libssh2 REQUIRED)
+ ENDIF()
+-IF (LIBSSH2_FOUND)
++IF (Libssh2_FOUND)
+        SET(GIT_SSH 1)
+-       LIST(APPEND LIBGIT2_SYSTEM_INCLUDES ${LIBSSH2_INCLUDE_DIRS})
+-       LIST(APPEND LIBGIT2_LIBS ${LIBSSH2_LIBRARIES})
+-       LIST(APPEND LIBGIT2_PC_LIBS ${LIBSSH2_LDFLAGS})
++       LIST(APPEND LIBGIT2_LIBS Libssh2::libssh2)
++       LIST(APPEND LIBGIT2_PC_LIBS -lssh2)
+ 
+-       CHECK_LIBRARY_EXISTS("${LIBSSH2_LIBRARIES}" libssh2_userauth_publickey_frommemory "${LIBSSH2_LIBRARY_DIRS}" HAVE_LIBSSH2_MEMORY_CREDENTIALS)
++       CHECK_LIBRARY_EXISTS(Libssh2::libssh2 libssh2_userauth_publickey_frommemory "" HAVE_LIBSSH2_MEMORY_CREDENTIALS)
+        IF (HAVE_LIBSSH2_MEMORY_CREDENTIALS)
+                SET(GIT_SSH_MEMORY_CREDENTIALS 1)
+        ENDIF()
