@@ -1,0 +1,66 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8405e3776..8c039b16b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,6 +55,7 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
+ set(WITH_UTILITIES TRUE CACHE BOOL "Choose if libLAS utilities should be built")
+ set(WITH_TESTS TRUE CACHE BOOL "Choose if libLAS unit tests should be built")
+ set(BUILD_OSGEO4W TRUE CACHE BOOL "Should OSGeo4W package for Windows be built")
++option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+ 
+ # Choose to use pkg-config or not
+ set(WITH_PKGCONFIG FALSE CACHE BOOL
+@@ -184,7 +185,9 @@ message(STATUS "Searching for Boost 1.38+ - done")
+ # on windows in the compilation documentation.
+ if(WIN32)
+   if (MSVC)
+-    set(Boost_USE_STATIC_LIBS   ON)
++    if (NOT BUILD_SHARED_LIBS)
++      set(Boost_USE_STATIC_LIBS   ON)
++    endif()
+     set(Boost_USE_MULTITHREADED ON)
+   endif(MSVC)
+ endif(WIN32)
+@@ -204,6 +207,9 @@ link_directories(${Boost_LIBRARY_DIRS})
+ # LASZIP support - optional, default=ON
+ set(WITH_LASZIP FALSE CACHE BOOL "Choose if LASzip support should be built")
+ set(WITH_STATIC_LASZIP FALSE CACHE BOOL "Choose of LASzip should be statically linked")
++if (NOT BUILD_SHARED_LIBS)
++  set(WITH_STATIC_LASZIP TRUE)
++endif()
+ mark_as_advanced(WITH_STATIC_LASZIP)
+ 
+ if (WITH_LASZIP)
+@@ -286,6 +292,9 @@ if(WITH_GDAL)
+     message(FATAL_ERROR
+       "GDAL support requires GeoTIFF library which was not found")
+   endif()
++  if (NOT BUILD_SHARED_LIBS)
++    set(GEOTIFF_LIBRARY "")
++  endif()
+ endif()
+ 
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e35de0627..9bce4de9b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -211,6 +211,7 @@ set(LIBLAS_C_SOURCES
+ #  add_definitions("-fPIC")
+ #endif()
+ 
++if (BUILD_SHARED_LIBS)
+ if(WIN32)
+     add_definitions("-DLAS_DLL_EXPORT=1")
+ if (NOT WITH_STATIC_LASZIP)
+@@ -220,6 +221,10 @@ endif()
+ 
+ add_library(${LIBLAS_LIB_NAME} SHARED ${LIBLAS_SOURCES})
+ add_library(${LIBLAS_C_LIB_NAME} SHARED ${LIBLAS_C_SOURCES})
++else()
++add_library(${LIBLAS_LIB_NAME} STATIC ${LIBLAS_SOURCES})
++add_library(${LIBLAS_C_LIB_NAME} STATIC ${LIBLAS_C_SOURCES})
++endif()
+ 
+ target_link_libraries(${LIBLAS_LIB_NAME}
+   ${TIFF_LIBRARY}
