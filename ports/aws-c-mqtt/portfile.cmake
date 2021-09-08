@@ -18,13 +18,23 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-mqtt/cmake)
 
+vcpkg_copy_tools(
+    TOOL_NAMES elastipubsub
+    AUTO_CLEAN
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE 
+        ${CURRENT_PACKAGES_DIR}/bin 
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+endif()
+
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/debug/bin
 	${CURRENT_PACKAGES_DIR}/debug/include
 	${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-mqtt
 	${CURRENT_PACKAGES_DIR}/lib/aws-c-mqtt
-)
+	)
 
 vcpkg_copy_pdbs()
 

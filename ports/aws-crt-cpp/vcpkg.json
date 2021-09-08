@@ -14,6 +14,9 @@
     "aws-c-mqtt",
     "aws-c-s3",
     "aws-checksums",
-    "s2n"
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    }
   ]
 }

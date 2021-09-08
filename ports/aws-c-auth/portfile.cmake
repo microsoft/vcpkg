@@ -18,13 +18,18 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-auth/cmake)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE 
+        ${CURRENT_PACKAGES_DIR}/bin 
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+endif()
+
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/debug/bin
 	${CURRENT_PACKAGES_DIR}/debug/include
 	${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-auth
 	${CURRENT_PACKAGES_DIR}/lib/aws-c-auth
-)
+	)
 
 vcpkg_copy_pdbs()
 

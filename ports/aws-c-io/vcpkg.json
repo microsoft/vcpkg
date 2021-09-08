@@ -6,6 +6,9 @@
   "dependencies": [
     "aws-c-cal",
     "aws-c-common",
-    "s2n"
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    }
   ]
 }

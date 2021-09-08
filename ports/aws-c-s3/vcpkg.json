@@ -10,6 +10,9 @@
     "aws-c-compression",
     "aws-c-http",
     "aws-c-io",
-    "s2n"
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    }
   ]
 }
