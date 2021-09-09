@@ -1,0 +1,12 @@
+{
+  "name": "qt5-svg",
+  "version-string": "5.15.2",
+  "port-version": 2,
+  "description": "Qt5 SVG Module - provides classes for displaying the contents of SVG files",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

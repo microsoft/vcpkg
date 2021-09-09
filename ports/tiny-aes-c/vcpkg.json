@@ -1,0 +1,7 @@
+{
+  "name": "tiny-aes-c",
+  "version-string": "2019-07-31",
+  "port-version": 1,
+  "description": "Small portable AES128/192/256 in C",
+  "homepage": "https://github.com/kokke/tiny-AES-c"
+}

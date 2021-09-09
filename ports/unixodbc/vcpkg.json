@@ -1,0 +1,8 @@
+{
+  "name": "unixodbc",
+  "version-string": "2.3.7",
+  "port-version": 3,
+  "description": "unixODBC is an Open Source ODBC sub-system and an ODBC SDK for Linux, Mac OSX, and UNIX",
+  "homepage": "https://github.com/lurcher/unixODBC",
+  "supports": "osx | linux"
+}

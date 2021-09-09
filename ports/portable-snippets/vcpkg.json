@@ -1,0 +1,7 @@
+{
+  "name": "portable-snippets",
+  "version-string": "2019-09-20",
+  "port-version": 1,
+  "description": "Collection of miscellaneous portable C snippets",
+  "homepage": "https://github.com/nemequ/portable-snippets"
+}

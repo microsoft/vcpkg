@@ -1,5 +1,0 @@
-Source: qtkeychain
-Version: 0.11.1
-Homepage: https://github.com/frankosterfeld/qtkeychain
-Description:  qtkeychain - Platform-independent Qt API for storing passwords securely
-Build-Depends: qt5-base[core], qt5-tools

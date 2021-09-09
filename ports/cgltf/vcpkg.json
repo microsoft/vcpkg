@@ -1,0 +1,7 @@
+{
+  "name": "cgltf",
+  "version-string": "1.8",
+  "port-version": 1,
+  "description": "Single-file glTF 2.0 loader and writer written in C99",
+  "homepage": "https://github.com/jkuhlmann/cgltf"
+}

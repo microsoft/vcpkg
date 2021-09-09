@@ -1,0 +1,7 @@
+{
+  "name": "double-conversion",
+  "version-string": "3.1.5",
+  "port-version": 1,
+  "description": "Efficient binary-decimal and decimal-binary conversion routines for IEEE doubles.",
+  "homepage": "https://github.com/google/double-conversion"
+}

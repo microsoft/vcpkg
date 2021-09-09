@@ -1,0 +1,7 @@
+{
+  "name": "wintoast",
+  "version-string": "1.2.0",
+  "port-version": 1,
+  "description": "WinToast is a lightly library written in C++ which brings a complete integration of the modern toast notifications of Windows 8 & Windows 10.",
+  "supports": "!uwp"
+}

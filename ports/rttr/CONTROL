@@ -1,5 +1,0 @@
-Source: rttr
-Version: 0.9.6-2
-Homepage: https://github.com/rttrorg/rttr
-Description: an easy and intuitive way to use reflection in C++
-Build-Depends: rapidjson

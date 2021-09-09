@@ -1,0 +1,15 @@
+{
+  "name": "uchardet",
+  "version-string": "2020-04-26",
+  "port-version": 1,
+  "description": "An encoding detector library ported from Mozilla",
+  "homepage": "https://cgit.freedesktop.org/uchardet/uchardet/",
+  "features": {
+    "tool": {
+      "description": "Build uchardet CLI tool",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
+}

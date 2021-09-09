@@ -1,0 +1,7 @@
+{
+  "name": "libcerf",
+  "version-string": "1.13",
+  "port-version": 1,
+  "description": "A self-contained numeric library that provides an efficient and accurate implementation of complex error functions, along with Dawson, Faddeeva, and Voigt functions.",
+  "homepage": "https://jugit.fz-juelich.de/mlz/libcerf"
+}

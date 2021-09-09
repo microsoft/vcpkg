@@ -1,0 +1,7 @@
+{
+  "name": "libmspack",
+  "version-string": "0.10.1",
+  "port-version": 4,
+  "description": "libmspack is a portable library for some loosely related Microsoft compression formats.",
+  "homepage": "https://www.cabextract.org.uk/libmspack"
+}

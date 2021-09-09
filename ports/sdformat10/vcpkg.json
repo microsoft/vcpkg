@@ -1,0 +1,13 @@
+{
+  "name": "sdformat10",
+  "version-string": "10.0.0",
+  "port-version": 1,
+  "description": "Simulation Description Format (SDF) parser and description files.",
+  "homepage": "http://sdformat.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    "ignition-math6",
+    "tinyxml2",
+    "urdfdom"
+  ]
+}

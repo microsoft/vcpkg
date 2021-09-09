@@ -1,5 +1,0 @@
-Source: quazip
-Version: 0.9.1
-Homepage: https://stachenov.github.io/quazip/
-Description: Qt/C++ wrapper over minizip
-Build-Depends: qt5-base, zlib

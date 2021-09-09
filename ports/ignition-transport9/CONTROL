@@ -1,4 +1,0 @@
-Source: ignition-transport9
-Version: 9.0.0
-Build-Depends: cppzmq, ignition-cmake2, ignition-msgs6, libuuid (!windows&!uwp), protobuf, sqlite3, zeromq
-Description: Transport middleware for robotics

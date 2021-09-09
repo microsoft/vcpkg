@@ -1,0 +1,11 @@
+{
+  "name": "clickhouse-cpp",
+  "version-string": "2019-05-22",
+  "port-version": 1,
+  "description": "C++ client for Yandex ClickHouse.",
+  "homepage": "https://github.com/artpaul/clickhouse-cpp",
+  "dependencies": [
+    "cityhash",
+    "lz4"
+  ]
+}

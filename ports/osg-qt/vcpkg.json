@@ -1,0 +1,13 @@
+{
+  "name": "osg-qt",
+  "version-string": "Qt5",
+  "port-version": 2,
+  "description": "osgQt - Qt project for making use of OpenSceneGraph(OSG)",
+  "dependencies": [
+    "osg",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

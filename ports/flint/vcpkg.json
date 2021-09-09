@@ -1,0 +1,13 @@
+{
+  "name": "flint",
+  "version-string": "2.5.2",
+  "port-version": 5,
+  "description": "Fast Library for Number Theory",
+  "homepage": "https://www.flintlib.org/",
+  "dependencies": [
+    "gettimeofday",
+    "mpfr",
+    "mpir",
+    "pthreads"
+  ]
+}

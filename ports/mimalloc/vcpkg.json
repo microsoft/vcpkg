@@ -1,0 +1,19 @@
+{
+  "name": "mimalloc",
+  "version-string": "1.6.4",
+  "port-version": 1,
+  "description": "Compact general purpose allocator with excellent performance",
+  "homepage": "https://github.com/microsoft/mimalloc",
+  "supports": "!(arm | uwp)",
+  "features": {
+    "asm": {
+      "description": "Generate assembly files"
+    },
+    "override": {
+      "description": "Override the standard malloc interface"
+    },
+    "secure": {
+      "description": "Use security mitigations (like guard pages and randomization)"
+    }
+  }
+}

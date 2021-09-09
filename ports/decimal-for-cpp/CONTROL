@@ -1,5 +1,0 @@
-Source: decimal-for-cpp
-Version: 1.16
-Port-Version: 1
-Description: Decimal data type support, for COBOL-like fixed-point operations on currency values. 
-

@@ -1,0 +1,7 @@
+{
+  "name": "yas",
+  "version-string": "7.0.5",
+  "port-version": 1,
+  "description": "Yet Another Serialization is a header only serialization library",
+  "homepage": "https://github.com/niXman/yas"
+}

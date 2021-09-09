@@ -1,0 +1,11 @@
+{
+  "name": "clrng",
+  "version-string": "2020-12-01",
+  "port-version": 1,
+  "description": "clRNG is a library for uniform random number generation in OpenCL.",
+  "homepage": "https://github.com/clMathLibraries/clRNG",
+  "supports": "!arm64",
+  "dependencies": [
+    "opencl"
+  ]
+}

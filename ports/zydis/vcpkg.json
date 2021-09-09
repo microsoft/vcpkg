@@ -1,0 +1,7 @@
+{
+  "name": "zydis",
+  "version-string": "3.1.0",
+  "port-version": 2,
+  "description": "Fast and lightweight x86/x86-64 disassembler library.",
+  "homepage": "https://zydis.re"
+}

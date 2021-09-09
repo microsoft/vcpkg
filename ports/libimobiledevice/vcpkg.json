@@ -1,0 +1,14 @@
+{
+  "name": "libimobiledevice",
+  "version-string": "1.3.6",
+  "port-version": 2,
+  "description": "A cross-platform protocol library to communicate with iOS devices",
+  "homepage": "http://www.libimobiledevice.org",
+  "dependencies": [
+    "dirent",
+    "getopt",
+    "libplist",
+    "libusbmuxd",
+    "openssl"
+  ]
+}

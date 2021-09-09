@@ -1,0 +1,7 @@
+{
+  "name": "rpclib",
+  "version-string": "2.2.1",
+  "port-version": 3,
+  "description": "a RPC library for C++, providing both a client and server implementation. It is built using modern C++14.",
+  "homepage": "https://github.com/rpclib/rpclib"
+}

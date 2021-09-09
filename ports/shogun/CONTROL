@@ -1,6 +1,0 @@
-Source: shogun
-Version: 6.1.4
-Port-Version: 4
-Build-Depends: bzip2, eigen3, liblzma, libxml2, blas, nlopt, rxcpp, snappy, zlib, protobuf, curl, lzo, dirent
-Homepage: https://github.com/shogun-toolbox/shogun
-Description: Unified and efficient Machine Learning

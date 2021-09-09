@@ -1,4 +1,0 @@
-Source: lazy-importer
-Version: 2019-08-10
-Description: Library for importing functions from dlls in a hidden, reverse engineer unfriendly way
-Homepage: https://github.com/JustasMasiulis/lazy_importer

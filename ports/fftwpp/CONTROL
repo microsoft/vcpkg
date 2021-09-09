@@ -1,5 +1,0 @@
-Source: fftwpp
-Version: 2019-12-19
-Homepage: https://www.fftw.org/
-Description: FFTW++ is a C++ header/MPI transpose for Version 3 of the highly optimized FFTW (http://www.fftw.org) Fourier Transform library.
-Build-Depends: fftw3

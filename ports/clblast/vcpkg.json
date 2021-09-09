@@ -1,0 +1,9 @@
+{
+  "name": "clblast",
+  "version-string": "1.5.1",
+  "port-version": 1,
+  "description": "A modern, lightweight, performant and tunable OpenCL BLAS library written in C++11.",
+  "dependencies": [
+    "opencl"
+  ]
+}

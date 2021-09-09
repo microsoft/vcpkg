@@ -1,0 +1,16 @@
+{
+  "name": "leptonica",
+  "version-string": "1.80.0",
+  "port-version": 3,
+  "description": "An open source library containing software that is broadly useful for image processing and image analysis applications",
+  "homepage": "https://github.com/DanBloomberg/leptonica",
+  "dependencies": [
+    "giflib",
+    "libjpeg-turbo",
+    "libpng",
+    "libwebp",
+    "openjpeg",
+    "tiff",
+    "zlib"
+  ]
+}

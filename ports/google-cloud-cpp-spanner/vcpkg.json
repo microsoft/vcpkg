@@ -1,0 +1,9 @@
+{
+  "name": "google-cloud-cpp-spanner",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated, use google-cloud-cpp instead",
+  "dependencies": [
+    "google-cloud-cpp"
+  ]
+}

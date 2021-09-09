@@ -1,0 +1,13 @@
+{
+  "name": "libgeotiff",
+  "version-string": "1.6.0",
+  "port-version": 4,
+  "description": "Libgeotiff is an open source library normally hosted on top of libtiff for reading, and writing GeoTIFF information tags.",
+  "homepage": "https://github.com/OSGeo/libgeotiff",
+  "dependencies": [
+    "libjpeg-turbo",
+    "proj4",
+    "tiff",
+    "zlib"
+  ]
+}

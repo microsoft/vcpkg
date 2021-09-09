@@ -1,6 +1,0 @@
-Source: qwtw
-Version: 3.1.0
-Homepage: https://github.com/ig-or/qwtw
-Description: qwt-based 2D plotting library
-Supports: windows & x64 & !static
-Build-Depends: qt5-base, qt5-svg, qt5-networkauth, qwt, marble, boost-system, boost-filesystem, boost-date-time, boost-chrono, boost-regex, boost-thread, boost-circular-buffer, boost-asio

@@ -1,0 +1,7 @@
+{
+  "name": "cimg",
+  "version-string": "2.9.4",
+  "port-version": 1,
+  "description": "The CImg Library is a small, open-source, and modern C++ toolkit for image processing",
+  "homepage": "https://github.com/dtschump/CImg"
+}

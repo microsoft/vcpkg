@@ -1,5 +1,0 @@
-Source: tinyexif
-Version: 1.0.2-6
-Build-Depends: tinyxml2
-Homepage: https://github.com/cdcseacave/TinyEXIF
-Description: tiny ISO-compliant C++ EXIF and XMP parsing library for JPEG images

@@ -1,5 +1,0 @@
-Source: triangle
-Version: 1.6
-Homepage: http://www.cs.cmu.edu/~quake/triangle.html
-Description: A Two-Dimensional Quality Mesh Generator and Delaunay Triangulator.
-Supports: !uwp

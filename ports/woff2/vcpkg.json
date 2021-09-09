@@ -1,0 +1,9 @@
+{
+  "name": "woff2",
+  "version-string": "1.0.2",
+  "port-version": 2,
+  "description": "font compression reference code",
+  "dependencies": [
+    "brotli"
+  ]
+}

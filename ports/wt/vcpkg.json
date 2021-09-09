@@ -1,0 +1,107 @@
+{
+  "name": "wt",
+  "version-string": "4.5.0",
+  "port-version": 1,
+  "description": "Wt is a C++ library for developing web applications",
+  "homepage": "https://github.com/emweb/wt",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-array",
+    "boost-asio",
+    "boost-bind",
+    "boost-config",
+    "boost-container-hash",
+    "boost-filesystem",
+    "boost-fusion",
+    "boost-interprocess",
+    "boost-lexical-cast",
+    "boost-logic",
+    "boost-math",
+    "boost-multi-index",
+    "boost-optional",
+    "boost-phoenix",
+    "boost-pool",
+    "boost-program-options",
+    "boost-range",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-system",
+    "boost-thread",
+    "boost-tokenizer",
+    "boost-tuple",
+    "boost-ublas",
+    "boost-variant",
+    "glew",
+    {
+      "name": "harfbuzz",
+      "platform": "!windows"
+    },
+    "libharu",
+    "libpng",
+    {
+      "name": "pango",
+      "platform": "!windows"
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "openssl"
+  ],
+  "features": {
+    "dbo": {
+      "description": "Wt::Dbo"
+    },
+    "graphicsmagick": {
+      "description": "WRasterImage support on non-Windows based on GraphicsMagick",
+      "dependencies": [
+        "graphicsmagick"
+      ]
+    },
+    "openssl": {
+      "description": "TLS support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "postgresql": {
+      "description": "Wt::Dbo PostgreSQL backend",
+      "dependencies": [
+        "libpq",
+        {
+          "name": "wt",
+          "features": [
+            "dbo"
+          ]
+        }
+      ]
+    },
+    "sqlite3": {
+      "description": "Wt::Dbo Sqlite 3 backend",
+      "dependencies": [
+        "sqlite3",
+        {
+          "name": "wt",
+          "features": [
+            "dbo"
+          ]
+        }
+      ]
+    },
+    "sqlserver": {
+      "description": "Wt::Dbo MS SQL Server backend",
+      "dependencies": [
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
+        },
+        {
+          "name": "wt",
+          "features": [
+            "dbo"
+          ]
+        }
+      ]
+    }
+  }
+}

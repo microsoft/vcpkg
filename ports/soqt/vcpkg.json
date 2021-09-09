@@ -1,0 +1,15 @@
+{
+  "name": "soqt",
+  "version-string": "1.6.0",
+  "port-version": 3,
+  "description": "A Qt Gui-toolkit binding for Coin",
+  "homepage": "https://github.com/coin3d/soqt",
+  "supports": "!(arm | arm64 | uwp)",
+  "dependencies": [
+    "coin",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

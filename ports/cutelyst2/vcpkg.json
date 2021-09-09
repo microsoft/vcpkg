@@ -1,0 +1,12 @@
+{
+  "name": "cutelyst2",
+  "version-string": "2.12.0",
+  "port-version": 1,
+  "description": "A C++ Web Framework built on top of Qt, using the simple approach of Catalyst (Perl) framework",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

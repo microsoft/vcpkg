@@ -1,0 +1,10 @@
+{
+  "name": "breakpad",
+  "version-string": "2020-09-14",
+  "port-version": 3,
+  "description": "a set of client and server components which implement a crash-reporting system.",
+  "homepage": "https://github.com/google/breakpad",
+  "dependencies": [
+    "libdisasm"
+  ]
+}

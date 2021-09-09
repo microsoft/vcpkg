@@ -1,0 +1,11 @@
+{
+  "name": "quazip",
+  "version-string": "0.9.1",
+  "port-version": 1,
+  "description": "Qt/C++ wrapper over minizip",
+  "homepage": "https://stachenov.github.io/quazip/",
+  "dependencies": [
+    "qt5-base",
+    "zlib"
+  ]
+}

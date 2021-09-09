@@ -1,0 +1,10 @@
+{
+  "name": "rttr",
+  "version-string": "0.9.6",
+  "port-version": 3,
+  "description": "an easy and intuitive way to use reflection in C++",
+  "homepage": "https://github.com/rttrorg/rttr",
+  "dependencies": [
+    "rapidjson"
+  ]
+}

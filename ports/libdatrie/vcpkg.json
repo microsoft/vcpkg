@@ -1,0 +1,10 @@
+{
+  "name": "libdatrie",
+  "version-string": "0.2.10",
+  "port-version": 4,
+  "description": "implementation of double-array structure for representing trie",
+  "homepage": "https://linux.thai.net/pub/ThaiLinux/software/libthai",
+  "dependencies": [
+    "libiconv"
+  ]
+}

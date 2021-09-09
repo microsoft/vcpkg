@@ -1,4 +1,0 @@
-Source: aws-c-event-stream
-Version: 0.1.6
-Description: C99 implementation of the vnd.amazon.event-stream content-type.
-Build-Depends: aws-c-common, aws-checksums

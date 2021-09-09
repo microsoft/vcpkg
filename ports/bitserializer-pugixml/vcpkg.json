@@ -1,0 +1,14 @@
+{
+  "name": "bitserializer-pugixml",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated alias for bitserializer-pugixml",
+  "dependencies": [
+    {
+      "name": "bitserializer",
+      "features": [
+        "pugixml-archive"
+      ]
+    }
+  ]
+}

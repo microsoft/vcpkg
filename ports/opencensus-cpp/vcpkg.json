@@ -1,0 +1,16 @@
+{
+  "name": "opencensus-cpp",
+  "version-string": "0.4.0",
+  "port-version": 2,
+  "description": "OpenCensus is a toolkit for collecting application performance and behavior data. It currently includes an API for tracing and stats.",
+  "homepage": "https://github.com/census-instrumentation/opencensus-cpp",
+  "supports": "!windows",
+  "dependencies": [
+    "abseil"
+  ],
+  "features": {
+    "test": {
+      "description": "Build test"
+    }
+  }
+}

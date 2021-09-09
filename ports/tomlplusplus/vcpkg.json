@@ -1,0 +1,8 @@
+{
+  "name": "tomlplusplus",
+  "version-string": "2.4.0",
+  "port-version": 1,
+  "description": "Header-only TOML config file parser and serializer for modern C++.",
+  "homepage": "https://marzer.github.io/tomlplusplus/",
+  "supports": "!(arm | uwp | osx)"
+}

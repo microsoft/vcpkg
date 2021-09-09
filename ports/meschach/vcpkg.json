@@ -1,0 +1,7 @@
+{
+  "name": "meschach",
+  "version-string": "1.2b",
+  "port-version": 4,
+  "description": "Matrix computations in C",
+  "homepage": "https://homepage.math.uiowa.edu/~dstewart/meschach"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "urdfdom",
+  "version-string": "1.0.4",
+  "port-version": 4,
+  "description": "Provides core data structures and a simple XML parsers for populating the class data structures from an URDF file.",
+  "homepage": "https://github.com/ros/urdfdom",
+  "dependencies": [
+    "console-bridge",
+    "tinyxml",
+    "urdfdom-headers"
+  ]
+}

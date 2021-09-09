@@ -1,0 +1,7 @@
+{
+  "name": "bitsery",
+  "version-string": "5.2.1",
+  "port-version": 1,
+  "description": "Header only C++ binary serialization library",
+  "homepage": "https://github.com/fraillt/bitsery"
+}

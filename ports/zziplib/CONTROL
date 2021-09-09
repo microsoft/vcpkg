@@ -1,6 +1,0 @@
-Source: zziplib
-Version: 0.13.71
-Port-Version: 1
-Build-Depends: zlib
-Homepage: https://github.com/gdraheim/zziplib
-Description: library providing read access on ZIP-archives

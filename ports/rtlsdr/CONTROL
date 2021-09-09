@@ -1,6 +1,0 @@
-Source: rtlsdr
-Version: 2020-04-16-1
-Homepage: https://osmocom.org/projects/rtl-sdr
-Description: rtl-sdr is a library that turns your Realtek RTL2832 based DVB dongle into a SDR receiver
-Build-Depends: libusb, pthreads (windows)
-Supports: windows&(x86|x64)

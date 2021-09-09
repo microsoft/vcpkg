@@ -1,0 +1,7 @@
+{
+  "name": "egl-registry",
+  "version-string": "2020-02-20",
+  "port-version": 1,
+  "description": "the EGL API and Extension Registry",
+  "homepage": "https://github.com/KhronosGroup/EGL-Registry"
+}
