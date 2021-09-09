@@ -1,0 +1,11 @@
+{
+  "name": "openni2",
+  "version-string": "2.2.0.33",
+  "port-version": 12,
+  "description": "OpenNI is open source library for access to Natural Interaction (NI) devices such as RGB-D camera.",
+  "homepage": "https://github.com/OpenNI/OpenNI2",
+  "supports": "!uwp",
+  "dependencies": [
+    "kinectsdk1"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "rs-core-lib",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "Minimal common utilities by Ross Smith",
+  "homepage": "https://github.com/CaptainCrowbar/rs-core-lib"
+}

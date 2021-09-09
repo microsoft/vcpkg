@@ -1,0 +1,12 @@
+{
+  "name": "libideviceactivation",
+  "version-string": "1.2.235",
+  "port-version": 1,
+  "description": "A library to handle the activation process of iOS devices",
+  "dependencies": [
+    "curl",
+    "libimobiledevice",
+    "libplist",
+    "libxml2"
+  ]
+}

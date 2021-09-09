@@ -1,0 +1,7 @@
+{
+  "name": "dimcli",
+  "version-string": "5.0.2",
+  "port-version": 1,
+  "description": "C++ command line parser toolkit",
+  "homepage": "https://github.com/gknowles/dimcli"
+}
