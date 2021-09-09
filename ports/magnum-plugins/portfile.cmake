@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     HEAD_REF master
     PATCHES
-        001-tools-path.patch
         002-fix-stb-conflict.patch
 )
 

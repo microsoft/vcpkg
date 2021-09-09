@@ -1,0 +1,10 @@
+{
+  "name": "easycl",
+  "version-string": "0.3",
+  "port-version": 1,
+  "description": "OpenCL based lightweight c++ computing library",
+  "homepage": "https://github.com/architector1324/EasyCL",
+  "dependencies": [
+    "opencl"
+  ]
+}

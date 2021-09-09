@@ -1,0 +1,7 @@
+{
+  "name": "tlx",
+  "version-string": "0.5.20191212",
+  "port-version": 1,
+  "description": "tlx is a collection of C++ helpers and extensions universally needed, but not found in the STL",
+  "homepage": "https://github.com/tlx/tlx"
+}

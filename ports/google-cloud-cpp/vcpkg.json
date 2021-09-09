@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.30.1",
-  "port-version": 1,
+  "version": "1.31.1",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -36,6 +35,28 @@
     "bigtable": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "experimental-storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        },
         "grpc",
         {
           "name": "grpc",
