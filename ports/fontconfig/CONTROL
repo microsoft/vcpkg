@@ -1,6 +1,0 @@
-Source: fontconfig
-Version: 2.13.1
-Port-Version: 7
-Homepage: https://www.freedesktop.org/software/fontconfig/front.html
-Description: Library for configuring and customizing font access.
-Build-Depends: freetype, expat, libiconv, dirent, pthread, json-c, libuuid (!windows&!osx&!mingw), gettext

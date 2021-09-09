@@ -1,5 +1,0 @@
-Source: idevicerestore
-Version: 1.0.12-4
-Description: Restore/upgrade firmware of iOS devices
-Build-Depends: libimobiledevice, curl, libirecovery, libzip
-Supports: windows

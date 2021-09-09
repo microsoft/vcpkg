@@ -1,0 +1,10 @@
+{
+  "name": "brigand",
+  "version-string": "1.3.0",
+  "port-version": 1,
+  "description": "Brigand is a light-weight, fully functional, instant-compile time C++ 11 meta-programming library.",
+  "homepage": "https://github.com/edouarda/brigand",
+  "dependencies": [
+    "boost"
+  ]
+}
