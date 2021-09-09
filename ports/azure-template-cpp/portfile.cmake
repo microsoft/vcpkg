@@ -1,12 +1,8 @@
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# SPDX-License-Identifier: MIT
-# Added change to validate multiple releases to the same PR
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-template_1.0.0-beta.1073058
-    SHA512 60beb42b3aeb4cbd3205ded12fb3e54a7d903d508de5d3e2f68f2e6e775348cc0c7f932ed22618f34c4ddd58be22b2d442a538c742ab94527566897018032117
+    REF azure-template_1.0.0-beta.1089047
+    SHA512 465ea7e0eb2b0c1563dd9e917be8d9dbed7ce7429762a9a0239d4f7e5d6086e7c2416dde342a10547c82d83c310fd443c9586ec459262f0b50bea7c0f0f7a0db
 )
 
 vcpkg_cmake_configure(
