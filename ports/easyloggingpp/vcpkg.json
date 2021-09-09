@@ -1,0 +1,6 @@
+{
+  "name": "easyloggingpp",
+  "version-string": "9.96.7",
+  "port-version": 2,
+  "description": "Easylogging++ is a single header efficient logging library for C++ applications."
+}

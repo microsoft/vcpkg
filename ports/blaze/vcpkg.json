@@ -1,0 +1,11 @@
+{
+  "name": "blaze",
+  "version-string": "3.8",
+  "port-version": 2,
+  "description": "Blaze is an open-source, high-performance C++ math library for dense and sparse arithmetic.",
+  "homepage": "https://bitbucket.org/blaze-lib/blaze",
+  "dependencies": [
+    "boost-exception",
+    "lapack"
+  ]
+}

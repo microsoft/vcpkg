@@ -1,4 +1,0 @@
-Source: casclib
-Version: 1.50b-1
-Build-Depends: zlib
-Description: An open-source implementation of library for reading CASC storage from Blizzard games since 2014
