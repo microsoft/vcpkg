@@ -82,7 +82,12 @@ if(WIN32 OR APPLE)
 else()
   set(PKG_REQUIRES_PRIVATE "fontconfig >= 2.10.92, harfbuzz >= 1.2.3, fribidi >= 0.19.0, freetype2 >= 9.10.3")
 endif()
-set(PKG_LIBS_PRIVATE -lm)
+# patch comes from original repository, use lrint to judge whether to link libm 
+include(CheckFunctionExists)
+check_function_exists(lrint HAVE_LRINT)
+if(NOT HAVE_LRINT)
+  set(PKG_LIBS_PRIVATE -lm)
+endif()
 configure_file(libass.pc.in libass.pc @ONLY)
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/libass.pc
