@@ -6,7 +6,7 @@ diff --git a/tensorflow/core/kernels/depthtospace_op.cc b/tensorflow/core/kernel
      auto Toutput = outputs_tensor->tensor<T, kDims>();
  
 -    if (std::is_same<Device, GPUDevice>::value) {
-+    if constexpr (std::is_same_v<Device, GPUDevice>) {
++    if constexpr (std::is_same<Device, GPUDevice>::value) {
        if (is_int8x4) {
          // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
          auto Tinput_v = input.template reinterpret_last_dimension<int32, 4>();
@@ -35,7 +35,7 @@ diff --git a/tensorflow/core/kernels/spacetodepth_op.cc b/tensorflow/core/kernel
                         &outputs_tensor));
  
 -    if (std::is_same<Device, GPUDevice>::value) {
-+    if constexpr (std::is_same_v<Device, GPUDevice>) {
++    if constexpr (std::is_same<Device, GPUDevice>::value) {
        using RT = typename RawType<T>::type;
        if (data_format_ == FORMAT_NCHW_VECT_C) {
          // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
