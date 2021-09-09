@@ -3605,7 +3605,7 @@
       "port-version": 1
     },
     "libressl": {
-      "baseline": "3.3.3",
+      "baseline": "3.3.4",
       "port-version": 0
     },
     "librsvg": {
@@ -3693,12 +3693,12 @@
       "port-version": 1
     },
     "libssh": {
-      "baseline": "0.9.5",
-      "port-version": 6
+      "baseline": "0.9.6",
+      "port-version": 0
     },
     "libssh2": {
-      "baseline": "1.9.0",
-      "port-version": 1
+      "baseline": "1.10.0",
+      "port-version": 0
     },
     "libstemmer": {
       "baseline": "2017-9",
