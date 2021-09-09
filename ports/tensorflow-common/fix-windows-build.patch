@@ -1,3 +1,51 @@
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -255,15 +255,6 @@
+ )
+
+ config_setting(
+-    name = "msvc_cl_debug",
+-    values = {
+-        "compiler": "msvc-cl",
+-        "compilation_mode": "dbg",
+-    },
+-    visibility = ["//visibility:public"],
+-)
+-
+-config_setting(
+     name = "no_tensorflow_py_deps",
+     define_values = {"no_tensorflow_py_deps": "true"},
+     visibility = ["//visibility:public"],
+@@ -459,6 +450,15 @@
+     visibility = ["//visibility:public"],
+ )
+
++selects.config_setting_group(
++    name = "msvc_cl_debug",
++    match_all = [
++        "@bazel_tools//src/conditions:windows_msvc",
++        ":debug",
++    ],
++    visibility = ["//visibility:public"],
++)
++
+ # Features that are default ON are handled differently below.
+ #
+ config_setting(
+@@ -1004,6 +1004,11 @@
+             "-z defs",
+             "-Wl,--version-script,$(location //tensorflow/c:version_script.lds)",
+         ],
++    }) + select({
++        "//tensorflow:msvc_cl_debug": [
++            "/DEBUG:FASTLINK",
++        ],
++        "//conditions:default": [],
+     }),
+     per_os_targets = True,
+     soversion = VERSION,
+
 diff --git a/tensorflow/core/kernels/depthtospace_op.cc b/tensorflow/core/kernels/depthtospace_op.cc
 --- a/tensorflow/core/kernels/depthtospace_op.cc
 +++ b/tensorflow/core/kernels/depthtospace_op.cc

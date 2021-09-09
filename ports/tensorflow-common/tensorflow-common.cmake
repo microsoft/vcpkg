@@ -185,11 +185,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(PLATFORM_COMMAND UNIX_COMMAND)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
-		if(VCPKG_TARGET_IS_WINDOWS)
-			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
-		else()
-			set(BUILD_OPTS "--compilation_mode=dbg")
-		endif()
+		set(BUILD_OPTS "--compilation_mode=dbg")
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
