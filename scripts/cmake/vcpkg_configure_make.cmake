@@ -490,7 +490,7 @@ function(vcpkg_configure_make)
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
                             "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
+                            "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             #"--includedir='\${prefix}'/include" # already the default!
                             "--mandir=\\\${prefix}/share/${PORT}"
                             "--docdir=\\\${prefix}/share/${PORT}"
@@ -499,7 +499,7 @@ function(vcpkg_configure_make)
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/../tools/${PORT}/debug/bin"
                             "--sbindir=\\\${prefix}/../tools/${PORT}/debug/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
+                            "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             "--includedir=\\\${prefix}/../include"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
