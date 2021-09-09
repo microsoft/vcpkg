@@ -1,0 +1,7 @@
+{
+  "name": "celero",
+  "version-string": "2.8.2",
+  "port-version": 1,
+  "description": "Celero is a modern cross-platform (Windows, Linux, MacOS) Microbenchmarking library for C++.",
+  "homepage": "https://github.com/DigitalInBlue/Celero"
+}

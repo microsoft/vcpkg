@@ -1,4 +1,0 @@
-Source: bitserializer-cpprestjson
-Version: alias
-Build-Depends: bitserializer[cpprestjson-archive]
-Description: Deprecated alias for bitserializer-cpprestjson
