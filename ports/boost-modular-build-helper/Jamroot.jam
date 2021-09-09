@@ -134,6 +134,14 @@ if "@PORT@" != "boost-mpi"
     explicit boost_mpi ;
 }
 
+if "@PORT@" != "boost-container"
+{
+    use-project /boost/container : . ;
+
+    lib boost_container : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_container@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    explicit boost_container ;
+}
+
 rule requires ( foo * )
 {
 }

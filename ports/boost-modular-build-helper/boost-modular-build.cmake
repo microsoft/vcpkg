@@ -61,16 +61,22 @@ function(boost_modular_build)
         endif()
     endif()
 
+    set(_jamfile)
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
-        file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
+        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile.v2")
+    elseif(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile")
+        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile")
+    endif()
+    if(_jamfile)
+        file(READ "${_jamfile}" _contents)
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
             _contents
             "${_contents}"
         )
-        string(REGEX REPLACE " /boost//([^/ ]+)" " /boost/\\1//boost_\\1" _contents "${_contents}")
-        file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
+        string(REGEX REPLACE "/boost//([^/ ]+)" "/boost/\\1//boost_\\1" _contents "${_contents}")
+        file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
     function(unix_build BOOST_LIB_SUFFIX BUILD_TYPE BUILD_LIB_PATH)
