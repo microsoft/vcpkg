@@ -3,6 +3,7 @@
   "version": "0.10.7",
   "description": "Handles all IO and TLS work for application protocols.",
   "homepage": "https://github.com/awslabs/aws-c-io",
+  "supports": "!arm & !uwp",
   "dependencies": [
     "aws-c-cal",
     "aws-c-common",
