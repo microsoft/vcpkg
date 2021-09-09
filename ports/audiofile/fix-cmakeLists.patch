@@ -29,7 +29,7 @@ index d43c0c7..1bf21cf 100644
 \ No newline at end of file
 +set (CMAKE_SUPPRESS_REGENERATION true)
 +
-+#install
++#install and export targets
 +install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config)
 +export(TARGETS ${PROJECT_NAME} FILE ${PROJECT_NAME}Config.cmake)
 +install(EXPORT ${PROJECT_NAME}Config DESTINATION share/AudioFile FILE ${PROJECT_NAME}Config.cmake)
