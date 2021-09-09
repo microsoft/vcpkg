@@ -3,6 +3,7 @@
   "version-semver": "2.8.0",
   "description": "Fast Library for Number Theory",
   "homepage": "https://www.flintlib.org/",
+  "supports": "!uwp",
   "dependencies": [
     "gettimeofday",
     "gmp",
