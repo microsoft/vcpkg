@@ -1,0 +1,19 @@
+{
+  "name": "llfio",
+  "version-string": "2.0",
+  "port-version": 20210421,
+  "description": "P1031 low level file i/o and filesystem library for the C++ standard",
+  "homepage": "https://github.com/ned14/llfio",
+  "supports": "!(uwp | static)",
+  "dependencies": [
+    "outcome"
+  ],
+  "features": {
+    "run-tests": {
+      "description": "Build and run the dependency validation tests"
+    },
+    "status-code": {
+      "description": "Have LLFIO use SG14 `status_code` (proposed `std::error`) instead of `std::error_code`."
+    }
+  }
+}

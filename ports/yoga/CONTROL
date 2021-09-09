@@ -1,5 +1,0 @@
-Source: yoga
-Version: 1.18.0-1
-Homepage: https://github.com/facebook/yoga
-Description: Yoga is a cross-platform layout engine which implements Flexbox
-Supports: !uwp
