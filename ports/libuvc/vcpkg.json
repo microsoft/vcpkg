@@ -8,6 +8,7 @@
   "dependencies": [
     "libjpeg-turbo",
     "libusb",
+    "libusb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,7 +16,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "libusb"
+    }
   ]
 }
