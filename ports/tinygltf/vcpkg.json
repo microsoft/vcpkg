@@ -1,0 +1,11 @@
+{
+  "name": "tinygltf",
+  "version-string": "2020-07-28",
+  "port-version": 2,
+  "description": "A header only C++11 glTF 2.0 library.",
+  "homepage": "https://github.com/syoyo/tinygltf",
+  "dependencies": [
+    "nlohmann-json",
+    "stb"
+  ]
+}

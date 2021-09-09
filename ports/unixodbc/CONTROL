@@ -1,6 +1,0 @@
-Source: unixodbc
-Version: 2.3.7
-Port-Version: 2
-Homepage: https://github.com/lurcher/unixODBC
-Description: unixODBC is an Open Source ODBC sub-system and an ODBC SDK for Linux, Mac OSX, and UNIX
-Supports: (osx|linux)

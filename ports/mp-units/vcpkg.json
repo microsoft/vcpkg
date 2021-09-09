@@ -1,0 +1,11 @@
+{
+  "name": "mp-units",
+  "version-string": "0.6.0",
+  "port-version": 1,
+  "description": "mp-units - A Units Library for C++",
+  "homepage": "https://github.com/mpusz/units",
+  "dependencies": [
+    "fmt",
+    "ms-gsl"
+  ]
+}

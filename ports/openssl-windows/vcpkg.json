@@ -1,0 +1,10 @@
+{
+  "name": "openssl-windows",
+  "version-string": "1.1.1h",
+  "port-version": 2,
+  "description": "Deprecated OpenSSL port",
+  "supports": "windows",
+  "dependencies": [
+    "openssl"
+  ]
+}

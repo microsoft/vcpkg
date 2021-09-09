@@ -1,0 +1,26 @@
+{
+  "name": "getdns",
+  "version-string": "1.6.0",
+  "port-version": 1,
+  "description": "GetDNS is a modern asynchronous DNS API",
+  "homepage": "https://getdnsapi.net/",
+  "supports": "!uwp & windows",
+  "dependencies": [
+    "libidn2",
+    "openssl"
+  ],
+  "features": {
+    "libevent": {
+      "description": "libevent event loop integration",
+      "dependencies": [
+        "libevent"
+      ]
+    },
+    "libuv": {
+      "description": "libuv event loop integration",
+      "dependencies": [
+        "libuv"
+      ]
+    }
+  }
+}

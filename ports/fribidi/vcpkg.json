@@ -1,0 +1,10 @@
+{
+  "name": "fribidi",
+  "version-string": "1.0.10",
+  "port-version": 3,
+  "description": "GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)",
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    "tool-meson"
+  ]
+}

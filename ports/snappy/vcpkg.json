@@ -1,0 +1,7 @@
+{
+  "name": "snappy",
+  "version-string": "1.1.8",
+  "port-version": 1,
+  "description": "A fast compressor/decompressor.",
+  "homepage": "https://github.com/google/snappy"
+}

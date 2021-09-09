@@ -1,0 +1,12 @@
+{
+  "name": "hypre",
+  "version-string": "2.19.0",
+  "port-version": 1,
+  "description": "SCALABLE LINEAR SOLVERS AND MULTIGRID METHODS",
+  "homepage": "https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods",
+  "dependencies": [
+    "blas",
+    "lapack",
+    "mpi"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "asmjit",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "Complete x86/x64 JIT and Remote Assembler for C++",
+  "homepage": "https://github.com/asmjit/asmjit",
+  "supports": "!arm"
+}

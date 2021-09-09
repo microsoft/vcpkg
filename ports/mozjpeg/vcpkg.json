@@ -1,0 +1,10 @@
+{
+  "name": "mozjpeg",
+  "version-string": "2020-06-02",
+  "port-version": 3,
+  "description": "MozJPEG reduces file sizes of JPEG images while retaining quality and compatibility with the vast majority of the world's deployed decoders. It's compatible with libjpeg API and ABI, and can be used as a drop-in replacement for libjpeg.",
+  "homepage": "https://github.com/mozilla/mozjpeg",
+  "dependencies": [
+    "libpng"
+  ]
+}

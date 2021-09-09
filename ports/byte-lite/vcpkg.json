@@ -1,0 +1,6 @@
+{
+  "name": "byte-lite",
+  "version-string": "0.2.0",
+  "port-version": 1,
+  "description": "A C++17-like byte type for C++98, C++11 and later in a single-file header-only library"
+}

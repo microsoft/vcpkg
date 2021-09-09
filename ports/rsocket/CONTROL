@@ -1,6 +1,0 @@
-Source: rsocket
-Version: 2020.05.04.00-1
-Homepage: https://github.com/rsocket/rsocket-cpp
-Description: C++ implementation of RSocket http://rsocket.io
-Build-Depends: folly, double-conversion, openssl, gflags, glog, fmt, boost-system, boost-thread, boost-filesystem, boost-regex, boost-context, boost-program-options, zlib
-Supports: !(windows&x64)

@@ -1,6 +1,0 @@
-Source: threadpool
-Version: 0.2.5
-Port-Version: 1
-Homepage: http://threadpool.sourceforge.net/
-Description: threadpool is a cross-platform C++ thread pool library. It provides a convenient way for dispatching asynchronous tasks and can be easily customized. threadpool is based on the high-quality Boost source libraries.
-Build-Depends: boost-thread

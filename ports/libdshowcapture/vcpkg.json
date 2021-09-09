@@ -1,0 +1,6 @@
+{
+  "name": "libdshowcapture",
+  "version-string": "0.6.0",
+  "port-version": 2,
+  "description": "Free and Open Source C++11 Library for capturing DirectShow video/audio devices on windows."
+}

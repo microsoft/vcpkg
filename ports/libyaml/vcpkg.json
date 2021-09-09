@@ -1,0 +1,7 @@
+{
+  "name": "libyaml",
+  "version-string": "0.2.5",
+  "port-version": 1,
+  "description": "A C library for parsing and emitting YAML.",
+  "homepage": "https://github.com/yaml/libyaml"
+}

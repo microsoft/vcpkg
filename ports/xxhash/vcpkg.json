@@ -1,0 +1,12 @@
+{
+  "name": "xxhash",
+  "version-string": "0.8.0",
+  "port-version": 2,
+  "description": "Extremely fast hash algorithm",
+  "homepage": "https://github.com/Cyan4973/xxHash",
+  "features": {
+    "xxhsum": {
+      "description": "Build the xxhsum binary"
+    }
+  }
+}

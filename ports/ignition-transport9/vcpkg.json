@@ -1,0 +1,18 @@
+{
+  "name": "ignition-transport9",
+  "version-string": "9.0.0",
+  "port-version": 1,
+  "description": "Transport middleware for robotics",
+  "dependencies": [
+    "cppzmq",
+    "ignition-cmake2",
+    "ignition-msgs6",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp"
+    },
+    "protobuf",
+    "sqlite3",
+    "zeromq"
+  ]
+}

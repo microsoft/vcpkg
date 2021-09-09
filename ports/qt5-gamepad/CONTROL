@@ -1,4 +1,0 @@
-Source: qt5-gamepad
-Version: 5.15.2
-Description: Qt5 Gamepad Module - Enables Qt applications to support the use of gamepad hardware
-Build-Depends:  qt5-base[core], qt5-declarative

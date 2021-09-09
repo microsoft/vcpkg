@@ -1,0 +1,8 @@
+{
+  "name": "ampl-asl",
+  "version-string": "2020-11-11",
+  "port-version": 1,
+  "description": "AMPL Solver Library",
+  "homepage": "https://github.com/ampl/asl",
+  "supports": "!uwp"
+}

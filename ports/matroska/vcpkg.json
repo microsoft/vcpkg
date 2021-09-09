@@ -1,0 +1,11 @@
+{
+  "name": "matroska",
+  "version-string": "1.6.2",
+  "port-version": 1,
+  "description": "a C++ library to parse Matroska files (.mkv and .mka)",
+  "homepage": "https://github.com/Matroska-Org/libmatroska",
+  "supports": "!uwp",
+  "dependencies": [
+    "ebml"
+  ]
+}

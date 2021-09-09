@@ -1,4 +1,0 @@
-Source: qt5-location
-Version: 5.15.2
-Description: Qt5 Location Module - Displays map, navigation, and place content in a QML application.
-Build-Depends: qt5-base[core], qt5-declarative, qt5-quickcontrols, qt5-quickcontrols2, qt5-serialport

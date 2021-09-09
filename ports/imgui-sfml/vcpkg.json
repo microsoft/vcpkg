@@ -1,0 +1,12 @@
+{
+  "name": "imgui-sfml",
+  "version-string": "2.1",
+  "port-version": 3,
+  "description": "ImGui binding for use with SFML",
+  "homepage": "https://github.com/eliasdaler/imgui-sfml",
+  "dependencies": [
+    "imgui",
+    "opengl",
+    "sfml"
+  ]
+}

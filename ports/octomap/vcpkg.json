@@ -1,0 +1,7 @@
+{
+  "name": "octomap",
+  "version-string": "1.9.5",
+  "port-version": 1,
+  "description": "An Efficient Probabilistic 3D Mapping Framework Based on Octrees",
+  "homepage": "https://octomap.github.io/"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "lz4",
+  "version-string": "1.9.3",
+  "port-version": 1,
+  "description": "Lossless compression algorithm, providing compression speed at 400 MB/s per core.",
+  "homepage": "https://github.com/lz4/lz4",
+  "dependencies": [
+    "xxhash"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "usrsctp",
+  "version-string": "0db9691",
+  "port-version": 1,
+  "description": "This is a userland SCTP stack supporting FreeBSD, Linux, Mac OS X and Windows."
+}

@@ -1,0 +1,8 @@
+{
+  "name": "triangle",
+  "version-string": "1.6",
+  "port-version": 1,
+  "description": "A Two-Dimensional Quality Mesh Generator and Delaunay Triangulator.",
+  "homepage": "http://www.cs.cmu.edu/~quake/triangle.html",
+  "supports": "!uwp"
+}

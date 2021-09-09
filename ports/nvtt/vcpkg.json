@@ -1,0 +1,11 @@
+{
+  "name": "nvtt",
+  "version-string": "2.1.2",
+  "port-version": 2,
+  "description": "Texture processing tools with support for Direct3D 10 and 11 formats.",
+  "homepage": "https://github.com/castano/nvidia-texture-tools",
+  "supports": "!x86",
+  "dependencies": [
+    "libsquish"
+  ]
+}

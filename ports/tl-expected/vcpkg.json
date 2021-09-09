@@ -1,0 +1,6 @@
+{
+  "name": "tl-expected",
+  "version-string": "1.0.0",
+  "port-version": 2,
+  "description": "C++11/14/17 std::expected implementation with functional-style extensions"
+}

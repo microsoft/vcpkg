@@ -1,0 +1,6 @@
+{
+  "name": "cmark",
+  "version-string": "0.29.0",
+  "port-version": 1,
+  "description": "CommonMark parsing and rendering library"
+}

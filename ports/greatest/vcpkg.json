@@ -1,0 +1,7 @@
+{
+  "name": "greatest",
+  "version-string": "1.4.2",
+  "port-version": 1,
+  "description": "Single-file testing system for C",
+  "homepage": "https://github.com/silentbicycle/greatest"
+}

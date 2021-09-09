@@ -1,4 +1,0 @@
-Source: qt5-x11extras
-Version: 5.15.2
-Description: Qt5 x11extras Module; 
-Build-Depends:  qt5-base[core]

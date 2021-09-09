@@ -1,0 +1,30 @@
+{
+  "name": "ace",
+  "version-string": "7.0.3",
+  "port-version": 1,
+  "description": "The ADAPTIVE Communication Environment",
+  "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
+  "features": {
+    "ssl": {
+      "description": "Enable SSL/TLS features in ACE",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tao": {
+      "description": "The ACE ORB"
+    },
+    "wchar": {
+      "description": "Enable extra wide char functions in ACE"
+    },
+    "xml": {
+      "description": "Enable XML features in ACE"
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "libodb-pgsql",
+  "version-string": "2.4.0",
+  "port-version": 5,
+  "description": "Description: PostgreSQL support for the ODB ORM library",
+  "homepage": "https://www.codesynthesis.com/products/odb/",
+  "dependencies": [
+    "libodb",
+    "libpq"
+  ]
+}

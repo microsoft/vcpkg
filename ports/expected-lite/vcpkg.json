@@ -1,0 +1,6 @@
+{
+  "name": "expected-lite",
+  "version-string": "0.3.0",
+  "port-version": 1,
+  "description": "Expected objects in C++11 and later in a single-file header-only library"
+}

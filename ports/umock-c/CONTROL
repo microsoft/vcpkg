@@ -1,9 +1,0 @@
-Source: umock-c
-Version: 2020-06-17-1
-Description: A pure C mocking library
-Homepage: https://github.com/Azure/umock-c
-Build-Depends: azure-macro-utils-c
-
-Feature: public-preview
-Description: A pure C mocking library (public-preview)
-Build-Depends: azure-macro-utils-c[public-preview]

@@ -1,0 +1,7 @@
+{
+  "name": "reproc",
+  "version-string": "14.2.1",
+  "port-version": 1,
+  "description": "Cross-platform (C99/C++11) process library",
+  "homepage": "https://github.com/DaanDeMeyer/reproc"
+}

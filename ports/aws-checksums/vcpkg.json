@@ -1,0 +1,10 @@
+{
+  "name": "aws-checksums",
+  "version-string": "0.1.9",
+  "port-version": 1,
+  "description": "Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.",
+  "supports": "!(arm & windows)",
+  "dependencies": [
+    "aws-c-common"
+  ]
+}

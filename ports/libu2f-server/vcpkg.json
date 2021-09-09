@@ -1,0 +1,12 @@
+{
+  "name": "libu2f-server",
+  "version-string": "1.1.0",
+  "port-version": 3,
+  "description": "Yubico Universal 2nd Factor (U2F) Server C Library",
+  "homepage": "https://developers.yubico.com/libu2f-server/",
+  "supports": "(x86 | x64) & windows",
+  "dependencies": [
+    "json-c",
+    "openssl"
+  ]
+}

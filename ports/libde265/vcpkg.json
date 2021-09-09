@@ -1,0 +1,8 @@
+{
+  "name": "libde265",
+  "version-string": "1.0.8",
+  "port-version": 1,
+  "description": "Open h.265 video codec implementation.",
+  "homepage": "https://www.libde265.org/",
+  "supports": "!(arm | uwp)"
+}

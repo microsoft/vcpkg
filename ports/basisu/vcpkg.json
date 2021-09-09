@@ -1,0 +1,10 @@
+{
+  "name": "basisu",
+  "version-string": "1.11",
+  "port-version": 5,
+  "description": "Basis Universal is a supercompressed GPU texture and video compression format that outputs a highly compressed intermediate file format (.basis) that can be quickly transcoded to a wide variety of GPU texture compression formats.",
+  "homepage": "https://github.com/BinomialLLC/basis_universal",
+  "dependencies": [
+    "lodepng"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "xsimd",
+  "version-string": "7.4.9",
+  "port-version": 1,
+  "description": "Modern, portable C++ wrappers for SIMD intrinsics",
+  "homepage": "https://github.com/xtensor-stack/xsimd",
+  "features": {
+    "xcomplex": {
+      "description": "xtl complex support",
+      "dependencies": [
+        "xtl"
+      ]
+    }
+  }
+}

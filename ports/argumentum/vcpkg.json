@@ -1,0 +1,7 @@
+{
+  "name": "argumentum",
+  "version-string": "0.3.1",
+  "port-version": 1,
+  "description": "A C++17 command line argument parser inspired by Python argparse",
+  "homepage": "https://github.com/mmahnic/argumentum"
+}

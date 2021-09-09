@@ -1,0 +1,7 @@
+{
+  "name": "ms-gsl",
+  "version-string": "3.1.0",
+  "port-version": 1,
+  "description": "Microsoft implementation of the Guidelines Support Library",
+  "homepage": "https://github.com/Microsoft/GSL"
+}
