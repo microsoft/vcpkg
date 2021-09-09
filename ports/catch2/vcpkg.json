@@ -1,6 +1,7 @@
 {
   "name": "catch2",
   "version-semver": "2.13.7",
+  "port-version": 1,
   "description": "A modern, header-only test framework for unit testing.",
   "homepage": "https://github.com/catchorg/Catch2",
   "dependencies": [

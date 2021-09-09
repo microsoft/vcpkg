@@ -1,0 +1,7 @@
+{
+  "name": "tinyxml",
+  "version-string": "2.6.2",
+  "port-version": 8,
+  "description": "A simple, small, minimal, C++ XML parser that can be easily integrating into other programs.",
+  "homepage": "https://sourceforge.net/projects/tinyxml"
+}
