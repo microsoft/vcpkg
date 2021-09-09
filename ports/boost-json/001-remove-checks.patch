@@ -1,49 +1,30 @@
- Jamfile       | 9 ---------
- build/Jamfile | 3 ---
- 2 files changed, 12 deletions(-)
+ Jamfile       | 2 +-
+ build/Jamfile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Jamfile b/Jamfile
-index b999474..c79d081 100644
+index b999474..33bc8c9 100644
 --- a/Jamfile
 +++ b/Jamfile
-@@ -7,21 +7,12 @@
+@@ -7,7 +7,7 @@
  # Official repository: https://github.com/boostorg/json
  #
  
 -import ../config/checks/config : requires ;
--
++rule requires ( checks * ) { }
+ 
  # These make sure we only build on
  # compatible C++11 or later toolchains.
- obj check_basic_alignas : check/basic_alignas.cpp ;
- explicit check_basic_alignas ;
- 
- constant c11-requires :
--    [ requires
--    cxx11_constexpr
--    cxx11_decltype
--    cxx11_hdr_tuple
--    cxx11_template_aliases
--    cxx11_variadic_templates
--    ]
-     # We only require limited alignas support,
-     # so we have to use a custom check
-     [ check-target-builds
 diff --git a/build/Jamfile b/build/Jamfile
-index 8425ad3..319bdff 100644
+index 8425ad3..86d1208 100644
 --- a/build/Jamfile
 +++ b/build/Jamfile
-@@ -7,14 +7,11 @@
+@@ -7,7 +7,7 @@
  # Official repository: https://github.com/boostorg/json
  #
  
 -import ../../config/checks/config : requires ;
--
++rule requires ( checks * ) { }
+ 
  project boost/json
      : requirements
-       $(c11-requires)
-       <link>shared:<define>BOOST_JSON_DYN_LINK=1
-       <link>static:<define>BOOST_JSON_STATIC_LINK=1
--      <library>/boost//container/<warnings-as-errors>off
-       <define>BOOST_JSON_SOURCE
-     : usage-requirements
-       $(c11-requires)
