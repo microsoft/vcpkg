@@ -120,7 +120,7 @@ vcpkg_execute_build_process(
 
 if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
-      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${WORKSPACE}XML.mwc
+      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${ACE_ROOT}/ACEXML/ACEXML.mwc
       WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
       LOGNAME mwc-${TARGET_TRIPLET}
   )
@@ -136,18 +136,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     USE_VCPKG_INTEGRATION
     SKIP_CLEAN
   )
-
-  if("xml" IN_LIST FEATURES)
-    file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH}/ACEXML ${WORKSPACE}XML.sln)
-    vcpkg_install_msbuild(
-      SOURCE_PATH ${SOURCE_PATH}/ACEXML
-      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
-      LICENSE_SUBPATH COPYING
-      PLATFORM ${MSBUILD_PLATFORM}
-      USE_VCPKG_INTEGRATION
-      SKIP_CLEAN
-    )
-  endif()
 
   # ACE itself does not define an install target, so it is not clear which
   # headers are public and which not. For the moment we install everything
@@ -283,13 +271,34 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   if("xml" IN_LIST FEATURES)
+    file(WRITE ${SOURCE_PATH}/ACEXML/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                            <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                            <ItemDefinitionGroup>
+                                                            <ClCompile>
+                                                            <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
+                                                            </ClCompile>
+                                                            <Link>
+                                                            <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib</AdditionalLibraryDirectories>
+                                                            </Link>
+                                                            </ItemDefinitionGroup>
+                                                            </Project>")
+    file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH} ${ACE_ROOT}/ACEXML/ACEXML.sln)
+    vcpkg_install_msbuild(
+      SOURCE_PATH ${SOURCE_PATH}
+      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
+      LICENSE_SUBPATH COPYING
+      PLATFORM ${MSBUILD_PLATFORM}
+      USE_VCPKG_INTEGRATION
+      SKIP_CLEAN
+    )
+
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
                                "ACEXML/parser/parser")
     install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
-  if("tao" IN_LIST FEATURES)
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll
