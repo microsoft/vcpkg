@@ -27,10 +27,11 @@ if("openmp" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opencv OpenMVG_USE_OPENCV
-    opencv OpenMVG_USE_OCVSIFT
-    software OpenMVG_BUILD_SOFTWARES
-    software OpenMVG_BUILD_GUI_SOFTWARES
+    FEATURES
+        opencv OpenMVG_USE_OPENCV
+        opencv OpenMVG_USE_OCVSIFT
+        software OpenMVG_BUILD_SOFTWARES
+        software OpenMVG_BUILD_GUI_SOFTWARES
 )
 
 # remove some deps to prevent conflict
