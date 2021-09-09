@@ -19,7 +19,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindPNG.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindWEBP.cmake")
 
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
