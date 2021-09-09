@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 969c9b85af58fc144480f6548e78126cf3fe758951ecbdffb579163b9a505a7ea58c32430390102ff620e828bf241dd24c0167f205306949d36dcf4504efa09a
     HEAD_REF master
     PATCHES
+        disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
         fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
 )
 
