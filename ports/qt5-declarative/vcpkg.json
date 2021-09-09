@@ -5,6 +5,11 @@
   "description": "Qt5 Declarative (Quick 2) Module. Includes QtQuick, QtQuickParticles, QtQuickWidgets, QtQml, and QtPacketProtocol.",
   "dependencies": [
     {
+      "$comment": "not a real dependendcy. Just required to make the binary cache deterministic/build order independet",
+      "name": "qt5-activeqt",
+      "platform": "windows"
+    },
+    {
       "name": "qt5-base",
       "default-features": false
     },
