@@ -17,8 +17,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 6efdcc1219545e301d6ba911c50471bbb30a6a1c
-        SHA512 66f9ef1bd0255329489b04bc4bee8931f51798cfa7f713470d81d2068d472a616d8695e3b97399d53c6993f9a8281c82a67723900045fe866b00b72b9c485a11
+        REF 73a2039cc0de5ececf5755ebe731a6b5b98f85da
+        SHA512 6374b7b175a5c0206bee148c35eb6a3a79f1b149e87d2b51981a9fd1446809134a1aa0f28f4acf1318719ac5554f7bd8de225a5dca63eb6537012aed6b10e4cc
         HEAD_REF master
         PATCHES
             fix-utilityFunctions-conditions.patch
