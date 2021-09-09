@@ -1,0 +1,14 @@
+{
+  "name": "zookeeper",
+  "version-string": "3.5.5",
+  "port-version": 2,
+  "description": "ZooKeeper C bindings",
+  "default-features": [
+    "sync"
+  ],
+  "features": {
+    "sync": {
+      "description": "ZooKeeper with the sync API"
+    }
+  }
+}

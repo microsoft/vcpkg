@@ -34,6 +34,8 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${GETDNS_ENABLE_STATIC}
         -DENABLE_SHARED=${GETDNS_ENABLE_SHARED}
         ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF
+        -DENABLE_STUB_ONLY=ON #if setting ON, it will require libunbound to build on Unix platform.
 )
 vcpkg_cmake_install()
 

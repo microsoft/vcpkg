@@ -1,7 +1,0 @@
-Source: hyperscan
-Version: 5.3.0
-Port-Version: 1
-Homepage: https://www.hyperscan.io
-Description: A regular expression library with O(length of input) match times that takes advantage of Intel hardware to provide blazing speed.
-Build-Depends: boost-array, boost-chrono, boost-config, boost-core, boost-crc, boost-detail, boost-functional, boost-regex, boost-system, boost-thread, boost-type-traits, boost-unordered, boost-utility, boost-dynamic-bitset, boost-random, boost-graph, boost-multi-array, boost-icl, boost-ptr-container, pcre, ragel
-Supports: !arm
