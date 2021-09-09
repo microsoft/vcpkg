@@ -1,16 +1,13 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ccf5a33..8e88494 100644
+index a576cf7..1f6a048 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -361,9 +361,9 @@ if (WITH_VISIBILITY_HIDDEN)
-   set_target_properties(ssh PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
+@@ -359,7 +359,7 @@ if (WITH_VISIBILITY_HIDDEN)
+     set_target_properties(ssh PROPERTIES C_VISIBILITY_PRESET hidden)
  endif (WITH_VISIBILITY_HIDDEN)
  
 -if (MINGW)
 +if (MINGW AND NOT ANDROID)
-     set_target_properties(ssh PROPERTIES LINK_FLAGS "-Wl,--enable-stdcall-fixup")
--    set_target_properties(ssh PROPERTIES COMPILE_FLAGS "-D_POSIX_SOURCE")
-+    set_property(TARGET ssh APPEND PROPERTY COMPILE_FLAGS "-D_POSIX_SOURCE")
+     target_link_libraries(ssh PRIVATE "-Wl,--enable-stdcall-fixup")
+     target_compile_definitions(ssh PRIVATE "_POSIX_SOURCE")
  endif ()
- 
- 
