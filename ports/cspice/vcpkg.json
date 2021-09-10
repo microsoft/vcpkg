@@ -1,0 +1,7 @@
+{
+  "name": "cspice",
+  "version-string": "66",
+  "port-version": 5,
+  "description": "NASA C SPICE toolkit",
+  "homepage": "https://naif.jpl.nasa.gov/naif/toolkit_C.html"
+}

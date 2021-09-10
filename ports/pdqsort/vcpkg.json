@@ -1,0 +1,7 @@
+{
+  "name": "pdqsort",
+  "version-string": "2019-07-30",
+  "port-version": 1,
+  "description": "Pattern-defeating quicksort (pdqsort) is a novel sorting algorithm",
+  "homepage": "https://github.com/orlp/pdqsort"
+}
