@@ -1,11 +1,11 @@
 {
-  "name": "azure-storage-files-shares-cpp",
-  "version-semver": "12.2.0",
+  "name": "azure-storage-queues-cpp",
+  "version-semver": "12.0.0-beta.1",
   "description": [
-    "Microsoft Azure Storage Files Shares SDK for C++",
-    "This library provides Azure Storage Files Shares SDK."
+    "Microsoft Azure Storage Queues SDK for C++",
+    "This library provides Azure Storage Queues SDK."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-files-shares",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-queues",
   "license": "MIT",
   "dependencies": [
     {
