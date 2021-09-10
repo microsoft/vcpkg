@@ -57,22 +57,22 @@ Remove any boiler plate comments introduced by the `create` command before submi
 Ports must not change their behavior based on which ports are already installed in a form that would change which contents that port installs. For example, given:
 
 ```
-vcpkg install a
-vcpkg install b
-vcpkg uninstall a
+> vcpkg install a
+> vcpkg install b
+> vcpkg remove a
 ```
 
 and
 
 ```
-vcpkg install b
+> vcpkg install b
 ```
 
-the files installed by b must be the same, regardless of influence by the previous installation of a. This means that ports must not try and detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
+the files installed by `b` must be the same, regardless of influence by the previous installation of `a`. This means that ports must not try to detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
 
 ### Unique port attribution rule
 
-In the entire vcpkg system, no 2 ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
+In the entire vcpkg system, no two ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
 
 ## Features
 
