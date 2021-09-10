@@ -12,8 +12,6 @@ stages:
   pool: $(windows-pool)
   jobs:
   - job:
-    workspace:
-      clean: resources
     variables:
     - name: VCPKG_DOWNLOADS
       value: D:\downloads

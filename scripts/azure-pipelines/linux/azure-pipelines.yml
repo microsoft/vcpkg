@@ -6,8 +6,6 @@ jobs:
 - job: x64_linux
   pool:
     name: ${{ parameters.poolName }}
-  workspace:
-    clean: resources
   timeoutInMinutes: 1440 # 1 day
   variables:
   - name: WORKING_ROOT

@@ -6,8 +6,6 @@ jobs:
 - job: ${{ parameters.jobName }}
   pool:
     name: ${{ parameters.poolName }}
-  workspace:
-    clean: resources
   timeoutInMinutes: 1440 # 1 day
   variables:
   - name: WORKING_ROOT
@@ -31,9 +29,6 @@ jobs:
   # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
-  - script: |
-      if exist ${{ variables.VCPKG_DOWNLOADS }} rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
-    displayName: 'Clean downloads'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
