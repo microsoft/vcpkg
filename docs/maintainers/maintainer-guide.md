@@ -70,8 +70,6 @@ vcpkg install b
 
 the files installed by b must be the same, regardless of influence by the previous installation of a. This means that ports must not try and detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
 
-https://github.com/microsoft/vcpkg/issues/19922 is an example bug caused by a violation of this rule.
-
 ### Unique port attribution rule
 
 In the entire vcpkg system, no 2 ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
