@@ -1,0 +1,7 @@
+{
+  "name": "jsoncpp",
+  "version-string": "1.9.4",
+  "port-version": 1,
+  "description": "jsoncpp is an implementation of a JSON reader and writer in C++. JSON (JavaScript Object Notation) is a lightweight data-interchange format that it is easy to parse and redeable for human.",
+  "homepage": "https://github.com/open-source-parsers/jsoncpp"
+}

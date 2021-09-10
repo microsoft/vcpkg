@@ -1,0 +1,10 @@
+{
+  "name": "cppmicroservices",
+  "version-string": "3.4.0",
+  "port-version": 3,
+  "description": "An OSGi-like C++ dynamic module system and service registry",
+  "homepage": "https://github.com/CppMicroServices/CppMicroServices",
+  "dependencies": [
+    "gtest"
+  ]
+}

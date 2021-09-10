@@ -1,0 +1,8 @@
+{
+  "name": "yasm",
+  "version-string": "1.3.0",
+  "port-version": 1,
+  "description": "Yasm is a complete rewrite of the NASM assembler under the “new” BSD License.",
+  "homepage": "https://github.com/yasm/yasm",
+  "supports": "windows & !uwp & !arm"
+}

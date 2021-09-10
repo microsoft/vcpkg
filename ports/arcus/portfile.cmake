@@ -3,28 +3,27 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ultimaker/libArcus
-    REF 4.8.0
-    SHA512 44db9b48ab6be08c30f2121d68197a7347eaf3ee255649969a773afbe45ec2433e2cc082aa72f6d40dad7ea28345da858471fff9a129365a4e848df8c8c07689
+    REF 617f6f71572090f73cb44592b12f49567b539e5b #v4.10.0
+    SHA512 cf0954d8b10d9f94165aa5c086d0e58c2925464f9fbe4252535c36d7e6bb12b767d89efb816c9e642f9cd7f0ec0d66d61ca21c5121a05340499d38d5d851f73b
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_PYTHON=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${ENABLE_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Arcus TARGET_PATH share/arcus)
+vcpkg_cmake_config_fixup(PACKAGE_NAME Arcus CONFIG_PATH lib/cmake/Arcus)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/arcus/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
