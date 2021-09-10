@@ -1,7 +1,6 @@
 {
   "name": "azure-umqtt-c",
-  "version-string": "2020-12-09",
-  "port-version": 1,
+  "version-date": "2021-09-09",
   "description": "General purpose library for communication over the mqtt protocol",
   "homepage": "https://github.com/Azure/azure-umqtt-c",
   "dependencies": [
