@@ -5,44 +5,38 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO librsync/librsync
-    REF d1938c387e86ab5bbf7cb2e84244229c5bbd5ebf # commit 2020-06-04
-    SHA512 2afb844f20e6d74d8874b2022db5c4c4befa09f2cfcf5360ffcdd4fd3ef56270d3ab8de6be76fc68f8648d871c28f3bbe15e4f6f417c0776b542f86ac6a910cb
+    REF 42b636d2a65ab6914ea7cac50886da28192aaf9b # V2.3.2
+    SHA512 4903a64e327a7d49ae5f741b7b9fe3a76018010147249e2bc53917b06d31ee0f9b917f6c3e36a2d241ae66c19fa881113b59911d777742a859922486d9fe9c4c
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_RDIFF:BOOL=OFF 
         -DENABLE_COMPRESSION:BOOL=OFF
         -DENABLE_TRACE:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/rsync.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/rsync.dll ${CURRENT_PACKAGES_DIR}/bin/rsync.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/rsync.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/rsync.dll" "${CURRENT_PACKAGES_DIR}/bin/rsync.dll")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll ${CURRENT_PACKAGES_DIR}/debug/bin/rsync.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/rsync.dll")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/librsync_export.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/librsync_export.h"
         "#  ifdef LIBRSYNC_STATIC_DEFINE"
         "#  if 1 /* LIBRSYNC_STATIC_DEFINE */"
     )
 endif()
 
-file(INSTALL
-    ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
-)
-
 vcpkg_copy_pdbs()
+file(INSTALL  "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

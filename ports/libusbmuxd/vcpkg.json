@@ -1,0 +1,10 @@
+{
+  "name": "libusbmuxd",
+  "version-string": "1.2.219",
+  "port-version": 1,
+  "description": "A client library to multiplex connections from and to iOS devices",
+  "supports": "!(uwp | linux | osx)",
+  "dependencies": [
+    "libplist"
+  ]
+}

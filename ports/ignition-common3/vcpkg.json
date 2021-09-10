@@ -1,0 +1,24 @@
+{
+  "name": "ignition-common3",
+  "version-string": "3.9.0",
+  "port-version": 1,
+  "description": "Common libraries for robotics applications",
+  "homepage": "https://ignitionrobotics.org/libs/common",
+  "dependencies": [
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows | uwp"
+    },
+    "ffmpeg",
+    "freeimage",
+    "gts",
+    "ignition-cmake2",
+    "ignition-math6",
+    "ignition-modularscripts",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp"
+    },
+    "tinyxml2"
+  ]
+}

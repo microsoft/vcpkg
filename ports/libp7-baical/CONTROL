@@ -1,4 +1,0 @@
-Source: libp7-baical
-Version: replaced
-Build-Depends: libp7client
-Description: An old name for the port libp7client; please install libp7client instead.
