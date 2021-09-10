@@ -1,55 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dfa9b72..922a69f 100644
+index dfa9b72..e21eee0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,76 +1,34 @@
+@@ -1,8 +1,9 @@
 -cmake_minimum_required(VERSION 2.8)
 +cmake_minimum_required(VERSION 3.0)
  
--###################################################################################
+ ###################################################################################
  project(libgo)
--
--enable_language(C ASM)
--
--if (CMAKE_BUILD_TYPE)
--else()
--    set(CMAKE_BUILD_TYPE RELEASE)
--    #set(CMAKE_BUILD_TYPE DEBUG)
--endif()
--
--message("------------ Options -------------")
--message("  CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
--message("  CMAKE_COMMAND: ${CMAKE_COMMAND}")
--
--option(ENABLE_DEBUGGER "enable debugger" OFF)
--if (ENABLE_DEBUGGER)
--    set(ENABLE_DEBUGGER 1)
--    message ("  enable_debugger: yes")
--else()
--    set(ENABLE_DEBUGGER 0)
--    message ("  enable_debugger: no")
--endif()
--
--option(DISABLE_HOOK "disable hook" OFF)
--if (DISABLE_HOOK)
--    set(ENABLE_HOOK 0)
--    message ("  enable_hook: no")
--else()
--    set(ENABLE_HOOK 1)
--    message ("  enable_hook: yes")
--endif()
--
--if (BUILD_DYNAMIC)
--    message ("  build dynamic lib: yes")
--else()
--    message ("  build dynamic lib: no")
--endif()
--
--message("-------------- Env ---------------")
--message("  CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
--message("  CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
--message("----------------------------------")
--
+ 
++if(0)
+ enable_language(C ASM)
+ 
+ if (CMAKE_BUILD_TYPE)
+@@ -43,34 +44,38 @@ message("-------------- Env ---------------")
+ message("  CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+ message("  CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+ message("----------------------------------")
++endif()
++
 +enable_language(C CXX ASM)
 +set(CMAKE_CXX_STANDARD 11)
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,8 +37,9 @@ index dfa9b72..922a69f 100644
 +
 +set(ENABLE_DEBUGGER 0)
 +set(ENABLE_HOOK 0)
+ 
  configure_file(${PROJECT_SOURCE_DIR}/libgo/common/cmake_config.h.in ${PROJECT_SOURCE_DIR}/libgo/common/cmake_config.h)
--message("----------------------------------")
+ message("----------------------------------")
  
  if (UNIX)
 -    set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -Wall ${CMAKE_CXX_FLAGS}")
@@ -98,99 +68,47 @@ index dfa9b72..922a69f 100644
  include_directories(${PROJECT_SOURCE_DIR})
  aux_source_directory(${PROJECT_SOURCE_DIR}/libgo CO_SRC_LIST)
  aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/common CO_SRC_LIST)
-@@ -88,75 +46,34 @@ if (NOT DISABLE_HOOK)
-     if (UNIX)
-         aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/netio/unix CO_SRC_LIST)
-     elseif (WIN32)
--	include_directories(${PROJECT_SOURCE_DIR}/libgo/netio/windows)
-+        include_directories(${PROJECT_SOURCE_DIR}/libgo/netio/windows)
-         aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/netio/windows CO_SRC_LIST)
--	aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/context/fiber CO_SRC_LIST)
--	list(APPEND CO_SRC_LIST ${PROJECT_SOURCE_DIR}/libgo/netio/windows/xhook/xhook.cpp)
-+        aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/context/fiber CO_SRC_LIST)
-+        list(APPEND CO_SRC_LIST ${PROJECT_SOURCE_DIR}/libgo/netio/windows/xhook/xhook.cpp)
-     endif()
- else()
+@@ -97,6 +102,7 @@ else()
      aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/netio/disable_hook CO_SRC_LIST)
  endif()
  
--set(TARGET "libgo")
--set(STATIC_T "libgo_static")
--set(STATIC_HOOK "static_hook")
++if(0)
+ set(TARGET "libgo")
+ set(STATIC_T "libgo_static")
+ set(STATIC_HOOK "static_hook")
+@@ -136,7 +142,6 @@ if (UNIX)
+     )
+ 
+     set(PROFILE_FLAGS "-pg ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
 -
- list(APPEND CO_SRC_LIST ${jump_asm_file})
- list(APPEND CO_SRC_LIST ${make_asm_file})
--add_library("${STATIC_T}" STATIC ${CO_SRC_LIST})
--set_target_properties("${STATIC_T}" PROPERTIES OUTPUT_NAME "${TARGET}")
--
--if (UNIX)
--    install(TARGETS ${STATIC_T} LIBRARY DESTINATION "lib" ARCHIVE DESTINATION "lib")
--    install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/ DESTINATION "include/libgo" FILES_MATCHING PATTERN "*.h")
--        #PATTERN "windows" EXCLUDE
--
--    add_library("${STATIC_HOOK}" STATIC "${PROJECT_SOURCE_DIR}/libgo/netio/unix/static_hook/static_hook.cpp")
--
--    if (BUILD_DYNAMIC)
--        set(SHARED_T "libgo_dynamic")
--        add_library("${SHARED_T}" SHARED ${CO_SRC_LIST})
--        set_target_properties("${SHARED_T}" PROPERTIES OUTPUT_NAME "${TARGET}")
--        target_link_libraries("${SHARED_T}" ${LINK_LIBS} -ldl)
--        install(TARGETS ${SHARED_T} LIBRARY DESTINATION "lib" ARCHIVE DESTINATION "lib")
--    endif()
--
--    add_custom_target(debug
--        COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=DEBUG ${CMAKE_SOURCE_DIR}
--        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
--        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
--        COMMENT "Switch CMAKE_BUILD_TYPE to Debug"
--    )
--
--    add_custom_target(release
--        COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=RELEASE ${CMAKE_SOURCE_DIR}
--        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
--        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
--        COMMENT "Switch CMAKE_BUILD_TYPE to Release"
--    )
--
--    set(PROFILE_FLAGS "-pg ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
+     #message("PROFILE_FLAGS: ${PROFILE_FLAGS}")
+     add_custom_target(profile
+         COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=PROFILE -DCMAKE_CXX_FLAGS_PROFILE=\\'${PROFILE_FLAGS}\\' ${CMAKE_SOURCE_DIR}
+@@ -160,3 +165,27 @@ if (WIN32)
+ 	    add_subdirectory(${PROJECT_SOURCE_DIR}/tutorial)
+     endif()
+ endif()
++endif()
++
++list(APPEND CO_SRC_LIST ${jump_asm_file})
++list(APPEND CO_SRC_LIST ${make_asm_file})
 +add_library(${PROJECT_NAME} ${CO_SRC_LIST})
 +target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
 +if (WIN32)
 +    target_link_libraries(${PROJECT_NAME} ws2_32)
 +    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
 +endif()
- 
--    #message("PROFILE_FLAGS: ${PROFILE_FLAGS}")
--    add_custom_target(profile
--        COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=PROFILE -DCMAKE_CXX_FLAGS_PROFILE=\\'${PROFILE_FLAGS}\\' ${CMAKE_SOURCE_DIR}
--        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
--        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
--        COMMENT "Switch CMAKE_BUILD_TYPE to PROFILE"
--    )
++
 +install(TARGETS ${PROJECT_NAME}
 +        EXPORT "${PROJECT_NAME}Config"
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib
 +        RUNTIME DESTINATION bin)
- 
--    add_custom_target(uninstall
--        COMMAND rm ${CMAKE_INSTALL_PREFIX}/lib/liblibgo.a ${CMAKE_INSTALL_PREFIX}/lib/liblibgo.so ${CMAKE_INSTALL_PREFIX}/lib/liblibgo_main.a -f
--        COMMAND rm ${CMAKE_INSTALL_PREFIX}/include/libgo -rf
--    )
++
 +install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/
 +        DESTINATION ${INSTALL_INCLUDE_DIR}
 +        FILES_MATCHING PATTERN "*.h")
- 
--elseif (WIN32)
--    set_target_properties("${STATIC_T}" PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
--endif()
--
--if (WIN32)
--    if (BOOST_ROOT)
--	    add_subdirectory(${PROJECT_SOURCE_DIR}/test/gtest_unit)
--	    add_subdirectory(${PROJECT_SOURCE_DIR}/tutorial)
--    endif()
--endif()
++
 +install(EXPORT "${PROJECT_NAME}Config"
 +        NAMESPACE libgo::
 +        DESTINATION "${INSTALL_CMAKE_DIR}")
