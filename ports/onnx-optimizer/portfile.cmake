@@ -37,6 +37,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED} # for onnx_opt_cpp2py_export
+    MAYBE_UNUSED_VARIABLES ONNX_USE_PROTOBUF_SHARED_LIBS
 )
 if("pybind11" IN_LIST FEATURES)
     # This target is not in install/export
