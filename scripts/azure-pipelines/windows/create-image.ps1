@@ -137,7 +137,7 @@ function Invoke-ScriptWithPrefix {
       $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
     }
 
-    if (-Not ([string]::IsNullOrWhiteSpace($AddCudnnUrl))) {
+    if (-Not ([string]::IsNullOrWhiteSpace($CudnnUrl))) {
       $script = $script.Replace('# REPLACE WITH $CudnnUrl', "`$CudnnUrl = '$CudnnUrl'")
     }
 
