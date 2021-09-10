@@ -273,8 +273,8 @@
       "port-version": 1
     },
     "azure-c-shared-utility": {
-      "baseline": "2020-12-09",
-      "port-version": 2
+      "baseline": "2021-09-09",
+      "port-version": 0
     },
     "azure-core-cpp": {
       "baseline": "1.2.1",
@@ -285,8 +285,8 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2020-12-09",
-      "port-version": 2
+      "baseline": "2021-09-09",
+      "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
@@ -329,16 +329,16 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2020-12-09",
-      "port-version": 1
+      "baseline": "2021-09-09",
+      "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2020-12-09",
-      "port-version": 1
+      "baseline": "2021-09-09",
+      "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2020-12-09",
-      "port-version": 1
+      "baseline": "2021-09-09",
+      "port-version": 0
     },
     "b64": {
       "baseline": "2.0.0.1",
