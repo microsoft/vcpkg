@@ -1,6 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.15",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [

@@ -1,0 +1,9 @@
+{
+  "name": "casclib",
+  "version-string": "1.50b",
+  "port-version": 2,
+  "description": "An open-source implementation of library for reading CASC storage from Blizzard games since 2014",
+  "dependencies": [
+    "zlib"
+  ]
+}
