@@ -18,7 +18,7 @@ vcpkg_extract_source_archive_ex(
 if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_install_nmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
         OPTIONS_DEBUG
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph/debug"
@@ -27,16 +27,16 @@ if (VCPKG_TARGET_IS_WINDOWS)
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph"
             CFLAGS="${VCPKG_C_FLAGS_RELEASE} "
     )
-    file(INSTALL ${CURRENT_INSTALLED_DIR}/calceph/include/calceph.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-    file(INSTALL ${CURRENT_INSTALLED_DIR}/calceph/lib/libcalceph.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/include/calceph.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
 elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
 
     vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
       --enable-fortran=no
       --enable-thread=yes
@@ -49,8 +49,8 @@ else()# Other build system
     message(FATAL_ERROR "Unsupported build system.")
 endif()
 
-    file(INSTALL ${SOURCE_PATH}/README.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/calceph RENAME readme.rst)
-    file(INSTALL ${SOURCE_PATH}/COPYING_CECILL_B.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/calceph RENAME copyright)
-    file(INSTALL ${SOURCE_PATH}/doc/calceph_c.pdf DESTINATION ${CURRENT_PACKAGES_DIR}/share/calceph RENAME calceph_c.pdf)
+    file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
+    file(INSTALL "${SOURCE_PATH}/COPYING_CECILL_B.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME copyright)
+    file(INSTALL "${SOURCE_PATH}/doc/calceph_c.pdf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME calceph_c.pdf)
 
 message(STATUS "Packaging ${TARGET_TRIPLET} done")
