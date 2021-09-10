@@ -176,6 +176,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ogrtindex
         testepsg
     )
+    # vcpkg_copy_tools removed the bin directories for us so no need to remove again
     vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
   elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
