@@ -1,14 +1,15 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7f364a7..9e0baac 100644
+index ddeb144..49dcf02 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -213,6 +213,9 @@ endif()
- find_package(PythonLibs QUIET)
- if(BUILD_PANGOLIN_GUI AND BUILD_PANGOLIN_VARS AND PYTHONLIBS_FOUND AND NOT _WIN_)
-   set(HAVE_PYTHON 1)
+@@ -299,7 +299,9 @@ if(BUILD_PANGOLIN_PYTHON AND BUILD_PANGOLIN_GUI AND BUILD_PANGOLIN_VARS AND NOT
+ 
+   if(pybind11_FOUND)
+     set(HAVE_PYTHON 1)
+-
 +  if (UNIX)
 +    set(PYTHON_LIBRARY ${PYTHON_LIBRARY} dl util)
 +  endif()
-   list(APPEND HEADERS
-     ${INCDIR}/console/ConsoleInterpreter.h
-     ${INCDIR}/console/ConsoleView.h
+     file(GLOB pypangolin_SRC "python/pypangolin/*.cpp" )
+     file(GLOB pypangolin_HDR "python/pypangolin/*.hpp" )
+     list(APPEND HEADERS

@@ -1,4 +1,0 @@
-Source: pfultz2-linq
-Version: 2019-05-14
-Description: Linq for list comprehension in C++
-Build-Depends: boost-fusion, boost-iterator, boost-mpl, boost-optional, boost-preprocessor, boost-range, boost-static-assert, boost-type-traits, boost-unordered, boost-utility

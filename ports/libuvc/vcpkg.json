@@ -1,0 +1,11 @@
+{
+  "name": "libuvc",
+  "version-string": "2020-11-24",
+  "port-version": 1,
+  "description": "a cross-platform library for USB video devices",
+  "homepage": "https://github.com/libuvc/libuvc",
+  "supports": "linux",
+  "dependencies": [
+    "libusb"
+  ]
+}

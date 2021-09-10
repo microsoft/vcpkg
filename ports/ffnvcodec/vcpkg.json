@@ -1,0 +1,8 @@
+{
+  "name": "ffnvcodec",
+  "version-string": "10.0.26.0",
+  "port-version": 2,
+  "description": "FFmpeg version of Nvidia Codec SDK headers.",
+  "homepage": "https://github.com/FFmpeg/nv-codec-headers",
+  "supports": "(windows | linux) & !uwp"
+}
