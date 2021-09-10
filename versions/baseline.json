@@ -6621,8 +6621,8 @@
       "port-version": 0
     },
     "usrsctp": {
-      "baseline": "0db9691",
-      "port-version": 1
+      "baseline": "0.9.5.0",
+      "port-version": 0
     },
     "utf8h": {
       "baseline": "2020-06-14",
