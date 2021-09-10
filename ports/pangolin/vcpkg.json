@@ -6,12 +6,6 @@
   "supports": "!uwp",
   "dependencies": [
     "eigen3",
-    {
-      "name": "ffmpeg",
-      "features": [
-        "avformat"
-      ]
-    },
     "glew",
     "libjpeg-turbo",
     "libpng",
@@ -25,6 +19,17 @@
     }
   ],
   "features": {
+    "ffmpeg": {
+      "description": "For video decoding and image rescaling",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avformat"
+          ]
+        }
+      ]
+    },
     "examples": {
       "description": "Build Examples"
     },
