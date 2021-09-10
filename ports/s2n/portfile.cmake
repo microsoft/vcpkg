@@ -6,26 +6,26 @@ vcpkg_from_github(
     PATCHES fix-cmake-target-path.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(GLOB SHARED_CMAKE_FILES
-     ${CURRENT_PACKAGES_DIR}/lib/s2n
-     ${CURRENT_PACKAGES_DIR}/debug/lib/s2n)
-file(COPY ${SHARED_CMAKE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+     "${CURRENT_PACKAGES_DIR}/lib/s2n"
+     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n)"
+file(COPY "${SHARED_CMAKE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug
-	${CURRENT_PACKAGES_DIR}/lib/s2n
+    "${CURRENT_PACKAGES_DIR}/debug"
+	"${CURRENT_PACKAGES_DIR}/lib/s2n"
 	)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE	${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

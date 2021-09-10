@@ -8,6 +8,14 @@
     "aws-c-cal",
     "aws-c-common",
     "aws-c-io",
-    "aws-checksums"
+    "aws-checksums",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
