@@ -101,7 +101,7 @@
       "port-version": 0
     },
     "approval-tests-cpp": {
-      "baseline": "10.11.0",
+      "baseline": "10.12.0",
       "port-version": 0
     },
     "apr": {
