@@ -1,0 +1,8 @@
+{
+  "name": "aws-c-common",
+  "version-string": "0.4.56",
+  "port-version": 2,
+  "description": "AWS common library for C",
+  "homepage": "https://github.com/awslabs/aws-c-common",
+  "supports": "!(arm | uwp)"
+}

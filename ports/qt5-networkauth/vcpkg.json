@@ -1,0 +1,12 @@
+{
+  "name": "qt5-networkauth",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 Network Authorization Module",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

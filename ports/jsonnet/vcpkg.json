@@ -1,0 +1,10 @@
+{
+  "name": "jsonnet",
+  "version-string": "0.16.0",
+  "port-version": 3,
+  "description": "Jsonnet - The data templating language",
+  "homepage": "https://github.com/google/jsonnet",
+  "dependencies": [
+    "nlohmann-json"
+  ]
+}
