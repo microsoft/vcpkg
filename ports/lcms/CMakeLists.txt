@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 
 option(CMAKE_VERBOSE_MAKEFILE "Create verbose makefile" OFF)
-option(BUILD_SHARED_LIBS "Create lcms as a shared library" ON)
+option(BUILD_SHARED_LIBS "Create lcms2 as a shared library" ON)
 
 project(little-cms)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-add_library(lcms
+add_library(lcms2
     "${CMAKE_CURRENT_LIST_DIR}/src/cmstypes.c"
     "${CMAKE_CURRENT_LIST_DIR}/src/cmsvirt.c"
     "${CMAKE_CURRENT_LIST_DIR}/src/cmswtpnt.c"
@@ -39,15 +39,33 @@ add_library(lcms
 )
 
 if(BUILD_SHARED_LIBS)
-    target_compile_options(lcms PRIVATE -DCMS_DLL_BUILD)
-    target_compile_options(lcms PUBLIC -DCMS_DLL)
+    target_compile_options(lcms2 PRIVATE -DCMS_DLL_BUILD)
+    target_compile_options(lcms2 PUBLIC -DCMS_DLL)
 endif()
-target_compile_options(lcms PRIVATE -DUNICODE -D_UNICODE)
+target_compile_options(lcms2 PRIVATE -DUNICODE -D_UNICODE)
 
-target_include_directories(lcms PRIVATE "${CMAKE_CURRENT_LIST_DIR}/include")
-set_target_properties(lcms PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/include/lcms2.h;${CMAKE_CURRENT_LIST_DIR}/include/lcms2_plugin.h")
+target_include_directories(lcms2 PRIVATE "${CMAKE_CURRENT_LIST_DIR}/include")
+set_target_properties(lcms2 PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/include/lcms2.h;${CMAKE_CURRENT_LIST_DIR}/include/lcms2_plugin.h")
 
-install(TARGETS lcms
+# Generate pkg-config file
+SET(PACKAGE "lcms2")
+# Read VERSION from file configure
+file(READ "${CMAKE_CURRENT_LIST_DIR}/configure" lcms2_configure)
+string(REGEX MATCH "PACKAGE_VERSION='(([0-9]+)\\.([0-9]+))'" _ ${lcms2_configure})
+set(VERSION "${CMAKE_MATCH_1}")
+SET(prefix "${CMAKE_INSTALL_PREFIX}")
+SET(exec_prefix "\${prefix}")
+SET(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+SET(includedir "\${prefix}/include")
+CONFIGURE_FILE(lcms2.pc.in "${PROJECT_BINARY_DIR}/lcms2.pc" @ONLY)
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    # Add CMAKE_DEBUG_POSTFIX
+    file(READ "${PROJECT_BINARY_DIR}/lcms2.pc" LCMS2_PC)
+    string(REPLACE "-llcms2" "-llcms2${CMAKE_DEBUG_POSTFIX}" LCMS2_PC "${LCMS2_PC}")
+    file(WRITE "${PROJECT_BINARY_DIR}/lcms2.pc" "${LCMS2_PC}") 
+ENDIF()
+
+install(TARGETS lcms2
     EXPORT lcmsConfig
     RUNTIME DESTINATION "bin"
     LIBRARY DESTINATION "lib"
@@ -56,12 +74,14 @@ install(TARGETS lcms
     COMPONENT dev
 )
 
-export(TARGETS lcms
-    NAMESPACE lcms::
+INSTALL(FILES ${PROJECT_BINARY_DIR}/lcms2.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
+export(TARGETS lcms2
+    NAMESPACE lcms2::
     FILE "share/lcms/lcmsConfig.cmake"
 )
 
 install(EXPORT lcmsConfig
     DESTINATION "share/lcms"
-    NAMESPACE lcms::
+    NAMESPACE lcms2::
 )

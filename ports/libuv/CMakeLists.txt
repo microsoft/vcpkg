@@ -32,6 +32,7 @@ file(GLOB UV_SOURCES_LINUX
     src/unix/procfs-exepath.c
     src/unix/sysinfo-loadavg.c
     src/unix/sysinfo-memory.c
+    src/unix/epoll.c
 )
 file(GLOB UV_SOURCES_DARWIN
     src/unix/proctitle.c
