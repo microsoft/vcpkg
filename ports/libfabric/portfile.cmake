@@ -27,7 +27,7 @@ vcpkg_install_msbuild(
     ALLOW_ROOT_INCLUDES
     OPTIONS
       /p:SolutionDir=${SOURCE_PATH}
-      /p:AdditionalIncludeDirectories=${CURRENT_INSTALLED_DIR}/include
+      /p:AdditionalIncludeDirectories="${CURRENT_INSTALLED_DIR}/include"
 )
 
 #Move includes under subdirectory to avoid colisions with other libraries
