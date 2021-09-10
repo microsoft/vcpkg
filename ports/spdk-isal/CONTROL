@@ -1,4 +1,0 @@
-Source: spdk-isal
-Version: 20181006
-Description: SPDK mirror of isa-l. Intel(R) Intelligent Storage Acceleration Library
-Supports: x64
