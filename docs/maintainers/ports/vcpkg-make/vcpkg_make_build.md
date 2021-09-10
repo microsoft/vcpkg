@@ -10,39 +10,46 @@ vcpkg_make_build(
     [ADD_BIN_TO_PATH]
     [ENABLE_INSTALL]
     [MAKEFILE <makefileName>]
+    [SUBPATH <makefilepath>]
+    [DISABLE_PARALLEL]
     [LOGFILE_BASE <logfilebase>]
 )
 ```
 
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
-be passed.
+`vcpkg_make_build` builds an already-configured make project.
+You can use the alias [`vcpkg_make_install()`] function
+if the Makefile build system supports the `install` TARGET,
+and this is something we recommend doing whenever possible.
+Otherwise, you can directly call `vcpkg_make_build` without `ENABLE_INSTALL`.
 
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
+By default, `vcpkg_make_build` will call the `Makefile` in the build directory
+and build all the targets.
 
-### ENABLE_INSTALL
-IF the port supports the install target use vcpkgl_make_instal() instead of vcpkg_make_build()
+If the `Makefile` in another path, please pass the absolute path to `SUBPATH`.
+This path is based on the build path.
+If the makefile comes from another path or the name is not `Makefile`, please
+pass `MAKEFILE` and set the absolute path.
+Please pass `BUILD_TARGET` to select the needed targets.
 
-### MAKEFILE
-Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_make_configure()`
+When `ENABLE_INSTALL` is enabled, `vcpkg_make_build` will install all targets
+unless `INSTALL_TARGET` is declared as some specific targets.
 
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). Defaults to 'all'.
+`LOGFILE_BASE` is used to set the base of the logfile names;
+by default, this is `build`, and thus the logfiles end up being something like
+`build-x86-windows-dbg.log`; if you use `vcpkg_cmake_install`,
+this is set to `install`, so you'll get log names like `install-x86-windows-dbg.log`.
 
-### INSTALL_TARGET
-The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
+For build systems that are buggy when run in parallel,
+using `DISABLE_PARALLEL` will run the build with only one job.
 
-### DISABLE_PARALLEL
-The underlying buildsystem will be instructed to not parallelize
-
-### SUBPATH
-Additional subdir to invoke make in. Useful if only parts of a port should be built. 
+Finally, `ADD_BIN_TO_PATH` adds the appropriate (either release or debug)
+`bin/` directories to the path during the build,
+such that executables run during the build will be able to access those DLLs.
 
 ## Notes:
 This command should be preceded by a call to [`vcpkg_make_configure()`](vcpkg_make_configure.md).
-You can use the alias [`vcpkgl_make_instal()`](vcpkgl_make_instal.md) function if your makefile supports the
-"install" target
+You can use the alias [`vcpkgl_make_install()`](vcpkgl_make_install.md) function if your makefile
+supports the "install" target.
 
 ## Examples
 
