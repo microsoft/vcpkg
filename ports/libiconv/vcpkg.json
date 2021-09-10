@@ -1,7 +1,13 @@
 {
   "name": "libiconv",
   "version": "1.16",
-  "port-version": 11,
+  "port-version": 12,
   "description": "GNU Unicode text conversion",
-  "homepage": "https://www.gnu.org/software/libiconv/"
+  "homepage": "https://www.gnu.org/software/libiconv/",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
 }

@@ -309,9 +309,8 @@ else()
         list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
@@ -340,7 +339,7 @@ else()
         endif()
     endforeach()
 
-    vcpkg_install_make(MAKEFILE GNUmakefile)
+    vcpkg_make_install(MAKEFILE GNUmakefile)
     
     file(REMOVE_RECURSE
          "${CURRENT_PACKAGES_DIR}/lib/gdalplugins"

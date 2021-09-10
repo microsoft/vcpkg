@@ -1,7 +1,7 @@
 {
   "name": "hunspell",
   "version": "1.7.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "The most popular spellchecking library.",
   "homepage": "https://github.com/hunspell/hunspell",
   "supports": "!((arm | uwp) & windows)",
@@ -13,7 +13,11 @@
         "tools"
       ]
     },
-    "libiconv"
+    "libiconv",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ],
   "features": {
     "tools": {

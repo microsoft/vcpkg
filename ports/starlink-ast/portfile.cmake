@@ -25,7 +25,7 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-pthreads")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     USE_WRAPPERS
     DETERMINE_BUILD_TRIPLET
@@ -35,7 +35,7 @@ vcpkg_configure_make(
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")

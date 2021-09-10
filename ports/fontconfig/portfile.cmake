@@ -23,8 +23,7 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
     COPY_SOURCE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -44,7 +43,7 @@ vcpkg_configure_make(
     ADDITIONAL_MSYS_PACKAGES xz findutils gettext gettext-devel  # for autopoint
 )
 
-vcpkg_install_make(ADD_BIN_TO_PATH)
+vcpkg_make_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 #Fix missing libintl static dependency
 if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)

@@ -61,15 +61,13 @@ else()
         file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
     endif()
     vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
-        AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES gzip
     )
     #install-pkgconfDATA:
-    vcpkg_build_make(BUILD_TARGET dist LOGFILE_ROOT build-dist)
-    vcpkg_install_make()
+    vcpkg_make_build(BUILD_TARGET dist LOGFILE_ROOT build-dist)
+    vcpkg_make_install()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
