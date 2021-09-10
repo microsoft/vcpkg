@@ -3113,7 +3113,7 @@
       "port-version": 7
     },
     "libarchive": {
-      "baseline": "3.5.1",
+      "baseline": "3.5.2",
       "port-version": 0
     },
     "libass": {

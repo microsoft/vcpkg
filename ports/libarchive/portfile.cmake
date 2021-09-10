@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF 227a4b9719a7fbeba6ba46e377ff7d953f405cd5      #v3.5.1
-    SHA512 65adce56266a72ac25e3e36253ad66e4af4ba319a85d399362417a91e395adbc86caa39637a98c33af3a4147b03ca8836b647518b898346a5243f8cfc224ef32
+    REF 1b2c437b99b361c7692538fa373e99955e9b93ae      #v3.5.2
+    SHA512 df527dd333b01ed85f07831ba0bd4b1d0b5384fe12cfa53474ad39c04509105a3c8574a2d21a430e3584a931c8f6ae923bca95df83945f0c593c1ffaed3f62da
     HEAD_REF master
     PATCHES 
         disable-warnings.patch
