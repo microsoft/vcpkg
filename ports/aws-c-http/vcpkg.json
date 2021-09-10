@@ -8,6 +8,14 @@
     "aws-c-cal",
     "aws-c-common",
     "aws-c-compression",
-    "aws-c-io"
+    "aws-c-io",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

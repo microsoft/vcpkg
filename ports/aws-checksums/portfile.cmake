@@ -13,27 +13,27 @@ else()
     set(STATIC_CRT_LNK OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -DSTATIC_CRT=${STATIC_CRT_LNK}
-        -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
+        "-DSTATIC_CRT=${STATIC_CRT_LNK}"
+        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-checksums/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-checksums/cmake)
 
 file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/aws-checksums
-	${CURRENT_PACKAGES_DIR}/lib/aws-checksums
+	"${CURRENT_PACKAGES_DIR}/debug/include"
+	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-checksums"
+	"${CURRENT_PACKAGES_DIR}/lib/aws-checksums"
 )
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

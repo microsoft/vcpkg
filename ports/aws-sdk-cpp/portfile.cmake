@@ -43,21 +43,21 @@ include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
 foreach(TARGET IN LISTS BUILD_ONLY)
     message(STATUS "Building ${TARGET}")
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         PREFER_NINJA
         OPTIONS
             ${EXTRA_ARGS}
-            -DENABLE_UNITY_BUILD=ON
-            -DENABLE_TESTING=OFF
-            -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
-            -DBUILD_ONLY=${TARGET}
-            -DBUILD_DEPS=OFF
-            -DCMAKE_INSTALL_RPATH=${rpath}
-            -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
+            "-DENABLE_UNITY_BUILD=ON"
+            "-DENABLE_TESTING=OFF"
+            "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
+            "-DBUILD_ONLY=${TARGET}"
+            "-DBUILD_DEPS=OFF"
+            "-DCMAKE_INSTALL_RPATH=${rpath}"
+            "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
     )
-    vcpkg_install_cmake()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+    vcpkg_cmake_install()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
     vcpkg_copy_pdbs()
 endforeach()
 
@@ -79,12 +79,12 @@ foreach(AWS_CONFIG IN LISTS AWS_CONFIGS)
 endforeach()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/nuget
-    ${CURRENT_PACKAGES_DIR}/debug/nuget
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/nuget"
+    "${CURRENT_PACKAGES_DIR}/debug/nuget"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -105,4 +105,4 @@ endif()
 configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

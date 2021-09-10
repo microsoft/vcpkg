@@ -9,18 +9,18 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -DSTATIC_CRT=${STATIC_CRT}
-        -DBUILD_DEPS=OFF
-        -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common # use extra cmake files
+        "-DSTATIC_CRT=${STATIC_CRT}"
+        "-DBUILD_DEPS=OFF"
+        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-crt-cpp/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-crt-cpp/cmake)
 
 vcpkg_copy_tools(
     TOOL_NAMES elasticurl_cpp
@@ -29,20 +29,20 @@ vcpkg_copy_tools(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 
-        ${CURRENT_PACKAGES_DIR}/bin 
-        ${CURRENT_PACKAGES_DIR}/debug/bin
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
 
 file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/aws-crt-cpp
-	${CURRENT_PACKAGES_DIR}/lib/aws-crt-cpp
+	"${CURRENT_PACKAGES_DIR}/debug/include"
+	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-crt-cpp"
+	"${CURRENT_PACKAGES_DIR}/lib/aws-crt-cpp"
 )
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
