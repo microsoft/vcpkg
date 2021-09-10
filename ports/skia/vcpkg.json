@@ -9,9 +9,6 @@
   ],
   "homepage": "https://skia.org",
   "supports": "x64 & (osx | windows)",
-  "default-features": [
-    "gl"
-  ],
   "dependencies": [
     "expat",
     {
@@ -34,21 +31,24 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "gl"
+  ],
   "features": {
+    "dawn": {
+      "description": "dawn support for skia"
+    },
+    "direct3d": {
+      "description": "Direct3D support for skia"
+    },
+    "gl": {
+      "description": "OpenGL support for skia"
+    },
     "metal": {
       "description": "Metal support for skia"
     },
     "vulkan": {
       "description": "Vulkan support for skia"
-    },
-    "direct3d": {
-      "description": "Direct3D support for skia"
-    },
-    "dawn": {
-      "description": "dawn support for skia"
-    },
-    "gl": {
-      "description": "OpenGL support for skia"
     }
   }
 }
