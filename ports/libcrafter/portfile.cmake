@@ -1,15 +1,17 @@
+vcpkg_fail_port_install(ON_TARGET "windows")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pellegre/libcrafter
-    REF version-0.3
-    SHA512 7c396ba942b304dddfaa569adb44697f75568d3ef2ed48dda758e281f3b7c172439309033bbf5498069a4a61a952f93e41af99b129ce874ce76b5ec08da58116
+    REF 86f81f101b5e3051ed04563b3ad3dd7a823afb21 #version-1.0
+    SHA512 bd0eac06896df63f0fff0ed3cf7ca5176e56615476c8134bd26f035692ab9e583f58f1f57daa7673771a710d6921c0c6a6473ab181982ad57727584f2cde56d0
     HEAD_REF master
     PATCHES fix-build-error.patch
 )
 
 vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libcrafter
     OPTIONS
         "--with-libpcap=${CURRENT_INSTALLED_DIR}"
@@ -17,9 +19,9 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/libcrafter/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/libcrafter/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
