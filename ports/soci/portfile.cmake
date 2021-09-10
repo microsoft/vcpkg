@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency-libmysql.patch
         export-include-dirs.patch
+        fix-mysql-feature-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -37,15 +38,10 @@ vcpkg_cmake_configure(
     OPTIONS
         -DSOCI_TESTS=OFF
         -DSOCI_CXX11=ON
-        -DSOCI_LIBDIR:STRING=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
-        -DLIBDIR:STRING=lib
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
         ${MYSQL_OPT}
-        -DWITH_ORACLE=OFF
-        -DWITH_FIREBIRD=OFF
-        -DWITH_DB2=OFF
 )
 
 vcpkg_cmake_install()
@@ -53,7 +49,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SOCI)
 
 if ("mysql" IN_LIST FEATURES)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake"
         "# Create imported target SOCI::soci_mysql"
         "\ninclude(CMakeFindDependencyMacro)\nfind_dependency(libmysql)\n# Create imported target SOCI::soci_mysql"
     )
