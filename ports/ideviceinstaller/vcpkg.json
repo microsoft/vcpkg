@@ -1,0 +1,10 @@
+{
+  "name": "ideviceinstaller",
+  "version-string": "1.1.2.23",
+  "port-version": 2,
+  "description": "Manage apps of iOS devices",
+  "dependencies": [
+    "libimobiledevice",
+    "libzip"
+  ]
+}

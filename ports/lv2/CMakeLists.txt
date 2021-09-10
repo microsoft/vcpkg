@@ -31,5 +31,5 @@ endforeach()
 install(
     EXPORT lv2-config
     NAMESPACE lv2::
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/lv2"
+    DESTINATION share/lv2
 )
