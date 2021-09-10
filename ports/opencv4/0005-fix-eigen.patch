@@ -1,5 +1,3 @@
-diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
-index 3753084..0aeb31a 100644
 --- a/cmake/OpenCVFindLibsPerf.cmake
 +++ b/cmake/OpenCVFindLibsPerf.cmake
 @@ -55,7 +55,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)

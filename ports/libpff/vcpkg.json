@@ -1,0 +1,9 @@
+{
+  "name": "libpff",
+  "version-string": "2018-07-14",
+  "port-version": 2,
+  "description": "Library and tools to access the Personal Folder File (PFF) and the Offline Folder File (OFF) format.",
+  "dependencies": [
+    "zlib"
+  ]
+}
