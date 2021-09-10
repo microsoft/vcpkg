@@ -1,0 +1,7 @@
+{
+  "name": "toml11",
+  "version-string": "3.5.0",
+  "port-version": 2,
+  "description": "A C++11 header-only toml parser/encoder depending only on C++ standard library.",
+  "homepage": "https://github.com/ToruNiina/toml11"
+}
