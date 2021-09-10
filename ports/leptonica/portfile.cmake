@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-cmakelists.patch
         find-dependency.patch
         fix-find-libwebp.patch
+        Modify-include-dir.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
@@ -16,6 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSW_BUILD=OFF
+        -DCPPAN_BUILD=OFF
         -DSTATIC=${STATIC}
         -DCMAKE_REQUIRED_INCLUDES=${CURRENT_INSTALLED_DIR}/include # for check_include_file()
     MAYBE_UNUSED_VARIABLES
@@ -23,6 +25,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
