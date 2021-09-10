@@ -6,7 +6,6 @@ Configure a Makefile buildsystem.
 ```cmake
 vcpkg_make_configure(
     SOURCE_PATH <${source_path}>
-    [AUTOCONFIG]
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
@@ -163,7 +162,7 @@ macro(z_vcpkg_backup_env_variable envvar)
 endmacro()
 
 macro(z_vcpkg_backup_env_variables)
-    foreach(_var ${ARGV})
+    foreach(_var IN LISTS ${ARGV})
         z_vcpkg_backup_env_variable(${_var})
     endforeach()
 endmacro()
@@ -177,7 +176,7 @@ macro(z_vcpkg_restore_env_variable envvar)
 endmacro()
 
 macro(z_vcpkg_restore_env_variables)
-    foreach(_var ${ARGV})
+    foreach(_var IN LISTS ${ARGV})
         z_vcpkg_restore_env_variable(${_var})
     endforeach()
 endmacro()
@@ -217,37 +216,14 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
 endmacro()
 
-macro(z_vcpkg_convert_path_to_unix pathvar)
-    if (NOT cygpath)
-        find_program(cygpath NAMES cygpath PATHS "${MSYS_ROOT}/usr/bin" REQUIRED)
-    endif()
-    foreach (curr_option IN LISTS ${pathvar})
-        debug_message("curr_option: ${curr_option}")
-        string(REGEX REPLACE ".*=(.+)" "\\1" matched_path "${curr_option}")
-        debug_message("matched_path: ${matched_path}")
-        if (matched_path AND NOT (matched_path STREQUAL curr_option))
-            execute_process(
-                COMMAND "${cygpath}" "${matched_path}"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-                OUTPUT_VARIABLE out_vars
-            )
-            string(REGEX MATCH "[^\n]+" out_vars "${out_vars}")
-            debug_message("Converted path: ${out_vars}")
-            debug_message("replace \"${matched_path}\" with \"${out_vars}\" in \"${${pathvar}}\"")
-            list(TRANSFORM ${pathvar} REPLACE "${matched_path}" "${out_vars}")
-            debug_message("fixed_values: ${fixed_values}")
-        endif()
-    endforeach()
-endmacro()
-
 function(vcpkg_make_configure)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
-    
+
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
@@ -259,16 +235,14 @@ function(vcpkg_make_configure)
 
     set(requires_autogen FALSE) # use autogen.sh
     set(requires_autoconfig FALSE) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac") # remove configure; rerun autoconf
-        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
-            set(requires_autoconfig TRUE)
-            file(REMOVE "${src_dir}/configure") # remove possible autodated configure scripts
-            set(arg_AUTOCONFIG ON)
+    if(EXISTS "${src_dir}/configure.ac") # Run autoconf by default if configure.ac exist
+        if(VCPKG_MAINTAINER_SKIP_AUTOCONFIG AND NOT EXISTS "${src_dir}/configure")
+            message(FATAL_ERROR "file `configure` not found, please do not pass VCPKG_MAINTAINER_SKIP_AUTOCONFIG")
         endif()
-    elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autgen required
-    elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
+        # remove configure; rerun autoconf
         set(requires_autoconfig TRUE)
-        set(arg_AUTOCONFIG ON)
+        file(REMOVE "${src_dir}/configure") # remove possible autodated configure scripts
+    elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/autogen.sh") # Run autogen
         set(requires_autogen TRUE)
     else()
@@ -279,7 +253,7 @@ function(vcpkg_make_configure)
     debug_message("requires_autoconfig:${requires_autoconfig}")
 
     if(CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe") #only applies to windows (clang-)cl and lib
-        if(arg_AUTOCONFIG)
+        if(requires_autoconfig)
             set(arg_USE_WRAPPERS TRUE)
         else()
             # Keep the setting from portfiles.
@@ -319,13 +293,8 @@ function(vcpkg_make_configure)
         if(CMAKE_HOST_WIN32)
             list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
-            message(STATUS "Checking and converting options...")
-            z_vcpkg_convert_path_to_unix(arg_OPTIONS)
-            z_vcpkg_convert_path_to_unix(arg_OPTIONS_DEBUG)
-            z_vcpkg_convert_path_to_unix(arg_OPTIONS_RELEASE)
-            message(STATUS "Checking and converting done...")
         endif()
-        if (arg_AUTOCONFIG AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT arg_BUILD_TRIPLET)
+        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT arg_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
             # --build: the machine you are building on
@@ -480,7 +449,7 @@ function(vcpkg_make_configure)
 
     # macOS - cross-compiling support
     if(VCPKG_TARGET_IS_OSX)
-        if (arg_AUTOCONFIG AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
+        if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
             # --build: the machine you are building on
@@ -639,7 +608,7 @@ function(vcpkg_make_configure)
     endif()
 
     # Run autoconf if necessary
-    if (arg_AUTOCONFIG OR requires_autoconfig)
+    if (requires_autoconfig)
         find_program(AUTORECONF autoreconf)
         if(NOT AUTORECONF)
             message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
@@ -868,7 +837,7 @@ function(vcpkg_make_configure)
             set(ENV{PATH} "${path_backup}")
         endif()
         # Restore environment (config dependent)
-        foreach(ENV_VAR ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
+        foreach(ENV_VAR IN LISTS ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
             if(backup_config_${ENV_VAR})
                 set(ENV{${ENV_VAR}} "${backup_config_${ENV_VAR}}")
             else()
