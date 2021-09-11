@@ -5,19 +5,19 @@ vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARG
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO civetweb/civetweb
-    REF 8e243456965c9be5212cb96519da69cd54550e3d # v1.13
-    SHA512 6f9daf404975697c6b7a56cc71006aaf14442acf545e483d8a7b845f255d5e5d6e08194fe3350a667e0b737b6924c9d39b025b587af27e7f12cd7b64f314eb70
+    REF eefb26f82b233268fc98577d265352720d477ba4 # v1.15
+    SHA512 5ce962e31b3c07b7110cbc645458dba9c0e26e693fbe3b4a7ffe8a28563827049a22fc5596a911fbcea4d88a9adbef3f82000ff61027ff4387f40e4a4045c26d
     HEAD_REF master
-    PATCHES "add-option-to-disable-debug-tools.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    ssl CIVETWEB_ENABLE_SSL
+    FEATURES
+        ssl CIVETWEB_ENABLE_SSL
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    # PREFER_NINJA - See https://github.com/civetweb/civetweb/issues/1024
     OPTIONS
         -DCIVETWEB_BUILD_TESTING=OFF
         -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
@@ -35,6 +35,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/civetweb)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

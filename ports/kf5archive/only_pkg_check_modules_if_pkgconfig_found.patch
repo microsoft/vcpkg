@@ -1,0 +1,27 @@
+From 9ab5f2bfbe59038b0d0b6ca7f1b22d1c9229c67e Mon Sep 17 00:00:00 2001
+From: Dawid Wrobel <me@dawidwrobel.com>
+Date: Fri, 30 Jul 2021 10:23:48 +0000
+Subject: [PATCH] Only pkg_check_modules() if PkgConfig is found
+
+---
+ CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bab7661..2cdda70 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,7 +45,9 @@ set_package_properties(LibLZMA PROPERTIES
+ )
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++if (PkgConfig_FOUND)
++    pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++endif()
+ add_feature_info(LibZstd LibZstd_FOUND
+                 "Support for zstd compressed files and data streams"
+ )
+-- 
+GitLab
+

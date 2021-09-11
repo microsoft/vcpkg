@@ -1,0 +1,37 @@
+{
+  "name": "crashrpt",
+  "version": "1.4.3",
+  "port-version": 1,
+  "description": "A crash reporting system for Windows applications",
+  "homepage": "http://crashrpt.sourceforge.net/",
+  "dependencies": [
+    "dbghelp",
+    "libjpeg-turbo",
+    "libogg",
+    "libpng",
+    "libtheora",
+    "tinyxml",
+    "wtl",
+    "zlib"
+  ],
+  "features": {
+    "demos": {
+      "description": "Demo applications for CrashRptProbe"
+    },
+    "probe": {
+      "description": "The CrashRptProbe library"
+    },
+    "tests": {
+      "description": "Test application for crashrpt",
+      "dependencies": [
+        {
+          "name": "crashrpt",
+          "default-features": false,
+          "features": [
+            "probe"
+          ]
+        }
+      ]
+    }
+  }
+}

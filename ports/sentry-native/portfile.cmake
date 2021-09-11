@@ -3,9 +3,9 @@ if(NOT VCPKG_TARGET_IS_OSX)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.11/sentry-native.zip"
-    FILENAME "sentry-native-0.4.11.zip"
-    SHA512 3d66295526c0cd068a0b7c2180dbeae7594775b3eb3199a74da7efe634cbc19cff6eba8d44b1479037c43c6eb58a9ba4fdaf8da6995767f27c585a0d42582c37
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.12/sentry-native.zip"
+    FILENAME "sentry-native-0.4.12.zip"
+    SHA512 15da4407ed5e2c8d5e56e497ccc6006b29235aef6b3a81e034c93443e20a7cfdf95d55e31b88e552c55e824eb15d6f7fafe988c453a5a6f36fe45136d7268b19
 )
 
 vcpkg_extract_source_archive_ex(
@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
-        fix-libcurl.patch
+        use-zlib-target.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -30,22 +30,22 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DSENTRY_BACKEND=${SENTRY_BACKEND}
+        -DCRASHPAD_ZLIB_SYSTEM=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
