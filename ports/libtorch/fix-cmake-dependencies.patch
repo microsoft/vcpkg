@@ -33,8 +33,8 @@ index 24d3c9b..8f9d98f 100644
 +# we will import vcpkg ports instead of CAFFE2_THIRD_PARTY_ROOT
 +# include(cmake/Dependencies.cmake)
 +find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-+find_package(pybind11 CONFIG REQUIRED)
-+list(APPEND Caffe2_DEPENDENCY_LIBS Python3::Python pybind11::pybind11)
++# find_package(pybind11 CONFIG REQUIRED)
++# list(APPEND Caffe2_DEPENDENCY_LIBS Python3::Python pybind11::pybind11)
 +if(USE_NUMPY)
 +  find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
 +  list(APPEND Caffe2_DEPENDENCY_LIBS Python3::NumPy)

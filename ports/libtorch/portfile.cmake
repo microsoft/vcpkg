@@ -1,3 +1,4 @@
+vcpkg_check_linkage(ONLY_DTNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -80,8 +81,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_build(TARGET __aten_op_header_gen) # explicit codegen
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Torch CONFIG_PATH "share/cmake/Torch")
-vcpkg_cmake_config_fixup(PACKAGE_NAME ATen  CONFIG_PATH "share/cmake/ATen")
+vcpkg_cmake_config_fixup(PACKAGE_NAME Torch CONFIG_PATH "share/cmake/Caffe2")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 
