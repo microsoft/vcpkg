@@ -16,6 +16,8 @@ set(${PORT}_PATCHES
         dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
+        fix_egl.patch # Maybe the angle library names on windows should be discussed
+        fix_qthread_max.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
