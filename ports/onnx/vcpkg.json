@@ -1,17 +1,15 @@
 {
   "name": "onnx",
   "version-semver": "1.9.0",
+  "port-version": 1,
   "description": "Open standard for machine learning interoperability",
   "homepage": "https://onnx.ai",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "protobuf",
     {
       "name": "protobuf",
-      "host": true
-    },
-    {
-      "name": "python3",
       "host": true
     },
     {
@@ -24,11 +22,11 @@
     }
   ],
   "features": {
+    "foxi": {
+      "description": "Build ONNXIFI with Facebook Extension "
+    },
     "pybind11": {
-      "description": "Build Python binaries",
-      "dependencies": [
-        "pybind11"
-      ]
+      "description": "Build Python binaries"
     }
   }
 }
