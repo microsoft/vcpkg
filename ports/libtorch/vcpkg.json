@@ -1,6 +1,6 @@
 {
   "name": "libtorch",
-  "version-string": "v1.8.1",
+  "version-semver": "1.8.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "supports": "x64 & (windows | osx | linux)",
@@ -9,7 +9,6 @@
     "eigen3",
     "fbgemm",
     "fmt",
-    "fp16",
     "gflags",
     "glog",
     "lmdb",
@@ -20,11 +19,11 @@
       ]
     },
     "onnx-optimizer",
+    "protobuf",
     {
       "name": "protobuf",
       "host": true
     },
-    "protobuf",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -33,8 +32,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zstd"
+    }
   ],
   "default-features": [
     "xnnpack"
@@ -49,7 +47,8 @@
           "name": "tensorpipe",
           "features": [
             "cuda"
-          ]
+          ],
+          "platform": "linux | osx"
         }
       ]
     },
