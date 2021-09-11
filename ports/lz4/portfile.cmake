@@ -30,6 +30,10 @@ foreach(FILE lz4.h lz4frame.h)
 endforeach()
 
 vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lz4.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lz4.pc" " -llz4" " -llz4d")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
