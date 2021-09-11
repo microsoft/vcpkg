@@ -58,7 +58,6 @@ vcpkg_cmake_configure(
         -DPython3_EXECUTABLE=${PYTHON3} -DPYTHON_EXECUTABLE=${PYTHON3}
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
         -DINTERN_BUILD_MOBILE=OFF
-        -DINTERN_DISABLE_ONNX=OFF -DONNX_ML=ON
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
@@ -66,7 +65,7 @@ vcpkg_cmake_configure(
         -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX}
         -DUSE_METAL=${VCPKG_TARGET_IS_OSX}
         -DBLAS=Eigen
-        -DUSE_MKL=OFF -DUSE_MKLDNN=OFF
+        -DUSE_MKLDNN=OFF
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON
         -DUSE_LMDB=ON
@@ -78,9 +77,14 @@ vcpkg_cmake_configure(
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
 )
-vcpkg_cmake_build(TARGET __aten_op_header_gen)
+vcpkg_cmake_build(TARGET __aten_op_header_gen) # explicit codegen
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Torch CONFIG_PATH "share/cmake/Torch")
+vcpkg_cmake_config_fixup(PACKAGE_NAME ATen  CONFIG_PATH "share/cmake/ATen")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
