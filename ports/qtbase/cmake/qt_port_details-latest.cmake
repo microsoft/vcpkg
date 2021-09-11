@@ -106,7 +106,7 @@ if(QT_UPDATE_VERSION)
             set(_current_control "${VCPKG_ROOT_DIR}/ports/${_current_qt_port}/vcpkg.json")
             file(READ "${_current_control}" _control_contents)
             string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
-            string(REGEX REPLACE "\"port-version": [^\n]+\n" "" _control_contents "${_control_contents}")
+            string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
             file(WRITE "${_current_control}" "${_control_contents}")
             #need to run a vcpkg format-manifest --all after update once 
         endforeach()
