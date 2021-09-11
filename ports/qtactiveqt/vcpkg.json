@@ -1,6 +1,6 @@
 {
   "name": "qtactiveqt",
-  "version-semver": "6.1.2",
+  "version-semver": "6.2.0-beta4",
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
   "supports": "windows",
@@ -25,7 +25,7 @@
       "description": "Build QML imports",
       "dependencies": [
         {
-          "name": "qtquickcontrols2",
+          "name": "qtdeclarative",
           "default-features": false
         }
       ]

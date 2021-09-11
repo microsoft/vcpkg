@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version-semver": "6.1.2",
+  "version-semver": "6.2.0-beta4",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -76,7 +76,6 @@
       "name": "qtquick3d",
       "default-features": false
     },
-    "qtquickcontrols2",
     "qtquicktimeline",
     {
       "name": "qtremoteobjects",

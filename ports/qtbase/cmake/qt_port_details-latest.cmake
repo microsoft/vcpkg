@@ -1,6 +1,9 @@
-set(QT_VERSION 6.2.0-beta3)
+set(QT_VERSION 6.2.0-beta4)
+
 if(PORT MATCHES "qtquickcontrols2")
-    set(QT_VERSION 6.2.0-beta2)
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    message(STATUS "qtquickcontrols2 is integrated in qtdeclarative since Qt 6.2. Please remove your dependency on it!")
+    return()
 endif()
 set(QT_GIT_TAG v${QT_VERSION})
 
@@ -10,9 +13,6 @@ if(QT_UPDATE_VERSION)
     endfunction()
 endif()
 set(QT_IS_LATEST 1)
-# List of added an removed modules https://doc-snapshots.qt.io/qt6-dev/whatsnew60.html#changes-to-supported-modules
-#https://wiki.qt.io/Get_the_Source
-#TODO:qtknx?
 
 set(QT_PORTS qt
              qtbase 
@@ -31,7 +31,7 @@ set(QT_PORTS qt
              qtimageformats
              qtmqtt
              qtnetworkauth
-             qtquickcontrols2
+             # qtquickcontrols2 -> moved into qtdeclarative
              ## New in 6.1
              qtactiveqt
              qtdatavis3d
@@ -58,43 +58,43 @@ foreach(_port IN LISTS QT_PORTS)
     set(${_port}_TAG ${QT_GIT_TAG})
 endforeach()
 
-set(qtbase_REF             a3d8d79fbdb776f8848cba2d721ee89c28cf2e50)
-set(qttools_REF            6ec6f55bba2f3b86e71a0b63113ba4c036539eee)
-set(qtdeclarative_REF      9c856186498a0e34f0179bd03b7972e57a76775d)
-set(qtsvg_REF              5a93bf0d0781eeb04fec1635ed5051fcf750214b)
-set(qt5compat_REF          920ae1ef2ffbbedb19e3e419056ac3a461f0a632)
-set(qtshadertools_REF      49ccc41b8a55de07ba5fe033e19a706274f10fff)
-set(qtquicktimeline_REF    62e4533c91a9e829af63913d11c08fae7b974b36)
-set(qtquick3d_REF          2301f81eedd7a9156f4e48f993a62eaed77eae9b)
-set(qttranslations_REF     15fc73facf33171a143441612906514e437fd52f)
-set(qtwayland_REF          e5a80e612960eb221b95bf69d2c79355a3e62389)
-set(qtdoc_REF              71642a96f5dc93c423471480adbdbfc672752017)
-set(qtimageformats_REF     e1e54e9432bc8cee544323b843f2693298532e6d)
-set(qtmqtt_REF             e4ad030f694892130b1b44ca86b97f3be139a176)
-set(qtquickcontrols2_REF   a71fa9356119b0d56db3ae61ee52772f6f6016f0)
-set(qtnetworkauth_REF      7f77f8a28de9bd45854b2e49b8438579ec489da0)
-set(qtcoap_REF             3ec6ce75d29964a74606813f2b9a5be22c2877be)
-set(qtopcua_REF            b440ac640b698b84b232e4e2f7c7722561342797)
+set(qtbase_REF             4b25d23b1ed9e5cbb6a5ee921280a6f1fac72c96)
+set(qtshadertools_REF      d3f9dc3b3f805ace0c9384676120d0fb87d1a164)
+set(qtdeclarative_REF      95f90346ff374bd88f913baa73f2854a1054b7ff)
+set(qt5compat_REF          a43bb50a4155e651e31888e84063dd280fb83976)
+set(qttools_REF            d589b7a7c9a907e37516b7694ef5f716dbaf287b) # Additional refs in portfile due to submodule
+set(qtsvg_REF              554292199c2fd327af5e21038589262518b94ec7)
+set(qtquicktimeline_REF    9ad86f82d5ac872b0faa0e0a29c55ba1b8f40237)
+set(qtquick3d_REF          0d953fba1a7f7a5176c3fc7ee46525333e860870)
+set(qttranslations_REF     8857ab35c102944b9d37ae2a5463e50bc148639d)
+set(qtwayland_REF          527874ea095a2c5a2d4aa207b2860d116009ff75)
+set(qtdoc_REF              0baf066a924142cf944bb116ef3b9acbdaa7c19c)
+set(qtimageformats_REF     483584123f1ee04b9df64de9877923444f7f4b31)
+set(qtmqtt_REF             f5d9a96b37ce0998ef5897606c28cc0ce706d896)
+# set(qtquickcontrols2_REF   0) # Moved into qtdeclarative since Qt 6.2
+set(qtnetworkauth_REF      71dc1ba6d4ac1424ec43465ce8f4e0fa2f83305d)
+set(qtcoap_REF             00b300434e91af445961b619d587709ebbbda5ea)
+set(qtopcua_REF            6925bf5e7faefba261164c07094ec4a8f4680c9a)
 ### New in 6.1
-set(qtactiveqt_REF         850ef726ddff3b344409a032cac605d1b3a02837)
-set(qtdatavis3d_REF        3e628a64ec2e8de7979a2a0265b4792fdc97a5d0)
+set(qtactiveqt_REF         6b7daa59f951343c88daa1f923d60e26006467c7)
+set(qtdatavis3d_REF        a400e5232e9b03a90949c2ce14c2446fd5d86512)
 #set(qtdeviceutils_REF      0) #missing tag
-set(qtlottie_REF           fafcc1bbcf624a89f15537930af3dd2c8ac1fa5e)
-set(qtscxml_REF            d8afa42031e678119b5731c9c8c5906452de22df)
-set(qtvirtualkeyboard_REF  a863b7e1ff1a6dd6fd6f55a53b80f0f83c593ccd)
-set(qtcharts_REF           da2bae114d7cac011965523767d9916749b03f25)
+set(qtlottie_REF           505bbdb2909e5c96688b88169f3cbb4b2aae9854)
+set(qtscxml_REF            5ee3a92ddfeb49f92f38f1d21457ce1929a65f2b)
+set(qtvirtualkeyboard_REF  a96a8eec64ade5609365337935a7e2e1a94e7670)
+set(qtcharts_REF           5b1b4f1692ace73c86ca1e7532446fa423525f8b)
 ### New in 6.2
-set(qtconnectivity_REF     65efa5cc25bf2b295e24b9a3dc88cb10bf0ea06c)
-set(qtlocation_REF         43de24f22407e1d224de400dbd92d387b907a4c1)
-set(qtmultimedia_REF       f32a7fe94a589f993b7ab8a90234e7dcf719fc8c)
-set(qtremoteobjects_REF    beb76d94b5c3f943fdb62fb2cf8e975f3facad5d)
-set(qtsensors_REF          2e48ce07157a834f1b533b0a60366f67e5a8dcac)
-set(qtserialbus_REF        3f90fafb7808a8b55283ce3fe26b3fdb26d6b45e)
-set(qtserialport_REF       d036b5c27d8515bd1972658482371396935c1a01)
-set(qtwebchannel_REF       2136d70c3b451c8f105a41d0679b1fd7e3bf1632)
-set(qtwebengine_REF        99f769f85aa6dc1197e28ee7b95c86182819241f)
-set(qtwebsockets_REF       a4d5deb0935c7a97e4156d84b08f65793f3ddc75)
-set(qtwebview_REF          693b6dda0b858bff1f2aa7ae2cf37c4511207a75)
+set(qtconnectivity_REF     e40adbaac03e19a6e82c6c7a3184710d8171ea8d)
+set(qtlocation_REF         4e19386e7e2e43a6314af1c371df548dc061a7b1)
+set(qtmultimedia_REF       8a111c2c2e67c76e9861815d514045e4177d55a9)
+set(qtremoteobjects_REF    d17423968363d08681c741181bafb7f16163add1)
+set(qtsensors_REF          61921f06bd99f2c1184ba0d8f13518b07d8b7b7b)
+set(qtserialbus_REF        672e3bac1b87b77bd896f55c7ce238ac34ae5ac6)
+set(qtserialport_REF       31de97226c90f2365f3632a49c332580f8c08647)
+set(qtwebchannel_REF       7534991cf0cfd51c70d00e5d110c80415c2e9291)
+set(qtwebengine_REF        8f6afad6309af431f609892fc0d9252429288bcf) # Additional refs in portfile due to submodule
+set(qtwebsockets_REF       930d41b8ae4235dc658997667edabbfc0ddfe04b)
+set(qtwebview_REF          10be72b20f78181bd227bc420a562cbdaa2e606b)
 
 
 if(QT_UPDATE_VERSION)
@@ -106,6 +106,7 @@ if(QT_UPDATE_VERSION)
             set(_current_control "${VCPKG_ROOT_DIR}/ports/${_current_qt_port}/vcpkg.json")
             file(READ "${_current_control}" _control_contents)
             string(REGEX REPLACE "\"version-(string|semver)\": [^\n]+\n" "\"version-semver\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
+            string(REGEX REPLACE "\"port-version": [^\n]+\n" "" _control_contents "${_control_contents}")
             file(WRITE "${_current_control}" "${_control_contents}")
             #need to run a vcpkg format-manifest --all after update once 
         endforeach()
