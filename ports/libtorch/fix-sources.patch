@@ -1,0 +1,38 @@
+diff --git a/caffe2/onnx/backend.cc b/caffe2/onnx/backend.cc
+index ffe0258..538cb6a 100644
+--- a/caffe2/onnx/backend.cc
++++ b/caffe2/onnx/backend.cc
+@@ -8,7 +8,7 @@
+ 
+ #ifndef C10_MOBILE
+ #include "onnx/checker.h"
+-#include "onnx/optimizer/optimize.h"
++#include "onnxoptimizer/optimize.h"
+ #endif
+ 
+ #include "google/protobuf/io/coded_stream.h"
+diff --git a/caffe2/onnx/onnxifi_graph_info.h b/caffe2/onnx/onnxifi_graph_info.h
+index 06c1ce4..67fe01d 100644
+--- a/caffe2/onnx/onnxifi_graph_info.h
++++ b/caffe2/onnx/onnxifi_graph_info.h
+@@ -7,7 +7,7 @@
+ 
+ #include "caffe2/core/logging.h"
+ #include "caffe2/opt/shape_info.h"
+-#include "foxi/onnxifi_loader.h"
++#include "onnx/onnxifi_loader.h"
+ 
+ namespace caffe2 {
+ namespace onnx {
+diff --git a/caffe2/onnx/onnxifi_init.h b/caffe2/onnx/onnxifi_init.h
+index 26ae914..02fbe94 100644
+--- a/caffe2/onnx/onnxifi_init.h
++++ b/caffe2/onnx/onnxifi_init.h
+@@ -1,6 +1,6 @@
+ #pragma once
+ 
+-#include "foxi/onnxifi_loader.h"
++#include "onnx/onnxifi_loader.h"
+ 
+ namespace caffe2 {
+ namespace onnx {

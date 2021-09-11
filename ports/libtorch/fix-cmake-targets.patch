@@ -1,0 +1,150 @@
+diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+index b590615..4466abf 100644
+--- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
++++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+@@ -315,112 +315,13 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
+ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/conv_utils.h)
+ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack_func.h)
+ 
+-# ---[ Configure clog
+-if(NOT TARGET clog)
+-  set(CLOG_BUILD_TESTS OFF CACHE BOOL "")
+-  set(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
+-  add_subdirectory(
+-    "${CLOG_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/clog")
+-  # We build static version of clog but a dynamic library may indirectly depend on it
+-  set_property(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
+-endif()
+-target_link_libraries(pytorch_qnnpack PUBLIC clog)
+-
+-# ---[ Configure cpuinfo
+-if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
+-  add_library(cpuinfo SHARED IMPORTED)
+-  find_library(CPUINFO_LIBRARY cpuinfo)
+-  if(NOT CPUINFO_LIBRARY)
+-    message(FATAL_ERROR "Cannot find cpuinfo")
+-  endif()
+-  message("Found cpuinfo: ${CPUINFO_LIBRARY}")
+-  set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
+-elseif(NOT TARGET cpuinfo)
+-  set(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
+-  set(CPUINFO_BUILD_UNIT_TESTS OFF CACHE BOOL "")
+-  set(CPUINFO_BUILD_MOCK_TESTS OFF CACHE BOOL "")
+-  set(CPUINFO_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-  add_subdirectory(
+-    "${CPUINFO_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo")
+-endif()
+-target_link_libraries(pytorch_qnnpack PRIVATE cpuinfo)
+-
+-# ---[ Configure pthreadpool
+-if(NOT TARGET pthreadpool AND NOT USE_SYSTEM_PTHREADPOOL)
+-  set(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
+-  set(PTHREADPOOL_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-  add_subdirectory(
+-    "${PTHREADPOOL_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/pthreadpool")
+-elseif(NOT TARGET pthreadpool AND USE_SYSTEM_PTHREADPOOL)
+-  add_library(pthreadpool SHARED IMPORTED)
+-  find_library(PTHREADPOOL_LIBRARY pthreadpool)
+-  if(NOT PTHREADPOOL_LIBRARY)
+-    message(FATAL_ERROR "Cannot find pthreadpool")
+-  endif()
+-  message("-- Found pthreadpool: ${PTHREADPOOL_LIBRARY}")
+-  set_target_properties(pthreadpool PROPERTIES
+-    IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
+-  add_library(pthreadpool_interface INTERFACE)
+-endif()
+-if(PYTORCH_QNNPACK_CUSTOM_THREADPOOL)
+-  # Depend on pthreadpool interface, but not on implementation.
+-  # This is used when QNNPACK user (e.g. Caffe2) provides its own threadpool implementation.
+-  target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool_interface)
+-else()
+-  target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
+-endif()
+-
+-# ---[ Configure FXdiv
+-if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
+-  set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+-  set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-  add_subdirectory(
+-    "${FXDIV_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/fxdiv")
+-elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
+-  find_file(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
+-  if(NOT FXDIV_HDR)
+-    message(FATAL_ERROR "Cannot find fxdiv")
+-  endif()
+-  add_library(fxdiv STATIC "${FXDIV_HDR}")
+-  set_property(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
+-endif()
+-target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
+-
+-# ---[ Configure psimd
+-if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
+-  add_subdirectory(
+-    "${PSIMD_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/psimd")
+-elseif(NOT TARGET psimd AND USE_SYSTEM_PSIMD)
+-  find_file(PSIMD_HDR psimd.h PATH_SUFFIXES include)
+-  if(NOT PSIMD_HDR)
+-    message(FATAL_ERROR "Cannot find psimd")
+-  endif()
+-  add_library(psimd STATIC "${PSIMD_HDR}")
+-  set_property(TARGET psimd PROPERTY LINKER_LANGUAGE C)
+-endif()
+-target_link_libraries(pytorch_qnnpack PRIVATE psimd)
+-
+-# ---[ Configure FP16
+-if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+-  set(FP16_BUILD_TESTS OFF CACHE BOOL "")
+-  set(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-  add_subdirectory(
+-    "${FP16_SOURCE_DIR}"
+-    "${CONFU_DEPENDENCIES_BINARY_DIR}/fp16")
+-elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
+-  find_file(FP16_HDR fp16.h PATH_SUFFIXES include)
+-  if(NOT FP16_HDR)
+-    message(FATAL_ERROR "Cannot find fp16")
+-  endif()
+-  add_library(fp16 STATIC "${FP16_HDR}")
+-  set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
+-endif()
+-target_link_libraries(pytorch_qnnpack PRIVATE fp16)
++target_link_libraries(pytorch_qnnpack PRIVATE
++  unofficial::cpuinfo::clog unofficial::cpuinfo::cpuinfo
++  unofficial::pthreadpool
++)
++target_include_directories(pytorch_qnnpack PRIVATE
++  ${FP16_INCLUDE_DIRS} ${PSIMD_INCLUDE_DIRS} ${FXDIV_INCLUDE_DIRS}
++)
+ 
+ install(TARGETS pytorch_qnnpack
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index 7bef849..968d248 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -99,13 +99,6 @@ endif()
+ # addressed yet.
+ 
+ if(NOT MSVC AND USE_XNNPACK)
+-  if(NOT TARGET fxdiv)
+-    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+-    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-    add_subdirectory(
+-      "${FXDIV_SOURCE_DIR}"
+-      "${CMAKE_BINARY_DIR}/FXdiv")
+-  endif()
+ endif()
+ 
+ add_subdirectory(core)
+@@ -856,7 +849,6 @@ if(USE_CUDA OR USE_ROCM)
+ endif()
+ 
+ if(NOT MSVC AND USE_XNNPACK)
+-  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+ endif()
+ 
+ # ==========================================================
