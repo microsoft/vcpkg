@@ -99,7 +99,6 @@ function(test_cmake_project)
             "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
             "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
             "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
-            "-DFIND_PACKAGES=${packages}"
             ${arg_OPTIONS}
         WORKING_DIRECTORY "${build_dir}"
         LOGNAME "cmake-user-${TARGET_TRIPLET}-${arg_NAME}-config"
@@ -110,16 +109,46 @@ function(test_cmake_project)
         WORKING_DIRECTORY "${build_dir}"
         LOGNAME "cmake-user-${TARGET_TRIPLET}-${arg_NAME}-build"
     )
+    # To produce better error messages for failing wrappers,
+    # we run execute_process directly here, for each wrapper.
+    set(failed_packages 0)
+    string(REPLACE " OFF:" ":" message
+    "  CMake ${cmake_version}: `find_package(@package@)` failed.\n"
+    "  See logs for more information:\n"
+    "    @log_out@\n"
+    "    @log_err@\n"
+    )
+    foreach(package IN LISTS packages)
+        set(log_out "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-out.log")
+        set(log_err "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-err.log")
+        execute_process(
+            COMMAND
+                "${CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
+                "-DFIND_PACKAGES=${package}"
+            OUTPUT_FILE "${log_out}"
+            ERROR_FILE "${log_err}"
+            RESULT_VARIABLE package_result
+            WORKING_DIRECTORY "${build_dir}"
+        )
+        if(package_result)
+            set(failed_packages 1)
+            string(CONFIGURE "${message}" package_message @ONLY)
+            if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
+                string(REGEX REPLACE "^ *(CMake)" "##vso[task.logissue type=error]\\1" package_message "${package_message}")
+            endif()
+            message(SEND_ERROR "${package_message}")
+        endif()
+    endforeach()
 endfunction()
 
-test_cmake_project(NAME "test-0"
+test_cmake_project(NAME "release"
     OPTIONS
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
         "-DVCPKG_PREFER_SYSTEM_LIBS=OFF"
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
 )
-test_cmake_project(NAME "test-1"
+test_cmake_project(NAME "debug"
     OPTIONS
         "-DCMAKE_BUILD_TYPE=Debug"
         "-DCMAKE_PREFIX_PATH=SYSTEM_LIBS" # for testing VCPKG_PREFER_SYSTEM_LIBS
