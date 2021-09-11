@@ -41,10 +41,6 @@
           "name": "gettext"
         },
         {
-          "$package": "JPEG",
-          "name": "libjpeg-turbo"
-        },
-        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
