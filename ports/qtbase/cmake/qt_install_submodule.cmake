@@ -31,8 +31,7 @@ function(qt_download_submodule)
 
     vcpkg_from_git(
         OUT_SOURCE_PATH SOURCE_PATH
-        URL "git://code.qt.io/qt/${PORT}.git"
-        #TAG ${${PORT}_TAG}
+        URL "https://code.qt.io/qt/${PORT}.git"
         REF "${${PORT}_REF}"
         ${UPDATE_PORT_GIT_OPTIONS}
         PATCHES ${_qarg_PATCHES}

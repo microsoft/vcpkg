@@ -1,7 +1,7 @@
 {
   "name": "kf5i18n",
   "version": "5.84.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Advanced internationalization framework",
   "homepage": "https://api.kde.org/frameworks/ki18n/html/index.html",
   "dependencies": [
@@ -14,6 +14,7 @@
         "tools"
       ]
     },
+    "libiconv",
     "qt5-declarative",
     "qt5-tools"
   ]

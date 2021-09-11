@@ -1,0 +1,6 @@
+{
+  "name": "ring-span-lite",
+  "version-string": "0.3.0",
+  "port-version": 1,
+  "description": "A C++yy-like ring_span type for C++98, C++11 and later in a single-file header-only library"
+}
