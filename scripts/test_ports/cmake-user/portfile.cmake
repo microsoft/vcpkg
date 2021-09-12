@@ -119,6 +119,7 @@ function(test_cmake_project)
     "    @log_err@\n"
     )
     foreach(package IN LISTS packages)
+        message(STATUS "Testing `find_package(${package})` (${arg_NAME})")
         set(log_out "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-out.log")
         set(log_err "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-err.log")
         execute_process(
