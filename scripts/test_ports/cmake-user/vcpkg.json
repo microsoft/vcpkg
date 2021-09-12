@@ -33,16 +33,41 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "BZip2",
+          "name": "bzip2"
+        },
+        {
+          "$package": "CURL",
+          "name": "curl"
+        },
+        {
           "$package": "EXPAT",
           "name": "expat"
+        },
+        {
+          "$package": "Freetype",
+          "name": "freetype"
         },
         {
           "$package": "Intl",
           "name": "gettext"
         },
         {
+          "$package": "GIF",
+          "name": "giflib"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
+        },
+        {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows & !uwp"
+        },
+        {
+          "$package": "TIFF",
+          "name": "tiff"
         },
         {
           "$package": "ZLIB",
