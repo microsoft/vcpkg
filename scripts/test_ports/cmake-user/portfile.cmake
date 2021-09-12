@@ -120,6 +120,9 @@ function(test_cmake_project)
     "    @log_out@\n"
     "    @log_err@\n"
     )
+    if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
+        string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
+    endif()
     foreach(package IN LISTS packages)
         message(STATUS "Testing `find_package(${package})` (${arg_NAME})")
         set(log_out "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-out.log")
@@ -135,9 +138,6 @@ function(test_cmake_project)
         )
         if(package_result)
             string(CONFIGURE "${message}" package_message @ONLY)
-            if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
-                string(REGEX REPLACE "^ *(CMake)" "##vso[task.logissue type=error]\\1" package_message "${package_message}")
-            endif()
             message(SEND_ERROR "${package_message}")
         endif()
     endforeach()
