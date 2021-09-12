@@ -16,13 +16,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "gpu": {
-      "description": "Build fbgemm-gpu sources with CUDA",
-      "dependencies": [
-        "cuda"
-      ]
-    }
-  }
+  ]
 }
