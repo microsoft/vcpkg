@@ -1,5 +1,3 @@
-diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 7c48aad..0d261b0 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -1205,7 +1205,7 @@ function(ocv_add_perf_tests)

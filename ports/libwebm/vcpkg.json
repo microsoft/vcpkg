@@ -1,0 +1,7 @@
+{
+  "name": "libwebm",
+  "version-string": "1.0.0.27",
+  "port-version": 7,
+  "description": "WebM File Parser",
+  "homepage": "https://github.com/webmproject/libwebm"
+}

@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF 736f0739ed8c75db0e29c7678b5a9194e957c347 # v4.1.6
-    SHA512 7632439f8cdc87d275a0524b87ea5cd19c3401c1b7bb7fcf673eef3e1ab36c0ec022d2dce050d07bc106af3166575882507a56ac829a4361329311484dc2c5c4
+    REF 8d605f0649ed1ab6d27a443c7688598ea21fdb75 # v4.2.2
+    SHA512 824b7e7eded0fea41a1c22da8453b97a1ffd0f416e2d2ee3a23f799cfd449d1d0cc2f58de19a7d5dbd336e0ebceec16dd2a78cb80519d02bb49133047f99a9e2
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
@@ -132,9 +132,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
 # option(LWS_WITH_LWS_DSH "Support lws_dsh_t Disordered Shared Heap" OFF)
 ##
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
@@ -150,31 +149,33 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libwebsockets)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libwebsockets)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets-test-server)
-file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake LIBWEBSOCKETSCONFIG_CMAKE)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/libwebsockets-test-server")
+file(READ "${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake" LIBWEBSOCKETSCONFIG_CMAKE)
 string(REPLACE "/../include" "/../../include" LIBWEBSOCKETSCONFIG_CMAKE "${LIBWEBSOCKETSCONFIG_CMAKE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake "${LIBWEBSOCKETSCONFIG_CMAKE}")
-file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake LIBWEBSOCKETSTARGETSDEBUG_CMAKE)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake" "${LIBWEBSOCKETSCONFIG_CMAKE}")
+file(READ "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake" LIBWEBSOCKETSTARGETSDEBUG_CMAKE)
 string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSDEBUG_CMAKE "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
-file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake LIBWEBSOCKETSTARGETSRELEASE_CMAKE)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake" "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
+file(READ "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake" LIBWEBSOCKETSTARGETSRELEASE_CMAKE)
 string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSRELEASE_CMAKE "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake" "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     if (VCPKG_TARGET_IS_WINDOWS)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/websockets.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/lib/websockets.lib)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/websockets_static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/websockets.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/websockets_static.lib" "${CURRENT_PACKAGES_DIR}/lib/websockets.lib")
     endif()
 endif ()
+
 vcpkg_copy_pdbs()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

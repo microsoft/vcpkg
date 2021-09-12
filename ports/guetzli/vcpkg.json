@@ -1,0 +1,11 @@
+{
+  "name": "guetzli",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "Perceptual JPEG encoder",
+  "homepage": "https://github.com/google/guetzli",
+  "dependencies": [
+    "butteraugli",
+    "libpng"
+  ]
+}

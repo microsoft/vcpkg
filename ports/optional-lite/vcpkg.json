@@ -1,0 +1,6 @@
+{
+  "name": "optional-lite",
+  "version-string": "3.2.0",
+  "port-version": 1,
+  "description": "A C++17-like optional, a nullable object for C++98, C++11 and later in a single-file header-only library"
+}
