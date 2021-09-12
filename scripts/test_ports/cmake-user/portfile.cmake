@@ -114,7 +114,6 @@ function(test_cmake_project)
     )
     # To produce better error messages for failing wrappers,
     # we run execute_process directly here, for each wrapper.
-    set(failed_packages 0)
     string(REPLACE " OFF:" ":" message
     "  CMake ${cmake_version}: `find_package(@package@)` failed.\n"
     "  See logs for more information:\n"
@@ -135,7 +134,6 @@ function(test_cmake_project)
             WORKING_DIRECTORY "${build_dir}"
         )
         if(package_result)
-            set(failed_packages 1)
             string(CONFIGURE "${message}" package_message @ONLY)
             if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
                 string(REGEX REPLACE "^ *(CMake)" "##vso[task.logissue type=error]\\1" package_message "${package_message}")
