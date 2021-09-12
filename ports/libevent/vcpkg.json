@@ -1,0 +1,28 @@
+{
+  "name": "libevent",
+  "version-string": "2.1.12",
+  "port-version": 2,
+  "description": "An event notification library",
+  "homepage": "https://github.com/libevent/libevent",
+  "supports": "!uwp",
+  "default-features": [
+    "thread"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Support for openssl",
+      "dependencies": [
+        {
+          "name": "libevent",
+          "features": [
+            "thread"
+          ]
+        },
+        "openssl"
+      ]
+    },
+    "thread": {
+      "description": "Support for thread"
+    }
+  }
+}

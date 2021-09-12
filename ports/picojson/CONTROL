@@ -1,5 +1,0 @@
-Source: picojson
-Version: 1.3.0-1
-Homepage: https://github.com/kazuho/picojson
-Description: A header-file-only, JSON parser serializer in C++.
-

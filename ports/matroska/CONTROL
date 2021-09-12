@@ -1,6 +1,0 @@
-Source: matroska
-Version: 1.6.2
-Homepage: https://github.com/Matroska-Org/libmatroska
-Description: a C++ library to parse Matroska files (.mkv and .mka)
-Build-Depends: ebml
-Supports: !uwp
