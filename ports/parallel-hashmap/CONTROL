@@ -1,3 +1,0 @@
-Source: parallel-hashmap
-Version: 1.33
-Description: A header-only, very fast and memory-friendly family of C++ hash maps. 

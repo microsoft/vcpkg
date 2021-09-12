@@ -1,0 +1,19 @@
+{
+  "name": "fontconfig",
+  "version": "2.13.94",
+  "description": "Library for configuring and customizing font access.",
+  "homepage": "https://www.freedesktop.org/software/fontconfig/front.html",
+  "dependencies": [
+    "dirent",
+    "expat",
+    "freetype",
+    "gettext",
+    "json-c",
+    "libiconv",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !osx & !mingw"
+    },
+    "pthread"
+  ]
+}

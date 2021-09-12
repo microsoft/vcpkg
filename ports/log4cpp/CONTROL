@@ -1,6 +1,0 @@
-Source: log4cpp
-Version: 2.9.1
-Port-Version: 4
-Homepage: https://github.com/orocos-toolchain/log4cpp
-Description: Log4cpp is library of C++ classes for flexible logging to files, syslog, IDSA and other destinations. It is modeled after the Log4j Java library, staying as close to their API as is reasonable.
-Supports: !uwp
