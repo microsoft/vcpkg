@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DTNAMIC_LIBRARY)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -87,4 +87,21 @@ file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/include/c10/test/core/impl"
+                    "${CURRENT_PACKAGES_DIR}/include/c10/hip"
+                    "${CURRENT_PACKAGES_DIR}/include/c10/benchmark"
+                    "${CURRENT_PACKAGES_DIR}/include/c10/test"
+                    "${CURRENT_PACKAGES_DIR}/include/c10/cuda"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/ideep/operators/quantization"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/python"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/depthwise"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/nnpack"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/mobile"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/experiments/python"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/test"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/utils/hip"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/opt/nql/tests"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/contrib"
+                    "${CURRENT_PACKAGES_DIR}/include/caffe2/core/nomnigraph/Representations"
+                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc"
 )
