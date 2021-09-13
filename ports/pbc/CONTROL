@@ -1,7 +1,0 @@
-Source: pbc
-Version: 0.5.14
-Port-Version: 4
-Build-Depends: mpir (windows), gmp (!windows)
-Homepage: https://crypto.stanford.edu/pbc
-Description: Pairing-Based Crypto library provides low-level routines for pairing-based cryptosystems.
-Supports: !uwp

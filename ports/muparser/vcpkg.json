@@ -1,0 +1,8 @@
+{
+  "name": "muparser",
+  "version-string": "2.3.2",
+  "port-version": 1,
+  "description": "Fast math parser library",
+  "homepage": "https://github.com/beltoforion/muparser",
+  "supports": "!uwp"
+}
