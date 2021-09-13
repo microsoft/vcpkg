@@ -80,5 +80,5 @@ else
     }
 }
 
-lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
-lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>debug : : ;
+lib iconv : : <file>"@VCPKG_ICONV_LIBRARY_RELEASE@" <link>shared <runtime-link>shared <variant>release : : ;
+lib iconv : : <file>"@VCPKG_ICONV_LIBRARY_DEBUG@" <link>shared <runtime-link>shared <variant>debug : : ;
