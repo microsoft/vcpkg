@@ -1,6 +1,6 @@
 {
   "name": "qtquickcontrols2",
-  "version-semver": "6.1.2",
+  "version-semver": "6.1.3",
   "description": "Qt Quick Controls 2",
   "homepage": "https://www.qt.io/",
   "dependencies": [
