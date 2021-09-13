@@ -2,31 +2,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.imanage.work.thirdparty</groupId>
     <artifactId>vcpkg</artifactId>
-    <version>10.3.0-SNAPSHOT</version>
-	
-	<name>Vcpkg</name>
+    <version>10.4.1-SNAPSHOT</version>
 	
 	<properties>
-		<version.prefix>10.3.0</version.prefix>
+		<version.prefix>10.4.1</version.prefix>
 	</properties>
 	
-	<distributionManagement>
-		<repository>
-			<id>internal</id>
-			<url>http://archiva.imanage.com/repository/internal</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<url>http://archiva.imanage.com/repository/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <url>http://archiva.imanage.com/repository/internal</url>
+        </repository>
+    </distributionManagement>
 	
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
 					<execution>
 						<id>generate-vcpkg</id>
 						<goals>
@@ -40,183 +34,238 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>build-vcpkg</id>
+						<id>build-solution-x64</id>
 						<goals>
 							<goal>run</goal>
 						</goals>
-						<phase>compile</phase>
+						<phase>generate-sources</phase>
 						<configuration>
-							<target name="build-vcpkg"> 
-								<exec executable="${basedir}/vcpkg.exe" failonerror="true">
-									<arg value="install" />
-									<arg value="boost:x64-windows-static" />
-									<arg value="boost:x86-windows-static" />
-									<arg value="bzip2:x64-windows-static" />
-									<arg value="bzip2:x86-windows-static" />
-									<arg value="cpprestsdk:x64-windows-static" />
-									<arg value="cpprestsdk:x86-windows-static" />
-									<arg value="curl[non-http,openssl]:x64-windows-static" />
-									<arg value="curl[non-http,openssl]:x86-windows-static" />
-									<arg value="gtest:x64-windows-static" />
-									<arg value="gtest:x86-windows-static" />
-									<arg value="libssh2:x64-windows-static" />
-									<arg value="libssh2:x86-windows-static" />
-									<arg value="openssl:x64-windows-static" />
-									<arg value="openssl:x86-windows-static" />
-									<arg value="xerces-c:x64-windows-static" />
-									<arg value="xerces-c:x86-windows-static" />
-									<arg value="zlib:x64-windows-static" />
-									<arg value="zlib:x86-windows-static" />
-								</exec>
-							</target>
+							<target name="build-solution"> 
+                                <!--property name="VCPKG_DEP_INFO_OVERRIDE_VARS" value="v141"/-->
+                                <exec executable="${basedir}/vcpkg.exe" failonerror="true">
+                                    <env key="VCPKG_PLATFORM_TOOLSET" value="v141"/>
+                                    <arg value="install" />
+                                    <arg value="--triplet" />
+                                    <arg value="x64-windows-static" />
+                                    <arg value="--x-buildtrees-root" />
+                                    <arg value="${project.build.directory}/buildtrees_x64" />
+                                    <arg value="--downloads-root" />
+                                    <arg value="${project.build.directory}/downloads_x64" />
+                                    <arg value="--x-packages-root" />
+                                    <arg value="${project.build.directory}/packages_x64" />
+                                    <arg value="--x-install-root" />
+                                    <arg value="${project.build.directory}/installed_x64" />
+                                </exec>
+                            </target>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
 					<execution>
-						<id>copy-vcpkg-release-includes</id>
-						<phase>prepare-package</phase>
+						<id>build-solution-x86</id>
 						<goals>
-							<goal>copy-resources</goal>
+							<goal>run</goal>
 						</goals>
+						<phase>generate-sources</phase>
 						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}/include</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/installed/x64-windows-static/include</directory>
-								</resource>
-							</resources>
+							<target name="build-solution"> 
+                                <!--property name="VCPKG_DEP_INFO_OVERRIDE_VARS" value="v141"/-->
+                                <exec executable="${basedir}/vcpkg.exe" failonerror="true">
+                                    <env key="VCPKG_PLATFORM_TOOLSET" value="v141"/>
+                                    <arg value="install" />
+                                    <arg value="--triplet" />
+                                    <arg value="x86-windows-static" />
+                                    <arg value="--x-buildtrees-root" />
+                                    <arg value="${project.build.directory}/buildtrees_x86" />
+                                    <arg value="--downloads-root" />
+                                    <arg value="${project.build.directory}/downloads_x86" />
+                                    <arg value="--x-packages-root" />
+                                    <arg value="${project.build.directory}/packages_x86" />
+                                    <arg value="--x-install-root" />
+                                    <arg value="${project.build.directory}/installed_x86" />
+                                </exec>
+                            </target>
 						</configuration>
 					</execution>
-					<execution>
-						<id>copy-vcpkg-x64-release-libs</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/x64</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/installed/x64-windows-static/lib</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-vcpkg-x64-debug-libs</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Debug/x64</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/installed/x64-windows-static/debug/lib</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-vcpkg-win32-release-libs</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/win32</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/installed/x86-windows-static/lib</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-vcpkg-win32-debug-libs</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/package/${project.artifactId}/lib//Debug/win32</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/installed/x86-windows-static/debug/lib</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-jar</id>
-						<phase>none</phase>
-					</execution>
-					<execution>
-						<id>vcpkg</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classesDirectory>${project.build.directory}/package</classesDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-vcpkg-json</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}</directory>
+                                    <includes>
+                                        <include>vcpkg.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-vcpkg-release-includes</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}/include</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/installed_x64/x64-windows-static/include</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-vcpkg-x64-release-libs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/x64</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/installed_x64/x64-windows-static/lib</directory>
+									<includes>
+										<include>**/*.lib</include>
+									</includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-vcpkg-x64-debug-libs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Debug/x64</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/installed_x64/x64-windows-static/debug/lib</directory>
+									<includes>
+										<include>**/*.lib</include>
+									</includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-vcpkg-x86-release-libs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Release/x86</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/installed_x86/x86-windows-static/lib</directory>
+									<includes>
+										<include>**/*.lib</include>
+									</includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-vcpkg-x86-debug-libs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/package/${project.artifactId}/lib/Debug/x86</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/installed_x86/x86-windows-static/debug/lib</directory>
+									<includes>
+										<include>**/*.lib</include>
+									</includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>vcpkg</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classesDirectory>${project.build.directory}/package</classesDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 		
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>com.googlecode.maven-download-plugin</groupId>
-					<artifactId>download-maven-plugin</artifactId>
-					<version>1.4.1</version>
-				</plugin>
-				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.6.0</version>
+                    <version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.7</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>2.5.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.5.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

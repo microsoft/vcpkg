@@ -1,54 +1,66 @@
-node('work-server') {
-	try {
-		notify('warning', "STARTED")
-			
-		stage ("Clone vcpkg") {
-			checkout scm
-		}
-		
-		withMaven (maven: "default", mavenSettings: "maven-settings", mavenLocalRepo: ".repository", 
-			options: [
-				artifactsPublisher(disabled: true)
-				]
-			) {
-			if (env.BRANCH_NAME == 'master') {
-				pom = readMavenPom file: 'pom.xml'
-				versionPrefix = pom.getProperties().getProperty('version.prefix')
-				script {
-					currentBuild.displayName = "${versionPrefix}-${BUILD_NUMBER}"
-				}
+#!/usr/bin/env groovy
 
-				stage ("Set versions") {
-					bat "mvn versions:set -DnewVersion=${versionPrefix}-${BUILD_NUMBER}"
-				}
+branch = 'vcpkg'
 
-				stage ("Deploy vcpkg") {
-					bat "mvn clean deploy"
-				}
-			}
-		}
-		
-		stage ("Clean workspace") {
-			deleteDir()
-		}
+node('aws-work-server-release') {
+    ws('C:\\workspace') {
+        try {
+            checkout(
+                [
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    extensions: scm.extensions + [[$class: 'WipeWorkspace']],
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ]
+            )
 
-		notify('good', 'SUCCESS')
-		
-	} catch (e) {
-		currentBuild.result = "FAILED"
-		notify('danger', 'FAILED')
-		throw e
-	}
-}
+            withMaven (maven: 'default', mavenSettings: 'maven-settings', mavenLocalRepo: '.repository',
+            options: [
+                artifactsPublisher(disabled: true)
+                ]
+            ) {
+                if (env.BRANCH_NAME =~ /^release\/vcpkg_.+/) {
+                    pom = readMavenPom file: 'pom.xml'
+                    versionPrefix = pom.getProperties().getProperty('version.prefix')
+                    script {
+                        currentBuild.displayName = "${versionPrefix}.${BUILD_NUMBER}"
+                    }
 
-def notify(color, message) {
-    withCredentials([string(credentialsId: 'work-server-slack', variable: 'TOKEN')]) {
-        slackSend(
-            channel: '#build-notifications',
-            color: color,
-            message: message + ": Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-            teamDomain: 'work-server',
-            token: "$TOKEN"
-        )
+                    stage ('Tag SCM') {
+                        sshagent(['maarcus-teamcity-github-key']) {
+
+                            def repoUrl = scm
+                                .getUserRemoteConfigs()[0]
+                                .getUrl()
+
+                            bat "git tag ${branch}-${versionPrefix}.${BUILD_NUMBER}"
+                            bat "git push ${repoUrl} ${branch}-${versionPrefix}.${BUILD_NUMBER}"
+                        }
+                    }
+
+                    stage ('Build vcpkg.exe') {
+                        bat "bootstrap-vcpkg.bat"
+                    }
+
+                    stage ('Build and deploy vcpkg') {
+                        bat 'mvn deploy'
+                    }
+                }
+                else {
+                    stage ('Build vcpkg.exe') {
+                        bat "bootstrap-vcpkg.bat"
+                    }
+
+                    stage ('Build vcpkg') {
+                        bat 'mvn verify'
+                    }
+                }
+            }
+        }
+        catch (e) {
+            echo 'FAILED: ' + e
+            currentBuild.result = 'FAILED'
+            throw e
+        }
     }
 }
