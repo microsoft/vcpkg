@@ -1,7 +1,6 @@
 {
   "name": "libhv",
-  "version": "1.0.0",
-  "port-version": 2,
+  "version": "1.2.1",
   "description": "Libhv is a C/C++ network library similar to libevent/libuv.",
   "homepage": "https://github.com/ithewei/libhv",
   "supports": "!(arm | uwp)"
