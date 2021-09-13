@@ -162,7 +162,7 @@ macro(z_vcpkg_backup_env_variable envvar)
 endmacro()
 
 macro(z_vcpkg_backup_env_variables)
-    foreach(_var IN LISTS ${ARGV})
+    foreach(_var IN ITEMS ${ARGV})
         z_vcpkg_backup_env_variable(${_var})
     endforeach()
 endmacro()
@@ -176,7 +176,7 @@ macro(z_vcpkg_restore_env_variable envvar)
 endmacro()
 
 macro(z_vcpkg_restore_env_variables)
-    foreach(_var IN LISTS ${ARGV})
+    foreach(_var IN ITEMS ${ARGV})
         z_vcpkg_restore_env_variable(${_var})
     endforeach()
 endmacro()
@@ -233,18 +233,18 @@ function(vcpkg_make_configure)
 
     set(src_dir "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
 
-    set(requires_autogen FALSE) # use autogen.sh
-    set(requires_autoconfig FALSE) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure.ac") # Run autoconf by default if configure.ac exist
-        if(VCPKG_MAINTAINER_SKIP_AUTOCONFIG AND NOT EXISTS "${src_dir}/configure")
-            message(FATAL_ERROR "file `configure` not found, please do not pass VCPKG_MAINTAINER_SKIP_AUTOCONFIG")
+    set(requires_autogen OFF) # use autogen.sh
+    set(requires_autoconfig OFF) # use autotools and configure.ac
+    if(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac")  # remove configure; rerun autoconf
+        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG)  # If fixing bugs skipping autoconfig saves a lot of time
+            set(requires_autoconfig ON)
+            file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
         endif()
-        # remove configure; rerun autoconf
-        set(requires_autoconfig TRUE)
-        file(REMOVE "${src_dir}/configure") # remove possible autodated configure scripts
     elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
+    elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
+        set(requires_autoconfig ON)
     elseif(EXISTS "${src_dir}/autogen.sh") # Run autogen
-        set(requires_autogen TRUE)
+        set(requires_autogen ON)
     else()
         message(FATAL_ERROR "Could not determine method to configure make")
     endif()
@@ -254,14 +254,14 @@ function(vcpkg_make_configure)
 
     if(CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe") #only applies to windows (clang-)cl and lib
         if(requires_autoconfig)
-            set(arg_USE_WRAPPERS TRUE)
+            set(arg_USE_WRAPPERS ON)
         else()
             # Keep the setting from portfiles.
             # Without autotools we assume a custom configure script which correctly handles cl and lib.
             # Otherwise the port needs to set CC|CXX|AR and probably CPP.
         endif()
     else()
-        set(arg_USE_WRAPPERS FALSE)
+        set(arg_USE_WRAPPERS OFF)
     endif()
 
     # Backup environment variables
@@ -281,11 +281,11 @@ function(vcpkg_make_configure)
     #Used by cl
     z_vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
-    set(vcm_paths_with_spaces FALSE)
+    set(vcm_paths_with_spaces OFF)
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
-        set(vcm_paths_with_spaces TRUE)
+        set(vcm_paths_with_spaces ON)
     endif()
 
     # Pre-processing windows configure requirements
@@ -569,9 +569,9 @@ function(vcpkg_make_configure)
     list(REMOVE_DUPLICATES all_libs_list)
     list(TRANSFORM all_libs_list STRIP)
     #Do lib list transformation from name.lib to -lname if necessary
-    set(x_vcpkg_transform_libs TRUE)
+    set(x_vcpkg_transform_libs ON)
     if(VCPKG_TARGET_IS_UWP)
-        set(x_vcpkg_transform_libs FALSE)
+        set(x_vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
         # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
@@ -799,7 +799,7 @@ function(vcpkg_make_configure)
             set(path_backup $ENV{PATH})
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${path_suffix_${_buildtype}}/bin")
         endif()
-        debug_message("Configure command:'${command}'")
+        message("Configure command:'${command}'")
         if (NOT arg_SKIP_CONFIGURE)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${short_name_${_buildtype}}")
             vcpkg_execute_required_process(
