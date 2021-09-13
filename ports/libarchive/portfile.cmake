@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF fc6563f5130d8a7ee1fc27c0e55baef35119f26c   #v3.4.3
-    SHA512 54ca4f3cc3b38dcf6588b2369ce43109c4a57a04061348ab8bf046c5c13ace0c4f42c9f3961288542cb5fe12c05359d572b39fe7cec32a10151dbac78e8a3707
+    REF v3.5.2
+    SHA512 d6b8811cffc087c1d07e98bbabbad256cab20b18d727705b49674b42ef3d48c79235765190701050a256c98e5058017007c7ab5e1a1602a2786d6da915360942
     HEAD_REF master
     PATCHES
         fix-buildsystem.patch
