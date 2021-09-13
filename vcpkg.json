@@ -1,0 +1,39 @@
+{
+    "name": "vcpkg",
+    "version": "10.4.1",
+    "dependencies": [
+        "boost",
+        "bzip2",
+        "cpprestsdk",
+        {
+            "name": "curl",
+            "features": [ "non-http", "openssl" ]
+        },
+        "gtest",
+        {
+            "name": "hiredis",
+            "features": [ "ssl" ]
+        },
+        "hazelcast-cpp-client",
+        "libssh2",
+        "openssl",
+        "rapidjson",
+        "xerces-c",
+        "zlib"
+    ],
+    "builtin-baseline": "0824440953e0b9dbc77b5dafc4a8406cc4c15806",
+    "overrides": [
+        { "name": "boost", "version": "1.76.0" },
+        { "name": "bzip2", "version": "1.0.8", "port-version": 2 },
+        { "name": "cpprestsdk", "version": "2.10.18" },
+        { "name": "curl", "version": "7.78.0" },
+        { "name": "gtest", "version": "1.11.0" },
+        { "name": "hiredis", "version": "1.0.0", "port-version": 1 },
+        { "name": "hazelcast-cpp-client", "version": "4.1.1" },
+        { "name": "libssh2", "version": "1.9.0" },
+        { "name": "openssl", "version-string": "1.0.2o-3" },
+        { "name": "rapidjson", "version-string": "2020-09-14", "port-version": 1 },
+        { "name": "xerces-c", "version-string": "3.2.3-1" },
+        { "name": "zlib", "version-string": "1.2.11" }
+    ]
+}
