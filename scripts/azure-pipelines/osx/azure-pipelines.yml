@@ -39,7 +39,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -EnforceCascades'
       pwsh: true
   - bash: |
       df -h
