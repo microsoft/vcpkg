@@ -1,4 +1,0 @@
-Source: tinkerforge
-Version: 2.1.25
-Description: Tinkerforge C API bindings for bricks and bricklets
-Supports: !uwp
