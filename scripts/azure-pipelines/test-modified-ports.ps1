@@ -134,25 +134,23 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 $ciArgs = $commonArgs
 if ($EnforceCascades) {
     if ($Triplet -eq 'x86-windows') {
-        $cascades = 0
+        $cascades = 28
     } elseif ($Triplet -eq 'x64-windows') {
-        $cascades = 0
+        $cascades = 21
     } elseif ($Triplet -eq 'x64-windows-static') {
-        $cascades = 0
+        $cascades = 59
     } elseif ($Triplet -eq 'x64-windows-static-md') {
-        $cascades = 0
+        $cascades = 53
     } elseif ($Triplet -eq 'x64-uwp') {
-        $cascades = 0
-    } elseif ($Triplet -eq 'arm64-uwp') {
-        $cascades = 0
+        $cascades = 341
     } elseif ($Triplet -eq 'arm64-windows') {
-        $cascades = 0
+        $cascades = 229
     } elseif ($Triplet -eq 'arm-uwp') {
-        $cascades = 0
+        $cascades = 229
     } elseif ($Triplet -eq 'x64-osx') {
-        $cascades = 0
+        $cascades = 61
     } elseif ($Triplet -eq 'x64-linux') {
-        $cascades = 0
+        $cascades = 31
     } else {
         throw "Unknown triplet ($Triplet); could not determine expected cascade count. Update test-modified-ports.ps1."
     }
