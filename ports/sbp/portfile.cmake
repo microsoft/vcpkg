@@ -23,14 +23,14 @@ vcpkg_from_github(
 )
 
 # Copy cmake files to expected location
-file(INSTALL ${CMAKE_EXTRA_MODS}/CCache.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/SwiftCmakeOptions.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/CompileOptions.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/LanguageStandards.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/ClangFormat.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/ClangTidy.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/CodeCoverage.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
-file(INSTALL ${CMAKE_EXTRA_MODS}/TestTargets.cmake DESTINATION ${SOURCE_PATH}/c/cmake/common)
+file(INSTALL "${CMAKE_EXTRA_MODS}/CCache.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/SwiftCmakeOptions.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/CompileOptions.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/LanguageStandards.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/ClangFormat.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/ClangTidy.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/CodeCoverage.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/TestTargets.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/c"
