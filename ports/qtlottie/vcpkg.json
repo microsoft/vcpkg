@@ -1,6 +1,6 @@
 {
   "name": "qtlottie",
-  "version-semver": "6.1.2",
+  "version-semver": "6.1.3",
   "description": "Lottie is a family of player software for a certain json-based file format for describing 2d vector graphics animations. These files are created/exported directly from After Effects by a plugin called Bodymovin.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
