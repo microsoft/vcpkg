@@ -1,0 +1,12 @@
+{
+  "name": "libaaplus",
+  "version-string": "2.12",
+  "port-version": 2,
+  "description": "libaaplus is an astronomical computations library by naughter software",
+  "homepage": "http://www.naughter.com/aa.html",
+  "features": {
+    "tools": {
+      "description": "Build libaaplus tools"
+    }
+  }
+}

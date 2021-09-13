@@ -1,6 +1,10 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+message(WARNING "qtwayland requires libwayland-dev from your system package manager. You can install it with
+sudo apt install libwayland-dev
+on Ubuntu systems.")
+
 set(${PORT}_PATCHES)
 
 set(TOOL_NAMES qtwaylandscanner)

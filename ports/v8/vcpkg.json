@@ -1,7 +1,6 @@
 {
   "name": "v8",
-  "version-string": "9.0.257.17",
-  "port-version": 1,
+  "version-string": "9.1.269.39",
   "description": "Google Chrome's JavaScript engine",
   "homepage": "https://v8.dev",
   "supports": "!(arm | arm64 | uwp | osx)",
