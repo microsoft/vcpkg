@@ -3213,7 +3213,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.14.6",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "libdshowcapture": {
