@@ -1,4 +1,0 @@
-Source: qt5-purchasing
-Version: 5.15.2
-Description: Qt5 Purchasing Module - Enables in-app purchase of products in Qt applications.
-Build-Depends:  qt5-base[core], qt5-declarative

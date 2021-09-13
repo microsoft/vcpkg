@@ -1,12 +1,35 @@
 {
   "name": "kf5archive",
-  "version": "5.84.0",
+  "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
   "dependencies": [
     "bzip2",
     "ecm",
     "qt5-base",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "lzma": {
+      "description": "Support for xz compressed files and data streams",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "zstd": {
+      "description": "Support for zstd compressed files and data streams",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }

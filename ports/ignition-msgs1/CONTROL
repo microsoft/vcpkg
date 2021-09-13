@@ -1,5 +1,0 @@
-Source: ignition-msgs1
-Version: 1.0.0
-Port-Version: 3
-Build-Depends: ignition-cmake0, ignition-math4, protobuf
-Description: Middleware protobuf messages for robotics

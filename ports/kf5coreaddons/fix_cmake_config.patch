@@ -1,0 +1,38 @@
+From 4588b0052c11189aa6872e3c3c13f05dbae0c26e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Fri, 27 Aug 2021 02:02:08 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5CoreAddonsConfig.cmake.in | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/KF5CoreAddonsConfig.cmake.in b/KF5CoreAddonsConfig.cmake.in
+index f86b69ff..f9e0d31f 100644
+--- a/KF5CoreAddonsConfig.cmake.in
++++ b/KF5CoreAddonsConfig.cmake.in
+@@ -18,6 +18,21 @@ else()
+         set_target_properties(KF5::desktoptojson PROPERTIES IMPORTED_LOCATION ${DESKTOPTOJSON_EXECUTABLE})
+     endif()
+ endif()
++
++if(NOT @BUILD_SHARED_LIBS@)
++    if(NOT WIN32)
++        find_dependency(Threads)
++    endif()
++
++    if(@Inotify_FOUND@)
++        find_package(Inotify) # https://bugs.kde.org/show_bug.cgi?id=441604
++    endif()
++
++    if(@Procstat_FOUND@)
++        find_dependency(Procstat)
++    endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5CoreAddonsTargets.cmake")
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5CoreAddonsMacros.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+
