@@ -6569,8 +6569,8 @@
       "port-version": 0
     },
     "uchardet": {
-      "baseline": "2020-04-26",
-      "port-version": 1
+      "baseline": "2021-09-03",
+      "port-version": 0
     },
     "umock-c": {
       "baseline": "2020-06-17",
