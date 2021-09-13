@@ -1,0 +1,11 @@
+{
+  "name": "xtensor-fftw",
+  "version-string": "2019-11-30",
+  "port-version": 1,
+  "description": "FFTW bindings for the xtensor C++14 multi-dimensional array library",
+  "homepage": "https://github.com/xtensor-stack/xtensor-fftw",
+  "dependencies": [
+    "fftw3",
+    "xtensor"
+  ]
+}

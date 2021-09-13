@@ -1,4 +1,0 @@
-Source: clblast
-Version: 1.5.1
-Build-Depends: opencl
-Description: A modern, lightweight, performant and tunable OpenCL BLAS library written in C++11.
