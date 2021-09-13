@@ -61,6 +61,7 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    # delete bin under non-windows because the dynamic libraries get put in lib
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
