@@ -122,18 +122,32 @@ if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
       COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${ACE_ROOT}/ACEXML/ACEXML.mwc
       WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
-      LOGNAME mwc-${TARGET_TRIPLET}
+      LOGNAME mwc-xml-${TARGET_TRIPLET}
   )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+  if("tao" IN_LIST FEATURES)
+    file(WRITE ${SOURCE_PATH}/TAO/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                         <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                         <ItemDefinitionGroup>
+                                                         <ClCompile>
+                                                         <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
+                                                         </ClCompile>
+                                                         <Link>
+                                                         <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib</AdditionalLibraryDirectories>
+                                                         </Link>
+                                                         </ItemDefinitionGroup>
+                                                         </Project>")
+  endif()
+
   file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
   vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
+#    USE_VCPKG_INTEGRATION
     SKIP_CLEAN
   )
 
@@ -288,7 +302,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
       PLATFORM ${MSBUILD_PLATFORM}
-      USE_VCPKG_INTEGRATION
+#      USE_VCPKG_INTEGRATION
       SKIP_CLEAN
     )
 
@@ -307,6 +321,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
+
+  # remove (erroneous) duplicate libs *TODO*: where do these come from ?
+  if("tao" IN_LIST FEATURES)
+    file(REMOVE
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosconcurrency.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosevent.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_coslifecycle.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosnaming.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosnotification.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_costrading.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_imr_activator.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_imr_locator.lib
+      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_rtevent.lib)
+  endif()
+
 
   vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
