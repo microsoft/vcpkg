@@ -62,10 +62,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-    configure_file(${SOURCE_PATH}/PC/pyconfig.h ${SOURCE_PATH}/PC/pyconfig.h)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in ${SOURCE_PATH}/PCbuild/python_vcpkg.props)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/openssl.props.in ${SOURCE_PATH}/PCbuild/openssl.props)
-    file(WRITE ${SOURCE_PATH}/PCbuild/libffi.props
+    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
+    file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
@@ -113,7 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
@@ -166,7 +166,7 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )
