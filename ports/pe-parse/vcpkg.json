@@ -1,0 +1,8 @@
+{
+  "name": "pe-parse",
+  "version-string": "1.2.0",
+  "port-version": 1,
+  "description": "pe-parse is a principled, lightweight C/C++ PE parser",
+  "homepage": "https://github.com/trailofbits/pe-parse",
+  "supports": "!uwp"
+}

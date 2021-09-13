@@ -1,0 +1,12 @@
+{
+  "name": "skyr-url",
+  "version-string": "1.13.0",
+  "port-version": 1,
+  "description": "A C++ library that implements the WhatWG URL specification",
+  "homepage": "https://github.com/cpp-netlib/url",
+  "dependencies": [
+    "nlohmann-json",
+    "range-v3",
+    "tl-expected"
+  ]
+}

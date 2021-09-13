@@ -1,0 +1,11 @@
+{
+  "name": "xmsh",
+  "version-string": "0.5.2",
+  "port-version": 2,
+  "description": "Reference Implementation of XMSH Library",
+  "homepage": "https://gitlab.com/libxmsh/xmsh",
+  "dependencies": [
+    "nlohmann-json",
+    "tl-expected"
+  ]
+}
