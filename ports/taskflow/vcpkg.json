@@ -1,6 +1,6 @@
 {
   "name": "taskflow",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Fast Parallel Tasking Programming Library using Modern C++",
   "homepage": "https://github.com/taskflow/taskflow"
 }
