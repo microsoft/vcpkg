@@ -83,6 +83,9 @@
 
   <!-- Install settings to get headers and import libs for the currently selected _ZVcpkgCurrentInstalledDir -->
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
+    </Lib>
     <Link>
       <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
