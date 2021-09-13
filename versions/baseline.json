@@ -4049,7 +4049,7 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "4.0.0",
+      "baseline": "2021-09-01",
       "port-version": 0
     },
     "marble": {
