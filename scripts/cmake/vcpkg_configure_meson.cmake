@@ -54,13 +54,20 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     foreach(prog IN LISTS compiler)
         if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
             string(REPLACE "CXX" "CPP" mesonprog "${prog}")
+            string(REPLACE "RC" "windres" mesonprog "${mesonprog}") # https://mesonbuild.com/Windows-module.html
             string(TOLOWER "${mesonprog}" proglower)
             string(APPEND NATIVE "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
     endforeach()
     if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND NATIVE "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
-        string(APPEND NATIVE "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        if (NOT VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Intel)$") # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
+            string(APPEND NATIVE "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        endif()
+    endif()
+    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
+        if (NOT VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Intel)$") # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
+            string(APPEND NATIVE "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        endif()
     endif()
     string(APPEND NATIVE "cmake = '${CMAKE_COMMAND}'\n")
     foreach(_binary IN LISTS ${_additional_binaries})
@@ -71,7 +78,7 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
         # This is currently wrongly documented in the meson docs or buggy. The docs say: 'none' = no flags
         # In reality however 'none' tries to deactivate eh and meson passes the flags for it resulting in a lot of warnings
-        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here. 
+        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here.
         # string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -79,12 +86,14 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
         string(REGEX REPLACE "\\.lib " ".lib;" WIN_C_STANDARD_LIBRARIES "${WIN_C_STANDARD_LIBRARIES}")
         list(TRANSFORM WIN_C_STANDARD_LIBRARIES APPEND "'")
         list(TRANSFORM WIN_C_STANDARD_LIBRARIES PREPEND "'")
+        list(REMOVE_ITEM WIN_C_STANDARD_LIBRARIES "''")
         list(JOIN WIN_C_STANDARD_LIBRARIES ", " WIN_C_STANDARD_LIBRARIES)
         string(APPEND NATIVE "c_winlibs = [${WIN_C_STANDARD_LIBRARIES}]\n")
         string(REGEX REPLACE "( |^)(-|/)" ";\\2" WIN_CXX_STANDARD_LIBRARIES "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         string(REGEX REPLACE "\\.lib " ".lib;" WIN_CXX_STANDARD_LIBRARIES "${WIN_CXX_STANDARD_LIBRARIES}")
         list(TRANSFORM WIN_CXX_STANDARD_LIBRARIES APPEND "'")
         list(TRANSFORM WIN_CXX_STANDARD_LIBRARIES PREPEND "'")
+        list(REMOVE_ITEM WIN_CXX_STANDARD_LIBRARIES "''")
         list(JOIN WIN_CXX_STANDARD_LIBRARIES ", " WIN_CXX_STANDARD_LIBRARIES)
         string(APPEND NATIVE "cpp_winlibs = [${WIN_CXX_STANDARD_LIBRARIES}]\n")
     endif()
@@ -113,7 +122,7 @@ endfunction()
 
 # Generates the required compiler properties for meson
 function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(L_FLAG /LIBPATH:)
     else()
         set(L_FLAG -L)
@@ -121,11 +130,11 @@ function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
     set(PATH_SUFFIX_DEBUG /debug)
     set(LIBPATH_${_config} "${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib")
     vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
-    list(APPEND MESON_CFLAGS_${_config} "-I\"${CURRENT_INSTALLED_DIR}/include\"")
+    list(APPEND MESON_CFLAGS_${_config} "-I${CURRENT_INSTALLED_DIR}/include")
     vcpkg_internal_meson_convert_list_to_python_array(MESON_CFLAGS_${_config} ${MESON_CFLAGS_${_config}})
     string(APPEND ${_out_var} "c_args = ${MESON_CFLAGS_${_config}}\n")
     vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
-    list(APPEND MESON_CXXFLAGS_${_config} "-I\"${CURRENT_INSTALLED_DIR}/include\"")
+    list(APPEND MESON_CXXFLAGS_${_config} "-I${CURRENT_INSTALLED_DIR}/include")
     vcpkg_internal_meson_convert_list_to_python_array(MESON_CXXFLAGS_${_config} ${MESON_CXXFLAGS_${_config}})
     string(APPEND ${_out_var} "cpp_args = ${MESON_CXXFLAGS_${_config}}\n")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -199,8 +208,8 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITECTURE})
         endif()
         if(BUILD_ARCH MATCHES "(amd|AMD)64")
-            set(BUILD_CPU_FAM x86_x64)
-            set(BUILD_CPU x86_x64)
+            set(BUILD_CPU_FAM x86_64)
+            set(BUILD_CPU x86_64)
         elseif(BUILD_ARCH MATCHES "(x|X)86")
             set(BUILD_CPU_FAM x86)
             set(BUILD_CPU i686)
@@ -211,16 +220,44 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             set(BUILD_CPU_FAM arm)
             set(BUILD_CPU armv7hl)
         else()
-            message(FATAL_ERROR "Unsupported host architecture ${BUILD_ARCH}!" )
+            message(FATAL_ERROR "Unsupported host architecture ${BUILD_ARCH}!")
         endif()
-    else() # TODO: add correct detection for OSX and Linux. Currently only x64 triplets are available in official vcpkg. 
-        set(BUILD_CPU_FAM x86_x64)
-        set(BUILD_CPU x86_x64)
+    elseif(CMAKE_HOST_UNIX)
+        # at this stage, CMAKE_HOST_SYSTEM_PROCESSOR is not defined
+        execute_process(
+            COMMAND uname -m
+            OUTPUT_VARIABLE MACHINE
+            COMMAND_ERROR_IS_FATAL ANY)
+        
+        # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
+        debug_message("Machine: ${MACHINE}")
+
+        if(MACHINE MATCHES "arm64")
+            set(BUILD_CPU_FAM aarch64)
+            set(BUILD_CPU armv8)
+        elseif(MACHINE MATCHES "x86_64|amd64")
+            set(BUILD_CPU_FAM x86_64)
+            set(BUILD_CPU x86_64)
+        elseif(MACHINE MATCHES "x86|i686")
+            set(BUILD_CPU_FAM x86)
+            set(BUILD_CPU i686)
+        elseif(MACHINE MATCHES "i386")
+            set(BUILD_CPU_FAM x86)
+            set(BUILD_CPU i386)
+        else()
+            unset(BUILD_CPU_FAM)
+            unset(BUILD_CPU)
+
+            # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
+            message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
+        endif()
+    else()
+        message(FATAL_ERROR "Failed to detect the host architecture!")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
-        set(HOST_CPU_FAM x86_x64)
-        set(HOST_CPU x86_x64)
+        set(HOST_CPU_FAM x86_64)
+        set(HOST_CPU x86_64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(HOST_CPU_FAM x86)
         set(HOST_CPU i686)
@@ -249,13 +286,20 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     foreach(prog IN LISTS compiler)
         if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
             string(REPLACE "CXX" "CPP" mesonprog "${prog}")
+            string(REPLACE "RC" "windres" mesonprog "${mesonprog}") # https://mesonbuild.com/Windows-module.html
             string(TOLOWER "${mesonprog}" proglower)
             string(APPEND CROSS "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
     endforeach()
     if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
-        string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
-        string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        if (NOT VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Intel)$") # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
+            string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        endif()
+    endif()
+    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
+        if (NOT VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Intel)$") # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
+            string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
+        endif()
     endif()
     foreach(_binary IN LISTS ${_additional_binaries})
         string(APPEND CROSS "${_binary}\n")
@@ -265,7 +309,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
 
     string(APPEND CROSS "[host_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
         set(MESON_SYSTEM_NAME "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" MESON_SYSTEM_NAME)
@@ -273,7 +317,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     string(APPEND CROSS "system = '${MESON_SYSTEM_NAME}'\n")
     string(APPEND CROSS "cpu_family = '${HOST_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${HOST_CPU}'\n")
-    
+
     string(APPEND CROSS "[build_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
     if(WIN32)
@@ -283,10 +327,15 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     else()
         string(APPEND CROSS "system = 'linux'\n")
     endif()
-    string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
-    string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
 
-    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP)
+    if(DEFINED BUILD_CPU_FAM)
+        string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
+    endif()
+    if(DEFINED BUILD_CPU)
+        string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
+    endif()
+
+    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_MINGW AND NOT WIN32))
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
         file(WRITE "${_file}" "${CROSS}")
@@ -323,17 +372,16 @@ function(vcpkg_configure_meson)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
-    vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
-    debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
 
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path("${PYTHON3_DIR}")
     list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "python = '${PYTHON3}'")
     list(APPEND _vcm_ADDITIONAL_CROSS_BINARIES "python = '${PYTHON3}'")
-    
+
     vcpkg_find_acquire_program(MESON)
 
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
@@ -386,7 +434,7 @@ function(vcpkg_configure_meson)
     else()
         list(APPEND _vcm_OPTIONS --default-library static)
     endif()
-    
+
     list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
     list(APPEND _vcm_OPTIONS_DEBUG -Ddebug=true --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
     list(APPEND _vcm_OPTIONS_RELEASE -Ddebug=false --prefix  ${CURRENT_PACKAGES_DIR})

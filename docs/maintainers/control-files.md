@@ -138,6 +138,7 @@ The grammar for the supports expression uses standard operators:
 - `(expr)` - grouping/precedence
 
 The predefined expressions are computed from standard triplet settings:
+- `native` - `TARGET_TRIPLET` == `HOST_TRIPLET`
 - `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`

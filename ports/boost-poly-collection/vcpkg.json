@@ -1,6 +1,6 @@
 {
   "name": "boost-poly-collection",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost poly_collection module",
   "homepage": "https://github.com/boostorg/poly_collection",
   "dependencies": [

@@ -1,15 +1,13 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-mongo
-    REF ebfad69af3db61c3f989ec2ec30ebd582e3a4073 # 1.2.0
-    SHA512 6cba529b258b26e8456e10089a127e9ef2b4e683f9d4e37551ed71887978ba22ba796d4af6db6558e20812428dff8ba95d1de540de0675a6563ac6b941c91921
+    REF ${OATPP_VERSION}
+    SHA512 b4d15b40521fc731213decbb4a68edf9f04d918ebd6539ec56e71bdc5aa3536bcd170d4d1f5ee828dc666294f520140241dbcd2c4498247c6d9ea363d7f8ec56
     HEAD_REF master
-    PATCHES
-        no-designatore-expression.patch # https://github.com/oatpp/oatpp-mongo/pull/5
 )
 
 set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")

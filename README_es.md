@@ -151,6 +151,18 @@ Para instalar las librerías para su proyecto, ejecute:
 $ ./vcpkg/vcpkg install [paquetes a instalar]
 ```
 
+Nota: por defecto se instalarán las librerías x86, para instalar x64, ejecute:
+
+```cmd
+> .\vcpkg\vcpkg install [paquete a instalar]:x64-windows
+```
+
+O si desea instalar varios paquetes:
+
+```cmd
+> .\vcpkg\vcpkg install [paquetes a instalar] --triplet=x64-windows
+```
+
 También puede buscar las librerías que necesita con el subcomando `search`:
 
 ```sh
@@ -365,7 +377,9 @@ ver la [documentación](docs/README.md) para tutoriales específicos, incluyendo
 [agregando un nuevo paquete desde un archivo comprimido](docs/examples/packaging-zipfiles.md),
 [agregando un nuevo paquete desde un repositorio en GitHub](docs/examples/packaging-github-repos.md).
 
-Nuestra documentación se encuentra online en ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+Nuestra documentación también esta disponible en nuestro sitio web [vcpkg.io](https://vcpkg.io/).
+Si necesita ayuda puede [crear un incidente](https://github.com/vcpkg/vcpkg.github.io/issues).
+¡Apreciamos cualquier retroalimentación!
 
 Ver un [video de demostración](https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutos.
 

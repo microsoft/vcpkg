@@ -18,9 +18,6 @@ The Azure Pipelines artifacts directory. If not supplied, defaults to the curren
 .PARAMETER ArchivesRoot
 Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 
-.PARAMETER UseEnvironmentSasToken
-Equivalent to '-BinarySourceStub "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"'
-
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
@@ -29,6 +26,10 @@ this parameter is not set, binary caching will not be used. Example: "files,W:\"
 The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
 If BinarySourceStub is not set, this parameter has no effect. If BinarySourceStub is set and this is
 not, binary caching will default to read-write mode.
+
+.PARAMETER PassingIsPassing
+Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
+when using vcpkg to test a prerelease MSVC++ compiler)
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -43,11 +44,11 @@ Param(
     $ArtifactStagingDirectory = '.',
     [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
-    [switch]
-    $UseEnvironmentSasToken = $false,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
-    $BuildReason = $null
+    $BuildReason = $null,
+    [switch]
+    $PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -55,25 +56,13 @@ if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/communi
     throw
 }
 
-$usingBinaryCaching = $true
-if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
-    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
-        if ($UseEnvironmentSasToken) {
-            $BinarySourceStub = "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"
-        } else {
-            $usingBinaryCaching = $false
-        }
-    } else {
-        if ($UseEnvironmentSasToken) {
-            Write-Error "Only one binary caching setting may be used."
-            throw
-        } else {
-            $BinarySourceStub = "files,$ArchivesRoot"
-        }
+if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
+    if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
+        Write-Error "Only one binary caching setting may be used."
+        throw
     }
-} elseif ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or $UseEnvironmentSasToken) {
-    Write-Error "Only one binary caching setting may be used."
-    throw
+
+    $BinarySourceStub = "files,$ArchivesRoot"
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
@@ -81,14 +70,7 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
-$commonArgs = @()
-if ($usingBinaryCaching) {
-    $commonArgs += @('--binarycaching')
-} else {
-    $commonArgs += @('--no-binarycaching')
-}
-
-$commonArgs += @(
+$commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
@@ -96,7 +78,10 @@ $commonArgs += @(
 )
 
 $skipFailures = $false
-if ($usingBinaryCaching) {
+if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
+    $commonArgs += @('--no-binarycaching')
+} else {
+    $commonArgs += @('--binarycaching')
     $binaryCachingMode = 'readwrite'
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
@@ -136,12 +121,6 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
 
-# WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
-# Install them so the CI succeeds:
-if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp', 'x64-windows', 'x64-windows-static', 'x64-windows-static-md')) {
-    .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
-}
-
 if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
     # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
@@ -154,4 +133,5 @@ else
 }
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
-    -baselineFile .\scripts\ci.baseline.txt
+    -baselineFile .\scripts\ci.baseline.txt `
+    -passingIsPassing:$PassingIsPassing

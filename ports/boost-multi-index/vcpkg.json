@@ -1,12 +1,11 @@
 {
   "name": "boost-multi-index",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost multi_index module",
   "homepage": "https://github.com/boostorg/multi_index",
   "dependencies": [
     "boost-assert",
     "boost-bind",
-    "boost-compatibility",
     "boost-config",
     "boost-container-hash",
     "boost-core",

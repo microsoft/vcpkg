@@ -1,6 +1,0 @@
-Source: slikenet
-Version: 2019-10-22-2
-Homepage: https://github.com/SLikeSoft/SLikeNet
-Description: SLikeNetT is an Open Source/Free Software cross-platform network engine written in C++ and specifially designed for games (and applications which have comparable requirements on a network engine like games) building upon the discontinued RakNet network engine which had more than 13 years of active development.
-Build-Depends: openssl
-Supports: !uwp

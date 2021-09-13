@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8575b2f..87de55c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,7 +46,7 @@ message(STATUS "=======================================================")
+ include(GNUInstallDirs)
+ include(FetchContent)
+ include(cmake/code_coverage.cmake)
+-include(cmake/sanitizer.cmake)
++#include(cmake/sanitizer.cmake)
+ include(cmake/gcc_analyze.cmake)
+ 
+ # SSL

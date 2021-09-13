@@ -1,7 +1,6 @@
 {
   "name": "boost-wave",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost wave module",
   "homepage": "https://github.com/boostorg/wave",
   "supports": "!uwp",
@@ -19,7 +18,6 @@
       "name": "boost-filesystem",
       "platform": "!uwp"
     },
-    "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",

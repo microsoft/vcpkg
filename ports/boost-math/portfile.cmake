@@ -3,15 +3,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.75.0
-    SHA512 d0b31cc55d2c0788b7376bc8be877acb30b0f23a71f83aa6df27d47fc8887542924df9f33b1d69da2befdb4ab087d6905d126ee3a8ae98a91aba0ad3c70311ee
+    REF boost-1.76.0
+    SHA512 50967b962ac4b3cfc799733e5cbbcc15215c27135368a739d2441a70aa6e4a7ccfb617bf3ccd571201568d8bacb209d2a98acbe0593cde7714c7da9faa09ee17
     HEAD_REF master
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "import ../../config/checks/config" "import config/checks/config")
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "check-target-builds ../config//has_gcc_visibility" "check-target-builds ../has_gcc_visibility.cpp")
+
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
+file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/build/config")
+file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-math requires a newer version of vcpkg in order to build.")
 endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

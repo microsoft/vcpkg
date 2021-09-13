@@ -1,10 +1,19 @@
+From 8a7a883b51e18645974921b1bfe9d3b6ef3c626c Mon Sep 17 00:00:00 2001
+From: Lars Glud <larshg@gmail.com>
+Date: Fri, 19 Mar 2021 22:22:57 +0100
+Subject: [PATCH] Add gcc-version-check
+
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c452ce..2c50b8d 100644
+index e5aa7f40a..1e346a316 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -303,6 +303,10 @@ set(FLANN_USE_STATIC ON)
+@@ -304,6 +304,10 @@ if(NOT PCL_SHARED_LIBS OR ((WIN32 AND NOT MINGW) AND NOT PCL_BUILD_WITH_FLANN_DY
+ endif()
  find_package(FLANN 1.7.0 REQUIRED)
- find_package(lz4)
  
 +if(UNIX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
 +    set (CMAKE_CXX_STANDARD 17)
@@ -13,3 +22,6 @@ index 6c452ce..2c50b8d 100644
  # libusb-1.0
  option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
  if(WITH_LIBUSB)
+-- 
+2.29.2.windows.2
+

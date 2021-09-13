@@ -12,6 +12,7 @@ vcpkg_from_sourceforge(
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
     ${CMAKE_CURRENT_LIST_DIR}/config.linux.h
+    ${CMAKE_CURRENT_LIST_DIR}/unofficial-libuuid-config.cmake.in
     DESTINATION ${SOURCE_PATH}
 )
 
@@ -29,6 +30,8 @@ set(includedir \$\{prefix\}/include)
 configure_file(${SOURCE_PATH}/uuid.pc.in ${SOURCE_PATH}/uuid.pc @ONLY)
 file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(INSTALL ${SOURCE_PATH}/uuid.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/unofficial-libuuid TARGET_PATH share/unofficial-libuuid)
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL

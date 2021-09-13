@@ -1,0 +1,53 @@
+From e6e59f41c082be94c4fef007e276b1dffe7dc240 Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sat, 8 May 2021 19:28:01 +0700
+Subject: [PATCH 01/14] Use libtre
+
+---
+ configure.ac    | 2 +-
+ src/Makefile.am | 2 +-
+ src/file.h      | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 02eac8f..b05c334 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -185,7 +185,7 @@ if test "$enable_libseccomp" != "no"; then
+     AC_CHECK_LIB(seccomp, seccomp_init)
+ fi
+ if test "$MINGW" = 1; then
+-  AC_CHECK_LIB(gnurx,regexec,,AC_MSG_ERROR([libgnurx is required to build file(1) with MinGW]))
++  AC_SEARCH_LIBS(tre_regexec,tre,,AC_MSG_ERROR([libtre is required to build file(1) with MinGW]))
+ fi
+ 
+ dnl See if we are cross-compiling
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 3f67f2c..34781b9 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -13,7 +13,7 @@ libmagic_la_SOURCES = buffer.c magic.c apprentice.c softmagic.c ascmagic.c \
+ 	file_opts.h elfclass.h mygetopt.h cdf.c cdf_time.c readcdf.c cdf.h
+ libmagic_la_LDFLAGS = -no-undefined -version-info 1:0:0
+ if MINGW
+-MINGWLIBS = -lgnurx -lshlwapi
++MINGWLIBS = -lshlwapi
+ else
+ MINGWLIBS =
+ endif
+diff --git a/src/file.h b/src/file.h
+index c548e97..299ac0c 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -79,7 +79,7 @@
+ #include <stdio.h>	/* Include that here, to make sure __P gets defined */
+ #include <errno.h>
+ #include <fcntl.h>	/* For open and flags */
+-#include <regex.h>
++#include <tre/regex.h>
+ #include <time.h>
+ #include <sys/types.h>
+ #ifndef WIN32
+-- 
+2.29.2.windows.2
+

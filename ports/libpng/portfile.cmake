@@ -55,24 +55,26 @@ else()
 endif()
 
 set(LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION )
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL iOS)
-    set(LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_HARDWARE_OPTIMIZATIONS=OFF")
+if(VCPKG_TARGET_IS_IOS)
+    list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_HARDWARE_OPTIMIZATIONS=OFF")
 endif()
 
 set(LD_VERSION_SCRIPT_OPTION )
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Android)
+if(VCPKG_TARGET_IS_ANDROID)
     set(LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
+    # for armeabi-v7a, check whether NEON is available
+    list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=check")
+else()
+    list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPNG_MAN_DIR=share/${PORT}/man
         ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
         ${LD_VERSION_SCRIPT_OPTION}
-        -DPNG_ARM_NEON=on
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
         -DPNG_TESTS=OFF
@@ -82,9 +84,9 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/libpng)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/libpng)
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc")
 if(EXISTS ${_file})
     file(READ "${_file}" _contents)

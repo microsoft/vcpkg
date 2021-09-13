@@ -1,7 +1,0 @@
-Source: cjson
-Version: 2019-11-30-1
-Description: Ultralightweight JSON parser in ANSI C
-Homepage: https://github.com/DaveGamble/cJSON
-
-Feature: utils
-Description: Enable building the cJSON_Utils library

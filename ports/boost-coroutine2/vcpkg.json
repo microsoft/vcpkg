@@ -1,6 +1,6 @@
 {
   "name": "boost-coroutine2",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost coroutine2 module",
   "homepage": "https://github.com/boostorg/coroutine2",
   "supports": "!emscripten",
