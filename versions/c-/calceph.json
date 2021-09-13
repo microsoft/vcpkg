@@ -16,8 +16,8 @@
       "port-version": 1
     },
     {
-      "git-tree": "334c4a4393d16d89857ca556206f3b7dc8b6574a",
-      "version-string": "3.5.0",
+      "git-tree": "f40d6c70356b3f48aaca21970c39aa4d59b379fc",
+      "version-semver": "3.5.0",
       "port-version": 0
     }
   ]
