@@ -6,15 +6,24 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         rename-shared-lib.patch
-        fix-uwp-APPX0703.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CMARK_SHARED)
 
+if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+    message(FATAL_ERROR "${PORT} does no support to build tools on UWP")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCMARK_TESTS=OFF
         -DCMARK_SHARED=${CMARK_SHARED}
         -DCMARK_STATIC=${CMARK_STATIC}
@@ -26,12 +35,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cmark)
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_tools(TOOL_NAMES cmark_exe AUTO_CLEAN)
-
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES cmark AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
