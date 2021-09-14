@@ -8,7 +8,6 @@
     {
       "name": "qt5-base",
       "default-features": false
-    },
-    "qt5-declarative"
+    }
   ]
 }

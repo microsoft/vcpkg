@@ -51,4 +51,24 @@ set(OPT_DBG "TIFF_LIBS=${TIFF_DEBUG} ${LZMA_DEBUG} ${JPEG_DEBUG} ${ZLIB_DEBUG}"
             "JASPER_LIBS=${JASPER_DEBUG} ${FREEGLUT_DEBUG} ${JPEG_DEBUG} ${ZLIB_DEBUG}")
 list(APPEND CORE_OPTIONS "WEBP_INCDIR=${CURRENT_INSTALLED_DIR}/include") # Requires libwebp[all]
 
-qt_submodule_installation(BUILD_OPTIONS ${CORE_OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
+set(qt_build_submodule_KEEP_TOOL_DEPS
+    libjasper
+    libjasperd
+    liblzma
+    liblzmad
+    libtiff
+    libtiffd
+    libwebp
+    libwebpd
+    libwebpmux
+    libwebpmuxd
+    libwebpdemux
+    libwebpdemuxd
+    libwebpdecoder
+    libwebpdecoderd
+)
+qt_submodule_installation(
+    BUILD_OPTIONS ${CORE_OPTIONS}
+    BUILD_OPTIONS_RELEASE ${OPT_REL}
+    BUILD_OPTIONS_DEBUG ${OPT_DBG}
+)

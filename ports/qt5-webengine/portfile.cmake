@@ -1,7 +1,7 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtrees_path_length)
-if(buildtrees_path_length GREATER 35 AND CMAKE_HOST_WIN32)
-    vcpkg_buildpath_length_warning(35)
+if(buildtrees_path_length GREATER 37 AND CMAKE_HOST_WIN32)
+    vcpkg_buildpath_length_warning(37)
     message(FATAL_ERROR "terminating due to source length.")
 endif()
 #set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
