@@ -6,40 +6,40 @@ vcpkg_from_github(
     SHA512 ff57fdb27eff8a83519601a30428f6979b042e8029484da8a3605a75d58120eaaaf57dfb456cb19d9078cfbdca3bd1f8fc38cc31c61cde3cd037ef246853ca73
     HEAD_REF master
     PATCHES
-      "use-proj.patch"
+        use-proj.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    "jpeg"                      USE_JPEG
-    "png"                       USE_PNG
-    "tiff"                      USE_TIFF
-    "webp"                      USE_WEBP
-    "libxml2"                   USE_LIBXML2
-    "cairo"                     USE_CAIRO
-    "proj"                      USE_PROJ
-    "grid-renderer"             USE_GRID_RENDERER
-    "svg-renderer"              USE_SVG_RENDERER
-    "input-csv"                 USE_PLUGIN_INPUT_CSV
-    "input-gdal"                USE_PLUGIN_INPUT_GDAL
-    "input-geobuf"              USE_PLUGIN_INPUT_GEOBUF
-    "input-geojson"             USE_PLUGIN_INPUT_GEOJSON
-    "input-ogr"                 USE_PLUGIN_INPUT_OGR
-    "input-pgraster"            USE_PLUGIN_INPUT_PGRASTER
-    "input-postgis"             USE_PLUGIN_INPUT_POSTGIS
-    "input-raster"              USE_PLUGIN_INPUT_RASTER
-    "input-shape"               USE_PLUGIN_INPUT_SHAPE
-    "input-sqlite"              USE_PLUGIN_INPUT_SQLITE
-    "input-topojson"            USE_PLUGIN_INPUT_TOPOJSON
-    "viewer"                    BUILD_DEMO_VIEWER
-    "demo"                      BUILD_DEMO_CPP
-    "utility-geometry-to-wkb"   BUILD_UTILITY_GEOMETRY_TO_WKB
-    "utility-mapnik-index"      BUILD_UTILITY_MAPNIK_INDEX
-    "utility-mapnik-render"     BUILD_UTILITY_MAPNIK_RENDER
-    "utility-ogrindex"          BUILD_UTILITY_OGRINDEX
-    "utility-pgsql2sqlite"      BUILD_UTILITY_PGSQL2SQLITE
-    "utility-shapeindex"        BUILD_UTILITY_SHAPEINDEX
-    "utility-svg2png"           BUILD_UTILITY_SVG2PNG
+    FEATURES
+        "jpeg"                      USE_JPEG
+        "png"                       USE_PNG
+        "tiff"                      USE_TIFF
+        "webp"                      USE_WEBP
+        "libxml2"                   USE_LIBXML2
+        "cairo"                     USE_CAIRO
+        "proj"                      USE_PROJ
+        "grid-renderer"             USE_GRID_RENDERER
+        "svg-renderer"              USE_SVG_RENDERER
+        "input-csv"                 USE_PLUGIN_INPUT_CSV
+        "input-gdal"                USE_PLUGIN_INPUT_GDAL
+        "input-geobuf"              USE_PLUGIN_INPUT_GEOBUF
+        "input-geojson"             USE_PLUGIN_INPUT_GEOJSON
+        "input-ogr"                 USE_PLUGIN_INPUT_OGR
+        "input-pgraster"            USE_PLUGIN_INPUT_PGRASTER
+        "input-postgis"             USE_PLUGIN_INPUT_POSTGIS
+        "input-raster"              USE_PLUGIN_INPUT_RASTER
+        "input-shape"               USE_PLUGIN_INPUT_SHAPE
+        "input-sqlite"              USE_PLUGIN_INPUT_SQLITE
+        "input-topojson"            USE_PLUGIN_INPUT_TOPOJSON
+        "viewer"                    BUILD_DEMO_VIEWER
+        "demo"                      BUILD_DEMO_CPP
+        "utility-geometry-to-wkb"   BUILD_UTILITY_GEOMETRY_TO_WKB
+        "utility-mapnik-index"      BUILD_UTILITY_MAPNIK_INDEX
+        "utility-mapnik-render"     BUILD_UTILITY_MAPNIK_RENDER
+        "utility-ogrindex"          BUILD_UTILITY_OGRINDEX
+        "utility-pgsql2sqlite"      BUILD_UTILITY_PGSQL2SQLITE
+        "utility-shapeindex"        BUILD_UTILITY_SHAPEINDEX
+        "utility-svg2png"           BUILD_UTILITY_SVG2PNG
 )
 
 vcpkg_cmake_configure(
@@ -102,7 +102,7 @@ if("utility-svg2png" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES svg2png AUTO_CLEAN)
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/mapnik/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
