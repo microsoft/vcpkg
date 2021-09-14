@@ -66,7 +66,7 @@ else()
         ADDITIONAL_MSYS_PACKAGES gzip
     )
     #install-pkgconfDATA:
-    vcpkg_make_build(BUILD_TARGET dist LOGFILE_ROOT build-dist)
+    vcpkg_make_build(BUILD_TARGET dist LOGFILE_BASE build-dist)
     vcpkg_make_install()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
