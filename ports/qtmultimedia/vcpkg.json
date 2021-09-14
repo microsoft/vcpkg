@@ -20,8 +20,8 @@
     "gstreamer": {
       "description": "Build with gstreamer",
       "dependencies": [
-        "gstreamer",
-        "angle"
+        "angle",
+        "gstreamer"
       ]
     },
     "qml": {
