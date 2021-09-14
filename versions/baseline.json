@@ -2512,6 +2512,10 @@
       "baseline": "2020-09-14",
       "port-version": 1
     },
+    "guilite": {
+      "baseline": "2021-07-31",
+      "port-version": 0
+    },
     "gumbo": {
       "baseline": "0.10.1",
       "port-version": 4
