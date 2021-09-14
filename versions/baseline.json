@@ -3138,7 +3138,7 @@
     },
     "libarchive": {
       "baseline": "3.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libass": {
       "baseline": "0.15.1",
