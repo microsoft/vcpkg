@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF 436bd7880e458532901c58f4d9d1ea23fa7edd52    #v3.15.8
-    SHA512 88bb9a965bccfe11a07aee2c0c16eb9cc1845ea2d7500ef6def3e1c0a8155ac4eadd0ceef4b12552960dffe95a0fc82549d1abba71ca073ab86ec5de57d9cafb
+    REF v3.17.3
+    SHA512 b4030b4474cc5fb5a62501200725dd488e6e66e3ced4ed12ab4ee029fcfed305e92ec966adafbdd343afffd186908163849422b95eaa500e7e741ac325d01d12
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        port_def.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -79,7 +78,7 @@ if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.15.8.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.17.3.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
