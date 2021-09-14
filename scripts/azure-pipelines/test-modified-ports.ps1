@@ -146,7 +146,7 @@ if ($EnforceCascades) {
     } elseif ($Triplet -eq 'arm64-windows') {
         $cascades = 229
     } elseif ($Triplet -eq 'arm-uwp') {
-        $cascades = 229
+        $cascades = 341
     } elseif ($Triplet -eq 'x64-osx') {
         $cascades = 61
     } elseif ($Triplet -eq 'x64-linux') {
