@@ -3,11 +3,6 @@
   "version-semver": "0.30.1",
   "description": "CommonMark parsing and rendering library",
   "homepage": "https://github.com/commonmark/cmark",
-  "features": {
-    "tools": {
-      "description": "Build tools"
-    }
-  },
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,5 +12,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }
