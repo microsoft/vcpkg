@@ -55,8 +55,8 @@ vcpkg_cmake_configure(
         -DUSE_EXTERNAL_MAPBOX_POLYLABEL=ON
         -DUSE_EXTERNAL_MAPBOX_PROTOZERO=ON
         -DUSE_EXTERNAL_MAPBOX_VARIANT=ON
-        -DINSTALL_CMAKE_DIR=share/${PORT}/cmake
-        -DFONTS_INSTALL_DIR=share/${PORT}/fonts
+        -DINSTALL_CMAKE_DIR=share/mapnik/cmake
+        -DFONTS_INSTALL_DIR=share/mapnik/fonts
 )
 
 vcpkg_cmake_install()
