@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d43c0c7..1bf21cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,8 @@ cmake_minimum_required (VERSION 3.12)
+ project ("AudioFile" VERSION 1.0.9
+                      DESCRIPTION "A simple C++ library for reading and writing audio files."
+                      HOMEPAGE_URL "https://github.com/adamstark/AudioFile")
++option(BUILD_EXAMPLES "Build examples" OFF)
++option(BUILD_TESTS "Build tests" OFF)
+ 
+ #===============================================================================
+ include (GNUInstallDirs)
+@@ -21,10 +23,20 @@ target_include_directories (
+ target_compile_features (${PROJECT_NAME} INTERFACE cxx_std_11)
+ 
+ #===============================================================================
++if(BUILD_EXAMPLES)
+ add_subdirectory (examples)
++endif()
+ 
++if(BUILD_TESTS)
+ enable_testing()
+ add_subdirectory (tests)
+-
++endif()
+ #===============================================================================
+-set (CMAKE_SUPPRESS_REGENERATION true)
+\ No newline at end of file
++set (CMAKE_SUPPRESS_REGENERATION true)
++
++#install and export targets
++install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config)
++export(TARGETS ${PROJECT_NAME} FILE ${PROJECT_NAME}Config.cmake)
++install(EXPORT ${PROJECT_NAME}Config DESTINATION share/AudioFile FILE ${PROJECT_NAME}Config.cmake)
++#install headers
++install(FILES AudioFile.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+\ No newline at end of file

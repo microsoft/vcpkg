@@ -217,7 +217,7 @@
       "port-version": 7
     },
     "audiofile": {
-      "baseline": "1.0.7",
+      "baseline": "1.0.9",
       "port-version": 0
     },
     "aurora": {
@@ -1237,8 +1237,8 @@
       "port-version": 3
     },
     "cgltf": {
-      "baseline": "1.8",
-      "port-version": 1
+      "baseline": "1.10",
+      "port-version": 0
     },
     "cgns": {
       "baseline": "4.2.0",
@@ -3661,8 +3661,8 @@
       "port-version": 1
     },
     "libsbml": {
-      "baseline": "5.18.0",
-      "port-version": 1
+      "baseline": "5.19.0",
+      "port-version": 0
     },
     "libsbsms": {
       "baseline": "2.3.0",
