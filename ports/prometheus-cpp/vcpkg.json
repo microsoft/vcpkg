@@ -1,7 +1,6 @@
 {
   "name": "prometheus-cpp",
-  "version-string": "0.12.3",
-  "port-version": 1,
+  "version-semver": "0.13.0",
   "description": "Prometheus Client Library for Modern C++",
   "default-features": [
     "compression",
