@@ -41,9 +41,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<target name="build-solution"> 
-                                <!--property name="VCPKG_DEP_INFO_OVERRIDE_VARS" value="v141"/-->
                                 <exec executable="${basedir}/vcpkg.exe" failonerror="true">
-                                    <env key="VCPKG_PLATFORM_TOOLSET" value="v141"/>
                                     <arg value="install" />
                                     <arg value="--triplet" />
                                     <arg value="x64-windows-static" />
@@ -55,6 +53,7 @@
                                     <arg value="${project.build.directory}/packages_x64" />
                                     <arg value="--x-install-root" />
                                     <arg value="${project.build.directory}/installed_x64" />
+                                    <arg value="-v" />
                                 </exec>
                             </target>
 						</configuration>
@@ -67,9 +66,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<target name="build-solution"> 
-                                <!--property name="VCPKG_DEP_INFO_OVERRIDE_VARS" value="v141"/-->
                                 <exec executable="${basedir}/vcpkg.exe" failonerror="true">
-                                    <env key="VCPKG_PLATFORM_TOOLSET" value="v141"/>
                                     <arg value="install" />
                                     <arg value="--triplet" />
                                     <arg value="x86-windows-static" />
