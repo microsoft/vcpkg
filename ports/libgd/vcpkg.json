@@ -1,6 +1,6 @@
 {
   "name": "libgd",
-  "version-string": "2.3.2",
+  "version-semver": "2.3.2",
   "description": "Open source code library for the dynamic creation of images by programmers.",
   "homepage": "https://github.com/libgd/libgd",
   "dependencies": [
