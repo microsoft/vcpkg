@@ -1,10 +1,8 @@
-set(BOTAN_VERSION 2.16.0)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 82a20c67bd54b8c6c75f32bd31dea5b12f3d7e67 # 2.16.0
-    SHA512 42b8dac0a6b44afee14e8ba928b323790b8d90395ba70b4919b3d033e5b9073706355c2263c2a9e66357fa6d4af4c85430c93a65cfdaa79f1c83c89940619a66
+    REF d4bd416702a65eddcc14ee06b9c1b674631e6ae3 # 2.18.1
+    SHA512 6c8a8a772ff926402aa77ea1156e8a6b8fcaa18514107c94e9d2c7c76daaf9a02ef8c5c249d1ddf56655bab0ecd0d91490d907fc2239259689662533089b09ad
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
@@ -58,13 +56,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
-        set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR}/debug)
+        set(BOTAN_FLAG_PREFIX "${CURRENT_PACKAGES_DIR}/debug")
         set(BOTAN_FLAG_DEBUGMODE --debug-mode)
         set(BOTAN_DEBUG_SUFFIX "")
         set(BOTAN_MSVC_RUNTIME_SUFFIX "d")
     else()
         set(BOTAN_FLAG_DEBUGMODE)
-        set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR})
+        set(BOTAN_FLAG_PREFIX "${CURRENT_PACKAGES_DIR}")
         set(BOTAN_MSVC_RUNTIME_SUFFIX "")
     endif()
 
@@ -113,7 +111,6 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --libdir=${BOTAN_FLAG_PREFIX}/lib
             --pkgconfigdir=${BOTAN_FLAG_PREFIX}/lib
             --includedir=${BOTAN_FLAG_PREFIX}/include
-            --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
@@ -123,31 +120,24 @@ endfunction()
 BOTAN_BUILD(rel)
 BOTAN_BUILD(dbg)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/botan)
-
-set(cli_exe_name "botan")
-if(CMAKE_HOST_WIN32)
-    set(cli_exe_name "botan-cli.exe")
-endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${cli_exe_name} ${CURRENT_PACKAGES_DIR}/tools/botan/${cli_exe_name})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${cli_exe_name})
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
-
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/include/botan-2
-    ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/manual)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/botan)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/ ${CURRENT_PACKAGES_DIR}/share/botan/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan/license.txt ${CURRENT_PACKAGES_DIR}/share/botan/copyright)
+if(CMAKE_HOST_WIN32)
+    vcpkg_copy_tools(TOOL_NAMES botan-cli AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/botan-2"
+    "${CURRENT_PACKAGES_DIR}/share/doc")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
