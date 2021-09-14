@@ -1795,7 +1795,6 @@ dimcli:x64-windows-static=fail
 cppgraphqlgen:x64-osx=fail
 
 v8:x64-windows-release=fail
-libmodplug:x64-windows-release=fail
 isal:x64-windows-release=fail
 azure-kinect-sensor-sdk:x64-windows-release=fail
 fluidsynth:x64-windows-release=fail
