@@ -1,5 +1,0 @@
-Source: vectorclass
-Version: 2.00.01
-Homepage: https://github.com/vectorclass/version2
-Description: C++ class library for using the Single Instruction Multiple Data (SIMD) instructions in modern Microprocessors
-Supports: !(arm|arm64)

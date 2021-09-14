@@ -5,12 +5,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/sentencepiece
-    REF v0.1.82
-    SHA512   669d6a1e86c44587d725b1e93f11b707e510a180dec08afb79268158f5de009cb20ffccc72c501c84f032360e52e53ae227504f3538f59978629433e0d6fcf65
+    REF v0.1.95
+    SHA512 22484cf0311315e25a3184561f4e18b45286ad068bfb722c860e1b44fb16913c96d34723b486fab5e4e1e69f4b620a0e3cff410f56cb6561a67193ebaf565a31
     HEAD_REF master
-    PATCHES rename-version.patch
 )
-file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

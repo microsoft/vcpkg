@@ -1,5 +1,0 @@
-Source: mqtt-cpp
-Version: 9.0.0
-Description: Header-only MQTT client/server for C++14 based on Boost.Asio.
-Homepage: https://github.com/redboltz/mqtt_cpp
-Build-Depends: boost-asio, boost-any, boost-multi-index, boost-type-erasure, boost-log
