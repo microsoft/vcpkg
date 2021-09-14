@@ -22,7 +22,7 @@ set(EXTRA_OPTS "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # $LIBS is an environment variable that vcpkg already pre-populated with some libraries. 
     # We need to re-purpose it when passing LIBS option to make to avoid overriding the vcpkg's own list.  
-    list(APPEND EXTRA_OPTS "LIBS=-lgettimeofday -lgetopt $LIBS")
+    list(APPEND EXTRA_OPTS "LIBS=-lgettimeofday -lgetopt \$LIBS")
 else()
     # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
     set(VCPKG_C_FLAGS "-g -O2") 
@@ -31,7 +31,7 @@ endif()
 
 # The upstream doesn't add this macro to the configure
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND EXTRA_OPTS "CFLAGS=$CFLAGS -DASN1_STATIC")
+    list(APPEND EXTRA_OPTS "CFLAGS=\$CFLAGS -DASN1_STATIC")
 endif()
 
 set(ENV{GTKDOCIZE} true)
