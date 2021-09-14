@@ -1357,6 +1357,8 @@ rsasynccpp:arm64-windows=fail
 rsasynccpp:arm-uwp=fail
 rsasynccpp:x64-linux=fail
 rsasynccpp:x64-osx=fail
+# Requires g++10 but CI compiler only has g++9
+rsm-bsa:x64-linux=fail
 rsocket:x64-windows=fail
 rsocket:x64-windows-static=fail
 rsocket:x64-windows-static-md=fail
