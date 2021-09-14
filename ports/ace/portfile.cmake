@@ -325,17 +325,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # remove (erroneous) duplicate libs *TODO*: where do these come from ?
   if("tao" IN_LIST FEATURES)
     file(REMOVE
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosconcurrency.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosevent.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_coslifecycle.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosnaming.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_cosnotification.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_costrading.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_imr_activator.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_imr_locator.lib
-      ${CURRENT_PACKAGES_DIR}/debug/bin/tao_rtevent.lib)
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosconcurrency.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosevent.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_coslifecycle.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnaming.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnotification.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_costrading.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_activator.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_locator.lib
+      ${CURRENT_PACKAGES_DIR}/debug/lib/tao_rtevent.lib)
   endif()
-
 
   vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
