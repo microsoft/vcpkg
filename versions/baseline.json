@@ -6228,10 +6228,6 @@
       "baseline": "2020-09-14",
       "port-version": 1
     },
-    "stduuid": {
-      "baseline": "2021-08-30",
-      "port-version": 0
-    },
     "stlab": {
       "baseline": "1.6.2",
       "port-version": 1
