@@ -88,6 +88,11 @@ ${contents}
 endif()
 
 # test regular mode with FETCH_REF
+vcpkg_execute_required_process(
+    COMMAND ${git} config uploadpack.allowReachableSHA1InWant false
+    WORKING_DIRECTORY "${git_remote}"
+    LOGNAME "git-config"
+)
 set(VCPKG_USE_HEAD_VERSION OFF)
 vcpkg_from_git(
     OUT_SOURCE_PATH source_path
@@ -102,6 +107,12 @@ if(NOT "${contents}" STREQUAL "first commit")
 ${contents}
 ")
 endif()
+
+vcpkg_execute_required_process(
+    COMMAND ${git} config uploadpack.allowReachableSHA1InWant true
+    WORKING_DIRECTORY "${git_remote}"
+    LOGNAME "git-config"
+)
 
 # test head mode
 set(VCPKG_USE_HEAD_VERSION ON)
