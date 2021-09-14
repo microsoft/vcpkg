@@ -15,7 +15,8 @@ vcpkg_cmake_install()
 
 file(GLOB SHARED_CMAKE_FILES
      "${CURRENT_PACKAGES_DIR}/lib/s2n"
-     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n)"
+     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
+     )
 file(COPY "${SHARED_CMAKE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 
 file(REMOVE_RECURSE
