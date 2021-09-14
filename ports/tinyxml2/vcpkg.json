@@ -1,0 +1,7 @@
+{
+  "name": "tinyxml2",
+  "version-string": "8.0.0",
+  "port-version": 2,
+  "description": "A simple, small, efficient, C++ XML parser",
+  "homepage": "https://github.com/leethomason/tinyxml2"
+}

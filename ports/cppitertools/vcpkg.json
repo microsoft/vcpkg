@@ -1,0 +1,10 @@
+{
+  "name": "cppitertools",
+  "version-string": "2.1",
+  "port-version": 1,
+  "description": "Range-based for loop add-ons inspired by the Python builtins and itertools library",
+  "homepage": "https://github.com/ryanhaining/cppitertools",
+  "dependencies": [
+    "boost-optional"
+  ]
+}

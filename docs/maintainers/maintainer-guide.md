@@ -23,7 +23,10 @@ then obviously beneficial changes like fixing typos are appreciated!
 
 A good service to check many at once is [Repology](https://repology.org/).
 If the library you are adding could be confused with another one,
-consider renaming to make it clear.
+consider renaming to make it clear. We prefer when names are longer and/or
+unlikely to conflict with any future use of the same name. If the port refers
+to a library on GitHub, a good practice is to prefix the name with the organization
+if there is any chance of confusion.
 
 ### Use GitHub Draft PRs
 
@@ -48,6 +51,28 @@ At this time, the following helpers are deprecated:
 
 Ideally, portfiles should be short, simple, and as declarative as possible.
 Remove any boiler plate comments introduced by the `create` command before submitting a PR.
+
+### Ports must not be path dependent
+
+Ports must not change their behavior based on which ports are already installed in a form that would change which contents that port installs. For example, given:
+
+```
+> vcpkg install a
+> vcpkg install b
+> vcpkg remove a
+```
+
+and
+
+```
+> vcpkg install b
+```
+
+the files installed by `b` must be the same, regardless of influence by the previous installation of `a`. This means that ports must not try to detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
+
+### Unique port attribution rule
+
+In the entire vcpkg system, no two ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
 
 ## Features
 
@@ -154,7 +179,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-    -CMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+    -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 )
 ```
 

@@ -18,7 +18,7 @@ endif()
 
 set(ALSOFT_REQUIRE_LINUX OFF)
 set(ALSOFT_REQUIRE_WINDOWS OFF)
-set(ALSOFT_REQUIRE_OSX OFF)
+set(ALSOFT_REQUIRE_APPLE OFF)
 
 if(VCPKG_TARGET_IS_LINUX)
     set(ALSOFT_REQUIRE_LINUX ON)
@@ -28,8 +28,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(_set_winsdk_to_10 -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10 -DCMAKE_SYSTEM_VERSION=10)
     message(WARNING "The openal-soft requires at least Windows SDK 10, as it doesn't build with earlier SDKs due to `/permissive-` flag. See https://github.com/microsoft/vcpkg/issues/10825 for details.")
 endif()
-if(VCPKG_TARGET_IS_OSX)
-    set(ALSOFT_REQUIRE_OSX ON)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(ALSOFT_REQUIRE_APPLE ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -48,7 +48,7 @@ vcpkg_configure_cmake(
         -DALSOFT_BACKEND_SNDIO=OFF
         -DALSOFT_BACKEND_PORTAUDIO=OFF
         -DALSOFT_BACKEND_PULSEAUDIO=OFF
-        -DALSOFT_BACKEND_COREAUDIO=${ALSOFT_REQUIRE_OSX}
+        -DALSOFT_BACKEND_COREAUDIO=${ALSOFT_REQUIRE_APPLE}
         -DALSOFT_BACKEND_JACK=OFF
         -DALSOFT_BACKEND_OPENSL=OFF
         -DALSOFT_BACKEND_WAVE=ON
