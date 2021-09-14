@@ -121,16 +121,60 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
 
+$LogSkippedPorts = $true # Maybe parameter
+$changedPorts = @()
+$skippedPorts = @()
+if ($LogSkippedPorts) {
+    $diffFile = Join-Path $WorkingRoot 'changed-ports.diff'
+    Start-Process -FilePath 'git' -ArgumentList 'diff --name-only HEAD~10 -- versions ports' `
+        -NoNewWindow -Wait `
+        -RedirectStandardOutput $diffFile
+    $changedPorts = (Get-Content -Path $diffFile) `
+        -match '^ports/|^versions/.-/' `
+        -replace '^(ports/|versions/.-/)([^/]*)(/.*|[.]json$)','$2' `
+        | Sort-Object -Unique
+    $skippedPorts = $skipList -Split ','
+    $changedPorts | ForEach-Object {
+        if ($skippedPorts -contains $_) {
+            $port = $_
+            Write-Host "##vso[task.logissue type=error]$port`: build skipped, reason: CI baseline file."
+        }
+    }
+}
+
+$hostArgs = @()
 if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
     # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
     # The workaround is to pass the skip list as host-excludes as well.
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    $hostArgs = @("--host-exclude=$skipList")
 }
-else
-{
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
-}
+
+$current_port_and_features = ':'
+& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs `
+    | ForEach-Object {
+        $_
+        if ($LogSkippedPorts) {
+            if ($_ -match '^ *([^ :]+):[^:]*: *cascade:' -and $changedPorts -contains $Matches[1]) {
+                $port = $Matches[1]
+                Write-Host "##vso[task.logissue type=error]$port`: build skipped, reason: cascade from CI baseline file."
+            }
+            elseif ($_ -match '^Building package ([^ ]+)[.][.][.]') {
+                $current_port_and_features = $Matches[1]
+            }
+            elseif ($_ -match 'failed with: CASCADED_DUE_TO_MISSING_DEPENDENCIES') {
+                & "./vcpkg$executableExtension" depend-info $current_port_and_features | ForEach-Object {
+                    if ($_ -match '^([^:[]+)[:[]' -and $changedPorts -contains $Matches[1]) {
+                        $port = $Matches[1]
+                        if ($current_port_and_features -notmatch "^$port[:[]") {
+                            Write-Host "##vso[task.logissue type=error]$port`: build of depending port '$current_port_and_features' skipped due to missing dependencies."
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
     -baselineFile .\scripts\ci.baseline.txt `
