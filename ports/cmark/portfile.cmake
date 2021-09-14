@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 ff8139fbb45549d6bea70e11c35ae1d8cf6108d0141688cc2b878afa6247147e0c15ac885e6ed8fa2263534dc79e88e398b30d3d3ae800f13dcdd878114adac8
     HEAD_REF master
     PATCHES
-        rename-shared-lib.patch
+        add-feature-tools.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
@@ -36,7 +36,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cmark)
 vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES cmark AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cmark SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/cmark" AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
