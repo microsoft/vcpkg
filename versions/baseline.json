@@ -5238,11 +5238,11 @@
     },
     "qt5-3d": {
       "baseline": "5.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-activeqt": {
       "baseline": "5.15.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-androidextras": {
       "baseline": "5.15.2",
@@ -5250,7 +5250,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 10
+      "port-version": 11
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5286,7 +5286,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-location": {
       "baseline": "5.15.2",
@@ -5378,7 +5378,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.2",
-      "port-version": 3
+      "port-version": 4
     },
     "qt5-webglplugin": {
       "baseline": "5.15.2",
