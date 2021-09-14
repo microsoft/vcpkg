@@ -6,6 +6,10 @@
   "homepage": "https://github.com/libarchive/libarchive",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [

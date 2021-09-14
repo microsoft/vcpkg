@@ -2,9 +2,7 @@ _find_package(${ARGS})
 
 include(CMakeFindDependencyMacro)
 
-if(@ENABLE_ZLIB@)
-    find_dependency(ZLIB)
-endif()
+find_dependency(ZLIB)
 if(@ENABLE_BZip2@)
     find_dependency(BZip2)
 endif()
