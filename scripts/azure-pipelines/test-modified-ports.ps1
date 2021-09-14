@@ -142,11 +142,11 @@ if ($EnforceCascades) {
     } elseif ($Triplet -eq 'x64-windows-static-md') {
         $cascades = 53
     } elseif ($Triplet -eq 'x64-uwp') {
-        $cascades = 341
+        $cascades = 344
     } elseif ($Triplet -eq 'arm64-windows') {
-        $cascades = 229
+        $cascades = 232
     } elseif ($Triplet -eq 'arm-uwp') {
-        $cascades = 341
+        $cascades = 344
     } elseif ($Triplet -eq 'x64-osx') {
         $cascades = 61
     } elseif ($Triplet -eq 'x64-linux') {
