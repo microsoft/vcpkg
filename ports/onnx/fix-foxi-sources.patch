@@ -1,0 +1,115 @@
+diff --git a/foxi/onnxifi_dummy.c b/foxi/onnxifi_dummy.c
+index 2115af9..2795f68 100644
+--- a/foxi/onnxifi_dummy.c
++++ b/foxi/onnxifi_dummy.c
+@@ -6,8 +6,8 @@
+ #include <string.h>
+ #include <math.h>
+ 
+-#include "foxi/onnxifi.h"
+-#include "foxi/onnxifi_ext.h"
++#include <onnx/onnxifi.h>
++#include <onnx/onnxifi_ext.h>
+ 
+ /*
+  * ONNXIFI Functions
+@@ -103,7 +103,9 @@ ONNXIFI_PUBLIC ONNXIFI_CHECK_RESULT onnxStatus ONNXIFI_ABI onnxInitGraph(
+     const void* onnxModel,
+     uint32_t weightCount,
+     const onnxTensorDescriptorV1* weightDescriptors,
+-    onnxGraph* graph) {
++    onnxGraph* graph,
++    uint32_t maxSeqLength,
++    void* deferredWeightReader) {
+   if (graph == NULL) {
+     return ONNXIFI_STATUS_INVALID_POINTER;
+   }
+@@ -215,6 +217,8 @@ ONNXIFI_PUBLIC ONNXIFI_CHECK_RESULT onnxStatus ONNXIFI_ABI
+ onnxWaitEventFor(onnxEvent event,
+                  uint32_t timeoutMs,
+                  onnxEventState* eventState,
+-                 onnxStatus* eventStatus) {
++                 onnxStatus* eventStatus,
++                 char* message,
++                 size_t* messageLength) {
+   return ONNXIFI_STATUS_SUCCESS;
+ }
+\ No newline at end of file
+diff --git a/foxi/onnxifi_ext.h b/foxi/onnxifi_ext.h
+index 85cf846..b6587af 100644
+--- a/foxi/onnxifi_ext.h
++++ b/foxi/onnxifi_ext.h
+@@ -1,7 +1,7 @@
+ #ifndef ONNXIFI_EXT_H
+ #define ONNXIFI_EXT_H 1
+ 
+-#include "foxi/onnxifi.h"
++#include <onnx/onnxifi.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/foxi/onnxifi_loader.c b/foxi/onnxifi_loader.c
+index 824d479..5ee3488 100644
+--- a/foxi/onnxifi_loader.c
++++ b/foxi/onnxifi_loader.c
+@@ -7,7 +7,7 @@
+ #include <dlfcn.h>
+ #endif
+ 
+-#include "foxi/onnxifi_loader.h"
++#include <onnx/onnxifi_loader.h>
+ 
+ /* ONNXIFI_LOADER_LOGGING macro enables/disables logging. Its OFF by default. */
+ #ifndef ONNXIFI_LOADER_LOGGING
+diff --git a/foxi/onnxifi_loader.h b/foxi/onnxifi_loader.h
+index 3e85fd7..9bd0c60 100644
+--- a/foxi/onnxifi_loader.h
++++ b/foxi/onnxifi_loader.h
+@@ -1,8 +1,8 @@
+ #ifndef ONNXIFI_LOADER_H
+ #define ONNXIFI_LOADER_H 1
+ 
+-#include "foxi/onnxifi.h"
+-#include "foxi/onnxifi_ext.h"
++#include <onnx/onnxifi.h>
++#include <onnx/onnxifi_ext.h>
+ 
+ #ifdef ONNXIFI_ENABLE_EXT
+ #define ONNXIFI_LOADER_FUNCTION_COUNT 16
+diff --git a/foxi/onnxifi_wrapper.c b/foxi/onnxifi_wrapper.c
+index 98a9325..5bc2f85 100644
+--- a/foxi/onnxifi_wrapper.c
++++ b/foxi/onnxifi_wrapper.c
+@@ -20,8 +20,8 @@
+   #include <errno.h>
+ #endif
+ 
+-#include <foxi/onnxifi.h>
+-#include <foxi/onnxifi_loader.h>
++#include <onnx/onnxifi.h>
++#include <onnx/onnxifi_loader.h>
+ 
+ #if defined(_WIN32)
+ #define ONNXIFI_FILENAME_WILDCARD L"\\onnxifi-*.dll"
+@@ -761,7 +761,9 @@ ONNXIFI_PUBLIC onnxStatus ONNXIFI_ABI onnxInitGraph(
+     const void* onnxModel,
+     uint32_t weightsCount,
+     const onnxTensorDescriptorV1* weightDescriptors,
+-    onnxGraph* graph)
++    onnxGraph* graph,
++    uint32_t maxSeqLength,
++    void* deferredWeightReader)
+ {
+   if (graph == NULL) {
+     return ONNXIFI_STATUS_INVALID_POINTER;
+@@ -797,7 +799,9 @@ ONNXIFI_PUBLIC onnxStatus ONNXIFI_ABI onnxInitGraph(
+     onnxModel,
+     weightsCount,
+     weightDescriptors,
+-    &graph_wrapper->graph);
++    &graph_wrapper->graph,
++    0,
++    NULL);
+   switch (status) {
+     case ONNXIFI_STATUS_SUCCESS:
+     case ONNXIFI_STATUS_FALLBACK:
