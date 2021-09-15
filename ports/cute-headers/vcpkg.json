@@ -1,0 +1,7 @@
+{
+  "name": "cute-headers",
+  "version-string": "2019-09-20",
+  "port-version": 1,
+  "description": "Collection of cross-platform one-file C/C++ libraries with no dependencies",
+  "homepage": "https://github.com/RandyGaul/cute_headers"
+}
