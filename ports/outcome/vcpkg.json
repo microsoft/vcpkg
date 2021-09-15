@@ -1,6 +1,6 @@
 {
   "name": "outcome",
-  "version-string": "2.2.0-release",
+  "version-string": "2.2.1-cfe0651f",
   "port-version": 1,
   "description": "Provides very lightweight outcome<T> and result<T> (non-Boost edition)",
   "homepage": "https://github.com/ned14/outcome",
