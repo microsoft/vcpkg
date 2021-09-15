@@ -4,6 +4,10 @@
   "description": "Internal vcpkg port used to build Boost libraries",
   "dependencies": [
     "boost-build",
-    "boost-uninstall"
+    "boost-uninstall",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

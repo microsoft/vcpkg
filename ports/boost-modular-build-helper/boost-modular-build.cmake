@@ -91,9 +91,8 @@ function(boost_modular_build)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
 
-        vcpkg_configure_cmake(
+        vcpkg_cmake_configure(
             SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
-            PREFER_NINJA
             OPTIONS
                 "-DPORT=${PORT}"
                 "-DFEATURES=${FEATURES}"
@@ -102,8 +101,10 @@ function(boost_modular_build)
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
                 ${configure_option}
+            MAYBE_UNUSED_VARIABLES
+                FEATURES
         )
-        vcpkg_install_cmake()
+        vcpkg_cmake_install()
     endfunction()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
