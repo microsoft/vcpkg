@@ -120,7 +120,7 @@ vcpkg_execute_build_process(
 
 if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
-      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} ${ACE_ROOT}/ACEXML/ACEXML.mwc
+      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ${ACE_ROOT}/ACEXML/ACEXML.mwc ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
       WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
       LOGNAME mwc-xml-${TARGET_TRIPLET}
   )
