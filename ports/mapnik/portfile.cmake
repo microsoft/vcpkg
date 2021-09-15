@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 737e7a69c2679b33093e1ebf0b4c3fa34ae36878
-    SHA512 ff57fdb27eff8a83519601a30428f6979b042e8029484da8a3605a75d58120eaaaf57dfb456cb19d9078cfbdca3bd1f8fc38cc31c61cde3cd037ef246853ca73
+    REF 1ccbbf95b5e7bf254ab5b4dc21bdc373978c36a1
+    SHA512 21b4fc6e64d9b53550a046c5c9bcc32524324d7df39816b74b23a7ce2a64c4eeb291ad1c1aa09a3d5d79158f889ba8b7182cd0bf3435c39d1f17f33e4ffdce05
     HEAD_REF master
     PATCHES
         use-proj.patch
