@@ -30,9 +30,6 @@ not, binary caching will default to read-write mode.
 .PARAMETER PassingIsPassing
 Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
 when using vcpkg to test a prerelease MSVC++ compiler)
-
-.PARAMETER EnforceCascades
-Enforces that the cascade count from ci.baseline.txt and "supports" is consistent with last known values.
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -51,9 +48,7 @@ Param(
     $BinarySourceStub = $null,
     $BuildReason = $null,
     [switch]
-    $PassingIsPassing = $false,
-    [switch]
-    $EnforceCascades = $false
+    $PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -131,42 +126,15 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
 
-$ciArgs = $commonArgs
-if ($EnforceCascades) {
-    if ($Triplet -eq 'x86-windows') {
-        $cascades = 28
-    } elseif ($Triplet -eq 'x64-windows') {
-        $cascades = 21
-    } elseif ($Triplet -eq 'x64-windows-static') {
-        $cascades = 59
-    } elseif ($Triplet -eq 'x64-windows-static-md') {
-        $cascades = 53
-    } elseif ($Triplet -eq 'x64-uwp') {
-        $cascades = 345
-    } elseif ($Triplet -eq 'arm64-windows') {
-        $cascades = 228
-    } elseif ($Triplet -eq 'arm-uwp') {
-        $cascades = 345
-    } elseif ($Triplet -eq 'x64-osx') {
-        $cascades = 61
-    } elseif ($Triplet -eq 'x64-linux') {
-        $cascades = 31
-    } else {
-        throw "Unknown triplet ($Triplet); could not determine expected cascade count. Update test-modified-ports.ps1."
-    }
-
-    $ciArgs += @("--x-skipped-cascade-count=$cascades")
-}
-
 if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
     # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
     # The workaround is to pass the skip list as host-excludes as well.
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @ciArgs
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
 else
 {
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @ciArgs
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
 
 if ($LASTEXITCODE -ne 0)
