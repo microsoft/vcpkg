@@ -55,22 +55,12 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
         unset(backup_env_pkg_config_path)
     endif()
 
-    vcpkg_list(SET pkg_config_path
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
         "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
         "${CURRENT_PACKAGES_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
     )
-    if("${VCPKG_HOST_PATH_SEPARATOR}" STREQUAL ";")
-        vcpkg_list(APPEND pkg_config_path $ENV{PKG_CONFIG_PATH})
-    else()
-        vcpkg_list(JOIN pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}" pkg_config_path)
-        if(NOT "$ENV{PKG_CONFIG_PATH}" STREQUAL "")
-            string(APPEND pkg_config_path "${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
-        endif()
-    endif()
-
-    set(ENV{PKG_CONFIG_PATH} "${pkg_config_path}")
 
     # First make sure everything is ok with the package and its deps
     cmake_path(GET file STEM LAST_ONLY package_name)
