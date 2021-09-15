@@ -1,0 +1,171 @@
+diff --git a/src/corelib/codecs/qtextcodec.cpp b/src/corelib/codecs/qtextcodec.cpp
+index 06fd88da..dbff3239 100644
+--- a/src/corelib/codecs/qtextcodec.cpp
++++ b/src/corelib/codecs/qtextcodec.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qplatformdefs.h"
+ 
+ #include "qtextcodec.h"
+diff --git a/src/corelib/codecs/qutfcodec.cpp b/src/corelib/codecs/qutfcodec.cpp
+index 8561f908..8128d3cf 100644
+--- a/src/corelib/codecs/qutfcodec.cpp
++++ b/src/corelib/codecs/qutfcodec.cpp
+@@ -38,6 +38,8 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
++
+ #include "qutfcodec_p.h"
+ #include "qlist.h"
+ #include "qendian.h"
+diff --git a/src/corelib/global/qendian.cpp b/src/corelib/global/qendian.cpp
+index eb08b2f8..6b41b3dd 100644
+--- a/src/corelib/global/qendian.cpp
++++ b/src/corelib/global/qendian.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qendian.h"
+ 
+ #include "qalgorithms.h"
+diff --git a/src/corelib/global/qfloat16.cpp b/src/corelib/global/qfloat16.cpp
+index c9733174..c62a1972 100644
+--- a/src/corelib/global/qfloat16.cpp
++++ b/src/corelib/global/qfloat16.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qfloat16.h"
+ #include "private/qsimd_p.h"
+ #include <cmath> // for fpclassify()'s return values
+diff --git a/src/corelib/global/qrandom.cpp b/src/corelib/global/qrandom.cpp
+index 10672c1f..6d5fd63e 100644
+--- a/src/corelib/global/qrandom.cpp
++++ b/src/corelib/global/qrandom.cpp
+@@ -40,6 +40,7 @@
+ // for rand_s
+ #define _CRT_RAND_S
+ 
++#include <limits>
+ #include "qrandom.h"
+ #include "qrandom_p.h"
+ #include <qobjectdefs.h>
+diff --git a/src/corelib/plugin/qelfparser_p.cpp b/src/corelib/plugin/qelfparser_p.cpp
+index 13eee353..9e7a7a41 100644
+--- a/src/corelib/plugin/qelfparser_p.cpp
++++ b/src/corelib/plugin/qelfparser_p.cpp
+@@ -37,6 +37,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qelfparser_p.h"
+ 
+ #if defined (Q_OF_ELF) && defined(Q_CC_GNU)
+diff --git a/src/corelib/plugin/qmachparser.cpp b/src/corelib/plugin/qmachparser.cpp
+index 11670caf..39f5596b 100644
+--- a/src/corelib/plugin/qmachparser.cpp
++++ b/src/corelib/plugin/qmachparser.cpp
+@@ -37,6 +37,8 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
++
+ #include "qmachparser_p.h"
+ 
+ #if defined(Q_OF_MACH_O)
+diff --git a/src/corelib/plugin/quuid.cpp b/src/corelib/plugin/quuid.cpp
+index 83873edf..5aafb4e5 100644
+--- a/src/corelib/plugin/quuid.cpp
++++ b/src/corelib/plugin/quuid.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "quuid.h"
+ 
+ #include "qcryptographichash.h"
+diff --git a/src/corelib/serialization/qdatastream.cpp b/src/corelib/serialization/qdatastream.cpp
+index 5082a8cb..7eecfcca 100644
+--- a/src/corelib/serialization/qdatastream.cpp
++++ b/src/corelib/serialization/qdatastream.cpp
+@@ -40,6 +40,8 @@
+ #include "qdatastream.h"
+ #include "qdatastream_p.h"
+ 
++#include <limits>
++
+ #if !defined(QT_NO_DATASTREAM) || defined(QT_BOOTSTRAPPED)
+ #include "qbuffer.h"
+ #include "qfloat16.h"
+diff --git a/src/corelib/text/qbytearray.cpp b/src/corelib/text/qbytearray.cpp
+index 9a72df58..6651ee98 100644
+--- a/src/corelib/text/qbytearray.cpp
++++ b/src/corelib/text/qbytearray.cpp
+@@ -39,6 +39,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qbytearray.h"
+ #include "qbytearraymatcher.h"
+ #include "private/qtools_p.h"
+diff --git a/src/corelib/text/qbytearraymatcher.cpp b/src/corelib/text/qbytearraymatcher.cpp
+index 72e09226..80511cb5 100644
+--- a/src/corelib/text/qbytearraymatcher.cpp
++++ b/src/corelib/text/qbytearraymatcher.cpp
+@@ -37,6 +37,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qbytearraymatcher.h"
+ 
+ #include <limits.h>
+diff --git a/src/corelib/tools/qbitarray.cpp b/src/corelib/tools/qbitarray.cpp
+index ab3054d5..22efb3a0 100644
+--- a/src/corelib/tools/qbitarray.cpp
++++ b/src/corelib/tools/qbitarray.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qbitarray.h"
+ #include <qalgorithms.h>
+ #include <qdatastream.h>
+diff --git a/src/corelib/tools/qcryptographichash.cpp b/src/corelib/tools/qcryptographichash.cpp
+index fa8d21e0..cd85956d 100644
+--- a/src/corelib/tools/qcryptographichash.cpp
++++ b/src/corelib/tools/qcryptographichash.cpp
+@@ -38,6 +38,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include <qcryptographichash.h>
+ #include <qiodevice.h>
+ 
+diff --git a/src/gui/text/qfontengine_qpf2.cpp b/src/gui/text/qfontengine_qpf2.cpp
+index e00f9d05..917ab5f9 100644
+--- a/src/gui/text/qfontengine_qpf2.cpp
++++ b/src/gui/text/qfontengine_qpf2.cpp
+@@ -37,6 +37,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qfontengine_qpf2_p.h"
+ 
+ #include <QtCore/QFile>

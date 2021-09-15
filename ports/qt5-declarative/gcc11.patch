@@ -1,0 +1,25 @@
+diff --git a/src/qml/jsruntime/qv4regexp.cpp b/src/qml/jsruntime/qv4regexp.cpp
+index 76daead8..4f707703 100644
+--- a/src/qml/jsruntime/qv4regexp.cpp
++++ b/src/qml/jsruntime/qv4regexp.cpp
+@@ -37,6 +37,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <limits>
+ #include "qv4regexp_p.h"
+ #include "qv4engine_p.h"
+ #include "qv4scopedvalue_p.h"
+diff --git a/src/qmldebug/qqmlprofilerevent_p.h b/src/qmldebug/qqmlprofilerevent_p.h
+index a7e37d19..21c3b465 100644
+--- a/src/qmldebug/qqmlprofilerevent_p.h
++++ b/src/qmldebug/qqmlprofilerevent_p.h
+@@ -40,6 +40,8 @@
+ #ifndef QQMLPROFILEREVENT_P_H
+ #define QQMLPROFILEREVENT_P_H
+ 
++#include <limits>
++
+ #include "qqmlprofilerclientdefinitions_p.h"
+ 
+ #include <QtCore/qstring.h>

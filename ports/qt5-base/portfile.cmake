@@ -27,12 +27,14 @@ if("latest" IN_LIST FEATURES) # latest = core currently
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
+        patches/gcc11.patch
         )
 else()
     set(PATCHES
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
+        patches/gcc11.patch
     )
 endif()
 
