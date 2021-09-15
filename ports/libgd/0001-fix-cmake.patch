@@ -1,173 +1,77 @@
-From 26fdb0f43b2d994de9a3d62f85fc650e8c495f18 Mon Sep 17 00:00:00 2001
-From: Mikhail Paulyshka <me@mixaill.tk>
-Date: Sat, 1 Apr 2017 23:16:18 +0300
-Subject: [PATCH] fix cmake
-
----
- CMakeLists.txt     | 53 +++++++++++++++++++++++----------------------
- src/CMakeLists.txt | 63 +++++++++++++++++++++++++++++-------------------------
- 2 files changed, 62 insertions(+), 54 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 42934d0..796fa47 100644
+index 57cd95d..50d5b9a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -223,8 +223,10 @@ else (USE_EXT_GD)
+@@ -280,8 +280,10 @@ else (USE_EXT_GD)
  	add_subdirectory(src)
  endif (USE_EXT_GD)
  
 -add_subdirectory(tests)
 -add_subdirectory(examples)
 +if(BUILD_TEST)
-+	add_subdirectory(tests)
-+	add_subdirectory(examples)
++    add_subdirectory(tests)
++    add_subdirectory(examples)
 +endif()
  
  add_custom_target(distclean ${GD_SOURCE_DIR}/cmake/distclean.sh)
  
-@@ -246,29 +248,30 @@ IF (ENABLE_LIQ AND LIQ_BUILD)
-     ADD_DEPENDENCIES(${GD_LIB_STATIC} libimagequant)
- ENDIF(ENABLE_LIQ AND LIQ_BUILD)
+@@ -298,7 +300,7 @@ else(WIN32)
+ 	set(CPACK_GENERATOR TGZ)
+ endif(WIN32)
  
 -
--INSTALL(FILES docs/INSTALL DESTINATION share/docs)
--INSTALL(FILES docs/README.JPN DESTINATION share/docs)
--INSTALL(FILES docs/README.CMAKE DESTINATION share/docs)
--INSTALL(FILES docs/README.TESTING DESTINATION share/docs)
--INSTALL(FILES docs/README.TXT DESTINATION share/docs)
++if(0)
+ INSTALL(FILES docs/INSTALL DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
+ INSTALL(FILES docs/README.JPN DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
+ INSTALL(FILES docs/README.CMAKE DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
+@@ -320,7 +322,7 @@ INSTALL(FILES examples/test_crop_threshold.png DESTINATION share/doc/gd-${GDLIB_
+ INSTALL(FILES examples/tgaread.c DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
+ INSTALL(FILES examples/tiffread.c DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
+ INSTALL(FILES examples/windows.c DESTINATION share/doc/gd-${GDLIB_MAJOR}.${GDLIB_MINOR})
 -
--
--INSTALL(FILES examples/arc.c DESTINATION share/docs)
--INSTALL(FILES examples/copyrotated.c DESTINATION share/docs)
--INSTALL(FILES examples/crop.c DESTINATION share/docs)
--INSTALL(FILES examples/flip.c DESTINATION share/docs)
--INSTALL(FILES examples/gif.c DESTINATION share/docs)
--INSTALL(FILES examples/nnquant.c DESTINATION share/docs)
--INSTALL(FILES examples/noIcon.pic DESTINATION share/docs)
--INSTALL(FILES examples/noIcon.sgi DESTINATION share/docs)
--INSTALL(FILES examples/noIcon.tga DESTINATION share/docs)
--INSTALL(FILES examples/noIconAlpha.tga DESTINATION share/docs)
--INSTALL(FILES examples/test_crop_threshold.png DESTINATION share/docs)
--INSTALL(FILES examples/tgaread.c DESTINATION share/docs)
--INSTALL(FILES examples/tiffread.c DESTINATION share/docs)
--INSTALL(FILES examples/windows.c DESTINATION share/docs)
--
-+if(BUILD_DOCS)
-+	INSTALL(FILES docs/INSTALL DESTINATION share/docs)
-+	INSTALL(FILES docs/README.JPN DESTINATION share/docs)
-+	INSTALL(FILES docs/README.CMAKE DESTINATION share/docs)
-+	INSTALL(FILES docs/README.TESTING DESTINATION share/docs)
-+	INSTALL(FILES docs/README.TXT DESTINATION share/docs)
-+endif()
-+
-+if(BUILD_EXAMPLES)
-+	INSTALL(FILES examples/arc.c DESTINATION share/docs)
-+	INSTALL(FILES examples/copyrotated.c DESTINATION share/docs)
-+	INSTALL(FILES examples/crop.c DESTINATION share/docs)
-+	INSTALL(FILES examples/flip.c DESTINATION share/docs)
-+	INSTALL(FILES examples/gif.c DESTINATION share/docs)
-+	INSTALL(FILES examples/nnquant.c DESTINATION share/docs)
-+	INSTALL(FILES examples/noIcon.pic DESTINATION share/docs)
-+	INSTALL(FILES examples/noIcon.sgi DESTINATION share/docs)
-+	INSTALL(FILES examples/noIcon.tga DESTINATION share/docs)
-+	INSTALL(FILES examples/noIconAlpha.tga DESTINATION share/docs)
-+	INSTALL(FILES examples/test_crop_threshold.png DESTINATION share/docs)
-+	INSTALL(FILES examples/tgaread.c DESTINATION share/docs)
-+	INSTALL(FILES examples/tiffread.c DESTINATION share/docs)
-+	INSTALL(FILES examples/windows.c DESTINATION share/docs)
 +endif()
  
  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 08fd699..497dd93 100644
+index 509c422..97a2976 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -90,17 +90,17 @@ if (BUILD_STATIC_LIBS)
+@@ -96,7 +96,6 @@ if (BUILD_STATIC_LIBS)
  	if (UNIX)
  		set_target_properties(${GD_LIB_STATIC} PROPERTIES OUTPUT_NAME ${GD_LIB})
  	endif()
 -endif()
  
--if (WIN32 AND NOT MINGW AND NOT MSYS)
--  #	SET_TARGET_PROPERTIES(${GD_LIB} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
--  SET_PROPERTY(TARGET ${GD_LIB_STATIC} APPEND PROPERTY COMPILE_DEFINITIONS NONDLL=1)
--ENDIF(WIN32 AND NOT MINGW AND NOT MSYS)
-+	if (WIN32 AND NOT MINGW AND NOT MSYS)
-+    #	SET_TARGET_PROPERTIES(${GD_LIB} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
-+        SET_PROPERTY(TARGET ${GD_LIB_STATIC} APPEND PROPERTY COMPILE_DEFINITIONS NONDLL=1)
-+    ENDIF(WIN32 AND NOT MINGW AND NOT MSYS)
- 
--if (MINGW OR MSYS)
--	ADD_DEFINITIONS("-mms-bitfields")
--	set_target_properties(${GD_LIB_STATIC} PROPERTIES OUTPUT_NAME ${GD_LIB})
--endif (MINGW OR MSYS)
-+    if (MINGW OR MSYS)
-+	   ADD_DEFINITIONS("-mms-bitfields")
-+	   set_target_properties(${GD_LIB_STATIC} PROPERTIES OUTPUT_NAME ${GD_LIB})
-+    endif (MINGW OR MSYS)
+ if (NOT "${GD_PROGRAMS_LIB_SRC_FILES}" STREQUAL "")
+ 	add_library(gd_programs_lib STATIC ${GD_PROGRAMS_LIB_SRC_FILES})
+@@ -117,6 +116,7 @@ if (MINGW OR MSYS)
+ 		set_target_properties(${GD_LIB_STATIC} PROPERTIES OUTPUT_NAME ${GD_LIB})
+ 	endif()
+ endif (MINGW OR MSYS)
 +endif()
  
  INCLUDE_DIRECTORIES(BEFORE "${PROJECT_BINARY_DIR}" "${CMAKE_BINARY_DIR}" "${GD_SOURCE_DIR}/src")
  
-@@ -123,32 +123,37 @@ if (BUILD_STATIC_LIBS)
- 	target_link_libraries(${GD_LIB_STATIC} ${LIBGD_DEP_LIBS})
- endif()
+@@ -148,6 +148,7 @@ SET(LIBS_PRIVATES
+ 	${WEBP_LIBRARIES}
+ )
  
--set(GD_PROGRAMS gdcmpgif)
- 
--if (PNG_FOUND)
--	set(GD_PROGRAMS ${GD_PROGRAMS} gdtopng pngtogd webpng)
 +if(BUILD_PROGRAMS)
-+	set(GD_PROGRAMS gdcmpgif)
-+
-+	if (PNG_FOUND)
-+		set(GD_PROGRAMS ${GD_PROGRAMS} gdtopng pngtogd webpng)
-+		if (ZLIB_FOUND)
-+			set(GD_PROGRAMS ${GD_PROGRAMS} gdparttopng gd2topng pngtogd2)
-+		endif()
-+	endif()
-+
-+	if (FREETYPE_FOUND)
-+		set(GD_PROGRAMS ${GD_PROGRAMS} annotate)
-+	endif()
-+
- 	if (ZLIB_FOUND)
--		set(GD_PROGRAMS ${GD_PROGRAMS} gdparttopng gd2topng pngtogd2)
-+		set(GD_PROGRAMS ${GD_PROGRAMS} gd2copypal gd2togif giftogd2)
+ set(GD_PROGRAMS gdcmpgif)
+ 
+ if (PNG_FOUND)
+@@ -177,6 +178,9 @@ foreach(program ${GD_PROGRAMS})
  	endif()
--endif()
+ endforeach(program)
  
--if (FREETYPE_FOUND)
--	set(GD_PROGRAMS ${GD_PROGRAMS} annotate)
--endif()
-+	foreach(program ${GD_PROGRAMS})
-+		add_executable(${program} ${program}.c)
-+		if (BUILD_SHARED_LIBS)
-+			target_link_libraries(${program} ${GD_LIB})
-+		else()
-+			target_link_libraries(${program} ${GD_LIB_STATIC})
-+		endif()
-+	endforeach(program)
- 
--if (ZLIB_FOUND)
--	set(GD_PROGRAMS ${GD_PROGRAMS} gd2copypal gd2togif giftogd2)
-+	install(PROGRAMS bdftogd DESTINATION bin)
- endif()
- 
--foreach(program ${GD_PROGRAMS})
--    add_executable(${program} ${program}.c)
--    if (BUILD_SHARED_LIBS)
--        target_link_libraries(${program} ${GD_LIB})
--    else()
--        target_link_libraries(${program} ${GD_LIB_STATIC})
--    endif()
--endforeach(program)
--
++install(PROGRAMS bdftogd DESTINATION bin)
++endif()
++
  set(GD_INSTALL_TARGETS ${GD_PROGRAMS})
  if (BUILD_SHARED_LIBS)
  	set(GD_INSTALL_TARGETS ${GD_INSTALL_TARGETS} ${GD_LIB})
-@@ -161,7 +166,7 @@ install(TARGETS ${GD_INSTALL_TARGETS}
+@@ -189,7 +193,7 @@ install(TARGETS ${GD_INSTALL_TARGETS}
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -176,6 +80,3 @@ index 08fd699..497dd93 100644
  install(FILES
  	entities.h
  	gd.h
--- 
-2.11.0.windows.1
-
