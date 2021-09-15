@@ -22,6 +22,10 @@
     "boost-random",
     "boost-static-assert",
     "boost-throw-exception",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

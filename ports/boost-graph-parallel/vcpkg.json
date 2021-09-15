@@ -42,6 +42,10 @@
     "boost-type-traits",
     "boost-variant",
     "boost-vcpkg-helpers",
-    "mpi"
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -25,6 +25,10 @@
     "boost-throw-exception",
     "boost-tokenizer",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -454,7 +454,8 @@ foreach ($library in $libraries) {
         if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
             $deps += @(
                 @{ name = "boost-build"; host = $True },
-                @{ name = "boost-modular-build-helper"; host = $True }
+                @{ name = "boost-modular-build-helper"; host = $True },
+                @{ name = "vcpkg-cmake"; host = $True }
             )
             $needsBuild = $true
         }
@@ -510,6 +511,6 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
-        -Dependencies @("boost-build", "boost-uninstall")
+        -Dependencies @("boost-uninstall")
 
 }

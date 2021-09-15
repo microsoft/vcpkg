@@ -26,6 +26,10 @@
     {
       "name": "libiconv",
       "platform": "!uwp & !windows & !mingw"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "features": {

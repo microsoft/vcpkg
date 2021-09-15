@@ -26,6 +26,10 @@
     "boost-system",
     "boost-type-traits",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

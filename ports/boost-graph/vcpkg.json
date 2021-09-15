@@ -53,6 +53,10 @@
     "boost-unordered",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-xpressive"
+    "boost-xpressive",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

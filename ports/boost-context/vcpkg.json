@@ -20,6 +20,10 @@
     "boost-pool",
     "boost-predef",
     "boost-smart-ptr",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

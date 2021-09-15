@@ -26,6 +26,10 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-vcpkg-helpers",
-    "boost-vmd"
+    "boost-vmd",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

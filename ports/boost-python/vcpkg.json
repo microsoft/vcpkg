@@ -35,7 +35,11 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "python3"
+    "python3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "python2": {
