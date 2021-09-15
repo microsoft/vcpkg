@@ -1,6 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
+    HEAD_REF master
     REF v2.0.12
     SHA512  bf502f4f8c5f8d9ae9ee6e6a417e3f9deea9933c69176903d460a1c91132658ebe093c8e9ed000cb579fe93f15626c15d8041ceb6438e15caca1d153a67975f9
     PATCHES
