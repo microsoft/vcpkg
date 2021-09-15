@@ -1762,7 +1762,7 @@
     },
     "discord-game-sdk": {
       "baseline": "2.5.6",
-      "port-version": 2
+      "port-version": 3
     },
     "discord-rpc": {
       "baseline": "3.4.0",
