@@ -28,6 +28,7 @@ vcpkg_extract_source_archive_ex(
         0003-Fix-win-unicode-paths.patch
         rel_path.patch
         android.patch
+        gettext-tools_woe32dll_gettextsrc-exports.c.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
