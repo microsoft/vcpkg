@@ -1,6 +1,6 @@
 {
   "name": "leptonica",
-  "version-semver": "1.81.1",
+  "version": "1.81.1",
   "description": "An open source library containing software that is broadly useful for image processing and image analysis applications",
   "homepage": "https://github.com/DanBloomberg/leptonica",
   "dependencies": [
