@@ -5,15 +5,14 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
-    REF hdf5-1_12_0
-    SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
+    REF hdf5-1_12_1
+    SHA512 8a736b6a66bf4ec904a0e0dd9e8e0e791d8a04c996c5ea6b73b7d6f8145c4bfa4ed5c6e4f11740ceb1d1226a333c8242968e604dbdac2b7b561a1bd265423434
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
         szip.patch
         mingw-import-libs.patch
         pkgconfig-requires.patch
-        pkgconfig-link-order.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -70,42 +69,42 @@ set(debug_suffix debug)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(debug_suffix D)
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc")
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc"
         "-lhdf5"
         "-lhdf5_${debug_suffix}"
     )
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl.pc")
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl.pc"
         "-lhdf5_hl"
         "-lhdf5_hl_${debug_suffix}"
     )
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp.pc")
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp.pc"
         "-lhdf5_cpp"
         "-lhdf5_cpp_${debug_suffix}"
     )
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp.pc"
         "Requires.private: hdf5"
         ""
     )
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp.pc")
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp.pc"
         "Requires.private: hdf5"
         ""
     )
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp.pc")
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp.pc"
         "-lhdf5_hl_cpp"
         "-lhdf5_hl_cpp_${debug_suffix}"
     )
@@ -114,14 +113,20 @@ set(PKG_FILES hdf5 hdf5_hl hdf5_cpp hdf5_hl_cpp)
 foreach(PC_FILE IN LISTS PKG_FILES)
     set(SUBPATHS "/debug/lib/pkgconfig" "/lib/pkgconfig")
     foreach(SUBPATH IN LISTS SUBPATHS)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc")
-            file(RENAME "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc" "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc")
+            file(RENAME "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc" "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc")
         endif()
     endforeach()
 endforeach()
-vcpkg_fixup_pkgconfig()
+#vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]] contents ${contents})
