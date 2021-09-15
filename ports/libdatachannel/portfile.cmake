@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.14.1
-    SHA512 a0eb834eacdb5aef644fc4456b5087742aab37ac58e2871daa7ba2ac25cab4ddb530bd0a12cf5f4754c28749a2f59fc2fb3e2ae945b867cec8aaad22f4ac71c6
+    REF v0.14.3
+    SHA512 21746d1a02aa8eb98a5c9716c12f14048a680f85efab8d8beca02379946bb49858c7ed02e7238f61e94d0aba6d70069136778d78484b88f8d09640c0740e24a3
     HEAD_REF master
     PATCHES
-        fix-for-vcpkg.patch
+        0001-fix-for-vcpkg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

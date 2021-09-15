@@ -1,0 +1,7 @@
+{
+  "name": "font-chef",
+  "version-string": "1.0.1",
+  "port-version": 1,
+  "description": "A font cooking library",
+  "homepage": "https://github.com/mobius3/font-chef"
+}

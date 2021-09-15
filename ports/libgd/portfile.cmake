@@ -1,51 +1,34 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
-    REF gd-2.2.5
-    SHA512 e4ee4c0d1064c93640c29b5741f710872297f42bcc883026a63124807b6ff23bd79ae66bb9148a30811907756c4566ba8f1c0560673ccafc20fee38d82ca838f
+    REF 2e40f55bfb460fc9d8cbcd290a0c9eb908d5af7e # gd-2.3.2
+    SHA512 c3f2db40f774b44e3fd3fbc743efe70916a71ecd948bf8cb4aeb8a9b9fefd9f17e02d82a9481bac6fcc3624f057b5a308925b4196fb612b65bb7304747d33ffa
     HEAD_REF master
     PATCHES
         0001-fix-cmake.patch
         no-write-source-dir.patch
         intrin.patch
+        fix_msvc_build.patch
 )
 
 #delete CMake builtins modules
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindFreetype.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindJPEG.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.cmake)
-file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/FindPNG.cmake)
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindFreetype.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindJPEG.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindPackageHandleStandardArgs.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindPNG.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/modules/FindWEBP.cmake")
 
-set(ENABLE_PNG OFF)
-if("png" IN_LIST FEATURES)
-    set(ENABLE_PNG ON)
-endif()
-
-set(ENABLE_JPEG OFF)
-if("jpeg" IN_LIST FEATURES)
-    set(ENABLE_JPEG ON)
-endif()
-
-set(ENABLE_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-    set(ENABLE_TIFF ON)
-endif()
-
-set(ENABLE_FREETYPE OFF)
-if("freetype" IN_LIST FEATURES)
-    set(ENABLE_FREETYPE ON)
-endif()
-
-set(ENABLE_WEBP OFF)
-if("webp" IN_LIST FEATURES)
-    set(ENABLE_WEBP ON)
-endif()
-
-set(ENABLE_FONTCONFIG OFF)
-if("fontconfig" IN_LIST FEATURES)
-    set(ENABLE_FONTCONFIG ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        png          ENABLE_PNG
+        jpeg         ENABLE_JPEG
+        tiff         ENABLE_TIFF
+        freetype     ENABLE_FREETYPE
+        webp         ENABLE_WEBP
+        fontconfig   ENABLE_FONTCONFIG
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(LIBGD_SHARED_LIBS ON)
@@ -55,22 +38,18 @@ else()
   set(LIBGD_STATIC_LIBS ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DENABLE_PNG=${ENABLE_PNG}
-            -DENABLE_JPEG=${ENABLE_JPEG}
-            -DENABLE_TIFF=${ENABLE_TIFF}
-            -DENABLE_FREETYPE=${ENABLE_FREETYPE}
-            -DENABLE_WEBP=${ENABLE_WEBP}
-            -DENABLE_FONTCONFIG=${ENABLE_FONTCONFIG}
-            -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIBGD_SHARED_LIBS=${LIBGD_SHARED_LIBS}
+        -DBUILD_STATIC_LIBS=${LIBGD_STATIC_LIBS}
+        -DBUILD_TEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgd)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/COPYING ${CURRENT_PACKAGES_DIR}/share/libgd/copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
