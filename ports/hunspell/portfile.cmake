@@ -63,6 +63,7 @@ else()
     vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
     vcpkg_make_configure(
         SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES gzip
     )
     #install-pkgconfDATA:

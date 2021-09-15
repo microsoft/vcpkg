@@ -235,7 +235,9 @@ function(vcpkg_make_configure)
 
     set(requires_autogen OFF) # use autogen.sh
     set(requires_autoconfig OFF) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac")  # remove configure; rerun autoconf
+    if(arg_AUTOCONFIG)
+        set(requires_autoconfig ON)
+    elseif(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac")  # remove configure; rerun autoconf
         if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG)  # If fixing bugs skipping autoconfig saves a lot of time
             set(requires_autoconfig ON)
             file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts

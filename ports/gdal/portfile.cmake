@@ -324,6 +324,7 @@ else()
 
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
         COPY_SOURCE
         OPTIONS
         ${CONF_OPTS}

@@ -13,6 +13,7 @@ vcpkg_from_sourceforge(
 vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
+    AUTOCONFIG
     COPY_SOURCE
     OPTIONS
         --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
