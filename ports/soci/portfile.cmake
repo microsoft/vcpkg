@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF 99e2d567161a302de4f99832af76e6d3b75b68e6 #version 4.0.2 
+    REF 99e2d567161a302de4f99832af76e6d3b75b68e6 #version 4.0.2
     SHA512 d08d2383808d46d5e9550e9c7d93fb405d9e336eb38d974ba429e5b9446d3af53d4e702b90e80c67e298333da0145457fa1146d9773322676030be69de4ec4f4
     HEAD_REF master
     PATCHES
         fix-dependency-libmysql.patch
         export-include-dirs.patch
-        fix-mysql-feature-error.patch
+        fix-mysql-feature-error.patch # https://bugs.mysql.com/bug.php?id=85131
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
