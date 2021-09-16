@@ -5,6 +5,13 @@
   "homepage": "https://community.kde.org/Alkimia/libalkimia",
   "dependencies": [
     "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "gmp",
     "kf5completion",
     "kf5config",
