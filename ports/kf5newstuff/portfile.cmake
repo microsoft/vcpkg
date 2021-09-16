@@ -20,9 +20,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuff DO_NOT_DELETE_PARENT
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuffCore TARGET_PATH share/kf5newstuffcore)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/qml ${CURRENT_PACKAGES_DIR}/debug/qml )
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/qml ${CURRENT_PACKAGES_DIR}/qml )
 
