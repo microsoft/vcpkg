@@ -95,15 +95,6 @@ index 300e4ea..7773f7a 100644
  else()
    add_library(onnx ${ONNX_SRCS})
  endif()
-@@ -639,7 +647,7 @@ endif()
- 
- if (NOT ANDROID AND NOT IOS)
-   # ---[ ONNXIFI wrapper
--  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
-+  add_library(onnxifi_wrapper SHARED onnx/onnxifi_wrapper.c)
-   if(MSVC)
-     add_msvc_runtime_flag(onnxifi_wrapper)
-   endif()
 @@ -738,11 +746,17 @@ install(EXPORT ONNXTargets DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/ONNX")
  install(TARGETS
    onnx onnx_proto
@@ -124,3 +115,34 @@ index 300e4ea..7773f7a 100644
  endif()
  
  if(ONNXIFI_DUMMY_BACKEND)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7773f7a..55047d6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -647,7 +647,12 @@ endif()
+ 
+ if (NOT ANDROID AND NOT IOS)
+   # ---[ ONNXIFI wrapper
+-  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
++  if(WIN32)
++    add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c) # for ${arch}-windows-static triplets
++  else()
++    add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
++  endif()
++
+   if(MSVC)
+     add_msvc_runtime_flag(onnxifi_wrapper)
+   endif()
+@@ -677,7 +682,11 @@ if (NOT ANDROID AND NOT IOS)
+ endif()
+ 
+ # ---[ ONNXIFI dummy backend
+-add_library(onnxifi_dummy SHARED onnx/onnxifi_dummy.c)
++if(WIN32)
++  add_library(onnxifi_dummy onnx/onnxifi_dummy.c) # for ${arch}-windows-static triplets
++else()
++  add_library(onnxifi_dummy SHARED onnx/onnxifi_dummy.c)
++endif()
+ 
+ if(ONNXIFI_ENABLE_EXT)
+   add_definitions(-DONNXIFI_ENABLE_EXT=ON)
