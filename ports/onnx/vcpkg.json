@@ -25,6 +25,9 @@
     "foxi": {
       "description": "Build ONNXIFI with Facebook Extension "
     },
+    "protobuf-lite": {
+      "description": "Use lite protobuf instead of full"
+    },
     "pybind11": {
       "description": "Build Python binaries"
     }
