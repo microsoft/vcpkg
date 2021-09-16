@@ -42,6 +42,10 @@ vcpkg_cmake_configure(
         -DTARGET_TRIPLET=${TRIPLET_SYSTEM_ARCH}
         -DBIN2COFF_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin2coff${VCPKG_HOST_EXECUTABLE_SUFFIX}
         -DHEXDUMP_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/hexdump${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    MAYBE_UNUSED_VARIABLES
+        TARGET_TRIPLET
+        BIN2COFF_EXECUTABLE
+        HEXDUMP_EXECUTABLE
 )
 
 
@@ -49,7 +53,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 
 set(EXTRA_TOOLS)
-if ("gentool" IN_LIST FEATURES)
+if (VCPKG_TARGET_IS_WINDOWS AND "gentool" IN_LIST FEATURES)
     list(APPEND EXTRA_TOOLS bin2coff hexdump)
 endif()
 if ("mudraw" IN_LIST FEATURES)
