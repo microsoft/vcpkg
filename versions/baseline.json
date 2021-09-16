@@ -4448,6 +4448,10 @@
       "baseline": "0.0.0-7cb75d4e",
       "port-version": 1
     },
+    "neon2sse": {
+      "baseline": "2021-09-16",
+      "port-version": 0
+    },
     "netcdf-c": {
       "baseline": "4.7.4",
       "port-version": 4
