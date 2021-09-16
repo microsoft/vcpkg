@@ -15,7 +15,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES makefilevc.patch
 )
 
-
 if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_install_nmake(
@@ -50,4 +49,3 @@ endif()
     file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
     file(INSTALL "${SOURCE_PATH}/COPYING_CECILL_B.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME copyright)
     file(INSTALL "${SOURCE_PATH}/doc/calceph_c.pdf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME calceph_c.pdf)
-
