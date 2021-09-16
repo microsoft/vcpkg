@@ -1,7 +1,30 @@
 {
   "name": "snappy",
-  "version-string": "1.1.8",
-  "port-version": 1,
+  "version": "1.1.9",
   "description": "A fast compressor/decompressor.",
-  "homepage": "https://github.com/google/snappy"
+  "homepage": "https://github.com/google/snappy",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "benchmark": {
+      "description": "Build Snappy's benchmarks",
+      "dependencies": [
+        "benchmark"
+      ]
+    },
+    "test": {
+      "description": "Build Snappy's own tests",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
 }
