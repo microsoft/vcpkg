@@ -23,7 +23,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS
         OPTIONS_DEBUG
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph/debug"
-            CFLAGS="${VCPKG_C_FLAGS_DEBUG} "
         OPTIONS_RELEASE
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph"
             CFLAGS="${VCPKG_C_FLAGS_RELEASE} "
@@ -33,7 +32,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
-elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
+else # Build in UNIX
 
     vcpkg_configure_make(
     AUTOCONFIG
@@ -46,12 +45,9 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     vcpkg_install_make()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     
-else()# Other build system
-    message(FATAL_ERROR "Unsupported build system.")
 endif()
 
     file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)
     file(INSTALL "${SOURCE_PATH}/COPYING_CECILL_B.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME copyright)
     file(INSTALL "${SOURCE_PATH}/doc/calceph_c.pdf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME calceph_c.pdf)
 
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
