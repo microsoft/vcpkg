@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
+        -DBUNDLE_INSTALL_DIR=bin
 )
 
 vcpkg_cmake_install()
@@ -21,12 +22,10 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME KF5NewStuff CONFIG_PATH lib/cmake/KF5NewSt
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5NewStuffCore CONFIG_PATH lib/cmake/KF5NewStuffCore)
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_copy_tools(
-        TOOL_NAMES knewstuff-dialog
-        AUTO_CLEAN
-    )
-endif()
+vcpkg_copy_tools(
+    TOOL_NAMES knewstuff-dialog
+    AUTO_CLEAN
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
