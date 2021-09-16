@@ -1,6 +1,6 @@
 {
   "name": "sdbus-cpp",
-  "version-semver": "0.8.3",
+  "version-string": "0.8.3",
   "description": "sdbus-c++ is a high-level C++ D-Bus library for Linux designed to provide expressive, easy-to-use API in modern C++.",
   "homepage": "https://github.com/Kistler-Group/sdbus-cpp",
   "dependencies": [
