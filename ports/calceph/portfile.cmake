@@ -32,7 +32,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
 else # Build in UNIX
-
     vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
