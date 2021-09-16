@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-error-c2668.patch
-        fix-error-C4996.patch
+        fix-error-C4996.patch  #fix x64-uwp error:std::uncaught_exception() is deprecated in C++17
 )
 
 vcpkg_cmake_configure(
