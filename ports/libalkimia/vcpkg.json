@@ -32,5 +32,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Enables tools, including Online Quotes Editor"
+    },
+    "webengine": {
+      "description": "Enables JavaScript support for parsing feature-rich websites",
+      "dependencies": [
+        "qt5-webengine"
+      ]
+    }
+  }
 }

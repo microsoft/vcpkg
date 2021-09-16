@@ -9,23 +9,37 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        webengine   BUILD_WITH_WEBENGINE
+        tools       BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        -DKDE_INSTALL_QMLDIR=qml
+        -DBUNDLE_INSTALL_DIR=bin
         -DBUILD_TESTING=OFF
         -DBUILD_DOXYGEN_DOCS=OFF
         -DBUILD_WITH_WEBKIT=OFF
-        -DBUILD_WITH_WEBENGINE=OFF
         -DBUILD_APPLETS=OFF
-        -DBUILD_TOOLS=OFF
-        -DKDE_INSTALL_QMLDIR=qml
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibAlkimia5 CONFIG_PATH lib/cmake/LibAlkimia5-8.1)
 vcpkg_copy_pdbs()
 
+vcpkg_copy_tools(
+    TOOL_NAMES onlinequoteseditor5
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
