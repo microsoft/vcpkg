@@ -6081,8 +6081,8 @@
       "port-version": 0
     },
     "soci": {
-      "baseline": "4.0.1",
-      "port-version": 3
+      "baseline": "4.0.2",
+      "port-version": 0
     },
     "socket-io-client": {
       "baseline": "3.0.0",
