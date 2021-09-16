@@ -23,6 +23,14 @@
     "kf5textwidgets",
     "kf5xmlgui",
     "qt5-base",
-    "qt5-tools"
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
