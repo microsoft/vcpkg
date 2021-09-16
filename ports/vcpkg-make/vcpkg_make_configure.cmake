@@ -219,7 +219,7 @@ endmacro()
 function(vcpkg_make_configure)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
@@ -238,7 +238,7 @@ function(vcpkg_make_configure)
     if(arg_AUTOCONFIG)
         set(requires_autoconfig ON)
     elseif(EXISTS "${src_dir}/configure" AND "${src_dir}/configure.ac")  # remove configure; rerun autoconf
-        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG)  # If fixing bugs skipping autoconfig saves a lot of time
+        if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
             set(requires_autoconfig ON)
             file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
         endif()
