@@ -1,6 +1,6 @@
 {
   "name": "libalkimia",
-  "version-string": "8.0.3",
+  "version-string": "8.1.70",
   "description": "Common functionality for finance applications.",
   "homepage": "https://community.kde.org/Alkimia/libalkimia",
   "dependencies": [
