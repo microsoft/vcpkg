@@ -1,3 +1,0 @@
-Source: ring-span-lite
-Version: 0.3.0
-Description: A C++yy-like ring_span type for C++98, C++11 and later in a single-file header-only library
