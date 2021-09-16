@@ -1,0 +1,21 @@
+{
+  "name": "libalkimia",
+  "version-string": "8.0.3",
+  "description": "Common functionality for finance applications.",
+  "homepage": "https://community.kde.org/Alkimia/libalkimia",
+  "dependencies": [
+    "ecm",
+    "gmp",
+    "kf5completion",
+    "kf5config",
+    "kf5coreaddons",
+    "kf5i18n",
+    "kf5iconthemes",
+    "kf5kio",
+    "kf5newstuff",
+    "kf5textwidgets",
+    "kf5xmlgui",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
