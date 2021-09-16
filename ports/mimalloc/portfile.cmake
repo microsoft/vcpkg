@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 fc96f6aa6972c167a956d8f928d9becd546689356d86e800df0f54c9c46cedf74d686168f44566fb4d0aa9cddf7a9444327acd2180cc91386c53658c6a5018f1
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
+        #fix-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -43,7 +43,6 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
