@@ -26,7 +26,7 @@ if("foxi" IN_LIST FEATURES)
     file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_loader.h"   DESTINATION "${SOURCE_PATH}/onnx")
     file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_wrapper.c"  DESTINATION "${SOURCE_PATH}/onnx")
     file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi.h"          DESTINATION "${SOURCE_PATH}/onnx")
-    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright.foxi)
+    file(INSTALL "${FOXI_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright.foxi)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
