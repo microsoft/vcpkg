@@ -1,0 +1,126 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5936d2..a20c5bd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@ project(nanogui
+     CXX C
+ )
+ 
+-if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/src")
++if (0)
+   message(FATAL_ERROR "The NanoGUI dependency repositories (GLFW, etc.) are missing! "
+     "You probably did not clone the project with --recursive. It is possible to recover "
+     "by calling \"git submodule update --init --recursive\"")
+@@ -186,7 +186,7 @@ if (NANOGUI_BUILD_GLFW)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+   endif()
+ 
+-  add_subdirectory(ext/glfw)
++  find_package(glfw3 CONFIG REQUIRED)
+ 
+   # Two targets have now been defined: `glfw_objects`, which will be merged into
+   # NanoGUI at the end, and `glfw`.  The `glfw` target is the library itself
+@@ -204,6 +204,7 @@ endif()
+ 
+ if (NANOGUI_BUILD_GLAD)
+   # Build and include GLAD on Windows
++  if (0)
+   list(APPEND NANOGUI_EXTRA
+     ext/glad/src/glad.c
+     ext/glad/include/glad/glad.h
+@@ -212,6 +213,9 @@ if (NANOGUI_BUILD_GLAD)
+     set_source_files_properties(ext/glad/src/glad.c
+       PROPERTIES COMPILE_FLAGS /wd4055)
+   endif()
++  endif()
++  find_package(glad CONFIG REQUIRED)
++  list(APPEND NANOGUI_BACKEND_DEFS NANOGUI_GLAD)
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "BSD")
+@@ -328,14 +332,11 @@ if (APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ endif()
+ 
+ if (NANOGUI_BUILD_GLFW)
+-  list(APPEND NANOGUI_EXTRA $<TARGET_OBJECTS:glfw_objects>)
++  list(APPEND NANOGUI_LIBS glfw)
+ endif()
+ 
+ # Compile main NanoGUI library
+ add_library(nanogui ${NANOGUI_LIBRARY_TYPE} 
+-  # Merge NanoVG into the NanoGUI library
+-  ext/nanovg/src/nanovg.c
+-  ext/nanovg/src/stb_image.h
+ 
+   # Merge GLAD into the NanoGUI library (only if needed)
+   ${NANOGUI_EXTRA}
+@@ -378,6 +379,8 @@ add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
+   include/nanogui/nanogui.h
+ )
+ 
++list(APPEND NANOGUI_LIBS nanovg::nanovg)
++
+ target_compile_definitions(nanogui
+   PUBLIC
+     ${NANOGUI_BACKEND_DEFS}
+@@ -392,7 +395,6 @@ target_include_directories(nanogui
+     ${CMAKE_CURRENT_SOURCE_DIR}/include
+ 
+   PRIVATE
+-    ext/nanovg/src
+     ${CMAKE_CURRENT_BINARY_DIR}
+ )
+ 
+@@ -414,22 +416,14 @@ if (NANOGUI_BUILD_SHARED)
+   endif()
+ 
+   if (NANOGUI_BUILD_GLFW)
+-    target_compile_definitions(nanogui PRIVATE _GLFW_BUILD_DLL)
++    target_compile_definitions(nanogui PRIVATE GLFW_DLL)
+   endif()
+ endif()
+ 
+-target_include_directories(nanogui PUBLIC
+-  "${CMAKE_CURRENT_SOURCE_DIR}/ext/nanovg/src")
++find_package(nanovg CONFIG REQUIRED)
+ 
+ if (NANOGUI_BUILD_GLAD)
+-  target_compile_definitions(nanogui PUBLIC -DNANOGUI_GLAD)
+-  target_include_directories(nanogui
+-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ext/glad/include")
+-endif()
+-
+-if (NANOGUI_BUILD_GLFW)
+-  target_include_directories(nanogui
+-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/include")
++    list(APPEND NANOGUI_LIBS glad::glad)
+ endif()
+ 
+ if (NANOGUI_BUILD_SHARED)
+@@ -454,12 +448,14 @@ if (NANOGUI_INSTALL)
+           FILES_MATCHING PATTERN "*.h")
+ endif()
+ 
++if (0)
+ # Quench warnings while compiling NanoVG
+ if (CMAKE_COMPILER_IS_GNUCC)
+   set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_FLAGS -Wno-unused-result)
+ elseif(MSVC)
+   set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_FLAGS "/wd4005 /wd4456 /wd4457")
+ endif()
++endif()
+ 
+ # Build example application if desired
+ if (NANOGUI_BUILD_EXAMPLES)
+@@ -481,9 +477,9 @@ endif()
+ 
+ if (NANOGUI_BUILD_PYTHON)
+   message(STATUS "NanoGUI: building the Python plugin.")
++  find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
++  find_package(pybind11 CONFIG REQUIRED)
+   if (NOT TARGET pybind11::module)
+-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+-
+     # Allow overriding the pybind11 library used to compile NanoGUI
+     set(NANOGUI_PYBIND11_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11"
+       CACHE STRING "Path containing the 'pybind11' library used to compile nanogui.")
