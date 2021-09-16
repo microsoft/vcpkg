@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/alkimia
-    REF 67b147250f76fd373a6d09c6f02537ac75ff5c74
-    SHA512 6627a1879a2949c075a05c1345a13a665de54a09865ccbe1c38a5786ea9c9312f5c771f46fa073da88243a185f1994db76846cf9543e748783b31619eb8bfb2f
+    REF 595186bee8409f30e5db091fffa245fc53ad92e8
+    SHA512 509082e22bc0a2ce0586e1167df14fd42ac85321315c1ee2914f60e695d1e2e8beae4fc93d16d0053edb520fc391a3dbe30777638285b295e761ad70512688ca
     HEAD_REF master
 )
 
@@ -21,7 +21,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibAlkimia5-8.0)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibAlkimia5-8.1)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
