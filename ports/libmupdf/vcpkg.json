@@ -33,6 +33,9 @@
     "zlib"
   ],
   "features": {
+    "gentool": {
+      "description": "Install tool bin2coff or hexdump"
+    },
     "mudraw": {
       "description": "Build tool mudraw"
     },
@@ -47,9 +50,6 @@
     },
     "mutool": {
       "description": "Build tool mutool"
-    },
-    "gentool": {
-      "description": "Install tool bin2coff or hexdump"
     }
   }
 }
