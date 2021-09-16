@@ -168,6 +168,12 @@ function(vcpkg_fixup_pkgconfig)
                 string(REGEX REPLACE "(^|\n)Libs.private:( *[^\n]*)(.*\nLibs: *[^\n]*)" "\\3\\2" _contents "${_contents}")
                 # Only Libs.private
                 string(REGEX REPLACE "(^|\n)Libs.private: *" "\\1Libs: " _contents "${_contents}")
+                # Cflags comes before Cflags.private
+                string(REGEX REPLACE "(^|\n)(Cflags: *[^\n]*)(.*)\nCflags.private:( *[^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
+                # Cflags.private comes before Cflags
+                string(REGEX REPLACE "(^|\n)Cflags.private:( *[^\n]*)(.*\nCflags: *[^\n]*)" "\\3\\2" _contents "${_contents}")
+                # Only Cflags.private
+                string(REGEX REPLACE "(^|\n)Cflags.private: *" "\\1Cflags: " _contents "${_contents}")
                 # Requires comes before Requires.private
                 string(REGEX REPLACE "(^|\n)(Requires: *[^\n]*)(.*)\nRequires.private:( *[^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
                 # Requires.private comes before Requires
