@@ -23,24 +23,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lzo     ENABLE_LZO
         openssl ENABLE_OPENSSL
         zstd    ENABLE_ZSTD
-        # The below features should be added to CONTROL
-        #pcre    ENABLE_PCREPOSIX
-        #nettle  ENABLE_NETTLE
-        #expat   ENABLE_EXPAT
-        #libgcc  ENABLE_LibGCC
-        #cng     ENABLE_CNG
-        #tar     ENABLE_TAR # Tool build option?
-        #cpio    ENABLE_CPIO # Tool build option?
-        #cat     ENABLE_CAT # Tool build option?
-        #xattr   ENABLE_XATTR # Tool support option?
-        #acl     ENABLE_ACL # Tool support option?
-        #iconv   ENABLE_ICONV # iconv support option?
-        #libb2   ENABLE_LIBB2
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_ZLIB=ON
