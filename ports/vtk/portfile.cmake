@@ -71,7 +71,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "mpi"         VTK_GROUP_ENABLE_MPI
-        "mpi"         VTK_USE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2
@@ -131,6 +130,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "cuda"         VTK_USE_CUDA
+        "mpi"         VTK_USE_MPI
         "all"          VTK_BUILD_ALL_MODULES
 )
 # =============================================================================
