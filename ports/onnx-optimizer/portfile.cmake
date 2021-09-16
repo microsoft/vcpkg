@@ -16,28 +16,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 if("pybind11" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
-    # When BUILD_ONNX_PYTHON, we need Development component. Give a hint for FindPython3
     list(APPEND FEATURE_OPTIONS
         -DPython3_EXECUTABLE=${PYTHON3}
-        -DPython3_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DONNX_USE_PROTOBUF_SHARED_LIBS=ON # /wd4251
     )
-endif()
-
-# ONNX_USE_PROTOBUF_SHARED_LIBS: find the library and check its file extension
-find_library(PROTOBUF_LIBPATH NAMES protobuf PATHS ${CURRENT_INSTALLED_DIR}/bin ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
-get_filename_component(PROTOBUF_LIBNAME ${PROTOBUF_LIBPATH} NAME)
-if(PROTOBUF_LIBNAME MATCHES ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(USE_PROTOBUF_SHARED ON)
-else()
-    set(USE_PROTOBUF_SHARED OFF)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED} # for onnx_opt_cpp2py_export
-    MAYBE_UNUSED_VARIABLES ONNX_USE_PROTOBUF_SHARED_LIBS
 )
 if("pybind11" IN_LIST FEATURES)
     # This target is not in install/export
