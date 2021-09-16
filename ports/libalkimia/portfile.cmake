@@ -9,15 +9,13 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
-            -DBUILD_DOXYGEN_DOCS=OFF
-            -DBUILD_WITH_WEBKIT=OFF
-            -DBUILD_WITH_WEBENGINE=OFF
-            -DBUILD_APPLETS=OFF
-            -DBUILD_TOOLS=OFF
+    OPTIONS 
+        -DBUILD_TESTING=OFF
+        -DBUILD_DOXYGEN_DOCS=OFF
+        -DBUILD_WITH_WEBKIT=OFF
+        -DBUILD_WITH_WEBENGINE=OFF
+        -DBUILD_APPLETS=OFF
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_install_cmake()
