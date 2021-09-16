@@ -1,0 +1,13 @@
+{
+  "name": "gemmlowp",
+  "version-date": "2021-09-16",
+  "description": "Low-precision matrix multiplication",
+  "homepage": "https://github.com/google/gemmlowp",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

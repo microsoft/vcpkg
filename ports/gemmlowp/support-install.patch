@@ -1,0 +1,30 @@
+diff --git a/contrib/CMakeLists.txt b/contrib/CMakeLists.txt
+index f90529d..53c7326 100644
+--- a/contrib/CMakeLists.txt
++++ b/contrib/CMakeLists.txt
+@@ -52,6 +52,25 @@ else()
+ endif()
+ target_link_libraries(eight_bit_int_gemm ${EXTERNAL_LIBRARIES})
+ 
++include(GNUInstallDirs)
++
++install(FILES ${eight_bit_int_gemm_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/eight_bit_int_gemm)
++file(GLOB meta_headers "${gemmlowp_src}/meta/*.h")
++install(FILES ${meta_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/meta)
++file(GLOB public_headers "${gemmlowp_src}/public/*.h")
++install(FILES ${public_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/public)
++file(GLOB profile_headers "${gemmlowp_src}/profiling/*.h")
++install(FILES ${profile_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/profile)
++file(GLOB internal_headers "${gemmlowp_src}/internal/*.h")
++install(FILES ${internal_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/internal)
++
++install(TARGETS eight_bit_int_gemm
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++return()
++
+ # Benchmarks
+ add_executable(benchmark
+     "${gemmlowp_src}/test/benchmark.cc" ${gemmlowp_test_headers})
