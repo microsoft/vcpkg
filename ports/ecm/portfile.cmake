@@ -8,9 +8,8 @@ vcpkg_from_github(
         fix_canberra.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
@@ -18,7 +17,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Remove debug files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
