@@ -2924,6 +2924,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5bookmarks": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5codecs": {
       "baseline": "5.84.0",
       "port-version": 1
@@ -3027,6 +3031,10 @@
     "kf5windowsystem": {
       "baseline": "5.84.0",
       "port-version": 2
+    },
+    "kf5xmlgui": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kfr": {
       "baseline": "2020-06-15",
