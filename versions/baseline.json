@@ -1497,8 +1497,8 @@
       "port-version": 1
     },
     "cppad": {
-      "baseline": "20200000.3",
-      "port-version": 1
+      "baseline": "20210000.7",
+      "port-version": 0
     },
     "cppcms": {
       "baseline": "1.2.1",
@@ -1565,8 +1565,8 @@
       "port-version": 0
     },
     "cpuid": {
-      "baseline": "0.4.1",
-      "port-version": 2
+      "baseline": "0.5.1",
+      "port-version": 0
     },
     "cpuinfo": {
       "baseline": "2021-04-04",
