@@ -12,17 +12,16 @@ vcpkg_cmake_configure(
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DBUNDLE_INSTALL_DIR=bin
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Declarative CONFIG_PATH lib/cmake/KF5Declarative)
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_copy_tools(
-        TOOL_NAMES kpackagelauncherqml
-    )
-endif()
+vcpkg_copy_tools(
+    TOOL_NAMES kpackagelauncherqml
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
