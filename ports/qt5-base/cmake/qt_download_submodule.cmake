@@ -15,8 +15,8 @@ function(qt_download_submodule)
 
     set(FULL_VERSION "${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}")
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
-    set(URLS "http://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
-    "http://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    set(URLS "https://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    "https://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
     )
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS ${URLS}

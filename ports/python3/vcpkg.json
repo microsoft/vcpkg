@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version-semver": "3.9.6",
+  "version-semver": "3.9.7",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "supports": "!(arm | uwp)",
@@ -33,6 +33,14 @@
     {
       "name": "sqlite3",
       "platform": "!(windows & static)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     "zlib"
   ],

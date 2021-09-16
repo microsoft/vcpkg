@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-When asking a question please also include where you looked for an answer (so we can update the documentation if needed).
+Please create a discussion in https://github.com/microsoft/vcpkg/discussions/new instead.

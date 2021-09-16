@@ -1,0 +1,29 @@
+{
+  "name": "libhsplasma",
+  "version-string": "2021.06.08",
+  "description": "Cross-platform Plasma data and network library",
+  "homepage": "https://github.com/H-uru/libhsplasma",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    "string-theory",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "net": {
+      "description": "Network functionality",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

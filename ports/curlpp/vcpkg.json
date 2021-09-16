@@ -1,0 +1,9 @@
+{
+  "name": "curlpp",
+  "version-string": "2018-06-15",
+  "port-version": 4,
+  "description": "C++ wrapper around libcURL",
+  "dependencies": [
+    "curl"
+  ]
+}

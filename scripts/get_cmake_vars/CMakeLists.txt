@@ -20,7 +20,7 @@ foreach(prog IN LISTS PROGLIST)
 endforeach()
 set(COMPILERS ${VCPKG_LANGUAGES} RC)
 foreach(prog IN LISTS COMPILERS)
-    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER CMAKE_${prog}_COMPILER_ID)
 endforeach()
 # Variables to check
 foreach(_lang IN LISTS VCPKG_LANGUAGES)

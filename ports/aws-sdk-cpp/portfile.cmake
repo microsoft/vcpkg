@@ -3,19 +3,13 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF b11ed430fa6a574cc842532192dfeb9bb09e62b4 # 1.8.126
-    SHA512 39e71f85d977b183df6f0d6d61a028db33573026f6abb8856f35e0e71398e2749db6dbdd033818a2c045ec42076fb23cdbae92608117db0a08ca88a05c825683
-    HEAD_REF master
+    REF b0204a7b6a33211f533a175e987a755f714bf7f3 # 1.9.96
+    SHA512 456d3fc256a5a26843ecf16014242514b165ae5fa35f088d57aa54a744d19e2c38bd0bed9b6a4b76948c8a49cf87a06a4c722be5a910ed41dfd9c9b9a66b398d
     PATCHES
         patch-relocatable-rpath.patch
-        fix-AWSSDKCONFIG.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
-
-set(BUILD_ONLY core)
-
-include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
 set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
@@ -43,26 +37,29 @@ elseif (VCPKG_TARGET_IS_ANDROID)
 else()
     set(rpath "\$ORIGIN")
 endif()
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
-    OPTIONS
-        ${EXTRA_ARGS}
-        -DENABLE_UNITY_BUILD=ON
-        -DENABLE_TESTING=OFF
-        -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        "-DBUILD_ONLY=${BUILD_ONLY}"
-        -DBUILD_DEPS=OFF
-        -DCMAKE_INSTALL_RPATH=${rpath}
-)
 
-vcpkg_install_cmake()
+set(BUILD_ONLY core)
+include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
-
-vcpkg_copy_pdbs()
+foreach(TARGET IN LISTS BUILD_ONLY)
+    message(STATUS "Building ${TARGET}")
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PREFER_NINJA
+        OPTIONS
+            ${EXTRA_ARGS}
+            "-DENABLE_UNITY_BUILD=ON"
+            "-DENABLE_TESTING=OFF"
+            "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
+            "-DBUILD_ONLY=${TARGET}"
+            "-DBUILD_DEPS=OFF"
+            "-DCMAKE_INSTALL_RPATH=${rpath}"
+            "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+    )
+    vcpkg_cmake_install()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+    vcpkg_copy_pdbs()
+endforeach()
 
 file(GLOB_RECURSE AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/*/*-targets-*.cmake")
 foreach(AWS_TARGET IN LISTS AWS_TARGETS)
@@ -82,12 +79,12 @@ foreach(AWS_CONFIG IN LISTS AWS_CONFIGS)
 endforeach()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/nuget
-    ${CURRENT_PACKAGES_DIR}/debug/nuget
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/nuget"
+    "${CURRENT_PACKAGES_DIR}/debug/nuget"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -108,4 +105,4 @@ endif()
 configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

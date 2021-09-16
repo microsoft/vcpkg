@@ -1,5 +1,0 @@
-Source: ignition-common3
-Version: 3.9.0
-Build-Depends: dlfcn-win32 (windows|uwp), ffmpeg, freeimage, gts, ignition-cmake2, ignition-math6, ignition-modularscripts, libuuid (!windows&!uwp), tinyxml2
-Homepage: https://ignitionrobotics.org/libs/common
-Description: Common libraries for robotics applications

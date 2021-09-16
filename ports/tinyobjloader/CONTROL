@@ -1,7 +1,0 @@
-Source: tinyobjloader
-Version: 2.0.0-rc2
-Description: Tiny but powerful single file wavefront obj loader
-
-Feature: double
-Description: enable double(64bit) precision
-

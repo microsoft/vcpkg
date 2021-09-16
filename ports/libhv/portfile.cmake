@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ithewei/libhv
-    REF v1.0.0
-    SHA512 49d9e93444667ff143048abc05f88aab23ec5c543c58d0494bac9c29ac8216760220f19828bde6b84a5864bc8c5ec280ee4a72cc5ba888a4f02734240243cb07
+    REF v1.2.1
+    SHA512 c917b50a2def643b808782631cae33289b62193b9ccb95f4f7736f4d1256de72358931263d5cc06f4581950d91656e700941cb0b929d2f73f650f5297d358b38
     HEAD_REF master
 )
 
@@ -27,3 +27,13 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/hv.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/hv.dll" "${CURRENT_PACKAGES_DIR}/bin/hv.dll")
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/hv.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/hv.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/hv.dll")
+endif()

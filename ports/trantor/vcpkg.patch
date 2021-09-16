@@ -1,14 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d164667..e75b869 100755
+index ad5a1b3..7d59844 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -90,6 +90,9 @@ if(c-ares_FOUND)
-   message(STATUS "c-ares found!")
-   target_link_libraries(${PROJECT_NAME} PRIVATE c-ares_lib)
-   set(TRANTOR_SOURCES ${TRANTOR_SOURCES} trantor/net/inner/AresResolver.cc)
+@@ -133,6 +133,9 @@ if(c-ares_FOUND)
+   set(private_headers
+       ${private_headers}
+       trantor/net/inner/AresResolver.h)
 +  if(APPLE)
 +    target_link_libraries(${PROJECT_NAME} PRIVATE resolv)
 +  endif()
- else()
-   set(TRANTOR_SOURCES ${TRANTOR_SOURCES} trantor/net/inner/NormalResolver.cc)
- endif()
+ else(c-ares_FOUND)
+   set(TRANTOR_SOURCES
+       ${TRANTOR_SOURCES}

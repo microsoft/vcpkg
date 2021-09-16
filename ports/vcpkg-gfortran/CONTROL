@@ -1,4 +1,0 @@
-Source: vcpkg-gfortran
-Version: 3
-Description: Metaport to install gfortran dependencies from msys if VCPKG_USE_EXTERNAL_Fortran is false
-Supports: windows & !arm

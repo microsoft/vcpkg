@@ -1,0 +1,12 @@
+diff --git a/src/lib/forcefield.h b/src/lib/forcefield.h
+index 81bd4c1..44761e2 100644
+--- a/src/lib/forcefield.h
++++ b/src/lib/forcefield.h
+@@ -24,6 +24,7 @@
+ #define VINA_FORCEFIELD_H
+ 
+ 
++#include <sstream>
+ #include <iostream>
+ #include <fstream>
+ #include <string>

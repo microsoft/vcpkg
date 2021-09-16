@@ -1,5 +1,0 @@
-Source: blosc
-Version: 1.18.1-1
-Build-Depends: lz4, snappy, zlib, zstd
-Homepage: https://github.com/Blosc/c-blosc
-Description: A blocking, shuffling and loss-less compression library that can be faster than `memcpy()`

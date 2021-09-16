@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b16d4a4..5126085 100644
+index 50d5b9a..17ddf6b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -191,7 +191,8 @@ else (USE_EXT_GD)
+@@ -248,7 +248,8 @@ else (USE_EXT_GD)
  	CHECK_INCLUDE_FILE("stdint.h"	HAVE_STDINT_H)
  	CHECK_INCLUDE_FILE("inttypes.h"	HAVE_INTTYPES_H)
  

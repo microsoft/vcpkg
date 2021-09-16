@@ -4,7 +4,7 @@ import sys
 lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
-        p_cd = re.compile("^\\((cd .*) && \\\\$")
+        p_cd = re.compile(r"^\((cd .*) && \\$")
         p_linker = re.compile(fr"^\s*(.+)gcc.+(@bazel-out\S+libtensorflow{lib_suffix}\.so\.\d\.\d\.\d-2\.params).*")
         f_out.write("#!/bin/bash\n# note: ar/binutils version 2.27 required to support output files > 4GB\n")
         env = []

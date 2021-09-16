@@ -1,0 +1,31 @@
+From dc45a01fec854b5e2a49196e82e1a336ab642764 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 28 Jul 2021 03:04:39 +0200
+Subject: [PATCH] Support static builds
+
+---
+ KF5CrashConfig.cmake.in | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/KF5CrashConfig.cmake.in b/KF5CrashConfig.cmake.in
+index 0222495..494c810 100644
+--- a/KF5CrashConfig.cmake.in
++++ b/KF5CrashConfig.cmake.in
+@@ -5,6 +5,14 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Core @REQUIRED_QT_VERSION@)
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(KF5CoreAddons REQUIRED)
++    find_dependency(KF5WindowSystem REQUIRED)
++
++    if (@X11_FOUND@)
++        find_dependency(Qt5X11Extras REQUIRED)
++    endif()
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5CrashTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+

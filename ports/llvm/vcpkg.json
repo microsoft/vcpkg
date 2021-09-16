@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version-string": "12.0.0",
-  "port-version": 1,
+  "version-string": "12.0.1",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "supports": "!uwp",

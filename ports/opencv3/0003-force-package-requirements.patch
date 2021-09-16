@@ -1,5 +1,3 @@
-diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
-index 2d28dff..6dbeca9 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -11,7 +11,7 @@ else()

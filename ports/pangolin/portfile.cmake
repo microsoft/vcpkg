@@ -1,78 +1,95 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF v0.5
-    SHA512 7ebeec108f33f1aa8b1ad08e3ca128a837b22d33e3fc580021f981784043b023a1bf563bbfa8b51d46863db770b336d24fc84ee3d836b85e0da1848281b2a5b2
+    REF dd801d244db3a8e27b7fe8020cd751404aa818fd #v0.6
+    SHA512 8004ab6f146f319df41e4b8d4bdb6677b8faf6db725e34fea76fcbf065522fa286d334c2426dcb39faf0cfb3332946104f78393d2b2b2418fe02d91450916e78
     HEAD_REF master
     PATCHES
-        deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
-        fix-dependency-python.patch
-        add-definition.patch
         fix-cmake-version.patch
+        fix-build-error-in-vs2019.patch
+        fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        test        BUILD_TESTS
+        tools       BUILD_TOOLS
+        examples    BUILD_EXAMPLES
+        gui         BUILD_PANGOLIN_GUI
+        vars        BUILD_PANGOLIN_VARS
+        video       BUILD_PANGOLIN_VIDEO
+        pybind11    BUILD_PANGOLIN_PYTHON
+        eigen       BUILD_PANGOLIN_EIGEN
+        ffmpeg      BUILD_PANGOLIN_FFMPEG
+        realsense   BUILD_PANGOLIN_LIBREALSENSE2
+        openni2     BUILD_PANGOLIN_OPENNI2
+        uvc         BUILD_PANGOLIN_LIBUVC
+        png         BUILD_PANGOLIN_LIBPNG
+        jpeg        BUILD_PANGOLIN_LIBJPEG
+        tiff        BUILD_PANGOLIN_LIBTIFF
+        openexr     BUILD_PANGOLIN_LIBOPENEXR
+        zstd        BUILD_PANGOLIN_ZSTD
+        lz4         BUILD_PANGOLIN_LZ4
+        module      BUILD_PYPANGOLIN_MODULE
+)
+
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_TooN=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_DC1394=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibRealSense=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI2=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_uvc=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_DepthSense=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_TeliCam=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Pleora=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
+        -DBUILD_PANGOLIN_PLEORA=OFF
+        -DBUILD_PANGOLIN_TELICAM=OFF
+        -DBUILD_PANGOLIN_DEPTHSENSE=OFF
+        -DBUILD_PANGOLIN_OPENNI=OFF
+        -DBUILD_PANGOLIN_UVC_MEDIAFOUNDATION=OFF
+        -DBUILD_PANGOLIN_LIBREALSENSE=OFF
+        -DBUILD_PANGOLIN_V4L=OFF
+        -DBUILD_PANGOLIN_LIBDC1394=OFF
+        -DBUILD_PANGOLIN_TOON=OFF
+        -DDISPLAY_WAYLAND=OFF
+        -DDISPLAY_X11=OFF
+        -DBUILD_FOR_GLES_2=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
+    MAYBE_UNUSED_VARIABLES
+        MSVC_USE_STATIC_CRT
+        BUILD_FOR_GLES_2
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Pangolin)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Pangolin)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${EXE})
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES Plotter VideoConvert VideoJsonPrint VideoJsonTransform VideoViewer AUTO_CLEAN)
+endif()
 
-    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE ${DEBUG_EXE})
-
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
-        "lib/pangolin.dll" "bin/pangolin.dll"
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # Copy missing header file
-    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/pangolin")
 endif()
 
 # Put the license file where vcpkg expects it
-file(COPY ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENCE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

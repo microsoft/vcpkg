@@ -1,0 +1,8 @@
+{
+  "name": "unicorn",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "Unicorn is a lightweight multi-platform, multi-architecture CPU emulator framework",
+  "homepage": "https://github.com/unicorn-engine/unicorn",
+  "supports": "!uwp"
+}

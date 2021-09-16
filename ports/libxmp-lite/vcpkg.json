@@ -1,0 +1,7 @@
+{
+  "name": "libxmp-lite",
+  "version-string": "4.4.1",
+  "port-version": 7,
+  "description": "Lightweight version of libxmp that supports MOD, S3M, XM and IT modules.",
+  "homepage": "https://sourceforge.net/projects/xmp/"
+}

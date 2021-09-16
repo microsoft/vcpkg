@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 300e4ea..155dd0d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -614,6 +614,7 @@ if(APPLE)
+   set_target_properties(onnx PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+ endif()
+ 
++if(ONNXIFI_ENABLE_EXT)
+ # ---[ ONNX Interface for Framework Integratin (ONNXIFI)
+ add_library(onnxifi INTERFACE)
+ target_include_directories(onnxifi INTERFACE
+@@ -688,6 +689,7 @@ if(MSVC)
+                                          # lists from 'identifier2'
+                         )
+ endif()
++endif() # ONNXIFI_ENABLE_EXT
+ 
+ include(GNUInstallDirs)
+ 
+@@ -737,8 +739,14 @@ install(FILES
+ install(EXPORT ONNXTargets DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/ONNX")
+ install(TARGETS
+   onnx onnx_proto
+-  onnxifi onnxifi_dummy onnxifi_loader
+   EXPORT ONNXTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
++if(ONNXIFI_ENABLE_EXT)
++  install(TARGETS
++    onnxifi onnxifi_dummy onnxifi_loader
++    EXPORT ONNXTargets
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ if(NOT ANDROID AND NOT IOS)
+   install(TARGETS onnxifi_wrapper
+@@ -748,6 +756,7 @@ endif()
+ if(ONNXIFI_DUMMY_BACKEND)
+   add_definitions(-DONNXIFI_DUMMY_BACKEND=1)
+ endif()
++endif() # ONNXIFI_ENABLE_EXT
+ 
+ if(ONNX_BUILD_TESTS)
+   include(${ONNX_ROOT}/cmake/unittest.cmake)

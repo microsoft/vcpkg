@@ -1,0 +1,38 @@
+From 2d9a393978ff6ae9c5577a3595cd761b199dc4fd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 26 Aug 2021 12:06:54 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5IconThemesConfig.cmake.in | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/KF5IconThemesConfig.cmake.in b/KF5IconThemesConfig.cmake.in
+index 79688bb..d91f546 100644
+--- a/KF5IconThemesConfig.cmake.in
++++ b/KF5IconThemesConfig.cmake.in
+@@ -3,6 +3,21 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Widgets "@REQUIRED_QT_VERSION@")
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt5Widgets "@REQUIRED_QT_VERSION@")
++    find_dependency(Qt5Svg "@REQUIRED_QT_VERSION@")
++
++    if (NOT ANDROID)
++        find_dependency(Qt5DBus "@REQUIRED_QT_VERSION@")
++    endif()
++
++    find_dependency(KF5Archive "@KF_DEP_VERSION@")
++    find_dependency(KF5I18n "@KF_DEP_VERSION@")
++    find_dependency(KF5CoreAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5ConfigWidgets "@KF_DEP_VERSION@")
++    find_dependency(KF5WidgetsAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5ItemViews "@KF_DEP_VERSION@")
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5IconThemesTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+

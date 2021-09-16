@@ -1,5 +1,0 @@
-Source: freetype-gl
-Version: 2020-09-14
-Homepage: https://github.com/rougier/freetype-gl
-Description: OpenGL text using one vertex buffer, one texture and FreeType
-Build-Depends: glew, freetype

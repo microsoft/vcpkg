@@ -1,0 +1,7 @@
+{
+  "name": "bitmagic",
+  "version-string": "7.2.0",
+  "port-version": 1,
+  "description": "Algorithms and tools for Algebra of Sets for information retrieval, indexing of databases, scientific algorithms, ranking, clustering, unsupervised machine learning and signal processing.",
+  "homepage": "http://bitmagic.io"
+}

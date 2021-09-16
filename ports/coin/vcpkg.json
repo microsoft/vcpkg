@@ -1,0 +1,65 @@
+{
+  "name": "coin",
+  "version-string": "4.0.0",
+  "port-version": 3,
+  "description": "A high-level 3D visualization library with Open Inventor 2.1 API",
+  "homepage": "https://github.com/coin3d/coin",
+  "supports": "!(arm | arm64 | uwp)",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "opengl-registry"
+  ],
+  "default-features": [
+    "simage",
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support bzip2 compressed fonts",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "freetype",
+          "features": [
+            "bzip2"
+          ]
+        }
+      ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig for font support",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "Use freetype for font support",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "openal": {
+      "description": "Use OpenAL for sound support in VRML97",
+      "dependencies": [
+        "openal-soft"
+      ]
+    },
+    "simage": {
+      "description": "Use simage for loading images (textures), audio, and animations",
+      "dependencies": [
+        "simage"
+      ]
+    },
+    "zlib": {
+      "description": "Use zlib for reading/writing compressed files",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

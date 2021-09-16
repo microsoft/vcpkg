@@ -1,6 +1,0 @@
-Source: fribidi
-Version: 1.0.10
-Port-Version: 2
-Description: GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)
-Build-Depends: tool-meson
-Supports: !(uwp | arm)

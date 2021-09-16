@@ -12,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF 478fd8e757dadfe2ca5fcd3953aeba24a14a98e1
-        SHA512 bece2a30abb88dd97b97e399b8e63f6833b052c01c2f779070d52bbc916af604568bf5098d5f994d278d70591b11c45a5fcca9350226eb6e59b04e53c2780bc4
+        REF 12cb55ee5a926a124f22ad737c7cec35f6af7165
+        SHA512 ed7d5c5132cfaa46574e70a99ce0181208b772fa2dca9122c8d16918af29240a2060705a25b121785c210eb5a4b917588a1623aedfd0bf9a4cf39df601b05dea
         HEAD_REF master
     )
 endif()
@@ -38,4 +38,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-

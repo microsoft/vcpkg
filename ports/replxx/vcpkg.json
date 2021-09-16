@@ -1,0 +1,8 @@
+{
+  "name": "replxx",
+  "version-string": "0.0.2",
+  "port-version": 3,
+  "description": "A small, portable GNU readline replacement for Linux, Windows and MacOS which is capable of handling UTF-8 characters.",
+  "homepage": "https://github.com/AmokHuginnsson/replxx",
+  "supports": "!uwp"
+}

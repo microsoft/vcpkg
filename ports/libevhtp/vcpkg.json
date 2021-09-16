@@ -1,0 +1,27 @@
+{
+  "name": "libevhtp",
+  "version-string": "1.2.18",
+  "port-version": 1,
+  "description": "Libevhtp was created as a replacement API for Libevent's current HTTP API.",
+  "homepage": "https://github.com/criticalstack/libevhtp",
+  "dependencies": [
+    "libevent"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Support SSL for libevhtp",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "regex": {
+      "description": "Support oniguruma for libevhtp",
+      "dependencies": [
+        "oniguruma"
+      ]
+    },
+    "thread": {
+      "description": "Support thread for libevhtp"
+    }
+  }
+}

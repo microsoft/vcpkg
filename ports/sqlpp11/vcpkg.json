@@ -1,0 +1,10 @@
+{
+  "name": "sqlpp11",
+  "version-string": "0.60",
+  "port-version": 1,
+  "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
+  "homepage": "https://github.com/rbock/sqlpp11",
+  "dependencies": [
+    "date"
+  ]
+}

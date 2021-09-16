@@ -1,0 +1,6 @@
+{
+  "name": "zserge-webview",
+  "version-string": "2019-04-27",
+  "port-version": 3,
+  "description": "Tiny cross-platform webview library for C/C++/Golang."
+}

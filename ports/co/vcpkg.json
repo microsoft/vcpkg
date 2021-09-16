@@ -1,0 +1,33 @@
+{
+  "name": "co",
+  "version-semver": "2.0.1",
+  "description": "A go-style coroutine library in C++11 and more",
+  "homepage": "https://github.com/idealvin/co",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "libcurl": {
+      "description": "libcurl with OpenSSL support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

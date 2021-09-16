@@ -1,0 +1,11 @@
+{
+  "name": "sf2cute",
+  "version-string": "0.2.0",
+  "port-version": 2,
+  "description": "C++14 Library for SoundFont 2",
+  "features": {
+    "example": {
+      "description": "Installs an example application"
+    }
+  }
+}

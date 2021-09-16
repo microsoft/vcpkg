@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF ae2a562936cc8504c9ef2757cceaff163147834f
-  SHA512 1c5a91e60c1809c6c26f11649659090a75501b0570f3147e5b27ac65c539b591967f258d14c399d33019317864ede823353ea44e0015bc3f7afc5a787f046cc7
+  REF 2fb89a0072ae7316af1c856f22663fde4928128a #11.6.0
+  SHA512 e22b85bb0c98d35c80f06dd6352d98c34ea0b965c5bec077d122d9aa346293672a11aec4964b410db8a6050c70dbc0a46fbbb599e178424d78234608075c110e
   HEAD_REF master
   PATCHES
     ignore-crt.patch
@@ -22,36 +22,34 @@ else()
   set(BUILD_BINARIES ON)  
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DSKIP_GLSLANG_INSTALL=OFF
     -DBUILD_EXTERNAL=OFF
     -DENABLE_GLSLANG_BINARIES=${BUILD_BINARIES}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/glslang)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 
 if(NOT BUILD_BINARIES)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 else()
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/glslang)
+  vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake OR EXISTS ${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake")
   message(FATAL_ERROR "glslang has been updated to provide a -config file -- please remove the vcpkg provided version from the portfile")
 endif()
 
 file(COPY
-  ${CMAKE_CURRENT_LIST_DIR}/copyright
-  ${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+  "${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

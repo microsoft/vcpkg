@@ -1,0 +1,14 @@
+{
+  "name": "avro-c",
+  "version-string": "1.9.2",
+  "port-version": 2,
+  "description": "Apache Avro is a data serialization system",
+  "homepage": "https://github.com/apache/avro",
+  "supports": "!(uwp | osx)",
+  "dependencies": [
+    "jansson",
+    "liblzma",
+    "snappy",
+    "zlib"
+  ]
+}

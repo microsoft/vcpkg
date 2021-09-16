@@ -1,0 +1,6 @@
+{
+  "name": "inih",
+  "version-string": "51",
+  "port-version": 1,
+  "description": "Simple .INI file parser"
+}

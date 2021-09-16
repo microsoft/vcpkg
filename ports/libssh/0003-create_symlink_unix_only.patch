@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1f5b0bf..6559468 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -206,9 +206,11 @@ endif (WITH_SYMBOL_VERSIONING AND ABIMAP_FOUND)
+ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source DEPENDS ${_SYMBOL_TARGET})
+ 
+ # Link compile database for clangd
++if(UNIX)
+ execute_process(COMMAND cmake -E create_symlink
+                 "${CMAKE_BINARY_DIR}/compile_commands.json"
+                 "${CMAKE_SOURCE_DIR}/compile_commands.json")
++endif()
+ 
+ message(STATUS "********************************************")
+ message(STATUS "********** ${PROJECT_NAME} build options : **********")

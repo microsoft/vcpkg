@@ -1,4 +1,0 @@
-Source: google-cloud-cpp-spanner
-Version: alias
-Build-Depends: google-cloud-cpp
-Description: Deprecated, use google-cloud-cpp instead

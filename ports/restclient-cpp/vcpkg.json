@@ -1,0 +1,10 @@
+{
+  "name": "restclient-cpp",
+  "version-string": "0.5.2",
+  "port-version": 1,
+  "description": "Simple REST client for C++. It wraps libcurl for HTTP requests.",
+  "homepage": "https://code.mrtazz.com/restclient-cpp/",
+  "dependencies": [
+    "curl"
+  ]
+}

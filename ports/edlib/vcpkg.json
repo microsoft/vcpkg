@@ -1,0 +1,7 @@
+{
+  "name": "edlib",
+  "version-string": "1.2.6",
+  "port-version": 1,
+  "description": "Lightweight, super fast C/C++ (& Python) library for sequence alignment using edit (Levenshtein) distance.",
+  "homepage": "https://github.com/Martinsos/edlib"
+}

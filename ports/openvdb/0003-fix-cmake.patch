@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 93a65c7..24ec864 100644
+index 3456346..f7e5796 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -338,13 +338,9 @@ endif()
+@@ -354,13 +354,9 @@ endif()
  
  if(OPENVDB_INSTALL_CMAKE_MODULES)
    set(OPENVDB_CMAKE_MODULES
@@ -17,21 +17,19 @@ index 93a65c7..24ec864 100644
      cmake/OpenVDBHoudiniSetup.cmake
      cmake/OpenVDBMayaSetup.cmake
 diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
-index 219b90a..b280f85 100644
+index 1dc5bc0..d84d8f1 100644
 --- a/cmake/FindOpenVDB.cmake
 +++ b/cmake/FindOpenVDB.cmake
-@@ -448,8 +448,8 @@ endif()
+@@ -457,7 +457,7 @@ endif()
  
  # Add standard dependencies
  
--find_package(IlmBase REQUIRED COMPONENTS Half)
 -find_package(TBB REQUIRED COMPONENTS tbb)
-+find_package(IlmBase CONFIG REQUIRED)
 +find_package(TBB CONFIG REQUIRED)
- find_package(ZLIB REQUIRED)
  
  if(NOT OPENVDB_USE_STATIC_LIBS AND NOT Boost_USE_STATIC_LIBS)
-@@ -588,7 +588,7 @@ else()
+   # @note  Both of these must be set for Boost 1.70 (VFX2020) to link against
+@@ -607,7 +607,7 @@ elseif(NOT OPENVDB_USE_STATIC_LIBS)
  endif()
  
  if(OpenVDB_USES_BLOSC)
@@ -40,16 +38,16 @@ index 219b90a..b280f85 100644
  endif()
  
  if(OpenVDB_USES_ZLIB)
-@@ -602,6 +602,8 @@ endif()
- if(OpenVDB_USES_EXR)
-   find_package(IlmBase REQUIRED)
-   find_package(OpenEXR REQUIRED)
-+  find_package(IlmBase CONFIG REQUIRED)
-+  find_package(OpenEXR CONFIG REQUIRED)
+@@ -619,7 +619,7 @@ if(OpenVDB_USES_LOG4CPLUS)
  endif()
  
- if(UNIX)
-@@ -662,7 +664,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
+ if(OpenVDB_USES_IMATH_HALF)
+-  find_package(IlmBase REQUIRED COMPONENTS Half)
++  find_package(IlmBase CONFIG REQUIRED)
+   if(WIN32)
+     # @note OPENVDB_OPENEXR_STATICLIB is old functionality and should be removed
+     if(OPENEXR_USE_STATIC_LIBS OR (${ILMBASE_LIB_TYPE} STREQUAL STATIC_LIBRARY))
+@@ -664,7 +664,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
  
  if(NOT OPENVDB_USE_STATIC_LIBS)
    if(OpenVDB_USES_BLOSC)
@@ -59,47 +57,31 @@ index 219b90a..b280f85 100644
    if(OpenVDB_USES_ZLIB)
      list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
 diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
-index 536bf1e..568fec1 100644
+index 88543df..92efaee 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
-@@ -47,7 +47,7 @@ message(STATUS "----------------------------------------------------")
- ##########################################################################
- 
- # Collect and configure lib dependencies
--
-+if(0)
- if(USE_EXR)
-   find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED)
-   find_package(OpenEXR ${MINIMUM_OPENEXR_VERSION} REQUIRED)
-@@ -57,8 +57,14 @@ if(USE_EXR)
-         "is deprecated and will be removed.")
-     endif()
-   endif()
-+endif()
-+endif()
-+
-+if(USE_EXR)
-+  find_package(IlmBase CONFIG REQUIRED)
-+  find_package(OpenEXR CONFIG REQUIRED)
- else()
--  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half)
-+  find_package(IlmBase CONFIG REQUIRED)
- endif()
- 
- if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
-@@ -68,7 +74,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
+@@ -120,7 +120,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BOOST_VERSION)
    endif()
  endif()
  
 -find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbb)
 +find_package(TBB CONFIG REQUIRED)
- 
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
    if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
-@@ -82,14 +88,7 @@ if(USE_LOG4CPLUS)
+     message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
+@@ -129,7 +129,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
  endif()
  
+ if(USE_IMATH_HALF)
+-  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half)
++  find_package(IlmBase CONFIG REQUIRED)
+   if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
+     if(${IlmBase_VERSION} VERSION_LESS FUTURE_MINIMUM_ILMBASE_VERSION)
+       message(DEPRECATION "Support for IlmBase versions < ${FUTURE_MINIMUM_ILMBASE_VERSION} "
+@@ -145,14 +145,7 @@ endif()
+ 
  if(USE_BLOSC)
+   # Find Blosc libraries
 -  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
 -  if(Blosc_FOUND AND Blosc_VERSION VERSION_GREATER MINIMUM_BLOSC_VERSION)
 -    message(WARNING "The version of Blosc located is greater than ${MINIMUM_BLOSC_VERSION}. "
@@ -112,7 +94,7 @@ index 536bf1e..568fec1 100644
  else()
    message(WARNING "Blosc support is disabled. It is strongly recommended to "
      "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -165,7 +164,7 @@ endif()
+@@ -215,7 +208,7 @@ endif()
  # See FindOpenVDB.cmake
  
  if(USE_BLOSC)
@@ -122,10 +104,10 @@ index 536bf1e..568fec1 100644
  
  if(USE_BLOSC OR USE_ZLIB)
 diff --git a/openvdb/openvdb/cmd/CMakeLists.txt b/openvdb/openvdb/cmd/CMakeLists.txt
-index ba78f4b..461fd2f 100644
+index 8d9c375..14e1296 100644
 --- a/openvdb/openvdb/cmd/CMakeLists.txt
 +++ b/openvdb/openvdb/cmd/CMakeLists.txt
-@@ -50,7 +50,7 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
+@@ -46,7 +46,7 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
    find_package(Jemalloc REQUIRED)
    list(APPEND OPENVDB_BINARIES_DEPENDENT_LIBS Jemalloc::jemalloc)
  elseif(CONCURRENT_MALLOC STREQUAL "Tbbmalloc")
@@ -134,7 +116,7 @@ index ba78f4b..461fd2f 100644
    list(APPEND OPENVDB_BINARIES_DEPENDENT_LIBS TBB::tbbmalloc)
  endif()
  
-@@ -120,8 +120,8 @@ endif()
+@@ -116,8 +116,8 @@ endif()
  #### vdb_render
  
  if(OPENVDB_BUILD_VDB_RENDER)

@@ -1,0 +1,11 @@
+{
+  "name": "ignition-msgs1",
+  "version-string": "1.0.0",
+  "port-version": 4,
+  "description": "Middleware protobuf messages for robotics",
+  "dependencies": [
+    "ignition-cmake0",
+    "ignition-math4",
+    "protobuf"
+  ]
+}

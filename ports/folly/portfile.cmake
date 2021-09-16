@@ -1,5 +1,7 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-  message(FATAL_ERROR "Folly only supports the x64 architecture.")
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86" "arm" "arm64")
+else()
+    vcpkg_fail_port_install(ON_ARCH "x86" "arm")
 endif()
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

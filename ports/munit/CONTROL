@@ -1,7 +1,0 @@
-Source: munit
-Version: 2019-04-06
-Port-Version: 1
-Description: A small but full-featured unit testing framework for C
-Build-Depends: tool-meson
-Supports: !(arm|arm64|uwp)
-Homepage: https://github.com/nemequ/munit

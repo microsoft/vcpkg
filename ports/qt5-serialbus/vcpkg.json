@@ -1,0 +1,13 @@
+{
+  "name": "qt5-serialbus",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 Serialbus Module;",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-serialport"
+  ]
+}

@@ -25,22 +25,22 @@ if ("dynamic-load" IN_LIST FEATURES)
     endif()
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    dynamic-load SDL_DYNAMIC_LOAD
-    mpg123 SDL_MIXER_ENABLE_MP3
-    libflac SDL_MIXER_ENABLE_FLAC
-    libmodplug SDL_MIXER_ENABLE_MOD
-    libvorbis SDL_MIXER_ENABLE_OGGVORBIS
-    opusfile SDL_MIXER_ENABLE_OPUS
-    nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
-    fluidsynth SDL_MIXER_ENABLE_FLUIDSYNTH
+    FEATURES
+        dynamic-load SDL_DYNAMIC_LOAD
+        mpg123 SDL_MIXER_ENABLE_MP3
+        libflac SDL_MIXER_ENABLE_FLAC
+        libmodplug SDL_MIXER_ENABLE_MOD
+        libvorbis SDL_MIXER_ENABLE_OGGVORBIS
+        opusfile SDL_MIXER_ENABLE_OPUS
+        nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
+        fluidsynth SDL_MIXER_ENABLE_FLUIDSYNTH
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBRARY_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} # It should always be dynamic suffix
@@ -48,10 +48,10 @@ vcpkg_configure_cmake(
         -DSDL_MIXER_SKIP_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

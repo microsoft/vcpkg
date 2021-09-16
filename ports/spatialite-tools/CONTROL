@@ -1,6 +1,0 @@
-Source: spatialite-tools
-Version: 5.0.0
-Port-Version: 2
-Homepage: https://www.gaia-gis.it/fossil/spatialite-tools/index
-Description: Contains spatialite.exe and other command line tools to work with SpatiaLite databases (import, export, SQL queries)
-Build-Depends: sqlite3, libspatialite, geos, readosm, proj4, zlib, libiconv, expat, librttopo

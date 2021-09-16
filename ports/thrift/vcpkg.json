@@ -1,0 +1,17 @@
+{
+  "name": "thrift",
+  "version-string": "0.13.0",
+  "port-version": 1,
+  "description": "Apache Thrift is a software project spanning a variety of programming languages and use cases. Our goal is to make reliable, performant communication and data serialization across languages as efficient and seamless as possible.",
+  "homepage": "https://github.com/apache/thrift",
+  "dependencies": [
+    "boost-date-time",
+    "boost-locale",
+    "boost-range",
+    "boost-scope-exit",
+    "boost-smart-ptr",
+    "libevent",
+    "openssl",
+    "zlib"
+  ]
+}

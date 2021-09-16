@@ -8,12 +8,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 099c8585e3add6f58fab9aa438a491fa55d3f67e # 2.2.17.0
-    SHA512 36e3aef52e082fcff64a16d10ad372a6335b3562c3d6e62aac88173476ae6c3694ac565084d50551724f47be83a7a8182e608c81c7a787392e576d9c401f65f5
+    REF 9f74cf4d9813bfdcad5bca08b4ff75a25d056cb0 # 2.3.7.2
+    SHA512 cebc388e842e983f010c5f3bf57bed3fe1ae9d2eac79019472f8431b194d6a8b156b27cc5688bd0998aa2d01959d47bcdc7e637417f755433ffe32c491cdc376
     HEAD_REF master
     PATCHES
         fix-config-cmake.patch
         fix_static_build.patch
+        disable-test.patch
+        fix-dependencies.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -83,7 +85,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(COPY "${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
+file(COPY "${SOURCE_PATH}/src/cmake/modules/FindLibsquish.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/openimageio")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

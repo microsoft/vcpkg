@@ -1,9 +1,0 @@
-Source: opencc
-Version: 2020-04-26
-Port-Version: 7
-Description: A project for conversion between Traditional and Simplified Chinese
-Homepage: https://github.com/BYVoid/OpenCC
-Supports: !(arm|arm64|uwp)
-
-Feature: tools
-Description: Build OpenCC command-line tools

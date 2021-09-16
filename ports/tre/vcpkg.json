@@ -1,0 +1,7 @@
+{
+  "name": "tre",
+  "version-string": "0.8.0",
+  "port-version": 3,
+  "description": "TRE is a lightweight, robust, and efficient POSIX compliant regexp matching library with some exciting features such as approximate (fuzzy) matching.",
+  "homepage": "https://github.com/laurikari/tre"
+}

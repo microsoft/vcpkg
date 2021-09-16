@@ -1,0 +1,22 @@
+{
+  "name": "libzippp",
+  "version-string": "5.0-1.8.0",
+  "port-version": 1,
+  "description": "Simple basic C++ wrapper around the libzip library. It is meant to be a portable and easy-to-use library for ZIP handling",
+  "homepage": "https://github.com/ctabin/libzippp",
+  "dependencies": [
+    {
+      "name": "libzip",
+      "default-features": false,
+      "features": [
+        "bzip2"
+      ]
+    },
+    "zlib"
+  ],
+  "features": {
+    "encryption": {
+      "description": "Support encryption"
+    }
+  }
+}

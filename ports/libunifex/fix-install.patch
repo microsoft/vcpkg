@@ -1,0 +1,33 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 3f25517..3c34a54 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -67,10 +67,27 @@ configure_file(
+ target_include_directories(unifex
+   PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>
+-    "${PROJECT_BINARY_DIR}/include")
++    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
++    $<INSTALL_INTERFACE:include>)
+ 
+ target_compile_features(unifex PUBLIC cxx_std_17)
+ 
+ if(CXX_COROUTINES_HAVE_COROUTINES)
+   target_link_libraries(unifex PUBLIC std::coroutines)
+ endif()
++
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/unifex
++        DESTINATION include
++)
++install(FILES ${PROJECT_BINARY_DIR}/include/unifex/config.hpp
++        DESTINATION include/unifex
++)
++
++install(TARGETS unifex
++  EXPORT unifex-config
++  DESTINATION lib
++)
++install(EXPORT unifex-config
++  NAMESPACE unofficial::
++  DESTINATION lib/cmake/unifex
++)

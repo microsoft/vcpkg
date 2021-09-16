@@ -1,0 +1,33 @@
+{
+  "name": "libproxy",
+  "version-string": "0.4.15",
+  "port-version": 3,
+  "description": "libproxy is a library that provides automatic proxy configuration management.",
+  "homepage": "https://github.com/libproxy/libproxy",
+  "dependencies": [
+    "libmodman"
+  ],
+  "features": {
+    "bindings-csharp": {
+      "description": "Install C# bindings"
+    },
+    "bindings-perl": {
+      "description": "Install PERL bindings"
+    },
+    "bindings-python": {
+      "description": "Install Python bindings"
+    },
+    "bindings-ruby": {
+      "description": "Install Ruby bindings"
+    },
+    "bindings-vala": {
+      "description": "Install Vala bindings"
+    },
+    "tests": {
+      "description": "Build libproxy tests"
+    },
+    "tools": {
+      "description": "build tools"
+    }
+  }
+}

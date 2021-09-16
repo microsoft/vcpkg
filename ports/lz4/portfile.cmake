@@ -6,30 +6,35 @@ vcpkg_from_github(
     HEAD_REF dev
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(DLL_IMPORT "1 && defined(_MSC_VER)")
+else()
+    set(DLL_IMPORT "0")
+endif()
 foreach(FILE lz4.h lz4frame.h)
-    file(READ ${CURRENT_PACKAGES_DIR}/include/${FILE} LZ4_HEADER)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(REPLACE "defined(LZ4_DLL_IMPORT) && (LZ4_DLL_IMPORT==1)" "1 && defined(_MSC_VER)" LZ4_HEADER "${LZ4_HEADER}")
-    else()
-        string(REPLACE "defined(LZ4_DLL_IMPORT) && (LZ4_DLL_IMPORT==1)" "0" LZ4_HEADER "${LZ4_HEADER}")
-    endif()
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/${FILE} "${LZ4_HEADER}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${FILE}"
+        "defined(LZ4_DLL_IMPORT) && (LZ4_DLL_IMPORT==1)"
+        "${DLL_IMPORT}"
+    )
 endforeach()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lz4.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lz4.pc" " -llz4" " -llz4d")
+endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/lib/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/lib/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,5 +1,0 @@
-Source: arb
-Version: 2.18.1
-Homepage: https://github.com/fredrik-johansson/arb
-Description: a C library for arbitrary-precision interval arithmetic
-Build-Depends: flint

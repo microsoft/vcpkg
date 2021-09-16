@@ -1,7 +1,7 @@
 {
   "name": "libxml2",
   "version-semver": "2.9.12",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Libxml2 is the XML C parser and toolkit developed for the Gnome project (but usable outside of the Gnome platform).",
   "homepage": "https://xmlsoft.org/",
   "dependencies": [

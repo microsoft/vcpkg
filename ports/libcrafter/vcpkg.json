@@ -1,0 +1,10 @@
+{
+  "name": "libcrafter",
+  "version": "1.0",
+  "description": "Libcrafter is a high level library for C++ designed to create and decode network packets.",
+  "homepage": "https://github.com/pellegre/libcrafter",
+  "supports": "!windows",
+  "dependencies": [
+    "libpcap"
+  ]
+}

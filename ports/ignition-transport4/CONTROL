@@ -1,4 +1,0 @@
-Source: ignition-transport4
-Version: 4.0.0-2
-Build-Depends: cppzmq, ignition-cmake0, ignition-modularscripts, ignition-msgs1, libuuid (!windows&!uwp), protobuf, zeromq
-Description: Transport middleware for robotics

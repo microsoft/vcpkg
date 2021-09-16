@@ -1,0 +1,13 @@
+{
+  "name": "ismrmrd",
+  "version-string": "1.5.0",
+  "port-version": 1,
+  "description": "ISMRM Raw Data Format",
+  "homepage": "https://github.com/ismrmrd/ismrmrd",
+  "dependencies": [
+    "boost",
+    "fftw3",
+    "hdf5",
+    "pugixml"
+  ]
+}

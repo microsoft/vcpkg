@@ -1,0 +1,10 @@
+{
+  "name": "arb",
+  "version-string": "2.18.1",
+  "port-version": 1,
+  "description": "a C library for arbitrary-precision interval arithmetic",
+  "homepage": "https://github.com/fredrik-johansson/arb",
+  "dependencies": [
+    "flint"
+  ]
+}

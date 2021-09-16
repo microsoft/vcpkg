@@ -1,0 +1,7 @@
+{
+  "name": "wren",
+  "version-string": "2019-07-01",
+  "port-version": 1,
+  "description": "Wren is a small, fast, class-based concurrent scripting language.",
+  "homepage": "https://github.com/wren-lang/wren"
+}

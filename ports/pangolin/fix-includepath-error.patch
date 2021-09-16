@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dd08d31..7f364a7 100644
+index a2c60ea..ddeb144 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -506,7 +506,7 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
+@@ -735,7 +735,7 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
      ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake @ONLY IMMEDIATE )
  
  # Install tree config

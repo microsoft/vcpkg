@@ -5,7 +5,7 @@ import sys
 lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.bat", "w") as f_out:
-        p_setenv = re.compile("^\s*(SET .+=.*)$")
+        p_setenv = re.compile(r"^\s*(SET .+=.*)$")
         p_linker = re.compile(fr".+link\.exe.+tensorflow{lib_suffix}\.dll-2\.params.*")
         env = []
         for line in f_in:

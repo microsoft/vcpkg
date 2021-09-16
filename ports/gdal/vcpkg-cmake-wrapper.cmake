@@ -56,7 +56,7 @@ function(_gdal_add_dependency target package)
         endif()
         if(dependency)
             if(TARGET GDAL::GDAL) # CMake 3.14
-                target_link_libraries(GDAL::GDAL INTERFACE ${dependency})
+                set_property(TARGET GDAL::GDAL APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${dependency})
             endif()
             if(NOT GDAL_LIBRARIES STREQUAL "GDAL::GDAL")
                 set(GDAL_LIBRARIES "${GDAL_LIBRARIES};${dependency}" PARENT_SCOPE)

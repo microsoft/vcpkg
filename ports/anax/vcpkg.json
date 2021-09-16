@@ -1,0 +1,7 @@
+{
+  "name": "anax",
+  "version-string": "2.1.0",
+  "port-version": 7,
+  "description": "An open source C++ entity system.",
+  "homepage": "https://github.com/miguelmartin75/anax"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ignition-math4",
+  "version-string": "4.0.0",
+  "port-version": 2,
+  "description": "Math API for robotic applications",
+  "homepage": "https://ignitionrobotics.org/libs/math",
+  "dependencies": [
+    "ignition-cmake0"
+  ]
+}

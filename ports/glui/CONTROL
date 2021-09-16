@@ -1,5 +1,0 @@
-Source: glui
-Version: 2019-11-30
-Description: GLUI is a GLUT-based C++ user interface library
-Homepage: https://github.com/libglui/glui
-Build-Depends: freeglut

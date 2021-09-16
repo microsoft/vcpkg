@@ -18,9 +18,6 @@ The Azure Pipelines artifacts directory. If not supplied, defaults to the curren
 .PARAMETER ArchivesRoot
 Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 
-.PARAMETER UseEnvironmentSasToken
-Equivalent to '-BinarySourceStub "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"'
-
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
@@ -47,8 +44,6 @@ Param(
     $ArtifactStagingDirectory = '.',
     [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
-    [switch]
-    $UseEnvironmentSasToken = $false,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
     $BuildReason = $null,
@@ -61,25 +56,13 @@ if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/communi
     throw
 }
 
-$usingBinaryCaching = $true
-if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
-    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
-        if ($UseEnvironmentSasToken) {
-            $BinarySourceStub = "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"
-        } else {
-            $usingBinaryCaching = $false
-        }
-    } else {
-        if ($UseEnvironmentSasToken) {
-            Write-Error "Only one binary caching setting may be used."
-            throw
-        } else {
-            $BinarySourceStub = "files,$ArchivesRoot"
-        }
+if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
+    if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
+        Write-Error "Only one binary caching setting may be used."
+        throw
     }
-} elseif ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or $UseEnvironmentSasToken) {
-    Write-Error "Only one binary caching setting may be used."
-    throw
+
+    $BinarySourceStub = "files,$ArchivesRoot"
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
@@ -87,14 +70,7 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
-$commonArgs = @()
-if ($usingBinaryCaching) {
-    $commonArgs += @('--binarycaching')
-} else {
-    $commonArgs += @('--no-binarycaching')
-}
-
-$commonArgs += @(
+$commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
@@ -102,7 +78,10 @@ $commonArgs += @(
 )
 
 $skipFailures = $false
-if ($usingBinaryCaching) {
+if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
+    $commonArgs += @('--no-binarycaching')
+} else {
+    $commonArgs += @('--binarycaching')
     $binaryCachingMode = 'readwrite'
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
@@ -137,6 +116,11 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg clean failed"
+}
+
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
@@ -152,6 +136,12 @@ else
 {
     & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
+
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg ci failed"
+}
+
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
     -baselineFile .\scripts\ci.baseline.txt `

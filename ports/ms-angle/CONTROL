@@ -1,4 +1,0 @@
-Source: ms-angle
-Version: alias
-Description: Deprecated alias for ms-angle
-Build-Depends: angle

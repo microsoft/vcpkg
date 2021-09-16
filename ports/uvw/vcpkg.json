@@ -1,0 +1,10 @@
+{
+  "name": "uvw",
+  "version-string": "2.7.0",
+  "port-version": 1,
+  "description": "Header-only, event based, tiny and easy to use libuv wrapper in modern C++.",
+  "homepage": "https://github.com/skypjack/uvw",
+  "dependencies": [
+    "libuv"
+  ]
+}

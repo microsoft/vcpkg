@@ -1,4 +1,0 @@
-Source: google-cloud-cpp-common
-Version: alias
-Build-Depends: google-cloud-cpp
-Description: Deprecated, use google-cloud-cpp instead

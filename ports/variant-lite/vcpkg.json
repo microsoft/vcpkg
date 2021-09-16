@@ -1,0 +1,6 @@
+{
+  "name": "variant-lite",
+  "version-string": "1.2.2",
+  "port-version": 1,
+  "description": "A C++17-like variant, a type-safe union for C++98, C++11 and later in a single-file header-only library"
+}

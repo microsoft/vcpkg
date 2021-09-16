@@ -1,0 +1,8 @@
+{
+  "name": "cppcoro",
+  "version-string": "2020-2-28",
+  "port-version": 2,
+  "description": "A library of C++ coroutine abstractions for the Coroutines TS",
+  "homepage": "https://github.com/lewissbaker/cppcoro",
+  "supports": "!uwp"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "intelrdfpmathlib",
+  "version-string": "20U2",
+  "port-version": 2,
+  "description": "Intel(R) Decimal Floating-Point Math Library"
+}

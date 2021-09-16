@@ -1,0 +1,10 @@
+{
+  "name": "fftwpp",
+  "version-string": "2019-12-19",
+  "port-version": 1,
+  "description": "FFTW++ is a C++ header/MPI transpose for Version 3 of the highly optimized FFTW (http://www.fftw.org) Fourier Transform library.",
+  "homepage": "https://www.fftw.org/",
+  "dependencies": [
+    "fftw3"
+  ]
+}

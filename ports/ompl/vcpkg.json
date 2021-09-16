@@ -1,0 +1,20 @@
+{
+  "name": "ompl",
+  "version-string": "1.5.1",
+  "port-version": 2,
+  "description": "The Open Motion Planning Library, consists of many state-of-the-art sampling-based motion planning algorithms",
+  "homepage": "https://ompl.kavrakilab.org/",
+  "dependencies": [
+    "boost-dynamic-bitset",
+    "boost-filesystem",
+    "boost-graph",
+    "boost-odeint",
+    "boost-program-options",
+    "boost-serialization",
+    "boost-system",
+    "boost-test",
+    "boost-timer",
+    "boost-ublas",
+    "eigen3"
+  ]
+}

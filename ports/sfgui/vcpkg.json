@@ -1,0 +1,10 @@
+{
+  "name": "sfgui",
+  "version-string": "0.4.0",
+  "port-version": 4,
+  "description": "simple and fast graphical user interface library",
+  "homepage": "https://github.com/TankOs/SFGUI",
+  "dependencies": [
+    "sfml"
+  ]
+}

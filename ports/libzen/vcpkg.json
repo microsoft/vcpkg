@@ -1,0 +1,6 @@
+{
+  "name": "libzen",
+  "version-string": "0.4.38",
+  "port-version": 1,
+  "description": "ZenLib is a C++ utility library for easiest cross-platform development"
+}

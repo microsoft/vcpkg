@@ -1,6 +1,0 @@
-Source: json5-parser
-Version: 1.0.0
-Port-Version: 2
-Homepage: https://github.com/Caltech-IPAC/json5_parser
-Description: An enhancement of the JSON Spirit C++ library to understand json5.
-Build-Depends: boost-spirit

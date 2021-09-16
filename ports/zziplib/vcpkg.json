@@ -1,0 +1,10 @@
+{
+  "name": "zziplib",
+  "version-string": "0.13.71",
+  "port-version": 2,
+  "description": "library providing read access on ZIP-archives",
+  "homepage": "https://github.com/gdraheim/zziplib",
+  "dependencies": [
+    "zlib"
+  ]
+}

@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 e6e77266dcd70c939c16667c916cccab8de161221d2ef600cfca43382f50da2dc8d790561556b4416adbb4ac6fba939004e0cc936c278e0e808dc3566e9a70d4
     HEAD_REF master
     PATCHES
+        fix-filemanager-uwp.patch
         fix-sqlite3-bin.patch
-        disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         tools-cmake.patch

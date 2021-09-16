@@ -1,5 +1,0 @@
-Source: bitserializer-rapidyaml
-Version: alias
-Build-Depends: bitserializer[rapidyaml-archive]
-Description: Deprecated alias for bitserializer-rapidyaml
-Supports: !(arm|arm64|osx)

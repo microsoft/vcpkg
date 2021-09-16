@@ -1,0 +1,8 @@
+{
+  "name": "cpuid",
+  "version-string": "0.4.1",
+  "port-version": 2,
+  "description": "Provides CPU identification for the x86 (and x86_64)",
+  "homepage": "https://github.com/anrieff/libcpuid",
+  "supports": "x86 | x64"
+}

@@ -1,5 +1,0 @@
-Source: moos-ui
-Version: 10.0.1-2
-Description: set of user interface tools to use and leverage the MOOS project.
-Homepage: https://sites.google.com/site/moossoftware/
-Build-Depends: moos-core

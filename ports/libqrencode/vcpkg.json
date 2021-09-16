@@ -1,0 +1,25 @@
+{
+  "name": "libqrencode",
+  "version-semver": "4.1.1",
+  "description": "libqrencode - a fast and compact QR Code encoding library",
+  "homepage": "https://github.com/fukuchi/libqrencode",
+  "dependencies": [
+    "libiconv",
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Build qrencode tool",
+      "dependencies": [
+        {
+          "name": "getopt",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}

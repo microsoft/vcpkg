@@ -1,7 +1,0 @@
-Source: status-value-lite
-Version: 1.1.0
-Homepage: https://github.com/martinmoene/status-value-lite
-Description: status_value is a single-file header-only library for objects that represent a status and an optional value. It is intended for use with C++11 and later. 
-
-Feature: test
-Description: Build with test

@@ -1,18 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO daniele77/cli
-    REF v1.2.1
-    SHA512 fc834608ac2ca6c3f330711c80897cc581eb1ed8da7a0d56a07efe6650d871f5317c777a6a029fdc0177684f08479bd129cc0ce748354bac3dbe6af79a390d14 
+    REF v2.0.0
+    SHA512 8a3e42d02f8bf757628fb876ccfa376771bbe66e7820d7fd5b34119fca262129f5122e67d939e0898b5964a162a8fd4538d5e6ffa96c4935a8c3979e5d5dbd9d
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cli)
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cli)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

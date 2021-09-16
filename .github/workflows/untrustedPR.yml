@@ -38,7 +38,7 @@ jobs:
           git config user.email github-actions
           git config user.name github-actions@github.com
 
-          ./vcpkg format-manifest ports/*/vcpkg.json
+          ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
           git commit -m "tmp" --allow-empty

@@ -1,5 +1,0 @@
-Source: qt5-activeqt
-Version: 5.15.2
-Description: Qt5 ActiveQt Module - ActiveX components
-Build-Depends:  qt5-base[core], qt5-declarative
-Supports: windows

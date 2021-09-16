@@ -1,0 +1,17 @@
+{
+  "name": "cli",
+  "version-semver": "2.0.0",
+  "description": "A library for interactive command line interfaces in modern C++",
+  "homepage": "https://github.com/daniele77/cli",
+  "dependencies": [
+    "boost-asio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

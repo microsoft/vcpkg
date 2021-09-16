@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.84.1",
+  "version": "1.84.2",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "features": {

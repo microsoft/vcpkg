@@ -1,0 +1,10 @@
+{
+  "name": "moos-ui",
+  "version-string": "10.0.1",
+  "port-version": 3,
+  "description": "set of user interface tools to use and leverage the MOOS project.",
+  "homepage": "https://sites.google.com/site/moossoftware/",
+  "dependencies": [
+    "moos-core"
+  ]
+}

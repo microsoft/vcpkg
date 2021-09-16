@@ -1,0 +1,18 @@
+{
+  "name": "ignition-transport4",
+  "version-string": "4.0.0",
+  "port-version": 3,
+  "description": "Transport middleware for robotics",
+  "dependencies": [
+    "cppzmq",
+    "ignition-cmake0",
+    "ignition-modularscripts",
+    "ignition-msgs1",
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp"
+    },
+    "protobuf",
+    "zeromq"
+  ]
+}

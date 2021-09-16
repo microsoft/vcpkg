@@ -1,0 +1,6 @@
+{
+  "name": "stxxl",
+  "version-string": "2018-11-15",
+  "port-version": 3,
+  "description": "Standard Template Library for Extra Large Data Sets"
+}

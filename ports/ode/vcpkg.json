@@ -1,0 +1,7 @@
+{
+  "name": "ode",
+  "version-string": "0.16.1",
+  "port-version": 1,
+  "description": "Open Dynamics Engine",
+  "homepage": "https://bitbucket.org/odedevs/ode/src/default/"
+}

@@ -40,20 +40,17 @@ list(APPEND OPTIONS -DBUILD_TESTING=OFF)
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
-                  REF f2aa6ad5be1a97e3fb41ef4680ee2c76c3434ac0 # v1.5.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
-                  SHA512 35e8a2c0ad6cd3c1f02a71a50d781c89f93909ad27030b406fd69f4fea5c1862c48a6e541fd07562947322c3a69bdfdb54206ae51bb86ef7a710f9e9898e9638
+                  REF 13a117e0e8935eef3f320b5a1cd71d9911ad9853 # v1.6.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
+                  SHA512 54f7f52ab4ee7954b6a303ffd3b8bcb18105b5d2fd8ed54b4e487fce2ebfbc51507e632189f775c79eea22ad24bd56bca401ddd679fc03d787342dd33d2ba18b
                   FILE_DISAMBIGUATOR 1)
-                  # For people only wanting vtk-m and not VTK 
-                  #REF 74ffad9bd0679d061bc87e544a728f1c3c926269 # v1.5.1
-                  #SHA512 c9e1c18432b6c11ae086445255acf9477fe4c888122a2b2a9713dc63a40d2e4c2375742157526b5f0869f14c62a4ad66d81ee58d6cc75a1d53a1d615525a03c9)
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} 
                       PREFER_NINJA 
                       OPTIONS ${OPTIONS})
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtkm-1.5 TARGET_PATH share/vtkm)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtkm-1.6 TARGET_PATH share/vtkm)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake _contents)
-string(REPLACE [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-1.5")]] [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]] _contents ${_contents})
+string(REPLACE [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/lib/cmake/vtkm-1.6")]] [[set_and_check(VTKm_CONFIG_DIR "${PACKAGE_PREFIX_DIR}/share/vtkm")]] _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtkm/VTKmConfig.cmake ${_contents})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

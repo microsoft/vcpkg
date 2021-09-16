@@ -1,0 +1,8 @@
+{
+  "name": "ebml",
+  "version-string": "1.4.0",
+  "port-version": 1,
+  "description": "a C++ library to parse EBML files",
+  "homepage": "https://github.com/Matroska-Org/libebml",
+  "supports": "!uwp"
+}

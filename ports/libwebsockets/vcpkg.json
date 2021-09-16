@@ -1,7 +1,6 @@
 {
   "name": "libwebsockets",
-  "version-semver": "4.1.6",
-  "port-version": 2,
+  "version-semver": "4.2.2",
   "description": "Libwebsockets is a lightweight pure C library built to use minimal CPU and memory resources, and provide fast throughput in both directions as client or server.",
   "homepage": "https://github.com/warmcat/libwebsockets",
   "supports": "!(arm | uwp)",
@@ -9,6 +8,14 @@
     "libuv",
     "openssl",
     "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

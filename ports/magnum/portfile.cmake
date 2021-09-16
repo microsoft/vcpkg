@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 65b0c8a4520d1d282420c30ecd7c8525525d4dbb6e562e1e2e93d110f4eb686af43f098bf02460727fab1e1f9446dd00a99051e150c05ea40b1486a44fea1042
     HEAD_REF master
     PATCHES
-        001-tools-path.patch
         002-sdl-includes.patch
 )
 

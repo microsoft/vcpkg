@@ -1,5 +1,0 @@
-Source: vc
-Version: 1.4.2
-Homepage: https://github.com/VcDevel/Vc
-Description: SIMD Vector Classes for C++ .
-Supports: !arm64

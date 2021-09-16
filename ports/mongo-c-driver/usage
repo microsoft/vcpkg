@@ -1,7 +1,7 @@
 The package mongo-c-driver is compatible with built-in CMake targets:
-	
-	find_package(libmongoc-1.0 CONFIG REQUIRED)
-	
-	target_include_directories(main PRIVATE ${MONGOC_INCLUDE_DIRS})
-	target_link_libraries(main PRIVATE ${MONGOC_LIBRARIES})
-	target_compile_definitions(main PRIVATE ${MONGOC_DEFINITIONS})
+
+    find_package(libmongoc-1.0 CONFIG REQUIRED)
+
+    target_include_directories(main PRIVATE ${MONGOC_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${MONGOC_LIBRARIES})
+    target_compile_definitions(main PRIVATE ${MONGOC_DEFINITIONS})

@@ -1,0 +1,13 @@
+{
+  "name": "log4cxx",
+  "version-string": "0.11.0",
+  "port-version": 3,
+  "description": "Apache log4cxx is a logging framework for C++ patterned after Apache log4j, which uses Apache Portable Runtime for most platform-specific code and should be usable on any platform supported by APR",
+  "homepage": "https://logging.apache.org/log4cxx",
+  "supports": "!uwp",
+  "dependencies": [
+    "apr",
+    "apr-util",
+    "expat"
+  ]
+}

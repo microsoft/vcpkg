@@ -1,8 +1,8 @@
 diff --git a/configure.py b/configure.py
-index 00baa0c..cfec5bb 100644
+index 89f87d4..ba7914f 100644
 --- a/configure.py
 +++ b/configure.py
-@@ -2035,7 +2035,7 @@ def create_template_vars(source_paths, build_paths, options, modules, cc, arch,
+@@ -2076,7 +2076,7 @@ def create_template_vars(source_paths, build_paths, options, modules, cc, arch,
          'maintainer_mode': options.maintainer_mode,
  
          'out_dir': build_dir,

@@ -1,0 +1,10 @@
+{
+  "name": "live555",
+  "version-string": "latest",
+  "port-version": 2,
+  "description": "A complete RTSP server application",
+  "homepage": "https://www.live555.com/liveMedia",
+  "dependencies": [
+    "openssl"
+  ]
+}

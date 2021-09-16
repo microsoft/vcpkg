@@ -1,0 +1,6 @@
+{
+  "name": "string-view-lite",
+  "version-string": "1.3.0",
+  "port-version": 1,
+  "description": "A C++17-like string_view for C++98, C++11 and later in a single-file header-only library"
+}

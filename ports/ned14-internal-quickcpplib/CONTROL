@@ -1,5 +1,0 @@
-Source: ned14-internal-quickcpplib
-Version: 0.0.0-7cb75d4e
-Homepage: https://github.com/ned14/quickcpplib
-Description: NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.
-Build-Depends: byte-lite, gsl-lite

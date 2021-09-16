@@ -1,0 +1,7 @@
+{
+  "name": "miniz",
+  "version-string": "2.1.0",
+  "port-version": 2,
+  "description": "Single C source file zlib-replacement library",
+  "homepage": "https://github.com/richgel999/miniz"
+}

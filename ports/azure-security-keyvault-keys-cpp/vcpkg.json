@@ -1,6 +1,6 @@
 {
   "name": "azure-security-keyvault-keys-cpp",
-  "version-semver": "4.0.0",
+  "version-semver": "4.1.0",
   "description": [
     "Microsoft Azure Key Vault Keys SDK for C++",
     "This library provides Azure Key Vault Keys SDK."
@@ -10,7 +10,8 @@
   "dependencies": [
     {
       "name": "azure-core-cpp",
-      "default-features": false
+      "default-features": false,
+      "version>=": "1.2.0"
     },
     {
       "name": "vcpkg-cmake",

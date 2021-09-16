@@ -1,0 +1,13 @@
+{
+  "name": "qt5-androidextras",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 androidextras Module;",
+  "supports": "android",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

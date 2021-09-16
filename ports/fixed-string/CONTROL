@@ -1,4 +1,0 @@
-Source: fixed-string
-Version: 0.1.0
-Description: Header-only C++17 library provides a string class with std::array fixed-size semantic.
-Homepage: https://github.com/unterumarmung/fixed_string

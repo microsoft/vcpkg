@@ -362,7 +362,7 @@ if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
     add_library(angle_renderer_opengl INTERFACE)
     target_sources(angle_renderer_opengl INTERFACE "$<BUILD_INTERFACE:${LIBANGLE_GL_SOURCES}>")
-    target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL)
+    target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL -DANGLE_ENABLE_OPENGL_DESKTOP)
     add_library(angle::renderer::opengl ALIAS angle_renderer_opengl)
 endif()
 

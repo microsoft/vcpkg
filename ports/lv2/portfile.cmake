@@ -1,22 +1,20 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lv2/lv2
-    REF v1.18.0
-    SHA512 f84c5f2b31f42ed5cab10976d1975743c62f06025a5b67bc99778ba5d0f354c06cb9fad8f5899a52b8c1131f4c9085f5867c83da4d8269c234fd2a22a2c6a689
+    REF cd152104c84bcee9fec22ef780cec2af7ba85d0c #v1.18.2
+    SHA512 77220524481e97222b12782a89efdcfcb73ee6ac9b9aac88741475c60a2c21049153297860a24b77c0ebd4de32d38a38232ba4fc64d12b8558a56ef50b316801
     HEAD_REF master
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(
     INSTALL "${SOURCE_PATH}/COPYING"

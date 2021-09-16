@@ -1,6 +1,6 @@
 {
   "name": "qtquicktimeline",
-  "version-semver": "6.1.2",
+  "version-semver": "6.1.3",
   "description": "Module for keyframe-based timeline construction.",
   "homepage": "https://www.qt.io/",
   "dependencies": [

@@ -11,9 +11,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCARES_STATIC=${BUILD_STATIC}
         -DCARES_SHARED=${BUILD_SHARED}
@@ -22,14 +21,16 @@ vcpkg_configure_cmake(
         -DCARES_BUILD_CONTAINER_TESTS=OFF
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/c-ares)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/c-ares)
+vcpkg_fixup_pkgconfig()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/ares.h
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/ares.h"
         "#ifdef CARES_STATICLIB" "#if 1"
     )
 endif()

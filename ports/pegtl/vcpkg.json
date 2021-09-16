@@ -1,0 +1,7 @@
+{
+  "name": "pegtl",
+  "version-string": "3.2.0",
+  "port-version": 1,
+  "description": "The Parsing Expression Grammar Template Library (PEGTL) is a zero-dependency C++ header-only parser combinator library for creating parsers according to a Parsing Expression Grammar (PEG).",
+  "homepage": "https://github.com/taocpp/PEGTL"
+}

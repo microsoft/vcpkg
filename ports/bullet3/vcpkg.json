@@ -1,0 +1,12 @@
+{
+  "name": "bullet3",
+  "version": "3.17",
+  "port-version": 1,
+  "description": "Bullet Physics is a professional collision detection, rigid body, and soft body dynamics library",
+  "homepage": "https://github.com/bulletphysics/bullet3",
+  "features": {
+    "multithreading": {
+      "description": "Multithreading functionality for bullet3"
+    }
+  }
+}

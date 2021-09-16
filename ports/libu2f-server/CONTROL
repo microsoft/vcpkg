@@ -1,7 +1,0 @@
-Source: libu2f-server
-Version: 1.1.0
-Port-Version: 2
-Build-Depends: openssl, json-c
-Homepage: https://developers.yubico.com/libu2f-server/
-Description: Yubico Universal 2nd Factor (U2F) Server C Library
-Supports: (x86 | x64) & windows

@@ -1,6 +1,0 @@
-Source: mdnsresponder
-Version: 765.30.11
-Port-Version: 3
-Description: The mDNSResponder project is a component of Bonjour, Apple's ease-of-use IP networking initiative.
-Homepage: https://developer.apple.com/bonjour/
-Supports: !arm

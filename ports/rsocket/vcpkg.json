@@ -1,0 +1,23 @@
+{
+  "name": "rsocket",
+  "version-string": "2020.05.04.00",
+  "port-version": 2,
+  "description": "C++ implementation of RSocket http://rsocket.io",
+  "homepage": "https://github.com/rsocket/rsocket-cpp",
+  "supports": "!(windows & x64)",
+  "dependencies": [
+    "boost-context",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "double-conversion",
+    "fmt",
+    "folly",
+    "gflags",
+    "glog",
+    "openssl",
+    "zlib"
+  ]
+}

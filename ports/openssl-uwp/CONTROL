@@ -1,6 +1,0 @@
-Source: openssl-uwp
-Version: 1.1.1h
-Port-Version: 1
-Description: Deprecated OpenSSL port
-Supports: uwp
-Build-Depends: openssl

@@ -1,0 +1,7 @@
+{
+  "name": "plog",
+  "version-string": "1.1.5",
+  "port-version": 1,
+  "description": "Portable, simple and extensible C++ logging library.",
+  "homepage": "https://github.com/SergiusTheBest/plog"
+}

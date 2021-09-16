@@ -1,0 +1,15 @@
+{
+  "name": "log4cplus",
+  "version-string": "2.0.5",
+  "port-version": 2,
+  "description": "A simple to use C++ logging API providing thread--safe, flexible, and arbitrarily granular control over log management and configuration",
+  "homepage": "https://github.com/log4cplus/log4cplus",
+  "dependencies": [
+    "catch"
+  ],
+  "features": {
+    "unicode": {
+      "description": "Unicode logger"
+    }
+  }
+}

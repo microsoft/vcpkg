@@ -1,0 +1,6 @@
+{
+  "name": "gcem",
+  "version-string": "1.13.1",
+  "port-version": 1,
+  "description": "A C++ compile-time math library using generalized constant expressions"
+}

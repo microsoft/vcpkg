@@ -1,0 +1,14 @@
+{
+  "name": "qt5-quickcontrols2",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 QuickControls2 Module.",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-imageformats"
+  ]
+}

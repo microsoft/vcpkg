@@ -1,0 +1,15 @@
+{
+  "name": "libmodman",
+  "version-string": "2.0.1",
+  "port-version": 3,
+  "description": "a simple library for managing modules",
+  "homepage": "https://code.google.com/p/libmodman",
+  "features": {
+    "tests": {
+      "description": "Build libmodman tests",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

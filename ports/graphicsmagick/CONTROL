@@ -1,5 +1,0 @@
-Source: graphicsmagick
-Version: 1.3.36
-Build-Depends: zlib, bzip2, freetype, libjpeg-turbo, libpng, tiff
-Homepage: https://sourceforge.net/projects/graphicsmagick/
-Description: Image processing library
