@@ -1,6 +1,6 @@
 {
   "name": "libproxy",
-  "version-string": "0.4.17",
+  "version": "0.4.17",
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
   "dependencies": [

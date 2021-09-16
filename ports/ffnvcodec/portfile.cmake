@@ -29,7 +29,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME build-${TARGET_TRIPLET}
     )
     
-    file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Linux, etc.
 else()
@@ -46,12 +46,12 @@ else()
 
     # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
     # FFMpeg's call to pkgconfig expects to find it.
-    file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-    file(INSTALL ${SOURCE_PATH}/ffnvcodec.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
 
 vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
