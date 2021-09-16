@@ -1,0 +1,15 @@
+diff --git a/main.c b/main.c
+index d257344..01958c4 100644
+--- a/main.c
++++ b/main.c
+@@ -1,8 +1,10 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifndef _WIN32
+ #include <unistd.h>
+ #include <errno.h>
++#endif
+ 
+ #include "mujs.h"
+ 
