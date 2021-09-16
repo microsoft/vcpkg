@@ -7,7 +7,7 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS -DBUILD_HTML_DOCS=OFF
             -DBUILD_MAN_DOCS=OFF
@@ -20,16 +20,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuff DO_NOT_DELETE_PARENT
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5NewStuffCore TARGET_PATH share/kf5newstuffcore)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/qml ${CURRENT_PACKAGES_DIR}/debug/qml )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/qml ${CURRENT_PACKAGES_DIR}/qml )
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/debug/qml")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/knewstuff-dialog${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/knewstuff-dialog${VCPKG_HOST_EXECUTABLE_SUFFIX}")	
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/knewstuff-dialog${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/knewstuff-dialog${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
