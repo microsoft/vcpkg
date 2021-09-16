@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_WEBENGINE=OFF
         -DBUILD_APPLETS=OFF
         -DBUILD_TOOLS=OFF
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
@@ -23,7 +24,5 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/qml ${CURRENT_PACKAGES_DIR}/debug/qml )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/qml ${CURRENT_PACKAGES_DIR}/qml )
 
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
