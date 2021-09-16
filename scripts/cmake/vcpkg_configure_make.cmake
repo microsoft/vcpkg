@@ -229,7 +229,7 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
 endmacro()
 
-function(vcpkg_make_configure)
+function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
@@ -517,14 +517,14 @@ function(vcpkg_make_configure)
     endif()
 
     # Can be set in the triplet to append options for configure
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
-        list(APPEND arg_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
+    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS)
+        list(APPEND arg_OPTIONS ${VCPKG_CONFIGURE_MAKE_OPTIONS})
     endif()
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE)
-        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE})
+    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE)
+        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE})
     endif()
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG)
-        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG})
+    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG)
+        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG})
     endif()
 
     file(RELATIVE_PATH relative_build_path "${CURRENT_BUILDTREES_DIR}" "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
