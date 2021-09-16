@@ -57,8 +57,8 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 if(VCPKG_TARGET_IS_OSX)
-    configure_file("${SOURCE_PATH}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
-    configure_file("${SOURCE_PATH}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
+    configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
+    configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
 endif()
 
 vcpkg_fixup_pkgconfig()
