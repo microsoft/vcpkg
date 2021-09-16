@@ -1,6 +1,6 @@
 {
   "name": "boost-io",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost io module",
   "homepage": "https://github.com/boostorg/io",
   "dependencies": [

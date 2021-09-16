@@ -1,12 +1,11 @@
 {
   "name": "boost-lexical-cast",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost lexical_cast module",
   "homepage": "https://github.com/boostorg/lexical_cast",
   "dependencies": [
     "boost-array",
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-container",
     "boost-core",

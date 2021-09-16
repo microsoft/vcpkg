@@ -34,8 +34,8 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
-    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_Clang
-    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
+    "qdoc"  CMAKE_DISABLE_FIND_PACKAGE_Clang
+    "qdoc"  CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
     )
 
  set(TOOL_NAMES 
@@ -86,9 +86,9 @@ if(VCPKG_TARGET_IS_OSX)
 endif()
 
 set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6ToolsTools/Qt6ToolsToolsTargets-debug.cmake")
-if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/windeployqt.exe")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
+if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
     file(READ "${configfile}" _contents)
-    string(REPLACE [[${_IMPORT_PREFIX}/tools/qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
+    string(REPLACE [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe]] [[${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat]] _contents "${_contents}")
     file(WRITE "${configfile}" "${_contents}")
 endif()

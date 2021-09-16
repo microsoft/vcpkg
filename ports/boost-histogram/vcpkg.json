@@ -1,6 +1,6 @@
 {
   "name": "boost-histogram",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost histogram module",
   "homepage": "https://github.com/boostorg/histogram",
   "dependencies": [

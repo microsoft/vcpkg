@@ -1,0 +1,101 @@
+{
+  "name": "opencv2",
+  "version": "2.4.13.7",
+  "port-version": 6,
+  "description": "computer vision library",
+  "homepage": "https://github.com/opencv/opencv",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "eigen",
+    "jpeg",
+    "png",
+    "tiff"
+  ],
+  "features": {
+    "cuda": {
+      "description": "CUDA support for opencv",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "eigen": {
+      "description": "Eigen support for opencv",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "ffmpeg": {
+      "description": "ffmpeg support for opencv",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "jasper": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "jasper"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG support for opencv",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "openexr": {
+      "description": "OpenEXR support for opencv",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "opengl": {
+      "description": "opengl support for opencv",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "png": {
+      "description": "PNG support for opencv",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "qt": {
+      "description": "Qt GUI support for opencv",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    },
+    "tiff": {
+      "description": "TIFF support for opencv",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "world": {
+      "description": "Compile to a single package support for opencv"
+    }
+  }
+}

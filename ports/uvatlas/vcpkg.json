@@ -1,0 +1,30 @@
+{
+  "name": "uvatlas",
+  "version-string": "jun2021b",
+  "description": "UVAtlas isochart texture atlas",
+  "homepage": "https://github.com/Microsoft/UVAtlas",
+  "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "directxmesh",
+      "platform": "!(uwp | linux)"
+    },
+    {
+      "name": "directxtex",
+      "platform": "!(uwp | linux)"
+    }
+  ],
+  "features": {
+    "eigen": {
+      "description": "Use Eigen & Spectra for eigen-value computations",
+      "dependencies": [
+        "eigen3",
+        "spectra"
+      ]
+    }
+  }
+}

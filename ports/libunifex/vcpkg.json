@@ -1,0 +1,29 @@
+{
+  "name": "libunifex",
+  "version-date": "2021-08-01",
+  "description": "Unified Executors",
+  "homepage": "https://github.com/facebookexperimental/libunifex",
+  "supports": "!osx",
+  "dependencies": [
+    {
+      "name": "liburing",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "test": {
+      "description": "Build test/example programs",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}

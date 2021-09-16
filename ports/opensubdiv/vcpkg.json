@@ -1,7 +1,7 @@
 {
   "name": "opensubdiv",
   "version-semver": "3.4.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
   "supports": "!arm & !uwp"

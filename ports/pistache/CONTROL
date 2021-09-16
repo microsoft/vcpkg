@@ -1,5 +1,0 @@
-Source: pistache
-Version: 2019-08-05
-Homepage: https://github.com/oktal/pistache
-Description: Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++11 and provides a clear and pleasant API.
-Supports: linux
