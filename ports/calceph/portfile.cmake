@@ -31,7 +31,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
-else # Build in UNIX
+else() # Build in UNIX
     vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
