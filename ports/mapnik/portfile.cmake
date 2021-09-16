@@ -1,3 +1,5 @@
+# test application for this port: https://github.com/mathisloge/mapnik-vcpkg-test
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
