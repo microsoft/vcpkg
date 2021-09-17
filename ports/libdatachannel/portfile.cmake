@@ -31,8 +31,8 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libdatachannel)
 vcpkg_fixup_pkgconfig()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake DATACHANNEL_CONFIG)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake "
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" DATACHANNEL_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
@@ -41,4 +41,4 @@ ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
