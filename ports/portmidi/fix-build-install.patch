@@ -1,0 +1,148 @@
+diff --git a/portmidi/trunk/CMakeLists.txt b/portmidi/trunk/CMakeLists.txt
+index 4919b78..e5e01b6 100644
+--- a/portmidi/trunk/CMakeLists.txt
++++ b/portmidi/trunk/CMakeLists.txt
+@@ -4,6 +4,7 @@
+ 
+ cmake_minimum_required(VERSION 2.6)
+ 
++if (0)
+ if(UNIX)
+   # allow user to set Release or Debug
+   set(CMAKE_BUILD_TYPE Release CACHE STRING 
+@@ -22,11 +23,13 @@ else(UNIX)
+   set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING 
+       "Semicolon-separate list of supported configuration types")
+ endif(UNIX)
++endif()
+ 
+ #set(CMAKE_RELATIVE_PATHS ON CACHE STRING "avoid absolute paths" FORCE)
+ 
+ # Clear out the built-in C++ compiler and link flags for each of the 
+ # unused configurations.
++if (0)
+ set(CMAKE_CXX_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused")
+ set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused")
+ set(CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused")
+@@ -37,10 +40,11 @@ set(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "Unused")
+ set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "Unused")
+ 
+ set(CMAKE_OSX_ARCHITECTURES i386 ppc x86_64 CACHE STRING "change to needed architecture for a smaller library" FORCE)
++endif()
+ 
+ PROJECT(portmidi)
+ 
+-if(UNIX)
++if(0)
+   # Problem: if there was an old Debug build and you change
+   #  CMAKE_BUILD_TYPE to Release, then the OUTPUT_DIRECTORY's will
+   #  still be Debug. Try to fix this by checking if the DIRECTORY's
+@@ -63,7 +67,7 @@ if(UNIX)
+         ${CMAKE_CACHEFILE_DIR}/${CMAKE_BUILD_TYPE}
+         CACHE STRING "libraries go here" FORCE)
+   endif(CMAKE_LIBRARY_OUTPUT_DIRECTORY MATCHES ${BAD_DIR})
+-endif(UNIX)
++endif(0)
+ 
+ include_directories(pm_common porttime)
+ add_subdirectory(pm_common)
+diff --git a/portmidi/trunk/pm_common/CMakeLists.txt b/portmidi/trunk/pm_common/CMakeLists.txt
+index cbeeade..c829063 100644
+--- a/portmidi/trunk/pm_common/CMakeLists.txt
++++ b/portmidi/trunk/pm_common/CMakeLists.txt
+@@ -5,8 +5,6 @@
+ if(APPLE OR WIN32)
+   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+   # set the build directory for .dylib libraries
+-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+ 
+   # the first time CMake configures, save off CMake's built-in flags
+   if(NOT DEFAULT_DEBUG_FLAGS)
+@@ -104,8 +102,9 @@ set(JNI_EXTRA_LIBS ${PM_NEEDED_LIBS} ${JAVA_JVM_LIBRARY})
+ # this completes the list of library sources by adding shared code
+ list(APPEND LIBSRC pmutil portmidi)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ # now add the shared files to make the complete list of library sources
+-add_library(portmidi-static ${LIBSRC})
++add_library(portmidi-static STATIC ${LIBSRC})
+ set_target_properties(portmidi-static PROPERTIES OUTPUT_NAME "portmidi_s")
+ target_link_libraries(portmidi-static ${PM_NEEDED_LIBS})
+ 
+@@ -118,11 +117,13 @@ target_link_libraries(pmjni ${JNI_EXTRA_LIBS})
+ set_target_properties(pmjni PROPERTIES EXECUTABLE_EXTENSION "jnilib")
+ 
+ # install the libraries (Linux and Mac OS X command line)
+-if(UNIX)
++if(1)
+   INSTALL(TARGETS portmidi-static pmjni
+-    LIBRARY DESTINATION /usr/local/lib
+-    ARCHIVE DESTINATION /usr/local/lib)
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib)
+ # .h files installed by pm_dylib/CMakeLists.txt, so don't need them here
+-#  INSTALL(FILES portmidi.h ../porttime/porttime.h
+-#    DESTINATION /usr/local/include)
+-endif(UNIX)
++  INSTALL(FILES portmidi.h ../porttime/porttime.h
++    DESTINATION include)
++endif(1)
++endif()
+diff --git a/portmidi/trunk/pm_common/portmidi.h b/portmidi/trunk/pm_common/portmidi.h
+index e07991e..6f48927 100644
+--- a/portmidi/trunk/pm_common/portmidi.h
++++ b/portmidi/trunk/pm_common/portmidi.h
+@@ -108,6 +108,8 @@ typedef unsigned int uint32_t;
+ 
+ #ifdef _WINDLL
+ #define PMEXPORT __declspec(dllexport)
++#elif defined _PM_USEDLL
++#define PMEXPORT __declspec(dllimport)
+ #else
+ #define PMEXPORT 
+ #endif
+diff --git a/portmidi/trunk/pm_dylib/CMakeLists.txt b/portmidi/trunk/pm_dylib/CMakeLists.txt
+index f693dd6..69d4d24 100644
+--- a/portmidi/trunk/pm_dylib/CMakeLists.txt
++++ b/portmidi/trunk/pm_dylib/CMakeLists.txt
+@@ -4,11 +4,8 @@
+ #    portmidi/pm_dylib
+ if(APPLE OR WIN32)
+   # set the build directory for .dylib libraries
+-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+   # the "archive" output directory says where to put portmidi.lib, the
+   # static part of the lib/dll pair:
+-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+ 
+   # the first time CMake configures, save off CMake's built-in flags
+   if(NOT DEFAULT_DEBUG_FLAGS)
+@@ -113,15 +110,21 @@ set(SHARED_FILES pmutil portmidi)
+ prepend_path(SHARED_PATHS ../pm_common/ ${SHARED_FILES})
+ list(APPEND LIBSRC ${SHARED_PATHS})
+ 
++if (BUILD_SHARED_LIBS)
+ add_library(portmidi-dynamic SHARED ${LIBSRC})
+ set_target_properties(portmidi-dynamic PROPERTIES OUTPUT_NAME "portmidi")
+ target_link_libraries(portmidi-dynamic ${PM_NEEDED_LIBS})
++if (MSVC)
++  target_compile_definitions(portmidi-dynamic PRIVATE _WINDLL)
++endif()
+ 
+ # install the libraries (Linux and Mac OS X command line)
+-if(UNIX)
++if(1)
+   INSTALL(TARGETS portmidi-dynamic
+-    LIBRARY DESTINATION /usr/local/lib
+-    ARCHIVE DESTINATION /usr/local/lib)
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib)
+   INSTALL(FILES ../pm_common/portmidi.h ../porttime/porttime.h
+-    DESTINATION /usr/local/include)
+-endif(UNIX)
++    DESTINATION include)
++endif(1)
++endif()
