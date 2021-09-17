@@ -95,12 +95,15 @@ function(boost_modular_build)
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
                 ${configure_option}
         )
         vcpkg_install_cmake()
+
+        vcpkg_copy_pdbs()
     endfunction()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(ON)
         set(build_flag 0)
         if(NOT DEFINED VCPKG_BUILD_TYPE)
             set(build_flag 1)
@@ -117,6 +120,39 @@ function(boost_modular_build)
 
         if(VCPKG_BUILD_TYPE STREQUAL "debug")
             unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
+        endif()
+
+        file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+        foreach(LIB ${INSTALLED_LIBS})
+            get_filename_component(OLD_FILENAME ${LIB} NAME)
+            get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+            string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
+            string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
+            string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
+            string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
+            string(REPLACE "-vc143-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2022 and VS2015 binaries
+            string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+            string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+            string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
+            string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
+            string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
+            string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
+            string(REPLACE "-1_76" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+            if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+                # nothing to do
+            elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+                file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
+            else()
+                file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+            endif()
+        endforeach()
+
+        # boost-regex[icu] and boost-locale[icu] generate has_icu.lib
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
+        endif()
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
         endif()
 
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
