@@ -22,7 +22,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS
         OPTIONS_DEBUG
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph/debug"
-            CFLAGS=""
+            CFLAGS="${VCPKG_C_FLAGS_DEBUG}"
         OPTIONS_RELEASE
             DESTDIR="${CURRENT_INSTALLED_DIR}/calceph"
             CFLAGS="${VCPKG_C_FLAGS_RELEASE} "
