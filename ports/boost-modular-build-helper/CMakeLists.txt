@@ -1,14 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(boost CXX)
 
-find_path(ZLIB_INCLUDE zlib.h)
-find_path(BZIP2_INCLUDE bzlib.h)
-if(WIN32)
-    set(ICU_OPTION "--disable-icu")
-else()
-    find_path(ICU_PATH include/unicode/utf.h)
-    set(ICU_OPTION "-sICU_PATH=\"${ICU_PATH}\"")
-endif()
+set(B2_OPTIONS)
 
 if(MSVC)
     if(MSVC_VERSION LESS 1900)
@@ -20,7 +13,13 @@ else()
     set(VCPKG_PLATFORM_TOOLSET external)
 endif()
 
-set(B2_OPTIONS)
+#### Handle ICU
+if(WIN32)
+    list(APPEND B2_OPTIONS "--disable-icu")
+else()
+    find_path(ICU_PATH include/unicode/utf.h)
+    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
+endif()
 
 if(DEFINED BOOST_CMAKE_FRAGMENT)
     message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
@@ -175,6 +174,7 @@ if(APPLE)
   string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
 endif()
 
+set(TOOLSET_OPTIONS)
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     # cl in b2 appears to not receive `LIBPATH` for finding winmd files, so we transform them to `/AI` options.
     set(libpath_args "$ENV{LIBPATH}")
@@ -187,9 +187,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(TRANSFORM libpath_args REPLACE "\\\"" "\\\\\"")
     list(JOIN libpath_args " " libpath_arg)
 
-    set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags>\"${libpath_arg}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+    set(TOOLSET_OPTIONS "<cflags>-Zl <compileflags>\"${libpath_arg}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     list(APPEND B2_OPTIONS windows-api=store)
 endif()
+
+find_path(ZLIB_INCLUDE zlib.h)
+list(APPEND B2_OPTIONS -sZLIB_INCLUDE="${ZLIB_INCLUDE}")
+
+find_path(BZIP2_INCLUDE bzlib.h)
+list(APPEND B2_OPTIONS -sBZIP2_INCLUDE="${BZIP2_INCLUDE}")
 
 if(WIN32)
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -268,9 +274,6 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -sZLIB_INCLUDE="${ZLIB_INCLUDE}"
-        -sBZIP2_INCLUDE="${BZIP2_INCLUDE}"
-        ${ICU_OPTION}
         -j${NUMBER_OF_PROCESSORS}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
