@@ -4201,8 +4201,8 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "1.6.4",
-      "port-version": 1
+      "baseline": "1.7.2",
+      "port-version": 0
     },
     "minc": {
       "baseline": "2.4.03",
