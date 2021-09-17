@@ -1,5 +1,5 @@
 diff --git a/glib/gconvert.c b/glib/gconvert.c
-index 3deac78..134ded9 100644
+index 7697ff6..b5d5d1e 100644
 --- a/glib/gconvert.c
 +++ b/glib/gconvert.c
 @@ -30,7 +30,8 @@
@@ -13,10 +13,10 @@ index 3deac78..134ded9 100644
  
  #ifdef G_PLATFORM_WIN32
 diff --git a/meson.build b/meson.build
-index d938ddf51..2ba256115 100644
+index 4f1178a..2affbf1 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1914,7 +1914,8 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
+@@ -1961,7 +1961,8 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
  # the built-in implementation
  iconv_opt = get_option('iconv')
  if host_system == 'windows'
