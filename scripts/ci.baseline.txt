@@ -134,7 +134,6 @@ clblast:x64-windows-static=fail
 clblast:x64-windows-static-md=fail
 clockutils:x64-linux=fail
 clockutils:x64-osx=fail
-cmark:x64-windows-static=fail
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
