@@ -3845,8 +3845,8 @@
       "port-version": 0
     },
     "libzen": {
-      "baseline": "0.4.39",
-      "port-version": 0
+      "baseline": "0.4.38",
+      "port-version": 1
     },
     "libzip": {
       "baseline": "1.7.3",
