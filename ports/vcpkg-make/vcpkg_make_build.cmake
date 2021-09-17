@@ -9,7 +9,6 @@ vcpkg_make_build(
     [ADD_BIN_TO_PATH]
     [ENABLE_INSTALL]
     [MAKEFILE <makefileName>]
-    [SUBPATH <makefilepath>]
     [DISABLE_PARALLEL]
     [LOGFILE_BASE <logfilebase>]
 )
@@ -24,8 +23,6 @@ Otherwise, you can directly call `vcpkg_make_build` without `ENABLE_INSTALL`.
 By default, `vcpkg_make_build` will call the `Makefile` in the build directory
 and build all the targets.
 
-If the `Makefile` in another path, please pass the absolute path to `SUBPATH`.
-This path is based on the build path.
 If the makefile comes from another path or the name is not `Makefile`, please
 pass `MAKEFILE` and set the absolute path.
 Please pass `BUILD_TARGET` to select the needed targets.
@@ -70,10 +67,10 @@ function(vcpkg_make_build)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL"
-        "LOGFILE_BASE;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
+        "LOGFILE_BASE;BUILD_TARGET;MAKEFILE;INSTALL_TARGET"
         ""
     )
-    
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_make_build was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
@@ -134,7 +131,7 @@ function(vcpkg_make_build)
     # Since includes are buildtype independent those are setup by vcpkg_make_configure
     _vcpkg_backup_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
-    foreach(buildtype IN ITEMS debug release)
+    foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL buildtype)
             if(buildtype STREQUAL "debug")
                 # Skip debug generate
@@ -155,7 +152,7 @@ function(vcpkg_make_build)
                 set(path_suffix "")
             endif()
 
-            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}${arg_SUBPATH}")
+            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}")
             message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
 
             _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${cmake_buildtype})
