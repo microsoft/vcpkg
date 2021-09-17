@@ -1,0 +1,58 @@
+diff --git a/src/core/kssld_dbusmetatypes.h b/src/core/kssld_dbusmetatypes.h
+index 2fb9fa25..958f4ff7 100644
+--- a/src/core/kssld_dbusmetatypes.h
++++ b/src/core/kssld_dbusmetatypes.h
+@@ -17,7 +17,7 @@
+ Q_DECLARE_METATYPE(KSslCertificateRule)
+ Q_DECLARE_METATYPE(QSslError::SslError)
+ 
+-QDBusArgument &operator<<(QDBusArgument &argument, const QSslCertificate &cert)
++inline QDBusArgument &operator<<(QDBusArgument &argument, const QSslCertificate &cert)
+ {
+     argument.beginStructure();
+     argument << cert.toDer();
+@@ -25,7 +25,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const QSslCertificate &cert)
+     return argument;
+ }
+ 
+-const QDBusArgument &operator>>(const QDBusArgument &argument, QSslCertificate &cert)
++inline const QDBusArgument &operator>>(const QDBusArgument &argument, QSslCertificate &cert)
+ {
+     QByteArray data;
+     argument.beginStructure();
+@@ -35,7 +35,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QSslCertificate &
+     return argument;
+ }
+ 
+-QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &rule)
++inline QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &rule)
+ {
+     argument.beginStructure();
+     argument << rule.certificate() << rule.hostName() << rule.isRejected() << rule.expiryDateTime().toString(Qt::ISODate)
+@@ -44,7 +44,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const KSslCertificateRule &ru
+     return argument;
+ }
+ 
+-const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRule &rule)
++inline const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRule &rule)
+ {
+     QSslCertificate cert;
+     QString hostName;
+@@ -63,7 +63,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRu
+     return argument;
+ }
+ 
+-QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &error)
++inline QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &error)
+ {
+     argument.beginStructure(); // overhead ho!
+     argument << static_cast<int>(error);
+@@ -71,7 +71,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &er
+     return argument;
+ }
+ 
+-const QDBusArgument &operator>>(const QDBusArgument &argument, QSslError::SslError &error)
++inline const QDBusArgument &operator>>(const QDBusArgument &argument, QSslError::SslError &error)
+ {
+     int data;
+     argument.beginStructure();

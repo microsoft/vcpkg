@@ -54,6 +54,9 @@ aubio:arm-uwp=fail
 aubio:x64-uwp=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
+bitserializer:x64-osx=fail
+bitserializer:arm64-windows=fail
+bitserializer:arm-uwp=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail

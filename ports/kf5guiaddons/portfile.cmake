@@ -18,8 +18,10 @@ if("wayland" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
     message(FATAL_ERROR "Feature wayland is only supported on Linux.")
 endif()
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF

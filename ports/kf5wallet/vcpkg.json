@@ -1,6 +1,7 @@
 {
   "name": "kf5wallet",
   "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "Safe desktop-wide storage for passwords",
   "homepage": "https://api.kde.org/frameworks/kwallet/html/index.html",
   "dependencies": [

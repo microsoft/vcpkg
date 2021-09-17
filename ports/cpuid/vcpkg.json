@@ -1,8 +1,17 @@
 {
   "name": "cpuid",
-  "version-string": "0.4.1",
-  "port-version": 2,
+  "version": "0.5.1",
   "description": "Provides CPU identification for the x86 (and x86_64)",
   "homepage": "https://github.com/anrieff/libcpuid",
-  "supports": "x86 | x64"
+  "supports": "x86 | x64",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -1,0 +1,34 @@
+From 459cfb91027b27831caaa63584859f51af88d778 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Mon, 30 Aug 2021 23:02:11 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5BookmarksConfig.cmake.in | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/KF5BookmarksConfig.cmake.in b/KF5BookmarksConfig.cmake.in
+index 0c4494a..de973f7 100644
+--- a/KF5BookmarksConfig.cmake.in
++++ b/KF5BookmarksConfig.cmake.in
+@@ -6,6 +6,17 @@ find_dependency(KF5WidgetsAddons "@KF_DEP_VERSION@")
+ find_dependency(Qt5Widgets @REQUIRED_QT_VERSION@)
+ find_dependency(Qt5Xml @REQUIRED_QT_VERSION@)
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    if (@Qt5DBus_FOUND@)
++        find_dependency(Qt5DBus @REQUIRED_QT_VERSION@)
++    endif()
++
++    find_dependency(KF5CoreAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5Codecs "@KF_DEP_VERSION@")
++    find_dependency(KF5Config "@KF_DEP_VERSION@")
++    find_dependency(KF5ConfigWidgets "@KF_DEP_VERSION@")
++    find_dependency(KF5XmlGui "@KF_DEP_VERSION@")
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5BookmarksTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+

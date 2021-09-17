@@ -1,6 +1,7 @@
 {
   "name": "aws-crt-cpp",
   "version": "0.15.1",
+  "port-version": 1,
   "description": "Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.",
   "homepage": "https://github.com/awslabs/aws-crt-cpp",
   "supports": "!arm & !uwp",
