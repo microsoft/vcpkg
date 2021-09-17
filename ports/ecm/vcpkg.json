@@ -1,6 +1,17 @@
 {
   "name": "ecm",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Extra CMake Modules (ECM), extra modules and scripts for CMake",
-  "homepage": "https://github.com/KDE/extra-cmake-modules"
+  "homepage": "https://github.com/KDE/extra-cmake-modules",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
