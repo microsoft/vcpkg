@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-Fix-UWP.patch
         fix-dellexport.patch
         fix-pkgconfig.patch
+        fix-error-c2065.patch    #fix error C2065: 'HANDLE_FLAG_INHERIT': undeclared identifier
 )
 
 vcpkg_cmake_configure(
