@@ -1,0 +1,31 @@
+{
+  "name": "fmi4cpp",
+  "version-string": "0.7.0",
+  "port-version": 3,
+  "description": "FMI 2.0 implementation written in modern C++",
+  "homepage": "https://github.com/NTNU-IHB/FMI4cpp",
+  "dependencies": [
+    "boost-property-tree",
+    {
+      "name": "libzip",
+      "features": [
+        "openssl"
+      ]
+    }
+  ],
+  "features": {
+    "curl": {
+      "description": "Allows loading FMUs from URL",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "odeint": {
+      "description": "Adds support for wrapping Model Exchange models as Co-simulation models using odeint solvers",
+      "dependencies": [
+        "boost-odeint",
+        "boost-ublas"
+      ]
+    }
+  }
+}

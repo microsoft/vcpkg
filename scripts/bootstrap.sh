@@ -165,10 +165,11 @@ fetchTool()
     xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ] || [[ "$toolData" == "<?xml"* ]]; then
+    case "$toolData" in
+	"" | "<!xml"*)
         echo "No entry for $toolRegexStart in $vcpkgRootDir/scripts/vcpkgTools.xml"
         return 1
-    fi
+    esac
 
     version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 
@@ -278,8 +279,8 @@ else
 fi
 
 # Do the build
-vcpkgToolReleaseTag="2021-08-12"
-vcpkgToolReleaseSha="a8b64125fb065129f7db48b299d8868a0394aa8a5c45e7c6076773d4bab9ca4b4d6cc4459df0df3399a7241fa0d168cdd2ab6169e4d8b7e6f708a52f003265b1"
+vcpkgToolReleaseTag="2021-09-10"
+vcpkgToolReleaseSha="0bea4c7bdd91933d44a0214e2202eb5ef988826d32ae7a00a8868e510710e7de0b336b1cc6aa1ea20af2f6e24d92f2ab665046089bb4ec43bc2add94a901d5fc"
 vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
 vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
 baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"

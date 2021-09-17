@@ -1,0 +1,10 @@
+{
+  "name": "minisat-master-keying",
+  "version-string": "2.2-mod",
+  "port-version": 3,
+  "description": [
+    "A minimalistic high-performance SAT solver",
+    "This is a modernized, cross-platform, CMake-enabled fork of the original MiniSat."
+  ],
+  "homepage": "https://github.com/master-keying/minisat"
+}
