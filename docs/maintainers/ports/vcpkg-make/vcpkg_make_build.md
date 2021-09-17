@@ -10,7 +10,6 @@ vcpkg_make_build(
     [ADD_BIN_TO_PATH]
     [ENABLE_INSTALL]
     [MAKEFILE <makefileName>]
-    [SUBPATH <makefilepath>]
     [DISABLE_PARALLEL]
     [LOGFILE_BASE <logfilebase>]
 )
@@ -25,8 +24,6 @@ Otherwise, you can directly call `vcpkg_make_build` without `ENABLE_INSTALL`.
 By default, `vcpkg_make_build` will call the `Makefile` in the build directory
 and build all the targets.
 
-If the `Makefile` in another path, please pass the absolute path to `SUBPATH`.
-This path is based on the build path.
 If the makefile comes from another path or the name is not `Makefile`, please
 pass `MAKEFILE` and set the absolute path.
 Please pass `BUILD_TARGET` to select the needed targets.
