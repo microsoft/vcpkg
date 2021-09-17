@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-for-vcpkg.patch
+        0002-fix-export-include.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
