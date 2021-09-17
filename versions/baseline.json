@@ -2984,6 +2984,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5diagram": {
+      "baseline": "2.8.0",
+      "port-version": 0
+    },
     "kf5globalaccel": {
       "baseline": "5.84.0",
       "port-version": 0
