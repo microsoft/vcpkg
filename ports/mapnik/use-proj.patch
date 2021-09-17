@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 54dda37..e82a817 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -254,21 +254,21 @@ endif()
+ 
+ if(USE_PROJ)
+     #https://proj.org/development/cmake.html
+     mapnik_find_package(PROJ QUIET)
+     # currently the cmake files are not installed, when installing proj via apt-get. So search via pkg-config
+     if(NOT PROJ_FOUND)
+         message(STATUS "PROJ not found via FindPROJ. Searching via pkg-config...")
+         pkg_check_modules(PROJ REQUIRED IMPORTED_TARGET proj)
+         string(REGEX MATCH "([0-9]+)\.([0-9]+)\.([0-9]+)" _dummy "${PROJ_VERSION}")
+         set(PROJ_VERSION_MAJOR "${CMAKE_MATCH_1}")
+         set(PROJ_VERSION_MINOR "${CMAKE_MATCH_2}")
+         set(PROJ_VERSION_PATCH "${CMAKE_MATCH_3}")
+     endif()
+     math(EXPR MAPNIK_PROJ_VERSION "${PROJ_VERSION_MAJOR}*10000 + ${PROJ_VERSION_MINOR}*100 + ${PROJ_VERSION_PATCH}" OUTPUT_FORMAT DECIMAL)
+     message(STATUS "Using mapnik PROJ version: ${MAPNIK_PROJ_VERSION}")
+     list(APPEND MAPNIK_COMPILE_DEFS MAPNIK_USE_PROJ MAPNIK_PROJ_VERSION=${MAPNIK_PROJ_VERSION})
+-    list(APPEND MAPNIK_OPTIONAL_LIBS ${PROJ_LIBRARIES})
+-    list(APPEND MAPNIK_OPTIONAL_LIBS_INCLUDE ${PROJ_INCLUDE_DIRS})
++    list(APPEND MAPNIK_OPTIONAL_LIBS ${PROJ_LIBRARIES})
++    # list(APPEND MAPNIK_OPTIONAL_LIBS_INCLUDE ${PROJ_INCLUDE_DIRS}) # this adds some non existent directory when building with vcpgk -> commented out
+ endif()
+ 
+ if(USE_GRID_RENDERER)
