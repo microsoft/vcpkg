@@ -1,6 +1,21 @@
 {
   "name": "libzen",
+<<<<<<< HEAD
   "version-string": "0.4.38",
   "port-version": 1,
   "description": "ZenLib is a C++ utility library for easiest cross-platform development"
+=======
+  "version": "0.4.39",
+  "description": "ZenLib is a C++ utility library for easiest cross-platform development",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+>>>>>>> d4633107c9dedd11b945d86f3713fb8486bffb53
 }
