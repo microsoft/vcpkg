@@ -1,5 +1,16 @@
 vcpkg_fail_port_install(ON_ARCH "x86")
 
+message(WARNING "Pixar USD has stated officially that they will not update to be compatible with the new version of Intel TBB in the near term.
+Because of this, vcpkg can no longer test this port.
+
+You can pin the previous version of TBB using manifest mode to attempt to continue using it:
+
+    \"overrides\": [
+        {\"name\": \"tbb\", \"version\": \"2020_U3#5\"}
+    ]
+
+Please see https://github.com/PixarAnimationStudios/USD/issues/1600 for updates on upstream's policy.")
+
 # Don't file if the bin folder exists. We need exe and custom files.
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
