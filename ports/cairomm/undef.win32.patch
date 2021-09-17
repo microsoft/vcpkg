@@ -1,0 +1,12 @@
+diff --git a/cairomm/surface.h b/cairomm/surface.h
+index c923e6086..8cfaa76a3 100644
+--- a/cairomm/surface.h
++++ b/cairomm/surface.h
+@@ -49,6 +49,7 @@
+ #include <cairo-glitz.h>
+ #endif // CAIRO_HAS_GLITZ_SURFACE
+ 
++#undef WIN32
+ 
+ namespace Cairo
+ {

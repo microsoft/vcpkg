@@ -1,6 +1,7 @@
 {
   "name": "boost-uninstall",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "boost uninstall port",
   "homepage": "https://boost.org"
 }

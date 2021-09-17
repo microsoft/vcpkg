@@ -1,6 +1,6 @@
 {
   "name": "argparse",
-  "version-string": "2.1",
+  "version-date": "2021-03-04",
   "description": "Argument parser for modern C++",
   "homepage": "https://github.com/p-ranav/argparse",
   "license": "MIT"

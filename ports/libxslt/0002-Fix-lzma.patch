@@ -1,21 +1,5 @@
-diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
-index 0d1953d..0e538ef 100644
---- a/win32/Makefile.msvc
-+++ b/win32/Makefile.msvc
-@@ -62,9 +62,9 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
- # The libraries are needed for static builds (the makefile builds all tools and dlls)
- LIBS = wsock32.lib iconv.lib charset.lib
- !if "$(DEBUG)" == "1"
--LIBS = $(LIBS) zlibd.lib
-+LIBS = $(LIBS) zlibd.lib lzmad.lib
- !else
--LIBS = $(LIBS) zlib.lib
-+LIBS = $(LIBS) zlib.lib lzma.lib
- !endif
- 
- # The archiver and its options.
 diff --git a/win32/configure.js b/win32/configure.js
-index 56694cc..24ccc8d 100644
+index 12c99f3..0737b06 100644
 --- a/win32/configure.js
 +++ b/win32/configure.js
 @@ -45,6 +45,7 @@ var withMemDebug = false;
@@ -25,24 +9,24 @@ index 56694cc..24ccc8d 100644
 +var withLzma = true;
  var withCrypto = true;
  var withModules = false;
- /* Win32 build options. */
-@@ -104,6 +105,7 @@ function usage()
+ var withProfiler = true;
+@@ -105,6 +106,7 @@ function usage()
  	txt += "  debugger:   Enable external debugger support (" + (withDebugger? "yes" : "no")  + ")\n";
  	txt += "  iconv:      Use iconv library (" + (withIconv? "yes" : "no")  + ")\n";
  	txt += "  zlib:       Use zlib library (" + (withZlib? "yes" : "no") + ")\n";
 +	txt += "  lzma:       Use lzma library (" + (withLzma? "yes" : "no") + ")\n";
  	txt += "  crypto:     Enable Crypto support (" + (withCrypto? "yes" : "no") + ")\n";
  	txt += "  modules:    Enable Module support (" + (withModules? "yes" : "no") + ")\n";
- 	txt += "\nWin32 build options, default value given in parentheses:\n\n";
-@@ -190,6 +192,7 @@ function discoverVersion()
+ 	txt += "  profiler:   Enable Profiler support (" + (withProfiler? "yes" : "no") + ")\n";
+@@ -192,6 +194,7 @@ function discoverVersion()
  	vf.WriteLine("WITH_DEBUGGER=" + (withDebugger? "1" : "0"));
  	vf.WriteLine("WITH_ICONV=" + (withIconv? "1" : "0"));
  	vf.WriteLine("WITH_ZLIB=" + (withZlib? "1" : "0"));
 +	vf.WriteLine("WITH_LZMA=" + (withLzma? "1" : "0"));
  	vf.WriteLine("WITH_CRYPTO=" + (withCrypto? "1" : "0"));
  	vf.WriteLine("WITH_MODULES=" + (withModules? "1" : "0"));
- 	vf.WriteLine("DEBUG=" + (buildDebug? "1" : "0"));
-@@ -339,6 +342,8 @@ for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
+ 	vf.WriteLine("WITH_PROFILER=" + (withProfiler? "1" : "0"));
+@@ -344,6 +347,8 @@ for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
  			withIconv = strToBool(arg.substring(opt.length + 1, arg.length));
  		else if (opt == "zlib")
  			withZlib  = strToBool(arg.substring(opt.length + 1, arg.length));
@@ -51,11 +35,11 @@ index 56694cc..24ccc8d 100644
  		else if (opt == "crypto")
  			withCrypto = strToBool(arg.substring(opt.length + 1, arg.length));
  		else if (opt == "modules")
-@@ -475,6 +480,7 @@ txtOut += "  Memory debugging: " + boolToStr(withMemDebug) + "\n";
+@@ -482,6 +487,7 @@ txtOut += "  Memory debugging: " + boolToStr(withMemDebug) + "\n";
  txtOut += "  Debugger support: " + boolToStr(withDebugger) + "\n";
  txtOut += "         Use iconv: " + boolToStr(withIconv) + "\n";
  txtOut += "         With zlib: " + boolToStr(withZlib) + "\n";
 +txtOut += "              Lzma: " + boolToStr(withLzma) + "\n";
  txtOut += "            Crypto: " + boolToStr(withCrypto) + "\n";
  txtOut += "           Modules: " + boolToStr(withModules) + "\n";
- txtOut += "\n";
+ txtOut += "          Profiler: " + boolToStr(withProfiler) + "\n";

@@ -1,0 +1,49 @@
+{
+  "name": "soci",
+  "version": "4.0.2",
+  "description": "SOCI database access library",
+  "homepage": "https://github.com/SOCI/soci",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "boost": {
+      "description": "Integration with Boost",
+      "dependencies": [
+        "boost-date-time",
+        "boost-fusion",
+        "boost-optional",
+        "boost-preprocessor",
+        "boost-tuple"
+      ]
+    },
+    "mysql": {
+      "description": "Build mysql backend",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "odbc": {
+      "description": "Build odbc backend"
+    },
+    "postgresql": {
+      "description": "Build postgresql backend",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sqlite3": {
+      "description": "Build sqlite3 backend",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

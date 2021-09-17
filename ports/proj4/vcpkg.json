@@ -1,12 +1,21 @@
 {
   "name": "proj4",
-  "version-string": "7.2.0",
+  "version-semver": "7.2.1",
+  "port-version": 5,
   "description": "PROJ.4 library for cartographic projections",
   "homepage": "https://github.com/OSGeo/PROJ",
   "dependencies": [
     {
       "name": "sqlite3",
       "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "default-features": [
@@ -19,10 +28,10 @@
       "dependencies": [
         {
           "name": "sqlite3",
+          "host": true,
           "features": [
             "tool"
-          ],
-          "platform": "!uwp & !arm"
+          ]
         }
       ]
     },

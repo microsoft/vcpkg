@@ -4,13 +4,13 @@ if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME 
     return()
 endif()
 
-set(BOOST_VERSION 1.75.0.beta1)
+set(BOOST_VERSION 1.75.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 e5dd73ef41d341e2bce25677389502d22ca7f328e7fdbb91d95aac415f7b490008d75ff0a63f8e4bd9427215f863c161ec9573c29b663b727df4b60e25a3aac2
+    SHA512 dc5784cdcc908591a8c8814dac32849fb00b5f5b2d48de963d51a0571fd9f5a0419d6bb569f3375bf8fbfae28d680db4ce869604667b717023e76869836534f4
     HEAD_REF master
     PATCHES
         fix_options.patch
@@ -28,8 +28,13 @@ vcpkg_download_distfile(BOOSTCPP_ARCHIVE
     SHA512 8cf929fa4a602342c859a6bbd5f9dda783ac29431d951bcf6cae4cb14377c1b3aed90bacd902b0f7d1807591cf5e1a244cf8fc3c6cc6e0a4056db145b58f51df
 )
 
+# https://github.com/boostorg/boost/pull/206
+# do not add version suffix for android
+file(READ "${BOOSTCPP_ARCHIVE}" _contents)
+string(REPLACE "aix &&" "aix android &&" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/boostcpp.jam" "${_contents}")
+
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)
-file(INSTALL ${BOOSTCPP_ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/boost-build RENAME boostcpp.jam)
 
 # This fixes the lib path to use desktop libs instead of uwp -- TODO: improve this with better "host" compilation
 string(REPLACE "\\store\\;" "\\;" LIB "$ENV{LIB}")

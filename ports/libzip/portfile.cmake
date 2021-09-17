@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 66e496489bdae81bfda8b0088172871d8fda0032 #v1.7.3
     SHA512 ae0cda3e9decf5a71bf1e0907a2a21b2c0d83e6e576faf4d9401d6954707ae298c1c09febbc5339f457ace3577fdd405a790c819ef24778990ca6bf1e9516d54
     HEAD_REF v1.7.3
-    PATCHES fix-findpackage.patch
+    PATCHES 
+        fix-findpackage.patch
+        fix-dependency.patch
 )
 
 vcpkg_check_features(
@@ -32,7 +34,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libzip)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
  

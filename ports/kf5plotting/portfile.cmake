@@ -1,18 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kplotting
-    REF 0645b4803f9d260ea80087cc81ebabfd874e4274 # v5.74.0
-    SHA512 32fb460ada2063106df3aee29b618b500e1418c4c341326960393308a65f74a0913480c1089278ef5a32a744d3b40b98b873dea14293c997dadce2525b6647d5
+    REF v5.84.0
+    SHA512 4007e90bc2505cfcfb14d5b40d922cf72ffcc6898da3ffed5ce5493484fe36c1f0f697f2b8319a7fd95909aada489d57be7a8dceb66b2cbba2746ed4aa93e5a5
     HEAD_REF master
 )
+
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_HTML_DOCS=OFF
-            -DBUILD_MAN_DOCS=OFF
-            -DBUILD_QTHELP_DOCS=OFF
-            -DBUILD_TESTING=OFF
+    OPTIONS 
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
@@ -22,4 +23,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/plugins ${CURRENT_PACKAGES_DIR}/debug/plugins)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/plugins ${CURRENT_PACKAGES_DIR}/plugins)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/kf5plotting RENAME copyright)
+
+file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

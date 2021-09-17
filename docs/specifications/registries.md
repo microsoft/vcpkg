@@ -1,5 +1,7 @@
 # Package Federation: Custom Registries
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 As it is now, vcpkg has over 1400 ports in the default registry (the `/ports` directory).
 For the majority of users, this repository of packages is enough. However, many enterprises
 need to more closely control their dependencies for one reason or another, and this document
@@ -180,7 +182,7 @@ and then run the following algorithm on each dependency:
 
 vcpkg will also rerun this algorithm whenever an install is run with different configuration.
 
-### How Registries are Layed Out
+### How Registries are Laid Out
 
 There are three kinds of registries, but they only differ in how the registry gets onto one's filesystem.
 Once the registry is there, package lookup runs the same, with each kind having it's own way of defining its

@@ -2,25 +2,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Taywee/args
-    REF 84c7f36ee123aaea0dd6653204435e473f1b088e # accessed on 2020-09-14
-    SHA512 c2a2f6571ec7f3cd64e9a1a0346af48c989663663d55a351bb51cd82583dcca3a6ed9f5b7a2686ef490b78efeb36b944dd9a76af0aad83b3dc64d3672c770efb
+    REF ae22269df734a2b0957a9ab4e37be41f61866dbe
+    SHA512 fe44bc6b7b81013ce649e3fa33c3d9503747a3c9044b70cf9eaf8ff780f2feabdabc261a33d29042daec19a598e3d60e318d3d415cbffb5fdcd2aabdd2ef39db
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
     -DARGS_BUILD_UNITTESTS=OFF
     -DARGS_BUILD_EXAMPLE=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/args)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/args/LICENSE ${CURRENT_PACKAGES_DIR}/share/args/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 

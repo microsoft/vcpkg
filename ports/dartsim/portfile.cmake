@@ -7,20 +7,23 @@ vcpkg_from_github(
     REF v6.9.4
     SHA512 a9e8712a294286772ee1e3c3899aac7d202f1d3c2b9242ebeaddb2a142787b192d5421a6e3f889dd9ff9ca9e9106b1f893a0c8ab2e1656b04fac6d0be13494ba
     HEAD_REF release-6.9
-    PATCHES 1478.patch
-            1497.patch
+    PATCHES
+        1478.patch
+        1497.patch
+        disable_unit_tests_examples_and_tutorials.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DDART_VERBOSE=ON
-            -DDART_MSVC_DEFAULT_OPTIONS=ON
-            -DDART_SKIP_DOXYGEN=ON
-            -DDART_SKIP_FLANN=ON
-            -DDART_SKIP_IPOPT=ON
-            -DDART_SKIP_NLOPT=ON
-            -DDART_SKIP_OPENGL=ON
-            -DDART_SKIP_pagmo=ON
+    OPTIONS
+        -DDART_VERBOSE=ON
+        -DDART_MSVC_DEFAULT_OPTIONS=ON
+        -DDART_SKIP_DOXYGEN=ON
+        -DDART_SKIP_FLANN=ON
+        -DDART_SKIP_IPOPT=ON
+        -DDART_SKIP_NLOPT=ON
+        -DDART_SKIP_OPENGL=ON
+        -DDART_SKIP_pagmo=ON
 )
 
 vcpkg_install_cmake()
@@ -36,5 +39,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/dartsim RENAME copyright)
-
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

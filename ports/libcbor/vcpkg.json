@@ -1,0 +1,7 @@
+{
+  "name": "libcbor",
+  "version": "0.8.0",
+  "port-version": 1,
+  "description": "libcbor is a C library for parsing and generating CBOR, the general-purpose schema-less binary data format",
+  "homepage": "https://github.com/PJK/libcbor"
+}

@@ -1,22 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO serge-sans-paille/frozen
-    REF b5735474fdaa28753c1dae515df5a4fdb45d94dd
-    SHA512 b175a03b4a0263937e176675558e2df0bd4174799e2c5d7138842235fa24be57bccd8b96fddb5791e055b9de44211063f195142de73acf9d4f52a9a37f7055cc
+    REF 867b33916044ced463ed42874b2aa1514ef66bec
+    SHA512 0cace261bf6068a382dc7c2d2b1c7d50de882e966adcdaaee7c358cc2e55b736d41c6ce2cefb30c231f550e4576cfdc5b2a10379a8affa084f1eb9202db7200e
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-      -DBUILD_TESTING=OFF
+      -Dfrozen.benchmark=OFF
+      -Dfrozen.coverage=OFF
+      -Dfrozen.installation=ON
       -Dfrozen.tests=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/frozen TARGET_PATH share/frozen)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/frozen)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

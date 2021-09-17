@@ -128,6 +128,10 @@
             "$ref": "#/definitions/identifier"
           }
         },
+        "host": {
+          "type": "boolean",
+          "default": false
+        },
         "default-features": {
           "type": "boolean",
           "default": true
@@ -190,9 +194,6 @@
       "description": "A package feature that can be activated by consumers.",
       "type": "object",
       "properties": {
-        "name": {
-          "$ref": "#/definitions/identifier"
-        },
         "description": {
           "$ref": "#/definitions/description-field"
         },
@@ -208,7 +209,6 @@
         "^\\$": {}
       },
       "required": [
-        "name",
         "description"
       ],
       "additionalProperties": false
@@ -279,10 +279,12 @@
           }
         },
         "features": {
-          "description": "An array of features supported by the package",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/feature"
+          "description": "A map of features supported by the package",
+          "type": "object",
+          "patternProperties": {
+            "": {
+              "$ref": "#/definitions/feature"
+            }
           }
         },
         "default-features": {

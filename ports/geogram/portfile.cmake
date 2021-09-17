@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
     REF ${GEOGRAM_VERSION}
     PATCHES
         fix-cmake-config-and-install.patch
+        fix-windows-dynamic.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)

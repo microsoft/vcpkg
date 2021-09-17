@@ -55,11 +55,8 @@
     </StringProperty.DataSource>
   </StringProperty>
 
-  <StringProperty Name="VcpkgCurrentInstalledDir" DisplayName="Package install directory" Category="General" Subtype="folder" Visible="false"
-                  Description="Defines the direct path to the installed Vcpkg packages.">
-    <StringProperty.DataSource>
-      <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="false" />
-    </StringProperty.DataSource>
+  <StringProperty Name="VcpkgInstalledDir" DisplayName="Installed Directory" Category="General" Subtype="folder" Visible="true"
+                  Description="The location where headers and binaries will be consumed from. In manifest mode, this directory will be created and populated based on vcpkg.json.">
   </StringProperty>
 
   <BoolProperty Name="VcpkgUseStatic" DisplayName="Use Static Libraries" Category="Conditional" Default="false"
@@ -67,6 +64,12 @@
 
   <StringProperty Name="VcpkgTriplet" DisplayName="Triplet" Category="Conditional" Subtype="Text"
                   Description="Specifies the triplet used by Vcpkg. Does not include the '-static' suffix that may be added by the 'Use static libraries' flag." />
+
+  <StringProperty Name="VcpkgHostTriplet" DisplayName="Host Triplet" Category="Conditional" Subtype="Text"
+                  Description="Specifies the host triplet used by Vcpkg. If empty, this will be automatically determined." />
+
+  <StringProperty Name="VcpkgAdditionalInstallOptions" DisplayName="Additional Options" Category="General" Subtype="Text"
+                  Description="Additional command line options to be passed to the underlying vcpkg tool when installing in manifest mode." />
 
   <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Category="Conditional"
                 Description="Specifies if release or debug libraries build with vcpkg should be used.">

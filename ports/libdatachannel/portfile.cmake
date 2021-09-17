@@ -1,22 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.10.1
-    SHA512 195f564776b2a7ab6fe3a838d55be7fa03b72a5f08faaba5ddefac59ae1fff28f3ee0b9ed5dc17a7ef9155a1d30a61f8c593f2a108f60e415ffd213188e081bd
+    REF v0.14.3
+    SHA512 21746d1a02aa8eb98a5c9716c12f14048a680f85efab8d8beca02379946bb49858c7ed02e7238f61e94d0aba6d70069136778d78484b88f8d09640c0740e24a3
     HEAD_REF master
     PATCHES
-        fix-for-vcpkg.patch
+        0001-fix-for-vcpkg.patch
+        0002-fix-export-include.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        stdcall CAPI_STDCALL
     INVERTED_FEATURES
-    ws NO_WEBSOCKET
-    srtp NO_MEDIA
+        ws NO_WEBSOCKET
+        srtp NO_MEDIA
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
@@ -24,11 +26,19 @@ vcpkg_configure_cmake(
         -DNO_TESTS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libdatachannel)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libdatachannel)
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" DATACHANNEL_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(OpenSSL)
+find_dependency(libjuice)
+${DATACHANNEL_CONFIG}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

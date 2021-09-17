@@ -23,7 +23,10 @@ then obviously beneficial changes like fixing typos are appreciated!
 
 A good service to check many at once is [Repology](https://repology.org/).
 If the library you are adding could be confused with another one,
-consider renaming to make it clear.
+consider renaming to make it clear. We prefer when names are longer and/or
+unlikely to conflict with any future use of the same name. If the port refers
+to a library on GitHub, a good practice is to prefix the name with the organization
+if there is any chance of confusion.
 
 ### Use GitHub Draft PRs
 
@@ -49,6 +52,28 @@ At this time, the following helpers are deprecated:
 Ideally, portfiles should be short, simple, and as declarative as possible.
 Remove any boiler plate comments introduced by the `create` command before submitting a PR.
 
+### Ports must not be path dependent
+
+Ports must not change their behavior based on which ports are already installed in a form that would change which contents that port installs. For example, given:
+
+```
+> vcpkg install a
+> vcpkg install b
+> vcpkg remove a
+```
+
+and
+
+```
+> vcpkg install b
+```
+
+the files installed by `b` must be the same, regardless of influence by the previous installation of `a`. This means that ports must not try to detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
+
+### Unique port attribution rule
+
+In the entire vcpkg system, no two ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
+
 ## Features
 
 ### Do not use features to implement alternatives
@@ -68,6 +93,14 @@ Notwithstanding the above, if there is a preview branch or similar where the pre
 Examples:
   * The Azure SDKs (of the form `azure-Xxx`) have a `public-preview` feature.
   * `imgui` has an `experimental-docking` feature which engages their preview docking branch which uses a merge commit attached to each of their public numbered releases.
+
+### Default features should enable behaviors, not APIs
+
+If a consumer is depending directly upon a library, they can list out any desired features easily (`library[feature1,feature2]`). However, if a consumer _does not know_ they are using a library, they cannot list out those features. If that hidden library is like `libarchive` where features are adding additional compression algorithms (and thus behaviors) to an existing generic interface, default features offer a way to ensure a reasonably functional transitive library is built even if the final consumer doesn't name it directly.
+
+If the feature adds additional APIs (or executables, or library binaries) and doesn't modify the behavior of existing APIs, it should be left off by default. This is because any consumer which might want to use those APIs can easily require it via their direct reference.
+
+If in doubt, do not mark a feature as default.
 
 ### Do not use features to control alternatives in published interfaces
 
@@ -146,7 +179,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-    -CMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+    -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 )
 ```
 
@@ -188,7 +221,7 @@ files into manifest files. Do not convert CONTROL files that have not been modif
 
 ### Follow common conventions for the `"version"` field
 
-See our [manifest files document](manifest-files.md#version-fields) for a full explanation of our conventions.
+See our [versioning documentation](../users/versioning.md#version-schemes) for a full explanation of our conventions.
 
 ### Update the `"port-version"` field in the manifest file of any modified ports
 
@@ -229,11 +262,11 @@ If you're updating multiple ports at the same time, instead you can run:
 vcpkg x-add-version --all
 ```
 
-To update the files for all modified ports at once.  
+To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
-See our [versioning specification](https://github.com/vicroms/vcpkg/blob/versioning-spec/docs/specifications/versioning.md) and [registries specification](https://github.com/strega-nil/vcpkg/blob/git-registries/docs/specifications/registries-2.md) to learn how vcpkg interacts with these files.
+See our [versioning specification](../specifications/versioning.md) and [registries specification](../specifications/registries-2.md) to learn how vcpkg interacts with these files.
 
 ## Patching
 

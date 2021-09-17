@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jiixyj/libebur128
-    REF v1.2.5
-    SHA512 5f53c64f47bbad224840eef978bbc357f3fab091ef45f849749e5fabba0035d074451bc6e60240d3ff2c56b96faaf66fb91f32f96dcaacd9d81d3c148688c2f7
+    REF v1.2.6
+    SHA512 ab188c6d32cd14613119258313a8a3fb1167b55501c9f5b6d3ba738d674bc58f24ac3034c23d9730ed8dc3e95a23619bfb81719e4c79807a9a16c1a5b3423582
 )
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

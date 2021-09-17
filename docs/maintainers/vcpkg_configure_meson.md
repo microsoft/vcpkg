@@ -1,5 +1,7 @@
 # vcpkg_configure_meson
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_meson.md).
+
 Configure Meson for Debug and Release builds of a project.
 
 ## Usage
@@ -35,4 +37,4 @@ This command supplies many common arguments to Meson. To see the full list, exam
 * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_configure_meson.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_meson.cmake)
+[scripts/cmake/vcpkg\_configure\_meson.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_meson.cmake)

@@ -1,0 +1,11 @@
+{
+  "name": "globjects",
+  "version-string": "1.1.0",
+  "port-version": 4,
+  "description": "C++ library strictly wrapping OpenGL objects",
+  "homepage": "https://github.com/cginternals/globjects",
+  "dependencies": [
+    "glbinding",
+    "glm"
+  ]
+}

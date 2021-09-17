@@ -1,11 +1,11 @@
 {
   "name": "gamedev-framework",
-  "version-string": "0.18.1",
+  "version-semver": "0.20.0",
   "maintainers": [
     "Julien Bernard <julien.bernard@univ-fcomte.fr>",
     "Arthur Hugeat <hugeat.arthur@gmail.com>"
   ],
-  "description": "gf is a framework to build 2D games in C++14",
+  "description": "gamedev-framework is a framework to build 2D games in C++17",
   "homepage": "https://gamedevframework.github.io/",
   "license": "Zlib",
   "supports": "!arm",

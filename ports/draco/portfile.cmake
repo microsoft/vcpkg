@@ -8,7 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
-		fix-uwperror.patch
+        fix-uwperror.patch
+        fix-build-error-in-gcc11.patch # Remove this patch in next release 
 )
 
 vcpkg_configure_cmake(

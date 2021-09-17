@@ -1,53 +1,45 @@
 # vcpkg_check_features
+
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_check_features.md).
 Check if one or more features are a part of a package installation.
 
-## Usage
 ```cmake
 vcpkg_check_features(
-  OUT_FEATURE_OPTIONS <FEATURE_OPTIONS>
-  [FEATURES
-    <cuda> <WITH_CUDA>
-    [<opencv> <WITH_OPENCV>]
-    ...]
-  [INVERTED_FEATURES
-    <cuda> <IGNORE_PACKAGE_CUDA>
-    [<opencv> <IGNORE_PACKAGE_OPENCV>]
-    ...]
+    OUT_FEATURE_OPTIONS <out-var>
+    [PREFIX <prefix>]
+    [FEATURES
+        [<feature-name> <feature-var>]...
+        ]
+    [INVERTED_FEATURES
+        [<feature-name> <feature-var>]...
+        ]
 )
 ```
-`vcpkg_check_features()` accepts these parameters:
 
-* `OUT_FEATURE_OPTIONS`:
-  An output variable, the function will clear the variable passed to `OUT_FEATURE_OPTIONS`
-  and then set it to contain a list of option definitions (`-D<OPTION_NAME>=ON|OFF`).
+The `<out-var>` should be set to `FEATURE_OPTIONS` by convention.
 
-  This should be set to `FEATURE_OPTIONS` by convention.
+`vcpkg_check_features()` will:
 
-* `FEATURES`:
-  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs.
-  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:
+- for each `<feature-name>` passed in `FEATURES`:
+    - if the feature is set, add `-D<feature-var>=ON` to `<out-var>`,
+      and set `<prefix>_<feature-var>` to ON.
+    - if the feature is not set, add `-D<feature-var>=OFF` to `<out-var>`,
+      and set `<prefix>_<feature-var>` to OFF.
+- for each `<feature-name>` passed in `INVERTED_FEATURES`:
+    - if the feature is set, add `-D<feature-var>=OFF` to `<out-var>`,
+      and set `<prefix>_<feature-var>` to OFF.
+    - if the feature is not set, add `-D<feature-var>=ON` to `<out-var>`,
+      and set `<prefix>_<feature-var>` to ON.
 
-    * `-D<OPTION_NAME>=ON`, if a feature is specified for installation,
-    * `-D<OPTION_NAME>=OFF`, otherwise.
+If `<prefix>` is not passed, then the feature vars set are simply `<feature-var>`,
+not `_<feature-var>`.
 
-* `INVERTED_FEATURES`:
-  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs, uses reversed logic from `FEATURES`.
-  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:
+If `INVERTED_FEATURES` is not passed, then the `FEATURES` keyword is optional.
+This behavior is deprecated.
 
-    * `-D<OPTION_NAME>=OFF`, if a feature is specified for installation,
-    * `-D<OPTION_NAME>=ON`, otherwise.
-
-
-## Notes
-
-The `FEATURES` name parameter can be omitted if no `INVERTED_FEATURES` are used.
-
-At least one (`FEATURE_NAME`, `OPTION_NAME`) pair must be passed to the function call.
-
-Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prevent duplication.
-If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists,
-two conflicting definitions are added to `OUT_FEATURE_OPTIONS`.
-
+If the same `<feature-var>` is passed multiple times,
+then `vcpkg_check_features` will cause a fatal error,
+since that is a bug.
 
 ## Examples
 
@@ -58,18 +50,18 @@ $ ./vcpkg install mimalloc[asm,secure]
 
 # ports/mimalloc/portfile.cmake
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  # Keyword FEATURES is optional if INVERTED_FEATURES are not used
-    asm       MI_SEE_ASM
-    override  MI_OVERRIDE
-    secure    MI_SECURE
+    FEATURES
+        asm       MI_SEE_ASM
+        override  MI_OVERRIDE
+        secure    MI_SECURE
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    # Expands to "-DMI_SEE_ASM=ON; -DMI_OVERRIDE=OFF; -DMI_SECURE=ON"
-    ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        # Expands to "-DMI_SEE_ASM=ON;-DMI_OVERRIDE=OFF;-DMI_SECURE=ON"
+        ${FEATURE_OPTIONS}
 )
 ```
 
@@ -79,18 +71,18 @@ vcpkg_configure_cmake(
 $ ./vcpkg install cpprestsdk[websockets]
 
 # ports/cpprestsdk/portfile.cmake
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES # <- Keyword INVERTED_FEATURES required
-    brotli      CPPREST_EXCLUDE_BROTLI
-    websockets  CPPREST_EXCLUDE_WEBSOCKETS
+vcpkg_check_features(
+    INVERTED_FEATURES
+        brotli      CPPREST_EXCLUDE_BROTLI
+        websockets  CPPREST_EXCLUDE_WEBSOCKETS
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    # Expands to "-DCPPREST_EXCLUDE_BROTLI=ON; -DCPPREST_EXCLUDE_WEBSOCKETS=OFF"
-    ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        # Expands to "-DCPPREST_EXCLUDE_BROTLI=ON;-DCPPREST_EXCLUDE_WEBSOCKETS=OFF"
+        ${FEATURE_OPTIONS}
 )
 ```
 
@@ -100,18 +92,19 @@ vcpkg_configure_cmake(
 $ ./vcpkg install pcl[cuda]
 
 # ports/pcl/portfile.cmake
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda  WITH_CUDA
-    cuda  BUILD_CUDA
-    cuda  BUILD_GPU
+vcpkg_check_features(
+    FEATURES
+        cuda  WITH_CUDA
+        cuda  BUILD_CUDA
+        cuda  BUILD_GPU
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    # Expands to "-DWITH_CUDA=ON; -DBUILD_CUDA=ON; -DBUILD_GPU=ON"
-    ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        # Expands to "-DWITH_CUDA=ON;-DBUILD_CUDA=ON;-DBUILD_GPU=ON"
+        ${FEATURE_OPTIONS}
 )
 ```
 
@@ -121,19 +114,19 @@ vcpkg_configure_cmake(
 $ ./vcpkg install rocksdb[tbb]
 
 # ports/rocksdb/portfile.cmake
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-    tbb   WITH_TBB
-  INVERTED_FEATURES
-    tbb   ROCKSDB_IGNORE_PACKAGE_TBB
+vcpkg_check_features(
+    FEATURES
+        tbb   WITH_TBB
+    INVERTED_FEATURES
+        tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    # Expands to "-DWITH_TBB=ON; -DROCKSDB_IGNORE_PACKAGE_TBB=OFF"
-    ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        # Expands to "-DWITH_TBB=ON;-DROCKSDB_IGNORE_PACKAGE_TBB=OFF"
+        ${FEATURE_OPTIONS}
 )
 ```
 
@@ -144,4 +137,4 @@ vcpkg_configure_cmake(
 * [rocksdb](https://github.com/microsoft/vcpkg/blob/master/ports/rocksdb/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_check_features.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_check_features.cmake)
+[scripts/cmake/vcpkg\_check\_features.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_check_features.cmake)

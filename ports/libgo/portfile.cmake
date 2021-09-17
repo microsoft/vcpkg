@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -7,7 +7,8 @@ vcpkg_from_github(
     REF 5d4f36508e8eb2d5aa17cf37cd951dc91da23096 #v3.1
     SHA512 0f281f58116148ba1dd3904febbc391d47190f8e148b70bed7c4b7e6cb3efa5e41e2b7be4832ceeb805996e085f4c2d89fd0cf3b0651e037b32758d6a441411b
     HEAD_REF master
-    PATCHES cmake.patch
+    PATCHES
+        cmake.patch
 )
 
 vcpkg_from_github(
@@ -18,29 +19,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
-file(MAKE_DIRECTORY ${SOURCE_PATH}/third_party)
-file(RENAME ${XHOOK_SOURCE_PATH} ${SOURCE_PATH}/third_party/xhook)
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party")
+file(RENAME "${XHOOK_SOURCE_PATH}" "${SOURCE_PATH}/third_party/xhook")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/disable_hook")
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/windows)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/windows")
 else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix")
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/libgo-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,7 +1,6 @@
 {
   "name": "python3",
-  "version-string": "3.9.0",
-  "port-version": 3,
+  "version-semver": "3.9.7",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "supports": "!(arm | uwp)",
@@ -35,6 +34,19 @@
       "name": "sqlite3",
       "platform": "!(windows & static)"
     },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "deprecated-win7-support": {
+      "description": "Deprecated support for the Windows 7 platform -- may be removed at any time."
+    }
+  }
 }

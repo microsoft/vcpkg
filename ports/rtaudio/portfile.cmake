@@ -3,25 +3,40 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtaudio
-    REF 5.1.0
-    SHA512 338a3a14cd4ea665ac7e94a275cb017bffd87cb10eb8ab6784fad320345ee828b8874439edd08c39efa48736edf9aa0622620784adc320473b03a8f81e17fff6
+    REF bc7ad66581947f810ff4460396bbbd1846b1e7c8
+    SHA512 ef5a41df15a8486550fb791ac21fcee4ecbf726fe9e91a56fcdd437cd554ea242f08c1061a9c6d5c261d721d86fbbcb32ce64db030976150862ed42a40137fc7
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_HOST_IS_LINUX)
+    message(WARNING "rtaudio requires ALSA on Linux; this is available on ubuntu via apt install libasound2-dev")
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(RTAUDIO_STATIC_MSVCRT ON)
+else()
+    set(RTAUDIO_STATIC_MSVCRT OFF)
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio  RTAUDIO_API_ASIO
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+        -DRTAUDIO_API_JACK=OFF
+        -DRTAUDIO_API_PULSE=OFF
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# Version 5.1.0 has the license text embedded in the README.md, so we are including it as a standalone file in the vcpkg port
-# Current master version of rtaudio has a LICENSE file which should be used instead for ports of future releases
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

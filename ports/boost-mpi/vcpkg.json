@@ -1,12 +1,14 @@
 {
   "name": "boost-mpi",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
   "dependencies": [
     "boost-assert",
-    "boost-build",
-    "boost-compatibility",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
     "boost-foreach",
@@ -16,7 +18,10 @@
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-mpl",
     "boost-optional",
     {

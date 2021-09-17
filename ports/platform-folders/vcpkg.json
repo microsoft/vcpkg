@@ -1,0 +1,6 @@
+{
+  "name": "platform-folders",
+  "version-string": "4.0.0",
+  "port-version": 7,
+  "description": "A C++ library to look for special directories like \"My Documents\" and \"%APPDATA%\""
+}

@@ -1,6 +1,0 @@
-Source: amqpcpp
-Version: 4.1.7
-Homepage: https://github.com/CopernicaMarketingSoftware/AMQP-CPP
-Description: AMQP-CPP is a C++ library for communicating with a RabbitMQ message broker
-Build-Depends: openssl (linux)
-Supports: !uwp

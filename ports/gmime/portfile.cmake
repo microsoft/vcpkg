@@ -21,10 +21,12 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 configure_file(${SOURCE_PATH}/build/vs2017/unistd.h ${SOURCE_PATH} COPYONLY)
 configure_file(${SOURCE_PATH}/build/vs2017/config.h ${SOURCE_PATH} COPYONLY)
 configure_file(${SOURCE_PATH}/build/vs2017/gmime.def ${SOURCE_PATH} COPYONLY)
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()

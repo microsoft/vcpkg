@@ -12,6 +12,8 @@ configuration JSON file into ~/vagrant/vcpkg-eg-mac.
 
 .PARAMETER MachineId
 The number to give the machine; should match [0-9]{2}.
+Defaults to the numbers at the end of the machine name,
+assuming that that machine name matches `VCPKGMM-[0-9]{2}`.
 
 .PARAMETER DevopsPat
 The personal access token which has Read & Manage permissions on the ADO pool.
@@ -36,12 +38,6 @@ Defaults to 'vcpkg-eg-mac'.
 The name of the box to use. Defaults to 'vcpkg/macos-ci',
 which is only available internally.
 
-.PARAMETER Force
-Delete any existing vagrant/vcpkg-eg-mac directory.
-
-.PARAMETER DiskSize
-The size to make the temporary disks in gigabytes. Defaults to 350.
-
 .INPUTS
 None
 
@@ -50,7 +46,7 @@ None
 #>
 [CmdletBinding(PositionalBinding=$False, DefaultParameterSetName='DefineDate')]
 Param(
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$False)]
     [String]$MachineId,
 
     [Parameter(Mandatory=$True)]
@@ -72,13 +68,7 @@ Param(
     [String]$BaseName = 'vcpkg-eg-mac',
 
     [Parameter()]
-    [String]$BoxName = 'vcpkg/macos-ci',
-
-    [Parameter()]
-    [Int]$DiskSize = 250,
-
-    [Parameter()]
-    [Switch]$Force
+    [String]$BoxName = 'vcpkg/macos-ci'
 )
 
 Set-StrictMode -Version 2
@@ -92,33 +82,43 @@ if (-not [String]::IsNullOrEmpty($Date)) {
     $AgentPool = "PrOsx-$Date"
 }
 
-if (Test-Path '~/vagrant/vcpkg-eg-mac') {
-    if ($Force) {
-        Write-Host 'Deleting existing directories'
-        Remove-Item -Recurse -Force -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
+if ([String]::IsNullOrEmpty($MachineId)) {
+    $hostname = hostname -s
+    if ($hostname -match '^VCPKGMM-([0-9]{2})$') {
+        $MachineId = $matches[1]
     } else {
-        throw '~/vagrant/vcpkg-eg-mac already exists; try re-running with -Force'
+        Write-Error "Hostname ($hostname) does not match the expected format (VCPKGMM-NN). Please pass -MachineId in order to give the VM a number."
+    }
+}
+
+if (Test-Path '~/vagrant/vcpkg-eg-mac') {
+    Push-Location '~/vagrant/vcpkg-eg-mac'
+    try {
+        Write-Host 'Deleting existing directories'
+        vagrant destroy -f
+        Remove-Item -Recurse -Force -LiteralPath '~/vagrant/vcpkg-eg-mac' | Out-Null
+    } finally {
+        Pop-Location
     }
 }
 
 Write-Host 'Creating new directories'
 if (-not (Test-Path -Path '~/vagrant')) {
-	New-Item -ItemType 'Directory' -Path '~/vagrant' | Out-Null
+    New-Item -ItemType 'Directory' -Path '~/vagrant' | Out-Null
 }
 New-Item -ItemType 'Directory' -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
 
 Copy-Item `
-    -Path "$PSScriptRoot/configuration/Vagrantfile" `
+    -Path "$PSScriptRoot/configuration/Vagrantfile-vm.rb" `
     -Destination '~/vagrant/vcpkg-eg-mac/Vagrantfile'
 
 $configuration = @{
-    pat = $DevopsPat;
-    agent_pool = $AgentPool;
-    devops_url = $DevopsUrl;
-    machine_name = "${BaseName}-${MachineId}";
-    box_name = $BoxName;
-    box_version = $BoxVersion;
-    disk_size = $DiskSize;
+    pat = $DevopsPat
+    agent_pool = $AgentPool
+    devops_url = $DevopsUrl
+    machine_name = "${BaseName}-${MachineId}"
+    box_name = $BoxName
+    box_version = $BoxVersion
 }
 ConvertTo-Json -InputObject $configuration -Depth 5 `
     | Set-Content -Path '~/vagrant/vcpkg-eg-mac/vagrant-configuration.json'

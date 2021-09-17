@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/nowide
-    REF boost-1.75.0
-    SHA512 15f836928459477339e11780b7ead2aa7f1721ec5c443a5370e1d6dd732228185f9055cbad169982aa6dee3d5c9efdce3076d9228d12cebfbe40475490503128
+    REF boost-1.76.0
+    SHA512 42acb8ef8d0c3ab01673814ada908dcfb6673c8fb6a4f056043b0a81bbeb9cc8bdd7b52febe0d06d5899d39af9717fa2e63f3678f7005e56d0bc4765e8a232c0
     HEAD_REF master
 )
 
@@ -15,7 +15,10 @@ string(REPLACE "check-target-builds ../config//lfs_support" "check-target-builds
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 file(COPY "${SOURCE_PATH}/config/check_lfs_support.cpp" "${SOURCE_PATH}/config/check_movable_fstreams.cpp" DESTINATION "${SOURCE_PATH}/build/config")
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-nowide requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
     BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"

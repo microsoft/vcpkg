@@ -1,27 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6df5dac..b79036d 100755
+index 7465e46..9650a59 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,13 +5,11 @@ project(drogon)
- message(STATUS "compiler: " ${CMAKE_CXX_COMPILER_ID})
- include(CheckCXXSourceRuns)
- check_cxx_source_runs(
--        ${PROJECT_SOURCE_DIR}/cmake/tests/binary_compatibility_test.cc
--        cross_compiling)
-+        "int main(){return 0;}"
-+        not_cross_compiling)
- 
--if(cross_compiling)
-+if(!not_cross_compiling)
-   set(BUILD_PROGRAMS OFF)
--else(cross_compiling)
--  set(BUILD_PROGRAMS ON)
- endif()
- 
- option(BUILD_CTL "Build drogon_ctl" ${BUILD_PROGRAMS})
-@@ -84,9 +82,9 @@ if(WIN32)
-     PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
- endif(WIN32)
+@@ -99,9 +99,9 @@ if (WIN32)
+         PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
+ endif (WIN32)
  
 -add_subdirectory(trantor)
 +find_package(Trantor CONFIG REQUIRED)
@@ -29,31 +12,30 @@ index 6df5dac..b79036d 100755
 -target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
 +target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
  
- if(NOT WIN32)
-   if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
-@@ -183,11 +181,11 @@ endif(NOT WIN32)
+ if (NOT WIN32)
+     if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
+@@ -205,11 +205,10 @@ endif (NOT WIN32)
  
- if(BUILD_ORM)
-   # find postgres
--  find_package(pg)
--  if(pg_FOUND)
--    message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
--    message(STATUS "libpq lib:" ${PG_LIBRARIES})
--    target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
-+  find_package(PostgreSQL REQUIRED)
-+  if(PostgreSQL_FOUND)
-+    message(STATUS "libpq inc path:" ${PostgreSQL_INCLUDE_DIRS})
-+    message(STATUS "libpq lib:" ${PostgreSQL_LIBRARIES})
-+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PostgreSQL_LIBRARIES})
-     set(DROGON_SOURCES ${DROGON_SOURCES}
-                        orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
-     if(LIBPQ_BATCH_MODE)
-@@ -206,7 +204,7 @@ if(BUILD_ORM)
-       set(DROGON_SOURCES ${DROGON_SOURCES}
-                          orm_lib/src/postgresql_impl/PgConnection.cc)
-     endif(libpq_supports_batch)
--  endif(pg_FOUND)
-+  endif(PostgreSQL_FOUND)
+ if (BUILD_POSTGRESQL)
+     # find postgres
+-    find_package(pg)
+-    if (pg_FOUND)
+-        message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-        message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-        target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++    find_package(PostgreSQL REQUIRED)
++    if(PostgreSQL_FOUND)
++      set(pg_FOUND true)
++      target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
+         set(DROGON_SOURCES ${DROGON_SOURCES}
+             orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
+         if (LIBPQ_BATCH_MODE)
+@@ -228,7 +227,7 @@ if (BUILD_POSTGRESQL)
+             set(DROGON_SOURCES ${DROGON_SOURCES}
+                 orm_lib/src/postgresql_impl/PgConnection.cc)
+         endif (libpq_supports_batch)
+-    endif (pg_FOUND)
++    endif (PostgreSQL_FOUND)
+ endif (BUILD_POSTGRESQL)
  
-   # Find mysql, only mariadb client liberary is supported
-   find_package(MySQL)
+ if (BUILD_MYSQL)

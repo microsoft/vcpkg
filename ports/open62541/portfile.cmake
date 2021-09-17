@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openssl UA_ENABLE_ENCRYPTION_OPENSSL
     mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
+    amalgamation UA_ENABLE_AMALGAMATION
 )
 
 vcpkg_find_acquire_program(PYTHON3)

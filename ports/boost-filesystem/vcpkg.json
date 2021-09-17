@@ -1,20 +1,25 @@
 {
   "name": "boost-filesystem",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost filesystem module",
   "homepage": "https://github.com/boostorg/filesystem",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-functional",
-    "boost-integer",
     "boost-io",
     "boost-iterator",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-predef",
     "boost-smart-ptr",
     "boost-system",

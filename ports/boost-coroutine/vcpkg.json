@@ -1,12 +1,15 @@
 {
   "name": "boost-coroutine",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
   "supports": "!arm & !uwp & !emscripten",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     {
       "name": "boost-context",
@@ -15,8 +18,10 @@
     "boost-core",
     "boost-detail",
     "boost-exception",
-    "boost-integer",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-system",
     "boost-thread",

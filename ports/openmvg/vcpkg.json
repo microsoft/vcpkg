@@ -1,0 +1,50 @@
+{
+  "name": "openmvg",
+  "version-string": "1.6",
+  "port-version": 2,
+  "description": "open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.",
+  "dependencies": [
+    "cereal",
+    {
+      "name": "ceres",
+      "features": [
+        "cxsparse",
+        "suitesparse"
+      ]
+    },
+    "clp",
+    "coinutils",
+    "eigen3",
+    "flann",
+    "libjpeg-turbo",
+    "liblemon",
+    "libpng",
+    "osi",
+    "tiff",
+    "vlfeat",
+    "zlib"
+  ],
+  "features": {
+    "opencv": {
+      "description": "opencv support for openmvg",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "openmp support for openmvg"
+    },
+    "software": {
+      "description": "build openMVG tools",
+      "dependencies": [
+        "qt5-base",
+        "qt5-svg"
+      ]
+    }
+  }
+}

@@ -12,7 +12,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
-* 文档: [Documentation](docs/index.md)
+* 文档: [Documentation](docs/README.md)
 
 [![当前生成状态](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -286,7 +286,7 @@ $ ./vcpkg integrate bash
 
 ## 示例
 
-请查看 [文档](docs/index.md) 获取具体示例，
+请查看 [文档](docs/README.md) 获取具体示例，
 其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
 [使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
 和 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。

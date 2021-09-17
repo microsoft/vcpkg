@@ -2,18 +2,20 @@ vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(OpenMPI_FULL_VERSION "4.0.3")
-set(OpenMPI_SHORT_VERSION "4.0")
+set(OpenMPI_FULL_VERSION "4.1.0")
+set(OpenMPI_SHORT_VERSION "4.1")
 
 vcpkg_download_distfile(ARCHIVE
   URLS "https://download.open-mpi.org/release/open-mpi/v${OpenMPI_SHORT_VERSION}/openmpi-${OpenMPI_FULL_VERSION}.tar.gz"
   FILENAME "openmpi-${OpenMPI_FULL_VERSION}.tar.gz"
-  SHA512 23a9dfb7f4a63589b82f4e073a825550d3bc7e6b34770898325323ef4a28ed90b47576acaae6be427eb2007b37a88e18c1ea44d929b8ca083fe576ef1111fef6
+  SHA512 1f8117b11c5279d34194b4f5652b0223cf1258a4ac0efd40bab78f31f203068e027235a92a87e546b1b35c5b369bc90788b109c05a7068c75533a03649410e99
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES 
+	keep_isystem.patch
 )
 
 vcpkg_find_acquire_program(PERL)

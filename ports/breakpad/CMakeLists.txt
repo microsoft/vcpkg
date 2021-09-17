@@ -11,7 +11,6 @@ add_definitions(
     -D_CRT_SECURE_NO_WARNINGS
     -D_CRT_SECURE_NO_DEPRECATE
     -D_CRT_NONSTDC_NO_DEPRECATE
-    -D_LIBCPP_VERSION
 )
 
 set(CMAKE_DEBUG_POSTFIX d)
@@ -20,43 +19,52 @@ string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "Release" DEFAULT_INSTALL_HEADERS)
 option(INSTALL_HEADERS "Install header files" ${DEFAULT_INSTALL_HEADERS})
 
 # libbreakpad target
-file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
-if(WIN32)
-    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-        "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
-elseif(APPLE)
-    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-        "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
-else()
-    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-        "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL Android)
+    file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
+    if(WIN32)
+        list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+            "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+    elseif(APPLE)
+        list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+            "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+    else()
+        list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+            "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+    endif()
+
+    find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
+
+    add_library(libbreakpad ${LIBBREAKPAD_SOURCES})
+    target_link_libraries(libbreakpad PRIVATE ${LIBDISASM_LIB})
+
+    target_include_directories(libbreakpad
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+            $<INSTALL_INTERFACE:include>
+    )
+
+    set(TARGETS libbreakpad)
 endif()
 
-find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
-
-add_library(libbreakpad ${LIBBREAKPAD_SOURCES})
-target_link_libraries(libbreakpad PRIVATE ${LIBDISASM_LIB})
-
-target_include_directories(libbreakpad
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:include>
-)
-
-set(TARGETS libbreakpad)
-if(WIN32)
-    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/windows/*.cc src/common/windows/*.cc)
-    include_directories("$ENV{VSINSTALLDIR}/DIA SDK/include")
-elseif(APPLE)
-    add_definitions(-DHAVE_MACH_O_NLIST_H)
-    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/mac/*.cc src/common/mac/*.cc)
-    list(APPEND LIBBREAKPAD_CLIENT_SOURCES src/common/mac/MachIPC.mm)
+# libbreakpad_client target
+if(CMAKE_SYSTEM_NAME STREQUAL Android)
+    file(READ "android/google_breakpad/Android.mk" android_mk)
+    string(REGEX MATCHALL "src/[^\n]*\\.cc" LIBBREAKPAD_CLIENT_SOURCES "${android_mk}")
 else()
-    add_definitions(-DHAVE_A_OUT_H)
-    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/linux/*.cc src/common/linux/*.cc)
+    if(WIN32)
+        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/windows/*.cc src/common/windows/*.cc)
+        include_directories("$ENV{VSINSTALLDIR}/DIA SDK/include")
+    elseif(APPLE)
+        add_definitions(-DHAVE_MACH_O_NLIST_H)
+        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/mac/*.cc src/common/mac/*.cc)
+        list(APPEND LIBBREAKPAD_CLIENT_SOURCES src/common/mac/MachIPC.mm)
+    else()
+        add_definitions(-DHAVE_A_OUT_H)
+        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/linux/*.cc src/common/linux/*.cc)
+    endif()
+    file(GLOB LIBBREAKPAD_COMMON_SOURCES src/common/*.cc src/common/*.c src/client/*.cc)
+    list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
 endif()
-file(GLOB LIBBREAKPAD_COMMON_SOURCES src/common/*.cc src/common/*.c src/client/*.cc)
-list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
 list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "/sender|/tests|/unittests|/testcases|_unittest|_test")
 if(WIN32)
     list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "language.cc|path_helper.cc|stabs_to_module.cc|stabs_reader.cc|minidump_file_writer.cc")
@@ -76,7 +84,9 @@ elseif(APPLE)
     target_link_libraries(libbreakpad_client PRIVATE ${CoreFoundation_FRAMEWORK})
 else()
     find_library(PTHREAD_LIBRARIES pthread)
-    target_link_libraries(libbreakpad_client PRIVATE ${PTHREAD_LIBRARIES})
+    if(PTHREAD_LIBRARIES)
+        target_link_libraries(libbreakpad_client PRIVATE ${PTHREAD_LIBRARIES})
+    endif()
     if (HAVE_GETCONTEXT)
         target_compile_definitions(libbreakpad_client PRIVATE HAVE_GETCONTEXT=1)
     endif()

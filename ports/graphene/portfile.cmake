@@ -15,15 +15,15 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dgtk_doc=false
-        -Dgobject_types=true
-        -Dintrospection=false
+        -Dgtk_doc=false #Enable generating the API reference (depends on GTK-Doc)
+        -Dgobject_types=true #Enable GObject types (depends on GObject)
+        -Dintrospection=false #Enable GObject Introspection (depends on GObject)'
         -Dtests=false
         -Dinstalled_tests=false
-    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()
@@ -32,32 +32,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
-# option('gtk_doc', type: 'boolean',
-       # value: false,
-       # description: 'Enable generating the API reference (depends on GTK-Doc)')
-# option('gobject_types', type: 'boolean',
-       # value: true,
-       # description: 'Enable GObject types (depends on GObject)')
-# option('introspection', type: 'boolean',
-       # value: true,
-       # description: 'Enable GObject Introspection (depends on GObject)')
-# option('gcc_vector', type: 'boolean',
-       # value: true,
-       # description: 'Enable GCC vector fast paths (requires GCC)')
-# option('sse2', type: 'boolean',
-       # value: true,
-       # description: 'Enable SSE2 fast paths (requires SSE2 or later)')
-# option('arm_neon', type: 'boolean',
-       # value: true,
-       # description: 'Enable ARM NEON fast paths (requires ARM)')
-# option('tests', type: 'boolean',
-       # value: true,
-       # description: 'Build the test suite (requires GObject)')
-# option('installed_tests', type: 'boolean',
-       # value: true,
-       # description: 'Install tests')
-
- 
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

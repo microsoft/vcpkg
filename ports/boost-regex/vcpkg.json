@@ -1,12 +1,14 @@
 {
   "name": "boost-regex",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost regex module",
   "homepage": "https://github.com/boostorg/regex",
   "dependencies": [
     "boost-assert",
-    "boost-build",
-    "boost-compatibility",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-concept-check",
     "boost-config",
     "boost-container-hash",
@@ -14,7 +16,10 @@
     "boost-detail",
     "boost-integer",
     "boost-iterator",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-mpl",
     "boost-predef",
     "boost-smart-ptr",

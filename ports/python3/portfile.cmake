@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  0)
+set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -19,11 +19,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
 endif()
 
+# Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
+# required to build this port on Windows 7 itself due to Python using itself in its own build system.
+if("deprecated-win7-support" IN_LIST FEATURES)
+    list(APPEND PATCHES 0007-restore-support-for-windows-7.patch)
+    message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
+elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
+    message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 39d304cae181674c4872c63768c0e5aeace2c92eb6d5ea550428d65c8571bc60922b3a3d484b51c46b466aadb7e27500559cafec13a489b48613bbb3fe6a5a5d
+    SHA512 05de4e485fb6f5f21e4e48fb4d7ec0e9a420fab243cba08663e52b8062f86df3e4f57b8afd49ad94d363ca0972ab85efe132b980a7f84188c82814b6df0ba191
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -53,10 +62,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-    configure_file(${SOURCE_PATH}/PC/pyconfig.h ${SOURCE_PATH}/PC/pyconfig.h)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in ${SOURCE_PATH}/PCbuild/python_vcpkg.props)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/openssl.props.in ${SOURCE_PATH}/PCbuild/openssl.props)
-    file(WRITE ${SOURCE_PATH}/PCbuild/libffi.props
+    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
+    file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
@@ -79,6 +88,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
         )
     endif()
+    string(REPLACE "\\" "" WindowsSDKVersion "$ENV{WindowsSDKVersion}")
+    list(APPEND OPTIONS
+        "/p:WindowsTargetPlatformVersion=${WindowsSDKVersion}"
+        "/p:DefaultWindowsSDKVersion=${WindowsSDKVersion}"
+    )
     if(VCPKG_TARGET_IS_UWP)
         list(APPEND OPTIONS "/p:IncludeUwp=true")
     else()
@@ -99,7 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
@@ -152,13 +166,12 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
     # Makefiles, c files, __pycache__, and other junk.

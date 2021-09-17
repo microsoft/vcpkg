@@ -1,4 +1,4 @@
-set(PODOFO_VERSION 0.9.6)
+set(PODOFO_VERSION 0.9.7)
 
 if (VCPKG_TARGET_IS_UWP)
   set(ADDITIONAL_PATCH "0003-uwp_fix.patch")
@@ -9,13 +9,13 @@ vcpkg_from_sourceforge(
     REPO podofo/podofo
     REF ${PODOFO_VERSION}
     FILENAME "podofo-${PODOFO_VERSION}.tar.gz"
-    SHA512 35c1a457758768bdadc93632385f6b9214824fead279f1b85420443fb2135837cefca9ced476df0d47066f060e9150e12fcd40f60fa1606b177da433feb20130
+    SHA512 0e699739c2fb7d4d02ffca371504bb19f3a8a97ddcbfc06f8d9636db9e73064b4f633f7f09bce92140bb2174610ad68c1e5f8460d474d176ab803ed28295251b
     PATCHES
-        0001-unique_ptr.patch
         0002-HAVE_UNISTD_H.patch
         freetype.patch
         ${ADDITIONAL_PATCH}
         0005-fix-crypto.patch
+        fix-x64-osx.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)

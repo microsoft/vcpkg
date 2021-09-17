@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake.patch
         no-samples.patch
+        0003-fix-android-ndk-r22.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -28,5 +29,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(COPY ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebm)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebm/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/libwebm/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,10 +1,65 @@
 # Binary Caching
 
-Binary caching is vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md).**
 
-If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
+Libraries installed with vcpkg can always be built from source. However, that can duplicate work and waste time when working across multiple projects.
 
-In-tool help is available via `vcpkg help binarycaching` and a [detailed configuration reference is provided below](#Configuration).
+Binary caching is a vcpkg feature that saves copies of library binaries in a shared location that can be accessed by vcpkg for future installs. This means that, as a user, you should only need to build dependencies from source once. If vcpkg is asked to install the same library with the same build configuration in the future, it will just copy the built binaries from the cache and finish the operation in seconds.
+
+Binary caching is especially effective when using Continuous Integration, since local developers can reuse the binaries produced during a CI run. It also greatly enhances the performance of "ephemeral" or "hosted" build agents, since all local changes are otherwise lost between runs. By using binary caching backed by a cloud service, such as GitHub, Azure, or many others, you can ensure your CI runs at maximum speed and only rebuilds your dependencies when they've changed.
+
+Caches can be hosted in a variety of environments. The most basic examples are a folder on the local machine or a network file share. Caches can also be stored in any NuGet feed (such as GitHub or Azure DevOps Artifacts), Azure Blob Storage*, or Google Cloud Storage*.
+
+\* (experimental) 
+
+If your CI provider offers a native "caching" function, we recommend using both vcpkg binary caching and the native method for the most performant results.
+
+In-tool help is available via `vcpkg help binarycaching`.
+
+Table of Contents
+ - [Configuration](#configuration)
+ - [CI Examples](#ci-examples)
+   - [GitHub Packages](#github-packages)
+   - [Azure DevOps Artifacts](#azure-devops-artifacts)
+   - [Azure Blob Storage](#azure-blob-storage-experimental)
+   - [Google Cloud Storage](#google-cloud-storage-experimental)
+ - [NuGet Provider Configuration](#nuget-provider-configuration)
+ - [Implementation Notes](#implementation-notes-internal-details-subject-to-change-without-notice)
+
+
+## Configuration
+
+Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
+
+By default, zip-based archives will be cached at the first valid location of:
+
+**Windows**
+1. `%VCPKG_DEFAULT_BINARY_CACHE%`
+2. `%LOCALAPPDATA%\vcpkg\archives`
+3. `%APPDATA%\vcpkg\archives`
+
+**Non-Windows**
+1. `$VCPKG_DEFAULT_BINARY_CACHE`
+2. `$XDG_CACHE_HOME/vcpkg/archives`
+3. `$HOME/.cache/vcpkg/archives`
+
+### Valid source strings (`<source>`)
+
+| form                        | description
+|-----------------------------|---------------
+| `clear`                     | Removes all previous sources (including the default)
+| `default[,<rw>]`            | Adds the default file-based location
+| `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
+| `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
+| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `nugettimeout,<seconds>`    | Specifies a timeout for NuGet network operations; equivalent to the `-Timeout` parameter of the NuGet CLI.
+| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
+| `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
+
+The `<rw>` optional parameter for certain sources controls whether they will be consulted for
+downloading binaries (`read`)(default), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
+
+Additional configuration details for NuGet-based providers can be found below in [NuGet Provider Configuration](#nuget-provider-configuration).
 
 ## CI Examples
 
@@ -76,6 +131,10 @@ Next, you will need to create a feed for your project; see the [Azure DevOps Art
 variables:
 - name: VCPKG_BINARY_SOURCES
   value: 'clear;nuget,<FEED_URL>,readwrite'
+  
+steps:
+# Remember to add this task to allow vcpkg to upload archives via NuGet
+- task: NuGetAuthenticate@0
 ```
 
 If you are using custom agents with a non-Windows OS, you will need to install Mono to run `nuget.exe` (`apt install mono-complete`, `brew install mono`, etc).
@@ -112,40 +171,41 @@ Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
 1. It will be printed in full if `--debug` is passed
 2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
 
-## Configuration
+### Google Cloud Storage (experimental)
 
-Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
+> Note: This is an experimental feature and may change or be removed at any time
 
-By default, zip-based archives will be cached at the first valid location of:
+Vcpkg supports interfacing with Google Cloud Storage (GCS) via the `x-gcs` source type.
 
-**Windows**
-1. `%VCPKG_DEFAULT_BINARY_CACHE%`
-2. `%LOCALAPPDATA%\vcpkg\archives`
-3. `%APPDATA%\vcpkg\archives`
+```
+x-gcs,<prefix>[,<rw>]
+```
 
-**Non-Windows**
-1. `$VCPKG_DEFAULT_BINARY_CACHE`
-2. `$XDG_CACHE_HOME/vcpkg/archives`
-3. `$HOME/.cache/vcpkg/archives`
+First, you need to create an Google Cloud Platform Account as well as a storage bucket ([GCS Quick Start](https://cloud.google.com/storage/docs/quickstart-gsutil)].
 
-### Valid source strings (`<source>`)
+As part of this quickstart you would have configured the `gsutil` command-line tool to authenticate with Google Cloud.
+Vcpkg will use this command-line tool, make sure it is in your search path for executables.
 
-| form                        | description
-|-----------------------------|---------------
-| `clear`                     | Removes all previous sources (including the default)
-| `default[,<rw>]`            | Adds the default file-based location
-| `files,<path>[,<rw>]`       | Adds a custom file-based location
-| `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
-| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
-| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
-| `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
+Example 1 (using a bucket without a common prefix for the objects):
 
-The `<rw>` optional parameter for certain sources controls whether they will be consulted for
-downloading binaries (`read`), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
+```
+x-gcs,gs://<bucket-name>/,readwrite
+```
 
-### Nuget Provider Configuration
+Example 2 (using a bucket and a prefix for the objects):
 
-#### Credentials
+```
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with/many/slashes/,readwrite
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with`,commas/too!/,readwrite
+```
+
+Commas (`,`) are valid as part of a object prefix in GCS, just remember to escape them in the vcpkg configuration, as
+shown in the previous example. Note that GCS does not have folders (some of the GCS tools simulate folders), it is not
+necessary to create or otherwise manipulate the prefix used by your vcpkg cache.
+
+## NuGet Provider Configuration
+
+### Credentials
 
 Many NuGet servers require additional credentials to access. The most flexible way to supply credentials is via the `nugetconfig` provider with a custom `nuget.config` file. See https://docs.microsoft.com/en-us/nuget/consume-packages/consuming-packages-authenticated-feeds for more information on authenticating via `nuget.config`.
 

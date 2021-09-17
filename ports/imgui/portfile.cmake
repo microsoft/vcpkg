@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 682249396f02b8c21e5ff333ab4a1969c89387ad
-       SHA512 95f17c14e0a8f10dfc51fd1b30894f9905433fac8f9a93b6c545a542df5eb20be68f40996080a85cba934107ce19fff91a1df1edad1a1b5a0030e8f626e1985d
+       REF dedb381c510cc0b87164e16b9e7ef6bf50ffccec
+       SHA512 0b331cbf81fed15cdceb84ccf1962b5db19af1b6dc75a19460810919b7f61088a9ba46acf3e6fcadfda6297204b03f1be0ab08fa427f89e504d70be8da1f2281
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.79
-    SHA512 35ed7af89123e09989ef81085f19ed15f97f4798e2b35834fd8b4ae918889b51132d85901f867ab2f379711a734bc7b2edd309d74f3f7527eaaaebfd766d3737
+    REF v1.84.2
+    SHA512 ea62d03ffc4c8d3dbc6be0076fb93158d464f4f02e88028c2bc64768f72e3117297854816bb7a776bd750c003013fe1d2871a1b505d04dd0922dfb2f214dd0a3
     HEAD_REF master
     )
 endif()
@@ -26,6 +26,7 @@ if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES 
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
     dx10-binding                IMGUI_BUILD_DX10_BINDING
@@ -36,10 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     marmalade-binding           IMGUI_COPY_MARMALADE_BINDING
     metal-binding               IMGUI_BUILD_METAL_BINDING
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
-    opengl3-glew-binding        IMGUI_BUILD_OPENGL3_GLEW_BINDING
-    opengl3-glad-binding        IMGUI_BUILD_OPENGL3_GLAD_BINDING
-    opengl3-gl3w-binding        IMGUI_BUILD_OPENGL3_GL3W_BINDING
-    opengl3-glbinding-binding   IMGUI_BUILD_OPENGL3_GLBINDING_BINDING
+    opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
     sdl2-binding                IMGUI_BUILD_SDL2_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
@@ -68,9 +66,18 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DIMGUI_SKIP_HEADERS=ON
+    MAYBE_UNUSED_VARIABLES
+        IMGUI_COPY_MARMALADE_BINDING
 )
 
 vcpkg_install_cmake()
+
+if ("freetype" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("wchar32" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()

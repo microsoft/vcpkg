@@ -3,35 +3,38 @@
 
   "Applications": [
     {
-      "Name": "VirtualBox",
-      "TestCommand": "VBoxManage",
-      "DmgUrl": "https://download.virtualbox.org/virtualbox/6.1.16/VirtualBox-6.1.16-140961-OSX.dmg",
-      "Sha256": "D7DF0F05D9A9E7CBA50EA01DA264AC20948B1C9C0E0CCCD2D628085C9F434D45",
-      "InstallerPath": "VirtualBox.pkg"
+      "Name": "vagrant",
+      "VersionCommand": [ "vagrant", "-v" ],
+      "VersionRegex": "Vagrant (.*)",
+      "Version": "2.2.18",
+      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.dmg",
+      "Sha256": "B4E8103AABDF29F18F592CD6DE4FA03BF182FBC192A0757B5E18156CB18FA672",
+      "InstallerPath": "vagrant.pkg"
     },
     {
-      "Name": "vagrant",
-      "TestCommand": "vagrant",
-      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.14/vagrant_2.2.14_x86_64.dmg",
-      "Sha256": "76B849B26E6D6187A7829212B05545D3B424E05F1BCD0F7163DA1E5117084FA6",
-      "InstallerPath": "vagrant.pkg"
+      "Name": "osxfuse",
+      "VersionCommand": [ "cat", "/Library/Filesystems/macfuse.fs/Contents/version.plist" ],
+      "VersionRegex": "<key>CFBundleVersion</key>[\\n\\t ]*<string>([0-9.]+)</string>",
+      "Version": "4.1.2",
+      "DmgUrl": "https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.1.2/macfuse-4.1.2.dmg",
+      "Sha256": "9FF344DE38BAD5AC5ECA5194DA00A2BA35DD6AFDB9039133B5446168F8EDAFDB",
+      "InstallerPath": "Install macFUSE.pkg"
+    },
+    {
+      "Name": "sshfs",
+      "VersionCommand": [ "sshfs", "--version" ],
+      "VersionRegex": "SSHFS version [0-9.]* \\(OSXFUSE SSHFS (.*)\\)",
+      "Version": "2.5.0",
+      "PkgUrl": "https://github.com/osxfuse/sshfs/releases/download/osxfuse-sshfs-2.5.0/sshfs-2.5.0.pkg",
+      "Sha256": "F8F4F71814273EA42DBE6CD92199F7CFF418571FFD1B10C0608878D3472D2162"
     }
   ],
   "Brew": [
-    {
-      "Name": "osxfuse",
-      "Kind": "cask"
-    },
-    {
-      "Name": "sshfs"
-    }
   ],
-  "VBoxExtensions": [
+  "VagrantPlugins": [
     {
-      "Name": "Extension Pack",
-      "FullName": "Oracle VM VirtualBox Extension Pack",
-      "Url": "https://download.virtualbox.org/virtualbox/6.1.16/Oracle_VM_VirtualBox_Extension_Pack-6.1.16.vbox-extpack",
-      "Sha256": "9802482B77B95A954CB5111793DA10D009009A4E9A9C4EAA4BD1AE5DAFE9DB46"
+      "Name": "vagrant-parallels",
+      "Version": "2.2.3"
     }
   ]
 }

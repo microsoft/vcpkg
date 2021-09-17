@@ -1,0 +1,16 @@
+{
+  "name": "atk",
+  "version": "2.36.0",
+  "port-version": 1,
+  "description": "GNOME Accessibility Toolkit",
+  "homepage": "https://developer.gnome.org/atk/",
+  "supports": "!arm",
+  "dependencies": [
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    }
+  ]
+}

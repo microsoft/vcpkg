@@ -3,14 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor
-    REF a377fb84c29624e91b6b2451018f3aa3abec1c4f # 0.21.9
-    SHA512 627eaefef3526b59e9fdc6b0aebca1a47bac2adf382bc8381115c7f9fbf04a1496a46490985b16b5855166f03a873a7b00ea1f062131fd49d5adb545e5c8ecf5
+    REF f3c11b2d810159e7063daddeaa0764f4006e5a73 # 0.23.10
+    SHA512 85d94a3e346a13f8d802260e7b182a34f83ed7adddb5c082f10fdaac995ba5b895ea20daf33ac99d3f44e9eb95fdc4ec051eb006259258c4c2ae762c5f08399f
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xsimd XTENSOR_USE_XSIMD
-    tbb XTENSOR_USE_TBB
+    FEATURES
+        xsimd XTENSOR_USE_XSIMD
+        tbb XTENSOR_USE_TBB
 )
 
 vcpkg_configure_cmake(

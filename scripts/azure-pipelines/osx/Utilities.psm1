@@ -79,7 +79,7 @@ function Get-RemoteFile
     if ($actualHash.Hash -ne $Sha256) {
         throw @"
 Invalid hash for file $OutFile;
-    expected: $Hash
+    expected: $Sha256
     found:    $($actualHash.Hash)
 Please make sure that the hash in the powershell file is correct.
 "@
@@ -88,64 +88,3 @@ Please make sure that the hash in the powershell file is correct.
     Get-Item $OutFile
 }
 
-<#
-.SYNOPSIS
-Gets the list of installed extensions as powershell objects.
-
-.DESCRIPTION
-Get-InstalledVirtualBoxExtensionPacks gets the installed extensions,
-returning objects that look like:
-
-{
-    Pack = 'Oracle VM VirtualBox Extension Pack';
-    Version = '6.1.10';
-    ...
-}
-
-.INPUTS
-None
-
-.OUTPUTS
-PSCustomObject
-    The list of VBox Extension objects that are installed.
-#>
-function Get-InstalledVirtualBoxExtensionPacks
-{
-    [CmdletBinding()]
-    [OutputType([PSCustomObject])]
-    Param()
-
-    $lines = VBoxManage list extpacks
-
-    $result = @()
-
-    $currentObject = $null
-    $currentKey = ""
-    $currentString = ""
-
-    $lines | ForEach-Object {
-        $Line = $_
-        if ($Line[0] -eq ' ') {
-            $currentString += "`n$($Line.Trim())"
-        } else {
-            if ($null -ne $currentObject) {
-                $currentObject.$currentKey = $currentString
-            }
-            $currentKey, $currentString = $Line -Split ':'
-            $currentString = $currentString.Trim()
-
-            if ($currentKey.StartsWith('Pack no')) {
-                $currentKey = 'Pack'
-                if ($null -ne $currentObject) {
-                    Write-Output ([PSCustomObject]$currentObject)
-                }
-                $currentObject = @{}
-            }
-        }
-    }
-
-    if ($null -ne $currentObject) {
-        $currentObject.$currentKey = $currentString
-        Write-Output ([PSCustomObject]$currentObject)
-    }
-}

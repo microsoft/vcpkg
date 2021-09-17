@@ -5,8 +5,6 @@ vcpkg_from_github(
     SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
     PATCHES
         fix-tiff-linkage.patch
-        fix-text2image.patch
-        fix-training-tools.patch
 )
 
 # The built-in cmake FindICU is better
@@ -46,6 +44,11 @@ find_package(LibArchive REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESSERACT_CONFIG}")
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract41" "-ltesseract41d")
+endif()
+vcpkg_fixup_pkgconfig()
 
 if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS

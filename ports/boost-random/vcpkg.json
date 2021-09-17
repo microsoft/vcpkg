@@ -1,21 +1,25 @@
 {
   "name": "boost-random",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost random module",
   "homepage": "https://github.com/boostorg/random",
   "dependencies": [
+    "boost-array",
     "boost-assert",
-    "boost-build",
-    "boost-compatibility",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-dynamic-bitset",
     "boost-integer",
     "boost-io",
-    "boost-math",
-    "boost-modular-build-helper",
-    "boost-multiprecision",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-range",
     "boost-static-assert",
     "boost-system",

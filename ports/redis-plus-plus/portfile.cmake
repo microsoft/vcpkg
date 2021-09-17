@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF a9f9c301f8de1c181e6d45c573b5d1fe7b8200b1 # 1.2.1
-    SHA512 038641a91a2d62f8b07b548fb16f03e87a014fc3a53e59d95e9d31d707e800de4922838bc1bc181d642bb6ac23eae877e0a8724548d9d8f113ebc8d744384abf
+    REF df522812ba4114f1dd3386b81afc2369c82b717d # 1.2.3
+    SHA512 2ac59c5416ba85a60061d941787cb3bc2e43042ca0a53829f866448015ed6800c38ecbde3319d9756a70bfba2860732136d89d296382a6b9a675bbe32173f22b
     HEAD_REF master
     PATCHES
         fix-ws2-linking-windows.patch
@@ -39,6 +39,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright )

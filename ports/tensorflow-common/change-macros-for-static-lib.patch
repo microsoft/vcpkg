@@ -23,7 +23,7 @@ diff --git a/tensorflow/core/platform/macros.h b/tensorflow/core/platform/macros
 diff --git a/tensorflow/c/c_api.h b/tensorflow/c/c_api.h
 --- a/tensorflow/c/c_api.h
 +++ b/tensorflow/c/c_api.h
-@@ -70,24 +70,7 @@
+@@ -71,24 +71,7 @@
  //   and the API just provides high level controls over the number of
  //   devices of each type.
  
@@ -81,7 +81,7 @@ diff --git a/tensorflow/c/c_api_experimental.h b/tensorflow/c/c_api_experimental
 diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
 --- a/tensorflow/c/c_api_macros.h
 +++ b/tensorflow/c/c_api_macros.h
-@@ -16,18 +16,6 @@
+@@ -16,17 +16,5 @@
  #ifndef TENSORFLOW_C_C_API_MACROS_H_
  #define TENSORFLOW_C_C_API_MACROS_H_
  
@@ -99,14 +99,13 @@ diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
 -#endif  // _WIN32
 -#endif  // SWIG
  
- #endif  // TENSORFLOW_C_C_API_MACROS_H_
 
 diff --git a/tensorflow/c/kernels.h b/tensorflow/c/kernels.h
 --- a/tensorflow/c/kernels.h
 +++ b/tensorflow/c/kernels.h
-@@ -21,24 +21,7 @@
- #include "tensorflow/c/tf_datatype.h"
+@@ -23,24 +23,7 @@
  #include "tensorflow/c/tf_status.h"
+ #include "tensorflow/c/tf_tensor.h"
  
 -// Macro to control visibility of exported symbols in the shared library (.so,
 -// .dylib, .dll).
@@ -210,7 +209,7 @@ diff --git a/tensorflow/c/tf_status.h b/tensorflow/c/tf_status.h
 diff --git a/tensorflow/c/tf_tensor.h b/tensorflow/c/tf_tensor.h
 --- a/tensorflow/c/tf_tensor.h
 +++ b/tensorflow/c/tf_tensor.h
-@@ -22,24 +22,7 @@
+@@ -23,24 +23,7 @@
  #include "tensorflow/c/tf_datatype.h"
  #include "tensorflow/c/tf_status.h"
 

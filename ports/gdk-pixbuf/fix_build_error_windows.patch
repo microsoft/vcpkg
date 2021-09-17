@@ -1,0 +1,21 @@
+diff --git a/meson.build b/meson.build
+index b39c55d..4b050c7 100644
+--- a/meson.build
++++ b/meson.build
+@@ -89,8 +89,14 @@ if cc.has_function('round', dependencies: mathlib_dep)
+   gdk_pixbuf_conf.set('HAVE_ROUND', 1)
+ endif
+ 
+-if cc.has_function('lrint', dependencies: mathlib_dep)
+-  gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++if cc.get_id() == 'msvc'
++    if cc.has_function('lrint', dependencies: mathlib_dep, args: '-Oi-')
++        gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++    endif
++else
++    if cc.has_function('lrint', dependencies: mathlib_dep)
++      gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++    endif
+ endif
+ 
+ if cc.has_function('bind_textdomain_codeset', prefix: '#include <libintl.h>')

@@ -1,26 +1,13 @@
-set(MPG123_VERSION 1.26.3)
-set(MPG123_HASH 7574331afaecf3f867455df4b7012e90686ad6ac8c5b5e820244204ea7088bf2b02c3e75f53fe71c205f9eca81fef93f1d969c8d0d1ee9775dc05482290f7b2d)
+set(MPG123_VERSION 1.28.0)
+set(MPG123_HASH 4e333ee4f3bbebcfff280cf286265e969a8da93b9043d03c0189e22cd40918b07bf12181bd06141d4479c78bc0d0ed472e0d3bb61b2fdb96fe9f7cd48f9a6b77)
 
-#architecture detection
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-   set(MPG123_ARCH Win32)
-   set(MPG123_CONFIGURATION _x86)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-   set(MPG123_ARCH x64)
-   set(MPG123_CONFIGURATION _x86)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-   set(MPG123_ARCH ARM)
-   set(MPG123_CONFIGURATION _Generic)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-   set(MPG123_ARCH ARM64)
-   set(MPG123_CONFIGURATION _Generic)
-else()
-   message(FATAL_ERROR "unsupported architecture")
-endif()
-
-#linking
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(MPG123_CONFIGURATION_SUFFIX _Dll)
+set(PATCHES "")
+if(VCPKG_TARGET_IS_UWP)
+    set(PATCHES
+        0002-fix-libmpg123-uwp-build.patch
+        0003-fix-libout123-uwp-build.patch
+        0004-fix-libsyn123-uwp-build.patch
+    )
 endif()
 
 vcpkg_from_sourceforge(
@@ -30,41 +17,26 @@ vcpkg_from_sourceforge(
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
     PATCHES
-        0001-fix-x86-build.patch
+        0001-fix-checkcpuarch-path.patch
+        ${PATCHES}
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
-        PLATFORM ${MPG123_ARCH}
-        RELEASE_CONFIGURATION Release_uwp
-        DEBUG_CONFIGURATION Debug_uwp
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}/ports/cmake
+        OPTIONS -DUSE_MODULES=OFF
     )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-        ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
-        RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-        DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-        ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
+    vcpkg_install_cmake()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+    vcpkg_fixup_pkgconfig()
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(MPG123_OPTIONS
         --disable-dependency-tracking
@@ -95,6 +67,7 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
         OPTIONS ${MPG123_OPTIONS}
     )
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
