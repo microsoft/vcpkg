@@ -116,6 +116,11 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg clean failed"
+}
+
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
@@ -131,6 +136,12 @@ else
 {
     & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
+
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg ci failed"
+}
+
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
     -baselineFile .\scripts\ci.baseline.txt `

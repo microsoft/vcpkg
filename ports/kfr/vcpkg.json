@@ -1,16 +1,23 @@
 {
   "name": "kfr",
-  "version-string": "2020-06-15",
-  "port-version": 1,
-  "description": "Fast, modern C++ DSP framework",
+  "version-semver": "4.2.1",
+  "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
+  "license": "GPL-2.0",
   "supports": "!(arm | linux)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "capi": {
-      "description": "Enable C API build",
+      "description": "Enable C API build.",
       "dependencies": [
         {
           "name": "kfr",
+          "default-features": false,
           "features": [
             "dft"
           ]
@@ -18,10 +25,10 @@
       ]
     },
     "dft": {
-      "description": "Enable DFT and related algorithms"
+      "description": "Enable DFT and related algorithms."
     },
     "dft-np": {
-      "description": "Enable Non-power of 2 DFT"
+      "description": "Enable non-power of 2 DFT."
     }
   }
 }

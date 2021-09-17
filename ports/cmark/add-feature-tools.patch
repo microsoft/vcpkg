@@ -1,0 +1,54 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3a78d0b..7065c89 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -52,6 +52,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmark_version.h.in
+ include(GNUInstallDirs)
+ include (GenerateExportHeader)
+ 
++if (BUILD_TOOLS)
+ add_executable(${PROGRAM} ${PROGRAM_SOURCES})
+ cmark_add_compile_options(${PROGRAM})
+ set_target_properties(${PROGRAM} PROPERTIES
+@@ -65,6 +66,7 @@ if (CMARK_STATIC)
+ elseif (CMARK_SHARED)
+   target_link_libraries(${PROGRAM} ${LIBRARY})
+ endif()
++endif()
+ 
+ # -fvisibility=hidden
+ set(CMAKE_C_VISIBILITY_PRESET hidden)
+@@ -114,23 +116,30 @@ if (CMARK_STATIC)
+   list(APPEND CMARK_INSTALL ${STATICLIBRARY})
+ endif()
+ 
+-if (MSVC)
++if (MSVC AND BUILD_TOOLS)
+   set_property(TARGET ${PROGRAM}
+     APPEND PROPERTY LINK_FLAGS /INCREMENTAL:NO)
+-endif(MSVC)
++endif(MSVC AND BUILD_TOOLS)
+ 
+ if(NOT MSVC OR CMAKE_HOST_SYSTEM_NAME STREQUAL Windows)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
+   include(InstallRequiredSystemLibraries)
+ endif()
+ 
+-install(TARGETS ${PROGRAM} ${CMARK_INSTALL}
++install(TARGETS ${CMARK_INSTALL}
+   EXPORT cmark-targets
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   )
+ 
++if (BUILD_TOOLS)
++    install(TARGETS ${PROGRAM}
++        EXPORT cmark-targets
++        RUNTIME DESTINATION tools/cmark
++    )
++endif()
++
+ if(CMARK_SHARED OR CMARK_STATIC)
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libcmark.pc.in
+     ${CMAKE_CURRENT_BINARY_DIR}/libcmark.pc @ONLY)
