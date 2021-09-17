@@ -1,6 +1,7 @@
 {
   "name": "kf5attica",
   "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "A Qt library that implements the Open Collaboration Services API",
   "homepage": "https://api.kde.org/frameworks/attica/html/index.html",
   "dependencies": [
