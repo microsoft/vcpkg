@@ -5174,7 +5174,7 @@
     },
     "portmidi": {
       "baseline": "0.234",
-      "port-version": 1
+      "port-version": 2
     },
     "portsmf": {
       "baseline": "0.238",
