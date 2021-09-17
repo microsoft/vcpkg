@@ -1,7 +1,6 @@
 {
   "name": "seal",
-  "version-semver": "3.6.6",
-  "port-version": 1,
+  "version-semver": "3.7.0",
   "description": "Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.",
   "homepage": "https://github.com/microsoft/SEAL",
   "supports": "!windows | (windows & static)",
