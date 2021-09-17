@@ -51,7 +51,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
@@ -122,19 +121,10 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-endif()
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mirror_server${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-endif()
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/mirror_server_stop${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+vcpkg_copy_tools(
+    TOOL_NAMES mirror_server mirror_server_stop 
+    AUTO_CLEAN
+)
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]] contents ${contents})
