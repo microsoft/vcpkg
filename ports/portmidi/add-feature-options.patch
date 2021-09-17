@@ -1,0 +1,50 @@
+diff --git a/portmidi/trunk/CMakeLists.txt b/portmidi/trunk/CMakeLists.txt
+index e5e01b6..483b900 100644
+--- a/portmidi/trunk/CMakeLists.txt
++++ b/portmidi/trunk/CMakeLists.txt
+@@ -72,10 +72,14 @@ endif(0)
+ include_directories(pm_common porttime)
+ add_subdirectory(pm_common)
+ 
++if (0)
+ add_subdirectory(pm_test)
++endif()
+ 
+ add_subdirectory(pm_dylib)
+ 
+ # Cannot figure out how to make an xcode Java application with CMake
++if (JAVA_SUPPORT)
+ add_subdirectory(pm_java)
++endif()
+ 
+diff --git a/portmidi/trunk/pm_common/CMakeLists.txt b/portmidi/trunk/pm_common/CMakeLists.txt
+index c829063..2597bea 100644
+--- a/portmidi/trunk/pm_common/CMakeLists.txt
++++ b/portmidi/trunk/pm_common/CMakeLists.txt
+@@ -111,17 +111,25 @@ target_link_libraries(portmidi-static ${PM_NEEDED_LIBS})
+ # define the jni library
+ include_directories(${JAVA_INCLUDE_PATHS})
+ 
++if (JAVA_SUPPORT)
+ set(JNISRC ${LIBSRC} ../pm_java/pmjni/pmjni.c)
+ add_library(pmjni SHARED ${JNISRC})
+ target_link_libraries(pmjni ${JNI_EXTRA_LIBS})
+ set_target_properties(pmjni PROPERTIES EXECUTABLE_EXTENSION "jnilib")
++endif()
+ 
+ # install the libraries (Linux and Mac OS X command line)
+ if(1)
+-  INSTALL(TARGETS portmidi-static pmjni
++  INSTALL(TARGETS portmidi-static
+     RUNTIME DESTINATION bin
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib)
++  if (JAVA_SUPPORT)
++    INSTALL(TARGETS pmjni
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib)
++  endif()
+ # .h files installed by pm_dylib/CMakeLists.txt, so don't need them here
+   INSTALL(FILES portmidi.h ../porttime/porttime.h
+     DESTINATION include)
