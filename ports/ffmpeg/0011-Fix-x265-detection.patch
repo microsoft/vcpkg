@@ -7,7 +7,7 @@ index a534d95..9ee3abf 100644
                               require_cpp_condition libx264 x264.h "X264_BUILD >= 118" &&
                               check_cpp_condition libx262 x264.h "X264_MPEG2"
 -enabled libx265           && require_pkg_config libx265 x265 x265.h x265_api_get &&
-+enabled libx265           && require_pkg_config libx265 x265 x265.h x265_api_get ||
++enabled libx265           && { check_pkg_config libx265 x265 x265.h x265_api_get ||
 +                               { { check_lib libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++ -lgcc_s -lgcc -lrt -lnuma" ||
 +                               require libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++"; } &&
 +                                 warn "using libx265 without pkg-config"; } } &&
