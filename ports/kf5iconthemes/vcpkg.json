@@ -1,6 +1,7 @@
 {
   "name": "kf5iconthemes",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Icon GUI utilities",
   "homepage": "https://api.kde.org/frameworks/kiconthemes/html/index.html",
   "dependencies": [

@@ -1,6 +1,7 @@
 {
   "name": "kf5configwidgets",
   "version-semver": "5.84.0",
+  "port-version": 1,
   "description": "Widgets for configuration dialogs",
   "homepage": "https://api.kde.org/frameworks/kconfigwidgets/html/index.html",
   "dependencies": [

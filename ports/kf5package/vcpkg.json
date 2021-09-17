@@ -1,6 +1,7 @@
 {
   "name": "kf5package",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Installation and loading of additional content (ex: scripts, images...) as packages",
   "homepage": "https://api.kde.org/frameworks/kpackage/html/index.html",
   "dependencies": [
