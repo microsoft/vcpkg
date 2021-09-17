@@ -2,7 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "vamp-sdk",
   "version": "2.10",
-  "description": "Library for VAMP plugins",
+  "port-version": 1,
+  "description": "Library for Vamp plugins",
   "homepage": "https://www.vamp-plugins.org/develop.html",
   "supports": "!uwp",
   "dependencies": [

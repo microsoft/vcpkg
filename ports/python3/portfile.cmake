@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  6)
+set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -32,7 +32,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 a484de98044d180c3494ccf199f146516650cf7bc917b7d4a85f1e9b42b3938c2540f82298cb3f59332ae41c927e2335b4d91265de3496db4a14693a25a6a772
+    SHA512 05de4e485fb6f5f21e4e48fb4d7ec0e9a420fab243cba08663e52b8062f86df3e4f57b8afd49ad94d363ca0972ab85efe132b980a7f84188c82814b6df0ba191
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -62,10 +62,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-    configure_file(${SOURCE_PATH}/PC/pyconfig.h ${SOURCE_PATH}/PC/pyconfig.h)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in ${SOURCE_PATH}/PCbuild/python_vcpkg.props)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/openssl.props.in ${SOURCE_PATH}/PCbuild/openssl.props)
-    file(WRITE ${SOURCE_PATH}/PCbuild/libffi.props
+    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
+    file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
@@ -113,7 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
@@ -166,7 +166,7 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )

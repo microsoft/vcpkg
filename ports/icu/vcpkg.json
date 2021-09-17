@@ -1,7 +1,7 @@
 {
   "name": "icu",
   "version": "69.1",
-  "port-version": 12,
+  "port-version": 14,
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "http://icu-project.org/apiref/icu4c/",
   "supports": "!uwp",
