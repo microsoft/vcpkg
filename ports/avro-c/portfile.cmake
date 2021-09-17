@@ -1,5 +1,5 @@
 vcpkg_buildpath_length_warning(37)
-vcpkg_fail_port_install(ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp" "osx")
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()

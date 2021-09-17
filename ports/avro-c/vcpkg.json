@@ -3,7 +3,7 @@
   "version": "1.10.2",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
-  "supports": "!uwp",
+  "supports": "!(uwp | osx)",
   "dependencies": [
     "jansson",
     "liblzma",
