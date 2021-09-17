@@ -19,8 +19,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${GLIB_VERSION}
     PATCHES
-        #use-libiconv-on-windows.patch
-        #fix-libintl-detection.patch
+        use-libiconv-on-windows.patch
+        fix-libintl-detection.patch
 )
 
 
