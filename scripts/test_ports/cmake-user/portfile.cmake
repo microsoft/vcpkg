@@ -74,43 +74,46 @@ function(test_cmake_project)
     endif()
 
     set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${arg_NAME}")
-    file(REMOVE_RECURSE "${build_dir}")
-    file(MAKE_DIRECTORY "${build_dir}")
+    set(base_options
+        -G "Ninja"
+        "-DCMAKE_MAKE_PROGRAM=${NINJA}"
+        "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
+        "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
+        "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
+        "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+    )
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
+        list(APPEND base_options "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-            list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+            list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
         endif()
         if(DEFINED VCPKG_PLATFORM_TOOLSET)
-            list(APPEND arg_OPTIONS "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
+            list(APPEND base_options "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND arg_OPTIONS -DBUILD_SHARED_LIBS=ON)
+        list(APPEND base_options -DBUILD_SHARED_LIBS=ON)
     else()
-        list(APPEND arg_OPTIONS -DBUILD_SHARED_LIBS=OFF)
+        list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
     endif()
 
+    file(REMOVE_RECURSE "${build_dir}")
+    file(MAKE_DIRECTORY "${build_dir}")
     vcpkg_execute_required_process(
         COMMAND
             "${CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
-            -G "Ninja"
-            "-DCMAKE_MAKE_PROGRAM=${NINJA}"
-            "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/../../buildsystems/vcpkg.cmake"
-            "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
-            "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
-            "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+            ${base_options}
             ${arg_OPTIONS}
         WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "cmake-user-${TARGET_TRIPLET}-${arg_NAME}-config"
+        LOGNAME "${TARGET_TRIPLET}-${arg_NAME}-config"
     )
     vcpkg_execute_required_process(
         COMMAND
             "${CMAKE_COMMAND}" --build . --target install
         WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "cmake-user-${TARGET_TRIPLET}-${arg_NAME}-build"
+        LOGNAME "${TARGET_TRIPLET}-${arg_NAME}-build"
     )
     # To produce better error messages for failing wrappers,
     # we run execute_process directly here, for each wrapper.
@@ -124,17 +127,24 @@ function(test_cmake_project)
         string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
     endif()
     foreach(package IN LISTS packages)
+        string(MAKE_C_IDENTIFIER "${package}" package_string)
+        set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-find-package-${package_string}-${arg_NAME}")
+        set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-find-package-${package_string}-${arg_NAME}-out.log")
+        set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-find-package-${package_string}-${arg_NAME}-err.log")
+
         message(STATUS "Testing `find_package(${package})` (${arg_NAME})")
-        set(log_out "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-out.log")
-        set(log_err "${CURRENT_BUILDTREES_DIR}/find-package-${package}-${TARGET_TRIPLET}-${arg_NAME}-err.log")
+        file(REMOVE_RECURSE "${find_package_build_dir}")
+        file(MAKE_DIRECTORY "${find_package_build_dir}")
         execute_process(
             COMMAND
                 "${CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
+                ${base_options}
+                ${arg_OPTIONS}
                 "-DFIND_PACKAGES=${package}"
             OUTPUT_FILE "${log_out}"
             ERROR_FILE "${log_err}"
             RESULT_VARIABLE package_result
-            WORKING_DIRECTORY "${build_dir}"
+            WORKING_DIRECTORY "${find_package_build_dir}"
         )
         if(package_result)
             string(CONFIGURE "${message}" package_message @ONLY)
