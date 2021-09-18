@@ -45,7 +45,7 @@ foreach(TARGET IN LISTS BUILD_ONLY)
     message(STATUS "Building ${TARGET}")
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_NINJA
+        DISABLE_PARALLEL_CONFIGURE
         OPTIONS
             ${EXTRA_ARGS}
             "-DENABLE_UNITY_BUILD=ON"
@@ -99,10 +99,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(REMOVE ${DEBUG_LIB_FILES})
     endif()
 
-    file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#ifndef USE_IMPORT_EXPORT\n#define USE_IMPORT_EXPORT\n#endif")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h" "#ifndef USE_IMPORT_EXPORT\n#define USE_IMPORT_EXPORT\n#endif")
 endif()
 
-configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
