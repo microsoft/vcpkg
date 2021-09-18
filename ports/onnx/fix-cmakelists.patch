@@ -116,24 +116,19 @@ index 300e4ea..7773f7a 100644
  
  if(ONNXIFI_DUMMY_BACKEND)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7773f7a..55047d6 100644
+index ac584a5..9f94181 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -647,7 +647,12 @@ endif()
+@@ -647,7 +647,7 @@ endif()
  
  if (NOT ANDROID AND NOT IOS)
    # ---[ ONNXIFI wrapper
 -  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
-+  if(WIN32)
-+    add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c) # for ${arch}-windows-static triplets
-+  else()
-+    add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
-+  endif()
-+
++  add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
    if(MSVC)
      add_msvc_runtime_flag(onnxifi_wrapper)
    endif()
-@@ -677,7 +682,11 @@ if (NOT ANDROID AND NOT IOS)
+@@ -677,7 +677,11 @@ if (NOT ANDROID AND NOT IOS)
  endif()
  
  # ---[ ONNXIFI dummy backend

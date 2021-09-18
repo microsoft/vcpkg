@@ -9,25 +9,6 @@ vcpkg_from_github(
     PATCHES
         fix-cmakelists.patch
 )
-# ONNXIFI sources will be replaced with https://github.com/houseroad/foxi
-if("foxi" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH FOXI_SOURCE_PATH
-        REPO houseroad/foxi
-        REF c278588e34e535f0bb8f00df3880d26928038cad
-        HEAD_REF master
-        SHA512 ad42cfd70e40ba0f0a9187b34ae9e3bd361c8c0038669f4c1591c4f7421d12ad93f76f42b33c2575eea1a3ddb3ff781da2895cdc636df5b60422598f450203c7
-        PATCHES
-            fix-foxi-sources.patch
-    )
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_dummy.c"    DESTINATION "${SOURCE_PATH}/onnx")
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_ext.h"      DESTINATION "${SOURCE_PATH}/onnx")
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_loader.c"   DESTINATION "${SOURCE_PATH}/onnx")
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_loader.h"   DESTINATION "${SOURCE_PATH}/onnx")
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi_wrapper.c"  DESTINATION "${SOURCE_PATH}/onnx")
-    file(COPY "${FOXI_SOURCE_PATH}/foxi/onnxifi.h"          DESTINATION "${SOURCE_PATH}/onnx")
-    file(INSTALL "${FOXI_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright.foxi)
-endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 
