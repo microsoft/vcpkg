@@ -1,10 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES forward_cmake_args.patch)
+#set(${PORT}_PATCHES forward_cmake_args.patch)
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
-
-
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -16,7 +14,6 @@ INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
 )
-
 
 if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATRUES)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine-native-spellchecker=ON")
@@ -46,7 +43,7 @@ vcpkg_find_acquire_program(GPERF)
 vcpkg_find_acquire_program(PYTHON2)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
-#vcpkg_find_acquire_program(PKGCONFIG)
+
 find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node"  "bin" NO_DEFAULT_PATHS)
 find_program(NODEJS NAMES node)
 if(NOT NODEJS)
