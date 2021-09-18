@@ -127,18 +127,19 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  if("tao" IN_LIST FEATURES)
-    file(WRITE ${SOURCE_PATH}/TAO/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                                                         <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
-                                                         <ItemDefinitionGroup>
-                                                         <ClCompile>
-                                                         <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
-                                                         </ClCompile>
-                                                         <Link>
-                                                         <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib</AdditionalLibraryDirectories>
-                                                         </Link>
-                                                         </ItemDefinitionGroup>
-                                                         </Project>")
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
+    file(WRITE ${SOURCE_PATH}/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                     <ItemDefinitionGroup>
+                                                     <ClCompile>
+                                                     <AdditionalOptions>/MP</AdditionalOptions>
+                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
+                                                     </ClCompile>
+                                                     <Link>
+                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib;${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/lib</AdditionalLibraryDirectories>
+                                                     </Link>
+                                                     </ItemDefinitionGroup>
+                                                     </Project>")
   endif()
 
   file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
@@ -285,17 +286,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   if("xml" IN_LIST FEATURES)
-    file(WRITE ${SOURCE_PATH}/ACEXML/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                                                            <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
-                                                            <ItemDefinitionGroup>
-                                                            <ClCompile>
-                                                            <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
-                                                            </ClCompile>
-                                                            <Link>
-                                                            <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib</AdditionalLibraryDirectories>
-                                                            </Link>
-                                                            </ItemDefinitionGroup>
-                                                            </Project>")
     file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH} ${ACE_ROOT}/ACEXML/ACEXML.sln)
     vcpkg_install_msbuild(
       SOURCE_PATH ${SOURCE_PATH}
@@ -363,7 +353,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
       WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
-      LOGNAME make-${TARGET_TRIPLET}-dbg
+      LOGNAME make-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
@@ -377,7 +367,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
       WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
-      LOGNAME install-${TARGET_TRIPLET}-dbg
+      LOGNAME install-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
 
@@ -400,7 +390,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
       WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
-      LOGNAME realclean-${TARGET_TRIPLET}-dbg
+      LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
 
@@ -414,7 +404,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
       WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
-      LOGNAME make-${TARGET_TRIPLET}-rel
+      LOGNAME make-xml-${TARGET_TRIPLET}-rel
     )
   endif()
   message(STATUS "Building ${TARGET_TRIPLET}-rel done")
@@ -428,7 +418,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
       WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
-      LOGNAME install-${TARGET_TRIPLET}-rel
+      LOGNAME install-xml-${TARGET_TRIPLET}-rel
     )
   endif()
   if("tao" IN_LIST FEATURES)
