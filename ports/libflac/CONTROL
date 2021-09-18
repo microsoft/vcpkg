@@ -1,9 +1,0 @@
-Source: libflac
-Version: 1.3.3
-Port-Version: 5
-Homepage: https://xiph.org/flac/
-Description: Library for manipulating FLAC files
-Build-Depends: libogg
-
-Feature: asm
-Description: Use any assembly optimization routines
