@@ -5,6 +5,13 @@
   "homepage": "https://api.kde.org/frameworks/kcmutils/html/index.html",
   "dependencies": [
     "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "kf5configwidgets",
     "kf5coreaddons",
     "kf5declarative",
