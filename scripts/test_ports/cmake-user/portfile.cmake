@@ -81,6 +81,7 @@ function(test_cmake_project)
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_MANIFEST_MODE=OFF"
     )
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
