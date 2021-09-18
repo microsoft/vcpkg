@@ -12,9 +12,11 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON3)
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
