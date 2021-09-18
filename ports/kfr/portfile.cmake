@@ -1,23 +1,25 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "Linux")
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kfrlib/kfr
-    REF 1f9706197abfcd4b4ec19ded3ce37b70ebd9a223
-    SHA512 901c6984a46a7abcc28adf9397759156a9e8d173e028c236ab423568ed20b3a3efe207be9660c961539c73a2767afaedcd76133304f542d3299353942cf13f5e
+    REF 9fc73247f43b303617329294ae264613df4dce71 # 4.2.1
+    SHA512 c7dd4b1a0be436460973fb8a48bc6f2264a0f7d8d034ce88ccfd8328135f1492eab155023103a1461c2058eb6c79a6019b62d023dc5bc390ab4d2b43eac9c2d4
     HEAD_REF master
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    capi ENABLE_CAPI_BUILD
-    dft ENABLE_DFT
-    dft-np ENABLE_DFT_NP
+    FEATURES
+        capi ENABLE_CAPI_BUILD
+        dft ENABLE_DFT
+        dft-np ENABLE_DFT_NP
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
         -DENABLE_ASMTEST=OFF
@@ -27,8 +29,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,6 +1,6 @@
 {
   "name": "apsi",
-  "version-semver": "0.2.0",
+  "version-semver": "0.3.1",
   "description": "APSI is a research library for asymmetric private set intersection.",
   "homepage": "https://github.com/microsoft/APSI",
   "supports": "static",
