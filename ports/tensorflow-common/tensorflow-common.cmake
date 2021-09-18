@@ -186,7 +186,7 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			set(BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
 			set(BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS currently broken
 		else()
