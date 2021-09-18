@@ -92,10 +92,10 @@ function(qt_build_submodule SOURCE_PATH)
             endif()
         endif()
         if(EXISTS "${CURRENT_BUILD_PACKAGE_DIR}/plugins")
-            file(COPY "${CURRENT_BUILD_PACKAGE_DIR}/plugins" DESTINATION "${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5/bin")
+            file(COPY "${CURRENT_BUILD_PACKAGE_DIR}/plugins" DESTINATION "${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5")
         endif()
         if(EXISTS "${CURRENT_BUILD_PACKAGE_DIR}/qml")
-            file(COPY "${CURRENT_BUILD_PACKAGE_DIR}/qml" DESTINATION "${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5/bin")
+            file(COPY "${CURRENT_BUILD_PACKAGE_DIR}/qml" DESTINATION "${CURRENT_BUILD_PACKAGE_DIR}/tools/qt5")
         endif()
 
         #cleanup empty folders
@@ -103,8 +103,12 @@ function(qt_build_submodule SOURCE_PATH)
         remove_if_empty("${CURRENT_BUILD_PACKAGE_DIR}/bin")
     endforeach()
 
-    file(GLOB_RECURSE my_bins RELATIVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin" "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/*")
-    file(GLOB plugin_dirs "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/plugins/*")
+    file(GLOB_RECURSE my_bins
+        RELATIVE "${CURRENT_PACKAGES_DIR}/tools/qt5"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/*"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/qml/*"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/plugins/*")
+    file(GLOB plugin_dirs "${CURRENT_PACKAGES_DIR}/tools/qt5/plugins/*")
     foreach(plugin_dir IN LISTS plugin_dirs)
         file(GLOB plugin_bins RELATIVE "${plugin_dir}" "${plugin_dir}/*")
         vcpkg_copy_tool_dependencies("${plugin_dir}")
@@ -123,7 +127,18 @@ function(qt_build_submodule SOURCE_PATH)
         endforeach()
     endforeach()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/qt5/bin")
-    file(GLOB_RECURSE required_bins RELATIVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin" "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/*")
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/plugins")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/plugins" "${CURRENT_PACKAGES_DIR}/tools/qt5/plugins")
+    endif()
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qml")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qml" "${CURRENT_PACKAGES_DIR}/tools/qt5/qml")
+    endif()
+    file(GLOB_RECURSE required_bins
+        RELATIVE "${CURRENT_PACKAGES_DIR}/tools/qt5"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/*"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/qml/*"
+        "${CURRENT_PACKAGES_DIR}/tools/qt5/plugins/*"
+    )
     foreach(bin IN LISTS required_bins)
         if("${bin}" IN_LIST my_bins)
             # Deployed by me, continuing
@@ -134,11 +149,11 @@ function(qt_build_submodule SOURCE_PATH)
             # This is an external dependency that I am expected to deploy
             continue()
         endif()
-        if(EXISTS "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/${bin}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/${bin}")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/tools/qt5/${bin}")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/${bin}")
         else()
             # I expected a dependency that doesn't currently exist to have already been deployed
-            message(FATAL_ERROR "Port ${PORT} expected ${CURRENT_INSTALLED_DIR}/tools/qt5/bin/${bin} to be deployed by another port")
+            message(FATAL_ERROR "Port ${PORT} expected ${CURRENT_INSTALLED_DIR}/tools/qt5/${bin} to be deployed by another port")
         endif()
     endforeach()
     remove_if_empty_recurse("${CURRENT_PACKAGES_DIR}/bin")
