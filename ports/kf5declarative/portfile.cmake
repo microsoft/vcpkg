@@ -23,6 +23,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
     TOOL_NAMES kpackagelauncherqml
+    AUTO_CLEAN
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
