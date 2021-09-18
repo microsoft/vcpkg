@@ -1,16 +1,3 @@
-diff --git a/cmake/QtBuild.cmake b/cmake/QtBuild.cmake
-index d27eeb2f6..4b0b485ac 100644
---- a/cmake/QtBuild.cmake
-+++ b/cmake/QtBuild.cmake
-@@ -412,7 +412,7 @@ set(QT_KNOWN_MODULES_WITH_TOOLS "" CACHE INTERNAL "Known Qt modules with tools"
- 
- # Reset syncqt cache variable, to make sure it gets recomputed on reconfiguration, otherwise
- # it might not get installed.
--unset(QT_SYNCQT CACHE)
-+# unset(QT_SYNCQT CACHE)
- 
- # For adjusting variables when running tests, we need to know what
- # the correct variable is for separating entries in PATH-alike
 diff --git a/cmake/QtBuildInternalsExtra.cmake.in b/cmake/QtBuildInternalsExtra.cmake.in
 index ffc9d90f8..0b3a7d59e 100644
 --- a/cmake/QtBuildInternalsExtra.cmake.in
