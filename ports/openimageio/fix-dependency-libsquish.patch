@@ -1,0 +1,42 @@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index 2fef6ce..a858637 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -292,7 +292,8 @@ endmacro()
+ option (USE_EMBEDDED_LIBSQUISH
+         "Force use of embedded Libsquish, even if external is found" OFF)
+ if (NOT USE_EMBEDDED_LIBSQUISH)
+-    checked_find_package (Libsquish)
++    checked_find_package (unofficial-squish PREFER_CONFIG)
++    set(Libsquish_FOUND 1)
+ endif ()
+ 
+ 
+diff --git a/src/dds.imageio/CMakeLists.txt b/src/dds.imageio/CMakeLists.txt
+index d693453..63d582c 100644
+--- a/src/dds.imageio/CMakeLists.txt
++++ b/src/dds.imageio/CMakeLists.txt
+@@ -5,7 +5,7 @@
+ if (Libsquish_FOUND)
+     # External libsquish was found -- use it
+     add_oiio_plugin (ddsinput.cpp
+-                     LINK_LIBRARIES Libsquish::Libsquish
++                     LINK_LIBRARIES unofficial-squish::squish
+                      )
+ else ()
+     # No external libsquish was found -- use the embedded version.
+diff --git a/src/libOpenImageIO/CMakeLists.txt b/src/libOpenImageIO/CMakeLists.txt
+index 1e34593..532d559 100644
+--- a/src/libOpenImageIO/CMakeLists.txt
++++ b/src/libOpenImageIO/CMakeLists.txt
+@@ -152,6 +152,10 @@ target_link_libraries (OpenImageIO
+             ${CMAKE_DL_LIBS}
+         )
+ 
++if (Libsquish_FOUND)
++    target_link_libraries (OpenImageIO PUBLIC unofficial-squish::squish)
++endif()
++
+ if (FREETYPE_FOUND)
+     target_link_libraries (OpenImageIO PRIVATE ${FREETYPE_LIBRARIES})
+ endif()
