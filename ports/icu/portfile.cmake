@@ -16,10 +16,11 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
-        ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
+        disable-escapestr-tool.patch
+        remove-MD-from-configure.patch
+        fix_parallel_build_on_windows.patch
+        fix-extra.patch
+        mingw-dll-install.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -123,15 +124,6 @@ endif()
 
 vcpkg_install_make()
 
-if(VCPKG_TARGET_IS_MINGW)
-    file(GLOB ICU_TOOLS
-        ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/icu-config
-        ${CURRENT_PACKAGES_DIR}/debug/bin/icu-config)
-    file(REMOVE ${ICU_TOOLS})
-endif()
-
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -196,17 +188,17 @@ file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/config)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
 endif()
 
 # copy dlls
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
