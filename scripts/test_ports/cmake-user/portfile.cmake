@@ -100,6 +100,7 @@ function(test_cmake_project)
         list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
     endif()
 
+    message(STATUS "Running tests for '${arg_NAME}'")
     file(REMOVE_RECURSE "${build_dir}")
     file(MAKE_DIRECTORY "${build_dir}")
     vcpkg_execute_required_process(
@@ -133,7 +134,7 @@ function(test_cmake_project)
         set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-find-package-${package_string}-${arg_NAME}-out.log")
         set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-find-package-${package_string}-${arg_NAME}-err.log")
 
-        message(STATUS "Testing `find_package(${package})` (${arg_NAME})")
+        message(STATUS "  find_package(${package})")
         file(REMOVE_RECURSE "${find_package_build_dir}")
         file(MAKE_DIRECTORY "${find_package_build_dir}")
         execute_process(
