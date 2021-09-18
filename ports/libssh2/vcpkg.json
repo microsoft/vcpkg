@@ -1,6 +1,6 @@
 {
   "name": "libssh2",
-  "version-semver": "1.10.0",
+  "version": "1.10.0",
   "description": "The SSH library",
   "homepage": "https://www.libssh2.org",
   "dependencies": [
