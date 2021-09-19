@@ -21,6 +21,7 @@ vcpkg_extract_source_archive_ex(
         fix_parallel_build_on_windows.patch
         fix-extra.patch
         mingw-dll-install.patch
+        disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -139,29 +140,6 @@ if(TEST_LIBS)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        # rename static libraries to match import libs
-        # see https://gitlab.kitware.com/cmake/cmake/issues/16617
-        foreach(MODULE dt in io tu uc)
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
-
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
-        endforeach()
-
-        file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
-        message(STATUS "${pkg_files}")
-        foreach(pkg_file IN LISTS pkg_files)
-            message(STATUS "${pkg_file}")
-            file(READ ${pkg_file} PKG_FILE)
-            string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
-            file(WRITE ${pkg_file} "${PKG_FILE}")
-        endforeach()
-    endif()
-
     # force U_STATIC_IMPLEMENTATION macro
     foreach(HEADER utypes.h utf_old.h platform.h)
         file(READ ${CURRENT_PACKAGES_DIR}/include/unicode/${HEADER} HEADER_CONTENTS)
