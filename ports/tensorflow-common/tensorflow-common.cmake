@@ -1,7 +1,6 @@
 set(TF_VERSION 2.6.0)
 set(TF_VERSION_SHORT 2.6)
 
-message(STATUS "find/acquire bazel")
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${BAZEL_DIR})
@@ -15,7 +14,6 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
-message(STATUS "find/acquire git")
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${GIT_DIR})
@@ -43,7 +41,6 @@ if(CMAKE_HOST_WIN32)
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
-message(STATUS "find/acquire python3")
 	vcpkg_find_acquire_program(PYTHON3)
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
@@ -54,18 +51,15 @@ message(STATUS "find/acquire python3")
 		set(ENV{BLAS} "None")
 		set(ENV{LAPACK} "None")
 		set(ENV{ATLAS} "None")
-message(STATUS "find/acquire numpy")
 		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	else()
 		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	endif()
-message(STATUS "check python")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
-message(STATUS "check numpy")
 # check if numpy can be loaded
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
 
@@ -141,7 +135,6 @@ foreach(BUILD_TYPE dbg rel)
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
 	endif()
-message(STATUS "download sources")
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
@@ -286,11 +279,6 @@ message(STATUS "download sources")
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ls -al
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuilddbg1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-			vcpkg_execute_build_process(
 				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
@@ -298,7 +286,7 @@ message(STATUS "download sources")
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" ${TF_LIB_SUFFIX}
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log  ${TF_VERSION} ${TF_LIB_SUFFIX}
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
