@@ -286,7 +286,7 @@ foreach(BUILD_TYPE dbg rel)
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log  ${TF_VERSION} ${TF_LIB_SUFFIX}
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" ${TF_VERSION} ${TF_LIB_SUFFIX}
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
