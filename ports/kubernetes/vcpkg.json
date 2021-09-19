@@ -1,25 +1,12 @@
 {
   "name": "kubernetes",
   "version-string": "0.0.1",
-  "port-version": 0,
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "dependencies": [
-    {
-      "name": "openssl",
-      "default-features": true
-    },
-    {
-      "name": "curl",
-      "default-features": true
-    },
-    {
-      "name": "libyaml",
-      "default-features": true
-    },
-    {
-      "name": "libwebsockets",
-      "default-features": true
-    }
+    "curl",
+    "libwebsockets",
+    "libyaml",
+    "openssl"
   ]
 }

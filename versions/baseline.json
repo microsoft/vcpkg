@@ -3092,6 +3092,10 @@
       "baseline": "0.1.19",
       "port-version": 1
     },
+    "kubernetes": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "kuku": {
       "baseline": "2.1",
       "port-version": 1
