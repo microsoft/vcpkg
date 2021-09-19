@@ -279,6 +279,11 @@ foreach(BUILD_TYPE dbg rel)
 			)
 		else()
 			vcpkg_execute_build_process(
+				COMMAND ls -al
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuilddbg1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+			vcpkg_execute_build_process(
 				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
