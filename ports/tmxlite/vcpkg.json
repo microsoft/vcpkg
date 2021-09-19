@@ -1,0 +1,6 @@
+{
+  "name": "tmxlite",
+  "version-string": "2019-03-05",
+  "port-version": 1,
+  "description": "A lightweight C++14 parsing library for tmx map files created with the Tiled map editor."
+}
