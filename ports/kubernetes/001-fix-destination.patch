@@ -1,0 +1,12 @@
+diff --git a/kubernetes/CMakeLists.txt b/kubernetes/CMakeLists.txt
+--- a/kubernetes/CMakeLists.txt	(revision 6b98698c92c59d8c63815f74ed4183fc36cde37b)
++++ b/kubernetes/CMakeLists.txt	(date 1632055519986)
+@@ -1563,7 +1563,7 @@
+     install(TARGETS ${pkgName} DESTINATION ${CMAKE_INSTALL_PREFIX})
+ else()
+     include(GNUInstallDirs)
+-    install(TARGETS ${pkgName} DESTINATION ${CMAKE_INSTALL_PREFIX} EXPORT ${pkgName}Targets)
++    install(TARGETS ${pkgName} EXPORT ${pkgName}Targets)
+ 
+     foreach(HDR_FILE ${HDRS})
+         get_filename_component(HDR_DIRECTORY ${HDR_FILE} DIRECTORY)
