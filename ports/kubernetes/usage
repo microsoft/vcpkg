@@ -1,4 +1,0 @@
-The package kubernetes is compatible with built-in CMake targets:
-
-    find_package(kubernetes CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ssh::kubernetes)
