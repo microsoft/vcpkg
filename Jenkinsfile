@@ -2,7 +2,7 @@
 
 branch = 'vcpkg'
 
-node('aws-work-server-release') {
+node('windows-aws-builder-minimal') {
     ws('C:\\workspace') {
         try {
             checkout(
