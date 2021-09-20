@@ -1,7 +1,6 @@
 {
   "name": "mdnsresponder",
-  "version-string": "765.30.11",
-  "port-version": 4,
+  "version": "878.270.2",
   "description": "The mDNSResponder project is a component of Bonjour, Apple's ease-of-use IP networking initiative.",
   "homepage": "https://developer.apple.com/bonjour/",
   "supports": "!arm"
