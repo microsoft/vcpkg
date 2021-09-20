@@ -7,6 +7,7 @@ Configure Meson for Debug and Release builds of a project.
 ```cmake
 vcpkg_configure_meson(
     SOURCE_PATH <${SOURCE_PATH}>
+    [NO_PKG_CONFIG]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
@@ -26,6 +27,9 @@ Additional options passed to Meson during the Release configuration. These are i
 
 ### OPTIONS_DEBUG
 Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
+
+### NO_PKG_CONFIG
+Disable pkg-config setup 
 
 ## Notes
 This command supplies many common arguments to Meson. To see the full list, examine the source.
@@ -301,6 +305,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         endif()
     endif()
+    string(APPEND CROSS "cmake = '${CMAKE_COMMAND}'\n")
     foreach(_binary IN LISTS ${_additional_binaries})
         string(APPEND CROSS "${_binary}\n")
     endforeach()
@@ -367,7 +372,7 @@ endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcm "NO_PKG_CONFIG" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES")
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
@@ -447,12 +452,14 @@ function(vcpkg_configure_meson)
         list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
         list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
-
-    vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
-    vcpkg_add_to_path("${PKGCONFIG_PATH}")
-    set(PKGCONFIG_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
-
+    
+    if(NOT _vcm_NO_PKG_CONFIG)
+        vcpkg_find_acquire_program(PKGCONFIG)
+        get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
+        vcpkg_add_to_path("${PKGCONFIG_PATH}")
+        set(PKGCONFIG_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
+    endif()
+    
     set(buildtypes)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(BUILDNAME DEBUG)
@@ -491,13 +498,15 @@ function(vcpkg_configure_meson)
         message(STATUS "Configuring ${TARGET_TRIPLET}-${SUFFIX_${buildtype}}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SUFFIX_${buildtype}}")
         #setting up PKGCONFIG
-        set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
-        set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/${PATH_SUFFIX_${buildtype}}lib/pkgconfig/")
-        if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
-        else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
+        if(NOT _vcm_NO_PKG_CONFIG)
+            set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
+            set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}/${PATH_SUFFIX_${buildtype}}lib/pkgconfig/")
+            if(DEFINED ENV{PKG_CONFIG_PATH})
+                set(BACKUP_ENV_PKG_CONFIG_PATH_RELEASE $ENV{PKG_CONFIG_PATH})
+                set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            else()
+                set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_SHARE_DIR}")
+            endif()
         endif()
 
         vcpkg_execute_required_process(
@@ -517,12 +526,14 @@ function(vcpkg_configure_meson)
         endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${SUFFIX_${buildtype}} done")
 
-        #Restore PKG_CONFIG_PATH
-        if(BACKUP_ENV_PKG_CONFIG_PATH_${buildtype})
-            set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_${buildtype}}")
-            unset(BACKUP_ENV_PKG_CONFIG_PATH_${buildtype})
-        else()
-            unset(ENV{PKG_CONFIG_PATH})
+        if(NOT _vcm_NO_PKG_CONFIG)
+            #Restore PKG_CONFIG_PATH
+            if(BACKUP_ENV_PKG_CONFIG_PATH_${buildtype})
+                set(ENV{PKG_CONFIG_PATH} "${BACKUP_ENV_PKG_CONFIG_PATH_${buildtype}}")
+                unset(BACKUP_ENV_PKG_CONFIG_PATH_${buildtype})
+            else()
+                unset(ENV{PKG_CONFIG_PATH})
+            endif()
         endif()
     endforeach()
 
