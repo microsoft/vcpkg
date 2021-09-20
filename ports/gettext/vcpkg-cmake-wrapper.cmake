@@ -7,4 +7,8 @@ if(Intl_FOUND AND Intl_LIBRARIES)
     unset(Intl_LIBRARIES)
     unset(Intl_LIBRARIES CACHE)
     select_library_configurations(Intl)
+    find_package(Iconv) # Since CMake 3.11
+    if(Iconv_FOUND AND NOT Iconv_IS_BUILT_IN)
+        list(APPEND Intl_LIBRARIES ${Iconv_LIBRARIES})
+    endif()
 endif()

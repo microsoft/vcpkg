@@ -1,11 +1,11 @@
 {
   "name": "matplotplusplus",
   "version-date": "2021-04-11",
-  "port-version": 4,
+  "port-version": 5,
   "description": "A C++ graphics library for data visualization",
   "homepage": "https://alandefreitas.github.io/matplotplusplus/",
   "license": "MIT",
-  "supports": "!(arm | uwp)",
+  "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "cimg",
     {

@@ -1,0 +1,56 @@
+diff --git a/doc/Makefile.vc b/doc/Makefile.vc
+index 60c7eee..1e783a0 100644
+--- a/doc/Makefile.vc
++++ b/doc/Makefile.vc
+@@ -62,7 +62,7 @@
+ #
+ 
+ install: 
+-	copy calceph_c.pdf $(DESTDIR)\doc
+-	copy calceph_fortran2003.pdf $(DESTDIR)\doc
+-	copy calceph_fortran77.pdf $(DESTDIR)\doc
+-	copy calceph_python.pdf $(DESTDIR)\doc
++	copy calceph_c.pdf "$(DESTDIR)"\doc
++	copy calceph_fortran2003.pdf "$(DESTDIR)"\doc
++	copy calceph_fortran77.pdf "$(DESTDIR)"\doc
++	copy calceph_python.pdf "$(DESTDIR)"\doc
+diff --git a/mexapi/src/Makefile.vc b/mexapi/src/Makefile.vc
+index 68e5d45..803c12f 100644
+--- a/mexapi/src/Makefile.vc
++++ b/mexapi/src/Makefile.vc
+@@ -62,10 +62,10 @@
+ #
+ 
+ install: 
+-	copy interfacemex.c $(DESTDIR)\libexec\calceph\mex
+-	copy CalcephBin.m $(DESTDIR)\libexec\calceph\mex
+-	copy calceph_compilemex.m   $(DESTDIR)\libexec\calceph\mex
+-	copy Constants.m $(DESTDIR)\libexec\calceph\mex
+-	copy calceph_getversion_str.m $(DESTDIR)\libexec\calceph\mex
+-	copy NaifId.m $(DESTDIR)\libexec\calceph\mex
+-	copy calceph_seterrorhandler.m $(DESTDIR)\libexec\calceph\mex
++	copy interfacemex.c "$(DESTDIR)"\libexec\calceph\mex
++	copy CalcephBin.m "$(DESTDIR)"\libexec\calceph\mex
++	copy calceph_compilemex.m   "$(DESTDIR)"\libexec\calceph\mex
++	copy Constants.m "$(DESTDIR)"\libexec\calceph\mex
++	copy calceph_getversion_str.m "$(DESTDIR)"\libexec\calceph\mex
++	copy NaifId.m "$(DESTDIR)"\libexec\calceph\mex
++	copy calceph_seterrorhandler.m "$(DESTDIR)"\libexec\calceph\mex
+diff --git a/src/Makefile.vc b/src/Makefile.vc
+index 730b4a7..9e790b1 100644
+--- a/src/Makefile.vc
++++ b/src/Makefile.vc
+@@ -111,9 +111,9 @@ clean:
+ # install target: "nmake /f Makefile.vc install DESTDIR=xxx" to perform the installation.
+ #
+ install: all $(F2003INSTALL)
+-    copy f90calceph.h $(DESTDIR)\include
+-    copy calceph.h $(DESTDIR)\include
+-    copy $(LIBRARY) $(DESTDIR)\lib
++    copy f90calceph.h "$(DESTDIR)"\include
++    copy calceph.h "$(DESTDIR)"\include
++    copy $(LIBRARY) "$(DESTDIR)"\lib
+ 
+ f2003install :
+-    copy f2003calceph.mod $(DESTDIR)\include
++    copy f2003calceph.mod "$(DESTDIR)"\include
