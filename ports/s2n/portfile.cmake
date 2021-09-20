@@ -9,14 +9,18 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
+	OPTIONS
+		-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
-file(GLOB SHARED_CMAKE_FILES
-     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
-     )
-file(COPY "${SHARED_CMAKE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+	file(GLOB SHARED_CMAKE_FILES
+		 "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
+		 )
+	file(COPY "${SHARED_CMAKE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
