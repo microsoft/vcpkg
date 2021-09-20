@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DBUNDLE_INSTALL_DIR=bin
+        -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
 )
 
@@ -38,8 +39,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/debug/qml")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
