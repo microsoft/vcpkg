@@ -4145,8 +4145,8 @@
       "port-version": 0
     },
     "mdnsresponder": {
-      "baseline": "765.30.11",
-      "port-version": 4
+      "baseline": "878.270.2",
+      "port-version": 0
     },
     "mecab": {
       "baseline": "2019-09-25",
