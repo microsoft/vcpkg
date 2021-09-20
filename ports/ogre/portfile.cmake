@@ -33,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
     java     OGRE_BUILD_COMPONENT_JAVA
     python   OGRE_BUILD_COMPONENT_PYTHON
-    csharp   OGRE_BUILD_COMPONENT_CSHARP        
+    csharp   OGRE_BUILD_COMPONENT_CSHARP
     overlay  OGRE_BUILD_COMPONENT_OVERLAY
     zziplib  OGRE_CONFIG_ENABLE_ZIP
     strict   OGRE_RESOURCEMANAGER_STRICT
@@ -99,7 +99,7 @@ endif()
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
@@ -107,7 +107,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
         endif()
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
