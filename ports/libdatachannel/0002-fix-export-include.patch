@@ -1,0 +1,66 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3c01184..0adff6f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -217,18 +217,22 @@ set_target_properties(datachannel-static PROPERTIES
+ 	VERSION ${PROJECT_VERSION}
+ 	CXX_STANDARD 17)
+ 
+-target_include_directories(datachannel PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
++target_include_directories(datachannel PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+ target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
+-target_link_libraries(datachannel PUBLIC Threads::Threads)
++target_link_libraries(datachannel PRIVATE Threads::Threads)
+ target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
+ 
+-target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
++target_include_directories(datachannel-static PUBLIC 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>)
+ target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+ target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+ target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
+-target_link_libraries(datachannel-static PUBLIC Threads::Threads)
++target_link_libraries(datachannel-static PRIVATE Threads::Threads)
+ target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
+ 
+ if(WIN32)
+diff --git a/examples/client-benchmark/CMakeLists.txt b/examples/client-benchmark/CMakeLists.txt
+index ad0024c..a734db6 100644
+--- a/examples/client-benchmark/CMakeLists.txt
++++ b/examples/client-benchmark/CMakeLists.txt
+@@ -3,6 +3,7 @@ if(POLICY CMP0079)
+ 	cmake_policy(SET CMP0079 NEW)
+ endif()
+ 
++find_package(Threads)
+ if(WIN32)
+ 	add_executable(datachannel-client-benchmark main.cpp parse_cl.cpp parse_cl.h getopt.cpp getopt.h)
+ 	target_compile_definitions(datachannel-client-benchmark PUBLIC STATIC_GETOPT)
+@@ -15,7 +16,7 @@ set_target_properties(datachannel-client-benchmark PROPERTIES
+ 	OUTPUT_NAME client-benchmark)
+ set_target_properties(datachannel-client-benchmark PROPERTIES
+ 	XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.github.paullouisageneau.libdatachannel.examples.client.benchmark)
+-target_link_libraries(datachannel-client-benchmark datachannel nlohmann_json)
++target_link_libraries(datachannel-client-benchmark datachannel nlohmann_json Threads::Threads)
+ 
+ if(WIN32)
+ 	add_custom_command(TARGET datachannel-client-benchmark POST_BUILD
+diff --git a/examples/streamer/CMakeLists.txt b/examples/streamer/CMakeLists.txt
+index cebec95..3e73160 100644
+--- a/examples/streamer/CMakeLists.txt
++++ b/examples/streamer/CMakeLists.txt
+@@ -47,7 +47,8 @@ set_target_properties(streamer PROPERTIES
+ set_target_properties(streamer PROPERTIES
+ 	XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.github.paullouisageneau.libdatachannel.examples.streamer)
+ 
+-target_link_libraries(streamer datachannel nlohmann_json)
++find_package(Threads)
++target_link_libraries(streamer datachannel nlohmann_json Threads::Threads)
+ 
+ if(WIN32)
+ 	add_custom_command(TARGET streamer POST_BUILD

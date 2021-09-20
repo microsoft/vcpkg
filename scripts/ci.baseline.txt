@@ -54,6 +54,9 @@ aubio:arm-uwp=fail
 aubio:x64-uwp=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
+bitserializer:x64-osx=fail
+bitserializer:arm64-windows=fail
+bitserializer:arm-uwp=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
@@ -134,7 +137,6 @@ clblast:x64-windows-static=fail
 clblast:x64-windows-static-md=fail
 clockutils:x64-linux=fail
 clockutils:x64-osx=fail
-cmark:x64-windows-static=fail
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
@@ -212,6 +214,9 @@ devicenameresolver:x64-windows-static=fail
 dimcli:arm-uwp=fail
 dimcli:x64-osx=fail
 dimcli:x64-uwp=fail
+# legacy directxsdk which conflicts with dxsdk-d3dx
+directxsdk:x86-windows=skip
+directxsdk:x64-windows=skip
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
@@ -269,6 +274,8 @@ elfutils:x64-osx=fail
 # https://github.com/embree/embree/issues/331
 embree2:x64-windows-static=skip
 embree2:x64-windows-static-md=skip
+# embree2 conflicts with embree3 on Linux
+embree2:x64-linux=skip
 enet:arm-uwp=fail
 enet:x64-uwp=fail
 epsilon:arm-uwp=fail

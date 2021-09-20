@@ -1,12 +1,13 @@
 {
   "name": "freealut",
-  "version-string": "1.1.0",
+  "version": "1.1.0",
+  "port-version": 1,
   "description": [
     "FreeALUT is a free implementation of OpenAL's ALUT standard.",
     "ALUT is a set of portable functions which remove the annoying details of getting an audio application started. It is the OpenAL counterpart of what GLUT is for OpenGL. "
   ],
   "homepage": "https://github.com/vancegroup/freealut",
-  "supports": "!uwp & !arm & !arm64",
+  "supports": "!uwp",
   "dependencies": [
     "openal-soft",
     {
