@@ -6,10 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_EXE_PATH ${GPERF} DIRECTORY)
-vcpkg_add_to_path(${GPERF_EXE_PATH})
-
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
