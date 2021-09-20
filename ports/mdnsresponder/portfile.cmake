@@ -1,7 +1,9 @@
+vcpkg_fail_port_install(ON_ARCH "arm")
+
 vcpkg_download_distfile(ARCHIVE
-  URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-765.30.11.tar.gz
-  FILENAME mDNSResponder-765.30.11.tar.gz
-  SHA512 dfdea663ec1089058c2225ede13d70241dfec8311ff7fb8d29c8d386f5077a4104455d78f8777496cce96b8ff289b73ed1aec2bf65c52154b866fc1b7675ef90
+  URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.270.2.tar.gz
+  FILENAME mDNSResponder-878.270.2.tar.gz
+  SHA512 dbc1805c757fceb2b37165ad2575e4084447c10f47ddc871f5476e25affd91f5f759662c17843e30857a9ea1ffd25132bc8012737cf22700ac329713e6a3ac0a
 )
 
 vcpkg_extract_source_archive_ex(
@@ -11,8 +13,6 @@ vcpkg_extract_source_archive_ex(
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
   SET(BUILD_ARCH "Win32")
-ELSEIF(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-  MESSAGE(FATAL_ERROR " ARM is currently not supported.")
 ELSE()
   SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
@@ -57,39 +57,39 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
   file(WRITE ${VCXPROJ_PATH} "${ORIG}")
 endfunction()
 
-FIX_VCXPROJ(${SOURCE_PATH}/mDNSWindows/DLL/dnssd.vcxproj)
-FIX_VCXPROJ(${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj)
+FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLL/dnssd.vcxproj")
+FIX_VCXPROJ("${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj")
 
 vcpkg_build_msbuild(
-  PROJECT_PATH ${SOURCE_PATH}/mDNSResponder.sln
+  PROJECT_PATH "${SOURCE_PATH}/mDNSResponder.sln"
   PLATFORM ${BUILD_ARCH}
   TARGET dns-sd
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   file(INSTALL
-    ${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.dll"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
   )
   file(INSTALL
-    ${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.dll"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
   )
 endif()
 file(INSTALL
-  ${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.lib
-  DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.lib"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
 )
 file(INSTALL
-  ${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.lib
-  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.lib"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
 )
 file(INSTALL
-  ${SOURCE_PATH}/mDNSShared/dns_sd.h
-  DESTINATION ${CURRENT_PACKAGES_DIR}/include
+  "${SOURCE_PATH}/mDNSShared/dns_sd.h"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 file(INSTALL
-  ${SOURCE_PATH}/LICENSE
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/mdnsresponder/copyright
+  "${SOURCE_PATH}/LICENSE"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
 )
 vcpkg_copy_pdbs()
