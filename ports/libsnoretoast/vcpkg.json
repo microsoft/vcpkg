@@ -1,6 +1,7 @@
 {
   "name": "libsnoretoast",
-  "version-semver": "0.8.0",
+  "version": "0.8.0",
+  "port-version": 1,
   "description": "A tool to create Windows Toast notifications and parse them on Windows 8 or later.",
   "homepage": "https://invent.kde.org/libraries/snoretoast",
   "supports": "windows & !uwp",
