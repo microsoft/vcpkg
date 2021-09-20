@@ -1,10 +1,9 @@
 {
   "name": "bitserializer",
   "version": "0.10",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Core part of C++ 17 library for serialization to JSON, XML, YAML",
   "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
-  "supports": "!(arm | osx)",
   "default-features": [
     "cpprestjson-archive",
     "pugixml-archive",
