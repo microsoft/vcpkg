@@ -1,0 +1,28 @@
+{
+  "name": "zxing-cpp",
+  "version-string": "2020-12",
+  "port-version": 3,
+  "description": "Barcode detection and decoding library.",
+  "homepage": "https://github.com/glassechidna/zxing-cpp",
+  "dependencies": [
+    "bigint"
+  ],
+  "default-features": [
+    "iconv",
+    "opencv"
+  ],
+  "features": {
+    "iconv": {
+      "description": "Build with libiconv",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
+    "opencv": {
+      "description": "Build with opencv",
+      "dependencies": [
+        "opencv"
+      ]
+    }
+  }
+}

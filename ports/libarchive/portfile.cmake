@@ -3,14 +3,14 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF fc6563f5130d8a7ee1fc27c0e55baef35119f26c   #v3.4.3
-    SHA512 54ca4f3cc3b38dcf6588b2369ce43109c4a57a04061348ab8bf046c5c13ace0c4f42c9f3961288542cb5fe12c05359d572b39fe7cec32a10151dbac78e8a3707
+    REF 1b2c437b99b361c7692538fa373e99955e9b93ae      #v3.5.2
+    SHA512 df527dd333b01ed85f07831ba0bd4b1d0b5384fe12cfa53474ad39c04509105a3c8574a2d21a430e3584a931c8f6ae923bca95df83945f0c593c1ffaed3f62da
     HEAD_REF master
-    PATCHES
-        fix-buildsystem.patch
-        fix-dependencies.patch
-        fix-cpu-set.patch
+    PATCHES 
         disable-warnings.patch
+        fix-buildsystem.patch
+        fix-cpu-set.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -76,6 +76,10 @@ vcpkg_copy_pdbs()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
     file(READ ${HEADER} CONTENTS)
