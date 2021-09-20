@@ -4662,11 +4662,11 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 5
+      "port-version": 6
     },
     "ogre-next": {
       "baseline": "2019-10-20",
-      "port-version": 2
+      "port-version": 3
     },
     "ois": {
       "baseline": "1.5",
