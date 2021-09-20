@@ -487,40 +487,59 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
         endif()
 
-        execute_process(
-            COMMAND "${Z_VCPKG_EXECUTABLE}" install
-                --triplet "${VCPKG_TARGET_TRIPLET}"
-                --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
-                "--x-wait-for-lock"
-                "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
-                "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-                "${Z_VCPKG_FEATURE_FLAGS}"
-                ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
-                ${VCPKG_INSTALL_OPTIONS}
-            OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
-            ERROR_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
-            RESULT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_RESULT
-            ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
-        )
+        file(TIMESTAMP "${VCPKG_MANIFEST_DIR}/vcpkg.json" Z_VCPKG_MANIFEST_TIMESTAMP UTC)
+        if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+            file(TIMESTAMP "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json" Z_VCPKG_CONFIGURATION_TIMESTAMP UTC)
+        else()
+            set(Z_VCPKG_CONFIGURATION_TIMESTAMP "NOTFOUND")
+        endif()
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
-        file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
+        set(Z_VCPKG_DO_ACTUAL_INSTALL OFF)
+        foreach(var IN ITEMS ADDITIONAL_MANIFEST_PARAMS FEATURE_FLAGS TARGET_TRIPLET MANIFEST_TIMESTAMP CONFIGURATION_TIMESTAMP)
+            if(NOT DEFINED "Z_VCPKG_CHECK_${var}" OR NOT "${Z_VCPKG_${var}}" STREQUAL "${Z_VCPKG_CHECK_${var}}")
+                set(Z_VCPKG_DO_ACTUAL_INSTALL ON)
+                set("Z_VCPKG_CHECK_${var}"
+                    "${Z_VCPKG_${var}}"
+                    CACHE INTERNAL "making sure that ${var} doesn't change"
+                )
+            endif()
+        endforeach()
 
-        if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
-            message(STATUS "Running vcpkg install - done")
+        if(Z_VCPKG_DO_ACTUAL_INSTALL)
+            execute_process(
+                COMMAND "${Z_VCPKG_EXECUTABLE}" install
+                    --triplet "${VCPKG_TARGET_TRIPLET}"
+                    --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
+                    "--x-wait-for-lock"
+                    "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
+                    "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                    "${Z_VCPKG_FEATURE_FLAGS}"
+                    ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
+                    ${VCPKG_INSTALL_OPTIONS}
+                OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
+                ERROR_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
+                RESULT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_RESULT
+                ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
+            )
 
-            # file(TOUCH) added in CMake 3.12
-            file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
-            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                "${VCPKG_MANIFEST_DIR}/vcpkg.json"
-                "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
-            if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+            file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
+            file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
+
+            if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
+                message(STATUS "Running vcpkg install - done")
+
+                # file(TOUCH) added in CMake 3.12
+                file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                    "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+                    "${VCPKG_MANIFEST_DIR}/vcpkg.json"
+                    "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json"
+                    "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
+            else()
+                message(STATUS "Running vcpkg install - failed")
+                z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
             endif()
         else()
-            message(STATUS "Running vcpkg install - failed")
-            z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
+            message(STATUS "Running vcpkg install - unneeded")
         endif()
     endif()
 endif()
