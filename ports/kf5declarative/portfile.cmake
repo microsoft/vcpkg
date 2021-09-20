@@ -8,6 +8,11 @@ vcpkg_from_github(
         fix_config_cmake.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "opengl"    CMAKE_DISABLE_FIND_PACKAGE_EPOXY
+)
+
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
@@ -15,6 +20,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         -DBUNDLE_INSTALL_DIR=bin
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

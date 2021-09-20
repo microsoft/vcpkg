@@ -32,5 +32,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "opengl": {
+      "description": "Enables OpenGl support",
+      "dependencies": [
+        "libepoxy"
+      ]
+    }
+  }
 }
