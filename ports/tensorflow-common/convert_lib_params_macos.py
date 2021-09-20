@@ -4,7 +4,7 @@ import sys
 version = sys.argv[1]
 lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 
-if os.path.is_file(f"libtensorflow_framework.{version}.dylib-2.params"):
+if os.path.isfile(f"libtensorflow_framework.{version}.dylib-2.params"):
     with open(f"libtensorflow{lib_suffix}.{version}.a-2.params", "w") as f_out:
         parts = []
         with open(f"libtensorflow_framework.{version}.dylib-2.params", "r") as f_in:
