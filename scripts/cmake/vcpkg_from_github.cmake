@@ -124,7 +124,7 @@ function(vcpkg_from_github)
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED arg_HEAD_REF)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
-    elseif(NOT DEFINED arg_REF)
+    elseif(NOT VCPKG_USE_HEAD_VERSION AND NOT DEFINED arg_REF)
         message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
     endif()
 
