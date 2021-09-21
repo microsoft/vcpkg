@@ -12,7 +12,7 @@ file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: fals
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 
@@ -26,7 +26,9 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5.exe)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5.exe)
     file (GLOB EXES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${EXES})
+    if(${EXES})
+      file(REMOVE ${EXES})
+    endif()
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kreadconfig5)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/kwriteconfig5)
@@ -40,8 +42,8 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../data")
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
