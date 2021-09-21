@@ -8,15 +8,13 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
       "-D BUILD_TESTS=OFF"
       "-D BUILD_DOC=OFF"
 )
 
-# vcpkg_fixup_cmake_targets()
 vcpkg_cmake_install()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sdbus-c++ TARGET_PATH share/sdbus-c++)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sdbus-c++)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
