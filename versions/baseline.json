@@ -2998,7 +2998,7 @@
     },
     "kf5holidays": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5i18n": {
       "baseline": "5.84.0",
@@ -3026,7 +3026,7 @@
     },
     "kf5plotting": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5service": {
       "baseline": "5.84.0",
@@ -3034,7 +3034,7 @@
     },
     "kf5solid": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5sonnet": {
       "baseline": "5.84.0",
@@ -3198,7 +3198,7 @@
     },
     "libbacktrace": {
       "baseline": "2021-03-14",
-      "port-version": 0
+      "port-version": 1
     },
     "libbf": {
       "baseline": "1.0.0",
