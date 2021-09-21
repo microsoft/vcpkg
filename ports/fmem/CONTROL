@@ -1,3 +1,0 @@
-Source: fmem
-Version: c-libs-2ccee3d2fb
-Description: A cross-platform library for opening memory-backed libc streams.

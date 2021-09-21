@@ -1,0 +1,6 @@
+{
+  "name": "roaring",
+  "version-string": "2019-03-05",
+  "port-version": 3,
+  "description": "A better compressed bitset in C (and C++)"
+}

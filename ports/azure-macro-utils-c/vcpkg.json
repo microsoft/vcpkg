@@ -1,0 +1,11 @@
+{
+  "name": "azure-macro-utils-c",
+  "version-string": "2020-06-17",
+  "port-version": 3,
+  "description": "A library of macros for the Azure IoT SDK Suite",
+  "features": {
+    "public-preview": {
+      "description": "A library of macros for the Azure IoT SDK Suite (public-preview)"
+    }
+  }
+}

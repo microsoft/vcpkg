@@ -1,0 +1,7 @@
+{
+  "name": "dpdk",
+  "version-string": "19.02",
+  "port-version": 1,
+  "description": "A set of libraries and drivers for fast packet processing",
+  "supports": "linux"
+}

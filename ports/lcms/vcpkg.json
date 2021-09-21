@@ -1,7 +1,7 @@
 {
   "name": "lcms",
   "version": "2.12",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Little CMS.",
   "homepage": "https://github.com/mm2/Little-CMS",
   "dependencies": [
