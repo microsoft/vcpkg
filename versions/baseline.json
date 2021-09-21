@@ -1500,6 +1500,10 @@
       "baseline": "2.6.0",
       "port-version": 1
     },
+    "cpp-timsort": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "cppad": {
       "baseline": "20210000.7",
       "port-version": 0
