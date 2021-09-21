@@ -9,7 +9,7 @@
     "aws-c-common",
     {
       "name": "s2n",
-      "platform": "!uwp & !windows"
+      "platform": "!uwp"
     },
     {
       "name": "vcpkg-cmake",
