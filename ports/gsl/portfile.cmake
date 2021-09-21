@@ -16,13 +16,12 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
