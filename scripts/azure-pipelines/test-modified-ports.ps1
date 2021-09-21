@@ -63,7 +63,7 @@ if (-Not $null -eq $HostTriplet) {
       Write-Error "Incorrect host triplet '$HostTriplet', please supply a valid triplet."
       throw
   }
-  $cli_extra_argument = " --host-triplet=$HostTriplet "
+  #$cli_extra_argument = " --host-triplet=$HostTriplet "
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
