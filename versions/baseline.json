@@ -3138,7 +3138,7 @@
     },
     "lcms": {
       "baseline": "2.12",
-      "port-version": 1
+      "port-version": 2
     },
     "leaf": {
       "baseline": "0.2.2",
