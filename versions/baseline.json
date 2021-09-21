@@ -298,7 +298,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 1
+      "port-version": 2
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -1182,6 +1182,10 @@
     },
     "cairomm": {
       "baseline": "1.16.0",
+      "port-version": 0
+    },
+    "calceph": {
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "camport3": {
@@ -2446,7 +2450,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 6
+      "port-version": 7
     },
     "google-cloud-cpp": {
       "baseline": "1.31.1",
@@ -3722,7 +3726,7 @@
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libsodium": {
       "baseline": "1.0.18",
@@ -4145,8 +4149,8 @@
       "port-version": 0
     },
     "mdnsresponder": {
-      "baseline": "765.30.11",
-      "port-version": 4
+      "baseline": "878.270.2",
+      "port-version": 0
     },
     "mecab": {
       "baseline": "2019-09-25",
@@ -4845,7 +4849,7 @@
       "port-version": 2
     },
     "opentelemetry-cpp": {
-      "baseline": "1.0.0-rc4",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "opentracing": {
@@ -5846,7 +5850,7 @@
     },
     "s2n": {
       "baseline": "1.0.17",
-      "port-version": 0
+      "port-version": 1
     },
     "safeint": {
       "baseline": "3.0.26",
