@@ -1750,7 +1750,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "devicenameresolver": {
       "baseline": "2016-06-26-0850d88fa6",
