@@ -59,11 +59,12 @@ if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/communi
 }
 
 if (-Not $null -eq $HostTriplet) {
-  if (-Not ((Test-Path "triplets/$HostTriplet.cmake") -or (Test-Path "triplets/community/$HostTriplet.cmake"))) {
-      Write-Error "Incorrect host triplet '$HostTriplet', please supply a valid triplet."
-      throw
-  }
-  #$cli_extra_argument = " --host-triplet=$HostTriplet "
+    if (-Not ((Test-Path "triplets/$HostTriplet.cmake") -or (Test-Path "triplets/community/$HostTriplet.cmake"))) {
+        Write-Error "Incorrect host triplet '$HostTriplet', please supply a valid triplet."
+        throw
+    }
+    #$cli_extra_argument = " --host-triplet=$HostTriplet "
+    $env:VCPKG_DEFAULT_HOST_TRIPLET = $HostTriplet
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
