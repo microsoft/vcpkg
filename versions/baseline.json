@@ -1174,7 +1174,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cairo": {
       "baseline": "1.17.4",
