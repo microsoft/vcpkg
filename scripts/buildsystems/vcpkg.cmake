@@ -539,7 +539,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 z_vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}")
             endif()
         else()
-            message(STATUS "Running vcpkg install - unneeded")
+            message(STATUS "Running vcpkg install - skipped because install was unnecessary")
         endif()
     endif()
 endif()
