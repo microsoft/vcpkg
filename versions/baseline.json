@@ -6685,8 +6685,8 @@
       "port-version": 0
     },
     "valijson": {
-      "baseline": "2018-11-17",
-      "port-version": 2
+      "baseline": "0.6",
+      "port-version": 0
     },
     "value-ptr-lite": {
       "baseline": "0.2.1",
