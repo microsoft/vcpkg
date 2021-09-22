@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix_boost_ptr.patch
         fix_thrift.patch
+        fix-protobuf-deprecated.patch
 )
 
 vcpkg_configure_cmake(
