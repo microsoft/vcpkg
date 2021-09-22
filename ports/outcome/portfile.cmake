@@ -22,8 +22,8 @@ Outcome depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byt
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
-    REF cfe0651f5067b32ceca2ce057835e66096a5989d
-    SHA512 480280be1b728350981c378606db0234e1c6ec3a9095160e41ef1949544ece43a57c8eec9e381920458513cd9b3872b8f4c6bc3e61541dcb64a70de9f0465166
+    REF a86c6b053b86e4fc5d920907b0afb3234bec9336
+    SHA512 c282afd7b335fef37ec4c2011bf591d3ffd56872515e8fcbd95714020ab99d141a87a064ecda44bf9308cb4bd1f39977b62303f2cc297918be2f257a36ff5832
     HEAD_REF develop
     PATCHES
       outcome-prune-sources.patch

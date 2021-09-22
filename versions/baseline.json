@@ -3961,8 +3961,8 @@
       "port-version": 2
     },
     "llfio": {
-      "baseline": "2.0",
-      "port-version": 20210915
+      "baseline": "2.0-20210922",
+      "port-version": 0
     },
     "llgl": {
       "baseline": "2019-08-15",
@@ -4917,8 +4917,8 @@
       "port-version": 0
     },
     "outcome": {
-      "baseline": "2.2.1-cfe0651f",
-      "port-version": 1
+      "baseline": "2.2.2-20210922",
+      "port-version": 0
     },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
