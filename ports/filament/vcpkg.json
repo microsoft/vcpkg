@@ -1,0 +1,26 @@
+{
+  "name": "filament",
+  "version-semver": "1.9.20",
+  "description": "Filament is a real-time physically based rendering engine for Android, iOS, Windows, Linux, macOS and WASM/WebGL",
+  "homepage": "https://google.github.io/filament/",
+  "supports": "!x86",
+  "dependencies": [
+    "assimp",
+    "benchmark",
+    "freetype",
+    "gtest",
+    "imgui",
+    "libpng",
+    "robin-map",
+    "sdl2",
+    "spirv-cross",
+    "spirv-tools",
+    "stb",
+    "tinyexr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}
