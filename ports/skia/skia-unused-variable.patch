@@ -1,0 +1,13 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index aeb46b4664..9906f73485 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -844,7 +844,7 @@ optional("gpu") {
+   }
+ 
+   libs = []
+-  frameworks = []
++  #frameworks = []
+ 
+   if (skia_use_gl) {
+     public_defines += [ "SK_GL" ]

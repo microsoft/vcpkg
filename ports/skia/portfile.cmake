@@ -5,8 +5,10 @@ vcpkg_fail_port_install(
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
-    REF fb0b35fed5580d49392df7ce9374551b348fffbf
-    PATCHES add-missing-tuple.patch
+    REF a40ddcd63d40d647fcc5ed3b11acd2fa8ee834ed
+    PATCHES
+        "skia-unused-variable.patch"
+        "skia-revert-5619c3af3de044c4f06892eedf5294f1c107c72a.patch"
 )
 
 function(checkout_in_path PATH URL REF)
@@ -37,7 +39,7 @@ checkout_in_path("${EXTERNALS}/dng_sdk"
 )
 checkout_in_path("${EXTERNALS}/libgifcodec"
     "https://skia.googlesource.com/libgifcodec"
-    "d06d2a6d42baf6c0c91cacc28df2542a911d05fe"
+    "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
 )
 checkout_in_path("${EXTERNALS}/piex"
     "https://android.googlesource.com/platform/external/piex"
@@ -113,10 +115,19 @@ skia_enable_tools=false \
 skia_enable_spirv_validation=false")
 
 # used for passing feature-specific definitions to the config file
-set(SKIA_PUBLIC_DEFINITIONS "")
+set(SKIA_PUBLIC_DEFINITIONS 
+    SK_SUPPORT_PDF
+    SK_HAS_JPEG_LIBRARY
+    SK_USE_LIBGIFCODEC
+    SK_HAS_PNG_LIBRARY
+    SK_HAS_WEBP_LIBRARY
+    SK_XML)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPTIONS "${OPTIONS} is_component_build=true")
+    if(CMAKE_HOST_WIN32)
+        set(SKIA_PUBLIC_DEFINITIONS SKIA_DLL)
+    endif()
 else()
     set(OPTIONS "${OPTIONS} is_component_build=false")
 endif()
@@ -124,6 +135,26 @@ endif()
 if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
+endif()
+
+if("vulkan" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} skia_use_vulkan=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_VULKAN)
+endif()
+
+if("direct3d" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
+endif()
+
+if("dawn" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} skia_use_dawn=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
+endif()
+
+if("gl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} skia_use_gl=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
 endif()
 
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")

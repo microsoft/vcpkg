@@ -18,8 +18,9 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-find_library(SKIA_LIB NAMES skia skia.dll)
-target_link_libraries(skia INTERFACE "${SKIA_LIB}")
+target_link_libraries(skia INTERFACE
+    debug "${_IMPORT_PREFIX}/debug/lib/${CMAKE_IMPORT_LIBRARY_PREFIX}skia${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    optimized "${_IMPORT_PREFIX}/lib/${CMAKE_IMPORT_LIBRARY_PREFIX}skia${CMAKE_IMPORT_LIBRARY_SUFFIX}")
 
 function(set_dependencies CONFIG LIBRARIES)
     foreach(LIB ${LIBRARIES})
@@ -42,44 +43,17 @@ function(set_dependencies CONFIG LIBRARIES)
 endfunction()
 
 set_dependencies(Debug "${SKIA_DEP_DBG}")
+set_dependencies(RelWithDebInfo "${SKIA_DEP_REL}")
 set_dependencies(Release "${SKIA_DEP_REL}")
 
 set(SKIA_DEFINITIONS_DBG
-        _CRT_SECURE_NO_WARNINGS
-        _HAS_EXCEPTIONS=0
-        WIN32_LEAN_AND_MEAN
-        NOMINMAX
-        SK_GL
         SK_ENABLE_DUMP_GPU
-        SK_SUPPORT_PDF
-        SK_HAS_JPEG_LIBRARY
-        SK_USE_LIBGIFCODEC
         SK_HAS_HEIF_LIBRARY
-        SK_HAS_PNG_LIBRARY
         SK_ENABLE_SKSL_INTERPRETER
-        SK_HAS_WEBP_LIBRARY
-        SK_XML
-        SKIA_DLL
         SK_SUPPORT_ATLAS_TEXT=1)
 
-set(SKIA_DEFINITIONS_REL
-        _CRT_SECURE_NO_WARNINGS
-        _HAS_EXCEPTIONS=0
-        WIN32_LEAN_AND_MEAN
-        NOMINMAX
-        NDEBUG
-        SK_GL
-        SK_SUPPORT_PDF
-        SK_HAS_JPEG_LIBRARY
-        SK_USE_LIBGIFCODEC
-        SK_HAS_PNG_LIBRARY
-        SK_HAS_WEBP_LIBRARY
-        SK_XML
-        SKIA_DLL)
-
 target_compile_definitions(skia INTERFACE
-        $<$<CONFIG:Debug>:${SKIA_DEFINITIONS_DBG}>
-        $<$<CONFIG:Release>:${SKIA_DEFINITIONS_REL}>)
+        $<$<CONFIG:Debug>:${SKIA_DEFINITIONS_DBG}>)
 
 target_include_directories(skia INTERFACE ${_IMPORT_PREFIX}/include)
 target_compile_definitions(skia INTERFACE ${SKIA_PUBLIC_DEFINITIONS})
