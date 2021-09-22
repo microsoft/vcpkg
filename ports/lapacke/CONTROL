@@ -1,0 +1,4 @@
+Source: lapacke
+Version: 3.8.0
+Description: Metapackage for packages which provide LAPACKE
+Build-Depends: lapack, vcpkg-gfortran(windows)
