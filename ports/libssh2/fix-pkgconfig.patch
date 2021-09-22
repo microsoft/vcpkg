@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3965bb8..ce9712c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -68,7 +68,6 @@ if(CRYPTO_BACKEND STREQUAL "OpenSSL" OR NOT CRYPTO_BACKEND)
+     list(APPEND PRIVATE_COMPILE_DEFINITIONS LIBSSH2_OPENSSL)
+     list(APPEND PRIVATE_INCLUDE_DIRECTORIES ${OPENSSL_INCLUDE_DIR})
+     list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
+-    list(APPEND PC_REQUIRES_PRIVATE libssl libcrypto)
+ 
+     if (WIN32)
+       # Statically linking to OpenSSL requires crypt32 for some Windows APIs.

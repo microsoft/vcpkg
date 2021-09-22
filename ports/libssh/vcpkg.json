@@ -1,7 +1,6 @@
 {
   "name": "libssh",
-  "version-string": "0.9.5",
-  "port-version": 6,
+  "version": "0.9.6",
   "description": "libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side",
   "homepage": "https://www.libssh.org/",
   "supports": "!(uwp | arm)",
@@ -13,6 +12,14 @@
         "mbedtls"
       ],
       "platform": "android"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "default-features": [
