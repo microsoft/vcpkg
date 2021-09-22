@@ -34,8 +34,8 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
-    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_Clang
-    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
+    "qdoc"  CMAKE_DISABLE_FIND_PACKAGE_Clang
+    "qdoc"  CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
     )
 
  set(TOOL_NAMES 
