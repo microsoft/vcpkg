@@ -4354,7 +4354,7 @@
     },
     "mpi": {
       "baseline": "1",
-      "port-version": 1
+      "port-version": 2
     },
     "mpir": {
       "baseline": "3.0.0",
@@ -4406,7 +4406,7 @@
     },
     "msmpi": {
       "baseline": "10.1.12498",
-      "port-version": 1
+      "port-version": 2
     },
     "mstch": {
       "baseline": "1.0.2",
