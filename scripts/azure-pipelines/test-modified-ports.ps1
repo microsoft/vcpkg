@@ -37,8 +37,6 @@ Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]$Triplet,
-    [Parameter(Mandatory = $false)]
-    [string]$HostTriplet,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     $WorkingRoot,
@@ -56,15 +54,6 @@ Param(
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
     throw
-}
-
-if (-Not $null -eq $HostTriplet) {
-    if (-Not ((Test-Path "triplets/$HostTriplet.cmake") -or (Test-Path "triplets/community/$HostTriplet.cmake"))) {
-        Write-Error "Incorrect host triplet '$HostTriplet', please supply a valid triplet."
-        throw
-    }
-    #$cli_extra_argument = " --host-triplet=$HostTriplet "
-    #$env:VCPKG_DEFAULT_HOST_TRIPLET = $HostTriplet
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
@@ -141,11 +130,11 @@ if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
     # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
     # The workaround is to pass the skip list as host-excludes as well.
-    & "./vcpkg$executableExtension" ci $Triplet $cli_extra_argument--x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
 else
 {
-    & "./vcpkg$executableExtension" ci $Triplet $cli_extra_argument --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
 
 if ($LASTEXITCODE -ne 0)
