@@ -2,16 +2,16 @@ diff --git a/cmake/headers.cmake b/cmake/headers.cmake
 index 1aad359..e5053ed 100644
 --- a/cmake/headers.cmake
 +++ b/cmake/headers.cmake
-@@ -13,8 +13,6 @@ set(quickcpplib_HEADERS
+@@ -15,8 +15,6 @@ set(quickcpplib_HEADERS
    "include/quickcpplib/boost/test/unit_test.hpp"
    "include/quickcpplib/byte.hpp"
    "include/quickcpplib/byte/include/nonstd/byte.hpp"
 -  "include/quickcpplib/byte/test/byte-main.t.hpp"
--  "include/quickcpplib/byte/test/lest_cpp03.hpp"
+-  "include/quickcpplib/byte/test/lest/lest_cpp03.hpp"
    "include/quickcpplib/config.hpp"
    "include/quickcpplib/console_colours.hpp"
    "include/quickcpplib/cpp_feature.h"
-@@ -25,15 +23,8 @@ set(quickcpplib_HEADERS
+@@ -27,15 +25,8 @@ set(quickcpplib_HEADERS
    "include/quickcpplib/erasure_cast.hpp"
    "include/quickcpplib/execinfo_win64.h"
    "include/quickcpplib/function_ptr.hpp"
