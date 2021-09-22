@@ -1,6 +1,6 @@
 {
   "name": "kubernetes",
-  "version-string": "0.0.1",
+  "version": "0.0.1",
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "dependencies": [
