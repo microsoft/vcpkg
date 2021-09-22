@@ -3248,6 +3248,10 @@
       "baseline": "0.6.13",
       "port-version": 3
     },
+    "libctl": {
+      "baseline": "4.5.0",
+      "port-version": 0
+    },
     "libcuckoo": {
       "baseline": "0.3",
       "port-version": 1
@@ -4163,6 +4167,10 @@
     "mecab": {
       "baseline": "2019-09-25",
       "port-version": 2
+    },
+    "meep": {
+      "baseline": "1.15.0",
+      "port-version": 0
     },
     "memorymodule": {
       "baseline": "2019-12-31",
@@ -6970,7 +6978,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",
