@@ -9,9 +9,6 @@ function(boost_modular_build)
     endif()
 
     # Next CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
-    set(B2_OPTIONS)
-    set(B2_OPTIONS_DBG)
-    set(B2_OPTIONS_REL)
     set(B2_REQUIREMENTS) # this variable is used in the Jamroot.jam
 
     if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
@@ -28,12 +25,6 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
-
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        list(APPEND B2_OPTIONS windows-api=store)
-    endif()
-
-    set(_bm_DIR ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build)
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
@@ -79,55 +70,32 @@ function(boost_modular_build)
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
-    function(unix_build BOOST_LIB_SUFFIX BUILD_TYPE BUILD_LIB_PATH)
-        message(STATUS "Building ${BUILD_TYPE}...")
-        set(BOOST_LIB_SUFFIX ${BOOST_LIB_SUFFIX})
-        set(VARIANT ${BUILD_TYPE})
-        set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
-        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
-        set(configure_option)
-        if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-            list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
-        endif()
-
-        vcpkg_cmake_configure(
-            SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
-            GENERATOR Ninja
-            OPTIONS
-                "-DPORT=${PORT}"
-                "-DFEATURES=${FEATURES}"
-                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
-                "-DB2_EXE=${B2_EXE}"
-                "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
-                "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-                "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
-                ${configure_option}
-            MAYBE_UNUSED_VARIABLES
-                FEATURES
-        )
-        vcpkg_cmake_install()
-
-        vcpkg_copy_pdbs()
-    endfunction()
-
-    set(build_flag 0)
-    if(NOT DEFINED VCPKG_BUILD_TYPE)
-        set(build_flag 1)
-        set(VCPKG_BUILD_TYPE "release")
+    set(configure_options)
+    if(_bm_BOOST_CMAKE_FRAGMENT)
+        list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
 
-    if(VCPKG_BUILD_TYPE STREQUAL "release")
-        unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
-    endif()
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
+        GENERATOR Ninja
+        OPTIONS
+            "-DPORT=${PORT}"
+            "-DFEATURES=${FEATURES}"
+            "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
+            "-DB2_EXE=${B2_EXE}"
+            "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+            "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+            "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+            ${configure_options}
+        MAYBE_UNUSED_VARIABLES
+            FEATURES
+    )
 
-    if(build_flag)
-        set(VCPKG_BUILD_TYPE "debug")
-    endif()
+    vcpkg_cmake_install()
 
-    if(VCPKG_BUILD_TYPE STREQUAL "debug")
-        unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
-    endif()
+    vcpkg_copy_pdbs()
 
     file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
     foreach(LIB IN LISTS INSTALLED_LIBS)
