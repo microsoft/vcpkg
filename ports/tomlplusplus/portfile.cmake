@@ -3,14 +3,14 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "osx" "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO marzer/tomlplusplus
-    REF v2.4.0
-    SHA512 cfb8a1eeaed3350f8b5341b6893527c9571ee71416c0dc2d680d8739003cd5de85aad8efc0bdbf06e4ed7d3da0a942939509a86c035b551773df3e1b77afacbe
+    REF v2.5.0
+    SHA512 7394cda2009b37e88f9028ee5d1887120bed7042833c7cb218d7705cdc92273c81a84163ff0be034d3f23c8dd93e63b7615134a4b0e1c580e1e945fae45c7d35
     HEAD_REF master
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         -Dgenerate_cmake_config=true
         -Dbuild_tests=false
         -Dbuild_examples=false
