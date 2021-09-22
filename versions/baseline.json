@@ -3890,7 +3890,7 @@
     },
     "libwebsockets": {
       "baseline": "4.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4309,8 +4309,8 @@
       "port-version": 1
     },
     "mosquitto": {
-      "baseline": "1.6.8",
-      "port-version": 3
+      "baseline": "2.0.12",
+      "port-version": 0
     },
     "mozjpeg": {
       "baseline": "2020-06-02",
