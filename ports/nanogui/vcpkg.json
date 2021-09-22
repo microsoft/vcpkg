@@ -6,8 +6,12 @@
   "homepage": "https://github.com/wjakob/nanogui",
   "supports": "!uwp",
   "dependencies": [
-    "eigen3",
+    "glad",
     "glfw3",
-    "nanovg"
+    "nanovg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
