@@ -1,0 +1,21 @@
+{
+  "name": "kubernetes",
+  "version": "0.0.1",
+  "description": "Kubernetes C client",
+  "homepage": "https://github.com/kubernetes-client/c/",
+  "supports": "!uwp",
+  "dependencies": [
+    "curl",
+    "libwebsockets",
+    "libyaml",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
