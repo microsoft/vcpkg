@@ -1,4 +1,4 @@
-From 6492277e39dbe7dd77d32fdc9ae4b989213ef3c6 Mon Sep 17 00:00:00 2001
+From db0c2279a903547665434c8739a89b6872b66a72 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 20:15:58 -0400
 Subject: [PATCH 5/6] only build required projects
@@ -23,7 +23,7 @@ index 4dffa202b7..e661cb6fb6 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 4d416c589e..ede9868a8f 100644
+index 8e7088d47d..ba797e8afd 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
 @@ -45,21 +45,21 @@
@@ -56,5 +56,5 @@ index 4d416c589e..ede9868a8f 100644
      <ExtensionModules Include="@(ExternalModules->'%(Identity)')" Condition="$(IncludeExternals)" />
      <Projects Include="@(ExtensionModules->'%(Identity).vcxproj')" Condition="$(IncludeExtensions)" />
 -- 
-2.28.0.windows.1
+2.33.0.windows.1
 
