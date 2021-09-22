@@ -1,6 +1,6 @@
 {
   "name": "mapnik",
-  "version-date": "2021-09-15",
+  "version-date": "2021-09-22",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "supports": "!(static & windows)",

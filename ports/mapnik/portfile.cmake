@@ -3,12 +3,10 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mapnik/mapnik
-    REF 1ccbbf95b5e7bf254ab5b4dc21bdc373978c36a1
-    SHA512 21b4fc6e64d9b53550a046c5c9bcc32524324d7df39816b74b23a7ce2a64c4eeb291ad1c1aa09a3d5d79158f889ba8b7182cd0bf3435c39d1f17f33e4ffdce05
+    REPO mathisloge/mapnik
+    REF f1ed49edec8ab50d0263f5dfd4a3f77190c5f0d4
+    SHA512 102a8d0817aa493ff5928a313de5b873e800fb2b725f0a480caa07930a0bb0d2b07967373086c33cd55f0ba4832afe72ae4f7674485496bd2f68c40fa984fe1c
     HEAD_REF master
-    PATCHES
-        use-proj.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -34,7 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "input-sqlite"              USE_PLUGIN_INPUT_SQLITE
         "input-topojson"            USE_PLUGIN_INPUT_TOPOJSON
         "viewer"                    BUILD_DEMO_VIEWER
-        "demo"                      BUILD_DEMO_CPP
         "utility-geometry-to-wkb"   BUILD_UTILITY_GEOMETRY_TO_WKB
         "utility-mapnik-index"      BUILD_UTILITY_MAPNIK_INDEX
         "utility-mapnik-render"     BUILD_UTILITY_MAPNIK_RENDER
@@ -53,11 +50,12 @@ vcpkg_cmake_configure(
         -DINSTALL_DEPENDENCIES=OFF
         -DBUILD_TEST=OFF
         -DBUILD_BENCHMARK=OFF
+        -DBUILD_DEMO_CPP=OFF
         -DUSE_EXTERNAL_MAPBOX_GEOMETRY=ON
         -DUSE_EXTERNAL_MAPBOX_POLYLABEL=ON
         -DUSE_EXTERNAL_MAPBOX_PROTOZERO=ON
         -DUSE_EXTERNAL_MAPBOX_VARIANT=ON
-        -DINSTALL_CMAKE_DIR=share/mapnik/cmake
+        -DMAPNIK_CMAKE_DIR=share/mapnik/cmake
         -DFONTS_INSTALL_DIR=share/mapnik/fonts
 )
 
@@ -68,11 +66,6 @@ if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/plugins")
   file(COPY "${CURRENT_PACKAGES_DIR}/bin/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 vcpkg_copy_pdbs()
-
-if("demo" IN_LIST FEATURES)
-  file(COPY "${SOURCE_PATH}/demo/data" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/demo")
-  vcpkg_copy_tools(TOOL_NAMES mapnik-demo AUTO_CLEAN)
-endif()
 
 if("viewer" IN_LIST FEATURES)
   # copy the ini file to reference the plugins correctly
