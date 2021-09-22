@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
+  "supports": "!uwp",
   "dependencies": [
     "curl",
     "libwebsockets",
