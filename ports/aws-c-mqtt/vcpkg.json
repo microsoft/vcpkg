@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "s2n",
-      "platform": "!uwp"
+      "platform": "!uwp & !windows"
     },
     {
       "name": "vcpkg-cmake",

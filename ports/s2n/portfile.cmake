@@ -7,28 +7,20 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+		SOURCE_PATH "${SOURCE_PATH}"
+		PREFER_NINJA
+		OPTIONS
+			-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
-file(GLOB SHARED_CMAKE_FILES
-     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
-     "${CURRENT_PACKAGES_DIR}/lib/s2n"
-     )
-
-foreach(FILE ${SHARED_CMAKE_FILES})
-    file(COPY "${FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
-endforeach()
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
-	"${CURRENT_PACKAGES_DIR}/lib/s2n"
-	)
+#file(REMOVE_RECURSE
+#    "${CURRENT_PACKAGES_DIR}/debug"
+#	"${CURRENT_PACKAGES_DIR}/lib/s2n"
+#	)
 
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
