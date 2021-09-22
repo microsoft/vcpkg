@@ -238,13 +238,13 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -263,13 +263,13 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
