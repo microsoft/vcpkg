@@ -1,6 +1,6 @@
 {
   "name": "boost-concept-check",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost concept_check module",
   "homepage": "https://github.com/boostorg/concept_check",
   "dependencies": [

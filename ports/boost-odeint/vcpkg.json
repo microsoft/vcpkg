@@ -1,6 +1,6 @@
 {
   "name": "boost-odeint",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "dependencies": [
@@ -14,6 +14,10 @@
     "boost-fusion",
     "boost-iterator",
     "boost-math",
+    {
+      "name": "boost-mpi",
+      "platform": "!uwp"
+    },
     "boost-mpl",
     "boost-multi-array",
     "boost-preprocessor",
@@ -21,6 +25,7 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
+    "boost-ublas",
     "boost-units",
     "boost-utility",
     "boost-vcpkg-helpers"

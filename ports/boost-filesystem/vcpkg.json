@@ -1,19 +1,20 @@
 {
   "name": "boost-filesystem",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost filesystem module",
   "homepage": "https://github.com/boostorg/filesystem",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
+    "boost-atomic",
     {
       "name": "boost-build",
       "host": true
     },
     "boost-config",
+    "boost-container-hash",
     "boost-core",
     "boost-detail",
-    "boost-functional",
     "boost-io",
     "boost-iterator",
     {
@@ -25,6 +26,10 @@
     "boost-system",
     "boost-type-traits",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

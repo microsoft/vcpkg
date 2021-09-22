@@ -1,6 +1,6 @@
 {
   "name": "boost-static-string",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost static_string module",
   "homepage": "https://github.com/boostorg/static_string",
   "dependencies": [

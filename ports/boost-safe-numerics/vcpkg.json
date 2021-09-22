@@ -1,6 +1,6 @@
 {
   "name": "boost-safe-numerics",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost safe_numerics module",
   "homepage": "https://github.com/boostorg/safe_numerics",
   "dependencies": [

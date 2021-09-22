@@ -1,6 +1,6 @@
 {
   "name": "boost-icl",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost icl module",
   "homepage": "https://github.com/boostorg/icl",
   "dependencies": [
@@ -8,6 +8,7 @@
     "boost-concept-check",
     "boost-config",
     "boost-container",
+    "boost-core",
     "boost-date-time",
     "boost-detail",
     "boost-iterator",

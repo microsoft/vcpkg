@@ -1,6 +1,6 @@
 {
   "name": "boost-log",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost log module",
   "homepage": "https://github.com/boostorg/log",
   "supports": "!uwp & !emscripten",
@@ -22,7 +22,6 @@
     "boost-container",
     "boost-core",
     "boost-date-time",
-    "boost-detail",
     "boost-exception",
     {
       "name": "boost-filesystem",
@@ -35,11 +34,6 @@
     "boost-io",
     "boost-iterator",
     "boost-lexical-cast",
-    {
-      "name": "boost-locale",
-      "platform": "!uwp"
-    },
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -67,6 +61,10 @@
     "boost-utility",
     "boost-vcpkg-helpers",
     "boost-winapi",
-    "boost-xpressive"
+    "boost-xpressive",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

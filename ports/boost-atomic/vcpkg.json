@@ -1,6 +1,6 @@
 {
   "name": "boost-atomic",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost atomic module",
   "homepage": "https://github.com/boostorg/atomic",
   "dependencies": [
@@ -20,6 +20,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

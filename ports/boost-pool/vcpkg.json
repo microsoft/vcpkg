@@ -1,12 +1,11 @@
 {
   "name": "boost-pool",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost pool module",
   "homepage": "https://github.com/boostorg/pool",
   "dependencies": [
     "boost-assert",
     "boost-config",
-    "boost-detail",
     "boost-integer",
     "boost-throw-exception",
     "boost-type-traits",

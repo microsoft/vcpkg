@@ -1,13 +1,12 @@
 {
   "name": "boost-poly-collection",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost poly_collection module",
   "homepage": "https://github.com/boostorg/poly_collection",
   "dependencies": [
     "boost-assert",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-iterator",
     "boost-mp11",
     "boost-mpl",

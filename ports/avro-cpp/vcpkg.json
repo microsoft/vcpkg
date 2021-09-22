@@ -1,6 +1,7 @@
 {
   "name": "avro-cpp",
   "version-date": "2021-06-01",
+  "port-version": 1,
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
   "supports": "!(windows & static)",
@@ -9,6 +10,7 @@
     "boost-filesystem",
     "boost-format",
     "boost-iostreams",
+    "boost-math",
     "boost-program-options",
     "boost-random",
     "boost-test",

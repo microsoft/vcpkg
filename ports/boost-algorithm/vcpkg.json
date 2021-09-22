@@ -1,6 +1,6 @@
 {
   "name": "boost-algorithm",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost algorithm module",
   "homepage": "https://github.com/boostorg/algorithm",
   "dependencies": [
@@ -10,7 +10,6 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-exception",
     "boost-function",
     "boost-iterator",
@@ -22,7 +21,6 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-unordered",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

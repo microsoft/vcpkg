@@ -1,6 +1,6 @@
 {
   "name": "boost",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "dependencies": [
@@ -49,6 +49,7 @@
     },
     "boost-crc",
     "boost-date-time",
+    "boost-describe",
     "boost-detail",
     "boost-dll",
     "boost-dynamic-bitset",
@@ -72,7 +73,10 @@
     "boost-geometry",
     "boost-gil",
     "boost-graph",
-    "boost-graph-parallel",
+    {
+      "name": "boost-graph-parallel",
+      "platform": "!uwp"
+    },
     "boost-hana",
     "boost-heap",
     "boost-histogram",
@@ -80,7 +84,6 @@
     "boost-icl",
     "boost-integer",
     "boost-interprocess",
-    "boost-interval",
     "boost-interval",
     "boost-intrusive",
     "boost-io",
@@ -91,6 +94,7 @@
     "boost-iterator",
     "boost-json",
     "boost-lambda",
+    "boost-lambda2",
     "boost-leaf",
     "boost-lexical-cast",
     "boost-local-function",
@@ -108,6 +112,10 @@
     "boost-metaparse",
     "boost-move",
     "boost-mp11",
+    {
+      "name": "boost-mpi",
+      "platform": "!uwp"
+    },
     "boost-mpl",
     "boost-msm",
     "boost-multi-array",
@@ -115,8 +123,6 @@
     "boost-multiprecision",
     "boost-nowide",
     "boost-numeric-conversion",
-    "boost-numeric-conversion",
-    "boost-odeint",
     "boost-odeint",
     "boost-optional",
     "boost-outcome",
@@ -138,6 +144,7 @@
     },
     "boost-program-options",
     "boost-property-map",
+    "boost-property-map-parallel",
     "boost-property-tree",
     "boost-proto",
     "boost-ptr-container",
@@ -151,7 +158,6 @@
     "boost-ratio",
     "boost-rational",
     "boost-regex",
-    "boost-safe-numerics",
     "boost-safe-numerics",
     "boost-scope-exit",
     "boost-serialization",
@@ -183,7 +189,6 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-ublas",
-    "boost-ublas",
     "boost-units",
     "boost-unordered",
     "boost-utility",
@@ -203,6 +208,7 @@
     "mpi": {
       "description": "Build with MPI support",
       "dependencies": [
+        "boost-graph-parallel",
         "boost-mpi"
       ]
     }

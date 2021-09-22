@@ -21,11 +21,6 @@ else()
     list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
 endif()
 
-if(DEFINED BOOST_CMAKE_FRAGMENT)
-    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
-    include(${BOOST_CMAKE_FRAGMENT})
-endif()
-
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -174,7 +169,6 @@ if(APPLE)
   string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
 endif()
 
-set(TOOLSET_OPTIONS)
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     # cl in b2 appears to not receive `LIBPATH` for finding winmd files, so we transform them to `/AI` options.
     set(libpath_args "$ENV{LIBPATH}")
@@ -187,8 +181,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(TRANSFORM libpath_args REPLACE "\\\"" "\\\\\"")
     list(JOIN libpath_args " " libpath_arg)
 
-    set(TOOLSET_OPTIONS "<cflags>-Zl <compileflags>\"${libpath_arg}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+    string(APPEND CXXFLAGS " <compileflags>\"${libpath_arg}\" <cxxflags>/ZW <compileflags>\"/D_WIN32_WINNT=0x0A00\"")
+    string(APPEND CFLAGS " <cflags>-Zl")
     list(APPEND B2_OPTIONS windows-api=store)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
 endif()
 
 find_path(ZLIB_INCLUDE zlib.h)
@@ -250,6 +246,12 @@ endif()
 
 if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
+endif()
+
+# Include port specific CMake fragment
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
+    include(${BOOST_CMAKE_FRAGMENT})
 endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)

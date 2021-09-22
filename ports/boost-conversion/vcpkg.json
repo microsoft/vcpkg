@@ -1,6 +1,6 @@
 {
   "name": "boost-conversion",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost conversion module",
   "homepage": "https://github.com/boostorg/conversion",
   "dependencies": [
@@ -11,7 +11,6 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

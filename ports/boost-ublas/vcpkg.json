@@ -1,6 +1,6 @@
 {
   "name": "boost-ublas",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost ublas module",
   "homepage": "https://github.com/boostorg/ublas",
   "dependencies": [
@@ -8,6 +8,7 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
+    "boost-interval",
     "boost-iterator",
     "boost-mpl",
     "boost-range",
@@ -16,7 +17,6 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

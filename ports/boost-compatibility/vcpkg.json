@@ -1,6 +1,6 @@
 {
   "name": "boost-compatibility",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost compatibility module",
   "homepage": "https://github.com/boostorg/compatibility",
   "dependencies": [

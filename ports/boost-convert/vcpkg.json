@@ -1,6 +1,6 @@
 {
   "name": "boost-convert",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost convert module",
   "homepage": "https://github.com/boostorg/convert",
   "dependencies": [

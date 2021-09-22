@@ -1,21 +1,22 @@
 {
   "name": "boost-asio",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "supports": "!emscripten",
   "dependencies": [
+    "boost-align",
     "boost-array",
     "boost-assert",
     "boost-bind",
     "boost-chrono",
     "boost-config",
+    "boost-core",
     {
       "name": "boost-coroutine",
       "platform": "!arm & !uwp & !emscripten"
     },
     "boost-date-time",
-    "boost-detail",
     "boost-function",
     "boost-regex",
     "boost-smart-ptr",

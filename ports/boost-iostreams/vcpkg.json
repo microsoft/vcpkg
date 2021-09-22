@@ -1,6 +1,6 @@
 {
   "name": "boost-iostreams",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "supports": "!uwp",
@@ -15,6 +15,7 @@
     "boost-detail",
     "boost-function",
     "boost-integer",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -22,6 +23,7 @@
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-preprocessor",
+    "boost-random",
     "boost-range",
     "boost-regex",
     "boost-smart-ptr",
@@ -32,6 +34,10 @@
     "boost-vcpkg-helpers",
     "bzip2",
     "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]
