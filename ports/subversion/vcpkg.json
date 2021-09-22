@@ -1,0 +1,13 @@
+{
+  "name": "subversion",
+  "version-string": "1.14.1",
+  "description": "Apache Subversion is an open source version control system. The Subversion project and software have seen incredible success over the past decade. Subversion has enjoyed and continues to enjoy widespread adoption in both the open source arena and the corporate world.",
+  "homepage": "https://subversion.apache.org",
+  "dependencies": [
+    "apr",
+    "apr-util",
+    "serf",
+    "sqlite3",
+    "zlib"
+  ]
+}
