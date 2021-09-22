@@ -18,6 +18,7 @@ The latter is suggested to use for all future `vcpkg_extract_source_archive`s.
 vcpkg_extract_source_archive(<out-var>
     ARCHIVE <path>
     [NO_REMOVE_ONE_LEVEL]
+    [SKIP_PATCH_CHECK]
     [PATCHES <patch>...]
     [SOURCE_BASE <base>]
     [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
@@ -58,6 +59,10 @@ prevent `vcpkg_extract_source_archive` from performing this transformation.
 
 If the source needs to be patched in some way, the `PATCHES` argument
 allows one to do this, just like other `vcpkg_from_*` functions.
+Additionally, the `SKIP_PATCH_CHECK` is provided for `--head` mode -
+this allows patches to fail to apply silently.
+This argument should _only_ be used when installing a `--head` library,
+since otherwise we want a patch failing to appply to be a hard error.
 
 `vcpkg_extract_source_archive` extracts the files to
 `${CURRENT_BUILDTREES_DIR}/<base-directory>/<source-base>-<hash>.clean`.
@@ -221,7 +226,7 @@ function(vcpkg_extract_source_archive)
         endif()
     endif()
 
-    if (arg_Z_SKIP_PATCH_CHECK)
+    if (arg_SKIP_PATCH_CHECK)
         set(quiet_param QUIET)
     else()
         set(quiet_param "")
@@ -239,4 +244,3 @@ function(vcpkg_extract_source_archive)
     set("${out_source_path}" "${source_path}" PARENT_SCOPE)
     message(STATUS "Using source at ${source_path}")
 endfunction()
-
