@@ -6808,6 +6808,10 @@
       "baseline": "3",
       "port-version": 1
     },
+    "vcpkg-make": {
+      "baseline": "2021-08-25",
+      "port-version": 0
+    },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2021-04-02",
       "port-version": 1
@@ -6970,7 +6974,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",

@@ -1,5 +1,7 @@
 # vcpkg_build_make
 
+**This function has been deprecated in favor of [`vcpkg_make_build`](ports/vcpkg-make/vcpkg_make_build.md) from the vcpkg-make port.**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_build_make.md).
 
 Build a linux makefile project.

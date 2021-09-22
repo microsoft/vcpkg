@@ -34,7 +34,7 @@ if(VCPKG_TARGET_IS_LINUX)
     list(APPEND OPTIONS --enable-pic)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     NO_ADDITIONAL_PATHS
     OPTIONS
@@ -50,7 +50,7 @@ vcpkg_configure_make(
 
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(NOT VCPKG_TARGET_IS_UWP)
     vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)

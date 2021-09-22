@@ -12,12 +12,12 @@ vcpkg_from_github(
 )
 
 # note: check ${SOURCE_PATH}/liburing.spec before updating configure options
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
     NO_DEBUG
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE 

@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-make/vcpkg_make_configure
 #[===[.md:
 # vcpkg_configure_make
 
@@ -236,6 +237,11 @@ function(vcpkg_configure_make)
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
+
+    if(NOT arg_Z_GET_MAKE_VARS_USAGE AND Z_VCPKG_MAKE_CONFIGURE_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-make; using both vcpkg-make and vcpkg_configure_make in the same port is unsupported.")
+    endif()
+    
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")

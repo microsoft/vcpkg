@@ -62,7 +62,7 @@ else(VCPKG_TARGET_IS_WINDOWS)
         message(STATUS "Configuring apr-util")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         NO_DEBUG
         OPTIONS 
@@ -75,7 +75,7 @@ else(VCPKG_TARGET_IS_WINDOWS)
             "${CONFIGURE_PARAMETER_3}"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 
 endif()
 

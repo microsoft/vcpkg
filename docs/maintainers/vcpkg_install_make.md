@@ -1,5 +1,7 @@
 # vcpkg_install_make
 
+**This function has been deprecated in favor of [`vcpkg_make_install`](ports/vcpkg-make/vcpkg_make_install.md) from the vcpkg-make port.**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_make.md).
 
 Build and install a make project.

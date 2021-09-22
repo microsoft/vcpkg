@@ -10,17 +10,17 @@ vcpkg_from_sourceforge(
     PATCHES fix-dependency.patch
 )
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH src/cxx
+    AUTOCONFIG
     COPY_SOURCE
     OPTIONS
         --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
         --with-libcfitsio-lib=${CURRENT_INSTALLED_DIR}/lib
 )
 
-vcpkg_build_make(BUILD_TARGET compile_all)
+vcpkg_make_build(BUILD_TARGET compile_all)
 #vcpkg_fixup_pkgconfig()
 
 # Install manually because healpix has no install target

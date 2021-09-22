@@ -41,7 +41,7 @@ if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH source
     OPTIONS ${CONFIGURE_OPTIONS}
@@ -52,7 +52,7 @@ vcpkg_configure_make(
 
 if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release"))
 
-    vcpkg_build_make()
+    vcpkg_make_build()
     # remove this block if https://unicode-org.atlassian.net/browse/ICU-21458
     # is resolved and use the configure script instead
     if(DEFINED CMAKE_INSTALL_NAME_DIR)
@@ -121,7 +121,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT DEF
     )
 endif()
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(VCPKG_TARGET_IS_MINGW)
     file(GLOB ICU_TOOLS

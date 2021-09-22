@@ -26,16 +26,17 @@ if (NOT VCPKG_TARGET_IS_ANDROID)
     list(APPEND OPTIONS --enable-relocatable)
 endif()
 
-vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}
-                     DETERMINE_BUILD_TRIPLET
-                     USE_WRAPPERS
-                     OPTIONS
-                        --enable-extra-encodings
-                        --without-libiconv-prefix 
-                        --without-libintl-prefix
-                        ${OPTIONS}
-                    )
-vcpkg_install_make()
+vcpkg_make_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    DETERMINE_BUILD_TRIPLET
+    USE_WRAPPERS
+    OPTIONS
+       --enable-extra-encodings
+       --without-libiconv-prefix 
+       --without-libintl-prefix
+       ${OPTIONS}
+)
+vcpkg_make_install()
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)

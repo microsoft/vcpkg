@@ -40,14 +40,14 @@ set(OPTIONS_RELEASE
     --without-debug
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
     NO_ADDITIONAL_PATHS
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 vcpkg_fixup_pkgconfig()
 

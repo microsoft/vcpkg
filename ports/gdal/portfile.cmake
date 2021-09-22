@@ -322,7 +322,7 @@ else()
         list(APPEND CONF_OPTS "--with-tools=no")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
@@ -354,8 +354,8 @@ else()
         endif()
     endforeach()
 
-    vcpkg_install_make(MAKEFILE GNUmakefile)
-
+    vcpkg_make_install(MAKEFILE GNUmakefile)
+    
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/lib/gdalplugins"
         "${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins"
