@@ -4,7 +4,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(STATIC_PATCH "001-automagically-define-modplug-static.patch")
 endif()
 
-vcpkg_from_github(ARCHIVE
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Konstanty/libmodplug
     REF ${MODPLUG_HASH}
@@ -28,10 +28,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_TARGET_IS_WINDOWS)
     else()
         set(BIN_NAME modplug.dll)
     endif()
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/bin/${BIN_NAME})
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/debug/bin/${BIN_NAME})
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+      file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/bin/${BIN_NAME})
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/debug/bin/${BIN_NAME})
+    endif()
     vcpkg_copy_pdbs()
 endif()
 

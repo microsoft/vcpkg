@@ -16,7 +16,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    
+
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
@@ -29,7 +29,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/include/calceph.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
 else() # Build in UNIX
@@ -40,10 +42,10 @@ else() # Build in UNIX
       --enable-fortran=no
       --enable-thread=yes
     )
-    
+
     vcpkg_install_make()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    
+
 endif()
 
     file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)

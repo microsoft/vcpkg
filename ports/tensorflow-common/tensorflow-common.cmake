@@ -125,7 +125,15 @@ else()
 	endif()
 endif()
 
-foreach(BUILD_TYPE dbg rel)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND PORT_BUILD_CONFIGS "dbg")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  list(APPEND PORT_BUILD_CONFIGS "rel")
+endif()
+
+foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
 	set(WINDOWS_ONLY_PATCHES)

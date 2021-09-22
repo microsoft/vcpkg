@@ -798,7 +798,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.76.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.76.0",
@@ -1186,7 +1186,7 @@
     },
     "calceph": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "camport3": {
       "baseline": "1.5.3",
@@ -1750,7 +1750,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "devicenameresolver": {
       "baseline": "2016-06-26-0850d88fa6",
@@ -2970,7 +2970,7 @@
     },
     "kf5config": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5configwidgets": {
       "baseline": "5.84.0",
@@ -3002,7 +3002,7 @@
     },
     "kf5holidays": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5i18n": {
       "baseline": "5.84.0",
@@ -3030,7 +3030,7 @@
     },
     "kf5plotting": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5service": {
       "baseline": "5.84.0",
@@ -3038,7 +3038,7 @@
     },
     "kf5solid": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5sonnet": {
       "baseline": "5.84.0",
@@ -3206,7 +3206,7 @@
     },
     "libbacktrace": {
       "baseline": "2021-03-14",
-      "port-version": 0
+      "port-version": 1
     },
     "libbf": {
       "baseline": "1.0.0",
@@ -3310,7 +3310,7 @@
     },
     "libffi": {
       "baseline": "3.4.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libfido2": {
       "baseline": "1.7.0",
@@ -3438,7 +3438,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "2.0.6",
-      "port-version": 2
+      "port-version": 3
     },
     "libjuice": {
       "baseline": "0.8.4",
@@ -3522,7 +3522,7 @@
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
-      "port-version": 8
+      "port-version": 9
     },
     "libmorton": {
       "baseline": "0.2",
@@ -4682,11 +4682,11 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 5
+      "port-version": 6
     },
     "ogre-next": {
       "baseline": "2019-10-20",
-      "port-version": 2
+      "port-version": 3
     },
     "ois": {
       "baseline": "1.5",
@@ -6406,7 +6406,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
@@ -6970,7 +6970,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",
@@ -7122,7 +7122,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 12
+      "port-version": 13
     },
     "zlib-ng": {
       "baseline": "2.0.3",
