@@ -86,22 +86,17 @@ if (WIN32)
     target_link_libraries(enet winmm ws2_32)
 endif()
 
-set(INSTALL_TARGETS enet)
 set(ENET_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/enet)
 
-install(TARGETS enet EXPORT enetConfig
+install(TARGETS enet EXPORT unofficial-enet-config
                      ARCHIVE DESTINATION lib
                      LIBRARY DESTINATION lib
                      RUNTIME DESTINATION bin)
 
-export(TARGETS ${INSTALL_TARGETS}
-    NAMESPACE enet::
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/enetConfig.cmake"
-)
-
-install(EXPORT
-    enetConfig DESTINATION ${ENET_CMAKE_DIR}
-    NAMESPACE enet::
+INSTALL(EXPORT unofficial-enet-config
+    NAMESPACE unofficial::enet::
+    FILE unofficial-enet-config.cmake
+    DESTINATION share/unofficial-enet
 )
 
 install(DIRECTORY include/
