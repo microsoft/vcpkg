@@ -1,0 +1,21 @@
+diff --git a/SMP/libgnutls.vcxproj b/SMP/libgnutls.vcxproj
+index f3950a28..b0b2acca 100644
+--- a/SMP/libgnutls.vcxproj
++++ b/SMP/libgnutls.vcxproj
+@@ -241,16 +241,6 @@
+     <ClInclude Include="version.h" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ClCompile Include="..\devel\libtasn1\lib\coding.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\decoding.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\element.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\errors.c">
+-      <ObjectFileName>$(IntDir)\tasn1_$(filename).obj</ObjectFileName>
+-    </ClCompile>
+-    <ClCompile Include="..\devel\libtasn1\lib\gstr.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\parser_aux.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\structure.c" />
+-    <ClCompile Include="..\devel\libtasn1\lib\version.c" />
+     <ClCompile Include="..\gnulib\lib\c-strcasecmp.c" />
+     <ClCompile Include="..\gnulib\lib\c-strncasecmp.c" />
+     <ClCompile Include="..\gnulib\lib\hash-pjw-bare.c" />
