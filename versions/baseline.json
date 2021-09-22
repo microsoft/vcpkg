@@ -3265,7 +3265,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.14.6",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "libdshowcapture": {
@@ -6246,7 +6246,7 @@
     },
     "sqlite3": {
       "baseline": "3.36.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
