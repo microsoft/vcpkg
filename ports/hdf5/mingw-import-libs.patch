@@ -1,16 +1,17 @@
-diff -urw a/config/cmake_ext_mod/HDFMacros.cmake b/config/cmake_ext_mod/HDFMacros.cmake
---- a/config/cmake_ext_mod/HDFMacros.cmake	2020-03-03 00:03:12.000000000 +0100
-+++ b/config/cmake_ext_mod/HDFMacros.cmake	2021-05-12 07:56:13.703041807 +0200
-@@ -144,7 +144,7 @@
+diff --git a/config/cmake_ext_mod/HDFMacros.cmake b/config/cmake_ext_mod/HDFMacros.cmake
+index ae0ebca83d..89f516b2bf 100644
+--- a/config/cmake_ext_mod/HDFMacros.cmake
++++ b/config/cmake_ext_mod/HDFMacros.cmake
+@@ -142,7 +142,7 @@ macro (HDF_SET_LIB_OPTIONS libtarget libname libtype)
    endif ()
  
-   #----- Use MSVC Naming conventions for Shared Libraries
--  if (MINGW AND ${libtype} MATCHES "SHARED")
-+  if (FALSE AND MINGW AND ${libtype} MATCHES "SHARED")
+   option (HDF5_MSVC_NAMING_CONVENTION "Use MSVC Naming conventions for Shared Libraries" OFF)
+-  if (HDF5_MSVC_NAMING_CONVENTION AND MINGW AND ${libtype} MATCHES "SHARED")
++  if (FALSE AND HDF5_MSVC_NAMING_CONVENTION AND MINGW AND ${libtype} MATCHES "SHARED")
      set_target_properties (${libtarget} PROPERTIES
          IMPORT_SUFFIX ".lib"
          IMPORT_PREFIX ""
-@@ -168,7 +168,7 @@
+@@ -166,7 +166,7 @@ macro (HDF_IMPORT_SET_LIB_OPTIONS libtarget libname libtype libversion)
  
    if (${libtype} MATCHES "SHARED")
      if (WIN32)
@@ -19,7 +20,7 @@ diff -urw a/config/cmake_ext_mod/HDFMacros.cmake b/config/cmake_ext_mod/HDFMacro
          set_target_properties (${libtarget} PROPERTIES
              IMPORTED_IMPLIB "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${IMPORT_LIB_NAME}.lib"
              IMPORTED_LOCATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${IMPORT_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}"
-@@ -180,7 +180,7 @@
+@@ -178,7 +178,7 @@ macro (HDF_IMPORT_SET_LIB_OPTIONS libtarget libname libtype libversion)
          )
        endif ()
      else ()
