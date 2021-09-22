@@ -70,12 +70,22 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
 
     file(SHA512 "${path}" file_hash)
     if(NOT "${file_hash}" STREQUAL "${sha512}")
-        message(FATAL_ERROR
-            "\nFile does not have expected hash:\n"
+        if(Z_VCPKG_SHA512_MISMATCH_NO_ERROR)
+            message("b360a6a9-fb74-41de-a4c5-a7faf126d565")
+            message(WARNING
+            "\n7279eda6-681f-46e0-aa5d-679ec14a2fb9\n"
+            "expected=${sha512}\n"
+            "actual=${file_hash}\n"
+            "6982135f-5ad4-406f-86e3-f2e19c8966ef\n")
+            message("9d36a06a-0efa-470a-9a1e-63a26be67a84")
+        else()
+            message(FATAL_ERROR
+            "\nFile does not have the expected hash:\n"
             "        File path: [ ${file_path} ]\n"
             "    Expected hash: [ ${sha512} ]\n"
             "      Actual hash: [ ${file_hash} ]\n"
             "${CUSTOM_ERROR_ADVICE}\n")
+        endif()
     endif()
 endfunction()
 
@@ -254,6 +264,10 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         vcpkg_list(SET sha512_param "--sha512=${arg_SHA512}")
     endif()
 
+    if(Z_VCPKG_SHA512_MISMATCH_NO_ERROR)
+        vcpkg_list(APPEND sha512_param "--only-warn-sha512-mismatch" "--sha512-mismatch-guid-wrapped")
+    endif()
+
     if(NOT EXISTS "${downloaded_file_path}" OR arg_ALWAYS_REDOWNLOAD)
         vcpkg_execute_in_download_mode(
             COMMAND "$ENV{VCPKG_COMMAND}" x-download
@@ -272,6 +286,12 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         if(NOT "${error_code}" EQUAL "0")
             message("${output}")
             z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
+        endif()
+        if(Z_VCPKG_SHA512_MISMATCH_NO_ERROR AND output MATCHES "7279eda6-681f-46e0-aa5d-679ec14a2fb9")
+            message("b360a6a9-fb74-41de-a4c5-a7faf126d565")
+            message("${output}")
+            message(WARNING "Hash mismatch")
+            message("9d36a06a-0efa-470a-9a1e-63a26be67a84")
         endif()
     endif()
 
