@@ -12,16 +12,12 @@ vcpkg_cmake_configure(
     PREFER_NINJA
     OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+		-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-mqtt/cmake)
-
-vcpkg_copy_tools(
-    TOOL_NAMES elastipubsub
-    AUTO_CLEAN
-)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 

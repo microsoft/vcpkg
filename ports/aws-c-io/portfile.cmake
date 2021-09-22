@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     PREFER_NINJA
 	OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+		-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()

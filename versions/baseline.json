@@ -254,7 +254,7 @@
     },
     "aws-c-cal": {
       "baseline": "0.5.11",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-common": {
       "baseline": "0.6.9",
@@ -262,7 +262,7 @@
     },
     "aws-c-compression": {
       "baseline": "0.2.14",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-event-stream": {
       "baseline": "0.2.7",
@@ -3095,6 +3095,10 @@
     "kubazip": {
       "baseline": "0.1.19",
       "port-version": 1
+    },
+    "kubernetes": {
+      "baseline": "0.0.1",
+      "port-version": 0
     },
     "kuku": {
       "baseline": "2.1",

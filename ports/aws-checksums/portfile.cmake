@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DSTATIC_CRT=${STATIC_CRT_LNK}"
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+		-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()

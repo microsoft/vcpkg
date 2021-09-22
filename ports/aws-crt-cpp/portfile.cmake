@@ -7,25 +7,25 @@ vcpkg_from_github(
         fix-cmake-target-path.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+if(MSVC)
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+
+    set(EXTRA_ARGS "-DSTATIC_CRT=${STATIC_CRT}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        "-DSTATIC_CRT=${STATIC_CRT}"
+        ${EXTRA_ARGS}
         "-DBUILD_DEPS=OFF"
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-crt-cpp/cmake)
-
-vcpkg_copy_tools(
-    TOOL_NAMES elasticurl_cpp
-    AUTO_CLEAN
-)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 

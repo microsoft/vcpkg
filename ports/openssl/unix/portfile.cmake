@@ -27,8 +27,6 @@ vcpkg_configure_cmake(
         -DPERL=${PERL}
         -DMAKE=${MAKE}
         -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
-    OPTIONS_RELEASE
-        -DINSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
