@@ -29,6 +29,7 @@ vcpkg_configure_cmake(
         -DWITH_TLS_PSK=ON
         -DWITH_THREADING=ON
         -DDOCUMENTATION=OFF
+        -DWITH_PLUGINS=OFF
 )
 
 vcpkg_install_cmake()
