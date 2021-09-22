@@ -72,9 +72,6 @@
         "cairomm"
       ]
     },
-    "demo": {
-      "description": "Make demo application"
-    },
     "grid-renderer": {
       "description": "Grid renderer"
     },
