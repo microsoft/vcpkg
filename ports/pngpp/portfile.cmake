@@ -10,6 +10,9 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
+# Patch error.hpp: fix `strerror_r` not existing + `strerror_s` not being detected on MSVC
+vcpkg_replace_string(${SOURCE_PATH}/error.hpp "defined(__STDC_LIB_EXT1__)" "defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)")
+
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.hpp)
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/png++)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
