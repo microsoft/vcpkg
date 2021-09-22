@@ -1,0 +1,223 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4063020..6dfe09c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,3 +78,51 @@ include(build/cmake/main.cmake)
+ if(wxBUILD_SAMPLES AND wxUSE_GUI)
+     set_directory_properties(PROPERTIES VS_STARTUP_PROJECT minimal)
+ endif()
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake.in"
++[[include(CMakeFindDependencyMacro)
++if (@wxUSE_ZLIB@ STREQUAL "sys")
++    find_dependency(ZLIB)
++endif()
++if (@wxUSE_EXPAT@ STREQUAL "sys")
++    find_dependency(EXPAT)
++endif()
++if (@wxUSE_LIBJPEG@ STREQUAL "sys")
++    find_dependency(JPEG)
++endif()
++if (@wxUSE_LIBPNG@ STREQUAL "sys")
++    find_dependency(PNG)
++endif()
++if (@wxUSE_LIBTIFF@ STREQUAL "sys")
++    find_dependency(TIFF)
++endif()
++
++list(APPEND TARGET_FILES wxregex wxscintilla wxbase wxcore)
++if (@wxUSE_OPENGL@)
++    list(APPEND TARGET_FILES wxgl)
++endif()
++if (@wxUSE_XML@)
++    list(APPEND TARGET_FILES wxxml)
++endif()
++list(APPEND TARGET_FILES wxhtml wxxrc wxstc wxwebview)
++if (@wxUSE_SOCKETS@)
++    list(APPEND TARGET_FILES wxnet)
++endif()
++list(APPEND TARGET_FILES wxpropgrid)
++if (@wxUSE_DEBUGREPORT@)
++    list(APPEND TARGET_FILES wxqa)
++endif()
++list(APPEND TARGET_FILES wxribbon wxrichtext)
++if (@wxUSE_MEDIACTRL@)
++    list(APPEND TARGET_FILES wxmedia)
++endif()
++list(APPEND TARGET_FILES wxadv wxaui)
++
++foreach (TARGET_FILE ${TARGET_FILES})
++    include("${CMAKE_CURRENT_LIST_DIR}/unofficial-${TARGET_FILE}Targets.cmake")
++endforeach()
++
++set(wxWidgets_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../tools/wxwidgets/wx-config")
++]])
++configure_file(${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake DESTINATION share/unofficial-wxwidgets)
+\ No newline at end of file
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index e99555e..468426e 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -257,13 +257,20 @@ function(wx_set_target_properties target_name is_base)
+     target_include_directories(${target_name}
+         BEFORE
+         PUBLIC
+-            ${wxSETUP_HEADER_PATH}
+-            ${wxSOURCE_DIR}/include
++            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
++            "$<BUILD_INTERFACE:${wxSOURCE_DIR}/include>"
++            $<INSTALL_INTERFACE:include>
+         )
+ 
++    if (NOT MSVC)
++        target_include_directories(${target_name}
++            PUBLIC $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
++        )
++    endif()
++
+     if(wxTOOLKIT_INCLUDE_DIRS)
+         target_include_directories(${target_name}
+-            PUBLIC ${wxTOOLKIT_INCLUDE_DIRS})
++            PUBLIC "$<BUILD_INTERFACE:${wxTOOLKIT_INCLUDE_DIRS}>")
+     endif()
+ 
+     if (WIN32)
+@@ -371,12 +378,14 @@ macro(wx_add_library name)
+         set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
+ 
+         # Setup install
+-        wx_install(TARGETS ${name}
++        wx_install(TARGETS ${name} EXPORT unofficial-${name}Targets
+             LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+             ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+             RUNTIME DESTINATION "bin${wxPLATFORM_LIB_DIR}"
+             BUNDLE DESTINATION Applications/wxWidgets
+             )
++            
++        install(EXPORT unofficial-${name}Targets NAMESPACE wx:: DESTINATION share/unofficial-wxwidgets)
+     endif()
+ endmacro()
+ 
+@@ -453,7 +462,18 @@ macro(wx_lib_include_directories name)
+         if (_LIB_INCLUDE_DIRS_PRIVATE)
+             set(INCLUDE_POS BEFORE)
+         endif()
+-        target_include_directories(${name};${INCLUDE_POS};${ARGN})
++        if (_LIB_INCLUDE_DIRS_PUBLIC)
++            foreach (PUBLIC_DIR ${_LIB_INCLUDE_DIRS_PUBLIC})
++                target_include_directories(${name};${INCLUDE_POS};PUBLIC;$<BUILD_INTERFACE:${PUBLIC_DIR}>)
++            endforeach()
++        endif()
++        if (_LIB_INCLUDE_DIRS_PRIVATE)
++            target_include_directories(${name};${INCLUDE_POS};PRIVATE;${_LIB_INCLUDE_DIRS_PRIVATE})
++        endif()
++        target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include>)
++        if (NOT MSVC)
++            target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>)
++        endif()
+     endif()
+ endmacro()
+ 
+@@ -514,8 +534,14 @@ function(wx_set_builtin_target_properties target_name)
+     target_include_directories(${target_name}
+         BEFORE
+         PUBLIC
+-            ${wxSETUP_HEADER_PATH}
++            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
++            $<INSTALL_INTERFACE:include>
+         )
++    if (NOT MSVC)
++        target_include_directories(${target_name}
++            PUBLIC $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
++        )
++    endif()
+ 
+     set_target_properties(${target_name} PROPERTIES FOLDER "Third Party Libraries")
+ 
+@@ -789,10 +815,10 @@ function(wx_add name group)
+     endif()
+ 
+     if(group STREQUAL Samples)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/samples)
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/samples>")
+     elseif(group STREQUAL Tests)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/tests)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/3rdparty/catch/include)
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/tests>")
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/3rdparty/catch/include>")
+     endif()
+ 
+     if(APP_DATA)
+diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
+index 5c574c7..5497605 100644
+--- a/build/cmake/lib/CMakeLists.txt
++++ b/build/cmake/lib/CMakeLists.txt
+@@ -86,11 +86,11 @@ if(wxBUILD_MONOLITHIC)
+             target_link_libraries(wxmono ${vis} ${wxMONO_LIBS_${vis}})
+         endif()
+         if(wxMONO_INCLUDE_DIRS_${vis})
+-            set(INCLUDE_POS)
+             if (vis STREQUAL PRIVATE)
+-                set(INCLUDE_POS BEFORE)
++                target_include_directories(wxmono BEFORE ${vis} ${wxMONO_INCLUDE_DIRS_${vis}})
++            else()
++                target_include_directories(wxmono ${vis} "$<BUILD_INTERFACE:${wxMONO_INCLUDE_DIRS_${vis}}>")
+             endif()
+-            target_include_directories(wxmono ${INCLUDE_POS} ${vis} ${wxMONO_INCLUDE_DIRS_${vis}})
+         endif()
+         if(wxMONO_DEFINITIONS_${vis})
+             target_compile_definitions(wxmono ${vis} ${wxMONO_DEFINITIONS_${vis}})
+diff --git a/build/cmake/lib/regex.cmake b/build/cmake/lib/regex.cmake
+index b28fc2c..a78c2da 100644
+--- a/build/cmake/lib/regex.cmake
++++ b/build/cmake/lib/regex.cmake
+@@ -18,4 +18,13 @@ if(wxUSE_REGEX)
+     target_include_directories(wxregex PRIVATE ${wxSETUP_HEADER_PATH} ${wxSOURCE_DIR}/include)
+     set(REGEX_LIBRARIES wxregex)
+     set(REGEX_INCLUDE_DIRS ${wxSOURCE_DIR}/src/regex)
++    
++    install(TARGETS wxregex EXPORT unofficial-wxregexTargets
++        LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
++        ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
++        RUNTIME DESTINATION "bin${wxPLATFORM_LIB_DIR}"
++        BUNDLE DESTINATION Applications/wxWidgets
++        )
++
++    install(EXPORT unofficial-wxregexTargets NAMESPACE wx:: DESTINATION share/unofficial-wxwidgets)
+ endif()
+diff --git a/build/cmake/lib/stc/CMakeLists.txt b/build/cmake/lib/stc/CMakeLists.txt
+index bd6acd8..c8c5ff5 100644
+--- a/build/cmake/lib/stc/CMakeLists.txt
++++ b/build/cmake/lib/stc/CMakeLists.txt
+@@ -182,6 +182,15 @@ if(wxBUILD_PRECOMP)
+     wx_target_enable_precomp(wxscintilla ${wxSCINTILLA_PREC_HEADER})
+ endif()
+ 
++install(TARGETS wxscintilla EXPORT unofficial-wxscintillaTargets
++    LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
++    ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
++    RUNTIME DESTINATION "bin${wxPLATFORM_LIB_DIR}"
++    BUNDLE DESTINATION Applications/wxWidgets
++    )
++
++install(EXPORT unofficial-wxscintillaTargets NAMESPACE wx:: DESTINATION share/unofficial-wxwidgets)
++
+ wx_add_library(wxstc ${STC_FILES})
+ wx_lib_include_directories(wxstc PRIVATE
+     ${wxSOURCE_DIR}/src/stc/scintilla/include
+diff --git a/build/cmake/lib/webview/CMakeLists.txt b/build/cmake/lib/webview/CMakeLists.txt
+index cc3298f..1d47e56 100644
+--- a/build/cmake/lib/webview/CMakeLists.txt
++++ b/build/cmake/lib/webview/CMakeLists.txt
+@@ -132,8 +132,8 @@ if(WXGTK AND wxUSE_WEBVIEW_WEBKIT2)
+         )
+ 
+     target_include_directories(wxwebkit2_ext PUBLIC
+-        ${LIBSOUP_INCLUDE_DIRS}
+-        ${WEBKIT2_INCLUDE_DIR}
++        "$<BUILD_INTERFACE:${LIBSOUP_INCLUDE_DIRS}>"
++        "$<BUILD_INTERFACE:${WEBKIT2_INCLUDE_DIR}>"
+         )
+     target_link_libraries(wxwebkit2_ext PUBLIC
+         ${LIBSOUP_LIBRARIES}

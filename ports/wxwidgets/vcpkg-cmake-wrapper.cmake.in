@@ -1,0 +1,22 @@
+_find_package(unofficial-wxwidgets CONFIG REQUIRED)
+
+set(wxWidgets_FOUND 1)
+file(GLOB WX_TARGETS ${CMAKE_CURRENT_LIST_DIR}/../unofficial-wxwidgets/unofficial*Targets.cmake)
+foreach(WX_TARGET ${WX_TARGETS})
+    get_filename_component(TARGET_FILE ${WX_TARGET} NAME)
+    string(REGEX REPLACE "unofficial-(.+)Targets.cmake" "wx::\\1" TARGET_NAME ${TARGET_FILE})
+    list(APPEND wxWidgets_LIBRARIES ${TARGET_NAME})
+endforeach()
+
+get_target_property(wxWidgets_INCLUDE_DIR wx::wxbase INTERFACE_INCLUDE_DIRECTORIES)
+set(wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIR})
+
+# Get extra cpp flags
+if (UNIX)
+    execute_process(
+        COMMAND @CURRENT_INSTALLED_DIR@/tools/wxwidgets/wx-config@VCPKG_TARGET_EXECUTABLE_SUFFIX@ --cxxflags
+        OUTPUT_VARIABLE OUTPUT_FLAGS
+    )
+    
+    string(REGEX MATCHALL "(-D[^ ]+)" wxWidgets_FLAGS "${OUTPUT_FLAGS}")
+endif()
