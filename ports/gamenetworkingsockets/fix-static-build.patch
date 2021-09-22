@@ -1,0 +1,124 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3471701..0eef9d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,7 +34,17 @@ if(SANITIZE_ADDRESS OR SANITIZE_THREAD OR SANITIZE_MEMORY OR SANITIZE_UNDEFINED)
+ endif()
+ 
+ include(FlagsMSVC)
+-set(MSVC_RUNTIME "dynamic")
++
++if(DEFINED VCPKG_CRT_LINKAGE)
++       set(MSVC_RUNTIME ${VCPKG_CRT_LINKAGE})
++else()
++       set(MSVC_RUNTIME "dynamic")
++endif()
++
++if(MSVC_RUNTIME STREQUAL "static")
++       set(OPENSSL_MSVC_STATIC_RT TRUE)
++endif()
++
+ configure_msvc_runtime()
+ print_default_msvc_flags()
+ 
+@@ -46,9 +56,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+                )
+ endif()
+ 
++option(BUILD_SHARED_LIBS "Build shared library" ON)
+ option(LTO "Enable Link-Time Optimization" OFF)
+ option(USE_STEAMWEBRTC "Build Google's WebRTC library to get ICE support for P2P" OFF)
+ option(Protobuf_USE_STATIC_LIBS "Link with protobuf statically" OFF)
++option(OPENSSL_USE_STATIC_LIBS "Link with OpenSSL statically" OFF)
+ option(LIGHT_TESTS "Use smaller/shorter tests for simple integration testing (e.g. Travis)" OFF)
+ option(GAMENETWORKINGSOCKETS_BUILD_EXAMPLES "Build the included example chat program" ON)
+ option(GAMENETWORKINGSOCKETS_BUILD_TESTS "Build crypto, pki and network connection tests" ON)
+diff --git a/cmake/GameNetworkingSocketsConfig.cmake.in b/cmake/GameNetworkingSocketsConfig.cmake.in
+index a0c33d0..e91e575 100644
+--- a/cmake/GameNetworkingSocketsConfig.cmake.in
++++ b/cmake/GameNetworkingSocketsConfig.cmake.in
+@@ -24,19 +24,33 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.11.0")
+     # Also, setting IMPORTED_GLOBAL from another directory from where it was first set blows up
+     # so we can only set it once.
+ 
+-    get_target_property(GNS_IMPORTED_GLOBAL_SET GameNetworkingSockets::GameNetworkingSockets IMPORTED_GLOBAL)
+-
+-    if(NOT ${GNS_IMPORTED_GLOBAL_SET})
+-        set_target_properties(
+-            GameNetworkingSockets::GameNetworkingSockets GameNetworkingSockets::GameNetworkingSockets_s
+-            PROPERTIES IMPORTED_GLOBAL True
+-        )
++    function(gns_set_imported_global TGT)
++        if(TARGET ${TGT})
++            get_target_property(GNS_IMPORTED_GLOBAL_SET ${TGT} IMPORTED_GLOBAL)
++            if(NOT ${GNS_IMPORTED_GLOBAL_SET})
++                set_target_properties(
++                    ${TGT}
++                    PROPERTIES IMPORTED_GLOBAL True
++                )
++            endif()
++        endif()
++    endfunction()
++    gns_set_imported_global(GameNetworkingSockets::GameNetworkingSockets)
++    gns_set_imported_global(GameNetworkingSockets::GameNetworkingSockets_s)
++    # GameNetworkingSockets::GameNetworkingSockets here refers to the shared library target
++    # If it exists, create a ::shared alias to it
++    # Otherwise, point GameNetworkingSockets::GameNetworkingSockets to the static library target
++    if(TARGET GameNetworkingSockets::GameNetworkingSockets)
++        add_library(GameNetworkingSockets::shared ALIAS GameNetworkingSockets::GameNetworkingSockets)
++    else()
++        if(TARGET GameNetworkingSockets::GameNetworkingSockets_s)
++            add_library(GameNetworkingSockets::GameNetworkingSockets ALIAS GameNetworkingSockets::GameNetworkingSockets_s)
++        endif()
+     endif()
+ 
+-    unset(GNS_IMPORTED_GLOBAL_SET)
+-
+-    add_library(GameNetworkingSockets::shared ALIAS GameNetworkingSockets::GameNetworkingSockets)
+-    add_library(GameNetworkingSockets::static ALIAS GameNetworkingSockets::GameNetworkingSockets_s)
++    if(TARGET GameNetworkingSockets::GameNetworkingSockets_s)
++        add_library(GameNetworkingSockets::static ALIAS GameNetworkingSockets::GameNetworkingSockets_s)
++    endif()
+ endif()
+ 
+ check_required_components(GameNetworkingSockets)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7040ab3..1ebfcfc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -282,23 +282,28 @@ macro(gamenetworkingsockets_common GNS_TARGET)
+ 
+ endmacro()
+ 
+-add_library(GameNetworkingSockets SHARED "")
+-add_library(GameNetworkingSockets::GameNetworkingSockets ALIAS GameNetworkingSockets)
+-add_library(GameNetworkingSockets::shared ALIAS GameNetworkingSockets)
+-gamenetworkingsockets_common(GameNetworkingSockets)
+-
+ add_library(GameNetworkingSockets_s STATIC "")
+ add_library(GameNetworkingSockets::GameNetworkingSockets_s ALIAS GameNetworkingSockets_s)
+ add_library(GameNetworkingSockets::static ALIAS GameNetworkingSockets_s)
+ target_compile_definitions(GameNetworkingSockets_s INTERFACE STEAMNETWORKINGSOCKETS_STATIC_LINK)
++set(GAMENETWORKINGSOCKETS_INSTALL_TARGETS GameNetworkingSockets_s)
+ gamenetworkingsockets_common(GameNetworkingSockets_s)
+ 
++if(BUILD_SHARED_LIBS)
++               add_library(GameNetworkingSockets SHARED "")
++               add_library(GameNetworkingSockets::GameNetworkingSockets ALIAS GameNetworkingSockets)
++               add_library(GameNetworkingSockets::shared ALIAS GameNetworkingSockets)
++               gamenetworkingsockets_common(GameNetworkingSockets)
++               list(APPEND GAMENETWORKINGSOCKETS_INSTALL_TARGETS GameNetworkingSockets)
++else()
++               add_library(GameNetworkingSockets::GameNetworkingSockets ALIAS GameNetworkingSockets_s)
++endif()
++
+ # Install rules
+ 
+ install(
+        TARGETS 
+-               GameNetworkingSockets
+-               GameNetworkingSockets_s
++               ${GAMENETWORKINGSOCKETS_INSTALL_TARGETS}
+        EXPORT GameNetworkingSockets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
