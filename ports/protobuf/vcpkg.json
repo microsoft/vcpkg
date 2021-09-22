@@ -1,7 +1,7 @@
 {
   "name": "protobuf",
   "version-semver": "3.15.8",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Protocol Buffers - Google's data interchange format",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "dependencies": [

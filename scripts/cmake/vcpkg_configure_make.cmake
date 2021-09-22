@@ -236,10 +236,9 @@ function(vcpkg_configure_make)
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
-    vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
-    debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -861,6 +860,15 @@ function(vcpkg_configure_make)
             endif()
         endforeach()
     endforeach()
+
+    # Export matching make program for vcpkg_build_make (cache variable)
+    if(CMAKE_HOST_WIN32 AND MSYS_ROOT)
+        find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
+    elseif(VCPKG_HOST_IS_OPENBSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE make REQUIRED)
+    endif()
 
     # Restore environment
     _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)

@@ -6,17 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_DATAROOTDIR=data
-    MAYBE_UNUSED_VARIABLES
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
 
 )
 

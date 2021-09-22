@@ -6,9 +6,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
-    REF  46604ef40bde400c0c33fb5790b023629d1bd445 #1.3.6 rc1
-    SHA512 692996be22b289a473be9371dbf558a940d7dda72ce655141610d55de5f7e6a331010a8d999fe4e3feaa01fff7797a4403173b3b804329579d08fbc77ba7958e
-    HEAD_REF master
+    REF release-1.3.7
+    SHA512 aad131027e88fac3fe73d7e0abfc2602cdc195388f14b29b58d654cb49b780e6ff2ef4270935730b45cd3d366f9e8c8fa3c27a4f17b1f6e8c8fd1f9a0a73c308
     PATCHES
         findlibsfix.patch
         config-path.patch

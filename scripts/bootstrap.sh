@@ -165,10 +165,11 @@ fetchTool()
     xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ]; then
-        echo "Unknown tool: $tool"
+    case "$toolData" in
+	"" | "<!xml"*)
+        echo "No entry for $toolRegexStart in $vcpkgRootDir/scripts/vcpkgTools.xml"
         return 1
-    fi
+    esac
 
     version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 
@@ -268,7 +269,7 @@ else
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
 if [ "$os" = "osx" ]; then
-    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] || [[ $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 11 ]]; then
         CXX=clang++
     else
         selectCXX
@@ -278,8 +279,8 @@ else
 fi
 
 # Do the build
-vcpkgToolReleaseTag="2021-07-26"
-vcpkgToolReleaseSha="e5252df535a75e1b776e057811a2913b0508d0a387a781815e353c23d0a33ec8bf8982a121adc6b711243bf0981843a435a0e53facf274ac7c38c3f571c26766"
+vcpkgToolReleaseTag="2021-09-10"
+vcpkgToolReleaseSha="0bea4c7bdd91933d44a0214e2202eb5ef988826d32ae7a00a8868e510710e7de0b336b1cc6aa1ea20af2f6e24d92f2ab665046089bb4ec43bc2add94a901d5fc"
 vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
 vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
 baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
@@ -305,7 +306,7 @@ if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
     cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
 fi
 
-(cd "$buildDir" && eval CXX="$CXX" "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && CXX="$CXX" eval "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"

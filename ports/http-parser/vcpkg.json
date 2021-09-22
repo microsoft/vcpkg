@@ -1,0 +1,7 @@
+{
+  "name": "http-parser",
+  "version-string": "2.9.4",
+  "port-version": 1,
+  "description": "HTTP Parser.",
+  "homepage": "https://github.com/nodejs/http-parser"
+}

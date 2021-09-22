@@ -1,0 +1,6 @@
+{
+  "name": "devicenameresolver",
+  "version-string": "2016-06-26-0850d88fa6",
+  "port-version": 2,
+  "description": "a little library that resolves a path from a (virtual) device name."
+}
