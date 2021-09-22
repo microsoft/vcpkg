@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index caa0e71..9319694 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -196,7 +196,7 @@ if(BLAS_LIBRARIES)
+   endif()
+ 
+ # User did not provide a BLAS Library but specified to search for one
+-elseif(USE_OPTIMIZED_BLAS)
++elseif (USE_OPTIMIZED_BLAS OR USE_EXTERNAL_BLAS)
+   find_package(BLAS)
+ endif()
+ 
