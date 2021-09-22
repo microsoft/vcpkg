@@ -44,6 +44,14 @@
       "name": "pango",
       "platform": "!windows"
     },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
