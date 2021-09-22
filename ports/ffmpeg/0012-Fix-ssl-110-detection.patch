@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index 2be953f7e7..e075949ffc 100755
+index 9ee3abf..778be40 100644
 --- a/configure
 +++ b/configure
-@@ -6497,6 +6497,7 @@ enabled omx_rpi           && { test_code cc OMX_Core.h OMX_IndexConfigBrcmVideoR
+@@ -6546,6 +6546,7 @@ enabled omx_rpi           && { test_code cc OMX_Core.h OMX_IndexConfigBrcmVideoR
  enabled omx               && require_headers OMX_Core.h
  enabled openssl           && { check_pkg_config openssl openssl openssl/ssl.h OPENSSL_init_ssl ||
                                 check_pkg_config openssl openssl openssl/ssl.h SSL_library_init ||
@@ -10,4 +10,3 @@ index 2be953f7e7..e075949ffc 100755
                                 check_lib openssl openssl/ssl.h OPENSSL_init_ssl -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl32 -leay32 ||
-

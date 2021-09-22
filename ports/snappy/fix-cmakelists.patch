@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 672561e..3bdc065 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -250,7 +250,7 @@ if(BUILD_SHARED_LIBS)
+ endif(BUILD_SHARED_LIBS)
+ 
+ if(SNAPPY_BUILD_TESTS OR SNAPPY_BUILD_BENCHMARKS)
+-  add_library(snappy_test_support "")
++  add_library(snappy_test_support STATIC "")
+   target_sources(snappy_test_support
+     PRIVATE
+       "snappy-test.cc"
+@@ -289,9 +289,8 @@ if(SNAPPY_BUILD_TESTS)
+   set(install_gtest OFF)
+   set(install_gmock OFF)
+   set(build_gmock ON)
+-
++  find_package(GTest CONFIG REQUIRED)
+   # This project is tested using GoogleTest.
+-  add_subdirectory("third_party/googletest")
+ 
+   # GoogleTest triggers a missing field initializers warning.
+   if(SNAPPY_HAVE_NO_MISSING_FIELD_INITIALIZERS)
+@@ -306,7 +305,7 @@ if(SNAPPY_BUILD_TESTS)
+     PRIVATE
+       "snappy_unittest.cc"
+   )
+-  target_link_libraries(snappy_unittest snappy_test_support gmock_main gtest)
++  target_link_libraries(snappy_unittest snappy_test_support GTest::gtest GTest::gmock_main)
+ 
+   add_test(
+     NAME snappy_unittest
+@@ -322,17 +321,17 @@ if(SNAPPY_BUILD_TESTS)
+ endif(SNAPPY_BUILD_TESTS)
+ 
+ if(SNAPPY_BUILD_BENCHMARKS)
++  find_package(benchmark CONFIG REQUIRED)
+   add_executable(snappy_benchmark "")
+   target_sources(snappy_benchmark
+     PRIVATE
+       "snappy_benchmark.cc"
+   )
+-  target_link_libraries(snappy_benchmark snappy_test_support benchmark_main)
++  target_link_libraries(snappy_benchmark snappy_test_support benchmark::benchmark_main)
+ 
+   # This project uses Google benchmark for benchmarking.
+   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+   set(BENCHMARK_ENABLE_EXCEPTIONS OFF CACHE BOOL "" FORCE)
+-  add_subdirectory("third_party/benchmark")
+ endif(SNAPPY_BUILD_BENCHMARKS)
+ 
+ if(SNAPPY_FUZZING_BUILD)
