@@ -1329,8 +1329,8 @@
       "port-version": 0
     },
     "cjson": {
-      "baseline": "2019-11-30",
-      "port-version": 2
+      "baseline": "1.7.15",
+      "port-version": 0
     },
     "clamav": {
       "baseline": "0.103.0",
