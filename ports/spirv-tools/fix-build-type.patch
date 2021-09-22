@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d1c9d5e..9acfe47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -159,7 +159,7 @@ endif()
+ # Ideally, all of these will go away - see https://github.com/KhronosGroup/SPIRV-Tools/issues/3909.
+ option(SPIRV_TOOLS_BUILD_STATIC "Build ${SPIRV_TOOLS}-static target. ${SPIRV_TOOLS} will alias to ${SPIRV_TOOLS}-static or ${SPIRV_TOOLS}-shared based on BUILD_SHARED_LIBS" ON)
+ if(SPIRV_TOOLS_BUILD_STATIC)
+-  set(SPIRV_TOOLS_FULL_VISIBILITY ${SPIRV_TOOLS}-static)
++  set(SPIRV_TOOLS_FULL_VISIBILITY ${SPIRV_TOOLS})
+   set(SPIRV_TOOLS_LIBRARY_TYPE "STATIC")
+ else(SPIRV_TOOLS_BUILD_STATIC)
+   set(SPIRV_TOOLS_FULL_VISIBILITY ${SPIRV_TOOLS})
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index e28f6ee..10cc5b9 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -362,36 +362,25 @@ function(spirv_tools_default_target_options target)
+   add_dependencies(${target} spirv-tools-build-version core_tables enum_string_mapping extinst_tables)
+ endfunction()
+ 
++if (NOT SPIRV_TOOLS_BUILD_STATIC)
+ # Always build ${SPIRV_TOOLS}-shared. This is expected distro packages, and
+ # unlike the other SPIRV_TOOLS target, defaults to hidden symbol visibility.
+-add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
++add_library(${SPIRV_TOOLS} SHARED ${SPIRV_SOURCES})
+ spirv_tools_default_target_options(${SPIRV_TOOLS}-shared)
+-set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
+-target_compile_definitions(${SPIRV_TOOLS}-shared
++set_target_properties(${SPIRV_TOOLS} PROPERTIES CXX_VISIBILITY_PRESET hidden)
++target_compile_definitions(${SPIRV_TOOLS}
+   PRIVATE SPIRV_TOOLS_IMPLEMENTATION
+   PUBLIC SPIRV_TOOLS_SHAREDLIB
+ )
+ 
+-if(SPIRV_TOOLS_BUILD_STATIC)
+-  add_library(${SPIRV_TOOLS}-static STATIC ${SPIRV_SOURCES})
+-  spirv_tools_default_target_options(${SPIRV_TOOLS}-static)
+-  # The static target does not have the '-static' suffix.
+-  set_target_properties(${SPIRV_TOOLS}-static PROPERTIES OUTPUT_NAME "${SPIRV_TOOLS}")
+-
+-  # Create the "${SPIRV_TOOLS}" target as an alias to either "${SPIRV_TOOLS}-static"
+-  # or "${SPIRV_TOOLS}-shared" depending on the value of BUILD_SHARED_LIBS.
+-  if(BUILD_SHARED_LIBS)
+-    add_library(${SPIRV_TOOLS} ALIAS ${SPIRV_TOOLS}-shared)
+-  else()
+-    add_library(${SPIRV_TOOLS} ALIAS ${SPIRV_TOOLS}-static)
+-  endif()
+ 
+-  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static ${SPIRV_TOOLS}-shared)
+ else()
+-  add_library(${SPIRV_TOOLS} ${SPIRV_TOOLS_LIBRARY_TYPE} ${SPIRV_SOURCES})
++  add_library(${SPIRV_TOOLS} STATIC ${SPIRV_SOURCES})
+   spirv_tools_default_target_options(${SPIRV_TOOLS})
+-  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS} ${SPIRV_TOOLS}-shared)
++  # The static target does not have the '-static' suffix.
++  set_target_properties(${SPIRV_TOOLS} PROPERTIES OUTPUT_NAME "${SPIRV_TOOLS}")
+ endif()
++set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS})
+ 
+ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+   find_library(LIBRT rt)
