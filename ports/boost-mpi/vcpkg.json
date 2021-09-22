@@ -3,6 +3,7 @@
   "version": "1.77.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
+  "supports": "!uwp",
   "dependencies": [
     "boost-assert",
     {

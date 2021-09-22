@@ -14,7 +14,10 @@
     "boost-fusion",
     "boost-iterator",
     "boost-math",
-    "boost-mpi",
+    {
+      "name": "boost-mpi",
+      "platform": "!uwp"
+    },
     "boost-mpl",
     "boost-multi-array",
     "boost-preprocessor",

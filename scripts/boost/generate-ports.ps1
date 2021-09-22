@@ -55,8 +55,14 @@ $portData = @{
             }
         }
     };
-    "boost-mpi"              = @{ "dependencies" = @("mpi") };
-    "boost-graph-parallel"   = @{ "dependencies" = @("mpi") };
+    "boost-mpi"              = @{
+        "dependencies" = @("mpi");
+        "supports"     = "!uwp";
+    };
+    "boost-graph-parallel"   = @{
+        "dependencies" = @("mpi");
+        "supports"     = "!uwp";
+    };
     "boost-parameter-python" = @{ "supports" = "!emscripten" };
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
