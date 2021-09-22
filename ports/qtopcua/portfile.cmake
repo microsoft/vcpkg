@@ -10,6 +10,7 @@ FEATURES
     "ns0idnames"     FEATURE_ns0idnames
     "ns0idgenerator" FEATURE_ns0idgenerator
 INVERTED_FEATURES
+    "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     )
 if("open62541" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=system

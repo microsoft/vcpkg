@@ -1249,13 +1249,6 @@ qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-# Skip ports not available in Qt 6.1.0 (for Qt 6.2)
-qt6betablock:x86-windows=skip
-qt6betablock:x64-windows=skip
-qt6betablock:x64-windows-static=skip
-qt6betablock:x64-windows-static-md=skip
-qt6betablock:x64-linux=skip
-qt6betablock:x64-osx=skip
 qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)

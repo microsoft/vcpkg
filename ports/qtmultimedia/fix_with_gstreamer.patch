@@ -1,0 +1,59 @@
+diff --git a/cmake/FindGObject.cmake b/cmake/FindGObject.cmake
+index 6f3cdea2a..ce1498c07 100644
+--- a/cmake/FindGObject.cmake
++++ b/cmake/FindGObject.cmake
+@@ -27,13 +27,13 @@ if(NOT TARGET GObject::GObject)
+                             GLIB2::GLIB2
+         )
+     else()
+-        find_path(GGObject_INCLUDE_DIR
++        find_path(GObject_INCLUDE_DIR
+             NAMES gobject.h
+             PATH_SUFFIXES glib-2.0/gobject/
+         )
+         find_library(GObject_LIBRARY NAMES gobject-2.0)
+         if (GObject_LIBRARY AND GObject_INCLUDE_DIR)
+-            add_library(GObject::GObject IMPORTED)
++            add_library(GObject::GObject INTERFACE IMPORTED)
+             target_include_directories(GObject::GObject INTERFACE
+                                     ${GObject_INCLUDE_DIR}
+             )
+diff --git a/cmake/FindGStreamer.cmake b/cmake/FindGStreamer.cmake
+index c80974e72..63695d9fa 100644
+--- a/cmake/FindGStreamer.cmake
++++ b/cmake/FindGStreamer.cmake
+@@ -53,8 +53,8 @@ function(find_gstreamer_component component prefix header library)
+             endif()
+             if(GStreamer_${component}_LIBRARY AND GStreamer_${component}_INCLUDE_DIR)
+                 add_library(GStreamer::${component} INTERFACE IMPORTED)
+-                target_include_directories(GStreamer::${component} INTERFACE GStreamer_${component}_INCLUDE_DIR)
+-                target_link_libraries(GStreamer::${component} INTERFACE GStreamer_${component}_LIBRARY)
++                target_include_directories(GStreamer::${component} INTERFACE ${GStreamer_${component}_INCLUDE_DIR})
++                target_link_libraries(GStreamer::${component} INTERFACE ${GStreamer_${component}_LIBRARY})
+             endif()
+             mark_as_advanced(GStreamer_${component}_INCLUDE_DIR GStreamer_${component}_LIBRARY)
+         endif()
+diff --git a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
+index d4806b23a..f985a973b 100644
+--- a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
++++ b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
+@@ -45,7 +45,6 @@
+ #include "qgstreameraudiosink_p.h"
+ #include "qgstreameraudiodevice_p.h"
+ #include <sys/types.h>
+-#include <unistd.h>
+ 
+ #include <private/qgstpipeline_p.h>
+ #include <private/qgstappsrc_p.h>
+diff --git a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
+index 51fc26c42..3b04a77bb 100644
+--- a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
++++ b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
+@@ -45,7 +45,6 @@
+ #include "qgstreameraudiosource_p.h"
+ #include "qgstreameraudiodevice_p.h"
+ #include <sys/types.h>
+-#include <unistd.h>
+ 
+ #include <gst/gst.h>
+ Q_DECLARE_OPAQUE_POINTER(GstSample *);

@@ -8,7 +8,13 @@
       "name": "qtbase",
       "default-features": false
     },
-    "qttools"
+    {
+      "name": "qttools",
+      "default-features": false,
+      "features": [
+        "linguist"
+      ]
+    }
   ],
   "default-features": [
     "default-features"

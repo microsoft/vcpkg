@@ -8,9 +8,13 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "gui"
+        "gui",
+        "testlib"
       ]
     },
-    "qttools"
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    }
   ]
 }
