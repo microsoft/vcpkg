@@ -63,3 +63,11 @@ install(
 
 install(FILES sqlite3.h sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
 install(EXPORT unofficial-sqlite3-targets NAMESPACE unofficial::sqlite3:: FILE unofficial-sqlite3-targets.cmake DESTINATION share/unofficial-sqlite3)
+
+if(UNIX)
+    set(PKGCONFIG_LIBS_PRIVATE "-lm -ldl -lpthread")
+else()
+    set(PKGCONFIG_LIBS_PRIVATE "")
+endif()
+configure_file(sqlite3.pc.in sqlite3.pc @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlite3.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
