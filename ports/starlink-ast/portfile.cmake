@@ -11,18 +11,22 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}    
 )
 
-set(CONFIGURE_OPTIONS "--without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
+set(CONFIGURE_OPTIONS
+    --without-fortran
+    star_cv_cnf_trail_type=long
+    star_cv_cnf_f2c_compatible=no
+)
 
 if ("yaml" IN_LIST FEATURES)
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-yaml")
+    list(APPEND CONFIGURE_OPTIONS --with-yaml)
 else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-yaml")
+    list(APPEND CONFIGURE_OPTIONS --without-yaml)
 endif()
 
 if ("pthreads" IN_LIST FEATURES)
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-pthreads")
+    list(APPEND CONFIGURE_OPTIONS --with-pthreads)
 else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-pthreads")
+    list(APPEND CONFIGURE_OPTIONS --without-pthreads)
 endif()
 
 vcpkg_configure_make(
@@ -31,8 +35,6 @@ vcpkg_configure_make(
     DETERMINE_BUILD_TRIPLET
     ADDITIONAL_MSYS_PACKAGES perl
     OPTIONS ${CONFIGURE_OPTIONS}
-    OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
-    OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
 )
 
 vcpkg_install_make()
