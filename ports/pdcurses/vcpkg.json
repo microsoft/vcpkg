@@ -3,5 +3,5 @@
   "version-string": "3.9",
   "port-version": 1,
   "description": "Public Domain Curses - a curses library for environments that don't fit the termcap/terminfo model.",
-  "homepage": "https://sourceforge.net/projects/pdcurses/"
+  "homepage": "https://pdcurses.org/"
 }
