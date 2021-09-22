@@ -1,17 +1,3 @@
-From d12e8f6266188ce7e221dc014a56071b8a5ef706 Mon Sep 17 00:00:00 2001
-From: "Friedrich W. H. Kossebau" <kossebau@kde.org>
-Date: Thu, 26 Aug 2021 14:09:36 +0200
-Subject: [PATCH] Remove explicit SHARED argument from add_library(KF5XmlGui)
-
-Reverts change slipped in iin 5d9b57f99e8a266e11e855080051ba8fe2a38764,
-as it prevents usage of BUILD_SHARED_LIBS otherwise for those doing
-static builds
-
-GIT_SILENT
----
- src/CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 2fac31b7..2f4fc881 100644
 --- a/src/CMakeLists.txt

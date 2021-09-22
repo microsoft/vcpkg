@@ -1,12 +1,3 @@
-From 2f1b948ad690942d4ec208c5676c11218f29181a Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
-Date: Mon, 30 Aug 2021 19:59:07 +0200
-Subject: [PATCH] Add support for static builds
-
----
- KF5XmlGuiConfig.cmake.in | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
 diff --git a/KF5XmlGuiConfig.cmake.in b/KF5XmlGuiConfig.cmake.in
 index 6238ab5f..8c249eb1 100644
 --- a/KF5XmlGuiConfig.cmake.in
