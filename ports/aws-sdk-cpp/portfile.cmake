@@ -12,14 +12,16 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
 set(EXTRA_ARGS)
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+if(APPLE)
     set(rpath "@loader_path")
-    set(EXTRA_ARGS
-            "-DCURL_HAS_H2_EXITCODE=0"
-            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
-            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
-            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
-            )
+    if(VCPKG_TARGET_IS_IOS)
+        set(EXTRA_ARGS
+                "-DCURL_HAS_H2_EXITCODE=0"
+                "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
+                "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
+                "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
+                )
+    endif()
 elseif (VCPKG_TARGET_IS_ANDROID)
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
             "-DGIT_EXECUTABLE=--invalid-git-executable--"
@@ -28,11 +30,6 @@ elseif (VCPKG_TARGET_IS_ANDROID)
             "-DANDROID_BUILD_ZLIB=FALSE"
             "-DANDROID_BUILD_CURL=FALSE"
             "-DANDROID_BUILD_OPENSSL=FALSE"
-            "-DENABLE_HW_OPTIMIZATION=OFF"
-            "-DCURL_HAS_H2_EXITCODE=0"
-            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
-            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
-            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
             )
 else()
     set(rpath "\$ORIGIN")

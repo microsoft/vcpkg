@@ -4,27 +4,24 @@ vcpkg_from_github(
     REF aa89aa4950074babe84762413f39bd364ecaf944 # v0.5.11
     SHA512 b92ae3cb14d26dfe48cb903df56f7df91a4dc0ab2e5ea4f095c72b0b7e0a2582f1324c73eb42c080bcb0a59a3dfc37cd2912037fc8e5f7df8433899749fca63c
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
+    PATCHES
+		001-fix-cmake-target-path.patch
+		002-no-exe-no-tests.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
-	OPTIONS
+ 	OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+		-DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-cal/cmake)
 
-vcpkg_copy_tools(
-    TOOL_NAMES sha256_profile
-    AUTO_CLEAN
-)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE 
+    file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
     )

@@ -21,14 +21,11 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-    PREFER_NINJA
     OPTIONS
         -DSOURCE_PATH=${MASTER_COPY_SOURCE_PATH}
         -DPERL=${PERL}
         -DMAKE=${MAKE}
         -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
-    OPTIONS_RELEASE
-        -DINSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
