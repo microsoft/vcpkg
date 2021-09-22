@@ -250,7 +250,7 @@
     },
     "aws-c-auth": {
       "baseline": "0.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-cal": {
       "baseline": "0.5.11",
@@ -258,7 +258,7 @@
     },
     "aws-c-common": {
       "baseline": "0.6.9",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-compression": {
       "baseline": "0.2.14",
@@ -266,31 +266,31 @@
     },
     "aws-c-event-stream": {
       "baseline": "0.2.7",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-http": {
       "baseline": "0.6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-io": {
       "baseline": "0.10.7",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-mqtt": {
       "baseline": "0.7.6",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-s3": {
       "baseline": "0.1.25",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-checksums": {
       "baseline": "0.1.11",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-crt-cpp": {
       "baseline": "0.15.1",
-      "port-version": 1
+      "port-version": 2
     },
     "aws-lambda-cpp": {
       "baseline": "0.2.6",
@@ -298,7 +298,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 2
+      "port-version": 3
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -4834,7 +4834,7 @@
     },
     "openssl": {
       "baseline": "1.1.1l",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
