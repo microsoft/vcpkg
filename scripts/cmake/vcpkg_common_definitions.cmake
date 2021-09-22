@@ -97,7 +97,7 @@ else()
     set(VCPKG_HOST_BUNDLE_SUFFIX "")
 endif()
 
-if(VCPKG_HOST_IS_OSX)
+if(VCPKG_TARGET_IS_OSX)
     set(VCPKG_TARGET_BUNDLE_SUFFIX ".app")
 else()
     set(VCPKG_TARGET_BUNDLE_SUFFIX "")
