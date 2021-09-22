@@ -7,12 +7,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
 endif()
 
-set(GLIB_MAJOR_MINOR 2.66)
-set(GLIB_PATCH 4)
+set(GLIB_MAJOR_MINOR 2.69)
+set(GLIB_PATCH 3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
     FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 b3bc3e6e5cca793139848940e5c0894f1c7e3bd3a770b213a1ea548ac54a2432aebb140ed54518712fb8af36382b3b13d5f7ffd3d87ff63cba9e2f55434f7260)
+    SHA512 45ab633ea63b8ca947df4e591ac92fcdad3124a4ad11c5a47ef0d829573f664ff671ca413ea644e76ec97ca757ff305d8493cac7ad1293720a538f00caa3da8e)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -40,7 +40,7 @@ else()
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dbuild_tests=false
         -Dinstalled_tests=false
@@ -113,7 +113,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc")
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${SYSTEM_LIBRARIES})
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Fix python scripts
 set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")
