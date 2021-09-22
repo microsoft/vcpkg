@@ -5812,6 +5812,10 @@
       "baseline": "0.4",
       "port-version": 1
     },
+    "scottt-debugbreak": {
+      "baseline": "1.0",
+      "port-version": 0
+    },
     "scylla-wrapper": {
       "baseline": "2018-08-26-16e6f435",
       "port-version": 1
