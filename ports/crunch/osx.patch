@@ -1,0 +1,92 @@
+diff --git a/crnlib/crn_threading_pthreads.h b/crnlib/crn_threading_pthreads.h
+index 547bb8845..09d410406 100644
+--- a/crnlib/crn_threading_pthreads.h
++++ b/crnlib/crn_threading_pthreads.h
+@@ -87,7 +87,11 @@ namespace crnlib
+       void unlock();
+ 
+    private:
++#ifdef __APPLE__
++      pthread_rwlock_t m_spinlock;
++#else
+       pthread_spinlock_t m_spinlock;
++#endif
+    };
+ 
+    class scoped_spinlock
+
+diff --git a/crnlib/crn_threading_pthreads.cpp b/crnlib/crn_threading_pthreads.cpp
+index f57adb2d1..486560694 100644
+--- a/crnlib/crn_threading_pthreads.cpp
++++ b/crnlib/crn_threading_pthreads.cpp
+@@ -192,31 +192,56 @@ namespace crnlib
+ 
+    spinlock::spinlock()
+    {
++#ifdef __APPLE__
++      if (pthread_rwlock_init(&m_spinlock, 0))
++      {
++         CRNLIB_FAIL("spinlock: pthread_rwlock_init() failed");
++      }
++#else
+       if (pthread_spin_init(&m_spinlock, 0))
+       {
+          CRNLIB_FAIL("spinlock: pthread_spin_init() failed");
+       }
++#endif
+    }
+ 
+    spinlock::~spinlock()
+    {
++#ifdef __APPLE__
++      pthread_rwlock_destroy(&m_spinlock);
++#else
+       pthread_spin_destroy(&m_spinlock);
++#endif
+    }
+ 
+    void spinlock::lock()
+    {
++#ifdef __APPLE__
++      if (pthread_rwlock_wrlock(&m_spinlock))
++      {
++         CRNLIB_FAIL("spinlock: pthread_rwlock_wrlock() failed");
++      }
++#else
+       if (pthread_spin_lock(&m_spinlock))
+       {
+          CRNLIB_FAIL("spinlock: pthread_spin_lock() failed");
+       }
++#endif
+    }
+ 
+    void spinlock::unlock()
+    {
++#ifdef __APPLE__
++      if (pthread_rwlock_unlock(&m_spinlock))
++      {
++         CRNLIB_FAIL("spinlock: pthread_rwlock_unlock() failed");
++      }
++#else
+       if (pthread_spin_unlock(&m_spinlock))
+       {
+          CRNLIB_FAIL("spinlock: pthread_spin_unlock() failed");
+       }
++#endif
+    }
+ 
+    task_pool::task_pool() :
+
+diff --git a/inc/crn_decomp.h b/inc/crn_decomp.h
+index 2c626af32..2a6192f20 100644
+--- a/inc/crn_decomp.h
++++ b/inc/crn_decomp.h
+@@ -318,7 +318,7 @@ namespace crnd
+ #ifdef WIN32
+ #include <memory.h>
+ #else
+-#include <malloc.h>
++#include <stdlib.h>
+ #endif
+ #include <stdarg.h>
+ #include <new> // needed for placement new, _msize, _expand

@@ -1608,6 +1608,10 @@
       "baseline": "0.3.2",
       "port-version": 1
     },
+    "crunch": {
+      "baseline": "104",
+      "port-version": 0
+    },
     "cryptopp": {
       "baseline": "8.5.0",
       "port-version": 1

@@ -1,0 +1,71 @@
+diff --git a/crnlib/crn_atomics.h b/crnlib/crn_atomics.h
+index 6eeedb5c0..ff35a0edb 100644
+--- a/crnlib/crn_atomics.h
++++ b/crnlib/crn_atomics.h
+@@ -19,7 +19,7 @@ extern __inline__ __attribute__((__always_inline__,__gnu_inline__)) void crnlib_
+ CRNLIB_FORCE_INLINE void crnlib_yield_processor()
+ {
+ #if CRNLIB_USE_MSVC_INTRINSICS
+-   #if CRNLIB_PLATFORM_PC_X64
++   #if CRNLIB_PLATFORM_PC_X64 && !(defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC))
+       _mm_pause();
+    #else
+       YieldProcessor();
+diff --git a/crnlib/CMakeLists.txt b/crnlib/CMakeLists.txt
+index c6c2d58d6..a27726ca8 100644
+--- a/crnlib/CMakeLists.txt
++++ b/crnlib/CMakeLists.txt
+@@ -86,6 +86,8 @@ ENDIF (WIN32)
+ 
+ IF (NOT WIN32)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++ELSE()
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D _CRT_SECURE_NO_WARNINGS")
+ ENDIF (NOT WIN32)
+ 
+ add_library(crunch STATIC ${SRCFILES})
+
+diff --git a/crnlib/lzma_7zFile.h b/crnlib/lzma_7zFile.h
+index d18f25838..45419ad55 100644
+--- a/crnlib/lzma_7zFile.h
++++ b/crnlib/lzma_7zFile.h
+@@ -5,8 +5,11 @@
+ #define __7Z_FILE_H
+ 
+ #ifdef _WIN32
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++#else
+ #define USE_WINDOWS_FILE
+ #endif
++#endif
+ 
+ #ifdef USE_WINDOWS_FILE
+ #include <windows.h>
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db9fbdc1a..3091b1152 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,9 @@ project(crunch-project)
+ add_subdirectory(crnlib)
+ 
+ # Add the command-line tool.
+-add_subdirectory(crunch)
++if(BUILD_TOOL)
++    add_subdirectory(crunch)
++endif()
+ 
+ # Add the emscripten library.
+ # add_subdirectory(emscripten)
+diff --git a/crunch/CMakeLists.txt b/crunch/CMakeLists.txt
+index b45b32e82..84f678183 100644
+--- a/crunch/CMakeLists.txt
++++ b/crunch/CMakeLists.txt
+@@ -12,8 +12,5 @@ target_link_libraries(crunch_exe
+ 	PUBLIC crunch
+ )
+ 
+-set_target_properties(crunch_exe
+-  PROPERTIES
+-  OUTPUT_NAME crunch)
+ 
+ install(TARGETS crunch_exe DESTINATION bin)

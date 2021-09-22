@@ -1,0 +1,20 @@
+{
+  "name": "crunch",
+  "version-string": "104",
+  "description": "Advanced DXTc texture compression and transcoding library",
+  "homepage": "https://github.com/rouault/crunch",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "tool"
+  ],
+  "features": {
+    "tool": {
+      "description": "crunch executable"
+    }
+  }
+}
