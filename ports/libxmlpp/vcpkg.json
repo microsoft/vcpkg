@@ -1,6 +1,7 @@
 {
   "name": "libxmlpp",
   "version": "5.0.0",
+  "port-version": 1,
   "description": "a C++ wrapper for the libxml XML parser library.",
   "supports": "!(windows & static)",
   "dependencies": [
