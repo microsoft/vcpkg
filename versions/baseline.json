@@ -1256,6 +1256,10 @@
       "baseline": "2.0.0",
       "port-version": 5
     },
+    "certify": {
+      "baseline": "2021-03-19",
+      "port-version": 0
+    },
     "cfitsio": {
       "baseline": "3.49",
       "port-version": 1
