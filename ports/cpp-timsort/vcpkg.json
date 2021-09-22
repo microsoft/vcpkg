@@ -1,6 +1,6 @@
 {
   "name": "cpp-timsort",
-  "version-string": "2.1.0",
+  "version": "2.1.0",
   "description": "A C++ implementation of timsort",
   "homepage": "https://github.com/timsort/cpp-TimSort",
   "dependencies": [
