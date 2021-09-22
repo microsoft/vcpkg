@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a50fd0c..2a5cdde 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -101,6 +101,13 @@ else(TARGET Eigen3::Eigen)
+   target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE ${EIGEN3_INCLUDE_DIRS})
+ endif(TARGET Eigen3::Eigen)
+ 
++# Add tl-optional interface dependency if enabled
++if(tl-optional_FOUND)
++  set(tl-optional_DEPENDENCY "find_dependency(tl-optional)")
++else()
++  set(tl-optional_DEPENDENCY "")
++endif()
++
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+   target_compile_options(${PROJECT_NAME} INTERFACE -ftemplate-depth=512)
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+diff --git a/cmake/manifConfig.cmake.in b/cmake/manifConfig.cmake.in
+index bbbc698..863d5b5 100644
+--- a/cmake/manifConfig.cmake.in
++++ b/cmake/manifConfig.cmake.in
+@@ -2,6 +2,7 @@
+ 
+ include(CMakeFindDependencyMacro)
+ @Eigen3_DEPENDENCY@
++@tl-optional_DEPENDENCY@
+ 
+ if(NOT TARGET @PROJECT_NAME@)
+   include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
