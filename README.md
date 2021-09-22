@@ -288,6 +288,24 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
+### Specifying Triplets
+
+Vcpkg uses triplets to capture the desired target platform, and link type, as well as the host platform and link type.
+If the default triplets are not used, then they must be specified both when building packages and when using them.
+See the documenation on [integrating](docs/users/integration.md) and [host dependencies](docs/users/host-dependencies.md) for more information.
+
+When installing packages, the triplets can be specified with command line flags.
+`--triplet [triplet]` for target packages and `--host-triplet [triplet]` for host dependencies.
+
+For projects cmake projects using the vcpkg toolchain, the triplets can be specified using the `VCPKG_TARGET_TRIPLET` and `VCPKG_HOST_TRIPLET` respectivley.
+For example
+```
+-DVCPKG_TARGET_TRIPLET=[target-triplet]
+-DVCPKG_HOST_TRIPLET=[host-triplet]
+```
+
+For both installation and use, `VCPKG_TARGET_TRIPLET` and `VCPKG_HOST_TRIPLET` environment variables can also be used.
+
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
