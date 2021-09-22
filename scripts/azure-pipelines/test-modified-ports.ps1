@@ -64,7 +64,7 @@ if (-Not $null -eq $HostTriplet) {
         throw
     }
     #$cli_extra_argument = " --host-triplet=$HostTriplet "
-    $env:VCPKG_DEFAULT_HOST_TRIPLET = $HostTriplet
+    #$env:VCPKG_DEFAULT_HOST_TRIPLET = $HostTriplet
 }
 
 if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
