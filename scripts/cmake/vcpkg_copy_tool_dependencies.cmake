@@ -38,7 +38,7 @@ function(vcpkg_copy_tool_dependencies tool_dir)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${ARGN}")
     endif()
 
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND CMAKE_HOST_WIN32)
         find_program(Z_VCPKG_POWERSHELL_CORE pwsh)
         if (NOT Z_VCPKG_POWERSHELL_CORE)
             message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
