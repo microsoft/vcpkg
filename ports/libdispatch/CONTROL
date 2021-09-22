@@ -1,0 +1,4 @@
+Source: libdispatch
+Version: 5.3.1
+Description: Grand central dispatch.
+Homepage: https://github.com/apple/swift-corelibs-libdispatch
