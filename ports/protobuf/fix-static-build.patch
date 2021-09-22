@@ -1,11 +1,11 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 4091bc8..9850018 100644
+index ef5bb13..e2d4acb 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -31,7 +31,7 @@ endforeach()
- if (protobuf_BUILD_PROTOC_BINARIES)
-   install(TARGETS protoc EXPORT protobuf-targets
-     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+@@ -33,7 +33,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT protoc)
 -  if (UNIX AND NOT APPLE)
 +  if (UNIX AND NOT APPLE AND NOT protobuf_MSVC_STATIC_RUNTIME)
      set_property(TARGET protoc

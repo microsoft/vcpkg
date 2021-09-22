@@ -1,7 +1,7 @@
 {
   "name": "caffe2",
   "version-string": "0.8.1",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Caffe2 is a lightweight, modular, and scalable deep learning framework.",
   "homepage": "https://github.com/caffe2/caffe2",
   "supports": "!x86",
