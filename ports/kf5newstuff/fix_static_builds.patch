@@ -1,0 +1,68 @@
+From 3eabc253dab40581aa4716f466bf101f0f1d5199 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 16 Sep 2021 17:07:38 +0200
+Subject: [PATCH 1/2] Add support for static builds
+
+---
+ KF5NewStuffConfig.cmake.in | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/KF5NewStuffConfig.cmake.in b/KF5NewStuffConfig.cmake.in
+index e4ef2944..063b83ca 100644
+--- a/KF5NewStuffConfig.cmake.in
++++ b/KF5NewStuffConfig.cmake.in
+@@ -10,5 +10,25 @@ find_dependency(KF5Service "@KF_DEP_VERSION@")
+ find_dependency(KF5NewStuffCore "@KF_VERSION@")
+ find_dependency(KF5NewStuffQuick "@KF_VERSION@")
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt5Qml @REQUIRED_QT_VERSION@)
++    find_dependency(Qt5Quick @REQUIRED_QT_VERSION@)
++    find_dependency(Qt5Gui @REQUIRED_QT_VERSION@)
++
++    find_dependency(KF5KIO "@KF_DEP_VERSION@")
++    find_dependency(KF5Completion "@KF_DEP_VERSION@")
++    find_dependency(KF5I18n "@KF_DEP_VERSION@")
++    find_dependency(KF5ItemViews "@KF_DEP_VERSION@")
++    find_dependency(KF5IconThemes "@KF_DEP_VERSION@")
++    find_dependency(KF5TextWidgets "@KF_DEP_VERSION@")
++    find_dependency(KF5Archive "@KF_DEP_VERSION@")
++    find_dependency(KF5Package "@KF_DEP_VERSION@")
++    find_dependency(KF5Config "@KF_DEP_VERSION@")
++
++    if(@KF5Syndication_FOUND@)
++            find_dependency(KF5Syndication "@KF_VERSION@")
++    endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5NewStuffTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+
+
+From e31b2b07a10b23d82e1e84316716aaf832e4ad99 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 16 Sep 2021 17:09:49 +0200
+Subject: [PATCH 2/2] Add missing find_package(Qt5Gui)
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c7022663..d2ead74a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,7 +18,7 @@ include(KDECMakeSettings)
+ include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
+ 
+ set(REQUIRED_QT_VERSION 5.15.0)
+-find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED COMPONENTS Widgets Xml)
++find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED COMPONENTS Gui Widgets Xml)
+ find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE COMPONENTS Qml Quick)
+ 
+ find_package(KF5Archive ${KF_DEP_VERSION} REQUIRED)
+-- 
+GitLab
+
