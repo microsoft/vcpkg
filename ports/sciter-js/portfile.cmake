@@ -1,6 +1,6 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_UWP)
     message(FATAL_ERROR "Sciter only supports Windows Desktop")
 endif()
 
