@@ -5,6 +5,12 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+    LINKER_LANGUAGE CXX
+    DEFINE_SYMBOL ""
+)
+
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
@@ -98,6 +104,17 @@ endif()
 
 if(IMGUI_USE_WCHAR32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
+endif()
+
+if(BUILD_SHARED_LIBS AND WIN32)
+	target_compile_definitions(${PROJECT_NAME}
+		INTERFACE
+            "IMGUI_API=__declspec(dllimport)"
+            "IMGUI_IMPL_API=__declspec(dllimport)"
+		PRIVATE
+            "IMGUI_API=__declspec(dllexport)"
+            "IMGUI_IMPL_API=__declspec(dllexport)"
+	)
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)
