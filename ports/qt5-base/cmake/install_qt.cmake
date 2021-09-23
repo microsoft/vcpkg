@@ -1,7 +1,7 @@
 include(qt_fix_makefile_install)
 
 function(install_qt)
-    if(CMAKE_HOST_WIN32)
+    if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW)
         if (VCPKG_QMAKE_USE_NMAKE)
             find_program(NMAKE nmake REQUIRED)
             set(INVOKE "${NMAKE}")

@@ -203,7 +203,7 @@ find_library(ICUDATA_RELEASE NAMES icudata libicudata icudt PATHS "${CURRENT_INS
 find_library(ICUDATA_DEBUG NAMES icudatad libicudatad icudata libicudata icudtd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 set(ICU_RELEASE "${ICUIN_RELEASE} ${ICUTU_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
 set(ICU_DEBUG "${ICUIN_DEBUG} ${ICUTU_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ICU_RELEASE "${ICU_RELEASE} Advapi32.lib")
     set(ICU_DEBUG "${ICU_DEBUG} Advapi32.lib" )
 endif()
@@ -257,6 +257,20 @@ set(DEBUG_OPTIONS
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
         list(APPEND CORE_OPTIONS -appstore-compliant)
+    elseif(VCPKG_TARGET_IS_MINGW)
+        z_vcpkg_get_cmake_vars(cmake_vars_file)
+        debug_message("Including cmake vars from: ${cmake_vars_file}")
+        include("${cmake_vars_file}")
+        list(APPEND CORE_OPTIONS
+            QMAKE_CC="${VCPKG_DETECTED_CMAKE_C_COMPILER}"
+            QMAKE_CXX="${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
+            QMAKE_LINK="${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
+            QMAKE_LINK_C="${VCPKG_DETECTED_CMAKE_C_COMPILER}"
+        )
+        if(CMAKE_HOST_WIN32)
+            set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+            set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+        endif()
     endif()
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
         list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
