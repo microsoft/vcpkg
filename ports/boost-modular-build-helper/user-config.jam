@@ -2,9 +2,12 @@ import toolset ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
-    using msvc : @MSVC_VERSION@ : cl.exe
+    using msvc : @BOOST_MSVC_VERSION@ : cl.exe
         :
         <setup>"@NOTHING_BAT@"
+        @CXXFLAGS@
+        @CFLAGS@
+        @LDFLAGS@
         @TOOLSET_OPTIONS@
         ;
 }
