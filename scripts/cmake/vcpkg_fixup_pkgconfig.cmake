@@ -56,10 +56,10 @@ function(z_vcpkg_fixup_pkgconfig_check_files file config)
     endif()
 
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
-        "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/pkgconfig"
-        "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
         "${CURRENT_PACKAGES_DIR}${path_suffix_${config}}/lib/pkgconfig"
         "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+        "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/pkgconfig"
+        "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
     )
 
     # First make sure everything is ok with the package and its deps
