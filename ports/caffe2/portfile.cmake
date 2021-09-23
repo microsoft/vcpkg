@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         msvc-fixes.patch
         fix-space.patch
+        fix-protobuf-deprecated.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
