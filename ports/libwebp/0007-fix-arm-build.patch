@@ -1,13 +1,13 @@
 diff --git a/cmake/cpu.cmake b/cmake/cpu.cmake
-index da9a42a4..ce7a69f3 100644
+index bc0dbc9..381f64a 100644
 --- a/cmake/cpu.cmake
 +++ b/cmake/cpu.cmake
-@@ -73,7 +73,7 @@ foreach(I_SIMD RANGE ${WEBP_SIMD_FLAGS_RANGE})
+@@ -97,7 +97,7 @@ foreach(I_SIMD RANGE ${WEBP_SIMD_FLAGS_RANGE})
      set(CMAKE_REQUIRED_FLAGS ${SIMD_COMPILE_FLAG})
      webp_check_compiler_flag(${WEBP_SIMD_FLAG} ${WEBP_ENABLE_SIMD})
    else()
--    if(MSVC)
-+    if(MSVC AND NOT (CMAKE_GENERATOR_PLATFORM MATCHES "^ARM"))
+-    if(MSVC AND SIMD_ENABLE_FLAGS)
++    if(MSVC AND SIMD_ENABLE_FLAGS AND NOT (CMAKE_GENERATOR_PLATFORM MATCHES "^ARM"))
+       # The detection for SSE2/SSE4 support under MSVC is based on the compiler
+       # version so e.g., clang-cl will require flags to enable the assembly.
        list(GET SIMD_ENABLE_FLAGS ${I_SIMD} SIMD_COMPILE_FLAG)
-     else()
-       set(SIMD_COMPILE_FLAG " ")
