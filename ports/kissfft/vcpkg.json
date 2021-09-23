@@ -1,0 +1,7 @@
+{
+  "name": "kissfft",
+  "version-string": "2020-03-30",
+  "port-version": 1,
+  "description": "A Fast Fourier Transform (FFT) library that tries to Keep it Simple, Stupid",
+  "homepage": "https://github.com/mborgerding/kissfft"
+}

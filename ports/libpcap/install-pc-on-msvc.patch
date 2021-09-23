@@ -1,97 +1,37 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55b93f1..3fe9979 100644
+index b83fbbd..2f675d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2355,48 +2355,54 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap.h DESTINATION include)
+@@ -2678,9 +2678,12 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap.h DESTINATION include)
  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap-bpf.h DESTINATION include)
  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap-namedb.h DESTINATION include)
  
 -# On UN*X, and on Windows when not using MSVC, generate libpcap.pc and
+-# pcap-config and process man pages and arrange that they be installed.
+-if(NOT MSVC)
 +# Generate libpcap.pc
 +if(BUILD_SHARED_LIBS)
 +    set(PACKAGE_NAME ${LIBRARY_NAME})
 +else()
 +    set(PACKAGE_NAME pcap)
 +endif()
-+set(prefix ${CMAKE_INSTALL_PREFIX})
-+set(exec_prefix "\${prefix}")
-+set(includedir "\${prefix}/include")
-+set(libdir "\${exec_prefix}/lib")
-+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR
-+   CMAKE_SYSTEM_NAME STREQUAL "NetBSD" OR
-+   CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR
-+   CMAKE_SYSTEM_NAME STREQUAL "DragonFly BSD" OR
-+   CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
-+   CMAKE_SYSTEM_NAME STREQUAL "OSF1")
-+    #
-+    # Platforms where the linker is the GNU linker
-+    # or accepts command-line arguments like
-+    # those the GNU linker accepts.
-+    #
-+    set(V_RPATH_OPT "-Wl,-rpath,")
-+elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS" AND CMAKE_SYSTEM_VERSION MATCHES "5[.][0-9.]*")
-+    #
-+    # SunOS 5.x.
-+    #
-+    # XXX - this assumes GCC is using the Sun linker,
-+    # rather than the GNU linker.
-+    #
-+    set(V_RPATH_OPT "-Wl,-R,")
-+else()
-+    #
-+    # No option needed to set the RPATH.
-+    #
-+    set(V_RPATH_OPT "")
-+endif()
-+set(LIBS "")
-+foreach(LIB ${PCAP_LINK_LIBRARIES})
-+    set(LIBS "${LIBS} -l${LIB}")
-+endforeach(LIB)
-+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpcap.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc @ONLY)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
-+
-+# On UN*X, and on Windows when not using MSVC, generate
- # pcap-config and process man pages and arrange that they be installed.
- if(NOT MSVC)
--    set(prefix ${CMAKE_INSTALL_PREFIX})
--    set(exec_prefix "\${prefix}")
--    set(includedir "\${prefix}/include")
--    set(libdir "\${exec_prefix}/lib")
--    if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR
--       CMAKE_SYSTEM_NAME STREQUAL "NetBSD" OR
--       CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR
--       CMAKE_SYSTEM_NAME STREQUAL "DragonFly BSD" OR
--       CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
--       CMAKE_SYSTEM_NAME STREQUAL "OSF1")
--        #
--        # Platforms where the linker is the GNU linker
--        # or accepts command-line arguments like
--        # those the GNU linker accepts.
--        #
--        set(V_RPATH_OPT "-Wl,-rpath,")
--    elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS" AND CMAKE_SYSTEM_VERSION MATCHES "5[.][0-9.]*")
--        #
--        # SunOS 5.x.
--        #
--        # XXX - this assumes GCC is using the Sun linker,
--        # rather than the GNU linker.
--        #
--        set(V_RPATH_OPT "-Wl,-R,")
--    else()
--        #
--        # No option needed to set the RPATH.
--        #
--        set(V_RPATH_OPT "")
--    endif()
--    set(LIBS "")
--    foreach(LIB ${PCAP_LINK_LIBRARIES})
--        set(LIBS "${LIBS} -l${LIB}")
--    endforeach(LIB)
-     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pcap-config.in ${CMAKE_CURRENT_BINARY_DIR}/pcap-config @ONLY)
--    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpcap.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc @ONLY)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
--    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
--
+     set(prefix ${CMAKE_INSTALL_PREFIX})
+     set(exec_prefix "\${prefix}")
+     set(includedir "\${prefix}/include")
+@@ -2715,10 +2718,14 @@ if(NOT MSVC)
+     foreach(LIB ${PCAP_LINK_LIBRARIES})
+         set(LIBS "${LIBS} -l${LIB}")
+     endforeach(LIB)
+-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pcap-config.in ${CMAKE_CURRENT_BINARY_DIR}/pcap-config @ONLY)
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpcap.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc @ONLY)
+-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
++    
++# On UN*X, and on Windows when not using MSVC, generate libpcap.pc and
++# pcap-config and process man pages and arrange that they be installed.
++if(NOT MSVC)
++    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pcap-config.in ${CMAKE_CURRENT_BINARY_DIR}/pcap-config @ONLY)
++    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
+ 
      #
      # Man pages.
-     #
