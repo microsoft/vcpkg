@@ -57,8 +57,8 @@ function(vcpkg_build_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL"
-	"LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
-	""
+        "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
+        ""
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -152,7 +152,7 @@ function(vcpkg_build_make)
             else() # dynamic
                 set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
             endif()
-            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_C_COMPILER MATCHES "cl.exe")
+            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
                 set(LDFLAGS_${cmake_buildtype} "-L${Z_VCPKG_INSTALLED}${path_suffix}/lib -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
                 set(LINK_ENV_${cmake_buildtype} "$ENV{_LINK_} ${LINKER_FLAGS_${cmake_buildtype}}")
             else()
