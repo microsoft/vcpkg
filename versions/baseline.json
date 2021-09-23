@@ -5677,8 +5677,8 @@
       "port-version": 1
     },
     "rbdl-orb": {
-      "baseline": "3.0.0",
-      "port-version": 1
+      "baseline": "3.1.2",
+      "port-version": 2
     },
     "re2": {
       "baseline": "2020-10-01",
