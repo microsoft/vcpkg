@@ -1,15 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision aa89aa4950074babe84762413f39bd364ecaf944)
-+++ b/CMakeLists.txt	(date 1632228755789)
-@@ -173,11 +173,3 @@
- install(FILES ${EXPORT_MODULES}
++++ b/CMakeLists.txt	(date 1632403791277)
+@@ -174,7 +174,7 @@
          DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/modules"
          COMPONENT Development)
--
+ 
 -if (NOT CMAKE_CROSSCOMPILING AND NOT BYO_CRYPTO)
--    add_subdirectory(bin/sha256_profile)
--    include(CTest)
--    if (BUILD_TESTING)
--        add_subdirectory(tests)
--    endif()
--endif()
++if (0)
+     add_subdirectory(bin/sha256_profile)
+     include(CTest)
+     if (BUILD_TESTING)
