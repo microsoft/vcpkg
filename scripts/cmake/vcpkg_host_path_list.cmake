@@ -69,8 +69,6 @@ function(vcpkg_host_path_list)
         else()
             set(list "${list}${VCPKG_HOST_PATH_SEPARATOR}${to_add}")
         endif()
-
-        return()
     else()
         message(FATAL_ERROR "Operation ${operation} not recognized.")
     endif()
