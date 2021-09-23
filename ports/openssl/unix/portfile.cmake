@@ -19,9 +19,8 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-    PREFER_NINJA
     OPTIONS
         -DSOURCE_PATH=${MASTER_COPY_SOURCE_PATH}
         -DPERL=${PERL}
@@ -29,7 +28,7 @@ vcpkg_configure_cmake(
         -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(GLOB HEADERS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/include/openssl/*.h)
