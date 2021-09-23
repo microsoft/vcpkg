@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 10a3f4d..b0ae7d5 100644
+index 0799269..45b3306 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -532,7 +532,7 @@ if(WEBP_BUILD_VWEBP)
@@ -18,6 +18,6 @@ index 10a3f4d..b0ae7d5 100644
 +      if(X11_Xrandr_FOUND) # due to glut linking xrandr if found
 +        target_link_libraries(vwebp ${X11_Xrandr_LIB})
 +      endif()
-     endif()                                       
+     endif()
      install(TARGETS vwebp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
+     if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")

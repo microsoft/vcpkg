@@ -69,26 +69,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_fixup_pkgconfig()
 
-
-set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/webp/")
-foreach(tool ${BIN_NAMES})
-  if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-  endif()
-
-  if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/webp/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-  endif()
-endforeach()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/webp")
-
-#No tools
-file(GLOB_RECURSE RESULT "${CURRENT_PACKAGES_DIR}/tools/")
-list(LENGTH RESULT RES_LEN)
-if(RES_LEN EQUAL 0)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/")
-endif()
+vcpkg_copy_tools(TOOL_NAMES cwebp dwebp gif2webp img2webp vwebp webpinfo webpmux DESTINATION "${CURRENT_PACKAGES_DIR}/tools/webp"  AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
