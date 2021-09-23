@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [MAYBE_UNUSED_VARIABLES <option-name>...]
+    [MAYBE_UNUSED_VARIABLES <OPTION_NAME>...]
 )
 ```
 
@@ -56,6 +56,17 @@ Additional options passed to CMake during the Debug configuration. These are in 
 
 ### MAYBE_UNUSED_VARIABLES
 Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
+For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
@@ -176,6 +187,18 @@ function(vcpkg_configure_cmake)
         set(GENERATOR "Visual Studio 16 2019")
         set(ARCH "ARM64")
 
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+        set(GENERATOR "Visual Studio 17 2022")
+        set(ARCH "Win32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+        set(GENERATOR "Visual Studio 17 2022")
+        set(ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+        set(GENERATOR "Visual Studio 17 2022")
+        set(ARCH "ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+        set(GENERATOR "Visual Studio 17 2022")
+        set(ARCH "ARM64")
     else()
         if(NOT VCPKG_CMAKE_SYSTEM_NAME)
             set(VCPKG_CMAKE_SYSTEM_NAME Windows)

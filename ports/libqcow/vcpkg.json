@@ -1,0 +1,13 @@
+{
+  "name": "libqcow",
+  "version-string": "20210419",
+  "port-version": 1,
+  "description": "Library and tools to access the QEMU Copy-On-Write (QCOW) image format.",
+  "homepage": "https://github.com/libyal/libqcow",
+  "supports": "!uwp",
+  "dependencies": [
+    "gettext",
+    "openssl",
+    "zlib"
+  ]
+}

@@ -1,0 +1,51 @@
+From 61325e4547225b8b2ecefda4ca328a38c075c909 Mon Sep 17 00:00:00 2001
+From: Nicolas Fella <nicolas.fella@gmx.de>
+Date: Wed, 11 Aug 2021 15:35:05 +0200
+Subject: [PATCH] Add missing limits include
+
+---
+ src/corelib/global/qendian.h         | 1 +
+ src/corelib/global/qfloat16.h        | 1 +
+ src/corelib/text/qbytearraymatcher.h | 2 ++
+ 3 files changed, 4 insertions(+)
+
+diff --git a/src/corelib/global/qendian.h b/src/corelib/global/qendian.h
+index 257efbbdbe..05f11d6f81 100644
+--- a/src/corelib/global/qendian.h
++++ b/src/corelib/global/qendian.h
+@@ -47,6 +47,7 @@
+ // include stdlib.h and hope that it defines __GLIBC__ for glibc-based systems
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits>
+ 
+ #ifdef min // MSVC
+ #undef min
+diff --git a/src/corelib/global/qfloat16.h b/src/corelib/global/qfloat16.h
+index c7a9c87af3..3287d7cbf2 100644
+--- a/src/corelib/global/qfloat16.h
++++ b/src/corelib/global/qfloat16.h
+@@ -44,6 +44,7 @@
+ #include <QtCore/qglobal.h>
+ #include <QtCore/qmetatype.h>
+ #include <string.h>
++#include <limits>
+ 
+ #if defined(QT_COMPILER_SUPPORTS_F16C) && defined(__AVX2__) && !defined(__F16C__)
+ // All processors that support AVX2 do support F16C too. That doesn't mean
+diff --git a/src/corelib/text/qbytearraymatcher.h b/src/corelib/text/qbytearraymatcher.h
+index 0eedfc1d20..f5f9bef7b8 100644
+--- a/src/corelib/text/qbytearraymatcher.h
++++ b/src/corelib/text/qbytearraymatcher.h
+@@ -42,6 +42,8 @@
+ 
+ #include <QtCore/qbytearray.h>
+ 
++#include <limits>
++
+ QT_BEGIN_NAMESPACE
+ 
+ 
+-- 
+2.32.0
+

@@ -1,0 +1,7 @@
+{
+  "name": "lmdb",
+  "version-string": "0.9.24",
+  "port-version": 1,
+  "description": "LMDB is an extraordinarily fast, memory-efficient database",
+  "homepage": "https://github.com/LMDB/lmdb"
+}

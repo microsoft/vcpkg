@@ -1,0 +1,9 @@
+{
+  "name": "catch",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated alias for Catch2 unit testing framework",
+  "dependencies": [
+    "catch2"
+  ]
+}

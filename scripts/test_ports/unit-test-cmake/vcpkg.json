@@ -5,7 +5,8 @@
   "supports": "x64",
   "default-features": [
     "function-arguments",
-    "list"
+    "list",
+    "minimum-required"
   ],
   "features": {
     "function-arguments": {
@@ -13,6 +14,9 @@
     },
     "list": {
       "description": "Test the vcpkg_list function"
+    },
+    "minimum-required": {
+      "description": "Test the vcpkg_minimum_required function"
     }
   }
 }
