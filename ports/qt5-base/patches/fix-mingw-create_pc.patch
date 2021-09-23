@@ -1,0 +1,35 @@
+diff --git a/qmake/generators/win32/mingw_make.cpp b/qmake/generators/win32/mingw_make.cpp
+index ee9a418..8a3c45a 100644
+--- a/qmake/generators/win32/mingw_make.cpp
++++ b/qmake/generators/win32/mingw_make.cpp
+@@ -86,7 +86,7 @@ bool MingwMakefileGenerator::writeMakefile(QTextStream &t)
+     if(project->first("TEMPLATE") == "app" ||
+        project->first("TEMPLATE") == "lib" ||
+        project->first("TEMPLATE") == "aux") {
+-        if(project->isActiveConfig("create_pc") && project->first("TEMPLATE") == "lib")
++        if(project->isActiveConfig("create_pc") && (project->first("TEMPLATE") == "lib" || project->first("TEMPLATE") == "aux"))
+             writePkgConfigFile();
+         writeMingwParts(t);
+         return MakefileGenerator::writeMakefile(t);
+diff --git a/qmake/generators/win32/winmakefile.cpp b/qmake/generators/win32/winmakefile.cpp
+index 5e446bd..de6b028 100644
+--- a/qmake/generators/win32/winmakefile.cpp
++++ b/qmake/generators/win32/winmakefile.cpp
+@@ -726,7 +726,7 @@ QString Win32MakefileGenerator::defaultInstall(const QString &t)
+ {
+     if((t != "target" && t != "dlltarget") ||
+        (t == "dlltarget" && (project->first("TEMPLATE") != "lib" || !project->isActiveConfig("shared"))) ||
+-        project->first("TEMPLATE") == "subdirs" || project->first("TEMPLATE") == "aux")
++        project->first("TEMPLATE") == "subdirs")
+        return QString();
+ 
+     const QString root = installRoot();
+@@ -748,7 +748,7 @@ QString Win32MakefileGenerator::defaultInstall(const QString &t)
+         uninst.append("-$(DEL_FILE) " + dst);
+     }
+ 
+-    if(t == "target" && project->first("TEMPLATE") == "lib") {
++    if(t == "target" && (project->first("TEMPLATE") == "lib" || project->first("TEMPLATE") == "aux")) {
+         if(project->isActiveConfig("create_prl") && !project->isActiveConfig("no_install_prl") &&
+            !project->isEmpty("QMAKE_INTERNAL_PRL_FILE")) {
+             QString dst_prl = Option::fixPathToTargetOS(project->first("QMAKE_INTERNAL_PRL_FILE").toQString());
