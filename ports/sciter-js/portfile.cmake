@@ -83,7 +83,7 @@ elseif(VCPKG_TARGET_IS_OSX)
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-else()
+elseif(VCPKG_TARGET_IS_WINDOWS)
     set(SCITER_BIN ${SOURCE_PATH}/bin/windows/${SCITER_ARCH})
     set(SCITER_BIN32 ${SOURCE_PATH}/bin/windows/x32)
 
