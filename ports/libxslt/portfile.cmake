@@ -16,6 +16,7 @@ vcpkg_from_github(
         0001-Fix-makefile.patch
         0002-Fix-lzma.patch
         0003-Fix-configure.patch
+        only_build_one_lib_type.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -26,14 +27,23 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(CONFIGURE_COMMAND_TEMPLATE
         cruntime=@CRUNTIME@
+        static=@BUILDSTATIC@
         debug=@DEBUGMODE@
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
         bindir=$(PREFIX)\\bin
         sodir=$(PREFIX)\\bin
+        zlib=yes
+        lzma=yes
     )
-    # Debug params
+    # Common
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(BUILDSTATIC yes)
+    else()
+        set(BUILDSTATIC no)
+    endif()
+    # Release params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(CRUNTIME /MD)
     else()
@@ -47,7 +57,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
     file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
     string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_REL)
-    # Release params
+    # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(CRUNTIME /MDd)
     else()

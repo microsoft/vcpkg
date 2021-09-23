@@ -1,7 +1,6 @@
 {
   "name": "avcpp",
-  "version-date": "2021-05-06",
-  "port-version": 1,
+  "version-date": "2021-06-14",
   "description": "Wrapper for the FFmpeg that simplify usage it from C++ projects.",
   "homepage": "https://github.com/h4tr3d/avcpp",
   "dependencies": [

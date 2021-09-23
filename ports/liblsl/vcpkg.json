@@ -1,0 +1,11 @@
+{
+  "name": "liblsl",
+  "version-string": "1.14.0",
+  "port-version": 2,
+  "description": "C++ lsl library for multi-modal time-synched data transmission over the local network",
+  "homepage": "https://github.com/sccn/liblsl",
+  "supports": "!staticcrt",
+  "dependencies": [
+    "pugixml"
+  ]
+}

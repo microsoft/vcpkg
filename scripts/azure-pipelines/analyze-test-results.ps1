@@ -23,6 +23,10 @@ The triplet to analyze.
 
 .PARAMETER baselineFile
 The path to the ci.baseline.txt file in the vcpkg repository.
+
+.PARAMETER passingIsPassing
+Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
+when using vcpkg to test a prerelease MSVC++ compiler)
 #>
 [CmdletBinding()]
 Param(
@@ -32,7 +36,8 @@ Param(
     [Parameter(Mandatory = $true)]
     [string]$triplet,
     [Parameter(Mandatory = $true)]
-    [string]$baselineFile
+    [string]$baselineFile,
+    [switch]$passingIsPassing = $false
 )
 
 $ErrorActionPreference = 'Stop'
@@ -400,6 +405,10 @@ function write_errors_for_summary {
             Write-Verbose "checking $($testName):$triplet $($test.result)"
 
             if ($test.result -eq 'Fail') {
+                if (($test.currentResult) -eq "pass" -and $passingIsPassing) {
+                    continue;
+                }
+
                 $failure_found = $true
                 if ($test.currentResult -eq "pass") {
                     [System.Console]::Error.WriteLine( `

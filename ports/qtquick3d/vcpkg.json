@@ -1,6 +1,6 @@
 {
   "name": "qtquick3d",
-  "version-semver": "6.1.2",
+  "version-semver": "6.1.3",
   "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
   "dependencies": [

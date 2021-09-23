@@ -1,11 +1,10 @@
 {
   "name": "boost-graph-parallel",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost graph_parallel module",
   "homepage": "https://github.com/boostorg/graph_parallel",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-concept-check",
     "boost-config",
     "boost-container-hash",
