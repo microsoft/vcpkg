@@ -1778,7 +1778,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 3
+      "port-version": 4
     },
     "directxtex": {
       "baseline": "aug2021",

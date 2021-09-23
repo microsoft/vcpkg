@@ -1,5 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
 
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/directxsdk/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if directxsdk is installed. Please remove directxsdk, and try to install ${PORT} again if you need it.")
+endif()
+
 message(WARNING "Use of ${PORT} is not recommended for new projects. See https://aka.ms/dxsdk for more information.")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -22,15 +26,15 @@ file(GLOB HEADER_FILES "${PACKAGE_PATH}/build/native/include/*.h" "${PACKAGE_PAT
 file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 file(GLOB RELEASE_LIB_FILES "${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/*.lib")
-file(INSTALL ${RELEASE_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/${PORT}")
+file(INSTALL ${RELEASE_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
 
 file(GLOB DEBUG_LIB_FILES "${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/*.lib")
-file(INSTALL ${DEBUG_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}")
+file(INSTALL ${DEBUG_LIB_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
 
 file(GLOB RELEASE_DLL_FILES "${PACKAGE_PATH}/build/native/release/bin/${VCPKG_TARGET_ARCHITECTURE}/*.dll")
-file(INSTALL ${RELEASE_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/${PORT}")
+file(INSTALL ${RELEASE_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
 
 file(GLOB DEBUG_DLL_FILES "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/*.dll")
-file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/${PORT}")
+file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
 
 file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
