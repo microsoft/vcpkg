@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 b92ae3cb14d26dfe48cb903df56f7df91a4dc0ab2e5ea4f095c72b0b7e0a2582f1324c73eb42c080bcb0a59a3dfc37cd2912037fc8e5f7df8433899749fca63c
     HEAD_REF master
     PATCHES
-		001-fix-cmake-target-path.patch
-		002-no-exe-no-tests.patch
+        001-fix-cmake-target-path.patch
+        002-no-exe-no-tests.patch
 )
 
 vcpkg_cmake_configure(
