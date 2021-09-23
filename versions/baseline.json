@@ -1966,7 +1966,7 @@
     },
     "enet": {
       "baseline": "1.3.17",
-      "port-version": 0
+      "port-version": 1
     },
     "ensmallen": {
       "baseline": "2.17.0",
