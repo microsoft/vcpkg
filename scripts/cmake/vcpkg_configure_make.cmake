@@ -648,7 +648,7 @@ function(vcpkg_configure_make)
         message(STATUS "Generating configure for ${TARGET_TRIPLET} via autogen.sh")
         if (CMAKE_HOST_WIN32)
             vcpkg_execute_required_process(
-                COMMAND "${base_cmd}" -c "./autogen.sh"
+                COMMAND ${base_cmd} -c "./autogen.sh"
                 WORKING_DIRECTORY "${src_dir}"
                 LOGNAME "autoconf-${TARGET_TRIPLET}"
             )
@@ -664,11 +664,19 @@ function(vcpkg_configure_make)
 
     if (arg_PRERUN_SHELL)
         message(STATUS "Prerun shell with ${TARGET_TRIPLET}")
-        vcpkg_execute_required_process(
-            COMMAND "${base_cmd}" -c "${arg_PRERUN_SHELL}"
-            WORKING_DIRECTORY "${src_dir}"
-            LOGNAME "prerun-${TARGET_TRIPLET}"
-        )
+        if (CMAKE_HOST_WIN32)
+            vcpkg_execute_required_process(
+                COMMAND ${base_cmd} -c "${arg_PRERUN_SHELL}"
+                WORKING_DIRECTORY "${src_dir}"
+                LOGNAME "prerun-${TARGET_TRIPLET}"
+            )
+        else
+            vcpkg_execute_required_process(
+                COMMAND "${base_cmd}" -c "${arg_PRERUN_SHELL}"
+                WORKING_DIRECTORY "${src_dir}"
+                LOGNAME "prerun-${TARGET_TRIPLET}"
+            )
+        endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)

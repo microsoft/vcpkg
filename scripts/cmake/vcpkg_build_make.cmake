@@ -170,24 +170,19 @@ function(vcpkg_build_make)
                 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
             endif()
 
-            if(MAKE_BASH)
-                set(make_cmd_line "${make_command} ${make_opts}")
-                set(no_parallel_make_cmd_line "${make_command} ${no_parallel_make_opts}")
-            else()
-                set(make_cmd_line ${make_command} ${make_opts})
-                set(no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
-            endif()
+            set(make_cmd_line ${make_command} ${make_opts})
+            set(no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
 
             if (arg_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                        COMMAND "${MAKE_BASH}" ${no_parallel_make_cmd_line}
+                        COMMAND ${no_parallel_make_cmd_line}
                         WORKING_DIRECTORY "${working_directory}"
                         LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
                 )
             else()
                 vcpkg_execute_build_process(
-                        COMMAND "${MAKE_BASH}" ${make_cmd_line}
-                        NO_PARALLEL_COMMAND "${MAKE_BASH}" ${no_parallel_make_cmd_line}
+                        COMMAND ${make_cmd_line}
+                        NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
                         WORKING_DIRECTORY "${working_directory}"
                         LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
                 )
@@ -200,13 +195,9 @@ function(vcpkg_build_make)
 
             if (arg_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
-                if(MAKE_BASH)
-                    set(make_cmd_line "${make_command} ${install_opts}")
-                else()
-                    set(make_cmd_line ${make_command} ${install_opts})
-                endif()
+                set(make_cmd_line ${make_command} ${install_opts})
                 vcpkg_execute_build_process(
-                    COMMAND "${MAKE_BASH}" ${make_cmd_line}
+                    COMMAND ${make_cmd_line}
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "install-${TARGET_TRIPLET}${short_buildtype}"
                 )
