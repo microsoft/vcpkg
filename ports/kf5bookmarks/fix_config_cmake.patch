@@ -1,12 +1,3 @@
-From 459cfb91027b27831caaa63584859f51af88d778 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
-Date: Mon, 30 Aug 2021 23:02:11 +0200
-Subject: [PATCH] Add support for static builds
-
----
- KF5BookmarksConfig.cmake.in | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
 diff --git a/KF5BookmarksConfig.cmake.in b/KF5BookmarksConfig.cmake.in
 index 0c4494a..de973f7 100644
 --- a/KF5BookmarksConfig.cmake.in
