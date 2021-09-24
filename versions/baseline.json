@@ -4826,7 +4826,7 @@
     },
     "openmvg": {
       "baseline": "1.6",
-      "port-version": 2
+      "port-version": 3
     },
     "openmvs": {
       "baseline": "1.1",
