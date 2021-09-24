@@ -10,7 +10,7 @@ if(MSVC)
 endif()
 
 find_package(ZLIB REQUIRED)
-find_package(MPG123 REQUIRED)
+find_package(mpg123 CONFIG REQUIRED)
 find_package(Vorbis REQUIRED)
 
 file(GLOB HEADERS libopenmpt/*.h libopenmpt/*.hpp)
@@ -54,14 +54,7 @@ target_compile_definitions(libopenmpt PRIVATE
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(
     libopenmpt
-    PRIVATE
-      -DMPT_BUILD_MSVC_SHARED -DLIBOPENMPT_BUILD_DLL
-  )
-else()
-  target_compile_definitions(
-    libopenmpt
-    PRIVATE
-      -DMPT_BUILD_MSVC_STATIC
+    PRIVATE -DLIBOPENMPT_BUILD_DLL
   )
 endif()
 
@@ -76,10 +69,11 @@ target_link_libraries(
   PRIVATE
     MPG123::libmpg123
     Vorbis::vorbisfile
+    Vorbis::vorbis
     ZLIB::ZLIB
 )
 
-set(LIBOPENMPT_REQUIRES_PRIVATE "zlib vorbisfile libmpg123")
+set(LIBOPENMPT_REQUIRES_PRIVATE "zlib vorbis vorbisfile libmpg123")
 set(LIBOPENMPT_LIBS_PRIVATE "")
 set(prefix "${CMAKE_INSTALL_PREFIX}")
 set(exec_prefix [[${prefix}]])
@@ -93,7 +87,7 @@ install(EXPORT libopenmpt-targets DESTINATION share/libopenmpt NAMESPACE libopen
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/libopenmpt-config.cmake [[
 include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
-find_dependency(MPG123)
+find_dependency(mpg123 CONFIG)
 find_dependency(Vorbis)
 include(${CMAKE_CURRENT_LIST_DIR}/libopenmpt-targets.cmake)
 ]])
