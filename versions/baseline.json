@@ -1782,7 +1782,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 3
+      "port-version": 4
     },
     "directxtex": {
       "baseline": "aug2021",
@@ -1882,7 +1882,7 @@
     },
     "dxsdk-d3dx": {
       "baseline": "9.29.952.8",
-      "port-version": 0
+      "port-version": 1
     },
     "dxut": {
       "baseline": "11.26",
