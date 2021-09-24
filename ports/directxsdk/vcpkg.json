@@ -1,7 +1,7 @@
 {
   "name": "directxsdk",
   "version-string": "jun10",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Legacy DirectX SDK",
   "homepage": "https://docs.microsoft.com/en-us/windows/win32/directx-sdk--august-2009-",
   "supports": "windows & !uwp & !arm",
