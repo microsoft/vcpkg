@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES 
-	keep_isystem.patch
+        keep_isystem.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -28,6 +28,7 @@ vcpkg_configure_make(
         OPTIONS
             --with-hwloc=internal
             --with-libevent=internal
+            --disable-mpi-fortran
         OPTIONS_DEBUG
             --enable-debug
 )
@@ -37,4 +38,4 @@ vcpkg_install_make(DISABLE_PARALLEL)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
