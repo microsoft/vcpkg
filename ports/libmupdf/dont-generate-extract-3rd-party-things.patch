@@ -1,0 +1,37 @@
+--- a/Makethird
++++ b/Makethird
+@@ -237,34 +237,3 @@ endif
+ endif
+ 
+ # --- EXTRACT ---
+-
+-THIRD_CFLAGS += $(EXTRACT_CFLAGS)
+-THIRD_LIBS += $(EXTRACT_LIBS)
+-THIRD_SRC += $(EXTRACT_SRC)
+-$(OUT)/thirdparty/extract/%.o: thirdparty/extract/%.c
+-       $(CC_CMD) $(WARNING_CFLAGS) $(LIB_CFLAGS) $(EXTRACT_CFLAGS) $(ZLIB_CFLAGS) $(EXTRACT_BUILD_CFLAGS)
+-
+-# The first python3 command in the next two rules returns 0 (success) iff
+-# python3 exists and is version 3.6 or later.
+-
+-thirdparty/extract/src/docx_template.c: thirdparty/extract/src/template.docx thirdparty/extract/src/docx_template_build.py
+-       $(QUIET_GEN) if python3 -c 'import sys; sys.exit(sys.version_info < (3,6))'; \
+-               then python3 thirdparty/extract/src/docx_template_build.py \
+-                       -i thirdparty/extract/src/template.docx \
+-                       -n docx \
+-                       -o thirdparty/extract/src/docx_template ; \
+-               else echo python3 is older than 3.6 so not running docx_template_build.py; \
+-               fi
+-       @touch $@
+-
+-thirdparty/extract/src/odt_template.c: thirdparty/extract/src/template.odt thirdparty/extract/src/docx_template_build.py
+-       $(QUIET_GEN) if python3 -c 'import sys; sys.exit(sys.version_info < (3,6))'; \
+-               then python3 thirdparty/extract/src/docx_template_build.py \
+-                       -i thirdparty/extract/src/template.odt \
+-                       -n odt \
+-                       -o thirdparty/extract/src/odt_template ; \
+-               else echo python3 is older than 3.6 so not running docx_template_build.py; \
+-               fi
+-       @touch $@
+-
+-generate: thirdparty/extract/src/docx_template.c
