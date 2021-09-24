@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaveGamble/cJSON
-    REF 95368da1a13c1ced5507bb5b0a457729af34837c
-    SHA512 e50fb7857573fac39bc9659004bd71483156677b4b1c7dd801470469162d1af2b1e3803fb4f1291b2b5defefb005ddd78b0efb01965626eecc00bc78b5f98c72
+    REF v1.7.15
+    SHA512 0b32a758c597fcc90c8ed0af493c9bccd611b9d4f9a03e87de3f7337bb9a28990b810befd44bc321a0cb42cbcd0b026d45761f9bab7bd798f920b7b6975fb124
     HEAD_REF master
 )
 
@@ -20,9 +20,8 @@ else()
     set(DENABLE_HIDDEN_SYMBOLS OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_SHARED_AND_STATIC_LIBS=OFF
         -DCJSON_OVERRIDE_BUILD_SHARED_LIBS=OFF
@@ -34,18 +33,18 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cJSON)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cJSON)
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h _contents)
+file(READ "${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h" _contents)
 if(ENABLE_PUBLIC_SYMBOLS)
     string(REPLACE "defined(CJSON_HIDE_SYMBOLS)" "0 /* defined(CJSON_HIDE_SYMBOLS) */" _contents "${_contents}")
     string(REPLACE "defined(CJSON_EXPORT_SYMBOLS)" "0 /* defined(CJSON_EXPORT_SYMBOLS) */" _contents "${_contents}")
@@ -53,7 +52,7 @@ if(ENABLE_PUBLIC_SYMBOLS)
 else()
     string(REPLACE "defined(CJSON_HIDE_SYMBOLS)" "1 /* defined(CJSON_HIDE_SYMBOLS) */" _contents "${_contents}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h" "${_contents}")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
