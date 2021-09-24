@@ -3533,7 +3533,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.18.1-so-3.11.14",
+      "baseline": "1.19.0-rc2",
       "port-version": 0
     },
     "libmysql": {
