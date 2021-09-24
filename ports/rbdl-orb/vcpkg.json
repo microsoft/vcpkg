@@ -1,7 +1,6 @@
 {
   "name": "rbdl-orb",
   "version": "3.1.2",
-  "port-version": 2,
   "description": "Rigid Body Dynamics Library - ORB",
   "homepage": "https://github.com/orb-hd/rbdl-orb",
   "dependencies": [
