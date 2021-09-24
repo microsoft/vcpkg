@@ -631,7 +631,7 @@ function(vcpkg_configure_make)
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
             vcpkg_execute_required_process(
-                COMMAND "${base_cmd}" -c "autoreconf -vfi"
+                COMMAND ${base_cmd} -c "autoreconf -vfi"
                 WORKING_DIRECTORY "${src_dir}"
                 LOGNAME "autoconf-${TARGET_TRIPLET}"
             )
