@@ -187,57 +187,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
 endif()
 
-find_path(ZLIB_INCLUDE zlib.h)
-list(APPEND B2_OPTIONS -sZLIB_INCLUDE="${ZLIB_INCLUDE}")
-
-find_path(BZIP2_INCLUDE bzlib.h)
-list(APPEND B2_OPTIONS -sBZIP2_INCLUDE="${BZIP2_INCLUDE}")
-
-if(WIN32)
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlib
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sBZIP2_BINARY=bz2
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sLZMA_BINARY=lzma
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sZSTD_BINARY=zstd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-        )
-    else()
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlibd
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sBZIP2_BINARY=bz2d
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sLZMA_BINARY=lzmad
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sZSTD_BINARY=zstdd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-        )
-    endif()
-else()
-    find_library(ZLIB_LIBPATH z)
-    list(APPEND B2_OPTIONS
-        -sZLIB_BINARY=z
-        -sZLIB_LIBPATH="${ZLIB_LIBPATH}"
-    )
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        find_library(BZIP2_LIBPATH bz2)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        find_library(BZIP2_LIBPATH bz2d)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2d
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    endif()
-endif()
-
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     list(APPEND B2_OPTIONS variant=release)
 else()
