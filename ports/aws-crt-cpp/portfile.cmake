@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${EXTRA_ARGS}
         -DBUILD_DEPS=OFF
-        -DCMAKE_MODULE_PATH="${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
 
