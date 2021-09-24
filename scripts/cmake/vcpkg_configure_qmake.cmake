@@ -21,35 +21,36 @@ The options passed to qmake.
 
 function(vcpkg_configure_qmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _csc "" "SOURCE_PATH" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG")
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        ""
+        "SOURCE_PATH"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG"
+    )
      
     # Find qmake executable
-    set(_triplet_hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)
+    set(triplet_hostbindir "${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
     if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR)
-        find_program(QMAKE_COMMAND NAMES qmake PATHS ${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin ${_triplet_hostbindir} NO_DEFAULT_PATH)
+        find_program(qmake_executable NAMES qmake PATHS "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin" "${triplet_hostbindir}" NO_DEFAULT_PATH)
     else()
-        find_program(QMAKE_COMMAND NAMES qmake PATHS ${_triplet_hostbindir} NO_DEFAULT_PATH)
+        find_program(qmake_executable NAMES qmake PATHS "${triplet_hostbindir}" NO_DEFAULT_PATH)
     endif()
 
-    if(NOT QMAKE_COMMAND)
+    if(NOT qmake_executable)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS "CONFIG-=shared")
-        list(APPEND _csc_OPTIONS "CONFIG*=static")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static")
     else()
-        list(APPEND _csc_OPTIONS "CONFIG-=static")
-        list(APPEND _csc_OPTIONS "CONFIG*=shared")
-        list(APPEND _csc_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=static")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=shared")
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
     
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS "CONFIG*=static-runtime")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static-runtime")
     endif()
-
-    # Cleanup build directories
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
@@ -61,73 +62,82 @@ function(vcpkg_configure_qmake)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(_config RELEASE)
-        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(PKGCONFIG_PACKAGES_DIR "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
-        set(PKGCONFIG_PACKAGES_SHARE_DIR "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(config_type RELEASE)
+        set(triplet_name "${TARGET_TRIPLET}-rel")
+        set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
+        set(pkgconfig_packages_dir "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_packages_share_dir "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
+
         if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_${_config} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}")
         endif()
 
-        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf)
+        # Cleanup build directories
+        file(REMOVE_RECURSE "${current_binary_dir}")
+
+        configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf" "${current_binary_dir}/qt.conf")
     
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        if(DEFINED _csc_BUILD_OPTIONS OR DEFINED _csc_BUILD_OPTIONS_RELEASE)
-            set(BUILD_OPT -- ${_csc_BUILD_OPTIONS} ${_csc_BUILD_OPTIONS_RELEASE})
+        message(STATUS "Configuring ${triplet_name}")
+        file(MAKE_DIRECTORY "${current_binary_dir}")
+        if(DEFINED arg_BUILD_OPTIONS OR DEFINED arg_BUILD_OPTIONS_RELEASE)
+            set(build_opt -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_RELEASE})
         endif()
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=debug CONFIG+=release
-                    ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE} ${_csc_SOURCE_PATH}
-                    -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qt.conf"
-                    ${BUILD_OPT}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME config-${TARGET_TRIPLET}-rel
+            COMMAND "${qmake_executable}" CONFIG-=debug CONFIG+=release
+                    ${arg_OPTIONS} ${arg_OPTIONS_RELEASE} ${arg_SOURCE_PATH}
+                    -qtconf "${current_binary_dir}/qt.conf"
+                    ${build_opt}
+            WORKING_DIRECTORY "${current_binary_dir}"
+            LOGNAME "config-${triplet_name}"
         )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log")
-            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
+        message(STATUS "Configuring ${triplet_name} done")
+        if(EXISTS "${current_binary_dir}/config.log")
+            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
+            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
         endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(_config DEBUG)
-        set(PATH_SUFFIX_DEBUG /debug)
-        set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
-        set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(PKGCONFIG_PACKAGES_DIR "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${_config}}/lib/pkgconfig")
-        set(PKGCONFIG_PACKAGES_SHARE_DIR "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(config_type DEBUG)
+        set(triplet_name "${TARGET_TRIPLET}-dbg")
+        set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
+        set(pkgconfig_packages_dir "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_packages_share_dir "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
+
         if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(BACKUP_ENV_PKG_CONFIG_PATH_${_config} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_INSTALLED_SHARE_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_DIR}${VCPKG_HOST_PATH_SEPARATOR}${PKGCONFIG_PACKAGES_SHARE_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}")
         endif()
 
-        configure_file(${CURRENT_INSTALLED_DIR}/tools/qt5/qt_debug.conf ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf)
+        # Cleanup build directories
+        file(REMOVE_RECURSE "${current_binary_dir}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        if(DEFINED _csc_BUILD_OPTIONS OR DEFINED _csc_BUILD_OPTIONS_DEBUG)
-            set(BUILD_OPT -- ${_csc_BUILD_OPTIONS} ${_csc_BUILD_OPTIONS_DEBUG})
+        configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_debug.conf" "${current_binary_dir}/qt.conf")
+
+        message(STATUS "Configuring ${triplet_name}")
+        file(MAKE_DIRECTORY "${current_binary_dir}")
+        if(DEFINED arg_BUILD_OPTIONS OR DEFINED arg_BUILD_OPTIONS_DEBUG)
+            set(build_opt -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_DEBUG})
         endif()
         vcpkg_execute_required_process(
-            COMMAND ${QMAKE_COMMAND} CONFIG-=release CONFIG+=debug
-                    ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG} ${_csc_SOURCE_PATH}
-                    -qtconf "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qt.conf"
-                    ${BUILD_OPT}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME config-${TARGET_TRIPLET}-dbg
+            COMMAND "${qmake_executable}" CONFIG-=release CONFIG+=debug
+                    ${arg_OPTIONS} ${arg_OPTIONS_DEBUG} ${arg_SOURCE_PATH}
+                    -qtconf "${current_binary_dir}/qt.conf"
+                    ${build_opt}
+            WORKING_DIRECTORY "${current_binary_dir}"
+            LOGNAME "config-${triplet_name}"
         )
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.log")
-            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
+        message(STATUS "Configuring ${triplet_name} done")
+        if(EXISTS "${current_binary_dir}/config.log")
+            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
+            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
         endif()
     endif()
 
