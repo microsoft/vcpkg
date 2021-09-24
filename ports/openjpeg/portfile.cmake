@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         dll.location.patch
         fix-lrintf-to-opj_lrintf.patch
+        Enable-tools-of-each-features.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
@@ -46,13 +47,23 @@ else()
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
 endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 set(TOOL_NAMES)
+if("jpwl" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_jpwl_compress opj_jpwl_decompress)
+endif()
 if("mj2" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_mj2_compress opj_mj2_decompress opj_mj2_extract opj_mj2_wrap)
+endif()
+if("jpip" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_compress opj_decompress opj_dump opj_dec_server opj_jpip_addxml opj_jpip_test opj_jpip_transcode)
+endif()
+if("jp3d" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES opj_jp3d_compress opj_jp3d_decompress)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
