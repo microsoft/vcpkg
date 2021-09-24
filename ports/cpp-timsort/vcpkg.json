@@ -1,9 +1,8 @@
 {
-  "name": "lcms",
-  "version": "2.12",
-  "port-version": 2,
-  "description": "Little CMS.",
-  "homepage": "https://github.com/mm2/Little-CMS",
+  "name": "cpp-timsort",
+  "version": "2.1.0",
+  "description": "A C++ implementation of timsort",
+  "homepage": "https://github.com/timsort/cpp-TimSort",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
