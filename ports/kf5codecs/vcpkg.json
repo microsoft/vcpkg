@@ -6,7 +6,10 @@
   "homepage": "https://api.kde.org/frameworks/kcodecs/html/index.html",
   "dependencies": [
     "ecm",
-    "gperf",
+    {
+      "name": "gperf",
+      "host": true
+    },
     "qt5-base",
     "qt5-tools",
     {
