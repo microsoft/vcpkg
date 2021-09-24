@@ -133,7 +133,7 @@
       "port-version": 3
     },
     "argparse": {
-      "baseline": "2021-03-04",
+      "baseline": "2.2",
       "port-version": 0
     },
     "args": {
@@ -1329,8 +1329,8 @@
       "port-version": 0
     },
     "cjson": {
-      "baseline": "2019-11-30",
-      "port-version": 2
+      "baseline": "1.7.15",
+      "port-version": 0
     },
     "clamav": {
       "baseline": "0.103.0",
@@ -1500,6 +1500,10 @@
       "baseline": "2.6.0",
       "port-version": 1
     },
+    "cpp-timsort": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "cppad": {
       "baseline": "20210000.7",
       "port-version": 0
@@ -1649,7 +1653,7 @@
       "port-version": 7
     },
     "curl": {
-      "baseline": "7.79.0",
+      "baseline": "7.79.1",
       "port-version": 0
     },
     "curlpp": {
@@ -1778,7 +1782,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 3
+      "port-version": 4
     },
     "directxtex": {
       "baseline": "aug2021",
@@ -1878,7 +1882,7 @@
     },
     "dxsdk-d3dx": {
       "baseline": "9.29.952.8",
-      "port-version": 0
+      "port-version": 1
     },
     "dxut": {
       "baseline": "11.26",
@@ -1966,7 +1970,7 @@
     },
     "enet": {
       "baseline": "1.3.17",
-      "port-version": 0
+      "port-version": 1
     },
     "ensmallen": {
       "baseline": "2.17.0",
@@ -2654,7 +2658,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 14
+      "port-version": 15
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -2754,7 +2758,7 @@
     },
     "imgui": {
       "baseline": "1.84.2",
-      "port-version": 0
+      "port-version": 1
     },
     "imgui-sfml": {
       "baseline": "2.1",
@@ -3063,6 +3067,10 @@
     "kf5windowsystem": {
       "baseline": "5.84.0",
       "port-version": 3
+    },
+    "kf5xmlgui": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kfr": {
       "baseline": "4.2.1",
@@ -3413,8 +3421,8 @@
       "port-version": 0
     },
     "libideviceactivation": {
-      "baseline": "1.2.235",
-      "port-version": 1
+      "baseline": "1.3.17",
+      "port-version": 0
     },
     "libidn2": {
       "baseline": "2.3.0",
@@ -3429,8 +3437,8 @@
       "port-version": 1
     },
     "libimobiledevice": {
-      "baseline": "1.3.6",
-      "port-version": 2
+      "baseline": "1.3.17",
+      "port-version": 0
     },
     "libirecovery": {
       "baseline": "1.0.25",
@@ -4818,11 +4826,11 @@
     },
     "openmpi": {
       "baseline": "4.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openmvg": {
       "baseline": "1.6",
-      "port-version": 2
+      "port-version": 3
     },
     "openmvs": {
       "baseline": "1.1",
@@ -4961,7 +4969,7 @@
       "port-version": 1
     },
     "pangomm": {
-      "baseline": "2.48.0",
+      "baseline": "2.48.1",
       "port-version": 0
     },
     "parallel-hashmap": {
@@ -5900,6 +5908,10 @@
       "baseline": "0.4",
       "port-version": 1
     },
+    "scottt-debugbreak": {
+      "baseline": "1.0",
+      "port-version": 0
+    },
     "scylla-wrapper": {
       "baseline": "2018-08-26-16e6f435",
       "port-version": 1
@@ -6406,7 +6418,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
