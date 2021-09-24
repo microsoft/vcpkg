@@ -16,10 +16,12 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
-        ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
+        disable-escapestr-tool.patch
+        remove-MD-from-configure.patch
+        fix_parallel_build_on_windows.patch
+        fix-extra.patch
+        mingw-dll-install.patch
+        disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -33,8 +35,10 @@ list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
-    # cross compiling
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_MINGW AND NOT HOST_TRIPLET MATCHES "mingw")
+    # Assuming no cross compiling because the host (windows) pkgdata tool doesn't
+    # use the '/' path separator when creating compiler commands for mingw bash.
+elseif(VCPKG_CROSSCOMPILING)
     set(TOOL_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
     # convert to unix path
     string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" _VCPKG_TOOL_PATH "${TOOL_PATH}")
@@ -123,15 +127,6 @@ endif()
 
 vcpkg_install_make()
 
-if(VCPKG_TARGET_IS_MINGW)
-    file(GLOB ICU_TOOLS
-        ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/icu-config
-        ${CURRENT_PACKAGES_DIR}/debug/bin/icu-config)
-    file(REMOVE ${ICU_TOOLS})
-endif()
-
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -147,29 +142,6 @@ if(TEST_LIBS)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        # rename static libraries to match import libs
-        # see https://gitlab.kitware.com/cmake/cmake/issues/16617
-        foreach(MODULE dt in io tu uc)
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
-
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
-        endforeach()
-
-        file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
-        message(STATUS "${pkg_files}")
-        foreach(pkg_file IN LISTS pkg_files)
-            message(STATUS "${pkg_file}")
-            file(READ ${pkg_file} PKG_FILE)
-            string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
-            file(WRITE ${pkg_file} "${PKG_FILE}")
-        endforeach()
-    endif()
-
     # force U_STATIC_IMPLEMENTATION macro
     foreach(HEADER utypes.h utf_old.h platform.h)
         file(READ ${CURRENT_PACKAGES_DIR}/include/unicode/${HEADER} HEADER_CONTENTS)
@@ -196,17 +168,17 @@ file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/config)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
 endif()
 
 # copy dlls
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*icu*${ICU_VERSION_MAJOR}.dll)
     file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
