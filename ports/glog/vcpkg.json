@@ -1,0 +1,10 @@
+{
+  "name": "glog",
+  "version-string": "0.4.0",
+  "port-version": 4,
+  "description": "C++ implementation of the Google logging module",
+  "homepage": "https://github.com/google/glog",
+  "dependencies": [
+    "gflags"
+  ]
+}

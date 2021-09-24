@@ -1,5 +1,0 @@
-Source: skyr-url
-Version: 1.13.0
-Build-Depends: tl-expected, range-v3, nlohmann-json
-Homepage: https://github.com/cpp-netlib/url
-Description: A C++ library that implements the WhatWG URL specification

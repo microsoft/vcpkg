@@ -1,0 +1,11 @@
+{
+  "name": "sassc",
+  "version-string": "3.6.1",
+  "port-version": 1,
+  "description": "SassC is a wrapper around libsass (http://github.com/sass/libsass) used to generate a useful command-line application that can be installed and packaged for several operating systems.",
+  "homepage": "https://github.com/sass/sassc",
+  "dependencies": [
+    "getopt",
+    "libsass"
+  ]
+}
