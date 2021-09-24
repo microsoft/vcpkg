@@ -3417,8 +3417,8 @@
       "port-version": 0
     },
     "libideviceactivation": {
-      "baseline": "1.2.235",
-      "port-version": 1
+      "baseline": "1.3.17",
+      "port-version": 0
     },
     "libidn2": {
       "baseline": "2.3.0",
@@ -3433,8 +3433,8 @@
       "port-version": 1
     },
     "libimobiledevice": {
-      "baseline": "1.3.6",
-      "port-version": 2
+      "baseline": "1.3.17",
+      "port-version": 0
     },
     "libirecovery": {
       "baseline": "1.0.25",
