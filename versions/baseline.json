@@ -5236,6 +5236,10 @@
       "baseline": "0.13.0",
       "port-version": 0
     },
+    "promise-cpp": {
+      "baseline": "1.0.3",
+      "port-version": 0
+    },
     "protobuf": {
       "baseline": "3.18.0",
       "port-version": 0
