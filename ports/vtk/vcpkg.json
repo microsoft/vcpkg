@@ -35,6 +35,14 @@
     "sqlite3",
     "tiff",
     "utfcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
