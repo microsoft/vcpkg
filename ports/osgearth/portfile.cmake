@@ -16,7 +16,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         StaticOSG.patch # Fix port compilation in static-md module
-#        deprecated_cpp_fix.patch # Fix port headers to not use classes deprecated in c++17. Gives errors when using the installed port headers
         make-all-find-packages-required.patch
         fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
