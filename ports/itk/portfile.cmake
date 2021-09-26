@@ -17,6 +17,7 @@ vcpkg_from_github(
         opencl.patch
         cufftw.patch
         use-the-lrintf-intrinsic.patch
+        gtest.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -177,6 +178,14 @@ vcpkg_configure_cmake(
 
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
+    MAYBE_UNUSED_VARIABLES
+        BUILD_PKGCONFIG_FILES
+        DCMTK_USE_ICU
+        INSTALL_GTEST
+        ITK_USE_SYSTEM_ICU
+        ITK_USE_SYSTEM_SWIG
+        Module_ITKCudaCommon
+        RTK_BUILD_APPLICATIONS
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround

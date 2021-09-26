@@ -1,0 +1,34 @@
+diff --git a/Modules/ThirdParty/GoogleTest/CMakeLists.txt b/Modules/ThirdParty/GoogleTest/CMakeLists.txt
+index 9276d7e..3392eac 100644
+--- a/Modules/ThirdParty/GoogleTest/CMakeLists.txt
++++ b/Modules/ThirdParty/GoogleTest/CMakeLists.txt
+@@ -4,11 +4,15 @@ set(ITKGoogleTest_THIRD_PARTY 1)
+ if(ITK_USE_SYSTEM_GOOGLETEST)
+   if( NOT DEFINED GTEST_ROOT OR NOT EXISTS "${GTEST_ROOT}/CMakeLists.txt")
+     set(ITKGoogleTest_NO_SRC 1)
+-    set(ITKGoogleTest_LIBRARIES GTest::GTest GTest::Main)
++    set(ITKGoogleTest_LIBRARIES GTest::gtest GTest::gtest_main)
++    set(ITKGoogleTest_EXPORT_CODE_INSTALL "
++set(ITK_USE_SYSTEM_GOOGLETEST \"${ITK_USE_SYSTEM_GOOGLETEST}\")
++find_package(GTest CONFIG REQUIRED)
++")
+     set(ITKGoogleTest_EXPORT_CODE_BUILD "
+ if(NOT ITK_BINARY_DIR)
+   set(GTEST_ROOT \"${GTEST_ROOT}\")
+-  find_package(GTest REQUIRED)
++  find_package(GTest CONFIG REQUIRED)
+ endif()
+ ")
+   endif()
+diff --git a/Modules/ThirdParty/GoogleTest/itk-module-init.cmake b/Modules/ThirdParty/GoogleTest/itk-module-init.cmake
+index 15cd556..f9a24c6 100644
+--- a/Modules/ThirdParty/GoogleTest/itk-module-init.cmake
++++ b/Modules/ThirdParty/GoogleTest/itk-module-init.cmake
+@@ -33,6 +33,6 @@ if(ITK_USE_SYSTEM_GOOGLETEST)
+      endif()
+ 
+    else()
+-     find_package( GTest REQUIRED )
++     find_package( GTest CONFIG REQUIRED )
+    endif ()
+ endif()
