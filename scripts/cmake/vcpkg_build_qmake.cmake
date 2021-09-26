@@ -8,7 +8,7 @@ vcpkg_build_qmake()
 ```
 #]===]
 
-function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
+function(z_run_jom_build TARGETS LOG_PREFIX LOG_SUFFIX)
     message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
     vcpkg_execute_build_process(
         COMMAND "${invoke_command}" -j ${VCPKG_CONCURRENCY} ${TARGETS}
@@ -91,9 +91,9 @@ function(vcpkg_build_qmake)
         
         vcpkg_list(APPEND arg_${build_type}_TARGETS ${arg_TARGETS})
         if(NOT arg_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles ${short_name_${build_type}})
+            z_run_jom_build(qmake_all makefiles ${short_name_${build_type}})
         endif()
-        run_jom("${arg_${build_type}_TARGETS}" ${arg_BUILD_LOGNAME} ${short_name_${build_type}})
+        z_run_jom_build("${arg_${build_type}_TARGETS}" ${arg_BUILD_LOGNAME} ${short_name_${build_type}})
 
         # Restore backup
         if(CMAKE_HOST_UNIX)

@@ -28,12 +28,7 @@ function(vcpkg_configure_qmake)
     )
      
     # Find qmake executable
-    set(triplet_hostbindir "${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
-    if(DEFINED VCPKG_QT_HOST_TOOLS_ROOT_DIR)
-        find_program(qmake_executable NAMES qmake PATHS "${VCPKG_QT_HOST_TOOLS_ROOT_DIR}/bin" "${triplet_hostbindir}" NO_DEFAULT_PATH)
-    else()
-        find_program(qmake_executable NAMES qmake PATHS "${triplet_hostbindir}" NO_DEFAULT_PATH)
-    endif()
+    find_program(qmake_executable NAMES qmake PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin" NO_DEFAULT_PATH)
 
     if(NOT qmake_executable)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
