@@ -113,9 +113,6 @@ function(vcpkg_fixup_pkgconfig)
         endif()
     endif()
 
-    vcpkg_find_acquire_program(PKGCONFIG)
-    debug_message("Using pkg-config from: ${PKGCONFIG}")
-
     #Absolute Unix like paths 
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
@@ -186,6 +183,8 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
 
         if(NOT _vfpkg_SKIP_CHECK) # The check can only run after all files have been corrected!
+            vcpkg_find_acquire_program(PKGCONFIG)
+            debug_message("Using pkg-config from: ${PKGCONFIG}")
             foreach(_file ${_vfpkg_${CONFIG}_FILES})
                 vcpkg_fixup_pkgconfig_check_files("${PKGCONFIG}" "${_file}" "${CONFIG}")
             endforeach()
