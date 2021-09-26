@@ -1,15 +1,11 @@
 {
   "name": "clue",
-  "version-string": "1.0.0",
+  "version": "1.0.0",
   "description": "clue is a C++03 header-only library to log messages with a severity and optional module identifier.",
   "homepage": "https://github.com/martinmoene/clue",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
