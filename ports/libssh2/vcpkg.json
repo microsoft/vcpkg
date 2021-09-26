@@ -1,7 +1,6 @@
 {
   "name": "libssh2",
-  "version-string": "1.9.0",
-  "port-version": 1,
+  "version-string": "1.10.0",
   "description": "The SSH library",
   "homepage": "https://www.libssh2.org",
   "dependencies": [
