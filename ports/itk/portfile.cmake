@@ -197,6 +197,7 @@ vcpkg_cmake_config_fixup()
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/ITKModuleAPI.cmake" ITKModuleAPI_CMAKE)
 string(PREPEND ITKModuleAPI_CMAKE
 [[
+if (NOT DEFINED _IMPORT_PREFIX AND NOT _IMPORT_PREFIX)
     get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
