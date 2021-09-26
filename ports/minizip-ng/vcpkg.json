@@ -38,7 +38,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "!(windows | uwp)"
+          "platform": "linux"
         }
       ]
     },

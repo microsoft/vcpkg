@@ -11,11 +11,14 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib MZ_ZLIB
+        crypto MZ_PKCRYPT
+        crypto MZ_SIGNING
+        crypto MZ_WZAES
+        openssl MZ_OPENSSL
         bzip2 MZ_BZIP2
         lzma MZ_LZMA
+        zlib MZ_ZLIB
         zstd MZ_ZSTD
-        openssl MZ_OPENSSL
 )
 
 vcpkg_cmake_configure(
