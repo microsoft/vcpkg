@@ -6,26 +6,26 @@ vcpkg_from_github(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS /wd4703")
-    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS /wd4703")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /wd4703")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /wd4703")
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/srtp2.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/srtp2.dll ${CURRENT_PACKAGES_DIR}/bin/srtp2.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/srtp2.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/srtp2.dll" "${CURRENT_PACKAGES_DIR}/bin/srtp2.dll")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/srtp2.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/srtp2.dll ${CURRENT_PACKAGES_DIR}/debug/bin/srtp2.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/srtp2.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/srtp2.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/srtp2.dll")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsrtp RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libsrtp" RENAME copyright)
