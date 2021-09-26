@@ -6097,8 +6097,8 @@
       "port-version": 7
     },
     "snappy": {
-      "baseline": "1.1.8",
-      "port-version": 1
+      "baseline": "1.1.9",
+      "port-version": 0
     },
     "sndfile": {
       "baseline": "0",
