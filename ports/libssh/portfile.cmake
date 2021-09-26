@@ -4,7 +4,6 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libssh.org/projects/libssh.git
     REF 47fd6e56c1058dca54afee1638c11fb6ec41911d # REFERENCE VERSION 0.9.6
-    SHA512 64e692a0bfa7f73585ea7b7b8b1d4c9a7f9be59565bfd4de32ca8cd9db121f87e7ad51f5c80269fbd99545af34dcf1894374ed8a6d6c1ac5f8601c026572ac18
     PATCHES
         0001-export-pkgconfig-file.patch
         0002-mingw_for_Android.patch
