@@ -1,3 +1,16 @@
+diff --git a/CMake/ITKModuleTest.cmake b/CMake/ITKModuleTest.cmake
+index f882c87..48287c3 100644
+--- a/CMake/ITKModuleTest.cmake
++++ b/CMake/ITKModuleTest.cmake
+@@ -245,7 +245,7 @@ endfunction()
+ function(CreateGoogleTestDriver KIT KIT_LIBS KitTests)
+   set(exe "${KIT}GTestDriver")
+   add_executable(${exe} ${KitTests} )
+-  target_link_libraries(${exe} ${KIT_LIBS} GTest::GTest GTest::Main)
++  target_link_libraries(${exe} ${KIT_LIBS} GTest::gtest GTest::gtest_main)
+   itk_module_target_label(${exe})
+ 
+   include(GoogleTest)
 diff --git a/Modules/ThirdParty/GoogleTest/CMakeLists.txt b/Modules/ThirdParty/GoogleTest/CMakeLists.txt
 index 9276d7e..3392eac 100644
 --- a/Modules/ThirdParty/GoogleTest/CMakeLists.txt

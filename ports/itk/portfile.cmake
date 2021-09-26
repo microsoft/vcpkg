@@ -118,9 +118,8 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL
 endif()
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
@@ -191,9 +190,22 @@ if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
     vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
 endif()
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/ITKModuleAPI.cmake" ITKModuleAPI_CMAKE)
+string(PREPEND ITKModuleAPI_CMAKE
+[[
+    get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+    endif()
+endif()
+]])
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/ITKModuleAPI.cmake" "${ITKModuleAPI_CMAKE}")
 
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -204,4 +216,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
