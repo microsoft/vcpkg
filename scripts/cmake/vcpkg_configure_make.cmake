@@ -670,7 +670,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${src_dir}"
                 LOGNAME "prerun-${TARGET_TRIPLET}"
             )
-        else
+        else()
             vcpkg_execute_required_process(
                 COMMAND "${base_cmd}" -c "${arg_PRERUN_SHELL}"
                 WORKING_DIRECTORY "${src_dir}"
