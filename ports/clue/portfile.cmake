@@ -23,5 +23,4 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(COPY "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE_1_0.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(INSTALL"${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
