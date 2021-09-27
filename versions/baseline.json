@@ -4729,8 +4729,8 @@
       "port-version": 0
     },
     "open62541": {
-      "baseline": "1.1.2",
-      "port-version": 2
+      "baseline": "1.2.2",
+      "port-version": 0
     },
     "openal-soft": {
       "baseline": "1.21.1",
