@@ -4,6 +4,7 @@
   "description": "libssh2 is a client-side C library implementing the SSH2 protocol.",
   "homepage": "https://www.libssh2.org",
   "dependencies": [
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,7 +13,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "openssl",
     "zlib"
   ]
 }
