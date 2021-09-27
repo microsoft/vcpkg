@@ -4118,7 +4118,7 @@
     },
     "mapnik": {
       "baseline": "2021-09-15",
-      "port-version": 0
+      "port-version": 1
     },
     "marble": {
       "baseline": "19.08.2",
@@ -5230,7 +5230,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 5
+      "port-version": 6
     },
     "prometheus-cpp": {
       "baseline": "0.13.0",
