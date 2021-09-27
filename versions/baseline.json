@@ -3620,6 +3620,10 @@
       "baseline": "2017-01-28-cf2390140",
       "port-version": 2
     },
+    "libopensp": {
+      "baseline": "1.5.2",
+      "port-version": 0
+    },
     "libopusenc": {
       "baseline": "0.2.1",
       "port-version": 1
