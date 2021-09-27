@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          # fetch-depth 2 ensures we capture both parents of the merge commit
-          fetch-depth: 2
+          # fetch-depth 50 tries to ensure we capture the whole history of the branch
+          fetch-depth: 50
 
       - uses: actions/cache@v2
         id: cache
@@ -38,6 +38,7 @@ jobs:
           git config user.email github-actions
           git config user.name github-actions@github.com
 
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
           ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
@@ -56,7 +57,9 @@ jobs:
             const add_version = (await fs.readFile('.github-pr.x-add-version.diff', 'utf8')).trim()
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
+            const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).trim()
 
+            let approve = true;
             var output = ''
             if (format !== "") {
               output += "<details><summary><b>All manifest files must be formatted</b></summary>\n\n"
@@ -64,11 +67,13 @@ jobs:
               output += "<details><summary><b>Diff</b></summary>\n\n"
               output += "```diff\n" + format + "\n```\n"
               output += "</details></details>\n\n"
+              approve = false;
             }
             if (add_version_out !== "") {
               output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
               output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
               output += "```\n" + add_version_out + "\n```\n</details>\n"
+              approve = false;
             }
             if (add_version !== "") {
               output += "<details><summary><b>After committing all other changes, the version database must be updated</b></summary>\n\n"
@@ -80,9 +85,27 @@ jobs:
               output += "<details><summary><b>Diff</b></summary>\n\n"
               output += "```diff\n" + add_version + "\n```\n"
               output += "</details></details>\n\n"
+              approve = false;
+            }
+            if (cmake !== "") {
+              output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              output += "<details>\n\n"
+              output += "If you feel able to do so, please consider migrating them to the new functions:\n"
+              output += "    `vcpkg_install_cmake` -> `vcpkg_cmake_install` (from port `vcpkg-cmake`)\n"
+              output += "    `vcpkg_build_cmake` -> `vcpkg_cmake_build` (from port `vcpkg-cmake`)\n"
+              output += "    `vcpkg_configure_cmake` -> `vcpkg_cmake_configure` (Please remove the option `PREFER_NINJA`) (from port `vcpkg-cmake`)\n"
+              output += "    `vcpkg_fixup_cmake_targets` -> `vcpkg_cmake_config_fixup` (from port `vcpkg-cmake-config`)\n"
+              output += "\n"
+              output += "In the ports that use the new function, you have to add the corresponding dependencies:\n"
+              output += "```json\n"
+              output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
+              output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
+              output += "```\n"
+              output += `The following files are affected:\n${cmake}\n`
+              output += "</details>\n"
             }
 
-            if (output === "") {
+            if (approve) {
               await fs.writeFile("pr/event", "APPROVE")
             } else {
               output = "_This is a new experimental fast check for PR issues. Please let us know if this bot is helpful!_\n\n" + output
