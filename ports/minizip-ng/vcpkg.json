@@ -17,8 +17,10 @@
   ],
   "default-features": [
     "bzip2",
-    "crypto",
     "lzma",
+    "pkcrypt",
+    "signing",
+    "wzaes",
     "zlib",
     "zstd"
   ],
@@ -27,19 +29,6 @@
       "description": "Enables BZIP2 compression",
       "dependencies": [
         "bzip2"
-      ]
-    },
-    "crypto": {
-      "description": "Enable cryptography features",
-      "dependencies": [
-        {
-          "name": "minizip-ng",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ],
-          "platform": "linux"
-        }
       ]
     },
     "lzma": {
@@ -52,6 +41,35 @@
       "description": "Enables OpenSSL for encryption",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "pkcrypt": {
+      "description": "Enables PKWARE traditional encryption"
+    },
+    "signing": {
+      "description": "Enables zip signing support",
+      "dependencies": [
+        {
+          "name": "minizip-ng",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "wzaes": {
+      "description": "Enables WinZIP AES encryption",
+      "dependencies": [
+        {
+          "name": "minizip-ng",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !osx"
+        }
       ]
     },
     "zlib": {
