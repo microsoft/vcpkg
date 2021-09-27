@@ -42,7 +42,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES ocspcheck openssl AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ocspcheck openssl DESTINATION "${CURRENT_PACKAGES_DIR}/tools/openssl" AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
