@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
        glog_disable_debug_postfix.patch
+       glog_fix_os_defines.patch
 )
 
 vcpkg_configure_cmake(

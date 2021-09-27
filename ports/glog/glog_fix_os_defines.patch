@@ -1,0 +1,29 @@
+diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
+--- a/src/glog/logging.h.in
++++ b/src/glog/logging.h.in
+@@ -61,6 +61,25 @@
+ #if @ac_cv_have_glog_export@
+ #include "glog/export.h"
+ #endif
++
++// definitions from utilities.h which are needed by glog/logging.h
++#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(OS_WINDOWS)
++# define OS_WINDOWS
++#elif (defined(__CYGWIN__) || defined(__CYGWIN32__)) && !defined(OS_CYGWIN)
++# define OS_CYGWIN
++#elif (defined(linux) || defined(__linux) || defined(__linux__)) && !defined(OS_LINUX)
++# define OS_LINUX
++#elif (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)) && !defined(OS_MACOSX)
++# define OS_MACOSX
++#elif defined(__FreeBSD__) && !defined(OS_FREEBSD)
++# define OS_FREEBSD
++#elif defined(__NetBSD__) && !defined(OS_NETBSD)
++# define OS_NETBSD
++#elif defined(__OpenBSD__) && !defined(OS_OPENBSD)
++# define OS_OPENBSD
++#else
++// TODO(hamaji): Add other platforms.
++#endif
+ 
+ // Annoying stuff for windows -- makes sure clients can import these functions
+ #ifndef GOOGLE_GLOG_DLL_DECL
