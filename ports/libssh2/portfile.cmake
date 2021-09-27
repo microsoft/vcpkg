@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch"
 )
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
         -DENABLE_DEBUG_LOGGING=OFF
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
@@ -25,7 +25,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh2)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libssh2)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libssh2" RENAME copyright)
 

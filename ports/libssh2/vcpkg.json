@@ -5,14 +5,6 @@
   "homepage": "https://www.libssh2.org",
   "dependencies": [
     "openssl",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
     "zlib"
   ]
 }
