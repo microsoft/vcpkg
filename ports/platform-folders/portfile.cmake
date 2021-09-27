@@ -13,7 +13,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-		-DBUILD_TESTING=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
@@ -24,13 +24,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL "${TARGET_BUILD_PATH}-dbg/platform_folders.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
 endif()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MinGW)
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH /share/platform_folders)
 else()
 	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ TARGET_PATH /share/)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/platform-folders" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
