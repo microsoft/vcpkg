@@ -2,7 +2,7 @@ diff --git a/src/draco/io/parser_utils.cc b/src/draco/io/parser_utils.cc
 index 6e42a58..3c302b9 100644
 --- a/src/draco/io/parser_utils.cc
 +++ b/src/draco/io/parser_utils.cc
-@@ -160,7 +160,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {
+@@ -152,7 +152,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {
    if (!ParseUnsignedInt(buffer, &v)) {
      return false;
    }
@@ -17,14 +17,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7e79da7..c4d9880 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -153,6 +153,10 @@ if(ENABLE_EXTRA_SPEED)
-   endif()
- endif()
+@@ -70,6 +70,10 @@ draco_set_build_definitions()
+ draco_set_cxx_flags()
+ draco_generate_features_h()
  
 +if (MSVC)
 +  add_compile_options(/wd4996)
 +endif()
 +
- # Generate a version file containing repository info.
- include(FindGit)
- find_package(Git)
+ # Draco source file listing variables.
+ list(APPEND draco_attributes_sources
+             "${draco_src_root}/attributes/attribute_octahedron_transform.cc"
