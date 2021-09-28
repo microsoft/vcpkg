@@ -1,18 +1,8 @@
-From 675ba1de6c01b4050ae3cc60916d3f0a72b03105 Mon Sep 17 00:00:00 2001
-From: Nicole Mazzuca <mazzucan@outlook.com>
-Date: Tue, 22 Sep 2020 15:40:55 -0700
-Subject: [PATCH 2/5] win64 support
-
----
- CMakeLists.txt | 7 +------
- config.h       | 2 +-
- 2 files changed, 2 insertions(+), 7 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e11959c..1a92fe3 100644
+index 07eff849..3edc7efa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -57,12 +57,7 @@ option(WITH_THREADING "Include client library threading support?" ON)
+@@ -67,12 +67,7 @@ option(WITH_THREADING "Include client library threading support?" ON)
  if (WITH_THREADING)
  	add_definitions("-DWITH_THREADING")
  	if (WIN32)
@@ -23,22 +13,6 @@ index e11959c..1a92fe3 100644
 -		endif (CMAKE_CL_64)
 -		set (PTHREAD_INCLUDE_DIR C:\\pthreads\\Pre-built.2\\include)
 +		find_package(pthread REQUIRED)
- 	else (WIN32)
- 		find_library(LIBPTHREAD pthread)
- 		if (LIBPTHREAD)
-diff --git a/config.h b/config.h
-index 5cce39e..c673bf4 100644
---- a/config.h
-+++ b/config.h
-@@ -31,7 +31,7 @@
- #  define EPROTO ECONNABORTED
- #endif
- 
--#ifdef WIN32
-+#ifdef _WIN32
- #  ifndef strcasecmp
- #    define strcasecmp strcmpi
- #  endif
--- 
-2.24.3 (Apple Git-128)
-
+ 	elseif (ANDROID)
+ 		set (PTHREAD_LIBRARIES "")
+ 		set (PTHREAD_INCLUDE_DIR "")
