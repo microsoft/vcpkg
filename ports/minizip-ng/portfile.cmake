@@ -11,9 +11,9 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        crypto MZ_PKCRYPT
-        crypto MZ_SIGNING
-        crypto MZ_WZAES
+        pkcrypt MZ_PKCRYPT
+        signing MZ_SIGNING
+        wzaes MZ_WZAES
         openssl MZ_OPENSSL
         bzip2 MZ_BZIP2
         lzma MZ_LZMA
