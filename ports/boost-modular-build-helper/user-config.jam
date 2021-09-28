@@ -8,7 +8,6 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
         @CXXFLAGS@
         @CFLAGS@
         @LDFLAGS@
-        @TOOLSET_OPTIONS@
         ;
 }
 else
@@ -36,7 +35,7 @@ if "@PORT@" = "boost-python"
     }
 }
 
-if "@PORT@" = "boost-mpi"
+if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
 {
     using mpi : :
         <library-path>"@CURRENT_INSTALLED_DIR@/lib"
@@ -91,8 +90,8 @@ else
     }
 }
 
-lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
+lib iconv : : <file>"@VCPKG_ICONV_LIBRARY_RELEASE@" <link>shared <runtime-link>shared <variant>release : : ;
 if "@VCPKG_BUILD_TYPE@" != "release"
 {
-    lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>debug : : ;
+    lib iconv : : <file>"@VCPKG_ICONV_LIBRARY_DEBUG@" <link>shared <runtime-link>shared <variant>debug : : ;
 }

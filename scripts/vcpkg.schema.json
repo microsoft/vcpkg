@@ -16,7 +16,7 @@
           "not": {
             "description": "Identifiers must not be a Windows filesystem or vcpkg reserved name.",
             "type": "string",
-            "pattern": "^prn|aux|nul|con|lpt[1-9]|com[1-9]|core|default$"
+            "pattern": "^(prn|aux|nul|con|lpt[1-9]|com[1-9]|core|default)$"
           }
         }
       ]

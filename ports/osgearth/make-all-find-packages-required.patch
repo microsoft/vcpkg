@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 049e37e..c78bd16 100644
+index 7541c8d..b4076fe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -121,9 +121,9 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
+@@ -122,40 +122,54 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
  
  # Mobile/GLES:
  IF (OSGEARTH_USE_GLES)
--    find_package(OpenGLES) 
+-    find_package(OpenGLES)
 +    find_package(OpenGLES REQUIRED)
  ELSE ()
 -    find_package(OpenGL)
@@ -14,9 +14,14 @@ index 049e37e..c78bd16 100644
  ENDIF (OSGEARTH_USE_GLES)
  
  # required
-@@ -132,28 +132,28 @@ find_package(CURL REQUIRED)
+ find_package(OSG REQUIRED)
+-find_package(CURL REQUIRED)
++find_package(CURL CONFIG REQUIRED)
++set(CURL_LIBRARY CURL::libcurl)
  find_package(GDAL REQUIRED)
- 
+-
++set(GDAL_LIBRARY ${GDAL_LIBRARIES})
++set(GDAL_FOUND 1)
  # optional
 -find_package(GEOS)
 -find_package(Sqlite3)
@@ -25,13 +30,25 @@ index 049e37e..c78bd16 100644
 -find_package(GLEW)
 -find_package(Protobuf)
 -find_package(WEBP)
-+find_package(GEOS REQUIRED)
-+find_package(Sqlite3 REQUIRED)
+-find_package(Blend2D)
++find_package(geos CONFIG REQUIRED)
++set(GEOS_LIBRARY GEOS::geos GEOS::geos_c)
++set(GEOS_FOUND 1)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
++set(SQLITE3_FOUND 1)
++set(SQLITE3_LIBRARY unofficial::sqlite3::sqlite3)
 +find_package(Draco REQUIRED)
 +find_package(BASISU REQUIRED)
 +find_package(GLEW REQUIRED)
-+find_package(Protobuf REQUIRED)
-+find_package(WEBP REQUIRED)
++set(GLEW_LIBRARIES GLEW::GLEW)
++set(GLEW_FOUND 1)
++find_package(protobuf CONFIG REQUIRED)
++set(Protobuf_LIBRARIES protobuf::libprotoc protobuf::libprotobuf)
++set(Protobuf_FOUND 1)
++find_package(WebP CONFIG REQUIRED)
++set(WEBP_LIBRARY WebP::webp)
++set(WEBP_FOUND 1)
++find_package(Blend2D REQUIRED)
  
  if(OSGEARTH_ENABLE_PROFILING)
 -    find_package(Tracy)
@@ -40,7 +57,9 @@ index 049e37e..c78bd16 100644
  
  if(OSGEARTH_BUILD_ZIP_PLUGIN)
 -    find_package(LIBZIP)
-+    find_package(LIBZIP REQUIRED)
++    find_package(libzip CONFIG REQUIRED)
++    set(LIBZIP_LIBRARY libzip::zip)
++    set(LIBZIP_FOUND 1)
  endif()
  
  if(OSGEARTH_BUILD_TRITON_NODEKIT)
@@ -54,7 +73,7 @@ index 049e37e..c78bd16 100644
  endif()
  
  # Sqlite enables the MBTiles format:
-@@ -182,18 +182,18 @@ SET (PROTOBUF_USE_DLLS FALSE CACHE BOOL "Set this to true if Protobuf is compile
+@@ -193,7 +207,7 @@ SET (PROTOBUF_USE_DLLS FALSE CACHE BOOL "Set this to true if Protobuf is compile
  # Duktape is the JavaScript interpreter
  SET (WITH_EXTERNAL_DUKTAPE FALSE CACHE BOOL "Use bundled or system wide version of Duktape")
  IF (WITH_EXTERNAL_DUKTAPE)
@@ -63,22 +82,14 @@ index 049e37e..c78bd16 100644
  ENDIF (WITH_EXTERNAL_DUKTAPE)
  
  # Whether to install shaders (glsl files).
--# If true, shaders install into a resources folder. If false, they are inlined in the 
-+# If true, shaders install into a resources folder. If false, they are inlined in the
- # code and you cannot tweak them after install.
- OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Make INSTALL" OFF)
- 
+@@ -204,7 +218,9 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
  # TinyXML is an XML parsing library
  SET (WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use bundled or system wide version of TinyXML")
  IF (WITH_EXTERNAL_TINYXML)
 -    find_package(TinyXML)
-+    find_package(TinyXML REQUIRED)
++    find_package(tinyxml CONFIG REQUIRED)
++    set(TINYXML_FOUND 1)
++    set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
  ENDIF (WITH_EXTERNAL_TINYXML)
  
  # postfix settings for various configs
-@@ -272,4 +272,4 @@ ADD_SUBDIRECTORY(src)
- 
- if (OSGEARTH_BUILD_DOCS)
-     ADD_SUBDIRECTORY(docs)
--endif()    
-+endif()
