@@ -5825,8 +5825,8 @@
       "port-version": 1
     },
     "rpclib": {
-      "baseline": "2.2.1",
-      "port-version": 3
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "rply": {
       "baseline": "1.1.4",
