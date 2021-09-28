@@ -14,6 +14,8 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - name: DiffFile
+    value: $(Build.ArtifactStagingDirectory)\format.diff
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
@@ -28,12 +30,35 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
       if exist ${{ variables.VCPKG_DOWNLOADS }} rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
     displayName: 'Clean downloads'
+  # Note that we run docs checks before PR checks because they are likely to invalidate a whole run anyway
+  - task: Powershell@2
+    displayName: 'Generate Documentation'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      filePath: 'docs/regenerate.ps1'
+      arguments: '-VcpkgRoot . -WarningAction Stop'
+      pwsh: true
+  - script: '.\vcpkg.exe format-manifest --all'
+    displayName: 'Format Manifests'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+  - task: Powershell@2
+    displayName: 'Create Diff'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      filePath: scripts/azure-pipelines/Create-PRDiff.ps1
+      arguments: '-DiffFile $(DiffFile)'
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Format and Documentation Diff'
+    condition: and(eq('${{ parameters.triplet }}', 'x86-windows'), failed())
+    inputs:
+      PathtoPublish: '$(DiffFile)'
+      ArtifactName: 'format.diff'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
@@ -91,7 +116,7 @@ jobs:
     condition: always()
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
-    condition: always()
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     inputs:
       targetType: inline
       script: |
@@ -100,7 +125,7 @@ jobs:
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
-    condition: always()
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     inputs:
       PathtoPublish: scripts/list_files
       ArtifactName: 'file lists for ${{ parameters.triplet }}'
