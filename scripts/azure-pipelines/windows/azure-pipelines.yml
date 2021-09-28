@@ -115,7 +115,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
-    condition: always()
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()
