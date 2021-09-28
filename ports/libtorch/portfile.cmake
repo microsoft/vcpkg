@@ -21,7 +21,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # The file is dummy. 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    python  BUILD_PYTHON # requires: pybind11, numpy, typing-extensions
+    python  BUILD_PYTHON # requires: pybind11, numpy, typing-extensions, pyyaml
     python  USE_NUMPY
     zstd    USE_ZSTD
     fftw3   USE_FFTW
@@ -69,18 +69,14 @@ endif()
 
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND FEATURE_OPTIONS -DBLAS=Accelerate) # Accelerate.framework will be used for Apple platforms
+elseif("eigen3" IN_LIST FEATURES AND "mkl" IN_LIST FEATURES)
+    message(FATAL_ERROR "'eigen3' and 'mkl' feature can't be used together")
 elseif("eigen3" IN_LIST FEATURES)
-    if("mkl" IN_LIST FEATURES)
-        message(FATAL_ERROR "'eigen3' and 'mkl' feature can't be used together")
-    endif()
     list(APPEND FEATURE_OPTIONS -DBLAS=Eigen)
 elseif("mkl" IN_LIST FEATURES)
-    if("mkl" IN_LIST FEATURES)
-        message(FATAL_ERROR "'eigen3' and 'mkl' feature can't be used together")
-    endif()
     list(APPEND FEATURE_OPTIONS -DBLAS=MKL)
 else()
-    message(FATAL_ERROR "'eigen3' or 'mkl' feature must be used for BLAS options")
+    message(FATAL_ERROR "One of 'eigen3' or 'mkl' feature must be used for BLAS")
 endif()
 
 if("tbb" IN_LIST FEATURES)
