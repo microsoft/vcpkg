@@ -53,7 +53,7 @@ jobs:
     condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
     inputs:
       filePath: scripts/azure-pipelines/Create-PRDiff.ps1
-      arguments: '-DiffFile $(DiffFile)'
+      arguments: "-DiffFile '$(DiffFile)'"
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Format and Documentation Diff'
