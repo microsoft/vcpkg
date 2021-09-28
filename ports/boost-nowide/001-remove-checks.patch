@@ -1,0 +1,16 @@
+ build/Jamfile.v2 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index 44cbc1c..a5605a7 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -8,7 +8,7 @@
+ # (See accompanying file LICENSE or www.boost.org/LICENSE_1_0.txt)
+ # See library home page at http://www.boost.org/libs/nowide
+ 
+-import ../../config/checks/config : requires ;
++rule requires ( checks * ) { }
+ 
+ local requirements =
+   <link>shared:<define>BOOST_NOWIDE_DYN_LINK=1

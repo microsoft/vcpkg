@@ -1,8 +1,9 @@
 {
   "name": "boost-mpi",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
+  "supports": "!uwp",
   "dependencies": [
     "boost-assert",
     {
@@ -17,7 +18,6 @@
     "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -35,6 +35,10 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "mpi"
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

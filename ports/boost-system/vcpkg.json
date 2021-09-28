@@ -1,6 +1,6 @@
 {
   "name": "boost-system",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost system module",
   "homepage": "https://github.com/boostorg/system",
   "dependencies": [
@@ -14,6 +14,10 @@
       "host": true
     },
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "boost-lexical-cast",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost lexical_cast module",
   "homepage": "https://github.com/boostorg/lexical_cast",
   "dependencies": [
@@ -9,7 +9,6 @@
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-detail",
     "boost-integer",
     "boost-numeric-conversion",
     "boost-range",

@@ -1,6 +1,6 @@
 {
   "name": "boost-gil",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost gil module",
   "homepage": "https://github.com/boostorg/gil",
   "dependencies": [
@@ -17,7 +17,6 @@
     "boost-mp11",
     "boost-numeric-conversion",
     "boost-preprocessor",
-    "boost-utility",
     "boost-variant2",
     "boost-vcpkg-helpers"
   ]

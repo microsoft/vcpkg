@@ -1,5 +1,5 @@
-constant BOOST_VERSION : 1.76.0 ;
-constant BOOST_VERSION_ABI_TAG : 1_76 ;
+constant BOOST_VERSION : 1.77.0 ;
+constant BOOST_VERSION_ABI_TAG : 1_77 ;
 constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;
@@ -36,7 +36,8 @@ if "@PORT@" != "boost-system"
 {
     use-project /boost/system : . ;
 
-    lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_system@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_system@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_system@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_system ;
 
     use-project /boost : . ;
@@ -47,7 +48,8 @@ if "@PORT@" != "boost-chrono"
 {
     use-project /boost/chrono : . ;
 
-    lib boost_chrono : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_chrono@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_chrono : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_chrono@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_chrono : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_chrono@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_chrono ;
 }
 
@@ -55,7 +57,8 @@ if "@PORT@" != "boost-regex"
 {
     use-project /boost/regex : . ;
 
-    lib boost_regex : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_regex@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_regex : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_regex@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_regex : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_regex@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_regex ;
 }
 
@@ -63,7 +66,8 @@ if "@PORT@" != "boost-date-time"
 {
     use-project /boost/date_time : . ;
 
-    lib boost_date_time : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_date_time@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ -<library>/boost/date_time//boost_date_time ;
+    lib boost_date_time : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_date_time@BOOST_LIB_RELEASE_SUFFIX@" <variant>release -<library>/boost/date_time//boost_date_time ;
+    lib boost_date_time : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_date_time@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug -<library>/boost/date_time//boost_date_time ;
     explicit boost_date_time ;
 }
 
@@ -71,7 +75,8 @@ if "@PORT@" != "boost-thread"
 {
     use-project /boost/thread : . ;
 
-    lib boost_thread : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_thread@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ : : <library>/boost/date_time//boost_date_time ;
+    lib boost_thread : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_thread@BOOST_LIB_RELEASE_SUFFIX@" <variant>release : : <library>/boost/date_time//boost_date_time ;
+    lib boost_thread : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_thread@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug : : <library>/boost/date_time//boost_date_time ;
     explicit boost_thread ;
 }
 
@@ -79,7 +84,8 @@ if "@PORT@" != "boost-timer"
 {
     use-project /boost/timer : . ;
 
-    lib boost_timer : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_timer@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_timer : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_timer@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_timer : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_timer@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_timer ;
 }
 
@@ -87,7 +93,8 @@ if "@PORT@" != "boost-filesystem"
 {
     use-project /boost/filesystem : . ;
 
-    lib boost_filesystem : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_filesystem@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ : : <library>/boost/system//boost_system ;
+    lib boost_filesystem : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_filesystem@BOOST_LIB_RELEASE_SUFFIX@" <variant>release : : <library>/boost/system//boost_system ;
+    lib boost_filesystem : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_filesystem@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug : : <library>/boost/system//boost_system ;
     explicit boost_filesystem ;
 }
 
@@ -95,7 +102,8 @@ if "@PORT@" != "boost-atomic"
 {
     use-project /boost/atomic : . ;
 
-    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_atomic ;
 }
 
@@ -106,7 +114,8 @@ if "@PORT@" != "boost-context"
 
     use-project /boost/context : . ;
 
-    lib boost_context : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_context@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_context : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_context@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_context : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_context@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_context ;
 }
 
@@ -114,7 +123,8 @@ if "@PORT@" != "boost-test"
 {
     use-project /boost/test : . ;
 
-    lib boost_unit_test_framework : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_unit_test_framework@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_unit_test_framework : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_unit_test_framework@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_unit_test_framework : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_unit_test_framework@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_unit_test_framework ;
 }
 
@@ -122,8 +132,27 @@ if "@PORT@" != "boost-serialization"
 {
     use-project /boost/serialization : . ;
 
-    lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/@BUILD_LIB_PATH@@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_SUFFIX@" <variant>@VARIANT@ ;
+    lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_serialization ;
+}
+
+if "@PORT@" != "boost-mpi"
+{
+    use-project /boost/mpi : . ;
+
+    lib boost_mpi : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_mpi@BOOST_LIB_RELEASE_SUFFIX@" <variant>release : : <library>/boost/serialization//boost_serialization ;
+    lib boost_mpi : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_mpi@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug : : <library>/boost/serialization//boost_serialization ;
+    explicit boost_mpi ;
+}
+
+if "@PORT@" != "boost-container"
+{
+    use-project /boost/container : . ;
+
+    lib boost_container : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_container@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_container : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_container@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
+    explicit boost_container ;
 }
 
 rule requires ( foo * )

@@ -1,6 +1,6 @@
 {
   "name": "boost-intrusive",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost intrusive module",
   "homepage": "https://github.com/boostorg/intrusive",
   "dependencies": [

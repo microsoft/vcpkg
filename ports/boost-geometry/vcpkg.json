@@ -1,10 +1,11 @@
 {
   "name": "boost-geometry",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost geometry module",
   "homepage": "https://github.com/boostorg/geometry",
   "dependencies": [
     "boost-algorithm",
+    "boost-any",
     "boost-array",
     "boost-assert",
     "boost-concept-check",
@@ -35,6 +36,7 @@
     "boost-type-traits",
     "boost-utility",
     "boost-variant",
+    "boost-variant2",
     "boost-vcpkg-helpers"
   ]
 }

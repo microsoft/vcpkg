@@ -1,6 +1,6 @@
 {
   "name": "boost-units",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost units module",
   "homepage": "https://github.com/boostorg/units",
   "dependencies": [
@@ -13,11 +13,9 @@
     "boost-math",
     "boost-mpl",
     "boost-preprocessor",
-    "boost-serialization",
     "boost-static-assert",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }
