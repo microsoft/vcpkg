@@ -216,7 +216,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
         # Patch out any remaining absolute references
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
