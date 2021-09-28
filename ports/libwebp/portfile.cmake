@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO webmproject/libwebp
-  REF d7844e9762b61c9638c263657bd49e1690184832 # v1.1.0
-  SHA512 13692970e7dd909cd6aaa03c9a0c863243baac1885644794362dec0c0b0721d6807f281f746215bfd856c6e0cb742b01a731a33fe075a32ff24496e10c1a94b4
+  REF 9ce5843dbabcfd3f7c39ec7ceba9cbeb213cbfdf # v1.2.1
+  SHA512 43224caedb0d591ad1dd3872cd882c0fe255e24425f6da82fca212783ddb231326797a82ead0a1b8b15dc98db1cb05741e3a5e5131babbcc49a529a9f3253865
   HEAD_REF master
   PATCHES
     0001-build.patch
@@ -31,6 +31,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      dwebp        WEBP_BUILD_DWEBP
      swap16bitcsp WEBP_ENABLE_SWAP_16BIT_CSP
      unicode      WEBP_UNICODE
+     libbwebpmux  WEBP_BUILD_LIBWEBPMUX
 )
 
 
@@ -44,22 +45,21 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     ${FEATURE_OPTIONS}
   OPTIONS_DEBUG
     -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake TARGET_PATH share/WebP) # find_package is called with WebP not libwebp
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_cmake_config_fixup(PACKAGE_NAME WebP CONFIG_PATH share/WebP/cmake) # find_package is called with WebP not libwebp
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebp.pc" "-lwebp" "-lwebpd")
@@ -68,7 +68,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpmux.pc" "-lwebpmux" "-lwebpmuxd")
 endif()
 vcpkg_fixup_pkgconfig()
-
 
 set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/webp/")
