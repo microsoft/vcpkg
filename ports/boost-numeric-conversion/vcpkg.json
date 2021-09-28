@@ -1,13 +1,12 @@
 {
   "name": "boost-numeric-conversion",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost numeric_conversion module",
   "homepage": "https://github.com/boostorg/numeric_conversion",
   "dependencies": [
     "boost-config",
     "boost-conversion",
     "boost-core",
-    "boost-detail",
     "boost-mpl",
     "boost-preprocessor",
     "boost-throw-exception",
