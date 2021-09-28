@@ -164,9 +164,8 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 # Configure & Install
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
@@ -185,12 +184,12 @@ vcpkg_configure_cmake(
         ${ADDITIONAL_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-9.0)
 
 # =============================================================================
 # Clean-up other directories
@@ -306,6 +305,13 @@ else()
 endif()
 endforeach()
 
+# Use vcpkg provided find method
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
+
 # =============================================================================
+# Usage
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
