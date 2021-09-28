@@ -1,6 +1,6 @@
 {
   "name": "gemmlowp",
-  "version-date": "2021-09-16",
+  "version-date": "2021-09-28",
   "description": "Low-precision matrix multiplication",
   "homepage": "https://github.com/google/gemmlowp",
   "license": "Apache-2.0",
