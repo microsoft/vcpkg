@@ -1,5 +1,9 @@
 set(OPENSP_VERSION 1.5.2)
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(PATCHES windows_cmake_build.diff)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/openjade/opensp/${OPENSP_VERSION}/OpenSP-${OPENSP_VERSION}.tar.gz"
     FILENAME "OpenSP-${OPENSP_VERSION}.tar.gz"
@@ -10,17 +14,27 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${OPENSP_VERSION}
+    PATCHES ${PATCHES}
 )
 
-vcpkg_configure_make(
-    AUTOCONFIG
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        --disable-doc-build
-        --enable-http
-)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+    )
 
-vcpkg_install_make()
+    vcpkg_cmake_install()
+else()
+    vcpkg_configure_make(
+        AUTOCONFIG
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            --disable-doc-build
+            --enable-http
+    )
+
+    vcpkg_install_make()
+endif()
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

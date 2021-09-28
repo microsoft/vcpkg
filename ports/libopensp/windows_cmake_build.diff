@@ -1,0 +1,701 @@
+diff -Nru -x '*~' OpenSP-1.5.2.orig/CMakeLists.txt OpenSP-1.5.2/CMakeLists.txt
+--- OpenSP-1.5.2.orig/CMakeLists.txt	1970-01-01 02:00:00.000000000 +0200
++++ OpenSP-1.5.2/CMakeLists.txt	2014-08-24 17:23:19.941495700 +0300
+@@ -0,0 +1,260 @@
++project(opensp)
++
++set (VERSION_MAJOR 1)
++set (VERSION_MINOR 5)
++set (VERSION_PATH 2)
++
++cmake_minimum_required(VERSION 2.6)
++
++include_directories(
++    include
++    generic
++)
++
++set (SRC_SOURCES
++    "lib/Allocator.cxx"
++    "lib/app_inst.cxx"
++    "lib/arc_inst.cxx"
++    "lib/ArcEngine.cxx"
++    "lib/assert.cxx"
++    "lib/Attribute.cxx"
++    "lib/Big5CodingSystem.cxx"
++    "lib/CharsetDecl.cxx"
++    "lib/CharsetInfo.cxx"
++    "lib/CharsetRegistry.cxx"
++    "lib/CmdLineApp.cxx"
++    "lib/CodingSystem.cxx"
++    "lib/CodingSystemKit.cxx"
++    "lib/ConsoleOutput.cxx"
++    "lib/ContentState.cxx"
++    "lib/ContentToken.cxx"
++    "lib/DescriptorManager.cxx"
++    "lib/Dtd.cxx"
++    "lib/ElementType.cxx"
++    "lib/Entity.cxx"
++    "lib/EntityApp.cxx"
++    "lib/EntityCatalog.cxx"
++    "lib/EntityDecl.cxx"
++    "lib/EntityManager.cxx"
++    "lib/entmgr_inst.cxx"
++    "lib/ErrnoMessageArg.cxx"
++    "lib/ErrorCountEventHandler.cxx"
++    "lib/EUCJPCodingSystem.cxx"
++    "lib/Event.cxx"
++    "lib/EventGenerator.cxx"
++    "lib/ExtendEntityManager.cxx"
++    "lib/ExternalId.cxx"
++    "lib/Fixed2CodingSystem.cxx"
++    "lib/GenericEventHandler.cxx"
++    "lib/Group.cxx"
++    "lib/Hash.cxx"
++    "lib/Id.cxx"
++    "lib/IdentityCodingSystem.cxx"
++    "lib/IListBase.cxx"
++    "lib/InputSource.cxx"
++    "lib/InternalInputSource.cxx"
++#    "lib/lib.res"
++    "lib/Link.cxx"
++    "lib/LinkProcess.cxx"
++    "lib/LiteralStorage.cxx"
++    "lib/Location.cxx"
++    "lib/Lpd.cxx"
++    "lib/Markup.cxx"
++    "lib/Message.cxx"
++    "lib/MessageArg.cxx"
++    "lib/MessageEventHandler.cxx"
++    "lib/MessageFormatter.cxx"
++    "lib/MessageReporter.cxx"
++    "lib/MessageTable.cxx"
++    "lib/ModeInfo.cxx"
++    "lib/Notation.cxx"
++    "lib/NotationStorage.cxx"
++    "lib/NumericCharRefOrigin.cxx"
++    "lib/OffsetOrderedList.cxx"
++    "lib/OpenElement.cxx"
++    "lib/OutputByteStream.cxx"
++    "lib/OutputCharStream.cxx"
++    "lib/OutputState.cxx"
++    "lib/Param.cxx"
++    "lib/parseAttribute.cxx"
++    "lib/parseCommon.cxx"
++    "lib/parseDecl.cxx"
++    "lib/parseInstance.cxx"
++    "lib/parseMode.cxx"
++    "lib/parseParam.cxx"
++    "lib/Parser.cxx"
++    "lib/parser_inst.cxx"
++    "lib/ParserApp.cxx"
++    "lib/ParserEventGeneratorKit.cxx"
++    "lib/ParserMessages.cxx"
++    "lib/ParserOptions.cxx"
++    "lib/ParserState.cxx"
++    "lib/parseSd.cxx"
++    "lib/Partition.cxx"
++    "lib/PosixStorage.cxx"
++    "lib/Recognizer.cxx"
++    "lib/RewindStorageObject.cxx"
++    "lib/Sd.cxx"
++    "lib/SdText.cxx"
++    "lib/SearchResultMessageArg.cxx"
++    "lib/SGMLApplication.cxx"
++    "lib/SgmlParser.cxx"
++    "lib/ShortReferenceMap.cxx"
++    "lib/SJISCodingSystem.cxx"
++    "lib/SOEntityCatalog.cxx"
++    "lib/splib.cxx"
++    "lib/StdioStorage.cxx"
++    "lib/StorageManager.cxx"
++    "lib/SubstTable.cxx"
++    "lib/Syntax.cxx"
++    "lib/Text.cxx"
++    "lib/TokenMessageArg.cxx"
++    "lib/TranslateCodingSystem.cxx"
++    "lib/TrieBuilder.cxx"
++    "lib/TypeId.cxx"
++    "lib/Undo.cxx"
++    "lib/UnicodeCodingSystem.cxx"
++    "lib/UnivCharsetDesc.cxx"
++    "lib/URLStorage.cxx"
++    "lib/UTF8CodingSystem.cxx"
++    "lib/Win32CodingSystem.cxx"
++    "lib/WinApp.cxx"
++    "lib/WinInetStorage.cxx"
++    "lib/xentmgr_inst.cxx"
++    "lib/XMLCodingSystem.cxx"
++)
++
++set (libopensp_HEADERS
++    generic/EventGenerator.h
++    generic/ParserEventGeneratorKit.h
++    generic/SGMLApplication.h
++    include/Allocator.h
++    include/ArcEngine.h
++    include/Attribute.h
++    include/Attributed.h
++    include/Big5CodingSystem.h
++    include/Boolean.h
++    include/CharMap.h
++    include/CharsetDecl.h
++    include/CharsetInfo.h
++    include/CharsetRegistry.h
++    include/CmdLineApp.h
++    include/CodingSystem.h
++    include/CodingSystemKit.h
++    include/config.h
++    include/ConsoleOutput.h
++    include/constant.h
++    include/ContentState.h
++    include/ContentToken.h
++    include/CopyOwner.h
++    include/DescriptorManager.h
++    include/Dtd.h
++    include/ElementType.h
++    include/Entity.h
++    include/EntityApp.h
++    include/EntityCatalog.h
++    include/EntityDecl.h
++    include/EntityManager.h
++    include/ErrnoMessageArg.h
++    include/ErrorCountEventHandler.h
++    include/EUCJPCodingSystem.h
++    include/Event.h
++    include/EventsWanted.h
++    include/ExtendEntityManager.h
++    include/ExternalId.h
++    include/Fixed2CodingSystem.h
++    include/Fixed4CodingSystem.h
++    include/GenericEventHandler.h
++    include/Hash.h
++    include/HashTable.h
++    include/HashTableItemBase.h
++    include/IdentityCodingSystem.h
++    include/IList.h
++    include/IListBase.h
++    include/IListIter.h
++    include/IListIterBase.h
++    include/InputSource.h
++    include/InternalInputSource.h
++    include/IQueue.h
++    include/ISet.h
++    include/ISetIter.h
++    include/Link.h
++    include/LinkProcess.h
++    include/List.h
++    include/ListIter.h
++    include/LiteralStorage.h
++    include/Location.h
++    include/Lpd.h
++    include/macros.h
++    include/Markup.h
++    include/Message.h
++    include/MessageArg.h
++    include/MessageBuilder.h
++    include/MessageEventHandler.h
++    include/MessageFormatter.h
++    include/MessageModule.h
++    include/MessageReporter.h
++    include/MessageTable.h
++    include/Mode.h
++    include/Named.h
++    include/NamedResource.h
++    include/NamedResourceTable.h
++    include/NamedTable.h
++    include/NCVector.h
++    include/Notation.h
++    include/NotationStorage.h
++    include/OpenElement.h
++    include/Options.h
++    include/OutputByteStream.h
++    include/OutputCharStream.h
++    include/Owner.h
++    include/OwnerTable.h
++    include/ParserApp.h
++    include/ParserOptions.h
++    include/PointerTable.h
++    include/PosixStorage.h
++    include/Ptr.h
++    include/RangeMap.h
++    include/Resource.h
++    include/RewindStorageObject.h
++    include/rtti.h
++    include/Sd.h
++    include/SdText.h
++    include/SearchResultMessageArg.h
++    include/SgmlParser.h
++    include/ShortReferenceMap.h
++    include/SJISCodingSystem.h
++    include/SOEntityCatalog.h
++    include/sptchar.h
++    include/StdioStorage.h
++    include/StorageManager.h
++    include/StringC.h
++    include/StringOf.h
++    include/StringResource.h
++    include/SubstTable.h
++    include/Syntax.h
++    include/Text.h
++    include/TranslateCodingSystem.h
++    include/TypeId.h
++    include/types.h
++    include/UnicodeCodingSystem.h
++    include/UnivCharsetDesc.h
++    include/URLStorage.h
++    include/UTF16CodingSystem.h
++    include/UTF8CodingSystem.h
++    include/Vector.h
++    include/Win32CodingSystem.h
++    include/WinApp.h
++    include/WinInetStorage.h
++    include/XcharMap.h
++    include/XMLCodingSystem.h
++    include/xnew.h
++)
++
++add_library(opensp SHARED ${SRC_SOURCES})
++set_target_properties(opensp PROPERTIES OUTPUT_NAME "sp133")
++target_link_libraries(opensp)
++
++install(TARGETS opensp RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
++install(FILES ${libopensp_HEADERS} DESTINATION include/opensp)
++
+diff -Nru -x '*~' OpenSP-1.5.2.orig/config.h OpenSP-1.5.2/config.h
+--- OpenSP-1.5.2.orig/config.h	2005-12-23 16:16:30.000000000 +0200
++++ OpenSP-1.5.2/config.h	2014-08-24 17:26:33.724698900 +0300
+@@ -26,6 +26,12 @@
+ #endif
+ #endif /* __GNUG__ */
+ 
++#ifdef __MINGW32__
++#define SP_HAVE_BOOL
++#define SP_HAVE_TYPENAME
++#define SP_DEFINE_TEMPLATES
++#endif /* __MINGW32__ */
++
+ #if defined(sun) || defined(__sun)
+ // struct stat has st_blksize member
+ #define SP_STAT_BLKSIZE
+@@ -80,6 +86,11 @@
+ #define SP_HAVE_TYPENAME
+ #endif
+ 
++#if _MSC_VER >=1800
++// Visual Studio 2013
++#define SP_ANSI_FOR_SCOPE
++#endif
++
+ #define SP_HAVE_SETMODE
+ #define SP_DLLEXPORT __declspec(dllexport)
+ #define SP_DLLIMPORT __declspec(dllimport)
+@@ -301,15 +312,8 @@
+ #define PATH_SEPARATOR ':'
+ #endif
+ 
+-
+-/* new stuff */
+-
+-#ifndef HAVE_MUTABLE
+-#define mutable
+-#endif
+-
+ // NOTE: This is processed as a Makefile, not as a header by autoconf.
+-#define SP_PACKAGE "OpenSP"
+-#define SP_VERSION "1.5.2"
++#define SP_PACKAGE "@PACKAGE@"
++#define SP_VERSION "@VERSION@"
+ 
+ #endif /* not config_INCLUDED */
+diff -Nru -x '*~' OpenSP-1.5.2.orig/generic/SGMLApplication.h OpenSP-1.5.2/generic/SGMLApplication.h
+--- OpenSP-1.5.2.orig/generic/SGMLApplication.h	2005-05-14 12:17:41.000000000 +0300
++++ OpenSP-1.5.2/generic/SGMLApplication.h	2014-08-24 17:23:19.957120700 +0300
+@@ -269,6 +269,7 @@
+     unsigned count_;
+     friend class OpenEntityPtr;
+   };
++  SGMLApplication();
+   virtual ~SGMLApplication();
+   virtual void appinfo(const AppinfoEvent &);
+   virtual void startDtd(const StartDtdEvent &);
+diff -Nru -x '*~' OpenSP-1.5.2.orig/include/config.h OpenSP-1.5.2/include/config.h
+--- OpenSP-1.5.2.orig/include/config.h	1970-01-01 02:00:00.000000000 +0200
++++ OpenSP-1.5.2/include/config.h	2014-08-24 17:26:44.693448900 +0300
+@@ -0,0 +1,319 @@
++// Copyright (c) 1994, 1995, 1996 James Clark
++// See the file COPYING for copying permission.
++
++#ifndef config_INCLUDED
++#define config_INCLUDED 1
++
++#define SP_INCLUDE_UNISTD_H
++#define SP_POSIX_FILENAMES
++
++#ifdef __GNUG__
++// Ideally, this should be set in configure.in, I think
++// It's not missing, but it pulls in libg++
++#define SP_NEW_H_MISSING
++// set_new_handler() has to be declared extern "C"
++#define SP_SET_NEW_HANDLER_EXTERN_C
++#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)
++#define SP_ANSI_FOR_SCOPE
++#endif
++#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8)
++#define SP_ANSI_LIB
++#define SP_NO_STD_NAMESPACE
++#undef SP_NEW_H_MISSING
++#endif
++#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 9)
++#undef SP_NO_STD_NAMESPACE
++#endif
++#endif /* __GNUG__ */
++
++#ifdef __MINGW32__
++#define SP_HAVE_BOOL
++#define SP_HAVE_TYPENAME
++#define SP_DEFINE_TEMPLATES
++#endif /* __MINGW32__ */
++
++#if defined(sun) || defined(__sun)
++// struct stat has st_blksize member
++#define SP_STAT_BLKSIZE
++#endif
++
++#if (defined __MACH__) && (! defined __GNU__)
++#define SP_MUTEX_MACH
++#endif
++
++#ifdef __EMX__
++// EMX 0.9a for OS/2
++#undef SP_POSIX_FILENAMES
++#define SP_MSDOS_FILENAMES
++#endif
++
++#ifdef _MSC_VER
++// Microsoft Visual C++ 4.0
++#undef SP_INCLUDE_UNISTD_H
++#define SP_INCLUDE_IO_H
++#ifndef SP_ANSI_CLASS_INST
++#define SP_ANSI_CLASS_INST
++#endif
++#undef SP_POSIX_FILENAMES
++#define SP_MSDOS_FILENAMES
++#define SP_SHORT_HEADERS
++#pragma warning ( disable : 4660 ) // already instantiated
++#pragma warning ( disable : 4661 ) // missing def for decl member
++#pragma warning ( disable : 4786 ) // debug symbol truncated (>255 chars)
++#pragma warning ( disable : 4018 ) // signed/unsigned mismatch
++#pragma warning ( disable : 4251 ) // __declspec(dllexport)
++#pragma warning ( disable : 4275 )
++#pragma warning ( disable : 4237 ) // future reserved keyword
++#define huge verybig
++#if _MSC_VER == 900
++#define SP_DECLARE_PLACEMENT_OPERATOR_NEW
++#endif
++#define set_new_handler _set_new_handler
++// Function passed to set_new_handler() returns int and takes size_t argument.
++#define SP_FANCY_NEW_HANDLER
++
++#if _MSC_VER >= 1100
++// Visual C++ 5.0
++#define SP_HAVE_BOOL
++#define SP_SIZEOF_BOOL_1
++#pragma warning ( disable : 4800 ) // forcing value to bool 'true' or
++                                   // 'false' (performance warning)
++#endif
++
++#if _MSC_VER >= 1200
++// Visual C++ 6.0
++#define SP_HAVE_PLACEMENT_OPERATOR_DELETE
++#define SP_HAVE_TYPENAME
++#endif
++
++#if _MSC_VER >=1800
++// Visual Studio 2013
++#define SP_ANSI_FOR_SCOPE
++#endif
++
++#define SP_HAVE_SETMODE
++#define SP_DLLEXPORT __declspec(dllexport)
++#define SP_DLLIMPORT __declspec(dllimport)
++
++#if defined(_DLL) || defined(_USRDLL) || defined(_MT)
++#define SP_USE_DLL
++#endif
++
++#ifdef SP_USE_DLL
++#ifndef BUILD_LIBSP
++// It's not possible to export templates using __declspec(dllexport),
++// so instead we include the template definitions in the headers,
++// which allows Visual C++ to instantiate any needed templates
++// in the client.
++#define SP_DEFINE_TEMPLATES
++#endif
++#endif /* SP_USE_DLL */
++
++#ifndef SP_MANUAL_INST
++#ifndef SP_DEFINE_TEMPLATES
++#define SP_MANUAL_INST
++#endif
++#endif /* not SP_MANUAL_INST */
++
++// SP_WIDE_SYSTEM builds will not compile due to missing overloads
++// OutputCharStream &operator<<(wchar_t) and
++// OutputCharStream &operator<<(unsigned short*)
++// which are required by onsgmls; osx has probably similar issues.
++// Once these issues are addressed, the following lines should be
++// re-activated.
++
++// #ifdef SP_MULTI_BYTE
++// #define SP_WIDE_SYSTEM
++// #endif
++
++// wchar_t's base type is an unsigned short
++#define SP_WCHAR_T_USHORT
++
++// Enable precompiled header support.
++#define SP_PCH
++// Don't compile in message text.
++#define SP_NO_MESSAGE_TEXT
++#ifdef _MT
++// Use Win32 critical section facilities
++#define SP_MUTEX_WIN32
++// Use the new Standard C++ library
++#define SP_ANSI_LIB
++#if _MSC_VER < 1100
++// Versions prior to 5.0 don't use the std namespace
++#define SP_NO_STD_NAMESPACE
++#endif
++#endif /* _MT */
++#endif /* _MSC_VER */
++
++#ifdef __WATCOMC__
++// Watcom C++ 10.0a
++#define SP_MANUAL_INST
++#undef SP_POSIX_FILENAMES
++#define SP_MSDOS_FILENAMES
++#undef SP_INCLUDE_UNISTD_H
++#define SP_INCLUDE_IO_H
++#pragma warning 004 9
++#undef huge
++// Cannot handle T::~T in template.
++#define SP_QUAL_TEMPLATE_DTOR_BROKEN
++#define SP_HAVE_SETMODE
++#define _setmode setmode
++#if __WATCOMC__ < 1050
++#define _O_BINARY O_BINARY
++#endif
++#define SP_WCHAR_T_USHORT
++#if __WATCOMC__ >= 1100
++#define SP_HAVE_BOOL
++// #define SP_SIZEOF_BOOL_1
++#endif
++#endif /* __WATCOMC__ */
++
++#ifdef __BORLANDC__
++// Borland C++ 5.0
++#define SP_ANSI_FOR_SCOPE
++#define SP_HAVE_RTTI
++#define SP_HAVE_SETMODE
++#undef SP_INCLUDE_UNISTD_H
++#define SP_INCLUDE_IO_H
++#undef SP_POSIX_FILENAMES
++#define SP_MSDOS_FILENAMES
++#define SP_HAVE_BOOL
++#define SP_SHORT_HEADERS
++#define _O_BINARY O_BINARY
++#define _setmode setmode
++#define SP_ANSI_CLASS_INST
++#define SP_MANUAL_INST
++// Building as a DLL doesn't work with Borland C++ yet.
++#define SP_DLLEXPORT __declspec(dllexport)
++#define SP_DLLIMPORT __declspec(dllimport)
++#ifdef SP_USE_DLL
++#ifndef BUILD_LIBSP
++#define SP_DEFINE_TEMPLATES
++#endif
++#endif /* SP_USE_DLL */
++#define SP_WCHAR_T_USHORT
++#endif /* __BORLANDC__ */
++
++#ifdef __IBMCPP__
++// IBM CSet++ 2.1 from Horst Szillat <szillat@berlin.snafu.de>.
++#undef SP_POSIX_FILENAMES
++#define SP_MANUAL_INST
++#define SP_SHORT_HEADERS
++#define SP_MSDOS_FILENAMES
++#undef SP_INCLUDE_UNISTD_H
++#define SP_INCLUDE_IO_H
++#define S_IFMT (S_IFDIR|S_IFCHR|S_IFREG)
++#endif
++
++#ifdef __xlC__
++// IBM CSet++ 3.1 on AIX 4.1.
++// Use CXX=xlC and CC=xlC in the Makefile.
++// Note that -g creates massive executables and that -O
++// takes ages to compile and creates core dumping executables!
++// I havn't tried the socket stuff.
++// <Chris_Paulson-Ellis@3mail.3com.com>
++#define SP_MANUAL_INST
++#define SP_HAVE_LOCALE
++#define SP_STAT_BLKSIZE
++#endif /* __xlC__ */
++
++#ifdef macintosh
++// Apple MacOS. Tested only with Metrowerks CW10.
++// From Ashley Colin Yakeley <AshleyB@halcyon.com>
++#undef SP_POSIX_FILENAMES
++#define SP_MAC_FILENAMES
++#define SP_LINE_TERM1 '\r'
++
++#ifdef __MWERKS__
++// Metrowerks for some platform (MacOS in this case)
++
++#pragma mpwc_newline off
++#define SP_DEFINE_TEMPLATES
++// #define SP_USE_DLL -- __declspec doesn't work with classes (yet)
++#ifdef SP_USE_DLL
++#define SP_DLLEXPORT __declspec(export)
++#define SP_DLLIMPORT __declspec(import)
++#endif // SP_USE_DLL
++
++#if __MWERKS__ >= 0x1000
++// bool option only defined for CW10 and later (note __MWERKS__ is BCD)
++#if __option(bool)
++#define SP_HAVE_BOOL
++#endif // __option(bool)
++#endif // __MWERKS__ >= 0x1000
++#endif // __MWERKS__
++
++#if ('\n' != 10) || ('\r' != 13)
++#error "newlines incorrect"
++#endif
++
++#endif /* macintosh */
++
++#ifdef SP_HAVE_SETMODE
++#ifndef SP_LINE_TERM1
++#define SP_LINE_TERM1 '\r'
++#define SP_LINE_TERM2 '\n'
++#endif
++#endif /* not SP_HAVE_SETMODE */
++
++#ifndef SP_LINE_TERM1
++#define SP_LINE_TERM1 '\n'
++#endif
++
++#ifndef SP_ANSI_FOR_SCOPE
++// This simulates the new ANSI "for" scope rules
++#define for if (0); else for
++#endif
++
++#ifndef SP_HAVE_TYPENAME
++#define typename /* as nothing */
++#endif
++
++#ifndef SP_DLLEXPORT
++#define SP_DLLEXPORT /* as nothing */
++#endif
++
++#ifndef SP_DLLIMPORT
++#define SP_DLLIMPORT /* as nothing */
++#endif
++
++#ifdef SP_USE_DLL
++
++#ifdef BUILD_LIBSP
++#define SP_API SP_DLLEXPORT
++#else
++#define SP_API SP_DLLIMPORT
++#endif
++
++#else /* not SP_USE_DLL */
++
++#define SP_API /* as nothing */
++
++#endif /* not SP_USE_DLL */
++
++// SP_WIDE_SYSTEM says that your OS provides wide character interfaces
++// SP_WIDE_SYSTEM currently works only with Visual C++ and Windows NT/95
++// SP_WIDE_SYSTEM implies SP_MULTI_BYTE
++#ifdef SP_WIDE_SYSTEM
++#ifndef SP_MULTI_BYTE
++#define SP_MULTI_BYTE
++#endif
++#endif
++
++#ifdef SP_NAMESPACE
++#define SP_NAMESPACE_SCOPE SP_NAMESPACE::
++#else
++#define SP_NAMESPACE_SCOPE
++#endif
++
++#ifdef SP_MSDOS_FILENAMES
++#define PATH_SEPARATOR ';'
++#else
++#define PATH_SEPARATOR ':'
++#endif
++
++// NOTE: This is processed as a Makefile, not as a header by autoconf.
++#define SP_PACKAGE "@PACKAGE@"
++#define SP_VERSION "@VERSION@"
++
++#endif /* not config_INCLUDED */
+diff -Nru -x '*~' OpenSP-1.5.2.orig/include/OutputCharStream.h OpenSP-1.5.2/include/OutputCharStream.h
+--- OpenSP-1.5.2.orig/include/OutputCharStream.h	2005-07-21 17:04:39.000000000 +0300
++++ OpenSP-1.5.2/include/OutputCharStream.h	2014-08-24 17:23:19.957120700 +0300
+@@ -31,6 +31,7 @@
+   OutputCharStream &operator<<(const char *);
+   OutputCharStream &operator<<(const StringC &);
+   OutputCharStream &operator<<(unsigned long);
++  OutputCharStream &operator<<(unsigned long long);
+   OutputCharStream &operator<<(int);
+   OutputCharStream &operator<<(Newline);
+ private:
+diff -Nru -x '*~' OpenSP-1.5.2.orig/lib/MessageReporter.cxx OpenSP-1.5.2/lib/MessageReporter.cxx
+--- OpenSP-1.5.2.orig/lib/MessageReporter.cxx	2005-07-21 17:05:17.000000000 +0300
++++ OpenSP-1.5.2/lib/MessageReporter.cxx	2014-08-24 17:23:19.957120700 +0300
+@@ -123,7 +123,11 @@
+     os() << ':';
+   }
+   if (options_ & messageNumbers)
++#ifdef _WIN64
++    os() << (unsigned long long)message.type->module() << "." 
++#else
+     os() << (unsigned long)message.type->module() << "." 
++#endif
+       << (unsigned long)message.type->number() << ":";
+   switch (message.type->severity()) {
+   case MessageType::info:
+diff -Nru -x '*~' OpenSP-1.5.2.orig/lib/OutputCharStream.cxx OpenSP-1.5.2/lib/OutputCharStream.cxx
+--- OpenSP-1.5.2.orig/lib/OutputCharStream.cxx	2005-07-21 17:05:17.000000000 +0300
++++ OpenSP-1.5.2/lib/OutputCharStream.cxx	2014-08-24 17:23:19.957120700 +0300
+@@ -61,6 +61,13 @@
+   return *this << buf;
+ }
+ 
++OutputCharStream &OutputCharStream::operator<<(unsigned long long n)
++{
++  char buf[sizeof(unsigned long long)*3 + 1];
++  sprintf(buf, "%I64u", n);
++  return *this << buf;
++}
++
+ OutputCharStream &OutputCharStream::operator<<(int n)
+ {
+   char buf[sizeof(int)*3 + 2];
+diff -Nru -x '*~' OpenSP-1.5.2.orig/lib/SGMLApplication.cxx OpenSP-1.5.2/lib/SGMLApplication.cxx
+--- OpenSP-1.5.2.orig/lib/SGMLApplication.cxx	2005-07-21 17:05:18.000000000 +0300
++++ OpenSP-1.5.2/lib/SGMLApplication.cxx	2014-08-24 17:23:19.972745700 +0300
+@@ -9,6 +9,10 @@
+ #include "Boolean.h"
+ #include "SGMLApplication.h"
+ 
++SGMLApplication::SGMLApplication()
++{
++}
++
+ SGMLApplication::~SGMLApplication()
+ {
+ }

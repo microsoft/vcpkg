@@ -5,11 +5,13 @@
   "homepage": "http://openjade.sourceforge.net",
   "dependencies": [
     {
-      "name": "gettext",
+      "name": "vcpkg-cmake",
       "host": true,
-      "features": [
-        "tools"
-      ],
+      "platform": "windows | uwp"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
       "platform": "windows | uwp"
     }
   ]
