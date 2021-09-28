@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 24d3c9b..8f9d98f 100644
+index 24d3c9b..5f17c4c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -539,15 +539,14 @@ endif()
@@ -18,7 +18,7 @@ index 24d3c9b..8f9d98f 100644
 +find_package(protobuf CONFIG REQUIRED)
 +find_program(PROTOBUF_PROTOC_EXECUTABLE
 +    NAMES   protoc
-+    PATHS   ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools
++    PATHS   ${_VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools
 +)
 +set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE})
 +include(cmake/ProtoBuf.cmake)
@@ -65,27 +65,29 @@ index 24d3c9b..8f9d98f 100644
 +find_package(fmt CONFIG REQUIRED) # fmt::fmt-header-only
 +list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
 +
-+# todo: use FindBLAS.cmake
-+if(BLAS STREQUAL "Eigen")
++if(BLAS STREQUAL "Accelerate")
++  set(WITH_BLAS "accelerate")
++  find_package(BLAS REQUIRED) # cmake/Modules/FindBLAS.cmake
++  find_package(LAPACK REQUIRED) # cmake/Modules/FindLAPACK.cmake
++  set(USE_LAPACK 1)
++  list(APPEND Caffe2_PRIVATE_DEPENDENCY_LIBS ${LAPACK_LIBRARIES})
++
++elseif(BLAS STREQUAL "Eigen")
 +  find_package(Eigen3 CONFIG REQUIRED) # Eigen3::Eigen
 +  include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 +  list(APPEND Caffe2_DEPENDENCY_LIBS Eigen3::Eigen)
-+  set(USE_BLAS 1)
-+  set(CAFFE2_USE_MKL 0)
 +  set(CAFFE2_USE_EIGEN_FOR_BLAS 1)
-+  set(AT_MKLDNN_ENABLED 0)
-+  set(AT_MKL_ENABLED 0)
-+  set(AT_FFTW_ENABLED 0)
 +
 +elseif(BLAS STREQUAL "MKL")
++  if(USE_TBB)
++    set(MKL_THREADING "TBB")
++  else()
++    set(MKL_THREADING "SEQ")
++  endif()
 +  find_package(MKL REQUIRED)
 +  include(${CMAKE_CURRENT_LIST_DIR}/public/mkl.cmake)
 +  include_directories(AFTER SYSTEM ${MKL_INCLUDE_DIR})
 +  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS caffe2::mkl)
-+  set(USE_BLAS 1)
-+  set(CAFFE2_USE_MKL 1)
-+  set(CAFFE2_USE_EIGEN_FOR_BLAS 0)
-+  set(AT_MKL_ENABLED 1)
 +
 +endif()
 +
@@ -93,9 +95,7 @@ index 24d3c9b..8f9d98f 100644
 +  find_package(MKLDNN REQUIRED) # BLAS::BLAS
 +  include(cmake/public/mkldnn.cmake)
 +  include_directories(AFTER SYSTEM ${MKLDNN_INCLUDE_DIR})
-+  set(CAFFE2_USE_MKLDNN ON)
 +  list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS caffe2::mkldnn)
-+  set(AT_MKLDNN_ENABLED 1)
 +endif()
 +
 +if(USE_TBB)
@@ -188,16 +188,3 @@ index 24d3c9b..8f9d98f 100644
    string(APPEND CMAKE_CXX_FLAGS " -DUSE_VULKAN")
    string(APPEND CMAKE_CXX_FLAGS " -DUSE_VULKAN_API")
  
-@@ -798,6 +934,12 @@ include_directories(BEFORE ${PROJECT_BINARY_DIR}/aten/src/)
- add_subdirectory(c10)
- add_subdirectory(caffe2)
- 
-+# list(APPEND Caffe2_DEPENDENCY_LIBS __aten_op_header_gen)
-+# if(USE_CUDA)
-+#   list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS __aten_op_header_gen)
-+# endif()
-+# include_directories(${PROJECT_BINARY_DIR}/caffe2/contrib/aten)
-+
- # --[ Documentation
- if(BUILD_DOCS)
-   # check if Doxygen is installed

@@ -3,21 +3,13 @@
   "version-semver": "1.8.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
-  "supports": "x64 & (windows | osx | linux)",
+  "supports": "x64 & (windows | osx | linux) & !static",
   "dependencies": [
     "cpuinfo",
-    "eigen3",
-    "fbgemm",
     "fmt",
     "gflags",
     "glog",
     "lmdb",
-    {
-      "name": "onnx",
-      "features": [
-        "foxi"
-      ]
-    },
     "onnx-optimizer",
     "protobuf",
     {
@@ -35,6 +27,7 @@
     }
   ],
   "default-features": [
+    "eigen3",
     "xnnpack"
   ],
   "features": {
@@ -69,11 +62,38 @@
         }
       ]
     },
+    "eigen3": {
+      "description": "Build with Eigen 3",
+      "dependencies": [
+        {
+          "name": "eigen3",
+          "platform": "windows | linux"
+        }
+      ]
+    },
+    "fbgemm": {
+      "description": "Build with FBGEMM (quantized 8-bit server operators)",
+      "dependencies": [
+        "fbgemm"
+      ]
+    },
+    "fftw3": {
+      "description": "Build with FFTW (Fastest Fourier Transform in the West)",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
     "leveldb": {
       "description": "Build with LevelDB",
       "dependencies": [
         "leveldb",
         "snappy"
+      ]
+    },
+    "mkl": {
+      "description": "Build with Intel MKL and MKLDNN (x86, x86_64, and AArch64)",
+      "dependencies": [
+        "intel-mkl"
       ]
     },
     "nnpack": {
