@@ -137,6 +137,9 @@ else
     & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
 }
 
+$failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+
 if ($LASTEXITCODE -ne 0)
 {
     throw "vcpkg ci failed"
