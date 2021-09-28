@@ -1,7 +1,6 @@
 {
   "name": "openmvs",
-  "version-string": "1.1",
-  "port-version": 5,
+  "version": "1.1.1",
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
   "homepage": "https://cdcseacave.github.io/openMVS",
   "dependencies": [
@@ -9,6 +8,7 @@
     "boost-program-options",
     "boost-serialization",
     "boost-system",
+    "boost-throw-exception",
     {
       "name": "cgal",
       "default-features": false
@@ -27,17 +27,25 @@
     },
     "tiff",
     "vcglib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
     "cuda": {
-      "description": "cuda support for openmvs",
+      "description": "CUDA support for openmvs",
       "dependencies": [
         "cuda"
       ]
     },
     "openmp": {
-      "description": "openmp support for openmvs"
+      "description": "OpenMP support for openmvs"
     }
   }
 }
