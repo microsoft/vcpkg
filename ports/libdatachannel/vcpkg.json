@@ -1,7 +1,6 @@
 {
   "name": "libdatachannel",
-  "version-semver": "0.14.3",
-  "port-version": 1,
+  "version-semver": "0.15.1",
   "description": "libdatachannel is a standalone implementation of WebRTC Data Channels, WebRTC Media Transport, and WebSockets in C++17 with C bindings for POSIX platforms (including GNU/Linux, Android, and Apple macOS) and Microsoft Windows.",
   "homepage": "https://github.com/paullouisageneau/libdatachannel",
   "dependencies": [
