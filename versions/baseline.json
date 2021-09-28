@@ -6213,8 +6213,8 @@
       "port-version": 0
     },
     "sparsehash": {
-      "baseline": "2.0.3",
-      "port-version": 1
+      "baseline": "2.0.4",
+      "port-version": 0
     },
     "sparsepp": {
       "baseline": "1.22",
