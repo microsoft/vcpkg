@@ -18,35 +18,31 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" SIMAGE_USE_MSVC_STATIC_RUNT
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avienc      SIMAGE_USE_AVIENC
+        gdiplus     SIMAGE_USE_GDIPLUS
         oggvorbis   SIMAGE_OGGVORBIS_SUPPORT
         sndfile     SIMAGE_LIBSNDFILE_SUPPORT
+        giflib      SIMAGE_GIF_SUPPORT
+        jpeg        SIMAGE_JPEG_SUPPORT
+        png         SIMAGE_PNG_SUPPORT
+        tiff        SIMAGE_TIFF_SUPPORT
+        zlib        SIMAGE_ZLIB_SUPPORT
 )
 
 # Depends on the platform
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(SIMAGE_ON_WIN ON)
-    set(SIMAGE_ON_NON_WIN OFF)
-else()
-    set(SIMAGE_ON_WIN OFF)
-    set(SIMAGE_ON_NON_WIN ON)
+if(VCPKG_TARGET_IS_WINDOWS AND "gdiplus" IN_LIST FEATURES)
+    message(WARNING "Feature 'gdiplus' will disable feature 'zlib', 'giflib', 'jpeg', 'png' and 'tiff' automaticly.")
+elseif ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+         AND ("gdiplus" IN_LIST FEATURES OR "avienc" IN_LIST FEATURES))
+    message(FATAL_ERROR "Feature 'avienc' and 'gdiplus' only support Windows.")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMAGE_BUILD_SHARED_LIBS:BOOL=${SIMAGE_BUILD_SHARED_LIBS}
         -DSIMAGE_USE_STATIC_LIBS:BOOL=${SIMAGE_USE_STATIC_LIBS}
         -DSIMAGE_USE_MSVC_STATIC_RUNTIME:BOOL=${SIMAGE_USE_MSVC_STATIC_RUNTIME}
-        -DSIMAGE_USE_AVIENC=${SIMAGE_ON_WIN}
-        -DSIMAGE_USE_GDIPLUS=${SIMAGE_ON_WIN}
-        # Available on Linux, OSX and Windows without gdiplus
-        -DSIMAGE_ZLIB_SUPPORT=${SIMAGE_ON_NON_WIN}
-        -DSIMAGE_GIF_SUPPORT=${SIMAGE_ON_NON_WIN}
-        -DSIMAGE_JPEG_SUPPORT=${SIMAGE_ON_NON_WIN}
-        -DSIMAGE_PNG_SUPPORT=${SIMAGE_ON_NON_WIN}
-        -DSIMAGE_TIFF_SUPPORT=${SIMAGE_ON_NON_WIN}
-        #
         -DSIMAGE_USE_CGIMAGE=OFF
         -DSIMAGE_USE_QIMAGE=OFF
         -DSIMAGE_USE_QT6=OFF
@@ -65,15 +61,15 @@ vcpkg_configure_cmake(
         -DSIMAGE_BUILD_DOCUMENTATION=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/simage-${SIMAGE_VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/simage-${SIMAGE_VERSION})
 
 if (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_tools(TOOL_NAMES simage-config AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
