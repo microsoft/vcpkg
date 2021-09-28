@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF v1.1
-    SHA512 baa9149853dc08c602deeb1a04cf57643d1cb0733aee2776f4e99b210279aad3b4a1013ab1d790e91a3a95b7c72b9c12c6be25f2c30a76b69b5319b610cb8e7a
+    REF v1.1.1
+    SHA512 EEB15D0756F12136A1E7938A0EED97024D564EEF3355F3BB6ABF6C681E38919011E1A133D89CA360F463E7FED5FEB8E0138A0FE9BE4C25B6A13BA4B042AEF3EB
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -23,7 +23,6 @@ file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    GENERATOR Ninja
     OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVS_USE_NONFREE=ON
         -DOpenMVS_USE_CERES=OFF
@@ -43,7 +42,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_cmake_config_fixup()
+vcpkg_fixup_cmake_targets()
 file(READ ${CURRENT_PACKAGES_DIR}/share/openmvs/OpenMVSTargets-release.cmake TARGETS_CMAKE)
 string(REPLACE "bin/InterfaceCOLMAP" "tools/openmvs/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/InterfaceVisualSFM" "tools/openmvs/InterfaceVisualSFM" TARGETS_CMAKE "${TARGETS_CMAKE}")
