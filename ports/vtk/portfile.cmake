@@ -27,6 +27,7 @@ vcpkg_from_github(
         1f00a0c9.patch
         156fb524.patch
         d107698a.patch
+        fix-gdal.patch
 )
 
 # =============================================================================
@@ -124,13 +125,18 @@ endif()
 if("all" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
+        -DVTK_FORBID_DOWNLOADS=OFF
+    )
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_FORBID_DOWNLOADS=ON
     )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "cuda"         VTK_USE_CUDA
-        "mpi"         VTK_USE_MPI
+        "mpi"          VTK_USE_MPI
         "all"          VTK_BUILD_ALL_MODULES
 )
 # =============================================================================
@@ -146,7 +152,6 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
-        -DVTK_FORBID_DOWNLOADS=ON
         -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
@@ -158,6 +163,8 @@ vcpkg_configure_cmake(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         ${ADDITIONAL_OPTIONS}
+        -DVTK_DEBUG_MODULE_ALL=ON
+        -DVTK_DEBUG_MODULE=ON
 )
 
 vcpkg_install_cmake()

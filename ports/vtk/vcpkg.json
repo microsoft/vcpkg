@@ -83,7 +83,14 @@
     "gdal": {
       "description": "Support GDAL compilation",
       "dependencies": [
-        "gdal"
+        "gdal",
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ]
+        }
       ]
     },
     "geojson": {
