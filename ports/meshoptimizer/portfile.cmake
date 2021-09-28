@@ -24,4 +24,3 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/meshoptimizer)
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
-
