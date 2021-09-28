@@ -1,6 +1,6 @@
 {
   "name": "tl-generator",
-  "version-semver": "0.3.0",
+  "version-date": "2021-09-28",
   "description": "Single-header, ranges-compatible generator type built on C++20 coroutines",
   "homepage": "https://tl.tartanllama.xyz",
   "dependencies": [
