@@ -8,9 +8,11 @@ vcpkg_from_github(
         support_static_builds.patch # https://invent.kde.org/frameworks/kcrash/-/merge_requests/23
 )
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
 )
