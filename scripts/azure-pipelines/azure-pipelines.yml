@@ -94,12 +94,12 @@ stages:
       ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         mode: AllPorts
       ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-        mode: CorePorts
+        mode: NonTensorflow
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: osx/azure-pipelines.yml
       parameters:
         poolName: $(osx-pool)
-        mode: ExtraPorts
+        mode: OnlyTensorflow
         jobName: x64_osx_tensorflow
 
   - template: linux/azure-pipelines.yml

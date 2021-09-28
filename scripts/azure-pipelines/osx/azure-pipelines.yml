@@ -8,9 +8,9 @@ parameters:
 - name: mode
   type: string
   values:
-    - 'AllPorts' # PR mode
-    - 'CorePorts' # CI, excluding tensorflow
-    - 'ExtraPorts' # only tensorflow
+    - 'AllPorts'
+    - 'NonTensorflow'
+    - 'OnlyTensorflow'
 - name: jobName
   type: string
   default: x64_osx
@@ -36,14 +36,14 @@ jobs:
   - name: PowershellExtraArguments
     ${{ if eq(parameters.mode, 'AllPorts') }}:
       value: ''
-    ${{ if eq(parameters.mode, 'CorePorts') }}:
+    ${{ if eq(parameters.mode, 'NonTensorflow') }}:
       value: "-AdditionalSkips @('tensorflow', 'tensorflow-cc')"
-    ${{ if eq(parameters.mode, 'ExtraPorts') }}:
+    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
       value: "-OnlyTest @('tensorflow', 'tensorflow-cc')"
   - name: Postfix
-    ${{ if eq(parameters.mode, 'ExtraPorts') }}:
+    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
       value: '-tensorflow'
-    ${{ if ne(parameters.mode, 'ExtraPorts') }}:
+    ${{ if ne(parameters.mode, 'OnlyTensorflow') }}:
       value: ''
 
   steps:
