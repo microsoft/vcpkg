@@ -1,6 +1,6 @@
 {
   "name": "boost-qvm",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost qvm module",
   "homepage": "https://github.com/boostorg/qvm",
   "dependencies": [

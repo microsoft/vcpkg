@@ -1,6 +1,6 @@
 {
   "name": "boost-hof",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost hof module",
   "homepage": "https://github.com/boostorg/hof",
   "dependencies": [
