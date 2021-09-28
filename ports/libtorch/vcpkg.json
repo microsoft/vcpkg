@@ -6,6 +6,7 @@
   "supports": "x64 & (windows | osx | linux) & !static",
   "dependencies": [
     "cpuinfo",
+    "eigen3",
     "fmt",
     "gflags",
     "glog",
@@ -63,13 +64,7 @@
       ]
     },
     "eigen3": {
-      "description": "Build with Eigen 3",
-      "dependencies": [
-        {
-          "name": "eigen3",
-          "platform": "windows | linux"
-        }
-      ]
+      "description": "BLAS with Eigen 3"
     },
     "fbgemm": {
       "description": "Build with FBGEMM (quantized 8-bit server operators)",
@@ -91,7 +86,7 @@
       ]
     },
     "mkl": {
-      "description": "Build with Intel MKL and MKLDNN (x86, x86_64, and AArch64)",
+      "description": "BLAS with Intel MKL and MKLDNN (x86, x86_64, and AArch64)",
       "dependencies": [
         "intel-mkl"
       ]
