@@ -43,8 +43,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mozjpeg)
 # Remove extra debug files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran tjbench AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
@@ -52,8 +52,8 @@ vcpkg_copy_pdbs()
 
 # Remove empty folders after static build
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
