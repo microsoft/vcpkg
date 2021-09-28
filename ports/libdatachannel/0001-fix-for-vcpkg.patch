@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f0559b1..3c01184 100644
+index 02b688c..03b185f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,7 +27,6 @@ endif()
@@ -10,7 +10,7 @@ index f0559b1..3c01184 100644
  
  if(WIN32)
  	add_definitions(-DWIN32_LEAN_AND_MEAN)
-@@ -197,22 +196,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+@@ -196,9 +195,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
@@ -19,43 +19,43 @@ index f0559b1..3c01184 100644
 +find_library(USRSCTP_LIBRARY usrsctp REQUIRED)
 +find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
  
--option(sctp_build_programs 0)
--option(sctp_build_shared_lib 0)
--set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
--add_subdirectory(deps/usrsctp EXCLUDE_FROM_ALL)
--if (MSYS OR MINGW)
--	target_compile_definitions(usrsctp PUBLIC -DSCTP_STDINT_INCLUDE=<stdint.h>)
--endif()
--if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
--    target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
--endif()
--add_library(Usrsctp::Usrsctp ALIAS usrsctp)
++if(0)
+ option(sctp_build_programs 0)
+ option(sctp_build_shared_lib 0)
+ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+@@ -210,8 +210,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+     target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
+ endif()
+ add_library(Usrsctp::Usrsctp ALIAS usrsctp)
 -
 -add_library(datachannel SHARED
++endif()
 +add_library(datachannel
  	${LIBDATACHANNEL_SOURCES}
  	${LIBDATACHANNEL_HEADERS}
  	${LIBDATACHANNEL_IMPL_SOURCES}
-@@ -233,14 +220,16 @@ set_target_properties(datachannel-static PROPERTIES
- target_include_directories(datachannel PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+@@ -235,16 +235,18 @@ target_include_directories(datachannel PUBLIC
+     $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
- target_link_libraries(datachannel PUBLIC Threads::Threads)
+ target_link_libraries(datachannel PRIVATE Threads::Threads)
 -target_link_libraries(datachannel PRIVATE Usrsctp::Usrsctp plog::plog)
 +target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
  
- target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ target_include_directories(datachannel-static PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
- target_link_libraries(datachannel-static PUBLIC Threads::Threads)
+ target_link_libraries(datachannel-static PRIVATE Threads::Threads)
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::Usrsctp plog::plog)
 +target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
  
  if(WIN32)
  	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
-@@ -335,11 +324,11 @@ else()
+@@ -339,11 +341,11 @@ else()
  		target_link_libraries(datachannel PRIVATE LibJuice::LibJuice)
  		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuice)
  	else()
@@ -70,6 +70,3 @@ index f0559b1..3c01184 100644
  	endif()
  endif()
  
--- 
-2.33.0.windows.1
-
