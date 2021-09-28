@@ -1,6 +1,6 @@
 {
   "name": "boost-parameter",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost parameter module",
   "homepage": "https://github.com/boostorg/parameter",
   "dependencies": [

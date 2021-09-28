@@ -1,10 +1,15 @@
 {
   "name": "libarchive",
   "version-semver": "3.5.2",
+  "port-version": 1,
   "description": "Library for reading and writing streaming archives",
   "homepage": "https://github.com/libarchive/libarchive",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
@@ -47,9 +52,12 @@
       ]
     },
     "openssl": {
-      "description": "Openssl support",
+      "description": "OpenSSL support (not available on macOS)",
       "dependencies": [
-        "openssl"
+        {
+          "name": "openssl",
+          "platform": "!osx"
+        }
       ]
     },
     "zstd": {
