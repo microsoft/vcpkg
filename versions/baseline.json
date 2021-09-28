@@ -2976,6 +2976,10 @@
       "baseline": "5.84.0",
       "port-version": 2
     },
+    "kf5bookmarks": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5codecs": {
       "baseline": "5.84.0",
       "port-version": 2
