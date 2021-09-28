@@ -1,16 +1,16 @@
 {
   "name": "boost-any",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost any module",
   "homepage": "https://github.com/boostorg/any",
   "dependencies": [
+    "boost-assert",
     "boost-config",
     "boost-core",
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-index",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }
