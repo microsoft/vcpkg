@@ -49,11 +49,15 @@ index c2ba422..f1799f8 100644
 diff --git a/src/agent_win.c b/src/agent_win.c
 --- a/src/agent_win.c
 +++ b/src/agent_win.c
-@@ -55,7 +55,7 @@
+@@ -55,7 +55,11 @@
  #include <stdlib.h>
  #endif
  
 -#ifdef WIN32
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
++#define IS_UWP 1
++#endif  /* #if defined(WINAPI_FAMILY) */
++
 +#if defined(WIN32) && !defined(IS_UWP)
  /* Code to talk to OpenSSH was taken and modified from the Win32 port of
   * Portable OpenSSH by the PowerShell team. Commit
