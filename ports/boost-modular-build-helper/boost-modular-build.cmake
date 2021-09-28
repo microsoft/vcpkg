@@ -9,9 +9,6 @@ function(boost_modular_build)
     endif()
 
     # Next CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
-    set(B2_OPTIONS)
-    set(B2_OPTIONS_DBG)
-    set(B2_OPTIONS_REL)
     set(B2_REQUIREMENTS) # this variable is used in the Jamroot.jam
 
     if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
@@ -28,12 +25,6 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
-
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        list(APPEND B2_OPTIONS windows-api=store)
-    endif()
-
-    set(_bm_DIR ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build)
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
@@ -61,65 +52,50 @@ function(boost_modular_build)
         endif()
     endif()
 
+    set(_jamfile)
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
-        file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
+        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile.v2")
+    elseif(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile")
+        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile")
+    endif()
+    if(_jamfile)
+        file(READ "${_jamfile}" _contents)
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
             _contents
             "${_contents}"
         )
-        string(REGEX REPLACE " /boost//([^/ ]+)" " /boost/\\1//boost_\\1" _contents "${_contents}")
-        file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
+        string(REGEX REPLACE "/boost//([^/ ]+)" "/boost/\\1//boost_\\1" _contents "${_contents}")
+        file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
-    function(unix_build BOOST_LIB_SUFFIX BUILD_TYPE BUILD_LIB_PATH)
-        message(STATUS "Building ${BUILD_TYPE}...")
-        set(BOOST_LIB_SUFFIX ${BOOST_LIB_SUFFIX})
-        set(VARIANT ${BUILD_TYPE})
-        set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
-        configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
-        set(configure_option)
-        if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-            list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
-        endif()
-
-        vcpkg_configure_cmake(
-            SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
-            PREFER_NINJA
-            OPTIONS
-                "-DPORT=${PORT}"
-                "-DFEATURES=${FEATURES}"
-                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
-                "-DB2_EXE=${B2_EXE}"
-                "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
-                "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
-                "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
-                ${configure_option}
-        )
-        vcpkg_install_cmake()
-
-        vcpkg_copy_pdbs()
-    endfunction()
-
-    set(build_flag 0)
-    if(NOT DEFINED VCPKG_BUILD_TYPE)
-        set(build_flag 1)
-        set(VCPKG_BUILD_TYPE "release")
+    set(configure_options)
+    if(_bm_BOOST_CMAKE_FRAGMENT)
+        list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
 
-    if(VCPKG_BUILD_TYPE STREQUAL "release")
-        unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
-    endif()
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
+        GENERATOR Ninja
+        OPTIONS
+            "-DPORT=${PORT}"
+            "-DFEATURES=${FEATURES}"
+            "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
+            "-DB2_EXE=${B2_EXE}"
+            "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+            "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+            "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+            ${configure_options}
+        MAYBE_UNUSED_VARIABLES
+            FEATURES
+    )
 
-    if(build_flag)
-        set(VCPKG_BUILD_TYPE "debug")
-    endif()
+    vcpkg_cmake_install()
 
-    if(VCPKG_BUILD_TYPE STREQUAL "debug")
-        unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
-    endif()
+    vcpkg_copy_pdbs()
 
     file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
     foreach(LIB IN LISTS INSTALLED_LIBS)
@@ -136,7 +112,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_76" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_77" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
