@@ -1,7 +1,7 @@
 set(OPENSP_VERSION 1.5.2)
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    set(PATCHES windows_cmake_build.diff)
+    set(PATCHES windows_cmake_build.diff) # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
 endif()
 
 vcpkg_download_distfile(ARCHIVE
@@ -29,7 +29,6 @@ else()
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
-            --enable-http
     )
 
     vcpkg_install_make()
