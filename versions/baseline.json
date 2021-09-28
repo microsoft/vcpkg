@@ -3408,6 +3408,10 @@
       "baseline": "5.6.0",
       "port-version": 0
     },
+    "libgxps": {
+      "baseline": "0.3.2",
+      "port-version": 0
+    },
     "libharu": {
       "baseline": "2017-08-15",
       "port-version": 10
