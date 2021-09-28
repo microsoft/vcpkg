@@ -1,12 +1,9 @@
 set(VCPKG_LIBRARY_LINKAGE "dynamic")
 
-message(WARNING "Download ${PORT} may take a several hours to complete!")
-message(WARNING "Port ${PORT} source resides NGA US Government military ftp server with an extremely slow connection.")
-
 # We specify the Linux URL, but the only difference between the Windows/Linux packages are the included libraries
 # which we re-build anyway.  There is no source only package provided or it would be preferred (and smaller).
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.nga.mil/pub2/gandg/website/wgs84/apps/geotrans/current-version/sw/master_version/master.tgz"
+    URLS "https://earth-info.nga.mil/php/download.php?file=wgs-mastertgz"
     FILENAME "geotrans-3.8-master.tgz"
     SHA512 359704ee9700762111006d126872feab9f644af0cebd433a657473347ea48f4eb172681f5f564fbca171bbf58fe0e8fb0829597403958770b7d22ad380afeac3
 )

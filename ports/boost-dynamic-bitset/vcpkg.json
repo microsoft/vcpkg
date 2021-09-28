@@ -1,14 +1,13 @@
 {
   "name": "boost-dynamic-bitset",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost dynamic_bitset module",
   "homepage": "https://github.com/boostorg/dynamic_bitset",
   "dependencies": [
     "boost-assert",
     "boost-config",
+    "boost-container-hash",
     "boost-core",
-    "boost-detail",
-    "boost-functional",
     "boost-integer",
     "boost-move",
     "boost-static-assert",
