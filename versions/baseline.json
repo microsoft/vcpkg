@@ -122,7 +122,7 @@
     },
     "arcus": {
       "baseline": "4.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "argagg": {
       "baseline": "0.4.6",
@@ -298,7 +298,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 1
+      "port-version": 2
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -798,7 +798,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.76.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-move": {
       "baseline": "1.76.0",
@@ -1118,7 +1118,7 @@
     },
     "brpc": {
       "baseline": "0.9.7",
-      "port-version": 1
+      "port-version": 2
     },
     "brunocodutra-metal": {
       "baseline": "2.1.1",
@@ -1174,7 +1174,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cairo": {
       "baseline": "1.17.4",
@@ -1182,6 +1182,10 @@
     },
     "cairomm": {
       "baseline": "1.16.0",
+      "port-version": 0
+    },
+    "calceph": {
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "camport3": {
@@ -2446,7 +2450,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 6
+      "port-version": 7
     },
     "google-cloud-cpp": {
       "baseline": "1.31.1",
@@ -2509,8 +2513,8 @@
       "port-version": 1
     },
     "gsl": {
-      "baseline": "2.6",
-      "port-version": 2
+      "baseline": "2.7",
+      "port-version": 0
     },
     "gsl-lite": {
       "baseline": "0.38.1",
@@ -2984,6 +2988,10 @@
       "baseline": "5.84.0",
       "port-version": 2
     },
+    "kf5diagram": {
+      "baseline": "2.8.0",
+      "port-version": 0
+    },
     "kf5globalaccel": {
       "baseline": "5.84.0",
       "port-version": 1
@@ -3091,6 +3099,10 @@
     "kubazip": {
       "baseline": "0.1.19",
       "port-version": 1
+    },
+    "kubernetes": {
+      "baseline": "0.0.1",
+      "port-version": 0
     },
     "kuku": {
       "baseline": "2.1",
@@ -3261,7 +3273,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.14.6",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "libdshowcapture": {
@@ -3722,7 +3734,7 @@
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libsodium": {
       "baseline": "1.0.18",
@@ -3890,7 +3902,7 @@
     },
     "libwebsockets": {
       "baseline": "4.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4149,8 +4161,8 @@
       "port-version": 0
     },
     "mdnsresponder": {
-      "baseline": "765.30.11",
-      "port-version": 4
+      "baseline": "878.270.2",
+      "port-version": 0
     },
     "mecab": {
       "baseline": "2019-09-25",
@@ -4702,7 +4714,7 @@
     },
     "onnx": {
       "baseline": "1.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "onnx-optimizer": {
       "baseline": "0.2.6",
@@ -4766,7 +4778,7 @@
     },
     "opencv4": {
       "baseline": "4.5.3",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -4849,7 +4861,7 @@
       "port-version": 2
     },
     "opentelemetry-cpp": {
-      "baseline": "1.0.0-rc4",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "opentracing": {
@@ -5014,7 +5026,7 @@
     },
     "pdcurses": {
       "baseline": "3.9",
-      "port-version": 1
+      "port-version": 2
     },
     "pdqsort": {
       "baseline": "2019-07-30",
@@ -5221,8 +5233,8 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.15.8",
-      "port-version": 4
+      "baseline": "3.18.0",
+      "port-version": 0
     },
     "protobuf-c": {
       "baseline": "1.3.2",
@@ -5849,7 +5861,7 @@
       "port-version": 5
     },
     "s2n": {
-      "baseline": "1.0.17",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "safeint": {
@@ -6246,7 +6258,7 @@
     },
     "sqlite3": {
       "baseline": "3.36.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
@@ -6765,8 +6777,8 @@
       "port-version": 0
     },
     "valijson": {
-      "baseline": "2018-11-17",
-      "port-version": 2
+      "baseline": "0.6",
+      "port-version": 0
     },
     "value-ptr-lite": {
       "baseline": "0.2.1",
