@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF df522812ba4114f1dd3386b81afc2369c82b717d # 1.2.3
-    SHA512 2ac59c5416ba85a60061d941787cb3bc2e43042ca0a53829f866448015ed6800c38ecbde3319d9756a70bfba2860732136d89d296382a6b9a675bbe32173f22b
+    REF cff6ab8d8557a113ad97dfb779eb46647f7c92c7 # 1.3.1
+    SHA512 2bd179f47b13d05d58358ddf1aeef93fbc9e748a12f07fa5bd59fd75adcf7f3261d5f871d8fd33628d2d9df04e341ed24314fc2e817887ba0079e2711b5da317
     HEAD_REF master
     PATCHES
         fix-ws2-linking-windows.patch
@@ -15,17 +15,11 @@ else()
     set(REDIS_PLUS_PLUS_CXX_STANDARD 11)
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(REDIS_PLUS_PLUS_BUILD_STATIC ON)
-    set(REDIS_PLUS_PLUS_BUILD_SHARED OFF)
-else()
-    set(REDIS_PLUS_PLUS_BUILD_STATIC OFF)
-    set(REDIS_PLUS_PLUS_BUILD_SHARED ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" REDIS_PLUS_PLUS_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" REDIS_PLUS_PLUS_BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DREDIS_PLUS_PLUS_USE_TLS=OFF
         -DREDIS_PLUS_PLUS_BUILD_STATIC=${REDIS_PLUS_PLUS_BUILD_STATIC}
@@ -34,11 +28,11 @@ vcpkg_configure_cmake(
         -DREDIS_PLUS_PLUS_CXX_STANDARD=${REDIS_PLUS_PLUS_CXX_STANDARD}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
