@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # The port name and the find_package() name are different (onednn versus dnnl)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dnnl TARGET_PATH share/dnnl)
+vcpkg_cmake_config_fixup(PACKAGE_NAME dnnl CONFIG_PATH lib/cmake/dnnl)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
