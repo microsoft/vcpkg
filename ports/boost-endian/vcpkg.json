@@ -1,6 +1,6 @@
 {
   "name": "boost-endian",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost endian module",
   "homepage": "https://github.com/boostorg/endian",
   "dependencies": [

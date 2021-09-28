@@ -8,20 +8,22 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-build-boost-1_77_0.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda   OpenMVS_USE_CUDA
-    openmp OpenMVS_USE_OPENMP
+    FEATURES
+        cuda   OpenMVS_USE_CUDA
+        openmp OpenMVS_USE_OPENMP
 )
 
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    GENERATOR Ninja
     OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVS_USE_NONFREE=ON
         -DOpenMVS_USE_CERES=OFF
@@ -37,11 +39,11 @@ vcpkg_configure_cmake(
         -DOpenMVS_BUILD_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 file(READ ${CURRENT_PACKAGES_DIR}/share/openmvs/OpenMVSTargets-release.cmake TARGETS_CMAKE)
 string(REPLACE "bin/InterfaceCOLMAP" "tools/openmvs/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/InterfaceVisualSFM" "tools/openmvs/InterfaceVisualSFM" TARGETS_CMAKE "${TARGETS_CMAKE}")

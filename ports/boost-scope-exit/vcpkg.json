@@ -1,11 +1,10 @@
 {
   "name": "boost-scope-exit",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost scope_exit module",
   "homepage": "https://github.com/boostorg/scope_exit",
   "dependencies": [
     "boost-config",
-    "boost-detail",
     "boost-function",
     "boost-preprocessor",
     "boost-type-traits",

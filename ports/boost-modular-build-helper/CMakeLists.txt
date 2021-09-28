@@ -21,11 +21,6 @@ else()
     list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
 endif()
 
-if(DEFINED BOOST_CMAKE_FRAGMENT)
-    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
-    include(${BOOST_CMAKE_FRAGMENT})
-endif()
-
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -174,7 +169,6 @@ if(APPLE)
   string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
 endif()
 
-set(TOOLSET_OPTIONS)
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     # cl in b2 appears to not receive `LIBPATH` for finding winmd files, so we transform them to `/AI` options.
     set(libpath_args "$ENV{LIBPATH}")
@@ -187,59 +181,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(TRANSFORM libpath_args REPLACE "\\\"" "\\\\\"")
     list(JOIN libpath_args " " libpath_arg)
 
-    set(TOOLSET_OPTIONS "<cflags>-Zl <compileflags>\"${libpath_arg}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+    string(APPEND CXXFLAGS " <compileflags>\"${libpath_arg}\" <cxxflags>/ZW <compileflags>\"/D_WIN32_WINNT=0x0A00\"")
+    string(APPEND CFLAGS " <cflags>-Zl")
     list(APPEND B2_OPTIONS windows-api=store)
-endif()
-
-find_path(ZLIB_INCLUDE zlib.h)
-list(APPEND B2_OPTIONS -sZLIB_INCLUDE="${ZLIB_INCLUDE}")
-
-find_path(BZIP2_INCLUDE bzlib.h)
-list(APPEND B2_OPTIONS -sBZIP2_INCLUDE="${BZIP2_INCLUDE}")
-
-if(WIN32)
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlib
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sBZIP2_BINARY=bz2
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sLZMA_BINARY=lzma
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sZSTD_BINARY=zstd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-        )
-    else()
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlibd
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sBZIP2_BINARY=bz2d
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sLZMA_BINARY=lzmad
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sZSTD_BINARY=zstdd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-        )
-    endif()
-else()
-    find_library(ZLIB_LIBPATH z)
-    list(APPEND B2_OPTIONS
-        -sZLIB_BINARY=z
-        -sZLIB_LIBPATH="${ZLIB_LIBPATH}"
-    )
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        find_library(BZIP2_LIBPATH bz2)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        find_library(BZIP2_LIBPATH bz2d)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2d
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    endif()
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -250,6 +195,12 @@ endif()
 
 if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
+endif()
+
+# Include port specific CMake fragment
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
+    include(${BOOST_CMAKE_FRAGMENT})
 endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)

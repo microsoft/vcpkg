@@ -1,6 +1,6 @@
 {
   "name": "boost-predef",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost predef module",
   "homepage": "https://github.com/boostorg/predef",
   "dependencies": [

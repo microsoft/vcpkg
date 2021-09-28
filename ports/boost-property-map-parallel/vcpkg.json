@@ -1,0 +1,26 @@
+{
+  "name": "boost-property-map-parallel",
+  "version": "1.77.0",
+  "description": "Boost property_map_parallel module",
+  "homepage": "https://github.com/boostorg/property_map_parallel",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-concept-check",
+    "boost-config",
+    "boost-function",
+    {
+      "name": "boost-mpi",
+      "platform": "!uwp"
+    },
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-optional",
+    "boost-property-map",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

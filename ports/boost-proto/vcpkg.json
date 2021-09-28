@@ -1,12 +1,11 @@
 {
   "name": "boost-proto",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost proto module",
   "homepage": "https://github.com/boostorg/proto",
   "dependencies": [
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-fusion",
     "boost-mpl",
     "boost-preprocessor",

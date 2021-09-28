@@ -1,12 +1,11 @@
 {
   "name": "boost-bind",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost bind module",
   "homepage": "https://github.com/boostorg/bind",
   "dependencies": [
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-vcpkg-helpers"
   ]
 }
