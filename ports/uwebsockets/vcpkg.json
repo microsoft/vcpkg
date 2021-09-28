@@ -1,6 +1,6 @@
 {
   "name": "uwebsockets",
-  "version": "19.5.0",
+  "version": "19.9.0",
   "description": "Simple, secure & standards compliant web I/O for the most demanding of applications",
   "homepage": "https://github.com/uWebSockets/uWebSockets",
   "dependencies": [
