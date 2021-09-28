@@ -1,6 +1,6 @@
 set(OPENSP_VERSION 1.5.2)
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     set(PATCHES windows_cmake_build.diff)
 endif()
 
@@ -17,7 +17,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${PATCHES}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
     )
