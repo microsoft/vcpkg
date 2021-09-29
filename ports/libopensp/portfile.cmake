@@ -3,6 +3,9 @@ set(OPENSP_VERSION 1.5.2)
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     set(PATCHES windows_cmake_build.diff) # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
 endif()
+if (VCPKG_TARGET_IS_UWP)
+    list(APPEND PATCHES uwp_getenv_fix.diff)
+endif()
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/openjade/opensp/${OPENSP_VERSION}/OpenSP-${OPENSP_VERSION}.tar.gz"
