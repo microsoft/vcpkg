@@ -9,6 +9,9 @@ vcpkg_configure_qmake(
     [OPTIONS arg1 [arg2 ...]]
     [OPTIONS_RELEASE arg1 [arg2 ...]]
     [OPTIONS_DEBUG arg1 [arg2 ...]]
+    [BUILD_OPTIONS arg1 [arg2 ...]]
+    [BUILD_OPTIONS_RELEASE arg1 [arg2 ...]]
+    [BUILD_OPTIONS_DEBUG arg1 [arg2 ...]]
 )
 ```
 
@@ -16,7 +19,11 @@ vcpkg_configure_qmake(
 The path to the *.pro qmake project file.
 
 ### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
-The options passed to qmake.
+The options passed to qmake to the configure step.
+
+
+### BUILD\_OPTIONS, BUILD\_OPTIONS\_RELEASE, BUILD\_OPTIONS\_DEBUG
+The options passed to qmake to the build step.
 #]===]
 
 function(vcpkg_configure_qmake)
