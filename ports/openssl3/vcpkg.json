@@ -1,0 +1,7 @@
+{
+  "name": "openssl3",
+  "version-semver": "3.0.0",
+  "description": "TLS/SSL and crypto library",
+  "homepage": "https://www.openssl.org/",
+  "license": "Apache-2.0"
+}
