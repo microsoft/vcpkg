@@ -21,7 +21,6 @@ The path to the *.pro qmake project file.
 ### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
 The options passed to qmake to the configure step.
 
-
 ### BUILD\_OPTIONS, BUILD\_OPTIONS\_RELEASE, BUILD\_OPTIONS\_DEBUG
 The options passed to qmake to the build step.
 #]===]
