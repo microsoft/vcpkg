@@ -60,9 +60,9 @@ function(vcpkg_build_qmake)
     set(path_suffix_debug "/debug")
     set(targets_debug "${arg_DEBUG_TARGETS}")
     
-    set(short_name_debug "rel")
-    set(path_suffix_debug "")
-    set(targets_debug "${arg_RELEASE_TARGETS}")
+    set(short_name_release "rel")
+    set(path_suffix_release "")
+    set(targets_release "${arg_RELEASE_TARGETS}")
 
     foreach(build_type IN ITEMS debug release)
         set(current_installed_prefix "${CURRENT_INSTALLED_DIR}${path_suffix_${build_type}}")
