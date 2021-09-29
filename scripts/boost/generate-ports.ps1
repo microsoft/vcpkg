@@ -24,6 +24,8 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g.  "boost-asio" = 1;
+    "boost" = 1;
+    "boost-iostreams" = 1;
 }
 
 $portData = @{
@@ -35,8 +37,26 @@ $portData = @{
     "boost-fiber"            = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
     "boost-iostreams"        = @{
-        "dependencies" = @("zlib", "bzip2", "liblzma", "zstd");
-        "supports"     = "!uwp";
+        "default-features" = @("bzip2", "lzma", "zlib", "zstd");
+        "supports"         = "!uwp";
+        "features"         = @{
+            "bzip2" = @{
+                "dependencies" = @("bzip2");
+                "description"  = "Support bzip2 filters"
+            };
+            "lzma"  = @{
+                "dependencies" = @("liblzma");
+                "description"  = "Support LZMA/xz filters"
+            };
+            "zlib"  = @{
+                "dependencies" = @("zlib");
+                "description"  = "Support zlib filters"
+            };
+            "zstd"  = @{
+                "dependencies" = @("zstd");
+                "description"  = "Support zstd filters"
+            };
+        };
     };
     "boost-context"          = @{ "supports" = "!uwp&!emscripten" };
     "boost-stacktrace"       = @{ "supports" = "!uwp" };
@@ -46,12 +66,12 @@ $portData = @{
     "boost-wave"             = @{ "supports" = "!uwp" };
     "boost-log"              = @{ "supports" = "!uwp&!emscripten" };
     "boost-locale"           = @{
-        "dependencies" = @(@{ name = "libiconv"; platform = "!uwp&!windows&!mingw" });
+        "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp&!windows&!mingw" });
         "supports"     = "!uwp";
         "features"     = @{
-            icu = @{
-                dependencies = @("icu")
-                description  = "ICU backend for Boost.Locale"
+            "icu" = @{
+                "dependencies" = @("icu");
+                "description"  = "ICU backend for Boost.Locale"
             }
         }
     };
@@ -69,17 +89,17 @@ $portData = @{
         "dependencies" = @("python3");
         "supports"     = "!uwp&!(arm&windows)&!emscripten";
         "features"     = @{
-            python2 = @{
-                dependencies = @("python2")
-                description  = "Build with Python2 support"
+            "python2" = @{
+                "dependencies" = @("python2");
+                "description"  = "Build with Python2 support"
             }
         }
     };
     "boost-regex"            = @{
         "features" = @{
-            icu = @{
-                dependencies = @("icu")
-                description  = "ICU backend for Boost.Regex"
+            "icu" = @{
+                "dependencies" = @("icu");
+                "description"  = "ICU backend for Boost.Regex"
             }
         }
     }
@@ -111,7 +131,8 @@ function GeneratePortManifest() {
         [string]$Homepage,
         [string]$Description,
         $Dependencies = @(),
-        $Features = @()
+        $Features = @(),
+        $DefaultFeatures = @()
     )
     if ([string]::IsNullOrEmpty($PortName)) {
         $PortName = GeneratePortName $Library
@@ -133,6 +154,9 @@ function GeneratePortManifest() {
     }
     if ($Features.Count -gt 0) {
         $manifest["features"] += $Features
+    }
+    if ($DefaultFeatures.Count -gt 0) {
+        $manifest["default-features"] += $DefaultFeatures
     }
     $manifest | ConvertTo-Json -Depth 10 -Compress `
     | Out-File -Encoding UTF8 "$portsDir/$PortName/vcpkg.json"
@@ -482,14 +506,18 @@ foreach ($library in $libraries) {
 if ($updateServicePorts) {
     # Generate manifest file for master boost port which depends on each individual library
     # mpi and graph-parallel are excluded due to they having a dependency on msmpi/openmpi
-    $boostPortDependencies = $boostPortDependencies | Where-Object { $_ -notmatch "boost-mpi|boost-graph-parallel" }
+    $boostPortDependencies = $boostPortDependencies `
+    | Where-Object { $_ -notmatch "boost-mpi|boost-graph-parallel" } `
+    | Where-Object { $_.name -notmatch "boost-mpi|boost-graph-parallel" }
+    
     $boostPortFeatures = @(
         @{
-            name         = "mpi"
-            description  = "Build with MPI support"
-            dependencies = @("boost-mpi", "boost-graph-parallel")
+            "name"         = "mpi";
+            "description"  = "Build with MPI support";
+            "dependencies" = @("boost-mpi", "boost-graph-parallel")
         }
     )
+    
     GeneratePortManifest `
         -PortName "boost" `
         -Homepage "https://boost.org" `
