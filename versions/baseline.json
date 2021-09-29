@@ -2793,7 +2793,7 @@
       "port-version": 0
     },
     "indicators": {
-      "baseline": "2.0",
+      "baseline": "2.2",
       "port-version": 0
     },
     "influxdb-cxx": {
