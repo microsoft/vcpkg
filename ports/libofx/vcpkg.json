@@ -1,0 +1,9 @@
+{
+  "name": "libofx",
+  "version": "0.10.3",
+  "description": "OFX banking protocol abstraction library",
+  "homepage": "http://libofx.sourceforge.net",
+  "dependencies": [
+    "libopensp"
+  ]
+}
