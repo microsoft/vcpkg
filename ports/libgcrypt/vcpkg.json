@@ -1,6 +1,6 @@
 {
   "name": "libgcrypt",
-  "version-string": "1.9.3",
+  "version": "1.9.3",
   "description": "A library implementing the so-called Assuan protocol",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
   "supports": "linux | osx",
