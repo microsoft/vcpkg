@@ -11,6 +11,14 @@
     "boost-range",
     "boost-signals2",
     "boost-system",
-    "boost-test"
+    "boost-test",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
