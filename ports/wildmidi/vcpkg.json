@@ -1,0 +1,7 @@
+{
+  "name": "wildmidi",
+  "version-string": "0.4.3",
+  "port-version": 2,
+  "description": "MIDI software synthesizer library.",
+  "homepage": "https://github.com/Mindwerks/wildmidi"
+}
