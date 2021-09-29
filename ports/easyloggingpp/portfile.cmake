@@ -3,20 +3,20 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO muflihun/easyloggingpp
-    REF v9.96.7
-    SHA512 53ee637cd7462fac542170a81a9a206f3418dd8bc9e1f25d1d13dadef630e0fdf2880d71079808ebc49d36a7dbca7b5cdb76ad37b722c66b4b3d3efc8b5d2f35
+    REF v9.97.0
+    SHA512 E45789EDAF7A43AD6A73861840D24CCCE9B9D6BBA1AAACF93C6AC26FF7449957251D2CA322C9DA85130B893332DD305B13A2499EAFFC65ECFAAAFA3E11F8D63D
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dbuild_static_lib=ON
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/easyloggingpp RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/easyloggingpp" RENAME copyright)
+
