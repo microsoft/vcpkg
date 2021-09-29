@@ -3,12 +3,9 @@ vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gpg/libgcrypt
-    REF libgcrypt-1.8.7
-    SHA512 43e50a1b8a3cdbf420171c785fe558f443b414b708defa585277ac5ea59f9d8ae7f4555ed291c16fa004e7d4dd93a5ab2011c3c591e784ce3c6662a3193fd3e1
+    REF libgcrypt-1.9.3
+    SHA512 c4339f4cdbb668a9aa8c27399991af8cc16c46d38c85dbc726d64a229a2283548df3abf89bb12278637aa798fcc6b269c74b5f7646a9b6b92789a0d7420aec08
     HEAD_REF master
-    PATCHES
-        fix-pkgconfig.patch
-        fix-flags.patch
 )
 
 vcpkg_configure_make(
