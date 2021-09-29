@@ -164,36 +164,6 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
     unset(osx_archs_num)
 endmacro()
 
-macro(z_vcpkg_backup_env_variable envvar)
-    if(DEFINED ENV{${envvar}})
-        set(${envvar}_backup "$ENV{${envvar}}")
-        set(${envvar}_pathlike_concat "${VCPKG_HOST_PATH_SEPARATOR}$ENV{${envvar}}")
-    else()
-        set(${envvar}_backup)
-        set(${envvar}_pathlike_concat)
-    endif()
-endmacro()
-
-macro(z_vcpkg_backup_env_variables)
-    foreach(_var IN ITEMS ${ARGV})
-        z_vcpkg_backup_env_variable(${_var})
-    endforeach()
-endmacro()
-
-macro(z_vcpkg_restore_env_variable envvar)
-    if(${envvar}_backup)
-        set(ENV{${envvar}} "${${envvar}_backup}")
-    else()
-        unset(ENV{${envvar}})
-    endif()
-endmacro()
-
-macro(z_vcpkg_restore_env_variables)
-    foreach(_var IN ITEMS ${ARGV})
-        z_vcpkg_restore_env_variable(${_var})
-    endforeach()
-endmacro()
-
 macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
     string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
@@ -283,7 +253,7 @@ function(vcpkg_configure_make)
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
-    z_vcpkg_backup_env_variables(${cm_FLAGS})
+    vcpkg_backup_env_variables(VARS ${cm_FLAGS})
 
 
     # FC fotran compiler | FF Fortran 77 compiler 
@@ -291,10 +261,10 @@ function(vcpkg_configure_make)
     # LIBS -> pass -l flags
 
     #Used by gcc/linux
-    z_vcpkg_backup_env_variables(C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     #Used by cl
-    z_vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
+    vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
 
     set(vcm_paths_with_spaces OFF)
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
@@ -557,7 +527,7 @@ function(vcpkg_configure_make)
 
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(VCPKG_TARGET_IS_WINDOWS)
-        z_vcpkg_backup_env_variables(_CL_ _LINK_)
+        vcpkg_backup_env_variables(VARS _CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to: 
@@ -805,7 +775,7 @@ function(vcpkg_configure_make)
                 endif()
                 set(_link_path "${_link_path}${z_vcpkg_installed_path}${path_suffix_${_buildtype}}/lib/manual-link")
             endif()
-            set(ENV{${_lib_env_var}} "${_link_path}${${_lib_env_var}_pathlike_concat}")
+            vcpkg_host_path_list(PREPEND ENV{${_lib_env_var}} "${_link_path}")
         endforeach()
         unset(_link_path)
         unset(_lib_env_vars)
@@ -879,7 +849,7 @@ function(vcpkg_configure_make)
     endif()
 
     # Restore environment
-    z_vcpkg_restore_env_variables(${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)

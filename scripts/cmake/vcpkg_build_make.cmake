@@ -117,7 +117,7 @@ function(vcpkg_build_make)
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
-    z_vcpkg_backup_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
@@ -155,10 +155,10 @@ function(vcpkg_build_make)
             set(ENV{CXXFLAGS} "${CXXFLAGS_${cmake_buildtype}}")
             set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${cmake_buildtype}}")
             set(ENV{LDFLAGS} "${LDFLAGS_${cmake_buildtype}}")
-            set(ENV{LIB} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/${VCPKG_HOST_PATH_SEPARATOR}${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/${LIB_pathlike_concat}")
-            set(ENV{LIBPATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/${VCPKG_HOST_PATH_SEPARATOR}${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/${LIBPATH_pathlike_concat}")
-            set(ENV{LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/${VCPKG_HOST_PATH_SEPARATOR}${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/${LIBRARY_PATH_pathlike_concat}")
-            #set(ENV{LD_LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_pathlike_concat}")
+            vcpkg_host_path_list(PREPEND ENV{LIB} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            vcpkg_host_path_list(PREPEND ENV{LIBPATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            vcpkg_host_path_list(PREPEND ENV{LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            #vcpkg_host_path_list(PREPEND ENV{LD_LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/manual-link/")
 
             if(LINK_ENV_${_VAR_SUFFIX})
                 set(config_link_backup "$ENV{_LINK_}")
@@ -170,8 +170,8 @@ function(vcpkg_build_make)
                 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
             endif()
 
-            set(make_cmd_line ${make_command} ${make_opts})
-            set(no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
+            vcpkg_list(SET make_cmd_line ${make_command} ${make_opts})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
 
             if (arg_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
@@ -195,7 +195,7 @@ function(vcpkg_build_make)
 
             if (arg_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
-                set(make_cmd_line ${make_command} ${install_opts})
+                vcpkg_list(SET make_cmd_line ${make_command} ${install_opts})
                 vcpkg_execute_build_process(
                     COMMAND ${make_cmd_line}
                     WORKING_DIRECTORY "${working_directory}"
@@ -232,5 +232,5 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${path_backup}")
     endif()
 
-    z_vcpkg_restore_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 endfunction()
