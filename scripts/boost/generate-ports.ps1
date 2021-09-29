@@ -26,6 +26,7 @@ $portVersions = @{
     #e.g.  "boost-asio" = 1;
     "boost" = 1;
     "boost-iostreams" = 1;
+    "boost-process" = 1;
 }
 
 $portData = @{
