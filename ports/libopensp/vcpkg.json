@@ -5,6 +5,10 @@
   "homepage": "http://openjade.sourceforge.net",
   "dependencies": [
     {
+      "name": "gettext",
+      "platform": "!(windows | uwp)"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true,
       "platform": "windows | uwp"

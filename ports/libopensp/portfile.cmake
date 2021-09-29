@@ -24,11 +24,18 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
     vcpkg_cmake_install()
 else()
+    if(VCPKG_TARGET_IS_OSX)
+        set(LDFLAGS "-framework CoreFoundation")
+    else()
+        set(LDFLAGS "")
+    endif()
+
     vcpkg_configure_make(
         AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
+            "LDFLAGS=${LDFLAGS}"
     )
 
     vcpkg_install_make()
