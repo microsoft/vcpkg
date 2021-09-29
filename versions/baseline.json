@@ -5073,8 +5073,8 @@
       "port-version": 1
     },
     "pegtl": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "pegtl-2": {
       "baseline": "2.8.3",
