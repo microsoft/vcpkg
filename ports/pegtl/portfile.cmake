@@ -23,4 +23,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pegtl/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
