@@ -502,7 +502,7 @@
     },
     "boost": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-accumulators": {
       "baseline": "1.77.0",
@@ -750,7 +750,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-iterator": {
       "baseline": "1.77.0",
