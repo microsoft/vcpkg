@@ -56,15 +56,15 @@ elseif(VCPKG_TARGET_IS_MINGW)
     endif()
 
 elseif(VCPKG_TARGET_IS_UWP)
-    # https://github.com/microsoft/msquic/blob/main/submodules/CMakeLists.txt#L26
+    # ${SOURCE_PATH}/Configuration/50-win-onecore.conf
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PLATFORM "VC-WIN32-ONECORE")
+        set(PLATFORM "VC-WIN32-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(PLATFORM "VC-WIN64A-ONECORE")
+        set(PLATFORM "VC-WIN64A-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(PLATFORM "VC-WIN32-ARM")
+        set(PLATFORM "VC-WIN32-ARM-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(PLATFORM "VC-WIN64-ARM")
+        set(PLATFORM "VC-WIN64-ARM-UWP")
     endif()
 
 elseif(VCPKG_TARGET_IS_WINDOWS)
