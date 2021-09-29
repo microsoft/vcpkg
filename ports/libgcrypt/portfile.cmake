@@ -1,10 +1,10 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
 
-vcpkg_from_github(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/libgcrypt
-    REF libgcrypt-1.9.3
-    SHA512 c4339f4cdbb668a9aa8c27399991af8cc16c46d38c85dbc726d64a229a2283548df3abf89bb12278637aa798fcc6b269c74b5f7646a9b6b92789a0d7420aec08
+    URL git://git.gnupg.org/libgcrypt.git
+    FETCH_REF libgcrypt-1.9.4
+    REF 05422ca24a0391dad2a0b7790a904ce348819c10 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgcrypt.git;a=commit;h=05422ca24a0391dad2a0b7790a904ce348819c10
     HEAD_REF master
 )
 
