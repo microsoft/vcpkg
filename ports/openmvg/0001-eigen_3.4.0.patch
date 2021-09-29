@@ -1,0 +1,25 @@
+From 7be28dca0403660e721d66de954f27b92897163e Mon Sep 17 00:00:00 2001
+From: Alberto Luaces <aluaces@udc.es>
+Date: Wed, 8 Sep 2021 18:00:53 +0200
+Subject: [PATCH] eigen_3.4.0
+
+---
+ src/openMVG/multiview/solver_fundamental_kernel.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/openMVG/multiview/solver_fundamental_kernel.cpp b/src/openMVG/multiview/solver_fundamental_kernel.cpp
+index 5e0c12eb..fa025198 100644
+--- a/src/openMVG/multiview/solver_fundamental_kernel.cpp
++++ b/src/openMVG/multiview/solver_fundamental_kernel.cpp
+@@ -134,7 +134,7 @@ void EightPointSolver::Solve
+     MatX9 epipolar_constraint(x1.cols(), 9);
+     epipolar_constraint.fill(0.0);
+     EncodeEpipolarEquation(x1, x2, &epipolar_constraint);
+-    Eigen::SelfAdjointEigenSolver<MatX9> solver
++    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 9, 9>> solver
+       (epipolar_constraint.transpose() * epipolar_constraint);
+     f = solver.eigenvectors().leftCols<1>();
+   }
+-- 
+2.30.2
+
