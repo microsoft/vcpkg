@@ -1,11 +1,10 @@
 {
   "name": "boost-type-traits",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost type_traits module",
   "homepage": "https://github.com/boostorg/type_traits",
   "dependencies": [
     "boost-config",
-    "boost-detail",
     "boost-static-assert",
     "boost-vcpkg-helpers"
   ]

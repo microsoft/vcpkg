@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO keystone-engine/keystone
@@ -8,43 +10,37 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON2)
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" KEYSTONE_BUILD_STATIC_RUNTIME)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DKEYSTONE_BUILD_STATIC=${KEYSTONE_BUILD_STATIC}
-        -DKEYSTONE_BUILD_SHARED=${KEYSTONE_BUILD_SHARED}
+        -DKEYSTONE_BUILD_STATIC_RUNTIME=${KEYSTONE_BUILD_STATIC_RUNTIME}
         -DPYTHON_EXECUTABLE=${PYTHON2}
 
         # Add support for only a subset of architectures
         #-DLLVM_TARGETS_TO_BUILD="AArch64;X86"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    #For windows, do not build kstool if building DLL https://github.com/keystone-engine/keystone/blob/master/CMakeLists.txt#L74
+    vcpkg_copy_tools(TOOL_NAMES kstool AUTO_CLEAN)
 else()
     # Move DLLs
-    file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DLLS})
-    file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE ${DLLS})
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/keystone 
-    RENAME copyright
-)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

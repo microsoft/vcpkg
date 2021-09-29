@@ -1,0 +1,6 @@
+{
+  "name": "platform-folders",
+  "version": "4.1.0",
+  "description": "A C++ library to look for special directories like \"My Documents\" and \"%APPDATA%\"",
+  "homepage": "https://github.com/sago007/PlatformFolders"
+}

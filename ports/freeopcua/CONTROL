@@ -1,4 +1,0 @@
-Source: freeopcua
-Version: 20190125-3
-Description: OPC-UA server and client library written in C++ and with a lot of code auto-generated from xml specification using python.
-Build-Depends: boost-asio,boost-system,boost-program-options,boost-filesystem,boost-thread,boost-format,boost-foreach,boost-property-tree,boost-date-time
