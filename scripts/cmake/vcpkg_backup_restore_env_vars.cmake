@@ -23,28 +23,29 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function i
 
 #]===]
 
-function(z_vcpkg_backup_env_variable envvar)
+macro(z_vcpkg_backup_env_variable envvar)
     if(DEFINED ENV{${envvar}})
+        debug_message("backup ENV\{${envvar}\} to ${envvar}_backup")
         set(${envvar}_backup "$ENV{${envvar}}" PARENT_SCOPE)
     else()
         unset(${envvar}_backup)
     endif()
-endfunction()
+endmacro()
 
-function(z_vcpkg_restore_env_variable envvar)
+macro(z_vcpkg_restore_env_variable envvar)
     if(${envvar}_backup)
+        debug_message("restore ENV\{${envvar}\} from ${${envvar}_backup}")
         set(ENV{${envvar}} "${${envvar}_backup}")
     else()
         unset(ENV{${envvar}})
     endif()
-endfunction()
+endmacro()
 
 function(vcpkg_backup_env_variables)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "VARS")
     foreach(envvar IN ITEMS ${arg_VARS})
         z_vcpkg_backup_env_variable(${envvar})
     endforeach()
-    set()
 endfunction()
 
 function(vcpkg_restore_env_variables)
