@@ -17,7 +17,7 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch # Maybe the angle library names on windows should be discussed
-        fix_qthread_max.patch
+        #fix_qthread_max.patch // Trying different approach in qtmultimedia
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
