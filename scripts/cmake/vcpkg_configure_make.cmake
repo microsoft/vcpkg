@@ -478,6 +478,62 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
+    # Android - cross-compiling support
+    if(VCPKG_TARGET_IS_ANDROID)
+        if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^Clang$")
+            string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
+
+            if(VCPKG_HOST_IS_WINDOWS)
+                list(APPEND _csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
+                                                                                    # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+            elseif(VCPKG_HOST_IS_OSX)
+                list(APPEND _csc_BUILD_TRIPLET "--build=${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}-apple-darwin${VCPKG_CMAKE_HOST_SYSTEM_VERSION}")
+            elseif(VCPKG_HOST_IS_LINUX)
+                list(APPEND _csc_BUILD_TRIPLET "--build=${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}-pc-linux-gnu")
+            else()
+                message(FATAL_ERROR "unknown target ${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}")
+            endif()
+
+            if (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "armv7-a")
+                list(APPEND _csc_BUILD_TRIPLET "--host=arm-linux-androideabi")
+                set(ENV{CC} "armv7a-linux-androideabi23-clang")
+                set(ENV{CXX} "armv7a-linux-androideabi23-clang++")
+            elseif (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+                list(APPEND _csc_BUILD_TRIPLET "--host=arm-linux-androideabi")
+                set(ENV{CC}  "aarch64-linux-android23-clang")
+                set(ENV{CXX} "aarch64-linux-android23-clang++")
+            elseif (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
+                list(APPEND _csc_BUILD_TRIPLET "--host=arm-linux-androideabi")
+                set(ENV{CC}  "i686-linux-android23-clang")
+                set(ENV{CXX} "i686-linux-android23-clang++")
+            elseif (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "x64")
+                list(APPEND _csc_BUILD_TRIPLET "--host=arm-linux-androideabi")
+                set(ENV{CC}  "x86_64-linux-android23-clang")
+                set(ENV{CXX} "x86_64-linux-android23-clang++")
+            else()
+                message(FATAL_ERROR "unknown target ${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}")
+            endif()
+            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+
+            set(ENV{AR} "llvm-ar")
+            set(ENV{RANLIB} "llvm-ranlib")
+            set(ENV{READELF} "llvm-readelf")
+            set(ENV{STRIP} "llvm-strip")
+<<<<<<< HEAD
+
+            get_filename_component(ANDROID_NDK_BINDIR ${VCPKG_DETECTED_CMAKE_C_COMPILER} DIRECTORY)
+            list(APPEND _envPATH ${ANDROID_NDK_BINDIR})
+            list(APPEND _envPATH "/bin")
+            list(APPEND _envPATH "/usr/bin")
+            list(APPEND _envPATH "/usr/local/bin")
+            list(APPEND _envPATH "$ENV{HOME}/.local/bin")
+            list(JOIN _envPATH ${VCPKG_HOST_PATH_SEPARATOR} _envPATH)
+            set(ENV{PATH} ${_envPATH})
+=======
+>>>>>>> f1239c32c (fix: vcpkg_configure_make for NDK r23 clang cross-compiling)
+        endif()
+    endif()
+
     # Cleanup previous build dirs
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
@@ -775,7 +831,7 @@ function(vcpkg_configure_make)
         # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
         # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
-        if(VCPKG_TARGET_IS_ANDROID)
+        if(VCPKG_TARGET_IS_ANDROID AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^GNU$")
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
         endif()
 
