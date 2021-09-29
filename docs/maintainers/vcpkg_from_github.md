@@ -38,7 +38,7 @@ If `REF` is specified, `SHA512` must also be specified.
 ### SHA512
 The SHA512 hash that should match the archive (https://github.com/${REPO}/archive/${REF}.tar.gz).
 
-This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
 ### HEAD_REF
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.

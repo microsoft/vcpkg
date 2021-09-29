@@ -14,16 +14,18 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
-  - group: osx-2021-04-16
+  - group: osx-binary-caching-credentials
   - name: BINARY_SOURCE_STUB
-    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
+    value: "x-azblob,$(root-url),$(sas)"
+  - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(azblob-root-url),$(azblob-test-sas),readwrite"
+    value: "x-azurl,$(root-url),$(sas),readwrite"
 
   steps:
   - bash: df -h
     displayName: 'Report on Disk Space'
   - bash: |
+      sudo rm -rf ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
       exit 0
@@ -48,7 +50,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
       ArtifactName: 'failure logs for x64-osx'
-    condition: always()
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
   - bash: |
       python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'

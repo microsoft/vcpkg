@@ -100,12 +100,12 @@ else()
             tools.patch
     )
 
-    set(OPTIONS "--with-pic")
-
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        OPTIONS ${OPTIONS}
+        OPTIONS
+            --enable-cxx
+            --with-pic
     )
 
     vcpkg_install_make()

@@ -1,0 +1,7 @@
+{
+  "name": "genann",
+  "version-string": "2019-07-10",
+  "port-version": 1,
+  "description": "Genann is a minimal, well-tested library for training and using feedforward artificial neural networks (ANN) in C.",
+  "homepage": "https://github.com/codeplea/genann"
+}

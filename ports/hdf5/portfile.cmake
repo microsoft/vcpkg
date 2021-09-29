@@ -13,6 +13,7 @@ vcpkg_from_github(
         szip.patch
         mingw-import-libs.patch
         pkgconfig-requires.patch
+        pkgconfig-link-order.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)

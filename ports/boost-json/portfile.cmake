@@ -3,18 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.75.0
-    SHA512 887a8758d247eb76b41526107e4006de7d18f107afc9692d95eb2ba7beb9cfa6d5f2e721523a8d4530aec38bd1f6eb0f6364aa05b5bf95f5428f4c9fa3d24b7c
+    REF boost-1.77.0
+    SHA512 538d749ae612b3c2e1681978d1aa9c87aed89a48ef7ce3f7cbd3caf72c4f2e2a232b86b7b089d5ddf63acf71e1a82146de370dfa8c8b881cd07db09885f421ce
     HEAD_REF master
+    PATCHES 001-remove-checks.patch
 )
 
-# see https://github.com/boostorg/json/issues/556 fore more details
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "\n      <library>/boost//container/<warnings-as-errors>off" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "import ../config/checks/config" "import build/config/checks/config")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
 endif()

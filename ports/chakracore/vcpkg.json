@@ -1,8 +1,7 @@
 {
   "name": "chakracore",
-  "version-string": "1.11.22",
-  "port-version": 1,
+  "version-string": "2021-04-22",
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
-  "supports": "windows & !uwp & !static"
+  "supports": "!osx & !uwp & (linux | !static)"
 }

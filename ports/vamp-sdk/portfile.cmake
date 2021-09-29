@@ -1,12 +1,8 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://code.soundsoftware.ac.uk/attachments/download/2589/vamp-plugin-sdk-2.9.0.zip"
-    FILENAME "vamp-plugin-sdk-2.9.0.zip"
-    SHA512 38222f074c17ba420fcc1ad6639048c8f282b892a4baf4257481d7f65f2b5a62685d8bc8e9cbbb5b77063a92f33dc3d2f138ea9b21c475ae1c456146056720ed
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
+    REPO c4dm/vamp-plugin-sdk
+    REF vamp-plugin-sdk-v2.10
+    SHA512 67a71e5396eab5ce9503e9111b4cfc16fc9755cf6ae2d8dfc99ed29fd91e75eaf0de9a9c55ce8f7751f04c235eb86430856eff18f02adde54f1850a87c917ef0
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

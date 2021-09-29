@@ -1,6 +1,16 @@
 {
   "name": "libmt32emu",
-  "version": "2.5.0",
+  "version": "2.5.3",
   "description": "A MT-32 emulator",
-  "homepage": "https://github.com/munt/munt/tree/master/mt32emu"
+  "homepage": "https://github.com/munt/munt/tree/master/mt32emu",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

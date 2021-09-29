@@ -1,0 +1,145 @@
+diff -x '.*' -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2021-06-24 16:56:37.000000000 +0800
++++ b/CMakeLists.txt	2021-06-24 17:30:28.000000000 +0800
+@@ -163,6 +163,13 @@
+     include/time_conversion/gnss_error.h
+ )
+ 
++# fix dependency introduced by xerces
++if(APPLE)
++    find_library(CORE_FOUNDATION CoreFoundation REQUIRED)
++    find_library(CORE_SERVICES CoreServices REQUIRED)
++    set(EXTRA_LINK_FLAGS_OSX ${CORE_FOUNDATION} ${CORE_SERVICES})
++endif()
++
+ #
+ # Example programs
+ #
+@@ -174,6 +181,7 @@
+     E57RefImpl
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ add_executable( DemoRead01
+     src/examples/DemoRead01.cpp
+@@ -182,6 +190,7 @@
+     E57RefImpl
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ 
+ #
+@@ -203,6 +212,7 @@
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
+     ${LAS2E57_EXTRA_LINK}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ add_executable( e57fields
+     src/tools/e57fields.cpp
+@@ -211,6 +221,7 @@
+     E57RefImpl
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ add_executable( e57xmldump
+     src/tools/e57xmldump.cpp
+@@ -219,6 +230,7 @@
+     E57RefImpl
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ add_executable( e57validate
+     src/tools/e57validate.cpp
+@@ -227,6 +239,7 @@
+     E57RefImpl
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ add_executable( e57unpack
+     src/tools/e57unpack.cpp
+@@ -236,6 +249,7 @@
+     ${XML_LIBRARIES}
+     ${Boost_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    ${EXTRA_LINK_FLAGS_OSX}
+ )
+ 
+ #
+diff -x '.*' -Naur a/src/refimpl/E57FoundationImpl.cpp b/src/refimpl/E57FoundationImpl.cpp
+--- a/src/refimpl/E57FoundationImpl.cpp	2012-04-12 21:44:42.000000000 +0800
++++ b/src/refimpl/E57FoundationImpl.cpp	2021-06-24 17:04:57.000000000 +0800
+@@ -57,6 +57,12 @@
+ # include <fcntl.h>
+ # define O_BINARY (0)
+ # define _unlink unlink
++#elif defined( __APPLE__ )
++# include <sys/types.h>
++# include <unistd.h>
++# include <fcntl.h>
++# define O_BINARY (0)
++# define _unlink unlink
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+@@ -4764,6 +4770,8 @@
+ #  endif
+ #elif defined(LINUX)
+     int64_t result = ::lseek64(fd_, offset, whence);
++#elif defined( __APPLE__ )
++    int64_t result = ::lseek(fd_, offset, whence);
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+diff -x '.*' -Naur a/src/refimpl/E57Simple.cpp b/src/refimpl/E57Simple.cpp
+--- a/src/refimpl/E57Simple.cpp	2011-05-14 05:40:11.000000000 +0800
++++ b/src/refimpl/E57Simple.cpp	2021-06-24 16:58:24.000000000 +0800
+@@ -799,6 +799,9 @@
+ #  define __LARGE64_FILES
+ #  include <sys/types.h>
+ #  include <unistd.h>
++#elif defined( __APPLE__ )
++#  include <sys/types.h>
++#  include <unistd.h>
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+diff -x '.*' -Naur a/src/refimpl/E57SimpleImpl.cpp b/src/refimpl/E57SimpleImpl.cpp
+--- a/src/refimpl/E57SimpleImpl.cpp	2012-04-12 23:15:46.000000000 +0800
++++ b/src/refimpl/E57SimpleImpl.cpp	2021-06-24 16:58:24.000000000 +0800
+@@ -74,6 +74,12 @@
+ #  include <boost/uuid/uuid.hpp>
+ #  include <boost/uuid/uuid_generators.hpp>
+ #  include <boost/uuid/uuid_io.hpp>
++#elif defined(__APPLE__)
++#  include <sys/types.h>
++#  include <unistd.h>
++#  include <boost/uuid/uuid.hpp>
++#  include <boost/uuid/uuid_generators.hpp>
++#  include <boost/uuid/uuid_io.hpp>
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+diff -x '.*' -Naur a/src/tools/las2e57.cpp b/src/tools/las2e57.cpp
+--- a/src/tools/las2e57.cpp	2012-04-04 19:09:11.000000000 +0800
++++ b/src/tools/las2e57.cpp	2021-06-24 17:11:11.000000000 +0800
+@@ -404,12 +404,12 @@
+     int64_t     startIndex;
+     BoundingBox bbox;
+ 
+-                GroupRecord(int64_t id);
++                GroupRecord(int64_t id = 0);
+     void        addMember(double coords[3], int64_t recordIndex);
+     void        dump(int indent = 0, std::ostream& os = std::cout);
+ };
+ 
+-GroupRecord::GroupRecord(int64_t id_arg = 0)
++GroupRecord::GroupRecord(int64_t id_arg)
+ : id(id_arg),
+   count(0),
+   startIndex(0),
