@@ -3,17 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.76.0
-    SHA512 50967b962ac4b3cfc799733e5cbbcc15215c27135368a739d2441a70aa6e4a7ccfb617bf3ccd571201568d8bacb209d2a98acbe0593cde7714c7da9faa09ee17
+    REF boost-1.77.0
+    SHA512 8a35fff7ecb12bc8caf8951859555016caa21601d5aa21284aae83df19cde054bfe9ead4cb92341558b23794f2b7bfd37979acb9fc6b2f5546f50505adffd8d3
     HEAD_REF master
+    PATCHES 001-remove-checks.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2" "check-target-builds ../config//has_gcc_visibility" "check-target-builds ../has_gcc_visibility.cpp")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/build/config")
-file(COPY "${SOURCE_PATH}/config/has_gcc_visibility.cpp" DESTINATION "${SOURCE_PATH}/")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-math requires a newer version of vcpkg in order to build.")
 endif()

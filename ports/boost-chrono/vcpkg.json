@@ -1,6 +1,6 @@
 {
   "name": "boost-chrono",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost chrono module",
   "homepage": "https://github.com/boostorg/chrono",
   "dependencies": [
@@ -10,7 +10,7 @@
       "host": true
     },
     "boost-config",
-    "boost-detail",
+    "boost-core",
     "boost-integer",
     {
       "name": "boost-modular-build-helper",
@@ -27,6 +27,10 @@
     "boost-typeof",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
