@@ -490,7 +490,7 @@
     },
     "boinc": {
       "baseline": "7.18.1",
-      "port-version": 0
+      "port-version": 1
     },
     "bond": {
       "baseline": "9.0.3",
@@ -898,7 +898,7 @@
     },
     "boost-process": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-program-options": {
       "baseline": "1.77.0",
@@ -1373,7 +1373,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -1917,8 +1917,8 @@
       "port-version": 0
     },
     "easyloggingpp": {
-      "baseline": "9.96.7",
-      "port-version": 2
+      "baseline": "9.97.0",
+      "port-version": 0
     },
     "eathread": {
       "baseline": "1.32.09",
@@ -2110,7 +2110,7 @@
     },
     "fftw3": {
       "baseline": "3.3.10",
-      "port-version": 0
+      "port-version": 1
     },
     "fftwpp": {
       "baseline": "2019-12-19",
@@ -2793,7 +2793,7 @@
       "port-version": 0
     },
     "indicators": {
-      "baseline": "2.0",
+      "baseline": "2.2",
       "port-version": 0
     },
     "influxdb-cxx": {
@@ -3048,6 +3048,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5notifications": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5package": {
       "baseline": "5.84.0",
       "port-version": 1
@@ -3217,8 +3221,8 @@
       "port-version": 1
     },
     "libass": {
-      "baseline": "0.15.1",
-      "port-version": 1
+      "baseline": "0.15.2",
+      "port-version": 0
     },
     "libassuan": {
       "baseline": "2.5.3",
@@ -4146,7 +4150,7 @@
     },
     "mapnik": {
       "baseline": "2021-09-15",
-      "port-version": 0
+      "port-version": 1
     },
     "marble": {
       "baseline": "19.08.2",
@@ -4213,8 +4217,8 @@
       "port-version": 4
     },
     "meshoptimizer": {
-      "baseline": "0.14",
-      "port-version": 2
+      "baseline": "0.16",
+      "port-version": 0
     },
     "metis": {
       "baseline": "5.1.0",
@@ -4357,8 +4361,8 @@
       "port-version": 0
     },
     "mozjpeg": {
-      "baseline": "2020-06-02",
-      "port-version": 3
+      "baseline": "2021-09-27",
+      "port-version": 0
     },
     "mp-units": {
       "baseline": "0.6.0",
@@ -4633,7 +4637,7 @@
       "port-version": 1
     },
     "numcpp": {
-      "baseline": "2.1.0",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "nuspell": {
@@ -4737,8 +4741,8 @@
       "port-version": 0
     },
     "onednn": {
-      "baseline": "2.0",
-      "port-version": 1
+      "baseline": "2.3.2",
+      "port-version": 0
     },
     "oniguruma": {
       "baseline": "6.9.4",
@@ -4757,8 +4761,8 @@
       "port-version": 0
     },
     "open62541": {
-      "baseline": "1.1.2",
-      "port-version": 2
+      "baseline": "1.2.2",
+      "port-version": 0
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -5069,8 +5073,8 @@
       "port-version": 1
     },
     "pegtl": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "pegtl-2": {
       "baseline": "2.8.3",
@@ -5258,7 +5262,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 5
+      "port-version": 6
     },
     "prometheus-cpp": {
       "baseline": "0.13.0",
@@ -5854,7 +5858,7 @@
     },
     "rsm-mmio": {
       "baseline": "1.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rsocket": {
       "baseline": "2020.05.04.00",
@@ -6118,7 +6122,7 @@
     },
     "sleepy-discord": {
       "baseline": "2021-07-07",
-      "port-version": 0
+      "port-version": 1
     },
     "slikenet": {
       "baseline": "2021-06-07",
@@ -6201,8 +6205,8 @@
       "port-version": 0
     },
     "soundtouch": {
-      "baseline": "2.0.0",
-      "port-version": 7
+      "baseline": "2.3.1",
+      "port-version": 0
     },
     "soxr": {
       "baseline": "0.1.3",
@@ -6611,6 +6615,10 @@
     "tl-function-ref": {
       "baseline": "1.0.0",
       "port-version": 2
+    },
+    "tl-generator": {
+      "baseline": "2021-09-28",
+      "port-version": 0
     },
     "tl-optional": {
       "baseline": "1.0.0",
