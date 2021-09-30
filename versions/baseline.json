@@ -5613,7 +5613,7 @@
       "port-version": 0
     },
     "qtquickcontrols2": {
-      "baseline": "6.1.3",
+      "baseline": "6.2.0",
       "port-version": 0
     },
     "qtquicktimeline": {
