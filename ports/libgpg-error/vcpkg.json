@@ -4,5 +4,13 @@
   "port-version": 4,
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
-  "supports": "!(windows & (arm | arm64))"
+  "dependencies": [
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    }
+  ]
 }

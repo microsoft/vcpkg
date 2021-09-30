@@ -1,0 +1,38 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index fc3acc3..112835c 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -249,7 +249,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
+ # It is correct to use $(CPP).  We want the host's idea of the error codes.
+ mkerrcodes.h: Makefile mkerrcodes.awk $(gpg_extra_headers)
+ 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
+-	$(CPP) $(CPPFLAGS) $(extra_cppflags) -P _$@ | grep GPG_ERR_ | \
++	$(CPP) $(CPPFLAGS) $(extra_cppflags) _$@ | grep GPG_ERR_ | \
+                $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+ 	-rm _$@
+ 
+diff --git a/src/spawn-w32.c b/src/spawn-w32.c
+index 44a71a2..809581d 100644
+--- a/src/spawn-w32.c
++++ b/src/spawn-w32.c
+@@ -55,6 +55,7 @@
+  * Previous versions interpreted X_OK as F_OK anyway, so we'll just
+  * use F_OK directly. */
+ #undef X_OK
++#define F_OK 0
+ #define X_OK F_OK
+ 
+ /* For HANDLE and the internal file descriptor (fd) of this module:
+diff --git a/src/versioninfo.rc.in b/src/versioninfo.rc.in
+index d42d8fe..fe10ad0 100644
+--- a/src/versioninfo.rc.in
++++ b/src/versioninfo.rc.in
+@@ -13,8 +13,6 @@
+ 
+ /* This file is processed by configure to create versioninfo.rc */
+ 
+-#line __LINE__ "versioninfo.rc.in"
+-
+ #include <afxres.h>
+ 
+ 
