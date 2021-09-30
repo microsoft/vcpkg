@@ -1,6 +1,6 @@
 {
   "name": "boost-coroutine",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
   "supports": "!arm & !uwp & !emscripten",
@@ -16,7 +16,6 @@
       "platform": "!uwp & !emscripten"
     },
     "boost-core",
-    "boost-detail",
     "boost-exception",
     {
       "name": "boost-modular-build-helper",
@@ -28,6 +27,10 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

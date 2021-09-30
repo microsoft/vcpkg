@@ -1,5 +1,0 @@
-Source: qt5-macextras
-Version: 5.15.2
-Description: Qt5 Mac Extras Module. Provides platform-specific APIs for mac.
-Build-Depends:  qt5-base[core]
-Supports: osx

@@ -1,0 +1,155 @@
+{
+  "name": "libwebp",
+  "version": "1.2.1",
+  "description": "WebP codec: library to encode and decode images in WebP format",
+  "homepage": "https://github.com/webmproject/libwebp",
+  "dependencies": [
+    {
+      "name": "libwebp",
+      "features": [
+        "unicode"
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "nearlossless",
+    "simd"
+  ],
+  "features": {
+    "all": {
+      "description": "enable all features except for swap16bitcsp",
+      "dependencies": [
+        {
+          "name": "libwebp",
+          "features": [
+            "anim",
+            "cwebp",
+            "dwebp",
+            "gif2webp",
+            "img2webp",
+            "info",
+            "mux",
+            "nearlossless",
+            "simd"
+          ]
+        },
+        {
+          "name": "libwebp",
+          "features": [
+            "extras"
+          ],
+          "platform": "!osx"
+        },
+        {
+          "name": "libwebp",
+          "features": [
+            "vwebp-sdl"
+          ],
+          "platform": "!osx"
+        }
+      ]
+    },
+    "anim": {
+      "description": "Build animation utilities.",
+      "dependencies": [
+        {
+          "name": "libwebp",
+          "features": [
+            "img2webp",
+            "mux"
+          ]
+        }
+      ]
+    },
+    "cwebp": {
+      "description": "Build the cwebp command line tool."
+    },
+    "dwebp": {
+      "description": "Build the dwebp command line tool."
+    },
+    "extras": {
+      "description": "Build extras.",
+      "dependencies": [
+        {
+          "name": "libwebp",
+          "features": [
+            "vwebp"
+          ]
+        },
+        {
+          "name": "sdl1",
+          "platform": "windows"
+        }
+      ]
+    },
+    "gif2webp": {
+      "description": "Build the gif2webp conversion tool.",
+      "dependencies": [
+        "giflib"
+      ]
+    },
+    "img2webp": {
+      "description": "Build the img2webp animation tool.",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        "tiff"
+      ]
+    },
+    "info": {
+      "description": "Build the webpinfo command line tool."
+    },
+    "libbwebpmux": {
+      "description": "Build the libwebpmux library"
+    },
+    "mux": {
+      "description": "Build the webpmux command line tool."
+    },
+    "nearlossless": {
+      "description": "Enable near-lossless encoding"
+    },
+    "simd": {
+      "description": "Enable any SIMD optimization."
+    },
+    "swap16bitcsp": {
+      "description": "Enable byte swap for 16 bit colorspaces."
+    },
+    "unicode": {
+      "description": "Build Unicode executables. (Adds definition UNICODE and _UNICODE)"
+    },
+    "vwebp": {
+      "description": "Build the vwebp viewer tool.",
+      "dependencies": [
+        {
+          "name": "freeglut",
+          "platform": "!osx"
+        },
+        "opengl"
+      ]
+    },
+    "vwebp-sdl": {
+      "description": "Build the vwebp viewer tool.",
+      "dependencies": [
+        {
+          "name": "libwebp",
+          "features": [
+            "vwebp"
+          ]
+        },
+        {
+          "name": "sdl1",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}

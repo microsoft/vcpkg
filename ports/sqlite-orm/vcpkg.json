@@ -1,0 +1,21 @@
+{
+  "name": "sqlite-orm",
+  "version-string": "1.6",
+  "port-version": 1,
+  "description": "SQLite ORM light header only library for modern C++",
+  "homepage": "https://github.com/fnc12/sqlite_orm",
+  "dependencies": [
+    "sqlite3"
+  ],
+  "features": {
+    "example": {
+      "description": "Build examples"
+    },
+    "test": {
+      "description": "Build sqlite_orm unit tests",
+      "dependencies": [
+        "catch2"
+      ]
+    }
+  }
+}

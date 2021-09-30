@@ -1,12 +1,20 @@
 {
   "name": "fbgemm",
   "version-date": "2021-03-18",
-  "port-version": 1,
+  "port-version": 2,
   "description": "FB (Facebook) + GEMM (General Matrix-Matrix Multiplication)",
   "homepage": "https://code.fb.com/ml-applications/fbgemm/",
   "supports": "!(x86 | uwp)",
   "dependencies": [
     "asmjit",
-    "cpuinfo"
+    "cpuinfo",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
