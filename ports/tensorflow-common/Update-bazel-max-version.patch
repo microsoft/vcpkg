@@ -1,11 +1,10 @@
 diff --git a/configure.py b/configure.py
-index e5428a6..9324d7b 100644
 --- a/configure.py
 +++ b/configure.py
-@@ -47,7 +47,7 @@ _TF_WORKSPACE_ROOT = ''
+@@ -50,7 +50,7 @@
  _TF_BAZELRC = ''
  _TF_CURRENT_BAZEL_VERSION = None
- _TF_MIN_BAZEL_VERSION = '3.1.0'
+ _TF_MIN_BAZEL_VERSION = '3.7.2'
 -_TF_MAX_BAZEL_VERSION = '3.99.0'
 +_TF_MAX_BAZEL_VERSION = '4.1.0'
  
