@@ -1466,7 +1466,6 @@ soqt:arm-uwp=fail
 soqt:x64-uwp=fail
 soundtouch:arm-uwp=fail
 soundtouch:x64-uwp=fail
-soundtouch:x64-windows-static=fail
 spaceland:arm64-windows=fail
 spaceland:arm-uwp=fail
 spaceland:x64-uwp=fail
