@@ -72,9 +72,9 @@ function(vcpkg_configure_qmake)
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
 
         if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}")
+            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
         endif()
 
         # Cleanup build directories
@@ -112,9 +112,9 @@ function(vcpkg_configure_qmake)
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
 
         if(DEFINED ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_packages_share_dir}")
+            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
         endif()
 
         # Cleanup build directories
