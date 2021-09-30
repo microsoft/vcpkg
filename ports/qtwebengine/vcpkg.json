@@ -1,9 +1,10 @@
 {
+  "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
   "version-semver": "6.2.0",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
-  "supports": "!static",
+  "supports": "!static & !((arm | x86) & windows)",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -88,6 +89,7 @@
       "default-features": false
     },
     {
+      "$comment": "Requires GN host tool build by the port itself! (special version check)",
       "name": "qtwebengine",
       "host": true,
       "default-features": false
