@@ -30,9 +30,11 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/gpg-error-0.dll" "${CURRENT_PACKAGES_DIR}/bin/gpg-error.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/gpg-error-0.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/gpg-errord.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-error.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-errord.lib")
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-error.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-errord.lib")
+    endif()
 endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
