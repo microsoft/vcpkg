@@ -26,6 +26,11 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### FETCH_REF
+The git branch to fetch in non-HEAD mode. After this is fetched,
+then `REF` is checked out. This is useful in cases where the git server
+does not allow checking out non-advertised objects.
+
 ### HEAD_REF
 The git branch to use when the package is requested to be built from the latest sources.
 
@@ -44,12 +49,10 @@ Relative paths are based on the port directory.
 * [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
 #]===]
 
-include(vcpkg_execute_in_download_mode)
-
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;HEAD_REF;TAG"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG"
         "PATCHES"
     )
 
@@ -62,26 +65,41 @@ function(vcpkg_from_git)
     
 
     if(NOT DEFINED arg_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
+        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
     endif()
     if(NOT DEFINED arg_URL)
-        message(FATAL_ERROR "The git url must be specified")
+        message(FATAL_ERROR "URL must be specified")
     endif()
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
-        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
+        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified")
+    endif()
+    if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
+        message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
     endif()
 
-    set(working_directory_param "")
-    set(ref_to_use "${arg_REF}")
+    vcpkg_list(SET git_fetch_shallow_param --depth 1)
+    vcpkg_list(SET extract_working_directory_param)
+    set(git_working_directory "${DOWNLOADS}/git-tmp")
     if(VCPKG_USE_HEAD_VERSION)
         if(DEFINED arg_HEAD_REF)
-            set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            vcpkg_list(SET git_fetch_shallow_param --depth 1)
             set(ref_to_use "${arg_HEAD_REF}")
+            set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
         else()
             message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         endif()
-    elseif(NOT DEFINED arg_REF)
-        message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+    else()
+        if(NOT DEFINED arg_REF)
+            message(FATAL_ERROR "Package does not specify REF. It must be built using --head.")
+        endif()
+
+        if(DEFINED arg_FETCH_REF)
+            set(ref_to_use "${arg_FETCH_REF}")
+            vcpkg_list(SET git_fetch_shallow_param)
+        else()
+            set(ref_to_use "${arg_REF}")
+        endif()
     endif()
 
     string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
@@ -98,40 +116,54 @@ function(vcpkg_from_git)
         # Note: git init is safe to run multiple times
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" init git-tmp
-            WORKING_DIRECTORY "${DOWNLOADS}"
+            COMMAND "${GIT}" init "${git_working_directory}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
             LOGNAME "git-init-${TARGET_TRIPLET}"
         )
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" --depth 1 -n
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${git_fetch_shallow_param} -n
+            WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
-        vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" rev-parse FETCH_HEAD
-            OUTPUT_VARIABLE rev_parse_head
-            ERROR_VARIABLE rev_parse_head
-            RESULT_VARIABLE error_code
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
-        )
-        if(error_code)
-            message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
-        endif()
-        string(STRIP "${rev_parse_head}" rev_parse_head)
+
         if(VCPKG_USE_HEAD_VERSION)
-            set(VCPKG_HEAD_VERSION "${rev_parse_head}" PARENT_SCOPE)
-        elseif(NOT rev_parse_head STREQUAL arg_REF)
-            message(FATAL_ERROR "REF (${arg_REF}) does not match FETCH_HEAD (${rev_parse_head})
-    [Expected : ( ${arg_REF} )])
-    [  Actual : ( ${rev_parse_head} )]"
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" rev-parse FETCH_HEAD
+                OUTPUT_VARIABLE rev_parse_ref
+                ERROR_VARIABLE rev_parse_ref
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY "${git_working_directory}"
             )
+            if(error_code)
+                message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
+            endif()
+            string(STRIP "${rev_parse_ref}" rev_parse_ref)
+            set(VCPKG_HEAD_VERSION "${rev_parse_ref}" PARENT_SCOPE)
+        else()
+            vcpkg_execute_in_download_mode(
+                COMMAND "${GIT}" rev-parse "${arg_REF}"
+                OUTPUT_VARIABLE rev_parse_ref
+                ERROR_VARIABLE rev_parse_ref
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY "${git_working_directory}"
+            )
+            if(error_code)
+                message(FATAL_ERROR "unable to rev-parse ${arg_REF} after fetching git repository")
+            endif()
+            string(STRIP "${rev_parse_ref}" rev_parse_ref)
+            if(NOT "${rev_parse_ref}" STREQUAL "${arg_REF}")
+                message(FATAL_ERROR "REF (${arg_REF}) does not match rev-parse'd reference (${rev_parse_ref})
+        [Expected : ( ${arg_REF} )])
+        [  Actual : ( ${rev_parse_ref} )]"
+                )
+            endif()
         endif()
 
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" archive "${rev_parse_head}" -o "${temp_archive}"
+            COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
             WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
             LOGNAME git-archive
         )
@@ -146,7 +178,7 @@ function(vcpkg_from_git)
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
-        ${working_directory_param}
+        ${extract_working_directory_param}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

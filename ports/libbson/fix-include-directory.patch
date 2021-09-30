@@ -1,0 +1,13 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index d383424..cc633f6 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -326,7 +326,7 @@ if (ENABLE_EXAMPLES)
+ endif () # ENABLE_EXAMPLES
+ 
+ set (BSON_HEADER_INSTALL_DIR
+-   "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
++   "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
+ 
+ if (ENABLE_STATIC MATCHES "ON|AUTO")

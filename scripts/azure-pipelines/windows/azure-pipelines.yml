@@ -14,9 +14,16 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - name: DiffFile
+    value: $(Build.ArtifactStagingDirectory)\format.diff
+  - name: ExtraChecksTriplet
+    value: x86-windows
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url),$(sas-bin)"
 
   steps:
   - task: PowerShell@2
@@ -25,29 +32,77 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
-      dir ${{ variables.VCPKG_DOWNLOADS }} 2>&1 || (call )
-      dir ${{ variables.VCPKG_DOWNLOADS }}\tools 2>&1 || (call )
-      dir ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
-      rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
-    displayName: 'Clean msys2 downloads'
+      if exist ${{ variables.VCPKG_DOWNLOADS }} rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
+    displayName: 'Clean downloads'
+  # Note that we run docs checks before PR checks because they are likely to invalidate a whole run anyway
+  - task: Powershell@2
+    displayName: 'Generate Documentation'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+    inputs:
+      filePath: 'docs/regenerate.ps1'
+      arguments: '-VcpkgRoot . -WarningAction Stop'
+      pwsh: true
+  - script: '.\vcpkg.exe format-manifest --all'
+    displayName: 'Format Manifests'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+  - task: Powershell@2
+    displayName: 'Create Diff'
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
+    inputs:
+      filePath: scripts/azure-pipelines/Create-PRDiff.ps1
+      arguments: "-DiffFile '$(DiffFile)'"
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Format and Documentation Diff'
+    condition: and(eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}'), failed())
+    inputs:
+      PathtoPublish: '$(DiffFile)'
+      ArtifactName: 'format.diff'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
       pwsh: true
   - task: PowerShell@2
     displayName: 'Validate version files'
-    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    condition: eq('${{ parameters.triplet }}', '${{ variables.ExtraChecksTriplet }}')
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose |
+        ForEach-Object -Begin {
+          $long_error = ''
+        } -Process {
+          if ($long_error -ne '' -and $_ -match '^$|^       ') {
+             # Extend multi-line message
+             $long_error = -join($long_error, "%0D%0A", $_ -replace '^       ','' `
+               -replace '(git add) [^ ]*\\ports\\([^ ]*)', '$1 ports/$2' )
+          } else {
+            if ($long_error -ne '') {
+              # Flush multi-line message
+              $long_error
+              $long_error = ''
+            }
+            if ($_ -match '^Error: ') {
+              # Start multi-line message
+              $long_error = $_ -replace '^Error: ', '##vso[task.logissue type=error]' `
+                -replace '(^##vso[^\]]*)](.*) [^ ]*\\versions\\(.-)\\(.*.json)(.*)', '$1;sourcepath=versions/$3/$4;linenumber=2]$2 version/$3/$4$5'
+            } else {
+              # Normal line
+              $_
+            }
+          }
+        } -End {
+          if ($long_error -ne '') {
+            # Flush multi-line message
+            $long_error
+          }
+        }
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
@@ -60,7 +115,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
-    condition: always()
+    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()
