@@ -4362,7 +4362,7 @@
     },
     "mosquitto": {
       "baseline": "2.0.12",
-      "port-version": 0
+      "port-version": 1
     },
     "mozjpeg": {
       "baseline": "2021-09-27",
@@ -5729,8 +5729,8 @@
       "port-version": 1
     },
     "rbdl-orb": {
-      "baseline": "3.0.0",
-      "port-version": 1
+      "baseline": "3.1.2",
+      "port-version": 0
     },
     "re2": {
       "baseline": "2021-09-01",
