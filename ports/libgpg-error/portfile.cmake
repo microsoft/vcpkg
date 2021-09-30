@@ -2,7 +2,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set (PATCHES SMP.patch msvc.patch)
 endif()
 
-        SOURCE_PATH ${SOURCE_PATH}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gpg/libgpg-error
@@ -12,14 +11,9 @@ vcpkg_from_github(
     PATCHES ${PATCHES}
 )
 
-
-find_program(GETTEXT_TOOLS autopoint HINTS "${CURRENT_INSTALLED_DIR}/tools/gettext/bin" REQUIRED)
-get_filename_component(GETTEXT_TOOLS_PATH ${GETTEXT_TOOLS} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${GETTEXT_TOOLS_PATH}")
-
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-tests
@@ -37,13 +31,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-    endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
-    endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale" "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
