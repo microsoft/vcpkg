@@ -1295,6 +1295,7 @@ quickfix:x64-windows-static-md=fail
 quickfix:x64-windows=fail
 quickfix:x86-windows=fail
 qwt:x64-osx=fail
+qwtw:x64-windows=fail
 rabit:x64-osx=fail
 ragel:arm-uwp=fail
 ragel:x64-uwp=fail
@@ -1363,6 +1364,8 @@ rsasynccpp:arm64-windows=fail
 rsasynccpp:arm-uwp=fail
 rsasynccpp:x64-linux=fail
 rsasynccpp:x64-osx=fail
+# Requires g++10 but CI compiler only has g++9
+rsm-binary-io:x64-linux=fail
 # Requires g++10 but CI compiler only has g++9
 rsm-bsa:x64-linux=fail
 rsocket:x64-windows=fail
@@ -1463,7 +1466,6 @@ soqt:arm-uwp=fail
 soqt:x64-uwp=fail
 soundtouch:arm-uwp=fail
 soundtouch:x64-uwp=fail
-soundtouch:x64-windows-static=fail
 spaceland:arm64-windows=fail
 spaceland:arm-uwp=fail
 spaceland:x64-uwp=fail

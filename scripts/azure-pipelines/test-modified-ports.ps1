@@ -46,9 +46,10 @@ Param(
     $ArchivesRoot = $null,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
-    $BuildReason = $null,
-    [switch]
-    $PassingIsPassing = $false
+    [String]$BuildReason = $null,
+    [String[]]$AdditionalSkips = @(),
+    [String[]]$OnlyTest = $null,
+    [switch]$PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -124,25 +125,42 @@ if ($LASTEXITCODE -ne 0)
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
-    -SkipFailures:$skipFailures
+    -SkipFailures:$skipFailures `
+    -AdditionalSkips $AdditionalSkips
 
-if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
+if ($null -ne $OnlyTest)
 {
-    # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
-    # The workaround is to pass the skip list as host-excludes as well.
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    $OnlyTest | % {
+        $portName = $_
+        & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs $portName
+        [System.Console]::Error.WriteLine( `
+            "REGRESSION: ${portName}:$triplet. If expected, remove ${portName} from the OnlyTest list." `
+        )
+    }
 }
 else
 {
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
-}
+    if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
+    {
+        # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
+        # The workaround is to pass the skip list as host-excludes as well.
+        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    }
+    else
+    {
+        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    }
 
-if ($LASTEXITCODE -ne 0)
-{
-    throw "vcpkg ci failed"
-}
+    $failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
-& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
-    -triplet $Triplet `
-    -baselineFile .\scripts\ci.baseline.txt `
-    -passingIsPassing:$PassingIsPassing
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "vcpkg ci failed"
+    }
+
+    & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
+        -triplet $Triplet `
+        -baselineFile .\scripts\ci.baseline.txt `
+        -passingIsPassing:$PassingIsPassing
+}

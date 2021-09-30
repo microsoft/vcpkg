@@ -1,6 +1,7 @@
 {
   "name": "boost-process",
-  "version": "1.76.0",
+  "version": "1.77.0",
+  "port-version": 1,
   "description": "Boost process module",
   "homepage": "https://github.com/boostorg/process",
   "supports": "!emscripten",
