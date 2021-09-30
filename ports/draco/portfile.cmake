@@ -3,13 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 83b0922745981a35be16e2907bdbb749ebf2bf43 # 1.3.6
-    SHA512 29b270d749c5c0efcf791aaae7e33e2ae4404103ad8849d73aaca71492a3780d2fcaec01ec225da886bce2ab20ec14b8cf2d9e0976810cdaee557f97b3b0d9b8
+    REF 1.4.1
+    SHA512 55B8AF74552987220FB23580F6B167E4610A1341BC36117B6D235C05E126A79981F93787ACB90210127DC779B3134A1D9CC8D6697B1286459F233BF660B890BC
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
         fix-uwperror.patch
-        fix-build-error-in-gcc11.patch # Remove this patch in next release 
 )
 
 vcpkg_configure_cmake(
@@ -19,8 +18,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/draco/cmake)
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake)
+vcpkg_fixup_pkgconfig()
 # Install tools and plugins
 file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
 if(TOOLS)
@@ -29,10 +28,7 @@ if(TOOLS)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/draco)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/draco)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
