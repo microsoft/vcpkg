@@ -114,7 +114,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_pdbs()
 else()
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://www.gnupg.org/ftp/gcrypt/gnutls/v${PACKAGE_VERSION_MAJOR}.{PACKAGE_VERSION_MINOR}/gnutls-${PACKAGE_VERSION}.tar.xz"
+        URLS "https://www.gnupg.org/ftp/gcrypt/gnutls/v${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}/gnutls-${PACKAGE_VERSION}.tar.xz"
         FILENAME "gnutls-${PACKAGE_VERSION}.tar.xz"
         SHA512 f757d1532198f44bcad7b73856ce6a05bab43f6fb77fcc81c59607f146202f73023d0796d3e1e7471709cf792c8ee7d436e19407e0601bc0bda2f21512b3b01c
     )
