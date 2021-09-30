@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.0.3-pv5.9.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "dependencies": [
@@ -152,13 +152,8 @@
     "qt": {
       "description": "Qt functionality for VTK",
       "dependencies": [
-        "qt5-imageformats",
-        "qt5-tools",
-        {
-          "name": "qt5-x11extras",
-          "platform": "linux"
-        },
-        "qt5-xmlpatterns"
+        "qtimageformats",
+        "qttools"
       ]
     },
     "utf8": {
