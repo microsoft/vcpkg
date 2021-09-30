@@ -4,7 +4,7 @@
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests. 
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
 
-set(QT_IS_LATEST ON)
+#set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
@@ -16,13 +16,12 @@ set(${PORT}_PATCHES
         dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
-        fix_egl.patch # Maybe the angle library names on windows should be discussed
-        #fix_qthread_max.patch // Trying different approach in qtmultimedia
+        fix_egl.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES
-                )
+        )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
@@ -94,12 +93,10 @@ INVERTED_FEATURES
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
-#list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_doubleconversion:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
-
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS

@@ -1,9 +1,9 @@
 {
   "name": "qtwebengine",
-  "version-semver": "6.2.0-rc2",
+  "version-semver": "6.2.0",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
-  "supports": "!static & !x86",
+  "supports": "!static",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -85,6 +85,11 @@
     },
     {
       "name": "qttools",
+      "default-features": false
+    },
+    {
+      "name": "qtwebengine",
+      "host": true,
       "default-features": false
     },
     {

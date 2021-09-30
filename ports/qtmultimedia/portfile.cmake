@@ -1,8 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES #fix_with_gstreamer.patch
-                    fix_windows_header_include.patch)
+set(${PORT}_PATCHES fix_windows_header_include.patch)
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports)
 

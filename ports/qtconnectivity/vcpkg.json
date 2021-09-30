@@ -1,6 +1,6 @@
 {
   "name": "qtconnectivity",
-  "version-semver": "6.2.0-beta1",
+  "version-semver": "6.2.0",
   "description": "Qt Connectivity",
   "homepage": "https://www.qt.io/",
   "dependencies": [

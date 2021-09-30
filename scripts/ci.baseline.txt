@@ -1249,6 +1249,11 @@ qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
+# Should be supported but fails configure. Needs upstream fixes.
+qtwebengine:arm64-windows=skip 
+# Not officially supported/tested but should build. Fails build due to using 64bit intrinsics in an internal 3rd party lib. 
+# Note: Qt6 is not official supported on x86 widows. Only on Android/Linux
+qtwebengine:x86-windows=skip 
 qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
