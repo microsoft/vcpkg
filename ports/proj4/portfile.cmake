@@ -13,11 +13,9 @@ vcpkg_from_github(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
   set(EXTRA_FEATURES tiff ENABLE_TIFF tools BUILD_PROJSYNC tools ENABLE_CURL)
   set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
 else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
   set(TOOL_NAMES cct cs2cs geod gie proj projinfo)
 endif()
 
