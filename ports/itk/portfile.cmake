@@ -205,6 +205,7 @@ if (NOT DEFINED _IMPORT_PREFIX AND NOT _IMPORT_PREFIX)
     set(_IMPORT_PREFIX "")
     endif()
 endif()
+set(_IMPORT_PREFIX "${_IMPORT_PREFIX}" CACHE PATH "" FORCE)
 ]])
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/ITKModuleAPI.cmake" "${ITKModuleAPI_CMAKE}")
 
