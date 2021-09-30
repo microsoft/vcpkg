@@ -1,6 +1,7 @@
 {
   "name": "mapnik",
   "version-date": "2021-09-15",
+  "port-version": 1,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "supports": "!(static & windows)",
@@ -152,12 +153,7 @@
     "proj": {
       "description": "PROJ Functionalities",
       "dependencies": [
-        {
-          "name": "proj4",
-          "features": [
-            "database"
-          ]
-        }
+        "proj4"
       ]
     },
     "svg-renderer": {

@@ -1,6 +1,6 @@
 {
   "name": "qtdeclarative",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -14,6 +14,10 @@
     {
       "name": "qtdeclarative",
       "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtshadertools",
       "default-features": false
     }
   ]
