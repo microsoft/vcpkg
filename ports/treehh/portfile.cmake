@@ -6,5 +6,5 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/src/tree.hh DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/src/tree.hh DESTINATION ${CURRENT_PACKAGES_DIR}/share/treehh RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/src/tree.hh" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/")
+file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
