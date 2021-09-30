@@ -23,13 +23,22 @@ else {
 
 # Clear this array when moving to a new boost version
 $portVersions = @{
-    #e.g.  "boost-asio" = 1;
-    "boost" = 1;
+    #e.g. "boost-asio" = 1;
+    "boost"           = 1;
     "boost-iostreams" = 1;
-    "boost-process" = 1;
+    "boost-process"   = 1;
+    "boost-odeint"    = 1;
 }
 
 $portData = @{
+    "boost"                  = @{
+        "features" = @{
+            "mpi" = @{
+                "description"  = "Build with MPI support";
+                "dependencies" = @("boost-mpi", "boost-graph-parallel");
+            }
+        }
+    };
     "boost-asio"             = @{
         "dependencies" = @("openssl");
         "supports"     = "!emscripten"
@@ -84,6 +93,14 @@ $portData = @{
         "dependencies" = @("mpi");
         "supports"     = "!uwp";
     };
+    "boost-odeint"           = @{
+        "features" = @{
+            "mpi" = @{
+                "dependencies" = @("boost-mpi");
+                "description"  = "Support parallelization with MPI"
+            }
+        }
+    };
     "boost-parameter-python" = @{ "supports" = "!emscripten" };
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
@@ -125,40 +142,51 @@ function GeneratePortDependency() {
         $portName
     }
 }
+
 function GeneratePortManifest() {
     param (
         [string]$Library,
         [string]$PortName,
         [string]$Homepage,
         [string]$Description,
-        $Dependencies = @(),
-        $Features = @(),
-        $DefaultFeatures = @()
+        $Dependencies = @()
     )
     if ([string]::IsNullOrEmpty($PortName)) {
         $PortName = GeneratePortName $Library
     }
     $manifest = @{
-        name        = $PortName
-        "version"   = $version
-        homepage    = $Homepage
-        description = $Description
-    }
-    if ($portVersions.Contains($PortName)) {
-        $manifest["port-version"] = $portVersions[$PortName]
+        "name"        = $PortName
+        "version"     = $version
+        "homepage"    = $Homepage
+        "description" = $Description
     }
     if ($portData.Contains($PortName)) {
         $manifest += $portData[$PortName]
     }
+    if ($portVersions.Contains($PortName)) {
+        $manifest["port-version"] = $portVersions[$PortName]
+    }
     if ($Dependencies.Count -gt 0) {
         $manifest["dependencies"] += $Dependencies
     }
-    if ($Features.Count -gt 0) {
-        $manifest["features"] += $Features
+    # Remove from the dependencies the ports that are included in the feature dependencies
+    if ($manifest.Contains('features') -and $manifest.Contains('dependencies')) {
+        foreach ($feature in $manifest.features.Keys) {
+            $feature_dependencies = $manifest.features.$feature["dependencies"]
+            foreach ($dependency in $feature_dependencies) {
+                if ($dependency.Contains("name")) {
+                    $dep_name = $dependency.name
+                }
+                else {
+                    $dep_name = $dependency
+                }
+                $manifest["dependencies"] = $manifest["dependencies"] `
+                | Where-Object { $_ -notmatch "$dep_name" } `
+                | Where-Object { $_.name -notmatch "$dep_name" }
+            }
+        }
     }
-    if ($DefaultFeatures.Count -gt 0) {
-        $manifest["default-features"] += $DefaultFeatures
-    }
+
     $manifest | ConvertTo-Json -Depth 10 -Compress `
     | Out-File -Encoding UTF8 "$portsDir/$PortName/vcpkg.json"
     & $vcpkg format-manifest "$portsDir/$PortName/vcpkg.json"
@@ -506,25 +534,11 @@ foreach ($library in $libraries) {
 
 if ($updateServicePorts) {
     # Generate manifest file for master boost port which depends on each individual library
-    # mpi and graph-parallel are excluded due to they having a dependency on msmpi/openmpi
-    $boostPortDependencies = $boostPortDependencies `
-    | Where-Object { $_ -notmatch "boost-mpi|boost-graph-parallel" } `
-    | Where-Object { $_.name -notmatch "boost-mpi|boost-graph-parallel" }
-    
-    $boostPortFeatures = @(
-        @{
-            "name"         = "mpi";
-            "description"  = "Build with MPI support";
-            "dependencies" = @("boost-mpi", "boost-graph-parallel")
-        }
-    )
-    
     GeneratePortManifest `
         -PortName "boost" `
         -Homepage "https://boost.org" `
         -Description "Peer-reviewed portable C++ source libraries" `
-        -Dependencies $boostPortDependencies `
-        -Features $boostPortFeatures
+        -Dependencies $boostPortDependencies
 
     Set-Content -LiteralPath "$portsDir/boost/portfile.cmake" `
         -Value "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" `
