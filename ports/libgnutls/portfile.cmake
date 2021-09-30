@@ -132,7 +132,7 @@ else()
     endif()
 
     if ("openssl" IN_LIST FEATURES)
-    set(OPENSSL_COMPATIBILITY "--enable-openssl-compatibility")
+        set(OPENSSL_COMPATIBILITY "--enable-openssl-compatibility")
     endif()
 
     vcpkg_configure_make(
