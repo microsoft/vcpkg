@@ -1,0 +1,6 @@
+{
+  "name": "distorm",
+  "version-string": "3.4.1",
+  "port-version": 1,
+  "description": "Powerful Disassembler Library For x86/AMD64"
+}

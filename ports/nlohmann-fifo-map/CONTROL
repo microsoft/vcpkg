@@ -1,4 +1,0 @@
-Source: nlohmann-fifo-map
-Version: 2018.05.07-1
-Homepage: https://github.com/nlohmann/fifo_map
-Description: a FIFO-ordered associative container for C++
