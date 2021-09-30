@@ -1,0 +1,26 @@
+diff --git a/src/kxmlguiclient.cpp b/src/kxmlguiclient.cpp
+index a830ad0fa6b962654a0d1ebb161761a3afafb479..b2c9d0d21dce5f5d9ae4941ae4a909dfa9531155 100644
+--- a/src/kxmlguiclient.cpp
++++ b/src/kxmlguiclient.cpp
+@@ -70,6 +70,8 @@ KXMLGUIClient::KXMLGUIClient()
+ KXMLGUIClient::KXMLGUIClient(KXMLGUIClient *parent)
+     : d(new KXMLGUIClientPrivate)
+ {
++    Q_INIT_RESOURCE(kxmlgui);
++
+     parent->insertChildClient(this);
+ }
+ 
+diff --git a/src/kxmlguifactory.cpp b/src/kxmlguifactory.cpp
+index fc453cb2598dd36f8212cbccb3d4e777ffca4480..5c8dbda2b5700144e9aaf96f877615f874292640 100644
+--- a/src/kxmlguifactory.cpp
++++ b/src/kxmlguifactory.cpp
+@@ -172,6 +172,8 @@ KXMLGUIFactory::KXMLGUIFactory(KXMLGUIBuilder *builder, QObject *parent)
+     : QObject(parent)
+     , d(new KXMLGUIFactoryPrivate)
+ {
++    Q_INIT_RESOURCE(kxmlgui);
++
+     d->builder = builder;
+     d->guiClient = nullptr;
+     if (d->builder) {

@@ -1,5 +1,0 @@
-Source: discord-game-sdk
-Version: 2.5.6-1
-Homepage: https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide
-Description: The Discord GameSDK is an easy drop-in SDK to help you manage all the hard things that come with making a game.
-Supports: ((x64 && (windows || osx || linux)) || (x86 && windows)) && !uwp && !static

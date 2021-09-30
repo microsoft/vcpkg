@@ -1,4 +1,0 @@
-Source: qt5-charts
-Version: 5.15.2
-Description: Qt5 Charts Module - UI components for displaying charts, driven by static or dynamic data models
-Build-Depends:  qt5-base[core], qt5-declarative, qt5-multimedia

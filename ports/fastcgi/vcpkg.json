@@ -1,0 +1,7 @@
+{
+  "name": "fastcgi",
+  "version-string": "2020-09-11",
+  "port-version": 1,
+  "description": "The FastCGI interface combines the best aspects of CGI and vendor APIs. Like CGI, FastCGI applications run in separate, isolated processes.",
+  "homepage": "https://fastcgi-archives.github.io/"
+}

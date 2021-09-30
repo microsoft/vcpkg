@@ -1,13 +1,20 @@
 {
   "name": "realsense2",
-  "version": "2.42.0",
-  "port-version": 1,
+  "version": "2.49.0",
   "description": "Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).",
   "homepage": "https://github.com/IntelRealSense/librealsense",
   "dependencies": [
     {
       "name": "libusb",
       "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {
@@ -21,7 +28,7 @@
       "description": "Build Intel® RealSense™ T265 device"
     },
     "tools": {
-      "description": "Build Intel® RealSense™ examples and tools",
+      "description": "Build Intel® RealSense™ tools",
       "dependencies": [
         "glfw3",
         "opengl"
