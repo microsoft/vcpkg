@@ -7,7 +7,8 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "stb"
   ],
   "default-features": [
     "tool"

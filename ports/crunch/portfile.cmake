@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         osx.patch
         arm-uwp.patch
+        stb_image.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
+        -DStb_INCLUDE_DIR:FILEPATH=${CURRENT_INSTALLED_DIR}/include
 )
 
 vcpkg_cmake_install()

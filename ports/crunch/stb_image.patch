@@ -1,0 +1,37 @@
+diff --git a/crnlib/crn_image_utils.cpp b/crnlib/crn_image_utils.cpp
+index 0ffac1fed..9d79cd51a 100644
+--- a/crnlib/crn_image_utils.cpp
++++ b/crnlib/crn_image_utils.cpp
+@@ -15,7 +15,11 @@
+ #include "crn_buffer_stream.h"
+ 
+ #define STBI_HEADER_FILE_ONLY
+-#include "crn_stb_image.cpp"
++//#include "crn_stb_image.cpp"
++#define STB_IMAGE_IMPLEMENTATION
++#include "stb_image.h"
++#define STB_IMAGE_WRITE_IMPLEMENTATION
++#include "stb_image_write.h"
+ 
+ #include "crn_jpgd.h"
+ 
+diff --git a/crnlib/CMakeLists.txt b/crnlib/CMakeLists.txt
+index c6c2d58d6..c4b560533 100644
+--- a/crnlib/CMakeLists.txt
++++ b/crnlib/CMakeLists.txt
+@@ -46,7 +46,6 @@ set(SRCFILES
+ 	crn_rg_etc1.cpp
+ 	crn_ryg_dxt.cpp
+ 	crn_sparse_bit_array.cpp
+-	crn_stb_image.cpp
+ 	crn_strutils.cpp
+ 	crn_symbol_codec.cpp
+ 	crn_texture_comp.cpp
+@@ -95,6 +94,7 @@ IF (NOT WIN32)
+ ENDIF ()
+ 
+ target_include_directories(crunch
++  PUBLIC  ${Stb_INCLUDE_DIR}
+   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+ )
+ 

@@ -76,17 +76,105 @@ index f57adb2d1..486560694 100644
     }
  
     task_pool::task_pool() :
-
+diff --git a/crnlib/crn_platform.h b/crnlib/crn_platform.h
+index 3588e37a2..d2bb04495 100644
+--- a/crnlib/crn_platform.h
++++ b/crnlib/crn_platform.h
+@@ -18,7 +18,11 @@ void crnlib_fail(const char* pExp, const char* pFile, unsigned line);
+ 
+ const bool c_crnlib_big_endian_platform = !c_crnlib_little_endian_platform;
+ 
+-#ifdef __GNUC__
++#if defined(__APPLE__)
++   #define crn_fopen(pDstFile, f, m) *(pDstFile) = fopen(f, m)
++   #define crn_fseek fseeko
++   #define crn_ftell ftello
++#elif defined( __GNUC__ )
+    #define crn_fopen(pDstFile, f, m) *(pDstFile) = fopen64(f, m)
+    #define crn_fseek fseeko64
+    #define crn_ftell ftello64
 diff --git a/inc/crn_decomp.h b/inc/crn_decomp.h
-index 2c626af32..2a6192f20 100644
+index 2c626af32..552a0062a 100644
 --- a/inc/crn_decomp.h
 +++ b/inc/crn_decomp.h
-@@ -318,7 +318,7 @@ namespace crnd
+@@ -317,6 +317,8 @@ namespace crnd
+ #include <stdio.h>
  #ifdef WIN32
  #include <memory.h>
++#elif defined(__APPLE__)
++#include <malloc/malloc.h>
  #else
--#include <malloc.h>
-+#include <stdlib.h>
+ #include <malloc.h>
  #endif
- #include <stdarg.h>
- #include <new> // needed for placement new, _msize, _expand
+@@ -2426,6 +2428,8 @@ namespace crnd
+          {
+ #ifdef WIN32
+             *pActual_size = p_new ? ::_msize(p_new) : 0;
++#elif defined(__APPLE__)
++            *pActual_size = p_new ? malloc_size(p_new) : 0;
+ #else
+             *pActual_size = p_new ? malloc_usable_size(p_new) : 0;
+ #endif
+@@ -2462,6 +2466,8 @@ namespace crnd
+          {
+ #ifdef WIN32
+             *pActual_size = ::_msize(p_final_block);
++#elif defined(__APPLE__)
++            *pActual_size = ::malloc_size(p_final_block);
+ #else
+             *pActual_size = ::malloc_usable_size(p_final_block);
+ #endif
+@@ -2476,6 +2482,8 @@ namespace crnd
+       pUser_data;
+ #ifdef WIN32
+       return p ? _msize(p) : 0;
++#elif defined(__APPLE__)
++      return p ? malloc_size(p) : 0;
+ #else
+       return p ? malloc_usable_size(p) : 0;
+ #endif
+diff --git a/crnlib/crn_jpge.cpp b/crnlib/crn_jpge.cpp
+index 964f908de..0feabc573 100644
+--- a/crnlib/crn_jpge.cpp
++++ b/crnlib/crn_jpge.cpp
+@@ -12,7 +12,11 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#if defined(__APPLE__)
++#include <malloc/malloc.h>
++#else
+ #include <malloc.h>
++#endif
+ 
+ #include "crn_core.h"
+ 
+diff --git a/crnlib/crn_mem.cpp b/crnlib/crn_mem.cpp
+index b7abfb9b7..9816eeb22 100644
+--- a/crnlib/crn_mem.cpp
++++ b/crnlib/crn_mem.cpp
+@@ -3,7 +3,11 @@
+ #include "crn_core.h"
+ #include "crn_console.h"
+ #include "../inc/crnlib.h"
++#if defined(__APPLE__)
++#include <malloc/malloc.h>
++#else
+ #include <malloc.h>
++#endif
+ #if CRNLIB_USE_WIN32_API
+ #include "crn_winhdr.h"
+ #endif
+@@ -11,8 +15,12 @@
+ #define CRNLIB_MEM_STATS 0
+ 
+ #if !CRNLIB_USE_WIN32_API
++#if defined(__APPLE__)
++#define _msize malloc_size
++#else
+ #define _msize malloc_usable_size
+ #endif
++#endif
+ 
+ namespace crnlib
+ {
