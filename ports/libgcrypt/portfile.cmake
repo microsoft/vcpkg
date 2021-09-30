@@ -11,6 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES 
             outdir.patch
             gpgerror.patch
+            runtime.patch
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
