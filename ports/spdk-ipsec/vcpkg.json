@@ -1,0 +1,7 @@
+{
+  "name": "spdk-ipsec",
+  "version-string": "20180711",
+  "port-version": 1,
+  "description": "SPDK mirror of ipsec. Intel(R) Multi-Buffer Crypto for IPsec Library",
+  "supports": "x64 & linux"
+}

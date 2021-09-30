@@ -1,5 +1,0 @@
-Source: fcl
-Version: 0.6.1
-Homepage: https://github.com/flexible-collision-library/fcl
-Description: a library for performing three types of proximity queries on a pair of geometric models composed of triangles
-Build-Depends: ccd, octomap, eigen3

@@ -83,19 +83,47 @@ if(BUILD_TOOLS AND WITH_DEPENDENCIES)
 endif()
 
 install(
-    TARGETS aubio
+    TARGETS aubio EXPORT AubioTargets
+    INCLUDES DESTINATION include
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
-if(NOT DISABLE_INSTALL_HEADERS)
-    install(
-        DIRECTORY src/
-        DESTINATION include/aubio
-        FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*_priv.h" EXCLUDE
-        PATTERN "config.h" EXCLUDE
-    )
+install(EXPORT AubioTargets NAMESPACE Aubio:: DESTINATION share/aubio)
+
+install(
+    DIRECTORY src/
+    DESTINATION include/aubio
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*_priv.h" EXCLUDE
+    PATTERN "config.h" EXCLUDE
+)
+
+# Create CMake configuration export file.
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "@PACKAGE_INIT@\n")
+if(WITH_DEPENDENCIES)
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "
+    include(CMakeFindDependencyMacro)
+    find_dependency(FFMPEG COMPONENTS avcodec avutil avformat swresample REQUIRED)
+    find_dependency(BZip2 REQUIRED)
+    find_dependency(LibLZMA REQUIRED)
+    find_dependency(SndFile REQUIRED)
+    ")
 endif()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in "include(\${CMAKE_CURRENT_LIST_DIR}/AubioTargets.cmake)")
+
+# Install CMake configuration export file.
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/AubioConfig.cmake
+  INSTALL_DESTINATION share/aubio
+)
+install(
+  FILES
+    ${CMAKE_BINARY_DIR}/AubioConfig.cmake
+  DESTINATION
+    share/aubio
+)

@@ -1,6 +1,0 @@
-Source: ompl
-Version: 1.5.1
-Port-Version: 1
-Homepage: https://ompl.kavrakilab.org/
-Description: The Open Motion Planning Library, consists of many state-of-the-art sampling-based motion planning algorithms
-Build-Depends: boost-dynamic-bitset, boost-filesystem, boost-graph, boost-odeint, boost-program-options, boost-serialization, boost-system, boost-test, boost-ublas, boost-timer, eigen3

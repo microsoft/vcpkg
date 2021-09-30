@@ -1,9 +1,10 @@
 {
   "name": "behaviortree-cpp",
   "version": "3.5.6",
+  "port-version": 1,
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
-  "supports": "!uwp & !osx",
+  "supports": "!uwp",
   "dependencies": [
     "boost-coroutine2",
     "cppzmq"

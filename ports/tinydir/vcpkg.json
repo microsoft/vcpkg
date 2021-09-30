@@ -1,0 +1,7 @@
+{
+  "name": "tinydir",
+  "version-string": "1.2.4",
+  "port-version": 1,
+  "description": "Lightweight, portable and easy to integrate C directory and file reader",
+  "homepage": "https://github.com/cxong/tinydir"
+}

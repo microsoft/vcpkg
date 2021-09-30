@@ -1,6 +1,7 @@
 {
   "name": "libffi",
   "version": "3.4.2",
+  "port-version": 1,
   "description": "Portable, high level programming interface to various calling conventions",
   "homepage": "https://github.com/libffi/libffi"
 }
