@@ -486,6 +486,7 @@ function(vcpkg_configure_make)
     set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${_VCPKG_PREFIX}")
     set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${_VCPKG_PREFIX}/debug")
     if(NOT _csc_NO_ADDITIONAL_PATHS)
+        # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
