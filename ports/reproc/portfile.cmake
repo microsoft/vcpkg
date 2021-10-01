@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO DaanDeMeyer/reproc
     REF v14.2.3
     SHA512 acb3a0b90aca7bcfd1b0882b7094ba0f2f8dd8aa4a7c4a37d37780cebb23ef3c8842ca9a9aded337f607d832a95eed5cc7ccc120c64daef9a979a9d20aa07aad
-    HEAD_REF master
+    HEAD_REF main
 )
 
 vcpkg_configure_cmake(
