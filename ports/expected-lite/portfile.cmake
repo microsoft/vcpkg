@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO martinmoene/expected-lite
     REF v0.5.0
     SHA512 6dd8974d518db0c79fe7bd0e407a85436c6ad222f8e5ed84efb34925d9a665b5b83ff08529b3e985034ed9a9201c80575f6a956132408ef6577c9c47cac55eae
+    HEAD_REF master
 )
 
 vcpkg_cmake_configure(
