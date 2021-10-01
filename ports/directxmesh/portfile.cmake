@@ -26,14 +26,13 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
