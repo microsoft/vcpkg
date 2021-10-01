@@ -3,16 +3,18 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/upb
-    REF  9effcbcb27f0a665f9f345030188c0b291e32482
-    SHA512 416ff26ec21181d53be23e94203205072152ab3a8e4b3b28d16263a601995fd2d2f8afe5d8cfbecdac8543249482287b9fe6129314f7c9a7880660f5508bb85e
+    REF  60607da72e89ba0c84c84054d2e562d8b6b61177 # 2020-12-19
+    SHA512 d7de03f4a4024136ecccbcd3381058f26ace480f1817cbc1874a8ed4abbbad58dcf61cc77220400004927ab8e8c95ab5a2e1f27172ee3ed3bbd3f1dda2dda07c
     HEAD_REF master
     PATCHES
         add-cmake-install.patch
         fix-uwp.patch
+        no-wyhash.patch
+        add-all-libs-target.patch
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/cmake
     PREFER_NINJA
 )
 
@@ -20,10 +22,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    # empty folder
-    ${CURRENT_PACKAGES_DIR}/include/upb/bindings/lua/upb
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

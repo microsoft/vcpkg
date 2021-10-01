@@ -1,0 +1,36 @@
+diff --git a/vs2010-build/activemq-cpp.vcxproj b/vs2010-build/activemq-cpp.vcxproj
+index 54b4822..6b35511 100644
+--- a/vs2010-build/activemq-cpp.vcxproj
++++ b/vs2010-build/activemq-cpp.vcxproj
+@@ -2578,6 +2578,7 @@
+       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <CreateHotpatchableImage>false</CreateHotpatchableImage>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+       <PrecompiledHeaderFile>
+       </PrecompiledHeaderFile>
+@@ -2687,6 +2688,7 @@
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <CreateHotpatchableImage>false</CreateHotpatchableImage>
+       <RuntimeTypeInfo>true</RuntimeTypeInfo>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+       <PrecompiledHeaderFile>
+       </PrecompiledHeaderFile>
+       <PrecompiledHeaderOutputFile>
+@@ -2794,6 +2796,7 @@
+       <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <CreateHotpatchableImage>false</CreateHotpatchableImage>
+       <RuntimeTypeInfo>true</RuntimeTypeInfo>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <PrecompiledHeaderFile>
+       </PrecompiledHeaderFile>
+       <PrecompiledHeaderOutputFile>
+@@ -2906,6 +2909,7 @@
+       <AdditionalIncludeDirectories>../src/main;$(APR_DIST)\$(PlatformName)\include;$(OPENSSL_DIST)\$(PlatformName)\include;$(PLATFORM_SDK)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <CreateHotpatchableImage>false</CreateHotpatchableImage>
+       <RuntimeTypeInfo>true</RuntimeTypeInfo>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <PrecompiledHeaderFile>
+       </PrecompiledHeaderFile>
+       <PrecompiledHeaderOutputFile>

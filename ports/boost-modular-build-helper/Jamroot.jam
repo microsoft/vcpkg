@@ -1,5 +1,5 @@
-constant BOOST_VERSION : 1.73.0 ;
-constant BOOST_VERSION_ABI_TAG : 1_73 ;
+constant BOOST_VERSION : 1.77.0 ;
+constant BOOST_VERSION_ABI_TAG : 1_77 ;
 constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;
@@ -29,7 +29,7 @@ rule tag ( name : type ? : property-set )
 
 rule python-tag ( name : type ? : property-set )
 {
-    return [ tag $(name) : $(type) : $(property-set) ] ;
+    return [ boostcpp.python-tag $(name) : $(type) : $(property-set) ] ;
 }
 
 if "@PORT@" != "boost-system"
@@ -135,6 +135,24 @@ if "@PORT@" != "boost-serialization"
     lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
     lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_serialization ;
+}
+
+if "@PORT@" != "boost-mpi"
+{
+    use-project /boost/mpi : . ;
+
+    lib boost_mpi : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_mpi@BOOST_LIB_RELEASE_SUFFIX@" <variant>release : : <library>/boost/serialization//boost_serialization ;
+    lib boost_mpi : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_mpi@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug : : <library>/boost/serialization//boost_serialization ;
+    explicit boost_mpi ;
+}
+
+if "@PORT@" != "boost-container"
+{
+    use-project /boost/container : . ;
+
+    lib boost_container : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_container@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_container : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_container@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
+    explicit boost_container ;
 }
 
 rule requires ( foo * )

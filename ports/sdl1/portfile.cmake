@@ -16,12 +16,21 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/SDL1_2017.sln DESTINATION ${SOURCE_PATH}/VisualC/ )
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDL_static.vcxproj  ${SOURCE_PATH}/VisualC/SDL/SDL.vcxproj COPYONLY)
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDLmain_static.vcxproj ${SOURCE_PATH}/VisualC/SDLmain/SDLmain.vcxproj COPYONLY)
+        set(LIB_TYPE StaticLibrary)
     else()
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDL_dynamic.vcxproj ${SOURCE_PATH}/VisualC/SDL/SDL.vcxproj COPYONLY)
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/SDLmain_dynamic.vcxproj ${SOURCE_PATH}/VisualC/SDLmain/SDLmain.vcxproj COPYONLY)
+        set(LIB_TYPE DynamicLibrary)
     endif()
+    
+    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(CRT_TYPE_DBG MultiThreadedDebugDLL)
+        set(CRT_TYPE_REL MultiThreadedDLL)
+    else()
+        set(CRT_TYPE_DBG MultiThreadedDebug)
+        set(CRT_TYPE_REL MultiThreaded)
+    endif()
+    
+    configure_file(${CURRENT_PORT_DIR}/SDL.vcxproj.in ${SOURCE_PATH}/VisualC/SDL/SDL.vcxproj @ONLY)
+    configure_file(${CURRENT_PORT_DIR}/SDLmain.vcxproj.in ${SOURCE_PATH}/VisualC/SDLmain/SDLmain.vcxproj @ONLY)
     
     # This text file gets copied as a library, and included as one in the package 
     file(REMOVE_RECURSE ${SOURCE_PATH}/src/hermes/COPYING.LIB)
@@ -54,11 +63,13 @@ else()
     message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}     
+        SOURCE_PATH ${SOURCE_PATH}
     )
     
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig(IGNORE_FLAGS -Wl,-rpath,\${libdir} SYSTEM_LIBRARIES -lm -ldl -lpthread)
+    vcpkg_fixup_pkgconfig(IGNORE_FLAGS -Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib 
+                                       -Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib
+                          SYSTEM_LIBRARIES pthread)
     
     file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach (SDL1_TOOL ${SDL1_TOOLS})

@@ -1,4 +1,0 @@
-Source: turbobase64
-Version: 2020-01-12
-Description: Fastest Base64 SIMD/Neon library
-Homepage: https://github.com/powturbo/Turbo-Base64

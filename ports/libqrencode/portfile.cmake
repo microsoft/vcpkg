@@ -1,26 +1,20 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fukuchi/libqrencode
-    REF v4.0.2
-    SHA512 847e32bd13358319f3beabde103b5335a6e11c3f9275425b74e89a00b0ee4d67af8a428f12acc8b80a0419382480e5aeb02e58602a69ee750c21b28f357af6bc
+    REF 715e29fd4cd71b6e452ae0f4e36d917b43122ce8 # v4.1.1
+    SHA512 78a5464c6fd37d2b4ed6d81c5faf8d95f6f1c95bfdb55dfe89fc227cd487c1685e8080694b1c93128364337959562ea133b3bb332ae1c5a4094614b493611e9f
     HEAD_REF master
-    PATCHES
-        fix-found-wingetopt.patch
 )
 
-if("tool" IN_LIST FEATURES)
-    set(WITH_TOOLS YES)
-else()
-    set(WITH_TOOLS NO)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tool WITH_TOOLS
+)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        -DWITH_TOOLS=${WITH_TOOLS}
+        ${FEATURE_OPTIONS}
         -DWITH_TEST=NO
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
@@ -30,33 +24,31 @@ vcpkg_configure_cmake(
         -DWITH_TOOLS=NO
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # Windows
-	set(EXECUTABLE_SUFFIX ".exe")
+if(VCPKG_TARGET_IS_WINDOWS) # Windows
+    set(EXECUTABLE_SUFFIX ".exe")
 else()
-	set(EXECUTABLE_SUFFIX "")
+    set(EXECUTABLE_SUFFIX "")
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qrencode.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/qrencode.dll ${CURRENT_PACKAGES_DIR}/bin/qrencode.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/qrencode.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qrencode.dll" "${CURRENT_PACKAGES_DIR}/bin/qrencode.dll")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/qrencoded.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/qrencoded.dll ${CURRENT_PACKAGES_DIR}/debug/bin/qrencoded.dll)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/qrencoded.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qrencoded.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/qrencoded.dll")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/qrencode${EXECUTABLE_SUFFIX})
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/qrencode${EXECUTABLE_SUFFIX}")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qrencode")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/qrencode${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/qrencode/qrencode${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qrencode)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/qrencode")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libqrencode)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libqrencode/COPYING ${CURRENT_PACKAGES_DIR}/share/libqrencode/copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

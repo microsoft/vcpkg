@@ -1,0 +1,128 @@
+#! /bin/sh
+# Wrapper for windres to rc which do not understand '-i -o --output-format'.
+# cvtres is invoked by the linker
+scriptversion=2021-04-02.18; # UTC
+
+
+nl='
+'
+
+# We need space, tab and new line, in precisely that order.  Quoting is
+# there to prevent tools from complaining about whitespace usage.
+IFS=" ""	$nl"
+
+file_conv=
+
+# func_file_conv build_file lazy
+# Convert a $build file to $host form and store it in $file
+# Currently only supports Windows hosts. If the determined conversion
+# type is listed in (the comma separated) LAZY, no conversion will
+# take place.
+func_file_conv ()
+{
+  file=$1
+  case $file in
+    / | /[!/]*) # absolute file, and not a UNC file
+      if test -z "$file_conv"; then
+	# lazily determine how to convert abs files
+	case `uname -s` in
+	  MINGW*)
+	    file_conv=mingw
+	    ;;
+	  CYGWIN* | MSYS*)
+	    file_conv=cygwin
+	    ;;
+	  *)
+	    file_conv=wine
+	    ;;
+	esac
+      fi
+      case $file_conv/,$2, in
+	*,$file_conv,*)
+	  ;;
+	mingw/*)
+	  file=`cmd //C echo "$file " | sed -e 's/"\(.*\) " *$/\1/'`
+	  ;;
+	cygwin/* | msys/*)
+	  file=`cygpath -m "$file" || echo "$file"`
+	  ;;
+	wine/*)
+	  file=`winepath -w "$file" || echo "$file"`
+	  ;;
+      esac
+      ;;
+  esac
+}
+
+# func_windres_wrapper rc args...
+# Adjust compile command to suit rc instead of windres
+func_windres_wrapper ()
+{
+  # Assume a capable shell
+  in=
+  out=
+
+  for arg
+  do
+    if test -n "$eat"; then
+      eat=
+    else
+      case $1 in
+	-o)
+	  eat=1
+	  func_file_conv "$2"
+	  out="$file"
+	  echo "OUTPUT:$file"
+	  set x "$@"
+	  shift
+	  ;;
+	*.obj)
+	  func_file_conv "$1"
+	  out="$file"
+	  echo "OUTPUT:$file"
+	  set x "$@"
+	  shift
+	  ;;
+	--output-format=*)
+	  set x "$@"
+	  shift
+	  ;;
+	-i)
+	  eat=1
+	  func_file_conv "$2" mingw
+	  in="$file"
+	  echo "INPUT:$file"
+	  set x "$@"
+	  shift
+	  ;;
+	-*)
+	  set x "$@" "${1//\\\"/\"}"
+	  shift
+	  ;;
+	*)
+	  set x "$@" "$1"
+	  shift
+	  ;;
+      esac
+    fi
+    shift
+  done
+  echo "$@" -fo "$out" "$in"
+  exec "$@" -fo "$out" "$in"
+  exit 1
+}
+
+eat=
+
+func_windres_wrapper "$@"
+
+
+# Local Variables:
+# mode: shell-script
+# sh-indentation: 2
+# eval: (add-hook 'before-save-hook 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC0"
+# time-stamp-end: "; # UTC"
+# End:

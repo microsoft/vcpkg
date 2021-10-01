@@ -1,0 +1,39 @@
+From df5ec7ba4e7b1516a2636e47c33a4a6161b5c422 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Tue, 22 Sep 2020 15:38:44 -0700
+Subject: [PATCH 1/5] add archive destination to install
+
+---
+ lib/CMakeLists.txt     | 2 +-
+ lib/cpp/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index e1521f1..bd60b75 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -87,7 +87,7 @@ set_target_properties(libmosquitto PROPERTIES
+ 	SOVERSION 1
+ )
+ 
+-install(TARGETS libmosquitto RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(TARGETS libmosquitto RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ 
+ if (WITH_STATIC_LIBRARIES)
+ 	add_library(libmosquitto_static STATIC ${C_SRC})
+diff --git a/lib/cpp/CMakeLists.txt b/lib/cpp/CMakeLists.txt
+index b39ac3f..5805244 100644
+--- a/lib/cpp/CMakeLists.txt
++++ b/lib/cpp/CMakeLists.txt
+@@ -13,7 +13,7 @@ set_target_properties(mosquittopp PROPERTIES
+ 	VERSION ${VERSION}
+ 	SOVERSION 1
+ )
+-install(TARGETS mosquittopp RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(TARGETS mosquittopp RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ 
+ if (WITH_STATIC_LIBRARIES)
+ 	add_library(mosquittopp_static STATIC
+-- 
+2.24.3 (Apple Git-128)
+

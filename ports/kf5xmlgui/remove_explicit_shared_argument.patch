@@ -1,0 +1,15 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2fac31b7..2f4fc881 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ add_subdirectory(ksendbugmail)
+ 
+-add_library(KF5XmlGui SHARED)
++add_library(KF5XmlGui)
+ add_library(KF5::XmlGui ALIAS KF5XmlGui)
+ 
+ if (HAVE_GLOBALACCEL)
+-- 
+GitLab
+

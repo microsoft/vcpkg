@@ -1,0 +1,16 @@
+{
+  "name": "restbed",
+  "version-string": "4.7",
+  "description": "Corvusoft's Restbed framework brings asynchronous RESTful functionality to C++14 applications.",
+  "dependencies": [
+    "asio"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Secure over the wire communication allowing you to transmit private data online.",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

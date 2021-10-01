@@ -1,9 +1,0 @@
-Source: suitesparse
-Version: 5.4.0-5
-Build-Depends: clapack (!osx)
-Homepage: http://faculty.cse.tamu.edu/davis/SuiteSparse
-Description: algebra library
-
-Feature: metis
-Build-Depends: metis
-Description: Use metis in SuiteSparse

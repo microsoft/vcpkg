@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIB_NAME libmspack)
 set(LIB_VERSION 0.10.1alpha)
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)

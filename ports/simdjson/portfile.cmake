@@ -1,36 +1,41 @@
-# https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-vcpkg_fail_port_install(ON_ARCH "x86")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lemire/simdjson
-    REF ac0c3093f4935fd266656abc9311a63fad98e99e
-    SHA512 69bc9ce45839d5e42aefcf5a96f82f3049b05591f4d463b788365123ba06c36f0f784ede02e5015bd96bf8d0e631ccaac285ed5a63048113f2ea01d91d51b395
+    REPO simdjson/simdjson
+    REF 3bd8b0b575f43403705dcce57d427944c11421f8 # v1.0.0
     HEAD_REF master
-    PATCHES
-        no_benchmark.patch # `_pclose` is not available on UWP
+    SHA512 61c5db9bdf331cc692d85f135fda29ad5db7ee23d9518153adfd44cf26d76dae834a3071bd6c9e9b2a99a27a2881899162ac146750f444e9829a6dbbe986f769
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        exceptions SIMDJSON_EXCEPTIONS
+        threads    SIMDJSON_ENABLE_THREADS
+    INVERTED_FEATURES
+        deprecated SIMDJSON_DISABLE_DEPRECATED_API
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_TARGET_ARCHITECTURE}" "arm64" SIMDJSON_IMPLEMENTATION_ARM64)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSIMDJSON_JUST_LIBRARY=ON
+        -DSIMDJSON_SANITIZE_UNDEFINED=OFF
+        -DSIMDJSON_SANITIZE=OFF
+        -DSIMDJSON_SANITIZE_THREADS=OFF
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
-        -DSIMDJSON_IMPLEMENTATION_ARM64=${SIMDJSON_IMPLEMENTATION_ARM64}
-        -DSIMDJSON_GOOGLE_BENCHMARKS=OFF
-        -DSIMDJSON_COMPETITION=OFF
-        -DSIMDJSON_SANITIZE=OFF # issue 10145, pr 11495
+        -DSIMDJSON_DEVELOPMENT_CHECKS=OFF
+        -DSIMDJSON_VERBOSE_LOGGING=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

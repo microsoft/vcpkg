@@ -1,7 +1,5 @@
-include(vcpkg_common_functions)
-
-set(SHAPELIB_VERSION 1.4.1)
-set(SHAPELIB_HASH e3e02dde8006773fed25d630896e79fd79d2008a029cc86b157fe0d92c143a9fab930fdb93d9700d4e1397c3b23ae4b86e91db1dbaca1c5388d4e3aea0309341)
+set(SHAPELIB_VERSION 1.5.0)
+set(SHAPELIB_HASH 230939afb33aee042808a32b38ee9dfc7ec1f39432e5a4ebe3fda99c2f87bfbebc91830d4e21691c51aae3f4bb65d7e71e7061472bb08124dcd3402c46800d6c)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/shapelib/shapelib-${SHAPELIB_VERSION}.zip"
@@ -44,8 +42,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/shapelib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/shapelib/COPYING ${CURRENT_PACKAGES_DIR}/share/shapelib/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/shapelib)
 

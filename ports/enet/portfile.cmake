@@ -1,25 +1,24 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO  "lsalzman/enet"
-    REF f7c46f03fd8d883ac2811948aa71c7623069d070
+    REF e0e7045b7e056b454b5093cb34df49dc4cee0bee # v1.3.17
     HEAD_REF master
-    SHA512 2d5593ea56473b38479921fd0849318bf3ecb233f92fa487ba395a0bb7e6a3997109287867a67c66721f761a30cceab4ba4709080a93ed977b7650b10cab1936
+    SHA512 006a78edcc2059d8cee47a163d308dd02120a54f9c203401b83eb6cb4ab3e56cf09988d3c35b436a1e9f74c01296995ae6fdd46f6d354fe8261cf19cdde3df5d
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-enet CONFIG_PATH share/unofficial-enet)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

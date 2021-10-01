@@ -1,14 +1,14 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(LIB_VERSION 20191221)
+set(LIB_VERSION 20210419)
 set(LIB_FILENAME libqcow-alpha-${LIB_VERSION}.tar.gz)
 
 # Release distribution file contains configured sources, while the source code in the repository does not.
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libyal/libqcow/releases/download/${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 de0c5cfad84bbccc9a4144b108c7e022a98d130e829385e69ff00a8750709c9de814410eebfa1c0fc89051cf8f596d87b9bbc8228d99efd8be1c3efdc2b52730
+    SHA512 911d29bd880df95288e552356d128d18c924fcd0d61d166fbeaf09936f11bf27b984d8ffd4cdc4bc285e7df295a1fe64ff595b0dfdd10b6fcfbdc6586d6bd3b0
 )
 
 vcpkg_extract_source_archive_ex(
@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libqcow" TARGET_PATH "share/libqcow")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/libqcow")
 
 vcpkg_copy_pdbs()
 

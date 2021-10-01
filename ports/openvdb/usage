@@ -1,0 +1,4 @@
+The package openvdb provides CMake targets:
+
+    find_package(OpenVDB CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE OpenVDB::openvdb)

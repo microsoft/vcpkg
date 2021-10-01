@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -15,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         msvc-fixes.patch
         fix-space.patch
+        fix-protobuf-deprecated.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

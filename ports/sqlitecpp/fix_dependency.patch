@@ -1,0 +1,11 @@
+diff --git a/cmake/SQLiteCppConfig.cmake.in b/cmake/SQLiteCppConfig.cmake.in
+index 568922f..01196db 100644
+--- a/cmake/SQLiteCppConfig.cmake.in
++++ b/cmake/SQLiteCppConfig.cmake.in
+@@ -1,5 +1,5 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(SQLite3 REQUIRED)
++find_dependency(unofficial-sqlite3 REQUIRED)
+ if(@UNIX@)
+     set(THREADS_PREFER_PTHREAD_FLAG @THREADS_PREFER_PTHREAD_FLAG@)
+     find_dependency(Threads REQUIRED)

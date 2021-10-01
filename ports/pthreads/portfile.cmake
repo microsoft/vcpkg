@@ -1,24 +1,31 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
   return()
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  message(FATAL_ERROR "${PORT} does not currently support UWP platform nor ARM architectures")
-endif()
-
 set(PTHREADS4W_VERSION "3.0.0")
 
-vcpkg_download_distfile(ARCHIVE
-  URLS "https://sourceforge.net/projects/pthreads4w/files/pthreads4w-code-v${PTHREADS4W_VERSION}.zip/download"
-  FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
-  SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
-)
+if(VCPKG_TARGET_IS_UWP)
+  list(APPEND PATCH_FILES fix-uwp-linkage.patch)
+  # Inject linker option using the `LINK` environment variable
+  # https://docs.microsoft.com/en-us/cpp/build/reference/linker-options
+  # https://docs.microsoft.com/en-us/cpp/build/reference/linking#link-environment-variables
+  set(ENV{LINK} "/APPCONTAINER")
+endif()
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+  list(APPEND PATCH_FILES use-md.patch)
+else()
+  list(APPEND PATCH_FILES use-mt.patch)
+endif()
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  REF ${PTHREADS4W_VERSION}
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO pthreads4w
+    FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
+    SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
+    PATCHES
+        fix-arm-macro.patch
+        ${PATCH_FILES}
 )
 
 find_program(NMAKE nmake REQUIRED)
@@ -92,9 +99,10 @@ endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthread)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads_windows)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed4948f0..9f48ebde 100644
+index ed4948f..5b4e112 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,10 +2,14 @@
@@ -52,10 +52,10 @@ index ed4948f0..9f48ebde 100644
 -INSTALL ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/		DESTINATION include )
 +INSTALL ( TARGETS yuvconvert DESTINATION bin )
 +INSTALL ( FILES ${ly_include_files} DESTINATION include/libyuv )
-+INSTALL ( TARGETS ${ly_lib_static} EXPORT libyuv-export DESTINATION lib INCLUDES DESTINATION include PUBLIC_HEADER DESTINATION include )
-+INSTALL ( TARGETS ${ly_lib_shared} EXPORT libyuv-export LIBRARY DESTINATION lib RUNTIME DESTINATION bin )
++INSTALL ( TARGETS ${ly_lib_static} EXPORT libyuv-targets DESTINATION lib INCLUDES DESTINATION include PUBLIC_HEADER DESTINATION include )
++INSTALL ( TARGETS ${ly_lib_shared} EXPORT libyuv-targets LIBRARY DESTINATION lib RUNTIME DESTINATION bin )
 +
-+INSTALL( EXPORT libyuv-export FILE libyuv-config.cmake DESTINATION share/cmake/libyuv/ EXPORT_LINK_INTERFACE_LIBRARIES )
++INSTALL( EXPORT libyuv-targets DESTINATION share/cmake/libyuv/ EXPORT_LINK_INTERFACE_LIBRARIES )
  
  # create the .deb and .rpm packages using cpack
  INCLUDE ( CM_linux_packages.cmake )

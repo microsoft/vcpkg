@@ -19,13 +19,16 @@ The path to the ci.baseline.txt file.
 [CmdletBinding()]
 Param(
     [string]$Triplet,
-    [string]$BaselineFile
+    [string]$BaselineFile,
+    [switch]$SkipFailures = $false,
+    [String[]]$AdditionalSkips = @()
 )
 
 $ErrorActionPreference = 'Stop'
 
 if (-not (Test-Path -Path $BaselineFile)) {
     Write-Error "Unable to find baseline file $BaselineFile"
+    throw
 }
 
 #read in the file, strip out comments and blank lines and spaces
@@ -43,6 +46,7 @@ $missingValues = $baselineListRaw | Where-Object { -not ($_ -match "=\w") }
 
 if ($missingValues) {
     Write-Error "The following are missing values: $missingValues"
+    throw
 }
 
 $invalidValues = $baselineListRaw `
@@ -50,6 +54,7 @@ $invalidValues = $baselineListRaw `
 
 if ($invalidValues) {
     Write-Error "The following have invalid values: $invalidValues"
+    throw
 }
 
 $baselineForTriplet = $baselineListRaw `
@@ -61,12 +66,20 @@ foreach ($port in $baselineForTriplet | ForEach-Object { $_ -replace ":.*$" }) {
     if ($null -ne $file_map[$port]) {
         Write-Error `
             "$($port):$($Triplet) has multiple definitions in $baselineFile"
+        throw
     }
     $file_map[$port] = $true
 }
 
 # Format the skip list for the command line
+if ($SkipFailures) {
+    $targetRegex = "=(?:skip|fail)$"
+} else {
+    $targetRegex = "=skip$"
+}
+
 $skip_list = $baselineForTriplet `
-    | Where-Object { $_ -match "=skip$" } `
+    | Where-Object { $_ -match $targetRegex } `
     | ForEach-Object { $_ -replace ":.*$" }
+$skip_list += $AdditionalSkips
 [string]::Join(",", $skip_list)

@@ -17,6 +17,8 @@ file(GLOB_RECURSE DUKTAPE_HEADERS "${CMAKE_CURRENT_LIST_DIR}/src/*.h")
 add_library(duktape ${DUKTAPE_SOURCES} ${DUKTAPE_HEADERS})
 target_include_directories(duktape PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
 set_target_properties(duktape PROPERTIES PUBLIC_HEADER "${DUKTAPE_HEADERS}")
+set_target_properties(duktape PROPERTIES VERSION ${duktape_VERSION})
+set_target_properties(duktape PROPERTIES SOVERSION ${duktape_MAJOR_VERSION})
 
 if (BUILD_SHARED_LIBS)
   target_compile_definitions(duktape PRIVATE -DDUK_F_DLL_BUILD)

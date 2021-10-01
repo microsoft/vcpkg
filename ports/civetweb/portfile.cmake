@@ -5,20 +5,22 @@ vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARG
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO civetweb/civetweb
-    REF 4b440a339979852d5a51fb11a822952712231c23 # v1.12
-    SHA512 02b77cb7140eaab9c7d34461ec2e5ea3354601e369be424a48f4734acbd4f77a450b969ed7a0c0940fcac1900c3d78bae26e29dd6a396189862075781917f428
+    REF eefb26f82b233268fc98577d265352720d477ba4 # v1.15
+    SHA512 5ce962e31b3c07b7110cbc645458dba9c0e26e693fbe3b4a7ffe8a28563827049a22fc5596a911fbcea4d88a9adbef3f82000ff61027ff4387f40e4a4045c26d
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    ssl CIVETWEB_ENABLE_SSL
+    FEATURES
+        ssl CIVETWEB_ENABLE_SSL
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    # PREFER_NINJA - See https://github.com/civetweb/civetweb/issues/1024
     OPTIONS
         -DCIVETWEB_BUILD_TESTING=OFF
+        -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
         -DCIVETWEB_ENABLE_ASAN=OFF
         -DCIVETWEB_ENABLE_CXX=ON
         -DCIVETWEB_ENABLE_IPV6=ON
@@ -33,6 +35,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/civetweb)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

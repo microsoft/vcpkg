@@ -1,0 +1,7 @@
+{
+  "name": "libudis86",
+  "version-string": "2018-01-28-56ff6c87",
+  "port-version": 1,
+  "description": "Disassembler Library for x86 and x86-64",
+  "homepage": "https://github.com/vmt/udis86"
+}

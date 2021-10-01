@@ -1,0 +1,6 @@
+{
+  "name": "libsamplerate",
+  "version-string": "0.2.2",
+  "description": "Sample Rate Converter for audio",
+  "homepage": "http://libsndfile.github.io/libsamplerate/"
+}

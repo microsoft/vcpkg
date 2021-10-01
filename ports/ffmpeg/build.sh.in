@@ -1,0 +1,126 @@
+#!/bin/sh
+
+set -e
+
+export PATH="/usr/bin:$PATH"
+
+command -v cygpath >/dev/null && have_cygpath=1
+
+cygpath() {
+    if [ -n "$have_cygpath" ]; then
+        command cygpath "$@"
+    else
+        eval _p='$'$#
+        printf '%s\n' "$_p"
+    fi
+}
+
+move_binary() {
+    SOURCE=$1
+    TARGET=$2
+    BINARY=$3
+
+    # run lipo over the command to check whether it really
+    # is a binary that we need to merge architectures
+    lipo $SOURCE/$BINARY -info &> /dev/null || return 0
+
+    # get the directory name the file is in
+    DIRNAME=$(dirname $BINARY)
+
+    # ensure the directory to move the binary to exists
+    mkdir -p $TARGET/$DIRNAME
+
+    # now finally move the binary
+    mv $SOURCE/$BINARY $TARGET/$BINARY
+}
+
+move_binaries() {
+    SOURCE=$1
+    TARGET=$2
+
+    [ ! -d $SOURCE ] && return 0
+    pushd $SOURCE
+
+    for BINARY in $(find . -type f); do
+        move_binary $SOURCE $TARGET $BINARY
+    done
+
+    popd
+}
+
+merge_binaries() {
+    TARGET=$1
+    SOURCE=$2
+
+    shift
+    shift
+
+    pushd $SOURCE/$1
+    BINARIES=$(find . -type f)
+    popd
+
+    for BINARY in $BINARIES; do
+        COMMAND="lipo -create -output $TARGET/$BINARY"
+
+        for ARCH in $@; do
+            COMMAND="$COMMAND -arch $ARCH $SOURCE/$ARCH/$BINARY"
+        done
+
+        $($COMMAND)
+    done
+}
+
+export PKG_CONFIG_PATH="$(cygpath -p "${PKG_CONFIG_PATH}")"
+
+# Export HTTP(S)_PROXY as http(s)_proxy:
+[ -n "$HTTP_PROXY"  ] && export http_proxy="$HTTP_PROXY"
+[ -n "$HTTPS_PROXY" ] && export https_proxy="$HTTPS_PROXY"
+
+PATH_TO_BUILD_DIR=$(  cygpath "@BUILD_DIR@")
+PATH_TO_SRC_DIR=$(    cygpath "@SOURCE_PATH@")
+PATH_TO_PACKAGE_DIR=$(cygpath "@INST_PREFIX@")
+
+JOBS=@VCPKG_CONCURRENCY@
+
+OSX_ARCHS="@OSX_ARCHS@"
+OSX_ARCH_COUNT=0@OSX_ARCH_COUNT@
+
+# Default to hardware concurrency if unset.
+: ${JOBS:=$(nproc)}
+
+build_ffmpeg() {
+    echo "=== CONFIGURING ==="
+
+    sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ $@
+
+    echo "=== BUILDING ==="
+
+    make -j${JOBS}
+
+    echo "=== INSTALLING ==="
+
+    make install
+}
+
+cd "$PATH_TO_BUILD_DIR"
+
+if [ $OSX_ARCH_COUNT -gt 1 ]; then
+    for ARCH in $OSX_ARCHS; do
+        echo "=== CLEANING FOR $ARCH ==="
+
+        make clean && make distclean
+
+        build_ffmpeg --enable-cross-compile --arch=$ARCH --extra-cflags=-arch --extra-cflags=$ARCH --extra-ldflags=-arch --extra-ldflags=$ARCH
+
+        echo "=== COLLECTING BINARIES FOR $ARCH ==="
+
+        move_binaries $PATH_TO_PACKAGE_DIR/lib $PATH_TO_BUILD_DIR/stage/$ARCH/lib
+        move_binaries $PATH_TO_PACKAGE_DIR/bin $PATH_TO_BUILD_DIR/stage/$ARCH/bin
+    done
+
+    echo "=== MERGING ARCHITECTURES ==="
+
+    merge_binaries $PATH_TO_PACKAGE_DIR $PATH_TO_BUILD_DIR/stage $OSX_ARCHS
+else
+    build_ffmpeg
+fi

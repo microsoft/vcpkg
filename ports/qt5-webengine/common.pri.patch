@@ -1,8 +1,8 @@
-diff --git a/src/core/config/common.pri b/src/core/config/common.pri
+diff --git a/src/buildtools/config/common.pri b/src/buildtools/config/common.pri
 #latest diff --git a/src/buildtools/config/common.pri b/src/buildtools/config/common.pri
 index 97d39535c..dc09da43a 100644
---- a/src/core/config/common.pri	
-+++ b/src/core/config/common.pri
+--- a/src/buildtools/config/common.pri	
++++ b/src/buildtools/config/common.pri
 @@ -57,5 +57,5 @@
  precompile_header {
 -    gn_args += enable_precompiled_headers=true

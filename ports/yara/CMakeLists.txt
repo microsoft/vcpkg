@@ -37,6 +37,7 @@ set(
   libyara/ahocorasick.c
   libyara/arena.c
   libyara/atoms.c
+  libyara/base64.c
   libyara/bitmask.c
   libyara/compiler.c
   libyara/endian.c
@@ -51,16 +52,17 @@ set(
   libyara/libyara.c
   libyara/mem.c
   libyara/modules.c
-  libyara/modules/cuckoo.c
-  libyara/modules/dotnet.c
-  libyara/modules/elf.c
-  libyara/modules/hash.c
-  libyara/modules/math.c
-  libyara/modules/macho.c
-  libyara/modules/pe.c
-  libyara/modules/pe_utils.c
-  libyara/modules/tests.c
-  libyara/modules/time.c
+  libyara/modules/cuckoo/cuckoo.c
+  libyara/modules/dotnet/dotnet.c
+  libyara/modules/elf/elf.c
+  libyara/modules/hash/hash.c
+  libyara/modules/math/math.c
+  libyara/modules/macho/macho.c
+  libyara/modules/pe/pe.c
+  libyara/modules/pe/pe_utils.c
+  libyara/modules/tests/tests.c
+  libyara/modules/time/time.c
+  libyara/notebook.c
   libyara/object.c
   libyara/parser.c
   libyara/proc.c
@@ -81,13 +83,13 @@ set(
 
 set(
   yara_sources
-  args.c
-  threading.c
-  yara.c
+  cli/args.c
+  cli/threading.c
+  cli/yara.c
 )
 set( yarac_sources
-  args.c
-  yarac.c
+  cli/args.c
+  cli/yarac.c
 )
 
 

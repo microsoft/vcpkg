@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(SDL2_IMAGE_VERSION "2.0.5")
 
 vcpkg_download_distfile(ARCHIVE

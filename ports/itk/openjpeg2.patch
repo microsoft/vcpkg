@@ -1,0 +1,58 @@
+diff --git a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
+index 565cc338b..c061f0721 100644
+--- a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
++++ b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/CMakeLists.txt
+@@ -194,7 +194,7 @@ mark_as_advanced(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
+ # configure name mangling to allow multiple libraries to coexist
+ # peacefully
+ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/openjpeg_mangle.h.in)
+-set(MANGLE_PREFIX ${OPENJPEG_LIBRARY_NAME})
++set(MANGLE_PREFIX)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openjpeg_mangle.h.in
+                ${CMAKE_CURRENT_BINARY_DIR}/openjpeg_mangle.h
+                @ONLY)
+diff --git a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/src/lib/openjp2/CMakeLists.txt b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/src/lib/openjp2/CMakeLists.txt
+index c4adb91a2..89b731d88 100644
+--- a/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/src/lib/openjp2/CMakeLists.txt
++++ b/Modules/ThirdParty/GDCM/src/gdcm/Utilities/gdcmopenjpeg/src/lib/openjp2/CMakeLists.txt
+@@ -3,7 +3,7 @@ include_regular_expression("^.*$")
+ # configure name mangling to allow multiple libraries to coexist
+ # peacefully
+ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/openjpeg_mangle.h.in)
+-set(MANGLE_PREFIX ${OPENJPEG_LIBRARY_NAME})
++set(MANGLE_PREFIX)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openjpeg_mangle.h.in
+                ${CMAKE_CURRENT_BINARY_DIR}/openjpeg_mangle.h
+                @ONLY)
+diff --git a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
+index 3811e52f4..a41e9264e 100644
+--- a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
++++ b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
+@@ -8,10 +8,10 @@ if(ITK_USE_SYSTEM_OpenJPEG)
+    else()
+         message(FATAL_ERROR "OpenJPEG target openjp2 missing!")
+    endif()
+-     set(ITKOpenJPEG_INCLUDE_DIRS
+-    ${ITKOpenJPEG_BINARY_DIR}/src/openjpeg
+-    ${ITKOpenJPEG_SOURCE_DIR}/src/openjpeg
+-    )
++   #  set(ITKOpenJPEG_INCLUDE_DIRS
++   # ${ITKOpenJPEG_BINARY_DIR}/src/openjpeg
++   # ${ITKOpenJPEG_SOURCE_DIR}/src/openjpeg
++   # )
+ else()
+   set(ITKOpenJPEG_INCLUDE_DIRS
+     ${ITKOpenJPEG_BINARY_DIR}/src/openjpeg
+diff --git a/Modules/ThirdParty/OpenJPEG/src/openjpeg/CMakeLists.txt b/Modules/ThirdParty/OpenJPEG/src/openjpeg/CMakeLists.txt
+index e62e43eda..35dc89976 100644
+--- a/Modules/ThirdParty/OpenJPEG/src/openjpeg/CMakeLists.txt
++++ b/Modules/ThirdParty/OpenJPEG/src/openjpeg/CMakeLists.txt
+@@ -68,7 +68,7 @@ CONFIGURE_FILE(${ITK3P_OpenJPEG_SOURCE_DIR}/opj_configure.h.in
+ # configure name mangling to allow multiple libraries to coexist
+ # peacefully
+ if(EXISTS ${ITK3P_OpenJPEG_SOURCE_DIR}/openjpeg_mangle.h.in)
+-set(MANGLE_PREFIX itk)
++#set(MANGLE_PREFIX itk)
+ configure_file(${ITK3P_OpenJPEG_SOURCE_DIR}/openjpeg_mangle.h.in
+                ${ITK3P_OpenJPEG_BINARY_DIR}/openjpeg_mangle.h
+              @ONLY)

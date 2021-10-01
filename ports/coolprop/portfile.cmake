@@ -3,12 +3,14 @@ set(PORT_VERSION 6.1.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF 0e934e842e9ce83eea64fda1d4ab8e59adf9d8cd
-    SHA512 a44eafc84f2b88259d7bcf6cfa81daeb81ea9d55bd356e59b3ef77b6f68ea405961c7cb54ba899e3896bb2a02d3e01119a4a51f72899126c8da6081fa2ece948
+    REF f5ebb4e655add4c23bb327ab5209f3dbf919bc6d # v6.4.1
+    SHA512 916d00777fe56035171ed0a6cbe09b8d4487317772802e4fe9b43f5965f3212dcb3754e18fe1db9c748a4d17facbbe6cb2244451cf5cf66334465760fc1701b7
     HEAD_REF master
     PATCHES
         fmt-fix.patch
         fix-builderror.patch
+        fix-dependency.patch
+        fix-install.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -88,36 +90,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(TARGET_FOLDER "shared_library")
-else()
-    set(TARGET_FOLDER "static_library")
+if (VCPKG_TARGET_IS_WINDOWS AND COOLPROP_SHARED_LIBRARY)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CoolPropLib.h
+        "#if defined(COOLPROP_LIB)" "#if 1"
+    )
 endif()
 
-file(GLOB_RECURSE COOLPROP_HEADERS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.h")
-file(INSTALL ${COOLPROP_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(GLOB_RECURSE COOLPROP_LIBS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.lib")
-file(GLOB_RECURSE COOLPROP_DLLS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.dll")
-
-file(INSTALL ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(COOLPROP_DLLS)
-    file(INSTALL ${COOLPROP_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-
-file(GLOB_RECURSE COOLPROP_DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER}/*.lib")
-file(GLOB_RECURSE COOLPROP_DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER}/*.dll")
-
-file(INSTALL ${COOLPROP_DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-if(COOLPROP_DEBUG_DLLS)
-    file(INSTALL ${COOLPROP_DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER} ${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(
-  INSTALL ${SOURCE_PATH}/LICENSE
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-  RENAME copyright
-)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,7 +1,0 @@
-Source: hunspell
-Version: 1.7.0-1
-Homepage: https://github.com/hunspell/hunspell
-Description: The most popular spellchecking library.
-
-Feature: tools
-Description: Build hunspell tools

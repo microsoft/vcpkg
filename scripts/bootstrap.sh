@@ -74,8 +74,18 @@ vcpkgCheckRepoTool()
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl unzip tar"
+        echo "sudo apt-get install curl zip unzip tar"
         exit 1
+    fi
+}
+
+vcpkgCheckBuildTool()
+{
+    __tool=$1
+    if ! command -v "$__tool" >/dev/null 2>&1 ; then
+	echo "Could not find $__tool. Please install it (and other dependencies) with:"
+	echo "sudo apt-get install cmake ninja-build"
+	exit 1
     fi
 }
 
@@ -109,7 +119,7 @@ vcpkgDownloadFile()
     url=$1; downloadPath=$2 sha512=$3
     vcpkgCheckRepoTool "curl"
     rm -rf "$downloadPath.part"
-    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" || exit 1
+    curl -L $url --tlsv1.2 --create-dirs --retry 3 --output "$downloadPath.part" --silent --show-error --fail || exit 1
 
     vcpkgCheckEqualFileHash $url "$downloadPath.part" $sha512
     mv "$downloadPath.part" "$downloadPath"
@@ -155,10 +165,11 @@ fetchTool()
     xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
-    if [ "$toolData" = "" ]; then
-        echo "Unknown tool: $tool"
+    case "$toolData" in
+	"" | "<!xml"*)
+        echo "No entry for $toolRegexStart in $vcpkgRootDir/scripts/vcpkgTools.xml"
         return 1
-    fi
+    esac
 
     version="$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 
@@ -209,7 +220,11 @@ fetchTool()
 selectCXX()
 {
     if [ "x$CXX" = "x" ]; then
-        if which g++-9 >/dev/null 2>&1; then
+        if which g++-11 >/dev/null 2>&1; then
+            CXX=g++-11
+        elif which g++-10 >/dev/null 2>&1; then
+            CXX=g++-10
+        elif which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
         elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
@@ -226,16 +241,35 @@ selectCXX()
 
 # Preparation
 UNAME="$(uname)"
+ARCH="$(uname -m)"
+
+# Force using system utilities for building vcpkg if host arch is arm, arm64, s390x, or ppc64le.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" -o "$ARCH" = "ppc64le" ]; then
+    vcpkgUseSystem=true
+fi
+
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem=true
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
+fi
 
 if $vcpkgUseSystem; then
     cmakeExe="cmake"
     ninjaExe="ninja"
+    vcpkgCheckBuildTool "$cmakeExe"
+    vcpkgCheckBuildTool "$ninjaExe"
 else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
 fi
 if [ "$os" = "osx" ]; then
-    if [ "$vcpkgAllowAppleClang" = "true" ] ; then
+    if [ "$vcpkgAllowAppleClang" = "true" ] || [[ $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 11 ]]; then
         CXX=clang++
     else
         selectCXX
@@ -245,17 +279,44 @@ else
 fi
 
 # Do the build
-buildDir="$vcpkgRootDir/toolsrc/build.rel"
-rm -rf "$buildDir"
-mkdir -p "$buildDir"
+vcpkgToolReleaseTag="2021-09-10"
+vcpkgToolReleaseSha="0bea4c7bdd91933d44a0214e2202eb5ef988826d32ae7a00a8868e510710e7de0b336b1cc6aa1ea20af2f6e24d92f2ab665046089bb4ec43bc2add94a901d5fc"
+vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+buildDir="$baseBuildDir/build"
+tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+srcBaseDir="$baseBuildDir/src"
+srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+if [ -e "$tarballPath" ]; then
+    vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+else
+    echo "Downloading vcpkg tool sources"
+    vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+fi
+
+echo "Building vcpkg-tool..."
+rm -rf "$baseBuildDir"
+mkdir -p "$buildDir"
+vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
+cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DCMAKE_MAKE_PROGRAM='$ninjaExe'"
+
+if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
+    cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+fi
+
+(cd "$buildDir" && CXX="$CXX" eval "$cmakeExe" "$srcDir" $cmakeConfigOptions "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
-if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
+if [ "$vcpkgDisableMetrics" = "ON" ]; then
+    touch "$vcpkgRootDir/vcpkg.disable-metrics"
+elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
+    # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
+    # opted out they should stay opted out.
     cat <<EOF
 Telemetry
 ---------

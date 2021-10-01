@@ -1,8 +1,8 @@
 diff --git a/c++/test/CMakeLists.txt b/c++/test/CMakeLists.txt
-index 0a04aaf..795f5c9 100644
+index ea39023..599d79a 100644
 --- a/c++/test/CMakeLists.txt
 +++ b/c++/test/CMakeLists.txt
-@@ -64,6 +64,7 @@ target_link_libraries (create-test-files
+@@ -67,6 +67,7 @@ target_link_libraries (create-test-files
    protobuf
  )
  
@@ -10,17 +10,16 @@ index 0a04aaf..795f5c9 100644
  if (TEST_VALGRIND_MEMCHECK)
    add_test (orc-test
            valgrind --tool=memcheck --leak-check=full --error-exitcode=1 ./orc-test)
-@@ -78,3 +79,4 @@ if (WIN32)
+@@ -86,3 +87,4 @@ if (WIN32)
        ENVIRONMENT "TZDIR=${TZDATA_DIR}"
      )
  endif ()
 +endif()
-\ No newline at end of file
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index c816cdc..16075f2 100644
+index 3a35325..364470b 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -157,7 +157,7 @@ endif ()
+@@ -226,7 +226,7 @@ endif ()
  # ----------------------------------------------------------------------
  # IANA - Time Zone Database
  

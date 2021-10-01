@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3f9d19e..25d96ab 100644
+index 1911144984..8f78306f77 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -144,6 +144,9 @@ if(UNIX)
+@@ -181,6 +181,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -11,8 +11,8 @@ index 3f9d19e..25d96ab 100644
 +  endif()
  endif()
  
- set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-@@ -160,6 +163,9 @@ if(MSVC)
+  # Use C99 standard
+@@ -219,6 +222,9 @@ if(MSVC)
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
@@ -20,9 +20,9 @@ index 3f9d19e..25d96ab 100644
 +    add_definitions(-DGRPC_ARES=0)
 +  endif()
  endif()
- set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_gRPC_C_CXX_FLAGS}")
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_gRPC_C_CXX_FLAGS}")
-@@ -228,6 +234,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+ if (MINGW)
+   add_definitions(-D_WIN32_WINNT=0x600)
+@@ -286,6 +292,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,7 +33,7 @@ index 3f9d19e..25d96ab 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -300,6 +310,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
+@@ -358,6 +368,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
    list(APPEND _gRPC_PLUGIN_LIST grpc_ruby_plugin)
  endif ()
  
@@ -41,7 +41,7 @@ index 3f9d19e..25d96ab 100644
  add_custom_target(plugins
    DEPENDS ${_gRPC_PLUGIN_LIST}
  )
-@@ -321,6 +332,7 @@ add_custom_target(tools_cxx
+@@ -376,6 +387,7 @@ add_custom_target(tools_cxx
  
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
@@ -50,7 +50,7 @@ index 3f9d19e..25d96ab 100644
  protobuf_generate_grpc_cpp(
    src/proto/grpc/channelz/channelz.proto
 diff --git a/src/core/lib/iomgr/resource_quota.cc b/src/core/lib/iomgr/resource_quota.cc
-index 0fc0279..aaf2b09 100644
+index dbe84e3466..cda40b6435 100644
 --- a/src/core/lib/iomgr/resource_quota.cc
 +++ b/src/core/lib/iomgr/resource_quota.cc
 @@ -945,7 +945,7 @@ bool grpc_resource_user_alloc(grpc_resource_user* resource_user, size_t size,
@@ -63,7 +63,7 @@ index 0fc0279..aaf2b09 100644
    bool was_zero_or_negative = resource_user->free_pool <= 0;
    resource_user->free_pool += static_cast<int64_t>(size);
 diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-index 59432cf..fed574d 100644
+index 59432cff36..fed574d5bc 100644
 --- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 +++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
 @@ -39,6 +39,7 @@ bool check_bios_data(const char*) { return false; }

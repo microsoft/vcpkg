@@ -1,71 +1,88 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_68_0
-    SHA512 d75ed39b121a5a04d5a4ba89779967a49e196a93325747b51399adf1afb5f5c13355d6dbe798b259d19245c83bb55f0b621b24b25d8f3ddb1914df30067b8737
+    REF c7aef0a945f9b6fb6d3f91716a21dfe2f4ea635f #curl-7_79_1
+    SHA512 105e945e0acb47950d756382c7e45abbf0d0b12526eb0170af23e68653c1b7e3be27d547d537c4f36d099ebcb04870e8cd571d2baec996373b2032f8451b63e0
     HEAD_REF master
     PATCHES
-        0001_cmake.patch
         0002_fix_uwp.patch
-        0003_fix_libraries.patch
-        0004_nghttp2_staticlib.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0008_fix_tools_path.patch
-        0009_fix_openssl_config.patch
-        0010_fix_othertests_cmake.patch
+        0011_fix_static_build.patch
+        0012-fix-dependency-idn2.patch
+        0020-fix-pc-file.patch
+        0021-normaliz.patch # for mingw on case-sensitive file system
+        0022-deduplicate-libs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
-# winssl will enable sspi, but sspi do not support uwp
-if(("winssl" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "winssl,sspi,tool are not supported on non-Windows and uwp platforms")
-endif()
+# schannel will enable sspi, but sspi do not support uwp
+foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
+    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
+    endif()
+endforeach()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
+foreach(feature IN ITEMS "winldap" "winidn")
+    if(feature IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature ${feature} is not supported on non-Windows platforms.")
+    endif()
+endforeach()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
-    http2   USE_NGHTTP2
-    openssl CMAKE_USE_OPENSSL
-    mbedtls CMAKE_USE_MBEDTLS
-    ssh     CMAKE_USE_LIBSSH2
-    tool    BUILD_CURL_EXE
-    c-ares  ENABLE_ARES
-    sspi    CURL_WINDOWS_SSPI
-    brotli  CURL_BROTLI
-    winssl  CMAKE_USE_WINSSL
-    sectransp   CMAKE_USE_SECTRANSP
-    
+        # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
+        http2       USE_NGHTTP2
+        openssl     CMAKE_USE_OPENSSL
+        mbedtls     CMAKE_USE_MBEDTLS
+        ssh         CMAKE_USE_LIBSSH2
+        tool        BUILD_CURL_EXE
+        c-ares      ENABLE_ARES
+        sspi        CURL_WINDOWS_SSPI
+        brotli      CURL_BROTLI
+        schannel    CMAKE_USE_SCHANNEL
+        sectransp   CMAKE_USE_SECTRANSP
+        idn2        USE_LIBIDN2
+        winidn      USE_WIN32_IDN
+        winldap     USE_WIN32_LDAP
     INVERTED_FEATURES
-    non-http HTTP_ONLY
+        non-http    HTTP_ONLY
+        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
-set(SECTRANSP_OPTIONS)
+set(OPTIONS_RELEASE "")
+set(OPTIONS_DEBUG "")
+if("idn2" IN_LIST FEATURES)
+    x_vcpkg_pkgconfig_get_modules(PREFIX libidn2 MODULES libidn2 LIBS)
+    list(APPEND OPTIONS_RELEASE "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_RELEASE}")
+    list(APPEND OPTIONS_DEBUG   "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_DEBUG}")
+endif()
+
+set(SECTRANSP_OPTIONS "")
 if("sectransp" IN_LIST FEATURES)
     set(SECTRANSP_OPTIONS -DCURL_CA_PATH=none)
 endif()
 
 # UWP targets
-set(UWP_OPTIONS)
+set(UWP_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
     set(UWP_OPTIONS
-        -DUSE_WIN32_LDAP=OFF
         -DCURL_DISABLE_TELNET=ON
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+        ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
         ${SECTRANSP_OPTIONS}
         -DBUILD_TESTING=OFF
@@ -73,38 +90,55 @@ vcpkg_configure_cmake(
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
+        -DCURL_CA_FALLBACK=ON
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
 )
-
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
+    vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CURL)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+#Fix install path
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/curl-config")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "\nprefix=\${prefix}/debug" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "-lcurl" "-lcurl-d")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "curl." "curl-d.")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/curl-config")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    #Fix install path
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
-    string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/curl/curl.h"
+        "#ifdef CURL_STATICLIB"
+        "#if 1"
+    )
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
-else()
-    string(REPLACE "#ifdef CURL_STATICLIB" "#if 0" CURL_H "${CURL_H}")
+vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -lcurl-d")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
-file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 528c170..a5cd3fe 100644
+index cd716e3..a1f2ada 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -108,7 +108,7 @@ IF(MSVC)
+@@ -98,7 +98,7 @@ IF(MSVC)
    # Speedup system tests
    INCLUDE(${CC_SOURCE_DIR}/cmake/WindowsCache.cmake)
    ADD_DEFINITIONS(-DWIN32_LEAN_AND_MEAN)

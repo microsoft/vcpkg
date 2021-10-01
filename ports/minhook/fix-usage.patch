@@ -1,0 +1,10 @@
+diff --git a/cmake/minhook-config.cmake.in b/cmake/minhook-config.cmake.in
+index 14e6463..28fa17c 100644
+--- a/cmake/minhook-config.cmake.in
++++ b/cmake/minhook-config.cmake.in
+@@ -36,4 +36,4 @@ set(MINHOOK_FOUND ON)
+ set_and_check(MINHOOK_INCLUDE_DIRS  "${PACKAGE_PREFIX_DIR}/include/")
+ set_and_check(MINHOOK_LIBRARY_DIRS  "${PACKAGE_PREFIX_DIR}/lib")
+  
+-include("${PACKAGE_PREFIX_DIR}/lib/minhook/minhook-targets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/minhook-targets.cmake")

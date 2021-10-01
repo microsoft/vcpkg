@@ -1,0 +1,52 @@
+diff --git a/makefile.vc b/makefile.vc
+index cd0fc5a..7ce6861 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -32,6 +32,12 @@ epsilon.lib:	$(LIBOBJ)
+ 
+ $(EPSILON_DLL):	epsilon_i.lib
+ 
++!IFNDEF DEBUG
++POPTLIB=$(LIBPATH)popt.lib
++!ELSE
++POPTLIB=$(LIBPATH)poptd.lib
++!ENDIF
++
+ epsilon_i.lib:	$(LIBOBJ)
+ 	link /debug /dll /def:libepsilon.def /out:$(EPSILON_DLL) \
+ 		/implib:epsilon_i.lib $(LIBOBJ) 
+@@ -48,8 +54,8 @@ $(EPSILON_EXE): $(EPSILON_DLL) src\epsilon.obj \
+ 		src\cmd_truncate_file.obj src\cmd_decode_file.obj \
+ 		src\cmd_encode_file.obj src\misc.obj \
+ 		src\psi.obj src\pbm.obj \
+-		..\popt\lib\libpopt.lib
+-		/Fe$(EPSILON_EXE)
++		$(POPTLIB) \
++		/Fe"$(EPSILON_EXE)"
+ 	if exist $(EPSILON_EXE).manifest mt -manifest \
+ 		$(EPSILON_EXE).manifest -outputresource:$(EPSILON_EXE);1
+ 	
+@@ -71,8 +77,9 @@ install: all
+ 	-mkdir $(INSTDIR)\bin
+ 	-mkdir $(INSTDIR)\lib
+ 	-mkdir $(INSTDIR)\include
++	-mkdir $(INSTDIR)\tools
+ 	copy *.dll $(INSTDIR)\bin
+ 	copy *.lib $(INSTDIR)\lib
+-	copy *.exe $(INSTDIR)\bin
++	copy *.exe $(INSTDIR)\tools
+ 	copy lib\epsilon.h $(INSTDIR)\include
+ 	
+diff --git a/src/misc.h b/src/misc.h
+index 9023dce..d8ce602 100644
+--- a/src/misc.h
++++ b/src/misc.h
+@@ -30,7 +30,7 @@ extern "C" {
+ #endif
+ 
+ /* Use _snprintf instead of snprintf under MSVC compiler */
+-#if defined(_WIN32) && !defined(__MINGW32__)
++#if 0
+ #define snprintf    _snprintf
+ #endif
+ 

@@ -9,17 +9,21 @@ vcpkg_from_github(
     PATCHES
         fix-M_PI-in-windows.patch
         support-unix.patch
+        fix-pkgconfig.patch
+        glib2.patch
 )
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

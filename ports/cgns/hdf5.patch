@@ -1,0 +1,88 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d871a9dc8..d2c631023 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,46 +232,12 @@ if (CGNS_ENABLE_HDF5)
+      cmake_policy(SET CMP0074 NEW)
+   endif()
+ 
+-  find_package (HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS ${FIND_HDF_COMPONENTS})
+-  message (STATUS "HDF5 C libs:${HDF5_FOUND} static:${HDF5_static_C_FOUND} and shared:${HDF5_shared_C_FOUND}")
+-  if (HDF5_FOUND)
+-    if (NOT HDF5_static_C_FOUND AND NOT HDF5_shared_C_FOUND)
+-      set (FIND_HDF_COMPONENTS C)
+-
+-      find_package (HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS ${FIND_HDF_COMPONENTS})
+-      message (STATUS "HDF5 libs:${HDF5_FOUND} C:${HDF5_C_FOUND}")
+-      set (LINK_LIBS ${LINK_LIBS} ${HDF5_LIBRARIES})
+-      if (HDF5_BUILD_SHARED_LIBS)
+-        add_definitions (-DH5_BUILT_AS_DYNAMIC_LIB)
+-      else (HDF5_BUILD_SHARED_LIBS)
+-        add_definitions (-DH5_BUILT_AS_STATIC_LIB)
+-      endif (HDF5_BUILD_SHARED_LIBS)
+-    else (NOT HDF5_static_C_FOUND AND NOT HDF5_shared_C_FOUND)
+-      if (CGNS_BUILD_SHARED AND HDF5_shared_C_FOUND)
+-        set (LINK_LIBS ${LINK_LIBS} ${HDF5_C_SHARED_LIBRARY})
+-      else (CGNS_BUILD_SHARED AND HDF5_shared_C_FOUND)
+-        set (LINK_LIBS ${LINK_LIBS} ${HDF5_C_STATIC_LIBRARY})
+-      endif (CGNS_BUILD_SHARED AND HDF5_shared_C_FOUND)
+-    endif (NOT HDF5_static_C_FOUND AND NOT HDF5_shared_C_FOUND)
+-
+-  else (HDF5_FOUND)
+-    find_package (HDF5) # Legacy find
+-    
+-    #Legacy find_package does not set HDF5_TOOLS_DIR, so we set it here
+-    set(HDF5_TOOLS_DIR ${HDF5_LIBRARY}/../bin)
+-    
+-    #Legacy find_package does not set HDF5_BUILD_SHARED_LIBS, so we set it here
+-    if (CGNS_BUILD_SHARED AND EXISTS "${HDF5_LIBRARY}/libhdf5${CMAKE_SHARED_LIBRARY_SUFFIX}")
+-      set (HDF5_BUILD_SHARED_LIBS 1)
+-      add_definitions (-DH5_BUILT_AS_DYNAMIC_LIB)
+-    else ()
+-      set (HDF5_BUILD_SHARED_LIBS 0)
+-      add_definitions (-DH5_BUILT_AS_STATIC_LIB)
+-    endif ()
+-    set (LINK_LIBS ${LINK_LIBS} ${HDF5_LIBRARIES})
+-
+-  endif (HDF5_FOUND)
+-  set (HDF5_PACKAGE_NAME ${SEARCH_PACKAGE_NAME})
++  find_package (HDF5 CONFIG REQUIRED)
++  if (TARGET hdf5::hdf5-shared)
++    set (LINK_LIBS ${LINK_LIBS} hdf5::hdf5-shared)
++  else ()
++    set (LINK_LIBS ${LINK_LIBS} hdf5::hdf5-static)
++  endif ()
+ 
+   if (HDF5_FOUND)
+     if (NOT DEFINED HDF5_INCLUDE_DIRS)
+@@ -289,20 +255,10 @@ if (CGNS_ENABLE_HDF5)
+   endif (HDF5_FOUND)
+ 
+   set(HDF5_NEED_ZLIB "OFF" CACHE BOOL "Does the HDF5 library require linking to zlib?")
+-  if(HDF5_NEED_ZLIB)
+-    find_library(ZLIB_LIBRARY z)
+-    mark_as_advanced(CLEAR ZLIB_LIBRARY)
+-  else (HDF5_NEED_ZLIB)
+-    mark_as_advanced(FORCE ZLIB_LIBRARY)
+-  endif(HDF5_NEED_ZLIB)
++  set(HDF5_NEED_ZLIB ${HDF5_ENABLE_Z_LIB_SUPPORT} CACHE INTERNAL "" FORCE)
+ 
+   set(HDF5_NEED_SZIP "OFF" CACHE BOOL "Does the HDF5 library require linking to szip?")
+-  if (HDF5_NEED_SZIP)
+-    find_library(SZIP_LIBRARY szip)
+-    mark_as_advanced(CLEAR SZIP_LIBRARY)
+-  else (HDF5_NEED_SZIP)
+-    mark_as_advanced(FORCE SZIP_LIBRARY)
+-  endif (HDF5_NEED_SZIP)
++  set(HDF5_NEED_SZIP ${HDF5_ENABLE_SZIP_SUPPORT} CACHE INTERNAL "" FORCE)
+ 
+   # Check if HDF5 version is 1.8 or greater
+   if (HDF5_VERSION VERSION_LESS "1.8.0")
+@@ -310,6 +266,7 @@ if (CGNS_ENABLE_HDF5)
+   endif (HDF5_VERSION VERSION_LESS "1.8.0")
+ 
+   set(HDF5_NEED_MPI "OFF" CACHE BOOL "Does the HDF5 library require linking to mpi? (Only true if using parallel HDF5)")
++  set(HDF5_NEED_MPI ${HDF5_ENABLE_PARALLEL} CACHE INTERNAL "" FORCE)
+   set(MPI_INC)
+   set(MPI_LIBS)
+   if (HDF5_NEED_MPI)

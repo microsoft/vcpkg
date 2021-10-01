@@ -1,0 +1,9 @@
+{
+  "name": "boost-build",
+  "version-string": "1.77.0",
+  "description": "Boost.Build",
+  "homepage": "https://github.com/boostorg/build",
+  "dependencies": [
+    "boost-uninstall"
+  ]
+}

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e821a49bc..c68264ef2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -188,6 +188,9 @@ if(SFML_USE_SYSTEM_DEPS)
+     endforeach()
+ 
+     list(REMOVE_DUPLICATES CMAKE_IGNORE_PATH)
++
++    find_path(STB_INCLUDE_DIR stb.h)
++    include_directories(${STB_INCLUDE_DIR})
+ endif()
+ 
+ # Visual C++: remove warnings regarding SL security and algorithms on pointers

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO laurikari/tre
@@ -11,6 +9,10 @@ vcpkg_from_github(
 file(READ ${SOURCE_PATH}/win32/config.h CONFIG_H)
 string(REPLACE "#define snprintf sprintf_s" "" CONFIG_H ${CONFIG_H})
 file(WRITE ${SOURCE_PATH}/win32/config.h "${CONFIG_H}")
+
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string(${SOURCE_PATH}/win32/tre.def "tre.dll" "libtre.dll")
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

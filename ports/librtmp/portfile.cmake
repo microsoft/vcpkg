@@ -1,9 +1,8 @@
-set(RTMPDUMP_REVISION c5f04a58fc2aeea6296ca7c44ee4734c18401aa3)
-
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.ffmpeg.org/rtmpdump
-    REF ${RTMPDUMP_REVISION}
+    REPO mirror/rtmpdump
+    REF c5f04a58fc2aeea6296ca7c44ee4734c18401aa3
+    SHA512 d97ac38672898a96412baa5f03d1e64d512ccefe15ead0a055ca039dc6057e2e620e046c28f4d7468e132b0b5a9eb9bd171250c1afa14da53760a0d7aae3c9e9
     PATCHES
         dh.patch                #Openssl 1.1.1 patch
         handshake.patch         #Openssl 1.1.1 patch

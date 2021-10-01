@@ -3,26 +3,29 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO garyhouston/rxspencer
-    REF e42b6a667f1385aedf49b533b9fbba58e5a26934
-    SHA512 2842e1c78c3ebbbd03d15fb85e55f861740bb446aa57157f3fc90876d931d9f865242f5eaefc94f31c8d78e0d531a008d4c579e9b4f9c7179f5c7a95a98359fd
+    REF 9f835b523f1af617ca54e06863a1924c23f6e56a #v3.9.0
+    SHA512 fe7721bd4b4e4f7d31fd5a7e42d34d0c9735d062d8b146ee47a25f87c809eead7133265fc37fa958c37bc4ffeaf101d143202080508d98efd160b8fd0a278598
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DCMAKE_CONFIG_DEST=share/rxspencer
+    OPTIONS 
+        -DCMAKE_CONFIG_DEST=share/rxspencer
+        -Drxshared=${BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/rxspencer")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/rxspencer")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/regex)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/regex")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

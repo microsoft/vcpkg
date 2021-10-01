@@ -1,0 +1,22 @@
+{
+  "name": "3fd",
+  "version-string": "2.6.3",
+  "description": "C++ Framework For Fast Development",
+  "supports": "windows & !static & !arm64",
+  "dependencies": [
+    {
+      "name": "boost-lockfree",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-regex",
+      "platform": "windows"
+    },
+    {
+      "name": "poco",
+      "platform": "windows"
+    },
+    "rapidxml",
+    "sqlite3"
+  ]
+}

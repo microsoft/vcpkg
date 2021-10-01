@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -9,8 +7,8 @@ endif()
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION f8485d9333d16fb0ce2142ebced106a84a87d62b)
-set(SCITER_SHA 014c5167dd02fe402cb216f96b35d194c57efcd46557f944542e3ca3a9cac31c77b7bc4c91e5d727b27ba920fe6070dc7a916752f07e0a957826074ade08bc44)
+set(SCITER_REVISION 29a598b6d20220b93848b5e8abab704619296857)
+set(SCITER_SHA dc9ebcc59a4ca7b154efcbd96c7e0aa53dc344f6a2cfa91f8c351c1edc5a0f060129715f8eac85e00df9b6c153322a9ba36b430da5020d38769740434cbcd52c)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -42,8 +40,7 @@ set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ 
 
 # license
 file(COPY ${SOURCE_PATH}/logfile.htm DESTINATION ${SCITER_SHARE})
-file(COPY ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE})
-file(RENAME ${SCITER_SHARE}/license.htm ${SCITER_SHARE}/copyright)
+file(INSTALL ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE} RENAME copyright)
 
 # samples & widgets
 file(COPY ${SOURCE_PATH}/samples DESTINATION ${SCITER_SHARE})
@@ -60,6 +57,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux AND VCPKG_TARGET_ARCHITECTURE STREQUAL
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
 
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.lnx/x64lite)
+    endif()
+
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
@@ -71,7 +72,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 
     file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${SCITER_TOOLS})
 
     # not sure whether there is a better way to do this, because
     # `file(INSTALL sciter.app FILE_PERMISSIONS EXECUTE)`
@@ -79,8 +80,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     execute_process(COMMAND sh -c "chmod +x sciter.app/Contents/MacOS/sciter" WORKING_DIRECTORY ${SCITER_TOOLS})
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
 
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 else()
     set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH})
@@ -92,6 +93,10 @@ else()
     file(INSTALL ${SCITER_BIN32}/wsciter.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN32}/inspector.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN32}/sciter.dll DESTINATION ${SCITER_TOOLS})
+
+    if ("windowless" IN_LIST FEATURES)
+        set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH}lite)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

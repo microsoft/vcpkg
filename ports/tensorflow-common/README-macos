@@ -1,0 +1,12 @@
+Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
+    (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).
+
+Note: Besides TensorFlow itself, you'll also need to pass its dependencies to the linker:
+    * CoreFoundation
+    * Security (only when linking against the whole library, see below)
+for example, '-ltensorflow_cc -framework CoreFoundation -framework Security'.
+
+Note: There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.
+
+Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library:
+    '-Wl,-force_load,path/to/libtensorflow_cc.a [rest of linker arguments]'

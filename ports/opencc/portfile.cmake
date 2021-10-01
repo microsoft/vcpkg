@@ -19,7 +19,9 @@ vcpkg_configure_cmake(
         -DENABLE_GTEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(
+    DISABLE_PARALLEL
+)
 
 vcpkg_copy_pdbs()
 

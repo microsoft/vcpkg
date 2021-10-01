@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_colony
-    REF 81fe8c4daf433491f14248837ee8ed5cf447c856
-    SHA512 a6ae03d383c94b0a758e7aedee2838d46b3665881e2c0823b064a3579140a351d96fec66d456de5843b6c4c8d2f6f6efac5f547841c08edd349b0f153e9c4871
+    REF e6e563b63dd9e64fc2fcc66a757e366641e62f01
+    SHA512 61723a47387fb3ce9a342fbd6db11369774c1a5c5d28ba2db1fee3396a0588a0e9df50cbcaa4561f409d34ddadc17ae61dba29606aa6481647f3bcd003cfaafa
     HEAD_REF master
 )
 

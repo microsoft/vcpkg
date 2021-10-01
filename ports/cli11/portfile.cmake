@@ -1,25 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CLIUtils/CLI11
-    REF dd0d8e4fe729e5b1110232c7a5c9566dad884686 #version 1.9.0
-    SHA512 dccee89de994d17537b31db717d0f42cae8827a192067718641a6e9e3188f468047a86ce329781142b9c7a1216d5eedcfe975fdbd001f40005a8ab50e08470d9
+    REF v2.1.0
+    SHA512 22c75e6b55d5320656ca2f65bf7c1dc82546fa65458f66a3d6401d002e83f12a0ee93a572637f5daa8daed9e0ce11fbf4aabf864caadc851f75bced63814ba10
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCLI11_BUILD_EXAMPLES=OFF
         -DCLI11_BUILD_DOCS=OFF
         -DCLI11_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CLI11)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/CLI11)
+vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,5 @@
+The package GDAL provides CMake targets:
+
+    find_package(GDAL REQUIRED)
+    target_include_directories(main PRIVATE ${GDAL_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${GDAL_LIBRARIES})

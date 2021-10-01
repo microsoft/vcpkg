@@ -13,7 +13,7 @@ set(DISABLE_ICU ON)
 if("icu" IN_LIST FEATURES)
     set(DISABLE_ICU OFF)
 endif()
-if ("xmlch_wchar" IN_LIST FEATURES)
+if ("xmlch-wchar" IN_LIST FEATURES)
     set(XMLCHTYPE -Dxmlch-type=wchar_t)
 endif()
 

@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Amanieu/asyncplusplus
-    REF v1.0
-    SHA512 bb1fc032d2d8de49b4505e0629d48e5cfa99edfcafbf17848f160ceb320bcd993f1549095248d1a0ef8fc1ec07ecbaad6b634a770ddc1974092d373a508a5fe3
+    REF 172ca3f8e0df1b3f7f5ee8b8244e4ac67258b0d8 # v1.1
+    SHA512 fd95b3349ceed4cab5cb0e146d2ccfe77c85318303015cf513037fc69c1ade7cfdb3dc81de8a90846c4387c5e31f5a70a64da770547c201dfe24d2c181be1933
     HEAD_REF master
 )
 
@@ -30,5 +28,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/asyncplusplus)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/asyncplusplus/LICENSE ${CURRENT_PACKAGES_DIR}/share/asyncplusplus/copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME Async++)

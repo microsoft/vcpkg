@@ -1,4 +1,0 @@
-Source: json-dto
-Version: 0.2.9.2
-Description: A small header-only library for converting data between json representation and c++ structs.
-Build-Depends: rapidjson

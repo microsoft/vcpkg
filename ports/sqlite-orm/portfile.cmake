@@ -1,15 +1,35 @@
-include(vcpkg_common_functions)
+# header-only library
+
+set(FEATURE_PATCHES)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
-    REF e8a9e9416f421303f4b8970caab26dadf8bae98b # v1.5
-    SHA512 9774345e0209482a137e5f3058e2f27db55ea72fd08c44e67c0989df8927fee896cb789dcb2cd21167689c2f2be1c126bd730a6ea1083a48e6dd58fb048c6f5e
+    REF 4c6a46bd4dcfba14a650e0fafb86331526878587 # 1.6
+    SHA512 9626fc20374aff5da718d32c7b942a7a6434920da9cf68df6146e9c25cca61936c2e3091c6476c369c8bf241dcb8473169ee726eaedfeb92d79ff4fa8a6b2d32
     HEAD_REF master
+    PATCHES 
+        fix-features-build-error.patch
+        fix-dependency.patch
 )
 
-file(COPY ${SOURCE_PATH}/include/sqlite_orm DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    test BUILD_TESTING
+    example BUILD_EXAMPLES
+)
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/sqlite-orm RENAME copyright)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
+        -DSQLITE_ORM_ENABLE_CXX_17=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SqliteOrm TARGET_PATH share/SqliteOrm)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

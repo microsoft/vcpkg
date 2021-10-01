@@ -1,0 +1,15 @@
+diff --git a/decrepit/CMakeLists.txt b/decrepit/CMakeLists.txt
+index ef95a6b..0b52c05 100644
+--- a/decrepit/CMakeLists.txt
++++ b/decrepit/CMakeLists.txt
+@@ -40,6 +40,10 @@ add_executable(
+ 
+ add_dependencies(decrepit_test global_target)
+ 
++if(MSVC)
++  target_compile_options(decrepit PRIVATE /wd4065)
++endif()
++
+ target_link_libraries(decrepit_test test_support_lib boringssl_gtest decrepit
+                       crypto)
+ if(WIN32)

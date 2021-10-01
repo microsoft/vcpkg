@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 2.0.0
-    SHA512 efdaa1b018e5166c0f2469663bdd0dc788de0577d0c0cb8b98048a535f8cb07de1078f86aaacc9445d42078d2e02fd7bc7f1ed700ca96032976f6bd84c68ee8f
+    REF 647a48dfa7b19ef6bbfa68a69b5d87717541ef21 #2.4.0
+    SHA512 c72072df6f2b3ebc1b632f2e3b40bdcc732e25e7c4ef97b93bc5c5351566b553f682b615e6383ac7c5a1b5ecf8ed0fa9a305ea8c904031d4c78d7c3179323032
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
         openssl_threads.patch
-        fix-include-install-path.patch
         fix-include-path.patch
         fix-libusb.patch
 )
@@ -16,7 +15,12 @@ vcpkg_from_github(
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
 endif()
+set(FREERDP_WITH_CLIENT)
+if (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+    set(FREERDP_WITH_CLIENT -DWITH_CLIENT=OFF)
+endif()
 
+set(FREERDP_CRT_LINKAGE)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(FREERDP_CRT_LINKAGE -DMSVC_RUNTIME=static)
 endif()
@@ -26,11 +30,18 @@ file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    urbdrc CHANNEL_URBDRC
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FREERDP_CRT_LINKAGE}
+        ${FREERDP_WITH_CLIENT}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -53,13 +64,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-    
+
     file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
     foreach(FREERDP_DLL ${FREERDP_DLLS})
         file(COPY ${FREERDP_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(REMOVE ${FREERDP_DLL})
     endforeach()
-else()    
+else()
     file(GLOB_RECURSE FREERDP_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach(FREERDP_TOOL ${FREERDP_TOOLS})
         file(COPY ${FREERDP_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -78,6 +89,8 @@ endforeach()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Client2 TARGET_PATH share/FreeRDP-Client)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2 TARGET_PATH share/FreeRDP)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 TARGET_PATH share/WinPR)
+
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake
     "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
@@ -112,7 +125,7 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-Client
     "bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/debug/*.lib)
     file(REMOVE ${OBJS})
     file(GLOB OBJS ${CURRENT_PACKAGES_DIR}/*.lib)

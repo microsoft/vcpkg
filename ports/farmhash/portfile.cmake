@@ -14,6 +14,7 @@ if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND NOT ENV{CXX_FLAGS}) # This
 endif()
 file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
 vcpkg_configure_make(
+        AUTOCONFIG
         SOURCE_PATH ${SOURCE_PATH}
 )
 

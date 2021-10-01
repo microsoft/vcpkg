@@ -1,33 +1,33 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(BOND_VER 9.0.0)
+set(BOND_VER 9.0.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  fe6f582ce4beb65644d9338536066e07d80a0289 #9.0.0
-    SHA512 bf9c7436462fabb451c6a50b662455146a37c1421a6fe22920a5c4c1fa7c0fe727c1d783917fa119cd7092dc120e375a99a8eb84e3fc87c17b54a23befd9abc4
+    REF  ${BOND_VER}
+    SHA512 3a7884eb00e6d0ab40c688f4a40cb2d3f356c48b38d48a9a08c756047a94b82619ef345483f42c3240732f5da06816b65a61acb83bfebb3c2c6b44099ce71bf9
     HEAD_REF master
-    PATCHES fix-install-path.patch
+    PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
-    URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
-    FILENAME "gbc-${BOND_VER}-amd64.zip"
-    SHA512 f4480a3eb7adedfd3da554ef3cdc64b6e7da5c699bde0ccd86b2dd6a159ccacbb1df2b84b6bc80bc8475f30b904cba98085609e42aad929b2b23258eaff52048
+        URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
+        FILENAME "gbc-${BOND_VER}-amd64.zip"
+        SHA512 41a4e01a9a0f6246a3c07f516f2c0cfc8a837eff2166c2bb787877e409d6f55eeb6084e63aabc3502492775a3fa7e381bf37fde0bdfced50a9d0b39dfaca7dfd
     )
 
     # Clear the generator to prevent it from updating
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/tools/)
     # Extract the precompiled gbc
-    vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe)
+    vcpkg_extract_source_archive(extracted_tool_dir ARCHIVE "${GBC_ARCHIVE}" NO_REMOVE_ONE_LEVEL)
+    file(RENAME "${extracted_tool_dir}" "${CURRENT_BUILDTREES_DIR}/tools")
 
-    if (NOT EXISTS "${FETCHED_GBC_PATH}")
-        message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
+    set(FETCHED_GBC_PATH "${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe")
+    if(NOT EXISTS "${FETCHED_GBC_PATH}")
+        message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exist, but it doesn't.")
     endif()
-
 else()
     # According to the readme on https://github.com/microsoft/bond/
     # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
@@ -36,16 +36,22 @@ else()
 
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        bond-over-grpc BOND_ENABLE_GRPC
+)
+
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    -DBOND_LIBRARIES_ONLY=TRUE
-    -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
-    -DBOND_SKIP_GBC_TESTS=TRUE
-    -DBOND_ENABLE_COMM=FALSE
-    -DBOND_ENABLE_GRPC=FALSE
-    -DBOND_FIND_RAPIDJSON=TRUE
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBOND_LIBRARIES_ONLY=TRUE
+        -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
+        -DBOND_SKIP_GBC_TESTS=TRUE
+        -DBOND_ENABLE_COMM=FALSE
+        -DBOND_FIND_RAPIDJSON=TRUE
+        -DBOND_STACK_OPTIONS=--allow-different-user
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

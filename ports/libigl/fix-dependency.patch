@@ -1,47 +1,53 @@
+diff --git a/cmake/LibiglWindows.cmake b/cmake/LibiglWindows.cmake
+index b98aa55..46c68a7 100644
+--- a/cmake/LibiglWindows.cmake
++++ b/cmake/LibiglWindows.cmake
+@@ -1,4 +1,4 @@
+-if(MSVC)
++if(0)
+ 	option(IGL_STATIC_RUNTIME "Use libigl with the static MSVC runtime." OFF)
+ 	if(IGL_STATIC_RUNTIME)
+ 		message(STATUS "MSVC -> forcing use of statically-linked runtime.")
 diff --git a/cmake/libigl.cmake b/cmake/libigl.cmake
-index 7016cbf..3a6b4dd 100644
+index d07bbb3..a33cefa 100644
 --- a/cmake/libigl.cmake
 +++ b/cmake/libigl.cmake
-@@ -96,8 +96,9 @@ if(UNIX)
+@@ -107,7 +107,8 @@ if(HUNTER_ENABLED)
  endif()
  
  # Eigen
--if(TARGET Eigen3::Eigen)
-+if(1)
-   # If an imported target already exists, use it
-+  find_package(Eigen3 CONFIG REQUIRED)
-   target_link_libraries(igl_common INTERFACE Eigen3::Eigen)
- else()
+-if(NOT TARGET Eigen3::Eigen)
++find_package(Eigen3 CONFIG REQUIRED)
++if(0)
    igl_download_eigen()
-@@ -182,7 +183,7 @@ compile_igl_module("core" ${SOURCES_IGL})
+   add_library(igl_eigen INTERFACE)
+   target_include_directories(igl_eigen SYSTEM INTERFACE
+@@ -296,9 +297,9 @@ endif()
  ################################################################################
- ### Download the python part ###
- if(LIBIGL_WITH_PYTHON)
--  igl_download_pybind11()
-+  #igl_download_pybind11()
- endif()
- 
- ################################################################################
-@@ -281,7 +282,8 @@ if(LIBIGL_WITH_EMBREE)
-     set(EMBREE_STATIC_RUNTIME ON CACHE BOOL " " FORCE)
-   endif()
+ ### Compile the embree part ###
+ if(LIBIGL_WITH_EMBREE)
+-  set(EMBREE_DIR "${LIBIGL_EXTERNAL}/embree")
++  find_package(embree 3 CONFIG REQUIRED)
  
 -  if(NOT TARGET embree)
-+  find_package(embree 3 CONFIG REQUIRED)
 +  if(0)
-     # TODO: Should probably save/restore the CMAKE_CXX_FLAGS_*, since embree seems to be
-     # overriding them on Windows. But well... it works for now.
      igl_download_embree()
-@@ -289,7 +291,7 @@ if(LIBIGL_WITH_EMBREE)
+ 
+     set(EMBREE_TESTING_INTENSITY 0 CACHE STRING "")
+@@ -315,8 +315,11 @@ if(LIBIGL_WITH_EMBREE)
    endif()
  
    compile_igl_module("embree")
--  target_link_libraries(igl_embree ${IGL_SCOPE} embree)
-+  target_link_libraries(igl_embree ${IGL_SCOPE} sys math simd embree)
-   target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
+   target_link_libraries(igl_embree ${IGL_SCOPE} embree)
+-  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
++  if(LIBIGL_USE_STATIC_LIBRARY)
++  find_package(TBB CONFIG REQUIRED)
++  target_link_libraries(igl_embree ${IGL_SCOPE} TBB::tbb)
    target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
++  endif()
  endif()
-@@ -332,11 +334,12 @@ if(LIBIGL_WITH_OPENGL)
+ 
+@@ -358,11 +359,12 @@ if(LIBIGL_WITH_OPENGL)
    endif()
  
    # glad module
@@ -56,17 +62,17 @@ index 7016cbf..3a6b4dd 100644
  endif()
  
  ################################################################################
-@@ -345,7 +348,8 @@ if(LIBIGL_WITH_OPENGL_GLFW)
+@@ -371,7 +373,8 @@ if(LIBIGL_WITH_OPENGL_GLFW)
    if(TARGET igl::opengl)
      # GLFW module
      compile_igl_module("opengl/glfw")
 -    if(NOT TARGET glfw)
 +    find_package(glfw3 CONFIG REQUIRED)
 +    if(0)
-       set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
-       set(GLFW_BUILD_TESTS OFF CACHE BOOL " " FORCE)
-       set(GLFW_BUILD_DOCS OFF CACHE BOOL " " FORCE)
-@@ -363,9 +367,10 @@ if(LIBIGL_WITH_OPENGL_GLFW_IMGUI)
+       igl_download_glfw()
+       option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
+       option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
+@@ -394,11 +397,12 @@ if(LIBIGL_WITH_OPENGL_GLFW_IMGUI)
    if(TARGET igl::opengl_glfw)
      # ImGui module
      compile_igl_module("opengl/glfw/imgui")
@@ -74,12 +80,14 @@ index 7016cbf..3a6b4dd 100644
 +    find_package(imgui CONFIG REQUIRED)
 +    if(0)
        igl_download_imgui()
--      add_subdirectory(${LIBIGL_EXTERNAL}/libigl-imgui imgui)
-+      add_subdirectory(${LIBIGL_EXTERNAL}/libigl-imgui imgui::imgui)
+       add_subdirectory(${LIBIGL_EXTERNAL}/libigl-imgui imgui)
      endif()
-     target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui)
+-    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui)
++    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui::imgui)
    endif()
-@@ -377,12 +382,21 @@ if(LIBIGL_WITH_PNG)
+ endif()
+ 
+@@ -408,12 +412,22 @@ if(LIBIGL_WITH_PNG)
    # png/ module is anomalous because it also depends on opengl it really should
    # be moved into the opengl/ directory and namespace ...
    if(TARGET igl_opengl)
@@ -87,6 +95,7 @@ index 7016cbf..3a6b4dd 100644
 +    find_path(stb_include_dir stb.h)
 +    find_package(opengl REQUIRED)
 +    find_package(libpng CONFIG REQUIRED)
++    find_package(glad CONFIG REQUIRED)
 +    if (BUILD_SHARED_LIBS)
 +        set(libpng_LIBRARIES png)
 +    else()
@@ -98,12 +107,12 @@ index 7016cbf..3a6b4dd 100644
      endif()
      compile_igl_module("png" "")
 -    target_link_libraries(igl_png ${IGL_SCOPE} igl_stb_image igl_opengl)
-+    target_include_directories(igl_png PUBLIC ${stb_include_dir})
-+    target_link_libraries(igl_png ${IGL_SCOPE} OpenGL::GL ${libpng_LIBRARIES})
++    target_include_directories(igl_png INTERFACE ${stb_include_dir})
++    target_link_libraries(igl_png ${IGL_SCOPE} OpenGL::GL ${libpng_LIBRARIES} glad::glad)
    endif()
  endif()
  
-@@ -430,7 +444,8 @@ endif()
+@@ -461,7 +475,8 @@ endif()
  ### Compile the xml part ###
  if(LIBIGL_WITH_XML)
    set(TINYXML2_DIR "${LIBIGL_EXTERNAL}/tinyxml2")
@@ -113,13 +122,14 @@ index 7016cbf..3a6b4dd 100644
      igl_download_tinyxml2()
      add_library(tinyxml2 STATIC ${TINYXML2_DIR}/tinyxml2.cpp ${TINYXML2_DIR}/tinyxml2.h)
      target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
-@@ -440,7 +455,7 @@ if(LIBIGL_WITH_XML)
+@@ -471,7 +486,7 @@ if(LIBIGL_WITH_XML)
              SOVERSION "3")
    endif()
    compile_igl_module("xml")
 -  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2)
 +  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2::tinyxml2)
-   target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
+-   target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
++
  endif()
  
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
@@ -136,10 +146,10 @@ index 1d3e3bc..682b6d7 100644
  #include <string>
  #include <algorithm>
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp b/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
-index 3939b03..835b208 100644
+index 47de487..6c607de 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
 +++ b/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
-@@ -9,7 +9,7 @@
+@@ -9,9 +9,9 @@
  #include "ImGuiMenu.h"
  #include "ImGuiHelpers.h"
  #include <igl/project.h>
@@ -148,8 +158,11 @@ index 3939b03..835b208 100644
  #include <imgui_impl_glfw.h>
  #include <imgui_impl_opengl3.h>
  #include <imgui_fonts_droid_sans.h>
+ #include <GLFW/glfw3.h>
+ #include <iostream>
+ ////////////////////////////////////////////////////////////////////////////////
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiTraits.h b/include/igl/opengl/glfw/imgui/ImGuiTraits.h
-index fbc892f..e8828b1 100644
+index 7dae22a..e6911c5 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiTraits.h
 +++ b/include/igl/opengl/glfw/imgui/ImGuiTraits.h
 @@ -8,7 +8,7 @@
@@ -161,30 +174,11 @@ index fbc892f..e8828b1 100644
  
  // Extend ImGui by populating its namespace directly
  namespace ImGui
-diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
-index 7a14775..f5c84a8 100644
---- a/python/CMakeLists.txt
-+++ b/python/CMakeLists.txt
-@@ -23,8 +23,8 @@ endif()
- # set(PYTHON_INCLUDE_DIR "/usr/local/Cellar/python3/3.5.0/Frameworks/Python.framework/Versions/3.5/include/python3.5m")
- 
- set(Python_ADDITIONAL_VERSIONS 3.4 3.5 3.6 3.7)
--find_package(PythonInterp 3.4 REQUIRED)
--find_package(PythonLibs 3.4 REQUIRED)
-+find_package(PythonInterp REQUIRED)
-+find_package(PythonLibs REQUIRED)
- 
- ## libigl
- if(NOT TARGET igl::core)
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 8a0af13..5c6a350 100644
+index 273324d..cefbd52 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -11,16 +11,14 @@ else()
- endif()
- 
- ### Download data
--igl_download_test_data()
+@@ -15,12 +15,11 @@ igl_download_test_data()
  set(IGL_TEST_DATA ${LIBIGL_EXTERNAL}/../tests/data)
  
  ### Download Catch2 unit test framework
@@ -199,7 +193,7 @@ index 8a0af13..5c6a350 100644
  
  # Create test executable
 diff --git a/tutorial/106_ViewerMenu/main.cpp b/tutorial/106_ViewerMenu/main.cpp
-index 09f3272..9e1a19d 100644
+index cc514e5..f1be538 100644
 --- a/tutorial/106_ViewerMenu/main.cpp
 +++ b/tutorial/106_ViewerMenu/main.cpp
 @@ -2,7 +2,7 @@

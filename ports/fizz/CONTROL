@@ -1,4 +1,0 @@
-Source: fizz
-Version: 2020.02.03.00
-Build-Depends: folly, openssl, libsodium, zlib, fmt
-Description: a TLS 1.3 implementation by Facebook

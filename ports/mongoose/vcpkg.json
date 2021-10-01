@@ -1,0 +1,15 @@
+{
+  "name": "mongoose",
+  "version": "7.1",
+  "description": "Embedded web server / embedded networking library",
+  "homepage": "https://cesanta.com/",
+  "supports": "!uwp",
+  "features": {
+    "ssl": {
+      "description": "Build with openssl",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

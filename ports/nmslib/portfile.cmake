@@ -1,29 +1,21 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nmslib/nmslib
-    REF c9fc0b862f09260b558cf81e94e0d58aca15d9e9
-    SHA512 ac9c79e3ac991dd58f239f7e0b2bd6c3185907aa283bc42098aadddac87b361867f002664cc14853822f92a491d95269578bea01aa00477e39a40424320000a1
+    REF 5482e077d1c8637499f86231bcd3979cb7fa6aef # v2.0.6
+    SHA512 e529c8d1d97e972f8314be9837e10f4ebab57d4a5f19a66341bb8e163dfe53d1d640a3909a708b021a52d0e6c2537954d749cb80e71757469700a3e9e173ceca
     HEAD_REF master
     PATCHES
         fix-headers.patch
-        fix-cmake-order.patch
 )
-
-set(WITH_EXTRAS OFF)
-if("extra" IN_LIST FEATURES)
-    set(WITH_EXTRAS ON)
-endif()
 
 # TODO: check SSE and AVX avability and set corresponding tags
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
     PREFER_NINJA
-    OPTIONS
-        -DWITH_EXTRAS=${WITH_EXTRAS}
 )
 
 vcpkg_install_cmake()
@@ -50,5 +42,4 @@ endforeach()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/nmslib/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/nmslib/README.md ${CURRENT_PACKAGES_DIR}/share/nmslib/copyright)
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

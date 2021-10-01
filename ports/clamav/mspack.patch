@@ -1,0 +1,44 @@
+diff --git a/cmake/FindMSPack.cmake b/cmake/FindMSPack.cmake
+index cad448f..4ce4f87 100644
+--- a/cmake/FindMSPack.cmake
++++ b/cmake/FindMSPack.cmake
+@@ -50,7 +50,7 @@ find_path(MSPack_INCLUDE_DIR
+   PATH_SUFFIXES mspack
+ )
+ find_library(MSPack_LIBRARY
+-  NAMES mspack
++  NAMES libmspack
+   PATHS ${PC_MSPack_LIBRARY_DIRS}
+ )
+ 
+diff --git a/libclamav/CMakeLists.txt b/libclamav/CMakeLists.txt
+index 136ea30..72db826 100644
+--- a/libclamav/CMakeLists.txt
++++ b/libclamav/CMakeLists.txt
+@@ -504,7 +504,7 @@ target_link_libraries( clamav_obj
+         yara
+         tomsfastmath
+         bytecode_runtime
+-        ClamAV::libmspack
++        ${MSPack_LIBRARIES}
+         ClamAV::libclamunrar_iface_iface
+         OpenSSL::SSL
+         OpenSSL::Crypto
+@@ -547,7 +547,7 @@ if(ENABLE_SHARED_LIB)
+             yara
+             tomsfastmath
+             bytecode_runtime
+-            ClamAV::libmspack
++            ${MSPack_LIBRARIES}
+             ClamAV::libclamunrar_iface_iface
+             OpenSSL::SSL
+             OpenSSL::Crypto
+@@ -588,7 +588,7 @@ if(ENABLE_STATIC_LIB)
+             yara
+             tomsfastmath
+             bytecode_runtime
+-            ClamAV::libmspack
++            ${MSPack_LIBRARIES}
+             ClamAV::libclamunrar_iface_iface
+             OpenSSL::SSL
+             OpenSSL::Crypto

@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO wlandry/json5_parser
-    REF 1.0.0
-    SHA512 105d0cccb28dd9045c06d73ab1e98a5e744ffdb38310a4581b8f1517b0edffb2cba424dc557a3490dfdcd4627d3bd1c6850eb38f588e1627dcab1de120d70717
+    REPO Caltech-IPAC/json5_parser
+    REF 580bfe30c5ee5e06a0f536d7bddb75c07a29eda6 # 1.0.0
+    SHA512 25cdbc02ed2e3b05f0644c3398230ab82ede093ed6f7d8f140a9810509dd05feab1187d62fc38818725a92c47029fe3dc5ecfdbe14e1e0a2ef314e925b369d59
     HEAD_REF master
 	PATCHES 00001-fix-build.patch
 )
@@ -23,4 +21,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/json5-parser)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/json5-parser/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

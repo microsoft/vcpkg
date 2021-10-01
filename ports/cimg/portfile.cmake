@@ -1,23 +1,21 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
-    REPO "dtschump/CImg"
-    REF v.2.6.2
+    REPO dtschump/CImg
+    REF b33dcc8f9f1acf1f276ded92c04f8231f6c23fcd # v2.9.9
+    SHA512 327c72320e7cac386ba72d417c45b9e8b40df34650370c34e687c362731919af1b447b2ee498f21278d4af155f0d9dbfabd222856d5f18c2e05569fa638a5909
     HEAD_REF master
-    SHA512 6571c646c2d1c007212b3c8cd6794ff1722a0ffc4fcbbe26499cf1e74d3490e893cac5868c5b513602b336b5609316cd7f67c2e1f89b04fe79df5f93b9c6be7a)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
 
 # Move cmake files, ensuring they will be 3 directories up the import prefix
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cimg)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/Licence_CeCILL-C_V1-en.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cimg RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/Licence_CeCILL_V2-en.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cimg RENAME copyright2)
+file(INSTALL "${SOURCE_PATH}/Licence_CeCILL-C_V1-en.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Licence_CeCILL_V2-en.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright2)

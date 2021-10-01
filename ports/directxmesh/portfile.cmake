@@ -1,75 +1,65 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF dec2019
-    SHA512 b48b144172574d56775f7607d7ee7370b427fd95ab4e3089cdaf79b6cbd7fc4bbc15264d9a6703840b763bc2f4a5974594afa39f113960df34e07adfd74561d6
+    REF jun2021
+    SHA512 ed61e14bb217bdff803ad95bfffe31aac7ff0a3f78b963aac183c61233374def4c0b052d1bf9b0d03900fc5be052e1d8fe8de00e81f01349eff1a564d55be610
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dx12 BUILD_DX12
+)
 
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-        
-        # fix solution file to include DirectX 12 in build
-        file(READ ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj _contents)
-        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
-        file(WRITE ${SOURCE_PATH}/DirectXMesh/DirectXMesh_${SLN_NAME}.vcxproj "${_contents}")
-        
-        # fix solution file to include DirectX 12 in build
-        file(READ ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj _contents)
-        string(REPLACE "_WIN32_WINNT=0x0601" "_WIN32_WINNT=0x0A00" _contents "${_contents}")
-        file(WRITE ${SOURCE_PATH}/Meshconvert/Meshconvert_${SLN_NAME}.vcxproj "${_contents}")
-    endif()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/DirectXMesh/DirectXMesh.h
-    ${SOURCE_PATH}/DirectXMesh/DirectXMesh.inl
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(INSTALL
-    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.lib
-    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXMesh.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL
-    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.lib
-    ${SOURCE_PATH}/DirectXMesh/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXMesh.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(
+    MESHCONVERT_EXE
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jun2021/meshconvert.exe"
+    FILENAME "meshconvert-jun2021.exe"
+    SHA512 2a5e1eb69f24fd321d372dcd790970a15957757eacd0a861001299409ff56372bc890c2d8baba32368c81eeb63cdd7aef514c57bca1e7e4e3f7bdf494c3453a0
+  )
 
-if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxmesh)
-    file(MAKE_DIRECTORY ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Meshconvert/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Meshconvert.exe
-        DESTINATION ${TOOL_PATH})
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
+
+  file(INSTALL
+    ${MESHCONVERT_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-jun2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES meshconvert
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

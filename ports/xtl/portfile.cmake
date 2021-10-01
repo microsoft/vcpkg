@@ -3,9 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtl
-    REF be592a531e89f0e4eb3d384b00fec43451f3e734 # 0.6.11
-    SHA512 101bbb0430171499a1167ef39458e908ccf5b39c2037860c2a334642f3d2323f4b8766fe78973967e9cc731956a9c358882165a3713c490fd6513905c3173629
+    REF e0f00666d90086bb245ae73abb6123d0e2c1b30b # 0.7.2
+    SHA512 d7a552dc4e43a3270a56c57fde8fdc48a108909d4fa1e3fdd7ab12b178b3e271ed4d89aac9fd184e2739ddacfb3b5cb248538ed50a0ba56e740875c0faf5aa62
     HEAD_REF master
+    PATCHES
+        fix-fixup-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -19,6 +21,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -1,26 +1,19 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "x86")
 
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    # The library supports Linux/Darwin/BSD, it is just not yet added here
-    message(FATAL_ERROR "vcpkg libfabric currently suports windows.  Please consider a pull request to add additional support!")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ofiwg/libfabric
-    REF v1.8.1
+    REF 9682913a72c982b4a872b6b18cf2889e158a029b # v1.13.1
     HEAD_REF master
-    SHA512 7c3879af3ad7dbda9e9bf9f43a2d213a8e41d50212008f29e912d3d0946efc381e6833c08206106e9f486c37eaef16103198247b328297209ef80dc66ca1b6e5
+    SHA512 a484126d5f2b6ada1a081af4ae4b60ca00da84814f485cd39746f2ab82948dc68fac5fb47cda39510996e61765d3cf07c409f7a8646f33922d2486b6fb7ee2ab
     PATCHES
-      add_additional_includes.patch
+        add_additional_includes.patch
 )
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-   message(FATAL_ERROR "VCPKG BUILD ERROR: libfabric only supports x64")
-endif()
-
-set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v141")
-set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
+set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v142")
+set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v142")
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
@@ -38,9 +31,8 @@ vcpkg_install_msbuild(
 )
 
 #Move includes under subdirectory to avoid colisions with other libraries
-file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/includetemp)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/includetemp ${CURRENT_PACKAGES_DIR}/include/libfabric)
+file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/includetemp")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+file(RENAME "${CURRENT_PACKAGES_DIR}/includetemp" "${CURRENT_PACKAGES_DIR}/include/libfabric")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libfabric RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

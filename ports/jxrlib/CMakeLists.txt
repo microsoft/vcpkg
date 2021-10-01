@@ -20,6 +20,7 @@ endmacro()
 
 if(NOT MSVC)
   add_definitions(-D__ANSI__)
+  add_compile_options(-Wno-error=implicit-function-declaration)
 endif()
 
 include(TestBigEndian)

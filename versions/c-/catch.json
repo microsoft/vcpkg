@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "1f30153a939599e85b3098abf501d739f8ef88c2",
+      "version-string": "alias",
+      "port-version": 1
+    },
+    {
+      "git-tree": "1847097b1369a19c41e695e809a91923d95efd4d",
+      "version-string": "alias",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b08f20188fcfc3e5c5d30d72f4a75c03dfca110b",
+      "version-string": "2.0.1-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3a8ff2af44bbc79323a5278cd2100b5933290f6b",
+      "version-string": "2.0.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1bc0b237d321f03d1d059c1588f42860ebd409f2",
+      "version-string": "1.11.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e3cfb2ebc46897c8cdf3b6f2abf2bc71cc07227d",
+      "version-string": "1.10.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a6db724e345b4d19f6ab625c723c4f441d2b353c",
+      "version-string": "1.9.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d1fc377c44fe261263361527cb80987a33c523f5",
+      "version-string": "1.9.6",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b3cdc9bb97ead24ae0c75cc63d5819ff7895ee3e",
+      "version-string": "1.9.5-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ee1709bb21ed940740a9b3ae837226fc71765103",
+      "version-string": "1.9.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b8bde75a27102c182feb7d8e3443d2b2f4e747ff",
+      "version-string": "1.9.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "af5a5bf586f3b3a2173aac0660d8778f35242627",
+      "version-string": "1.9.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a0d3d912a1dbe700e83951f87118186e5a0cd3fd",
+      "version-string": "1.8.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4bd1360b247abd0d67dc3af50e73005dba9f351c",
+      "version-string": "1.8.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "81335c5a51db8928df33dc42ffc8c90e7fa3af63",
+      "version-string": "1.5.7",
+      "port-version": 0
+    }
+  ]
+}

@@ -1,16 +1,16 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO badaix/aixlog
-    REF 9e89f702b71320c49fee1d27cc2d1bffe330dcc6 # v1.2.4
-    SHA512 77dbe9631bdabb5c7178a51ecd064be0e3baa76ffdae05d012ac55f6d3837c9c3fb0fd2a1993535756869fc944c89c89ca7093dddb1f1ac0fff5343328536d83
+    REF fd4a341740ee840092963de852584ec8ff811c4f # v1.5.0
+    SHA512 10ab07dcb1e67064c0d69ddcf9289d79d914c70fe6922f32179f9ac38d5c682a4ebe08b686d8160c699a6b966bc7aa2fd7d0268664570a10ce146850e78b292d
     )
-    
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME aixlog)
+vcpkg_cmake_install()
+   
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

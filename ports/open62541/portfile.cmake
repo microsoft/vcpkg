@@ -1,35 +1,40 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
-set(VERSION v1.0.1)
+set(VERSION v1.2.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF e4309754fc2f6ea6508b59ca82e08c27b0118d74 # v1.0.1
-    SHA512 bfff9e722c5ee70b93abc54fe0b3267c531bbe039d3344376069175b5d5d95324cd9471ad45674c50393fb0259faacfa94eac1814de11dde4538d76f3e74b2bb
+    REF "${VERSION}"
+    SHA512 E6A1EC2208EC29D8685D2A957FAE6F3FEDC0E847D6AB1BB8AC5C7980223BC377692334C87575956B53BB37A9B71C5DEDD1B5C4F19F122561543D04661FEFE1D5
     HEAD_REF master
-    PATCHES fix-install-bindir.patch
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl UA_ENABLE_ENCRYPTION_OPENSSL
+        mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
+        amalgamation UA_ENABLE_AMALGAMATION
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOPEN62541_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/open62541/tools)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

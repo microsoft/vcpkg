@@ -1,32 +1,32 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
-    REF 32713d30b479690d199b3f02163a832b09b309a5 #v0.1.4
-    SHA512 c1f776b708cd4a68afbcc60e046dcfa3f7c1d378e7bf49ba7f93b3db3a248218316e5037254709320cd50efd6486996aa09678f41499fcea810adea16463ff4b
+    REF e87537be561d753ec82e783bc0929b1979c585f8 # v0.2.7
+    SHA512 651b05ba6d87ad8f65f6cf7e8940b7ea500722848f3e65c2de0bf84d2e6321d0aa1631d4f64a78cf5ed5ed5adac6805a4e91e5c31b3ae86e8c37afb38da4c786
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
 	OPTIONS
 		"-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/aws-c-event-stream/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-event-stream/cmake)
 
 file(REMOVE_RECURSE
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-event-stream
-	${CURRENT_PACKAGES_DIR}/lib/aws-c-event-stream
+	"${CURRENT_PACKAGES_DIR}/debug/include"
+	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-event-stream"
+	"${CURRENT_PACKAGES_DIR}/lib/aws-c-event-stream"
 	)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE	${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

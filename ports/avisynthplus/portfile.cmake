@@ -1,16 +1,22 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" "arm" "arm64")
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF e17f4f80055009bf45b37e1b6d1790bd1c1a93b2 # 3.5.0
-    SHA512 40d2f63416e0e812dd6c7db9b17c09c51295d192bdc4dc46daa063e20731a3451a2b797dab351d31dbb43842eb2c2cdb148da16e5b92816423e3cbf40fff23b0
+    REF v3.7.0
+    SHA512 0f2d5344c4472b810667b99d9e99a2ec8135923f4185dbd7e29ca65e696ce13500ea20ef09c995486573314149a671e1256a4dd0696c4ace8d3ec3716ffdcfc7
     HEAD_REF master
-    PATCHES
-        generate-version-3.5.patch
 )
+
+vcpkg_download_distfile(GHC_ARCHIVE
+    URLS "https://github.com/gulrak/filesystem/archive/3f1c185ab414e764c694b8171d1c4d8c5c437517.zip"
+    FILENAME filesystem-3f1c185ab414e764c694b8171d1c4d8c5c437517.zip
+    SHA512 e3fe1e41b31f840ebc219fcd795e7be2973b80bb3843d6bb080786ad9e3e7f846a118673cb9e17d76bae66954e64e024a82622fb8cea7818d5d9357de661d3d1
+)
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/filesystem)
+vcpkg_extract_source_archive(extracted_archive ARCHIVE "${GHC_ARCHIVE}")
+file(RENAME "${extracted_archive}" "${SOURCE_PATH}/filesystem")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -20,6 +26,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL ${SOURCE_PATH}/distrib/gpl.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/avisynthplus RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/distrib/gpl.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

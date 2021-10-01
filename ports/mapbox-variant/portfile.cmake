@@ -1,11 +1,9 @@
 # header-only
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/variant
-    REF 0f734f01e685a298e3756d30044a4164786c58c5
-    SHA512 36b842ffbaa7d466c26b4783d68dff17b0079927aca876bd021f439591a4ee5f184c71a60ca59857c35675b2e27cf650bedea7a3cdf9c3fc959c3c0ec3b135eb
+    REF a2a4858345423a760eca300ec42acad1ad123aa3 # v1.2.0
+    SHA512 6d1ad2f37e137c42592dbd618a3871008d4f83b3cb0d6f05a9c469a6a987ed3fc7f0416ae341646d73e69426903a5a4f64b9f41ae739fd940bbd304dfcae289e
     HEAD_REF master
 )
 

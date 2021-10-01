@@ -1,8 +1,6 @@
 # Due to the complexity involved, this package doesn't install the Vulkan SDK.
 # It instead verifies that Vulkan is installed.
 # Other packages can depend on this package to declare a dependency on Vulkan.
-include(vcpkg_common_functions)
-
 message(STATUS "Querying VULKAN_SDK Enviroment variable")
 file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
 set(VULKAN_INCLUDE "${VULKAN_DIR}/include/vulkan/")

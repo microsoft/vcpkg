@@ -1,3 +1,6 @@
+if (EXISTS ${CURRENT_INSTALLED_DIR}/share/lodepng-c/copyright)
+    message(FATAL_ERROR "${PORT} conflict with lodepng-c, please remove lodepng-c before install ${PORT}.")
+endif()
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 

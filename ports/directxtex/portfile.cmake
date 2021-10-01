@@ -1,76 +1,110 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXTex only supports dynamic CRT linkage")
-endif()
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF dec2019
-    SHA512 b0c7fdeb2f035186eddeb543cd16813c6807b9646367cd309082bd164ab484001dee912249d5570e3ddf5abb90cb3e7c0355a3c18c2e2bd2a051292b65a293f6
+    REF aug2021
+    SHA512 72b688848ad7645e018bb7dc3a3179ea3857e8349185ad53ad583b17aca555554ce44773a4b900ad163b2fd8551c28c3503b88333d8cff8f8d3ee03017bad35d
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
+if("openexr" IN_LIST FEATURES)
+    vcpkg_download_distfile(
+        DIRECTXTEX_EXR_HEADER
+        URLS "https://raw.githubusercontent.com/wiki/Microsoft/DirectXTex/DirectXTexEXR.h"
+        FILENAME "DirectXTexEXR-2.h"
+        SHA512 54163820996f7f3c47d0e34da7d717ba51a4363458d77e8f3750d2b6b38bcf803f199b913b4fd7b8dcdd3f520cd0c2bb42a9f79d30f5805fccdece6af368dd12
+    )
 
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
+    vcpkg_download_distfile(
+        DIRECTXTEX_EXR_SOURCE
+        URLS "https://raw.githubusercontent.com/wiki/Microsoft/DirectXTex/DirectXTexEXR.cpp"
+        FILENAME "DirectXTexEXR-2.cpp"
+        SHA512 fbf5a330961f3ac80e4425e8451e9a696240cd89fabca744a19f1f110ae188bae7d8eb5b058aaf66015066d919d4f581b14494d78d280147b23355d8a32745b9
+    )
+
+    file(COPY ${DIRECTXTEX_EXR_HEADER} DESTINATION ${SOURCE_PATH}/DirectXTex)
+    file(COPY ${DIRECTXTEX_EXR_SOURCE} DESTINATION ${SOURCE_PATH}/DirectXTex)
+    file(RENAME ${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.h ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h)
+    file(RENAME ${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.cpp ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.cpp)
+    vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES enable_openexr_support.patch)
+endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dx12 BUILD_DX12
+        openexr ENABLE_OPENEXR_SUPPORT
+)
+
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-    endif()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTex_${SLN_NAME}.sln
-    PLATFORM ${BUILD_ARCH}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
+        -DBC_USE_OPENMP=ON
+        -DBUILD_DX11=ON
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/DirectXTex.h
-    ${SOURCE_PATH}/DirectXTex/DirectXTex.inl
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.lib
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.lib
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtex)
-    file(MAKE_DIRECTORY ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texdiag/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/texdiag.exe
-        DESTINATION ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texconv/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texconv.exe
-        DESTINATION ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texassemble/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texassemble.exe
-        DESTINATION ${TOOL_PATH})
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("openexr" IN_LIST FEATURES)))
+  vcpkg_download_distfile(
+    TEXASSEMBLE_EXE
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/aug2021/texassemble.exe"
+    FILENAME "texassemble-aug2021.exe"
+    SHA512 11b07da257d7ea394fa789210b2985656bf28a0b6117d5380d9639ffc0a460a0e6c4bdbb24256dcf3b4d75088b4b5386951a7de856fecb99e73dfe326b4bfe45
+  )
+
+  vcpkg_download_distfile(
+    TEXCONV_EXE
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/aug2021/texconv.exe"
+    FILENAME "texconv-aug2021.exe"
+    SHA512 c11bc77a36d5989189519793f3a44c15f1e01b3e0a6254bffca4ee6f96c933a6add34ffc7e409f3c3f97d862816006d3ca440876a4af200f035353d096902c5b
+  )
+
+  vcpkg_download_distfile(
+    TEXDIAG_EXE
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/aug2021/texdiag.exe"
+    FILENAME "texdiag-aug2021.exe"
+    SHA512 73ae5fbc20ff7d970891d8e4029f1400f5d16675912cc4af97f9ef0e563dc77fa89690989e80eec5fd033975cf67d350be5a547d08fc5fecbabd4577603eef80
+  )
+
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
+
+  file(INSTALL
+    ${TEXASSEMBLE_EXE}
+    ${TEXCONV_EXE}
+    ${TEXDIAG_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtex/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-aug2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-aug2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-aug2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES texassemble texconv texdiag
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

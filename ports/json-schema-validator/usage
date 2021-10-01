@@ -1,0 +1,4 @@
+The package json-schema-validator provides CMake integration:
+
+    find_package(nlohmann_json_schema_validator REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json_schema_validator)

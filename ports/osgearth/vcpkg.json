@@ -1,0 +1,33 @@
+{
+  "name": "osgearth",
+  "version": "3.2",
+  "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
+  "homepage": "https://github.com/gwaldron/osgearth",
+  "supports": "!(x86 | wasm32)",
+  "dependencies": [
+    "basisu",
+    "draco",
+    "geos",
+    "glew",
+    "libwebp",
+    "libzip",
+    "opengl",
+    {
+      "name": "osg",
+      "features": [
+        "plugins"
+      ]
+    },
+    "protobuf",
+    "sqlite3",
+    "tinyxml"
+  ],
+  "default-features": [
+    "tools"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

@@ -1,36 +1,33 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF 6ec4107907552db927be8601aed97b5a4b83d33d#version 1.3.0
-    SHA512 28b99d822d7be0348d4e367c2d92cd2bd4a5563806454388ad3c7d9817ef91fa7b4408d15ce4c77ac6a8ad2dd7db173899fdaf7881585282bf57f4c487909be6
+    REF 9fcf039b573d153ba9bbc2beb5f11259ddacdcff # v1.5.1
+    SHA512 3db2668c3f971dc54156df2a3520645224fbb55460957da35940889c3148cb2cbc67c10cd23b9614ece70235d1f6003618310129eb9c40ced42db058c140dd58
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    mbedtls NNG_ENABLE_TLS
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        mbedtls NNG_ENABLE_TLS
+        tools NNG_ENABLE_NNGCAT
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -DNNG_TESTS=OFF
-        -DNNG_ENABLE_NNGCAT=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nng)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+    "${CURRENT_PACKAGES_DIR}/include/nng/nng.h"
     "defined(NNG_SHARED_LIB)"
     "0 /* defined(NNG_SHARED_LIB) */"
 )
@@ -49,7 +46,10 @@ else()
     )
 endif()
 
-# Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES nngcat AUTO_CLEAN)
+endif()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

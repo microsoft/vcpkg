@@ -1,0 +1,29 @@
+From a6fd3992d44053a523a67aa16f5ae88fecfb20e1 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Tue, 22 Sep 2020 14:09:53 -0700
+Subject: [PATCH 1/2] remove `#ifndef NOUNCRYPT`
+
+enable decrypt support for password-encrypted ZIP files
+
+---
+ contrib/minizip/unzip.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/contrib/minizip/unzip.c b/contrib/minizip/unzip.c
+index bcfb941..1895a0f 100644
+--- a/contrib/minizip/unzip.c
++++ b/contrib/minizip/unzip.c
+@@ -68,10 +68,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#ifndef NOUNCRYPT
+-        #define NOUNCRYPT
+-#endif
+-
+ #include "zlib.h"
+ #include "unzip.h"
+ 
+-- 
+2.24.3 (Apple Git-128)
+

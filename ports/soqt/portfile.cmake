@@ -11,54 +11,28 @@ vcpkg_from_github(
         disable-test-code.patch
 )
 
-if(VCPKG_HEAD_VERSION)
-    vcpkg_download_distfile(
-        SOANYDATA_ARCHIVE
-        URLS "https://github.com/coin3d/soanydata/archive/master.tar.gz"
-        FILENAME "Coin3D-soanydata-master.tar.gz"
-        SKIP_SHA512
-    )
-else()
-    vcpkg_download_distfile(
-        SOANYDATA_ARCHIVE
-        URLS "https://github.com/coin3d/soanydata/archive/3ff6e9203fbb0cc08a2bdf209212b7ef4d78a1f2.tar.gz"
-        FILENAME "Coin3D-soanydata-3ff6e9203fbb0cc08a2bdf209212b7ef4d78a1f2.tar.gz"
-        SHA512 9e176feda43a12ccdf8756f7329517936357499771a7d0a58357d343bdea125c34f8734ff1cd16cda3eeee58090dc1680999849c50132c30940a23d3f81a5c66
-    )
-endif()
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOANYDATA_SOURCE_PATH
-    ARCHIVE ${SOANYDATA_ARCHIVE}
+    REPO coin3d/soanydata
+    REF 3ff6e9203fbb0cc08a2bdf209212b7ef4d78a1f2
+    SHA512 9e176feda43a12ccdf8756f7329517936357499771a7d0a58357d343bdea125c34f8734ff1cd16cda3eeee58090dc1680999849c50132c30940a23d3f81a5c66
+    HEAD_REF master
 )
 
-if(NOT EXISTS ${SOURCE_PATH}/data)
-    file(RENAME ${SOANYDATA_SOURCE_PATH} ${SOURCE_PATH}/data)
+if(NOT EXISTS "${SOURCE_PATH}/data")
+    file(RENAME "${SOANYDATA_SOURCE_PATH}" "${SOURCE_PATH}/data")
 endif()
 
-if(VCPKG_HEAD_VERSION)
-    vcpkg_download_distfile(
-        SOGUI_ARCHIVE
-        URLS "https://github.com/coin3d/sogui/archive/master.tar.gz"
-        FILENAME "Coin3D-sogui-master.tar.gz"
-        SKIP_SHA512
-    )
-else()
-    vcpkg_download_distfile(
-        SOGUI_ARCHIVE
-        URLS "https://github.com/coin3d/sogui/archive/fb79af47cff89f0f3657501601a7ea5c11968b17.tar.gz"
-        FILENAME "Coin3D-sogui-fb79af47cff89f0f3657501601a7ea5c11968b17.tar.gz"
-        SHA512 bcf4d2e04c3b6ac87a6425d90c6077ec655732bcc0f99bf181ff2dfce8d356509f52d71b884660fafddc135551ee8fbb139e02b6706d2a01be006193918d232b
-    )
-endif()
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOGUI_SOURCE_PATH
-    ARCHIVE ${SOGUI_ARCHIVE}
+    REPO coin3d/sogui
+    REF fb79af47cff89f0f3657501601a7ea5c11968b17
+    SHA512 bcf4d2e04c3b6ac87a6425d90c6077ec655732bcc0f99bf181ff2dfce8d356509f52d71b884660fafddc135551ee8fbb139e02b6706d2a01be006193918d232b
+    HEAD_REF master
 )
 
 if(NOT EXISTS ${SOURCE_PATH}/src/Inventor/Qt/common)
-    file(RENAME ${SOGUI_SOURCE_PATH} ${SOURCE_PATH}/src/Inventor/Qt/common)
+    file(RENAME "${SOGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/Inventor/Qt/common")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -79,11 +53,11 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SoQt-1.6.0)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

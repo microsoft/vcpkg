@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(hwloc
     LANGUAGES C
-    VERSION 1.11.7)
+    VERSION 2.2.0)
 
 configure_file(contrib/windows/hwloc_config.h include/hwloc/autogen/config.h COPYONLY)
 configure_file(contrib/windows/static-components.h include/static-components.h COPYONLY)
@@ -18,24 +18,24 @@ endif()
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/private/autogen/config.h "${PRIVATE_CONFIG_H}")
 
 add_library(libhwloc
-    src/base64.c
-    src/bind.c
-    src/bitmap.c
-    src/components.c
-    src/distances.c
-    src/diff.c
-    src/misc.c
-    src/pci-common.c
-    src/topology-custom.c
-    src/topology-noos.c
-    src/topology-synthetic.c
-    src/topology-windows.c
-    src/topology-x86.c
-    src/topology-xml-nolibxml.c
-    src/topology-xml.c
-    src/topology.c
-    src/traversal.c
-    src/dolib.c)
+    hwloc/base64.c
+    hwloc/bind.c
+    hwloc/bitmap.c
+    hwloc/components.c
+    hwloc/distances.c
+    hwloc/diff.c
+    hwloc/misc.c
+    hwloc/pci-common.c
+    hwloc/shmem.c
+    hwloc/topology-noos.c
+    hwloc/topology-synthetic.c
+    hwloc/topology-windows.c
+    hwloc/topology-x86.c
+    hwloc/topology-xml-nolibxml.c
+    hwloc/topology-xml.c
+    hwloc/topology.c
+    hwloc/traversal.c
+    hwloc/dolib.c)
 
 set_target_properties(libhwloc PROPERTIES DEFINE_SYMBOL _USRDLL)
 
@@ -45,7 +45,7 @@ add_executable(hwloc-info
 target_link_libraries(hwloc-info PRIVATE libhwloc)
 
 foreach(Target IN ITEMS libhwloc hwloc-info)
-    target_include_directories(${Target} PRIVATE ./include ./src ${CMAKE_CURRENT_BINARY_DIR}/include)
+    target_include_directories(${Target} PRIVATE ./include ./hwloc ${CMAKE_CURRENT_BINARY_DIR}/include)
     target_compile_definitions(${Target} PRIVATE _CRT_SECURE_NO_WARNINGS)
 endforeach(Target)
 

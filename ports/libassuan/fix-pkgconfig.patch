@@ -1,0 +1,11 @@
+diff --git a/src/libassuan.pc.in b/src/libassuan.pc.in
+index 4e952d7..83ba872 100644
+--- a/src/libassuan.pc.in
++++ b/src/libassuan.pc.in
+@@ -10,5 +10,5 @@ Description: IPC library for the GnuPG components
+ Requires: gpg-error
+ Version: @PACKAGE_VERSION@
+ Cflags: @LIBASSUAN_CONFIG_CFLAGS@
+-Libs: @LIBASSUAN_CONFIG_LIBS@
++Libs: -L${libdir} @LIBASSUAN_CONFIG_LIBS@
+ URL: https://www.gnupg.org/related_software/libassuan/index.html

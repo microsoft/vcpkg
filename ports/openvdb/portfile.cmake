@@ -1,25 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF c5e9e2944f085907e973b627843c49c838afe912 # v7.0.0
-    SHA512 351611b04a192bcc501da599e55892a5dc7570dce6c0aea287d800612a20f6cb2a0d7825e062aa99f12bc2a968c51c7fe6af61badfdbd746edbd4e9fc9e4f2a4
+    REF ea786c46b7a1b5158789293d9b148b379fc9914c # v8.1.0
+    SHA512 3c4ab3db35b3eb019149ac455f0c7a262081e9866b7e49eaba05424bf837debccf0c987c2555d3c91a2cff2d1ba4b41862f544fd4684558f3a319616ef3c9eb3
     HEAD_REF master
     PATCHES
-        0001-remove-pkgconfig.patch
-        0002-fix-cmake-modules.patch
         0003-fix-cmake.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindIlmBase.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindBlosc.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenEXR.cmake)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(OPENVDB_STATIC ON)
-    set(OPENVDB_SHARED OFF)
-else()
-    set(OPENVDB_STATIC OFF)
-    set(OPENVDB_SHARED ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
 
+set(OPENVDB_BUILD_TOOLS OFF)
 if ("tools" IN_LIST FEATURES)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENVDB_BUILD_TOOLS ON)
@@ -28,9 +25,16 @@ if ("tools" IN_LIST FEATURES)
   endif()
 endif()
 
-vcpkg_configure_cmake(
+if ("ax" IN_LIST FEATURES)
+  if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(OPENVDB_BUILD_AX ON)
+  else()
+    message(FATAL_ERROR "Currently no support for building OpenVDB AX on Windows.")  
+  endif()
+endif()
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOPENVDB_BUILD_UNITTESTS=OFF
         -DOPENVDB_BUILD_PYTHON_MODULE=OFF
@@ -40,33 +44,24 @@ vcpkg_configure_cmake(
         -DOPENVDB_CORE_SHARED=${OPENVDB_SHARED}
         -DOPENVDB_BUILD_VDB_PRINT=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_VIEW=${OPENVDB_BUILD_TOOLS}
-        #-DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS} # Enable vdb_render when https://github.com/openexr/openexr/issues/302 is fixed
+        -DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_LOD=${OPENVDB_BUILD_TOOLS}
+        -DUSE_PKGCONFIG=OFF
+        ${OPENVDB_BUILD_AX}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenVDB TARGET_PATH share/openvdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenVDB)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if (OPENVDB_BUILD_TOOLS)
-    # copy tools to tools/openvdb directory
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_print.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_print.exe)
-    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_render.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_render.exe)
-    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_view.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_view.exe) # vdb_view does not support win32 currently.
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_lod.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_lod.exe)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    # remove debug versions of tools
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_print.exe)
-    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_render.exe)
-    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_view.exe) # vdb_view does not support win32 currently.
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_lod.exe)
+    vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

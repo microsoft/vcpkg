@@ -1,0 +1,20 @@
+diff --git a/Modules/ThirdParty/HDF5/CMakeLists.txt b/Modules/ThirdParty/HDF5/CMakeLists.txt
+index a700ecdfb..0a683a52b 100644
+--- a/Modules/ThirdParty/HDF5/CMakeLists.txt	
++++ b/Modules/ThirdParty/HDF5/CMakeLists.txt
+@@ -25,11 +25,11 @@ endif()
+ ")
+   endif()
+ 
+-  set(ITKHDF5_LIBRARIES )
+-  if(BUILD_SHARED_LIBS)
+-    list(APPEND ITKHDF5_LIBRARIES ${HDF5_C_SHARED_LIBRARY} ${HDF5_CXX_SHARED_LIBRARY})
++  set(ITKHDF5_LIBRARIES)
++  if(HDF5_BUILD_SHARED_LIBS)
++    list(APPEND ITKHDF5_LIBRARIES hdf5::hdf5_cpp-shared hdf5::hdf5-shared)
+   else()
+-    list(APPEND ITKHDF5_LIBRARIES ${HDF5_C_STATIC_LIBRARY} ${HDF5_CXX_STATIC_LIBRARY})
++    list(APPEND ITKHDF5_LIBRARIES hdf5::hdf5_cpp-static hdf5::hdf5-static)
+   endif()
+ 
+   set(ITKHDF5_INCLUDE_DIRS

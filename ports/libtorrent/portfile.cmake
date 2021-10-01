@@ -5,25 +5,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("python" IN_LIST FEATURES)
         message(FATAL_ERROR "The python feature is currently broken on Windows")
     endif()
-
-    if("iconv" IN_LIST FEATURES)
-        set(ICONV_PATCH "fix_find_iconv.patch")
-    else()
-        # prevent picking up libiconv if it happens to already be installed
-        set(ICONV_PATCH "no_use_iconv.patch")
-    endif()
-
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
     endif()
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    deprfun     deprecated-functions
-    examples    build_examples
-    python      python-bindings
-    test        build_tests
-    tools       build_tools
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        deprfun     deprecated-functions
+        examples    build_examples
+        iconv       iconv
+        python      python-bindings
+        test        build_tests
+        tools       build_tools
 )
 
 # Note: the python feature currently requires `python3-dev` and `python3-setuptools` installed on the system
@@ -39,18 +34,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF 8b42b0413a8ff6768fd15ee91eb9656f31f27bea # based on libtorrent-1.2.6 plus fixes from RC_1_2 branch
-    SHA512 6dd4d60b1f13cfa07af60c553ebf1085c5306e1788c87e53a8320bf7041bc7f66aaea57c16d09468742b9bda958b5f203d08f27086c98b7f296ab429d0df20d9
+    REF 33a10d5a723a6c27d9baee7d9bf2028eb81c88ed # v1.2.14
+    SHA512 7be169625c9ab1319047aa025abb36579cf6c749faeee7788b5c0ca24ca32d0a4bfd898415159b9133302da4d26230edcb5585c12137edcab8f5b3548c67a268
     HEAD_REF RC_1_2
-    PATCHES
-        add-datetime-to-boost-libs.patch
-        fix_python_cmake.patch
-        ${ICONV_PATCH}
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -Dboost-python-module-name=${_boost-python-module-name}

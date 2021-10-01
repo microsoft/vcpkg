@@ -1,0 +1,6 @@
+{
+  "name": "argtable3",
+  "version-string": "3.2.1",
+  "description": "A single-file, ANSI C, command-line parsing library that parses GNU-style command-line options",
+  "homepage": "www.argtable.org"
+}

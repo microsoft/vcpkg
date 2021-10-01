@@ -1,0 +1,6 @@
+{
+  "name": "palsigslot",
+  "version-string": "1.2.0",
+  "description": "A header-only, thread safe implementation of signal-slots for C++.",
+  "homepage": "https://github.com/palacaze/sigslot"
+}

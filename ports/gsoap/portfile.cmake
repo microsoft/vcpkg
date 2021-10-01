@@ -1,16 +1,14 @@
+message(FATAL_ERROR "gsoap does not offer permanent public downloads of its sources; all versions except the latest are removed from sourceforge. Therefore, vcpkg cannot support this library directly in the central catalog. If you would like to use gsoap, you can use this port as a starting point (${CMAKE_CURRENT_LIST_DIR}) and update it to use a permanent commercial copy or the latest public download. Do not report issues with this library to the vcpkg GitHub.")
+
 vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/gsoap2/gsoap-2.8/gsoap_2.8.102.zip"
-    FILENAME "gsoap_2.8.102.zip"
-    SHA512 3cff65605b15f820c9d56e32575231fb6fb89927bafc1db85ac1f879acd8496d6f38b558e994d17cce475beae0976d5fafcff7f22b28cdfbec8b7ec4b08bcbe7
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-       "${CMAKE_CURRENT_LIST_DIR}/fix-build-in-windows.patch"
+    REPO gsoap2
+    REF gsoap-2.8
+    FILENAME "gsoap_2.8.112.zip"
+    SHA512 0c2562891a738916235f1d4b19d8419d96d0466ca4b729766551183c7b9b90cbe35bbf7fe126b3ea6b18138cbf591c9a9b5b73ddea7152ccdd2f790777c2b6d8
+    PATCHES fix-build-in-windows.patch
 )
 
 set(BUILD_ARCH "Win32")
@@ -18,7 +16,7 @@ set(BUILD_ARCH "Win32")
 # Handle binary files and includes
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_build_msbuild(
         USE_VCPKG_INTEGRATION
         PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
@@ -46,6 +44,9 @@ file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOUR
 
 # Handle import files
 file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+# Handle custom files
+file(COPY ${SOURCE_PATH}/gsoap/custom DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle plugin files
 file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

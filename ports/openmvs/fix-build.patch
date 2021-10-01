@@ -1,0 +1,449 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7966ed5..f34b5b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,9 +63,10 @@ INCLUDE_DIRECTORIES("${OpenMVS_SOURCE_DIR}")
+ SET(OpenMVS_EXTRA_LIBS "")
+ if(OpenMVS_USE_OPENMP)
+ 	SET(OpenMP_LIBS "")
+-	FIND_PACKAGE(OpenMP)
+-	if(OPENMP_FOUND)
+-		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
++	FIND_PACKAGE(OpenMP REQUIRED)
++	if(OpenMP_FOUND)
++	  link_libraries(OpenMP::OpenMP_CXX)
++	  link_libraries(OpenMP::OpenMP_C)
+ 		ADD_DEFINITIONS(-D_USE_OPENMP)
+ 		SET(_USE_OPENMP TRUE)
+ 		#cmake only check for separate OpenMP library on AppleClang 7+
+@@ -83,7 +84,7 @@ if(OpenMVS_USE_OPENGL)
+ 	if(POLICY CMP0072)
+ 		cmake_policy(SET CMP0072 NEW)
+ 	endif()
+-	FIND_PACKAGE(OpenGL)
++	FIND_PACKAGE(OpenGL REQUIRED)
+ 	if(OPENGL_FOUND)
+ 		INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+ 		ADD_DEFINITIONS(${OpenGL_DEFINITIONS} -D_USE_OPENGL)
+@@ -94,7 +95,7 @@ if(OpenMVS_USE_OPENGL)
+ endif()
+ 
+ if(OpenMVS_USE_CUDA)
+-	FIND_PACKAGE(CUDA)
++	FIND_PACKAGE(CUDA REQUIRED)
+ 	if(CUDA_FOUND)
+ 		INCLUDE_DIRECTORIES(${CUDA_INCLUDE_DIRS})
+ 		ADD_DEFINITIONS(-D_USE_CUDA)
+@@ -108,7 +109,7 @@ else()
+ endif()
+ 
+ if(OpenMVS_USE_BREAKPAD)
+-	FIND_PACKAGE(BREAKPAD)
++	FIND_PACKAGE(BREAKPAD REQUIRED)
+ 	if(BREAKPAD_FOUND)
+ 		INCLUDE_DIRECTORIES(${BREAKPAD_INCLUDE_DIRS})
+ 		ADD_DEFINITIONS(${BREAKPAD_DEFINITIONS} -D_USE_BREAKPAD)
+@@ -119,7 +120,7 @@ if(OpenMVS_USE_BREAKPAD)
+ 	endif()
+ endif()
+ 
+-FIND_PACKAGE(Boost ${SYSTEM_PACKAGE_REQUIRED} COMPONENTS iostreams program_options system serialization)
++FIND_PACKAGE(Boost COMPONENTS iostreams program_options system serialization REQUIRED)
+ if(Boost_FOUND)
+ 	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+ 	ADD_DEFINITIONS(${Boost_DEFINITIONS} -D_USE_BOOST)
+@@ -127,14 +128,14 @@ if(Boost_FOUND)
+ 	SET(_USE_BOOST TRUE)
+ endif()
+ 
+-FIND_PACKAGE(Eigen ${SYSTEM_PACKAGE_REQUIRED})
+-if(EIGEN_FOUND)
+-	INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIRS})
+-	ADD_DEFINITIONS(${EIGEN_DEFINITIONS} -D_USE_EIGEN)
++FIND_PACKAGE(Eigen3 REQUIRED)
++if(EIGEN3_FOUND)
++	INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIRS})
++	ADD_DEFINITIONS(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
+ 	SET(_USE_EIGEN TRUE)
+ endif()
+ 
+-FIND_PACKAGE(OpenCV ${SYSTEM_PACKAGE_REQUIRED})
++FIND_PACKAGE(OpenCV REQUIRED)
+ if(OpenCV_FOUND)
+ 	INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+ 	ADD_DEFINITIONS(${OpenCV_DEFINITIONS})
+@@ -170,7 +171,9 @@ ADD_DEFINITIONS(${OpenMVS_DEFINITIONS})
+ 
+ # Add modules
+ ADD_SUBDIRECTORY(libs)
++if(OpenMVS_BUILD_TOOLS)
+ ADD_SUBDIRECTORY(apps)
++endif()
+ ADD_SUBDIRECTORY(docs)
+ 
+ if(OpenMVS_USE_CERES)
+@@ -188,7 +191,7 @@ export(TARGETS Common IO Math MVS FILE "${PROJECT_BINARY_DIR}/OpenMVSTargets.cma
+ # Export the package for use from the build-tree
+ # (this registers the build-tree with a global CMake-registry)
+ export(PACKAGE OpenMVS)
+- 
++
+ # Create the OpenMVSConfig.cmake and OpenMVSConfigVersion files
+ file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${INSTALL_INCLUDE_DIR}")
+ # ... for the build tree
+@@ -199,7 +202,7 @@ set(CONF_INCLUDE_DIRS "${INSTALL_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/build/OpenMVSConfig.cmake.in" "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/OpenMVSConfig.cmake" @ONLY)
+ # ... for both
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/build/OpenMVSConfigVersion.cmake.in" "${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake" @ONLY)
+- 
++
+ # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
+ install(FILES
+ 	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/OpenMVSConfig.cmake"
+diff --git a/MvgMvsPipeline.py b/MvgMvsPipeline.py.in
+similarity index 97%
+rename from MvgMvsPipeline.py
+rename to MvgMvsPipeline.py.in
+index f4914bf..23d03e6 100644
+--- a/MvgMvsPipeline.py
++++ b/MvgMvsPipeline.py.in
+@@ -91,12 +91,12 @@ def find(afile):
+ 
+ 
+ # Try to find openMVG and openMVS binaries in PATH
+-OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
+-OPENMVS_BIN = whereis("ReconstructMesh")
++OPENMVG_BIN = "@OPENMVG_TOOLS_PATH@"
++OPENMVS_BIN = "@OPENMVS_TOOLS_PATH@"
+ 
+ # Try to find openMVG camera sensor database
+-CAMERA_SENSOR_DB_FILE = "sensor_width_camera_database.txt"
+-CAMERA_SENSOR_DB_DIRECTORY = find(CAMERA_SENSOR_DB_FILE)
++CAMERA_SENSOR_DB_FILE = "@SENSOR_WIDTH_CAMERA_DATABASE_TXT_PATH@"
++CAMERA_SENSOR_DB_DIRECTORY = "@OPENMVG_TOOLS_PATH@"
+ 
+ # Ask user for openMVG and openMVS directories if not found
+ if not OPENMVG_BIN:
+@@ -175,10 +175,10 @@ class StepsStore:
+              ["-i", "%input_dir%", "-o", "%matches_dir%", "-d", "%camera_file_params%"]],
+             ["Compute features",             # 1
+              os.path.join(OPENMVG_BIN, "openMVG_main_ComputeFeatures"),
+-             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-m", "SIFT", "-n", "4"]],
++             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-m", "SIFT"]],
+             ["Compute matches",              # 2
+              os.path.join(OPENMVG_BIN, "openMVG_main_ComputeMatches"),
+-             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-n", "HNSWL2", "-r", ".8"]],
++             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-n", "AUTO", "-r", ".8"]],
+             ["Incremental reconstruction",   # 3
+              os.path.join(OPENMVG_BIN, "openMVG_main_IncrementalSfM"),
+              ["-i", "%matches_dir%/sfm_data.json", "-m", "%matches_dir%", "-o", "%reconstruction_dir%"]],
+diff --git a/apps/Viewer/CMakeLists.txt b/apps/Viewer/CMakeLists.txt
+index c519040..934cd50 100644
+--- a/apps/Viewer/CMakeLists.txt
++++ b/apps/Viewer/CMakeLists.txt
+@@ -16,18 +16,6 @@ else()
+ 	MESSAGE("-- Can't find GLEW. Continuing without it.")
+ 	RETURN()
+ endif()
+-if(CMAKE_COMPILER_IS_GNUCXX)
+-	FIND_PACKAGE(PkgConfig QUIET)
+-	pkg_search_module(GLFW QUIET glfw3)
+-	if(GLFW_FOUND)
+-		INCLUDE_DIRECTORIES(${GLFW_INCLUDE_DIRS})
+-		ADD_DEFINITIONS(${GLFW_DEFINITIONS})
+-		MESSAGE(STATUS "GLFW3 ${GLFW_VERSION} found (include: ${GLFW_INCLUDE_DIRS})")
+-	else()
+-		MESSAGE("-- Can't find GLFW3. Continuing without it.")
+-		RETURN()
+-	endif()
+-else()
+ 	FIND_PACKAGE(glfw3 QUIET)
+ 	if(glfw3_FOUND)
+ 		INCLUDE_DIRECTORIES(${glfw3_INCLUDE_DIRS})
+@@ -37,7 +25,6 @@ else()
+ 		MESSAGE("-- Can't find GLFW3. Continuing without it.")
+ 		RETURN()
+ 	endif()
+-endif()
+ 
+ # List sources files
+ FILE(GLOB PCH_C "Common.cpp")
+diff --git a/build/OpenMVSConfig.cmake.in b/build/OpenMVSConfig.cmake.in
+index 96b8fe2..fa6d4a6 100644
+--- a/build/OpenMVSConfig.cmake.in
++++ b/build/OpenMVSConfig.cmake.in
+@@ -3,16 +3,71 @@
+ #  OpenMVS_INCLUDE_DIRS - include directories for OpenMVS
+ #  OpenMVS_LIBRARIES    - libraries to link against
+ #  OpenMVS_BINARIES     - the binaries
+- 
++
+ # Compute paths
+ get_filename_component(OpenMVS_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ set(OpenMVS_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+- 
++list(APPEND CMAKE_MODULE_PATH "${OpenMVS_CMAKE_DIR}")
++
++if (MSVC)
++	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /GL")
++	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
++	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
++	set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
++endif()
++
++set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
++include(CMakeFindDependencyMacro)
++
++if(@OpenMVS_USE_OPENMP@)
++	find_dependency(OpenMP)
++	add_definitions(-D_USE_OPENMP)
++endif()
++
++if(@OpenMVS_USE_OPENGL@)
++	find_dependency(OpenGL)
++	add_definitions(${OpenGL_DEFINITIONS} -D_USE_OPENGL)
++endif()
++
++if(@OpenMVS_USE_CUDA@)
++	find_dependency(CUDA)
++	add_definitions(-D_USE_CUDA)
++	include_directories(${CUDA_INCLUDE_DIRS})
++endif()
++
++if(@OpenMVS_USE_BREAKPAD@)
++	find_dependency(BREAKPAD)
++	add_definitions(${BREAKPAD_DEFINITIONS} -D_USE_BREAKPAD)
++endif()
++
++find_dependency(Boost)
++add_definitions(${Boost_DEFINITIONS} -D_USE_BOOST)
++include_directories(${Boost_INCLUDE_DIRS})
++find_dependency(Eigen3)
++add_definitions(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
++include_directories(${EIGEN3_INCLUDE_DIRS})
++find_dependency(OpenCV)
++add_definitions(${OpenCV_DEFINITIONS})
++find_dependency(CGAL)
++add_definitions(${CGAL_DEFINITIONS})
++
++find_dependency(VCG REQUIRED)
++add_definitions(${VCG_DEFINITIONS})
++
++if(@OpenMVS_USE_CERES@)
++	find_dependency(Ceres)
++	add_definitions(${CERES_DEFINITIONS})
++endif()
++
++add_definitions(@OpenMVS_DEFINITIONS@)
++
+ # Our library dependencies (contains definitions for IMPORTED targets)
+ if(NOT TARGET MVS AND NOT OpenMVS_BINARY_DIR)
+ 	include("${OpenMVS_CMAKE_DIR}/OpenMVSTargets.cmake")
+ endif()
+- 
++
+ # These are IMPORTED targets created by OpenMVSTargets.cmake
+ set(OpenMVS_LIBRARIES MVS)
+ set(OpenMVS_BINARIES InterfaceVisualSFM DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+diff --git a/build/Utils.cmake b/build/Utils.cmake
+index f41c9d8..31cd292 100644
+--- a/build/Utils.cmake
++++ b/build/Utils.cmake
+@@ -160,7 +160,7 @@ macro(GetOperatingSystemArchitectureBitness)
+ 	elseif(CMAKE_SYSTEM_PROCESSOR MATCHES i686.*|i386.*|x86.*)
+ 		set(X86 1)
+ 	endif()
+-	
++
+ 	if(NOT ${MY_VAR_PREFIX}_PACKAGE_REQUIRED)
+ 		set(${MY_VAR_PREFIX}_PACKAGE_REQUIRED "REQUIRED")
+ 	endif()
+@@ -173,30 +173,6 @@ macro(ComposePackageLibSuffix)
+ 	set(PACKAGE_LIB_SUFFIX "")
+ 	set(PACKAGE_LIB_SUFFIX_DBG "")
+ 	set(PACKAGE_LIB_SUFFIX_REL "")
+-	if(MSVC)
+-		if("${MSVC_VERSION}" STREQUAL "1921")
+-			set(PACKAGE_LIB_SUFFIX "/vc16")
+-		elseif("${MSVC_VERSION}" STREQUAL "1916")
+-			set(PACKAGE_LIB_SUFFIX "/vc15")
+-		elseif("${MSVC_VERSION}" STREQUAL "1900")
+-			set(PACKAGE_LIB_SUFFIX "/vc14")
+-		elseif("${MSVC_VERSION}" STREQUAL "1800")
+-			set(PACKAGE_LIB_SUFFIX "/vc12")
+-		elseif("${MSVC_VERSION}" STREQUAL "1700")
+-			set(PACKAGE_LIB_SUFFIX "/vc11")
+-		elseif("${MSVC_VERSION}" STREQUAL "1600")
+-			set(PACKAGE_LIB_SUFFIX "/vc10")
+-		elseif("${MSVC_VERSION}" STREQUAL "1500")
+-			set(PACKAGE_LIB_SUFFIX "/vc9")
+-		endif()
+-		if("${SYSTEM_BITNESS}" STREQUAL "64")
+-			set(PACKAGE_LIB_SUFFIX "${PACKAGE_LIB_SUFFIX}/x64")
+-		else()
+-			set(PACKAGE_LIB_SUFFIX "${PACKAGE_LIB_SUFFIX}/x86")
+-		endif()
+-		set(PACKAGE_LIB_SUFFIX_DBG "${PACKAGE_LIB_SUFFIX}/Debug")
+-		set(PACKAGE_LIB_SUFFIX_REL "${PACKAGE_LIB_SUFFIX}/Release")
+-	endif()
+ endmacro()
+ 
+ 
+@@ -511,7 +487,7 @@ macro(optimize_default_compiler_settings)
+ 	  endif()
+ 	  add_extra_compiler_option(-fdiagnostics-show-option)
+ 	  add_extra_compiler_option(-ftemplate-backtrace-limit=0)
+-	  
++
+ 	  # The -Wno-long-long is required in 64bit systems when including sytem headers.
+ 	  if(X86_64)
+ 		add_extra_compiler_option(-Wno-long-long)
+@@ -817,7 +793,7 @@ macro(ConfigCompilerAndLinker)
+   else()
+     set(cxx_rtti_support "${cxx_no_rtti_flags}")
+   endif()
+-  
++
+   SET(cxx_default "${cxx_exception_support} ${cxx_rtti_support}" CACHE PATH "Common compile CXX flags")
+   SET(c_default "${CMAKE_C_FLAGS} ${cxx_base_flags}" CACHE PATH "Common compile C flags")
+ endmacro()
+@@ -825,16 +801,12 @@ endmacro()
+ # Initialize variables needed for a library type project.
+ macro(ConfigLibrary)
+ 	# Offer the user the choice of overriding the installation directories
+-	set(INSTALL_LIB_DIR "lib/${PROJECT_NAME}" CACHE PATH "Installation directory for libraries")
+-	set(INSTALL_BIN_DIR "bin/${PROJECT_NAME}" CACHE PATH "Installation directory for executables")
+-	set(INSTALL_INCLUDE_DIR "include/${PROJECT_NAME}" CACHE PATH "Installation directory for header files")
+-	if(WIN32 AND NOT CYGWIN)
+-		set(DEF_INSTALL_CMAKE_DIR "CMake")
+-	else()
+-		set(DEF_INSTALL_CMAKE_DIR "lib/CMake/${PROJECT_NAME}")
+-	endif()
++	set(INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
++	set(INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
++	set(INSTALL_INCLUDE_DIR "include/openmvs" CACHE PATH "Installation directory for header files")
++	set(DEF_INSTALL_CMAKE_DIR "share/openmvs")
+ 	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+-	 
++
+ 	# Make relative paths absolute (needed later on)
+ 	foreach(p LIB BIN INCLUDE CMAKE)
+ 		set(var INSTALL_${p}_DIR)
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 2e6c1a4..6e1fa95 100644
+--- a/libs/Common/CMakeLists.txt
++++ b/libs/Common/CMakeLists.txt
+@@ -18,6 +18,7 @@ set_target_pch(Common Common.h)
+ 
+ # Link its dependencies
+ TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
++TARGET_INCLUDE_DIRECTORIES(Common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>)
+ 
+ # Install
+ SET_TARGET_PROPERTIES(Common PROPERTIES
+diff --git a/libs/Common/Strings.h b/libs/Common/MVSStrings.h
+similarity index 100%
+rename from libs/Common/Strings.h
+rename to libs/Common/MVSStrings.h
+diff --git a/libs/Common/Types.h b/libs/Common/Types.h
+index bcac65c..9abeefb 100644
+--- a/libs/Common/Types.h
++++ b/libs/Common/Types.h
+@@ -378,7 +378,7 @@ typedef TAliasCast<double,int32_t> CastD2I;
+ 
+ // I N C L U D E S /////////////////////////////////////////////////
+ 
+-#include "Strings.h"
++#include "MVSStrings.h"
+ #include "AutoPtr.h"
+ #include "List.h"
+ #include "Thread.h"
+@@ -2558,7 +2558,7 @@ public:
+ 
+ 	/// creates an SO3 as a rotation that takes Vector a into the direction of Vector b
+ 	/// with the rotation axis along a ^ b. If |a ^ b| == 0, it creates the identity rotation.
+-	/// An assertion will fail if Vector a and Vector b are in exactly opposite directions. 
++	/// An assertion will fail if Vector a and Vector b are in exactly opposite directions.
+ 	/// @param a source Vector
+ 	/// @param b target Vector
+ 	SO3(const Vec3& a, const Vec3& b) {
+@@ -2604,7 +2604,7 @@ public:
+ 		mat.row(2) -= mat.row(1) * d12;
+ 		mat.row(2).normalize();
+ 		// check for positive determinant <=> right handed coordinate system of row vectors
+-		ASSERT(mat.row(0).cross(mat.row(1)).dot(mat.row(2)) > 0); 
++		ASSERT(mat.row(0).cross(mat.row(1)).dot(mat.row(2)) > 0);
+ 	}
+ 
+ 	/// Exponentiate a vector in the Lie algebra to generate a new SO3.
+diff --git a/libs/IO/CMakeLists.txt b/libs/IO/CMakeLists.txt
+index a354376..4fd478c 100644
+--- a/libs/IO/CMakeLists.txt
++++ b/libs/IO/CMakeLists.txt
+@@ -43,7 +43,8 @@ cxx_library_with_type_no_pch(IO "Libs" "STATIC" "${cxx_default}"
+ set_target_pch(IO Common.h)
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(IO Common ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXIV2_LIBS})
++TARGET_LINK_LIBRARIES(IO Common ${TIFF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${EXIV2_LIBS})
++TARGET_INCLUDE_DIRECTORIES(IO PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>)
+ 
+ # Install
+ SET_TARGET_PROPERTIES(IO PROPERTIES
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 14be620..867cfd5 100644
+--- a/libs/MVS/CMakeLists.txt
++++ b/libs/MVS/CMakeLists.txt
+@@ -1,12 +1,12 @@
+ # Find required packages
+-FIND_PACKAGE(CGAL ${SYSTEM_PACKAGE_REQUIRED})
++FIND_PACKAGE(CGAL REQUIRED)
+ if(CGAL_FOUND)
+ 	include_directories(${CGAL_INCLUDE_DIRS})
+ 	add_definitions(${CGAL_DEFINITIONS})
+ 	link_directories(${CGAL_LIBRARY_DIRS})
+ endif()
+ 
+-FIND_PACKAGE(VCG ${SYSTEM_PACKAGE_REQUIRED})
++FIND_PACKAGE(VCG REQUIRED)
+ if(VCG_FOUND)
+ 	include_directories(${VCG_INCLUDE_DIRS})
+ 	add_definitions(${VCG_DEFINITIONS})
+@@ -14,12 +14,10 @@ endif()
+ 
+ set(CERES_LIBS "")
+ if(OpenMVS_USE_CERES)
+-	FIND_PACKAGE(CERES)
++	FIND_PACKAGE(Ceres REQUIRED)
+ 	if(CERES_FOUND)
+ 		include_directories(${CERES_INCLUDE_DIRS})
+ 		add_definitions(${CERES_DEFINITIONS})
+-	else()
+-		set(OpenMVS_USE_CERES OFF)
+ 	endif()
+ endif()
+ 
+@@ -42,7 +40,8 @@ cxx_library_with_type_no_pch(MVS "Libs" "" "${cxx_default}"
+ set_target_pch(MVS Common.h)
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO ${CERES_LIBS} ${CGAL_LIBS} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO ${CERES_LIBS} CGAL::CGAL	${CUDA_CUDA_LIBRARY})
++TARGET_INCLUDE_DIRECTORIES(MVS PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>)
+ 
+ # Install
+ SET_TARGET_PROPERTIES(MVS PROPERTIES
+diff --git a/libs/Math/CMakeLists.txt b/libs/Math/CMakeLists.txt
+index d592bd0..f1fe4c6 100644
+--- a/libs/Math/CMakeLists.txt
++++ b/libs/Math/CMakeLists.txt
+@@ -35,6 +35,7 @@ set_target_pch(Math Common.h)
+ 
+ # Link its dependencies
+ TARGET_LINK_LIBRARIES(Math Common)
++TARGET_INCLUDE_DIRECTORIES(Math PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>)
+ 
+ # Install
+ INSTALL(FILES ${LIBRARY_FILES_H} DESTINATION "${INSTALL_INCLUDE_DIR}/Math" COMPONENT dev)

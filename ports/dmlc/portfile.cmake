@@ -11,7 +11,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openmp    ENABLE_OPENMP
+    FEATURES
+        openmp    ENABLE_OPENMP
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -23,7 +24,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    NO_PARALLEL_CONFIGURE
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
        -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}
        -DUSE_OPENMP=${ENABLE_OPENMP}

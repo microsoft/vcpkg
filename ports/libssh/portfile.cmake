@@ -1,53 +1,68 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-set(VERSION 0.9.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libssh.org/files/0.9/libssh-${VERSION}.tar.xz"
-    FILENAME "libssh-${VERSION}.tar.xz"
-    SHA512 6e59718565daeca6d224426cc1095a112deff9af8e0b021917e04f08bb7409263c35724de95f591f38e26f0fb3bbbbc69b679b6775edc21dec158d241b076c6f
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    URL https://git.libssh.org/projects/libssh.git
+    REF 47fd6e56c1058dca54afee1638c11fb6ec41911d # REFERENCE VERSION 0.9.6
+    PATCHES
+        0001-export-pkgconfig-file.patch
+        0002-mingw_for_Android.patch
+        0003-create_symlink_unix_only.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-                     FEATURES
-                         mbedtls WITH_MBEDTLS
-                         zlib WITH_ZLIB
+    FEATURES
+        mbedtls WITH_MBEDTLS
+        zlib    WITH_ZLIB
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if (VCPKG_TARGET_IS_ANDROID)
+	set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
+			"-DWITH_PCAP=FALSE"
+			)
+endif ()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${EXTRA_ARGS}
         ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
         -DUNIT_TESTING=OFF
         -DCLIENT_TESTING=OFF
         -DSERVER_TESTING=OFF
-        -DWITH_NACL=OFF)
+        -DWITH_NACL=OFF
+        -DWITH_GSSAPI=OFF)
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
+#Fixup pthread naming
+if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libssh.pc" "-lpthread" "-lpthreadVC3d")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libssh.pc" "-lpthread" "-lpthreadVC3")
+endif()
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h _contents)
-    string(REPLACE "#ifdef LIBSSH_STATIC" "#if 1" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h "${_contents}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    vcpkg_replace_string(
+	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h" 
+	    "#ifdef LIBSSH_STATIC"
+	    "#if 1"
+	)	
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(READ ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake _contents)
-    string(REPLACE ".dll" ".lib" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake "${_contents}")
+    vcpkg_replace_string(
+	    "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
+	    ".dll"
+	    ".lib"
+	)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

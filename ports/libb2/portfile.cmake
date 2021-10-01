@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "WINDOWS")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE2/libb2
@@ -12,8 +14,11 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${OPTIONS}
+    OPTIONS
+        ax_cv_check_cflags___O3=no # see https://github.com/microsoft/vcpkg/pull/17912#issuecomment-840514179
+        ${OPTIONS}
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
@@ -23,5 +28,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

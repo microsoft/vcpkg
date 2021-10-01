@@ -1,20 +1,19 @@
+# highfive should be updated together with hdf5
+
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
-    FILENAME "CMake-hdf5-1.10.5.tar.gz"
-    SHA512 a25ea28d7a511f9184d97b5b8cd4c6d52dcdcad2bffd670e24a1c9a6f98b03108014a853553fa2b00d4be7523128b5fd6a4454545e3b17ff8c66fea16a09e962
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF hdf5
+    REPO  HDFGroup/hdf5
+    REF hdf5-1_12_0
+    SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
+    HEAD_REF develop
     PATCHES
-        hdf5_config.patch       
-        fix-generate.patch      # removes the build of static targets in shared builds
-        static-targets.patch    # maps the internal static tagets to the shared targets if building as a dynamic library
-        export-private.patch    # exports two additional functions in shared builds to make hl/tools/h5watch build in shared builds. 
+        hdf5_config.patch
+        szip.patch
+        mingw-import-libs.patch
+        pkgconfig-requires.patch
+        pkgconfig-link-order.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -26,27 +25,32 @@ if ("fortran" IN_LIST FEATURE)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-     parallel     HDF5_ENABLE_PARALLEL
-     tools        HDF5_BUILD_TOOLS
-     cpp          HDF5_BUILD_CPP_LIB
-     szip         HDF5_ENABLE_SZIP_SUPPORT
-     szip         HDF5_ENABLE_SZIP_ENCODING
-     zlib         HDF5_ENABLE_Z_LIB_SUPPORT
-     fortran      HDF5_BUILD_FORTRAN
+    FEATURES
+        parallel     HDF5_ENABLE_PARALLEL
+        tools        HDF5_BUILD_TOOLS
+        cpp          HDF5_BUILD_CPP_LIB
+        szip         HDF5_ENABLE_SZIP_SUPPORT
+        szip         HDF5_ENABLE_SZIP_ENCODING
+        zlib         HDF5_ENABLE_Z_LIB_SUPPORT
+        fortran      HDF5_BUILD_FORTRAN
+        threadsafe   HDF5_ENABLE_THREADSAFE
 )
 
-file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip
+file(REMOVE "${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake")#Outdated; does not find debug szip
 
 if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
-find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS
+                    -DBUILD_STATIC_LIBS=OFF
+                    -DONLY_SHARED_LIBS=ON)
+endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -55,17 +59,69 @@ vcpkg_configure_cmake(
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
-        "-DSZIP_LIBRARY_DEBUG:PATH=${SZIP_DEBUG}"
-        "-DSZIP_LIBRARY_RELEASE:PATH=${SZIP_RELEASE}"
+        -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+set(debug_suffix debug)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(debug_suffix D)
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5-1.12.0.pc"
+        "-lhdf5"
+        "-lhdf5_${debug_suffix}"
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl-1.12.0.pc"
+        "-lhdf5_hl"
+        "-lhdf5_hl_${debug_suffix}"
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "-lhdf5_cpp"
+        "-lhdf5_cpp_${debug_suffix}"
+    )
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "Requires.private: hdf5"
+        ""
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "Requires.private: hdf5"
+        ""
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc"
+        "-lhdf5_hl_cpp"
+        "-lhdf5_hl_cpp_${debug_suffix}"
+    )
+endif()
+set(PKG_FILES hdf5 hdf5_hl hdf5_cpp hdf5_hl_cpp)
+foreach(PC_FILE IN LISTS PKG_FILES)
+    set(SUBPATHS "/debug/lib/pkgconfig" "/lib/pkgconfig")
+    foreach(SUBPATH IN LISTS SUBPATHS)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc")
+            file(RENAME "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc" "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc")
+        endif()
+    endforeach()
+endforeach()
+vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]] [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]] contents ${contents})
@@ -78,7 +134,7 @@ if(FEATURES MATCHES "tools")
     else()
         set(TOOL_SUFFIXES "-static${VCPKG_TARGET_EXECUTABLE_SUFFIX};${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     endif()
-    
+
     foreach(tool IN LISTS TOOLS)
         foreach(suffix IN LISTS TOOL_SUFFIXES)
             if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${suffix}")
@@ -86,17 +142,17 @@ if(FEATURES MATCHES "tools")
             endif()
             if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
                 file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}"
-                             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+                     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
                 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
             endif()
         endforeach()
     endforeach()
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

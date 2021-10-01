@@ -1,71 +1,72 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXTK only supports dynamic CRT linkage")
-endif()
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF 9cac24555395925e3c1039bcbbae306da09742ed
-    SHA512 0cea14919cce3c31ec94826fbf65069fcd1a4654cbbf50caa9e44bad6087437e6bec4538627db18b1c5704ea27b056899040da4a7355abfbf35219b4552c07f2
+    REF aug2021
+    SHA512 ed4ff5c8a1f12e2489a4ddb653a0d8097da4a901498852ada5595959f6e6275531e11ca20d8ce16da19f3ac37193b23edf7c9c1b6d6a78a8810e8f0d399ca4b8
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
-
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xaudio2-9 BUILD_XAUDIO_WIN10
+        xaudio2-8 BUILD_XAUDIO_WIN8
+        xaudio2redist BUILD_XAUDIO_WIN7
+)
 
 if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-    endif()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/Inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
-)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(
+    MAKESPRITEFONT_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/aug2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-aug2021.exe"
+    SHA512 a84786f57f7f26c4ab0cd446136d79c19a74296f5074396854c81ad67aedfccfe76e15025ba9bcfcabb993f0bb7247ca536d55b4574192efb3e7c2069abf70d7
+  )
 
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  vcpkg_download_distfile(
+    XWBTOOL_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/aug2021/XWBTool.exe"
+    FILENAME "xwbtool-aug2021.exe"
+    SHA512 3dd1ebd04db21517f74453727512783141b997d33efc1a47236c9ff343310da17b4add4c4ba6e138ad35095fb77f4207e7458a9e51ee3f4872fc0e0cf62be5b5
+  )
 
-if(NOT VCPKG_TARGET_IS_UWP)
-    set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
-    file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
-        DESTINATION ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/XWBTool/Bin/Desktop_${VS_VERSION}/${BUILD_ARCH}/Release/XWBTool.exe
-        DESTINATION ${DXTK_TOOL_PATH})
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+  file(INSTALL
+    ${MAKESPRITEFONT_EXE}
+    ${XWBTOOL_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-aug2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-aug2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe)
+
+elseif(NOT VCPKG_TARGET_IS_UWP)
+
+  vcpkg_copy_tools(
+        TOOL_NAMES XWBTool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

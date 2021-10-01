@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm64")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
@@ -7,11 +7,10 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF ad55a1f1c617a7f0c3dd735c0780fc758424c7f1 # z3-4.8.8
-  SHA512 e9ee645e0a70e1884c3c7745c3c95445d009557f2f06d018a0368274758dedfd94960093b9ee9332212eb29d05aca76137e8ac61365ae0deb5c12fefbe2feee1
+  REF z3-4.8.12
+  SHA512 0B377923BDAFFACA1846AA2ABD61003BBECADFCDFC908ED3097D0AAC8F32028AC39D93FB4A9C2E2C2BFFFBDBEE80AA415875F17DE6C2EE2AE8E2B7921F788C6E
   HEAD_REF master
-  PATCHES
-         fix-install-path.patch
+  PATCHES fix-install-path.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,6 +28,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/z3 TARGET_PATH share/Z3)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

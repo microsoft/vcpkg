@@ -7,7 +7,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES dll_exports.patch
+    PATCHES
+        dll_exports.patch
+        fix-dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -36,6 +38,10 @@ foreach(HEADER IN LISTS HEADERS)
     string(REPLACE "\"fitsio.h\"" "\"cfitsio/fitsio.h\"" _contents "${_contents}")
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
+
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
+    "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
+)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

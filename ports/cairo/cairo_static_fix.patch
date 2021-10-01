@@ -1,0 +1,92 @@
+diff --git a/util/cairo-fdr/meson.build b/util/cairo-fdr/meson.build
+index 3cb66c678..b12b90036 100644
+--- a/util/cairo-fdr/meson.build
++++ b/util/cairo-fdr/meson.build
+@@ -4,7 +4,7 @@ cairo_fdr_sources = [
+ 
+ libcairofdr = library('cairo-fdr', cairo_fdr_sources,
+   include_directories: [incbase, incsrc],
+-  c_args: ['-DHAVE_CONFIG_H'],
++  c_args: ['-DHAVE_CONFIG_H'] + static_definition,
+   dependencies: deps,
+   install: true,
+   install_dir: join_paths(get_option('prefix'), get_option('libdir'), 'cairo'),
+diff --git a/util/cairo-script/meson.build b/util/cairo-script/meson.build
+index a782ec63f..7e21f6c04 100644
+--- a/util/cairo-script/meson.build
++++ b/util/cairo-script/meson.build
+@@ -26,7 +26,7 @@ csi_trace_sources = [
+ 
+ libcairoscript = library('cairo-script-interpreter',
+   cairoscript_interpreter_sources,
+-  c_args: ['-DHAVE_CONFIG_H'],
++  c_args: ['-DHAVE_CONFIG_H'] + static_definition,
+   include_directories: [incbase, incsrc],
+   dependencies: deps,
+   link_with: [libcairo],
+@@ -41,14 +41,14 @@ libcairoscript_dep = declare_dependency(link_with: libcairoscript,
+   include_directories: [incbase, inccairoscript])
+ 
+ csi_replay_exe = executable('csi-replay', csi_replay_sources,
+-  c_args: ['-DHAVE_CONFIG_H'],
++  c_args: ['-DHAVE_CONFIG_H'] + static_definition,
+   include_directories: [incbase, incsrc],
+   link_with: [libcairo, libcairoscript],
+   dependencies: deps,
+ )
+ 
+ csi_exec_exe = executable('csi-exec', csi_exec_sources,
+-  c_args: ['-DHAVE_CONFIG_H'],
++  c_args: ['-DHAVE_CONFIG_H'] + static_definition,
+   include_directories: [incbase, incsrc],
+   link_with: [libcairo, libcairoscript],
+   dependencies: deps,
+@@ -56,7 +56,7 @@ csi_exec_exe = executable('csi-exec', csi_exec_sources,
+ 
+ if feature_conf.get('CAIRO_HAS_SCRIPT_SURFACE', 0) == 1 and conf.get('HAVE_LIBGEN_H', 0) == 1
+   csi_trace_exe = executable('csi-trace', csi_trace_sources,
+-    c_args: ['-DHAVE_CONFIG_H'],
++    c_args: ['-DHAVE_CONFIG_H'] + static_definition,
+     include_directories: [incbase, incsrc],
+     link_with: [libcairo, libcairoscript],
+     dependencies: deps,
+diff --git a/util/cairo-trace/meson.build b/util/cairo-trace/meson.build
+index e836f98cf..76ee372a2 100644
+--- a/util/cairo-trace/meson.build
++++ b/util/cairo-trace/meson.build
+@@ -12,7 +12,7 @@ libcairotrace = library('cairo-trace', cairo_trace_sources,
+   include_directories: [incbase, incsrc],
+   dependencies: deps,
+   link_args: extra_link_args,
+-  c_args: ['-DSHARED_LIB_EXT="@0@"'.format(shared_lib_ext), '-DHAVE_CONFIG_H'] + pthread_c_args,
++  c_args: ['-DSHARED_LIB_EXT="@0@"'.format(shared_lib_ext), '-DHAVE_CONFIG_H'] + pthread_c_args + static_definition,
+   install: true,
+   install_dir: join_paths(get_option('prefix'), get_option('libdir'), 'cairo'),
+ )
+diff --git a/util/meson.build b/util/meson.build
+index 016955cea..a90363115 100644
+--- a/util/meson.build
++++ b/util/meson.build
+@@ -2,6 +2,14 @@ subdir('cairo-missing')
+ 
+ cairo_utils = []
+ 
++static_definition=[]
++if host_machine.system() == 'windows'
++  lib_default = get_option('default_library')
++  if lib_default == 'static'
++    static_definition=['-DCAIRO_WIN32_STATIC_BUILD']
++  endif
++endif
++
+ if feature_conf.get('CAIRO_HAS_GOBJECT_FUNCTIONS', 0) == 1
+   subdir('cairo-gobject')
+ endif
+@@ -55,6 +63,7 @@ foreach util : cairo_utils
+     include_directories: [incbase, incsrc, inccairoscript],
+     dependencies: deps + util_deps,
+     link_with: [libcairo, libcairoscript],
++    c_args: static_definition
+   )
+ endforeach
+ 

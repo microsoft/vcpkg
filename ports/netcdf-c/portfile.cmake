@@ -1,14 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF b7cd387bee8c661141fabb490f4969587c008c55 # v4.7.3
-    SHA512 a55391620fac61e4975fe62907ca21049911afce6190fc12d183d24133a32aae8cd223b97a3fe57fc82d8bdca1a7db451046e3be3c379051624d48b1f56c0332
+    REF 26fba54a58fa02af92d84441ed90b417c1d08161 # v4.7.4
+    SHA512 7144374b5bd3574ea422de07ffb30fecc4e5f560f9b46f62762cc0cce511dd33068b8df9244fe94ae3cc7b3a9bb9fe398c7e67c3e5ac2109768e5a9b984f24fb
     HEAD_REF master
     PATCHES
         no-install-deps.patch
-        config-pkg-location.patch
         use_targets.patch
-        mpi.patch
+        fix-dependency-libmath.patch
+        fix-linkage-error.patch
+        fix-pkgconfig.patch
+        fix-dependency-zlib.patch
+        fix-manpage-msys.patch
 )
 
 #Remove outdated find modules
@@ -22,32 +25,47 @@ else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dap       ENABLE_DAP
+        netcdf-4  ENABLE_NETCDF_4
+        netcdf-4  USE_HDF5
+        tools     BUILD_UTILITIES
+    INVERTED_FEATURES
+        dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
+        netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
-    PREFER_NINJA
     OPTIONS
-        -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_FILTER_TESTING=OFF
-        -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
-        -DConfigPackageLocation=share/netcdf
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES  nccopy ncdump ncgen ncgen3
+        AUTO_CLEAN
+    )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    # delete bin under non-windows because the dynamic libraries get put in lib
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

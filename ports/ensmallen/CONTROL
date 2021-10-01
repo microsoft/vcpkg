@@ -1,6 +1,0 @@
-Source: ensmallen
-Version: 2.11.2
-Homepage: https://github.com/mlpack/ensmallen
-Description: A header-only C++ library for mathematical optimization.
-Build-Depends: openblas (!osx), clapack (!osx), armadillo
-

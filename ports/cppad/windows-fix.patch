@@ -1,0 +1,48 @@
+diff --git a/include/cppad/local/cppad_colpack.hpp b/include/cppad/local/cppad_colpack.hpp
+index ee96ab5fe..6dd022180 100644
+--- a/include/cppad/local/cppad_colpack.hpp
++++ b/include/cppad/local/cppad_colpack.hpp
+@@ -59,7 +59,7 @@ it is not the case that both
+ This routine tries to minimize, with respect to the choice of colors,
+ the number of colors.
+ */
+-extern void cppad_colpack_general(
++CPPAD_LIB_EXPORT void cppad_colpack_general(
+           CppAD::vector<size_t>&         color         ,
+     size_t                               m             ,
+     size_t                               n             ,
+@@ -91,7 +91,7 @@ The properties of this coloring have not yet been determined; see
+ Efficient Computation of Sparse Hessians Using Coloring
+ and Automatic Differentiation (pdf/ad/gebemedhin14.pdf)
+ */
+-extern void cppad_colpack_symmetric(
++CPPAD_LIB_EXPORT void cppad_colpack_symmetric(
+           CppAD::vector<size_t>&         color         ,
+     size_t                               n             ,
+     const CppAD::vector<unsigned int*>&  adolc_pattern
+diff --git a/include/cppad/local/graph/json_parser.hpp b/include/cppad/local/graph/json_parser.hpp
+index 17bcc7c7e..a28d2c045 100644
+--- a/include/cppad/local/graph/json_parser.hpp
++++ b/include/cppad/local/graph/json_parser.hpp
+@@ -42,7 +42,7 @@ Upon return it is a $cref cpp_ad_graph$$ representation of this function.
+ $head Prototype$$
+ $srccode%hpp% */
+ namespace CppAD { namespace local { namespace graph {
+-    void json_parser(
++    CPPAD_LIB_EXPORT void json_parser(
+         const std::string&  json      ,
+         cpp_graph&          graph_obj
+     );
+diff --git a/include/cppad/local/graph/json_writer.hpp b/include/cppad/local/graph/json_writer.hpp
+index 36a4cb39f..299c56cc0 100644
+--- a/include/cppad/local/graph/json_writer.hpp
++++ b/include/cppad/local/graph/json_writer.hpp
+@@ -41,7 +41,7 @@ This is a $code cpp_graph$$ object.
+ $head Prototype$$
+ $srccode%hpp% */
+ namespace CppAD { namespace local { namespace graph {
+-    void json_writer(
++    CPPAD_LIB_EXPORT void json_writer(
+         std::string&       json        ,
+         const cpp_graph&   graph_obj
+     );

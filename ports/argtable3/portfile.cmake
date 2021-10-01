@@ -1,13 +1,12 @@
-include(vcpkg_common_functions)
+vcpkg_download_distfile(ARCHIVE
+   URLS "https://github.com/argtable/argtable3/releases/download/v3.2.1.52f24e5/argtable-v3.2.1.52f24e5.tar.gz"
+   FILENAME "argtable-v3.2.1.52f24e5.tar.gz"
+   SHA512 cec77d56048b38bb7af8553cb660e745972bbd90378eeea4e928579af78190c8a41fdb29c972263e18955e3a497e09c42f705f7c4d548c3c523c5cb104c97a10
+)
 
-vcpkg_from_github(
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO argtable/argtable3
-    REF bbc4ec20991e87ecf8dcf288aef777b55b78daa7
-    SHA512 050f54ead2d029715d8f10e63ff555027ead61fbfa18bd955e3b99e080f9178ad5c41937c5d62477885143f27bb9e7e505a7120b95bfcd899a60719584191f1c
-    HEAD_REF master
-    PATCHES
-        fix-cmake.patch
+    ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +15,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DARGTABLE3_ENABLE_CONAN=OFF
         -DARGTABLE3_ENABLE_TESTS=OFF
-        -DARGTABLE3_BUILD_STATIC_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
@@ -29,25 +27,6 @@ elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/argtable3.h"
-        "defined(argtable3_IMPORTS)"
-        "1 // defined(argtable3_IMPORTS)"
-    )
-endif()
-
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

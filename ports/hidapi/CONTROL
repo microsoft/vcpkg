@@ -1,4 +1,0 @@
-Source: hidapi
-Version: 2019-08-30
-Description: A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.
-Homepage: https://github.com/libusb/hidapi

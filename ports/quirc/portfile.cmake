@@ -1,15 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dlbeer/quirc
-    REF v1.0
-    SHA512 a556b08f2e2c710648b342fd06a855aa577b2b8c047c45a1c47cf54cde9963faf612978afba80bfd60a6f4f63156566f549ea303f09ed6e5348c1c30f5d77c13
+    REF 7e7ab596e4d0988faf1c12ae89c354b114181c40
+    SHA512 d10a783a33ffcc168a287b03250c5ac00b942ec724da641b13fe2ef3f456453b143146422b7e18129a75ce00f13d2d9e3097ac4620134d832de8be4adbbc61c2
     HEAD_REF master
-    PATCHES
-        patch-for-msvc.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -20,10 +16,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/quirc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/quirc/license ${CURRENT_PACKAGES_DIR}/share/quirc/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/quirc/copyright)

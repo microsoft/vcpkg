@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz"
     FILENAME "lzo-2.10.tar.gz"
@@ -9,6 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES always_install_pc.patch
 )
 
 set(LZO_STATIC OFF)
@@ -28,6 +27,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-pgsql-2.4.0.tar.gz"
     FILENAME "libodb-pgsql-2.4.0.tar.gz"
@@ -10,6 +8,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
+file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt

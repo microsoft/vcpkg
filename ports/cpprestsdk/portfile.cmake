@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.16
-    SHA512 d850b26051439dd10edcecd006075c64c61c565193cd76870af175bd343a72ecc59485deb0f907807071a57dd256b67139ad5d016f19cb38f7142357f430be1c
+    REF 122d09549201da5383321d870bed45ecb9e168c5
+    SHA512 c9ded33d3c67880e2471e479a38b40a14a9ff45d241e928b6339eca697b06ad621846260eca47b6b1b8a2bc9ab7bf4fea8d3e8e795cd430d8839beb530e16dd7
     HEAD_REF master
+    PATCHES fix-find-openssl.patch
 )
 
 set(OPTIONS)
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_UWP)
     SET(WEBSOCKETPP_PATH "${CURRENT_INSTALLED_DIR}/share/websocketpp")
     list(APPEND OPTIONS
         -DWEBSOCKETPP_CONFIG=${WEBSOCKETPP_PATH}
@@ -32,17 +33,21 @@ vcpkg_configure_cmake(
         -DBUILD_SAMPLES=OFF
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
+        -DPKG_CONFIG_EXECUTABLE=FALSE
     OPTIONS_DEBUG
         -DCPPREST_INSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
 
-file(INSTALL
-    ${SOURCE_PATH}/license.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/cpprest/details/cpprest_compat.h
+        "#ifdef _NO_ASYNCRTIMP" "#if 1")
+endif()
 
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

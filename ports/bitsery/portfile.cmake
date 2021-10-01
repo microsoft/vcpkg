@@ -1,22 +1,20 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO fraillt/bitsery
- REF d24dfe14f5a756c0f8ad3d56ae6949ecc2c99b2e # v5.0.3
-	SHA512 0bd4c80632640b74387587f85ca6e174aed2efd1dc1d83dd682e26e10aa9ef9a98b5477cfb78aa9cbb1a4112fc12468d7072b5c237f32f6738158ba21cf2ea39
-	HEAD_REF master
-	PATCHES fix-install-paths.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO fraillt/bitsery
+    REF c0fc083c9de805e5825d7553507569febf6a6f93 # v5.2.2
+    SHA512 a4c8660f6e8dcb5162f6f75e0f1e4716032b8403e9461f42e0628955eb07dc7c17aec9f774f45c2c15cce28a231699a71815d3d6d7d0f34a1367ee1e2d944305
+    HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Delete redundant and empty directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

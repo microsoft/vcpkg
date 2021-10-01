@@ -1,0 +1,27 @@
+diff --git a/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h b/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
+index 6378d468a..c8563db52 100644
+--- a/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
++++ b/Source/ThirdParty/Assimp/contrib/zlib/gzguts.h
+@@ -38,6 +38,9 @@
+ #if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32)
+ #  include <io.h>
+ #endif
++#ifdef __APPLE__
++#  include <unistd.h>
++#endif
+ 
+ #if defined(_WIN32)
+ #  define WIDECHAR
+diff --git a/Source/ThirdParty/Civetweb/src/civetweb.c b/Source/ThirdParty/Civetweb/src/civetweb.c
+index 4d26e0a83..2bd577e81 100644
+--- a/Source/ThirdParty/Civetweb/src/civetweb.c
++++ b/Source/ThirdParty/Civetweb/src/civetweb.c
+@@ -167,6 +167,8 @@ mg_static_assert(sizeof(void *) >= sizeof(int), "data type size check");
+ 
+ #endif
+ 
++#include <stdlib.h>
++
+ #if !defined(DEBUG_TRACE)
+ #if defined(DEBUG)
+ 

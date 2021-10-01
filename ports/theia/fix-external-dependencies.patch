@@ -1,7 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c1b150..5810156 100644
+index 9c1b150..1adbfed 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -105,10 +105,10 @@ add_definitions(-DTHEIA_DATA_DIR="${CMAKE_SOURCE_DIR}/data")
+ 
+ # Eigen
+ set(MIN_EIGEN_VERSION 3.2.0)
+-find_package(Eigen ${MIN_EIGEN_VERSION} REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-endif (EIGEN_FOUND)
++find_package(Eigen3 ${MIN_EIGEN_VERSION} REQUIRED)
++if (EIGEN3_FOUND)
++  message("-- Found Eigen version ${EIGEN3_VERSION}: ${EIGEN3_INCLUDE_DIRS}")
++endif (EIGEN3_FOUND)
+ 
+ # Use a larger inlining threshold for Clang, since it hobbles Eigen,
+ # resulting in an unreasonably slow version of the blas routines. The
 @@ -129,70 +129,27 @@ endif ()
  
  # GFlags. The namespace patch is borrow from Ceres Solver (see license in
@@ -299,10 +314,48 @@ index 84f3829..f88d75a 100644
 -add_subdirectory(visual_sfm)
 \ No newline at end of file
 +add_subdirectory(visual_sfm)
+diff --git a/libraries/optimo/CMakeLists.txt b/libraries/optimo/CMakeLists.txt
+index 80f5e5f..ea57f1b 100644
+--- a/libraries/optimo/CMakeLists.txt
++++ b/libraries/optimo/CMakeLists.txt
+@@ -67,11 +67,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ 
+ # Locations to search for Eigen
+ # Eigen
+-find_package(Eigen REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-endif (EIGEN_FOUND)
+-include_directories(${EIGEN_INCLUDE_DIRS})
++find_package(Eigen3 REQUIRED)
++if (EIGEN3_FOUND)
++  message("-- Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
++endif (EIGEN3_FOUND)
++include_directories(${EIGEN3_INCLUDE_DIRS})
+ 
+ # Setting CXX FLAGS appropriately. The code below was inspired from
+ # Google CERES and modified for this library.
 diff --git a/libraries/statx/CMakeLists.txt b/libraries/statx/CMakeLists.txt
-index 23b9e49..af236a3 100644
+index 23b9e49..c58a550 100644
 --- a/libraries/statx/CMakeLists.txt
 +++ b/libraries/statx/CMakeLists.txt
+@@ -72,11 +72,11 @@ message("-- Default Install prefix: ${CMAKE_INSTALL_PREFIX}")
+ option(STATX_WITH_CERES "Enables GEV parameter estimation using Ceres" ON)
+ 
+ # Eigen
+-find_package(Eigen REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-endif (EIGEN_FOUND)
+-include_directories(${EIGEN_INCLUDE_DIRS})
++find_package(Eigen3 REQUIRED)
++if (EIGEN3_FOUND)
++  message("-- Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
++endif (EIGEN3_FOUND)
++include_directories(${EIGEN3_INCLUDE_DIRS})
+ 
+ # Google Flags
+ find_package(Gflags REQUIRED)
 @@ -103,7 +103,11 @@ if(STATX_WITH_CERES)
    endif(CERES_FOUND)
  

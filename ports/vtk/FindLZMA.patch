@@ -70,7 +70,7 @@ index 0c8c7943c..d60669484 100644
 +          IMPORTED_IMPLIB_DEBUG "${LZMA_LIBRARY_DEBUG}")
 +    endif()
 +  
-+    # Guard against possible stupidity of VTK reading only LOCATION without configuration
++    # Guard against possible stupidity of depending projects reading only LOCATION without configuration
 +    if(CMAKE_BUILD_TYPE MATCHES "Debug") 
 +      set_target_properties(LZMA::LZMA PROPERTIES
 +          IMPORTED_LOCATION "${LZMA_LIBRARY_DEBUG}"
