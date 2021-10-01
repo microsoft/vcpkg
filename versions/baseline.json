@@ -2017,8 +2017,8 @@
       "port-version": 0
     },
     "expected-lite": {
-      "baseline": "0.3.0",
-      "port-version": 1
+      "baseline": "0.5.0",
+      "port-version": 0
     },
     "exprtk": {
       "baseline": "2021-01-01",
