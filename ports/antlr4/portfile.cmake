@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 set(VERSION 4.9.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
+    URLS "https://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
     SHA512 fe33005f73f8d408fcea8ebab62c0def119bbe0c075f04a66404d0df258126eb6caf0a8bbac34d5c4c9e79d4aa8896f32698a560d4be7d71a32dcc3457245cee
 )
