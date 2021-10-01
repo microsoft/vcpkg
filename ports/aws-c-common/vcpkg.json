@@ -1,8 +1,17 @@
 {
   "name": "aws-c-common",
-  "version-string": "0.4.56",
-  "port-version": 2,
+  "version": "0.6.9",
   "description": "AWS common library for C",
   "homepage": "https://github.com/awslabs/aws-c-common",
-  "supports": "!(arm | uwp)"
+  "supports": "!arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

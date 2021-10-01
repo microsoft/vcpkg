@@ -2,11 +2,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tristanpenman/valijson
-    REF dd084d747448bb56ddfeab5946b4f2f4617b99c4
-    SHA512 ee241eefc816360608f86792a4c25abadea79cbffc94d7e31a2dbd0a483ed4d7a303b6d2410b99ab7694e58a3d299f0df0baa52fa16f89e9233d90b190a4d799
+    REF v0.6
+    SHA512 a493d17159e479be7fe29d45c610c7d4fdd2c2f9ba897923129734fb07257dbb41fddde4c4263dbf0aa5c7101cd1555568a048beba2f60d2b32e625dd9690749
     HEAD_REF master
-    PATCHES fix-nlohmann-json.patch
-            fix-picojson.patch
+    PATCHES fix-picojson.patch
             fix-optional.patch
 )
 
