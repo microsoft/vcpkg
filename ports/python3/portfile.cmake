@@ -162,7 +162,7 @@ else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--with-ensurepip"
-        [[--with-suffix=""]]
+        "--with-suffix="
         "--with-system-expat"
     )
     if(VCPKG_TARGET_IS_OSX)
