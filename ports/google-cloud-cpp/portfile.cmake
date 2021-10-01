@@ -5,9 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.31.1
-    SHA512 c172280cc934978505524d53bc804dc9079af21a1357f347b0bd3554d25cc2d57dec3869f1ba01f9eacaa1367feede84ae158fa3e9039b0e6bb87f7c27717bb1
-    HEAD_REF master
+    REF v1.32.0
+    SHA512 ffec5a4f76fc4232f15940afea137c38f12e395d0b04cf49838e53f04ba28c151c05470191dc9648b5ae9be5bdcc5b449379b3dbb51552917625a9a87b97c8e2
+    HEAD_REF main
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
@@ -16,9 +16,8 @@ set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DGOOGLE_CLOUD_CPP_ENABLE=${GOOGLE_CLOUD_CPP_ENABLE}"
@@ -29,7 +28,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
