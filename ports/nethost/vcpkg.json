@@ -1,0 +1,7 @@
+{
+  "name": "nethost",
+  "version-string": "2019-12-21",
+  "port-version": 1,
+  "description": "Provides a set of APIs that can be used to host .NET Core (dotnet)",
+  "homepage": "https://github.com/dotnet/runtime/tree/master/src/installer/corehost/cli/nethost"
+}

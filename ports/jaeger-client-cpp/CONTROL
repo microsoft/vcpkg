@@ -1,6 +1,0 @@
-Source: jaeger-client-cpp
-Version: 0.5.1-1
-Build-Depends: nlohmann-json,thrift,yaml-cpp,opentracing
-Homepage: https://github.com/jaegertracing/jaeger-client-cpp
-Description: C++ OpenTracing binding for Jaeger https://jaegertracing.io/
-Supports: !arm64

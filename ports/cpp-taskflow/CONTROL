@@ -1,5 +1,0 @@
-Source: cpp-taskflow
-Version: 2.6.0
-Description: Fast Parallel Tasking Programming Library using Modern C++.
-Homepage: https://github.com/taskflow/taskflow
-Build-Depends: taskflow
