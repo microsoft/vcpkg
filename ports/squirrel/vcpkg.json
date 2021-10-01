@@ -1,6 +1,6 @@
 {
   "name": "squirrel",
-  "version-date": "2021-06-29",
+  "version-date": "2021-10-01",
   "description": "Squirrel is a high level imperative, object-oriented programming language, designed to be a light-weight scripting language that fits in the size, memory bandwidth, and real-time requirements of applications like video games.",
   "homepage": "http://www.squirrel-lang.org",
   "dependencies": [
@@ -12,5 +12,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "interpreter": {
+      "description": "Build sq command-line interpreter"
+    }
+  }
 }
