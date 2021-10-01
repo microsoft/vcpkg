@@ -6,23 +6,21 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DREPROC++=ON
         -DREPROC_INSTALL_PKGCONFIG=OFF
         -DREPROC_INSTALL_CMAKECONFIGDIR=share
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 foreach(TARGET reproc reproc++)
-    vcpkg_fixup_cmake_targets(
-        CONFIG_PATH share/${TARGET}
-        TARGET_PATH share/${TARGET}
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ${TARGET}
     )
 endforeach()
 
