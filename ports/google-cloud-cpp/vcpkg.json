@@ -6,7 +6,15 @@
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "abseil"
+    "abseil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "bigquery",
