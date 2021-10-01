@@ -21,13 +21,13 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 foreach(TARGET reproc reproc++)
     vcpkg_fixup_cmake_targets(
-        CONFIG_PATH share/${TARGET} 
+        CONFIG_PATH share/${TARGET}
         TARGET_PATH share/${TARGET}
     )
 endforeach()
 
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE 
+    INSTALL ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright
 )
