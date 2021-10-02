@@ -1,7 +1,8 @@
 {
   "name": "gst-rtsp-server",
   "version": "1.19.2",
-  "homepage": "",
   "description": "",
-  "dependencies": ["gstreamer"]
+  "dependencies": [
+    "gstreamer"
+  ]
 }
