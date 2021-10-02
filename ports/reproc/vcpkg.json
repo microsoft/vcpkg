@@ -1,6 +1,6 @@
 {
   "name": "reproc",
-  "version-string": "14.2.3",
+  "version": "14.2.3",
   "description": "Cross-platform (C99/C++11) process library",
   "homepage": "https://github.com/DaanDeMeyer/reproc",
   "supports": "!uwp",
