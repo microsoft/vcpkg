@@ -26,6 +26,7 @@ $portVersions = @{
     #e.g. "boost-asio" = 1;
     "boost"           = 1;
     "boost-iostreams" = 1;
+    "boost-python"    = 1;
     "boost-process"   = 1;
     "boost-odeint"    = 1;
 }
@@ -104,12 +105,16 @@ $portData = @{
     "boost-parameter-python" = @{ "supports" = "!emscripten" };
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
-        "dependencies" = @("python3");
+        "default-features" = @("python3");
         "supports"     = "!uwp&!(arm&windows)&!emscripten";
         "features"     = @{
             "python2" = @{
                 "dependencies" = @("python2");
                 "description"  = "Build with Python2 support"
+            };
+            "python3" = @{
+                "dependencies" = @("python3");
+                "description"  = "Build with Python3 support"
             }
         }
     };
