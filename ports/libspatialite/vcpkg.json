@@ -11,6 +11,11 @@
     "libxml2",
     "proj4",
     "sqlite3",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true,
+      "platform": "windows"
+    },
     "zlib"
   ]
 }

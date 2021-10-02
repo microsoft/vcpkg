@@ -14,59 +14,33 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-        set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
-        set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-        set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-    else()
-        set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
-        set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
-        set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-        set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-    endif()
-
-    set(LIBS_ALL_DBG
-        "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
-        ${LIBXML2_LIBS_DBG} \
-        ${GEOS_LIBS_DBG} \
-        ${LIBRTTOPO_LIBS_DBG} \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax freexl rttopo geos libxml-2.0 proj sqlite3 zlib
+        LIBS
     )
-    set(LIBS_ALL_REL
-        "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
-        ${LIBXML2_LIBS_REL} \
-        ${GEOS_LIBS_REL} \
-        ${LIBRTTOPO_LIBS_REL} \
-        ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
+    string(JOIN " " LIBS_ALL_DEBUG
+        "/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+        "${PKGCONFIG_LIBS_DEBUG}"
+        iconv.lib charset.lib
+    )
+    string(JOIN " " LIBS_ALL_RELEASE
+        "/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
+        "${PKGCONFIG_LIBS_RELEASE}"
+        iconv.lib charset.lib
     )
 
     string(REPLACE "/" "\\\\" INST_DIR "${CURRENT_PACKAGES_DIR}")
-    list(APPEND OPTIONS_RELEASE
-        "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
-    )
-    list(APPEND OPTIONS_DEBUG
-        "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
-     )
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS_RELEASE
-            ${OPTIONS_RELEASE}
+            "INST_DIR=${INST_DIR}"
+            "LIBS_ALL=${LIBS_ALL_RELEASE}"
         OPTIONS_DEBUG
-            ${OPTIONS_DEBUG}
+            "INST_DIR=${INST_DIR}\\debug"
+            "LIBS_ALL=${LIBS_ALL_DEBUG}"
+            "LINK_FLAGS=/debug"
     )
 
     vcpkg_copy_pdbs()
