@@ -1,6 +1,6 @@
 {
   "name": "expected-lite",
-  "version-semver": "0.5.0",
+  "version": "0.5.0",
   "description": "Expected objects in C++11 and later in a single-file header-only library",
   "homepage": "https://github.com/martinmoene/expected-lite",
   "dependencies": [
