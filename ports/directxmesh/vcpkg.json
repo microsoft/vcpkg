@@ -1,14 +1,22 @@
 {
   "name": "directxmesh",
-  "version-string": "jun2021",
+  "version-string": "sept2021",
   "description": "DirectXMesh geometry processing library",
-  "homepage": "http://go.microsoft.com/fwlink/?LinkID=324981",
+  "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
   "license": "MIT",
   "supports": "windows | linux",
   "dependencies": [
     "directx-headers",
-    "directxmath"
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "dx12": {
