@@ -134,4 +134,5 @@ else() # Build in UNIX
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# With rttopo and ground control points enabled, the license is GPLv2+.
+file(INSTALL "${SOURCE_PATH}/src/control_points/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
