@@ -2537,7 +2537,7 @@
       "port-version": 0
     },
     "gsl-lite": {
-      "baseline": "0.38.1",
+      "baseline": "0.39.0",
       "port-version": 0
     },
     "gsoap": {
