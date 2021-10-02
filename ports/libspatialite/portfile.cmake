@@ -63,8 +63,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
         OPTIONS_RELEASE
             ${OPTIONS_RELEASE}
         OPTIONS_DEBUG
