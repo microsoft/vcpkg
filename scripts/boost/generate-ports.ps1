@@ -24,11 +24,12 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost"           = 1;
-    "boost-iostreams" = 1;
-    "boost-python"    = 1;
-    "boost-process"   = 1;
-    "boost-odeint"    = 1;
+    "boost"                      = 1;
+    "boost-iostreams"            = 1;
+    "boost-modular-build-helper" = 1;
+    "boost-odeint"               = 1;
+    "boost-python"               = 1;
+    "boost-process"              = 1;
 }
 
 $portData = @{
@@ -106,8 +107,8 @@ $portData = @{
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");
-        "supports"     = "!uwp&!(arm&windows)&!emscripten";
-        "features"     = @{
+        "supports"         = "!uwp&!(arm&windows)&!emscripten";
+        "features"         = @{
             "python2" = @{
                 "dependencies" = @("python2");
                 "description"  = "Build with Python2 support"
