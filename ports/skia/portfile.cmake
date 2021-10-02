@@ -96,7 +96,7 @@ set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
 
 replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD" "libexpat,libexpatMD" "")
 replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
-replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
+replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz;harfbuzz-icu;harfbuzz-subset" "harfbuzz;harfbuzz-icu;harfbuzz-subset" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
