@@ -1,6 +1,6 @@
 {
   "name": "uvatlas",
-  "version-string": "jun2021b",
+  "version-string": "sept2021",
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
@@ -16,6 +16,14 @@
     {
       "name": "directxtex",
       "platform": "!(uwp | linux)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {
