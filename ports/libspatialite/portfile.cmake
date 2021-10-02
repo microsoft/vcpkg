@@ -1,8 +1,8 @@
-set(LIBSPATIALITE_VERSION_STR "5.0.0")
+set(LIBSPATIALITE_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
+    URLS "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
     FILENAME "libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
-    SHA512 df72a3434d6e49f8836a9de2340f343a53f0673d0d17693cdb0f4971928b7c8bf40df44b21c0861945a9c81058e939acd1714b0b426ce9aa2ff7b0e8e6b196a7
+    SHA512 c2552994bc30d69d1e80aa274760f048cd384f71e8350a1e48a47cb8222ba71a1554a69c6534eedde9a09dc582c39c089967bcc1c57bf158cc91a3e7b1840ddf
 )
 
 vcpkg_extract_source_archive_ex(
@@ -120,6 +120,16 @@ else() # Build in UNIX
         OPTIONS_RELEASE
             ${OPTIONS_RELEASE}
     )
+
+    # automake adds the basedir of the generated config to `DEFAULT_INCLUDES`,
+    # but libspatialite uses `#include <spatialite/gaiaconfig.h>`.
+    file(GLOB_RECURSE makefiles
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Makefile"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Makefile"
+    )
+    foreach(makefile IN LISTS makefiles)
+        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers")
+    endforeach()
 
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
