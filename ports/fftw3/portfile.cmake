@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.9.tar.gz"
-    FILENAME "fftw-3.3.9.tar.gz"
-    SHA512 52ebc2a33063a41fd478f6ea2acbf3b511867f736591d273dd57f9dfca5d3e0b0c73157921b3a36f1a7cfd741a8a6bde0fd80de578040ae730ea168b5ba466cf
+    URLS "http://www.fftw.org/fftw-3.3.10.tar.gz"
+    FILENAME "fftw-3.3.10.tar.gz"
+    SHA512 2d34b5ccac7b08740dbdacc6ebe451d8a34cf9d9bfec85a5e776e87adf94abfd803c222412d8e10fbaa4ed46f504aa87180396af1b108666cde4314a55610b40
 )
 
 vcpkg_extract_source_archive_ex(
