@@ -14,8 +14,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    "openssl" OPENSSL_FEATURE
+    FEATURES
+        "openssl" OPENSSL_FEATURE
 )
 
 vcpkg_cmake_configure(
