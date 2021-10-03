@@ -7189,8 +7189,8 @@
       "port-version": 0
     },
     "yas": {
-      "baseline": "7.0.5",
-      "port-version": 1
+      "baseline": "7.1.0",
+      "port-version": 0
     },
     "yasm": {
       "baseline": "1.3.0",
