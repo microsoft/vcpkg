@@ -15,7 +15,7 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
             "--with-openssl=${CURRENT_INSTALLED_DIR}"
@@ -43,7 +43,7 @@ else()
         PATCHES ${PATCHES}
     )
 
-    set(ACTIVEMQCPP_MSVC_PROJ ${SOURCE_PATH}/vs2010-build/activemq-cpp.vcxproj)
+    set(ACTIVEMQCPP_MSVC_PROJ "${SOURCE_PATH}/vs2010-build/activemq-cpp.vcxproj")
 
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ACTIVEMQCPP_SHARED_LIB)
 
@@ -53,14 +53,14 @@ else()
 
         set(ACTIVEMQCPP_LIB_PREFFIX )
         set(ACTIVEMQCPP_LIB_SUFFIX d)
-        vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} ";apr-1.lib" ";libapr-1.lib")
+        vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";apr-1.lib" ";libapr-1.lib")
     else()
         set(RELEASE_CONF "Release")
         set(DEBUG_CONF   "Debug")
 
         set(ACTIVEMQCPP_LIB_PREFFIX lib)
         set(ACTIVEMQCPP_LIB_SUFFIX )
-        vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} ";libapr-1.lib" ";apr-1.lib")
+        vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";libapr-1.lib" ";apr-1.lib")
     endif()
 
     if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
@@ -72,9 +72,9 @@ else()
     endif()
 
     string(REPLACE "/" "\\" WIN_SOURCE_PATH "${SOURCE_PATH}")
-    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "ClCompile Include=\"..\\src" "ClCompile Include=\"${WIN_SOURCE_PATH}\\src")
-    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "ClInclude Include=\"..\\src" "ClInclude Include=\"${WIN_SOURCE_PATH}\\src")
-    vcpkg_replace_string(${ACTIVEMQCPP_MSVC_PROJ} "../src/main" "${WIN_SOURCE_PATH}\\src\\main")
+    vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "ClCompile Include=\"..\\src" "ClCompile Include=\"${WIN_SOURCE_PATH}\\src")
+    vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "ClInclude Include=\"..\\src" "ClInclude Include=\"${WIN_SOURCE_PATH}\\src")
+    vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "../src/main" "${WIN_SOURCE_PATH}\\src\\main")
     vcpkg_install_msbuild(
          SOURCE_PATH "${SOURCE_PATH}/vs2010-build"
          PROJECT_SUBPATH "activemq-cpp.vcxproj"
@@ -90,45 +90,45 @@ else()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(COPY
-            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp.lib
-            DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp.lib"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
         )
 
         if (ACTIVEMQCPP_SHARED_LIB)
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll
-                DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll"
+                DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
             )
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb
-                DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb"
+                DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
             )
         endif()
     endif()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY
-            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         )
 
         if (ACTIVEMQCPP_SHARED_LIB)
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll
-                DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
+                DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
             )
             file(COPY
-                ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb
-                DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb"
+                DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
             )
         endif()
     endif()
 
-    file(COPY ${SOURCE_PATH}/src/main/activemq DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
-    file(COPY ${SOURCE_PATH}/src/main/cms      DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
-    file(COPY ${SOURCE_PATH}/src/main/decaf    DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.h)
+    file(COPY "${SOURCE_PATH}/src/main/activemq" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
+    file(COPY "${SOURCE_PATH}/src/main/cms"      DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
+    file(COPY "${SOURCE_PATH}/src/main/decaf"    DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
     vcpkg_clean_msbuild()
 endif()
 
-file(INSTALL ${CURRENT_PORT_DIR}/activemq-cppConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/activemq-cpp)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/activemq-cppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/activemq-cpp")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
