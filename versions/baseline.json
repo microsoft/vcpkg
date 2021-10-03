@@ -6141,8 +6141,8 @@
       "port-version": 1
     },
     "simde": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.7.2",
+      "port-version": 0
     },
     "simdjson": {
       "baseline": "1.0.0",
