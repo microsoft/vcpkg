@@ -21,9 +21,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        "-DUSE_OPTIMIZED_LAPACK=ON"
-        "-DUSE_OPTIMIZED_BLAS=ON"
-        "-DLAPACKE=ON"
+        -DUSE_OPTIMIZED_LAPACK=ON
+        -DUSE_OPTIMIZED_BLAS=ON
+        -DLAPACKE=ON
         ${FORTRAN_CMAKE}
 )
 
