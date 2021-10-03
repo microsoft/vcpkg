@@ -12,6 +12,8 @@ vcpkg_from_github(
         install-dll.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libcurl    WITH_LIBCURL
@@ -20,7 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DSTATIC_VS_CRT=${STATIC_CRT}
     DISABLE_PARALLEL_CONFIGURE
 )
 
