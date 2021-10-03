@@ -18,7 +18,7 @@ if(VCPKG_USE_INTERNAL_Fortran)
         message(FATAL_ERROR "LAPACKE cannot be used without supplying an external fortran compiler")
     endif()
 endif()    
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DUSE_OPTIMIZED_LAPACK=ON
