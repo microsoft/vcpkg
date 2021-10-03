@@ -18,15 +18,14 @@ if(VCPKG_USE_INTERNAL_Fortran)
         message(FATAL_ERROR "LAPACKE cannot be used without supplying an external fortran compiler")
     endif()
 endif()    
-vcpkg_configure_cmake(
-        PREFER_NINJA
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            "-DUSE_OPTIMIZED_LAPACK=ON"
-            "-DUSE_OPTIMIZED_BLAS=ON"
-            "-DLAPACKE=ON"
-            ${FORTRAN_CMAKE}
-        )
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        "-DUSE_OPTIMIZED_LAPACK=ON"
+        "-DUSE_OPTIMIZED_BLAS=ON"
+        "-DLAPACKE=ON"
+        ${FORTRAN_CMAKE}
+)
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapacke-${lapacke_ver})
