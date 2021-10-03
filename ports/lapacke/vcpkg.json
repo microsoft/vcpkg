@@ -11,9 +11,6 @@
       "platform": "windows"
     },
     {
-      "name": "vcpkg-cmake"
-    },
-    {
       "name": "vcpkg-cmake-config"
     }
   ]
