@@ -1849,8 +1849,8 @@
       "port-version": 1
     },
     "doctest": {
-      "baseline": "2.4.5",
-      "port-version": 1
+      "baseline": "2.4.6",
+      "port-version": 0
     },
     "double-conversion": {
       "baseline": "3.1.5",
