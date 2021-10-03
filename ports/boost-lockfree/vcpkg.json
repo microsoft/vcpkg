@@ -1,6 +1,6 @@
 {
   "name": "boost-lockfree",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost lockfree module",
   "homepage": "https://github.com/boostorg/lockfree",
   "dependencies": [
@@ -11,6 +11,7 @@
     "boost-config",
     "boost-core",
     "boost-integer",
+    "boost-iterator",
     "boost-mpl",
     "boost-parameter",
     "boost-predef",
