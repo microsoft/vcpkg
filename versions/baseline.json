@@ -3569,8 +3569,8 @@
       "port-version": 8
     },
     "libmorton": {
-      "baseline": "0.2",
-      "port-version": 1
+      "baseline": "0.2.8",
+      "port-version": 0
     },
     "libmpeg2": {
       "baseline": "0.5.1",
