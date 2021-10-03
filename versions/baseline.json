@@ -6269,7 +6269,7 @@
       "port-version": 5
     },
     "span-lite": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.3",
       "port-version": 0
     },
     "sparsehash": {
