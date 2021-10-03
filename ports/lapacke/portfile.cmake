@@ -14,7 +14,7 @@ vcpkg_from_github(
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
 vcpkg_find_fortran(FORTRAN_CMAKE)
 if(VCPKG_USE_INTERNAL_Fortran)
-    if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL static) 
+    if(VCPKG_CRT_LINKAGE STREQUAL static) 
         message(FATAL_ERROR "LAPACKE cannot be used without supplying an external fortran compiler")
     endif()
 endif()    
