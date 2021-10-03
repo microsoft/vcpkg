@@ -1,4 +1,0 @@
-Source: ignition-transport8
-Version: 8.1.0
-Build-Depends: cppzmq, ignition-cmake2, ignition-msgs5, libuuid (!windows&!uwp), protobuf, sqlite3, zeromq
-Description: Transport middleware for robotics

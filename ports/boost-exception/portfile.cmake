@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/exception
-    REF boost-1.75.0
-    SHA512 fe7c62f3970b7041ac94922105305696374fbee59f8cfe3a48035f6487e616f430a1a577bfad997e2be34dc50393b9301726ca27612689f9275b64633c3fab1e
+    REF boost-1.77.0
+    SHA512 90af6443bed8114466bce41b43c7d1d439f0b62dee4e1609da84f60c41313aa94e4a6d7bf82e448d612e2521450cfd59cb34cf85f5962718ea33aa7027f5c84f
     HEAD_REF master
 )
 
@@ -15,6 +15,3 @@ include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmak
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-
-set(VCPKG_LIBRARY_LINKAGE static)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

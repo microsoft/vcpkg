@@ -1,6 +1,7 @@
 {
   "name": "nnpack",
   "version-date": "2021-02-21",
+  "port-version": 1,
   "description": "Acceleration package for neural networks on multi-core CPUs",
   "homepage": "https://github.com/Maratyszcza/NNPACK",
   "supports": "linux & osx",

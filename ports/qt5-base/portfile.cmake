@@ -87,6 +87,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             #CMake fixes
                             ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
+                            patches/limits_include.patch       # Add missing includes to build with gcc 11
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -306,6 +307,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND CORE_OPTIONS -fontconfig)
+    if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
+        FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
+        string(REPLACE "QMAKE_APPLE_DEVICE_ARCHS = x86_64" "QMAKE_APPLE_DEVICE_ARCHS = arm64" _tmp_contents ${_tmp_contents})
+        FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
+    endif()
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()

@@ -1,0 +1,58 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 8247f6f..e28f6ee 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -420,7 +420,3 @@ if(ENABLE_SPIRV_TOOLS_INSTALL)
+   install(FILES ${CMAKE_BINARY_DIR}/${SPIRV_TOOLS}Config.cmake DESTINATION ${PACKAGE_DIR})
+ endif(ENABLE_SPIRV_TOOLS_INSTALL)
+ 
+-if(MSVC AND (NOT ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")))
+-  # Enable parallel builds across four cores for this lib
+-  add_definitions(/MP4)
+-endif()
+diff --git a/source/fuzz/CMakeLists.txt b/source/fuzz/CMakeLists.txt
+index 804fcf0..4915f07 100644
+--- a/source/fuzz/CMakeLists.txt
++++ b/source/fuzz/CMakeLists.txt
+@@ -419,10 +419,6 @@ if(SPIRV_BUILD_FUZZER)
+         ${CMAKE_CURRENT_BINARY_DIR}/protobufs/spvtoolsfuzz.pb.cc
+         )
+ 
+-  if(MSVC AND (NOT ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")))
+-    # Enable parallel builds across four cores for this lib
+-    add_definitions(/MP4)
+-  endif()
+ 
+   spvtools_pch(SPIRV_TOOLS_FUZZ_SOURCES pch_source_fuzz)
+ 
+diff --git a/source/opt/CMakeLists.txt b/source/opt/CMakeLists.txt
+index 88d5658..e3faab7 100644
+--- a/source/opt/CMakeLists.txt
++++ b/source/opt/CMakeLists.txt
+@@ -218,11 +218,6 @@ set(SPIRV_TOOLS_OPT_SOURCES
+   wrap_opkill.cpp
+ )
+ 
+-if(MSVC AND (NOT ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")))
+-  # Enable parallel builds across four cores for this lib
+-  add_definitions(/MP4)
+-endif()
+-
+ spvtools_pch(SPIRV_TOOLS_OPT_SOURCES pch_source_opt)
+ 
+ add_library(SPIRV-Tools-opt ${SPIRV_TOOLS_LIBRARY_TYPE} ${SPIRV_TOOLS_OPT_SOURCES})
+diff --git a/source/reduce/CMakeLists.txt b/source/reduce/CMakeLists.txt
+index e589ad5..b93a37b 100644
+--- a/source/reduce/CMakeLists.txt
++++ b/source/reduce/CMakeLists.txt
+@@ -71,10 +71,6 @@ set(SPIRV_TOOLS_REDUCE_SOURCES
+         simple_conditional_branch_to_branch_reduction_opportunity.cpp
+ )
+ 
+-if(MSVC AND (NOT ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")))
+-  # Enable parallel builds across four cores for this lib
+-  add_definitions(/MP4)
+-endif()
+ 
+ spvtools_pch(SPIRV_TOOLS_REDUCE_SOURCES pch_source_reduce)
+

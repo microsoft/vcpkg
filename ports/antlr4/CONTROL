@@ -1,6 +1,0 @@
-Source: antlr4
-Version: 4.9.1
-Homepage: https://www.antlr.org
-Description: ANother Tool for Language Recognition
-Build-Depends: libuuid (!uwp&!windows&!osx)
-Supports: !uwp

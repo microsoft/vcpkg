@@ -1,0 +1,26 @@
+{
+  "name": "qtwebsockets",
+  "version-semver": "6.2.0",
+  "description": "Qt WebSockets",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

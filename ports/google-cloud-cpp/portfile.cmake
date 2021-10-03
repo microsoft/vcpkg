@@ -5,27 +5,30 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.26.0
-    SHA512 686b6390c9b64075d4644db4c9b19c3f01d53a2385dc85028e3277361e21fe834ddc1248c5ac6c63ff3c87d3a21de229ea77d3bec8480a0904ed0126e2e619f6
-    HEAD_REF master
-    PATCHES
-        disable-benchmarks.patch
+    REF v1.32.0
+    SHA512 ffec5a4f76fc4232f15940afea137c38f12e395d0b04cf49838e53f04ba28c151c05470191dc9648b5ae9be5bdcc5b449379b3dbb51552917625a9a87b97c8e2
+    HEAD_REF main
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
-vcpkg_configure_cmake(
+set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        "-DGOOGLE_CLOUD_CPP_ENABLE=${GOOGLE_CLOUD_CPP_ENABLE}"
         -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
         -DGOOGLE_CLOUD_CPP_ENABLE_WERROR=OFF
         -DGOOGLE_CLOUD_CPP_ENABLE_CCACHE=OFF
+        -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)

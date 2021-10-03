@@ -16,5 +16,5 @@ index 249b7d5..41a31e2 100644
 -        list(APPEND AWS_C_FLAGS "${_FLAGS}")
 -
      else()
-         list(APPEND AWS_C_FLAGS -Wall -Werror -Wstrict-prototypes)
+         list(APPEND AWS_C_FLAGS -Wall -Wstrict-prototypes)
  

@@ -14,15 +14,17 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### User Help
 
-- [Integration with build systems](users/integration.md)
+- [Buildsystem Integration](users/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
 - [Manifest Mode](users/manifests.md)
 - [Binary Caching](users/binarycaching.md)
+- [Asset Caching](users/assetcaching.md)
 - [Versioning](users/versioning.md)
 - [Usage with Android](users/android.md)
 - [Usage with Mingw-w64](users/mingw.md)
 - [Host Dependencies](users/host-dependencies.md)
+- [Using Registries](users/registries.md)
 
 ### Maintainer Help
 
@@ -31,6 +33,8 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
+- [Creating Registries](maintainers/registries.md)
+- [CMake Guidelines](maintainers/cmake-guidelines.md)
 
 ### [Vcpkg-Tool](https://github.com/microsoft/vcpkg-tool) Maintainer Help
 
@@ -42,6 +46,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
+- [vcpkg index](https://vcpkg.dev/) - Package index + search
 
 ### Specifications
 

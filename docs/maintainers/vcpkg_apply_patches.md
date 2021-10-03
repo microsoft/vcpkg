@@ -1,6 +1,6 @@
 # vcpkg_apply_patches
 
-**This function has been deprecated in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.**
+**This function has been deprecated in favor of the `PATCHES` argument to [`vcpkg_from_github()`](vcpkg_from_github.md) et al.**
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_apply_patches.md).
 

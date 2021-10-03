@@ -45,23 +45,31 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${EXE})
-    file(REMOVE ${DEBUG_EXE})
 
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/bin/Alembic.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/debug/bin/Alembic.dll)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake DEBUG_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll"
-                   "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake "${DEBUG_CONFIG}")
+        file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+        file(REMOVE ${EXE})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/bin/Alembic.dll)
+        file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake RELEASE_CONFIG)
+        string(REPLACE "\${_IMPORT_PREFIX}/lib/Alembic.dll"
+                    "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG "${RELEASE_CONFIG}")
+        file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
 
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake RELEASE_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/lib/Alembic.dll"
-                   "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+
+        file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+        file(REMOVE ${DEBUG_EXE})
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/debug/bin/Alembic.dll)
+        file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake DEBUG_CONFIG)
+        string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll"
+                    "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG "${DEBUG_CONFIG}")
+        file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake "${DEBUG_CONFIG}")
+        
+    endif()
+
 else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)

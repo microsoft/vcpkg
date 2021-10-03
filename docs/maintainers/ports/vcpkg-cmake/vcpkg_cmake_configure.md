@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
+    [MAYBE_UNUSED_VARIABLES
+        <option-name>...]
 )
 ```
 
@@ -31,7 +33,7 @@ that build type.
 
 Use the `OPTIONS` argument to set the configure settings for both release and debug,
 and use `OPTIONS_RELEASE` and `OPTIONS_DEBUG` to set the configure settings for
-release only and debug only repsectively.
+release only and debug only respectively.
 
 By default, when possible, `vcpkg_cmake_configure` uses [ninja-build]
 as its build system. If the `WINDOWS_USE_MSBUILD` argument is passed, then
@@ -55,6 +57,21 @@ This also disables the `CMAKE_DISABLE_SOURCE_CHANGES` option.
 By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
+
+This function makes certain that all options passed in are used by the
+underlying CMake build system. If there are options that might be unused,
+perhaps on certain platforms, pass those variable names to
+`MAYBE_UNUSED_VARIABLES`. For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like

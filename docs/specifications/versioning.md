@@ -32,7 +32,7 @@ This feature requires the use of manifests to declare project dependencies. To a
 * Ability for a top-level manifest to override all other version constraints.
 * Ability to declare a baseline for all versions.
 
-Example: A manifeset (`vcpkg.json`) using versioning features.
+Example: A manifest (`vcpkg.json`) using versioning features.
 ```json
 {
   "name": "versions-test",

@@ -9,7 +9,7 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 vcpkg_cmake_config_fixup(
     [PACKAGE_NAME <name>]
     [CONFIG_PATH <config-directory>]
-    [DO_NOT_DELETE_CONFIG_PATH_PARENT]
+    [DO_NOT_DELETE_PARENT_CONFIG_PATH]
     [NO_PREFIX_CORRECTION]
 )
 ```
@@ -136,9 +136,9 @@ function(vcpkg_cmake_config_fixup)
         "${debug_share}/*[Cc]onfigVersion.cmake"
         "${debug_share}/*[Cc]onfig-version.cmake"
     )
-    if(NOT unused_files STREQUAL "")
-        file(REMOVE "${unused_files}")
-    endif()
+    foreach(unused_file IN LISTS unused_files)
+        file(REMOVE "${unused_file}")
+    endforeach()
 
     file(GLOB_RECURSE release_targets
         "${release_share}/*-release.cmake"
@@ -216,20 +216,20 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
         # Patch out any remaining absolute references
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE remaining_files "${debug_share}/*")
-    if(NOT remaining_files STREQUAL "")
+    if(remaining_files STREQUAL "")
         file(REMOVE_RECURSE "${debug_share}")
     endif()
 
     # Remove /debug/share/ if it's empty.
     file(GLOB_RECURSE remaining_files "${CURRENT_PACKAGES_DIR}/debug/share/*")
-    if(NOT remaining_files STREQUAL "")
+    if(remaining_files STREQUAL "")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()

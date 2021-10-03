@@ -1,0 +1,10 @@
+The package cudnn provides CMake variables:
+
+    find_package(CUDNN REQUIRED)
+    target_link_libraries(main PRIVATE ${CUDNN_LIBRARIES})
+    target_include_directories(main PRIVATE ${CUDNN_INCLUDE_DIRS})
+
+Or the following CMake target:
+
+    find_package(CUDNN REQUIRED)
+    target_link_libraries(main PRIVATE CuDNN::CuDNN)

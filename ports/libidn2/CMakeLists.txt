@@ -89,6 +89,12 @@ set(GL_SRC gl/rawmemchr.c
 )
 
 add_library(libidn2 ${LIB_SRC} ${UNISTR_SRC} ${GL_SRC})
+set_target_properties(libidn2
+    PROPERTIES
+        OUTPUT_NAME idn2
+        PREFIX lib
+        IMPORT_PREFIX lib
+)
 
 target_include_directories(libidn2 PRIVATE . ./unistring ./gl)
 target_link_libraries(libidn2 PRIVATE Iconv::Iconv)
@@ -99,3 +105,13 @@ install(TARGETS libidn2
         ARCHIVE DESTINATION lib)
 
 install(FILES lib/idn2.h DESTINATION include)
+
+# Install pc file
+set(prefix      "\${pcfiledir}/../..")
+set(exec_prefix "\${prefix}")
+set(includedir  "\${prefix}/include")
+set(libdir      "\${prefix}/lib")
+set(LTLIBICONV  "")
+set(LTLIBUNISTRING "")
+configure_file("libidn2.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libidn2.pc")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libidn2.pc" DESTINATION "lib/pkgconfig")

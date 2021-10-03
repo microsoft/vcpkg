@@ -182,7 +182,7 @@ and then run the following algorithm on each dependency:
 
 vcpkg will also rerun this algorithm whenever an install is run with different configuration.
 
-### How Registries are Layed Out
+### How Registries are Laid Out
 
 There are three kinds of registries, but they only differ in how the registry gets onto one's filesystem.
 Once the registry is there, package lookup runs the same, with each kind having it's own way of defining its

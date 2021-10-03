@@ -3,10 +3,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.75.0
-    SHA512 887a8758d247eb76b41526107e4006de7d18f107afc9692d95eb2ba7beb9cfa6d5f2e721523a8d4530aec38bd1f6eb0f6364aa05b5bf95f5428f4c9fa3d24b7c
+    REF boost-1.77.0
+    SHA512 538d749ae612b3c2e1681978d1aa9c87aed89a48ef7ce3f7cbd3caf72c4f2e2a232b86b7b089d5ddf63acf71e1a82146de370dfa8c8b881cd07db09885f421ce
     HEAD_REF master
+    PATCHES 001-remove-checks.patch
 )
 
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

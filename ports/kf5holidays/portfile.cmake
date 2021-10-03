@@ -1,18 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
-    REF v5.75.0
-    SHA512 16b62a7e8fc664075cf787a7ae811bdb7f27b11f10619001994e1aa0c89e46bdb1c932091f6fcdcc3bad91614eeb9606a9b6aef62cec5e4a557a0c107e32d816
+    REF v5.84.0
+    SHA512 2e4813b3ca36694e1231b41372baf9a29f80ba44f28525863cedda97ebb766a5d04dbb65422186d97ec753768bd772081fbaf1a91a33ab4556acbea6eb2510f5
     HEAD_REF master
 )
+
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
 )
 

@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version-string": "3.9.2",
+  "version-semver": "3.9.7",
   "port-version": 2,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",

@@ -147,7 +147,7 @@ git rev-parse HEAD
 The output of that command will be the commit SHA you need to put as the `"builtin-baseline"` in your project's manifest file. Copy the 40-hex digits and save them to use later in your manifest file.
 
 ### Step 5: (Optional) Go back to the main repository branch
-Once your changes have been commited locally, you can refer to the commit SHA regardless of the repository branch you're working on. So, let's go back to the main vcpkg repository branch.
+Once your changes have been committed locally, you can refer to the commit SHA regardless of the repository branch you're working on. So, let's go back to the main vcpkg repository branch.
 
 ```
 git checkout master

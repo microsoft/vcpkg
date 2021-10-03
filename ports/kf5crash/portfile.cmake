@@ -1,29 +1,33 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
-    REF v5.75.0
-    SHA512 f6784d2db20bd90194a1ae8134e344a899f8c28d934783fbc104d2719e8340955278059ea5a237eeda550b4c4484e45c6d4b7c09425b0d1bb0b0025d8e214596
+    REF v5.84.0
+    SHA512 db37a481e0d34e0024cabd77c22680171fa383ea300c56c73f807380fd818263d27f36fb012fc6604b462dbf9374db39bab94c4dc2c3bff488ac9812d01eb2dd
     HEAD_REF master
     PATCHES
-        add_x11extras.patch
+        support_static_builds.patch # https://invent.kde.org/frameworks/kcrash/-/merge_requests/23
 )
 
-vcpkg_configure_cmake(
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Crash)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Crash CONFIG_PATH lib/cmake/KF5Crash)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/data")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

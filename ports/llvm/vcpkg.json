@@ -1,6 +1,6 @@
 {
   "name": "llvm",
-  "version-string": "11.1.0",
+  "version-string": "12.0.1",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "supports": "!uwp",
@@ -42,9 +42,9 @@
             "disable-assertions",
             "disable-clang-static-analyzer",
             "enable-bindings",
-            "enable-rtti",
             "enable-terminfo",
-            "enable-threads"
+            "enable-threads",
+            "enable-zlib"
           ]
         }
       ]
@@ -122,6 +122,12 @@
         "libffi"
       ]
     },
+    "enable-libxml2": {
+      "description": "Build with LibXml2.",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },
@@ -130,6 +136,12 @@
     },
     "enable-threads": {
       "description": "Use threads if available."
+    },
+    "enable-zlib": {
+      "description": "Build with ZLib.",
+      "dependencies": [
+        "zlib"
+      ]
     },
     "flang": {
       "description": "Include Fortran front end.",

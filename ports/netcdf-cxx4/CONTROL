@@ -1,6 +1,0 @@
-Source: netcdf-cxx4
-Version: 4.3.1
-Port-Version: 2
-Build-Depends: hdf5, netcdf-c
-Homepage: https://github.com/Unidata/netcdf-cxx4
-Description: a set of machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.

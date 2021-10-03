@@ -1,0 +1,13 @@
+diff -urw cfitsio-3-7822097674.clean/cfitsio.pc.cmake cfitsio-3-7822097674/cfitsio.pc.cmake
+--- cfitsio-3-7822097674.clean/cfitsio.pc.cmake	2020-08-12 20:01:04.000000000 +0200
++++ cfitsio-3-7822097674/cfitsio.pc.cmake	2021-05-06 08:46:49.160351519 +0200
+@@ -6,7 +6,8 @@
+ Name: cfitsio
+ Description: FITS File Subroutine Library
+ URL: https://heasarc.gsfc.nasa.gov/fitsio/
+-Version: @CFITSIO_MAJOR@.@CFITSIO_MINOR@
++Version: @CFITSIO_VERSION@
++Requires.private: @PKG_CONFIG_REQUIRES_PRIVATE@
+ Libs: -L${libdir} @PKG_CONFIG_LIBS@
+ Libs.private: -lm
+ Cflags: -I${includedir}

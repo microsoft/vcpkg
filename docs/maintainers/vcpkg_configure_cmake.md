@@ -1,8 +1,8 @@
 # vcpkg_configure_cmake
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
+**This function has been deprecated in favor of [`vcpkg_cmake_configure`](ports/vcpkg-cmake/vcpkg_cmake_configure.md) from the vcpkg-cmake port.**
 
-**This function has been deprecated in favor of `vcpkg_cmake_configure` from the vcpkg-cmake port.**
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
 
 Configure CMake for Debug and Release builds of a project.
 
@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+    [MAYBE_UNUSED_VARIABLES <OPTION_NAME>...]
 )
 ```
 
@@ -54,6 +55,20 @@ Additional options passed to CMake during the Release configuration. These are i
 
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
+
+### MAYBE_UNUSED_VARIABLES
+Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
+For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.

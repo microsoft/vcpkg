@@ -28,11 +28,27 @@ Options to be passed to the debug target.
 Options to be passed to the release target.
 #]===]
 
-function(vcpkg_configure_gn)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcg "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
+function(z_vcpkg_configure_gn_generate)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Internal error: generate was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
 
-    if(NOT DEFINED _vcg_SOURCE_PATH)
+    message(STATUS "Generating build (${arg_CONFIG})...")
+    vcpkg_execute_required_process(
+        COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
+        WORKING_DIRECTORY "${arg_SOURCE_PATH}"
+        LOGNAME "generate-${arg_CONFIG}"
+    )
+endfunction()
+
+function(vcpkg_configure_gn)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "vcpkg_configure_gn was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    if(NOT DEFINED arg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
     endif()
 
@@ -42,20 +58,19 @@ function(vcpkg_configure_gn)
 
     vcpkg_find_acquire_program(GN)
 
-    function(generate CONFIG ARGS)
-        message(STATUS "Generating build (${CONFIG})...")
-        vcpkg_execute_required_process(
-            COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${CONFIG}" ${ARGS}
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME generate-${CONFIG}
-        )
-    endfunction()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        generate(${TARGET_TRIPLET}-dbg "--args=${_vcg_OPTIONS} ${_vcg_OPTIONS_DEBUG}")
+        z_vcpkg_configure_gn_generate(
+            SOURCE_PATH "${arg_SOURCE_PATH}"
+            CONFIG "${TARGET_TRIPLET}-dbg"
+            ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_DEBUG}"
+        )
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        generate(${TARGET_TRIPLET}-rel "--args=${_vcg_OPTIONS} ${_vcg_OPTIONS_RELEASE}")
+        z_vcpkg_configure_gn_generate(
+            SOURCE_PATH "${arg_SOURCE_PATH}"
+            CONFIG "${TARGET_TRIPLET}-rel"
+            ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
+        )
     endif()
 endfunction()

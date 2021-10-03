@@ -2,7 +2,7 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/android.md).**
 
-Android is not officialy supported, and there are no official android triplets at the moment.
+Android is not officially supported, and there are no official android triplets at the moment.
 
 However, some packages can compile to Android, and the situation is improving: see the list of [PR related to Android](https://github.com/Microsoft/vcpkg/pulls?q=+android+).
 
@@ -149,7 +149,7 @@ Starting package 1/2: vulkan:arm64-android
 Building package vulkan[core]:arm64-android...
 -- Using community triplet arm64-android. This triplet configuration is not guaranteed to succeed.
 -- [COMMUNITY] Loading triplet configuration from: /.../vcpkg/triplets/community/arm64-android.cmake
--- Querying VULKAN_SDK Enviroment variable
+-- Querying VULKAN_SDK Environment variable
 -- Searching /.../Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/vulkan/ for vulkan.h
 -- Found vulkan.h
 -- Performing post-build validation
@@ -208,7 +208,7 @@ cmake \
   ...
 ````
 
-2. Specifiy the android abi and vcpkg triplet
+2. Specify the android abi and vcpkg triplet
 
 When compiling for android, you need to select a matching "android abi" / "vcpkg triplet" pair.
 
