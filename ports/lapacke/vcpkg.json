@@ -1,0 +1,14 @@
+{
+  "name": "lapacke",
+  "version-string": "3.8.0",
+  "description": "Metapackage for packages which provide LAPACKE",
+  "dependencies": [
+    {
+      "name": "lapack",
+    },
+    {
+      "name": "vcpkg-gfortran",
+      "platform": "windows"
+    }
+  ]
+}
