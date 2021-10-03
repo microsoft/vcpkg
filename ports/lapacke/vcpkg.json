@@ -9,6 +9,10 @@
     {
       "name": "vcpkg-gfortran",
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "platform": "!arm"
     }
   ]
 }
