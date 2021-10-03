@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
         ${FORTRAN_CMAKE}
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lapacke-${lapacke_ver})
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapacke.pc")
