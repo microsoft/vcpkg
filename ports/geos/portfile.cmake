@@ -13,6 +13,7 @@ vcpkg_extract_source_archive_ex(
         dont-build-docs.patch
         dont-build-astyle.patch
         pc-file-libs-private.patch
+        pc-file-for-msvc.patch
         make-geos-config-relocatable.patch
         fix-static-deps.patch
 )
