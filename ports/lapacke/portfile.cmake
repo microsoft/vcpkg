@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/lapacke-${lapacke_ver})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lapacke-${lapacke_ver})
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapacke.pc")
 if(EXISTS "${pcfile}")
