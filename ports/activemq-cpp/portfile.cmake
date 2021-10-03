@@ -23,10 +23,10 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 
     vcpkg_install_make()
-    file(RENAME ${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/activemq ${CURRENT_PACKAGES_DIR}/include/activemq)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/cms ${CURRENT_PACKAGES_DIR}/include/cms)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/decaf ${CURRENT_PACKAGES_DIR}/include/decaf)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION})
+    file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/activemq" "${CURRENT_PACKAGES_DIR}/include/activemq")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/cms" "${CURRENT_PACKAGES_DIR}/include/cms")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/decaf" "${CURRENT_PACKAGES_DIR}/include/decaf")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}")
 
     vcpkg_copy_pdbs()
 else()
@@ -89,7 +89,6 @@ else()
          USE_VCPKG_INTEGRATION
          ALLOW_ROOT_INCLUDES
          SKIP_CLEAN
-         # OPTIONS "/p:UseMultiToolTask=true" # without this, msbuild uses one core for activemq builds (741 source files)
     )
 
     vcpkg_copy_pdbs()

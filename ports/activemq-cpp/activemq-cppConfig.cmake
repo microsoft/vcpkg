@@ -9,7 +9,7 @@ endforeach()
 
 # Macro to find OS dependencies for windows builds.
 # Sets up for failure find_package() failure if dependencies not found.
-# On success, creates targets activemq-cpp::ws2, activemq-cpp::rpcrt4, and activemq-cpp::mswsock.
+# On success, creates targets unofficial::activemq-cpp::ws2, unofficial::activemq-cpp::rpcrt4, and unofficial::activemq-cpp::mswsock.
 # Sets boolean ${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND to TRUE or FALSE to indicate success or failure.
 macro(_activemq_cpp_windows_dependencies)
     find_library(ACTIVEMQ_CPP_LIBWS2 WS2_32)
@@ -19,22 +19,22 @@ macro(_activemq_cpp_windows_dependencies)
     find_library(ACTIVEMQ_CPP_LIBMSWSOCK MsWsock)
     find_file(ACTIVEMQ_CPP_DLLMSWSOCK MsWsock.dll)
     if(ACTIVEMQ_CPP_LIBWS2 AND ACTIVEMQ_CPP_DLLWS2 AND ACTIVEMQ_CPP_LIBRPCRT4 AND ACTIVEMQ_CPP_DLLRPCRT4 AND ACTIVEMQ_CPP_LIBMSWSOCK AND ACTIVEMQ_CPP_DLLMSWSOCK)
-        add_library(activemq-cpp::ws2 SHARED IMPORTED)
-        set_target_properties(activemq-cpp::ws2 
+        add_library(unofficial::activemq-cpp::ws2 SHARED IMPORTED)
+        set_target_properties(unofficial::activemq-cpp::ws2 
                               PROPERTIES
                                   IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLWS2}" 
                                   IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBWS2}" 
                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                               )
-        add_library(activemq-cpp::rpcrt4 SHARED IMPORTED)
-        set_target_properties(activemq-cpp::rpcrt4
+        add_library(unofficial::activemq-cpp::rpcrt4 SHARED IMPORTED)
+        set_target_properties(unofficial::activemq-cpp::rpcrt4
                               PROPERTIES 
                                   IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLRPCRT4}" 
                                   IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBRPCRT4}" 
                                   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                               )
-        add_library(activemq-cpp::mswsock SHARED IMPORTED)
-        set_target_properties(activemq-cpp::mswsock
+        add_library(unofficial::activemq-cpp::mswsock SHARED IMPORTED)
+        set_target_properties(unofficial::activemq-cpp::mswsock
                               PROPERTIES
                                   IMPORTED_LOCATION "${ACTIVEMQ_CPP_DLLMSWSOCK}"
                                   IMPORTED_IMPLIB "${ACTIVEMQ_CPP_LIBMSWSOCK}"
@@ -87,12 +87,12 @@ function(_set_exists VARNAME VARNAME_MISSING FILE)
     endif()
 endfunction()
 
-# Add the activemq-cpp::apr and activemq-cpp::activemq-cpp targets
+# Add the unofficial::activemq-cpp::apr and unofficial::activemq-cpp::activemq-cpp targets
 # Doesn't work for Windows DLL installs because that takes more args...
 function(_add_apr_and_amq_targets INC_PARENT LIB_TYPE APR_REL APR_DEB AMQ_REL AMQ_DEB DEPS)
     # the APR port doesn't have a CMake config target so create one
-    add_library(activemq-cpp::apr ${LIB_TYPE} IMPORTED)
-    set_target_properties(activemq-cpp::apr
+    add_library(unofficial::activemq-cpp::apr ${LIB_TYPE} IMPORTED)
+    set_target_properties(unofficial::activemq-cpp::apr
                           PROPERTIES
                               MAP_IMPORTED_CONFIG_MINSIZEREL Release
                               MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
@@ -103,8 +103,8 @@ function(_add_apr_and_amq_targets INC_PARENT LIB_TYPE APR_REL APR_DEB AMQ_REL AM
     )
 
     # the create the activemq-cpp CMake config target with a dependency on apr
-    add_library(activemq-cpp::activemq-cpp ${LIB_TYPE} IMPORTED)
-    set_target_properties(activemq-cpp::activemq-cpp
+    add_library(unofficial::activemq-cpp::activemq-cpp ${LIB_TYPE} IMPORTED)
+    set_target_properties(unofficial::activemq-cpp::activemq-cpp
                           PROPERTIES
                               MAP_IMPORTED_CONFIG_MINSIZEREL Release
                               MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
@@ -140,8 +140,8 @@ if (ACTIVEMQ_CPP_DLL_RELEASE)
             _activemq_cpp_windows_dependencies()
             if (${CMAKE_FIND_PACKAGE_NAME}_WINDOWS_DEPENDENCIES_FOUND)
                 # the APR port doesn't have a CMake config target so create one
-                add_library(activemq-cpp::apr SHARED IMPORTED)
-                set_target_properties(activemq-cpp::apr
+                add_library(unofficial::activemq-cpp::apr SHARED IMPORTED)
+                set_target_properties(unofficial::activemq-cpp::apr
                                       PROPERTIES
                                           MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                           MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
@@ -154,8 +154,8 @@ if (ACTIVEMQ_CPP_DLL_RELEASE)
                 )
 
                 # the create the activemq-cpp CMake config target with a dependency on apr
-                add_library(activemq-cpp::activemq-cpp SHARED IMPORTED)
-                set_target_properties(activemq-cpp::activemq-cpp
+                add_library(unofficial::activemq-cpp::activemq-cpp SHARED IMPORTED)
+                set_target_properties(unofficial::activemq-cpp::activemq-cpp
                                       PROPERTIES
                                           MAP_IMPORTED_CONFIG_MINSIZEREL Release
                                           MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
@@ -165,7 +165,7 @@ if (ACTIVEMQ_CPP_DLL_RELEASE)
                                           IMPORTED_IMPLIB_DEBUG "${ACTIVEMQ_CPP_LIB_DEBUG}"
                                           IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
                                           INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-                                          INTERFACE_LINK_LIBRARIES "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock"
+                                          INTERFACE_LINK_LIBRARIES "unofficial::activemq-cpp::apr;unofficial::activemq-cpp::ws2;unofficial::activemq-cpp::rpcrt4;unofficial::activemq-cpp::mswsock"
                 )
                 set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
             endif()
@@ -214,7 +214,7 @@ else()
                                              "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
                                              "${ACTIVEMQ_CPP_LIB_RELEASE}"
                                              "${ACTIVEMQ_CPP_LIB_DEBUG}"
-                                             "activemq-cpp::apr;activemq-cpp::ws2;activemq-cpp::rpcrt4;activemq-cpp::mswsock")
+                                             "unofficial::activemq-cpp::apr;unofficial::activemq-cpp::ws2;unofficial::activemq-cpp::rpcrt4;unofficial::activemq-cpp::mswsock")
                     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
                 endif()
             else()
@@ -250,7 +250,7 @@ else()
                                                  "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
                                                  "${ACTIVEMQ_CPP_LIB_RELEASE}"
                                                  "${ACTIVEMQ_CPP_LIB_DEBUG}"
-                                                 "activemq-cpp::apr;Threads::Threads")
+                                                 "unofficial::activemq-cpp::apr;Threads::Threads")
                         set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
                     else()
                         set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
@@ -289,7 +289,7 @@ else()
                                                      "${ACTIVEMQ_CPP_APR_LIB_DEBUG}"
                                                      "${ACTIVEMQ_CPP_LIB_RELEASE}"
                                                      "${ACTIVEMQ_CPP_LIB_DEBUG}"
-                                                     "activemq-cpp::apr;Threads::Threads")
+                                                     "unofficial::activemq-cpp::apr;Threads::Threads")
                             set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
                         else()
                             set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Activemq-cpp vcpkg install dependency failure: threads library not found.")
