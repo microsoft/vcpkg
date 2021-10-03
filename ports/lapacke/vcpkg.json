@@ -4,7 +4,7 @@
   "description": "Metapackage for packages which provide LAPACKE",
   "dependencies": [
     {
-      "name": "lapack",
+      "name": "lapack"
     },
     {
       "name": "vcpkg-gfortran",
