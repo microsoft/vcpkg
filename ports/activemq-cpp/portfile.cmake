@@ -30,23 +30,18 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     vcpkg_copy_pdbs()
 else()
+    set(PATCHES FunctionLevelLinkingOn.diff)
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE ${ARCHIVE}
-            PATCHES
-                FunctionLevelLinkingOn.diff
-                fix-crt-linkage.patch
-        )
+        list(APPEND PATCHES fix-crt-linkage.patch)
     else()
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE ${ARCHIVE}
-            PATCHES
-                FunctionLevelLinkingOn.diff
-                fix-crt-linkage-dyn.patch
-        )
+        list(APPEND PATCHES fix-crt-linkage-dyn.patch)
     endif()
+
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES ${PATCHES}
+    )
 
     set(ACTIVEMQCPP_MSVC_PROJ ${SOURCE_PATH}/vs2010-build/activemq-cpp.vcxproj)
 
