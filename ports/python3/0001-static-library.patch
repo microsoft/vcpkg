@@ -1,7 +1,7 @@
-From 364f6227f65a08ceb386bffc686fb333948eaf6e Mon Sep 17 00:00:00 2001
+From 14d91e4f4a9377f47cc4cc33faeeb7c82f64b176 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Thu, 28 May 2020 17:25:21 -0400
-Subject: [PATCH 1/6] static library
+Subject: [PATCH 1/7] static library
 
 builds the pythoncore as a static library instead of a DLL
 ---
@@ -10,7 +10,7 @@ builds the pythoncore as a static library instead of a DLL
  2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index 103e647ac8..9fe9b3018c 100644
+index d7d3cf081e..34269f0b75 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -251,6 +251,7 @@ typedef int pid_t;
@@ -37,7 +37,7 @@ index 103e647ac8..9fe9b3018c 100644
  
  #if defined(MS_WIN64)
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 0382977d6c..1ab1b703e7 100644
+index 2625d0293d..2f8bdaa931 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -73,7 +73,7 @@
@@ -59,5 +59,5 @@ index 0382977d6c..1ab1b703e7 100644
      </ClCompile>
      <Link>
 -- 
-2.33.0.windows.1
+2.28.0.windows.1
 

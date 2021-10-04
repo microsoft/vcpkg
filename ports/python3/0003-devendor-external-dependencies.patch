@@ -1,4 +1,4 @@
-From af42d2c33e80f63d73bddd07d42936e5af2bac05 Mon Sep 17 00:00:00 2001
+From 6c5c3793cbc6ba2a1d0d623a2bdaa9c2125be516 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:24:38 -0400
 Subject: [PATCH 3/6] devendor external dependencies
@@ -61,10 +61,10 @@ index fe076a6fc5..70cc61dd95 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
-index 5eb8559d29..80acdf5f1e 100644
+index 7e0062692b..6fb3279a20 100644
 --- a/PCbuild/_sqlite3.vcxproj
 +++ b/PCbuild/_sqlite3.vcxproj
-@@ -126,7 +126,7 @@
+@@ -127,7 +127,7 @@
        <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
@@ -113,5 +113,5 @@ index b2d9f5d57d..4efb826a05 100644
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
 -- 
-2.33.0.windows.1
+2.28.0.windows.1
 
