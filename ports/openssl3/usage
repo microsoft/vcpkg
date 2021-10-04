@@ -1,0 +1,11 @@
+The package openssl3 can be imported via CMake FindOpenSSL module:
+
+    find_package(OpenSSL REQUIRED)
+    target_link_libraries(main PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+
+Also, FindPkgConfig module can be used if pkg-config(.pc) files are installed:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(openssl REQUIRED IMPORTED_TARGET GLOBAL openssl>=3.0)
+    
+    target_link_libraries(main PRIVATE PkgConfig::openssl)
