@@ -1,6 +1,7 @@
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fail_port_install(ON_ARCH "arm" ON_TAREGT "uwp")
 endif()
+vcpkg_fail_port_install(ON_TAREGT "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
