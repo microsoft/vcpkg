@@ -7,12 +7,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-  ARCHIVE "${ARCHIVE}"
-  OUT_SOURCE_PATH SOURCE_PATH
-  PATCHES
-      fix-makefiles.patch
-      fix-sources.patch
-      fix-pc-file.patch
+    ARCHIVE "${ARCHIVE}"
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        fix-makefiles.patch
+        fix-sources.patch
+        fix-pc-file.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -40,22 +40,22 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib")
     else()
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
-      endif()
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
-      endif()
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
+        endif()
     endif()
 
-else() # Build in UNIX
+else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
