@@ -1242,7 +1242,7 @@
     },
     "ccfits": {
       "baseline": "2.5",
-      "port-version": 7
+      "port-version": 8
     },
     "cctag": {
       "baseline": "1.0.0",
