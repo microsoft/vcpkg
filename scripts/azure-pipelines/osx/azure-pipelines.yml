@@ -67,7 +67,7 @@ jobs:
       arguments: >
         -Triplet "x64-osx"
         -BuildReason "$(Build.Reason)"
-        -BinarySourceStub "${{ variables.BINARY_SOURCE_STUB }}"
+        -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
         -ArtifactStagingDirectory "$(Build.ArtifactStagingDirectory)"
         ${{ variables.PowershellExtraArguments }}
