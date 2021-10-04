@@ -140,6 +140,9 @@ if ($null -ne $OnlyTest)
             )
         }
     }
+
+    $failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 }
 else
 {
