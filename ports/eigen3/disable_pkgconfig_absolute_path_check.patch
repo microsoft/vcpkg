@@ -1,15 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dbb9bcf..84c413c 100644
+index f3e69b845..9534d6820 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -407,11 +407,13 @@ set(PKGCONFIG_INSTALL_DIR
-     CACHE STRING "The directory relative to CMAKE_PREFIX_PATH where eigen3.pc is installed"
+@@ -443,12 +443,14 @@ set(PKGCONFIG_INSTALL_DIR
+     CACHE PATH "The directory relative to CMAKE_INSTALL_PREFIX where eigen3.pc is installed"
      )
  
 +if(0)
  foreach(var INCLUDE_INSTALL_DIR CMAKEPACKAGE_INSTALL_DIR PKGCONFIG_INSTALL_DIR)
+   # If an absolute path is specified, make it relative to "{CMAKE_INSTALL_PREFIX}".
    if(IS_ABSOLUTE "${${var}}")
-     message(FATAL_ERROR "${var} must be relative to CMAKE_PREFIX_PATH. Got: ${${var}}")
+     file(RELATIVE_PATH "${var}" "${CMAKE_INSTALL_PREFIX}" "${${var}}")
    endif()
  endforeach()
 +endif()
