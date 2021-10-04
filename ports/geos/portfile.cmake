@@ -30,10 +30,11 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
         ${_CMAKE_EXTRA_OPTIONS}
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d # Legacy decision, hard coded in depending ports
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)
