@@ -16,27 +16,20 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(LIBS_ALL_DBG 
-      "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
-      )
-    set(LIBS_ALL_REL 
-      "\"${CURRENT_INSTALLED_DIR}/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/lib/charset.lib\""
-      )
-    
+    set(OPTFLAGS "/nologo /fp:precise /W3 /D_CRT_SECURE_NO_WARNINGS /DDLL_EXPORT")
+    cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR INSTDIR)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            "OPTFLAGS=${OPTFLAGS}"
+            "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
+            "LIBS_ALL=iconv.lib charset.lib"
         OPTIONS_DEBUG
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}/debug"
-            INST_DIR="${CURRENT_PACKAGES_DIR}/debug"
-            "LINK_FLAGS=/debug"
-            "LIBS_ALL=${LIBS_ALL_DBG}"
+            "INSTDIR=${INSTDIR}\\debug"
+            "LINK_FLAGS=/debug /LIBPATH:\"${CURRENT_INSTALLED_DIR}/debug/lib\""
         OPTIONS_RELEASE
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-            INST_DIR="${CURRENT_PACKAGES_DIR}"
-            "LINK_FLAGS="
-            "LIBS_ALL=${LIBS_ALL_REL}"       
+            "INSTDIR=${INSTDIR}"
+            "LINK_FLAGS=/LIBPATH:\"${CURRENT_INSTALLED_DIR}/lib\""
     )
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
