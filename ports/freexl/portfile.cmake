@@ -17,13 +17,18 @@ vcpkg_extract_source_archive_ex(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTFLAGS "/nologo /fp:precise /W3 /D_CRT_SECURE_NO_WARNINGS /DDLL_EXPORT")
+    set(LIBS_ALL "iconv.lib charset.lib")
+    if(VCPKG_TARGET_IS_UWP)
+        string(APPEND OPTFLAGS " /DWINAPI_FAMILY=WINAPI_FAMILY_APP")
+        string(APPEND LIBS_ALL " WindowsApp.lib /APPCONTAINER")
+    endif()
     cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR INSTDIR)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             "OPTFLAGS=${OPTFLAGS}"
             "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
-            "LIBS_ALL=iconv.lib charset.lib"
+            "LIBS_ALL=${LIBS_ALL}"
         OPTIONS_DEBUG
             "INSTDIR=${INSTDIR}\\debug"
             "LINK_FLAGS=/debug /LIBPATH:\"${CURRENT_INSTALLED_DIR}/debug/lib\""
