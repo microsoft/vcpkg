@@ -1,6 +1,6 @@
 {
   "name": "libopenmpt",
-  "version": "0.5.10",
+  "version": "0.5.12",
   "description": "a library to render tracker music",
   "homepage": "https://openmpt.org/",
   "dependencies": [
