@@ -497,7 +497,7 @@
       "port-version": 2
     },
     "boolinq": {
-      "baseline": "3.0.1",
+      "baseline": "3.0.2",
       "port-version": 0
     },
     "boost": {
