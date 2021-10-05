@@ -441,8 +441,8 @@
       "port-version": 1
     },
     "bitmagic": {
-      "baseline": "7.2.0",
-      "port-version": 1
+      "baseline": "7.5.0",
+      "port-version": 0
     },
     "bitserializer": {
       "baseline": "0.10",
