@@ -10,6 +10,8 @@ VCPKG_HOST_IS_<host>                     with <host> being one of the following:
 VCPKG_HOST_PATH_SEPARATOR                Host specific path separator (USAGE: "<something>${VCPKG_HOST_PATH_SEPARATOR}<something>"; only use and pass variables with VCPKG_HOST_PATH_SEPARATOR within "")
 VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
 VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
+VCPKG_HOST_BUNDLE_SUFFIX                 bundle suffix of the host
+VCPKG_TARGET_BUNDLE_SUFFIX               bundle suffix of the target
 VCPKG_TARGET_STATIC_LIBRARY_PREFIX       static library prefix for target (same as CMAKE_STATIC_LIBRARY_PREFIX)
 VCPKG_TARGET_STATIC_LIBRARY_SUFFIX       static library suffix for target (same as CMAKE_STATIC_LIBRARY_SUFFIX)
 VCPKG_TARGET_SHARED_LIBRARY_PREFIX       shared library prefix for target (same as CMAKE_SHARED_LIBRARY_PREFIX)
