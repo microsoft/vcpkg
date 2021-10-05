@@ -1925,8 +1925,8 @@
       "port-version": 2
     },
     "ebml": {
-      "baseline": "1.4.0",
-      "port-version": 1
+      "baseline": "1.4.2",
+      "port-version": 0
     },
     "ecm": {
       "baseline": "5.84.0",
