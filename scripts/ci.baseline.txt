@@ -1326,8 +1326,6 @@ realsense2:arm-uwp=fail
 realsense2:x64-uwp=fail
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
-reproc:arm-uwp=fail
-reproc:x64-uwp=fail
 restbed:arm-uwp=fail
 restbed:x64-uwp=fail
 # file conflicts with msgpack

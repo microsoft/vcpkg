@@ -5825,8 +5825,8 @@
       "port-version": 3
     },
     "reproc": {
-      "baseline": "14.2.1",
-      "port-version": 1
+      "baseline": "14.2.3",
+      "port-version": 0
     },
     "rest-rpc": {
       "baseline": "0.07",
