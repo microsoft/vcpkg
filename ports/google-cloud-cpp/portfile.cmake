@@ -63,6 +63,7 @@ foreach(package
         pubsub_client
         spanner_client
         storage_client)
+    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${config_path}")
         continue()
     endif()
