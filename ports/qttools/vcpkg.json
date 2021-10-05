@@ -27,7 +27,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "network"
+            "network",
+            "sql-sqlite"
           ]
         }
       ]
