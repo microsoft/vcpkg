@@ -1961,7 +1961,7 @@
       "port-version": 1
     },
     "eigen3": {
-      "baseline": "3.3.9",
+      "baseline": "3.4.0",
       "port-version": 1
     },
     "elfio": {
