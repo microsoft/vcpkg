@@ -53,6 +53,23 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endif()
     endif()
 
+    set(VERSION "${FREEXL_VERSION_STR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    set(ICONV_LIBS "-liconv -lcharset")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freexl.pc")
+        configure_file("${SOURCE_PATH}/freexl.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lm" "")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freexl.pc")
+        configure_file("${SOURCE_PATH}/freexl.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lm" "")
+    endif()
+
 else()
 
     vcpkg_configure_make(
@@ -60,9 +77,10 @@ else()
         AUTOCONFIG
     )
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
 
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
