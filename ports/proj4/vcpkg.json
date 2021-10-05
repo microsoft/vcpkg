@@ -1,13 +1,20 @@
 {
   "name": "proj4",
   "version-semver": "7.2.1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "PROJ.4 library for cartographic projections",
   "homepage": "https://github.com/OSGeo/PROJ",
   "dependencies": [
     {
       "name": "sqlite3",
       "default-features": false
+    },
+    {
+      "name": "sqlite3",
+      "host": true,
+      "features": [
+        "tool"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -19,22 +26,9 @@
     }
   ],
   "default-features": [
-    "database",
     "tiff"
   ],
   "features": {
-    "database": {
-      "description": "generate database",
-      "dependencies": [
-        {
-          "name": "sqlite3",
-          "host": true,
-          "features": [
-            "tool"
-          ]
-        }
-      ]
-    },
     "tiff": {
       "description": "Enable TIFF support to read some grids",
       "dependencies": [
