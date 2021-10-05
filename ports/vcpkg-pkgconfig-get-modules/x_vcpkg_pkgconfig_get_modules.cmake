@@ -56,7 +56,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         message(FATAL_ERROR "extra arguments passed to x_vcpkg_pkgconfig_get_modules: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_find_acquire_program(PKGCONFIG)
+    set(PKGCONFIG "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(backup_PKG_CONFIG_PATH "$ENV{PKG_CONFIG_PATH}")
 
     set(var_suffixes)
