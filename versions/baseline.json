@@ -6685,8 +6685,8 @@
       "port-version": 1
     },
     "tmxlite": {
-      "baseline": "2019-03-05",
-      "port-version": 1
+      "baseline": "1.3.0",
+      "port-version": 0
     },
     "tmxparser": {
       "baseline": "2.1.0",
