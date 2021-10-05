@@ -31,9 +31,50 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+foreach(feature IN LISTS FEATURES)
+    set(config_path "lib/cmake/google_cloud_cpp_${feature}")
+    # Most features get their own package in `google-cloud-cpp`.
+    # The exceptions are captured by this `if()` command, basically
+    # things like `core` and `experimental-storage-grpc` are skipped.
+    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
+        continue()
+    endif()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${feature}"
+                             CONFIG_PATH "${config_path}"
+                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endforeach()
+# These packages are automatically installed depending on what features are
+# enabled.
+foreach(suffix common googleapis grpc_utils)
+    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
+    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
+        continue()
+    endif()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${suffix}"
+                             CONFIG_PATH "${config_path}"
+                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+# These packages are only for backwards compability. The google-cloud-cpp team
+# is planning to remove them around 2022-02-15.
+foreach(package
+        googleapis
+        bigtable_client
+        pubsub_client
+        spanner_client
+        storage_client)
+    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
+    if(NOT IS_DIRECTORY "${config_path}")
+        continue()
+    endif()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}"
+                             CONFIG_PATH "${config_path}"
+                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endforeach()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/share") 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
