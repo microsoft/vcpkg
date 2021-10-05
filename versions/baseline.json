@@ -6877,7 +6877,7 @@
       "port-version": 1
     },
     "uwebsockets": {
-      "baseline": "19.9.0",
+      "baseline": "20.5.0",
       "port-version": 0
     },
     "v-hacd": {
