@@ -352,6 +352,12 @@ gainput:x64-uwp=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
+geogram:x64-linux=fail
+geogram:x64-osx=fail
+geogram:x64-windows-static-md=fail
+geogram:x64-windows-static=fail
+geogram:x64-windows=fail
+geogram:x86-windows=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
