@@ -1,0 +1,15 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index d9267e8..26713f9 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -36,6 +36,10 @@ if(NOT MSVC)
+       OWNER_READ OWNER_EXECUTE
+       GROUP_READ GROUP_EXECUTE
+       WORLD_READ WORLD_EXECUTE)
++else()
++  set(cxx_libs "")
++endif()
++if(1)
+ 
+   # pkg-config support
+   configure_file(
