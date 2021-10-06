@@ -220,6 +220,14 @@ else()
     set(SHELL /bin/sh)
 endif()
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_OSX AND VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(OPTIONS "--extra-cflags=-mmacosx-version-min=${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
+    set(OPTIONS "--extra-ldflags=-mmacosx-version-min=${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
+endif()
+
 set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}$ENV{${INCLUDE_VAR}}")
 
 set(_csc_PROJECT_PATH ffmpeg)
@@ -543,9 +551,6 @@ if("zlib" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 if (VCPKG_TARGET_IS_OSX)
     # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us
