@@ -1930,7 +1930,7 @@
     },
     "ecm": {
       "baseline": "5.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ecos": {
       "baseline": "2.0.8",
@@ -5337,8 +5337,8 @@
       "port-version": 1
     },
     "python3": {
-      "baseline": "3.9.7",
-      "port-version": 2
+      "baseline": "3.10.0",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.1",
