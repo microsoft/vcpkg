@@ -2,16 +2,17 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fail_port_install(ON_ARCH "arm" ON_TAREGT "uwp")
 endif()
 
-# It's not safe to use dynamic library, as we hooked some system APIs in CO.
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO idealvin/co
-    REF 82b9f75dcd114c69d2b9c2c5a13ce2c3b95ba99f #v2.0.1
-    SHA512 ec33c5b920adf8b5e5500ed7c9768bd595ba2b568b604f26f953ddb5d04e411e8a2ea05b213595a44cafbadf90c1e1661208855301b2b47295ccc6e20f36e8d8
+    REF 25915760f5cbcde1c5af625dd4d19a632ae43f12 #v2.0.2
+    SHA512 892d70923409306ab548cf4568f15ffd13949047a5a7810c68d60c1afd184eafd2076f62eb6249ae64b38c409255cb873fa28740ceab37b908b70174ddf6d077
     HEAD_REF master
+    PATCHES
+        install-dll.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -21,7 +22,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DSTATIC_VS_CRT=${STATIC_CRT}
+    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_cmake_install()
