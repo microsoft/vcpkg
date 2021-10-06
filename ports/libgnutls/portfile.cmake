@@ -19,6 +19,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             outdir.patch
             runtime.patch
             pkgconfig.patch
+            nettle.patch
     )
 
     file(REMOVE_RECURSE "${SOURCE_PATH}/devel/perlasm")
