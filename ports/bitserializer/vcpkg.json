@@ -13,11 +13,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "cpprestjson-archive",
-    "pugixml-archive",
-    "rapidjson-archive"
-  ],
   "features": {
     "cpprestjson-archive": {
       "description": "Module for support JSON (implementation based on the CppRestSDK library)",
