@@ -424,6 +424,7 @@ graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
+gstreamer:x64-osx=fail
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 gts:x64-osx=fail
