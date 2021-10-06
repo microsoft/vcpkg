@@ -1,7 +1,7 @@
-diff --git a/include/config.h b/include/config.h
+diff --git a/config.h b/config.h
 index 6a2b097..7db8a93 100644
---- a/include/config.h
-+++ b/include/config.h
+--- a/config.h
++++ b/config.h
 @@ -64,6 +64,8 @@
  #pragma warning ( disable : 4251 ) // __declspec(dllexport)
  #pragma warning ( disable : 4275 )
