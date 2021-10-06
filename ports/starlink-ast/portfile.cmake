@@ -15,6 +15,7 @@ set(CONFIGURE_OPTIONS
     --without-fortran
     star_cv_cnf_trail_type=long
     star_cv_cnf_f2c_compatible=no
+    CFLAGS='-DCMINPACK_NO_DLL'
 )
 
 if ("yaml" IN_LIST FEATURES)
