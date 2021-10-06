@@ -510,10 +510,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             message(STATUS "Running vcpkg install - done")
 
             # file(TOUCH) added in CMake 3.12
-            file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
+            file(WRITE "${CMAKE_BINARY_DIR}/.vcpkg-cmakestamp" "")
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${VCPKG_MANIFEST_DIR}/vcpkg.json"
-                "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
+                "${CMAKE_BINARY_DIR}/.vcpkg-cmakestamp")
             if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                     "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
