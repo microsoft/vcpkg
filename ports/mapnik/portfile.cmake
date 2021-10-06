@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 6f01d7a34ada914a16227a0135eb9384ff7f012c
-    SHA512 cea0d6b990486e10324e2d7cba4201efefaf8535bd9a6334c5d200f11741b1613a331e0fe9bcdba9daf3c5aab00046e1af0a81430dd5485decfbf628efd1956f
+    REF d96b6843b396b3df25bf943ffbbd2128126a907a
+    SHA512 aae42190e73993dc9c4865d5d4555e223ccaae1ad0c24497486eb715ff95ce7c7a2bf42726fab55a5d35aa0257e2f9aad2a2473dd0cfef8f46732901e20134ad
     HEAD_REF master
 )
 
@@ -60,16 +60,12 @@ vcpkg_cmake_configure(
         -DMAPNIK_PKGCONF_DIR=lib/pkgconfig
 )
 
-message(STATUS "pre vcpkg_cmake_install")
 vcpkg_cmake_install()
-message(STATUS "post vcpkg_cmake_install")
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/plugins")
   file(COPY "${CURRENT_PACKAGES_DIR}/bin/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
-message(STATUS "pre vcpkg_copy_pdbs")
 vcpkg_copy_pdbs()
-message(STATUS "post vcpkg_copy_pdbs")
 
 set(_tool_names "")
 if("viewer" IN_LIST FEATURES)
@@ -79,7 +75,6 @@ if("viewer" IN_LIST FEATURES)
 endif()
 
 if("utility-geometry-to-wkb" IN_LIST FEATURES)
-message(STATUS "vcpkg_copy_tools geometry-to-wkb")
   list(APPEND _tool_names geometry_to_wkb)
 endif()
 
@@ -110,6 +105,8 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/mapnik/mapnikPlugins-debug.cmake" "set(MAPNIK_PLUGINS_DIR_DEBUG \"\${PACKAGE_PREFIX_DIR}/debug/bin/mapnik/input\" CACHE STRING \"\")")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${SOURCE_PATH}/fonts/unifont_license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME fonts_copyright)
