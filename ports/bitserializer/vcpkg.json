@@ -1,8 +1,7 @@
 {
   "name": "bitserializer",
-  "version": "0.10",
-  "port-version": 2,
-  "description": "Core part of C++ 17 library for serialization to JSON, XML, YAML",
+  "version": "0.44",
+  "description": "C++ 17 library for serialization to JSON, XML, YAML",
   "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
   "default-features": [
     "cpprestjson-archive",
@@ -33,7 +32,7 @@
       "dependencies": [
         {
           "name": "ryml",
-          "platform": "!arm & !arm64 & !osx"
+          "platform": "!osx"
         }
       ]
     }

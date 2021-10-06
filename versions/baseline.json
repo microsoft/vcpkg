@@ -445,8 +445,8 @@
       "port-version": 1
     },
     "bitserializer": {
-      "baseline": "0.10",
-      "port-version": 2
+      "baseline": "0.44",
+      "port-version": 0
     },
     "bitserializer-cpprestjson": {
       "baseline": "alias",
@@ -462,7 +462,7 @@
     },
     "bitserializer-rapidyaml": {
       "baseline": "alias",
-      "port-version": 1
+      "port-version": 2
     },
     "bitsery": {
       "baseline": "5.2.2",

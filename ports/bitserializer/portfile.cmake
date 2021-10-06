@@ -1,8 +1,8 @@
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Pavel_Kisliak/BitSerializer
-    REF 0.10
-    SHA512 a8a5acf4f9cc83d3090a3b06efbca682f4e022b5206bc7859ba6738e4d49a7678aa55f431f1721d50b28d8bde126b672396baae27cbaa79f62e3dc237ae678e1
+    REF 0.44
+    SHA512 0629acc93807254bd51d9eed761a92be4780d01604a9ae4bf8a933af70fdb206ea9b4f4db3489805b4163f5071246529ea22f8b3e7fbcd77ed936c3ab24697b2
     HEAD_REF master
 )
 
