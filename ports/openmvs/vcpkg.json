@@ -28,6 +28,10 @@
     },
     "tiff",
     "vcglib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
