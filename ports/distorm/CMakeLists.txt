@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(distorm C)
 
+set(CMAKE_C_STANDARD 99)
+
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
 endif()
@@ -16,7 +18,6 @@ add_library(distorm
   src/operands.c
   src/prefix.c
   src/textdefs.c
-  src/wstring.c
 )
 
 if(BUILD_SHARED_LIBS)
