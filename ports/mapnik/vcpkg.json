@@ -149,12 +149,7 @@
     "proj": {
       "description": "PROJ Functionalities",
       "dependencies": [
-        {
-          "name": "proj4",
-          "features": [
-            "database"
-          ]
-        }
+        "proj4"
       ]
     },
     "svg-renderer": {
