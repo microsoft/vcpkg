@@ -582,7 +582,7 @@
     },
     "boost-config": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-container": {
       "baseline": "1.77.0",
