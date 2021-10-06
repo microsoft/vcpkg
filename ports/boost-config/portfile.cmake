@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-1.77.0
     SHA512 c6df16825b7bb27412667e00b6b6cdecbf56ee0707aa1df3505637c7de5c39c87335fabd7cd4361b29625d71c7664e6af865fc271ad0b3e70cc8872825f6155e
     HEAD_REF master
+    PATCHES
+        fix-emscripten-compilation.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
