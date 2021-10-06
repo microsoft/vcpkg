@@ -3597,8 +3597,8 @@
       "port-version": 2
     },
     "libnice": {
-      "baseline": "0.1.15",
-      "port-version": 7
+      "baseline": "0.1.18",
+      "port-version": 0
     },
     "libnoise": {
       "baseline": "1.0.0",
