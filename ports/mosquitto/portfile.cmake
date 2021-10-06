@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DWITH_THREADING=ON
         -DDOCUMENTATION=OFF
         -DWITH_PLUGINS=OFF
+        -DWITH_CJSON=OFF
 )
 
 vcpkg_install_cmake()
