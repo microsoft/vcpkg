@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_canberra.patch
+        fix_python_version.patch # Remove on next release
 )
 
 vcpkg_cmake_configure(
