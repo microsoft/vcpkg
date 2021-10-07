@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF d96b6843b396b3df25bf943ffbbd2128126a907a
     SHA512 aae42190e73993dc9c4865d5d4555e223ccaae1ad0c24497486eb715ff95ce7c7a2bf42726fab55a5d35aa0257e2f9aad2a2473dd0cfef8f46732901e20134ad
     HEAD_REF master
+    PATCHES
+        0001-fix-harfbuzz-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -63,42 +65,42 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/plugins")
-  file(COPY "${CURRENT_PACKAGES_DIR}/bin/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 vcpkg_copy_pdbs()
 
 set(_tool_names "")
 if("viewer" IN_LIST FEATURES)
-  # copy the ini file to reference the plugins correctly
-  file(COPY "${CURRENT_PACKAGES_DIR}/bin/viewer.ini" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-  list(APPEND _tool_names mapnik-viewer)
+    # copy the ini file to reference the plugins correctly
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/viewer.ini" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    list(APPEND _tool_names mapnik-viewer)
 endif()
 
 if("utility-geometry-to-wkb" IN_LIST FEATURES)
-  list(APPEND _tool_names geometry_to_wkb)
+    list(APPEND _tool_names geometry_to_wkb)
 endif()
 
 if("utility-mapnik-index" IN_LIST FEATURES)
-  list(APPEND _tool_names mapnik-index)
+    list(APPEND _tool_names mapnik-index)
 endif()
 if("utility-mapnik-render" IN_LIST FEATURES)
-  list(APPEND _tool_names mapnik-render)
+    list(APPEND _tool_names mapnik-render)
 endif()
 if("utility-ogrindex" IN_LIST FEATURES)
-  # build is currently not supported
-  # vcpkg_copy_tools(TOOL_NAMES ogrindex AUTO_CLEAN)
+    # build is currently not supported
+    # vcpkg_copy_tools(TOOL_NAMES ogrindex AUTO_CLEAN)
 endif()
 if("utility-pgsql2sqlite" IN_LIST FEATURES)
-  list(APPEND _tool_names pgsql2sqlite)
+    list(APPEND _tool_names pgsql2sqlite)
 endif()
 if("utility-shapeindex" IN_LIST FEATURES)
-  list(APPEND _tool_names shapeindex)
+    list(APPEND _tool_names shapeindex)
 endif()
 if("utility-svg2png" IN_LIST FEATURES)
-  list(APPEND _tool_names svg2png)
+    list(APPEND _tool_names svg2png)
 endif()
 if(_tool_names)
-  vcpkg_copy_tools(TOOL_NAMES ${_tool_names} AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ${_tool_names} AUTO_CLEAN)
 endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/mapnik/cmake)
 vcpkg_fixup_pkgconfig()
