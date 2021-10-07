@@ -1,12 +1,12 @@
 set(VERSION_MAJOR 5)
-set(VERSION_MINOR 6)
-set(VERSION_PATCH 0)
+set(VERSION_MINOR 7)
+set(VERSION_PATCH 3)
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.aquamaniac.de/rdm/attachments/download/364/gwenhywfar-${VERSION}.tar.gz"
+    URLS "https://www.aquamaniac.de/rdm/attachments/download/390/gwenhywfar-${VERSION}.tar.gz"
     FILENAME "gwenhywfar-${VERSION}.tar.gz"
-    SHA512 9875d677f49fc0a46f371fd1954d15d99c7d5994e90b16f1be7a5b8a1cbcd74ae9733e4541afd6d8251a2ba1a0a37c28e0f248952b7c917313fbf5b38b1d8d11
+    SHA512 c005c0af36786a000cf317647440304f6779b531256cdbd5d67180b7b0b2056c230391a3845057d6061875c505f88f9f23fe086dc7e8a04d35fed33c61a0fb47
 )
 
 vcpkg_extract_source_archive_ex(
