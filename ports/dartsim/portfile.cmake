@@ -11,7 +11,7 @@ vcpkg_from_github(
         disable_unit_tests_examples_and_tutorials.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DDART_VERBOSE=ON
@@ -24,9 +24,9 @@ vcpkg_configure_cmake(
         -DDART_SKIP_pagmo=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/dart/cmake TARGET_PATH share/dart)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/dart/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
