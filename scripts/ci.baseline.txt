@@ -332,8 +332,6 @@ freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
 freetype-gl:x64-uwp=fail
-freexl:arm-uwp=fail
-freexl:x64-uwp=fail
 fribidi:arm64-windows=fail
 fribidi:arm-uwp=fail
 fribidi:x64-uwp=fail

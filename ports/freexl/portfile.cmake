@@ -1,70 +1,86 @@
-set(FREEXL_VERSION_STR "1.0.4")
+set(FREEXL_VERSION_STR "1.0.6")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
+    URLS "https://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-${FREEXL_VERSION_STR}.tar.gz"
     FILENAME "freexl-${FREEXL_VERSION_STR}.tar.gz"
-    SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
+    SHA512 efbbe261e57d5c05167ad8e1d5a5b348a7e702c0a4030b18dd2a8c60a38332caccbb073ff604bdf5bafac827310b41c7b79f9fa519ea512d6de2eafd9c1f71f6
 )
 
 vcpkg_extract_source_archive_ex(
-  ARCHIVE "${ARCHIVE}"
-  OUT_SOURCE_PATH SOURCE_PATH
-  PATCHES
-      fix-makefiles.patch
-      fix-sources.patch
-      fix-pc-file.patch
+    ARCHIVE "${ARCHIVE}"
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        fix-makefiles.patch
+        fix-sources.patch
+        fix-pc-file.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(LIBS_ALL_DBG 
-      "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
-      )
-    set(LIBS_ALL_REL 
-      "\"${CURRENT_INSTALLED_DIR}/lib/iconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/lib/charset.lib\""
-      )
-    
+    set(OPTFLAGS "/nologo /fp:precise /W3 /D_CRT_SECURE_NO_WARNINGS /DDLL_EXPORT")
+    set(LIBS_ALL "iconv.lib charset.lib")
+    if(VCPKG_TARGET_IS_UWP)
+        string(APPEND OPTFLAGS " /DWINAPI_FAMILY=WINAPI_FAMILY_APP")
+        string(APPEND LIBS_ALL " WindowsApp.lib /APPCONTAINER")
+    endif()
+    cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR INSTDIR)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            "OPTFLAGS=${OPTFLAGS}"
+            "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
+            "LIBS_ALL=${LIBS_ALL}"
         OPTIONS_DEBUG
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}/debug"
-            INST_DIR="${CURRENT_PACKAGES_DIR}/debug"
-            "LINK_FLAGS=/debug"
-            "LIBS_ALL=${LIBS_ALL_DBG}"
+            "INSTDIR=${INSTDIR}\\debug"
+            "LINK_FLAGS=/debug /LIBPATH:\"${CURRENT_INSTALLED_DIR}/debug/lib\""
         OPTIONS_RELEASE
-            INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
-            INST_DIR="${CURRENT_PACKAGES_DIR}"
-            "LINK_FLAGS="
-            "LIBS_ALL=${LIBS_ALL_REL}"       
+            "INSTDIR=${INSTDIR}"
+            "LINK_FLAGS=/LIBPATH:\"${CURRENT_INSTALLED_DIR}/lib\""
     )
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib")
     else()
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
-      endif()
-      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
-      endif()
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/lib/freexl.lib")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib")
+        endif()
     endif()
 
-else() # Build in UNIX
+    set(VERSION "${FREEXL_VERSION_STR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    set(ICONV_LIBS "-liconv -lcharset")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freexl.pc")
+        configure_file("${SOURCE_PATH}/freexl.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lm" "")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freexl.pc")
+        configure_file("${SOURCE_PATH}/freexl.pc.in" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" " -lm" "")
+    endif()
+
+else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
     )
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
 
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
