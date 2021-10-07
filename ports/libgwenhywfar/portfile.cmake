@@ -15,6 +15,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE} 
     REF ${VERSION}
+    PATCHES
+        0001-Add-support-for-static-builds.patch
 )
 
 if ("libxml2" IN_LIST FEATURES)
@@ -36,6 +38,7 @@ else()
 endif()
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-silent-rules
