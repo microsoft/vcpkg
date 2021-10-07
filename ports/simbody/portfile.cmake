@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "0001-Use-vcpkg-deps.patch"
-        "0002-Use-same-cmake-dir.patch"
+        "0002-Use-same-install-dir.patch"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/Platform/Windows")
 
