@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DPKG_CONFIG_EXECUTABLE="${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe"
+        -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf
         -Denable_ltdl=OFF
 )
 
