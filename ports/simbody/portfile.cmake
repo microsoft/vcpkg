@@ -13,6 +13,8 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/Platform/Windows")
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DINSTALL_DOCS=OFF
+        -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
 )
@@ -21,26 +23,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-vcpkg_copy_tools(
-    TOOL_NAMES simbody-visualizer
-    AUTO_CLEAN
-)
-vcpkg_copy_tools(
-    TOOL_NAMES simbody-visualizer_d
-    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/debug/bin
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}
-    AUTO_CLEAN
-)
-# Copy debug dependencies not moved by vcpkg_copy_tool_dependencies for simbody-visualizer_d
-file(COPY "${CURRENT_PACKAGES_DIR}/debug/bin/SimTKcommon_d.dll"
-          "${CURRENT_PACKAGES_DIR}/debug/bin/SimTKmath_d.dll"
-          "${CURRENT_PACKAGES_DIR}/debug/bin/SimTKsimbody_d.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/"
-)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc/api" "${CURRENT_PACKAGES_DIR}/doc/api")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
