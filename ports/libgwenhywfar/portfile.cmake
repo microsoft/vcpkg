@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         0001-Add-support-for-static-builds.patch
+        0001-Use-pkg-config-to-find-libgcrypt-gpg-error.patch
 )
 
 if ("libxml2" IN_LIST FEATURES)

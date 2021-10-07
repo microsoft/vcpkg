@@ -1,0 +1,51 @@
+From fbc4e5c9615eba2b1e58814926cfee344f7fd71c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 7 Oct 2021 17:11:16 +0200
+Subject: [PATCH] Use pkg-config to find libgcrypt, gpg-error
+
+---
+ configure.ac | 21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 96f2cce5..b11a8174 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -669,24 +669,7 @@ AC_DEFINE_UNQUOTED(NEED_LIBGCRYPT_VERSION, "$NEED_LIBGCRYPT_VERSION",
+                                      [Required version of Libgcrypt])
+ NEED_LIBGCRYPT_MODULE="libgcrypt >= $NEED_LIBGCRYPT_VERSION"
+ AC_SUBST(NEED_LIBGCRYPT_MODULE)
+-
+-case "$OS_TYPE" in
+-  windows)
+-    LIBGCRYPT_CFLAGS=""
+-    LIBGCRYPT_LIBS="-lgcrypt"
+-    AC_SUBST(LIBGCRYPT_CFLAGS)
+-    AC_SUBST(LIBGCRYPT_LIBS)
+-    ;;
+-  *)
+-    AM_PATH_LIBGCRYPT("$NEED_LIBGCRYPT_API:$NEED_LIBGCRYPT_VERSION",
+-                      [have_gcrypt="yes"], [have_gcrypt="no"])
+-    if test "$have_gcrypt" != "yes"; then
+-      AC_MSG_ERROR([
+-    **** Libgcrypt is required for Gwenhywfar. Please install it (including devel packages)
+-    **** (at least version $NEED_LIBGCRYPT_VERSION using API $NEED_LIBGCRYPT_API is required.)])
+-    fi
+-    ;;
+-esac
++PKG_CHECK_MODULES([LIBGCRYPT], [$NEED_LIBGCRYPT_MODULE])
+ 
+ 
+ 
+@@ -694,7 +677,7 @@ esac
+ #
+ # check for library for common error values and messages in GnuPG components
+ #
+-AM_PATH_GPG_ERROR
++PKG_CHECK_MODULES([GPG_ERROR], [gpg-error])
+ 
+ 
+ 
+-- 
+2.33.0
+
