@@ -37,17 +37,17 @@
     {
       "name": "harfbuzz",
       "features": [
-        "coretext",
+        "core",
         "icu"
-      ],
-      "platform": "osx"
+      ]
     },
     {
       "name": "harfbuzz",
       "features": [
-        "icu"
+        "core",
+        "coretext"
       ],
-      "platform": "!osx"
+      "platform": "osx"
     },
     "icu",
     "mapbox-geometry",
