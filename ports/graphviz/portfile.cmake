@@ -10,14 +10,12 @@ vcpkg_from_gitlab(
 )
 
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
-set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
-vcpkg_add_to_path("${AWK_EXE_PATH}")
+vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(GIT)
 vcpkg_find_acquire_program(PYTHON3)
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
