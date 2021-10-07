@@ -1,4 +1,4 @@
-vcpkg_from_gitlab(ARCHIVE
+vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
@@ -23,13 +23,13 @@ get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 vcpkg_add_to_path(PREPEND "${GIT_DIR}")
-vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DPython3_EXECUTABLE=${PYTHON3}
         -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf
         -Denable_ltdl=OFF
 )
