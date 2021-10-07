@@ -6144,6 +6144,10 @@
       "baseline": "1.8.1",
       "port-version": 1
     },
+    "simbody": {
+      "baseline": "3.8-a8f49c84e98ccf3b7e6f05db55a29520e5f9c176",
+      "port-version": 0
+    },
     "simde": {
       "baseline": "0.7.2",
       "port-version": 0

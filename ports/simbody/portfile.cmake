@@ -4,17 +4,20 @@ vcpkg_from_github(
     REF a8f49c84e98ccf3b7e6f05db55a29520e5f9c176
     SHA512 85493e00286163ed8ac6aa71edf8d34701d62ac5e5f472f654faa8852eb7fd569ffc0d76fd2e88bebcd3f79df9e35fc702a029890defb8b0d84d0d0512268960
     HEAD_REF master
-    PATCHES ${PATCHES} "0001-Use-vcpkg-deps.patch"
+    PATCHES
+        "0001-Use-vcpkg-deps.patch"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/Platform/Windows")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 vcpkg_copy_tools(
     TOOL_NAMES simbody-visualizer

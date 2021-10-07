@@ -5,6 +5,14 @@
   "homepage": "https://simtk.org/home/simbody",
   "dependencies": [
     "blas",
-    "lapack"
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
