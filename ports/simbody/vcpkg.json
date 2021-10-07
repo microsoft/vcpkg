@@ -5,8 +5,8 @@
   "homepage": "https://simtk.org/home/simbody",
   "dependencies": [
     "blas",
-    "lapack",
     "freeglut",
+    "lapack",
     {
       "name": "vcpkg-cmake",
       "host": true

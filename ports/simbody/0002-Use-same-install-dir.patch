@@ -20,3 +20,15 @@ index 67874065..9410900b 100644
      set(SIMBODY_CMAKE_DIR cmake)
  elseif(UNIX)
      set(SIMBODY_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/simbody/)
+diff --git a/Simbody/Visualizer/simbody-visualizer/CMakeLists.txt b/Simbody/Visualizer/simbody-visualizer/CMakeLists.txt
+index e09809fb..3db6fd00 100644
+--- a/Simbody/Visualizer/simbody-visualizer/CMakeLists.txt
++++ b/Simbody/Visualizer/simbody-visualizer/CMakeLists.txt
+@@ -28,6 +28,7 @@ if(WIN32)
+     set(SIMBODY_HAS_GLUT TRUE)
+ else()
+     find_package(GLUT) # sets GLUT_LIBRARIES
++    set(GLUT_LIBRARIES GLUT::GLUT)
+     if(APPLE)
+         if(GLUT_FOUND)
+             set(SIMBODY_HAS_GLUT TRUE)
