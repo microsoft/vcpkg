@@ -25,6 +25,7 @@ else {
 $portVersions = @{
     #e.g. "boost-asio" = 1;
     "boost"                      = 1;
+    "boost-config"               = 1;
     "boost-iostreams"            = 1;
     "boost-modular-build-helper" = 1;
     "boost-odeint"               = 1;
@@ -151,15 +152,11 @@ function GeneratePortDependency() {
 
 function GeneratePortManifest() {
     param (
-        [string]$Library,
         [string]$PortName,
         [string]$Homepage,
         [string]$Description,
         $Dependencies = @()
     )
-    if ([string]::IsNullOrEmpty($PortName)) {
-        $PortName = GeneratePortName $Library
-    }
     $manifest = @{
         "name"        = $PortName
         "version"     = $version
@@ -212,8 +209,7 @@ function GeneratePort() {
 
     # Generate vcpkg.json
     GeneratePortManifest `
-        -Library $Library `
-        -PortName $PortName `
+        -PortName $portName `
         -Homepage "https://github.com/boostorg/$Library" `
         -Description "Boost $Library module" `
         -Dependencies $Dependencies
@@ -256,7 +252,7 @@ function GeneratePort() {
     )
 
     if (Test-Path "$scriptsDir/post-source-stubs/$Library.cmake") {
-        $portfileLines += @(get-content "$scriptsDir/post-source-stubs/$Library.cmake")
+        $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
     }
 
     if ($NeedsBuild) {
@@ -301,7 +297,7 @@ function GeneratePort() {
     )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
-        $portfileLines += @(get-content "$scriptsDir/post-build-stubs/$Library.cmake")
+        $portfileLines += @(Get-Content "$scriptsDir/post-build-stubs/$Library.cmake")
     }
 
     $portfileLines += @("")
@@ -568,4 +564,7 @@ if ($updateServicePorts) {
         -Description "Internal vcpkg port used to build Boost libraries" `
         -Dependencies @("boost-uninstall")
 
+    # Update Boost version in boost-modular-build.cmake
+    $boost_modular_build = "$portsDir/boost-modular-build-helper/boost-modular-build.cmake"
+    (Get-Content -LiteralPath "$boost_modular_build") -replace "set\(BOOST_VERSION ([0-9\.]+)\)", "set(BOOST_VERSION $version)" | Set-Content -LiteralPath "$boost_modular_build"
 }
