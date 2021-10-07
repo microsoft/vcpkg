@@ -6,6 +6,7 @@
   "dependencies": [
     "blas",
     "lapack",
+    "freeglut",
     {
       "name": "vcpkg-cmake",
       "host": true
