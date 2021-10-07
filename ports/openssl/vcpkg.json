@@ -1,5 +1,5 @@
 {
-  "name": "openssl3",
+  "name": "openssl",
   "version-semver": "3.0.0",
   "description": "TLS/SSL and crypto library",
   "homepage": "https://www.openssl.org/",
