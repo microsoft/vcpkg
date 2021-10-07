@@ -44,10 +44,13 @@ endif()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
+
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
-        "-lffi" "-llibffi")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
             "-lffi" "-llibffi")
     endif()
