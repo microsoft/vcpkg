@@ -4,7 +4,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES fix_windows_header_include.patch
                     FindGObject.patch
                     FindGStreamer.patch
-                    remove_unistd.patch)
+                    remove_unistd.patch
+                    3c74340.diff)
 
 #Maybe TODO: ALSA + PulseAudio? (Missing Ports)
 
