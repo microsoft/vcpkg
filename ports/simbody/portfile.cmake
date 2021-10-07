@@ -17,7 +17,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+
+if(WIN32)
+    set(SIMBODY_CMAKE_DIR cmake)
+elseif(UNIX)
+    set(SIMBODY_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/simbody/)
+endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH ${SIMBODY_CMAKE_DIR})
 
 vcpkg_copy_tools(
     TOOL_NAMES simbody-visualizer
