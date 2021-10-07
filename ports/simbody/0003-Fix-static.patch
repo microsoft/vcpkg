@@ -1,0 +1,44 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9410900b..79b9f479 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -457,25 +457,31 @@ if(MSVC)
+     mark_as_advanced(BUILD_LIMIT_PARALLEL_COMPILES)
+     set(mxcpu ${BUILD_LIMIT_PARALLEL_COMPILES}) # abbreviation
+ 
++    if(BUILD_DYNAMIC_LIBRARIES)
++        set(CRT "/MD")
++    else()
++        set(CRT "/MT")
++    endif()
++
+     ## C++
+     set(BUILD_CXX_FLAGS_DEBUG
+-    "/D _DEBUG /MDd /Od /Ob0 /RTC1 /Zi /GS- ${CL_INST_SET}") 
++    "/D _DEBUG ${CRT}d /Od /Ob0 /RTC1 /Zi /GS- ${CL_INST_SET}") 
+     set(BUILD_CXX_FLAGS_RELEASE
+-    "/D NDEBUG /MD  /O2 /Ob2 /Oi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O2 /Ob2 /Oi /GS- ${CL_INST_SET}")
+     set(BUILD_CXX_FLAGS_RELWITHDEBINFO
+-    "/D NDEBUG /MD  /O2 /Ob2 /Oi /Zi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O2 /Ob2 /Oi /Zi /GS- ${CL_INST_SET}")
+     set(BUILD_CXX_FLAGS_MINSIZEREL
+-    "/D NDEBUG /MD  /O1 /Ob1 /Oi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O1 /Ob1 /Oi /GS- ${CL_INST_SET}")
+ 
+     ## C
+     set(BUILD_C_FLAGS_DEBUG
+-    "/D _DEBUG /MDd /Od /Ob0 /RTC1 /Zi /GS- ${CL_INST_SET}")
++    "/D _DEBUG ${CRT}d /Od /Ob0 /RTC1 /Zi /GS- ${CL_INST_SET}")
+     set(BUILD_C_FLAGS_RELEASE
+-    "/D NDEBUG /MD  /O2 /Ob2 /Oi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O2 /Ob2 /Oi /GS- ${CL_INST_SET}")
+     set(BUILD_C_FLAGS_RELWITHDEBINFO
+-    "/D NDEBUG /MD  /O2 /Ob2 /Oi /Zi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O2 /Ob2 /Oi /Zi /GS- ${CL_INST_SET}")
+     set(BUILD_C_FLAGS_MINSIZEREL
+-    "/D NDEBUG /MD  /O1 /Ob1 /Oi /GS- ${CL_INST_SET}")
++    "/D NDEBUG ${CRT}  /O1 /Ob1 /Oi /GS- ${CL_INST_SET}")
+ 
+     ## C++
+     set(CMAKE_CXX_FLAGS_DEBUG "/MP${mxcpu} ${BUILD_CXX_FLAGS_DEBUG}"

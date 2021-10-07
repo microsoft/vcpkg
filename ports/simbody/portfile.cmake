@@ -7,12 +7,23 @@ vcpkg_from_github(
     PATCHES
         "0001-Use-vcpkg-deps.patch"
         "0002-Use-same-install-dir.patch"
+        "0003-Fix-static.patch"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/Platform/Windows")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_DYNAMIC_LIBRARIES ON)
+    set(BUILD_STATIC_LIBRARIES OFF)
+else()
+    set(BUILD_DYNAMIC_LIBRARIES OFF)
+    set(BUILD_STATIC_LIBRARIES ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DBUILD_DYNAMIC_LIBRARIES=${BUILD_DYNAMIC_LIBRARIES}
+        -DBUILD_STATIC_LIBRARIES=${BUILD_STATIC_LIBRARIES}
         -DINSTALL_DOCS=OFF
         -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
