@@ -1,6 +1,7 @@
 {
   "name": "openmvs",
   "version": "1.1.1",
+  "port-version": 1,
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
   "homepage": "https://cdcseacave.github.io/openMVS",
   "dependencies": [
@@ -29,10 +30,6 @@
     "vcglib",
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"
