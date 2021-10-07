@@ -24,13 +24,15 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 vcpkg_add_to_path(PREPEND "${GIT_DIR}")
 
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DPKG_CONFIG_EXECUTABLE="${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe" -Denable_ltdl=OFF
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE="${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe"
+        -Denable_ltdl=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

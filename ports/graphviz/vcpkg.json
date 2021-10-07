@@ -9,6 +9,10 @@
     "libffi",
     "libgd",
     "pango",
-    "pkgconf"
+    "pkgconf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
