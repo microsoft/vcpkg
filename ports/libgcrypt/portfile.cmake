@@ -60,8 +60,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(includedir "\${prefix}/../include")
     set(LIBGCRYPT_CONFIG_LIBS "-L\${libdir} -lgcryptd -lgpg-errord")
     configure_file("${SOURCE_PATH}/src/libgcrypt.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libgcrypt.pc" @ONLY)
+
     vcpkg_fixup_pkgconfig()
     vcpkg_copy_pdbs()
+
+    file(INSTALL "${SOURCE_PATH}/src/libgcrypt.m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/")
+
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
 else()
     vcpkg_from_git(
