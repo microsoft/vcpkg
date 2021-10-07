@@ -16,7 +16,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         HEAD_REF master
         PATCHES
             external-libtasn1.patch
-            outdir.patch
             runtime.patch
             pkgconfig.patch
             nettle.patch
@@ -83,9 +82,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
-        OPTIONS "/p:YasmPath=${YASM}"
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
+        OPTIONS /p:YasmPath="${YASM}" /p:OutDir=..\\msvc
+        OPTIONS_DEBUG /p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}
+        OPTIONS_RELEASE /p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}
     )
 
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
