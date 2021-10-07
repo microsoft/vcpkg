@@ -37,14 +37,12 @@
     {
       "name": "harfbuzz",
       "features": [
-        "core",
         "icu"
       ]
     },
     {
       "name": "harfbuzz",
       "features": [
-        "core",
         "coretext"
       ],
       "platform": "osx"
