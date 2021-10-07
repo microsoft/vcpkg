@@ -16,12 +16,14 @@ vcpkg_add_to_path("${AWK_EXE_PATH}")
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(GIT)
+vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(FLEX_DIR "${BISON}" DIRECTORY)
 get_filename_component(BISON_DIR "${FLEX}" DIRECTORY)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 vcpkg_add_to_path(PREPEND "${GIT_DIR}")
+vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 
 vcpkg_cmake_configure(
