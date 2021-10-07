@@ -148,7 +148,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
-#    USE_VCPKG_INTEGRATION
     SKIP_CLEAN
   )
 
@@ -292,7 +291,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
       PLATFORM ${MSBUILD_PLATFORM}
-#      USE_VCPKG_INTEGRATION
       SKIP_CLEAN
     )
 
@@ -312,7 +310,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endif()
 
-  # remove (erroneous) duplicate libs *TODO*: where do these come from ?
+  # remove (erroneous) duplicate libs
   if("tao" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE
