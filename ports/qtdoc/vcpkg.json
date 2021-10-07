@@ -1,21 +1,12 @@
 {
   "name": "qtdoc",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "Qt Documentation",
   "homepage": "https://www.qt.io/",
   "dependencies": [
     {
       "name": "qtbase",
       "default-features": false
-    },
-    "qtdeclarative"
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
     }
-  }
+  ]
 }

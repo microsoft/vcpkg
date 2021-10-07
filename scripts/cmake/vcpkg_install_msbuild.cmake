@@ -143,7 +143,10 @@ function(vcpkg_install_msbuild)
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         "/p:VcpkgManifestInstall=false"
-        "/m"
+        "/p:UseMultiToolTask=true"
+        "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
+        "/p:EnforceProcessCountAcrossBuilds=true"
+        "/m:${VCPKG_CONCURRENCY}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
