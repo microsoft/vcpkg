@@ -1,0 +1,86 @@
+From 588bcb49734dec1e9c6284f156ae15769735be81 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 7 Oct 2021 15:01:17 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ configure.ac               | 15 +++++++++++++--
+ gwenhywfar-config.cmake.in | 11 +++++++++++
+ gwenhywfar.pc.in           |  1 +
+ 3 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index bd0a1bf2..96f2cce5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -667,6 +667,9 @@ NEED_LIBGCRYPT_API=1
+ NEED_LIBGCRYPT_VERSION=1.2.0
+ AC_DEFINE_UNQUOTED(NEED_LIBGCRYPT_VERSION, "$NEED_LIBGCRYPT_VERSION",
+                                      [Required version of Libgcrypt])
++NEED_LIBGCRYPT_MODULE="libgcrypt >= $NEED_LIBGCRYPT_VERSION"
++AC_SUBST(NEED_LIBGCRYPT_MODULE)
++
+ case "$OS_TYPE" in
+   windows)
+     LIBGCRYPT_CFLAGS=""
+@@ -700,7 +703,12 @@ AM_PATH_GPG_ERROR
+ # check for libgnutls
+ #
+ 
+-PKG_CHECK_MODULES([LIBGNUTLS], [gnutls >= 2.9.8])
++NEED_GNUTLS_VERSION=2.9.8
++AC_DEFINE_UNQUOTED(NEED_GNUTLS_VERSION, "$NEED_GNUTLS_VERSION",
++                                     [Required version of GnuTLS])
++NEED_GNUTLS_MODULE="gnutls >= $NEED_GNUTLS_VERSION"
++AC_SUBST(NEED_GNUTLS_MODULE)
++PKG_CHECK_MODULES([LIBGNUTLS], [$NEED_GNUTLS_MODULE])
+ 
+ 
+ ###-------------------------------------------------------------------------
+@@ -936,7 +944,10 @@ AM_CONDITIONAL(WITH_LIBXML2_CODE, [test "$gwen_with_libxml2_code" = "yes"])
+ #
+ if test "$gwen_with_libxml2_code" = "yes"; then
+   AC_DEFINE(GWEN_COMPILE_LIBXML2_CODE, 1, [if libxml2-code is wanted])
+-  PKG_CHECK_MODULES(LIBXML,  [libxml-2.0])
++  NEED_LIBXML2_MODULE="libxml-2.0"
++  AC_SUBST(NEED_LIBXML2_MODULE)
++  AC_SUBST(gwen_with_libxml2_code)
++  PKG_CHECK_MODULES(LIBXML,  [$NEED_LIBXML2_MODULE])
+ fi
+ 
+ 
+diff --git a/gwenhywfar-config.cmake.in b/gwenhywfar-config.cmake.in
+index 55152a5a..42967152 100644
+--- a/gwenhywfar-config.cmake.in
++++ b/gwenhywfar-config.cmake.in
+@@ -68,6 +68,17 @@ if ( NOT ${FIND_GWEN_COMPONENT_QT5} EQUAL -1 )
+   endif()
+ endif()
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++      find_package(PkgConfig)
++
++      pkg_check_modules(GnuTLS REQUIRED @NEED_GNUTLS_MODULE@)
++      pkg_check_modules(libgcrypt REQUIRED @NEED_LIBGCRYPT_MODULE@)
++
++      if(@gwen_with_libxml2_code@)
++        pkg_check_modules(LIBXML REQUIRED @NEED_LIBXML2_MODULE@)
++      endif()
++endif()
++
+ check_required_components(GWENHYWFAR)
+ 
+ # The target is available since gwenhywfar 4.15.3
+diff --git a/gwenhywfar.pc.in b/gwenhywfar.pc.in
+index d4c61d87..17b47280 100644
+--- a/gwenhywfar.pc.in
++++ b/gwenhywfar.pc.in
+@@ -30,4 +30,5 @@ Description: A multi-platform helper library for other libraries
+ Version: @VERSION@
+ Libs: @gwenhywfar_ldflags@ @gwenhywfar_libs@
+ Cflags: -I@gwenhywfar_headerdir@
++Requires.private: @NEED_GNUTLS_MODULE@, @NEED_LIBGCRYPT_MODULE@, @NEED_LIBXML2_MODULE@
+ 
+-- 
+2.33.0
+
