@@ -1,16 +1,19 @@
 ﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 67874065..9410900b 100644
+index 67874065..873679b9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -602,7 +602,7 @@ endif()
+@@ -602,9 +602,9 @@ endif()
  # root CMakeLists.txt so the cmake config file can see this value.
  #
  # Also specify where include files are installed.
 -if(WIN32)
 +if(true)
      # Install visualizer to bin, since it needs to be co-located with dll's
-     set(SIMBODY_VISUALIZER_REL_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+-    set(SIMBODY_VISUALIZER_REL_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
++    set(SIMBODY_VISUALIZER_REL_INSTALL_DIR bin)
      # Install include files into base include folder since it's a sandbox
+     set(SIMBODY_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+ else()
 @@ -656,7 +656,7 @@ set(PKG_LIBRARIES
      ${SimTKCOMMON_LIBRARY_NAME}
      )
