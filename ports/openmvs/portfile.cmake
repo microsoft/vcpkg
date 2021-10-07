@@ -23,7 +23,6 @@ file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    GENERATOR Ninja
     OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVS_USE_NONFREE=ON
         -DOpenMVS_USE_CERES=OFF
@@ -43,7 +42,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_cmake_config_fixup()
+vcpkg_fixup_cmake_targets()
 file(READ ${CURRENT_PACKAGES_DIR}/share/openmvs/OpenMVSTargets-release.cmake TARGETS_CMAKE)
 string(REPLACE "bin/InterfaceCOLMAP" "tools/openmvs/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
 string(REPLACE "bin/InterfaceVisualSFM" "tools/openmvs/InterfaceVisualSFM" TARGETS_CMAKE "${TARGETS_CMAKE}")
