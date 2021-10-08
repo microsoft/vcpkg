@@ -244,6 +244,4 @@ macro(find_dependency_win)
     endif()
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
   endif()
-
-
 endmacro()
