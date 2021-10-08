@@ -118,6 +118,7 @@ function(z_vcpkg_download_distfile_via_aria)
         "FILENAME;SHA512"
         "URLS;HEADERS"
     )
+
     vcpkg_find_acquire_program(ARIA2)
     message(STATUS "Downloading ${arg_FILENAME}...")
 
@@ -240,14 +241,14 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
 
     if(NOT arg_DISABLE_AIRA2 AND _VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT EXISTS "${downloaded_file_path}")
         if (arg_SKIP_SHA512)
-            set(SKIP_SHA512 "SKIP_SHA512")
+            set(OPTION_SKIP_SHA512 "SKIP_SHA512")
         endif()
         z_vcpkg_download_distfile_via_aria(
+            "${OPTION_SKIP_SHA512}"
             FILENAME "${arg_FILENAME}"
+            SHA512 "${arg_SHA512}"
             URLS "${arg_URLS}"
             HEADERS "${arg_HEADERS}"
-            SHA512 "${arg_SHA512}"
-            ${SKIP_SHA512}
         )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()
