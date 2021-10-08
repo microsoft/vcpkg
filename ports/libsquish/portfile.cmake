@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-squish CONFIG_PATH share/unofficial-squish)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libsquish CONFIG_PATH share/unofficial-libsquish)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
