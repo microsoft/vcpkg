@@ -13,10 +13,9 @@ file(REMOVE "${SOURCE_PATH}/common/cmake/FindTBB.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EMBREE_STATIC_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EMBREE_STATIC_RUNTIME)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
@@ -28,7 +27,7 @@ vcpkg_configure_cmake(
 
 # just wait, the release build of embree is insanely slow in MSVC
 # a single file will took about 2-10 min
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # these cmake files do not seem to contain helpful configuration for find libs, just remove them
@@ -36,6 +35,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/embree-config.cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/embree-config-version.cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/embree-config.cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/embree-config-version.cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/uninstall.command" "${CURRENT_PACKAGES_DIR}/debug/uninstall.command")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

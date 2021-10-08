@@ -79,7 +79,7 @@ else()
 endif()
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/FreeImageConfig.h)
 
-add_library(FreeImage ${SRCS} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
+add_library(FreeImage ${SRCS} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/FreeImage.rc)
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(FreeImage PRIVATE -DFREEIMAGE_EXPORTS)

@@ -13,7 +13,9 @@ vcpkg_extract_source_archive_ex(
         dont-build-docs.patch
         dont-build-astyle.patch
         pc-file-libs-private.patch
+        pc-file-for-msvc.patch
         make-geos-config-relocatable.patch
+        fix-static-deps.patch
 )
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
@@ -27,12 +29,12 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
-        -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
         ${_CMAKE_EXTRA_OPTIONS}
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d # Legacy decision, hard coded in depending ports
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)
@@ -57,7 +59,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share") # vcpkg-cmake-config quirk, cf. GH-18063
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

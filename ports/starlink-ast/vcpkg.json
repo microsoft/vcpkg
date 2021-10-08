@@ -1,7 +1,7 @@
 {
   "name": "starlink-ast",
   "version-semver": "9.2.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The AST library provides a comprehensive range of facilities for attaching world coordinate systems to astronomical data, for retrieving and interpreting that information and for generating graphical output based on it",
   "homepage": "https://starlink.eao.hawaii.edu/starlink/AST",
   "supports": "windows",
