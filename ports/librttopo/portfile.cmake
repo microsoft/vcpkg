@@ -23,9 +23,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${SOURCE_PATH}/src/rttopo_config.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
 
+    set(OPTFLAGS "/nologo /fp:precise /W4 /D_CRT_SECURE_NO_WARNINGS /DDLL_EXPORT")
     vcpkg_build_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         TARGET librttopo.lib
+        OPTIONS
+            "OPTFLAGS=${OPTFLAGS}"
+            "CFLAGS=-I. -Iheaders ${OPTFLAGS}"
     )
 
     file(GLOB LIBRTTOPO_INCLUDE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h")
