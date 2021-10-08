@@ -18,32 +18,32 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-  file(REMOVE "${SOURCE_PATH}/src/rttopo_config.h")
-  configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
+    file(REMOVE "${SOURCE_PATH}/src/rttopo_config.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/rttopo_config.h.in" "${SOURCE_PATH}/src/rttopo_config.h" @ONLY)
 
-  vcpkg_build_nmake(
-      SOURCE_PATH "${SOURCE_PATH}"
-      TARGET librttopo.lib
-  )
+    vcpkg_build_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        TARGET librttopo.lib
+    )
 
-  file(GLOB LIBRTTOPO_INCLUDE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h")
-  file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(GLOB LIBRTTOPO_INCLUDE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h")
+    file(COPY ${LIBRTTOPO_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-else() # Build in UNIX
-  vcpkg_configure_make(
-      SOURCE_PATH "${SOURCE_PATH}"
-      AUTOCONFIG
-      OPTIONS_DEBUG
-          "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
-      OPTIONS_RELEASE
-          "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
-  )
-  vcpkg_install_make()
-  vcpkg_fixup_pkgconfig()
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS_DEBUG
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
+        OPTIONS_RELEASE
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
+    )
+    vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
 endif()
 
 # Handle copyright
