@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc35b6f..8ae1ff0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,7 @@ project(squirrel VERSION 3.1 LANGUAGES C CXX)
+ 
+ option(DISABLE_STATIC "Avoid building/installing static libraries.")
+ option(LONG_OUTPUT_NAMES "Use longer names for binaries and libraries: squirrel3 (not sq).")
++option(BUILD_SQ "Build sq interpreter.")
+ 
+ if (NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release")
+@@ -35,7 +36,10 @@ endif()
+ 
+ add_subdirectory(squirrel)
+ add_subdirectory(sqstdlib)
+-add_subdirectory(sq)
++
++if(BUILD_SQ)
++  add_subdirectory(sq)
++endif()
+ 
+ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+   set(tgts)
