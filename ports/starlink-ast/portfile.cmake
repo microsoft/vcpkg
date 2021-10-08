@@ -18,7 +18,7 @@ list(APPEND VCPKG_CXX_FLAGS -DCMINPACK_NO_DLL)
 set(CONFIGURE_OPTIONS
     --without-fortran
     star_cv_cnf_trail_type=long
-    star_cv_cnf_f2c_compatible=no    
+    star_cv_cnf_f2c_compatible=no
 )
 
 if ("yaml" IN_LIST FEATURES)
