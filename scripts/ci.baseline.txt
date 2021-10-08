@@ -1432,6 +1432,7 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
+simbody:x64-uwp=fail
 skia:arm64-windows=fail
 skia:arm-uwp=fail
 skia:x64-linux=fail
