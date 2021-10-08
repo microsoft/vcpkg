@@ -18,7 +18,8 @@ vcpkg_find_acquire_program(GIT)
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBISON_EXECUTABLE=${BISON}
@@ -40,4 +41,4 @@ vcpkg_copy_tools(
 )
 
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/graphviz RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
