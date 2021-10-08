@@ -553,6 +553,7 @@ function(vcpkg_find_acquire_program VAR)
           URLS ${URL}
           SHA512 ${HASH}
           FILENAME ${ARCHIVE}
+          DISABLE_AIRA2
       )
 
       file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
