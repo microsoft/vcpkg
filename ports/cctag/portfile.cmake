@@ -19,15 +19,14 @@ if("cuda" IN_LIST FEATURES)
     message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH  "${SOURCE_PATH}"
     OPTIONS -DCCTAG_BUILD_TESTS:BOOL=OFF ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CCTag)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CCTag)
 
 vcpkg_copy_pdbs()
 
