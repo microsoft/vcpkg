@@ -58,7 +58,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
         "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
@@ -66,17 +65,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
         "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
         "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
-        "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "mpi"         VTK_GROUP_ENABLE_MPI
-        "opengl"      VTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
-        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
-        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_opengl
@@ -100,8 +94,16 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
+if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
+    )
+endif()
+
 if("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
-    list(APPEND VTK_FEATURE_OPTIONS
+    list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
