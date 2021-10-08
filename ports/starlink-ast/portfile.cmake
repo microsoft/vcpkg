@@ -11,11 +11,14 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}    
 )
 
+# ensure cminpack doesn't get compiled with dllexport attribues
+list(APPEND VCPKG_C_FLAGS -DCMINPACK_NO_DLL)
+list(APPEND VCPKG_CXX_FLAGS -DCMINPACK_NO_DLL)
+
 set(CONFIGURE_OPTIONS
     --without-fortran
     star_cv_cnf_trail_type=long
-    star_cv_cnf_f2c_compatible=no
-    CFLAGS=-DCMINPACK_NO_DLL
+    star_cv_cnf_f2c_compatible=no    
 )
 
 if ("yaml" IN_LIST FEATURES)
