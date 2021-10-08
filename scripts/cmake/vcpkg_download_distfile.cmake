@@ -75,7 +75,7 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
             "        File path: [ ${file_path} ]\n"
             "    Expected hash: [ ${sha512} ]\n"
             "      Actual hash: [ ${file_hash} ]\n"
-            "${CUSTOM_ERROR_ADVICE}\n")
+            "${error_advice}\n")
     endif()
 endfunction()
 
@@ -140,6 +140,8 @@ function(z_vcpkg_download_distfile_via_aria filename urls headers sha512 skip_sh
             "${DOWNLOADS}/temp/${filename}"
             "downloaded file"
             "The file may have been corrupted in transit."
+            "${sha512}"
+            ${skip_sha512}
         )
         file(REMOVE
             ${DOWNLOADS}/download-${filename}-out.log
@@ -218,6 +220,8 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             "${downloaded_file_path}"
             "cached file"
             "Please delete the file and retry if this file should be downloaded again."
+            "${arg_SHA512}"
+            ${arg_SKIP_SHA512}
         )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()
