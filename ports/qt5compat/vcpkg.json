@@ -1,6 +1,6 @@
 {
   "name": "qt5compat",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "The module contains unsupported Qt 5 APIs",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -13,6 +13,7 @@
     "big-codecs",
     "codecs",
     "default-features",
+    "qml",
     "textcodec"
   ],
   "features": {
@@ -53,6 +54,22 @@
           "features": [
             "textcodec"
           ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
         }
       ]
     },

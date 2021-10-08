@@ -11,7 +11,7 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
         -DFFI_SKIP_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Create pkgconfig file
 set(PACKAGE_VERSION ${VERSION})
@@ -43,12 +43,17 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
-        "-lffi" "-llibffi")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
-        "-lffi" "-llibffi")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
 endif()
 vcpkg_fixup_pkgconfig()
 

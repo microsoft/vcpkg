@@ -214,7 +214,7 @@ target_include_directories(boinc PUBLIC
 
 target_include_directories(boincapi PUBLIC
                             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>/lib
+                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
                             $<INSTALL_INTERFACE:include>
 )
 
