@@ -14,8 +14,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2021.06.14.00
-    SHA512 aee5adc1a44d9b193f3f41b5fc9fa7575c677d8bf27ed3a3b612a2fbe53505f82481ce78f13fb41ae3ca81ca25446426fbdfdc578f503f919b4af5abe56ad71c
+    REF v2021.10.04.00
+    SHA512 685cb716d1131a456a927d769eaf7174ec4528cdafd124c38a424c630a820a90998258c79cb793d91c8a4d587367524e597cb4dcc5d4f377815bfdd7ad29cbf2
     HEAD_REF master
     PATCHES
         reorder-glog-gflags.patch
@@ -25,11 +25,11 @@ vcpkg_from_github(
 )
 
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
-    DESTINATION ${SOURCE_PATH}/CMake/
+    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
+    DESTINATION "${SOURCE_PATH}/CMake/"
 )
-file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
+file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -54,26 +54,23 @@ feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
         -DLIBAIO_FOUND=OFF
-        -DLIBURCU_FOUND=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 # Release folly-targets.cmake does not link to the right libraries in debug mode.
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
@@ -93,7 +90,7 @@ find_dependency(gflags CONFIG REQUIRED)
 find_dependency(ZLIB)
 ${_contents}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
