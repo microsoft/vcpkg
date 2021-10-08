@@ -56,19 +56,18 @@ file(RENAME      "${CURRENT_BUILDTREES_DIR}/${SOURCE_DIR_NAME}"
 
 # see ${SOURCE_PATH}/NOTES-PERL.md
 vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+get_filename_component(PERL_EXE_PATH "${PERL}" PATH)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 if(NOT VCPKG_HOST_IS_WINDOWS)
     # see ${SOURCE_PATH}/NOTES-UNIX.md
-    find_program(MAKE make)
-    get_filename_component(MAKE_EXE_PATH ${MAKE} DIRECTORY)
+    find_program(MAKE make REQUIRED)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # see ${SOURCE_PATH}/NOTES-WINDOWS.md
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    get_filename_component(NASM_EXE_PATH "${NASM}" PATH)
     vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
     # note: jom is not for `vcpkg_add_to_path`
     vcpkg_find_acquire_program(JOM)
