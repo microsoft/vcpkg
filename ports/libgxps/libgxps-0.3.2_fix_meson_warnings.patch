@@ -1,0 +1,55 @@
+From a18e12604d2cab13146a357c7fd3b80909b65efd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Wolfgang=20St=C3=B6ggl?= <c72578@yahoo.de>
+Date: Thu, 9 Sep 2021 17:59:13 +0200
+Subject: [PATCH] Fix meson warnings
+
+- Deduplicate "libraries" in pkgg.generate()
+  Fixes:
+    libgxps/meson.build:101: WARNING: Keyword argument "libraries"
+    defined multiple times.
+    WARNING: This will be an error in future Meson releases.
+- Increase required meson_version from 0.43.0 to 0.50.0 due to usage
+  of install arg in libgxps/meson.build:63:
+  Fixes:
+    WARNING: Project targeting '>= 0.43.0' but tried to use feature
+    introduced in '0.50.0': install arg in configure_file.
+---
+ libgxps/meson.build | 5 ++---
+ meson.build         | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/libgxps/meson.build b/libgxps/meson.build
+index 29b044e..52d53d0 100644
+--- a/libgxps/meson.build
++++ b/libgxps/meson.build
+@@ -98,12 +98,11 @@ pkgg = import('pkgconfig')
+ cairo_dep_str = cairo_pc_found ? ', cairo >= ' + cairo_req : ''
+ cairo_dep_libs = cairo_pc_found ? [] : cairo_dep
+ 
+-pkgg.generate(libraries: gxps,
++pkgg.generate(libraries: [gxps, cairo_dep_libs],
+               version: gxps_version,
+               name: 'libgxps',
+               description: 'XPS Documents library',
+-              requires: 'gobject-2.0 >= ' + glib_req + ', gio-2.0 >= ' + glib_req + ', libarchive >= ' + archive_req + cairo_dep_str,
+-              libraries: [gxps, cairo_dep_libs])
++              requires: 'gobject-2.0 >= ' + glib_req + ', gio-2.0 >= ' + glib_req + ', libarchive >= ' + archive_req + cairo_dep_str)
+ 
+ if build_gir
+   gir_extra_args = [
+diff --git a/meson.build b/meson.build
+index 07c8cc2..c6780c9 100644
+--- a/meson.build
++++ b/meson.build
+@@ -4,7 +4,7 @@ project('libgxps', 'c',
+           'buildtype=debugoptimized'
+         ],
+         license: 'LGPL2+',
+-        meson_version: '>= 0.43.0')
++        meson_version: '>= 0.50.0')
+ 
+ gxps_version = meson.project_version()
+ version_array = gxps_version.split('.')
+-- 
+GitLab
+

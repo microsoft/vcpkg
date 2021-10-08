@@ -1,6 +1,6 @@
 {
   "name": "boost-interprocess",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost interprocess module",
   "homepage": "https://github.com/boostorg/interprocess",
   "dependencies": [
@@ -8,15 +8,12 @@
     "boost-config",
     "boost-container",
     "boost-core",
-    "boost-date-time",
-    "boost-detail",
     "boost-integer",
     "boost-intrusive",
     "boost-move",
     "boost-static-assert",
     "boost-type-traits",
     "boost-unordered",
-    "boost-utility",
     "boost-vcpkg-helpers",
     "boost-winapi"
   ]

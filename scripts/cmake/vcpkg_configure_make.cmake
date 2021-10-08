@@ -148,7 +148,9 @@ endmacro()
 
 macro(_vcpkg_determine_autotools_target_arch_mac out_var)
     list(LENGTH VCPKG_OSX_ARCHITECTURES _num_osx_archs)
-    if(_num_osx_archs GREATER_EQUAL 2)
+    if(_num_osx_archs EQUAL 0)
+        set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+    elseif(_num_osx_archs GREATER_EQUAL 2)
         set(${out_var} "universal")
     else()
         # Better match the arch behavior of config.guess
@@ -234,10 +236,9 @@ function(vcpkg_configure_make)
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
-    vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
-    set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
-    debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
-    include("${_VCPKG_CMAKE_VARS_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -301,6 +302,7 @@ function(vcpkg_configure_make)
         set(_vcm_paths_with_spaces TRUE)
     endif()
 
+    set(CONFIGURE_ENV "V=1")
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         if(CMAKE_HOST_WIN32)
@@ -350,7 +352,6 @@ function(vcpkg_configure_make)
             endif()
         endmacro()
 
-        set(CONFIGURE_ENV "V=1")
         # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
         set(progs VCPKG_DETECTED_CMAKE_C_COMPILER VCPKG_DETECTED_CMAKE_CXX_COMPILER VCPKG_DETECTED_CMAKE_AR
                   VCPKG_DETECTED_CMAKE_LINKER VCPKG_DETECTED_CMAKE_RANLIB VCPKG_DETECTED_CMAKE_OBJDUMP
@@ -447,17 +448,16 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
+    # Some PATH handling for dealing with spaces....some tools will still fail with that!
+    # In particular, the libtool install command is unable to install correctly to paths with spaces.
+    # CURRENT_INSTALLED_DIR: Pristine native path (unprotected spaces, Windows drive letters)
+    # _VCPKG_INSTALLED:      Native path with escaped space characters
+    # _VCPKG_PREFIX:         Path with unprotected spaces, but drive letters transformed for mingw/msys
+    string(REPLACE " " "\\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     if(CMAKE_HOST_WIN32)
-        #Some PATH handling for dealing with spaces....some tools will still fail with that!
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
-        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${CURRENT_INSTALLED_DIR}")
     else()
-        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
-        string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(EXTRA_QUOTES)
-        set(prefix_var "\${prefix}")
+        set(_VCPKG_PREFIX "${CURRENT_INSTALLED_DIR}")
     endif()
 
     # macOS - cross-compiling support
@@ -483,25 +483,26 @@ function(vcpkg_configure_make)
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
-    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}${EXTRA_QUOTES}")
-    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${EXTRA_QUOTES}${_VCPKG_PREFIX}/debug${EXTRA_QUOTES}")
+    set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE} "--prefix=${_VCPKG_PREFIX}")
+    set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG} "--prefix=${_VCPKG_PREFIX}/debug")
     if(NOT _csc_NO_ADDITIONAL_PATHS)
+        # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
         set(_csc_OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
                             # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/tools/${PORT}/bin"
-                            "--sbindir=${prefix_var}/tools/${PORT}/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
+                            "--bindir=\\\${prefix}/tools/${PORT}/bin"
+                            "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
+                            "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             #"--includedir='\${prefix}'/include" # already the default!
-                            "--mandir=${prefix_var}/share/${PORT}"
-                            "--docdir=${prefix_var}/share/${PORT}"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
+                            "--mandir=\\\${prefix}/share/${PORT}"
+                            "--docdir=\\\${prefix}/share/${PORT}"
+                            "--datarootdir=\\\${prefix}/share/${PORT}")
         set(_csc_OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
                             # Important: These should all be relative to prefix!
-                            "--bindir=${prefix_var}/../tools/${PORT}/debug/bin"
-                            "--sbindir=${prefix_var}/../tools/${PORT}/debug/sbin"
-                            #"--libdir='\${prefix}'/lib" # already the default!
-                            "--includedir=${prefix_var}/../include"
-                            "--datarootdir=${prefix_var}/share/${PORT}")
+                            "--bindir=\\\${prefix}/../tools/${PORT}/debug/bin"
+                            "--sbindir=\\\${prefix}/../tools/${PORT}/debug/sbin"
+                            "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
+                            "--includedir=\\\${prefix}/../include"
+                            "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
     # Setup common options
     if(NOT DISABLE_VERBOSE_FLAGS)
@@ -533,18 +534,13 @@ function(vcpkg_configure_make)
     else()
         find_program(base_cmd bash REQUIRED)
     endif()
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
-        list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
-        list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
-    endif()
     
     # Setup include environment (since these are buildtype independent restoring them is unnecessary)
     macro(prepend_include_path var)
         if("${${var}_BACKUP}" STREQUAL "")
-            set(ENV{${var}} "${_VCPKG_INSTALLED}/include")
+            set(ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
         else()
-            set(ENV{${var}} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${${var}_BACKUP}")
+            set(ENV{${var}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}${${var}_BACKUP}")
         endif()
     endmacro()
     # Used by CL 
@@ -692,10 +688,10 @@ function(vcpkg_configure_make)
             endif()
         else()
             set(_link_dirs)
-            if(EXISTS "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
+            if(EXISTS "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
                 set(_link_dirs "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
             endif()
-            if(EXISTS "{_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(EXISTS "{CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
                 set(_link_dirs "${_link_dirs} -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
             endif()
             string(STRIP "${_link_dirs}" _link_dirs)
@@ -725,10 +721,10 @@ function(vcpkg_configure_make)
             endif()
         else()
             set(_link_dirs)
-            if(EXISTS "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
+            if(EXISTS "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
                 set(_link_dirs "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib")
             endif()
-            if(EXISTS "{_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(EXISTS "{CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
                 set(_link_dirs "${_link_dirs} -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
             endif()
             string(STRIP "${_link_dirs}" _link_dirs)
@@ -736,6 +732,15 @@ function(vcpkg_configure_make)
         endif()
         unset(_VAR_SUFFIX)
     endif()
+
+    foreach(var IN ITEMS _csc_OPTIONS _csc_OPTIONS_RELEASE _csc_OPTIONS_DEBUG)
+        vcpkg_list(SET tmp)
+        foreach(element IN LISTS "${var}")
+            string(REPLACE [["]] [[\"]] element "${element}")
+            vcpkg_list(APPEND tmp "\"${element}\"")
+        endforeach()
+        vcpkg_list(JOIN tmp " " "${var}")
+    endforeach()
 
     foreach(_buildtype IN LISTS _buildtypes)
         foreach(ENV_VAR ${_csc_CONFIG_DEPENDENT_ENVIRONMENT})
@@ -770,6 +775,14 @@ function(vcpkg_configure_make)
         set(ENV{CXXFLAGS} "${CXXFLAGS_${_buildtype}}")
         set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${_buildtype}}")
         set(ENV{LDFLAGS} "${LDFLAGS_${_buildtype}}")
+
+        # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
+        # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
+        # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
+        if(VCPKG_TARGET_IS_ANDROID)
+            set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
+        endif()
+
         if(LINK_ENV_${_VAR_SUFFIX})
             set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
@@ -779,27 +792,21 @@ function(vcpkg_configure_make)
         set(_lib_env_vars LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
         foreach(_lib_env_var IN LISTS _lib_env_vars)
             set(_link_path)
-            if(EXISTS "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib")
-                set(_link_path "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib")
+            if(EXISTS "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib")
+                set(_link_path "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib")
             endif()
-            if(EXISTS "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link")
+            if(EXISTS "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib/manual-link")
                 if(_link_path)
                     set(_link_path "${_link_path}${VCPKG_HOST_PATH_SEPARATOR}")
                 endif()
-                set(_link_path "${_link_path}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link")
+                set(_link_path "${_link_path}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/lib/manual-link")
             endif()
             set(ENV{${_lib_env_var}} "${_link_path}${${_lib_env_var}_PATHLIKE_CONCAT}")
         endforeach()
         unset(_link_path)
         unset(_lib_env_vars)
 
-        if(CMAKE_HOST_WIN32)
-            set(command "${base_cmd}" -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(command "${base_cmd}" -c "${CONFIGURE_ENV} $@" -- "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
-        else()
-            set(command "${base_cmd}" "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
-        endif()
+        set(command "${base_cmd}" -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         
         if(_csc_ADD_BIN_TO_PATH)
             set(PATH_BACKUP $ENV{PATH})
@@ -851,6 +858,15 @@ function(vcpkg_configure_make)
             endif()
         endforeach()
     endforeach()
+
+    # Export matching make program for vcpkg_build_make (cache variable)
+    if(CMAKE_HOST_WIN32 AND MSYS_ROOT)
+        find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
+    elseif(VCPKG_HOST_IS_OPENBSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE make REQUIRED)
+    endif()
 
     # Restore environment
     _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
