@@ -1,0 +1,21 @@
+{
+  "name": "asio-grpc",
+  "version-string": "1.1.1",
+  "description": "Asynchronous gRPC with Boost.Asio executors",
+  "homepage": "https://github.com/Tradias/asio-grpc",
+  "dependencies": [
+    "boost-asio",
+    "boost-core",
+    "boost-intrusive",
+    "boost-lockfree",
+    "grpc"
+  ],
+  "features": {
+    "boost-container": {
+      "description": "Use Boost.Container instead of <memory_resource>",
+      "dependencies": [
+        "boost-container"
+      ]
+    }
+  }
+}
