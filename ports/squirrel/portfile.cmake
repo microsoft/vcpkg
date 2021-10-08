@@ -10,7 +10,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
+    FEATURES
         "interpreter" BUILD_SQ
 )
 
@@ -39,6 +39,12 @@ if(BUILD_SQ)
             TOOL_NAMES sq sq_static
             AUTO_CLEAN
         )
+    endif()
+else()
+    if(BUILD_STATIC)
+        vcpkg_clean_executables_in_bin(FILE_NAMES sq)
+    elseif(BUILD_DYNAMIC)
+        vcpkg_clean_executables_in_bin(FILE_NAMES sq sq_static)
     endif()
 endif()
 
