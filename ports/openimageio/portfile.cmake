@@ -16,7 +16,6 @@ vcpkg_from_github(
         fix_static_build.patch
         disable-test.patch
         fix-dependencies.patch
-        fix-dependency-libsquish.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
