@@ -5825,8 +5825,8 @@
       "port-version": 1
     },
     "replxx": {
-      "baseline": "0.0.2",
-      "port-version": 3
+      "baseline": "0.0.3",
+      "port-version": 0
     },
     "reproc": {
       "baseline": "14.2.3",
