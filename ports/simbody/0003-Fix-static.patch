@@ -1,12 +1,12 @@
 ﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9410900b..79b9f479 100644
+index 9410900b..cf370e92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -457,25 +457,31 @@ if(MSVC)
      mark_as_advanced(BUILD_LIMIT_PARALLEL_COMPILES)
      set(mxcpu ${BUILD_LIMIT_PARALLEL_COMPILES}) # abbreviation
  
-+    if(BUILD_DYNAMIC_LIBRARIES)
++    if(BUILD_MD)
 +        set(CRT "/MD")
 +    else()
 +        set(CRT "/MT")
