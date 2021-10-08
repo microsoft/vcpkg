@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
-    REF 2.47.3
-    SHA512 76b5c7da516f7a3d1bb58203173ed3c00e096f43641ae7e8b97c0046f340d6b67c6a936e0f576bad4c57cff93ebc50f9fbc6340005cb404eac125214204332c2
+    REF 2.49.1
+    SHA512 ac14303f67d0840b260c5f2f99c53049a1e444a963d31387ae7a44ffc24757bd44f1c40ddd3fdb6a8d0e0bb1dde0e15d320f613729fb631efd4f078fcb3a4f62
     HEAD_REF main
     PATCHES
         0001-Fix-build.patch

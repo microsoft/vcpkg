@@ -1,6 +1,6 @@
 {
   "name": "graphviz",
-  "version-semver": "2.47.3",
+  "version-semver": "2.49.1",
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "dependencies": [

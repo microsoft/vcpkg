@@ -33,10 +33,10 @@ index 0937e41ef..bb876ce46 100644
      # prior to CMake 3.12, PkgConfig does not set *_LINK_LIBRARIES, so do it
      # manually
 diff --git a/cmd/tools/CMakeLists.txt b/cmd/tools/CMakeLists.txt
-index 2d937b525..369c91584 100644
+index 8d7b88484..58f8d80fe 100644
 --- a/cmd/tools/CMakeLists.txt
 +++ b/cmd/tools/CMakeLists.txt
-@@ -395,14 +395,14 @@ endif(EXPAT_FOUND)
+@@ -392,14 +392,14 @@ tool_defaults(sccmap)
  
  # ===================== Install third party DLLs on Windows ====================
  
@@ -47,7 +47,7 @@ index 2d937b525..369c91584 100644
          DESTINATION ${BINARY_INSTALL_DIR}
      )
 -endif(WIN32 AND EXPAT_FOUND)
-+endif()
++endif(false)
  
 -if (WIN32)
 +if (false)
@@ -55,7 +55,7 @@ index 2d937b525..369c91584 100644
          FILES ${Getopt_RUNTIME_LIBRARIES}
          DESTINATION ${BINARY_INSTALL_DIR}
 diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
-index 3cde1e318..c082bb90e 100644
+index 144c442ae..fa56739b0 100644
 --- a/lib/common/CMakeLists.txt
 +++ b/lib/common/CMakeLists.txt
 @@ -93,6 +93,7 @@ target_include_directories(common_obj PRIVATE
@@ -67,32 +67,23 @@ index 3cde1e318..c082bb90e 100644
      ${GRAPHVIZ_LIB_DIR}/cgraph
      ${GRAPHVIZ_LIB_DIR}/gvc
 diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index da70b122c..9493bed22 100644
+index 745841176..57e2dd32b 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
-@@ -45,7 +45,7 @@ target_include_directories(gvc PRIVATE
-     ${GRAPHVIZ_LIB_DIR}/cgraph
-     ${GRAPHVIZ_LIB_DIR}/common
-     ${GRAPHVIZ_LIB_DIR}/pathplan
--    ${LTDL_INCLUDE_DIRS}
-+    #${LTDL_INCLUDE_DIRS}
- )
- 
- target_link_libraries(gvc PRIVATE
-@@ -111,7 +111,7 @@ set_target_properties(gvc PROPERTIES
+@@ -134,7 +134,7 @@ set_target_properties(gvc PROPERTIES
  )
  
  # Include DLLs with this library on Windows
--if (WIN32)
+-if (WIN32 AND EXPAT_FOUND)
 +if (false)
      install(
          FILES
              ${EXPAT_RUNTIME_LIBRARIES}
 diff --git a/plugin/gd/CMakeLists.txt b/plugin/gd/CMakeLists.txt
-index 0beeccd82..384c66cfb 100644
+index fe7ed264d..dce635185 100644
 --- a/plugin/gd/CMakeLists.txt
 +++ b/plugin/gd/CMakeLists.txt
-@@ -37,7 +37,7 @@ install(
+@@ -36,7 +36,7 @@ install(
  )
  
  # Include DLLs with this library on Windows
