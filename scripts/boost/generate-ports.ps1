@@ -454,6 +454,12 @@ foreach ($library in $libraries) {
         "    [unknown] " + $($usedLibraries | Where-Object { $foundLibraries -notcontains $_ })
 
         $deps = @($usedLibraries | Where-Object { $foundLibraries -contains $_ })
+        # break unnecessary dependencies
+        $deps = @($deps | ? {
+            -not (
+                ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
+            )
+        })
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
         $deps += @("boost-vcpkg-helpers")
 
