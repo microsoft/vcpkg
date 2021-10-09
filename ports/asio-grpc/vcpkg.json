@@ -1,6 +1,6 @@
 {
   "name": "asio-grpc",
-  "version-string": "1.1.1",
+  "version": "1.1.2",
   "description": "Asynchronous gRPC with Boost.Asio executors",
   "homepage": "https://github.com/Tradias/asio-grpc",
   "dependencies": [
@@ -8,7 +8,15 @@
     "boost-core",
     "boost-intrusive",
     "boost-lockfree",
-    "grpc"
+    "grpc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "boost-container": {
