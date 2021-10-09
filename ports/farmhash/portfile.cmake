@@ -2,9 +2,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
 vcpkg_download_distfile(WIN_PR_PATCH
-    URLS "https://github.com/google/farmhash/pull/40/commits/bbeede95c871ef4b1d1f0a9595c90c18da51dc17.diff"
-    FILENAME farmhash-windows-bbeede95c871.patch
-    SHA512 ba36493ad81448a06c63878d076d5bf6daabe52c754974709f225f77657a0bee992798685982751307f88927846ebbc03ccec120a9f201a70e799b1411709fa4
+    URLS "https://github.com/google/farmhash/pull/40.diff"
+    FILENAME farmhash-pr-40.patch
+    SHA512 265f5c15c17da2b88c82e6016a181abe73d2d94492cdb0cba892acf67a9d40815d54fa81e07351254fe2a39aea143b125924db0e7df14aac84a7469a78612cbd
 )
 
 vcpkg_from_github(
