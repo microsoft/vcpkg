@@ -1,14 +1,14 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 740da06..57a2424 100644
+index 740da06..a34d4c9 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
 @@ -11,6 +11,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
                      HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
      find_dependency(OpenEXR @OpenEXR_VERSION@
                      HINTS @OpenEXR_DIR@)
-+    find_dependency(libpng CONFIG)
-+    find_dependency(libheif CONFIG)
-+    find_dependency(unofficial-libsquish CONFIG)
++    find_dependency(libpng CONFIG REQUIRED)
++    find_dependency(libheif CONFIG REQUIRED)
++    find_dependency(unofficial-libsquish CONFIG REQUIRED)
      find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
      find_dependency(Threads)  # Because OpenEXR doesn't do it
  endif ()
@@ -64,7 +64,7 @@ index 957abe3..2c093dd 100644
  
  
 diff --git a/src/dds.imageio/CMakeLists.txt b/src/dds.imageio/CMakeLists.txt
-index d693453..036d9ee 100644
+index d693453..9bef055 100644
 --- a/src/dds.imageio/CMakeLists.txt
 +++ b/src/dds.imageio/CMakeLists.txt
 @@ -5,7 +5,7 @@
@@ -72,7 +72,7 @@ index d693453..036d9ee 100644
      # External libsquish was found -- use it
      add_oiio_plugin (ddsinput.cpp
 -                     LINK_LIBRARIES Libsquish::Libsquish
-+                     LINK_LIBRARIES unofficial-libsquish::squish
++                     LINK_LIBRARIES unofficial::libsquish::squish
                       )
  else ()
      # No external libsquish was found -- use the embedded version.
