@@ -1,20 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stachenov/quazip
-    REF v0.9.1
-    SHA512 db31f3c7e3d7e95c25090ceb8379643e0b49ed69ece009dd015bee120b2b60f42e73408f580caed3138fa19ca64dcd23a05f16435abb54e2b8df21105c7b42c0
-    PATCHES
-        vcpkg_remove_extra_static.patch
+    REF v1.1
+    SHA512 418516759e993c2e5636422c6a14e2caf95f836698b91d2188df5ef9b97879ee326255273793fc802325e14f378cbe2baad7e6ec2e1732e19bf238f70891f22c
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/QuaZip5/)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt5-1.1)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/ RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/" RENAME copyright)
