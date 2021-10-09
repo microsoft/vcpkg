@@ -79,7 +79,7 @@ function(boost_modular_build)
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     set(configure_options)
     if(_bm_BOOST_CMAKE_FRAGMENT)

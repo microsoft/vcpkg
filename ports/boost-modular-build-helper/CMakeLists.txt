@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.9)
 project(boost CXX)
 
+# The following variables are used in user-config.jam file
 set(USER_CONFIG_TOOLSET)
 set(USER_CONFIG_TOOLSET_VERSION)
 set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND)
 set(USER_CONFIG_TOOLSET_OPTIONS)
-set(USER_CONFIG_LINES)
+set(USER_CONFIG_EXTRA_LINES)
 
 set(B2_OPTIONS)
 
@@ -236,7 +237,7 @@ if(DEFINED BOOST_CMAKE_FRAGMENT)
     include(${BOOST_CMAKE_FRAGMENT})
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
 
 add_custom_target(boost ALL
     COMMAND "${B2_EXE}"
