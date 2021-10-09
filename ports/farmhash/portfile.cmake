@@ -1,18 +1,19 @@
 #Requires a compiler which understands '__builtin_unreachable': 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # disable `__builtin_expect`, `__builtin_unreachable`
-    # 'data' is ambiguous
-    list(APPEND PATCHES fix-windows.patch) 
-endif()
+vcpkg_download_distfile(WIN_PR_PATCH
+    URLS "https://github.com/google/farmhash/pull/40/commits/bbeede95c871ef4b1d1f0a9595c90c18da51dc17.diff"
+    FILENAME farmhash-windows-bbeede95c871.patch
+    SHA512 ba36493ad81448a06c63878d076d5bf6daabe52c754974709f225f77657a0bee992798685982751307f88927846ebbc03ccec120a9f201a70e799b1411709fa4
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/farmhash
     REF 0d859a811870d10f53a594927d0d0b97573ad06d
     SHA512 7bc14931e488464c1cedbc17551fb90a8cec494d0e0860db9df8efff09000fd8d91e01060dd5c5149b1104ac4ac8bf7eb57e5b156b05ef42636938edad1518f1
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES ${WIN_PR_PATCH}
 )
 
 if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND NOT ENV{CXX_FLAGS}) # This should be a compiler check
