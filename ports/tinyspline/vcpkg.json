@@ -1,7 +1,7 @@
 {
   "name": "tinyspline",
   "version": "0.3.0",
-  "description": "Library for NURBS, B-Splines, and B?zier curves, allowing you to handle splines with ease",
+  "description": "Library for NURBS, B-Splines, and Bézier curves, allowing you to handle splines with ease",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
