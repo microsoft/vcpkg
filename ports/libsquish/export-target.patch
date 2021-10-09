@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a3ecdde..259515c 100644
+index a3ecdde..94c7b3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -120,8 +120,14 @@ INCLUDE(GNUInstallDirs)
@@ -14,6 +14,6 @@ index a3ecdde..259515c 100644
      )
 +
 +INSTALL(EXPORT unofficial-libsquishConfig
-+    NAMESPACE unofficial-libsquish::
++    NAMESPACE unofficial::libsquish::
 +    DESTINATION share/unofficial-libsquish
 +)
