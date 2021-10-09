@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWANT_PLAYER=OFF
-        "-DWANT_STATIC=${WANT_STATIC}"
+        -DWANT_STATIC=${WANT_STATIC}
 )
 
 vcpkg_cmake_install()
