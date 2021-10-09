@@ -1,6 +1,6 @@
 {
   "name": "qtopcua",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "Qt wrapper for existing OPC UA stacks",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -10,8 +10,7 @@
       "features": [
         "network"
       ]
-    },
-    "qtdeclarative"
+    }
   ],
   "default-features": [
     "default-features",
@@ -42,6 +41,22 @@
             "amalgamation",
             "openssl"
           ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
         }
       ]
     },

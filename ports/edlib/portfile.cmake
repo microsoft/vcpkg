@@ -1,24 +1,19 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Martinsos/edlib
-    REF v1.2.6
-    SHA512 75b470c1403113e5f0895b3c1bb4163e65c6e04ccf41a75297a5b4cc915a567567ebcc79f3b9ea74b5e7188adfab2eceda5ac75e2d861aef8b3fefc6d4f39200
+    REF v1.2.7
+    SHA512 720C732C76D0D9ABE28ADCE9972B355864571A2E6CBD2C72C3B4A92E045A99E3A688153865586F7E8B6C90433E2EB1BB024AD0A6E9D4EB4B4D401A160D3F13CE
     HEAD_REF master
-    PATCHES
-        fix-cmake-install.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/edlib)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/edlib)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
