@@ -1,5 +1,4 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index bbf67f7..7238a59 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,6 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -11,9 +10,9 @@ index bbf67f7..7238a59 100644
  add_dependencies(libjsonnet md5 stdlib)
  target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json)
 @@ -48,6 +49,7 @@ install(TARGETS libjsonnet
- 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
- 	ARCHIVE DESTINATION "${CMAKE_INSTALL_BINDIR}"
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ target_include_directories(libjsonnet INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 +endif()
  
  if (BUILD_STATIC_LIBS)
@@ -25,7 +24,6 @@ index bbf67f7..7238a59 100644
 +
 +install(FILES ${LIB_HEADER} DESTINATION include)
 diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
-index 6b7b8c3..6dfa1fa 100644
 --- a/cpp/CMakeLists.txt
 +++ b/cpp/CMakeLists.txt
 @@ -8,9 +8,9 @@ set(LIBJSONNETPP_SOURCE
@@ -40,10 +38,10 @@ index 6b7b8c3..6dfa1fa 100644
  
  # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
  # this step the output would be |liblibjsonnet|.
-@@ -22,6 +22,7 @@ install(TARGETS libjsonnet++
- 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
- 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+@@ -24,6 +24,7 @@ install(TARGETS libjsonnet++
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ target_include_directories(libjsonnet++ INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 +endif()
  
  if (BUILD_STATIC_LIBS)
