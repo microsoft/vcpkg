@@ -3833,7 +3833,7 @@
       "port-version": 1
     },
     "libsvm": {
-      "baseline": "3.2.5",
+      "baseline": "3.25",
       "port-version": 0
     },
     "libtasn1": {
