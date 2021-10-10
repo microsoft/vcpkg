@@ -4753,8 +4753,8 @@
       "port-version": 0
     },
     "oniguruma": {
-      "baseline": "6.9.4",
-      "port-version": 1
+      "baseline": "6.9.7.1",
+      "port-version": 0
     },
     "onnx": {
       "baseline": "1.9.0",
