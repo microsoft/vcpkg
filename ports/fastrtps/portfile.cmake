@@ -29,7 +29,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     # remove tools from debug builds
     foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-serverd.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
         endif()
     endforeach()
