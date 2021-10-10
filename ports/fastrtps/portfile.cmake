@@ -19,14 +19,19 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "share/fastrtps/cmake")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
-    foreach(TOOL "fast-discovery-server-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
-        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+    # on Windows, either "fast-discovery-server.exe" (symlink) or "fast-discovery-server.bat" may be present, depending on if the installation ran with administrator privileges
+    foreach(TOOL "fast-discovery-server-1.0.0.exe" "fast-discovery-server.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+            file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+        endif()
     endforeach()
 
     # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+    foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-serverd.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
+        endif()
     endforeach()
 
     # adjust paths in batch files
