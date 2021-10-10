@@ -2077,8 +2077,8 @@
       "port-version": 0
     },
     "fastrtps": {
-      "baseline": "2.0.1",
-      "port-version": 1
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "fbgemm": {
       "baseline": "2021-03-18",
