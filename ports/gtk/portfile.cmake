@@ -12,6 +12,8 @@ vcpkg_from_gitlab(
         0001-build.patch
         0002-windows-build.patch
         0003-vs2022-rc.patch
+        0004-macos-build.patch
+        0005-xdamage-optional.patch
 ) 
 
 vcpkg_find_acquire_program(PKGCONFIG)
