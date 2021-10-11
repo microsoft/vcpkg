@@ -2,134 +2,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
-# TODO:
-# - add loguru as a dependency requires #8682
-
-# =============================================================================
-# Options:
-# Collect CMake options for optional components
-if("qt" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_GROUP_ENABLE_Qt=YES
-        -DVTK_MODULE_ENABLE_VTK_GUISupportQt=YES
-        -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
-        -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
-    )
-
-endif()
-if("atlmfc" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
-    )
-endif()
-if("vtkm" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=YES
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel=YES
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters=YES
-        -DVTK_MODULE_ENABLE_VTK_vtkm=YES
-    )
-endif()
-
-if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_WRAP_PYTHON=ON
-        -DVTK_PYTHON_VERSION=3
-        -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
-        -DVTK_MODULE_ENABLE_VTK_Python=YES
-        -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES
-        -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
-    )
-    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
-endif()
-
-if("paraview" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=YES
-        -DVTK_MODULE_ENABLE_VTK_IOParallelExodus=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingParallel=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeAMR=YES
-        -DVTK_MODULE_ENABLE_VTK_IOXdmf2=YES
-        -DVTK_MODULE_ENABLE_VTK_IOH5part=YES
-        -DVTK_MODULE_ENABLE_VTK_IOParallelLSDyna=YES
-        -DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=YES
-        -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemistry=YES
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
-    )
-    if("python" IN_LIST FEATURES)
-        list(APPEND ADDITIONAL_OPTIONS
-            -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
-        )
-    endif()
-endif()
-
-if("mpi" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_GROUP_ENABLE_MPI=YES
-        -DVTK_USE_MPI=YES
-    )
-endif()
-
-if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
-    )
-endif()
-
-if("opengl" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
-        -DVTK_MODULE_ENABLE_VTK_opengl=YES
-        )
-endif()
-
-if ("openvr" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS    
-        -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=YES
-    )
-endif()
-
-if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
-    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
-endif()
-
-if("utf8" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DKWSYS_ENCODING_DEFAULT_CODEPAGE=CP_UTF8
-    )
-endif()
-
-if("all" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
-    )
-endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "cuda"         VTK_USE_CUDA
-        "all"          VTK_BUILD_ALL_MODULES
-)
-
-
 # =============================================================================
 # Clone & patch
-
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
@@ -153,6 +27,7 @@ vcpkg_from_github(
         1f00a0c9.patch
         156fb524.patch
         d107698a.patch
+        fix-gdal.patch
 )
 
 # =============================================================================
@@ -161,16 +36,123 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 # =============================================================================
 
 # =============================================================================
+# Options:
+# Collect CMake options for optional components
+
+# TODO:
+# - add loguru as a dependency requires #8682
+vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
+    FEATURES
+        "qt"          VTK_GROUP_ENABLE_Qt
+        "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQt
+        "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
+        "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
+        "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
+        "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
+        "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
+        "python"      VTK_MODULE_ENABLE_VTK_Python
+        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
+        "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
+        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
+        "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
+        "mpi"         VTK_GROUP_ENABLE_MPI
+        "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
+        "opengl"      VTK_MODULE_ENABLE_VTK_opengl
+        "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
+        "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
+        "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
+)
+
+# Replace common value to vtk value
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
+
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_WRAP_PYTHON=ON
+        -DVTK_PYTHON_VERSION=3
+        -DPython3_FIND_REGISTRY=NEVER
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
+    )
+    #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
+endif()
+
+if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
+    )
+endif()
+
+if("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
+    )
+endif()
+
+if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
+    )
+endif()
+
+if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
+    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
+endif()
+
+if("utf8" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DKWSYS_ENCODING_DEFAULT_CODEPAGE=CP_UTF8
+    )
+endif()
+
+if("all" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
+        -DVTK_FORBID_DOWNLOADS=OFF
+    )
+else()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_FORBID_DOWNLOADS=ON
+    )
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "cuda"         VTK_USE_CUDA
+        "mpi"          VTK_USE_MPI
+        "all"          VTK_BUILD_ALL_MODULES
+)
+# =============================================================================
 # Configure & Install
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
-        -DVTK_FORBID_DOWNLOADS=ON
         -DVTK_ENABLE_REMOTE_MODULES=OFF
         # VTK groups to enable
         -DVTK_GROUP_ENABLE_StandAlone=YES
@@ -182,6 +164,8 @@ vcpkg_cmake_configure(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         ${ADDITIONAL_OPTIONS}
+        -DVTK_DEBUG_MODULE_ALL=ON
+        -DVTK_DEBUG_MODULE=ON
 )
 
 vcpkg_cmake_install()
