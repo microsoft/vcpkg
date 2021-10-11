@@ -35,12 +35,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 
     # adjust paths in batch files
-    file(READ "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" CONTENTS)
-    string(REPLACE "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py" CONTENTS "${CONTENTS}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" "${CONTENTS}")
-    file(READ "${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" CONTENTS)
-    string(REPLACE "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py" CONTENTS "${CONTENTS}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" "${CONTENTS}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
 
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -56,12 +52,8 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endforeach()
 
     # adjust paths in batch files
-    file(READ "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" CONTENTS)
-    string(REPLACE "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py" CONTENTS "${CONTENTS}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" "${CONTENTS}")
-    file(READ "${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" CONTENTS)
-    string(REPLACE "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py" CONTENTS "${CONTENTS}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "${CONTENTS}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
