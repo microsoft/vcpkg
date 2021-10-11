@@ -25,12 +25,12 @@ else {
 $portVersions = @{
     #e.g. "boost-asio" = 1;
     "boost"                      = 1;
-    "boost-config"               = 1;
+    "boost-config"               = 2;
     "boost-iostreams"            = 1;
     "boost-modular-build-helper" = 1;
     "boost-odeint"               = 1;
     "boost-python"               = 1;
-    "boost-process"              = 1;
+    "boost-process"              = 2;
 }
 
 $portData = @{
@@ -365,7 +365,7 @@ foreach ($library in $libraries) {
     if ($hash -is [Object[]]) {
         $hash = $hash[1]
     }
-     
+
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked)) {
         "Unpacking boost/$library..."
@@ -546,7 +546,7 @@ if ($updateServicePorts) {
         -Value "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" `
         -Encoding UTF8 `
         -NoNewline
-    
+
     # Generate manifest files for boost-uninstall
     GeneratePortManifest `
         -PortName "boost-uninstall" `
