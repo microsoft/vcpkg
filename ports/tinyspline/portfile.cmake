@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
         -DTINYSPLINE_BUILD_TESTS=OFF
         -DTINYSPLINE_BUILD_DOCS=OFF
         -DTINYSPLINE_WARNINGS_AS_ERRORS=OFF
+        -DTINYSPLINE_INSTALL_LIBRARY_DIR=lib
 )
 
 vcpkg_cmake_install()
