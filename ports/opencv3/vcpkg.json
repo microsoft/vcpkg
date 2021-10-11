@@ -1,7 +1,6 @@
 {
   "name": "opencv3",
-  "version": "3.4.15",
-  "port-version": 3,
+  "version": "3.4.16",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -98,6 +97,12 @@
       "description": "GDCM support for opencv",
       "dependencies": [
         "gdcm"
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "halide": {

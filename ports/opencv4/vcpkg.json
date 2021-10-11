@@ -1,7 +1,6 @@
 {
   "name": "opencv4",
-  "version": "4.5.3",
-  "port-version": 3,
+  "version": "4.5.4",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -100,6 +99,12 @@
       "description": "GDCM support for opencv",
       "dependencies": [
         "gdcm"
+      ]
+    },
+    "gtk": {
+      "description": "GDCM support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "halide": {

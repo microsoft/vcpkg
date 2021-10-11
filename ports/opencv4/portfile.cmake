@@ -6,7 +6,7 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.5.3")
+set(OPENCV_VERSION "4.5.4")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -24,7 +24,6 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-fix-caffe-io.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -53,6 +52,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "gdcm"     WITH_GDCM
+ "gtk"      WITH_GTK
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
@@ -385,7 +385,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_GTK=OFF
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}

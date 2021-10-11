@@ -6,13 +6,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.15")
+set(OPENCV_VERSION "3.4.16")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 775149e56f0aa94d53eb024404866380d97ce423ef1c8343ee8f12c1377e454ae182b2528e86949b5f7250e551d464bd1a5de2e2d9f0d0e1dd3dc188a1db790d
+    SHA512 2fa9243625309a1c12c916737c94f0e2f9566f0828469b148cc1683dd1b8db8d1d58f90a36cfcaa72052964a718929451f04cda5361d8b546a63da69217d040a
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -24,7 +24,6 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-fix-caffe-io.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -51,6 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ffmpeg"   WITH_FFMPEG
  "flann"    BUILD_opencv_flann
  "gdcm"     WITH_GDCM
+ "gtk"      WITH_GTK
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
@@ -118,7 +118,7 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 639f5f869d68014fcc5041f5fe890c98635610d8b26c9964721e2fbe74ce8a12aef8f305364ff024fe0086bf2e7252c4fdd00a5de08854fdcd285c0f4916125a
+      SHA512 31bd55617d3a54fa020d4255e463c90caf41e10136c82a05c24ee19890f0cdc4fc049136874841dc84037dedb0562471ea0345ab1dcd5ad8a5b0218f24ae9a35
       HEAD_REF master
       PATCHES
         0007-fix-hdf5.patch
@@ -328,7 +328,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_GTK=OFF
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
