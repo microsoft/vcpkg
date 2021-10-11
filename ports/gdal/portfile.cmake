@@ -32,12 +32,12 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
     set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
-    include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
-    find_dependency_win()
-
     set(NMAKE_OPTIONS "")
     set(NMAKE_OPTIONS_REL "")
     set(NMAKE_OPTIONS_DBG "")
+
+    include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
+    find_dependency_win()
 
     if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR}")
