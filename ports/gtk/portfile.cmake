@@ -1,14 +1,17 @@
 
-set(GTK_VERSION 4.3.0)
+set(GTK_VERSION 4.4.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  40ebed3a03aef096addc0af09fec4ec529d882a0 #v4.3.0
-    SHA512 6f68e1e2f18a4bf0299f0563ccf091cbee3a1dc1db0819565216d50f98f3f3ad4904eef746357d9bc2fdac8a5e29c5cbed5d4df5dd0f89bb941f7438ae3cd096
+    REF  f1f197e3b94a55d5cbfaae2498f991a0ae733b32 #v4.4.0
+    SHA512 80ffc2c2a2baae4a4097470a41d0b10d5df9086e60daa520aad845fe571e03486c4f87e295ae4f05aa0069df80fe40ad7655de4f9aecc21c2482bbe0b2b6e2fb
     HEAD_REF master # branch name
-    PATCHES build.patch
+    PATCHES
+        0001-build.patch
+        0002-windows-build.patch
+        0003-vs2022-rc.patch
 ) 
 
 vcpkg_find_acquire_program(PKGCONFIG)
