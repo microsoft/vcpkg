@@ -3,12 +3,10 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mapnik/mapnik
-    REF d96b6843b396b3df25bf943ffbbd2128126a907a
-    SHA512 aae42190e73993dc9c4865d5d4555e223ccaae1ad0c24497486eb715ff95ce7c7a2bf42726fab55a5d35aa0257e2f9aad2a2473dd0cfef8f46732901e20134ad
+    REPO mathisloge/mapnik
+    REF 6dee79f4420e003342b773e1e704624761da0710
+    SHA512 7e5704da4ca8bac5a995830a4e9cfab1f6b5920dee0bf3d7e3c566982c043f9ca6ac4c098ff41673a77f2effba24985eb1bd877c91e99d66d9e846e30ea777da
     HEAD_REF master
-    PATCHES
-        0001-fix-harfbuzz-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
