@@ -2050,7 +2050,7 @@
     },
     "farmhash": {
       "baseline": "1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "fast-cpp-csv-parser": {
       "baseline": "2021-01-03",
