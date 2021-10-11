@@ -1,0 +1,25 @@
+diff -u a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -498,14 +498,18 @@
+   xi_dep         = dependency('xi')
+   xext_dep       = dependency('xext')
+   xcursor_dep    = dependency('xcursor')
+-  xdamage_dep    = dependency('xdamage')
++  xdamage_dep    = dependency('xdamage', required: false)
+   xfixes_dep     = dependency('xfixes')
+   fontconfig_dep = dependency('fontconfig')
+
+-  x11_pkgs = ['fontconfig', 'x11', 'xext', 'xi', 'xrandr', 'xcursor', 'xdamage', 'xfixes', 'xinerama']
++  x11_pkgs = ['fontconfig', 'x11', 'xext', 'xi', 'xrandr', 'xcursor', 'xfixes', 'xinerama']
++
++  if xdamage_dep.found()
++    x11_pkgs += ['xdamage']
++  endif
+
+   cdata.set('HAVE_XCURSOR', 1)
+-  cdata.set('HAVE_XDAMAGE', 1)
++  cdata.set('HAVE_XDAMAGE', xdamage_dep.found())
+   cdata.set('HAVE_XFIXES', 1)
+
+   if not cc.has_function('XkbQueryExtension', dependencies: x11_dep,
