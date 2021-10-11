@@ -1346,6 +1346,14 @@ rocksdb:x64-uwp=fail
 rpclib:arm64-windows=fail
 rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
+#The website of rply http://w3.impa.br/~diego/software/rply cannot be accessed
+rply:x86-windows=skip
+rply:x64-windows=skip
+rply:x64-windows-static=skip
+rply:x64-uwp=skip
+rply:arm64-windows=skip
+rply:x64-linux=skip
+rply:x64-osx=skip
 rsasynccpp:arm64-windows=fail
 rsasynccpp:arm-uwp=fail
 rsasynccpp:x64-linux=fail
