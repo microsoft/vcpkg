@@ -4045,8 +4045,8 @@
       "port-version": 1
     },
     "log4cplus": {
-      "baseline": "2.0.5",
-      "port-version": 2
+      "baseline": "2.0.7",
+      "port-version": 0
     },
     "log4cpp": {
       "baseline": "2.9.1",
