@@ -1,6 +1,7 @@
 {
   "name": "qtbase",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
+  "port-version": 1,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -211,7 +212,16 @@
       ]
     },
     "sql": {
-      "description": "Qt Sql"
+      "description": "Qt Sql",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "concurrent"
+          ]
+        }
+      ]
     },
     "sql-psql": {
       "description": "Enable SQL Driver psql",
