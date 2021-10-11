@@ -8,11 +8,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
         -DFFI_SKIP_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Create pkgconfig file
 set(PACKAGE_VERSION ${VERSION})
@@ -43,17 +43,22 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
-if(VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc
-        "-lffi" "-llibffi")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc
-        "-lffi" "-llibffi")
+vcpkg_cmake_config_fixup()
+
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
 endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/ffi.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h"
         "   *know* they are going to link with the static library.  */"
         "   *know* they are going to link with the static library.  */
 
@@ -62,4 +67,4 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

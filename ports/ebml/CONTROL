@@ -1,5 +1,0 @@
-Source: ebml
-Version: 1.4.0
-Homepage: https://github.com/Matroska-Org/libebml
-Description: a C++ library to parse EBML files
-Supports: !uwp

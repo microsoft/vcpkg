@@ -5,9 +5,11 @@ vcpkg_from_github(
     SHA512 1fd6a6194a718184dcbed0131a2b93575382b3ef7620049cb7a1ac2e55f271113c880d90b76fd6967b720fc44762f10119e8629bda30e6dea10f61ce22f9e02c
 )
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF

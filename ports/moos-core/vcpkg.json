@@ -1,0 +1,7 @@
+{
+  "name": "moos-core",
+  "version-string": "10.4.0",
+  "port-version": 6,
+  "description": "A very light weight, easy to use middleware.",
+  "homepage": "https://sites.google.com/site/moossoftware/"
+}

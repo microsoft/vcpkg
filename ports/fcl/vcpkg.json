@@ -1,0 +1,12 @@
+{
+  "name": "fcl",
+  "version-string": "0.6.1",
+  "port-version": 1,
+  "description": "a library for performing three types of proximity queries on a pair of geometric models composed of triangles",
+  "homepage": "https://github.com/flexible-collision-library/fcl",
+  "dependencies": [
+    "ccd",
+    "eigen3",
+    "octomap"
+  ]
+}

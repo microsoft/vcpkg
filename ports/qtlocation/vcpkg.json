@@ -1,0 +1,44 @@
+{
+  "name": "qtlocation",
+  "version-semver": "6.2.0",
+  "description": "Qt Location",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "nmea": {
+      "description": "Build with nmea",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        },
+        "qtserialport"
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

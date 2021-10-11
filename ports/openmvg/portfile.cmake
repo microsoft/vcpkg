@@ -14,6 +14,7 @@ vcpkg_from_github(
     SHA512 6e74effbc66f5d5e7c2d5edd7dacf3c0fa7eec1cb666244db8e4147c08d2e6faca98c1164ca1305a5013d247d479184742e5156232d4d8430615af31811e216e
     PATCHES
         build_fixes.patch
+        0001-eigen_3.4.0.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
@@ -26,10 +27,11 @@ if("openmp" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opencv OpenMVG_USE_OPENCV
-    opencv OpenMVG_USE_OCVSIFT
-    software OpenMVG_BUILD_SOFTWARES
-    software OpenMVG_BUILD_GUI_SOFTWARES
+    FEATURES
+        opencv OpenMVG_USE_OPENCV
+        opencv OpenMVG_USE_OCVSIFT
+        software OpenMVG_BUILD_SOFTWARES
+        software OpenMVG_BUILD_GUI_SOFTWARES
 )
 
 # remove some deps to prevent conflict
