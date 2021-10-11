@@ -199,6 +199,32 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
 endmacro()
 
+macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
+    # Allows to overwrite settings in custom triplets via the environment on windows
+    if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
+        string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
+    else()
+        string(APPEND ${inoutstring} " ${var}='${defaultval}'")
+    endif()
+endmacro()
+
+# Setup include environment (since these are buildtype independent restoring them is unnecessary)
+macro(z_prepend_include_path var)
+    unset(ENV{${var}})
+    if(NOT DEFINED z_vcpkg_env_backup_${var} OR "${z_vcpkg_env_backup_${var}}" STREQUAL "")
+        vcpkg_host_path_list(APPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
+    else()
+        foreach (one_bk IN ITEMS ${z_vcpkg_env_backup_${var}})
+            vcpkg_host_path_list(PREPEND ENV{${var}} "${one_bk}")
+        endforeach()
+        vcpkg_host_path_list(PREPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
+    endif()
+endmacro()
+
+macro(z_convert_to_list input output)
+    string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
+endmacro()
+
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
@@ -313,15 +339,6 @@ function(vcpkg_configure_make)
             set(ENV{PATH} "${NEWPATH}")
             set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
-
-        macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
-            # Allows to overwrite settings in custom triplets via the environment on windows
-            if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
-                string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
-            else()
-                string(APPEND ${inoutstring} " ${var}='${defaultval}'")
-            endif()
-        endmacro()
 
         # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
         set(progs VCPKG_DETECTED_CMAKE_C_COMPILER VCPKG_DETECTED_CMAKE_CXX_COMPILER VCPKG_DETECTED_CMAKE_AR
@@ -456,7 +473,7 @@ function(vcpkg_configure_make)
     # Set configure paths
     set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE} "--prefix=${z_vcpkg_prefix_path}")
     set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG} "--prefix=${z_vcpkg_prefix_path}/debug")
-    if(NOT _csc_NO_ADDITIONAL_PATHS)
+    if(NOT arg_NO_ADDITIONAL_PATHS)
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
         set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE}
                             # Important: These should all be relative to prefix!
@@ -506,18 +523,6 @@ function(vcpkg_configure_make)
         find_program(base_cmd bash REQUIRED)
     endif()
 
-    # Setup include environment (since these are buildtype independent restoring them is unnecessary)
-    macro(z_prepend_include_path var)
-        unset(ENV{${var}})
-        if(NOT DEFINED z_vcpkg_env_backup_${var} OR "${z_vcpkg_env_backup_${var}}" STREQUAL "")
-            vcpkg_host_path_list(APPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
-        else()
-            foreach (one_bk IN ITEMS ${z_vcpkg_env_backup_${var}})
-                vcpkg_host_path_list(PREPEND ENV{${var}} "${one_bk}")
-            endforeach()
-            vcpkg_host_path_list(PREPEND ENV{${var}} "${CURRENT_INSTALLED_DIR}/include")
-        endif()
-    endmacro()
     # Used by CL 
     z_prepend_include_path(INCLUDE)
     # Used by GCC
@@ -544,9 +549,6 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    macro(z_convert_to_list input output)
-        string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
-    endmacro()
     z_convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES c_libs_list)
     z_convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES cxx_libs_list)
     set(all_libs_list ${c_libs_list} ${cxx_libs_list})
