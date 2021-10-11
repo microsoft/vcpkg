@@ -1,6 +1,6 @@
 {
   "name": "kcp",
-  "version-string": "1.7",
+  "version": "1.7",
   "description": "A fast and reliable ARQ protocol",
   "homepage": "https://github.com/skywind3000/kcp",
   "dependencies": [
