@@ -1,0 +1,46 @@
+From 0202616076e6b05b7100ae67d7d012e2c22f79fb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 31 Aug 2021 03:40:09 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5KIOConfig.cmake.in | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/KF5KIOConfig.cmake.in b/KF5KIOConfig.cmake.in
+index 41699cb03..05922f769 100644
+--- a/KF5KIOConfig.cmake.in
++++ b/KF5KIOConfig.cmake.in
+@@ -11,13 +11,22 @@ find_dependency(KF5Config "@KF_DEP_VERSION@")
+ find_dependency(KF5Service "@KF_DEP_VERSION@")
+ 
+ if (NOT @KIOCORE_ONLY@)
+-find_dependency(KF5Bookmarks "@KF_DEP_VERSION@")
+-find_dependency(KF5Completion "@KF_DEP_VERSION@")
+-find_dependency(KF5ItemViews "@KF_DEP_VERSION@")
+-find_dependency(KF5JobWidgets "@KF_DEP_VERSION@")
+-find_dependency(KF5Solid "@KF_DEP_VERSION@")
+-find_dependency(KF5XmlGui "@KF_DEP_VERSION@")
+-find_dependency(KF5WindowSystem "@KF_DEP_VERSION@")
++    find_dependency(KF5Bookmarks "@KF_DEP_VERSION@")
++    find_dependency(KF5Completion "@KF_DEP_VERSION@")
++    find_dependency(KF5ItemViews "@KF_DEP_VERSION@")
++    find_dependency(KF5JobWidgets "@KF_DEP_VERSION@")
++    find_dependency(KF5Solid "@KF_DEP_VERSION@")
++    find_dependency(KF5XmlGui "@KF_DEP_VERSION@")
++    find_dependency(KF5WidgetsAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5WindowSystem "@KF_DEP_VERSION@")
++
++    if (NOT @BUILD_SHARED_LIBS@)
++        find_dependency(KF5ConfigWidgets "@KF_DEP_VERSION@")
++        find_dependency(KF5Crash "@KF_DEP_VERSION@")
++        find_dependency(KF5GuiAddons "@KF_DEP_VERSION@")
++        find_dependency(KF5IconThemes "@KF_DEP_VERSION@")
++        find_dependency(KF5DBusAddons "@KF_DEP_VERSION@")
++    endif()
+ endif()
+ 
+ find_dependency(Qt5Network "@REQUIRED_QT_VERSION@")
+-- 
+GitLab
+
