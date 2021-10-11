@@ -1,0 +1,128 @@
+From 3c7434025c5e14c2b3027a13ce90aab49712156c Mon Sep 17 00:00:00 2001
+From: André de la Rocha <andre.rocha@qt.io>
+Date: Wed, 06 Oct 2021 02:45:14 +0200
+Subject: [PATCH] Fix function declarations
+
+Adding missing QT_WIN_CALLBACK / QT_FASTCALL
+
+Pick-to: 6.2
+Change-Id: I5ba5a6341a988f162b9562c9fd328b9d90c6e1ab
+Reviewed-by: Lars Knoll <lars.knoll@qt.io>
+---
+
+diff --git a/src/multimedia/platform/windows/qwindowsmediadevices.cpp b/src/multimedia/platform/windows/qwindowsmediadevices.cpp
+index 067c2bb..a525569 100644
+--- a/src/multimedia/platform/windows/qwindowsmediadevices.cpp
++++ b/src/multimedia/platform/windows/qwindowsmediadevices.cpp
+@@ -190,7 +190,7 @@
+     }
+ };
+ 
+-LRESULT deviceNotificationWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
++LRESULT QT_WIN_CALLBACK deviceNotificationWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+ {
+     if (message == WM_DEVICECHANGE) {
+         auto b = (PDEV_BROADCAST_HDR)lParam;
+diff --git a/src/multimedia/platform/windows/qwindowsmediadevices_p.h b/src/multimedia/platform/windows/qwindowsmediadevices_p.h
+index 29e214d..0dc06a4 100644
+--- a/src/multimedia/platform/windows/qwindowsmediadevices_p.h
++++ b/src/multimedia/platform/windows/qwindowsmediadevices_p.h
+@@ -65,7 +65,7 @@
+ class QWindowsEngine;
+ class CMMNotificationClient;
+ 
+-LRESULT deviceNotificationWndProc(HWND, UINT, WPARAM, LPARAM);
++LRESULT QT_WIN_CALLBACK deviceNotificationWndProc(HWND, UINT, WPARAM, LPARAM);
+ 
+ class QWindowsMediaDevices : public QPlatformMediaDevices
+ {
+@@ -88,7 +88,7 @@
+     HDEVNOTIFY m_videoDeviceNotification;
+ 
+     friend CMMNotificationClient;
+-    friend LRESULT deviceNotificationWndProc(HWND, UINT, WPARAM, LPARAM);
++    friend LRESULT QT_WIN_CALLBACK deviceNotificationWndProc(HWND, UINT, WPARAM, LPARAM);
+ };
+ 
+ QT_END_NAMESPACE
+diff --git a/src/multimedia/video/qvideoframeconversionhelper_avx2.cpp b/src/multimedia/video/qvideoframeconversionhelper_avx2.cpp
+index c17f8a6..cada965 100644
+--- a/src/multimedia/video/qvideoframeconversionhelper_avx2.cpp
++++ b/src/multimedia/video/qvideoframeconversionhelper_avx2.cpp
+@@ -114,17 +114,17 @@
+     convert_to_ARGB32_avx2<0, 1, 2, 3>(frame, output);
+ }
+ 
+-void qt_convert_ABGR8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_ABGR8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_avx2<0, 3, 2, 1>(frame, output);
+ }
+ 
+-void qt_convert_RGBA8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_RGBA8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_avx2<3, 0, 1, 2>(frame, output);
+ }
+ 
+-void qt_convert_BGRA8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_BGRA8888_to_ARGB32_avx2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_avx2<3, 2, 1, 0>(frame, output);
+ }
+diff --git a/src/multimedia/video/qvideoframeconversionhelper_sse2.cpp b/src/multimedia/video/qvideoframeconversionhelper_sse2.cpp
+index 8c0092e..68abf04 100644
+--- a/src/multimedia/video/qvideoframeconversionhelper_sse2.cpp
++++ b/src/multimedia/video/qvideoframeconversionhelper_sse2.cpp
+@@ -96,22 +96,22 @@
+ 
+ }
+ 
+-void qt_convert_ARGB8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_ARGB8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_sse2<0, 1, 2, 3>(frame, output);
+ }
+ 
+-void qt_convert_ABGR8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_ABGR8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_sse2<0, 3, 2, 1>(frame, output);
+ }
+ 
+-void qt_convert_RGBA8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_RGBA8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_sse2<3, 0, 1, 2>(frame, output);
+ }
+ 
+-void qt_convert_BGRA8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_BGRA8888_to_ARGB32_sse2(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_sse2<3, 2, 1, 0>(frame, output);
+ }
+diff --git a/src/multimedia/video/qvideoframeconversionhelper_ssse3.cpp b/src/multimedia/video/qvideoframeconversionhelper_ssse3.cpp
+index c1acb9b..a5dfdda 100644
+--- a/src/multimedia/video/qvideoframeconversionhelper_ssse3.cpp
++++ b/src/multimedia/video/qvideoframeconversionhelper_ssse3.cpp
+@@ -105,17 +105,17 @@
+     convert_to_ARGB32_ssse3<0, 1, 2, 3>(frame, output);
+ }
+ 
+-void qt_convert_ABGR8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_ABGR8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_ssse3<0, 3, 2, 1>(frame, output);
+ }
+ 
+-void qt_convert_RGBA8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_RGBA8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_ssse3<3, 0, 1, 2>(frame, output);
+ }
+ 
+-void qt_convert_BGRA8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
++void QT_FASTCALL qt_convert_BGRA8888_to_ARGB32_ssse3(const QVideoFrame &frame, uchar *output)
+ {
+     convert_to_ARGB32_ssse3<3, 2, 1, 0>(frame, output);
+ }

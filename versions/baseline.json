@@ -5562,7 +5562,7 @@
     },
     "qtbase": {
       "baseline": "6.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.2.0",
@@ -5610,7 +5610,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.2.0",

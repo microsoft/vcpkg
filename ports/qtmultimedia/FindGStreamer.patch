@@ -1,0 +1,36 @@
+From 375d2c0ccb602df38ef8f49c5b3e0bf09c24bf46 Mon Sep 17 00:00:00 2001
+From: Joerg Bornemann <joerg.bornemann@qt.io>
+Date: Mon, 13 Sep 2021 10:50:03 +0200
+Subject: Fix build without pkg-config support
+
+Fix several issues in cmake/Find* in the code path that's hit when
+pkg-config is not used.
+
+Pick-to: 6.2
+Task-number: QTBUG-96401
+Change-Id: Iac6af560976ba6408d877027ed44a0354d32d2b7
+Reviewed-by: Alexey Edelev <alexey.edelev@qt.io>
+Reviewed-by: Doris Verria <doris.verria@qt.io>
+---
+ cmake/FindGStreamer.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+(limited to 'cmake/FindGStreamer.cmake')
+
+diff --git a/cmake/FindGStreamer.cmake b/cmake/FindGStreamer.cmake
+index 0624c1a77..c3becd731 100644
+--- a/cmake/FindGStreamer.cmake
++++ b/cmake/FindGStreamer.cmake
+@@ -53,8 +53,8 @@ function(find_gstreamer_component component prefix header library)
+             endif()
+             if(GStreamer_${component}_LIBRARY AND GStreamer_${component}_INCLUDE_DIR)
+                 add_library(GStreamer::${component} INTERFACE IMPORTED)
+-                target_include_directories(GStreamer::${component} INTERFACE GStreamer_${component}_INCLUDE_DIR)
+-                target_link_libraries(GStreamer::${component} INTERFACE GStreamer_${component}_LIBRARY)
++                target_include_directories(GStreamer::${component} INTERFACE ${GStreamer_${component}_INCLUDE_DIR})
++                target_link_libraries(GStreamer::${component} INTERFACE ${GStreamer_${component}_LIBRARY})
+             endif()
+             mark_as_advanced(GStreamer_${component}_INCLUDE_DIR GStreamer_${component}_LIBRARY)
+         endif()
+-- 
+cgit v1.2.1
