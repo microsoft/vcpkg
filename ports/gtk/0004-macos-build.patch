@@ -1,13 +1,12 @@
-diff --git a/gdk/macos/gdkmacoseventsource.c b/gdk/macos/gdkmacoseventsource.c
-index 8bf15740243b126894243e5a272ace77b5c3f4fb..b039d04615cc57b7ad0d750e424470e676d9f3fd 100644
---- a/gdk/macos/gdkmacoseventsource.c
-+++ b/gdk/macos/gdkmacoseventsource.c
-@@ -32,6 +32,8 @@
- #include "gdkmacoseventsource-private.h"
- #include "gdkmacosdisplay-private.h"
- 
+diff -u a/gdk/macos/gdkmacoseventsource-private.h b/gdk/macos/gdkmacoseventsource-private.h
+--- a/gdk/macos/gdkmacoseventsource-private.h
++++ b/gdk/macos/gdkmacoseventsource-private.h
+@@ -24,6 +24,8 @@
+
+ #include "gdkmacosdisplay.h"
+
 +#include "gdk-private.h"
 +
- /*
-  * This file implementations integration between the GLib main loop and
-  * the native system of the Core Foundation run loop and Cocoa event
+ G_BEGIN_DECLS
+
+ typedef enum
