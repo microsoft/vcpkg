@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 3.9)
 project(boost CXX)
 
-set(B2_OPTIONS)
+# The following variables are used in user-config.jam file
+set(USER_CONFIG_TOOLSET)
+set(USER_CONFIG_TOOLSET_VERSION)
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND)
+set(USER_CONFIG_TOOLSET_OPTIONS)
+set(USER_CONFIG_EXTRA_LINES)
 
-if(MSVC)
-    if(MSVC_VERSION LESS 1900)
-        math(EXPR BOOST_MSVC_VERSION "${MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR BOOST_MSVC_VERSION "${MSVC_VERSION} / 10 - 50")
-    endif()
-else()
-    set(VCPKG_PLATFORM_TOOLSET external)
-endif()
+set(B2_OPTIONS)
 
 #### Handle ICU
 if(WIN32)
@@ -24,10 +21,8 @@ endif()
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
-    set(LIB_RUNTIME_LINK "shared")
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
-    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if(BUILD_SHARED_LIBS)
@@ -56,29 +51,26 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
     list(APPEND B2_OPTIONS "asmflags=/safeseh")
 endif()
 
-file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
-
 if(MSVC)
-    set(B2_TOOLSET msvc)
+    set(USER_CONFIG_TOOLSET msvc)
+    if(MSVC_VERSION LESS 1900)
+        math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 60")
+    else()
+        math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 50")
+    endif()
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
-    set(B2_TOOLSET clang)
+    set(USER_CONFIG_TOOLSET clang)
     list(APPEND B2_OPTIONS target-os=darwin)
 elseif(WIN32)
-    set(B2_TOOLSET gcc)
+    set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(ANDROID)
-    set(B2_TOOLSET gcc)
+    set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=android)
 else()
-    set(B2_TOOLSET gcc)
+    set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=linux)
-endif()
-
-if(WIN32)
-    list(APPEND B2_OPTIONS threadapi=win32)
-else()
-    list(APPEND B2_OPTIONS threadapi=pthread)
 endif()
 
 # Properly handle compiler and linker flags passed by VCPKG
@@ -122,9 +114,12 @@ if(APPLE)
     endforeach()
 endif()
 
+string(REGEX REPLACE "[ \t\r\n]+" " " CXXFLAGS "${CXXFLAGS}")
 string(STRIP "${CXXFLAGS}" CXXFLAGS)
-string(STRIP "${CFLAGS}"   CFLAGS)
-string(STRIP "${LDFLAGS}"  LDFLAGS)
+string(REGEX REPLACE "[ \t\r\n]+" " " CFLAGS "${CFLAGS}")
+string(STRIP "${CFLAGS}" CFLAGS)
+string(REGEX REPLACE "[ \t\r\n]+" " " LDFLAGS "${LDFLAGS}")
+string(STRIP "${LDFLAGS}" LDFLAGS)
 
 if(NOT CXXFLAGS STREQUAL "")
     string(REPLACE " " " <cxxflags>" CXXFLAGS "<cxxflags>${CXXFLAGS}")
@@ -187,6 +182,39 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
 endif()
 
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${CMAKE_CXX_COMPILER}\"")
+
+if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+    file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <setup>\"${NOTHING_BAT}\"\n"
+        "    ${CXXFLAGS}\n"
+        "    ${CFLAGS}\n"
+        "    ${LDFLAGS}\n"
+    )
+else()
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <ranlib>\"${CMAKE_RANLIB}\"\n"
+        "    <archiver>\"${CMAKE_AR}\"\n"
+        "    ${CXXFLAGS}\n"
+        "    ${CFLAGS}\n"
+        "    ${LDFLAGS}\n"
+    )
+endif()
+
+if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+    # MINGW here causes b2 to not run cygpath
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <flavor>mingw\n"
+    )
+endif()
+
+if(WIN32)
+    list(APPEND B2_OPTIONS threadapi=win32)
+else()
+    list(APPEND B2_OPTIONS threadapi=pthread)
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     list(APPEND B2_OPTIONS variant=release)
 else()
@@ -197,23 +225,23 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-# Include port specific CMake fragment
-if(DEFINED BOOST_CMAKE_FRAGMENT)
-    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
-    include(${BOOST_CMAKE_FRAGMENT})
-endif()
-
-configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
-
 include(ProcessorCount)
 ProcessorCount(NUMBER_OF_PROCESSORS)
 if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
 
+# Include port specific CMake fragment
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
+    include(${BOOST_CMAKE_FRAGMENT})
+endif()
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
+
 add_custom_target(boost ALL
     COMMAND "${B2_EXE}"
-        toolset=${B2_TOOLSET}
+        toolset=${USER_CONFIG_TOOLSET}
         --user-config=${CMAKE_CURRENT_BINARY_DIR}/user-config.jam
         --stagedir=${CMAKE_CURRENT_BINARY_DIR}/stage
         --build-dir=${CMAKE_CURRENT_BINARY_DIR}
@@ -235,6 +263,7 @@ add_custom_target(boost ALL
         --hash
         -q
         debug-symbols=on
+        # Enable debugging level 2.
         -d +2
 
         threading=multi

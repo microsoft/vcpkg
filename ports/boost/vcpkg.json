@@ -1,6 +1,7 @@
 {
   "name": "boost",
   "version": "1.77.0",
+  "port-version": 1,
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "dependencies": [
@@ -73,10 +74,6 @@
     "boost-geometry",
     "boost-gil",
     "boost-graph",
-    {
-      "name": "boost-graph-parallel",
-      "platform": "!uwp"
-    },
     "boost-hana",
     "boost-heap",
     "boost-histogram",
@@ -112,10 +109,6 @@
     "boost-metaparse",
     "boost-move",
     "boost-mp11",
-    {
-      "name": "boost-mpi",
-      "platform": "!uwp"
-    },
     "boost-mpl",
     "boost-msm",
     "boost-multi-array",
