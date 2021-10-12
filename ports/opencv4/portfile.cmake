@@ -12,7 +12,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 efd2214f29b1eb2e1ae55280f9fc2f64af7c2e91154264c43d0d4186dd5b8f81e86942dff612d08cd9eaa834421457fe765760181160168cd4c52839a0739758
+    SHA512 39a7af95bc30d427c6df5e5d481469ab1ceea7878a93ae5c119991333e877a88d0a644e17dc6bd316e64b2840e48411a97f1b2397a8000719c5cec32751fa954
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -44,33 +44,33 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
- "ade"      WITH_ADE
- "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUBLAS
- "cuda"     WITH_CUDA
- "cudnn"    WITH_CUDNN
- "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
- "gdcm"     WITH_GDCM
- "gtk"      WITH_GTK
- "halide"   WITH_HALIDE
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "lapack"   WITH_LAPACK
- "nonfree"  OPENCV_ENABLE_NONFREE
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "quirc"    WITH_QUIRC
- "sfm"      BUILD_opencv_sfm
- "tiff"     WITH_TIFF
- "vtk"      WITH_VTK
- "webp"     WITH_WEBP
- "world"    BUILD_opencv_world
+ "ade"       WITH_ADE
+ "contrib"   WITH_CONTRIB
+ "cuda"      WITH_CUBLAS
+ "cuda"      WITH_CUDA
+ "cudnn"     WITH_CUDNN
+ "eigen"     WITH_EIGEN
+ "ffmpeg"    WITH_FFMPEG
+ "gdcm"      WITH_GDCM
+ "gstreamer" WITH_GDCM
+ "halide"    WITH_HALIDE
+ "jasper"    WITH_JASPER
+ "jpeg"      WITH_JPEG
+ "lapack"    WITH_LAPACK
+ "nonfree"   OPENCV_ENABLE_NONFREE
+ "openexr"   WITH_OPENEXR
+ "opengl"    WITH_OPENGL
+ "png"       WITH_PNG
+ "qt"        WITH_QT
+ "quirc"     WITH_QUIRC
+ "sfm"       BUILD_opencv_sfm
+ "tiff"      WITH_TIFF
+ "vtk"       WITH_VTK
+ "webp"      WITH_WEBP
+ "world"     BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb"
+# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -78,6 +78,15 @@ if("dnn" IN_LIST FEATURES)
     set(BUILD_opencv_dnn ON)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
+  endif()
+endif()
+
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
 endif()
 
@@ -143,7 +152,7 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 5b48e2aedcf8c64fcfe80fad243c455c1bb9bfd10741c5ba03679ef26b28f61767fec632a9a9828a87a90542488354ebbbe8c65845bf2ae55b15a721c147a30a
+    SHA512 a48d4b5d764170814d9027fdf50f61bb4a24f0b5a547dded79d06b948f86443f14734efc7bbb708b3870781cafc6bc9e3092d35dac34a81da2bf1740d5f93ff9
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
@@ -385,6 +394,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}

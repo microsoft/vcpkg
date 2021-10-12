@@ -99,6 +99,12 @@
         "gdcm"
       ]
     },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
     "gtk": {
       "description": "GTK support for opencv",
       "dependencies": [

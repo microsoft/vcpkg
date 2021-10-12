@@ -42,33 +42,33 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
- "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUBLAS
- "cuda"     WITH_CUDA
- "dnn"      BUILD_opencv_dnn
- "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
- "flann"    BUILD_opencv_flann
- "gdcm"     WITH_GDCM
- "gtk"      WITH_GTK
- "halide"   WITH_HALIDE
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "lapack"   WITH_LAPACK
- "nonfree"  OPENCV_ENABLE_NONFREE
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "quirc"    WITH_QUIRC
- "sfm"      BUILD_opencv_sfm
- "tiff"     WITH_TIFF
- "vtk"      WITH_VTK
- "webp"     WITH_WEBP
- "world"    BUILD_opencv_world
+ "contrib"   WITH_CONTRIB
+ "cuda"      WITH_CUBLAS
+ "cuda"      WITH_CUDA
+ "dnn"       BUILD_opencv_dnn
+ "eigen"     WITH_EIGEN
+ "ffmpeg"    WITH_FFMPEG
+ "flann"     BUILD_opencv_flann
+ "gdcm"      WITH_GDCM
+ "gstreamer" WITH_GSTREAMER
+ "halide"    WITH_HALIDE
+ "jasper"    WITH_JASPER
+ "jpeg"      WITH_JPEG
+ "lapack"    WITH_LAPACK
+ "nonfree"   OPENCV_ENABLE_NONFREE
+ "openexr"   WITH_OPENEXR
+ "opengl"    WITH_OPENGL
+ "png"       WITH_PNG
+ "qt"        WITH_QT
+ "quirc"     WITH_QUIRC
+ "sfm"       BUILD_opencv_sfm
+ "tiff"      WITH_TIFF
+ "vtk"       WITH_VTK
+ "webp"      WITH_WEBP
+ "world"     BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb"
+# Cannot use vcpkg_check_features() for "dnn", "gtk", "ipp", ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -76,6 +76,15 @@ if("dnn" IN_LIST FEATURES)
     set(BUILD_opencv_dnn ON)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
+  endif()
+endif()
+
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
 endif()
 
@@ -328,6 +337,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+        -DWITH_GTK=${WITH_GTK}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}

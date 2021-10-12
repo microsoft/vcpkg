@@ -114,6 +114,18 @@
         }
       ]
     },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "gstreamer"
+          ]
+        }
+      ]
+    },
     "gtk": {
       "description": "GTK support for opencv",
       "dependencies": [
