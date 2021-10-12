@@ -1,5 +1,4 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index d4e77a8..5d36314 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -15,7 +15,8 @@ set(LIBJSONNET_HEADERS
@@ -39,4 +38,4 @@ index d4e77a8..5d36314 100644
 +    target_link_libraries(libjsonnet_static nlohmann_json::nlohmann_json)
      set_target_properties(libjsonnet_static PROPERTIES OUTPUT_NAME jsonnet)
      install(TARGETS libjsonnet_static DESTINATION "${CMAKE_INSTALL_LIBDIR}")
- endif()
+     target_include_directories(libjsonnet_static INTERFACE
