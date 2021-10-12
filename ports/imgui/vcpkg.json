@@ -1,7 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.84.2",
-  "port-version": 1,
+  "version": "1.85",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "features": {
@@ -64,6 +63,12 @@
     },
     "sdl2-binding": {
       "description": "Make available SDL2 binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sdl2-renderer-binding": {
+      "description": "Make available SDL2 Renderer binding",
       "dependencies": [
         "sdl2"
       ]
