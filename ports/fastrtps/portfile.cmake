@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-find-package-asio.patch
+        disable-symlink.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,16 +20,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/fastrtps/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
-    # on Windows, either "fast-discovery-server.exe" (symlink) or "fast-discovery-server.bat" may be present, depending on if the installation ran with administrator privileges
-    foreach(TOOL "fast-discovery-server-1.0.0.exe" "fast-discovery-server.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
-            file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
-        endif()
+    foreach(TOOL "fast-discovery-server-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
 
     # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-serverd.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-serverd-1.0.0.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
         endif()
@@ -45,6 +43,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
+
+    # replace symlink by a copy because symlinks do not work well together with vcpkg binary caching
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server-1.0.0" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}" RENAME "fast-discovery-server")
 
     # remove tools from debug builds
     foreach(TOOL "fast-discovery-serverd-1.0.0" "fast-discovery-server" "fastdds" "ros-discovery")
