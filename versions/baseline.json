@@ -3750,7 +3750,7 @@
     },
     "librttopo": {
       "baseline": "1.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libsamplerate": {
       "baseline": "0.2.2",
