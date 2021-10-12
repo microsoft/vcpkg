@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/fastrtps/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/fastrtps/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
