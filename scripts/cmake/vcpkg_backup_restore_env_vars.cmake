@@ -15,31 +15,13 @@ vcpkg_restore_env_variables(VARS <ENV_VARS>)
 ### ENV_VARS
 The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
 be passed.
+And the backup variable is `z_vcpkg_env_backup_${ENV_VARS}`.
 
 ## Notes:
-This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
-"install" target
+This command should be preceded by a call to [`vcpkg_backup_env_variables()`](vcpkg_backup_env_variables.md) or
+[`vcpkg_restore_env_variables()`](vcpkg_restore_env_variables.md).
 
 #]===]
-
-macro(z_vcpkg_backup_env_variable envvar)
-    if(DEFINED ENV{${envvar}})
-        debug_message("backup ENV\{${envvar}\} to z_vcpkg_env_backup_${envvar}")
-        set("z_vcpkg_env_backup_${envvar}" "$ENV{${envvar}}" PARENT_SCOPE)
-    else()
-        unset(z_vcpkg_env_backup_${envvar})
-    endif()
-endmacro()
-
-macro(z_vcpkg_restore_env_variable envvar)
-    if(DEFINED z_vcpkg_env_backup_${envvar})
-        debug_message("restore ENV\{${envvar}\} from z_vcpkg_env_backup_${envvar}")
-        set(ENV{${envvar}} "${z_vcpkg_env_backup_${envvar}}")
-    else()
-        unset(ENV{${envvar}})
-    endif()
-endmacro()
 
 function(vcpkg_backup_env_variables)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "VARS")
@@ -51,7 +33,12 @@ function(vcpkg_backup_env_variables)
     endif()
 
     foreach(envvar IN LISTS arg_VARS)
-        z_vcpkg_backup_env_variable("${envvar}")
+        if(DEFINED ENV{${envvar}})
+            debug_message("backup ENV\{${envvar}\} to z_vcpkg_env_backup_${envvar}")
+            set("z_vcpkg_env_backup_${envvar}" "$ENV{${envvar}}" PARENT_SCOPE)
+        else()
+            unset(z_vcpkg_env_backup_${envvar})
+        endif()
     endforeach()
 endfunction()
 
@@ -65,6 +52,11 @@ function(vcpkg_restore_env_variables)
     endif()
 
     foreach(envvar IN LISTS arg_VARS)
-        z_vcpkg_restore_env_variable("${envvar}")
+        if(DEFINED z_vcpkg_env_backup_${envvar})
+            debug_message("restore ENV\{${envvar}\} from z_vcpkg_env_backup_${envvar}")
+            set(ENV{${envvar}} "${z_vcpkg_env_backup_${envvar}}")
+        else()
+            unset(ENV{${envvar}})
+        endif()
     endforeach()
 endfunction()
