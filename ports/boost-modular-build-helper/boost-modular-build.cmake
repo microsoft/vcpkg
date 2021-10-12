@@ -130,6 +130,20 @@ function(boost_modular_build)
             file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
         endif()
     endforeach()
+    # Similar for mingw
+    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*-mgw10-*.a" "${CURRENT_PACKAGES_DIR}/lib/*-mgw10-*.a")
+    foreach(LIB IN LISTS INSTALLED_LIBS)
+        get_filename_component(OLD_FILENAME "${LIB}" NAME)
+        get_filename_component(DIRECTORY_OF_LIB_FILE "${LIB}" DIRECTORY)
+        string(REGEX REPLACE "-mgw[0-9]+-.*[0-9](\\.dll\\.a|\\.a)$" "\\1" NEW_FILENAME "${OLD_FILENAME}")
+        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+            # nothing to do
+        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+        else()
+            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+        endif()
+    endforeach()
 
     # boost-regex[icu] and boost-locale[icu] generate has_icu.lib
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
