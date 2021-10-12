@@ -1,0 +1,22 @@
+diff -ru a/gtk/gtk-win32.rc.body.in b/gtk/gtk-win32.rc.body.in
+--- a/gtk/gtk-win32.rc.body.in
++++ b/gtk/gtk-win32.rc.body.in
+@@ -1,5 +1,4 @@
+-#include <winuser.h>
+-#include <winver.h>
++#include <windows.h>
+
+ GTK_ICON               ICON                    "gtk.ico"
+
+diff -ru a/tools/generate-uac-manifest.py b/tools/generate-uac-manifest.py
+--- a/tools/generate-uac-manifest.py
++++ b/tools/generate-uac-manifest.py
+@@ -92,7 +92,7 @@
+
+     if resource is None:
+         outfile = open(output_file_base_name + '.rc', 'w+')
+-        outfile.write('#include <winuser.h>')
++        outfile.write('#include <windows.h>')
+     else:
+         if resource != output_file_base_name + '.rc':
+             outfile = open(output_file_base_name + '.rc', 'w+')

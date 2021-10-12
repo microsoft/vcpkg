@@ -2557,7 +2557,7 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.3.0",
+      "baseline": "4.4.0",
       "port-version": 0
     },
     "gtkmm": {
