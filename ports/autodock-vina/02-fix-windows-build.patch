@@ -1,0 +1,43 @@
+diff --git a/src/lib/parse_pdbqt.cpp b/src/lib/parse_pdbqt.cpp
+index 84bf052..3aaddc9 100755
+--- a/src/lib/parse_pdbqt.cpp
++++ b/src/lib/parse_pdbqt.cpp
+@@ -352,6 +352,7 @@ void parse_pdbqt_aux(std::istream& in, parsing_struct& p, context& c, boost::opt
+                 throw pdbqt_parse_error("TORSDOF keyword can be defined only once.");
+             torsdof = parse_one_unsigned(str, "TORSDOF");
+         }
++	else if (str.find_first_not_of(" \t\v\r") != std::string::npos) {} // ignore lines only consisting of spaces, tabs, vertical tabs, and/or carriage returns
+         else if(residue && starts_with(str, "END_RES"))
+             return; 
+         else if(starts_with(str, "MODEL"))
+diff --git a/src/lib/precalculate.h b/src/lib/precalculate.h
+index ef7b10b..8a2b199 100755
+--- a/src/lib/precalculate.h
++++ b/src/lib/precalculate.h
+@@ -30,7 +30,7 @@
+ //Forward declaration
+ struct model;
+ 
+-class precalculate_element
++struct precalculate_element
+ {
+ public:
+     precalculate_element(sz n, fl factor_) : fast(n, 0), smooth(n, pr(0, 0)), factor(factor_) { }
+@@ -121,7 +121,7 @@ private:
+     fl factor;
+ };
+ 
+-class precalculate 
++struct precalculate 
+ {
+ public:
+     precalculate() { }
+@@ -190,7 +190,7 @@ private:
+     triangular_matrix<precalculate_element> m_data;
+ };
+ 
+-class precalculate_byatom
++struct precalculate_byatom
+ {
+ public:
+     precalculate_byatom() { }

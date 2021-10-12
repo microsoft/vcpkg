@@ -6,8 +6,9 @@ vcpkg_from_github(
     REF v1.2.2
     SHA512 a6117137292b9b77afd3dff4a5ca31c65c9e85edd0b2351795fb2cccc06eca5b865b7dc054bb2859d0cf32abb6f6a72aaf62647e6d53709be879cc12a0336ba8
     HEAD_REF develop
-    PATCHES 
+    PATCHES
         01-windows.patch
+        02-fix-windows-build.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
