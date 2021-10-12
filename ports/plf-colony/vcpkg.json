@@ -1,0 +1,6 @@
+{
+  "name": "plf-colony",
+  "version": "6.28",
+  "description": "An unordered C++ data container providing fast iteration/insertion/erasure while maintaining pointer/iterator validity to non-erased elements regardless of insertions/erasures.",
+  "homepage": "https://plflib.org/colony.htm"
+}

@@ -1,26 +1,22 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO AmokHuginnsson/replxx
-        REF 45696c250ce39ab21dedeea962b94d7827007a8c
-        SHA512 7beec508fa3049fe5a736a487728506d646d26d7194ef7453fc07bceade1982430808fab0a10ca9b1c43a8b87bf3a973f5cfe4aa22ed06927647c9a7244167fd
-        HEAD_REF master
-        PATCHES
-                add-stdexcept.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO AmokHuginnsson/replxx
+    REF release-0.0.3
+    SHA512 039812B65D96C44907105D409E608132A115314BEA8616F79DA928BFEECEBFF64381F063D7B1C971B61C449FA24552E001767D61C57F65AF9EBD8F0B3AC62B18
+    HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        DISABLE_PARALLEL_CONFIGURE
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/replxx")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/replxxConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

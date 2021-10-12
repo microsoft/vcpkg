@@ -40,7 +40,6 @@ index c032f02..d80d2a0 100644
 +	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
  endif()
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index d277872..bbf67f7 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,7 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -59,8 +58,8 @@ index d277872..bbf67f7 100644
 -	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 +	ARCHIVE DESTINATION "${CMAKE_INSTALL_BINDIR}"
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
- 
- if (BUILD_STATIC_LIBS)
+ target_include_directories(libjsonnet INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
 index a481d9f..2f58d2f 100644
 --- a/stdlib/CMakeLists.txt

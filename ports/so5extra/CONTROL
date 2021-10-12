@@ -1,5 +1,0 @@
-Source: so5extra
-Version: 1.4.1
-Homepage: https://github.com/Stiffstream/so5extra
-Description: A set of additional tools for SObjectizer framework.
-Build-Depends: sobjectizer
