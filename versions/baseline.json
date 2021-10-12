@@ -4269,7 +4269,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "1.7.2",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "minc": {
