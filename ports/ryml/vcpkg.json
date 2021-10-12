@@ -4,7 +4,6 @@
   "port-version": 1,
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "c4core",
