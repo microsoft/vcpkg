@@ -25,7 +25,7 @@ endforeach()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -36,8 +36,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Debug includes and share are the same as release
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Install tools
 if("utility" IN_LIST FEATURES)
@@ -49,22 +49,22 @@ endif()
 if(NOT FEATURES)
     # No features, no binaries (only Corrade.h).
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug)
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/lib"
+        "${CURRENT_PACKAGES_DIR}/debug")
     # debug is completely empty, as include and share
     # have already been removed.
 
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # No dlls
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+file(INSTALL "${SOURCE_PATH}/COPYING"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)
 
 vcpkg_copy_pdbs()

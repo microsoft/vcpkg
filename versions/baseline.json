@@ -1482,7 +1482,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 2
+      "port-version": 3
     },
     "cpp-base64": {
       "baseline": "V2.rc.08",
