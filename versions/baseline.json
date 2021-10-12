@@ -22,7 +22,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 4
+      "port-version": 5
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -502,7 +502,7 @@
     },
     "boost": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-accumulators": {
       "baseline": "1.77.0",
@@ -582,7 +582,7 @@
     },
     "boost-config": {
       "baseline": "1.77.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-container": {
       "baseline": "1.77.0",
@@ -750,7 +750,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-iterator": {
       "baseline": "1.77.0",
@@ -806,7 +806,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-move": {
       "baseline": "1.77.0",
@@ -850,7 +850,7 @@
     },
     "boost-odeint": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-optional": {
       "baseline": "1.77.0",
@@ -898,7 +898,7 @@
     },
     "boost-process": {
       "baseline": "1.77.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-program-options": {
       "baseline": "1.77.0",
@@ -926,7 +926,7 @@
     },
     "boost-python": {
       "baseline": "1.77.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-qvm": {
       "baseline": "1.77.0",
@@ -1709,7 +1709,7 @@
       "port-version": 2
     },
     "dartsim": {
-      "baseline": "6.9.4",
+      "baseline": "6.11.0",
       "port-version": 1
     },
     "dataframe": {
@@ -2050,7 +2050,7 @@
     },
     "farmhash": {
       "baseline": "1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "fast-cpp-csv-parser": {
       "baseline": "2021-01-03",
@@ -2322,7 +2322,7 @@
     },
     "gdal": {
       "baseline": "3.2.2",
-      "port-version": 5
+      "port-version": 6
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -3055,6 +3055,10 @@
     "kf5jobwidgets": {
       "baseline": "5.84.0",
       "port-version": 1
+    },
+    "kf5kio": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5notifications": {
       "baseline": "5.84.0",
@@ -3806,7 +3810,7 @@
     },
     "libsquish": {
       "baseline": "1.15",
-      "port-version": 8
+      "port-version": 9
     },
     "libsrt": {
       "baseline": "1.3.4",
@@ -3821,8 +3825,8 @@
       "port-version": 0
     },
     "libssh2": {
-      "baseline": "1.9.0",
-      "port-version": 1
+      "baseline": "1.10.0",
+      "port-version": 0
     },
     "libstemmer": {
       "baseline": "2017-9",
@@ -4041,8 +4045,8 @@
       "port-version": 1
     },
     "log4cplus": {
-      "baseline": "2.0.5",
-      "port-version": 2
+      "baseline": "2.0.7",
+      "port-version": 0
     },
     "log4cpp": {
       "baseline": "2.9.1",
@@ -4429,7 +4433,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.8",
+      "baseline": "1.9.1",
       "port-version": 0
     },
     "msgpack": {
@@ -4850,7 +4854,7 @@
     },
     "openimageio": {
       "baseline": "2.3.7.2",
-      "port-version": 2
+      "port-version": 3
     },
     "openjpeg": {
       "baseline": "2.4.0",
@@ -5558,7 +5562,7 @@
     },
     "qtbase": {
       "baseline": "6.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.2.0",
@@ -5606,7 +5610,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.2.0",
@@ -6962,7 +6966,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 2
+      "port-version": 3
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
@@ -7246,7 +7250,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 12
+      "port-version": 13
     },
     "zlib-ng": {
       "baseline": "2.0.3",
