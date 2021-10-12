@@ -3473,8 +3473,8 @@
       "port-version": 4
     },
     "libigl": {
-      "baseline": "2.2.0",
-      "port-version": 6
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "libilbc": {
       "baseline": "3.0.3",

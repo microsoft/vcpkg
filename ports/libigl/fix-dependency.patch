@@ -9,7 +9,7 @@ index b98aa55..46c68a7 100644
  	if(IGL_STATIC_RUNTIME)
  		message(STATUS "MSVC -> forcing use of statically-linked runtime.")
 diff --git a/cmake/libigl.cmake b/cmake/libigl.cmake
-index d07bbb3..a33cefa 100644
+index 6de1b41..46ecbf0 100644
 --- a/cmake/libigl.cmake
 +++ b/cmake/libigl.cmake
 @@ -107,7 +107,8 @@ if(HUNTER_ENABLED)
@@ -33,21 +33,22 @@ index d07bbb3..a33cefa 100644
 +  if(0)
      igl_download_embree()
  
-     set(EMBREE_TESTING_INTENSITY 0 CACHE STRING "")
-@@ -315,8 +315,11 @@ if(LIBIGL_WITH_EMBREE)
-   endif()
+     # Note: On macOS, building embree as a static lib can only be done with a single ISA target.
+@@ -317,8 +318,11 @@ if(LIBIGL_WITH_EMBREE)
  
    compile_igl_module("embree")
    target_link_libraries(igl_embree ${IGL_SCOPE} embree)
 -  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
+-  target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
 +  if(LIBIGL_USE_STATIC_LIBRARY)
-+  find_package(TBB CONFIG REQUIRED)
-+  target_link_libraries(igl_embree ${IGL_SCOPE} TBB::tbb)
-   target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
++    find_package(TBB CONFIG REQUIRED)
++    target_link_libraries(igl_embree ${IGL_SCOPE} TBB::tbb)
++    target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
 +  endif()
  endif()
  
-@@ -358,11 +359,12 @@ if(LIBIGL_WITH_OPENGL)
+ ################################################################################
+@@ -359,11 +363,12 @@ if(LIBIGL_WITH_OPENGL)
    endif()
  
    # glad module
@@ -62,7 +63,7 @@ index d07bbb3..a33cefa 100644
  endif()
  
  ################################################################################
-@@ -371,7 +373,8 @@ if(LIBIGL_WITH_OPENGL_GLFW)
+@@ -372,7 +377,8 @@ if(LIBIGL_WITH_OPENGL_GLFW)
    if(TARGET igl::opengl)
      # GLFW module
      compile_igl_module("opengl/glfw")
@@ -72,7 +73,7 @@ index d07bbb3..a33cefa 100644
        igl_download_glfw()
        option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
        option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
-@@ -394,11 +397,12 @@ if(LIBIGL_WITH_OPENGL_GLFW_IMGUI)
+@@ -395,17 +401,19 @@ if(LIBIGL_WITH_OPENGL_GLFW_IMGUI)
    if(TARGET igl::opengl_glfw)
      # ImGui module
      compile_igl_module("opengl/glfw/imgui")
@@ -82,12 +83,20 @@ index d07bbb3..a33cefa 100644
        igl_download_imgui()
        add_subdirectory(${LIBIGL_EXTERNAL}/libigl-imgui imgui)
      endif()
--    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui)
-+    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui::imgui)
+-    if(NOT TARGET imguizmo)
++	find_package(imguizmo CONFIG REQUIRED)
++    if(0)
+       igl_download_imguizmo()
+       add_library(imguizmo ${LIBIGL_EXTERNAL}/imguizmo/ImGuizmo.cpp ${LIBIGL_EXTERNAL}/imguizmo/ImGuizmo.h)
+       target_compile_features(imguizmo PUBLIC cxx_std_11)
+       target_link_libraries(imguizmo PUBLIC imgui)
+     endif()
+-    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui imguizmo)
++    target_link_libraries(igl_opengl_glfw_imgui ${IGL_SCOPE} igl_opengl_glfw imgui::imgui imguizmo::imguizmo)
    endif()
  endif()
  
-@@ -408,12 +412,22 @@ if(LIBIGL_WITH_PNG)
+@@ -415,12 +423,22 @@ if(LIBIGL_WITH_PNG)
    # png/ module is anomalous because it also depends on opengl it really should
    # be moved into the opengl/ directory and namespace ...
    if(TARGET igl_opengl)
@@ -112,7 +121,7 @@ index d07bbb3..a33cefa 100644
    endif()
  endif()
  
-@@ -461,7 +475,8 @@ endif()
+@@ -468,7 +486,8 @@ endif()
  ### Compile the xml part ###
  if(LIBIGL_WITH_XML)
    set(TINYXML2_DIR "${LIBIGL_EXTERNAL}/tinyxml2")
@@ -122,18 +131,18 @@ index d07bbb3..a33cefa 100644
      igl_download_tinyxml2()
      add_library(tinyxml2 STATIC ${TINYXML2_DIR}/tinyxml2.cpp ${TINYXML2_DIR}/tinyxml2.h)
      target_include_directories(tinyxml2 PUBLIC ${TINYXML2_DIR})
-@@ -471,7 +486,7 @@ if(LIBIGL_WITH_XML)
+@@ -478,8 +497,7 @@ if(LIBIGL_WITH_XML)
              SOVERSION "3")
    endif()
    compile_igl_module("xml")
 -  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2)
+-  target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
 +  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2::tinyxml2)
--   target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
-+
  endif()
  
+ ################################################################################
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
-index 1d3e3bc..682b6d7 100644
+index 0663390..f35f097 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
 +++ b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
 @@ -10,7 +10,7 @@
@@ -146,10 +155,10 @@ index 1d3e3bc..682b6d7 100644
  #include <string>
  #include <algorithm>
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp b/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
-index 47de487..6c607de 100644
+index c91c1cc..0836142 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
 +++ b/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
-@@ -9,9 +9,9 @@
+@@ -9,7 +9,7 @@
  #include "ImGuiMenu.h"
  #include "ImGuiHelpers.h"
  #include <igl/project.h>
@@ -158,9 +167,6 @@ index 47de487..6c607de 100644
  #include <imgui_impl_glfw.h>
  #include <imgui_impl_opengl3.h>
  #include <imgui_fonts_droid_sans.h>
- #include <GLFW/glfw3.h>
- #include <iostream>
- ////////////////////////////////////////////////////////////////////////////////
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiTraits.h b/include/igl/opengl/glfw/imgui/ImGuiTraits.h
 index 7dae22a..e6911c5 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiTraits.h
@@ -175,7 +181,7 @@ index 7dae22a..e6911c5 100644
  // Extend ImGui by populating its namespace directly
  namespace ImGui
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 273324d..cefbd52 100644
+index 2410c19..a7659a3 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
 @@ -15,12 +15,11 @@ igl_download_test_data()
@@ -193,7 +199,7 @@ index 273324d..cefbd52 100644
  
  # Create test executable
 diff --git a/tutorial/106_ViewerMenu/main.cpp b/tutorial/106_ViewerMenu/main.cpp
-index cc514e5..f1be538 100644
+index a8e49d6..c7946f9 100644
 --- a/tutorial/106_ViewerMenu/main.cpp
 +++ b/tutorial/106_ViewerMenu/main.cpp
 @@ -2,7 +2,7 @@
