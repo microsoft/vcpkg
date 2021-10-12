@@ -1,0 +1,20 @@
+{
+  "name": "launch-darkly",
+  "version": "2.3.1",
+  "description": "LaunchDarkly Client-side SDK for C/C++",
+  "homepage": "https://github.com/launchdarkly/c-client-sdk",
+  "dependencies": [
+    {
+      "name": "curl",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

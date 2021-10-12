@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f64c105..6d659a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,6 +148,17 @@ target_include_directories(ldclientapicpp PUBLIC "cpp/include")
+ 
+ target_link_libraries(ldclientapicpp PUBLIC ldclientapi)
+ 
++INSTALL(
++    TARGETS     ldclientapicpp
++    DESTINATION lib
++)
++
++INSTALL(
++    DIRECTORY              ${PROJECT_SOURCE_DIR}/cpp/include/
++    DESTINATION            include
++    FILES_MATCHING PATTERN "*.h*"
++)
++
+ # test targets -----------------------------------------------------------------
+ 
+ if(BUILD_TESTING)
