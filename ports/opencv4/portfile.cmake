@@ -52,7 +52,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "gdcm"      WITH_GDCM
- "gstreamer" WITH_GDCM
+ "gstreamer" WITH_GSTREAMER
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
  "jpeg"      WITH_JPEG
