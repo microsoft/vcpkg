@@ -1,7 +1,7 @@
 {
   "name": "sentry-native",
   "version-semver": "0.4.12",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "supports": "!(arm | (arm64 & !osx) | uwp)",
