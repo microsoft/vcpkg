@@ -6502,7 +6502,7 @@
     },
     "tcl": {
       "baseline": "core-9-0-a1",
-      "port-version": 2
+      "port-version": 3
     },
     "tclap": {
       "baseline": "1.2.2",
