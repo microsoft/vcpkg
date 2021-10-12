@@ -1,36 +1,11 @@
 import toolset ;
 
-if "@VCPKG_PLATFORM_TOOLSET@" != "external"
-{
-    using msvc : @BOOST_MSVC_VERSION@ : cl.exe
-        :
-        <setup>"@NOTHING_BAT@"
-        @CXXFLAGS@
-        @CFLAGS@
-        @LDFLAGS@
-        ;
-}
-else
-{
-    using @B2_TOOLSET@ : : @CMAKE_CXX_COMPILER@
-        :
-        <ranlib>@CMAKE_RANLIB@
-        <archiver>@CMAKE_AR@
-        @CXXFLAGS@
-        @CFLAGS@
-        @LDFLAGS@
-        # MINGW here causes b2 to not run cygpath
-        <flavor>mingw
-        ;
-}
+using @USER_CONFIG_TOOLSET@ : @USER_CONFIG_TOOLSET_VERSION@ : @USER_CONFIG_TOOLSET_INVOCATION_COMMAND@
+    :
+@USER_CONFIG_TOOLSET_OPTIONS@
+    ;
 
-if "@PORT@" = "boost-python"
-{
-    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_RELEASE@" ;
-    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_DEBUG@" : <python-debugging>on ;
-    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_RELEASE@" ;
-    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_DEBUG@" : <python-debugging>on ;
-}
+@USER_CONFIG_EXTRA_LINES@
 
 if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
 {
@@ -42,7 +17,7 @@ if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
 
 project user-config : ;
 
-if "@VCPKG_PLATFORM_TOOLSET@" != "external"
+if "@USER_CONFIG_TOOLSET@" = "msvc"
 {
     lib advapi32 ;
 

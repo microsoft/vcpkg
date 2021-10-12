@@ -1,6 +1,7 @@
 {
   "name": "boost-iostreams",
   "version": "1.77.0",
+  "port-version": 1,
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "supports": "!uwp",
@@ -32,13 +33,41 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "bzip2",
-    "liblzma",
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
+    }
+  ],
+  "default-features": [
+    "bzip2",
+    "lzma",
     "zlib",
     "zstd"
-  ]
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support bzip2 filters",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "lzma": {
+      "description": "Support LZMA/xz filters",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "zlib": {
+      "description": "Support zlib filters",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support zstd filters",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }
