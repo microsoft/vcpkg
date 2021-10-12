@@ -2957,8 +2957,8 @@
       "port-version": 1
     },
     "kcp": {
-      "baseline": "2019-09-20",
-      "port-version": 1
+      "baseline": "1.7",
+      "port-version": 0
     },
     "kd-soap": {
       "baseline": "1.9.0",
