@@ -1,6 +1,7 @@
 {
   "name": "ryml",
   "version-date": "2021-07-24",
+  "port-version": 1,
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
   "supports": "!osx",

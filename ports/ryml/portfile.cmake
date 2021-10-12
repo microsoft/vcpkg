@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(
-    ON_TARGET "OSX"
-)
-
 # Get rapidyaml src
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -39,7 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -49,9 +45,9 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/ryml)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/ryml")
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ryml)
 endif()
 
