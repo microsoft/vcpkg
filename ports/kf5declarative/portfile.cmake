@@ -9,8 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "opengl"    CMAKE_DISABLE_FIND_PACKAGE_EPOXY
+    INVERTED_FEATURES
+        "opengl"    CMAKE_DISABLE_FIND_PACKAGE_EPOXY
 )
 
 vcpkg_cmake_configure(
