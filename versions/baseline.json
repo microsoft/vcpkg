@@ -432,6 +432,10 @@
       "baseline": "1.1.8",
       "port-version": 0
     },
+    "bext-wintls": {
+      "baseline": "0.9.5",
+      "port-version": 0
+    },
     "bfgroup-lyra": {
       "baseline": "1.5",
       "port-version": 1
