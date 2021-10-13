@@ -1,0 +1,7 @@
+{
+  "name": "minhook",
+  "version-string": "1.3.3",
+  "port-version": 2,
+  "description": "The Minimalistic x86/x64 API Hooking Library for Windows.",
+  "supports": "!uwp"
+}

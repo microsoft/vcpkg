@@ -1,9 +1,19 @@
 {
   "name": "freetype",
-  "version-semver": "2.10.4",
+  "version-semver": "2.11.0",
   "port-version": 1,
   "description": "A library to render fonts.",
   "homepage": "https://www.freetype.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
     "brotli",
     "bzip2",

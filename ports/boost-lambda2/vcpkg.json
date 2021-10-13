@@ -1,0 +1,9 @@
+{
+  "name": "boost-lambda2",
+  "version": "1.77.0",
+  "description": "Boost lambda2 module",
+  "homepage": "https://github.com/boostorg/lambda2",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

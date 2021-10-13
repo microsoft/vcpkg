@@ -1,0 +1,15 @@
+{
+  "name": "memorymodule",
+  "version-string": "2019-12-31",
+  "port-version": 1,
+  "description": "Library to load a DLL from memory",
+  "homepage": "https://github.com/fancycode/MemoryModule",
+  "default-features": [
+    "unicode"
+  ],
+  "features": {
+    "unicode": {
+      "description": "Compile with UNICODE support"
+    }
+  }
+}

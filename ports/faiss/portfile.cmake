@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "x86" ON_TARGET "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/faiss
-    REF 0fb6c00cfa9487416b5cdf514f5f796476eecb06 # v1.6.4
-    SHA512 c7019615103fd29124c1f4458a47faebc5fe35545eea185c41cf643f2eabe82d134dc558c85f67faea7680c292abd7477ceefde157a7c3969eda78b77a23462b 
+    REF cff072b78ef019998990c6ba02df83dd7d3c8d38 # v1.7.1
+    SHA512 08d4acf30b6a2a0f326cb71035b58e65f05e70817edbf9dda7d5f8b53d4fb722909c2412d42dca4d88d0576a3da528c2db869fb4fd6fb2343b7acad80066051d 
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -21,23 +21,20 @@ if ("${FAISS_ENABLE_GPU}")
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DFAISS_ENABLE_PYTHON=OFF  # Requires SWIG
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-     RENAME copyright
-)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

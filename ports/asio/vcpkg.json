@@ -1,9 +1,19 @@
 {
   "name": "asio",
-  "version": "1.18.2",
+  "version": "1.19.2",
   "description": "Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.",
   "homepage": "https://github.com/chriskohlhoff/asio",
   "documentation": "https://think-async.com/Asio/asio-1.18.0/doc/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "coroutine": {
       "description": "Boost.Coroutine (optional) if you use spawn() to launch coroutines",

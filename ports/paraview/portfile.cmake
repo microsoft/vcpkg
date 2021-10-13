@@ -1,4 +1,6 @@
-set(VERSION 5.8)
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _vcpkg_json)
+string(JSON _ver_string GET "${_vcpkg_json}" "version-semver")
+string(REGEX MATCH "^[0-9]+\.[0-9]+" VERSION "${_ver_string}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
@@ -12,16 +14,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/ParaView
-    REF 56631fdd9a31f4acdfe5fce2c3be3c4fb6e6800f # v5.8.0
-    SHA512  1cdf4065428debc301c98422233524cdafc843495c54569b0854bf53f6ffeba1e83acf60497450779d493e56051557cd377902325d6ece89ad1b98ae6ba831be
+    REF aad4b6f1e92154879209102edfab8367f1e7d191 # v5.9.1
+    SHA512  330fcb8525bdee9b02e06f05d4e91cc4d631d03df99c30f82bb97da5e06b5a2a6ff4ecee807b6f6c7110d2f53db1c17e4670d6078ae1cc89cfd7089b67d05bdb
     HEAD_REF master
     PATCHES
-        paraview_build.patch
-        remove_duplicates.patch # Missed something in the above patch
+        external_vtk.patch
         cgns.patch
         python_include.patch
         python_wrapper.patch
         add-tools-option.patch
+        catalyst_install.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -36,11 +38,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH VISITIT_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/visitbridge
-    REF c2605b5c3115bc4869c76a0d8bfdd8939b59f283
-    SHA512 6d2c1d6e1cd345547926938451755e7a8be5dabd89e18a2ceb419db16c5b29f354554a5130eb365b7e522d655370fd4766953813ff530c06e4851fe26104ce58
+    REF 42fce8ad6863ca2c1308741955cca1d0cf570d22
+    SHA512 03a6254989d3e286a462683af92caba1e90decbdcfb2e729f2d7e1116b04d63a05c28d02c4615d780fdd0d33e2719f96617233d6e0602410cc6d894f92fe6ee3
     PATCHES 
-        VisIt_Build.patch        
-        #removeunusedsymbols.patch # These also get remove in master of ParaView
         ${VisItPatches}
 )
 #Get QtTesting Plugin
@@ -48,12 +48,23 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH QTTESTING_SOURCE_PATH
     GITLAB_URL https://gitlab.kitware.com/
     REPO paraview/qttesting
-    REF f2429588feb839e0d8f9f3ee73bfa8a032a3f178
-    SHA512  752b13ff79095a14faa2edc134a64497ff0426da3aa6b1a5951624816fb4f113a26fbe559cedf495ebb775d782c9a1851421a88dd299a79f27cbebb730ea227e
+    REF 72290689c7c55622d729bf95c97e7627026a234e
+    SHA512  fb18c6745b784b294f01d5391ba4cdcaa109443a193eb35fbf1553fdb3a4f7217f784fd4893fab72784cec5bd3fc821bf1e766e943d0f562c5917788800599b0
 )
+
+#Get Catalyst
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH CATALYST_SOURCE_PATH
+    GITLAB_URL https://gitlab.kitware.com/
+    REPO paraview/catalyst
+    REF e36e4a5f3c67011c97c335cce23d2bc3abc0d086
+    SHA512  9926c272ab8785997f9c98cfaf696943081b0ddb0e9e343602722671b6f3eaef5b8de5dd049ca783b6844c7e328a96e1b09c8b24c16f001eeeed2d154d290480
+)
+
 
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
+file(COPY ${CATALYST_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/catalyst/vtkcatalyst/catalyst)
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)

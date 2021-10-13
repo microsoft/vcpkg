@@ -1,0 +1,10 @@
+{
+  "name": "cctz",
+  "version-string": "2.3",
+  "port-version": 3,
+  "description": "two libraries that cooperate with <chrono> to give C++ programmers all the necessary tools for computing with dates, times, and time zones in a simple and correct manner.",
+  "homepage": "https://github.com/google/cctz",
+  "dependencies": [
+    "benchmark"
+  ]
+}
