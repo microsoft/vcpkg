@@ -11,7 +11,7 @@ vcpkg_from_sourceforge(
         fix-bzip2-pc.patch  # we have a bzip2 file that we can use - https://gitlab.freedesktop.org/freetype/freetype/-/commit/b2aeca5fda870751f3c9d645e0dca4c80fa1ae5a
         brotli-static.patch
         fix-exports.patch
-	fix-2.11-msvc-build.patch
+        fix-2.11-msvc-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
