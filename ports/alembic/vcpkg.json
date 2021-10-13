@@ -1,0 +1,12 @@
+{
+  "name": "alembic",
+  "version": "1.7.16",
+  "port-version": 1,
+  "description": "Alembic is an open framework for storing and sharing scene data that includes a C++ library, a file format, and client plugins and applications.",
+  "homepage": "https://alembic.io/",
+  "supports": "windows & !arm & !uwp & !static",
+  "dependencies": [
+    "hdf5",
+    "ilmbase"
+  ]
+}

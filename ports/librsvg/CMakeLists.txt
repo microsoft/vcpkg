@@ -86,8 +86,6 @@ else()
     list(APPEND LIBRSVG_SOURCES rsvg.symbols)
 endif()
 
-set(CMAKE_DEBUG_POSTFIX "d")
-
 add_library(rsvg-2.40 ${LIBRSVG_SOURCES})
 add_library(pixbufloader-svg ${PIXBUFLOADERSVG_SOURCES})
 
@@ -130,8 +128,8 @@ install(
 )
 
 install(FILES
-	rsvg.h
-	rsvg-cairo.h
+    rsvg.h
+    rsvg-cairo.h
     librsvg-features.h
     librsvg-enum-types.h
     DESTINATION include/librsvg

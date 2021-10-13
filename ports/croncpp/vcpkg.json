@@ -1,0 +1,7 @@
+{
+  "name": "croncpp",
+  "version-string": "2020-09-04",
+  "port-version": 2,
+  "description": "croncpp is a C++17 header-only cross-platform library for handling CRON expressions.",
+  "homepage": "https://github.com/mariusbancila/croncpp"
+}

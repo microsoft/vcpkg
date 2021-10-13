@@ -1,8 +1,11 @@
 {
   "name": "wxwidgets",
   "version-semver": "3.1.5",
-  "port-version": 2,
-  "description": "a widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications.",
+  "port-version": 3,
+  "description": [
+    "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
+    "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option."
+  ],
   "homepage": "https://github.com/wxWidgets/wxWidgets",
   "supports": "!uwp",
   "dependencies": [

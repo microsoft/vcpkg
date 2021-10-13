@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${LIBUNISTRING_VERSION}
+    PATCHES fix-for-automake-1.16.4.patch # automake 1.16.4 uses m4_ifset instead of m4_ifdef
 )
 
 vcpkg_configure_make(

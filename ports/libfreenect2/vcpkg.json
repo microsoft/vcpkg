@@ -1,0 +1,29 @@
+{
+  "name": "libfreenect2",
+  "version-string": "0.2.0",
+  "port-version": 6,
+  "description": "Open source drivers for the Kinect for Windows v2 device",
+  "homepage": "https://github.com/OpenKinect/libfreenect2",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libusb"
+  ],
+  "default-features": [
+    "opengl"
+  ],
+  "features": {
+    "opencl": {
+      "description": "OpenCL support for libfreenect2",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL support for libfreenect2",
+      "dependencies": [
+        "glfw3",
+        "opengl"
+      ]
+    }
+  }
+}

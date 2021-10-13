@@ -1,4 +1,4 @@
-# Triplet files
+# Triplet Files
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
 
@@ -117,6 +117,10 @@ This option (if set) will override the default set of terms used for qualified d
 See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file field documentation for more details.
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
+
+### VCPKG_DISABLE_COMPILER_TRACKING
+
+When this option is set to (true|1|on), the compiler is ignored in the abi tracking.
 
 ## Windows Variables
 

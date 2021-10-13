@@ -1,0 +1,36 @@
+{
+  "name": "librdkafka",
+  "version-string": "1.7.0",
+  "port-version": 1,
+  "description": "The Apache Kafka C/C++ library",
+  "homepage": "https://github.com/edenhill/librdkafka",
+  "features": {
+    "lz4": {
+      "description": "Enable external LZ4 library support",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "snappy": {
+      "description": "Build with snappy"
+    },
+    "ssl": {
+      "description": "Build with OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "zlib": {
+      "description": "Build with zlib",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Build with zstd",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}
