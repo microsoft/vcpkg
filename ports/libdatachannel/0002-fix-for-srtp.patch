@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45f3e40..0c2ef37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -268,18 +268,11 @@ else()
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=1)
+ 	if(USE_SYSTEM_SRTP)
+-		find_package(SRTP REQUIRED)
+-		if(NOT TARGET SRTP::SRTP)
+-			add_library(SRTP::SRTP UNKNOWN IMPORTED)
+-			set_target_properties(SRTP::SRTP PROPERTIES
+-				INTERFACE_INCLUDE_DIRECTORIES ${SRTP_INCLUDE_DIRS}
+-				IMPORTED_LINK_INTERFACE_LANGUAGES C
+-				IMPORTED_LOCATION ${SRTP_LIBRARIES})
+-		endif()
++		find_package(libsrtp CONFIG REQUIRED)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_SRTP=1)
+ 		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_SRTP=1)
+-		target_link_libraries(datachannel PRIVATE SRTP::SRTP)
+-		target_link_libraries(datachannel-static PRIVATE SRTP::SRTP)
++		target_link_libraries(datachannel PRIVATE LibSRTP::srtp2)
++		target_link_libraries(datachannel-static PRIVATE LibSRTP::srtp2)
+ 	else()
+ 		add_subdirectory(deps/libsrtp EXCLUDE_FROM_ALL)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_SRTP=0)
