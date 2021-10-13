@@ -28,7 +28,8 @@ index d9918469..679b0e61 100644
  set(FIZZ_LIBRARIES fizz::fizz)
  
 +include(CMakeFindDependencyMacro)
- find_dependency(Sodium)
+-find_dependency(Sodium)
++find_dependency(unofficial-sodium)
 +find_dependency(folly CONFIG)
 +find_dependency(ZLIB)
  
