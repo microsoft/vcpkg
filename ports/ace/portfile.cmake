@@ -136,7 +136,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
                                                      <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
                                                      </ClCompile>
                                                      <Link>
-                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib;${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/lib</AdditionalLibraryDirectories>
+                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
                                                      </Link>
                                                      </ItemDefinitionGroup>
                                                      </Project>")
