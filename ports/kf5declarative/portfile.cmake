@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DBUNDLE_INSTALL_DIR=bin
         -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES CMAKE_DISABLE_FIND_PACKAGE_EPOXY
 )
 
 vcpkg_cmake_install()
