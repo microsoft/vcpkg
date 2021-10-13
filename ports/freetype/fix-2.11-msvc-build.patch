@@ -1,34 +1,3 @@
-From 0a7e68fa4ee9131b25cb3813881e1dbc499dcb92 Mon Sep 17 00:00:00 2001
-From: Ben Wagner <bungeman@chromium.org>
-Date: Fri, 23 Jul 2021 11:59:58 -0400
-Subject: [PATCH] Split afwrtsys.h
-
-The header file afwrtsys.h has two distinct functions, to include the
-required writing system headers and also to generate code for each
-writing system. At each current use site only one or the other is used,
-with various macro trickery selecting one or the other. Split this
-header into afws_dec.h for the required writing system declarations and
-afws_itr.h for iterating over the writing systems to generate code.
-
-The motivation for this change is that the Visual C++ compiler treats
-the standard include guard idiom like `#pragma once` "if no non-comment
-code or preprocessor directive comes before or after the standard form
-of the idiom". It appears to check this after macro expansion, so if
-WRITING_SYSTEM expands to empty the bottom of afwrtsys.h is empty and
-looks like the standard include guard idiom which is treated like
-`#pragma once` so subsequent inclusion of afwrtsys.h is elided.
-
-Fixes: https://gitlab.freedesktop.org/freetype/freetype/-/issues/1075
----
- src/autofit/afglobal.c                 |  8 ++-----
- src/autofit/aftypes.h                  |  5 +----
- src/autofit/afws_dec.h                 | 30 ++++++++++++++++++++++++++
- src/autofit/{afwrtsys.h => afws_itr.h} | 21 +++---------------
- src/autofit/rules.mk                   |  3 ++-
- 5 files changed, 38 insertions(+), 29 deletions(-)
- create mode 100644 src/autofit/afws_dec.h
- rename src/autofit/{afwrtsys.h => afws_itr.h} (66%)
-
 diff --git a/src/autofit/afglobal.c b/src/autofit/afglobal.c
 index aedb74ddd..5d53dfb71 100644
 --- a/src/autofit/afglobal.c
@@ -181,6 +150,3 @@ index 19b3bcadb..a5438ecba 100644
  
  
  # AUTOF driver object(s)
--- 
-GitLab
-
