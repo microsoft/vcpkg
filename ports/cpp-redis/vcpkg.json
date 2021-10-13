@@ -1,0 +1,10 @@
+{
+  "name": "cpp-redis",
+  "version-string": "4.3.1",
+  "port-version": 3,
+  "description": "cpp-redis is a C++11 Asynchronous Multi-Platform Lightweight Redis Client, with support for synchronous operations and pipelining.",
+  "homepage": "https://github.com/cpp-redis/cpp_redis",
+  "dependencies": [
+    "tacopie"
+  ]
+}

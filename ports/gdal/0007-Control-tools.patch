@@ -1,0 +1,83 @@
+diff --git a/GDALmake.opt.in b/GDALmake.opt.in
+index 07955b2..0d79ac3 100644
+--- a/GDALmake.opt.in
++++ b/GDALmake.opt.in
+@@ -660,3 +660,6 @@ O_OBJ =	$(foreach file,$(OBJ),../o/$(file))
+ 
+ %-clean:
+ 	$(MAKE) -C $* clean
++
++
++BUILD_TOOLS = @BUILD_TOOLS@
+\ No newline at end of file
+diff --git a/apps/GNUmakefile b/apps/GNUmakefile
+index 9624cf7..f91403d 100644
+--- a/apps/GNUmakefile
++++ b/apps/GNUmakefile
+@@ -43,6 +43,11 @@ NON_DEFAULT_LIST = 	multireadtest$(EXE) dumpoverviews$(EXE) \
+ 	gdaltorture$(EXE) gdal2ogr$(EXE) test_ogrsf$(EXE) \
+ 	gdalasyncread$(EXE) testreprojmulti$(EXE)
+ 
++ifeq ($(BUILD_TOOLS),no)
++BIN_LIST =
++NON_DEFAULT_LIST =
++endif
++
+ default:	gdal-config-inst gdal-config $(BIN_LIST)
+ 
+ all: default $(NON_DEFAULT_LIST)
+diff --git a/apps/makefile.vc b/apps/makefile.vc
+index 6e1fc9b..66f9b29 100644
+--- a/apps/makefile.vc
++++ b/apps/makefile.vc
+@@ -20,6 +20,7 @@ GNM_PROGRAMS =	gnmmanage.exe gnmanalyse.exe
+ !ENDIF
+ 
+ 
++!IF "$(BUILD_TOOLS)" == "1"
+ default:	gdal_translate.exe gdalinfo.exe gdaladdo.exe gdalwarp.exe \
+ 		nearblack.exe gdalmanage.exe gdalenhance.exe gdaltransform.exe\
+ 		gdaldem.exe gdallocationinfo.exe gdalsrsinfo.exe gdalmdiminfo.exe \
+@@ -28,6 +29,10 @@ default:	gdal_translate.exe gdalinfo.exe gdaladdo.exe gdalwarp.exe \
+ all:	default multireadtest.exe \
+ 			dumpoverviews.exe gdalwarpsimple.exe gdalflattenmask.exe \
+ 			gdaltorture.exe gdal2ogr.exe test_ogrsf.exe
++!ELSE
++default:
++all:
++!ENDIF
+ OBJ = commonutils.obj gdalinfo_lib.obj gdal_translate_lib.obj gdalwarp_lib.obj ogr2ogr_lib.obj \
+ 	gdaldem_lib.obj nearblack_lib.obj gdal_grid_lib.obj gdal_rasterize_lib.obj gdalbuildvrt_lib.obj \
+ 	gdalmdiminfo_lib.obj gdalmdimtranslate_lib.obj
+@@ -223,5 +228,9 @@ clean:
+ 	-del *.manifest
+ 	-del *.exp
+ 
++!IF "$(BUILD_TOOLS)" == "1"
+ install:	default
+ 	copy *.exe $(BINDIR)
++!ELSE
++install:
++!ENDIF
+\ No newline at end of file
+diff --git a/configure.ac b/configure.ac
+index b88676a..0a46a9c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -6150,6 +6150,16 @@ case "${host_os}" in
+         ;;
+ esac
+ 
++BUILD_TOOLS=yes
++AC_ARG_WITH([tools], AS_HELP_STRING([--with-tools], [Build the tools]),,)
++if test "$with_tools" = "yes"; then
++    AC_MSG_RESULT([enabled])
++else
++    BUILD_TOOLS=no
++    AC_MSG_RESULT([disabled by user])
++fi
++AC_SUBST(BUILD_TOOLS,$BUILD_TOOLS)
++
+ AC_OUTPUT(GDALmake.opt)
+ 
+ dnl ---------------------------------------------------------------------------

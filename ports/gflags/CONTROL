@@ -1,6 +1,0 @@
-Source: gflags
-Version: 2.2.2
-Port-Version: 2
-Homepage: https://github.com/gflags/gflags
-Description: A C++ library that implements commandline flags processing
-Supports: !uwp

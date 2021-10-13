@@ -30,9 +30,8 @@ if (NOT DEFINED SENTRY_BACKEND)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
@@ -40,13 +39,13 @@ vcpkg_configure_cmake(
         -DCRASHPAD_ZLIB_SYSTEM=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sentry)
 
 if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(

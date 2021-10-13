@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/stl_interfaces
-    REF boost-1.76.0
-    SHA512 6e260882bda4b57369fefbd4515273617b84708bd5b68f1e5ee77038b1a80e88efb43bddf1931ec6af346bfe25ae4afe7e282fb65712eb3959da88ff0d110ece
+    REF boost-1.77.0
+    SHA512 df752f05d8c6125cf93b79a5b2b2722e3890fba888e729fba5503500da75a930ee29f654225028d3874107e3d1d0c4ecb165656ecf90ab4ba456fa435fe60b18
     HEAD_REF master
 )
 

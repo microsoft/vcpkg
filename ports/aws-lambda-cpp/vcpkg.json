@@ -1,0 +1,10 @@
+{
+  "name": "aws-lambda-cpp",
+  "version-string": "0.2.6",
+  "port-version": 1,
+  "description": "C++ Runtime for AWS Lambda.",
+  "supports": "linux",
+  "dependencies": [
+    "curl"
+  ]
+}

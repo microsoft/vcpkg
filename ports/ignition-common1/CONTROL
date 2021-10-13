@@ -1,4 +1,0 @@
-Source: ignition-common1
-Version: 1.1.1-1
-Build-Depends: dlfcn-win32 (windows|uwp), ffmpeg (!windows&!uwp), freeimage (!windows&!uwp), gts (!windows&!uwp), ignition-cmake0, ignition-math4, tinyxml2 (!windows&!uwp)
-Description: Common libraries for robotics applications

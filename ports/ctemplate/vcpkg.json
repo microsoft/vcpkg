@@ -1,0 +1,7 @@
+{
+  "name": "ctemplate",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "C++ CTemplate system",
+  "homepage": "https://github.com/OlafvdSpek/ctemplate"
+}

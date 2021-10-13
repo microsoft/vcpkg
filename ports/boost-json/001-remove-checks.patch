@@ -1,0 +1,30 @@
+ Jamfile       | 2 +-
+ build/Jamfile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Jamfile b/Jamfile
+index b999474..33bc8c9 100644
+--- a/Jamfile
++++ b/Jamfile
+@@ -7,7 +7,7 @@
+ # Official repository: https://github.com/boostorg/json
+ #
+ 
+-import ../config/checks/config : requires ;
++rule requires ( checks * ) { }
+ 
+ # These make sure we only build on
+ # compatible C++11 or later toolchains.
+diff --git a/build/Jamfile b/build/Jamfile
+index 8425ad3..86d1208 100644
+--- a/build/Jamfile
++++ b/build/Jamfile
+@@ -7,7 +7,7 @@
+ # Official repository: https://github.com/boostorg/json
+ #
+ 
+-import ../../config/checks/config : requires ;
++rule requires ( checks * ) { }
+ 
+ project boost/json
+     : requirements

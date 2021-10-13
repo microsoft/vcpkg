@@ -1,0 +1,12 @@
+{
+  "name": "crossguid",
+  "version-string": "0.2.2-2018-06-16",
+  "port-version": 2,
+  "description": "CrossGuid is a minimal, cross platform, C++ GUID library.",
+  "dependencies": [
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp & !osx & !android"
+    }
+  ]
+}

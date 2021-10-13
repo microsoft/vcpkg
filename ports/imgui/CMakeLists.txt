@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(imgui CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
+
+if(APPLE)
+    set(CMAKE_CXX_STANDARD 11)
+    enable_language(OBJCXX)
+endif()
 
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -59,6 +64,7 @@ endif()
 
 if(IMGUI_BUILD_METAL_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.mm)
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.mm PROPERTIES COMPILE_FLAGS -fobjc-weak)
 endif()
 
 if(IMGUI_BUILD_OPENGL2_BINDING)

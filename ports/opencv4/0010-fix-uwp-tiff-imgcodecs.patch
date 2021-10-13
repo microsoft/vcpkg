@@ -1,5 +1,3 @@
-diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 24f89e6..435deb6 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
 @@ -9,6 +9,10 @@ ocv_add_module(imgcodecs opencv_imgproc WRAP java objc python)

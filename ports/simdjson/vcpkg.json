@@ -1,6 +1,6 @@
 {
   "name": "simdjson",
-  "version": "0.9.7",
+  "version-semver": "1.0.0",
   "description": "A extremely fast JSON library that can parse gigabytes of JSON per second",
   "homepage": "https://simdjson.org/",
   "license": "Apache-2.0",

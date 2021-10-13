@@ -1,0 +1,7 @@
+{
+  "name": "gainput",
+  "version-string": "1.0.0",
+  "port-version": 4,
+  "description": "Gainput is a multiplatform C++ input library, supporting mouse, keyboard and controllers",
+  "homepage": "https://github.com/jkuhlmann/gainput"
+}

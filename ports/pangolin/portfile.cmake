@@ -12,17 +12,32 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-includepath-error.patch # include path has one more ../
-        fix-dependency-python.patch
-        add-definition.patch
         fix-cmake-version.patch
         fix-build-error-in-vs2019.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test     BUILD_TESTS
-        tools    BUILD_TOOLS
-        examples BUILD_EXAMPLES
+        test        BUILD_TESTS
+        tools       BUILD_TOOLS
+        examples    BUILD_EXAMPLES
+        gui         BUILD_PANGOLIN_GUI
+        vars        BUILD_PANGOLIN_VARS
+        video       BUILD_PANGOLIN_VIDEO
+        pybind11    BUILD_PANGOLIN_PYTHON
+        eigen       BUILD_PANGOLIN_EIGEN
+        ffmpeg      BUILD_PANGOLIN_FFMPEG
+        realsense   BUILD_PANGOLIN_LIBREALSENSE2
+        openni2     BUILD_PANGOLIN_OPENNI2
+        uvc         BUILD_PANGOLIN_LIBUVC
+        png         BUILD_PANGOLIN_LIBPNG
+        jpeg        BUILD_PANGOLIN_LIBJPEG
+        tiff        BUILD_PANGOLIN_LIBTIFF
+        openexr     BUILD_PANGOLIN_LIBOPENEXR
+        zstd        BUILD_PANGOLIN_ZSTD
+        lz4         BUILD_PANGOLIN_LZ4
+        module      BUILD_PYPANGOLIN_MODULE
 )
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindGLEW.cmake")
@@ -36,20 +51,22 @@ vcpkg_cmake_configure(
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_TooN=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_DC1394=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibRealSense=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI2=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_uvc=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_DepthSense=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_TeliCam=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Pleora=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
+        -DBUILD_PANGOLIN_PLEORA=OFF
+        -DBUILD_PANGOLIN_TELICAM=OFF
+        -DBUILD_PANGOLIN_DEPTHSENSE=OFF
+        -DBUILD_PANGOLIN_OPENNI=OFF
+        -DBUILD_PANGOLIN_UVC_MEDIAFOUNDATION=OFF
+        -DBUILD_PANGOLIN_LIBREALSENSE=OFF
+        -DBUILD_PANGOLIN_V4L=OFF
+        -DBUILD_PANGOLIN_LIBDC1394=OFF
+        -DBUILD_PANGOLIN_TOON=OFF
+        -DDISPLAY_WAYLAND=OFF
+        -DDISPLAY_X11=OFF
+        -DBUILD_FOR_GLES_2=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_CRT
+        BUILD_FOR_GLES_2
 )
 
 vcpkg_cmake_install()

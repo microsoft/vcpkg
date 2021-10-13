@@ -1,9 +1,20 @@
 {
   "name": "simage",
   "version-semver": "1.8.1",
+  "port-version": 1,
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
   "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
     "all"
   ],
@@ -24,6 +35,22 @@
           "features": [
             "sndfile"
           ]
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "avienc"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "gdiplus"
+          ],
+          "platform": "windows"
         },
         {
           "name": "simage",
@@ -66,6 +93,12 @@
           "platform": "!windows"
         }
       ]
+    },
+    "avienc": {
+      "description": "Use Video for Windows for AVI encoding"
+    },
+    "gdiplus": {
+      "description": "Use GDI+ on Windows to load/save images"
     },
     "giflib": {
       "description": "Enable support for GIF images",

@@ -1,19 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mkazhdan/PoissonRecon
-    REF 03f73754e994eb388de63285d3a2772493168e8a
-    SHA512 be1d6842952d2b27860b5a82d9cc536da213fd2e44d946c512e04881af66a4c7c039930347fe9db5b168cc356e55167c9bdbdb39eab9cea68882dc01a9482867
+    REF 455ea0dbe651f31bf6985ff2891becff1dd79c72
+    SHA512 93ef904b0a73b7650e2f1ed143444861661db74b4991182ffd0ff49c008fec9d664fb93e24825fce748576d8d6abbd1de8bfc8f8b1f7c48f57207712bf80ce9e
     HEAD_REF master
     PATCHES
         use-external-libs.patch
         disable-gcc5-checks.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TOOLS=OFF
 )
@@ -25,9 +24,9 @@ find_dependency(JPEG)
 include("${CMAKE_CURRENT_LIST_DIR}/PoissonReconTargets.cmake")
 ]=])
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
