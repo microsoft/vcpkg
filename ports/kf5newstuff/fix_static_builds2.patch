@@ -1,15 +1,3 @@
-From 606522b9586c8c583f4c1e9de36e5343412ed88c Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
-Date: Fri, 17 Sep 2021 23:12:32 +0200
-Subject: [PATCH] Add support for static builds - fixes
-
-KF5NewStuffCore has a separate config template, so find its own
-dependencies accordingly.
----
- KF5NewStuffConfig.cmake.in     |  8 --------
- KF5NewStuffCoreConfig.cmake.in | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 8 deletions(-)
-
 diff --git a/KF5NewStuffConfig.cmake.in b/KF5NewStuffConfig.cmake.in
 index 063b83ca..1be53741 100644
 --- a/KF5NewStuffConfig.cmake.in
