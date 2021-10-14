@@ -11,10 +11,10 @@
 include(${CURRENT_PORT_DIR}/sha_manifest.cmake)
 
 message(WARNING [=[
-QuickCppLib and its downstream dependencies Outcome and LLFIO were tested against gsl-lite version 0.37.0 and byte-lite version 0.2.0. They are not guaranteed to work with newer versions, with failures experienced in the past up-to-and-including runtime crashes. You can pin the versions as verified to work in QuickCppLib's CI in your manifest file by adding:
+QuickCppLib and its downstream dependencies Outcome and LLFIO were tested against gsl-lite version 0.38.1 and byte-lite version 0.3.0. They are not guaranteed to work with newer versions, with failures experienced in the past up-to-and-including runtime crashes. You can pin the versions as verified to work in QuickCppLib's CI in your manifest file by adding:
     "overrides": [
-        { "name": "gsl-lite", "version": "0.37.0" },
-        { "name": "byte-lite", "version": "0.2.0" }
+        { "name": "gsl-lite", "version": "0.38.1" },
+        { "name": "byte-lite", "version": "0.3.0" }
     ]
 Do not report issues to upstream without first pinning these previous versions.
 ]=])

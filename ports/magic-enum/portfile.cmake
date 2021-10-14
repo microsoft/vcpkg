@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/magic_enum
-    REF v0.7.2
-    SHA512 53991ccc890548a81a410e274ec2deaf0f153ec15d154ac802452235dc5b913b56da64fddc6aeed9882206fd2abe7250423d36f5e72bdba54b622b8dfdfa9dad
+    REF v0.7.3
+    SHA512 7645ef56bbe262ba801c6f5ffb7baf997869de6422a239ef2000d7ff6f4f6d00c34360543c60aa91a02433311b4b996bba410e4f04f96f185a6276ad9e6bb0a8
     HEAD_REF master
 )
 

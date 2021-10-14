@@ -1,0 +1,13 @@
+{
+  "name": "pixel",
+  "version-string": "0.3",
+  "port-version": 2,
+  "description": "Simple 2D Graphics based on standard and portable OpenGL.",
+  "homepage": "https://github.com/dascandy/pixel",
+  "supports": "!windows",
+  "dependencies": [
+    "glew",
+    "opengl",
+    "sdl2"
+  ]
+}

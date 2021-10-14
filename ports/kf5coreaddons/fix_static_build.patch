@@ -1,0 +1,51 @@
+From de4e22fe644d5df9066ba78f778032a42c2f19b9 Mon Sep 17 00:00:00 2001
+From: Nicolas Fella <nicolas.fella@gmx.de>
+Date: Sat, 7 Aug 2021 17:24:44 +0200
+Subject: [PATCH] Fix issue when building KCrash static
+
+KCoreAddons forward declares a function from KCrash.
+
+It contains a Q_DECL_IMPORT but that breaks when doing a static build.
+
+Only add the Q_DECL_IMPORT when we are doing a dynamic build.
+
+BUG: 440416
+---
+ src/lib/CMakeLists.txt | 4 ++++
+ src/lib/kaboutdata.h   | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/src/lib/CMakeLists.txt b/src/lib/CMakeLists.txt
+index 8e9006fd..b3ea957f 100644
+--- a/src/lib/CMakeLists.txt
++++ b/src/lib/CMakeLists.txt
+@@ -16,6 +16,10 @@ configure_file(util/config-accountsservice.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/c
+ add_library(KF5CoreAddons)
+ add_library(KF5::CoreAddons ALIAS KF5CoreAddons)
+ 
++if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(KF5CoreAddons PUBLIC -DKCOREADDONS_STATIC)
++endif()
++
+ ecm_create_qm_loader(KF5CoreAddons kcoreaddons5_qt)
+ 
+ if (FAM_FOUND)
+diff --git a/src/lib/kaboutdata.h b/src/lib/kaboutdata.h
+index 4309b145..a0222861 100644
+--- a/src/lib/kaboutdata.h
++++ b/src/lib/kaboutdata.h
+@@ -27,7 +27,11 @@ class KAboutData;
+ class KPluginMetaData;
+ namespace KCrash
+ {
++#ifdef KCOREADDONS_STATIC
++void defaultCrashHandler(int sig);
++#else
+ Q_DECL_IMPORT void defaultCrashHandler(int sig);
++#endif
+ }
+ 
+ /**
+-- 
+GitLab
+

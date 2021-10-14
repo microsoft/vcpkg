@@ -1,43 +1,11 @@
-From 4bb19e77e95bc505d32e098190ffbf056810017c Mon Sep 17 00:00:00 2001
-From: Nicole Mazzuca <mazzucan@outlook.com>
-Date: Tue, 22 Sep 2020 15:44:42 -0700
-Subject: [PATCH 4/5] support static build
-
----
- lib/CMakeLists.txt | 2 +-
- src/CMakeLists.txt | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index bd60b75..cc01a2a 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -60,7 +60,7 @@ if (UNIX AND NOT APPLE)
- endif (UNIX AND NOT APPLE)
+diff --git a/apps/mosquitto_passwd/CMakeLists.txt b/apps/mosquitto_passwd/CMakeLists.txt
+index 13a7d826..31069306 100644
+--- a/apps/mosquitto_passwd/CMakeLists.txt
++++ b/apps/mosquitto_passwd/CMakeLists.txt
+@@ -13,6 +13,10 @@ if (WITH_TLS)
+ 		)
  
- if (WIN32)
--	set (LIBRARIES ${LIBRARIES} ws2_32)
-+	set (LIBRARIES ${LIBRARIES} ws2_32 crypt32)
- endif (WIN32)
  
- if (WITH_SRV)
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7898ff5..f066aea 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -158,7 +158,7 @@ if (UNIX)
- endif (UNIX)
- 
- if (WIN32)
--	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32)
-+	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32 crypt32)
- endif (WIN32)
- 
- if (WITH_WEBSOCKETS)
-@@ -189,6 +189,10 @@ install(FILES mosquitto_broker.h mosquitto_plugin.h DESTINATION "${CMAKE_INSTALL
- 
- if (WITH_TLS)
- 	add_executable(mosquitto_passwd mosquitto_passwd.c)
 -	target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
 +	if(WIN32)
 +		target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES} ws2_32 crypt32)
@@ -46,6 +14,29 @@ index 7898ff5..f066aea 100644
 +	endif()
  	install(TARGETS mosquitto_passwd RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
  endif (WITH_TLS)
--- 
-2.24.3 (Apple Git-128)
-
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 5da221dc..c3e9fce0 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -69,7 +69,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID)
+ endif (UNIX AND NOT APPLE AND NOT ANDROID)
+ 
+ if (WIN32)
+-	set (LIBRARIES ${LIBRARIES} ws2_32)
++	set (LIBRARIES ${LIBRARIES} ws2_32 crypt32)
+ endif (WIN32)
+ 
+ if (WITH_SRV)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9380a046..62ce99e5 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -189,7 +189,7 @@ if (UNIX)
+ endif (UNIX)
+ 
+ if (WIN32)
+-	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32)
++	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32 crypt32)
+ endif (WIN32)
+ 
+ if (WITH_WEBSOCKETS)

@@ -2,9 +2,17 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md).**
 
-Binary caching is vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
+Libraries installed with vcpkg can always be built from source. However, that can duplicate work and waste time when working across multiple projects.
 
-If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
+Binary caching is a vcpkg feature that saves copies of library binaries in a shared location that can be accessed by vcpkg for future installs. This means that, as a user, you should only need to build dependencies from source once. If vcpkg is asked to install the same library with the same build configuration in the future, it will just copy the built binaries from the cache and finish the operation in seconds.
+
+Binary caching is especially effective when using Continuous Integration, since local developers can reuse the binaries produced during a CI run. It also greatly enhances the performance of "ephemeral" or "hosted" build agents, since all local changes are otherwise lost between runs. By using binary caching backed by a cloud service, such as GitHub, Azure, or many others, you can ensure your CI runs at maximum speed and only rebuilds your dependencies when they've changed.
+
+Caches can be hosted in a variety of environments. The most basic examples are a folder on the local machine or a network file share. Caches can also be stored in any NuGet feed (such as GitHub or Azure DevOps Artifacts), Azure Blob Storage*, or Google Cloud Storage*.
+
+\* (experimental) 
+
+If your CI provider offers a native "caching" function, we recommend using both vcpkg binary caching and the native method for the most performant results.
 
 In-tool help is available via `vcpkg help binarycaching`.
 
@@ -44,6 +52,7 @@ By default, zip-based archives will be cached at the first valid location of:
 | `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
 | `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `nugettimeout,<seconds>`    | Specifies a timeout for NuGet network operations; equivalent to the `-Timeout` parameter of the NuGet CLI.
 | `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
 | `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
@@ -122,6 +131,10 @@ Next, you will need to create a feed for your project; see the [Azure DevOps Art
 variables:
 - name: VCPKG_BINARY_SOURCES
   value: 'clear;nuget,<FEED_URL>,readwrite'
+  
+steps:
+# Remember to add this task to allow vcpkg to upload archives via NuGet
+- task: NuGetAuthenticate@0
 ```
 
 If you are using custom agents with a non-Windows OS, you will need to install Mono to run `nuget.exe` (`apt install mono-complete`, `brew install mono`, etc).

@@ -23,6 +23,13 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUA
     )
 endif()
 
+# This may be set to ON by users in a custom triplet.
+# wxUSE_STL=ON and wxUSE_STL=OFF are not API compatible which is why this must be set
+# in a custom triplet rather than a port feature.
+if(NOT DEFINED WXWIDGETS_USE_STL)
+    set(WXWIDGETS_USE_STL OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -33,8 +40,8 @@ vcpkg_configure_cmake(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
-        -DwxUSE_STL=ON
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
+        -DwxUSE_STL=${WXWIDGETS_USE_STL}
         ${OPTIONS}
 )
 

@@ -1,0 +1,14 @@
+{
+  "name": "ignition-fuel-tools1",
+  "version-string": "1.2.0",
+  "port-version": 3,
+  "description": "Tools for using fuel API to download robot models",
+  "dependencies": [
+    "curl",
+    "ignition-cmake0",
+    "ignition-common1",
+    "jsoncpp",
+    "libyaml",
+    "libzip"
+  ]
+}

@@ -1,7 +1,6 @@
 {
   "name": "boost-type-erasure",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.77.0",
   "description": "Boost type_erasure module",
   "homepage": "https://github.com/boostorg/type_erasure",
   "dependencies": [
@@ -11,7 +10,7 @@
       "host": true
     },
     "boost-config",
-    "boost-detail",
+    "boost-core",
     "boost-fusion",
     "boost-iterator",
     {
@@ -26,8 +25,11 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-typeof",
-    "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-vmd"
+    "boost-vmd",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

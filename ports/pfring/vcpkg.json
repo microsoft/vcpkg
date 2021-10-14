@@ -1,0 +1,10 @@
+{
+  "name": "pfring",
+  "version-string": "2019-10-17",
+  "port-version": 3,
+  "description": "PF_RING™ is a Linux kernel module and user-space framework that allows you to process packets at high-rates while providing you a consistent API for packet processing applications.",
+  "homepage": "https://github.com/ntop/PF_RING",
+  "dependencies": [
+    "libpcap"
+  ]
+}

@@ -29,6 +29,10 @@ if(DEFINED OPENSSL_USE_NOPINSHARED)
     set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
 endif()
 
+if(OPENSSL_NO_AUTOLOAD_CONFIG)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-autoload-config)
+endif()
+
 set(CONFIGURE_COMMAND "${PERL}" Configure ${CONFIGURE_OPTIONS})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -168,6 +172,3 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/openssl")
-endif()

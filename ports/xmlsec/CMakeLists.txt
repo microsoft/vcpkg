@@ -55,6 +55,9 @@ if(MSVC)
   add_compile_options(/wd4130 /wd4127 /wd4152)
 endif()
 
+set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
+
 add_library(xmlsec1 ${SOURCESXMLSEC})
 add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 

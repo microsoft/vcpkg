@@ -4,14 +4,12 @@ vcpkg_from_github(
     REF v1.4.0
     SHA512 7156465e2aff02f472933617512069355836a03a02d4587cfe03c1b1d667a9762a4e3ed6e055b2a44f1fce1b6746179203c7204389626a7b458dcab1b28930d8
     HEAD_REF master
+    PATCHES export-include-dir.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/orocos_kdl
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()

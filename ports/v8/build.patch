@@ -1,16 +1,16 @@
 diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
-index 0c8743726..e6a5ae0b4 100644
+index 1904a2559..e66586c88 100644
 --- a/config/compiler/BUILD.gn
 +++ b/config/compiler/BUILD.gn
-@@ -1545,6 +1545,7 @@ config("default_warnings") {
+@@ -1571,6 +1571,7 @@ config("default_warnings") {
        # Disables.
        "-Wno-missing-field-initializers",  # "struct foo f = {0};"
        "-Wno-unused-parameter",  # Unused function parameters.
 +      "-Wno-invalid-offsetof", # Use of "conditionally-supported" offsetof in c++17
      ]
    }
-
-@@ -1969,8 +1970,17 @@ config("no_incompatible_pointer_warnings") {
+ 
+@@ -1987,8 +1988,17 @@ config("no_incompatible_pointer_warnings") {
  # Shared settings for both "optimize" and "optimize_max" configs.
  # IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
  if (is_win) {
@@ -31,7 +31,7 @@ index 0c8743726..e6a5ae0b4 100644
      "/Zc:inline",  # Remove unreferenced COMDAT (faster links).
    ]
 diff --git a/config/linux/pkg-config.py b/config/linux/pkg-config.py
-index 5adf70cc3..dab159f98 100644
+index 5adf70cc3..dab159f98 100755
 --- a/config/linux/pkg-config.py
 +++ b/config/linux/pkg-config.py
 @@ -41,6 +41,11 @@ from optparse import OptionParser
@@ -43,13 +43,13 @@ index 5adf70cc3..dab159f98 100644
 +# of the PKG_CONFIG_LIBDIR environment library.
 +#
 +# --full-path-libs causes lib names to include their full path.
-
-
+ 
+ 
  def SetConfigPath(options):
 @@ -105,11 +110,32 @@ def RewritePath(path, strip_prefix, sysroot):
      return path
-
-
+ 
+ 
 +flag_regex = re.compile("(-.)(.+)")
 +
 +
@@ -79,7 +79,7 @@ index 5adf70cc3..dab159f98 100644
 +  if "linux" not in sys.platform and 'win32' not in sys.platform:
      print("[[],[],[],[],[]]")
      return 0
-
+ 
 @@ -128,6 +154,9 @@ def main():
    parser.add_option('--dridriverdir', action='store_true', dest='dridriverdir')
    parser.add_option('--version-as-components', action='store_true',
@@ -88,12 +88,12 @@ index 5adf70cc3..dab159f98 100644
 +                    type='string')
 +  parser.add_option('--full-path-libs', action='store_true', dest='full_path_libs')
    (options, args) = parser.parse_args()
-
+ 
    # Make a list of regular expressions to strip out.
 @@ -144,6 +173,10 @@ def main():
    else:
      prefix = ''
-
+ 
 +  # Override PKG_CONFIG_LIBDIR
 +  if options.pkg_config_libdir:
 +    os.environ['PKG_CONFIG_LIBDIR'] = options.pkg_config_libdir
@@ -107,12 +107,12 @@ index 5adf70cc3..dab159f98 100644
    # to happen in practice.
 -  all_flags = flag_string.strip().split(' ')
 +  all_flags = ConvertGCCToMSVC(flag_string.strip().split(' '))
-
-
+ 
+ 
    sysroot = options.sysroot
 @@ -220,7 +253,10 @@ def main():
        continue;
-
+ 
      if flag[:2] == '-l':
 -      libs.append(RewritePath(flag[2:], prefix, sysroot))
 +      library = RewritePath(flag[2:], prefix, sysroot)
@@ -125,7 +125,7 @@ index 5adf70cc3..dab159f98 100644
 @@ -237,6 +273,14 @@ def main():
      else:
        cflags.append(flag)
-
+ 
 +  if options.full_path_libs:
 +    full_path_libs = []
 +    for lib_dir in lib_dirs:
@@ -149,12 +149,12 @@ index 428e44ac0..a0d2175ee 100644
 +  # Allow directly overriding the PKG_CONFIG_LIBDIR enviroment variable
 +  pkg_config_libdir = ""
  }
-
+ 
  pkg_config_script = "//build/config/linux/pkg-config.py"
 @@ -87,6 +90,17 @@ if (host_pkg_config != "") {
    host_pkg_config_args = pkg_config_args
  }
-
+ 
 +if (pkg_config_libdir != "") {
 +  pkg_config_args += [
 +    "--pkg_config_libdir",
@@ -170,10 +170,10 @@ index 428e44ac0..a0d2175ee 100644
    assert(defined(invoker.packages),
           "Variable |packages| must be defined to be a list in pkg_config.")
 diff --git a/util/lastchange.py b/util/lastchange.py
-index 874870ad5..a4fc0be8d 100644
+index 02a36642b..78934f1b0 100755
 --- a/util/lastchange.py
 +++ b/util/lastchange.py
-@@ -191,7 +191,10 @@ def GetGitTopDirectory(source_dir):
+@@ -192,7 +192,10 @@ def GetGitTopDirectory(source_dir):
    Returns:
      The output of "git rev-parse --show-toplevel" as a string
    """
@@ -182,6 +182,6 @@ index 874870ad5..a4fc0be8d 100644
 +  if "GCC" in sys.version and sys.platform=='win32':
 +    return subprocess.check_output(["cygpath", "-w", directory]).strip(b"\n").decode()
 +  return directory
-
-
+ 
+ 
  def WriteIfChanged(file_name, contents):

@@ -8,19 +8,20 @@ vcpkg_from_github(
     PATCHES
         msvc.patch
         fix-additerator.patch
+        disable-werror.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    	-DMSGPACK11_BUILD_TESTS=OFF
-    	-DMSGPACK11_BUILD_EXAMPLES=OFF
+        -DMSGPACK11_BUILD_TESTS=OFF
+        -DMSGPACK11_BUILD_EXAMPLES=OFF
 )
 
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

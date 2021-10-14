@@ -1,9 +1,9 @@
 {
   "name": "atkmm",
   "version": "2.36.0",
+  "port-version": 1,
   "description": "atkmm is the official C++ interface for the ATK accessibility toolkit library. It may be used, for instance, by user interfaces implemented with gtkmm.",
   "homepage": "https://www.gtkmm.org",
-  "supports": "!osx",
   "dependencies": [
     "atk",
     "gettext",

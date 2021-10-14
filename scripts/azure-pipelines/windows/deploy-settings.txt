@@ -12,6 +12,7 @@ if ($null -eq $av) {
   Write-Host 'Configuring AntiVirus exclusions...'
   Add-MpPreference -ExclusionPath C:\agent
   Add-MPPreference -ExclusionPath D:\
+  Add-MPPreference -ExclusionPath E:\
   Add-MPPreference -ExclusionProcess ninja.exe
   Add-MPPreference -ExclusionProcess clang-cl.exe
   Add-MPPreference -ExclusionProcess cl.exe

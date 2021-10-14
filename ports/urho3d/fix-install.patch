@@ -1,0 +1,187 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8f54e9..1c23bbc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,7 +37,6 @@ set (PATH_SUFFIX Urho3D)
+ if (WIN32)
+     set (SCRIPT_EXT .bat)
+     if (CMAKE_HOST_WIN32)
+-        set (PATH_SUFFIX .)
+         if (URHO3D_64BIT AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+             string (REPLACE " (x86)" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+         endif ()
+@@ -45,7 +44,7 @@ if (WIN32)
+ else ()
+     set (SCRIPT_EXT .sh)
+ endif ()
+-if (URHO3D_64BIT)
++if (0)
+     # Install to 'lib64' when one of these conditions is true
+     if ((MINGW AND CMAKE_CROSSCOMPILING) OR URHO3D_USE_LIB64_RPM OR (HAS_LIB64 AND NOT URHO3D_USE_LIB_DEB))
+         set (LIB_SUFFIX 64)
+@@ -59,7 +58,7 @@ set (DEST_LIBRARY_DIR lib${LIB_SUFFIX}/${PATH_SUFFIX})
+ set (DEST_PKGCONFIG_DIR lib${LIB_SUFFIX}/pkgconfig)
+ # Install application launcher scripts
+ file (GLOB APP_SCRIPTS ${CMAKE_SOURCE_DIR}/bin/*${SCRIPT_EXT})
+-install (PROGRAMS ${APP_SCRIPTS} DESTINATION ${DEST_RUNTIME_DIR})   # DEST_RUNTIME_DIR variable is set by the set_output_directories() macro call in the UrhoCommon module
++install (PROGRAMS ${APP_SCRIPTS} DESTINATION ${DEST_SHARE_DIR}/script)   # DEST_RUNTIME_DIR variable is set by the set_output_directories() macro call in the UrhoCommon module
+ # Install CMake modules and toolchains provided by and for Urho3D
+ install (DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/ DESTINATION ${DEST_SHARE_DIR}/cmake)    # Note: the trailing slash is significant
+ # Install CMake build scripts and rakefile
+diff --git a/Docs/CMakeLists.txt b/Docs/CMakeLists.txt
+index 9993d07..9a58363 100644
+--- a/Docs/CMakeLists.txt
++++ b/Docs/CMakeLists.txt
+@@ -99,7 +99,7 @@ if (DOXYGEN_FOUND)
+         execute_process (COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaPkgToDox.txt.new)
+         file (GLOB_RECURSE API_PKG_FILES ${CMAKE_SOURCE_DIR}/Source/Urho3D/LuaScript/pkgs/*.pkg)
+         add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaScriptAPI.dox
+-            COMMAND ${CMAKE_BINARY_DIR}/bin/tool/tolua++ -L ToDoxHook.lua -P -o ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaScriptAPI.dox ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaPkgToDox.txt
++            COMMAND ${CMAKE_BINARY_DIR}/tools/urho3d/tolua++ -L ToDoxHook.lua -P -o ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaScriptAPI.dox ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaPkgToDox.txt
+             DEPENDS tolua++ ${API_PKG_FILES} ${CMAKE_CURRENT_BINARY_DIR}/generated/LuaPkgToDox.txt ${CMAKE_SOURCE_DIR}/Source/Urho3D/LuaScript/pkgs/ToDoxHook.lua
+             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/Source/Urho3D/LuaScript/pkgs
+             COMMENT "Dumping LuaScript API to LuaScriptAPI.dox")
+diff --git a/Source/ThirdParty/LuaJIT/CMakeLists.txt b/Source/ThirdParty/LuaJIT/CMakeLists.txt
+index f1ec925..c310fcc 100644
+--- a/Source/ThirdParty/LuaJIT/CMakeLists.txt
++++ b/Source/ThirdParty/LuaJIT/CMakeLists.txt
+@@ -603,7 +603,7 @@ if (NOT CMAKE_PROJECT_NAME MATCHES ^Urho3D-ExternalProject-LuaJIT AND NOT IOS AN
+ 
+     # Install dependency files required by luajit
+     if (DEST_RUNTIME_DIR)
+-        install (DIRECTORY ${LUAJIT_DEP_DIR} DESTINATION ${DEST_RUNTIME_DIR})
++        install (DIRECTORY ${LUAJIT_DEP_DIR} DESTINATION share/Urho3D)
+     endif ()
+ endif ()
+ 
+diff --git a/Source/ThirdParty/toluapp/src/bin/CMakeLists.txt b/Source/ThirdParty/toluapp/src/bin/CMakeLists.txt
+index 0cd69fc..e761ef6 100644
+--- a/Source/ThirdParty/toluapp/src/bin/CMakeLists.txt
++++ b/Source/ThirdParty/toluapp/src/bin/CMakeLists.txt
+@@ -52,7 +52,7 @@ if (URHO3D_UPDATE_SOURCE_TREE)
+ endif ()
+ file (GLOB TOLUA lua/*.lua)
+ add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.c
+-    COMMAND ${CMAKE_BINARY_DIR}/bin/tool/tolua++ -o ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.c -H ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.h -n tolua tolua_scons.pkg 2>${NULL_DEVICE} || ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/toluabind.c ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.c
++    COMMAND ${CMAKE_BINARY_DIR}/tools/urho3d/tolua++ -o ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.c -H ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.h -n tolua tolua_scons.pkg 2>${NULL_DEVICE} || ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/toluabind.c ${CMAKE_CURRENT_BINARY_DIR}/generated/toluabind.c
+     ${UPDATE_COMMAND}
+     DEPENDS ${TOLUA} tolua_scons.pkg
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+diff --git a/Source/Tools/CMakeLists.txt b/Source/Tools/CMakeLists.txt
+index 65b59d9..db8f5cd 100644
+--- a/Source/Tools/CMakeLists.txt
++++ b/Source/Tools/CMakeLists.txt
+@@ -51,24 +51,24 @@ if (CMAKE_CROSSCOMPILING)
+     if (URHO3D_PACKAGING)
+         ExternalProject_Add (PackageTool
+             SOURCE_DIR ${CMAKE_SOURCE_DIR}/Source/Tools/PackageTool
+-            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/bin/tool -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D BAKED_CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
++            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/tools/urho3d -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D BAKED_CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+             ${ALTERNATE_COMMAND})
+         add_make_clean_files (${CMAKE_BINARY_DIR}/bin/tool/PackageTool)
+         if (CMAKE_HOST_WIN32 AND NOT HAS_MKLINK)
+             add_dependencies (PackageTool Urho3D)   # Ensure Urho3D headers are fresh when building PackageTool externally on Windows host system without MKLINK
+         endif ()
+-        install (PROGRAMS ${CMAKE_BINARY_DIR}/bin/tool/PackageTool DESTINATION ${DEST_RUNTIME_DIR}/tool)
++        install (PROGRAMS ${CMAKE_BINARY_DIR}/bin/tool/PackageTool DESTINATION ${DEST_RUNTIME_DIR})
+     endif ()
+     if (URHO3D_GENERATEBINDINGS)
+         ExternalProject_Add (BindingGenerator
+             SOURCE_DIR ${CMAKE_SOURCE_DIR}/Source/Tools/BindingGenerator
+-            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/bin/tool -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D BAKED_CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
++            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/tools/urho3d -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D BAKED_CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+             ${ALTERNATE_COMMAND})
+         add_make_clean_files (${CMAKE_BINARY_DIR}/bin/tool/BindingGenerator)
+         if (CMAKE_HOST_WIN32 AND NOT HAS_MKLINK)
+             add_dependencies (BindingGenerator Urho3D)
+         endif ()
+-        install (PROGRAMS ${CMAKE_BINARY_DIR}/bin/tool/BindingGenerator DESTINATION ${DEST_RUNTIME_DIR}/tool)
++        install (PROGRAMS ${CMAKE_BINARY_DIR}/bin/tool/BindingGenerator DESTINATION ${DEST_RUNTIME_DIR})
+     endif ()
+ endif ()
+ 
+diff --git a/Source/Urho3D/CMakeLists.txt b/Source/Urho3D/CMakeLists.txt
+index 7433020..8161011 100644
+--- a/Source/Urho3D/CMakeLists.txt
++++ b/Source/Urho3D/CMakeLists.txt
+@@ -283,7 +283,7 @@ if (URHO3D_BINDINGS)
+     endif ()
+     ExternalProject_Add (AutoBinder
+         SOURCE_DIR ${CMAKE_SOURCE_DIR}/Source/Clang-Tools
+-        CMAKE_ARGS -D URHO3D_CLANG_TOOLS=AutoBinder -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/bin/tool/clang -D DEST_INCLUDE_DIR=${DEST_INCLUDE_DIR} -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
++        CMAKE_ARGS -D URHO3D_CLANG_TOOLS=AutoBinder -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/tools/urho3d/clang -D DEST_INCLUDE_DIR=${DEST_INCLUDE_DIR} -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+         ${ALTERNATE_COMMAND})
+     add_make_clean_files (${CMAKE_BINARY_DIR}/bin/tool/clang/AutoBinder)
+     file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/generated/generated)
+@@ -319,10 +319,10 @@ if (URHO3D_LUA)
+         set(CMAKE_DISABLE_SOURCE_CHANGES OFF)
+         ExternalProject_Add (tolua++
+             SOURCE_DIR ${CMAKE_SOURCE_DIR}/Source/ThirdParty/toluapp/src/bin
+-            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/bin/tool -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D URHO3D_UPDATE_SOURCE_TREE=${URHO3D_UPDATE_SOURCE_TREE} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
++            CMAKE_ARGS -D URHO3D_DEPLOYMENT_TARGET=generic -D DEST_RUNTIME_DIR=${CMAKE_BINARY_DIR}/tools/urho3d -D BAKED_CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -D URHO3D_UPDATE_SOURCE_TREE=${URHO3D_UPDATE_SOURCE_TREE} -D CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+             ${TRAVIS_ANDROID_FIX}
+             ${ALTERNATE_COMMAND})
+-        add_make_clean_files (${CMAKE_BINARY_DIR}/bin/tool/tolua++)
++        add_make_clean_files (${CMAKE_BINARY_DIR}/tools/urho3d/tolua++)
+     else ()
+         # Otherwise, build it internally as per normal
+         add_subdirectory (../ThirdParty/toluapp/src/bin ../ThirdParty/toluapp/src/bin)
+@@ -343,7 +343,7 @@ if (URHO3D_LUA)
+         list (APPEND LUA_GEN_CPP_FILES ${GEN_CPP_FILE})
+         file (GLOB PKG_FILES LuaScript/pkgs/${DIR}/*.pkg)
+         add_custom_command (OUTPUT ${GEN_CPP_FILE}
+-            COMMAND ${CMAKE_BINARY_DIR}/bin/tool/tolua++ -E ${CMAKE_PROJECT_NAME} -L ToCppHook.lua -o ${GEN_CPP_FILE} ${NAME}
++            COMMAND ${CMAKE_BINARY_DIR}/tools/urho3d/tolua++ -E ${CMAKE_PROJECT_NAME} -L ToCppHook.lua -o ${GEN_CPP_FILE} ${NAME}
+             DEPENDS tolua++ ${API_PKG_FILE} ${PKG_FILES} LuaScript/pkgs/ToCppHook.lua
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/LuaScript/pkgs
+             COMMENT "Generating tolua++ API binding on the fly for ${DIR}")
+diff --git a/cmake/Modules/UrhoCommon.cmake b/cmake/Modules/UrhoCommon.cmake
+index cfac648..b196095 100644
+--- a/cmake/Modules/UrhoCommon.cmake
++++ b/cmake/Modules/UrhoCommon.cmake
+@@ -1358,7 +1358,7 @@ macro (find_Urho3D_tool VAR NAME)
+     find_program (${VAR} ${NAME} HINTS ${ARG_HINTS} PATHS ${ARG_PATHS} PATH_SUFFIXES ${ARG_PATH_SUFFIXES} DOC ${ARG_DOC} NO_DEFAULT_PATH)
+     mark_as_advanced (${VAR})  # Hide it from cmake-gui in non-advanced mode
+     if (NOT ${VAR})
+-        set (${VAR} ${CMAKE_BINARY_DIR}/bin/tool/${NAME})
++        set (${VAR} ${CMAKE_BINARY_DIR}/tools/urho3d/${NAME})
+         if (ARG_MSG_MODE AND NOT CMAKE_PROJECT_NAME STREQUAL Urho3D)
+             message (${ARG_MSG_MODE}
+                 "Could not find ${VAR} tool in the Urho3D build tree or Urho3D SDK. Your project may not build successfully without this tool. "
+@@ -1515,8 +1515,8 @@ macro (setup_executable)
+     if (ARG_TOOL)
+         list (APPEND TARGET_PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH YES)
+         if (NOT ARG_PRIVATE AND NOT DEST_RUNTIME_DIR MATCHES tool)
+-            set_output_directories (${CMAKE_BINARY_DIR}/bin/tool LOCAL RUNTIME PDB)
+-            set (RUNTIME_DIR ${CMAKE_BINARY_DIR}/bin/tool)
++            set_output_directories (${CMAKE_BINARY_DIR}/tools/urho3d LOCAL RUNTIME PDB)
++            set (RUNTIME_DIR ${CMAKE_BINARY_DIR}/tools/urho3d)
+         endif ()
+     endif ()
+     if (NOT ARG_NODEPS)
+@@ -1570,7 +1570,6 @@ macro (setup_executable)
+             endif ()
+             if (DIRECT3D_DLL AND NOT DIRECT3D_DLL_INSTALLED)
+                 # Make a copy of the D3D DLL to the runtime directory in the installed location
+-                install (FILES ${DIRECT3D_DLL} DESTINATION ${DEST_RUNTIME_DIR})
+                 set (DIRECT3D_DLL_INSTALLED TRUE)
+             endif ()
+         endif ()
+@@ -1692,7 +1691,7 @@ macro (setup_main_executable)
+         if (URHO3D_PACKAGING)
+             # Urho3D project builds the PackageTool as required; downstream project uses PackageTool found in the Urho3D build tree or Urho3D SDK
+             find_Urho3d_tool (PACKAGE_TOOL PackageTool
+-                HINTS ${CMAKE_BINARY_DIR}/bin/tool ${URHO3D_HOME}/bin/tool
++                HINTS ${CMAKE_BINARY_DIR}/tools/urho3d ${URHO3D_HOME}/bin/tool
+                 DOC "Path to PackageTool" MSG_MODE WARNING)
+             if (CMAKE_PROJECT_NAME STREQUAL Urho3D)
+                 set (PACKAGING_DEP DEPENDS PackageTool)
+@@ -1741,7 +1740,7 @@ macro (setup_main_executable)
+         foreach (DIR ${RESOURCE_DIRS})
+             list (FIND INSTALLED_RESOURCE_DIRS ${DIR} FOUND_INDEX)
+             if (FOUND_INDEX EQUAL -1)
+-                install (DIRECTORY ${DIR} DESTINATION ${DEST_SHARE_DIR}/resources)
++                install (DIRECTORY ${DIR} DESTINATION tools/urho3d)
+                 list (APPEND INSTALLED_RESOURCE_DIRS ${DIR})
+             endif ()
+             # This cache variable is used to keep track of whether a resource directory has been instructed to be installed by CMake or not

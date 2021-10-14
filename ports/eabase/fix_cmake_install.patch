@@ -36,7 +36,7 @@ index 89c6703..ab8e553 100644
 +    #-------------------------------------------------------------------------------------------
 +    target_include_directories(EABase INTERFACE
 +        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include/Common>
-+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Common>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 +    )
 +
 +    # create and install an export set for eabase target as EABase::EABase
@@ -64,7 +64,7 @@ index 89c6703..ab8e553 100644
 +    )
 +
 +    install(TARGETS EABase LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-+    install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++    install(DIRECTORY "include/Common/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 +
 +    install(
 +        FILES

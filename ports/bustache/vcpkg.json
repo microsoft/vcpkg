@@ -1,0 +1,11 @@
+{
+  "name": "bustache",
+  "version-string": "1.1.0",
+  "port-version": 1,
+  "description": "C++11 implementation of {{ mustache }}",
+  "homepage": "https://github.com/jamboree/bustache",
+  "dependencies": [
+    "boost-unordered",
+    "boost-utility"
+  ]
+}

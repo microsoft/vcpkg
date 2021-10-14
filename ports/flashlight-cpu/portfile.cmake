@@ -10,6 +10,7 @@ vcpkg_from_github(
     REF 626914e79073c5547513de649af706f7e2b796ad # 0.3 branch tip
     SHA512 a22057cfa4cfe7acd95cbc5445a30870cce3cdde89066d1d75f40be0d73b069a49e89b226fe5337488cfe5618dd25958679c0636a3e4008312f01606328becfa
     HEAD_REF master
+    PATCHES fix-dependencies.patch
 )
 
 ################################### Build ###################################
@@ -19,7 +20,6 @@ set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_EXAMPLES=OFF
   -DFL_BACKEND=CPU # this port is CPU-backend only
   -DFL_BUILD_STANDALONE=OFF
-  -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
 )
 
 # Determine which components to build via specified feature
@@ -41,10 +41,14 @@ vcpkg_configure_cmake(
     OPTIONS 
         ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} 
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/flashlight
+    OPTIONS_RELEASE
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/flashlight
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight-cpu TARGET_PATH share/flashlight)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight TARGET_PATH share/flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
