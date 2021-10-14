@@ -506,7 +506,7 @@
     },
     "boost": {
       "baseline": "1.77.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-accumulators": {
       "baseline": "1.77.0",
@@ -810,7 +810,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.77.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-move": {
       "baseline": "1.77.0",
@@ -1249,7 +1249,7 @@
       "port-version": 8
     },
     "cctag": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "cctz": {
@@ -1422,7 +1422,7 @@
     },
     "co": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "coin": {
       "baseline": "4.0.0",
@@ -2081,8 +2081,8 @@
       "port-version": 0
     },
     "fastrtps": {
-      "baseline": "2.0.1",
-      "port-version": 1
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "fbgemm": {
       "baseline": "2021-03-18",
@@ -2524,6 +2524,10 @@
       "baseline": "0.7.0",
       "port-version": 2
     },
+    "graphviz": {
+      "baseline": "2.49.1",
+      "port-version": 0
+    },
     "greatest": {
       "baseline": "1.5.0",
       "port-version": 0
@@ -2785,8 +2789,8 @@
       "port-version": 1
     },
     "imgui": {
-      "baseline": "1.84.2",
-      "port-version": 1
+      "baseline": "1.85",
+      "port-version": 0
     },
     "imgui-sfml": {
       "baseline": "2.1",
@@ -3761,8 +3765,8 @@
       "port-version": 0
     },
     "libsass": {
-      "baseline": "3.6.4",
-      "port-version": 1
+      "baseline": "3.6.5",
+      "port-version": 0
     },
     "libsbml": {
       "baseline": "5.19.0",
@@ -3817,8 +3821,8 @@
       "port-version": 9
     },
     "libsrt": {
-      "baseline": "1.3.4",
-      "port-version": 1
+      "baseline": "1.4.4",
+      "port-version": 0
     },
     "libsrtp": {
       "baseline": "2.4.2",
@@ -4269,7 +4273,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "1.7.2",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "minc": {
@@ -4502,7 +4506,7 @@
     },
     "nanodbc": {
       "baseline": "2.13.0",
-      "port-version": 4
+      "port-version": 5
     },
     "nanoflann": {
       "baseline": "1.3.2",
@@ -4581,7 +4585,7 @@
       "port-version": 2
     },
     "nghttp2": {
-      "baseline": "1.44.0",
+      "baseline": "1.45.1",
       "port-version": 0
     },
     "ngspice": {
@@ -5095,6 +5099,10 @@
     "pegtl-2": {
       "baseline": "2.8.3",
       "port-version": 1
+    },
+    "pffft": {
+      "baseline": "2021-10-09",
+      "port-version": 0
     },
     "pfring": {
       "baseline": "2019-10-17",
@@ -5962,7 +5970,7 @@
     },
     "ryml": {
       "baseline": "2021-07-24",
-      "port-version": 0
+      "port-version": 1
     },
     "ryu": {
       "baseline": "2.0",
@@ -6502,7 +6510,7 @@
     },
     "tcl": {
       "baseline": "core-9-0-a1",
-      "port-version": 2
+      "port-version": 3
     },
     "tclap": {
       "baseline": "1.2.2",
@@ -6582,7 +6590,7 @@
     },
     "tiff": {
       "baseline": "4.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -6649,8 +6657,8 @@
       "port-version": 1
     },
     "tinyspline": {
-      "baseline": "0.2.0",
-      "port-version": 4
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "tinythread": {
       "baseline": "1.1",
@@ -6898,7 +6906,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 0
+      "port-version": 1
     },
     "valijson": {
       "baseline": "0.6",
