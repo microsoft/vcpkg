@@ -46,6 +46,9 @@
     "tools": {
       "description": "Build hdf tools"
     },
+    "utils": {
+      "description": "Build HDF5 Utils"
+    },
     "zlib": {
       "description": "Build with zlib",
       "dependencies": [
