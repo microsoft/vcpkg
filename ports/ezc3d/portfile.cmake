@@ -6,18 +6,31 @@ vcpkg_from_github(ARCHIVE
     HEAD_REF dev
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DBUILD_EXAMPLE=OFF
-        -Dezc3d_LIB_FOLDER="lib"
-        -Dezc3d_BIN_FOLDER="bin"
-)
+if(WIN32)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DBUILD_EXAMPLE=OFF
+            -Dezc3d_LIB_FOLDER="lib"
+            -Dezc3d_BIN_FOLDER="bin"
+    )
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DBUILD_EXAMPLE=OFF
+    )
+endif()
 
 vcpkg_install_cmake()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
+if(WIN32)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
+endif()
 
 # # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
