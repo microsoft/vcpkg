@@ -2804,6 +2804,10 @@
       "baseline": "2021-05-03",
       "port-version": 0
     },
+    "imnodes": {
+      "baseline": "0.4",
+      "port-version": 1
+    },
     "implot": {
       "baseline": "0.11",
       "port-version": 0
