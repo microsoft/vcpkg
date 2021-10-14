@@ -4,8 +4,6 @@
   "port-version": 1,
   "description": "A small, dependency-free node editor for dear imgui",
   "dependencies": [
-    {
-      "name": "imgui"
-    }
+    "imgui"
   ]
 }
