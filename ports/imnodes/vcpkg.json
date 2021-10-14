@@ -4,6 +4,14 @@
   "port-version": 1,
   "description": "A small, dependency-free node editor for dear imgui",
   "dependencies": [
-    "imgui"
+    "imgui",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
