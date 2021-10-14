@@ -1,6 +1,7 @@
 {
   "name": "qtmultimedia",
   "version-semver": "6.2.0",
+  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -11,6 +12,11 @@
         "gui",
         "network"
       ]
+    },
+    {
+      "name": "qtshadertools",
+      "host": true,
+      "default-features": false
     }
   ],
   "default-features": [
