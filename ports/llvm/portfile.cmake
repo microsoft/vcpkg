@@ -1,4 +1,4 @@
-set(LLVM_VERSION "12.0.1")
+set(LLVM_VERSION "13.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -14,7 +14,6 @@ vcpkg_from_github(
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
         0007-fix-compiler-rt-install-path.patch
-        0008-fix-libcxx-install.patch
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
@@ -236,9 +235,8 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESS
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/llvm
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CROSS_OPTIONS}
@@ -261,14 +259,14 @@ vcpkg_configure_cmake(
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/llvm_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME usage)
 
 if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
     file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/clang_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME usage)
 endif()
@@ -282,7 +280,7 @@ if("clang-tools-extra" IN_LIST FEATURES)
 endif()
 
 if("flang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/flang/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
     file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/flang_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME usage)
     # Remove empty include directory /include/flang/Config
@@ -293,24 +291,24 @@ if("flang" IN_LIST FEATURES)
 endif()
 
 if("lld" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/lld/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME copyright)
     file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/lld_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME usage)
 endif()
 
 if("mlir" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/mlir/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME copyright)
     file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/mlir_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME usage)
 endif()
 
 if("polly" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/polly/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
 endif()
 
 if("pstl" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/ParallelSTL" TARGET_PATH "share/ParallelSTL" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/ParallelSTL" TARGET_PATH "share/ParallelSTL" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
 endif()
 
