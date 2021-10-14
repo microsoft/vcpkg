@@ -31,16 +31,6 @@ index e4ef2944..063b83ca 100644
 -- 
 GitLab
 
-
-From e31b2b07a10b23d82e1e84316716aaf832e4ad99 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
-Date: Thu, 16 Sep 2021 17:09:49 +0200
-Subject: [PATCH 2/2] Add missing find_package(Qt5Gui)
-
----
- CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c7022663..d2ead74a 100644
 --- a/CMakeLists.txt
