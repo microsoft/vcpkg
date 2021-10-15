@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(imnodes CXX)
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 set(CMAKE_DEBUG_POSTFIX d)
 
 find_package(imgui CONFIG REQUIRED)
