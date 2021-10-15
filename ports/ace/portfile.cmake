@@ -118,14 +118,36 @@ vcpkg_execute_build_process(
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
+if("xml" IN_LIST FEATURES)
+  vcpkg_execute_build_process(
+      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ${ACE_ROOT}/ACEXML/ACEXML.mwc ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+      WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
+      LOGNAME mwc-xml-${TARGET_TRIPLET}
+  )
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
+    file(WRITE ${SOURCE_PATH}/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                     <ItemDefinitionGroup>
+                                                     <ClCompile>
+                                                     <AdditionalOptions>/MP</AdditionalOptions>
+                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
+                                                     </ClCompile>
+                                                     <Link>
+                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
+                                                     </Link>
+                                                     </ItemDefinitionGroup>
+                                                     </Project>")
+  endif()
+
   file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
   vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
     SKIP_CLEAN
   )
 
@@ -262,14 +284,45 @@ if(VCPKG_TARGET_IS_WINDOWS)
     install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
   endif()
 
+  if("xml" IN_LIST FEATURES)
+    file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH} ${ACE_ROOT}/ACEXML/ACEXML.sln)
+    vcpkg_install_msbuild(
+      SOURCE_PATH ${SOURCE_PATH}
+      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
+      LICENSE_SUBPATH COPYING
+      PLATFORM ${MSBUILD_PLATFORM}
+      SKIP_CLEAN
+    )
+
+    set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
+                               "ACEXML/parser/parser")
+    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
+  endif()
+
   # Remove dlls without any export
-  if("tao" IN_LIST FEATURES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
+    endif()
+  endif()
+
+  # remove (erroneous) duplicate libs
+  if("tao" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+      file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosconcurrency.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosevent.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_coslifecycle.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnaming.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnotification.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_costrading.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_activator.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_locator.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_rtevent.lib)
     endif()
   endif()
 
@@ -296,6 +349,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME make-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
@@ -303,6 +363,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME install-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} install
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME install-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
 
   file(COPY ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
 
@@ -319,6 +386,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME realclean-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} realclean
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
 
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -326,6 +400,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME make-${TARGET_TRIPLET}-rel
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME make-xml-${TARGET_TRIPLET}-rel
+    )
+  endif()
   message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -333,6 +414,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME install-${TARGET_TRIPLET}-rel
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} install
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME install-xml-${TARGET_TRIPLET}-rel
+    )
+  endif()
   if("tao" IN_LIST FEATURES)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
