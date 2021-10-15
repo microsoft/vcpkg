@@ -3,7 +3,7 @@
   "version-string": "1.4.6",
   "description": "C3D reader/writer",
   "homepage": "https://github.com/pyomeca/ezc3d",
-  "dependencies" : [
+  "dependencies": [
     {
       "name": "vcpkg-cmake-config",
       "host": true
