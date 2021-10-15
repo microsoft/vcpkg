@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF sept2021
-    SHA512 5fe5ed64fd58d9b881b186d3ca0fcac7980afc214eb219f842607d4b868b14c1411613a46d74d3cd9ab242d533dfa0ac8c181d083391c665a4577e4c3b931100
+    REF oct2021
+    SHA512 3fc1f8267a4708babe91e94f2062cd9d475b3682273e5c4f704cdb6093a5aae269cf573ad75fdd3dce59a6a79e6892a4cf5630a3160257e542edde9eb9dbb51a
     HEAD_REF master
 )
 
@@ -49,9 +49,8 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
@@ -59,8 +58,8 @@ vcpkg_configure_cmake(
         -DBUILD_DX11=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("openexr" IN_LIST FEATURES)))
   vcpkg_download_distfile(

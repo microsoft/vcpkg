@@ -5,33 +5,32 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF sept2021
-    SHA512 bb8a8a81381a6638e33cefc0c058126843df79cf84fd9a248606e965048ba6faae23e8167eb91dd6b8e9a11a788b188067877ef26852c6530ef6fc3c50b221b4
+    REF oct2021
+    SHA512 b5b6b7d42967463bf941b41c9407417068761000344506b720e038f82b3a1aa6f44893695b2391075495d6a63eeb1d80cb011ed87e8f54430de3a77baa8cb570
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DBUILD_XAUDIO_WIN10=ON -DBUILD_DXIL_SHADERS=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MAKESPRITEFONT_EXE
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/sept2021/MakeSpriteFont.exe"
-    FILENAME "makespritefont-sept2021.exe"
-    SHA512 a22ec8e7d283585574a5aec82c937c2844e89e66ded01fea92bb278beb7ff32c8070fa3016192029ed8c106db7ef0356f867521a2603a4de7c085cd8db693d0a
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/oct2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-oct2021.exe"
+    SHA512 abff446bfd4cbddbca45816ec3a2230e52d9afb81c100966e4bce7e52a6e02620fd8cdcb416943090564885f63d33c4a246f43ff585c8f5686c2c9877ec50698
   )
 
   vcpkg_download_distfile(
     XWBTOOL_EXE
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/sept2021/XWBTool.exe"
-    FILENAME "xwbtool-sept2021.exe"
-    SHA512 40f33af95bfdaf60a41564dc347d51768774ad7caa8529046e3f87256e80e165aa124b21193d0ffa1e94644343006d6de01807df317dfdf13377a31275b973ef
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/oct2021/XWBTool.exe"
+    FILENAME "xwbtool-oct2021.exe"
+    SHA512 fda62e06fb9998c41795c6be42f00a1048dcae302b20437f2a39350215789f77acfc77c0f1ebbc5bedeb986229c94f35bd1a03be37cdf4fcf4c007110f7efaa4
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
@@ -41,8 +40,8 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${XWBTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk12/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont.exe)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont-oct2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-oct2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
