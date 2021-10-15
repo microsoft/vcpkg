@@ -83,7 +83,7 @@
       "description": "Qt GUI support for opencv",
       "dependencies": [
         {
-          "name": "qt5-base",
+          "name": "qtbase",
           "default-features": false
         }
       ]
