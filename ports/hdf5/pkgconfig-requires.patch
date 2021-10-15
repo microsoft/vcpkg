@@ -1,5 +1,5 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index ddd84f6..5427260 100644
+index b8ec9d2..34dc2e8 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
 @@ -74,6 +74,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
@@ -55,6 +55,19 @@ index 835d422..9a7176f 100644
  
  configure_file (
      ${HDF_CONFIG_DIR}/libhdf5.pc.in
+diff --git a/config/cmake_ext_mod/HDFMacros.cmake b/config/cmake_ext_mod/HDFMacros.cmake
+index ae0ebca..095fae4 100644
+--- a/config/cmake_ext_mod/HDFMacros.cmake
++++ b/config/cmake_ext_mod/HDFMacros.cmake
+@@ -384,7 +384,7 @@ macro (HDF_DIR_PATHS package_prefix)
+   endif ()
+ 
+   #set the default debug suffix for all library targets
+-    if(NOT CMAKE_DEBUG_POSTFIX)
++    if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+       if (WIN32)
+         set (CMAKE_DEBUG_POSTFIX "_D")
+       else ()
 diff --git a/fortran/src/CMakeLists.txt b/fortran/src/CMakeLists.txt
 index e59a829..8da64dd 100644
 --- a/fortran/src/CMakeLists.txt
