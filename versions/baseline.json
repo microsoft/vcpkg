@@ -401,8 +401,8 @@
       "port-version": 3
     },
     "bdwgc": {
-      "baseline": "8.0.4",
-      "port-version": 2
+      "baseline": "8.2.0",
+      "port-version": 0
     },
     "beast": {
       "baseline": "0",
@@ -430,6 +430,10 @@
     },
     "bext-ut": {
       "baseline": "1.1.8",
+      "port-version": 0
+    },
+    "bext-wintls": {
+      "baseline": "0.9.5",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -2482,7 +2486,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.32.1",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2645,8 +2649,8 @@
       "port-version": 1
     },
     "hfsm2": {
-      "baseline": "beta7",
-      "port-version": 1
+      "baseline": "1.10.1",
+      "port-version": 0
     },
     "hidapi": {
       "baseline": "0.11.0",
@@ -3485,8 +3489,8 @@
       "port-version": 4
     },
     "libigl": {
-      "baseline": "2.2.0",
-      "port-version": 6
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "libilbc": {
       "baseline": "3.0.3",
@@ -4065,8 +4069,8 @@
       "port-version": 5
     },
     "log4cxx": {
-      "baseline": "0.11.0",
-      "port-version": 3
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "loguru": {
       "baseline": "2.1.0",
