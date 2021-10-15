@@ -1,6 +1,6 @@
 {
   "name": "ace",
-  "version-string": "7.0.3",
+  "version": "7.0.3",
   "port-version": 1,
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
