@@ -1801,15 +1801,15 @@
       "port-version": 4
     },
     "directxtex": {
-      "baseline": "sept2021",
+      "baseline": "oct2021",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "sept2021",
+      "baseline": "oct2021",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "sept2021",
+      "baseline": "oct2021",
       "port-version": 0
     },
     "dirent": {
