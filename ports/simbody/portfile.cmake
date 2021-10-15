@@ -28,7 +28,7 @@ vcpkg_cmake_install()
 if(WIN32)
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
