@@ -25,11 +25,11 @@ if("openexr" IN_LIST FEATURES)
         SHA512 fbf5a330961f3ac80e4425e8451e9a696240cd89fabca744a19f1f110ae188bae7d8eb5b058aaf66015066d919d4f581b14494d78d280147b23355d8a32745b9
     )
 
-    file(COPY ${DIRECTXTEX_EXR_HEADER} DESTINATION ${SOURCE_PATH}/DirectXTex)
-    file(COPY ${DIRECTXTEX_EXR_SOURCE} DESTINATION ${SOURCE_PATH}/DirectXTex)
-    file(RENAME ${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.h ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h)
-    file(RENAME ${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.cpp ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.cpp)
-    vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES enable_openexr_support.patch)
+    file(COPY ${DIRECTXTEX_EXR_HEADER} DESTINATION "${SOURCE_PATH}/DirectXTex")
+    file(COPY ${DIRECTXTEX_EXR_SOURCE} DESTINATION "${SOURCE_PATH}/DirectXTex")
+    file(RENAME "${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.h" "${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h")
+    file(RENAME "${SOURCE_PATH}/DirectXTex/DirectXTexEXR-2.cpp" "${SOURCE_PATH}/DirectXTex/DirectXTexEXR.cpp")
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}" PATCHES enable_openexr_support.patch)
 endif()
 
 vcpkg_check_features(
@@ -50,7 +50,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
@@ -89,21 +89,21 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${TEXASSEMBLE_EXE}
     ${TEXCONV_EXE}
     ${TEXDIAG_EXE}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtex/)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe)
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
     )
 
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

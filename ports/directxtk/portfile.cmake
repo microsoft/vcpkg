@@ -25,7 +25,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
@@ -52,20 +52,20 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   file(INSTALL
     ${MAKESPRITEFONT_EXE}
     ${XWBTOOL_EXE}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk/)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-oct2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-oct2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe)
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-oct2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-oct2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
 
 elseif(NOT VCPKG_TARGET_IS_UWP)
 
   vcpkg_copy_tools(
         TOOL_NAMES XWBTool
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
     )
 
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
