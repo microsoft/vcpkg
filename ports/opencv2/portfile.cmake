@@ -101,17 +101,31 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(CUDA QUIET)
-find_package(Threads QUIET)
-find_package(PNG QUIET)
-find_package(OpenEXR QUIET)
+
+  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+find_dependency(Threads)")
+  if("tiff" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+  endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if("png" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(PNG)")
+  endif()
+  if("qt" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
-find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_dependency(QT NAMES Qt5 COMPONENTS Core Gui Widgets Test Concurrent)")
+  endif()
+
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
