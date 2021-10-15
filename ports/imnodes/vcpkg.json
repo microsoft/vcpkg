@@ -1,7 +1,6 @@
 {
   "name": "imnodes",
-  "version-string": "0.4",
-  "port-version": 1,
+  "version": "0.4",
   "description": "A small, dependency-free node editor for dear imgui",
   "dependencies": [
     "imgui",
