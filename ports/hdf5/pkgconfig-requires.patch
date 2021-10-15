@@ -1,5 +1,5 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index b8ec9d2..34dc2e8 100644
+index 40b52b1..3b08703 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
 @@ -74,6 +74,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
@@ -10,14 +10,21 @@ index b8ec9d2..34dc2e8 100644
      else ()
        if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
          EXTERNAL_ZLIB_LIBRARY (${HDF5_ALLOW_EXTERNAL_SUPPORT})
-@@ -97,6 +98,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
-     set (EXTERNAL_FILTERS "${EXTERNAL_FILTERS} DEFLATE")
-   endif ()
-   set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_STATIC_LIBRARY})
-+  set (szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
-   INCLUDE_DIRECTORIES (${ZLIB_INCLUDE_DIRS})
-   if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.15.0")
-     message (VERBOSE "Filter ZLIB is ON")
+@@ -128,12 +129,14 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+     else()
+         get_target_property(SZIP_STATIC_LIBRARY szip-shared IMPORTED_LOCATION_${upper_build_type})
+     endif()
++    set(szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
+   elseif (TARGET szip-static)
+     if (WIN32)
+         get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_IMPLIB_${upper_build_type})
+     else()
+         get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_LOCATION_${upper_build_type})
+     endif()
++    set(szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
+   elseif (SZIP_FOUND)
+     set (H5_HAVE_FILTER_SZIP 1)
+     set (H5_HAVE_SZLIB_H 1)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b75fdd2..a2e88fd 100644
 --- a/CMakeLists.txt
