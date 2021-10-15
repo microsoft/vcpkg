@@ -3,26 +3,21 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simbody/simbody
-    REF a8f49c84e98ccf3b7e6f05db55a29520e5f9c176
-    SHA512 85493e00286163ed8ac6aa71edf8d34701d62ac5e5f472f654faa8852eb7fd569ffc0d76fd2e88bebcd3f79df9e35fc702a029890defb8b0d84d0d0512268960
+    REF 23c39e9356e9f052bcc9e498a5dd357554bbaf89
+    SHA512 e11de8193ca1e0f7a1c54b137e2d2c3cd3a9bb705df352d8f069023975c6037b1a3be7ed41b288939fa308530b775744f7d729429d9734b0968067f3ef1f49ef
     HEAD_REF master
-    PATCHES
-        "0001-Use-vcpkg-deps.patch"
-        "0002-Use-same-install-dir.patch"
-        "0003-Fix-static.patch"
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/Platform/Windows")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBRARIES)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBRARIES)
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" BUILD_MD)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_DYNAMIC_LIBRARIES=${BUILD_DYNAMIC_LIBRARIES}
         -DBUILD_STATIC_LIBRARIES=${BUILD_STATIC_LIBRARIES}
-        -DBUILD_MD=${BUILD_MD}
+        -DWINDOWS_USE_EXTERNAL_LIBS=ON
         -DINSTALL_DOCS=OFF
         -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
@@ -31,7 +26,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+if(WIN32)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH ${CMAKE_INSTALL_LIBDIR}/cmake/${PORT})
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
