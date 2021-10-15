@@ -78,6 +78,8 @@ vcpkg_cmake_configure(
         -DHDF5_MSVC_NAMING_CONVENTION=${HDF5_MSVC_NAMING_CONVENTION}
         -DSZIP_USE_EXTERNAL=ON
         -DALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
+    OPTIONS_RELEASE
+        -DCMAKE_DEBUG_POSTFIX= # For lib name in pkgconfig files
 )
 
 vcpkg_cmake_install()
@@ -123,6 +125,16 @@ if ("utils" IN_LIST FEATURES)
         TOOL_NAMES mirror_server mirror_server_stop 
         AUTO_CLEAN
     )
+endif()
+
+# Script tools
+if (NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5cc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/h5cc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5hlcc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/h5hlcc")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 # Clean up
