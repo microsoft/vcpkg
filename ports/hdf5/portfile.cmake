@@ -127,12 +127,6 @@ if ("utils" IN_LIST FEATURES)
     )
 endif()
 
-# Script tools
-if (NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5cc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/h5cc")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5hlcc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/h5hlcc")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

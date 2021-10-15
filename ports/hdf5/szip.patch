@@ -1,8 +1,8 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index d5f801e..40b52b1 100644
+index d5f801e..141ab44 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
-@@ -117,8 +117,24 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+@@ -117,8 +117,20 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
          set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
        endif ()
      endif ()
@@ -19,11 +19,7 @@ index d5f801e..40b52b1 100644
 +        get_target_property(SZIP_STATIC_LIBRARY szip-shared IMPORTED_LOCATION_${upper_build_type})
 +    endif()
 +  elseif (TARGET szip-static)
-+    if (WIN32)
-+        get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_IMPLIB_${upper_build_type})
-+    else()
-+        get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_LOCATION_${upper_build_type})
-+    endif()
++    get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_LOCATION_${upper_build_type})
 +  elseif (SZIP_FOUND)
      set (H5_HAVE_FILTER_SZIP 1)
      set (H5_HAVE_SZLIB_H 1)
