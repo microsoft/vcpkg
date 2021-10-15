@@ -63,8 +63,8 @@ foreach(package
         pubsub_client
         spanner_client
         storage_client)
-    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
-    if(NOT IS_DIRECTORY "${config_path}")
+    set(config_path "lib/cmake/${package}")
+    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
     endif()
     vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}"
