@@ -19,7 +19,7 @@ $Prefix = 'Win-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D32as_v4'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2019-datacenter-gensecond'
+$WindowsServerSku = '2022-datacenter-g2'
 $ErrorActionPreference = 'Stop'
 $CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-11.2-windows-x64-v8.1.1.33.zip'
 
