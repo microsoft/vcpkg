@@ -1,6 +1,11 @@
 vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
 set(VERSION 0.30)
-set(PATCHES pkgconfig.patch)
+set(PATCHES 
+    pkgconfig.patch
+    undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
+    gtk_dont_assume_x11.patch # likewise
+    03_onlyshowin_unity.patch # likewise
+)
 
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND PATCHES macos_fix.patch)
