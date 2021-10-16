@@ -9,21 +9,33 @@ vcpkg_from_sourceforge(
 		003_detect_arm_on_windows.patch
 )
 
-vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+	    openmp WITH_OPENMP
+        lsr-bindings WITH_LSR_BINDINGS
+)
+
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(BUILD_SHARED_RUNTIME ON)
+else()
+    set(BUILD_SHARED_RUNTIME OFF)
+endif()
+
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 		-DBUILD_TESTS=OFF
 		-DBUILD_EXAMPLES=OFF
-		-DWITH_OPENMP=OFF
-		-DWITH_LSR_BINDINGS=OFF
+		-DBUILD_SHARED_RUNTIME=${BUILD_SHARED_RUNTIME}
+		${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/soxr RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENCE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
