@@ -49,6 +49,23 @@ else()
     set(LIBS_PRIVATE "-lltdl")
 endif()
 
+if (NOT "alsa" IN_LIST FEATURES)
+   list(APPEND FEATURES_BACKENDS "--disable-alsa")
+endif()
+if (NOT "gstreamer" IN_LIST FEATURES)
+   list(APPEND FEATURES_BACKENDS "--disable-gstreamer")
+endif()
+if (NOT "null" IN_LIST FEATURES)
+   list(APPEND FEATURES_BACKENDS "--disable-null")
+endif()
+if (NOT "oss" IN_LIST FEATURES)
+   list(APPEND FEATURES_BACKENDS "--disable-oss")
+endif()
+if (NOT "pulse" IN_LIST FEATURES)
+   list(APPEND FEATURES_BACKENDS "--disable-pulse")
+endif()
+
+
 set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     AUTOCONFIG
@@ -57,6 +74,8 @@ vcpkg_configure_make(
         --disable-gtk-doc
         --disable-lynx
         --disable-silent-rules
+        --disable-tdb
+        ${FEATURES_BACKENDS}
         ${EXTRA_CPPFLAGS}
         ${EXTRA_LDFLAGS}
 )

@@ -6,5 +6,47 @@
   "supports": "!(windows | uwp)",
   "dependencies": [
     "libvorbis"
-  ]
+  ],
+  "default-features": [
+    "defaults"
+  ],
+  "features": {
+    "alsa": {
+      "description": "Enable optional ALSA support"
+    },
+    "defaults": {
+      "description": "Default features",
+      "dependencies": [
+        {
+          "name": "libcanberra",
+          "features": [
+            "null"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "libcanberra",
+          "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "gstreamer": {
+      "description": "Enable optional GStreamer support",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
+    "null": {
+      "description": "Enable optional null output"
+    },
+    "oss": {
+      "description": "Enable optional OSS support"
+    },
+    "pulse": {
+      "description": "Enable optional PulseAudio support"
+    }
+  }
 }
