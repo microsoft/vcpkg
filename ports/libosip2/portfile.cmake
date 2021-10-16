@@ -6,27 +6,39 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 cc714ab5669c466ee8f0de78cf74a8b7633f3089bf104c9c1474326840db3d791270159456f9deb877af2df346b04493e8f796b2bb7d2be134f6c08b25a29f83
 )
 
+set(PATCHES)
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND PATCHES fix-path-in-project.patch)
 endif()
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES ${PATCHES}
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)     
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
-    
+
+    # Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
+    foreach(VCXPROJ IN ITEMS
+        "${SOURCE_PATH}/platform/vsnet/osip2.vcxproj"
+        "${SOURCE_PATH}/platform/vsnet/osipparser2.vcxproj")
+        vcpkg_replace_string(
+            "${VCXPROJ}"
+            "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+            "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+        )
+    endforeach()
+
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "platform/vsnet/osip2.vcxproj"
         INCLUDES_SUBPATH include
         USE_VCPKG_INTEGRATION
-        REMOVE_ROOT_INCLUDES      
+        REMOVE_ROOT_INCLUDES
     )
-    
+
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
@@ -34,18 +46,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS ${OPTIONS}
-    )
-
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}")
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
-    
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
