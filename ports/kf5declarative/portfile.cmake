@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES 
         CMAKE_DISABLE_FIND_PACKAGE_EPOXY
+        BUNDLE_INSTALL_DIR
 )
 
 vcpkg_cmake_install()
