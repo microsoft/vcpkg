@@ -1,6 +1,6 @@
 include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 
-set(XAUDIO2REDIST_VERSION "1.2.7")
+set(XAUDIO2REDIST_VERSION "1.2.8")
 
 if(NOT xaudio2redist_INCLUDE_DIR)
    find_path(xaudio2redist_INCLUDE_DIR

@@ -7,9 +7,9 @@ endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/1.2.7"
-    FILENAME "xaudio2redist.1.2.7.zip"
-    SHA512 01b1bbd62cc21edf2a888d1496d6cdd9fd5293bfb8ef1fd4d3f7c13af8ff2b3c7cfae5be83014a8da6fe8379346555ff456f7417b8b89195d6b4fd43925a3722
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/1.2.8"
+    FILENAME "xaudio2redist.1.2.8.zip"
+    SHA512 509b2783457b86ed1878fd4e14a01fa7288591925a2bb3cad4d68afd597fbff1f1349b619dad628b5d685169825a775120e1611559e9097837cff0fb6d39acf0
 )
 
 vcpkg_extract_source_archive_ex(
