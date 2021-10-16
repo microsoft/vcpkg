@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 8004c05d32b9720fb3391783621690c1df9bd1e97e72cbff9192ed88a84b0acd303b61432145fa917b5b5e548c8cee29b24ef8547dcc8677adf4816e7a8a0eb2
     HEAD_REF master
     PATCHES
+        0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
         0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
@@ -268,7 +269,6 @@ function(llvm_cmake_package_config_fixup package_name)
     if("${arg_FEATURE_NAME}" STREQUAL "${PORT}" OR "${arg_FEATURE_NAME}" IN_LIST FEATURES)
         set(args)
         list(APPEND args PACKAGE_NAME "${package_name}")
-        list(APPEND args CONFIG_PATH "lib/cmake/${package_name}")
         if(arg_DO_NOT_DELETE_PARENT_CONFIG_PATH)
             list(APPEND args "DO_NOT_DELETE_PARENT_CONFIG_PATH")
         endif()
