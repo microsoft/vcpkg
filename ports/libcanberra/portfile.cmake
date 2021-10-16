@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
 set(VERSION 0.30)
-set(PATCHES)
+set(PATCHES pkgconfig.patch)
 
 if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHES macos_fix.patch macos_pkgconfig.patch)
+    list(APPEND PATCHES macos_fix.patch)
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -40,6 +40,8 @@ if(VCPKG_TARGET_IS_OSX)
     set(CFLAGS_PRIVATE "-I${BREW_LIBTOOL_PATH}/include")
     set(EXTRA_LDFLAGS "LDFLAGS=${LIBS_PRIVATE}")
     set(EXTRA_CPPFLAGS "CPPFLAGS=${CFLAGS_PRIVATE}")
+else()
+    set(LIBS_PRIVATE "-lltdl")
 endif()
 
 set(ENV{GTKDOCIZE} true)
@@ -56,10 +58,8 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-if(VCPKG_TARGET_IS_OSX)
-    configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
-    configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
-endif()
+configure_file("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
+configure_file("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
 
 vcpkg_fixup_pkgconfig()
 
