@@ -1,7 +1,6 @@
 {
   "name": "mapnik",
-  "version-date": "2021-09-15",
-  "port-version": 1,
+  "version-date": "2021-10-13",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "supports": "!(static & windows)",
@@ -41,6 +40,13 @@
         "icu"
       ]
     },
+    {
+      "name": "harfbuzz",
+      "features": [
+        "coretext"
+      ],
+      "platform": "osx"
+    },
     "icu",
     "mapbox-geometry",
     "mapbox-polylabel",
@@ -72,9 +78,6 @@
         "cairo",
         "cairomm"
       ]
-    },
-    "demo": {
-      "description": "Make demo application"
     },
     "grid-renderer": {
       "description": "Grid renderer"
