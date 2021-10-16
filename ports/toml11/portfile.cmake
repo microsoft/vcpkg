@@ -9,14 +9,13 @@ vcpkg_from_github(
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA # Disable this option if project cannot be built with Ninja
         OPTIONS
             -Dtoml11_BUILD_TEST=OFF
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/toml11 TARGET_PATH share/toml11)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/toml11)
 
 vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/toml11/toml11Config.cmake
