@@ -1,6 +1,6 @@
 {
   "name": "geogram",
-  "version-string": "1.7.6",
+  "version": "1.7.6",
   "description": "Geogram is a programming library of geometric algorithms.",
   "homepage": "https://gforge.inria.fr/projects/geogram/",
   "supports": "!uwp",
