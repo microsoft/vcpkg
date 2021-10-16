@@ -24,7 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost"                      = 1;
+    "boost"                      = 2;
     "boost-config"               = 2;
     "boost-gil"                  = 1;
     "boost-iostreams"            = 1;
@@ -39,7 +39,7 @@ $portData = @{
         "features" = @{
             "mpi" = @{
                 "description"  = "Build with MPI support";
-                "dependencies" = @("boost-mpi", "boost-graph-parallel");
+                "dependencies" = @("boost-mpi", "boost-graph-parallel", "boost-property-map-parallel");
             }
         }
     };
