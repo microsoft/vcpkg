@@ -2353,8 +2353,8 @@
       "port-version": 1
     },
     "geogram": {
-      "baseline": "1.7.5",
-      "port-version": 4
+      "baseline": "1.7.6",
+      "port-version": 0
     },
     "geographiclib": {
       "baseline": "1.52",
