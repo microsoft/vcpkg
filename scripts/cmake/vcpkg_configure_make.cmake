@@ -783,9 +783,9 @@ function(vcpkg_configure_make)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
         endif()
 
-        if(LINK_ENV_${_VAR_SUFFIX})
+        if(LINK_ENV_${_buildtype})
             set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
-            set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+            set(ENV{_LINK_} "${LINK_ENV_${_buildtype}}")
         endif()
         set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
