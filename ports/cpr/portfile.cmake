@@ -15,9 +15,8 @@ vcpkg_from_github(
         ${UWP_PATCH}
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DCPR_BUILD_TESTS=OFF
         -DCPR_FORCE_USE_SYSTEM_CURL=ON
@@ -25,10 +24,10 @@ vcpkg_configure_cmake(
         -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/cpr)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cpr)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
 vcpkg_copy_pdbs()
 
