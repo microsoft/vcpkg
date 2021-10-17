@@ -1,0 +1,66 @@
+diff --git a/fizz/protocol/FizzBase.h b/fizz/protocol/FizzBase.h
+index e47469d5..232e7ead 100644
+--- a/fizz/protocol/FizzBase.h
++++ b/fizz/protocol/FizzBase.h
+@@ -151,7 +151,60 @@ class FizzBase {
+   F(AppClose, __VA_ARGS__)         \
+   F(WriteNewSessionTicket, __VA_ARGS__)
+ 
+-  FIZZ_DECLARE_VARIANT_TYPE(PendingEvent, FIZZ_PENDING_EVENT)
++  struct PendingEvent {                                                
++    enum class Type { FIZZ_PENDING_EVENT(FIZZ_ENUM_TYPES) };                    
++                                                               
++    FIZZ_PENDING_EVENT(FIZZ_UNION_CTORS, PendingEvent)                                  
++                                                               
++    PendingEvent(PendingEvent&& other) {                                       
++      switch (other.type_) { FIZZ_PENDING_EVENT(FIZZ_UNION_MOVE_CASES, other) } 
++      type_ = other.type_;                                     
++    }                                                          
++                                                               
++    PendingEvent& operator=(PendingEvent&& other) {                            
++      destroyVariant();                                        
++      switch (other.type_) { FIZZ_PENDING_EVENT(FIZZ_UNION_MOVE_CASES, other) } 
++      type_ = other.type_;                                     
++      return *this;                                            
++    }                                                          
++                                                               
++    ~PendingEvent() {                                                  
++      destroyVariant();                                        
++    }                                                          
++                                                               
++    Type type() const {                                        
++      return type_;                                            
++    }                                                          
++                                                               
++    FIZZ_PENDING_EVENT(FIZZ_UNION_ACCESSOR)                                     
++                                                               
++    FIZZ_PENDING_EVENT(FIZZ_CONST_UNION_ACCESSOR)                               
++                                                               
++    template <class T, class E>                                
++    struct TypedGet {};                                        
++    FIZZ_PENDING_EVENT(FIZZ_UNION_TYPED_GET)                                    
++                                                               
++    /* Do not use in non-test code */                          
++    template <class T>                                         
++    T* getType() {                                             
++      return TypedGet<T, int>::get(*this);                     
++    }                                                          
++    template <class T>                                         
++    const T* getType() const {                                 
++      return TypedGet<T, int>::getConst(*this);                
++    }                                                          
++                                                               
++   private:                                                    
++    union {                                                    
++      FIZZ_PENDING_EVENT(FIZZ_UNION_TYPE)                                       
++    };                                                         
++                                                               
++    void destroyVariant() {                                    
++      switch (type_) { FIZZ_PENDING_EVENT(FIZZ_DESTRUCTOR_CASES) }              
++    }                                                          
++                                                               
++    Type type_;                                                
++  };
+ 
+   std::deque<PendingEvent> pendingEvents_;
+   bool waitForData_{true};

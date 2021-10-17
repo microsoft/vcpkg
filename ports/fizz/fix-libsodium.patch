@@ -1,0 +1,48 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index f4c56fac..3b7a1fdb 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -64,7 +64,7 @@ endif()
+ 
+ include(CheckAtomic)
+ 
+-find_package(Sodium REQUIRED)
++find_package(unofficial-sodium CONFIG REQUIRED)
+ 
+ SET(FIZZ_SHINY_DEPENDENCIES "")
+ SET(FIZZ_LINK_LIBRARIES "")
+@@ -250,12 +250,12 @@ target_link_libraries(fizz
+   PUBLIC
+     ${FOLLY_LIBRARIES}
+     ${OPENSSL_LIBRARIES}
+-    sodium
++    unofficial-sodium::sodium
+     Threads::Threads
+     ZLIB::ZLIB
+     ${ZSTD_LIBRARY}
+   PRIVATE
+     ${GLOG_LIBRARIES}
+     ${GFLAGS_LIBRARIES}
+     ${FIZZ_LINK_LIBRARIES}
+     ${DOUBLE_CONVERSION_LIBRARIES}
+diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
+index 679b0e61..f6b6aed6 100644
+--- a/fizz/cmake/fizz-config.cmake.in
++++ b/fizz/cmake/fizz-config.cmake.in
+@@ -26,10 +26,14 @@ endif()
+ set(FIZZ_LIBRARIES fizz::fizz)
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(Sodium)
++find_dependency(unofficial-sodium CONFIG REQUIRED)
+ find_dependency(folly CONFIG)
+ find_dependency(ZLIB)
+ 
+ if (NOT fizz_FIND_QUIETLY)
+   message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")
+ endif()
++
++if (unofficial-sodium_FOUND)
++  message(STATUS "Found Libsodium: ${PACKAGE_PREFIX_DIR}")
++endif()
+\ No newline at end of file

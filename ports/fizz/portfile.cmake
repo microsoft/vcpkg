@@ -3,11 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF v2021.06.14.00
-    SHA512 ff55f933d55031128b5355707fd025649ad90d261d91ec5f9d793433a77e63d3c2527a7f0111d6a3151667ab29f4117f96a505bcb80c1a4a99bd60346f05f4de
+    REF v2021.10.11.00
+    SHA512 9df2e90c4d1b72c6f0a4726b7f05ba806a24ed775e5703f937575a46643cc3bfd5d9571cdb07063f1f835675437d77e20685cc86322fdae25d0d5303f4e30b2a
     HEAD_REF master
     PATCHES
-        fix-zlib.patch
+        fix-libsodium.patch
+        fix-wangle.patch
 )
 
 # Prefer installed config files
@@ -29,10 +30,28 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fizz)
 vcpkg_copy_pdbs()
 
+# Release fizz-targets.cmake does not link to the right libraries in debug mode.
+# We substitute with generator expressions so that the right libraries are linked for debug and release.
+set(FIZZ_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/fizz/fizz-targets.cmake")
+FILE(READ ${FIZZ_TARGETS_CMAKE} _contents)
+STRING(REPLACE "\${_IMPORT_PREFIX}/lib/glog.lib" "glog::glog" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
+FILE(WRITE ${FIZZ_TARGETS_CMAKE} "${_contents}")
+FILE(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
+FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(glog CONFIG)
+find_dependency(gflags CONFIG REQUIRED)
+find_dependency(ZLIB)
+${_contents}")
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake" "lib/cmake/fizz" "share/fizz")
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
+${CURRENT_PACKAGES_DIR}/debug/include
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test" "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")

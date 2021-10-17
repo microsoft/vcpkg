@@ -6,12 +6,9 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF v2021.06.14.00
-    SHA512 e59465adcd57722626e5a4407529b164472cde3942bd100b3d6e92c5057f88f1a8544b7181a01e05ed3077ffd2b3811b687aa6741d08aedef6b79aea02305798
+    REF v2021.10.11.00
+    SHA512 2836646f1c6ca64068813c2a6449eb81238b2ade4eb4c0eb62433140279279fa7ea5d61e33c8f102d86b364a39db74ed9a296b516f4ad325a253c5d3a6e3491e
     HEAD_REF master
-    PATCHES
-        fix-sodium-target.patch # fixed in master
-        fix-zlib.patch # fixed in master
 )
 
 vcpkg_configure_cmake(
