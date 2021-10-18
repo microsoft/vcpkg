@@ -7,24 +7,22 @@ vcpkg_from_github(ARCHIVE
 )
 
 if(WIN32)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -DBUILD_EXAMPLE=OFF
             -Dezc3d_LIB_FOLDER="lib"
             -Dezc3d_BIN_FOLDER="bin"
     )
 else()
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -DBUILD_EXAMPLE=OFF
     )
 endif()
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(WIN32)
     vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
