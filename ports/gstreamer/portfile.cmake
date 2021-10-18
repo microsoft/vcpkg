@@ -57,12 +57,12 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-file(RENAME ${GST_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer)
-file(RENAME ${GST_PLUGIN_BASE_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base)
-file(RENAME ${GST_PLUGIN_GOOD_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good)
-file(RENAME ${GST_PLUGIN_BAD_SOURCE_PATH}  ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad)
-file(RENAME ${GST_PLUGIN_UGLY_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly)
-file(RENAME ${GST_MESON_PORTS_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers)
+file(RENAME "${GST_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer")
+file(RENAME "${GST_PLUGIN_BASE_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base")
+file(RENAME "${GST_PLUGIN_GOOD_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good")
+file(RENAME "${GST_PLUGIN_BAD_SOURCE_PATH}"  "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad")
+file(RENAME "${GST_PLUGIN_UGLY_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly")
+file(RENAME "${GST_MESON_PORTS_SOURCE_PATH}" "${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers")
 
 if(VCPKG_TARGET_IS_OSX)
     # In Darwin platform, there can be an old version of `bison`, 
@@ -82,7 +82,7 @@ if(VCPKG_TARGET_IS_OSX)
 endif()
 
 # make tools like 'glib-mkenums' visible
-get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
+get_filename_component(GLIB_TOOL_DIR "${CURRENT_INSTALLED_DIR}/tools/glib" ABSOLUTE)
 message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
 vcpkg_add_to_path(PREPEND ${GLIB_TOOL_DIR})
 
@@ -217,48 +217,80 @@ vcpkg_configure_meson(
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     # note: can't find where z.lib comes from. replace it to appropriate library name manually
-    get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
+    get_filename_component(BUILD_NINJA_DBG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja" ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
-    get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
+    get_filename_component(BUILD_NINJA_REL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja" ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
     vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
 endif()
+
 vcpkg_install_meson()
 
+vcpkg_copy_pdbs()
+
+# For pkgconfig
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            string(REPLACE [[flac >= 1.1.4]] [[flac]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        endforeach()
+    endif()
+endif()
+
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            string(REPLACE [[flac >= 1.1.4]] [[flac]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        endforeach()
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()
+
 # Remove duplicated GL headers (we already have `opengl-registry`)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
-                    ${CURRENT_PACKAGES_DIR}/include/GL
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
+                    "${CURRENT_PACKAGES_DIR}/include/GL"
 )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
-            ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
+            "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
 )
 
-file(INSTALL ${GST_BUILD_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
-                    ${CURRENT_PACKAGES_DIR}/libexec
-                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/debug/libexec"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include"
+                    "${CURRENT_PACKAGES_DIR}/libexec"
+                    "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include"
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/bin
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
+                        "${CURRENT_PACKAGES_DIR}/bin"
     )
     set(PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
     set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
+                "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
     )
 endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
+    file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
+    file(COPY "${DBG_BINS}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${DBG_BINS} ${REL_BINS})
+    file(COPY "${REL_BINS}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE "${DBG_BINS}" "${REL_BINS}")
 endif()
-vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${GST_BUILD_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
