@@ -1260,6 +1260,7 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+qtmultimedia:x64-linux=fail
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
