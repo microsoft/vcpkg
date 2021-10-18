@@ -1,5 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
-vcpkg_fail_port_install(ON_TARGET "linux" "uwp" "osx")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO buck-yeh/bux
