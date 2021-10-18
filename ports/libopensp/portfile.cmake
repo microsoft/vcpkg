@@ -1,7 +1,8 @@
 set(OPENSP_VERSION 1.5.2)
 
+set(PATCHES opensp_1.5.2-13.diff)                   # http://deb.debian.org/debian/pool/main/o/opensp/opensp_1.5.2-13.diff.gz
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    list(APPEND PATCHES windows_cmake_build.diff) # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
+    list(APPEND PATCHES windows_cmake_build.diff)   # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
 endif()
 if (VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES uwp_getenv_fix.diff)
