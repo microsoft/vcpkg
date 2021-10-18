@@ -60,7 +60,7 @@ index 02b688c..03b185f 100644
  		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuice)
  	else()
 -		add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
-+		find_package(libjuice CONFIG REQUIRED)
++		find_package(LibJuice CONFIG REQUIRED)
  		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_JUICE=0)
  		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_JUICE=0)
 -		target_link_libraries(datachannel PRIVATE LibJuice::LibJuiceStatic)
