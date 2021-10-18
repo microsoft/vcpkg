@@ -1,7 +1,7 @@
 set(OPENSP_VERSION 1.5.2)
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    set(PATCHES windows_cmake_build.diff) # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
+    list(APPEND PATCHES windows_cmake_build.diff) # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
 endif()
 if (VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES uwp_getenv_fix.diff)
@@ -27,10 +27,9 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
     vcpkg_cmake_install()
 else()
+    set(EXTRA_OPTS "")
     if(VCPKG_TARGET_IS_OSX)
-        set(LDFLAGS "-framework CoreFoundation") # libintl links to it
-    else()
-        set(LDFLAGS "")
+        list(APPEND EXTRA_OPTS "LDFLAGS=-framework CoreFoundation \$LDFLAGS") # libintl links to it
     endif()
 
     vcpkg_configure_make(
@@ -38,7 +37,7 @@ else()
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
-            "LDFLAGS=${LDFLAGS}"
+            ${EXTRA_OPTS}
     )
 
     vcpkg_install_make()
