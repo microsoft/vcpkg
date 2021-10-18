@@ -120,6 +120,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     
+    file(CHMOD_RECURSE
+            "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
+            "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
+        PERMISSIONS
+            OWNER_READ OWNER_WRITE
+            GROUP_READ GROUP_WRITE
+            WORLD_READ WORLD_WRITE
+    )
 else()
     file(REMOVE "${SOURCE_PATH}/unix/configure")
     vcpkg_configure_make(
