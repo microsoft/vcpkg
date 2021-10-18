@@ -4557,7 +4557,7 @@
       "port-version": 1
     },
     "ncurses": {
-      "baseline": "6.2",
+      "baseline": "6.3",
       "port-version": 1
     },
     "neargye-semver": {
