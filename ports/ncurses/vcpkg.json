@@ -3,5 +3,4 @@
   "version-string": "6.2",
   "port-version": 1,
   "description": "free software emulation of curses in System V Release 4.0",
-  "supports": "!(windows | uwp)"
 }
