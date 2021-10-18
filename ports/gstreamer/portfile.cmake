@@ -105,6 +105,13 @@ else()
     set(LIBRARY_LINKAGE "static")
 endif()
 
+set(GST_EXTRA_OPTS )
+# See issue https://gitlab.freedesktop.org/gstreamer/gst-build/-/issues/186
+if (VCPKG_TARGET_IS_OSX)
+    message(WARNING "${PORT} has bug when using Darwin, temporary disable feature gst-full-version-script automaticly.")
+    set(GST_EXTRA_OPTS "-Dgst-full-version-script=")# Keep this to empty to avoid osx build failure
+endif()
+
 # gst-build's meson configuration needs git. Make the tool visible.
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
@@ -139,6 +146,7 @@ vcpkg_configure_meson(
         -Dgstreamer:gtk_doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
+        ${GST_EXTRA_OPTS}
         # gst-plugins-base
         -Dgst-plugins-base:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-base:examples=disabled
@@ -229,7 +237,7 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
 # For pkgconfig
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/*.pc")
     if (GST_EXT_PKGS)
         foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
@@ -242,7 +250,7 @@ if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
     endif()
 endif()
 
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/*.pc")
     if (GST_EXT_PKGS)
         foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
