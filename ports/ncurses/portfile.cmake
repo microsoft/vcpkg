@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-
 vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS
