@@ -16,11 +16,7 @@ vcpkg_check_features(
         lsr-bindings WITH_LSR_BINDINGS
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_RUNTIME ON)
-else()
-    set(BUILD_SHARED_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" BUILD_SHARED_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
