@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 # libopensp requirements
-list(APPEND EXTRA_OPTS "LIBS=-lintl -liconv")
+list(APPEND EXTRA_OPTS "LIBS=-lintl -liconv \$LIBS")
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND EXTRA_OPTS "LDFLAGS=-framework CoreFoundation \$LDFLAGS") 
 endif()
