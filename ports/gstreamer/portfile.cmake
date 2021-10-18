@@ -285,12 +285,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
                        "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY "${DBG_BINS}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
                        "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY "${REL_BINS}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE "${DBG_BINS}" "${REL_BINS}")
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
 
 file(INSTALL "${GST_BUILD_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
