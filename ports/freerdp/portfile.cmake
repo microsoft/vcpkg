@@ -10,6 +10,7 @@ vcpkg_from_github(
         openssl_threads.patch
         fix-include-path.patch
         fix-libusb.patch
+        install-dirs.patch
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
