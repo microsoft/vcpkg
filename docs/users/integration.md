@@ -2,16 +2,18 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/integration.md).**
 ## Table of Contents
-- [MSBuild Integration (Visual Studio)](#msbuild-integration-visual-studio)
-  - [User-wide integration](#user-wide-integration)
-  - [Per-project Integration](#per-project-integration)
-  - [Changing the triplet](#msbuild-changing-the-triplet)
-- [CMake Integration](#cmake-integration)
-  - [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option)
-  - [Using multiple toolchain files](#using-multiple-toolchain-files)
-  - [Changing the triplet](#cmake-changing-the-triplet)
-- [Manual Compiler Setup](#manual-compiler-setup)
-- [`export` Command](#export-command)
+- [Buildsystem Integration](#buildsystem-integration)
+  - [Table of Contents](#table-of-contents)
+  - [MSBuild Integration (Visual Studio)](#msbuild-integration-visual-studio)
+    - [User-wide integration](#user-wide-integration)
+    - [Per-project integration](#per-project-integration)
+    - [Changing the triplet](#changing-the-triplet)
+  - [CMake Integration](#cmake-integration)
+    - [Using an environment variable instead of a command line option](#using-an-environment-variable-instead-of-a-command-line-option)
+    - [Using multiple toolchain files](#using-multiple-toolchain-files)
+    - [Changing the triplet](#changing-the-triplet-1)
+  - [Manual Compiler Setup](#manual-compiler-setup)
+  - [Export Command](#export-command)
 
 The buildsystem-specific integration styles have heuristics to deduce the correct [triplet][]. This can be overridden in a native way for [MSBuild](#msbuild-changing-the-triplet) and [CMake](#cmake-changing-the-triplet).
 
@@ -75,9 +77,12 @@ To override the automatically chosen [triplet][], you can specify the MSBuild pr
 ```no-highlight
 cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=[vcpkg-root]/scripts/buildsystems/vcpkg.cmake
 ```
-Projects configured with the Vcpkg toolchain file will have the appropriate Vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
+Projects configured with the vcpkg toolchain file will have the appropriate vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
 
 See [Installing and Using Packages Example: sqlite](../examples/installing-and-using-packages.md) for a fully worked example using our CMake toolchain.
+
+For more information on using CMake with manifest mode,
+please see [Manifests: CMake Integration](manifests.md#cmake-integration).
 
 Note that we do not automatically add ourselves to your compiler include paths. To use a header-only library, simply use `find_path()`, which will correctly work on all platforms:
 ```cmake

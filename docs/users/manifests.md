@@ -321,7 +321,7 @@ Defaults to searching upwards from the current working directory.
 ## CMake Integration
 
 Our [CMake Integration](integration.md#cmake) will automatically detect a `vcpkg.json` manifest file in the same
-directory as the top-level `CMakeLists.txt` (`${CMAKE_SOURCE_DIR}/vcpkg.json`) and activate manifest mode. Vcpkg will be
+directory as the top-level `CMakeLists.txt` (`${CMAKE_SOURCE_DIR}/vcpkg.json`) and activate manifest mode. vcpkg will be
 automatically bootstrapped if missing and invoked to install your dependencies into your local build directory
 (`${CMAKE_BINARY_DIR}/vcpkg_installed`).
 
@@ -427,6 +427,13 @@ project(myapp)
 
 This variable controls whether to automatically activate all default features in addition to those listed in
 `VCPKG_MANIFEST_FEATURES`. If set to `ON`, default features will not be automatically activated.
+
+Defaults to `OFF`.
+
+#### `VCPKG_INSTALL_DEBUG_MESSAGES`
+
+When installing, you may want to get vcpkg to print debug messages; setting this variable to `ON` will pass
+`--debug` to vcpkg, so that it prints those messages.
 
 Defaults to `OFF`.
 

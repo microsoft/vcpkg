@@ -102,6 +102,10 @@ Install the dependencies listed in your manifest:
     ON
     "VCPKG_MANIFEST_MODE"
     OFF)
+CMAKE_DEPENDENT_OPTION(VCPKG_INSTALL_DEBUG_MESSAGES "Have vcpkg print debug messages when it is installing"
+    OFF
+    "VCPKG_MANIFEST_INSTALL"
+    OFF)
 
 if(VCPKG_MANIFEST_INSTALL)
     set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
