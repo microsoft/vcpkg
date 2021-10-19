@@ -1678,7 +1678,7 @@
     },
     "curl": {
       "baseline": "7.79.1",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -5334,7 +5334,7 @@
     },
     "ptex": {
       "baseline": "2.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "pthread": {
       "baseline": "3.0.0",
@@ -6949,7 +6949,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-09-27",
+      "baseline": "2021-10-19",
       "port-version": 0
     },
     "vcpkg-gfortran": {
