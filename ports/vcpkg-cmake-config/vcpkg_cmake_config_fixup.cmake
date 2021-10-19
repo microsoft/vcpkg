@@ -216,7 +216,15 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
         # Patch out any remaining absolute references
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${cmake_current_packages_dir}" [[${CMAKE_CURRENT_LIST_DIR}/../..]] contents "${contents}")
+        if (contents MATCHES ".*${cmake_current_packages_dir}.*")
+            string(PREPEND contents
+[[
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+]]
+        )
+        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        endif()
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
