@@ -35,7 +35,7 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cm
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
-find_dependency(libjuice)
+find_dependency(LibJuice)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")

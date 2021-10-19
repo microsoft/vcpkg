@@ -133,10 +133,16 @@ if ($null -ne $OnlyTest)
     $OnlyTest | % {
         $portName = $_
         & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs $portName
-        [System.Console]::Error.WriteLine( `
-            "REGRESSION: ${portName}:$triplet. If expected, remove ${portName} from the OnlyTest list." `
-        )
+        if (-not $?)
+        {
+            [System.Console]::Error.WriteLine( `
+                "REGRESSION: ${portName}:$triplet. If expected, remove ${portName} from the OnlyTest list." `
+            )
+        }
     }
+
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 }
 else
 {
@@ -151,7 +157,7 @@ else
         & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
     }
 
-    $failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
     if ($LASTEXITCODE -ne 0)
