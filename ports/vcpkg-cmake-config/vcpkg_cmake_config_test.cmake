@@ -3,37 +3,36 @@
 
 Automatically test the correctness of the configuration file exported by cmake
 
-## Usage
 ```cmake
 vcpkg_cmake_config_test(
-    [target_name <PORT_NAME>]
+    [TARGET_NAME <PORT_NAME>]
     [TARGET_VARS <TARGETS>...]
     [HEADERS <headername.h>...]
     [FUNCTIONS <function1> ...]
 )
 ```
 
-## Parameters
-### target_name
-Specify the main parameters to find the port through find_package
-The default value is the prefix of -config.cmake/Config.cmake/Targets.cmake/-targets.cmake
+For most ports, `vcpkg_cmake_config_test` should work without passing any options,
+`vcpkg_cmake_config_test` will automatically detect the targets declared in the generated
+cmake configuration file which are used in `find_package`, and set the targets to `TARGET_NAME`.
 
-### TARGET_VARS
-Specify targets in the configuration file, the value may contain namespace
+`TARGET_VARS` should use the target name in `target_link_libraries` and support namespace.
 
-### HEADERS
-Specify the installed header file names (including the relative path)
+For more advanced usage, `vcpkg_cmake_config_test` supports the use of reserved c/c++ code for testing.
+Please encapsulate the test code as one or more functions and save them to `vcpkg_test.c` or `vcpkg_test.cpp`,
+and pass the name of the system header file that needs to be included into the `HEADERS`.
 
-### FUNCTIONS
-Specify the exported function names, do not support namespace currently
+And, please use option `FUNCTIONS` to pass these test function names into `vcpkg_cmake_config_test`.
 
-## Notes
-This function allows to use `vcpkg_test.cmake` / `vcpkg_test.c` / `vcpkg_test.cpp`
-that exists in PORT_DIR to test the generated cmake file.
-Still work in progress. If there are more cases which can be handled here feel free to add them.
+More, you can implement the test cmake code by yourself to add additional compilation options
+or cmake options by writing them into `vcpkg_test.cmake`.
+
+Please note that `vcpkg_test.cmake` / `vcpkg_test.c` / `vcpkg_test.cpp` must be placed in the same directory
+as `portfile.cmake`.
 
 ## Examples
 
+* [curl](https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake)
 * [ptex](https://github.com/Microsoft/vcpkg/blob/master/ports/ptex/portfile.cmake)
 #]===]
 
@@ -126,7 +125,7 @@ target_link_libraries(cmake_test PRIVATE @current_target@)
     endif()
 endmacro()
 
-macro(build_with_toolchain)
+macro(z_build_with_toolchain)
     foreach(build_type IN ITEMS "Debug" "Release")
         set(config_cmd ${CMAKE_COMMAND} -G Ninja
             -DCMAKE_BUILD_TYPE=${build_type}
@@ -216,7 +215,7 @@ function(vcpkg_cmake_config_test)
         # Write a sample CMakeLists.txt and source file
         z_write_sample_code(${target_name})
         # Build
-        build_with_toolchain()
+        z_build_with_toolchain()
     endforeach()
     unset(extern_symbol_check_symbol)
     unset(extern_symbol_checks_base)
