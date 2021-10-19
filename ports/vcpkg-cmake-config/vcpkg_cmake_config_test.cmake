@@ -6,7 +6,7 @@ Automatically test the correctness of the configuration file exported by cmake
 ## Usage
 ```cmake
 vcpkg_cmake_config_test(
-    [TARGET_NAME <PORT_NAME>]
+    [target_name <PORT_NAME>]
     [TARGET_VARS <TARGETS>...]
     [HEADERS <headername.h>...]
     [FUNCTIONS <function1> ...]
@@ -14,7 +14,7 @@ vcpkg_cmake_config_test(
 ```
 
 ## Parameters
-### TARGET_NAME
+### target_name
 Specify the main parameters to find the port through find_package
 The default value is the prefix of -config.cmake/Config.cmake/Targets.cmake/-targets.cmake
 
@@ -37,113 +37,113 @@ Still work in progress. If there are more cases which can be handled here feel f
 * [ptex](https://github.com/Microsoft/vcpkg/blob/master/ports/ptex/portfile.cmake)
 #]===]
 
-macro(get_cmake_targets)
-    set(TARGET_NAMES )
-    set(TARGET_FOLDERS )
+macro(z_get_cmake_targets)
+    set(target_names )
+    set(target_folders )
     
-    file(GLOB_RECURSE CMAKE_FILES ${CURRENT_PACKAGES_DIR}/*/*.cmake)
-    foreach(CMAKE_FILE ${CMAKE_FILES})
-        get_filename_component(TARGET_FOLDER ${CMAKE_FILE} DIRECTORY)
-        get_filename_component(TARGET_FOLDER ${TARGET_FOLDER} NAME)
-        list(APPEND TARGET_FOLDERS ${TARGET_FOLDER})
-        file(READ ${CMAKE_FILE} CMAKE_CONTENT)
-        string(REGEX MATCH "add_library.([^\ ]+)\ " TARGET_NAME "${CMAKE_CONTENT}")
-        string(REPLACE "add_library(" "" TARGET_NAME "${TARGET_NAME}")
-        string(REPLACE " " "" TARGET_NAME "${TARGET_NAME}")
-        if (NOT TARGET_NAME)
+    file(GLOB_RECURSE cmake_files "${CURRENT_PACKAGES_DIR}/*/*.cmake")
+    foreach(cmake_file IN ITEMS cmake_files)
+        get_filename_component(target_folder ${cmake_file} DIRECTORY)
+        get_filename_component(target_folder ${target_folder} NAME)
+        vcpkg_list(APPEND target_folders "${target_folder}")
+        file(READ "${cmake_file}" CMAKE_CONTENT)
+        string(REGEX MATCH "add_library.([^\ ]+)\ " target_name "${CMAKE_CONTENT}")
+        string(REPLACE "add_library(" "" target_name "${target_name}")
+        string(REPLACE " " "" target_name "${target_name}")
+        if (NOT target_name)
             continue()
         endif()
-        list(APPEND TARGET_NAMES ${TARGET_NAME})
-        debug_message("TARGET_NAME: ${TARGET_NAME}")
+        list(APPEND target_names ${target_name})
+        debug_message("target_name: ${target_name}")
     endforeach()
-    unset(TARGET_NAME)
-    list(REMOVE_DUPLICATES TARGET_NAMES)
-    list(REMOVE_DUPLICATES TARGET_FOLDERS)
+    unset(target_name)
+    vcpkg_list(REMOVE_DUPLICATES target_names)
+    vcpkg_list(REMOVE_DUPLICATES target_folders)
     
-    list(LENGTH TARGET_NAMES TARGET_SIZE)
-    list(LENGTH TARGET_FOLDERS FOLDER_SIZE)
+    list(LENGTH target_names target_size)
+    list(LENGTH target_folders folder_size)
     
-    if (TARGET_SIZE EQUAL 0 OR FOLDER_SIZE EQUAL 0)
+    if (target_size EQUAL 0 OR folder_size EQUAL 0)
         return()
     endif()
     
-    if (NOT FOLDER_SIZE EQUAL 1 AND NOT _tcc_TARGET_NAME)
-        message(FATAL_ERROR "More than one folder contains cmake configuration files, please set \"TARGET_NAME\" to select the certain target name")
+    if (NOT folder_size EQUAL 1 AND NOT arg_TARGET_NAME)
+        message(FATAL_ERROR "More than one folder contains cmake configuration files, please set \"target_name\" to select the certain target name")
     endif()
     
-    set(TARGET_NAMES ${TARGET_NAMES} PARENT_SCOPE)
-    set(TARGET_FOLDER ${TARGET_FOLDERS} PARENT_SCOPE)
+    #set(target_names ${target_names} PARENT_SCOPE)
+    #set(target_folder ${target_folders} PARENT_SCOPE)
 endmacro()
 
-macro(write_sample_code CURRENT_TARGET)
-    set(TEST_DIR ${CURRENT_BUILDTREES_DIR}/test_cmake)
-    file(REMOVE_RECURSE ${TEST_DIR})
-    file(MAKE_DIRECTORY ${TEST_DIR})
+macro(z_write_sample_code current_target)
+    set(test_dir "${CURRENT_BUILDTREES_DIR}/test_cmake")
+    file(REMOVE_RECURSE "${test_dir}")
+    file(MAKE_DIRECTORY "${test_dir}")
     
     # c/cxx test file
-    if (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.c)
-        set(TEST_SOURCE cmake_test.c)
-        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.c ${TEST_DIR}/cmake_test.c COPYONLY)
-    elseif (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.cpp)
-        set(TEST_SOURCE cmake_test.cpp)
-        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.c ${TEST_DIR}/cmake_test.cpp COPYONLY)
+    if (EXISTS "${CURRENT_PORT_DIR}/vcpkg_test.c")
+        set(test_source cmake_test.c)
+        configure_file("${CURRENT_PORT_DIR}/vcpkg_test.c" "${test_dir}/cmake_test.c" COPYONLY)
+    elseif (EXISTS "${CURRENT_PORT_DIR}/vcpkg_test.cpp")
+        set(test_source cmake_test.cpp)
+        configure_file("${CURRENT_PORT_DIR}/vcpkg_test.c" "${test_dir}/cmake_test.cpp" COPYONLY)
     else()
-        set(SRC_CONTENT
+        set(src_content
 [[
 #include <stdio.h>
-@EXTERN_HEADER_CHECKS@
-@EXTERN_SYMBOL_CHECKS_BASE@
+@extern_header_checks@
+@extern_symbol_checks_base@
 int main(void)
-{@EXTERN_SYMBOL_CHECK_SYMBOL@}
+{@extern_symbol_check_symbol@}
 ]]
         )
 
-        file(WRITE ${TEST_DIR}/cmake_test.cpp.in ${SRC_CONTENT})
-        configure_file(${TEST_DIR}/cmake_test.cpp.in ${TEST_DIR}/cmake_test.cpp @ONLY)
-        set(TEST_SOURCE cmake_test.cpp)
+        file(WRITE "${test_dir}/cmake_test.cpp.in" "${src_content}")
+        configure_file("${test_dir}/cmake_test.cpp.in" "${test_dir}/cmake_test.cpp" @ONLY)
+        set(test_source cmake_test.cpp)
     endif()
     
     # CMakeLists.txt
-    if (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.cmake)
-        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.cmake ${TEST_DIR}/CMakeLists.txt COPYONLY)
+    if (EXISTS "${CURRENT_PORT_DIR}/vcpkg_test.cmake")
+        configure_file("${CURRENT_PORT_DIR}/vcpkg_test.cmake" "${test_dir}/CMakeLists.txt" COPYONLY)
     else()
         set(CMAKE_LISTS_CONTENT
 [[
 cmake_minimum_required (VERSION 3.19)
 project (cmake_test)
 
-find_package(@TARGET_FOLDER@ CONFIG REQUIRED)
+find_package(@target_folder@ CONFIG REQUIRED)
 
-add_executable(cmake_test @TEST_SOURCE@)
+add_executable(cmake_test @test_source@)
 
-target_link_libraries(cmake_test PRIVATE @CURRENT_TARGET@)
+target_link_libraries(cmake_test PRIVATE @current_target@)
 ]]
     )
     
-        set(CURRENT_TARGET ${CURRENT_TARGET})
-        file(WRITE ${TEST_DIR}/CMakeLists.txt.in ${CMAKE_LISTS_CONTENT})
-        configure_file(${TEST_DIR}/CMakeLists.txt.in ${TEST_DIR}/CMakeLists.txt @ONLY)
+        set(current_target ${current_target})
+        file(WRITE "${test_dir}/CMakeLists.txt.in" "${CMAKE_LISTS_CONTENT}")
+        configure_file("${test_dir}/CMakeLists.txt.in" "${test_dir}/CMakeLists.txt" @ONLY)
     endif()
 endmacro()
 
 macro(build_with_toolchain)
-    foreach(BUILD_TYPE Debug Release)
-        set(CONFIG_CMD ${CMAKE_COMMAND} -G Ninja
-            -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
-            -DCMAKE_PREFIX_PATH=${CURRENT_PACKAGES_DIR}/share/${TARGET_FOLDER}
-            -DCMAKE_SOURCE_DIR=${TEST_DIR}
-            -DCMAKE_BINARY_DIR=${TEST_DIR}
-            -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake
+    foreach(build_type IN ITEMS "Debug" "Release")
+        set(config_cmd ${CMAKE_COMMAND} -G Ninja
+            -DCMAKE_BUILD_TYPE=${build_type}
+            -DCMAKE_PREFIX_PATH="${CURRENT_PACKAGES_DIR}/share/${target_folder}"
+            -DCMAKE_SOURCE_DIR="${test_dir}"
+            -DCMAKE_BINARY_DIR="${test_dir}"
+            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
             -DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}
         )
-        set(BUILD_CMD ${CMAKE_COMMAND} --build . --config ${BUILD_TYPE} -- -v)
+        set(build_cmd "${CMAKE_COMMAND} --build . --config ${build_type} -- -v")
         
         execute_process(
-            COMMAND ${CONFIG_CMD}
-            WORKING_DIRECTORY ${TEST_DIR}
+            COMMAND "${config_cmd}"
+            WORKING_DIRECTORY "${test_dir}"
             RESULT_VARIABLE error_code
-            OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/config-test-cmake-out.log
-            ERROR_FILE ${CURRENT_BUILDTREES_DIR}/config-test-cmake-err.log
+            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/config-test-cmake-out.log"
+            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/config-test-cmake-err.log"
         )
         
         if (error_code)
@@ -154,11 +154,11 @@ macro(build_with_toolchain)
         endif()
         
         execute_process(
-            COMMAND ${BUILD_CMD}
-            WORKING_DIRECTORY ${TEST_DIR}
+            COMMAND "${build_cmd}"
+            WORKING_DIRECTORY "${test_dir}"
             RESULT_VARIABLE error_code
-            OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-test-cmake-out.log
-            ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-test-cmake-err.log
+            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-test-cmake-out.log"
+            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-test-cmake-err.log"
         )
         
         if (error_code)
@@ -176,49 +176,49 @@ function(vcpkg_cmake_config_test)
         return()
     endif()
     
-    cmake_parse_arguments(PARSE_ARGV 0 _tcc "" "TARGET_NAME" "TARGET_VARS;HEADERS;FUNCTIONS")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "TARGET_NAME" "TARGET_VARS;HEADERS;FUNCTIONS")
     # First, we should get the cmake targets automanticlly
-    if ((_tcc_TARGET_NAME AND NOT TARGET_VARS) OR (NOT TARGET_NAME AND TARGET_VARS))
+    if ((arg_TARGET_NAME AND NOT arg_TARGET_VARS) OR (NOT arg_TARGET_NAME AND arg_TARGET_VARS))
         message(FATAL_ERROR "TARGET_NAME and TARGET_VARS must be declared at same time!")
     endif()
     
-    if (NOT _tcc_TARGET_NAME)
-        get_cmake_targets()
+    if (NOT arg_TARGET_NAME)
+        z_get_cmake_targets()
     endif()
     
-    if (_tcc_TARGET_NAME)
-        set(TARGET_FOLDER ${_tcc_TARGET_NAME})
-        set(TARGET_NAMES ${_tcc_TARGET_VARS})
-    elseif (NOT TARGET_FOLDER OR NOT TARGET_NAMES)
+    if (arg_TARGET_NAME)
+        set(target_folder "${arg_TARGET_NAME}")
+        set(target_names ${arg_TARGET_VARS})
+    elseif (NOT target_folder OR NOT target_names)
         # Skip cmake test because the cmake configuration is not exported
         message(STATUS "Could not find the cmake configuration file, skip test the cmake configuration.")
         return()
     endif()
     
     
-    set(EXTERN_HEADER_CHECKS )
-    set(EXTERN_SYMBOL_CHECKS_BASE )
-    set(EXTERN_SYMBOL_CHECK_SYMBOL )
-    if (_tcc_HEADERS)
-        foreach(header ${_tcc_HEADERS})
-            string(APPEND EXTERN_HEADER_CHECKS ${EXTERN_HEADER_CHECKS} "#include <${header}>\n")
+    set(extern_header_checks )
+    set(extern_symbol_checks_base )
+    set(extern_symbol_check_symbol )
+    if (arg_HEADERS)
+        foreach(header IN LISTS arg_HEADERS)
+            string(APPEND extern_header_checks ${extern_header_checks} "#include <${header}>\n")
         endforeach()
     endif()
     
-    if (_tcc_FUNCTIONS)
-        set(EXTERN_SYMBOL_CHECKS_BASE "typedef int (*symbol_func)(void);\n\n")
-        foreach(symbol ${_tcc_FUNCTIONS})
-            set(EXTERN_SYMBOL_CHECK_SYMBOL "symbol_func func = (symbol_func)&${symbol};\nreturn func();\n")
+    if (arg_FUNCTIONS)
+        set(extern_symbol_checks_base "typedef int (*symbol_func)(void);\n\n")
+        foreach(symbol ${arg_FUNCTIONS})
+            set(extern_symbol_check_symbol "symbol_func func = (symbol_func)&${symbol};\nreturn func();\n")
         endforeach()
     endif()
     
-    foreach(TARGET_NAME ${TARGET_NAMES})
+    foreach(target_name IN LISTS target_names)
         # Write a sample CMakeLists.txt and source file
-        write_sample_code(${TARGET_NAME})
+        z_write_sample_code(${target_name})
         # Build
         build_with_toolchain()
     endforeach()
-    unset(EXTERN_SYMBOL_CHECK_SYMBOL)
-    unset(EXTERN_SYMBOL_CHECKS_BASE)
-    unset(EXTERN_HEADER_CHECKS)
+    unset(extern_symbol_check_symbol)
+    unset(extern_symbol_checks_base)
+    unset(extern_header_checks)
 endfunction()
