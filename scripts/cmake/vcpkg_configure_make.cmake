@@ -519,18 +519,6 @@ function(vcpkg_configure_make)
             set(ENV{RANLIB} "llvm-ranlib")
             set(ENV{READELF} "llvm-readelf")
             set(ENV{STRIP} "llvm-strip")
-<<<<<<< HEAD
-
-            get_filename_component(ANDROID_NDK_BINDIR ${VCPKG_DETECTED_CMAKE_C_COMPILER} DIRECTORY)
-            list(APPEND _envPATH ${ANDROID_NDK_BINDIR})
-            list(APPEND _envPATH "/bin")
-            list(APPEND _envPATH "/usr/bin")
-            list(APPEND _envPATH "/usr/local/bin")
-            list(APPEND _envPATH "$ENV{HOME}/.local/bin")
-            list(JOIN _envPATH ${VCPKG_HOST_PATH_SEPARATOR} _envPATH)
-            set(ENV{PATH} ${_envPATH})
-=======
->>>>>>> f1239c32c (fix: vcpkg_configure_make for NDK r23 clang cross-compiling)
         endif()
     endif()
 
