@@ -9,10 +9,13 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
+find_program(GPERF_EXE NAMES gperf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/" NO_DEFAULT_PATHS)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DGperf_EXECUTABLE="${GPERF_EXE}"
 )
 
 vcpkg_cmake_install()
