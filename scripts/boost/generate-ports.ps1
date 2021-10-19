@@ -28,7 +28,7 @@ $portVersions = @{
     "boost-config"               = 2;
     "boost-gil"                  = 1;
     "boost-iostreams"            = 1;
-    "boost-modular-build-helper" = 2;
+    "boost-modular-build-helper" = 3;
     "boost-odeint"               = 1;
     "boost-python"               = 1;
     "boost-process"              = 2;
@@ -569,7 +569,7 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
-        -Dependencies @("boost-uninstall")
+        -Dependencies @("boost-uninstall", @{name = "vcpkg-cmake"; host = $True})
 
     # Update Boost version in boost-modular-build.cmake
     $boost_modular_build = "$portsDir/boost-modular-build-helper/boost-modular-build.cmake"
