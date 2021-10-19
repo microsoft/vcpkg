@@ -7,9 +7,9 @@ vcpkg_from_github(
     SHA512 13b205dd4278600e6ec05c829dc6c7e449747cccb118a3b83abc0ab5ef0ab180feb364ac84da8075471697fbba798ed3d9d763934d7fe9a64ac0560f5f9d3e83
     HEAD_REF master
     PATCHES
-        add-cmake-install.patch
         fix-uwp.patch
         add-all-libs-target.patch
+        add-cmake-install.patch
 )
 
 vcpkg_configure_cmake(

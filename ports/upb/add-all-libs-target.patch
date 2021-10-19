@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index b04a937..dcf54e1 100644
+index 6b4c50d..f3aca6f 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -66,6 +66,7 @@ endif()
@@ -10,7 +10,7 @@ index b04a937..dcf54e1 100644
  add_library(upb
    ../upb/decode.c
    ../upb/decode_internal.h
-@@ -133,6 +134,21 @@ add_library(table INTERFACE)
+@@ -133,4 +134,19 @@ add_library(table INTERFACE)
  target_link_libraries(table INTERFACE
    port)
  
@@ -30,5 +30,3 @@ index b04a937..dcf54e1 100644
 +set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
 +set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
  
- install(
-   DIRECTORY ../upb
