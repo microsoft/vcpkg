@@ -32,8 +32,11 @@ vcpkg_configure_make(
         --enable-html-docs=no
         --enable-latex-docs=no
         "--with-opensp-includes=${CURRENT_INSTALLED_DIR}/include/OpenSP"
-        "--with-opensp-libs=${CURRENT_INSTALLED_DIR}/lib"
         ${EXTRA_OPTS}
+    OPTIONS_RELEASE
+        "--with-opensp-libs=${CURRENT_INSTALLED_DIR}/lib"
+    OPTIONS_DEBUG
+        "--with-opensp-libs=${CURRENT_INSTALLED_DIR}/debug/lib"
 )
 
 vcpkg_install_make()
