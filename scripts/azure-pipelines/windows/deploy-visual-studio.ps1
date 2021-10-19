@@ -18,6 +18,7 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
   'Microsoft.VisualStudio.Component.Windows10SDK.19041',
   'Microsoft.Net.Component.4.8.SDK',
+  'Microsoft.Net.Component.4.7.2.TargetingPack',
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',

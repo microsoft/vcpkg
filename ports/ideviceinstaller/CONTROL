@@ -1,4 +1,0 @@
-Source: ideviceinstaller
-Version: 1.1.2.23-1
-Description: Manage apps of iOS devices
-Build-Depends: libimobiledevice, libzip

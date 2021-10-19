@@ -21,15 +21,35 @@ Generally, there is no need to call this function manually. Instead, pass an ext
 * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
 #]===]
 
-function(vcpkg_clean_executables_in_bin)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vct "" "" "FILE_NAMES")
+function(z_vcpkg_clean_executables_in_bin_remove_directory_if_empty directory)
+    if(NOT EXISTS "${directory}")
+        return()
+    endif()
 
-    if(NOT DEFINED _vct_FILE_NAMES)
+    if(NOT IS_DIRECTORY "${directory}")
+        message(FATAL_ERROR "${directory} must be a directory")
+    endif()
+
+    file(GLOB items "${directory}/*")
+    if("${items}" STREQUAL "")
+        file(REMOVE_RECURSE "${directory}")
+    endif()
+endfunction()
+
+
+function(vcpkg_clean_executables_in_bin)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "" "FILE_NAMES")
+
+    if(NOT DEFINED arg_FILE_NAMES)
         message(FATAL_ERROR "FILE_NAMES must be specified.")
     endif()
 
-    foreach(file_name IN LISTS _vct_FILE_NAMES)
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+
+    foreach(file_name IN LISTS arg_FILE_NAMES)
         file(REMOVE
             "${CURRENT_PACKAGES_DIR}/bin/${file_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
             "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
@@ -38,27 +58,6 @@ function(vcpkg_clean_executables_in_bin)
         )
     endforeach()
 
-    function(try_remove_empty_directory directory)
-        if(NOT EXISTS "${directory}")
-            return()
-        endif()
-
-        if(NOT IS_DIRECTORY "${directory}")
-            message(FATAL_ERROR "${directory} is supposed to be an existing directory.")
-        endif()
-
-        # TODO:
-        # For an empty directory,
-        #     file(GLOB items "${directory}" "${directory}/*")
-        # will return a list with one item.
-        file(GLOB items "${directory}/" "${directory}/*")
-        list(LENGTH items items_count)
-
-        if(${items_count} EQUAL 0)
-            file(REMOVE_RECURSE "${directory}")
-        endif()
-    endfunction()
-
-    try_remove_empty_directory("${CURRENT_PACKAGES_DIR}/bin")
-    try_remove_empty_directory("${CURRENT_PACKAGES_DIR}/debug/bin")
+    z_vcpkg_clean_executables_in_bin_remove_directory_if_empty("${CURRENT_PACKAGES_DIR}/bin")
+    z_vcpkg_clean_executables_in_bin_remove_directory_if_empty("${CURRENT_PACKAGES_DIR}/debug/bin")
 endfunction()

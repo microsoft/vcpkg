@@ -53,7 +53,7 @@ target_link_libraries(minizip PRIVATE ZLIB::ZLIB)
 target_compile_definitions(minizip PRIVATE -D_ZLIB_H)
 
 if(ENABLE_BZIP2)
-  target_link_libraries(minizip PRIVATE ${BZIP2_LIBRARIES})
+  target_link_libraries(minizip PUBLIC ${BZIP2_LIBRARIES})
   target_compile_definitions(minizip PRIVATE -DHAVE_BZIP2=1)
 endif()
 if(ANDROID)

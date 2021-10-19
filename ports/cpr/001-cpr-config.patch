@@ -1,8 +1,8 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index 563b785..20f8a54 100644
+index 8061a14..e8daf19 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -20,6 +20,7 @@ add_library(cpr
+@@ -21,6 +21,7 @@ add_library(cpr
  
  add_library(cpr::cpr ALIAS cpr)
  
@@ -10,7 +10,7 @@ index 563b785..20f8a54 100644
  target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but first dependencys in ssl_options need to be removed
  
  # Set version for shared libraries.
-@@ -28,4 +29,18 @@ set_target_properties(cpr
+@@ -29,4 +30,18 @@ set_target_properties(cpr
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
  
@@ -30,4 +30,3 @@ index 563b785..20f8a54 100644
 +if (NOT DISABLE_INSTALL_HEADERS)
 +  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../include/cpr DESTINATION include)
 +endif()
-\ No newline at end of file

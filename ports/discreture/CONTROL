@@ -1,5 +1,0 @@
-Source: discreture
-Version: 2020-01-29
-Homepage: https://github.com/mraggi/discreture
-Description: A modern C++ library for efficiently and easily iterating through common combinatorial objects, such as combinations, permutations, partitions and more.
-Build-Depends: boost-iterator, boost-container

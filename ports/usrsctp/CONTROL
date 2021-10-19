@@ -1,3 +1,0 @@
-Source: usrsctp
-Version: 0db9691
-Description: This is a userland SCTP stack supporting FreeBSD, Linux, Mac OS X and Windows.

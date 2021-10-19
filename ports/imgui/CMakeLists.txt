@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(imgui CXX)
 
 set(CMAKE_DEBUG_POSTFIX d)
+
+if(APPLE)
+    set(CMAKE_CXX_STANDARD 11)
+    enable_language(OBJCXX)
+endif()
 
 add_library(${PROJECT_NAME} "")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -59,33 +64,14 @@ endif()
 
 if(IMGUI_BUILD_METAL_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.mm)
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.mm PROPERTIES COMPILE_FLAGS -fobjc-weak)
 endif()
 
 if(IMGUI_BUILD_OPENGL2_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.cpp)
 endif()
 
-if(IMGUI_BUILD_OPENGL3_GLEW_BINDING)
-    find_package(GLEW REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC GLEW::GLEW)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GLAD_BINDING)
-    find_package(glad CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glad::glad)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GL3W_BINDING)
-    find_package(gl3w CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC unofficial::gl3w::gl3w)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
-endif()
-
-if(IMGUI_BUILD_OPENGL3_GLBINDING_BINDING)
-    find_package(glbinding CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glbinding::glbinding)
+if(IMGUI_BUILD_OPENGL3_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
 endif()
 
@@ -97,6 +83,12 @@ if(IMGUI_BUILD_SDL2_BINDING)
     find_package(SDL2 CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl.cpp)
+endif()
+
+if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
+    find_package(SDL2 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.cpp)
 endif()
 
 if(IMGUI_BUILD_VULKAN_BINDING)
@@ -193,8 +185,14 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_OPENGL3_GLEW_BINDING OR IMGUI_BUILD_OPENGL3_GLAD_BINDING OR IMGUI_BUILD_OPENGL3_GL3W_BINDING OR IMGUI_BUILD_OPENGL3_GLBINDING_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.h DESTINATION include)
+    if(IMGUI_BUILD_OPENGL3_BINDING)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3_loader.h
+            DESTINATION
+                include
+        )
     endif()
 
     if(IMGUI_BUILD_OSX_BINDING)
@@ -203,6 +201,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_SDL2_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)

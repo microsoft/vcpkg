@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/GameNetworkingSockets
-    REF 681ce028953088fc585c239bdf39c4cd9f516737 #2021-04-26
-    SHA512 9d5453aa1e82a672a05c2c54c94c446e2b4a2bb46474d3a0c191a57c146aa58c35974ebecf46b59a68f7c74e10b2c3baf240c3d4e99728cb9d349fcf051b3512
+    REF 9875f39ad3fae8c913daa310c7ff0a7a54b1e6c2 # v1.3.0
+    SHA512 edf814ef10a11b67045d90d589a3bd6471fa46bc3f16cf1e83d1806df6bb48306dcda4096a2ff80fee78b24ce36d164cd46808680c9f5f8f546455fce7bf9aa0
     HEAD_REF master
 )
 
@@ -24,6 +24,7 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/GameNetworkingSockets" TARGET_PATH "share/GameNetworkingSockets")
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

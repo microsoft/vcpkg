@@ -1,4 +1,0 @@
-Source: vlpp
-Version: 0.11.0.0
-Homepage: https://github.com/vczh-libraries/Release
-Description: Common C++ construction, including string operation / generic container / linq / General-LR parser generator / multithreading / reflection for C++ / etc

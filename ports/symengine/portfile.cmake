@@ -1,17 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF 4f669d5954977e86f4da0f53cb5110d2eb6320b6
-    SHA512 091ebc83240d3823fb73e0f65f80732d2a85e55f19c8e1a3d1435f05cfa0d1b95d893e8a3c432e1698953a35c56a6af78044ee59db04f03706cf33e0798a02c7
+    REF v0.7.0
+    SHA512 fd3198bc4a05ca2b9b8a58039cc21af65b44457f295362a1a9b8dbf9c6e3df5186c0c84b289bc9fe85d9efd5ac1a683f6b7ba9a661fb6d913d6ceefb14ee2348
     HEAD_REF master
+    PATCHES
+        fix-build.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    arb WITH_ARB
-    flint WITH_FLINT 
-    mpfr WITH_MPFR
-    tcmalloc WITH_TCMALLOC
+    FEATURES
+        arb WITH_ARB
+        flint WITH_FLINT 
+        mpfr WITH_MPFR
+        tcmalloc WITH_TCMALLOC
 )
 
 if(integer-class-boostmp IN_LIST FEATURES)

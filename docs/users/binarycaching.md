@@ -10,7 +10,7 @@ Binary caching is especially effective when using Continuous Integration, since 
 
 Caches can be hosted in a variety of environments. The most basic examples are a folder on the local machine or a network file share. Caches can also be stored in any NuGet feed (such as GitHub or Azure DevOps Artifacts), Azure Blob Storage*, or Google Cloud Storage*.
 
-\* (experimental) 
+\* (experimental)
 
 If your CI provider offers a native "caching" function, we recommend using both vcpkg binary caching and the native method for the most performant results.
 
@@ -52,6 +52,7 @@ By default, zip-based archives will be cached at the first valid location of:
 | `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
 | `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `nugettimeout,<seconds>`    | Specifies a timeout for NuGet network operations; equivalent to the `-Timeout` parameter of the NuGet CLI.
 | `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
 | `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
@@ -130,6 +131,10 @@ Next, you will need to create a feed for your project; see the [Azure DevOps Art
 variables:
 - name: VCPKG_BINARY_SOURCES
   value: 'clear;nuget,<FEED_URL>,readwrite'
+
+steps:
+# Remember to add this task to allow vcpkg to upload archives via NuGet
+- task: NuGetAuthenticate@0
 ```
 
 If you are using custom agents with a non-Windows OS, you will need to install Mono to run `nuget.exe` (`apt install mono-complete`, `brew install mono`, etc).
@@ -165,6 +170,8 @@ x-azblob,https://<storagename>.blob.core.windows.net/<containername>,sv=2019-12-
 Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
 1. It will be printed in full if `--debug` is passed
 2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
+
+Azure Blob Storage includes a feature to remove cache entries that haven't been accessed in a given number of days which can be used to reduce the size of your cache. See [Data Lifecycle Management on Microsoft Docs](https://docs.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview) for more information, or look for "Data management > Lifecycle management" in the Azure Portal for your storage account. If you wish to be able to be resilient to upstream libraries' servers but still want to remove entries from the binary cache, consider using [asset caching](assetcaching.md#x-azurl) in a different storage account without a lifecycle management policy.
 
 ### Google Cloud Storage (experimental)
 

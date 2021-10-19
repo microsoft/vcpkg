@@ -1,0 +1,35 @@
+{
+  "name": "qtwebview",
+  "version-semver": "6.2.0",
+  "description": "Qt Web View",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "webengine": {
+      "description": "Build with Webengine",
+      "dependencies": [
+        {
+          "name": "qtwebengine",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}
