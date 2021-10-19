@@ -19,7 +19,7 @@ diff -Nru -x '*~' OpenSP-1.5.2.orig/CMakeLists.txt OpenSP-1.5.2/CMakeLists.txt
 +file(GLOB SRC_SOURCES lib/*.cxx)
 +file(GLOB libopensp_HEADERS config.h generic/*.h include/*.h)
 +
-+add_library(opensp SHARED ${SRC_SOURCES})
++add_library(opensp ${SRC_SOURCES})
 +set_target_properties(opensp PROPERTIES OUTPUT_NAME "osp")
 +target_link_libraries(opensp)
 +
