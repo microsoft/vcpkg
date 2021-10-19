@@ -223,7 +223,7 @@ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 ]]
         )
-        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+            string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
         endif()
 
         file(WRITE "${main_cmake}" "${contents}")
