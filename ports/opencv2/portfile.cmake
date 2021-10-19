@@ -121,10 +121,10 @@ find_dependency(Threads)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+find_dependency(Qt5 COMPONENTS Core Gui Widgets Test Concurrent)")
     if("opengl" IN_LIST FEATURES)
       string(APPEND DEPS_STRING "
-find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
+find_dependency(Qt5 COMPONENTS OpenGL)")
     endif()
   endif()
 

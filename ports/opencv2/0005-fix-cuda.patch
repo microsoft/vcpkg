@@ -51,8 +51,6 @@
        endif()
        set(__cuda_arch_ptx "3.0")
      endif()
-diff --git a/cmake/templates/OpenCVConfig.cmake.in b/cmake/templates/OpenCVConfig.cmake.in
-index fe85571..0f9d2f5 100644
 --- a/cmake/templates/OpenCVConfig.cmake.in
 +++ b/cmake/templates/OpenCVConfig.cmake.in
 @@ -256,7 +256,7 @@ if(OpenCV_CUDA_VERSION)
@@ -86,8 +84,6 @@ index fe85571..0f9d2f5 100644
  endif()
  
  # ==============================================================
-diff --git a/cmake/OpenCVDetectCUDA.cmake b/cmake/OpenCVDetectCUDA.cmake
-index 30b5093..50dcdc9 100644
 --- a/cmake/OpenCVDetectCUDA.cmake
 +++ b/cmake/OpenCVDetectCUDA.cmake
 @@ -229,18 +229,40 @@ else()
