@@ -7,6 +7,7 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
 endif()
 
 set(OPENCV_VERSION "3.4.16")
+set(USE_QT_VERSION "5")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -89,7 +90,7 @@ endif()
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
-  set(WITH_QT "5")
+  set(WITH_QT ${USE_QT_VERSION})
 endif()
 
 set(WITH_IPP OFF)
@@ -429,7 +430,11 @@ find_dependency(Tesseract)")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_dependency(QT NAMES Qt5 COMPONENTS Core Gui Widgets Test Concurrent)")
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent)")
+    if("opengl" IN_LIST FEATURES)
+      string(APPEND DEPS_STRING "
+find_dependency(Qt${USE_QT_VERSION} COMPONENTS OpenGL)")
+    endif()
   endif()
   if("ade" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(ade)")
