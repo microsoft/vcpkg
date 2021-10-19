@@ -1,33 +1,149 @@
 {
   "name": "qt",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qt5compat",
+    {
+      "name": "qt5compat",
+      "default-features": false,
+      "features": [
+        "big-codecs",
+        "codecs",
+        "qml",
+        "textcodec"
+      ]
+    },
     {
       "name": "qtbase",
       "default-features": false
     },
-    "qtcharts",
+    {
+      "name": "qtcharts",
+      "default-features": false,
+      "features": [
+        "designer",
+        "qml"
+      ]
+    },
     "qtcoap",
+    "qtconnectivity",
     "qtdatavis3d",
     "qtdeclarative",
     "qtdoc",
-    "qtimageformats",
-    "qtlottie",
+    {
+      "name": "qtimageformats",
+      "default-features": false,
+      "features": [
+        "jasper",
+        "tiff",
+        "webp"
+      ]
+    },
+    {
+      "name": "qtlocation",
+      "default-features": false,
+      "features": [
+        "nmea",
+        "qml"
+      ]
+    },
+    {
+      "name": "qtlottie",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
     "qtmqtt",
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "gstreamer",
+        "qml",
+        "widgets"
+      ]
+    },
     "qtnetworkauth",
-    "qtopcua",
-    "qtquick3d",
-    "qtquickcontrols2",
+    {
+      "name": "qtopcua",
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtquick3d",
+      "default-features": false
+    },
     "qtquicktimeline",
-    "qtscxml",
+    {
+      "name": "qtremoteobjects",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtscxml",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtsensors",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    "qtserialbus",
+    "qtserialport",
     "qtshadertools",
     "qtsvg",
-    "qttools",
+    {
+      "name": "qttools",
+      "default-features": false,
+      "features": [
+        "assistant",
+        "designer",
+        "qml"
+      ]
+    },
     "qttranslations",
-    "qtvirtualkeyboard"
+    "qtvirtualkeyboard",
+    {
+      "name": "qtwebchannel",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtwebengine",
+      "default-features": false,
+      "features": [
+        "geolocation",
+        "spellchecker",
+        "webchannel"
+      ]
+    },
+    {
+      "name": "qtwebsockets",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtwebview",
+      "default-features": false,
+      "features": [
+        "qml",
+        "webengine"
+      ]
+    }
   ],
   "default-features": [
     "default-features"
@@ -38,10 +154,16 @@
       "dependencies": [
         {
           "name": "qtactiveqt",
+          "features": [
+            "qml"
+          ],
           "platform": "windows"
         },
         {
           "name": "qtwayland",
+          "features": [
+            "qml"
+          ],
           "platform": "linux"
         }
       ]

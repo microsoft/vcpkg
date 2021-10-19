@@ -12,18 +12,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-file(GLOB SHARED_CMAKE_FILES
-     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
-     "${CURRENT_PACKAGES_DIR}/lib/s2n"
-     )
-
-foreach(FILE ${SHARED_CMAKE_FILES})
-    file(COPY "${FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
-endforeach()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/s2n/cmake)
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
 	"${CURRENT_PACKAGES_DIR}/lib/s2n"
 	)
 

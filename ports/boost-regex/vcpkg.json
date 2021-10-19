@@ -1,6 +1,6 @@
 {
   "name": "boost-regex",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost regex module",
   "homepage": "https://github.com/boostorg/regex",
   "dependencies": [
@@ -13,9 +13,7 @@
     "boost-config",
     "boost-container-hash",
     "boost-core",
-    "boost-detail",
     "boost-integer",
-    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -26,8 +24,11 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "icu": {

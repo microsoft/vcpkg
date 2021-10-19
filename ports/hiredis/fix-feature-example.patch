@@ -2,7 +2,7 @@ diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
 index dd3a313..8c69d3a 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -19,16 +19,30 @@ if (LIBEV)
+@@ -19,16 +19,25 @@ if (LIBEV)
      TARGET_LINK_LIBRARIES(example-libev hiredis ev)
  ENDIF()
  
@@ -10,15 +10,10 @@ index dd3a313..8c69d3a 100644
 -if (LIBEVENT)
 +FIND_PACKAGE(Libevent CONFIG REQUIRED)
 +FIND_PATH(LIBEVENT_INCLUDES evutil.h)
-+if (BUILD_SHARED_LIBS)
-+    set(LIBEVENT_LIBS ${LIBEVENT_SHARED_LIBRARIES})
-+else()
-+    set(LIBEVENT_LIBS ${LIBEVENT_STATIC_LIBRARIES})
-+endif()
 +if (UNIX)
      ADD_EXECUTABLE(example-libevent example-libevent)
 -    TARGET_LINK_LIBRARIES(example-libevent hiredis event)
-+    TARGET_LINK_LIBRARIES(example-libevent hiredis ${LIBEVENT_LIBS})
++    TARGET_LINK_LIBRARIES(example-libevent hiredis ${LIBEVENT_LIBRARIES})
 +    TARGET_INCLUDE_DIRECTORIES(example-libevent PRIVATE ${LIBEVENT_INCLUDES})
  ENDIF()
  
@@ -60,7 +55,7 @@ index dd3a313..8c69d3a 100644
  
  ADD_EXECUTABLE(example example.c)
 -TARGET_LINK_LIBRARIES(example hiredis)
-+TARGET_LINK_LIBRARIES(example hiredis ${LIBEVENT_LIBS})
++TARGET_LINK_LIBRARIES(example hiredis ${LIBEVENT_LIBRARIES})
  
  ADD_EXECUTABLE(example-push example-push.c)
  TARGET_LINK_LIBRARIES(example-push hiredis)

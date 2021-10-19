@@ -1,6 +1,6 @@
 {
   "name": "boost-local-function",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost local_function module",
   "homepage": "https://github.com/boostorg/local_function",
   "dependencies": [
