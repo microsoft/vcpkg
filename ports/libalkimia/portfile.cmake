@@ -27,6 +27,8 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_WEBKIT=OFF
         -DBUILD_APPLETS=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        BUNDLE_INSTALL_DIR
 )
 
 vcpkg_cmake_install()
