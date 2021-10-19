@@ -4,6 +4,10 @@
   "description": "OFX banking protocol abstraction library",
   "homepage": "http://libofx.sourceforge.net",
   "dependencies": [
+    {
+      "name": "getopt",
+      "platform": "windows & !mingw"
+    },
     "libopensp"
   ]
 }

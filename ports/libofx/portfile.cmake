@@ -10,15 +10,22 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${OFX_VERSION}
+    PATCHES
+        msvc.diff   # https://github.com/libofx/libofx/pull/47
 )
 
 # libopensp requirements
-list(APPEND EXTRA_OPTS "LIBS=-lintl -liconv \$LIBS")
 if(VCPKG_TARGET_IS_OSX)
+    list(APPEND EXTRA_OPTS "LIBS=-lintl -liconv \$LIBS")
     list(APPEND EXTRA_OPTS "LDFLAGS=-framework CoreFoundation \$LDFLAGS") 
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND EXTRA_OPTS "LIBS=-lgetopt \$LIBS")
+endif()
+
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --enable-doxygen=no

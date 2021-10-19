@@ -1,0 +1,285 @@
+From f518f1faf3382c1ec7791be504dac40a2fb3d763 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 19 Oct 2021 13:51:46 +0200
+Subject: [PATCH 1/5] Make Windows macros more generic to include MSVC
+
+__WIN32__ macros are not defined by MSVC. Use the more broad
+_WIN32 macro instead.
+
+See:
+https://web.archive.org/web/20140625123925/http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
+---
+ lib/ofx_preproc.cpp   | 10 +++++-----
+ lib/ofx_utilities.cpp |  4 ++--
+ lib/win32.cpp         |  2 +-
+ lib/win32.hh          |  2 +-
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/lib/ofx_preproc.cpp b/lib/ofx_preproc.cpp
+index e465497..0bfe012 100644
+--- a/lib/ofx_preproc.cpp
++++ b/lib/ofx_preproc.cpp
+@@ -35,13 +35,13 @@
+ #include <iconv.h>
+ #endif
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ # define DIRSEP "\\"
+ #else
+ # define DIRSEP "/"
+ #endif
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ # include "win32.hh"
+ # include <windows.h> // for GetModuleFileName()
+ # undef ERROR
+@@ -108,7 +108,7 @@ int ofx_proc_file(LibofxContextPtr ctx, const char * p_filename)
+     mkTempFileName("libofxtmpXXXXXX", tmp_filename, sizeof(tmp_filename));
+ 
+     message_out(DEBUG, "ofx_proc_file(): Creating temp file: " + string(tmp_filename));
+-#ifdef __WIN32__
++#ifdef _WIN32
+     tmp_file_fd = mkstemp_win32(tmp_filename);
+ #else
+     tmp_file_fd = mkstemp(tmp_filename);
+@@ -512,7 +512,7 @@ string sanitize_proprietary_tags(string input_string)
+ }
+ 
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ static std::string get_dtd_installation_directory()
+ {
+   // Partial implementation of
+@@ -567,7 +567,7 @@ std::string find_dtd(LibofxContextPtr ctx, const std::string& dtd_filename)
+     }
+   }
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+   dtd_path_filename = get_dtd_installation_directory();
+   if (!dtd_path_filename.empty())
+   {
+diff --git a/lib/ofx_utilities.cpp b/lib/ofx_utilities.cpp
+index e2281f0..a78aacd 100644
+--- a/lib/ofx_utilities.cpp
++++ b/lib/ofx_utilities.cpp
+@@ -28,7 +28,7 @@
+ #include "messages.hh"
+ #include "ofx_utilities.hh"
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ # define DIRSEP "\\"
+ /* MSWin calls it _mkgmtime instead of timegm */
+ # define timegm(tm) _mkgmtime(tm)
+@@ -235,7 +235,7 @@ std::string get_tmp_dir()
+   if (var) return var;
+   var = getenv("TEMP");
+   if (var) return var;
+-#ifdef __WIN32__
++#ifdef _WIN32
+   return "C:\\";
+ #else
+   return "/tmp";
+diff --git a/lib/win32.cpp b/lib/win32.cpp
+index 5f863de..b4b8594 100644
+--- a/lib/win32.cpp
++++ b/lib/win32.cpp
+@@ -25,7 +25,7 @@
+ 
+ 
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ 
+ int mkstemp_win32(char *tmpl)
+ {
+diff --git a/lib/win32.hh b/lib/win32.hh
+index 8df3970..f41f673 100644
+--- a/lib/win32.hh
++++ b/lib/win32.hh
+@@ -21,7 +21,7 @@
+ #endif
+ 
+ 
+-#ifdef __WIN32__
++#ifdef _WIN32
+ 
+ int mkstemp_win32(char *tmpl);
+ 
+
+From 593cad1b751bcf2ed06a1e61f85f8210bfc320f8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 19 Oct 2021 14:00:33 +0200
+Subject: [PATCH 2/5] unistd.h is not available under MSVC
+
+---
+ lib/win32.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/win32.cpp b/lib/win32.cpp
+index b4b8594..3542fe6 100644
+--- a/lib/win32.cpp
++++ b/lib/win32.cpp
+@@ -18,7 +18,9 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <assert.h>
+
+From b577585f3c2dc670556f2228d3a80c4457965487 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 19 Oct 2021 14:02:18 +0200
+Subject: [PATCH 3/5] Use strcasecmp, snprintf and open replacements under MSVC
+
+---
+ lib/win32.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/lib/win32.cpp b/lib/win32.cpp
+index 3542fe6..7d53811 100644
+--- a/lib/win32.cpp
++++ b/lib/win32.cpp
+@@ -29,6 +29,14 @@
+ 
+ #ifdef _WIN32
+ 
++#ifdef _MSC_VER
++#include <Windows.h>
++#include <io.h>
++#define strcasecmp strcmpi
++#define snprintf _snprintf
++#define open _open
++#endif
++
+ int mkstemp_win32(char *tmpl)
+ {
+   int fd = -1;
+
+From d28c013b647d2293b702243bcddda913e445916b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Thu, 21 Oct 2021 14:01:04 +0200
+Subject: [PATCH 4/5] Convert ofx2qif into a C++ app
+
+---
+ ofx2qif/Makefile.am                |  2 +-
+ ofx2qif/{ofx2qif.c => ofx2qif.cpp} | 28 ++++++++++++++--------------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+ rename ofx2qif/{ofx2qif.c => ofx2qif.cpp} (90%)
+
+diff --git a/ofx2qif/Makefile.am b/ofx2qif/Makefile.am
+index 3d41a24..e1fe304 100644
+--- a/ofx2qif/Makefile.am
++++ b/ofx2qif/Makefile.am
+@@ -1,5 +1,5 @@
+ bin_PROGRAMS = ofx2qif
+ ofx2qif_LDADD = $(top_builddir)/lib/libofx.la
+-ofx2qif_SOURCES = ofx2qif.c
++ofx2qif_SOURCES = ofx2qif.cpp
+ AM_CPPFLAGS = \
+ 	-I${top_builddir}/inc
+diff --git a/ofx2qif/ofx2qif.c b/ofx2qif/ofx2qif.cpp
+similarity index 90%
+rename from ofx2qif/ofx2qif.c
+rename to ofx2qif/ofx2qif.cpp
+index eb715a7..7f450ff 100644
+--- a/ofx2qif/ofx2qif.c
++++ b/ofx2qif/ofx2qif.cpp
+@@ -1,5 +1,5 @@
+ /***************************************************************************
+-                                   ofx2qif.c
++                                  ofx2qif.cpp
+                              -------------------
+     copyright            : (C) 2002 by Benoit Gr�goire
+     email                : benoitg@coeus.ca
+@@ -22,7 +22,7 @@
+  hacking on ofx2qif, links to QIF documentation are available on the LibOFX
+  home page.
+  *
+- * ofx2qif is meant to be the C code example and demo of the library.  It uses
++ * ofx2qif is meant to be the C++ code example and demo of the library.  It uses
+  many of the functions and structures of the LibOFX API.  Note that unlike 
+  ofxdump, all error output is disabled by default.
+  *
+@@ -142,17 +142,17 @@ int ofx_proc_statement_cb(const struct OfxStatementData data, void * statement_d
+   if(data.account_ptr->account_type_valid==true)
+     {
+       switch(data.account_ptr->account_type){
+-      case OFX_CHECKING : printf("TBank\n");
++      case OfxAccountData::OFX_CHECKING : printf("TBank\n");
+ 	break;
+-      case OFX_SAVINGS :  printf("TBank\n");
++      case OfxAccountData::OFX_SAVINGS :  printf("TBank\n");
+ 	break;
+-      case OFX_MONEYMRKT :  printf("TOth A\n");
++      case OfxAccountData::OFX_MONEYMRKT :  printf("TOth A\n");
+ 	break;
+-      case OFX_CREDITLINE :  printf("TOth L\n");
++      case OfxAccountData::OFX_CREDITLINE :  printf("TOth L\n");
+ 	break;
+-      case OFX_CMA :  printf("TOth A\n");
++      case OfxAccountData::OFX_CMA :  printf("TOth A\n");
+ 	break;
+-      case OFX_CREDITCARD :   printf("TCCard\n");
++      case OfxAccountData::OFX_CREDITCARD :   printf("TCCard\n");
+ 	break;
+       default: perror("WRITEME: ofx_proc_account() This is an unknown account type!");
+       }
+@@ -170,17 +170,17 @@ int ofx_proc_statement_cb(const struct OfxStatementData data, void * statement_d
+   /*The transactions will follow, here is the header */
+   if(data.account_ptr->account_type_valid==true){
+     switch(data.account_ptr->account_type){
+-    case OFX_CHECKING : printf("!Type:Bank\n");
++    case OfxAccountData::OFX_CHECKING : printf("!Type:Bank\n");
+       break;
+-    case OFX_SAVINGS : printf("!Type:Bank\n");
++    case OfxAccountData::OFX_SAVINGS : printf("!Type:Bank\n");
+       break;
+-    case OFX_MONEYMRKT : printf("!Type:Oth A\n");
++    case OfxAccountData::OFX_MONEYMRKT : printf("!Type:Oth A\n");
+       break;
+-    case OFX_CREDITLINE : printf("!Type:Oth L\n");
++    case OfxAccountData::OFX_CREDITLINE : printf("!Type:Oth L\n");
+       break;
+-    case OFX_CMA : printf("!Type:Oth A\n");
++    case OfxAccountData::OFX_CMA : printf("!Type:Oth A\n");
+       break;
+-    case OFX_CREDITCARD : printf("!Type:CCard\n");
++    case OfxAccountData::OFX_CREDITCARD : printf("!Type:CCard\n");
+       break;
+     default: perror("WRITEME: ofx_proc_account() This is an unknown account type!");
+     }
+
+From 5416951d58b2ae123a7e59827c95ebd8aae3316d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 19 Oct 2021 14:03:24 +0200
+Subject: [PATCH 5/5] Explicit linking against stdc++ should be required
+
+This fixes compilation with MSVC as well.
+---
+ lib/Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index bd9a8aa..f0eef60 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -45,8 +45,8 @@ AM_CPPFLAGS = \
+ 	-I${OPENSPINCLUDES} \
+ 	-DMAKEFILE_DTD_PATH=\"${LIBOFX_DTD_DIR}\"
+ 
+-#libofx_la_LIBADD = @LIBOBJS@ ${OPENSPLIBS} -lstdc++
+-libofx_la_LIBADD = $(OPENSPLIBS) $(ICONV_LIBS) -lstdc++
++#libofx_la_LIBADD = @LIBOBJS@ ${OPENSPLIBS}
++libofx_la_LIBADD = $(OPENSPLIBS) $(ICONV_LIBS)
+ libofx_la_LDFLAGS = -no-undefined -version-info @LIBOFX_SO_CURRENT@:@LIBOFX_SO_REVISION@:@LIBOFX_SO_AGE@
+ 
+ 
