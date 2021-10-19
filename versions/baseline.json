@@ -2,7 +2,7 @@
   "default": {
     "3fd": {
       "baseline": "2.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "7zip": {
       "baseline": "19.00",
@@ -173,7 +173,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.19.2",
+      "baseline": "1.20.0",
       "port-version": 0
     },
     "asio-grpc": {
@@ -297,8 +297,8 @@
       "port-version": 1
     },
     "aws-lambda-cpp": {
-      "baseline": "0.2.6",
-      "port-version": 1
+      "baseline": "0.2.7",
+      "port-version": 0
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
@@ -1381,7 +1381,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -1456,6 +1456,10 @@
       "baseline": "3.6.4",
       "port-version": 0
     },
+    "compoundfilereader": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "concurrencpp": {
       "baseline": "0.1.3",
       "port-version": 0
@@ -1526,7 +1530,7 @@
     },
     "cppad": {
       "baseline": "20210000.7",
-      "port-version": 0
+      "port-version": 1
     },
     "cppcms": {
       "baseline": "1.2.1",
@@ -1550,7 +1554,7 @@
     },
     "cppitertools": {
       "baseline": "2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "cppkafka": {
       "baseline": "0.3.1",
@@ -1586,7 +1590,7 @@
     },
     "cpr": {
       "baseline": "1.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "cpu-features": {
       "baseline": "0.6.0",
@@ -1594,7 +1598,7 @@
     },
     "cpuid": {
       "baseline": "0.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cpuinfo": {
       "baseline": "2021-04-04",
@@ -1646,7 +1650,7 @@
     },
     "ctemplate": {
       "baseline": "2020-09-14",
-      "port-version": 1
+      "port-version": 2
     },
     "ctp": {
       "baseline": "6.6.1_P1_20210406_se",
@@ -1786,7 +1790,7 @@
     },
     "dimcli": {
       "baseline": "5.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "directx-headers": {
       "baseline": "1.4.9",
@@ -2033,7 +2037,7 @@
       "port-version": 1
     },
     "ezc3d": {
-      "baseline": "1.3.7",
+      "baseline": "1.4.6",
       "port-version": 0
     },
     "faad2": {
@@ -2234,7 +2238,7 @@
     },
     "freerdp": {
       "baseline": "2.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "freetds": {
       "baseline": "1.2.11",
@@ -3318,7 +3322,7 @@
     },
     "libdatachannel": {
       "baseline": "0.15.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libdatrie": {
       "baseline": "0.2.10",
@@ -3509,7 +3513,7 @@
       "port-version": 2
     },
     "libjuice": {
-      "baseline": "0.8.4",
+      "baseline": "0.9.1",
       "port-version": 0
     },
     "libkeyfinder": {
@@ -3742,7 +3746,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 4
+      "port-version": 5
     },
     "librdkafka": {
       "baseline": "1.7.0",
@@ -4609,7 +4613,7 @@
       "port-version": 2
     },
     "nlohmann-json": {
-      "baseline": "3.10.2",
+      "baseline": "3.10.4",
       "port-version": 0
     },
     "nlopt": {
@@ -4898,7 +4902,7 @@
     },
     "openni2": {
       "baseline": "2.2.0.33",
-      "port-version": 12
+      "port-version": 13
     },
     "openscap": {
       "baseline": "1.3.1",
@@ -4974,7 +4978,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 8
+      "port-version": 9
     },
     "osg-qt": {
       "baseline": "Qt5",
@@ -4982,7 +4986,7 @@
     },
     "osgearth": {
       "baseline": "3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "osi": {
       "baseline": "0.108.6",
@@ -6302,7 +6306,7 @@
     },
     "sparsehash": {
       "baseline": "2.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sparsepp": {
       "baseline": "1.22",
@@ -6469,8 +6473,8 @@
       "port-version": 1
     },
     "sundials": {
-      "baseline": "5.7.0",
-      "port-version": 1
+      "baseline": "5.8.0",
+      "port-version": 0
     },
     "superlu": {
       "baseline": "2020-01-07",
@@ -6482,7 +6486,7 @@
     },
     "systemc": {
       "baseline": "2.3.3",
-      "port-version": 5
+      "port-version": 6
     },
     "szip": {
       "baseline": "2.1.1",
@@ -6721,8 +6725,8 @@
       "port-version": 5
     },
     "toml11": {
-      "baseline": "3.5.0",
-      "port-version": 2
+      "baseline": "3.7.0",
+      "port-version": 0
     },
     "tomlplusplus": {
       "baseline": "2.5.0",
