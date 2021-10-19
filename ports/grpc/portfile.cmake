@@ -65,11 +65,13 @@ vcpkg_cmake_configure(
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
         -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DPROTOBUF_PROTOC_EXECUTABLE="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    MAYBE_UNUSED_VARIABLES
+        gRPC_MSVC_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_cmake_fixup_config()
+vcpkg_cmake_config_fixup()
 
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
