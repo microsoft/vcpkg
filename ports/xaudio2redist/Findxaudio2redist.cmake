@@ -19,11 +19,11 @@ string(REPLACE "/include/xaudio2redist" "/debug/lib" xaudio2redist_DEBUG_LIB_DIR
 string(REPLACE "/include/xaudio2redist" "/debug/bin" xaudio2redist_DEBUG_BIN_DIR ${xaudio2redist_INCLUDE_DIR})
 
 if(XAUDIO2REDIST_FOUND AND NOT TARGET Microsoft::XAudio2Redist)
-   set(XAUDIO2_RELEASE_LIB ${xaudio2redist_LIB_DIR}/xaudio2_9redist.lib)
-   set(XAUDIO2_RELEASE_DLL ${xaudio2redist_BIN_DIR}/xaudio2_9redist.dll)
+   set(XAUDIO2_RELEASE_LIB "${xaudio2redist_LIB_DIR}/xaudio2_9redist.lib")
+   set(XAUDIO2_RELEASE_DLL "${xaudio2redist_BIN_DIR}/xaudio2_9redist.dll")
 
-   set(XAUDIO2_DEBUG_LIB ${xaudio2redist_DEBUG_LIB_DIR}/xaudio2_9redist.lib)
-   set(XAUDIO2_DEBUG_DLL ${xaudio2redist_DEBUG_BIN_DIR}/xaudio2_9redist.dll)
+   set(XAUDIO2_DEBUG_LIB "${xaudio2redist_DEBUG_LIB_DIR}/xaudio2_9redist.lib")
+   set(XAUDIO2_DEBUG_DLL "${xaudio2redist_DEBUG_BIN_DIR}/xaudio2_9redist.dll")
 
    add_library(Microsoft::XAudio2Redist SHARED IMPORTED)
    set_target_properties(Microsoft::XAudio2Redist PROPERTIES
@@ -37,12 +37,12 @@ if(XAUDIO2REDIST_FOUND AND NOT TARGET Microsoft::XAudio2Redist)
 endif()
 
 if(XAUDIO2REDIST_FOUND AND NOT TARGET Microsoft::XApoBase)
-   set(XAPOBASE_RELEASE_LIB ${xaudio2redist_LIB_DIR}/xapobaseredist_md.lib)
-   set(XAPOBASE_DEBUG_LIB ${xaudio2redist_DEBUG_LIB_DIR}/xapobaseredist_md.lib)
+   set(XAPOBASE_RELEASE_LIB "${xaudio2redist_LIB_DIR}/xapobaseredist_md.lib")
+   set(XAPOBASE_DEBUG_LIB "${xaudio2redist_DEBUG_LIB_DIR}/xapobaseredist_md.lib")
 
    if(NOT EXISTS ${XAPOBASE_RELEASE_LIB})
-      set(XAPOBASE_RELEASE_LIB ${xaudio2redist_LIB_DIR}/xapobaseredist.lib)
-      set(XAPOBASE_DEBUG_LIB ${xaudio2redist_DEBUG_LIB_DIR}/xapobaseredist.lib)
+      set(XAPOBASE_RELEASE_LIB "${xaudio2redist_LIB_DIR}/xapobaseredist.lib")
+      set(XAPOBASE_DEBUG_LIB "${xaudio2redist_DEBUG_LIB_DIR}/xapobaseredist.lib")
    endif()
 
    add_library(Microsoft::XApoBase STATIC IMPORTED)
