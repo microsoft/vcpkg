@@ -61,7 +61,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "png"       WITH_PNG
- "qt"        WITH_QT
  "quirc"     WITH_QUIRC
  "sfm"       BUILD_opencv_sfm
  "tiff"      WITH_TIFF
@@ -70,7 +69,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"     BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "tbb"
+# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "qt, "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -88,6 +87,11 @@ if("gtk" IN_LIST FEATURES)
   else()
     message(WARNING "The gtk module cannot be enabled outside Linux")
   endif()
+endif()
+
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_QT "5")
 endif()
 
 set(BUILD_opencv_gapi ON)
@@ -395,6 +399,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
         -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=${WITH_GTK}
+        -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
