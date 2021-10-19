@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp.patch
+        fix-cmakelists.patch
         add-all-libs-target.patch
         add-cmake-install.patch
 )

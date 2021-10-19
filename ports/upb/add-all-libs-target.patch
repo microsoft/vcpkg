@@ -1,16 +1,8 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 6b4c50d..f3aca6f 100644
+index b4f43f9..c90968f 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -66,6 +66,7 @@ endif()
- enable_testing()
- 
- add_library(port INTERFACE)
-+add_library(descriptor_upbproto INTERFACE)
- add_library(upb
-   ../upb/decode.c
-   ../upb/decode_internal.h
-@@ -133,4 +134,19 @@ add_library(table INTERFACE)
+@@ -137,4 +137,20 @@ add_library(table INTERFACE)
  target_link_libraries(table INTERFACE
    port)
  
@@ -19,10 +11,11 @@ index 6b4c50d..f3aca6f 100644
 +  INTERFACE
 +  upb
 +  fastdecode
++  utf8_range
 +  json
 +  port
 +  table
-+  descriptor_upbproto
++  descriptor_upb_proto
 +  reflection
 +  textformat
 +)

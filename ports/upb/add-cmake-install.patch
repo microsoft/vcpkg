@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index f3aca6f..be243c1 100644
+index c90968f..50637ec 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -8,7 +8,7 @@ else()
@@ -11,7 +11,7 @@ index f3aca6f..be243c1 100644
  cmake_policy(SET CMP0048 NEW)
  
  project(upb)
-@@ -150,3 +150,26 @@ set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
+@@ -154,3 +154,27 @@ set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
  set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
  set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
  
@@ -27,11 +27,12 @@ index f3aca6f..be243c1 100644
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
 +install(TARGETS
 +  upb
++  utf8_range
 +  fastdecode
 +  json
 +  port
 +  table
-+  descriptor_upbproto
++  descriptor_upb_proto
 +  reflection
 +  textformat
 +  all_libs
