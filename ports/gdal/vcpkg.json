@@ -13,7 +13,7 @@
     "hdf5",
     {
       "name": "json-c",
-      "platform": "!windows"
+      "platform": "!windows | mingw"
     },
     "libgeotiff",
     "libjpeg-turbo",
