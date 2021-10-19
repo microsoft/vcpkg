@@ -8,6 +8,10 @@
       "name": "getopt",
       "platform": "windows & !mingw"
     },
+    {
+      "name": "libiconv",
+      "platform": "windows & static"
+    },
     "libopensp"
   ]
 }
