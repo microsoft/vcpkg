@@ -24,8 +24,8 @@ vcpkg_configure_make(
         --enable-doxygen=no
         --enable-html-docs=no
         --enable-latex-docs=no
-        --with-opensp-includes="${CURRENT_INSTALLED_DIR}/include/OpenSP"
-        --with-opensp-libs="${CURRENT_INSTALLED_DIR}/lib"
+        "--with-opensp-includes=${CURRENT_INSTALLED_DIR}/include/OpenSP"
+        "--with-opensp-libs=${CURRENT_INSTALLED_DIR}/lib"
         ${EXTRA_OPTS}
 )
 
