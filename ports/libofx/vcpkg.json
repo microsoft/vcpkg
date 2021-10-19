@@ -5,10 +5,6 @@
   "homepage": "http://libofx.sourceforge.net",
   "dependencies": [
     {
-      "name": "getopt",
-      "platform": "windows & !mingw"
-    },
-    {
       "name": "libiconv",
       "platform": "windows & static"
     },

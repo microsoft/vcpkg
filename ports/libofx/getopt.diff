@@ -1,0 +1,96 @@
+diff --git a/lib/getopt.c b/lib/getopt.c
+index 9bafa45..8f45628 100644
+--- a/lib/getopt.c
++++ b/lib/getopt.c
+@@ -40,6 +40,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include "getopt.h"
+ 
+ /* Comment out all this code if we are using the GNU C Library, and are not
+    actually compiling the library itself.  This code is part of the GNU C
+@@ -199,7 +200,7 @@ static char *posixly_correct;
+ # define my_index	strchr
+ #else
+ 
+-# if HAVE_STRING_H
++# if HAVE_STRING_H || defined(_MSC_VER)
+ #  include <string.h>
+ # else
+ #  include <strings.h>
+diff --git a/lib/getopt.h b/lib/getopt.h
+new file mode 100644
+index 0000000..de05f40
+--- /dev/null
++++ b/lib/getopt.h
+@@ -0,0 +1,20 @@
++#ifndef _getopt_h
++#define _getopt_h
++
++#ifndef _MSC_VER
++#include <getopt.h>
++#else
++struct option {
++    const char *name;
++    int has_arg;
++    int *flag;
++    int val;
++};
++
++extern char *optarg;
++extern int optind;
++
++
++int getopt_long(int argc, char *const *argv, const char *shortopts, const struct option *longopts, int *indexptr);
++#endif
++#endif
+diff --git a/ofxdump/Makefile.am b/ofxdump/Makefile.am
+index 3ca48fb..3d4794e 100644
+--- a/ofxdump/Makefile.am
++++ b/ofxdump/Makefile.am
+@@ -1,6 +1,6 @@
+ bin_PROGRAMS = ofxdump
+ ofxdump_LDADD = $(top_builddir)/lib/libofx.la
+-ofxdump_SOURCES = cmdline.h cmdline.c ofxdump.cpp
++ofxdump_SOURCES = cmdline.h cmdline.c ofxdump.cpp $(top_builddir)/lib/getopt.c $(top_builddir)/lib/getopt1.c
+ dist_man_MANS = ofxdump.1
+ 
+ AM_CPPFLAGS = \
+diff --git a/ofxdump/cmdline.c b/ofxdump/cmdline.c
+index 98a41c3..5bf5121 100644
+--- a/ofxdump/cmdline.c
++++ b/ofxdump/cmdline.c
+@@ -21,7 +21,7 @@
+ #define FIX_UNUSED(X) (void) (X) /* avoid warnings for unused params */
+ #endif
+ 
+-#include <getopt.h>
++#include "getopt.h"
+ 
+ #include "cmdline.h"
+ 
+@@ -395,7 +395,6 @@ int update_arg(void *field, char **orig_field,
+   const char *val = value;
+   int found;
+   char **string_field;
+-  FIX_UNUSED (field);
+ 
+   stop_char = 0;
+   found = 0;
+@@ -498,8 +497,6 @@ cmdline_parser_internal (
+ 
+   optarg = 0;
+   optind = 0;
+-  opterr = params->print_errors;
+-  optopt = '?';
+ 
+   while (1)
+     {
+diff --git a/ofxdump/getopt.h b/ofxdump/getopt.h
+new file mode 100644
+index 0000000..70ded8e
+--- /dev/null
++++ b/ofxdump/getopt.h
+@@ -0,0 +1 @@
++#include "../lib/getopt.h"
