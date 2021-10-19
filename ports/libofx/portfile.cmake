@@ -11,7 +11,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     REF ${OFX_VERSION}
     PATCHES
-        msvc.diff   # https://github.com/libofx/libofx/pull/47
+        msvc.diff   		    # https://github.com/libofx/libofx/pull/47
+        pkgconfig.patch             # https://github.com/libofx/libofx/pull/49
 )
 
 # libopensp requirements

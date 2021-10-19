@@ -1,0 +1,27 @@
+From 19e3c1a5816123ef7cd5a6c04926ccfc78defece Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 19 Oct 2021 15:07:42 +0200
+Subject: [PATCH] Fix .pc to support static build
+
+OpenSP libs and includes need to be explicitly declared in
+Libs.private and Cflags.private for static OFX build to be
+consumable.
+---
+ libofx.pc.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libofx.pc.in b/libofx.pc.in
+index 5bad4b0..cc1b0fd 100644
+--- a/libofx.pc.in
++++ b/libofx.pc.in
+@@ -10,7 +10,7 @@ Description: libofx is a library for processing Open Financial eXchange (OFX) da
+ Version: @VERSION@
+ Requires:
+ Conflicts:
+-#Libs: -L${libdir} @OPENSPLIBS@ -lofx
+-#Cflags: -I${includedir} -I@OPENSPINCLUDES@ 
+ Libs: -L${libdir} -lofx
++Libs.private: @OPENSPLIBS@
+ Cflags: -I${includedir}
++Cflags.private: -I@OPENSPINCLUDES@
+\ No newline at end of file
