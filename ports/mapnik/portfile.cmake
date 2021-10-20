@@ -4,9 +4,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 0edb018465790cd156d6849557fa7fd568755ebb
-    SHA512 cd6180b96dbfbc1bafbc8f2a4ff2091a0e8c0c42b0569ef83640ad1f5766ff74ea95f8c6cef53f879396cbceebc6396c1a977676eca67c401b8e145a9ceae7e2
+    REF 4695c42b51bc633e10b15c30ba580093ca0dda4f
+    SHA512 c0e6c77b6c859ac03a2169d8f71ee2d68e6b76dd0295a0656f278f31ccf531b02f2a5bc5cce7e78177872fba2e5dda95dc00685d6157043fa3a246a072ab7075
     HEAD_REF master
+    PATCHES
+        cairo-find-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
