@@ -15,12 +15,14 @@ in which case `vcpkg_host_path_list` will modify the environment.
 `vcpkg_host_path_list` adds all of the paths passed to it to `<list-var>`;
 `PREPEND` puts them before the existing list, so that they are searched first;
 `APPEND` places them after the existing list,
-so they would be searched after the paths which are already in the variable.
+so they would be searched after the paths which are already in the variable,
+and `SET` replaces the value of the existing list.
 
-For both `APPEND` and `PREPEND`,
+For all of `APPEND`, `PREPEND`, and `SET`,
 the paths are added (and thus searched) in the order received.
 
-If no paths are passed, then nothing will be done.
+If no paths are passed to `APPEND` or `PREPEND`, nothing will be done;
+for `SET`, the variable will be set to the empty string.
 #]===]
 function(vcpkg_host_path_list)
     if("${ARGC}" LESS "2")
@@ -47,28 +49,29 @@ function(vcpkg_host_path_list)
 
     if("${operation}" MATCHES "^(APPEND|PREPEND|SET)$")
         cmake_parse_arguments(PARSE_ARGV 2 arg "" "" "")
-        if(NOT DEFINED arg_UNPARSED_ARGUMENTS)
+        if(DEFINED arg_UNPARSED_ARGUMENTS)
+            if("${VCPKG_HOST_PATH_SEPARATOR}" STREQUAL ";")
+                set(to_add "${arg_UNPARSED_ARGUMENTS}")
+                string(FIND "${arg_UNPARSED_ARGUMENTS}" [[\;]] index_of_host_path_separator)
+            else()
+                vcpkg_list(JOIN arg_UNPARSED_ARGUMENTS "${VCPKG_HOST_PATH_SEPARATOR}" to_add)
+                string(FIND "${arg_UNPARSED_ARGUMENTS}" "${VCPKG_HOST_PATH_SEPARATOR}" index_of_host_path_separator)
+            endif()
+            if(NOT "${index_of_host_path_separator}" EQUAL "-1")
+                message(FATAL_ERROR "Host path separator (${VCPKG_HOST_PATH_SEPARATOR}) in path; this is unsupported.")
+            endif()
+
+            if("${operation}" STREQUAL "SET" OR "${list}" STREQUAL "")
+                set(list "${to_add}")
+            elseif(arg_PREPEND)
+                set(list "${to_add}${VCPKG_HOST_PATH_SEPARATOR}${list}")
+            else()
+                set(list "${list}${VCPKG_HOST_PATH_SEPARATOR}${to_add}")
+            endif()
+        elseif("${operation}" STREQUAL "SET")
+            set(list "")
+        else()
             return()
-        endif()
-
-        if("${VCPKG_HOST_PATH_SEPARATOR}" STREQUAL ";")
-            set(to_add "${arg_UNPARSED_ARGUMENTS}")
-            string(FIND "${arg_UNPARSED_ARGUMENTS}" [[\;]] index_of_host_path_separator)
-        else()
-            vcpkg_list(JOIN arg_UNPARSED_ARGUMENTS "${VCPKG_HOST_PATH_SEPARATOR}" to_add)
-            string(FIND "${arg_UNPARSED_ARGUMENTS}" "${VCPKG_HOST_PATH_SEPARATOR}" index_of_host_path_separator)
-        endif()
-
-        if(NOT "${index_of_host_path_separator}" EQUAL "-1")
-            message(FATAL_ERROR "Host path separator (${VCPKG_HOST_PATH_SEPARATOR}) in path; this is unsupported.")
-        endif()
-
-        if("${operation}" STREQUAL "SET" OR "${list}" STREQUAL "")
-            set(list "${to_add}")
-        elseif(arg_PREPEND)
-            set(list "${to_add}${VCPKG_HOST_PATH_SEPARATOR}${list}")
-        else()
-            set(list "${list}${VCPKG_HOST_PATH_SEPARATOR}${to_add}")
         endif()
     else()
         message(FATAL_ERROR "Operation ${operation} not recognized.")
