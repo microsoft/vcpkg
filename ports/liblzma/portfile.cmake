@@ -13,7 +13,7 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS_DEBUG
         "-DCMAKE_DEBUG_POSTFIX=d" # This was in the old vcpkg CMakeLists.txt and I don't intend to fix it all over vcpkg 
 )
 vcpkg_cmake_install()
