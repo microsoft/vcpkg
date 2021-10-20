@@ -44,6 +44,7 @@
 - [vcpkg\_from\_sourceforge](vcpkg_from_sourceforge.md)
 - [vcpkg\_get\_program\_files\_platform\_bitness](vcpkg_get_program_files_platform_bitness.md)
 - [vcpkg\_get\_windows\_sdk](vcpkg_get_windows_sdk.md)
+- [vcpkg\_host\_path\_list](vcpkg_host_path_list.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md) (deprecated, use [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md))
 - [vcpkg\_install\_gn](vcpkg_install_gn.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)

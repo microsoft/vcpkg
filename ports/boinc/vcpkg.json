@@ -1,6 +1,7 @@
 {
   "name": "boinc",
   "version": "7.18.1",
+  "port-version": 1,
   "description": "Open-source software for volunteer computing and grid computing.",
   "homepage": "https://boinc.berkeley.edu/",
   "supports": "!(windows & arm) & !uwp",

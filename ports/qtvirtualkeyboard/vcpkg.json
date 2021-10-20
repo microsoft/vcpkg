@@ -1,12 +1,24 @@
 {
   "name": "qtvirtualkeyboard",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "SCXML (state machine notation) compiler and related tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtdeclarative",
-    "qtsvg",
-    "qttools"
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtsvg",
+      "default-features": false
+    }
   ],
   "default-features": [
     "default-features",

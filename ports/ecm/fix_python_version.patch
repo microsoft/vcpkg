@@ -1,0 +1,61 @@
+From 12f4266eb71b30da1df92a5d628d402ea1a45b3b Mon Sep 17 00:00:00 2001
+From: Michael Pyne <mpyne@kde.org>
+Date: Sun, 4 Jul 2021 18:47:45 -0400
+Subject: [PATCH] python: Bump maximum version for Python 3 module generator
+ check.
+
+The proximate problem is that the Python Module generator cmake script
+has started failing for people with Python 3.10, which a CMake backtrace
+pointing into FindPythonModuleGeneration.cmake with an error of the form
+"The max python version in PythonModuleGeneration must be updated."
+
+At least one distro has addressed this by simply patching out modules
+that happen to use this CMake module [1].
+
+From what I can tell and the testing I've done, the cause is pretty
+simple: The CMake script attempts to find the best Python 3 version by
+starting from an impossible version and working backwards until it finds
+a version that is installed.
+
+As a sanity check, if the "impossible" version is actually present, it
+aborts. But this appears to be just a sanity check, and not any sort of
+guard against buggy version handling code later.
+
+While the best fix is probably to start from a known *good* version and
+move up until we stop finding better versions, there's problems here
+(e.g. a user with 3.6 and 3.8 installed would fail to see 3.7 and so be
+left with 3.6 as the "best" match), so I opted just to increase the max
+version significantly, and improve the documentation as to what's
+happening and whether it is safe to repeat the step again later.
+
+[1]: https://bugs.gentoo.org/746866
+---
+ find-modules/FindPythonModuleGeneration.cmake | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/find-modules/FindPythonModuleGeneration.cmake b/find-modules/FindPythonModuleGeneration.cmake
+index 210ba662..6104c1f4 100644
+--- a/find-modules/FindPythonModuleGeneration.cmake
++++ b/find-modules/FindPythonModuleGeneration.cmake
+@@ -162,14 +162,19 @@ endif()
+ 
+ if (NOT GPB_PYTHON3_LIBRARY)
+   set(_PYTHON3_MIN_VERSION 4)
+-  set(_PYTHON3_MAX_VERSION 10)
+ 
+-  _find_python(3 ${_PYTHON3_MAX_VERSION}) # Canary check
++  # This value is safe to increment over time, it is used only as a reasonable
++  # upper bound to start searching from
++  set(_PYTHON3_MAX_VERSION 50)
++
++  _find_python(3 ${_PYTHON3_MAX_VERSION})
+ 
+   if (GPB_PYTHON3_LIBRARY)
+     message(FATAL_ERROR "The max python version in ${CMAKE_FIND_PACKAGE_NAME} must be updated.")
+   endif()
+ 
++  # Look for the highest supported version of Python 3 by looking for a minor
++  # version that doesn't exist and decrementing until we find a match.
+   set(_PYTHON3_FIND_VERSION ${_PYTHON3_MAX_VERSION})
+ 
+   while(NOT GPB_PYTHON3_LIBRARY

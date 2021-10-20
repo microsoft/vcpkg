@@ -150,7 +150,6 @@
     </PropertyGroup>
     <Message Text="Installing vcpkg dependencies to $(_ZVcpkgInstalledDir)" Importance="High" />
     <MakeDir Directories="$(_ZVcpkgInstalledDir)" />
-    <Delete Files="$(_ZVcpkgMSBuildStampFile)" />
     <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           Importance="High" />
     <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
