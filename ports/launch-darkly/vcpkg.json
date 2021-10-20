@@ -3,6 +3,7 @@
   "version": "2.3.1",
   "description": "LaunchDarkly Client-side SDK for C/C++",
   "homepage": "https://github.com/launchdarkly/c-client-sdk",
+  "supports": "!uwp & !arm",
   "dependencies": [
     {
       "name": "curl",
