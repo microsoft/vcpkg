@@ -1926,7 +1926,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 1
+      "port-version": 2
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
