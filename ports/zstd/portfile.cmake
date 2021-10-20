@@ -38,7 +38,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zstd)
 
 # This enables find_package(ZSTD) and find_package(zstd) to find zstd on Linux(case sensitive filesystems)
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config.cmake")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-configVersion.cmake")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config-version.cmake")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(static_suffix "_static")
