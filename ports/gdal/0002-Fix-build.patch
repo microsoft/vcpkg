@@ -1,7 +1,7 @@
-diff --git a/makefile.vc b/makefile.vc
+diff --git a/gdal/makefile.vc b/gdal/makefile.vc
 index 9e0bd44..8559f79 100644
---- a/makefile.vc
-+++ b/makefile.vc
+--- a/gdal/makefile.vc
++++ b/gdal/makefile.vc
 @@ -84,7 +84,7 @@ staticlib:	$(LIB_DEPENDS)
  	call <<clean_main_build_output.bat
  $(CLEAN_MAIN_BUILD_OUTPUT_CMDS)
