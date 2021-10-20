@@ -97,11 +97,14 @@ endif()
 
 # `vcpkg_find_acquire_program(PYTHON3)` only supports Interpreter components.
 # We need Development, NumPy component. See https://cmake.org/cmake/help/latest/module/FindPython3.html
-find_program(Python3_EXECUTABLE NAMES python3 REQUIRED)
-find_package(Python3 COMPONENTS Development REQUIRED)
-if("python" IN_LIST FEATURES)
-    find_package(Python3 COMPONENTS Development NumPy REQUIRED)
-endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+
+#find_program(Python3_EXECUTABLE NAMES python3 REQUIRED)
+#find_package(Python3 COMPONENTS Development REQUIRED)
+#if("python" IN_LIST FEATURES)
+#    find_package(Python3 COMPONENTS Development NumPy REQUIRED)
+#endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 
@@ -109,7 +112,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_EXECUTABLE="${Python3_EXECUTABLE}"
+        -DPYTHON3_EXECUTABLE=${PYTHON3}
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON

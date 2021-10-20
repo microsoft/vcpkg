@@ -3,7 +3,7 @@
   "version-semver": "1.8.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
-  "supports": "x64 & (windows | osx | linux)",
+  "supports": "x64",
   "dependencies": [
     "cpuinfo",
     "eigen3",
@@ -17,6 +17,7 @@
       "name": "protobuf",
       "host": true
     },
+    "python3",
     "sleef",
     {
       "name": "vcpkg-cmake",
