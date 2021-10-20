@@ -11,12 +11,12 @@
     {
       "name": "vcpkg-cmake",
       "host": true,
-      "platform": "windows | uwp"
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true,
-      "platform": "windows | uwp"
+      "platform": "windows"
     }
   ]
 }
