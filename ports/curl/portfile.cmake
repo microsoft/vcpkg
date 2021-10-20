@@ -140,7 +140,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -lcurl-d")
 endif()
 
-vcpkg_test_cmake_config(
+vcpkg_cmake_config_test(
     HEADERS     curl/curl.h
     FUNCTIONS   curl_global_init
 )
