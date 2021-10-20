@@ -97,7 +97,7 @@
       "port-version": 0
     },
     "aom": {
-      "baseline": "3.1.2",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "approval-tests-cpp": {
