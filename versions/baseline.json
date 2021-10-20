@@ -1508,6 +1508,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "cpp-jwt": {
+      "baseline": "2021-10-18",
+      "port-version": 0
+    },
     "cpp-netlib": {
       "baseline": "0.13.0",
       "port-version": 5
