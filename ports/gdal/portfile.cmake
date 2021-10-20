@@ -1,32 +1,25 @@
 vcpkg_fail_port_install(ON_ARCH "arm")
 
-# NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "3.2.2")
-set(GDAL_VERSION_PKG "322")
-set(GDAL_PACKAGE_SUM "ce319e06c78bd076228b3710c127cdbd37c7d6fb23966b47df7287eaffe86a05d4ddcc78494c8bfcaf4db98a71f2ed50a01fb3ca2fe1c10cf0d2e812683c8e53")
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
-    FILENAME "gdal${GDAL_VERSION_PKG}.zip"
-    SHA512 ${GDAL_PACKAGE_SUM}
-    )
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
     0007-Control-tools.patch
-    )
+    0008-Fix-absl-string_view.patch
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO OSGeo/gdal
+    REF 348075f26f8e4c200a34818123beeb4abe53c876 # 3.3.2
+    SHA512 84bd7c74a079c4aa8cbefbbb1c4ab782e74a85d37d4c875a203760939f4f7c9175c40abc5184d8c1c521fd3b37bb90bc7bf046021ade22e510810535e3f61bd2
+    HEAD_REF master
     PATCHES ${GDAL_PATCHES}
-    )
+)
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
@@ -134,7 +127,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     # Begin build process
     vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}"
+        SOURCE_PATH "${SOURCE_PATH}/gdal"
         TARGET devinstall
         OPTIONS_RELEASE
         "${NMAKE_OPTIONS_REL}"
@@ -191,7 +184,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
     # See https://github.com/microsoft/vcpkg/issues/16990
-    file(TOUCH "${SOURCE_PATH}/config.rpath")
+    file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
 
     set(CONF_OPTS
         --with-hide-internal-symbols=yes
@@ -323,7 +316,7 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
+        SOURCE_PATH "${SOURCE_PATH}/gdal"
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
@@ -375,4 +368,4 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/gdal/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
