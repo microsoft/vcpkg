@@ -5,10 +5,7 @@
   "homepage": "https://github.com/launchdarkly/c-client-sdk",
   "supports": "!uwp & !arm",
   "dependencies": [
-    {
-      "name": "curl",
-      "platform": "!uwp & !windows"
-    },
+    "curl",
     {
       "name": "vcpkg-cmake",
       "host": true

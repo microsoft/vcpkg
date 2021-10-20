@@ -16,12 +16,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/ldclientapi.dll ${CURRENT_PACKAGES_DIR}/bin/ldclientapi.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/ldclientapicpp.dll ${CURRENT_PACKAGES_DIR}/bin/ldclientapicpp.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapi.dll ${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapi.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapicpp.dll ${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapicpp.dll)
+    endif()
+endif()
+
 file(REMOVE_RECURSE
 	"${CURRENT_PACKAGES_DIR}/debug/include"
 	"${CURRENT_PACKAGES_DIR}/debug/lib/launch-darkly"
 	"${CURRENT_PACKAGES_DIR}/lib/launch-darkly"
 	)
-
+    
 vcpkg_copy_pdbs()
 
 # Handle copyright
