@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 25dd1d7f207f1324aed418555dda1c3d4ec64baf76431c9efd88fd3c34b163a2e5a6778192d2c0caf937f3efd31b2f21e6a0d0f7230684d176164da0e8bcc92e
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
-            silence-libcrypto-messages.patch
+            remove-libcrypto-messages.patch
 )
 
 vcpkg_cmake_configure(
