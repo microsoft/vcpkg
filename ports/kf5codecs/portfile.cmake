@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DGperf_EXECUTABLE=${GPERF_EXE}
+        "-DGperf_EXECUTABLE=${GPERF_EXE}"
 )
 
 vcpkg_cmake_install()
