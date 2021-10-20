@@ -19,9 +19,10 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "freeimage"  USE_FREEIMAGE
-    "tbb"        USE_TBB
-    "rapidjson"  USE_RAPIDJSON
+    FEATURES
+        "freeimage"  USE_FREEIMAGE
+        "tbb"        USE_TBB
+        "rapidjson"  USE_RAPIDJSON
 )
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
