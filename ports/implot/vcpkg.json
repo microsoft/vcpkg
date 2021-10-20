@@ -4,6 +4,7 @@
   "description": "Advanced 2D Plotting for Dear ImGui",
   "homepage": "https://github.com/epezent/implot",
   "dependencies": [
+    "imgui",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -11,7 +12,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "imgui"
+    }
   ]
 }
