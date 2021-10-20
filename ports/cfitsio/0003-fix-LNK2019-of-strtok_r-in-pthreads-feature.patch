@@ -1,0 +1,13 @@
+diff --git a/fitsio2.h b/fitsio2.h
+index 1adb17b..19f8511 100644
+--- a/fitsio2.h
++++ b/fitsio2.h
+@@ -26,7 +26,7 @@ extern int Fitsio_Pthread_Status;
+ #define FFUNLOCK1(lockname) (Fitsio_Pthread_Status = pthread_mutex_unlock(&lockname))
+ #define FFLOCK   FFLOCK1(Fitsio_Lock)
+ #define FFUNLOCK FFUNLOCK1(Fitsio_Lock)
+-#define ffstrtok(str, tok, save) strtok_r(str, tok, save)
++#define ffstrtok(str, tok, save) strtok_s(str, tok, save)
+ 
+ #else
+ #define FFLOCK
