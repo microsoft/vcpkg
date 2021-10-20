@@ -1,7 +1,4 @@
-
-if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT WIN32)
-    include(CMakeFindDependencyMacro)
-    find_dependency(Threads)
-endif()
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
 
 include(${CMAKE_CURRENT_LIST_DIR}/unofficial-libuv-targets.cmake)
