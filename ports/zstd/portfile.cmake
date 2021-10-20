@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 659576d0f52d2271b6b53f638b407b873888b1cffe4f014c3149d33a961653c2fcf7ff270bc669a5647205b573ef2809907645a4c89ab6c030ad65bce15547ae
     HEAD_REF dev
     PATCHES
-      install_pkgpc.patch
-      fix-c4703-error.patch
+        install_pkgpc.patch
+        fix-c4703-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
@@ -65,5 +65,3 @@ endif()
 file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "ZSTD is dual licensed - see LICENSE and COPYING files\n")
-
-
