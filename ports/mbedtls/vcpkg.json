@@ -12,7 +12,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }    
+    }
   ],
   "features": {
     "pthreads": {
