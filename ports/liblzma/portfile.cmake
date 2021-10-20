@@ -45,13 +45,10 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzma-config.cmake" "include
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake"
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
-find_path(LibLZMA_INCLUDE_DIR
-    NAMES lzma.h
-    PATH_SUFFIXES lzma
-)
+find_path(LibLZMA_INCLUDE_DIR NAMES lzma.h PATHS \"\${_IMPORT_PREFIX}/include\" NO_DEFAULT_PATH REQUIRED)
 if(NOT LibLZMA_LIBRARY)
-    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma PATHS \"\${_IMPORT_PREFIX}/lib\" NO_DEFAULT_PATH)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad PATHS \"\${_IMPORT_PREFIX}/debug/lib\" NO_DEFAULT_PATH)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
