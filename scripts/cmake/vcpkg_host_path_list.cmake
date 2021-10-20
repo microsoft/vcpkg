@@ -6,6 +6,7 @@ Modify a host path list variable (PATH, INCLUDE, LIBPATH, etc.)
 ```cmake
 vcpkg_host_path_list(PREPEND <list-var> [<path>...])
 vcpkg_host_path_list(APPEND <list-var> [<path>...])
+vcpkg_host_path_list(SET <list-var> [<path>...])
 ```
 
 `<list-var>` may be either a regular variable name, or `ENV{variable-name}`,
@@ -44,7 +45,7 @@ function(vcpkg_host_path_list)
     set(operation "${ARGV0}")
     set(list_var "${ARGV1}")
 
-    if("${operation}" MATCHES "^(APPEND|PREPEND)$")
+    if("${operation}" MATCHES "^(APPEND|PREPEND|SET)$")
         cmake_parse_arguments(PARSE_ARGV 2 arg "" "" "")
         if(NOT DEFINED arg_UNPARSED_ARGUMENTS)
             return()
@@ -62,7 +63,7 @@ function(vcpkg_host_path_list)
             message(FATAL_ERROR "Host path separator (${VCPKG_HOST_PATH_SEPARATOR}) in path; this is unsupported.")
         endif()
 
-        if("${list}" STREQUAL "")
+        if("${operation}" STREQUAL "SET" OR "${list}" STREQUAL "")
             set(list "${to_add}")
         elseif(arg_PREPEND)
             set(list "${to_add}${VCPKG_HOST_PATH_SEPARATOR}${list}")
