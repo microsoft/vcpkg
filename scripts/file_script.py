@@ -11,7 +11,8 @@ def getFiles(path):
 
 def gen_all_file_strings(path, files, headers, output):
     for file in files:
-        package = file[:file.find("_")]
+        components = file.split("_")
+        package = components[0] + ":" + components[2].replace(".list", "")
         f = open(path + file)
         for line in f:
             idx = line.strip().find(keyword)
