@@ -116,6 +116,15 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
+if ($IsWindows)
+{
+    mkdir empty
+    cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$installRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    rmdir empty
+}
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 if ($LASTEXITCODE -ne 0)
 {
