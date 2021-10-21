@@ -14,8 +14,8 @@ vcpkg_from_github(
         fix_compile-option.patch
         fix-version-search.patch
         fix-build-type.patch
-        fix-dependencies.patch
         fix-mac-build.patch
+        fix-dependencies.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)

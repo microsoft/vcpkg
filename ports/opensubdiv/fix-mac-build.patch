@@ -1,8 +1,8 @@
 diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
-index ebf1ea5..0f90a37 100644
+index ca24488..adb0191 100644
 --- a/opensubdiv/CMakeLists.txt
 +++ b/opensubdiv/CMakeLists.txt
-@@ -240,7 +240,7 @@ if (NOT NO_LIB)
+@@ -241,7 +241,7 @@ if (NOT NO_LIB)
      endif()
  
      # Build frameworks  ----------------------------------

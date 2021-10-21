@@ -110,7 +110,7 @@ index 1a71f72..8eaaccb 100644
          "${TBB_LIBRARIES}"
      )
 diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
-index ca24488..ebf1ea5 100644
+index adb0191..0f90a37 100644
 --- a/opensubdiv/CMakeLists.txt
 +++ b/opensubdiv/CMakeLists.txt
 @@ -49,7 +49,6 @@ if (NOT NO_LIB)
@@ -122,7 +122,7 @@ index ca24488..ebf1ea5 100644
              ${TBB_LIBRARIES}
          )
 diff --git a/opensubdiv/osd/CMakeLists.txt b/opensubdiv/osd/CMakeLists.txt
-index 75f64b6..acacc4d 100644
+index 75f64b6..90d5ea2 100644
 --- a/opensubdiv/osd/CMakeLists.txt
 +++ b/opensubdiv/osd/CMakeLists.txt
 @@ -88,7 +88,6 @@ set(TBB_PUBLIC_HEADERS
@@ -133,3 +133,14 @@ index 75f64b6..acacc4d 100644
  
      list(APPEND CPU_SOURCE_FILES
          tbbEvaluator.cpp
+@@ -379,6 +378,10 @@ add_library(osd_cpu_obj
+         ${PUBLIC_HEADER_FILES}
+ )
+ 
++if (TBB_FOUND)
++    target_link_libraries(osd_cpu_obj ${TBB_LIBRARIES})
++endif()
++
+ set_target_properties(osd_cpu_obj
+     PROPERTIES
+         FOLDER "opensubdiv"
