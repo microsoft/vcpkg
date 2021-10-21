@@ -2057,7 +2057,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.9",
       "port-version": 0
     },
     "fann": {
