@@ -2685,8 +2685,8 @@
       "port-version": 5
     },
     "hwloc": {
-      "baseline": "2.2.0",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "hyperscan": {
       "baseline": "5.3.0",
