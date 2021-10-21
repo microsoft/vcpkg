@@ -1,12 +1,11 @@
 {
   "name": "boost-logic",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost logic module",
   "homepage": "https://github.com/boostorg/logic",
   "dependencies": [
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-vcpkg-helpers"
   ]
 }
