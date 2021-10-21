@@ -1,0 +1,11 @@
+{
+  "name": "tinyobjloader",
+  "version-string": "2.0.0-rc2",
+  "port-version": 1,
+  "description": "Tiny but powerful single file wavefront obj loader",
+  "features": {
+    "double": {
+      "description": "enable double(64bit) precision"
+    }
+  }
+}

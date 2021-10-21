@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_download_distfile(ARCHIVE
@@ -58,6 +56,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(_STATIC_BUILD ON)
+endif()
+
+if (VCPKG_TARGET_IS_UWP)
+    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
+    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
 endif()
 
 vcpkg_configure_cmake(

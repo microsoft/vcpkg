@@ -1,7 +1,0 @@
-Source: bullet3
-Version: 3.17
-Homepage: https://github.com/bulletphysics/bullet3
-Description: Bullet Physics is a professional collision detection, rigid body, and soft body dynamics library
-
-Feature: multithreading
-Description: Multithreading functionality for bullet3

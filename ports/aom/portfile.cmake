@@ -13,8 +13,8 @@ vcpkg_add_to_path(${PERL_PATH})
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 33aff8586e35ffe385637f6aa2c991858c0fb58e
-    TAG v3.1.0
+    REF 8f85bb1d686647d0f7dc1e7220f94f55193d2c89
+    TAG v3.1.2
     PATCHES
         aom-rename-static.diff
         # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream

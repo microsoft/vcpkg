@@ -1,7 +1,7 @@
 {
   "name": "hunspell",
   "version": "1.7.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The most popular spellchecking library.",
   "homepage": "https://github.com/hunspell/hunspell",
   "supports": "!((arm | uwp) & windows)",

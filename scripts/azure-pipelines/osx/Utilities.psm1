@@ -79,7 +79,7 @@ function Get-RemoteFile
     if ($actualHash.Hash -ne $Sha256) {
         throw @"
 Invalid hash for file $OutFile;
-    expected: $Hash
+    expected: $Sha256
     found:    $($actualHash.Hash)
 Please make sure that the hash in the powershell file is correct.
 "@

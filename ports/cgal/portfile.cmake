@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v5.2.2
-    SHA512 48c6f44f41d6cf4fead878d9e5d62325ec90fc1f744d547b2f5683e41e48b25d19db2606804ac302c24520600d1f5b37a1649c19891cd9e87e227480ef410dbc
+    REF v5.3
+    SHA512 b4093b5f1b4802cffe5dd6a47a7382a59ed83d30bb8cafa5f3fa8daef4579c9f3caf208bc2a58b7a41cf61ed825d0e549c7c442e9f5977bd82f553b2dfe8748f
     HEAD_REF master
 )
 

@@ -18,9 +18,6 @@ The Azure Pipelines artifacts directory. If not supplied, defaults to the curren
 .PARAMETER ArchivesRoot
 Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 
-.PARAMETER UseEnvironmentSasToken
-Equivalent to '-BinarySourceStub "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"'
-
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
@@ -47,13 +44,12 @@ Param(
     $ArtifactStagingDirectory = '.',
     [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
-    [switch]
-    $UseEnvironmentSasToken = $false,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
-    $BuildReason = $null,
-    [switch]
-    $PassingIsPassing = $false
+    [String]$BuildReason = $null,
+    [String[]]$AdditionalSkips = @(),
+    [String[]]$OnlyTest = $null,
+    [switch]$PassingIsPassing = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -61,25 +57,13 @@ if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/communi
     throw
 }
 
-$usingBinaryCaching = $true
-if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
-    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
-        if ($UseEnvironmentSasToken) {
-            $BinarySourceStub = "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"
-        } else {
-            $usingBinaryCaching = $false
-        }
-    } else {
-        if ($UseEnvironmentSasToken) {
-            Write-Error "Only one binary caching setting may be used."
-            throw
-        } else {
-            $BinarySourceStub = "files,$ArchivesRoot"
-        }
+if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
+    if ((-Not [string]::IsNullOrWhiteSpace($BinarySourceStub))) {
+        Write-Error "Only one binary caching setting may be used."
+        throw
     }
-} elseif ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or $UseEnvironmentSasToken) {
-    Write-Error "Only one binary caching setting may be used."
-    throw
+
+    $BinarySourceStub = "files,$ArchivesRoot"
 }
 
 $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
@@ -87,14 +71,7 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
-$commonArgs = @()
-if ($usingBinaryCaching) {
-    $commonArgs += @('--binarycaching')
-} else {
-    $commonArgs += @('--no-binarycaching')
-}
-
-$commonArgs += @(
+$commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
@@ -102,7 +79,10 @@ $commonArgs += @(
 )
 
 $skipFailures = $false
-if ($usingBinaryCaching) {
+if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
+    $commonArgs += @('--no-binarycaching')
+} else {
+    $commonArgs += @('--binarycaching')
     $binaryCachingMode = 'readwrite'
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
@@ -136,23 +116,66 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
+if ($IsWindows)
+{
+    mkdir empty
+    cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$installRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    rmdir empty
+}
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg clean failed"
+}
+
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
-    -SkipFailures:$skipFailures
+    -SkipFailures:$skipFailures `
+    -AdditionalSkips $AdditionalSkips
 
-if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
+if ($null -ne $OnlyTest)
 {
-    # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
-    # The workaround is to pass the skip list as host-excludes as well.
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    $OnlyTest | % {
+        $portName = $_
+        & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs $portName
+        if (-not $?)
+        {
+            [System.Console]::Error.WriteLine( `
+                "REGRESSION: ${portName}:$triplet. If expected, remove ${portName} from the OnlyTest list." `
+            )
+        }
+    }
+
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 }
 else
 {
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
+    {
+        # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
+        # The workaround is to pass the skip list as host-excludes as well.
+        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    }
+    else
+    {
+        & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+    }
+
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "vcpkg ci failed"
+    }
+
+    & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
+        -triplet $Triplet `
+        -baselineFile .\scripts\ci.baseline.txt `
+        -passingIsPassing:$PassingIsPassing
 }
-& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
-    -triplet $Triplet `
-    -baselineFile .\scripts\ci.baseline.txt `
-    -passingIsPassing:$PassingIsPassing

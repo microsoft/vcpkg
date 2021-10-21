@@ -1,4 +1,0 @@
-Source: curlpp
-Version: 2018-06-15-3
-Description: C++ wrapper around libcURL
-Build-Depends: curl

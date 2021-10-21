@@ -1,0 +1,14 @@
+{
+  "name": "mqtt-cpp",
+  "version-string": "9.0.0",
+  "port-version": 1,
+  "description": "Header-only MQTT client/server for C++14 based on Boost.Asio.",
+  "homepage": "https://github.com/redboltz/mqtt_cpp",
+  "dependencies": [
+    "boost-any",
+    "boost-asio",
+    "boost-log",
+    "boost-multi-index",
+    "boost-type-erasure"
+  ]
+}

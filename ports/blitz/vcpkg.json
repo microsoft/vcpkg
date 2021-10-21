@@ -1,0 +1,8 @@
+{
+  "name": "blitz",
+  "version-string": "2020-03-25",
+  "port-version": 1,
+  "description": "Blitz++ is a C++ template class library that provides high-performance multidimensional array containers for scientific computing.",
+  "homepage": "https://github.com/blitzpp/blitz",
+  "supports": "!(arm | arm64 | uwp)"
+}

@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 63b03efc2af332c88b86d4fd8079d00f4b439adf # v0.3.10
-    SHA512 269852348e042fe32d0d400d5e6f4cf758024389d3966a9b1bc217061d4a03b3a7003a399212130ec4e783f1e1e5b423eb531e6e0948485b5d5ac9fdc58982cb
+    REF 904f9a267dddb30e9f187e57231ed160ab2f2704 # v0.3.15
+    SHA512 ddb1eba7b0def08483d7610675335648017eff41de3cbe24357bd15c6938c7997f12c449f32d8225abbb5ef8f7a2e7501320ec05e970e8ddf8e4c25fd81e8002 
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
-        fix-pkg-config.patch
         fix-uwp-build.patch
         fix-marco-conflict.patch
 )
@@ -33,6 +32,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    	"dynamic-arch"      DYNAMIC_ARCH
+)
+
+if(VCPKG_TARGET_IS_OSX)
+    if("dynamic-arch" IN_LIST FEATURES)
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+        message(STATUS "Openblas with \"dynamic-arch\" option for OSX supports only dynamic linkage. It's not a bag of openblas but bug of combination cmake+ninja+osx. See: https://gitlab.kitware.com/cmake/cmake/-/issues/16731") 
+    endif()
+endif()
 
 # for UWP version, must build non uwp first for helper
 # binaries.
@@ -77,15 +88,16 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
+            ${FEATURE_OPTIONS}
     )
 else()
-    list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
-    list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
+    string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
+    string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
-            -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            ${FEATURE_OPTIONS}
             -DNOFORTRAN=ON
             -DBU=_  #required for all blas functions to append extra _ using NAME
             )

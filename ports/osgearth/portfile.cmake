@@ -11,14 +11,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF 342fcadf4c8892ba84841cb5b4162bdc51519e3c #version 3.1
-    SHA512 03378a918306846d2144e545785c783b01e33fa2dd5c77d16d390a275217b6ce7a3a743c35ae99a497b272a7516b055442c0a891bd312cce727a5538b40364f5
+    REF 15d5340f174212d6f93ae55c0d9af606c3d361c0 #version 3.2
+    SHA512 f922e8bbb041a498e948587f03e8dc8a07b92e641f38d50a8eafb8b3ce1e0c92bb1ee01360d57e794429912734b60cf05ba143445a442bc95af39e3dd9fc3670
     HEAD_REF master
     PATCHES 
         StaticOSG.patch # Fix port compilation in static-md module
-        deprecated_cpp_fix.patch # Fix port headers to not use classes deprecated in c++17. Gives errors when using the installed port headers
         make-all-find-packages-required.patch
-        fix-dependencies.patch
         fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
 )
@@ -79,7 +77,7 @@ endif()
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_overlayviewer osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+        osgearth_conv osgearth_imgui osgearth_overlayviewer osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
 endif()

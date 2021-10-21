@@ -1,6 +1,0 @@
-Source: libspatialite
-Version: 5.0.0
-Port-Version: 2
-Homepage: https://www.gaia-gis.it/gaia-sins/libspatialite-sources
-Description: SpatiaLite is an open source library intended to extend the SQLite core to support fully fledged Spatial SQL capabilities.
-Build-Depends: libxml2, sqlite3, geos, proj4, zlib, freexl, libiconv, librttopo
