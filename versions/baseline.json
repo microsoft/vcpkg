@@ -6877,8 +6877,8 @@
       "port-version": 0
     },
     "utf8h": {
-      "baseline": "2021-08-23",
-      "port-version": 2
+      "baseline": "2021-10-21",
+      "port-version": 0
     },
     "utf8proc": {
       "baseline": "2.6.1",
