@@ -1,7 +1,6 @@
 {
   "name": "utf8h",
-  "version-string": "2021-08-23",
-  "port-version": 2,
+  "version-date": "2021-10-21",
   "description": "Single header utf8 string functions for C and C++",
   "homepage": "https://github.com/sheredom/utf8.h"
 }
