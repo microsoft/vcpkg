@@ -36,7 +36,7 @@ else()
     set(STATIC_CRT_LNK OFF)
 endif()
 
-if ("cuda" IN_LIST FEATURES AND BUILD_ARCH STREQUAL "Win32")
+if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     message(FATAL_ERROR "Feature 'cuda' can only build on x64 arch.")
 endif()
 
