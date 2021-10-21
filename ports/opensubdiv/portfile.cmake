@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-version-search.patch
         fix-build-type.patch
         fix-dependencies.patch
+        fix-mac-build.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -39,8 +40,8 @@ if ("cuda" IN_LIST FEATURES AND BUILD_ARCH STREQUAL "Win32")
     message(FATAL_ERROR "Feature 'cuda' can only build on x64 arch.")
 endif()
 
-if ("dx" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature 'dx' only support Windows.")
+if (("dx" IN_LIST FEATURES OR "omp" IN_LIST FEATURES) AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature 'dx' and 'omp' only support Windows.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
