@@ -10,4 +10,4 @@ vcpkg_from_github(
 
 file(COPY "${SOURCE_PATH}/include/semver.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/neargye")
 
-file(INSTALL" ${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
