@@ -1,6 +1,0 @@
-Source: sf2cute
-Version: 0.2.0-1
-Description: C++14 Library for SoundFont 2
-
-Feature: example
-Description: Installs an example application

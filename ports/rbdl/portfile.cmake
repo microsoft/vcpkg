@@ -1,8 +1,8 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(RBDL_STATIC ON)
-else()
-    set(RBDL_STATIC OFF)
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/rbdl-orb/copyright")
+    message(FATAL_ERROR "${PORT} conflict with rbdl-orb, please remove rbdl-orb before install ${PORT}.")
 endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RBDL_STATIC)
 
 vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,19 +14,16 @@ vcpkg_from_github(ARCHIVE
 )
 
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRBDL_BUILD_STATIC=${RBDL_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# # Remove duplicated include directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

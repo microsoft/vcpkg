@@ -8,14 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_compile-option.patch
+        fix-version-search.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
     message(
 "OpenSubdiv currently requires the following libraries from the system package manager:
-    xinerama
+    xinerama xxf86vm
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxxf86vm-dev")
 endif()
 
 vcpkg_find_acquire_program(PYTHON2)

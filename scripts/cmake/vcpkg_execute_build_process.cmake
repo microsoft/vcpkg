@@ -34,120 +34,129 @@ conflict when building multiple at once.
 * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 #]===]
 
-function(vcpkg_execute_build_process)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND")
+set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
+    "LINK : fatal error LNK1102:"
+    " fatal error C1060: "
+    # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
+    "LINK : fatal error LNK1318:"
+    "LINK : fatal error LNK1104:"
+    "LINK : fatal error LNK1201:"
+    # Multiple threads using the same directory at the same time cause conflicts, will try again.
+    "Cannot create parent directory"
+    "Cannot write file"
+    # Multiple threads caused the wrong order of creating folders and creating files in folders
+    "Can't open"
+)
+list(JOIN Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES "|" Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES)
 
-    set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out.log")
-    set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err.log")
+function(vcpkg_execute_build_process)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND")
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    foreach(required_arg IN ITEMS WORKING_DIRECTORY COMMAND)
+        if(NOT DEFINED arg_${required_arg})
+            message(FATAL_ERROR "${required_arg} must be specified.")
+        endif()
+    endforeach()
+
+    if(NOT DEFINED arg_LOGNAME)
+        message(WARNING "LOGNAME should be specified.")
+        set(arg_LOGNAME "build")
+    endif()
+
+    set(log_prefix "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}")
+    set(log_out "${log_prefix}-out.log")
+    set(log_err "${log_prefix}-err.log")
+    set(all_logs "${log_out}" "${log_err}")
 
     execute_process(
-        COMMAND ${_ebp_COMMAND}
-        WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
-        OUTPUT_FILE ${LOG_OUT}
-        ERROR_FILE ${LOG_ERR}
+        COMMAND ${arg_COMMAND}
+        WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+        OUTPUT_FILE "${log_out}"
+        ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
     )
 
-    if(error_code)
-        file(READ ${LOG_OUT} out_contents)
-        file(READ ${LOG_ERR} err_contents)
-
-        if(out_contents)
-            list(APPEND LOGS ${LOG_OUT})
-        endif()
-        if(err_contents)
-            list(APPEND LOGS ${LOG_ERR})
-        endif()
-
-        if(out_contents MATCHES "LINK : fatal error LNK1102:" OR out_contents MATCHES " fatal error C1060: "
-           OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: "
-           OR out_contents MATCHES "LINK : fatal error LNK1318: Unexpected PDB error; ACCESS_DENIED"
-           OR out_contents MATCHES "LINK : fatal error LNK1104:"
-           OR out_contents MATCHES "LINK : fatal error LNK1201:"
-            # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
-           OR err_contents MATCHES "Cannot create parent directory" OR err_contents MATCHES "Cannot write file"
-            # Multiple threads using the same directory at the same time cause conflicts, will try again.
-           OR err_contents MATCHES "Can't open"
-            # Multiple threads caused the wrong order of creating folders and creating files in folders
-           )
+    if(NOT error_code EQUAL "0")
+        file(READ "${log_out}" out_contents)
+        file(READ "${log_err}" err_contents)
+        set(all_contents "${out_contents}${err_contents}")
+        if(all_contents MATCHES "${Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES}")
             message(STATUS "Restarting Build without parallelism because memory exceeded")
-            set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
-            set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
+            set(log_out "${log_prefix}-out-1.log")
+            set(log_err "${log_prefix}-err-1.log")
+            list(APPEND all_logs "${log_out}" "${log_err}")
 
-            if(_ebp_NO_PARALLEL_COMMAND)
+            if(DEFINED arg_NO_PARALLEL_COMMAND)
                 execute_process(
-                    COMMAND ${_ebp_NO_PARALLEL_COMMAND}
-                    WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
-                    OUTPUT_FILE ${LOG_OUT}
-                    ERROR_FILE ${LOG_ERR}
+                    COMMAND ${arg_NO_PARALLEL_COMMAND}
+                    WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+                    OUTPUT_FILE "${log_out}"
+                    ERROR_FILE "${log_err}"
                     RESULT_VARIABLE error_code
                 )
             else()
                 execute_process(
-                    COMMAND ${_ebp_COMMAND}
-                    WORKING_DIRECTORY ${_ebp_WORKING_DIRECTORY}
-                    OUTPUT_FILE ${LOG_OUT}
-                    ERROR_FILE ${LOG_ERR}
+                    COMMAND ${arg_COMMAND}
+                    WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+                    OUTPUT_FILE "${log_out}"
+                    ERROR_FILE "${log_err}"
                     RESULT_VARIABLE error_code
                 )
             endif()
-
-            if(error_code)
-                file(READ ${LOG_OUT} out_contents)
-                file(READ ${LOG_ERR} err_contents)
-
-                if(out_contents)
-                    list(APPEND LOGS ${LOG_OUT})
-                endif()
-                if(err_contents)
-                    list(APPEND LOGS ${LOG_ERR})
-                endif()
-            endif()
-        elseif(out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: ")
+        elseif(all_contents MATCHES "mt : general error c101008d: ")
             # Antivirus workaround - occasionally files are locked and cause mt.exe to fail
             message(STATUS "mt.exe has failed. This may be the result of anti-virus. Disabling anti-virus on the buildtree folder may improve build speed")
-            set(ITERATION 0)
-            while (ITERATION LESS 3 AND (out_contents MATCHES "mt : general error c101008d: " OR out_contents MATCHES "mt.exe : general error c101008d: "))
-                MATH(EXPR ITERATION "${ITERATION}+1")
-                message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${ITERATION}")
+            foreach(iteration RANGE 1 3)
+                message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of mt.exe file locking issue. Iteration: ${iteration}")
+
+                set(log_out "${log_prefix}-out-${iteration}.log")
+                set(log_err "${log_prefix}-err-${iteration}.log")
+                list(APPEND all_logs "${log_out}" "${log_err}")
                 execute_process(
-                    COMMAND ${_ebp_COMMAND}
-                    OUTPUT_FILE "${LOGPREFIX}-out-${ITERATION}.log"
-                    ERROR_FILE "${LOGPREFIX}-err-${ITERATION}.log"
+                    COMMAND ${arg_COMMAND}
+                    WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+                    OUTPUT_FILE "${log_out}"
+                    ERROR_FILE "${log_err}"
                     RESULT_VARIABLE error_code
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+                )
 
-                if(error_code)
-                    file(READ "${LOGPREFIX}-out-${ITERATION}.log" out_contents)
-                    file(READ "${LOGPREFIX}-err-${ITERATION}.log" err_contents)
-
-                    if(out_contents)
-                        list(APPEND LOGS "${LOGPREFIX}-out-${ITERATION}.log")
-                    endif()
-                    if(err_contents)
-                        list(APPEND LOGS "${LOGPREFIX}-err-${ITERATION}.log")
-                    endif()
-                else()
+                if(error_code EQUAL "0")
                     break()
                 endif()
-            endwhile()
-        elseif(out_contents MATCHES "fatal error: ld terminated with signal 9 [Killed]")
+
+                file(READ "${log_out}" out_contents)
+                file(READ "${log_err}" err_contents)
+                set(all_contents "${out_contents}${err_contents}")
+                if(NOT all_contents MATCHES "mt : general error c101008d: ")
+                    break()
+                endif()
+            endforeach()
+        elseif(all_contents MATCHES "fatal error: ld terminated with signal 9 [Killed]")
             message(WARNING "ld was terminated with signal 9 [killed], please ensure your system has sufficient hard disk space and memory.")
         endif()
+    endif()
 
-        if(error_code)
-            set(STRINGIFIED_LOGS)
-            foreach(LOG ${LOGS})
-                file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
-                list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
-            endforeach()
-            z_vcpkg_prettify_command_line(_ebp_COMMAND_PRETTY ${_ebp_COMMAND})
-            message(FATAL_ERROR
-                "  Command failed: ${_ebp_COMMAND_PRETTY}\n"
-                "  Working Directory: ${_ebp_WORKING_DIRECTORY}\n"
-                "  See logs for more information:\n"
-                ${STRINGIFIED_LOGS})
-        endif(error_code)
-    endif(error_code)
-endfunction(vcpkg_execute_build_process)
+    if(NOT error_code EQUAL "0")
+        set(stringified_logs "")
+        foreach(log IN LISTS all_logs)
+            if(NOT EXISTS "${log}")
+                continue()
+            endif()
+            file(SIZE "${log}" log_size)
+            if(NOT log_size EQUAL "0")
+                file(TO_NATIVE_PATH "${log}" native_log)
+                string(APPEND stringified_logs "    ${native_log}\n")
+            endif()
+        endforeach()
+        z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
+        message(FATAL_ERROR
+            "  Command failed: ${pretty_command}\n"
+            "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
+            "  See logs for more information:\n"
+            "${stringified_logs}"
+        )
+    endif()
+endfunction()

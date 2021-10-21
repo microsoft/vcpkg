@@ -1,0 +1,80 @@
+{
+  "name": "mathgl",
+  "version-string": "2.4.3",
+  "port-version": 7,
+  "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
+  "default-features": [
+    "jpeg",
+    "opengl",
+    "png",
+    "zlib"
+  ],
+  "features": {
+    "fltk": {
+      "description": "fltk module",
+      "dependencies": [
+        "fltk"
+      ]
+    },
+    "gif": {
+      "description": "gif module",
+      "dependencies": [
+        "giflib"
+      ]
+    },
+    "glut": {
+      "description": "glut module",
+      "dependencies": [
+        "freeglut"
+      ]
+    },
+    "gsl": {
+      "description": "gsl module",
+      "dependencies": [
+        "gsl"
+      ]
+    },
+    "hdf5": {
+      "description": "hdf5 module",
+      "dependencies": [
+        "hdf5"
+      ]
+    },
+    "jpeg": {
+      "description": "jpeg module",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "opengl": {
+      "description": "opengl module",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "png": {
+      "description": "png module",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "qt5": {
+      "description": "qt5 module",
+      "dependencies": [
+        "qt5"
+      ]
+    },
+    "wx": {
+      "description": "wx module",
+      "dependencies": [
+        "wxwidgets"
+      ]
+    },
+    "zlib": {
+      "description": "zlib module",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

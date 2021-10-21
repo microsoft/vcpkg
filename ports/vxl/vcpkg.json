@@ -1,0 +1,21 @@
+{
+  "name": "vxl",
+  "version-string": "2.0.2",
+  "port-version": 3,
+  "description": "A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.",
+  "dependencies": [
+    "bzip2",
+    "expat",
+    "libgeotiff",
+    "libjpeg-turbo",
+    "libpng",
+    "shapelib",
+    "tiff",
+    "zlib"
+  ],
+  "features": {
+    "core-imaging": {
+      "description": "core-imaging support for vxl"
+    }
+  }
+}

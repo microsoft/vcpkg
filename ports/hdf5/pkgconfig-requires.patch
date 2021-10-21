@@ -1,0 +1,51 @@
+diff -urN a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2020-03-03 00:03:12.000000000 +0100
++++ b/CMakeLists.txt	2021-05-15 15:02:03.496210691 +0200
+@@ -682,6 +682,9 @@
+   if (MPI_C_LINK_FLAGS)
+     set (CMAKE_EXE_LINKER_FLAGS "${MPI_C_LINK_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
+   endif ()
++  if(UNIX)
++    set(ompi-c_PC_LIBS_PRIVATE ${MPI_C_LIBRARIES})
++  endif()
+ endif ()
+ 
+ #option (DEFAULT_API_VERSION "Enable v1.12 API (v16, v18, v110, v112)" "v112")
+diff -urN a/CMakeFilters.cmake b/CMakeFilters.cmake
+--- a/CMakeFilters.cmake	2020-03-03 00:03:12.000000000 +0100
++++ b/CMakeFilters.cmake	2021-05-15 12:35:58.453641554 +0200
+@@ -55,6 +55,7 @@
+         if (ZLIB_FOUND)
+           set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_LIBRARIES})
+           set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${ZLIB_LIBRARIES})
++          set (zlib_PC_LIBS_PRIVATE "${ZLIB_LIBRARIES}")
+         endif ()
+       endif ()
+     endif ()
+@@ -130,6 +131,7 @@
+     set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_SHARED_LIBRARY})
+   endif ()
+   set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_STATIC_LIBRARY})
++  set (szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
+   INCLUDE_DIRECTORIES (${SZIP_INCLUDE_DIRS})
+   message (STATUS "Filter SZIP is ON")
+   if (H5_HAVE_FILTER_SZIP)
+diff -urN a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt	2020-03-03 00:03:12.000000000 +0100
++++ b/src/CMakeLists.txt	2021-05-15 12:41:34.762354040 +0200
+@@ -1259,6 +1259,15 @@
+ 
+ set (_PKG_CONFIG_REQUIRES)
+ set (_PKG_CONFIG_REQUIRES_PRIVATE)
++set(_PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
++foreach(_module IN ITEMS ompi-c szip zlib)
++    if(${_module}_PC_LIBS_PRIVATE)
++        foreach(_lib IN LISTS ${_module}_PC_LIBS_PRIVATE)
++            string(REPLACE " -l${_lib} " " " _PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE}")
++        endforeach()
++        string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " ${_module}")
++    endif()
++endforeach()
+ 
+ configure_file (
+     ${HDF_RESOURCES_DIR}/libhdf5.pc.in

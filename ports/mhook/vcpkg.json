@@ -1,0 +1,6 @@
+{
+  "name": "mhook",
+  "version-string": "2.5.1",
+  "port-version": 2,
+  "description": "A Windows API hooking library."
+}

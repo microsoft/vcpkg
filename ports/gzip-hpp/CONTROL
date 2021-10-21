@@ -1,5 +1,0 @@
-Source: gzip-hpp
-Version: 0.1.0
-Homepage: https://github.com/mapbox/gzip-hpp/
-Description: Gzip header-only C++ library
-Build-Depends: zlib

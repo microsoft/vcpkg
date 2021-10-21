@@ -1,4 +1,0 @@
-Source: asyncplusplus
-Version: 1.1
-Description: Async++ is a lightweight concurrency framework for C++11
-Supports: !uwp

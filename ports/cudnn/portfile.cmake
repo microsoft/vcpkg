@@ -20,7 +20,7 @@ find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
 message(STATUS "CUDNN_INCLUDE_DIR: ${CUDNN_INCLUDE_DIR}")
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/lib/x86_64-linux-gnu/
-  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
+  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64 cuda/lib/x64)
 message(STATUS "CUDNN_LIBRARY: ${CUDNN_LIBRARY}")
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
@@ -73,3 +73,4 @@ endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/FindCUDNN.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

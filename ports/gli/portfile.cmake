@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/gli
-    REF dd17acf9cc7fc6e6abe9f9ec69949eeeee1ccd82
-    SHA512 9e3a4ab9ee73d5c271b8346cf81339cd3cd0c20d20991524b816313b6a99e8d3a01863316a38cf1a52ef9c5b31d689ecccf6248b12d1d270460c048bf904650b
+    REF 779b99ac6656e4d30c3b24e96e0136a59649a869
+    SHA512 6e7ab46b7943cb185c8c1f6e45b765f5463e03628973043a0e8b866458ccceb5249f69a2a77b5e69c73f3ace85af96c7b9b2137685ceb6d0fcb67e491a49be69
     HEAD_REF master
     PATCHES
         disable-test.patch
@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gli TARGET_PATH share/gli)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gli)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)

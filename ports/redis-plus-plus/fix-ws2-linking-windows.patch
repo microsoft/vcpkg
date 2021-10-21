@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eb3ff66..1309213 100644
+index 452cc0f..90932ce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -77,6 +77,7 @@ if (REDIS_PLUS_PLUS_BUILD_SHARED)
+@@ -148,6 +148,7 @@ if(REDIS_PLUS_PLUS_BUILD_SHARED)
          target_compile_definitions(${SHARED_LIB} PRIVATE NOMINMAX)
-         set_target_properties(${SHARED_LIB} PROPERTIES CXX_STANDARD ${REDIS_PLUS_PLUS_CXX_STANDARD} CXX_EXTENSIONS OFF)
+         set_target_properties(${SHARED_LIB} PROPERTIES CXX_STANDARD ${REDIS_PLUS_PLUS_CXX_STANDARD})
          set_target_properties(${SHARED_LIB} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-+        target_link_libraries(${SHARED_LIB} Ws2_32.lib)
++        target_link_libraries(${SHARED_LIB} PUBLIC Ws2_32.lib)
+     else()
+         target_compile_options(${SHARED_LIB} PRIVATE "-Wall" "-W" "-Werror")
      endif()
- 
-     target_link_libraries(${SHARED_LIB} ${HIREDIS_LIB})
