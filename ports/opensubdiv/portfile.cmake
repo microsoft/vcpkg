@@ -39,6 +39,10 @@ if ("cuda" IN_LIST FEATURES AND BUILD_ARCH STREQUAL "Win32")
     message(FATAL_ERROR "Feature 'cuda' can only build on x64 arch.")
 endif()
 
+if ("dx" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature 'dx' only support Windows.")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "true-deriv-eval"   OPENSUBDIV_GREGORY_EVAL_TRUE_DERIVATIVES
@@ -84,6 +88,8 @@ vcpkg_cmake_configure(
         -DNO_OPENGL=ON # missing glloader
         ${FEATURE_OPTIONS}
         ${OSD_EXTRA_OPTS}
+    MAYBE_UNUSED_VARIABLES
+        MSVC_STATIC_CRT
 )
 
 vcpkg_cmake_install()
@@ -93,11 +99,11 @@ if ("opencl" IN_LIST FEATURES OR "dx" IN_LIST FEATURES)
 endif()
 
 if ("examples" IN_LIST FEATURES)
-    if ("ptex" IN_LIST FEATURES)
-        vcpkg_copy_tools(TOOL_NAMES dxPtexViewer AUTO_CLEAN)
-    endif()
     if ("dx" IN_LIST FEATURES)
         vcpkg_copy_tools(TOOL_NAMES dxViewer AUTO_CLEAN)
+        if ("ptex" IN_LIST FEATURES)
+            vcpkg_copy_tools(TOOL_NAMES dxPtexViewer AUTO_CLEAN)
+        endif()
     endif()
 endif()
 
