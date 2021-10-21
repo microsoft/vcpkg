@@ -6,7 +6,7 @@
   "dependencies": [
     {
       "name": "libiconv",
-      "platform": "windows & static"
+      "platform": "windows"
     },
     "libopensp"
   ]
