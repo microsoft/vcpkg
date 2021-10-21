@@ -1,7 +1,7 @@
 {
   "name": "kf5archive",
   "version-semver": "5.84.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
   "dependencies": [

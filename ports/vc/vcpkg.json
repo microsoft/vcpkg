@@ -1,0 +1,8 @@
+{
+  "name": "vc",
+  "version-string": "1.4.2",
+  "port-version": 1,
+  "description": "SIMD Vector Classes for C++ .",
+  "homepage": "https://github.com/VcDevel/Vc",
+  "supports": "!arm64"
+}

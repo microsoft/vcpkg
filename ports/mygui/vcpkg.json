@@ -1,0 +1,19 @@
+{
+  "name": "mygui",
+  "version-string": "2020-06-17",
+  "port-version": 1,
+  "description": "Fast, flexible and simple GUI",
+  "homepage": "http://mygui.info",
+  "dependencies": [
+    "freetype",
+    "sdl2-image"
+  ],
+  "features": {
+    "opengl": {
+      "description": "Use OpenGL render system.",
+      "dependencies": [
+        "opengl"
+      ]
+    }
+  }
+}

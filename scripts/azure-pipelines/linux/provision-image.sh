@@ -81,17 +81,3 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
-
-# Write script to provision disks used by cloud-init
-echo "if [ ! -d \"/mnt/vcpkg-ci\" ]; then" > /etc/provision-disks.sh
-echo "sudo parted /dev/sdb mklabel gpt" >> /etc/provision-disks.sh
-echo "sudo parted /dev/sdb mkpart cidisk ext4 0% 100%" >> /etc/provision-disks.sh
-echo "sudo mkfs -t ext4 /dev/sdb1" >> /etc/provision-disks.sh
-echo "sudo mkdir /mnt/vcpkg-ci -m=777" >> /etc/provision-disks.sh
-echo "echo \"/dev/sdb1 /mnt/vcpkg-ci ext4 barrier=0 0 0\" | sudo tee -a /etc/fstab" >> /etc/provision-disks.sh
-echo "sudo mount -a" >> /etc/provision-disks.sh
-echo "sudo chmod 777 /mnt/vcpkg-ci" >> /etc/provision-disks.sh
-echo "fi" >> /etc/provision-disks.sh
-sudo chmod 700 /etc/provision-disks.sh
-
-# provision-image.ps1 will append installation of the SAS token here

@@ -1,9 +1,9 @@
 {
   "name": "libunifex",
   "version-date": "2021-08-01",
+  "port-version": 1,
   "description": "Unified Executors",
   "homepage": "https://github.com/facebookexperimental/libunifex",
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "liburing",

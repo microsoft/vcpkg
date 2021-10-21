@@ -1,5 +1,0 @@
-Source: easycl
-Version: 0.3
-Homepage: https://github.com/architector1324/EasyCL
-Build-Depends: opencl
-Description: OpenCL based lightweight c++ computing library

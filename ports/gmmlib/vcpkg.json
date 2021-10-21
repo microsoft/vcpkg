@@ -1,0 +1,7 @@
+{
+  "name": "gmmlib",
+  "version-string": "20.3.1",
+  "port-version": 1,
+  "description": "intel's graphics memory management library",
+  "supports": "linux"
+}

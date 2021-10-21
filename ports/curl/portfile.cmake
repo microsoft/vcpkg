@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF bfbde883af33397943df68a3ae01847a634d33bf #curl-7_78_0
-    SHA512 72c2d0daedbd1e0610f507f637c5725cb0769befe5205f613260217b692e27ec135711974f85660f863a49b415c1457d2d29960158758e232caa89f972f7045e
+    REF c7aef0a945f9b6fb6d3f91716a21dfe2f4ea635f #curl-7_79_1
+    SHA512 105e945e0acb47950d756382c7e45abbf0d0b12526eb0170af23e68653c1b7e3be27d547d537c4f36d099ebcb04870e8cd571d2baec996373b2032f8451b63e0
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch

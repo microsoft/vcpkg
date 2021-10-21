@@ -1,0 +1,9 @@
+{
+  "name": "clblas",
+  "version-string": "2.12",
+  "port-version": 5,
+  "description": "clBLAS is an OpenCL 1.2 accelerated BLAS (Basic Linear Algebra Subsystem) library.",
+  "dependencies": [
+    "opencl"
+  ]
+}

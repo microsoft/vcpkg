@@ -1,4 +1,0 @@
-Source: tinynpy
-Version: 1.0.0-3
-Build-Depends: zlib
-Description: tiny C++ loader/exporter of python numpy array NPY/NPZ files

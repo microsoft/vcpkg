@@ -1,0 +1,6 @@
+{
+  "name": "brunocodutra-metal",
+  "version-string": "2.1.1",
+  "port-version": 1,
+  "description": "A single header C++11 library designed to make you love template metaprogramming"
+}
