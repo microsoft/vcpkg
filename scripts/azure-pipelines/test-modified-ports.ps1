@@ -119,9 +119,9 @@ $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 if ($IsWindows)
 {
     mkdir empty
-    cmd /c "robocopy.exe empty buildtrees /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty packages /MIR /NFL /NDL /NC /NP > nul"
-    cmd /c "robocopy.exe empty installed /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty buildtrees /MIR /NFL /NDL /NC /NP"
+    cmd /c "robocopy.exe empty packages /MIR /NFL /NDL /NC /NP"
+    cmd /c "robocopy.exe empty installed /MIR /NFL /NDL /NC /NP"
     rmdir empty
 }
 
