@@ -1,0 +1,11 @@
+{
+  "name": "libassuan",
+  "version-string": "2.5.3",
+  "port-version": 2,
+  "description": "A library implementing the so-called Assuan protocol",
+  "homepage": "https://gnupg.org/software/libassuan/index.html",
+  "supports": "!windows",
+  "dependencies": [
+    "libgpg-error"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "protopuf",
-  "version-semver": "2.0.0",
+  "version-semver": "2.1.0",
   "description": "A little, highly templated, and protobuf-compatible serialization/deserialization library written in C++20",
   "homepage": "https://github.com/PragmaTwice/protopuf"
 }

@@ -1,0 +1,10 @@
+{
+  "name": "strtk",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "robust, optimized and portable string processing algorithms for the C++ language",
+  "homepage": "https://github.com/ArashPartow/strtk",
+  "dependencies": [
+    "boost"
+  ]
+}

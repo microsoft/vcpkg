@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  VcDevel/Vc 
-    REF 1.4.1
-    SHA512 dd17e214099796c41d70416d365ea038c00c5fda285b05e48d7ee4fe03f4db2671d2be006ca7b98b0d4133bfcb57faf04cecfe35c29c3b006cd91c9a185cc04a
+    REF 1.4.2
+    SHA512 9a929cd48bdf6b8e94765bd649e7ec42b10dea28e36eff288223d72cffa5f4fc8693e942aa3f780b42d8a0c1824fcabff22ec0622aa8ea5232c9123858b8bbbf
     HEAD_REF 1.4
     PATCHES
         "correct_cmake_config_path.patch"

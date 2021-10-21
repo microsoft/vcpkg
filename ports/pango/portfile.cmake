@@ -13,7 +13,7 @@ vcpkg_configure_meson(
         -Dintrospection=disabled # Build the GObject introspection data for Pango
         -Dfontconfig=enabled # Build with FontConfig support.
         -Dsysprof=disabled # include tracing support for sysprof
-        -Dlibtahi=disabled # Build with libthai support
+        -Dlibthai=disabled # Build with libthai support
         -Dcairo=enabled # Build with cairo support
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support

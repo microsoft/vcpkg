@@ -30,7 +30,7 @@ vcpkg_configure_cmake(
     OPTIONS ${FEATURE_OPTIONS}
         -DTGUI_MISC_INSTALL_PREFIX=${TGUI_SHARE_PATH}
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
-        -DTGUI_BACKEND="Custom"
+        -DTGUI_BACKEND=Custom
         -DTGUI_BUILD_EXAMPLES=OFF
 )
 

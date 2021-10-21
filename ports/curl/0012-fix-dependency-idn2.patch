@@ -1,51 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc7223b..a661cb8 100644
+index 9f6de81..6702845 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -620,9 +620,6 @@ if(NOT CURL_DISABLE_LDAPS)
-   check_include_file_concat("ldapssl.h"  HAVE_LDAPSSL_H)
+@@ -632,6 +632,9 @@ endif()
+ option(USE_LIBIDN2 "Use libidn2 for IDN support" ON)
+ set(HAVE_LIBIDN2 OFF)
+ if(USE_LIBIDN2)
++  set(HAVE_LIBIDN2 TRUE)
++  list(APPEND CURL_LIBS ${LIBIDN2_LIBRARIES})
++elseif(0)
+   check_library_exists_concat("idn2" idn2_lookup_ul HAVE_LIBIDN2)
  endif()
  
--# Check for idn
--check_library_exists_concat("idn2" idn2_lookup_ul HAVE_LIBIDN2)
--
- # Check for symbol dlopen (same as HAVE_LIBDL)
- check_library_exists("${CURL_LIBS}" dlopen "" HAVE_DLOPEN)
- 
-@@ -870,6 +867,20 @@ if(CURL_CA_PATH_SET AND NOT USE_OPENSSL AND NOT USE_MBEDTLS)
-           "Set CURL_CA_PATH=none or enable one of those TLS backends.")
- endif()
- 
-+if (CMAKE_USE_IDN2)
-+    include(FindPackageHandleStandardArgs)
-+    include(SelectLibraryConfigurations)
-+    
-+    find_path(LIBIDN2_INCLUDE_DIRS idn2.h)
-+    find_library(LIBIDN2_LIBRARY_DEBUG NAMES libidn2 idn2 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH Release RelWithDebInfo MinSizeRel)
-+    find_library(LIBIDN2_LIBRARY_RELEASE NAMES libidn2 idn2 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH Debug)
-+    select_library_configurations(LIBIDN2)
-+    
-+    add_definitions(-DHAVE_IDN2_H -DHAVE_LIBIDN2)
-+    include_directories(${LIBIDN2_INCLUDE_DIRS})
-+    link_libraries(${LIBIDN2_LIBRARY})
-+endif()
-+
- # Check for header files
- if(NOT UNIX)
-   check_include_file_concat("windows.h"      HAVE_WINDOWS_H)
-@@ -906,7 +917,6 @@ check_include_file_concat("crypto.h"         HAVE_CRYPTO_H)
- check_include_file_concat("err.h"            HAVE_ERR_H)
- check_include_file_concat("errno.h"          HAVE_ERRNO_H)
- check_include_file_concat("fcntl.h"          HAVE_FCNTL_H)
--check_include_file_concat("idn2.h"           HAVE_IDN2_H)
- check_include_file_concat("ifaddrs.h"        HAVE_IFADDRS_H)
- check_include_file_concat("io.h"             HAVE_IO_H)
- check_include_file_concat("krb.h"            HAVE_KRB_H)
-@@ -1362,7 +1372,6 @@ _add_if("libz"          HAVE_LIBZ)
- _add_if("brotli"        HAVE_BROTLI)
- _add_if("zstd"          HAVE_ZSTD)
- _add_if("AsynchDNS"     USE_ARES OR USE_THREADS_POSIX OR USE_THREADS_WIN32)
--_add_if("IDN"           HAVE_LIBIDN2)
- _add_if("Largefile"     (CURL_SIZEOF_CURL_OFF_T GREATER 4) AND
-                         ((SIZEOF_OFF_T GREATER 4) OR USE_WIN32_LARGE_FILES))
- # TODO SSP1 (Schannel) check is missing

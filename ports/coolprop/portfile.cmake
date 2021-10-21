@@ -10,6 +10,7 @@ vcpkg_from_github(
         fmt-fix.patch
         fix-builderror.patch
         fix-dependency.patch
+        fix-install.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
@@ -89,32 +90,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(TARGET_FOLDER "shared_library")
-else()
-    set(TARGET_FOLDER "static_library")
+if (VCPKG_TARGET_IS_WINDOWS AND COOLPROP_SHARED_LIBRARY)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CoolPropLib.h
+        "#if defined(COOLPROP_LIB)" "#if 1"
+    )
 endif()
 
-file(GLOB_RECURSE COOLPROP_HEADERS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.h")
-file(INSTALL ${COOLPROP_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(GLOB_RECURSE COOLPROP_LIBS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.lib")
-file(GLOB_RECURSE COOLPROP_DLLS "${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.dll")
-
-file(INSTALL ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(COOLPROP_DLLS)
-    file(INSTALL ${COOLPROP_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-
-file(GLOB_RECURSE COOLPROP_DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER}/*.lib")
-file(GLOB_RECURSE COOLPROP_DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER}/*.dll")
-
-file(INSTALL ${COOLPROP_DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-if(COOLPROP_DEBUG_DLLS)
-    file(INSTALL ${COOLPROP_DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER} ${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

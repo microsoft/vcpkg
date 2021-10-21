@@ -1,29 +1,33 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if(VCPKG_TARGET_IS_UWP)
+    set(UWP_PATCH fix-uwp.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO whoshuu/cpr
-    REF 41fbaca90160950f1397e0ffc6b58bd81063f131 # v1.5.2
-    SHA512 0c493eef3069c1067f2492e6bc91e20b415a03a9392cbe70d4fb40f64a71b601ec62a9bcf5ca7e5b5a6e74449904f3121503421f4653f5b55df6702121806977
+    REPO libcpr/cpr
+    REF 1.6.2
+    SHA512 77afd1dc81274aa1d37bf17abaf2614b63802f17fc08bdf8453d96d8fa2bd4b025511db9fadbde51160d7dde31a0363694422d3407ca9cdac3cd79b744a82888
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
+        ${UWP_PATCH}
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
-        -DBUILD_CPR_TESTS=OFF
-        -DUSE_SYSTEM_CURL=ON
+        -DCPR_BUILD_TESTS=OFF
+        -DCPR_FORCE_USE_SYSTEM_CURL=ON
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/cpr)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cpr)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
 vcpkg_copy_pdbs()
 

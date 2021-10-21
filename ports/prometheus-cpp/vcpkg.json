@@ -1,0 +1,35 @@
+{
+  "name": "prometheus-cpp",
+  "version-semver": "0.13.0",
+  "description": "Prometheus Client Library for Modern C++",
+  "default-features": [
+    "compression",
+    "pull"
+  ],
+  "features": {
+    "compression": {
+      "description": "Enable zlib compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "pull": {
+      "description": "Support for regular pull mode",
+      "dependencies": [
+        "civetweb"
+      ]
+    },
+    "push": {
+      "description": "Support push gateway",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "tests": {
+      "description": "Additional testing support",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}

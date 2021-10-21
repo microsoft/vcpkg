@@ -1,0 +1,17 @@
+diff --git a/Source/CMakeLists.txt b/Source/CMakeLists.txt
+index 866fc22..ee02d2e 100644
+--- a/Source/CMakeLists.txt
++++ b/Source/CMakeLists.txt
+@@ -147,8 +147,12 @@ endif ()
+ 
+ # In order to get clean module segregation, always exclude player/samples from AAR
+ if (NOT ANDROID)
++    if (URHO3D_BUILD_TOOLS)
+     add_subdirectory (Tools)
++    endif()
++    if (URHO3D_BUILD_SAMPLES)
+     add_subdirectory (Samples)
++    endif()
+ endif ()
+ 
+ if (URHO3D_EXTRAS)

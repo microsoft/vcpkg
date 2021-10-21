@@ -1,5 +1,5 @@
 
-set(pkgver "9.0.257.17")
+set(pkgver "9.1.269.39")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
@@ -71,7 +71,7 @@ endfunction()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 462fc27a2892702a4d42ffd647789c58ffcee747
+    REF 7d3d62c91f69a702e5aa54c6b4dbbaa883683717
     PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
@@ -79,7 +79,7 @@ message(STATUS "Fetching submodules")
 v8_fetch(
         DESTINATION build
         URL https://chromium.googlesource.com/chromium/src/build.git
-        REF acacc4cc0668cb4dc7f44a3f4430635f438d7478 
+        REF fd86d60f33cbc794537c4da2ef7e298d7f81138e 
         SOURCE ${SOURCE_PATH}
         PATCHES ${CURRENT_PORT_DIR}/build.patch)
 v8_fetch(

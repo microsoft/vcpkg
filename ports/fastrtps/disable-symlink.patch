@@ -1,0 +1,16 @@
+Normally, the build script attempts to create a symlink to fast-discovery-server on Windows
+and only falls back to a batch file if the necessary administrator privileges are not available.
+Since symlinks do not work well with vcpkg binary caching,
+we force the build script to create a batch file in any case.
+diff --git a/tools/fds/CMakeLists.txt b/tools/fds/CMakeLists.txt
+--- a/tools/fds/CMakeLists.txt
++++ b/tools/fds/CMakeLists.txt
+@@ -124,7 +124,7 @@ if(NOT BUILD_SHARED_LIBS)
+     if( WIN32 )
+         # Use powershell to generate the link
+         install(
+-          CODE "execute_process( COMMAND PowerShell -Command \"if( test-path ${PROJECT_NAME}.exe -PathType Leaf ) { rm ${PROJECT_NAME}.exe } ; New-Item -ItemType SymbolicLink -Target $<TARGET_FILE_NAME:${PROJECT_NAME}> -Path ${PROJECT_NAME}.exe \" ERROR_QUIET RESULTS_VARIABLE SYMLINK_FAILED WORKING_DIRECTORY \"${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}\") \n if( SYMLINK_FAILED ) \n message(STATUS \"Windows requires admin installation rights to create symlinks. A bat script will be provided instead.\") \n set(FAST_SERVER_BINARY_NAME $<TARGET_FILE_NAME:${PROJECT_NAME}>) \n configure_file(${CMAKE_CURRENT_LIST_DIR}/fast-discovery-server.bat.in ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}${MSVCARCH_DIR_EXTENSION}/${PROJECT_NAME}.bat @ONLY) \n endif()"
++          CODE "set(FAST_SERVER_BINARY_NAME $<TARGET_FILE_NAME:${PROJECT_NAME}>) \n configure_file(${CMAKE_CURRENT_LIST_DIR}/fast-discovery-server.bat.in ${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}${MSVCARCH_DIR_EXTENSION}/${PROJECT_NAME}.bat @ONLY) \n"
+           COMPONENT discovery)
+     else()
+         # Use ln to create the symbolic link. We remove the version from the file name but keep the debug suffix
