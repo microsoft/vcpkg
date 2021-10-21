@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_explicit_shared_lib.diff
+        dll_names.diff                  # https://invent.kde.org/office/alkimia/-/commit/0ff901025a747ab31ab7efba9f8899b06774f60a
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -46,12 +47,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB_RECURSE DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-        file(GLOB_RECURSE DLLS_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-        file(REMOVE ${DLLS} ${DLLS_DBG})
-    endif()
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
