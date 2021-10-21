@@ -9,7 +9,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTIONS ac_cv_prog_cc_c99= # To avoid the compiler check for C99 which will fail for MSVC
-                 --disable-plugin-dlopen) 
+                --disable-plugin-dlopen) 
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -43,7 +43,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 
 # Handle copyright
-file(INSTALL "${CURRENT_PACKAGES_DIR}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/COPYING.txt"
             "${CURRENT_PACKAGES_DIR}/debug/README.txt"
