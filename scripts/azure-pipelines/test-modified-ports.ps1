@@ -116,6 +116,15 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
+if ($IsWindows)
+{
+    mkdir empty
+    cmd /c "robocopy.exe empty `"$buildtreesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$packagesRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    cmd /c "robocopy.exe empty `"$installRoot`" /MIR /NFL /NDL /NC /NP > nul"
+    rmdir empty
+}
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 if ($LASTEXITCODE -ne 0)
 {
@@ -141,7 +150,7 @@ if ($null -ne $OnlyTest)
         }
     }
 
-    $failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 }
 else
@@ -157,7 +166,7 @@ else
         & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
     }
 
-    $failureLogsEmpty = ((Test-Path $failureLogs) -and (Get-ChildItem $failureLogs).count -eq 0)
+    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
     if ($LASTEXITCODE -ne 0)
