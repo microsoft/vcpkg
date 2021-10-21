@@ -7,10 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(
-    COPY ${SOURCE_PATH}/httplib.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+file(COPY "${SOURCE_PATH}/httplib.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
