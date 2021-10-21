@@ -1,5 +1,7 @@
 # Registries: Take 2 (including Git Registries)
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 Originally, the design of registries was decided upon and written up in the [Registries RFC](registries.md).
 However, as we've gotten further into the design process of git registries and versioning,
 and discussed the interaction of versioning with registries,
@@ -457,7 +459,7 @@ This means that, even across different machines, the same registries will be use
 We will also be able to write down version resolution in this file as soon as that feature is added.
 
 It is recommended that one adds this `vcpkg-lock.json` to one's version control.
-This file is machine generated, and it is not specified how it's layed out;
+This file is machine generated, and it is not specified how it's laid out;
 however, for purposes of this RFC, we will define how it relates to git registries.
 
 In `vcpkg-lock.json`, in the top level object,

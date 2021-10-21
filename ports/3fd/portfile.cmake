@@ -22,7 +22,7 @@ vcpkg_from_github(
     SHA512 70630291b4055de2044ad76ef21e99d6ab6fd3468debb2a864a461cf8513642fe87f116e9dfff96ecff96f4577108493dc25aa40eeefcd93ee75990b13bb7b20
     HEAD_REF master
     PATCHES
-        rapidxml.patch
+        RapidXML.patch
 )
 
 # Build:

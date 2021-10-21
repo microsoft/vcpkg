@@ -1,6 +1,6 @@
 {
   "name": "boost-thread",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "description": "Boost thread module",
   "homepage": "https://github.com/boostorg/thread",
   "dependencies": [
@@ -8,7 +8,10 @@
     "boost-assert",
     "boost-atomic",
     "boost-bind",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-chrono",
     "boost-concept-check",
     "boost-config",
@@ -16,15 +19,16 @@
     "boost-container-hash",
     "boost-core",
     "boost-date-time",
-    "boost-detail",
     "boost-exception",
     "boost-function",
-    "boost-integer",
     "boost-intrusive",
     "boost-io",
+    "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-optional",
     "boost-predef",
@@ -37,6 +41,10 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "name": "xlnt",
+  "version": "1.5.0",
+  "port-version": 2,
+  "description": "Cross-platform user-friendly xlsx library for C++14",
+  "homepage": "https://github.com/tfussell/xlnt"
+}

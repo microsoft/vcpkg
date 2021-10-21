@@ -1,7 +1,0 @@
-Source: libaaplus
-Version: 2.12-1
-Description: libaaplus is an astronomical computations library by naughter software
-Homepage: http://www.naughter.com/aa.html
-
-Feature: tools
-Description: Build libaaplus tools

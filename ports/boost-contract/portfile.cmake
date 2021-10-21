@@ -3,12 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/contract
-    REF boost-1.75.0
-    SHA512 6dc5bad8e9d54c9a33f68da89956fbcf89af51bedbd4b8c539cff23d59e14ed93f521f88d247b66816ed8bc4d13634d2573ff52e3e05356906e1141490615966
+    REF boost-1.77.0
+    SHA512 f7d26121200a3e3f5f693423b50ae313477749446ba0c89b2e47ce26007a0f7dd636c2ab47a83b120412d9fe09f3b905ca4a4ce93550be1ae4acb9c23f1892de
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-contract requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

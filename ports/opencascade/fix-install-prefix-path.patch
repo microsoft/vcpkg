@@ -1,0 +1,15 @@
+diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
+index e391ddf..c926c49 100644
+--- a/adm/templates/OpenCASCADEConfig.cmake.in
++++ b/adm/templates/OpenCASCADEConfig.cmake.in
+@@ -24,6 +24,7 @@ set (OpenCASCADE_DEVELOPMENT_VERSION "@OCC_VERSION_DEVELOPMENT@")
+ # - in Android style: $INSTALL_DIR/libs/$CMAKE_ANDROID_ARCH_ABI/cmake/opencascade-<version>
+ get_filename_component (OpenCASCADE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
++get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
+ if (OpenCASCADE_INSTALL_PREFIX MATCHES "/cmake$")
+   get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
+ endif()
+-- 
+2.14.3.windows.1
+

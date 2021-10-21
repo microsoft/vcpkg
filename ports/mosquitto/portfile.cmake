@@ -1,16 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
-    REF e55f7facce7628b33e57d6b44cc8e9dd1042e624 # v1.6.8
-    SHA512 c192b53f52ce9dc8e02d31acd9e93c00cafbe543b038d7619e6b653f102126872bbd485c94604bca9287e71a5dfe0de2f4d8d3f51cdd5c37f90fd2a6535bd89b
     HEAD_REF master
+    REF v2.0.12
+    SHA512  bf502f4f8c5f8d9ae9ee6e6a417e3f9deea9933c69176903d460a1c91132658ebe093c8e9ed000cb579fe93f15626c15d8041ceb6438e15caca1d153a67975f9
     PATCHES
         0001-add-archive-destination-to-install.patch
         0002-win64-support.patch
         0003-add-find_package-libwebsockets.patch
         0004-support-static-build.patch
-        0005-add-mach.h-include.patch
+        0005-websocket-shared-lib-name.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_WEBSOCKETS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -18,14 +20,13 @@ vcpkg_configure_cmake(
     OPTIONS
         -DWITH_SRV=OFF
         -DWITH_WEBSOCKETS=ON
+        -DSTATIC_WEBSOCKETS=${STATIC_WEBSOCKETS}
         -DWITH_TLS=ON
         -DWITH_TLS_PSK=ON
         -DWITH_THREADING=ON
         -DDOCUMENTATION=OFF
-    OPTIONS_RELEASE
-        -DENABLE_DEBUG=OFF
-    OPTIONS_DEBUG
-        -DENABLE_DEBUG=ON
+        -DWITH_PLUGINS=OFF
+        -DWITH_CJSON=OFF
 )
 
 vcpkg_install_cmake()

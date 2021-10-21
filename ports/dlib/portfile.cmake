@@ -22,9 +22,10 @@ string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  "sqlite3"   DLIB_LINK_WITH_SQLITE3
-  "fftw3"     DLIB_USE_FFTW
-  "cuda"      DLIB_USE_CUDA
+    FEATURES
+        "sqlite3"   DLIB_LINK_WITH_SQLITE3
+        "fftw3"     DLIB_USE_FFTW
+        "cuda"      DLIB_USE_CUDA
 )
 
 vcpkg_configure_cmake(

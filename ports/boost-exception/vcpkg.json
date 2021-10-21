@@ -1,17 +1,28 @@
 {
   "name": "boost-exception",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "description": "Boost exception module",
   "homepage": "https://github.com/boostorg/exception",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-smart-ptr",
+    "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

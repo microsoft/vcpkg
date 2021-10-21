@@ -1,12 +1,12 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-zlib
-    REF b3a0c1d140175d8ec43ebbe1da9ac46e2baa142c # 1.2.0
-    SHA512 a6a012ad5294f994a5a65a57ccfd8b9af77515d0c203d04193a2202996b3a831f314c0847a3f5ebc1867835fbd0c438284142c070998ed26881fdc1110a3c5ad
+    REF ${OATPP_VERSION}
+    SHA512 da132edc8c6476bf8d6d1df7d05eac45ac05057153fb0042f0fae54c1a20b3866174cffce2813a0cde7dbf0d8674babf61c84b62cba8dd22c440fef5f81e322b
     HEAD_REF master
 )
 

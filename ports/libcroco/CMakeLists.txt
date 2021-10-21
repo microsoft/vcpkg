@@ -3,7 +3,8 @@ project(libcroco C)
 
 find_package(Iconv REQUIRED)
 find_package(Intl REQUIRED)
-find_package(unofficial-glib CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 find_package(LibXml2 REQUIRED)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
@@ -70,12 +71,9 @@ set(CMAKE_DEBUG_POSTFIX "d")
 
 add_library(croco-0.6 ${SOURCES})
 
-target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
+target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(croco-0.6 PRIVATE 
-    unofficial::glib::gio
-    unofficial::glib::glib
-    unofficial::glib::gmodule
-    unofficial::glib::gobject
+    PkgConfig::GLIB2
     ${LIBXML2_LIBRARIES} ${Intl_LIBRARIES} Iconv::Iconv
 )
 
@@ -129,7 +127,8 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(Intl)
 find_dependency(Iconv)
-find_dependency(unofficial-glib CONFIG)
+find_dependency(PkgConfig)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 find_dependency(LibXml2)
 if(NOT WIN32)
     find_dependency(Threads)

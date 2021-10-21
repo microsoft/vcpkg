@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         win-cmake.patch
         static-compile-fix.patch
+        remove-invalid-bison-directive.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")

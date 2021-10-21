@@ -1,5 +1,0 @@
-Source: c-ares
-Version: 1.17.1
-Homepage: https://github.com/c-ares/c-ares
-Description: A C library for asynchronous DNS requests
-Supports: !uwp

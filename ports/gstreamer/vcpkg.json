@@ -1,0 +1,76 @@
+{
+  "name": "gstreamer",
+  "version": "1.19.2",
+  "port-version": 1,
+  "description": "GStreamer open-source multimedia framework core library",
+  "homepage": "https://gstreamer.freedesktop.org/",
+  "license": "LGPL-2.0",
+  "supports": "(windows | osx) & (x64 | x86)",
+  "dependencies": [
+    {
+      "name": "cairo",
+      "features": [
+        "gobject"
+      ],
+      "platform": "windows | osx"
+    },
+    {
+      "name": "freetype",
+      "features": [
+        "brotli",
+        "png",
+        "zlib"
+      ]
+    },
+    {
+      "name": "glib",
+      "host": true
+    },
+    "graphene",
+    "libnice",
+    "libxml2",
+    {
+      "name": "opengl-registry",
+      "platform": "windows | osx"
+    },
+    "openssl",
+    "tool-meson",
+    {
+      "name": "yasm-tool-helper",
+      "platform": "windows"
+    }
+  ],
+  "default-features": [
+    "plugins-good",
+    "plugins-ugly"
+  ],
+  "features": {
+    "plugins-bad": {
+      "description": "'Bad' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "openh264"
+      ]
+    },
+    "plugins-good": {
+      "description": "'Good' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "bzip2",
+        "jack2",
+        "libflac",
+        "libjpeg-turbo",
+        "libpng",
+        "libraw",
+        "libvpx",
+        "mpg123",
+        "speex",
+        "taglib"
+      ]
+    },
+    "plugins-ugly": {
+      "description": "'Ugly' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "x264"
+      ]
+    }
+  }
+}

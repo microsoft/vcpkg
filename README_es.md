@@ -19,31 +19,31 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), en el canal #vcpkg
 * Discord: [\#include \<C++\>](https://www.includecpp.org), en el canal #🌏vcpkg
-* Docs: [Documentación](docs/index.md)
+* Docs: [Documentación](docs/README.md)
 
 [![Estado de compilación](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
 ## Tabla de contenido
 
-* [Vcpkg: General](#vcpkg-general)
-* [Tabla de contenidos](#tabla-de-contenidos)
-* ["Primeros pasos"](#primeros-pasos)
-  + [Inicio rápido: Windows](#inicio-rápido-windows)
-  + [Inicio rápido: Unix](#inicio-rápido-unix)
-  + [Instalando herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-Linux)
-  + [Instalando herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
-    - [Instalando GCC en MacOS previo a 10.15](#instalando-gcc-en-macos-previo-a-10.15)
-  + [Usando Vcpkg con CMake](#usando-vcpkg-con-cmake)
-    - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
-    - [Vcpkg con proyectos de Visual Studio (CMake)](#vcpkg-con-proyectos-de-visual-studio\(CMake\))
-    - [Vcpkg con CLion](#vcpkg-con-clion)
-    - [Vcpkg como submódulo](#vcpkg-como-submódulo)
-  + [Inicio rápido: archivos de Manifiesto](#inicio-rápido-manifiestos)
-* [Tab-Completado/Autocompletado](#Completado-TabAutocompletado)
-* [Ejemplos](#ejemplos)
-* [Contribuyendo](#contribuyendo)
-* [Licencia](#licencia)
-* [telemetría](#telemetría)
+- [Vcpkg](#vcpkg)
+  - [Tabla de contenido](#tabla-de-contenido)
+  - [Primeros pasos](#primeros-pasos)
+    - [Inicio Rápido: Windows](#inicio-rápido-windows)
+    - [Inicio rápido: Unix](#inicio-rápido-unix)
+    - [Instalando Herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-linux)
+    - [Instalando Herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
+      - [Instalando GCC en macOS previo a 10.15](#instalando-gcc-en-macos-previo-a-1015)
+    - [Usando Vcpkg con CMake](#usando-vcpkg-con-cmake)
+      - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
+      - [Vcpkg con proyectos de Visual Studio(CMake)](#vcpkg-con-proyectos-de-visual-studiocmake)
+      - [Vcpkg con CLion](#vcpkg-con-clion)
+      - [Vcpkg como Submódulo](#vcpkg-como-submódulo)
+    - [Inicio rápido: Manifiestos](#inicio-rápido-manifiestos)
+  - [Completado-Tab/Autocompletado](#completado-tabautocompletado)
+  - [Ejemplos](#ejemplos)
+  - [Contribuyendo](#contribuyendo)
+  - [Licencia](#licencia)
+  - [Telemetría](#telemetría)
 
 ## Primeros pasos
 
@@ -149,6 +149,18 @@ Para instalar las librerías para su proyecto, ejecute:
 
 ```sh
 $ ./vcpkg/vcpkg install [paquetes a instalar]
+```
+
+Nota: por defecto se instalarán las librerías x86, para instalar x64, ejecute:
+
+```cmd
+> .\vcpkg\vcpkg install [paquete a instalar]:x64-windows
+```
+
+O si desea instalar varios paquetes:
+
+```cmd
+> .\vcpkg\vcpkg install [paquetes a instalar] --triplet=x64-windows
 ```
 
 También puede buscar las librerías que necesita con el subcomando `search`:
@@ -360,12 +372,14 @@ según la terminal que use, luego reinicie la consola.
 
 ## Ejemplos
 
-ver la [documentación](docs/index.md) para tutoriales específicos, incluyendo
+ver la [documentación](docs/README.md) para tutoriales específicos, incluyendo
 [instalando y usando un paquete](docs/examples/installing-and-using-packages.md),
 [agregando un nuevo paquete desde un archivo comprimido](docs/examples/packaging-zipfiles.md),
 [agregando un nuevo paquete desde un repositorio en GitHub](docs/examples/packaging-github-repos.md).
 
-Nuestra documentación se encuentra online en ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+Nuestra documentación también esta disponible en nuestro sitio web [vcpkg.io](https://vcpkg.io/).
+Si necesita ayuda puede [crear un incidente](https://github.com/vcpkg/vcpkg.github.io/issues).
+¡Apreciamos cualquier retroalimentación!
 
 Ver un [video de demostración](https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutos.
 
@@ -397,8 +411,10 @@ El código en este repositorio se encuentra licenciado mediante la [Licencia MIT
 
 vcpkg recolecta datos de uso para mejorar su experiencia.
 La información obtenida por Microsoft es anónima.
-puede ser dado de baja de la telemetría ejecutando de nuevo el script `bootstrap-vcpkg` con `-disableMetrics`,
-pasando `--disable-metrics` a vcpkg en la línea de comandos,
-o creando la variable de entorno `VCPKG_DISABLE_METRICS`.
+puede ser dado de baja de la telemetría realizando lo siguiente:
+
+- ejecutar el script `bootstrap-vcpkg` con el parametro `-disableMetrics`
+- agregar el parametro `--disable-metrics` a vcpkg en la línea de comandos
+- agregar la variable de entorno `VCPKG_DISABLE_METRICS`
 
 Se puede leer más sobre la telemetría de vcpkg en docs/about/privacy.md

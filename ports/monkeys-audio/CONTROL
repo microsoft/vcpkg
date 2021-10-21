@@ -1,9 +1,0 @@
-Source: monkeys-audio
-Version: 5.70
-Homepage: https://monkeysaudio.com
-Description: Monkey's Audio is an excellent audio compression tool which has multiple advantages over traditional methods.
-  Audio files compressed with it end with .ape extension.
-Supports: !(uwp|osx|linux)
-
-Feature: tools
-Description: Build monkeys-audio tools

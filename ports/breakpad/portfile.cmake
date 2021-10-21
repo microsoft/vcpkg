@@ -8,9 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-unique_ptr.patch
+        fix-unordered_map.patch
 )
 
-if(VCPKG_HOST_IS_LINUX)
+if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     vcpkg_from_git(
         OUT_SOURCE_PATH LSS_SOURCE_PATH
         URL https://chromium.googlesource.com/linux-syscall-support

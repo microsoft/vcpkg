@@ -1,0 +1,14 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO eranpeer/FakeIt
+    REF 2.0.7
+    SHA512 b718c2283217a643b7b67ba4c141cc8ea4d18835181d261abfe6f09e9be99af755fa482c0fa17def0e99c97dc11bb95b2da390e9a55c9a50a50c4d98c0071168
+    HEAD_REF master
+)
+
+file(
+    COPY ${SOURCE_PATH}/single_header/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

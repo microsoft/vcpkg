@@ -1,7 +1,12 @@
 {
   "name": "dxut",
-  "version-string": "11.25",
+  "version": "11.26",
   "description": "A \"GLUT\"-like framework for Direct3D 11.x Win32 desktop applications",
   "homepage": "https://github.com/Microsoft/DXUT",
-  "supports": "windows & !uwp"
+  "documentation": "https://github.com/microsoft/DXUT/wiki",
+  "license": "MIT",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    "directxmath"
+  ]
 }

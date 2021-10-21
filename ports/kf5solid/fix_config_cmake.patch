@@ -1,0 +1,36 @@
+From c1e261d57383533a008f0c02689dd0292d4dc75a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Tue, 31 Aug 2021 02:18:42 +0200
+Subject: [PATCH] Add support for static builds
+
+---
+ KF5SolidConfig.cmake.in | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/KF5SolidConfig.cmake.in b/KF5SolidConfig.cmake.in
+index b597b3a..0a23f44 100644
+--- a/KF5SolidConfig.cmake.in
++++ b/KF5SolidConfig.cmake.in
+@@ -19,6 +19,19 @@ set(SOLID_DBUS_INTERFACES_DIR "@PACKAGE_KDE_INSTALL_DBUSINTERFACEDIR@")
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Core @REQUIRED_QT_VERSION@)
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt5Xml @REQUIRED_QT_VERSION@)
++    find_dependency(Qt5Gui @REQUIRED_QT_VERSION@)
++
++    if (@Qt5DBus_FOUND@)
++        find_dependency(Qt5DBus @REQUIRED_QT_VERSION@)
++    endif()
++
++    if (@UDev_FOUND@)
++        find_dependency(UDev)
++    endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5SolidTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+ 
+-- 
+GitLab
+

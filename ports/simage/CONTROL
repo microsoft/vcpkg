@@ -1,6 +1,0 @@
-Source: simage
-Version: 1.8.0
-Port-Version: 1
-Description: Image file format library abstraction layer
-Build-Depends: giflib (!windows&!osx), libjpeg-turbo (!windows&!osx), libpng (!windows&!osx), libsndfile, tiff (!windows&!osx), libvorbis, zlib (!windows&!osx)
-Homepage: https://github.com/coin3d/simage

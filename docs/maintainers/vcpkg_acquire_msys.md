@@ -1,5 +1,7 @@
 # vcpkg_acquire_msys
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_acquire_msys.md).
+
 Download and prepare an MSYS2 instance.
 
 ## Usage
@@ -55,4 +57,4 @@ vcpkg_execute_required_process(
 * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_acquire_msys.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_acquire_msys.cmake)
+[scripts/cmake/vcpkg\_acquire\_msys.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_acquire_msys.cmake)

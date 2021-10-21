@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF 83b592b134cb41e2e5611714bce0bf61413eb12b #2.6.0
-    SHA512 3315b56467c17330f603c6710996c1a76f67068960b1356ca92db1ab23fca9f27a2dda9be521a19b88efc2e961095ee5523924b135d380681a4328c09d963e8c
+    REF 6208b63dcd4baeea6817d3e84f79fb04ad99c720 #2.8.2
+    SHA512 13a486dafba394cc3e072292008d00e8a3e1b12b4fe7c82cf2ce43b3d24629d08b5762494c19da0a12b186a70114cba101553ed1b4cea90d090514307b06dec8
     HEAD_REF master
-    PATCHES fix-win32-define.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CELERO_COMPILE_DYNAMIC_LIBRARIES)
@@ -25,7 +24,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/celero/Export.h "ifdef CELERO_STATIC" "if 1")
 endif()
 

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f24ce30..8e5759b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -192,7 +192,7 @@ endif()
+ # install native libraries to lib64 rather than lib. Most distros seem to
+ # follow this convention with a couple notable exceptions (Debian-based and
+ # Arch-based distros) which we try to detect here.
+-if (CMAKE_SYSTEM_NAME MATCHES "Linux" AND
++if (0 AND CMAKE_SYSTEM_NAME MATCHES "Linux" AND
+     NOT DEFINED LIB_SUFFIX AND
+     NOT CMAKE_CROSSCOMPILING AND
+     CMAKE_SIZEOF_VOID_P EQUAL "8" AND

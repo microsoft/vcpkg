@@ -1,22 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/ensmallen
-    REF 8d9c03715346f2048e61e3e370a6a6c7a5e55d3b # 2.14.2
-    SHA512 2aebdd485265f8f6adcf9eb00c78e5f79f5d19e62566bdfcd024c44443d5658a7b92ea4ca62c29041f1b512cf67f8148fdc8b6894c9aa4c69ef305580916e24a
+    REF 9bd4bc25275066fa03173f65e1cbd789472e8f9b # 2.17.0
+    SHA512 8b665e6307e73ad3273eb28c17ec62e8d0d968623d41b5460771be41a74f6a8088ddadb1764b9b4dc496dbceae6e791895cee0997de8614dc9a7426b6db663e0
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTS=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ensmallen TARGET_PATH share/ensmallen)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ensmallen)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

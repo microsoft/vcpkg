@@ -1,0 +1,11 @@
+{
+  "name": "munit",
+  "version-string": "2019-04-06",
+  "port-version": 2,
+  "description": "A small but full-featured unit testing framework for C",
+  "homepage": "https://github.com/nemequ/munit",
+  "supports": "!(arm | arm64 | uwp)",
+  "dependencies": [
+    "tool-meson"
+  ]
+}

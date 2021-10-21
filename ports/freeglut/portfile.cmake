@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
         macOS_Xquartz.patch
         gcc10.patch
         fix-debug-macro.patch
+        no_x64_enforcement.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

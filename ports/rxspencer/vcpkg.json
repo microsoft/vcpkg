@@ -1,0 +1,17 @@
+{
+  "name": "rxspencer",
+  "version": "3.9.0",
+  "description": "Henry Spencer's BSD regular expression library.",
+  "homepage": "https://garyhouston.github.io/regex/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

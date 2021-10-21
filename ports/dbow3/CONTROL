@@ -1,4 +1,0 @@
-Source: dbow3
-Version: 1.0.0
-Description: DBoW3 is an improved version of the DBow2 library, an open source C++ library for indexing and converting images into a bag-of-word representation.
-Build-Depends: opencv3[contrib]

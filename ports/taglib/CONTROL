@@ -1,5 +1,0 @@
-Source: taglib
-Version: 1.12.0-20210123
-Description: TagLib Audio Meta-Data Library
-Homepage: https://github.com/taglib/taglib
-Build-Depends: zlib

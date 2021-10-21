@@ -1,0 +1,52 @@
+diff --git a/src/libmpg123/sample.h b/src/libmpg123/sample.h
+index 4d244fe..ed3ef86 100644
+--- a/src/libmpg123/sample.h
++++ b/src/libmpg123/sample.h
+@@ -171,7 +171,7 @@ static inline int16_t ftoi16(float x)
+ ( (u >= 2147483648UL) \
+ 	?	(int32_t)((uint32_t)u - (uint32_t)2147483648UL) \
+ 	:	((u == 0) \
+-		?	(int32_t)-2147483648UL \
++		?	-(int32_t)2147483648UL \
+ 		:	-(int32_t)((uint32_t)2147483648UL - u) ) \
+ )
+ 
+diff --git a/src/libsyn123/resample.c b/src/libsyn123/resample.c
+index b92f7f2..3552ffa 100644
+--- a/src/libsyn123/resample.c
++++ b/src/libsyn123/resample.c
+@@ -2005,7 +2005,7 @@ syn123_resample_intotal_64(long inrate, long outrate, int64_t outs)
+ 	// First offset is -inrate.
+ 	// You may want to work it out for yourself. Or trust me;-)
+ 	int err;
+-	uint64_t vtot = muloffdiv64(outs, vinrate, -vinrate, voutrate, &err, NULL);
++	uint64_t vtot = muloffdiv64(outs, vinrate, -(int64_t)vinrate, voutrate, &err, NULL);
+ 	if(err)
+ 		return SYN123_OVERFLOW;
+ 	if(vtot == UINT64_MAX)
+diff --git a/src/libsyn123/sampleconv.c b/src/libsyn123/sampleconv.c
+index 6e8fb3f..7179957 100644
+--- a/src/libsyn123/sampleconv.c
++++ b/src/libsyn123/sampleconv.c
+@@ -21,6 +21,8 @@
+ #include "syn123_int.h"
+ #include "sample.h"
+ #include "debug.h"
++// Avoid conflict with pragmas in isnan() and friends.
++#undef warning
+ 
+ /* Conversions between native byte order encodings. */
+ 
+diff --git a/src/libsyn123/volume.c b/src/libsyn123/volume.c
+index de018a2..a80851d 100644
+--- a/src/libsyn123/volume.c
++++ b/src/libsyn123/volume.c
+@@ -12,6 +12,8 @@
+ #define NO_SMAX
+ #include "syn123_int.h"
+ #include "debug.h"
++// Avoid conflict with pragmas in isnan() and friends.
++#undef warning
+ 
+ static const double db_min = -SYN123_DB_LIMIT;
+ static const double db_max =  SYN123_DB_LIMIT;

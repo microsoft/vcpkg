@@ -2,17 +2,17 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO smoked-herring/sail
-    REF a7b8cdb
-    SHA512 402b0e05ce99b5abeebf695a132121cc59789834d5a296ffada34fa3090c16ffc2266e98393e10136e31480b2378b966a8a48a153240f43b0196d986316aa9df
+    REPO HappySeaFox/sail
+    REF v0.9.0-pre17
+    SHA512 5efa1d56049d84515a92ae2df76476afcfd53ed4ea1f406851bcd86683c3b5390ee53fcd5d1dac233b855a1445496fda7fd7612a157596b0b4d088bacb5dd0fd
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SAIL_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+
     OPTIONS
         -DSAIL_STATIC=${SAIL_STATIC}
         -DSAIL_COMBINE_CODECS=ON
@@ -20,7 +20,7 @@ vcpkg_configure_cmake(
         -DSAIL_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -29,18 +29,22 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Move cmake configs
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sail       CONFIG_PATH lib/cmake/sail       DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sailcodecs CONFIG_PATH lib/cmake/sailcodecs DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sailcommon CONFIG_PATH lib/cmake/sailcommon DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sailc++    CONFIG_PATH lib/cmake/sailc++    DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME sailmanip  CONFIG_PATH lib/cmake/sailmanip  DO_NOT_DELETE_PARENT_CONFIG_PATH)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+
 
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
 # Handle usage
-if (UNIX AND NOT APPLE)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage.unix DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage.unix ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
-else()
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

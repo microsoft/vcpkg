@@ -1,0 +1,9 @@
+{
+  "name": "directxmath",
+  "version-string": "jan2021",
+  "port-version": 1,
+  "description": "DirectXMath SIMD C++ math library",
+  "homepage": "https://github.com/Microsoft/DirectXMath",
+  "documentation": "https://docs.microsoft.com/en-us/windows/win32/dxmath/directxmath-portal",
+  "license": "MIT"
+}

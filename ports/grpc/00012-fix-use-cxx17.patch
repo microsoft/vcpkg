@@ -1,16 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1911144..c749d28 100644
+index 4573027..4615602 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -257,6 +257,11 @@ include(cmake/re2.cmake)
- include(cmake/ssl.cmake)
- include(cmake/upb.cmake)
+@@ -271,6 +271,12 @@ include(cmake/upb.cmake)
+ include(cmake/xxhash.cmake)
  include(cmake/zlib.cmake)
+ 
 + 
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)
 +endif()
- 
++
  if(_gRPC_PLATFORM_MAC OR _gRPC_PLATFORM_IOS)
    set(_gRPC_ALLTARGETS_LIBRARIES ${CMAKE_DL_LIBS} m pthread)
+ elseif(_gRPC_PLATFORM_ANDROID)

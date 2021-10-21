@@ -5,6 +5,10 @@
   "homepage": "https://www.libraw.org",
   "dependencies": [
     "jasper",
-    "lcms"
+    "lcms",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

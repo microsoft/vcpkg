@@ -1,0 +1,6 @@
+{
+  "name": "graphqlparser",
+  "version-string": "0.7.0",
+  "port-version": 2,
+  "description": "A GraphQL query parser in C++ with C and C++ APIs"
+}

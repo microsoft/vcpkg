@@ -135,12 +135,6 @@ diff --git a/Configure b/Configure
 index 5a699836f3..de45f1e299 100755
 --- a/Configure
 +++ b/Configure
-@@ -1,4 +1,5 @@
- #! /usr/bin/env perl
-+#! /usr/bin/env perl
- # -*- mode: perl; -*-
- # Copyright 2016-2020 The OpenSSL Project Authors. All Rights Reserved.
- #
 @@ -407,6 +408,7 @@ my @disablables = (
      "ubsan",
      "ui-console",

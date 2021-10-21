@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF sdformat6_6.2.0
     SHA512 3d139ec4b4c9fbfd547ed8bfca0adb5cdca92c1b7cc4d4b554a7c51ccf755b9079c26a006ebfedc5bc5b1ba5e16ad950bb38c47ea97bf97e59a2fd7d12d60620
     HEAD_REF sdf6
+    PATCHES
+        disable-unneeded-include-findboost.patch
 )
 
 # Ruby is required by the sdformat build process
