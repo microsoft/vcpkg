@@ -1381,7 +1381,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -1506,6 +1506,10 @@
     },
     "cpp-ipc": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "cpp-jwt": {
+      "baseline": "2021-10-18",
       "port-version": 0
     },
     "cpp-netlib": {
@@ -1778,7 +1782,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "devicenameresolver": {
       "baseline": "2016-06-26-0850d88fa6",
@@ -2334,7 +2338,7 @@
     },
     "gdal": {
       "baseline": "3.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -3282,7 +3286,7 @@
     },
     "libcanberra": {
       "baseline": "0.30",
-      "port-version": 0
+      "port-version": 1
     },
     "libcbor": {
       "baseline": "0.8.0",
@@ -7122,7 +7126,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",
