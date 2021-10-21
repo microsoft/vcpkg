@@ -1157,7 +1157,7 @@
       "port-version": 0
     },
     "buck-yeh-bux": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "bullet3": {
@@ -1381,7 +1381,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -1506,6 +1506,10 @@
     },
     "cpp-ipc": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "cpp-jwt": {
+      "baseline": "2021-10-18",
       "port-version": 0
     },
     "cpp-netlib": {
@@ -1778,7 +1782,7 @@
     },
     "detours": {
       "baseline": "4.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "devicenameresolver": {
       "baseline": "2016-06-26-0850d88fa6",
@@ -1926,7 +1930,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 1
+      "port-version": 2
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
@@ -1962,7 +1966,7 @@
     },
     "effolkronium-random": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "efsw": {
       "baseline": "2020-06-08",
@@ -2257,8 +2261,8 @@
       "port-version": 0
     },
     "fribidi": {
-      "baseline": "1.0.10",
-      "port-version": 3
+      "baseline": "1.0.11",
+      "port-version": 0
     },
     "frozen": {
       "baseline": "2021-04-22",
@@ -2333,8 +2337,8 @@
       "port-version": 1
     },
     "gdal": {
-      "baseline": "3.2.2",
-      "port-version": 6
+      "baseline": "3.3.2",
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2617,7 +2621,7 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.9.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "hayai": {
@@ -3282,7 +3286,7 @@
     },
     "libcanberra": {
       "baseline": "0.30",
-      "port-version": 0
+      "port-version": 1
     },
     "libcbor": {
       "baseline": "0.8.0",
@@ -4181,7 +4185,7 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "2021-10-13",
+      "baseline": "2021-10-18",
       "port-version": 0
     },
     "marble": {
@@ -6294,7 +6298,7 @@
     },
     "soxr": {
       "baseline": "0.1.3",
-      "port-version": 4
+      "port-version": 5
     },
     "spaceland": {
       "baseline": "7.8.2",
@@ -7122,7 +7126,7 @@
     },
     "x264": {
       "baseline": "157-303c484ec828ed0",
-      "port-version": 15
+      "port-version": 16
     },
     "x265": {
       "baseline": "3.4",
