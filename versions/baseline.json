@@ -1173,8 +1173,8 @@
       "port-version": 2
     },
     "byte-lite": {
-      "baseline": "0.2.0",
-      "port-version": 1
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "bzip2": {
       "baseline": "1.0.8",
