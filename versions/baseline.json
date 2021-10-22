@@ -5793,7 +5793,7 @@
       "port-version": 1
     },
     "rapidcsv": {
-      "baseline": "8.50",
+      "baseline": "8.53",
       "port-version": 0
     },
     "rapidjson": {
