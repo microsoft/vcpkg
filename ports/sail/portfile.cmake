@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-pre16
-    SHA512 dca4b930c78d0d330cde0a0255efae6042e11914eec37be35b1fc39eaf3855a47f5b2d07be17c8b4c67f569acfab2cfe7ff86aaeba60eed4bbf2be637b1bf192
+    REF v0.9.0-pre17
+    SHA512 5efa1d56049d84515a92ae2df76476afcfd53ed4ea1f406851bcd86683c3b5390ee53fcd5d1dac233b855a1445496fda7fd7612a157596b0b4d088bacb5dd0fd
     HEAD_REF master
 )
 

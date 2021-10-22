@@ -1,6 +1,6 @@
 {
   "name": "boost-coroutine2",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost coroutine2 module",
   "homepage": "https://github.com/boostorg/coroutine2",
   "supports": "!emscripten",
@@ -11,7 +11,6 @@
       "name": "boost-context",
       "platform": "!uwp & !emscripten"
     },
-    "boost-detail",
     "boost-vcpkg-helpers"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "boost-unordered",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
   "dependencies": [
@@ -10,7 +10,6 @@
     "boost-container-hash",
     "boost-core",
     "boost-detail",
-    "boost-functional",
     "boost-move",
     "boost-predef",
     "boost-preprocessor",
@@ -18,7 +17,6 @@
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

@@ -5,8 +5,8 @@ message(WARNING ".Net framework 4.0 is required, please install it before instal
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EasyHook/EasyHook
-    REF v2.7.6789.0
-    SHA512 a48b4fe6dd2e55a2d515bc917c0f3ff5b73f08d1778e671df802347c3b8e1d4638005582a494acdf891ffe3fa6eae3eab0096083a8af2352e3f0883eb83421d6
+    REF v2.7.7097.0
+    SHA512 D0CA5B64E77F6281B2DD7EE0DC492A9B07DDB60A9F514037938CC3E3FFA5DD57C95CB630E18C02C984A89070839E4188044896D4EE57A21E43E6EA3A4918255A
     HEAD_REF master
     PATCHES fix-build.patch
 )
@@ -19,10 +19,31 @@ else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
+# Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
+foreach(VCXPROJ IN ITEMS
+    "${SOURCE_PATH}/EasyHookDll/EasyHookDll.vcxproj"
+    "${SOURCE_PATH}/Examples/UnmanagedHook/UnmanagedHook.vcxproj")
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        ""
+    )
+endforeach()
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH EasyHook.sln
-	TARGET EasyHookDll
+    TARGET EasyHookDll
     RELEASE_CONFIGURATION "netfx4-Release"
     DEBUG_CONFIGURATION "netfx4-Debug"
     PLATFORM ${BUILD_ARCH}

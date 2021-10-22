@@ -1,6 +1,6 @@
 {
   "name": "boost-spirit",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost spirit module",
   "homepage": "https://github.com/boostorg/spirit",
   "dependencies": [
@@ -8,7 +8,6 @@
     "boost-assert",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-endian",
     "boost-foreach",
     "boost-function",
