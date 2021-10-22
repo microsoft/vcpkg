@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Completion)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Completion CONFIG_PATH lib/cmake/KF5Completion)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

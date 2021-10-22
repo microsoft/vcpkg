@@ -33,7 +33,7 @@ else()
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5")
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Config)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Config CONFIG_PATH lib/cmake/KF5Config)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../data")
