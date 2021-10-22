@@ -6013,8 +6013,8 @@
       "port-version": 1
     },
     "sassc": {
-      "baseline": "3.6.1",
-      "port-version": 1
+      "baseline": "3.6.2",
+      "port-version": 0
     },
     "sbp": {
       "baseline": "3.4.10",
