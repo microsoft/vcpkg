@@ -4573,8 +4573,8 @@
       "port-version": 1
     },
     "neargye-semver": {
-      "baseline": "0.2.2",
-      "port-version": 1
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "ned14-internal-quickcpplib": {
       "baseline": "0.0.0-e691a6dc",
