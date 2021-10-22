@@ -1633,8 +1633,8 @@
       "port-version": 2
     },
     "crossguid": {
-      "baseline": "0.2.2-2018-06-16",
-      "port-version": 2
+      "baseline": "2021-10-22",
+      "port-version": 0
     },
     "crow": {
       "baseline": "0.3.3",
