@@ -35,6 +35,6 @@ endif()
 
 install(
   EXPORT ${PROJECT_NAME}_target
-  NAMESPACE ${PROJECT_NAME}::
+  NAMESPACE unofficial::${PROJECT_NAME}
   FILE ${PROJECT_NAME}-config.cmake
   DESTINATION share/${PROJECT_NAME})
