@@ -28,6 +28,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
         pdf         ENABLE_PDF
         netssl      ENABLE_NETSSL
         netssl      ENABLE_CRYPTO
