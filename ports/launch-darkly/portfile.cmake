@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO launchdarkly/c-client-sdk
@@ -20,11 +22,11 @@ vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/ldclientapi.dll ${CURRENT_PACKAGES_DIR}/bin/ldclientapi.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/ldclientapicpp.dll ${CURRENT_PACKAGES_DIR}/bin/ldclientapicpp.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapi.dll ${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapi.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapicpp.dll ${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapicpp.dll)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ldclientapi.dll" "${CURRENT_PACKAGES_DIR}/bin/ldclientapi.dll")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ldclientapicpp.dll" "${CURRENT_PACKAGES_DIR}/bin/ldclientapicpp.dll")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapi.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapi.dll")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ldclientapicpp.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/ldclientapicpp.dll")
     endif()
 endif()
 
