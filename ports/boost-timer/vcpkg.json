@@ -1,6 +1,6 @@
 {
   "name": "boost-timer",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost timer module",
   "homepage": "https://github.com/boostorg/timer",
   "dependencies": [
@@ -19,6 +19,10 @@
     "boost-predef",
     "boost-system",
     "boost-throw-exception",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

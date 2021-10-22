@@ -1,6 +1,7 @@
 {
   "name": "kf5service",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Plugin framework for desktop services",
   "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
   "dependencies": [

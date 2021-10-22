@@ -27,5 +27,9 @@ function(vcpkg_install_make)
     if(Z_VCPKG_MAKE_INSTALL_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-make; using both vcpkg-make and vcpkg_install_make in the same port is unsupported.")
     endif()
-    vcpkg_build_make(${ARGN} LOGFILE_ROOT ENABLE_INSTALL)
+    vcpkg_build_make(
+        ${ARGN}
+        LOGFILE_ROOT
+        ENABLE_INSTALL
+    )
 endfunction()

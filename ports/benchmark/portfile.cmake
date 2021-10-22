@@ -1,28 +1,26 @@
 #https://github.com/google/benchmark/issues/661
-vcpkg_fail_port_install(ON_TARGET "uwp") 
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF e991355c02b93fe17713efe04cbc2e278e00fdbd # v1.5.5
-    SHA512 aa4455fa0f8546ec5762f14065e0be6667b5874e6991ca6dd21dc7b29e38c7c74cfddb2c99c7a1ed2f7636aa7bdec8fc0fc1523967b179f5642c2dc2e968089c
+    REF f91b6b42b1b9854772a90ae9501464a161707d1e # v1.6.0
+    SHA512 5e3db75fcaa86b766d33e368f58cec5c5b2b9ba7fde658d13868d577679c13069756e68e86323b972daccc4f7d5e392d24d2d42e5308c1ae7e9955e651d45866
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/benchmark)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/benchmark)
 
 vcpkg_fixup_pkgconfig()
 

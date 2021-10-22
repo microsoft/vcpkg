@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-dependencies.patch
+        pkgconfig-modules.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,36 +23,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lzo     ENABLE_LZO
         openssl ENABLE_OPENSSL
         zstd    ENABLE_ZSTD
-        # The below features should be added to CONTROL
-        #pcre    ENABLE_PCREPOSIX
-        #nettle  ENABLE_NETTLE
-        #expat   ENABLE_EXPAT
-        #libgcc  ENABLE_LibGCC
-        #cng     ENABLE_CNG
-        #tar     ENABLE_TAR # Tool build option?
-        #cpio    ENABLE_CPIO # Tool build option?
-        #cat     ENABLE_CAT # Tool build option?
-        #xattr   ENABLE_XATTR # Tool support option?
-        #acl     ENABLE_ACL # Tool support option?
-        #iconv   ENABLE_ICONV # iconv support option?
-        #libb2   ENABLE_LIBB2
 )
 
-if(FEATURES MATCHES "pcre")
-else()
-    list(APPEND FEATURE_OPTIONS -DPOSIX_REGEX_LIB=NONE)
-endif()
-
-list(APPEND FEATURE_OPTIONS -DENABLE_ZLIB=ON)
-# Needed for configure_file
-set(ENABLE_ZLIB ON)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DENABLE_ZLIB=ON
         -DENABLE_PCREPOSIX=OFF
+        -DPOSIX_REGEX_LIB=NONE
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
@@ -67,7 +47,7 @@ vcpkg_configure_cmake(
         -DENABLE_WERROR=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 
@@ -75,17 +55,15 @@ vcpkg_copy_pdbs()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
-    file(READ ${HEADER} CONTENTS)
-    string(REPLACE "(!defined LIBARCHIVE_STATIC)" "0" CONTENTS "${CONTENTS}")
-    file(WRITE ${HEADER} "${CONTENTS}")
+foreach(header "${CURRENT_PACKAGES_DIR}/include/archive.h" "${CURRENT_PACKAGES_DIR}/include/archive_entry.h")
+    vcpkg_replace_string("${header}" "(!defined LIBARCHIVE_STATIC)" "0")
 endforeach()
 
-file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

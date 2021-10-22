@@ -1,0 +1,17 @@
+{
+  "name": "pffft",
+  "version-date": "2021-10-09",
+  "description": "PFFFT, a pretty fast Fourier Transform.",
+  "homepage": "https://bitbucket.org/jpommier/pffft/",
+  "supports": "static",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
