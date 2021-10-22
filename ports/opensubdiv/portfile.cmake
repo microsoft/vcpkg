@@ -120,6 +120,15 @@ if ("tutorials" IN_LIST FEATURES)
     endif()
 endif()
 
+# The header files are read only and can't remove when remove this port
+file(GLOB_RECURSE OSD_HDRS "${CURRENT_PACKAGES_DIR}/include/*.h")
+file(CHMOD_RECURSE ${OSD_HDRS} 
+        PERMISSIONS
+            OWNER_READ OWNER_WRITE
+            GROUP_READ GROUP_WRITE
+            WORLD_READ WORLD_WRITE
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/bin"
                     "${CURRENT_PACKAGES_DIR}/debug/bin"
