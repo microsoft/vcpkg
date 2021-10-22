@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-cpp-target.patch
+        x64linux-fixes.patch
 )
 
 vcpkg_cmake_configure(

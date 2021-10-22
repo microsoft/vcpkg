@@ -1,0 +1,53 @@
+diff --git a/src/client.c b/src/client.c
+index 442d486..21de277 100644
+--- a/src/client.c
++++ b/src/client.c
+@@ -956,7 +956,7 @@ LDStringVariationDetail(
+     LDVariationDetails *const details)
+ {
+     size_t              resultLength;
+-    char *              value;
++    char *              value = NULL;
+     struct LDStoreNode *selected;
+ 
+     LD_ASSERT_API(client);
+@@ -986,7 +986,7 @@ LDStringVariation(
+     const size_t           bufferSize)
+ {
+     size_t resultLength;
+-    char * value;
++    char * value = NULL;
+ 
+     LD_ASSERT_API(client);
+     LD_ASSERT_API(key);
+@@ -1009,7 +1009,7 @@ LDStringVariationAllocDetail(
+     const char *const         fallback,
+     LDVariationDetails *const details)
+ {
+-    char *              value;
++    char *              value = NULL;
+     struct LDStoreNode *selected;
+ 
+     LD_ASSERT_API(client);
+@@ -1032,7 +1032,7 @@ LDStringVariationAlloc(
+     const char *const      key,
+     const char *const      fallback)
+ {
+-    char *value;
++    char *value = NULL;
+ 
+     LD_ASSERT_API(client);
+     LD_ASSERT_API(key);
+diff --git a/src/event_processor.c b/src/event_processor.c
+index 514acb3..ac30e6c 100644
+--- a/src/event_processor.c
++++ b/src/event_processor.c
+@@ -713,6 +713,8 @@ LDi_valueToJSON(const void *const value, const LDJSONType valueType)
+ {
+     struct LDJSON *tmp;
+ 
++    tmp = NULL;
++
+     LD_ASSERT(value);
+ 
+     switch (valueType) {
