@@ -15,17 +15,16 @@ vcpkg_find_acquire_program(PYTHON3)
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5I18n)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5I18n)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

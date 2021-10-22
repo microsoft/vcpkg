@@ -9,14 +9,13 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
@@ -34,7 +33,7 @@ else()
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/kwriteconfig5")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Config)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../data")

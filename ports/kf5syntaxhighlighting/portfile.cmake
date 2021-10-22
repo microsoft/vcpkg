@@ -13,15 +13,14 @@ vcpkg_add_to_path("${PERL_EXE_PATH}")
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	

@@ -7,6 +7,14 @@
     "ecm",
     "kf5config",
     "kf5widgetsaddons",
-    "qt5-tools"
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
