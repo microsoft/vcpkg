@@ -5754,7 +5754,7 @@
     },
     "qwt": {
       "baseline": "6.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qwtw": {
       "baseline": "3.1.0",
