@@ -1,11 +1,10 @@
 diff --git a/imconfig-SFML.h b/imconfig-SFML.h
-index f66ba20..0f43ce6 100644
+index ddfe05d..4e7634e 100644
 --- a/imconfig-SFML.h
 +++ b/imconfig-SFML.h
-@@ -28,5 +28,3 @@
-             static_cast<sf::Uint8>(z * 255.f),                          \
-             static_cast<sf::Uint8>(w * 255.f));                         \
+@@ -23,5 +23,3 @@
+         return sf::Color(static_cast<sf::Uint8>(x * 255.f), static_cast<sf::Uint8>(y * 255.f),     \
+                          static_cast<sf::Uint8>(z * 255.f), static_cast<sf::Uint8>(w * 255.f));    \
      }
 -
 -#define ImTextureID unsigned int
-\ No newline at end of file
