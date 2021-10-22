@@ -6937,8 +6937,8 @@
       "port-version": 1
     },
     "variant-lite": {
-      "baseline": "1.2.2",
-      "port-version": 1
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "vc": {
       "baseline": "1.4.2",
