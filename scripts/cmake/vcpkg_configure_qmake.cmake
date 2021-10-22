@@ -32,7 +32,7 @@ function(vcpkg_configure_qmake)
         "SOURCE_PATH"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG"
     )
-     
+
     # Find qmake executable
     find_program(qmake_executable NAMES qmake PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin" NO_DEFAULT_PATH)
 
@@ -41,14 +41,12 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared")
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared" "CONFIG*=static")
     else()
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=static")
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=shared")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG-=static" "CONFIG*=shared")
         vcpkg_list(APPEND arg_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
-    
+
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
         vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static-runtime")
     endif()
@@ -67,8 +65,7 @@ function(vcpkg_configure_qmake)
         set(triplet_name "${TARGET_TRIPLET}-rel")
         set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(pkgconfig_packages_dir "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(pkgconfig_packages_share_dir "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(pkgconfig_packages_dir "${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
 
         if(DEFINED ENV{PKG_CONFIG_PATH})
@@ -107,8 +104,7 @@ function(vcpkg_configure_qmake)
         set(triplet_name "${TARGET_TRIPLET}-dbg")
         set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(pkgconfig_packages_dir "${_VCPKG_PACKAGES_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(pkgconfig_packages_share_dir "${_VCPKG_PACKAGES_PKGCONF}/share/pkgconfig")
+        set(pkgconfig_packages_dir "${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
 
         if(DEFINED ENV{PKG_CONFIG_PATH})
