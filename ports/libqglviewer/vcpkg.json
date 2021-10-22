@@ -1,7 +1,7 @@
 {
   "name": "libqglviewer",
   "version-string": "2.7.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "libQGLViewer is an open source C++ library based on Qt that eases the creation of OpenGL 3D viewers.",
   "dependencies": [
     {

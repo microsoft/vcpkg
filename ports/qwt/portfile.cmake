@@ -8,6 +8,7 @@ vcpkg_from_sourceforge(
 
 vcpkg_configure_qmake(
     SOURCE_PATH "${SOURCE_PATH}"
+    QT_VERSION 5
     OPTIONS
         CONFIG+=${VCPKG_LIBRARY_LINKAGE}
 )

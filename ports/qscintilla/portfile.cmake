@@ -19,6 +19,7 @@ vcpkg_add_to_path(${PYTHON3_PATH})
 
 vcpkg_configure_qmake(
     SOURCE_PATH ${SOURCE_PATH}/src
+    QT_VERSION 5
     OPTIONS
         CONFIG+=build_all
         CONFIG-=hide_symbols

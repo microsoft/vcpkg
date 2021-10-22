@@ -3742,7 +3742,7 @@
     },
     "libqglviewer": {
       "baseline": "2.7.2",
-      "port-version": 4
+      "port-version": 5
     },
     "libqrencode": {
       "baseline": "4.1.1",
@@ -5386,7 +5386,7 @@
     },
     "qcustomplot": {
       "baseline": "2.0.1",
-      "port-version": 5
+      "port-version": 6
     },
     "qhull": {
       "baseline": "8.0.2",
@@ -5402,7 +5402,7 @@
     },
     "qscintilla": {
       "baseline": "2.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qt": {
       "baseline": "6.2.0",
@@ -5430,7 +5430,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 11
+      "port-version": 12
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5762,7 +5762,7 @@
     },
     "qwt": {
       "baseline": "6.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qwtw": {
       "baseline": "3.1.0",

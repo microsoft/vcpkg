@@ -15,6 +15,7 @@ endif()
 
 vcpkg_configure_qmake(
     SOURCE_PATH ${SOURCE_PATH}/QGLViewer/QGLViewer.pro
+    QT_VERSION 5
     OPTIONS ${OPTIONS}
 )
 

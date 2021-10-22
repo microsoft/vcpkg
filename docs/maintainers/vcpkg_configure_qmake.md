@@ -7,6 +7,7 @@ Configure a qmake-based project.
 ```cmake
 vcpkg_configure_qmake(
     SOURCE_PATH <pro_file_path>
+    QT_VERSION <qt-version>
     [OPTIONS arg1 [arg2 ...]]
     [OPTIONS_RELEASE arg1 [arg2 ...]]
     [OPTIONS_DEBUG arg1 [arg2 ...]]
@@ -15,6 +16,9 @@ vcpkg_configure_qmake(
 
 ### SOURCE_PATH
 The path to the *.pro qmake project file.
+
+### QT_VERSION
+Select the required Qt version (5 or 6)
 
 ### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
 The options passed to qmake.

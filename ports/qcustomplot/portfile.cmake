@@ -20,8 +20,9 @@ vcpkg_extract_source_archive(SharedLib_SOURCE_PATH ARCHIVE "${ARCHIVE}")
 file(RENAME "${SharedLib_SOURCE_PATH}" "${SOURCE_PATH}/qcustomplot-sharedlib")
 
 
-vcpkg_configure_qmake(SOURCE_PATH
-    ${SOURCE_PATH}/qcustomplot-sharedlib/sharedlib-compilation/sharedlib-compilation.pro
+vcpkg_configure_qmake(
+    SOURCE_PATH ${SOURCE_PATH}/qcustomplot-sharedlib/sharedlib-compilation/sharedlib-compilation.pro
+    QT_VERSION 5
 )
 
 vcpkg_install_qmake(
