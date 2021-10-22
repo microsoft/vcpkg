@@ -1,6 +1,7 @@
 {
   "name": "boost-odeint",
   "version": "1.77.0",
+  "port-version": 1,
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "dependencies": [
@@ -14,10 +15,6 @@
     "boost-fusion",
     "boost-iterator",
     "boost-math",
-    {
-      "name": "boost-mpi",
-      "platform": "!uwp"
-    },
     "boost-mpl",
     "boost-multi-array",
     "boost-preprocessor",
@@ -29,5 +26,13 @@
     "boost-units",
     "boost-utility",
     "boost-vcpkg-helpers"
-  ]
+  ],
+  "features": {
+    "mpi": {
+      "description": "Support parallelization with MPI",
+      "dependencies": [
+        "boost-mpi"
+      ]
+    }
+  }
 }
