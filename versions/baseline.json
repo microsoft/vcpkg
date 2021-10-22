@@ -4789,7 +4789,7 @@
       "port-version": 0
     },
     "onnx": {
-      "baseline": "1.9.0",
+      "baseline": "1.10.1",
       "port-version": 0
     },
     "onnx-optimizer": {
