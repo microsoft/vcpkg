@@ -31,7 +31,7 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../data")
+file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	

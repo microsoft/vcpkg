@@ -14,8 +14,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_DATAROOTDIR=data
-
 )
 
 vcpkg_cmake_install()
