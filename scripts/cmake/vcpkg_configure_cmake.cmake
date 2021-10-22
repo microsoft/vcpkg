@@ -330,8 +330,9 @@ function(vcpkg_configure_cmake)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents ".." "rel")
-        elseif(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            z_vcpkg_configure_cmake_build_cmakecache("../../${TARGET_TRIPLET}-dbg" "dbg")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents "../../${TARGET_TRIPLET}-dbg" "dbg")
         endif()
 
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure")
