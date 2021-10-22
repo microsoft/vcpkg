@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-cal
-    REF aa89aa4950074babe84762413f39bd364ecaf944 # v0.5.11
-    SHA512 b92ae3cb14d26dfe48cb903df56f7df91a4dc0ab2e5ea4f095c72b0b7e0a2582f1324c73eb42c080bcb0a59a3dfc37cd2912037fc8e5f7df8433899749fca63c
+    REF c4c5b175e05f2affe5e3f0203ca6c8bc5cdd8f51 # v0.5.12
+    SHA512 25dd1d7f207f1324aed418555dda1c3d4ec64baf76431c9efd88fd3c34b163a2e5a6778192d2c0caf937f3efd31b2f21e6a0d0f7230684d176164da0e8bcc92e
     HEAD_REF master
     PATCHES fix-cmake-target-path.patch
+            remove-libcrypto-messages.patch
 )
 
 vcpkg_cmake_configure(
