@@ -2181,8 +2181,8 @@
       "port-version": 1
     },
     "fmi4cpp": {
-      "baseline": "0.7.0",
-      "port-version": 3
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "fmilib": {
       "baseline": "2.0.3",
