@@ -257,7 +257,7 @@
       "port-version": 0
     },
     "aws-c-cal": {
-      "baseline": "0.5.11",
+      "baseline": "0.5.12",
       "port-version": 0
     },
     "aws-c-common": {
@@ -302,7 +302,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 2
+      "port-version": 3
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -814,7 +814,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.77.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.77.0",
@@ -1141,8 +1141,8 @@
       "port-version": 2
     },
     "brunocodutra-metal": {
-      "baseline": "2.1.1",
-      "port-version": 1
+      "baseline": "2.1.3",
+      "port-version": 0
     },
     "brynet": {
       "baseline": "1.11.0",
@@ -1173,8 +1173,8 @@
       "port-version": 2
     },
     "byte-lite": {
-      "baseline": "0.2.0",
-      "port-version": 1
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "bzip2": {
       "baseline": "1.0.8",
@@ -1501,7 +1501,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2057,7 +2057,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.9",
       "port-version": 0
     },
     "fann": {
@@ -2181,8 +2181,8 @@
       "port-version": 1
     },
     "fmi4cpp": {
-      "baseline": "0.7.0",
-      "port-version": 3
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "fmilib": {
       "baseline": "2.0.3",
@@ -2194,7 +2194,7 @@
     },
     "folly": {
       "baseline": "2021.06.14.00",
-      "port-version": 1
+      "port-version": 2
     },
     "font-chef": {
       "baseline": "1.0.1",
@@ -2250,7 +2250,7 @@
     },
     "freetype": {
       "baseline": "2.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "freetype-gl": {
       "baseline": "2020-09-14",
@@ -2817,7 +2817,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.11",
+      "baseline": "0.12",
       "port-version": 0
     },
     "indicators": {
@@ -3039,6 +3039,10 @@
     "kf5dbusaddons": {
       "baseline": "5.84.0",
       "port-version": 2
+    },
+    "kf5declarative": {
+      "baseline": "5.84.0",
+      "port-version": 0
     },
     "kf5diagram": {
       "baseline": "2.8.0",
@@ -3421,7 +3425,7 @@
       "port-version": 4
     },
     "libgit2": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "libgnutls": {
@@ -3663,6 +3667,10 @@
     "libopenmpt": {
       "baseline": "2017-01-28-cf2390140",
       "port-version": 2
+    },
+    "libopensp": {
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "libopusenc": {
       "baseline": "0.2.1",
@@ -4569,8 +4577,8 @@
       "port-version": 1
     },
     "neargye-semver": {
-      "baseline": "0.2.2",
-      "port-version": 1
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "ned14-internal-quickcpplib": {
       "baseline": "0.0.0-e691a6dc",
@@ -4785,7 +4793,7 @@
       "port-version": 0
     },
     "onnx": {
-      "baseline": "1.9.0",
+      "baseline": "1.10.1",
       "port-version": 0
     },
     "onnx-optimizer": {
@@ -4810,7 +4818,7 @@
     },
     "opencascade": {
       "baseline": "7.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -5302,7 +5310,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 6
+      "port-version": 7
     },
     "prometheus-cpp": {
       "baseline": "0.13.0",
@@ -5357,7 +5365,7 @@
       "port-version": 1
     },
     "pybind11": {
-      "baseline": "2.7.1",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "pystring": {
@@ -5993,7 +6001,7 @@
       "port-version": 5
     },
     "s2n": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "safeint": {
@@ -6013,8 +6021,8 @@
       "port-version": 1
     },
     "sassc": {
-      "baseline": "3.6.1",
-      "port-version": 1
+      "baseline": "3.6.2",
+      "port-version": 0
     },
     "sbp": {
       "baseline": "3.4.10",
@@ -6181,7 +6189,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -6457,8 +6465,8 @@
       "port-version": 1
     },
     "string-view-lite": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "strtk": {
       "baseline": "2020-09-14",
@@ -6805,7 +6813,7 @@
       "port-version": 1
     },
     "type-safe": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "uchardet": {
@@ -6881,8 +6889,8 @@
       "port-version": 0
     },
     "utf8h": {
-      "baseline": "2020-06-14",
-      "port-version": 1
+      "baseline": "2021-10-21",
+      "port-version": 0
     },
     "utf8proc": {
       "baseline": "2.6.1",
@@ -6913,7 +6921,7 @@
       "port-version": 1
     },
     "uwebsockets": {
-      "baseline": "20.5.0",
+      "baseline": "20.6.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -6937,8 +6945,8 @@
       "port-version": 1
     },
     "variant-lite": {
-      "baseline": "1.2.2",
-      "port-version": 1
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "vc": {
       "baseline": "1.4.2",
