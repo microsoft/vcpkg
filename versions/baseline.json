@@ -3626,7 +3626,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 2
+      "port-version": 3
     },
     "libnice": {
       "baseline": "0.1.15",
