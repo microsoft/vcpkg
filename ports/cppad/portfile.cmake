@@ -25,15 +25,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-# Install the pkgconfig file
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pkgconfig/cppad.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pkgconfig/cppad.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 vcpkg_fixup_pkgconfig()
 
 # Add the copyright

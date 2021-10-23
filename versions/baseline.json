@@ -1118,7 +1118,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 0
+      "port-version": 1
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1534,7 +1534,7 @@
     },
     "cppad": {
       "baseline": "20210000.7",
-      "port-version": 1
+      "port-version": 2
     },
     "cppcms": {
       "baseline": "1.2.1",
@@ -2574,7 +2574,7 @@
     },
     "gtest": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk": {
       "baseline": "4.3.0",
@@ -4082,7 +4082,7 @@
     },
     "log4cpp": {
       "baseline": "2.9.1",
-      "port-version": 5
+      "port-version": 6
     },
     "log4cxx": {
       "baseline": "0.12.0",
@@ -4898,7 +4898,7 @@
     },
     "openmesh": {
       "baseline": "8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openmpi": {
       "baseline": "4.1.0",
@@ -5246,7 +5246,7 @@
     },
     "polyclipping": {
       "baseline": "6.4.2",
-      "port-version": 7
+      "port-version": 8
     },
     "polyhook2": {
       "baseline": "2021-05-09",
@@ -5754,7 +5754,7 @@
     },
     "quill": {
       "baseline": "1.6.3",
-      "port-version": 1
+      "port-version": 2
     },
     "quirc": {
       "baseline": "1.1",
