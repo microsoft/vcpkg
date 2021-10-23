@@ -1,0 +1,29 @@
+diff --git a/cmake/LibraryDefine.cmake b/cmake/LibraryDefine.cmake
+index 5696f3fe..e38f4c7b 100644
+--- a/cmake/LibraryDefine.cmake
++++ b/cmake/LibraryDefine.cmake
+@@ -90,9 +90,5 @@ function(OPENEXR_DEFINE_LIBRARY libname)
+     string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
+     set(verlibname ${CMAKE_SHARED_LIBRARY_PREFIX}${libname}${OPENEXR_LIB_SUFFIX}${CMAKE_${uppercase_CMAKE_BUILD_TYPE}_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX})
+     set(baselibname ${CMAKE_SHARED_LIBRARY_PREFIX}${libname}${CMAKE_${uppercase_CMAKE_BUILD_TYPE}_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX})
+-    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E chdir \"\$ENV\{DESTDIR\}${CMAKE_INSTALL_FULL_LIBDIR}\" ${CMAKE_COMMAND} -E create_symlink ${verlibname} ${baselibname})")
+-    install(CODE "message(STATUS \"Creating symlink ${CMAKE_INSTALL_FULL_LIBDIR}/${baselibname} -> ${verlibname}\")")
+-    set(verlibname)
+-    set(baselibname)
+   endif()
+ endfunction()
+diff --git a/cmake/OpenEXRLibraryDefine.cmake b/cmake/OpenEXRLibraryDefine.cmake
+index 3ecde28c..5b690d18 100644
+--- a/cmake/OpenEXRLibraryDefine.cmake
++++ b/cmake/OpenEXRLibraryDefine.cmake
+@@ -69,10 +69,6 @@ function(OPENEXR_DEFINE_LIBRARY libname)
+     string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
+     set(verlibname ${CMAKE_SHARED_LIBRARY_PREFIX}${libname}${OPENEXR_LIB_SUFFIX}${CMAKE_${uppercase_CMAKE_BUILD_TYPE}_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX})
+     set(baselibname ${CMAKE_SHARED_LIBRARY_PREFIX}${libname}${CMAKE_${uppercase_CMAKE_BUILD_TYPE}_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX})
+-    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E chdir \"\$ENV\{DESTDIR\}${CMAKE_INSTALL_FULL_LIBDIR}\" ${CMAKE_COMMAND} -E create_symlink ${verlibname} ${baselibname})")
+-    install(CODE "message(STATUS \"Creating symlink ${CMAKE_INSTALL_FULL_DIR}/${baselibname} -> ${verlibname}\")")
+-    set(verlibname)
+-    set(baselibname)
+   endif()
+ 
+ endfunction()
