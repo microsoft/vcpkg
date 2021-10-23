@@ -4865,8 +4865,8 @@
       "port-version": 0
     },
     "openexr": {
-      "baseline": "2.5.0",
-      "port-version": 3
+      "baseline": "3.1.2",
+      "port-version": 0
     },
     "opengl": {
       "baseline": "0.0",
