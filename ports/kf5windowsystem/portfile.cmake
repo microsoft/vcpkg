@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO KDE/kwindowsystem
     REF v5.87.0
     SHA512 c6b09d2c67902370da3d6cba61aa0b6c13d496332e5ba9694fe43a6571229f60389164024643b9e56c0c1e5cced0d29942b4b7a0ba919dd86b47dbf4602cb74d
+    PATCHES
+        xcb_private_dependency.diff
 )
 
 if (VCPKG_TARGET_IS_LINUX)
