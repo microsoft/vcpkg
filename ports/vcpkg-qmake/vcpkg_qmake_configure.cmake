@@ -31,13 +31,13 @@ function(vcpkg_qmake_configure)
 
     set(buildtypes "")
     if(NOT VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
-        list(buildtypes APPEND "DEBUG") # Using uppercase to also access the detected cmake variables with it
+        list(APPEND buildtypes "DEBUG") # Using uppercase to also access the detected cmake variables with it
         set(path_suffix_DEBUG "debug/")
         set(short_name_DEBUG "dbg")
         set(qmake_config_DEBUG CONFIG+=debug CONFIG-=release)
     endif()
     if(NOT VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
-        list(buildtypes APPEND "RELEASE")
+        list(APPEND buildtypes "RELEASE")
         set(path_suffix_RELEASE "")
         set(short_name_RELEASE "rel")
         set(qmake_config_RELEASE CONFIG-=debug CONFIG+=release)
@@ -56,14 +56,14 @@ function(vcpkg_qmake_configure)
                                         "QMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
                 )
     # QMAKE_OBJCOPY ?
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC)
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_LINKER}"
                                             "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_LINKER}"
                   )
     else()
         vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
                                             "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
-              )
+                  )
     endif()
 
     foreach(buildtype IN LISTS buildtypes)
@@ -73,9 +73,9 @@ function(vcpkg_qmake_configure)
         set(prefix_package "${CURRENT_PACKAGES_DIR}${path_suffix_${buildtype}}")
         set(config_triplet "${TARGET_TRIPLET}-${short}")
         # Cleanup build directories
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${config_triplet}"
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
 
-        configure_file("${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf ""${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf") # Needs probably more TODO for cross builds
+        configure_file("${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf" "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf") # Needs probably more TODO for cross builds
 
         vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
         vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
