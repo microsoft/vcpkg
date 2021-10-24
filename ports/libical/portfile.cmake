@@ -1,39 +1,41 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libical/libical
-    REF 0595c7d45ef5e75705f2d80e03e5310d9f78438c #v3.0.6 tag
-    SHA512 611dcb28500b9db23262926e6869f3e3920ece585f059be4e09c356d949014770b7f1f95d1e3e75e770b6c38f91c4ae8a014df8dc86d5191f12bc5d9b0549216
+    REF v3.0.11
+    SHA512 cdee86c50edc2373ab2024d7d4ae26dd4b9a728dbc13083472c4923c67f61ff3cef7d43edca762c6a11979d2040fc1576a033eaa23a19e58af8f14a7d67fc139
 )
 
-#Perl is required by the buildsystem.
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
-set(BUILD_ICAL_GLIB OFF)
-#TODO need pkgconfig, glib and libxml2 to build libical-glib
-#if("glib" IN_LIST FEATURES AND "libxml2" IN_LIST FEATURES)
-#set(BUILD_ICAL_GLIB ON)
-#endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DSHARED_ONLY=False
-        -DSTATIC_ONLY=False
-        -DUSE_BUILTIN_TZDATA=True
-        -DICAL_BUILD_DOCS=False
-        -DICAL_GLIB=${BUILD_ICAL_GLIB}
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        "rscale"    CMAKE_DISABLE_FIND_PACKAGE_ICU
 )
 
-vcpkg_install_cmake()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS -DSTATIC_ONLY=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DSHARED_ONLY=ON)
+endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_BDB=ON
+        -DUSE_BUILTIN_TZDATA=ON
+        -DICAL_GLIB=OFF
+        -DICAL_BUILD_DOCS=OFF
+        -DLIBICAL_BUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
+)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibIcal TARGET_PATH share/LibIcal)
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME LibIcal CONFIG_PATH CONFIG_PATH lib/cmake/LibIcal)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

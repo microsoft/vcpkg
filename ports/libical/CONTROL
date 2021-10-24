@@ -1,5 +1,0 @@
-Source: libical
-Version: 3.6.0
-Homepage: https://github.com/libical/libical
-Description: Reference implementation of the iCalendar data type and serialization format
-Build-Depends: icu
