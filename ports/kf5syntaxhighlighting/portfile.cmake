@@ -23,7 +23,13 @@ vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5SyntaxHighlighting CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/debug/qml")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
