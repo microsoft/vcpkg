@@ -1,7 +1,7 @@
 {
   "name": "capnproto",
   "version-string": "0.8.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Data interchange format and capability-based RPC system",
   "homepage": "https://capnproto.org/",
   "supports": "!uwp & !((arm | arm64) & windows)",
