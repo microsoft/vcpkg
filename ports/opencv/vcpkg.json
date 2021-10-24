@@ -10,12 +10,7 @@
     }
   ],
   "default-features": [
-    "dnn",
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp"
+    "default-features"
   ],
   "features": {
     "ade": {
@@ -63,6 +58,31 @@
           "features": [
             "cudnn"
           ]
+        }
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
         }
       ]
     },

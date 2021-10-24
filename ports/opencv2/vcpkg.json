@@ -16,16 +16,28 @@
     "zlib"
   ],
   "default-features": [
-    "eigen",
-    "jpeg",
-    "png",
-    "tiff"
+    "default-features"
   ],
   "features": {
     "cuda": {
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "eigen",
+            "jpeg",
+            "png",
+            "tiff"
+          ]
+        }
       ]
     },
     "eigen": {

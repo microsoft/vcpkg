@@ -15,12 +15,7 @@
     "zlib"
   ],
   "default-features": [
-    "dnn",
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp"
+    "default-features"
   ],
   "features": {
     "contrib": {
@@ -52,6 +47,31 @@
           "features": [
             "contrib"
           ]
+        }
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
         }
       ]
     },
