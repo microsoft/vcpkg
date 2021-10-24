@@ -13,6 +13,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "rscale"
+  ],
   "features": {
     "rscale": {
       "description": "Support for RSCALE element",
