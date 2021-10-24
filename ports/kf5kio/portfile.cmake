@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF v5.87.0
     SHA512 ae16478ea1d4140d8168a87a25017861e5b3b2e4afb280ea01dc6822d3ce880961791ec37d658750fe48d81eccda6327d66ea7de0ca8d4515cec18a3b79f453e
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        libmount_static_dep.diff    # https://invent.kde.org/frameworks/kio/-/merge_requests/615
+        ${PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
