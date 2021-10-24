@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 34fb28f149e49bb23b2dc230dd5277229f2c780de66aff0acc819601e6802a1dbf83110b5df455dffd63be6eaa286d4aedb4b0af559b8b034d98c3208ee9d969
     HEAD_REF master
     PATCHES
+        imath_find_dependency_fix.patch
         remove_symlinks.patch
 )
 
