@@ -20,14 +20,19 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Config CONFIG_PATH lib/cmake/KF5Config)
 vcpkg_copy_pdbs()
 
-set(LIBEXEC_TOOLS kconf_update kconfig_compiler_kf5)
+vcpkg_copy_tools(
+    TOOL_NAMES kreadconfig5 kwriteconfig5
+    AUTO_CLEAN
+)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(TRANSFORM LIBEXEC_TOOLS PREPEND "kf5/")
+    set(LIBEXEC_SUBFOLDER "kf5/")
 endif()
 
 vcpkg_copy_tools(
-    TOOL_NAMES kreadconfig5 kwriteconfig5 ${LIBEXEC_TOOLS}
+    TOOL_NAMES kconf_update kconfig_compiler_kf5
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/${LIBEXEC_SUBFOLDER}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${LIBEXEC_SUBFOLDER}"
     AUTO_CLEAN
 )
 
