@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/solid
-    REF v5.84.0
-    SHA512 b6452e56c6029289450850c1fcfff96da0005f8dfa03f1817754910945e3ccadd8502e330a4484a5c5e9a8d5525838c8090268bb083639062dfca7176852c159
+    REF v5.87.0
+    SHA512 e1add78825841c8a87b006a2c1dba31fff7fff5a26af52379769a0851927edead2296aab240c95c11d4d866dfd08e63ee92619f44ea0b8b08a8cc1a827f31e9a
     HEAD_REF master
     PATCHES
-        fix_config_cmake.patch # https://invent.kde.org/frameworks/solid/-/merge_requests/53
         fix-libmount.patch
 )
 
@@ -68,3 +67,4 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/qml" "${CURRENT_PACKAGES_DIR}/deb
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/qml" "${CURRENT_PACKAGES_DIR}/qml")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

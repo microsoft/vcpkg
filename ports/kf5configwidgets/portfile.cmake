@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.84.0
-    SHA512 da03f4cfc2a64b3ccccfe2b6b7f392f84aba2b975edbf6a5b08a14604ccb565a4491c7eb707af7191345b55ca81e864b7ee13fe648589a56f3226c26160ed024
+    REF v5.87.0
+    SHA512 0c7205394d270ca867387c4db01af9517fc9a19a2f134dc0ec53aa78bd49ec645c66aab5f2b6d023b68a1e0b0fbddfe17e85db77b90c26df8d40cffe9e6a61ec
     HEAD_REF master
-    PATCHES
-        add_support_for_static_builds.patch # https://invent.kde.org/frameworks/kconfigwidgets/-/merge_requests/71
 )
 
 vcpkg_check_features(

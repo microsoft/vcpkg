@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/syntax-highlighting
-    REF v5.84.0
-    SHA512 7df25f639504392f15dd55ae33de273ef8a32c3d4b4874dcd52fa5aa85e302acf102e31d249a3dc779d84facba0fca5e2196e83d8b4d439c5da96c2ad7b256cd
+    REF v5.87.0
+    SHA512 a5750e6dd3a055531f041a56240fba3cdfb90b2552fad8f1ec9ba6cebbe569a342737bc28a17bc1f738c21afe26208b7d1dd32a81d9d58421a2f3be52e836dce
     HEAD_REF master
 )
 

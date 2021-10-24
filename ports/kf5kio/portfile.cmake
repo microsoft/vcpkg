@@ -1,8 +1,3 @@
-set(PATCHES
-    fix_dbusmetatypes.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/563
-    fix_config_cmake.patch # https://invent.kde.org/frameworks/kio/-/merge_requests/565
-)
-
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES fix_libiconv.patch)
 endif()
@@ -10,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.84.0
-    SHA512 6c2d57a31e64ff1475b21d7fb2556d37b061dae319ddfe57a36f0bfc9627db624b1ac8fa4b2851681cb90d218255d0444c1403329d88f34a23e8ddffe99ca5b4
+    REF v5.87.0
+    SHA512 ae16478ea1d4140d8168a87a25017861e5b3b2e4afb280ea01dc6822d3ce880961791ec37d658750fe48d81eccda6327d66ea7de0ca8d4515cec18a3b79f453e
     HEAD_REF master
     PATCHES ${PATCHES}
 )
