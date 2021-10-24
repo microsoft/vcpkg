@@ -10,6 +10,13 @@ vcpkg_from_github(
         remove_symlinks.patch
 )
 
+# required for CMake's FetchContent to find git if it is not already in PATH
+vcpkg_find_acquire_program(
+    GIT
+)
+get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
+vcpkg_add_to_path("${GIT_EXE_PATH}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
