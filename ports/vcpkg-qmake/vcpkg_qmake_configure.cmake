@@ -57,12 +57,12 @@ function(vcpkg_qmake_configure)
                 )
     # QMAKE_OBJCOPY ?
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC)
-        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=$(VCPKG_DETECTED_CMAKE_LINKER}"
-                                            "QMAKE_LINK_C=$(VCPKG_DETECTED_CMAKE_LINKER}"
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_LINKER}"
+                                            "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_LINKER}"
                   )
     else()
-        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=$(VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
-                                            "QMAKE_LINK_C=$(VCPKG_DETECTED_CMAKE_C_COMPILER}"
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
+                                            "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
               )
     endif()
 
