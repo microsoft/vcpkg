@@ -7,16 +7,8 @@ vcpkg_from_github(
     SHA512 34fb28f149e49bb23b2dc230dd5277229f2c780de66aff0acc819601e6802a1dbf83110b5df455dffd63be6eaa286d4aedb4b0af559b8b034d98c3208ee9d969
     HEAD_REF master
     PATCHES
-        imath_find_dependency_fix.patch
         remove_symlinks.patch
 )
-
-# required for CMake's FetchContent to find git if it is not already in PATH
-vcpkg_find_acquire_program(
-    GIT
-)
-get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
-vcpkg_add_to_path("${GIT_EXE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -26,7 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Imath DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()

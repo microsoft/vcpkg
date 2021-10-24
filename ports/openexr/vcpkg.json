@@ -5,6 +5,7 @@
   "homepage": "https://www.openexr.com/",
   "supports": "!uwp",
   "dependencies": [
+    "imath",
     {
       "name": "vcpkg-cmake",
       "host": true
