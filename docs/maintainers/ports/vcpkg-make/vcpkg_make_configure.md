@@ -7,6 +7,7 @@ Configure a Makefile buildsystem.
 ```cmake
 vcpkg_make_configure(
     SOURCE_PATH <${source_path}>
+    [AUTOCONFIG]
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
