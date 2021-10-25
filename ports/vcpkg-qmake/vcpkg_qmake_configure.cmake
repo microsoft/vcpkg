@@ -148,10 +148,11 @@ function(vcpkg_qmake_configure)
         vcpkg_execute_required_process(
             COMMAND ${VCPKG_QMAKE_COMMAND} ${qmake_config_${buildtype}}
                     ${arg_QMAKE_OPTIONS} ${arg_QMAKE_OPTIONS_DEBUG}
-                    #${VCPKG_QMAKE_OPTIONS} ${VCPKG_QMAKE_OPTIONS_${buildtype}} # Advanced users need a way to inject QMAKE variables via the triplet.
+                    ${VCPKG_QMAKE_OPTIONS} ${VCPKG_QMAKE_OPTIONS_${buildtype}} # Advanced users need a way to inject QMAKE variables via the triplet.
                     ${qmake_build_tools} ${qmake_comp_flags}
                     "${arg_SOURCE_PATH}"
-                    -qtconf "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf" 
+                    -qtconf "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf"
+                    -d
                     ${options}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${config_triplet}
             LOGNAME config-${config_triplet}
