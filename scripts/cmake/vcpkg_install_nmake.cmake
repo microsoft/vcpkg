@@ -85,6 +85,14 @@ function(vcpkg_install_nmake)
     if(NOT VCPKG_HOST_IS_WINDOWS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} only support windows.")
     endif()
+
+    # backwards-compatibility hack
+    # gdal passes `arg_OPTIONS_DEBUG` (and RELEASE) as a single argument,
+    # so we need to split them again
+    if("${PORT}" STREQUAL "gdal")
+        set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG})
+        set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE})
+    endif()
     
     vcpkg_list(SET extra_args)
     # switch args

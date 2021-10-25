@@ -131,8 +131,10 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}/gdal"
         TARGET devinstall
-        OPTIONS_RELEASE ${NMAKE_OPTIONS_REL}
-        OPTIONS_DEBUG ${NMAKE_OPTIONS_DBG}
+        OPTIONS_RELEASE
+        "${NMAKE_OPTIONS_REL}"
+        OPTIONS_DEBUG
+        "${NMAKE_OPTIONS_DBG}"
         )
 
     if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
