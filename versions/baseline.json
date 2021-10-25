@@ -106,11 +106,11 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 4
+      "port-version": 5
     },
     "apr-util": {
       "baseline": "1.6.1",
-      "port-version": 4
+      "port-version": 5
     },
     "apsi": {
       "baseline": "0.3.1",
@@ -2338,7 +2338,7 @@
     },
     "gdal": {
       "baseline": "3.3.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2390,7 +2390,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 6
+      "port-version": 7
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -2638,7 +2638,7 @@
     },
     "healpix": {
       "baseline": "1.12.10",
-      "port-version": 8
+      "port-version": 9
     },
     "hedley": {
       "baseline": "15",
@@ -2682,7 +2682,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 5
+      "port-version": 6
     },
     "hwloc": {
       "baseline": "2.2.0",
@@ -2702,7 +2702,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 15
+      "port-version": 16
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -3482,7 +3482,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 11
+      "port-version": 12
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3926,7 +3926,7 @@
     },
     "liburing": {
       "baseline": "2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libusb": {
       "baseline": "1.0.24",
@@ -4570,7 +4570,7 @@
     },
     "ncurses": {
       "baseline": "6.2",
-      "port-version": 1
+      "port-version": 2
     },
     "neargye-semver": {
       "baseline": "0.3.0",
@@ -6430,7 +6430,7 @@
     },
     "starlink-ast": {
       "baseline": "9.2.4",
-      "port-version": 2
+      "port-version": 3
     },
     "status-code": {
       "baseline": "1.0.0-ab3cd821",
