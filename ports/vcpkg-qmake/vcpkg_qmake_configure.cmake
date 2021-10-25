@@ -56,9 +56,10 @@ function(vcpkg_qmake_configure)
                                         "QMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
                 )
     # QMAKE_OBJCOPY ?
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_LINKER}"
-                                            "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_LINKER}"
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        get_filename_component(LINKER "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${LINKER}"
+                                            "QMAKE_LINK_C=${LINKER}"
                   )
     else()
         vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
