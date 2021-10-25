@@ -21,4 +21,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/crossguid/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/crossguid/LICENSE" "${CURRENT_PACKAGES_DIR}/share/crossguid/copyright")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
