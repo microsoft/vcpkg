@@ -58,7 +58,7 @@ The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downlo
 * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 #]===]
 
-function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_sha512)
+function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         # When using the internal hash skip, do not output an explicit message.
         return()
@@ -68,14 +68,14 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
         return()
     endif()
 
-    file(SHA512 "${path}" file_hash)
+    file(SHA512 "${file_path}" file_hash)
     if(NOT "${file_hash}" STREQUAL "${sha512}")
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
             "    Expected hash: [ ${sha512} ]\n"
             "      Actual hash: [ ${file_hash} ]\n"
-            "${CUSTOM_ERROR_ADVICE}\n")
+            "${error_advice}\n")
     endif()
 endfunction()
 
@@ -203,6 +203,24 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     file(REMOVE_RECURSE "${DOWNLOADS}/temp0")
     file(REMOVE_RECURSE "${DOWNLOADS}/temp")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
+
+    # check if file with same name already exists in downloads
+    if(EXISTS "${downloaded_file_path}")
+        set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
+        if(_VCPKG_NO_DOWNLOADS)
+            string(APPEND advice_message " Downloads are disabled please provide a valid file at path ${downloaded_file_path} and retry.")
+        else()
+            string(APPEND advice_message " To re-download this file please delete cached file at path ${downloaded_file_path} and retry.")
+        endif()
+
+        z_vcpkg_download_distfile_test_hash(
+            "${downloaded_file_path}"
+            "cached file"
+            "${advice_message}"
+            "${arg_SHA512}"
+            FALSE
+        )
+    endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
     # this could be de-morgan'd out but it's more clear this way
