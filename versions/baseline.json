@@ -1641,8 +1641,8 @@
       "port-version": 0
     },
     "cryptopp": {
-      "baseline": "8.5.0",
-      "port-version": 1
+      "baseline": "8.6.0",
+      "port-version": 0
     },
     "cspice": {
       "baseline": "66",
