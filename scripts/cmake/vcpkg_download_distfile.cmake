@@ -218,8 +218,15 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
             "cached file"
             "${advice_message}"
             "${arg_SHA512}"
-            FALSE
+            "${arg_SKIP_SHA512}"
         )
+
+        if(NOT vcpkg_download_distfile_QUIET)
+            message(STATUS "Using cached ${arg_FILENAME}.")
+        endif()
+        
+        # Suppress the "Downloading ${arg_URLS} -> ${arg_FILENAME}..." message
+        set(vcpkg_download_distfile_QUIET TRUE)
     endif()
 
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
@@ -228,15 +235,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         if(NOT EXISTS "${downloaded_file_path}")
             message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
         endif()
-        if(NOT arg_QUIET)
-            message(STATUS "Using ${downloaded_file_path}")
-        endif()
 
-        z_vcpkg_download_distfile_test_hash(
-            "${downloaded_file_path}"
-            "cached file"
-            "Please delete the file and retry if this file should be downloaded again."
-        )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()
     endif()
