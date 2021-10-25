@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF 009450c7ad4d425fa5a10ac4bd6efbd25248d823 # 1.3.0 plus bugfixes for https://github.com/yasm/yasm/issues/153
     SHA512 a542577558676d11b52981925ea6219bffe699faa1682c033b33b7534f5a0dfe9f29c56b32076b68c48f65e0aef7c451be3a3af804c52caa4d4357de4caad83c
     HEAD_REF master
-    PATCHES fix-arm-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
