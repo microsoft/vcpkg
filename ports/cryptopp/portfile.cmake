@@ -13,14 +13,14 @@ vcpkg_from_github(
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_5_0
-  SHA512 e8dd210c9e9d4925edc456e4d68780deaa224d85e11394ad5da835dcb1a1e6b3e899aa473acf20449f9721116960884b6d88b29335479b305bb7e29faa87e6c0
+  REF CRYPTOPP_8_6_0
+  SHA512 ccb4baa6674cd830cddb779216ce702b3cdba6de8a3d627c218861507c36bddd2861b0d0e8cad35001a1e9f0c3d5020404684c87dd05d85264ac166fa7f70589
   HEAD_REF master
   PATCHES patch.patch
 )
 
-file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_SOURCE_PATH}/cryptopp-config.cmake" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_SOURCE_PATH}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if("pem-pack" IN_LIST FEATURES)
     vcpkg_from_github(
@@ -51,9 +51,8 @@ endif()
 #   https://www.cryptopp.com/wiki/Visual_Studio#Dynamic_Runtime_Linking
 #   https://www.cryptopp.com/wiki/Visual_Studio#The_DLL
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_SHARED=OFF
         -DBUILD_STATIC=ON
@@ -62,12 +61,11 @@ vcpkg_configure_cmake(
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cryptopp)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cryptopp)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cryptopp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cryptopp/License.txt ${CURRENT_PACKAGES_DIR}/share/cryptopp/copyright)
+file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
