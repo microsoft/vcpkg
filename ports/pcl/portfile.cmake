@@ -12,6 +12,7 @@ vcpkg_from_github(
         pcl_config.patch
         pcl_utils.patch
         remove-broken-targets.patch
+        fix-cmake_find_library_suffixes.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
