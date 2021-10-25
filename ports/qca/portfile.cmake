@@ -67,12 +67,10 @@ vcpkg_execute_required_process(
 message(STATUS "Importing certstore done")
 
 # Configure and build
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DUSE_RELATIVE_PATHS=ON
-        -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
         -DQCA_SUFFIX=OFF
@@ -84,27 +82,16 @@ vcpkg_configure_cmake(
         -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Patch and copy cmake files
-message(STATUS "Patching files")
-file(READ 
-    ${CURRENT_PACKAGES_DIR}/debug/share/qca/cmake/QcaTargets-debug.cmake
-    QCA_DEBUG_CONFIG
-)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" QCA_DEBUG_CONFIG "${QCA_DEBUG_CONFIG}")
-file(WRITE 
-    ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets-debug.cmake
-    "${QCA_DEBUG_CONFIG}"
-)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
-    QCA_TARGET_CONFIG
+vcpkg_cmake_config_fixup(CONFIG_PATH share/qca/cmake)
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/QcaConfig.cmake" QCA_CONFIG_FILE)
+string(REGEX REPLACE "PACKAGE_PREFIX_DIR \"(.*)\" ABSOLUTE"
+                     [[PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE]]
+       QCA_CONFIG_FILE "${QCA_CONFIG_FILE}"
 )
-string(REPLACE "packages/qca_" "installed/" QCA_TARGET_CONFIG "${QCA_TARGET_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
-    "${QCA_TARGET_CONFIG}"
-)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/QcaConfig.cmake" "${QCA_CONFIG_FILE}")
 
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
