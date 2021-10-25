@@ -21,7 +21,7 @@ vcpkg_from_github(
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_OPTS --enable-shared=yes --enable-static=no)
 else()
-    set(BUILD_OPTS --enable-shared=no --enable-shared=yes)
+    set(BUILD_OPTS --enable-shared=no --enable-static=yes)
 endif()
 
 vcpkg_configure_make(
