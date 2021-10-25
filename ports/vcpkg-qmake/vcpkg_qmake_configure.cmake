@@ -46,24 +46,24 @@ function(vcpkg_qmake_configure)
     # Setup Build tools
     set(QMAKE_COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(qmake_build_tools "")
-    vcpkg_list(APPEND qmake_build_tools "QMAKE_CC=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
-                                        "QMAKE_CXX=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
-                                        "QMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
-                                        "QMAKE_RANLIB=${VCPKG_DETECTED_CMAKE_RANLIB}"
-                                        "QMAKE_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}"
-                                        "QMAKE_NM=${VCPKG_DETECTED_CMAKE_NM}"
-                                        "QMAKE_RC=${VCPKG_DETECTED_CMAKE_RC_COMPILER}"
-                                        "QMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
+    vcpkg_list(APPEND qmake_build_tools "QMAKE_CC=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\""
+                                        "QMAKE_CXX=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\""
+                                        #"QMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
+                                        #"QMAKE_RANLIB=${VCPKG_DETECTED_CMAKE_RANLIB}"
+                                        #"QMAKE_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}"
+                                        #"QMAKE_NM=${VCPKG_DETECTED_CMAKE_NM}"
+                                        #"QMAKE_RC=${VCPKG_DETECTED_CMAKE_RC_COMPILER}"
+                                        #"QMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
                 )
     # QMAKE_OBJCOPY ?
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         get_filename_component(LINKER "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
-        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${LINKER}"
-                                            "QMAKE_LINK_C=${LINKER}"
-                  )
+        #vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${LINKER}"
+        #                                    "QMAKE_LINK_C=${LINKER}"
+        #          )
     else()
-        vcpkg_list(APPEND qmake_build_tools "QMAKE_LINK=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
-                                            "QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
+        vcpkg_list(APPEND qmake_build_tools #"QMAKE_LINK=${VCPKG_DETECTED_CMAKE_CXX_COMPILER}"
+                                            #"QMAKE_LINK_C=${VCPKG_DETECTED_CMAKE_C_COMPILER}"
                   )
     endif()
 
@@ -82,13 +82,14 @@ function(vcpkg_qmake_configure)
         vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
 
         set(qmake_comp_flags "")
-        vcpkg_list(APPEND qmake_comp_flags "QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
-                                           "QMAKE_RC+=${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}"
-                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}"
-                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS*=${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_DLL*=${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_EXE*=${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}")
+        vcpkg_list(APPEND qmake_comp_flags #"QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
+                                           #"QMAKE_RC+=${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}"
+                                           #"QMAKE_CFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}"
+                                           #"QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}"
+                                           #"QMAKE_LFLAGS*=${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}"
+                                           #"QMAKE_LFLAGS_DLL*=${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}"
+                                           #"QMAKE_LFLAGS_EXE*=${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}"
+                                           )
 
         message(STATUS "Configuring ${config_triplet}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
