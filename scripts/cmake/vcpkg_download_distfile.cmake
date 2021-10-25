@@ -121,7 +121,7 @@ function(z_vcpkg_download_distfile_via_aria)
     endforeach()
 
     foreach(URL IN LISTS arg_URLS)
-        debug_message("Downlad Command: ${ARIA2} ${URL} -o temp/${filename} -l download-${filename}-detailed.log ${headers_param}")
+        debug_message("Download Command: ${ARIA2} ${URL} -o temp/${filename} -l download-${filename}-detailed.log ${headers_param}")
         vcpkg_execute_in_download_mode(
             COMMAND ${ARIA2} ${URL}
             -o temp/${arg_FILENAME}
