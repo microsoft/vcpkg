@@ -1817,7 +1817,7 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "oct2021",
+      "baseline": "oct2021b",
       "port-version": 0
     },
     "directxtk12": {
@@ -7145,7 +7145,7 @@
       "port-version": 0
     },
     "xaudio2redist": {
-      "baseline": "1.2.6",
+      "baseline": "1.2.8",
       "port-version": 0
     },
     "xbyak": {
