@@ -14,10 +14,6 @@
       "name": "libuuid",
       "platform": "!windows & !osx & !mingw"
     },
-    "pthread",
-    {
-      "name": "vcpkg-make",
-      "host": true
-    }
+    "pthread"
   ]
 }
