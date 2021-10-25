@@ -263,4 +263,4 @@ index b843152..3945c7e 100644
 +endif()
  add_subdirectory("libsyn123")
  
- if(UNIX)
+ if(0)
