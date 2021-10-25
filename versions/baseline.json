@@ -3665,8 +3665,8 @@
       "port-version": 0
     },
     "libopenmpt": {
-      "baseline": "2017-01-28-cf2390140",
-      "port-version": 2
+      "baseline": "0.5.12",
+      "port-version": 0
     },
     "libopensp": {
       "baseline": "1.5.2",
@@ -4430,7 +4430,7 @@
     },
     "mpg123": {
       "baseline": "1.28.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mpi": {
       "baseline": "1",
