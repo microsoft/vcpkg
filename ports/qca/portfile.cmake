@@ -6,10 +6,10 @@
 #
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_EXE_PATH})
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src")
 endif()
 
 vcpkg_from_github(
@@ -38,14 +38,14 @@ vcpkg_download_distfile(ARCHIVE_PKGMSG
     FILENAME "FindPackageMessage.cmake"
     SHA512 44af652038ecd98c1e54f440e67994759345290530b36f687b7e6d5c310caa55597f3718901fe7a3f8816b560f03b8f238d90aab6ce9b1b24391ab0bb2aa44a8
 )
-file(COPY ${ARCHIVE_PKGCONFIG} ${ARCHIVE_PKGHSA} ${ARCHIVE_PKGMSG} DESTINATION ${SOURCE_PATH}/cmake/modules)
+file(COPY "${ARCHIVE_PKGCONFIG}" "${ARCHIVE_PKGHSA}" "${ARCHIVE_PKGMSG}" DESTINATION "${SOURCE_PATH}/cmake/modules")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
+  set(QCA_FEATURE_INSTALL_DIR_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/Qca")
+  set(QCA_FEATURE_INSTALL_DIR_RELEASE "${CURRENT_PACKAGES_DIR}/bin/Qca")
 else()
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
+  set(QCA_FEATURE_INSTALL_DIR_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/Qca")
+  set(QCA_FEATURE_INSTALL_DIR_RELEASE "${CURRENT_PACKAGES_DIR}/lib/Qca")
 endif()
 
 # According to:
@@ -53,15 +53,15 @@ endif()
 # it is up to developers or admins to maintain CAs.
 # So we do it here:
 message(STATUS "Importing certstore")
-file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
+file(REMOVE "${SOURCE_PATH}/certs/rootcerts.pem")
 # Using file(DOWNLOAD) to use https
 file(DOWNLOAD https://raw.githubusercontent.com/mozilla/gecko-dev/master/security/nss/lib/ckfw/builtins/certdata.txt
-    ${CURRENT_BUILDTREES_DIR}/cert/certdata.txt
+    "${CURRENT_BUILDTREES_DIR}/cert/certdata.txt"
     TLS_VERIFY ON
 )
 vcpkg_execute_required_process(
-    COMMAND ${PERL} ${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl -n ${SOURCE_PATH}/certs/rootcerts.pem
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/cert
+    COMMAND "${PERL}" "${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl" -n "${SOURCE_PATH}/certs/rootcerts.pem"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cert"
     LOGNAME ca-bundle
 )
 message(STATUS "Importing certstore done")
@@ -74,16 +74,15 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
         -DQCA_SUFFIX=OFF
-        -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
+        -DQCA_FEATURE_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features"
         -DOSX_FRAMEWORK=OFF
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
+        -DQCA_PLUGINS_INSTALL_DIR="${QCA_FEATURE_INSTALL_DIR_DEBUG}"
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
+        -DQCA_PLUGINS_INSTALL_DIR="${QCA_FEATURE_INSTALL_DIR_RELEASE}"
 )
 
 vcpkg_cmake_install()
-
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/qca/cmake)
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/QcaConfig.cmake" QCA_CONFIG_FILE)
@@ -95,12 +94,11 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/QcaConfig.cmake" "${QCA_CONFIG
 
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
-    ${CURRENT_BUILDTREES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_BUILDTREES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-message(STATUS "Patching files done")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
