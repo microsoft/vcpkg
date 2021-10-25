@@ -13,7 +13,6 @@ vcpkg_download_distfile(
     FILENAME <output.zip>
     SHA512 <5981de...>
     [ALWAYS_REDOWNLOAD]
-    [DISABLE_ARIA2]
 )
 ```
 ## Parameters
@@ -43,11 +42,6 @@ This switch is only valid when building with the `--head` command line flag.
 Avoid caching; this is a REST call or otherwise unstable.
 
 Requires `SKIP_SHA512`.
-
-### DISABLE_ARIA2
-Avoid using aria2 to download files.
-
-This switch is mainly used for downloading ARIA2.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
@@ -119,7 +113,6 @@ function(z_vcpkg_download_distfile_via_aria)
         "URLS;HEADERS"
     )
 
-    vcpkg_find_acquire_program(ARIA2)
     message(STATUS "Downloading ${arg_FILENAME}...")
 
     vcpkg_list(SET headers_param)
@@ -127,16 +120,23 @@ function(z_vcpkg_download_distfile_via_aria)
         vcpkg_list(APPEND headers_param "--header=${header}")
     endforeach()
 
-    vcpkg_execute_in_download_mode(
-        COMMAND ${ARIA2} ${arg_URLS}
-        -o temp/${arg_FILENAME}
-        -l download-${arg_FILENAME}-detailed.log
-        ${headers_param}
-        OUTPUT_FILE download-${arg_FILENAME}-out.log
-        ERROR_FILE download-${arg_FILENAME}-err.log
-        RESULT_VARIABLE error_code
-        WORKING_DIRECTORY "${DOWNLOADS}"
-    )
+    foreach(URL IN LISTS arg_URLS)
+        debug_message("Downlad Command: ${ARIA2} ${URL} -o temp/${filename} -l download-${filename}-detailed.log ${headers_param}")
+        vcpkg_execute_in_download_mode(
+            COMMAND ${ARIA2} ${URL}
+            -o temp/${arg_FILENAME}
+            -l download-${arg_FILENAME}-detailed.log
+            ${headers_param}
+            OUTPUT_FILE download-${arg_FILENAME}-out.log
+            ERROR_FILE download-${arg_FILENAME}-err.log
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${DOWNLOADS}"
+        )
+        
+        if ("${error_code}" STREQUAL "0")
+            break()
+        endif()
+    endforeach()
     if (NOT "${error_code}" STREQUAL "0")
         message(STATUS
             "Downloading ${arg_FILENAME}... Failed.\n"
@@ -168,7 +168,7 @@ endfunction()
 
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD;DISABLE_ARIA2"
+        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
         "FILENAME;SHA512"
         "URLS;HEADERS"
     )

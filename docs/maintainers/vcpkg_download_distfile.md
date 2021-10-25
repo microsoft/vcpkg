@@ -14,7 +14,6 @@ vcpkg_download_distfile(
     FILENAME <output.zip>
     SHA512 <5981de...>
     [ALWAYS_REDOWNLOAD]
-    [DISABLE_ARIA2]
 )
 ```
 ## Parameters
@@ -44,11 +43,6 @@ This switch is only valid when building with the `--head` command line flag.
 Avoid caching; this is a REST call or otherwise unstable.
 
 Requires `SKIP_SHA512`.
-
-### DISABLE_ARIA2
-Avoid using aria2 to download files.
-
-This switch is mainly used for downloading ARIA2.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
