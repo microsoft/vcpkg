@@ -152,7 +152,6 @@ function(vcpkg_qmake_configure)
                     ${qmake_build_tools} ${qmake_comp_flags}
                     "${arg_SOURCE_PATH}"
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf"
-                    -d
                     ${options}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${config_triplet}
             LOGNAME config-${config_triplet}
