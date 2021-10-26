@@ -120,6 +120,12 @@ endfunction()
 BOTAN_BUILD(rel)
 BOTAN_BUILD(dbg)
 
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc")
+vcpkg_fixup_pkgconfig()
+
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 vcpkg_copy_pdbs()
