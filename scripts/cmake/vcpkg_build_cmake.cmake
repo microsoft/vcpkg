@@ -68,10 +68,9 @@ function(vcpkg_build_cmake)
         message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
     endif()
 
+    vcpkg_list(SET target_param)
     if(arg_TARGET)
         vcpkg_list(SET target_param "--target" "${arg_TARGET}")
-    else()
-        vcpkg_list(SET target_param)
     endif()
 
     foreach(build_type IN ITEMS debug release)

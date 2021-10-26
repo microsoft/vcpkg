@@ -169,16 +169,10 @@ function(vcpkg_configure_cmake)
         set(generator "Ninja")
 
     else()
-        if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120")
+        if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
             set(generator "Visual Studio 12 2013")
-            if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-                set(generator "")
-            endif()
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140")
+        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
             set(generator "Visual Studio 14 2015")
-            if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-                set(generator "")
-            endif()
         elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
             set(generator "Visual Studio 15 2017")
         elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
@@ -198,9 +192,6 @@ function(vcpkg_configure_cmake)
         endif()
 
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
-            if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-                set(VCPKG_CMAKE_SYSTEM_NAME Windows)
-            endif()
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
     platform toolset: ${VCPKG_PLATFORM_TOOLSET}
