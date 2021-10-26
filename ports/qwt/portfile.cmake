@@ -6,8 +6,10 @@ vcpkg_from_sourceforge(
     SHA512 a3946c6e23481b5a2193819a1c1298db5a069d514ca60de54accb3a249403f5acd778172ae6fae24fae252767b1e58deba524de6225462f1bafd7c947996aae9
 )
 
-vcpkg_qmake_configure(
+vcpkg_configure_qmake(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        CONFIG+=${VCPKG_LIBRARY_LINKAGE}
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
