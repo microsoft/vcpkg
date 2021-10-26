@@ -14,7 +14,15 @@
     "boost-property-tree",
     "boost-system",
     "boost-thread",
-    "boost-uuid"
+    "boost-uuid",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "example": {
