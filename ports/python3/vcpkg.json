@@ -1,7 +1,6 @@
 {
   "name": "python3",
-  "version-semver": "3.9.7",
-  "port-version": 1,
+  "version-semver": "3.10.0",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "supports": "!(arm | uwp)",
