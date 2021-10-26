@@ -136,7 +136,7 @@
     <tool name="aria2" os="linux">
         <version>1.35.0</version>
         <exeRelativePath>aria2-1.35.0/bin/aria2c</exeRelativePath>
-        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2</sha512>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2</url>
         <sha512>3bb32b7d55347d1af37c6f4ebf0e20b38ce51c37a1baf92f7ad1762000539a03413dd679a6d902fdb1805fa71917300c9692aceee012eb06ecdff10491137aec</sha512>
         <archiveName>aria2-1.35.0-osx-darwin.tar.bz2</archiveName>
     </tool>
