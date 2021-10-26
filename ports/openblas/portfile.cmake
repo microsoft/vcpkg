@@ -15,12 +15,12 @@ vcpkg_from_github(
 find_program(GIT NAMES git git.cmd)
 
 # sed and awk are installed with git but in a different directory
-get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
+get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 
 # openblas require perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 set(PATH_BACKUP "$ENV{PATH}")
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_add_to_path("${SED_EXE_PATH}")
@@ -29,14 +29,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         threads         USE_THREAD
         simplethread    USE_SIMPLE_THREADED_LEVEL3
+        "dynamic-arch"  DYNAMIC_ARCH
 )
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-    	"dynamic-arch"      DYNAMIC_ARCH
-)
 
 if(VCPKG_TARGET_IS_OSX)
     if("dynamic-arch" IN_LIST FEATURES)
@@ -57,7 +53,7 @@ if(VCPKG_TARGET_IS_UWP)
     set(TARGET_TRIPLET "x64-windows")
 
     vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${FEATURE_OPTIONS}
             ${COMMON_OPTIONS}
             -DTARGET=NEHALEM
@@ -75,7 +71,7 @@ if(VCPKG_TARGET_IS_UWP)
     message(STATUS "Finished building Windows helper files")
 
     vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
@@ -85,7 +81,7 @@ if(VCPKG_TARGET_IS_UWP)
 elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_configure_cmake(
         PREFER_NINJA
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
             ${FEATURE_OPTIONS}
@@ -94,7 +90,7 @@ else()
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
             ${FEATURE_OPTIONS}
@@ -128,14 +124,14 @@ vcpkg_fixup_pkgconfig()
 # openblas do not make the config file , so I manually made this
 # but I think in most case, libraries will not include these files, they define their own used function prototypes
 # this is only to quite vcpkg
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/openblas_common.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/openblas_common.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
+file(READ "${SOURCE_PATH}/cblas.h" CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/cblas.h" "${CBLAS_H}")
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
