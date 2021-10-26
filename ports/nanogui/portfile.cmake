@@ -8,8 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-#         fix-package-seeking.diff
-#        fix-cmakelists.patch
+#       fix-package-seeking.diff
+#       fix-cmakelists.patch
 )
 
 vcpkg_cmake_configure(

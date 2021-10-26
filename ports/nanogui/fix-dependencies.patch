@@ -76,7 +76,7 @@ index f5936d2..a20c5bd 100644
  
    if (NANOGUI_BUILD_GLFW)
 -    target_compile_definitions(nanogui PRIVATE _GLFW_BUILD_DLL)
-+    target_compile_definitions(nanogui PRIVATE GLFW_DLL)
++    target_compile_definitions(nanogui PUBLIC GLFW_DLL)
    endif()
  endif()
  
