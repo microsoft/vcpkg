@@ -124,7 +124,7 @@ function(qt_fix_prl_files)
         file(GLOB_RECURSE prl_files "${CURRENT_PACKAGES_DIR}/lib/*.prl")
         foreach(prl_file IN LISTS prl_files)
             vcpkg_replace_string("${prl_file}" "[QT_INSTALL_PREFIX]/lib/objects-Debug" "[QT_INSTALL_LIBS]/objects-Debug")
-        endforeach
+        endforeach()
     endif()
 endfunction()
 
