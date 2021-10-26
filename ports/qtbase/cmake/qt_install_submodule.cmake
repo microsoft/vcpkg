@@ -119,11 +119,23 @@ function(qt_cmake_configure)
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
 
+function(qt_fix_prl_files)
+    if(NOT VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+        file(GLOB_RECURSE prl_files "${CURRENT_PACKAGES_DIR}/lib/*.prl")
+        foreach(prl_file IN LISTS prl_files)
+            vcpkg_replace_string("${prl_file}" "[QT_INSTALL_PREFIX]/lib/objects-Debug" "[QT_INSTALL_LIBS]/objects-Debug")
+        endforeach
+    endif()
+endfunction()
+
 function(qt_fixup_and_cleanup)
         cmake_parse_arguments(PARSE_ARGV 0 "_qarg" ""
                       ""
                       "TOOL_NAMES")
     vcpkg_copy_pdbs()
+
+    ## Handle PRL files
+    qt_fix_prl_files()
 
     ## Handle CMake files. 
     set(COMPONENTS)
@@ -214,7 +226,6 @@ function(qt_fixup_and_cleanup)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
-
 endfunction()
 
 function(qt_install_submodule)
