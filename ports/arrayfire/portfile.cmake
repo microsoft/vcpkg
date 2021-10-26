@@ -1,10 +1,12 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO arrayfire/arrayfire
-  REF 59ac7b980d1ae124aae914fb29cbf086c948954d # v3.7.3
-  SHA512 e8c209a5249046cb8d68877463b4f4921cfc363ec2f9b070ba67c9e00cbe7b44d5db209922dabc47e53977ff918e7f0d289f85c7571a826c2050d0ee8deae3e0
+  REF d99887ae431fcd58168b653a1e69f027f04d5188 # v3.8.0
+  SHA512 d8ddf6ba254744e62acf5ecf680f0ae56b05f8957b5463572923977ba2ffea7fa37cc1b6179421a1188a6f9e66565ca0f8cd00807513ccbe66ba1e9bbd41a3da
   HEAD_REF master
-  PATCHES build.patch
+  PATCHES
+        build.patch
+        Fix-constexpr-error-with-vs2019-with-half.patch
   )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
@@ -66,20 +68,21 @@ vcpkg_check_features(
 )
 
 # Build and install
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
   )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/examples")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
 
 # Copyright and license
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
