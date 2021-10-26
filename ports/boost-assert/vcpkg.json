@@ -1,6 +1,6 @@
 {
   "name": "boost-assert",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost assert module",
   "homepage": "https://github.com/boostorg/assert",
   "dependencies": [

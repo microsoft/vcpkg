@@ -1,7 +1,6 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version-string": "0.0.0-7cb75d4e",
-  "port-version": 1,
+  "version-string": "0.0.0-e691a6dc",
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
   "dependencies": [

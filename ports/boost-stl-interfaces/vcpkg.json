@@ -1,6 +1,6 @@
 {
   "name": "boost-stl-interfaces",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost stl_interfaces module",
   "homepage": "https://github.com/boostorg/stl_interfaces",
   "dependencies": [

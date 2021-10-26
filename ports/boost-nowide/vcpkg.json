@@ -1,6 +1,6 @@
 {
   "name": "boost-nowide",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost nowide module",
   "homepage": "https://github.com/boostorg/nowide",
   "dependencies": [
@@ -17,6 +17,10 @@
       "name": "boost-modular-build-helper",
       "host": true
     },
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

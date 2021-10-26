@@ -9,6 +9,9 @@
     "minimum-required"
   ],
   "features": {
+    "host-path-list": {
+      "description": "Test the vcpkg_host_path_list function"
+    },
     "function-arguments": {
       "description": "Test the z_vcpkg_function_arguments function"
     },

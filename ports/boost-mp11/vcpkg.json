@@ -1,6 +1,6 @@
 {
   "name": "boost-mp11",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost mp11 module",
   "homepage": "https://github.com/boostorg/mp11",
   "dependencies": [
