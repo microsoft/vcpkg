@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
         fix-linux-configure.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
         MODULES --msvc-syntax freexl rttopo geos libxml-2.0 proj sqlite3 zlib
@@ -58,39 +58,42 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
     endif()
-else() # Build in UNIX
-    if(VCPKG_TARGET_IS_LINUX)
-        set(STDLIB stdc++)
+else()
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES freexl rttopo geos proj # libxml2.pc used properly by configure
+        LIBS
+    )
+    if(VCPKG_TARGET_IS_MINGW)
+        # Avoid system libs (as detected by cmake) in exported pc files
+        set(SYSTEM_LIBS "")
     else()
-        set(STDLIB c++)
+        set(SYSTEM_LIBS "\$LIBS")
     endif()
-    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-      SET(EXTRALIBS "-lpthread")
+    # libspatialite needs some targets literally
+    if(VCPKG_TARGET_IS_ANDROID)
+        set(TARGET_ALIAS "--target=android")
+    elseif(VCPKG_TARGET_IS_MINGW)
+        set(TARGET_ALIAS "--target=mingw32")
+    elseif(VCPKG_TARGET_IS_OSX)
+        set(TARGET_ALIAS "--target=macosx")
+    else()
+        set(TARGET_ALIAS "")
     endif()
-    list(APPEND OPTIONS_RELEASE
-        "LIBXML2_LIBS=-lxml2 -llzma"
-        "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
-    )
-    list(APPEND OPTIONS_DEBUG
-        "LIBXML2_LIBS=-lxml2 -llzmad"
-        "GEOS_LDFLAGS=-lgeos_cd -lgeosd -l${STDLIB}"
-    )
-
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
-            "LIBS=${EXTRALIBS} -ldl -lm -l${STDLIB}"
-            "LIBXML2_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include"
+            ${TARGET_ALIAS}
             "--enable-rttopo"
             "--enable-gcp"
             "--enable-geocallbacks"
             "--disable-examples"
             "--disable-minizip"
         OPTIONS_DEBUG
-            ${OPTIONS_DEBUG}
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
         OPTIONS_RELEASE
-            ${OPTIONS_RELEASE}
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} ${SYSTEM_LIBS}"
     )
 
     # automake adds the basedir of the generated config to `DEFAULT_INCLUDES`,
@@ -105,6 +108,17 @@ else() # Build in UNIX
 
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
+
+    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/mod_spatialite.dll" "${CURRENT_PACKAGES_DIR}/plugins/${PORT}/mod_spatialite.dll")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/mod_spatialite.dll" "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}/mod_spatialite.dll")
+        endif()
+    endif()
 endif()
 
 # Handle copyright
