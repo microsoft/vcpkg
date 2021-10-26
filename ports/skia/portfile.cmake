@@ -1,3 +1,7 @@
+vcpkg_fail_port_install(
+    ON_ARCH "x86" "arm" "arm64"
+    ON_TARGET "UWP" "ANDROID" "FREEBSD")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
@@ -132,9 +136,11 @@ else()
     set(OPTIONS "${OPTIONS} is_component_build=false")
 endif()
 
-if("metal" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} skia_use_metal=true")
-    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
+if(CMAKE_HOST_APPLE)
+    if("metal" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} skia_use_metal=true")
+        list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
+    endif()
 endif()
 
 if("vulkan" IN_LIST FEATURES)
@@ -142,14 +148,46 @@ if("vulkan" IN_LIST FEATURES)
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_VULKAN)
 endif()
 
-if("direct3d" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
-    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
+if(CMAKE_HOST_WIN32)
+    if("direct3d" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
+        list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
+    endif()
 endif()
 
 if("dawn" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_dawn=true")
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
+
+    checkout_in_path("${EXTERNALS}/spirv-cross"
+        "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+        "bdbef7b1f3982fe99a62d076043036abe6dd6d80"
+    )
+
+    checkout_in_path("${EXTERNALS}/spirv-headers"
+        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+        "cf653e4ca4858583802b0d1656bc934edff6bd7f"
+    )
+
+    checkout_in_path("${EXTERNALS}/spirv-tools"
+        "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+        "11cd875ed88484f93943071083b4821b4c3d2193"
+    )
+
+    checkout_in_path("${EXTERNALS}/tint"
+        "https://dawn.googlesource.com/tint"
+        "b612c505939bf86c80a55c193b93c41ed0f252a1"
+    )
+
+    checkout_in_path("${EXTERNALS}/jinja2"
+        "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
+        "a82a4944a7f2496639f34a89c9923be5908b80aa"
+    )
+
+    checkout_in_path("${EXTERNALS}/markupsafe"
+        "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
+        "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
+    )
 
     checkout_in_path("${EXTERNALS}/dawn"
         "https://dawn.googlesource.com/dawn.git"
