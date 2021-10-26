@@ -5598,7 +5598,7 @@
     },
     "qtbase": {
       "baseline": "6.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qtcharts": {
       "baseline": "6.2.0",
@@ -6971,6 +6971,10 @@
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2021-04-02",
       "port-version": 1
+    },
+    "vcpkg-qmake": {
+      "baseline": "2021-10-23",
+      "port-version": 0
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
