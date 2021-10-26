@@ -8,13 +8,13 @@ vcpkg_build_qmake()
 ```
 #]===]
 
-function(z_run_jom_build TARGETS LOG_PREFIX LOG_SUFFIX)
-    message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
+function(z_run_jom_build targets log_prefix log_suffix)
+    message(STATUS "Package ${log_prefix}-${TARGET_TRIPLET}-${log_suffix}")
     vcpkg_execute_build_process(
-        COMMAND "${invoke_command}" -j ${VCPKG_CONCURRENCY} ${TARGETS}
-        NO_PARALLEL_COMMAND "${invoke_command}" -j 1 ${TARGETS}
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}"
-        LOGNAME "package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}"
+        COMMAND "${invoke_command}" -j ${VCPKG_CONCURRENCY} ${targets}
+        NO_PARALLEL_COMMAND "${invoke_command}" -j 1 ${targets}
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${log_suffix}"
+        LOGNAME "package-${log_prefix}-${TARGET_TRIPLET}-${log_suffix}"
     )
 endfunction()
 
@@ -27,7 +27,7 @@ function(vcpkg_build_qmake)
     )
 
     # Make sure that the linker finds the libraries used
-    vcpkg_backup_env_variables(VARS PATH CL _CL_)
+    vcpkg_backup_env_variables(VARS PATH LD_LIBRARY_PATH CL _CL_)
 
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
     set(ENV{_CL_} "/utf-8")
@@ -68,10 +68,9 @@ function(vcpkg_build_qmake)
         vcpkg_add_to_path(PREPEND "${current_installed_prefix}/lib" "${current_installed_prefix}/bin")
 
         # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
-        vcpkg_backup_env_variables(VARS LD_LIBRARY_PATH)
         if(CMAKE_HOST_UNIX)
-            unset(ENV{LD_LIBRARY_PATH})
-            vcpkg_host_path_list(PREPEND ENV{LD_LIBRARY_PATH} "${current_installed_prefix}/lib" "${current_installed_prefix}/lib/manual-link")
+            set(ENV{LD_LIBRARY_PATH} "")
+            vcpkg_host_path_list(APPEND ENV{LD_LIBRARY_PATH} "${current_installed_prefix}/lib" "${current_installed_prefix}/lib/manual-link")
         endif()
 
         vcpkg_list(SET targets ${targets_${build_type}} ${arg_TARGETS})
@@ -80,8 +79,8 @@ function(vcpkg_build_qmake)
         endif()
         z_run_jom_build("${targets}" "${arg_BUILD_LOGNAME}" "${short_name_${build_type}}")
 
-        vcpkg_restore_env_variables(VARS LD_LIBRARY_PATH)
+        vcpkg_restore_env_variables(VARS PATH LD_LIBRARY_PATH)
     endforeach()
 
-    vcpkg_restore_env_variables(VARS PATH CL _CL_)
+    vcpkg_restore_env_variables(VARS CL _CL_)
 endfunction()

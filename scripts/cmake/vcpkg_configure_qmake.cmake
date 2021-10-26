@@ -66,13 +66,16 @@ function(vcpkg_configure_qmake)
         set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
         set(pkgconfig_packages_dir "${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
+        set(pkgconfig_installed_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
+        set(pkgconfig_packages_dir "${CURRENT_PACKAGES_DIR}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
 
         if(DEFINED ENV{PKG_CONFIG_PATH})
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
         else()
             vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
-        endif()
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
 
         # Cleanup build directories
         file(REMOVE_RECURSE "${current_binary_dir}")
