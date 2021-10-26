@@ -150,6 +150,11 @@ endif()
 if("dawn" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_dawn=true")
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
+
+    checkout_in_path("${EXTERNALS}/dawn"
+        "https://dawn.googlesource.com/dawn.git"
+        "9096fc290f8677a0d395e4a5b6bf1443553629d6"
+    )
 endif()
 
 if("gl" IN_LIST FEATURES)
