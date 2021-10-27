@@ -152,6 +152,11 @@ if(CMAKE_HOST_WIN32)
     if("direct3d" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
         list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
+
+        checkout_in_path("${EXTERNALS}/d3d12allocator"
+            "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+            "169895d529dfce00390a20e69c2f516066fe7a3b"
+        )
     endif()
 endif()
 
