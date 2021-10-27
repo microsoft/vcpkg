@@ -37,6 +37,14 @@
             "png",
             "tiff"
           ]
+        },
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
         }
       ]
     },
@@ -59,6 +67,12 @@
             "swscale"
           ]
         }
+      ]
+    },
+    "gtk": {
+      "description": "GDCM support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "jasper": {

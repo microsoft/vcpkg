@@ -51,6 +51,15 @@ if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
 endif()
 
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
+  endif()
+endif()
+
 if("ffmpeg" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
@@ -92,6 +101,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
         -DWITH_ZLIB=ON
+        -WITH_GTK=${WITH_GTK}
         -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
 )
 
