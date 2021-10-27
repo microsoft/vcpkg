@@ -1,17 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 120dc7548..728ca3591 100644
+index e80b524..1ecf908 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -398,11 +398,12 @@ else()
- endif()
+@@ -429,7 +429,7 @@ set_target_properties(liblzma PROPERTIES
  
- if(WIN32)
-+    set_target_properties(liblzma PROPERTIES OUTPUT_NAME lzma)
-     if(BUILD_SHARED_LIBS)
-         # Add the Windows resource file for liblzma.dll.
-         target_sources(liblzma PRIVATE src/liblzma/liblzma_w32res.rc)
-         target_include_directories(liblzma PRIVATE windows/vs2019)
+     # It's liblzma.so or liblzma.dll, not libliblzma.so or lzma.dll.
+     # Avoid the name lzma.dll because it would conflict with LZMA SDK.
+-    PREFIX ""
++    OUTPUT_NAME lzma
+ )
  
-         # Export the public API symbols with __declspec(dllexport).
-         target_compile_definitions(liblzma PRIVATE DLL_EXPORT)
-     else()
+ # Create liblzmaConfigVersion.cmake.
