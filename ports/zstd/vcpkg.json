@@ -1,6 +1,7 @@
 {
   "name": "zstd",
   "version-semver": "1.5.0",
+  "port-version": 1,
   "description": "Zstandard - Fast real-time compression algorithm",
   "homepage": "https://facebook.github.io/zstd/",
   "dependencies": [
