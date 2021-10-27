@@ -1,12 +1,3 @@
-From 0ddc970348c24f106909a45c3f011fdb3792898d Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
-Date: Fri, 17 Sep 2021 19:03:27 +0200
-Subject: [PATCH] Add support for static builds
-
----
- KF5KCMUtilsConfig.cmake.in | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
 diff --git a/KF5KCMUtilsConfig.cmake.in b/KF5KCMUtilsConfig.cmake.in
 index 9871fba..ddcf6ea 100644
 --- a/KF5KCMUtilsConfig.cmake.in
