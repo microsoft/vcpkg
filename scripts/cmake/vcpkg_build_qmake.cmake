@@ -8,7 +8,7 @@ vcpkg_build_qmake()
 ```
 #]===]
 
-function(z_run_jom_build targets log_prefix log_suffix)
+function(z_run_jom_build invoke_command targets log_prefix log_suffix)
     message(STATUS "Package ${log_prefix}-${TARGET_TRIPLET}-${log_suffix}")
     vcpkg_execute_build_process(
         COMMAND "${invoke_command}" -j ${VCPKG_CONCURRENCY} ${targets}
@@ -75,9 +75,9 @@ function(vcpkg_build_qmake)
 
         vcpkg_list(SET targets ${targets_${build_type}} ${arg_TARGETS})
         if(NOT arg_SKIP_MAKEFILES)
-            z_run_jom_build(qmake_all makefiles "${short_name_${build_type}}")
+            z_run_jom_build("${invoke_command}" qmake_all makefiles "${short_name_${build_type}}")
         endif()
-        z_run_jom_build("${targets}" "${arg_BUILD_LOGNAME}" "${short_name_${build_type}}")
+        z_run_jom_build("${invoke_command}" "${targets}" "${arg_BUILD_LOGNAME}" "${short_name_${build_type}}")
 
         vcpkg_restore_env_variables(VARS PATH LD_LIBRARY_PATH)
     endforeach()
