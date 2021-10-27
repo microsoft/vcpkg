@@ -5,8 +5,8 @@
   "description": "Brigand is a light-weight, fully functional, instant-compile time C++ 11 meta-programming library.",
   "homepage": "https://github.com/edouarda/brigand",
   "dependencies": [
-   "boost-fusion",
-   "boost-variant",
+    "boost-fusion",
+    "boost-variant",
     {
       "name": "vcpkg-cmake",
       "host": true
