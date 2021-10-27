@@ -6,8 +6,8 @@ Automatically test the correctness of the configuration file exported by cmake
 
 ```cmake
 vcpkg_cmake_config_test(
-    [TARGET_NAME <PORT_NAME>]
-    [TARGET_VARS <TARGETS>...]
+    [CONFIG_NAME <PORT_NAME>]
+    [TARGET_NAMES <TARGETS>...]
     [HEADERS <headername.h>...]
     [FUNCTIONS <function1> ...]
 )
@@ -15,9 +15,9 @@ vcpkg_cmake_config_test(
 
 For most ports, `vcpkg_cmake_config_test` should work without passing any options,
 `vcpkg_cmake_config_test` will automatically detect the targets declared in the generated
-cmake configuration file which are used in `find_package`, and set the targets to `TARGET_NAME`.
+cmake configuration file which are used in `find_package`, and set the targets to `CONFIG_NAME`.
 
-`TARGET_VARS` should use the target name in `target_link_libraries` and support namespace.
+`TARGET_NAMES` should use the target name in `target_link_libraries` and support namespace.
 
 For more advanced usage, `vcpkg_cmake_config_test` supports the use of reserved c/c++ code for testing.
 Please encapsulate the test code as one or more functions and save them to `vcpkg_test.c` or `vcpkg_test.cpp`,

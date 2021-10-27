@@ -5,8 +5,8 @@ Automatically test the correctness of the configuration file exported by cmake
 
 ```cmake
 vcpkg_cmake_config_test(
-    [TARGET_NAME <PORT_NAME>]
-    [TARGET_VARS <TARGETS>...]
+    [CONFIG_NAME <PORT_NAME>]
+    [TARGET_NAMES <TARGETS>...]
     [HEADERS <headername.h>...]
     [FUNCTIONS <function1> ...]
 )
@@ -14,9 +14,9 @@ vcpkg_cmake_config_test(
 
 For most ports, `vcpkg_cmake_config_test` should work without passing any options,
 `vcpkg_cmake_config_test` will automatically detect the targets declared in the generated
-cmake configuration file which are used in `find_package`, and set the targets to `TARGET_NAME`.
+cmake configuration file which are used in `find_package`, and set the targets to `CONFIG_NAME`.
 
-`TARGET_VARS` should use the target name in `target_link_libraries` and support namespace.
+`TARGET_NAMES` should use the target name in `target_link_libraries` and support namespace.
 
 For more advanced usage, `vcpkg_cmake_config_test` supports the use of reserved c/c++ code for testing.
 Please encapsulate the test code as one or more functions and save them to `vcpkg_test.c` or `vcpkg_test.cpp`,
@@ -41,7 +41,7 @@ macro(z_get_cmake_targets)
     set(target_folders )
     
     file(GLOB_RECURSE cmake_files "${CURRENT_PACKAGES_DIR}/*/*.cmake")
-    foreach(cmake_file IN ITEMS cmake_files)
+    foreach(cmake_file IN LISTS cmake_files)
         get_filename_component(target_folder ${cmake_file} DIRECTORY)
         get_filename_component(target_folder ${target_folder} NAME)
         vcpkg_list(APPEND target_folders "${target_folder}")
@@ -66,7 +66,7 @@ macro(z_get_cmake_targets)
         return()
     endif()
     
-    if (NOT folder_size EQUAL 1 AND NOT arg_TARGET_NAME)
+    if (NOT folder_size EQUAL 1 AND NOT arg_CONFIG_NAME)
         message(FATAL_ERROR "More than one folder contains cmake configuration files, please set \"target_name\" to select the certain target name")
     endif()
     
@@ -127,43 +127,68 @@ endmacro()
 
 macro(z_build_with_toolchain)
     foreach(build_type IN ITEMS "Debug" "Release")
-        set(config_cmd ${CMAKE_COMMAND} -G Ninja
+        unset(config_cmd)
+        unset(build_cmd)
+        string(TOLOWER ${build_type} build_type_lower)
+        
+        vcpkg_list(APPEND config_cmd
+            "${CMAKE_COMMAND}"
+            -G
+            Ninja
             -DCMAKE_BUILD_TYPE=${build_type}
-            -DCMAKE_PREFIX_PATH="${CURRENT_PACKAGES_DIR}/share/${target_folder}"
+            "-DCMAKE_PREFIX_PATH=${CURRENT_PACKAGES_DIR}/share/${target_folder}"
             -DCMAKE_SOURCE_DIR="${test_dir}"
             -DCMAKE_BINARY_DIR="${test_dir}"
-            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
+            "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
             -DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}
+            "-D${target_folders}_DIR=${CURRENT_PACKAGES_DIR}/share/${target_folder}"
+                   
         )
-        set(build_cmd "${CMAKE_COMMAND} --build . --config ${build_type} -- -v")
+        vcpkg_list(APPEND build_cmd
+            "${CMAKE_COMMAND}"
+            --build
+            .
+            --config
+            ${build_type}
+            --
+            -v
+        )
         
+        debug_message("command: ${config_cmd}")
         execute_process(
-            COMMAND "${config_cmd}"
+            COMMAND ${config_cmd}
             WORKING_DIRECTORY "${test_dir}"
             RESULT_VARIABLE error_code
-            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/config-test-cmake-out.log"
-            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/config-test-cmake-err.log"
+            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/config-test-cmake-${build_type_lower}-out.log"
+            ERROR_FILE  "${CURRENT_BUILDTREES_DIR}/config-test-cmake-${build_type_lower}-err.log"
         )
         
         if (error_code)
             message(FATAL_ERROR
-                "Test cmake configuration failed, please check cmake configuration file!"
-                "See log: ${CURRENT_BUILDTREES_DIR}/config-test-cmake-err.log"
+                "  Test cmake configuration failed, please check cmake configuration file!\n"
+                "  Error code: ${error_code}\n"
+                "  See logs for more information:\n"
+                "      ${CURRENT_BUILDTREES_DIR}/config-test-cmake-${build_type_lower}-out.log\n"
+                "      ${CURRENT_BUILDTREES_DIR}/config-test-cmake-${build_type_lower}-err.log\n"
             )
         endif()
         
+        debug_message("command: ${build_cmd}")
         execute_process(
-            COMMAND "${build_cmd}"
+            COMMAND ${build_cmd}
             WORKING_DIRECTORY "${test_dir}"
             RESULT_VARIABLE error_code
-            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-test-cmake-out.log"
-            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-test-cmake-err.log"
+            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-test-cmake-${build_type_lower}-out.log"
+            ERROR_FILE  "${CURRENT_BUILDTREES_DIR}/build-test-cmake-${build_type_lower}-err.log"
         )
         
         if (error_code)
             message(FATAL_ERROR
-                "Test cmake configuration failed, please check cmake configuration file!"
-                "See log: ${CURRENT_BUILDTREES_DIR}/config-test-cmake-err.log"
+                "  Test cmake configuration failed, please check cmake configuration file!\n"
+                "  Error code: ${error_code}\n"
+                "  See logs for more information:\n"
+                "      ${CURRENT_BUILDTREES_DIR}/build-test-cmake-${build_type_lower}-out.log\n"
+                "      ${CURRENT_BUILDTREES_DIR}/build-test-cmake-${build_type_lower}-err.log\n"
             )
         endif()
     endforeach()
@@ -175,19 +200,19 @@ function(vcpkg_cmake_config_test)
         return()
     endif()
     
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "TARGET_NAME" "TARGET_VARS;HEADERS;FUNCTIONS")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "CONFIG_NAME" "TARGET_NAMES;HEADERS;FUNCTIONS")
     # First, we should get the cmake targets automanticlly
-    if ((arg_TARGET_NAME AND NOT arg_TARGET_VARS) OR (NOT arg_TARGET_NAME AND arg_TARGET_VARS))
-        message(FATAL_ERROR "TARGET_NAME and TARGET_VARS must be declared at same time!")
+    if ((arg_CONFIG_NAME AND NOT arg_TARGET_NAMES) OR (NOT arg_CONFIG_NAME AND arg_TARGET_NAMES))
+        message(FATAL_ERROR "CONFIG_NAME and TARGET_NAMES must be declared at same time!")
     endif()
     
-    if (NOT arg_TARGET_NAME)
+    if (NOT arg_CONFIG_NAME)
         z_get_cmake_targets()
     endif()
     
-    if (arg_TARGET_NAME)
-        set(target_folder "${arg_TARGET_NAME}")
-        set(target_names ${arg_TARGET_VARS})
+    if (arg_CONFIG_NAME)
+        set(target_folder "${arg_CONFIG_NAME}")
+        set(target_names ${arg_TARGET_NAMES})
     elseif (NOT target_folder OR NOT target_names)
         # Skip cmake test because the cmake configuration is not exported
         message(STATUS "Could not find the cmake configuration file, skip test the cmake configuration.")
