@@ -1,25 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif 
-    REF 667eeabb553ce73094eb29faea3f31fb8610fec2 #v1.10.0
-    SHA512 937290310ec6dda8840262d4bad5e3628033fa2caa6e9cc4a0df7a372cacf38c9b55cf29d2cb7ea2183641e263298fc2e87167c1b0f04f8697023f123d78aa9d
+    REF 56c8a2613370562fc330af2c70c1510aa5fd9ff6 #v1.12.0
+    SHA512 11ac7f32d1f49963046b1a4479a41f39004475211563ba7f41b2398f07f7b4d90339ea663e528b3cc80deeef1fff374987208d48b447116a806564ef05487e97
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
-        disable-depend-dav1d.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libheif/)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
