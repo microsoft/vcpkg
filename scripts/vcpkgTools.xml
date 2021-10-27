@@ -126,13 +126,6 @@
         <sha512>933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4</sha512>
         <archiveName>aria2-1.35.0-win-32bit-build1.zip</archiveName>
     </tool>
-    <tool name="aria2" os="linux">
-        <version>1.35.0</version>
-        <exeRelativePath>aria2-1.35.0-aarch64-linux-android-build1/aria2c</exeRelativePath>
-        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-aarch64-linux-android-build1.zip</url>
-        <sha512>23cc611d3ef72cae83a35f52b2bb454a0f70abe70574dae602e399c2510490fc999ce3f6582a8f5cca020232fab2b8fa2a9ab5282fd116cf7c4aa8fd152536ca</sha512>
-        <archiveName>aria2-1.35.0-aarch64-linux-android-build1.zip</archiveName>
-    </tool>
     <tool name="aria2" os="osx">
         <version>1.35.0</version>
         <exeRelativePath>aria2-1.35.0/bin/aria2c</exeRelativePath>
