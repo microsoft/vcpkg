@@ -14,9 +14,10 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(pkg_config_modules freexl rttopo geos libxml-2.0 proj sqlite3 zlib)
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES --msvc-syntax freexl rttopo geos libxml-2.0 proj sqlite3 zlib
+        MODULES --msvc-syntax ${pkg_config_modules}
         LIBS
     )
     string(JOIN " " LIBS_ALL_DEBUG
@@ -57,6 +58,26 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+    endif()
+
+    set(infile "${SOURCE_PATH}/spatialite.pc.in")
+    set(VERSION "${LIBSPATIALITE_VERSION_STR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    list(JOIN pkg_config_modules " " requires_private)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spatialite.pc")
+        configure_file("${infile}" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" "Libs:" "Requires.private: ${requires_private}\nLibs.private: -liconv -lcharset\nLibs:")
+        vcpkg_replace_string("${outfile}" "  -lm" " ")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spatialite.pc")
+        configure_file("${infile}" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" "Libs:" "Requires.private: ${requires_private}\nLibs.private: -liconv -lcharset\nLibs:")
+        vcpkg_replace_string("${outfile}" "  -lm" " ")
     endif()
 else()
     x_vcpkg_pkgconfig_get_modules(
@@ -107,7 +128,6 @@ else()
     endforeach()
 
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
 
     if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -120,6 +140,8 @@ else()
         endif()
     endif()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 # With rttopo and ground control points enabled, the license is GPLv2+.
