@@ -13,6 +13,12 @@ if("ffprobe" IN_LIST FEATURES)
 endif()
 
 
+if("aom" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'aom' does not support 'uwp | arm'")
+    endif()
+endif()
+
 if("ass" IN_LIST FEATURES)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
         message(FATAL_ERROR "Feature 'ass' does not support 'uwp | arm'")
@@ -145,6 +151,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
+        0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -339,6 +346,12 @@ endif()
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
+endif()
+
+if("aom" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libaom")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libaom")
 endif()
 
 if("ass" IN_LIST FEATURES)
