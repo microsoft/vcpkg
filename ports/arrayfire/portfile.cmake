@@ -5,8 +5,8 @@ vcpkg_from_github(
   SHA512 d8ddf6ba254744e62acf5ecf680f0ae56b05f8957b5463572923977ba2ffea7fa37cc1b6179421a1188a6f9e66565ca0f8cd00807513ccbe66ba1e9bbd41a3da
   HEAD_REF master
   PATCHES
-        build.patch
-        Fix-constexpr-error-with-vs2019-with-half.patch
+    build.patch
+    Fix-constexpr-error-with-vs2019-with-half.patch
   )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
@@ -25,11 +25,11 @@ vcpkg_from_github(
 # are still runtime dependencies, so the user can use the graphics
 # library by installing forge and freeimage.
 vcpkg_from_github(
-    OUT_SOURCE_PATH FORGE_PATH
-    REPO arrayfire/forge
-    REF 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389 # v1.0.5
-    SHA512 8f8607421880a0f0013380eb5efb3a4f05331cd415d68c9cd84dd57eb727da1df6223fc6d65b106675d6aa09c3388359fab64443c31fadadf7641161be6b3b89
-    HEAD_REF master
+  OUT_SOURCE_PATH FORGE_PATH
+  REPO arrayfire/forge
+  REF 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389 # v1.0.5
+  SHA512 8f8607421880a0f0013380eb5efb3a4f05331cd415d68c9cd84dd57eb727da1df6223fc6d65b106675d6aa09c3388359fab64443c31fadadf7641161be6b3b89
+  HEAD_REF master
 )
 
 ################################### Build ###################################
