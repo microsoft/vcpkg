@@ -11,31 +11,33 @@ vcpkg_from_github(
 set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
 set(FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
-    list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
+    list(APPEND FEATURE_OPTIONS "-Denable-${_feature}:BOOL=OFF")
 endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
         ${FEATURE_OPTIONS}
+        -DLIB_INSTALL_DIR=lib
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_DEBUG
         -Denable-debug:BOOL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Copy fluidsynth.exe to tools dir
 vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 
 # Remove unnecessary files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
