@@ -111,10 +111,6 @@ if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
-    # Disable Flang on Windows (see http://lists.llvm.org/pipermail/flang-dev/2020-July/000448.html).
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Building Flang with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
         # Flang requires C++17

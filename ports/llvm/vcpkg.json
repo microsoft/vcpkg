@@ -160,6 +160,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "mlir",
             "tools"
           ]
