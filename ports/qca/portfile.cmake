@@ -8,10 +8,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
-if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
