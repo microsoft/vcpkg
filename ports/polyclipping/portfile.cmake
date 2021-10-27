@@ -29,3 +29,5 @@ file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindCLIPPER.cmake DESTINATION ${CURRENT_P
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clipper)
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

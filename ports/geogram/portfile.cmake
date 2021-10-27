@@ -79,3 +79,5 @@ vcpkg_replace_string(
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
