@@ -1,7 +1,6 @@
 {
   "name": "mongo-cxx-driver",
-  "version-string": "3.4.0-5",
-  "port-version": 3,
+  "version": "3.6.5",
   "description": "MongoDB C++ Driver.",
   "homepage": "https://github.com/mongodb/mongo-cxx-driver",
   "dependencies": [
@@ -9,7 +8,15 @@
     "boost-smart-ptr",
     "boost-utility",
     "libbson",
-    "mongo-c-driver"
+    "mongo-c-driver",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "boost": {
