@@ -77,3 +77,5 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
+
+vcpkg_fixup_pkgconfig()
