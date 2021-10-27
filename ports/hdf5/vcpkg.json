@@ -1,7 +1,6 @@
 {
   "name": "hdf5",
-  "version": "1.12.0",
-  "port-version": 4,
+  "version": "1.12.1",
   "description": "HDF5 is a data model, library, and file format for storing and managing data",
   "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
   "supports": "!uwp",
@@ -46,6 +45,9 @@
     },
     "tools": {
       "description": "Build hdf tools"
+    },
+    "utils": {
+      "description": "Build HDF5 Utils"
     },
     "zlib": {
       "description": "Build with zlib",
