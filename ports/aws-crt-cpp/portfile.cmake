@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 3409b3e6a546ed585b90180807383e8731b36b0db149b5ff92701a43164c4282b1cea4a551bf4c7b1edec7b264098575cf919faee8a2520bb10bbae62258d463
     PATCHES
         fix-cmake-target-path.patch
+        fix-ios-build.patch
 )
 
 if(MSVC)

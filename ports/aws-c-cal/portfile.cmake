@@ -19,11 +19,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-cal/cmake)
 
-vcpkg_copy_tools(
-    TOOL_NAMES sha256_profile
-    AUTO_CLEAN
-)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 
         "${CURRENT_PACKAGES_DIR}/bin"
