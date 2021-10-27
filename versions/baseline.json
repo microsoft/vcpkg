@@ -4338,7 +4338,7 @@
     },
     "miniz": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "minizip": {
       "baseline": "1.2.11",
