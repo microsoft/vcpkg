@@ -141,8 +141,10 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc")
 endif()
 
 vcpkg_cmake_config_test(
-    HEADERS     curl/curl.h
-    FUNCTIONS   curl_global_init
+    USAGE        Curl CONFIG
+    TARGET_NAMES CURL::libcurl
+    HEADERS      curl/curl.h
+    FUNCTIONS    curl_global_init
 )
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
