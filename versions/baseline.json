@@ -7201,8 +7201,8 @@
       "port-version": 1
     },
     "xsimd": {
-      "baseline": "7.4.9",
-      "port-version": 1
+      "baseline": "8.0.3",
+      "port-version": 0
     },
     "xtensor": {
       "baseline": "0.23.10",
