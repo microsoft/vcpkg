@@ -3014,7 +3014,7 @@
     },
     "kf5codecs": {
       "baseline": "5.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kf5completion": {
       "baseline": "5.84.0",
