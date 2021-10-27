@@ -3389,7 +3389,7 @@
       "port-version": 1
     },
     "libfabric": {
-      "baseline": "1.13.1",
+      "baseline": "1.13.2",
       "port-version": 0
     },
     "libffi": {
