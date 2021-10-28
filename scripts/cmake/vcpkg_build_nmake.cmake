@@ -102,9 +102,6 @@ function(vcpkg_build_nmake)
         vcpkg_list(SET arg_TARGET all)
     endif()
 
-    vcpkg_list(SET make_command)
-    vcpkg_list(SET make_opts_base)
-
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Load toolchains
