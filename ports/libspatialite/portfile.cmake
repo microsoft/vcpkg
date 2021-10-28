@@ -11,10 +11,40 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-makefiles.patch
         fix-linux-configure.patch
+        gaiaconfig-msvc.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS unused
+    FEATURES
+        freexl          ENABLE_FREEXL
+        gcp             ENABLE_GCP
+        geocallbacks    ENABLE_GEOCALLBACKS
+        rttopo          ENABLE_RTTOPO
+)
+
+set(pkg_config_modules geos libxml-2.0 proj sqlite3 zlib)
+if(ENABLE_FREEXL)
+    list(APPEND pkg_config_modules freexl)
+endif()
+if(ENABLE_RTTOPO)
+    list(APPEND pkg_config_modules rttopo)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(pkg_config_modules freexl rttopo geos libxml-2.0 proj sqlite3 zlib)
+    set(CL_FLAGS "")
+    if(NOT ENABLE_FREEXL)
+        string(APPEND CL_FLAGS " /DOMIT_FREEXL")
+    endif()
+    if(ENABLE_GCP)
+        string(APPEND CL_FLAGS " /DENABLE_GCP")
+    endif()
+    if(NOT ENABLE_GEOCALLBACKS)
+        string(APPEND CL_FLAGS " /DOMIT_GEOCALLBACKS")
+    endif()
+    if(ENABLE_RTTOPO)
+        string(APPEND CL_FLAGS " /DENABLE_RTTOPO")
+    endif()
+
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
         MODULES --msvc-syntax ${pkg_config_modules}
@@ -33,8 +63,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     string(REPLACE "/" "\\\\" INST_DIR "${CURRENT_PACKAGES_DIR}")
 
+    if(ENABLE_RTTOPO)
+        list(APPEND pkg_config_modules rttopo)
+    endif()
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            "CL_FLAGS=${CL_FLAGS}"
         OPTIONS_RELEASE
             "INST_DIR=${INST_DIR}"
             "LIBS_ALL=${LIBS_ALL_RELEASE}"
@@ -80,9 +115,30 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_replace_string("${outfile}" "  -lm" " ")
     endif()
 else()
+    if(ENABLE_FREEXL)
+        set(FREEXL_OPTION "--enable-freexl")
+    else()
+        set(FREEXL_OPTION "--disable-freexl")
+    endif()
+    if(ENABLE_GCP)
+        set(GCP_OPTION "--enable-gcp")
+    else()
+        set(GCP_OPTION "--disable-gcp")
+    endif()
+    if(ENABLE_GEOCALLBACKS)
+        set(GEOCALLBACKS_OPTION "--enable-geocallbacks")
+    else()
+        set(GEOCALLBACKS_OPTION "--disable-geocallbacks")
+    endif()
+    if(ENABLE_RTTOPO)
+        set(RTTOPO_OPTION "--enable-rttopo")
+    else()
+        set(RTTOPO_OPTION "--disable-rttopo")
+    endif()
+    list(REMOVE_ITEM pkg_config_modules libxml2) # handled properly by configure
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES freexl rttopo geos proj # libxml2.pc used properly by configure
+        MODULES ${pkg_config_modules} 
         LIBS
     )
     if(VCPKG_TARGET_IS_MINGW)
@@ -106,9 +162,10 @@ else()
         AUTOCONFIG
         OPTIONS
             ${TARGET_ALIAS}
-            "--enable-rttopo"
-            "--enable-gcp"
-            "--enable-geocallbacks"
+            ${FREEXL_OPTION}
+            ${GCP_OPTION}
+            ${GEOCALLBACKS_OPTION}
+            ${RTTOPO_OPTION}
             "--disable-examples"
             "--disable-minizip"
         OPTIONS_DEBUG
@@ -144,5 +201,26 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-# With rttopo and ground control points enabled, the license is GPLv2+.
-file(INSTALL "${SOURCE_PATH}/src/control_points/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+set(outfile "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+if(NOT ENABLE_GCP AND NOT ENABLE_RTTOPO)
+    file(READ "${SOURCE_PATH}/COPYING" mpl)
+    file(WRITE "${outfile}"
+        "SpatiaLite[${FEATURES}] is licensed under the MPL tri-license terms;\n"
+        "you are free to choose the best-fit license between:\n"
+        "- the MPL 1.1\n"
+        "- the GPL v2.0 or any subsequent version\n"
+        "- the LGPL v2.1 or any subsequent version.\n\n"
+        "# MPL 1.1 (from COPYING)\n\n"
+        "${mpl}\n"
+    )
+else()
+    file(WRITE "${outfile}"
+        "SpatiaLite[${FEATURES}] is licensed under:\n"
+        "the GPL v2.0 or any subsequent version.\n\n"
+    )
+endif()
+file(READ "${SOURCE_PATH}/src/control_points/COPYING" gpl)
+file(APPEND "${outfile}"
+    "# GPL v2.0 (from src/control_points/COPYING)\n\n"
+    "${gpl}\n"
+)
