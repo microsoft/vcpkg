@@ -5,8 +5,8 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     {
-        "name": "alsa",
-        "platform" : "linux"
+      "name": "alsa",
+      "platform": "linux"
     },
     {
       "name": "qtbase",
