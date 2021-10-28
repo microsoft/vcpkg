@@ -8,9 +8,16 @@ vcpkg_from_github(
         Fix-cmake.patch
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(LIBWEBM_CRT_LINKAGE -DMSVC_RUNTIME=dll)
+else()
+    set(LIBWEBM_CRT_LINKAGE -DMSVC_RUNTIME=static)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+    ${LIBWEBM_CRT_LINKAGE}
     -DENABLE_SAMPLES=OFF
     -DENABLE_TOOLS=OFF
     -DENABLE_WEBMTS=OFF
