@@ -3229,8 +3229,8 @@
       "port-version": 1
     },
     "lazy-importer": {
-      "baseline": "2019-08-10",
-      "port-version": 1
+      "baseline": "2021-10-23",
+      "port-version": 0
     },
     "lcm": {
       "baseline": "1.4.0",
