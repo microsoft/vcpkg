@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
 
 vcpkg_buildpath_length_warning(37)
 
@@ -18,9 +18,9 @@ vcpkg_cmake_configure(
         -DUSE_HDF5=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Alembic)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Alembic)
 
 vcpkg_copy_pdbs()
 
