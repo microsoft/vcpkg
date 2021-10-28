@@ -11,7 +11,7 @@ vcpkg_from_github(
         fix-link-libpng.patch
         remove-broken-targets.patch
         fix-find-qhull.patch
-        fix_cmake_find_package_suffixex.patch
+        fix_cmake_find_package_suffixes.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
