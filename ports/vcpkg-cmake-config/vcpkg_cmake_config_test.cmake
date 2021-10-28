@@ -36,28 +36,26 @@ as `portfile.cmake`.
 * [ptex](https://github.com/Microsoft/vcpkg/blob/master/ports/ptex/portfile.cmake)
 #]===]
 
-macro(z_get_cmake_targets)
-    set(target_names )
-    set(target_folders )
+function(z_get_cmake_targets)
+    vcpkg_list(SET target_names)
+    vcpkg_list(SET target_folders)
 
     file(GLOB_RECURSE cmake_files "${CURRENT_PACKAGES_DIR}/*/*.cmake")
     foreach(cmake_file IN LISTS cmake_files)
-        get_filename_component(target_folder ${cmake_file} DIRECTORY)
-        get_filename_component(target_folder_name ${target_folder} NAME)
+        get_filename_component(target_folder "${cmake_file}" DIRECTORY)
+        get_filename_component(target_folder_name "${target_folder}" NAME)
         if (cmake_file MATCHES "[Cc]onfig\.cmake")
             vcpkg_list(APPEND target_folders "${target_folder_name}")
         endif()
         file(READ "${cmake_file}" CMAKE_CONTENT)
-        string(REGEX MATCH "add_library.([^\ ]+)\ " target_name "${CMAKE_CONTENT}")
-        string(REPLACE "add_library(" "" target_name "${target_name}")
-        string(REPLACE " " "" target_name "${target_name}")
-        if (NOT target_name)
+        # add_library(name SHARED/STATIC/INTERFACE IMPORTED)
+        if (CMAKE_CONTENT MATCHES "add_library.([^\ ]+)\ ")
+            debug_message("Found target: ${CMAKE_MATCH_1}")
+            list(APPEND target_names ${CMAKE_MATCH_1})
+        else()
             continue()
         endif()
-        list(APPEND target_names ${target_name})
-        debug_message("target_name: ${target_name}")
     endforeach()
-    unset(target_name)
     vcpkg_list(REMOVE_DUPLICATES target_names)
     vcpkg_list(REMOVE_DUPLICATES target_folders)
 
@@ -65,7 +63,7 @@ macro(z_get_cmake_targets)
     list(LENGTH target_folders folder_size)
 
     if (target_size EQUAL 0 OR folder_size EQUAL 0)
-        message(WARANING "Found the following cmake configuration file but not found the target.")
+        message(FATAL_ERROR "No targets found for config ${PORT}, please set \"USAGE\" and \"TARGET_NAMES\".")
         return()
     endif()
 
@@ -73,12 +71,12 @@ macro(z_get_cmake_targets)
         message(FATAL_ERROR "More than one folder contains cmake configuration files, please set \"TARGET_NAMES\" to select the certain target name")
     endif()
 
-    set(target_names ${target_names})
-    set(target_folder ${target_folders})
-    set(target_usage ${target_folder} CONFIG)
-endmacro()
+    set(target_names "${target_names}" PARENT_SCOPE)
+    set(target_folder "${target_folders}" PARENT_SCOPE)
+    set(target_usage "${target_folders} CONFIG" PARENT_SCOPE)
+endfunction()
 
-macro(z_write_sample_code current_target)
+function(z_write_sample_code current_target target_usage extern_header_checks extern_symbol_checks_base extern_symbol_check_symbol)
     set(test_dir "${CURRENT_BUILDTREES_DIR}/test_cmake")
     file(REMOVE_RECURSE "${test_dir}")
     file(MAKE_DIRECTORY "${test_dir}")
@@ -127,9 +125,11 @@ target_link_libraries(cmake_test PRIVATE @current_target@)
         file(WRITE "${test_dir}/CMakeLists.txt.in" "${CMAKE_LISTS_CONTENT}")
         configure_file("${test_dir}/CMakeLists.txt.in" "${test_dir}/CMakeLists.txt" @ONLY)
     endif()
-endmacro()
+    
+    set(test_dir ${test_dir} PARENT_SCOPE)
+endfunction()
 
-macro(z_build_with_toolchain)
+function(z_build_with_toolchain target_folder test_dir)
     foreach(build_type IN ITEMS "Debug" "Release")
         unset(config_cmd)
         unset(build_cmd)
@@ -137,23 +137,20 @@ macro(z_build_with_toolchain)
 
         vcpkg_list(APPEND config_cmd
             "${CMAKE_COMMAND}"
-            -G
-            Ninja
+            -G Ninja
             -DCMAKE_BUILD_TYPE=${build_type}
             "-DCMAKE_PREFIX_PATH=${CURRENT_PACKAGES_DIR}/share/${target_folder}"
             -DCMAKE_SOURCE_DIR="${test_dir}"
-            -DCMAKE_BINARY_DIR="${test_dir}"
+            -DCMAKE_BINARY_DIR="${test_dir}/${build_type}"
             "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
             -DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}
-            "-D${target_folders}_DIR=${CURRENT_PACKAGES_DIR}/share/${target_folder}"
+            "-D${target_folder}_DIR=${CURRENT_PACKAGES_DIR}/share/${target_folder}"
                    
         )
         vcpkg_list(APPEND build_cmd
             "${CMAKE_COMMAND}"
-            --build
-            .
-            --config
-            ${build_type}
+            --build .
+            --config ${build_type}
             --
             -v
         )
@@ -196,7 +193,7 @@ macro(z_build_with_toolchain)
             )
         endif()
     endforeach()
-endmacro()
+endfunction()
 
 function(vcpkg_cmake_config_test)
     if (NOT _VCPKG_EDITABLE)
@@ -210,6 +207,9 @@ function(vcpkg_cmake_config_test)
         message(FATAL_ERROR "USAGE and TARGET_NAMES must be declared at same time!")
     endif()
 
+    set(target_folder "")
+    set(test_dir "")
+
     if (arg_USAGE)
         set(target_usage "${arg_USAGE}")
         set(target_names ${arg_TARGET_NAMES})
@@ -219,7 +219,7 @@ function(vcpkg_cmake_config_test)
 
     if (NOT target_usage OR NOT target_names)
         # Skip cmake test because the cmake configuration is not exported
-        message(STATUS "Could not find the cmake configuration file, skip test the cmake configuration.")
+        message(STATUS "Could not find the cmake configuration file, skipping the cmake configuration test.")
         return()
     endif()
 
@@ -241,11 +241,8 @@ function(vcpkg_cmake_config_test)
 
     foreach(target_name IN LISTS target_names)
         # Write a sample CMakeLists.txt and source file
-        z_write_sample_code(${target_name})
+        z_write_sample_code("${target_name}" "${target_usage}" "${extern_header_checks}" "${extern_symbol_checks_base}" "${extern_symbol_check_symbol}")
         # Build
-        z_build_with_toolchain()
+        z_build_with_toolchain("${target_folder}" "${test_dir}")
     endforeach()
-    unset(extern_symbol_check_symbol)
-    unset(extern_symbol_checks_base)
-    unset(extern_header_checks)
 endfunction()
