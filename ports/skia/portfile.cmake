@@ -153,6 +153,21 @@ if(CMAKE_HOST_WIN32)
         set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
         list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
 
+        checkout_in_path("${EXTERNALS}/spirv-cross"
+            "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+            "bdbef7b1f3982fe99a62d076043036abe6dd6d80"
+        )
+
+        checkout_in_path("${EXTERNALS}/spirv-headers"
+            "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+            "cf653e4ca4858583802b0d1656bc934edff6bd7f"
+        )
+
+        checkout_in_path("${EXTERNALS}/spirv-tools"
+            "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+            "11cd875ed88484f93943071083b4821b4c3d2193"
+        )
+
         checkout_in_path("${EXTERNALS}/d3d12allocator"
             "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
             "169895d529dfce00390a20e69c2f516066fe7a3b"
