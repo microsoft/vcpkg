@@ -77,7 +77,7 @@ vcpkgCheckRepoTool()
         echo "On SUSE Linux and derivatives:"
         echo "  sudo zypper install curl zip unzip tar"
         echo "On Alpine:"
-        echo "  sudo apk add build-base cmake ninja zip unzip curl git"
+        echo "  apk add build-base cmake ninja zip unzip curl git"
         echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
         exit 1
     fi
@@ -92,12 +92,12 @@ UNAME="$(uname)"
 ARCH="$(uname -m)"
 
 if [ -e /etc/alpine-release ]; then
-    vcpkgUseSystem = "ON"
-    vcpkgUseMuslC = "ON"
+    vcpkgUseSystem="ON"
+    vcpkgUseMuslC="ON"
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
-    vcpkgUseSystem = "ON"
+    vcpkgUseSystem="ON"
 
     if [ -z "$CXX" ]; then
         CXX=/usr/bin/clang++
