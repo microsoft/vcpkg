@@ -1,7 +1,7 @@
 {
   "name": "hyperscan",
   "version-string": "5.3.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A regular expression library with O(length of input) match times that takes advantage of Intel hardware to provide blazing speed.",
   "homepage": "https://www.hyperscan.io",
   "supports": "!arm",
