@@ -131,7 +131,7 @@ function(boost_modular_build)
         endif()
     endforeach()
     # Similar for mingw
-    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*-mgw10-*.a" "${CURRENT_PACKAGES_DIR}/lib/*-mgw10-*.a")
+    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*-mgw*-*.a" "${CURRENT_PACKAGES_DIR}/lib/*-mgw*-*.a")
     foreach(LIB IN LISTS INSTALLED_LIBS)
         get_filename_component(OLD_FILENAME "${LIB}" NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE "${LIB}" DIRECTORY)
