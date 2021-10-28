@@ -1,13 +1,27 @@
 {
   "name": "rtabmap",
-  "version-string": "0.20.3",
-  "port-version": 1,
+  "version-string": "0.20.14",
+  "port-version": 0,
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
   "supports": "windows & !static",
   "dependencies": [
     "opencv",
-    "pcl",
+    {
+      "name": "pcl",
+      "default-features": false,
+      "features": [
+        "vtk"
+      ]
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "opengl",
+        "qt"
+      ]
+    },
     "zlib"
   ],
   "features": {

@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3c1a46f6..39cb1656 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -990,13 +990,13 @@ IF(ANDROID)
+    IF(BUILD_APP)
+       ADD_SUBDIRECTORY( app )
+    ENDIF(BUILD_APP)
++ELSEIF(NOT WITH_QT)
++   MESSAGE(WARNING "the GUI lib and the stand-alone application will not be compiled...")
+ ELSEIF(Qt5_FOUND OR (QT4_FOUND AND QT_QTCORE_FOUND AND QT_QTGUI_FOUND))
+    ADD_SUBDIRECTORY( guilib )
+    IF(BUILD_APP)
+       ADD_SUBDIRECTORY( app )
+    ENDIF(BUILD_APP)
+-ELSEIF(WITH_QT)
+-   MESSAGE(WARNING "Qt not found, the GUI lib and the stand-alone application will not be compiled...")
+ ENDIF()
+ 
+ IF(BUILD_TOOLS)
