@@ -12,21 +12,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # In debug mode with g++, alembic defines -Werror
-    # so we need to disable some warnings to avoid build errors
-    list(APPEND GXX_DEBUG_FLAGS
-        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-deprecated
-        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-error=implicit-fallthrough
-    )
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_HDF5=ON
-    OPTIONS_DEBUG
-        ${GXX_DEBUG_FLAGS}
 )
 
 vcpkg_install_cmake()
