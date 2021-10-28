@@ -1,0 +1,19 @@
+{
+  "name": "crossguid",
+  "version-date": "2021-10-22",
+  "description": "CrossGuid is a minimal, cross platform, C++ GUID library.",
+  "dependencies": [
+    {
+      "name": "libuuid",
+      "platform": "!windows & !uwp & !osx & !android"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

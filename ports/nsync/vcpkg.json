@@ -1,0 +1,6 @@
+{
+  "name": "nsync",
+  "version": "1.24.0",
+  "description": "nsync is a C library that exports various synchronization primitives, such as mutexes",
+  "homepage": "https://github.com/google/nsync"
+}

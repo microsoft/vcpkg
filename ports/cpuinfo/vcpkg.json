@@ -1,0 +1,11 @@
+{
+  "name": "cpuinfo",
+  "version-date": "2021-04-04",
+  "description": "CPU INFOrmation library (x86/x86-64/ARM/ARM64, Linux/Windows/Android/macOS/iOS)",
+  "homepage": "https://github.com/pytorch/cpuinfo",
+  "features": {
+    "tools": {
+      "description": "Build cpuinfo command-line tools"
+    }
+  }
+}

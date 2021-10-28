@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b969465..31e23cd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,7 +142,7 @@ if(SPDLOG_BUILD_SHARED OR BUILD_SHARED_LIBS)
+     endif()
+     add_library(spdlog SHARED ${SPDLOG_SRCS} ${SPDLOG_ALL_HEADERS})
+     target_compile_definitions(spdlog PUBLIC SPDLOG_SHARED_LIB)
+-    if(MSVC)
++    if(MSVC AND NOT MINGW)
+         target_compile_options(spdlog PUBLIC $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<NOT:$<COMPILE_LANGUAGE:CUDA>>>:/wd4251
+                                             /wd4275>)
+     endif()

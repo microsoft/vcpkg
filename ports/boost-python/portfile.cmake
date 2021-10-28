@@ -3,12 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/python
-    REF boost-1.75.0
-    SHA512 aca87fde436e8dd98d64149c1ba85f2bef33a76fa9cfc650d23055aa3ce12e94ac39b72b0704e7fd6d0d4adc55c4ec93d841b37bac3297ceb04264ed9adfffab
+    REF boost-1.77.0
+    SHA512 755a5636e9c65586d0459d017d93a88e5d9973da262ac1b60486d8159c9601c289b9e1acb45fd67bcd24b73e7c841d6e224729dedc9f7996bc9aea52baaeca80
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-python requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
     BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"

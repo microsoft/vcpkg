@@ -12,9 +12,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES
             vs.build.patch
             runtime.patch
+            adddef.patch
     )
 
-    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
     yasm_tool_helper(OUT_VAR YASM)
     file(TO_NATIVE_PATH "${YASM}" YASM)
 
@@ -41,12 +41,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(_file "${_porjectfile}")
     file(READ "${_file}" _contents)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
                     _contents "${_contents}")
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
     file(WRITE "${_file}" "${_contents}")
 
     vcpkg_install_msbuild(
@@ -80,6 +79,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmp.pc" @ONLY)
     configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmpxx.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gmp.h"
+                            "#if defined(DLL_EXPORT) && defined(NO_ASM)"
+                            "#if 1")
+    endif()
 else()
     vcpkg_download_distfile(
         ARCHIVE
@@ -92,11 +96,15 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
         REF gmp-6.2.1
+        PATCHES
+            tools.patch
     )
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        OPTIONS
+            --enable-cxx
     )
 
     vcpkg_install_make()
@@ -104,5 +112,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+    # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()

@@ -1,0 +1,68 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 8a81a2a..724a68c 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -13,6 +13,15 @@
+ 
+ 
+ if(NOT MSVC)
++  # C++ libraries needed even for the C API, for geos-config and geos.pc.
++  set(cxx_libs "")
++  foreach(lib IN ITEMS stdc++ c++)
++    if(lib IN_LIST CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++      string(APPEND cxx_libs "-l${lib} ")
++      break()
++    endif()
++  endforeach()
++
+   # Consider CMAKE_INSTALL_PREFIX with spaces
+   string(REPLACE " " "\\ " ESCAPED_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+   configure_file(
+diff --git a/tools/geos-config.cmake b/tools/geos-config.cmake
+index 4c546b5..4bdbc47 100644
+--- a/tools/geos-config.cmake
++++ b/tools/geos-config.cmake
+@@ -29,6 +29,12 @@ if test $# -eq 0; then
+   usage 1 1>&2
+ fi
+ 
++if test "@BUILD_SHARED_LIBS@" = "ON"; then
++  extra_libs=
++else
++  extra_libs="-lgeos -lm @cxx_libs@"
++fi
++
+ while test $# -gt 0; do
+   case "$1" in
+     -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+@@ -47,16 +53,16 @@ while test $# -gt 0; do
+       echo -L${libdir} -lgeos-@GEOS_VERSION_MAJOR@
+       ;;
+     --clibs)
+-      echo -L${libdir} -lgeos_c
++      echo -L${libdir} -lgeos_c ${extra_libs}
+       ;;
+     --cclibs)
+-      echo -L${libdir} -lgeos
++      echo -L${libdir} -lgeos ${extra_libs#-lgeos }
+       ;;
+     --static-clibs)
+-      echo -L${libdir} -lgeos_c -lgeos -lm
++      echo -L${libdir} -lgeos_c -lgeos -lm @cxx_libs@
+       ;;
+     --static-cclibs)
+-      echo -L${libdir} -lgeos -lm
++      echo -L${libdir} -lgeos -lm @cxx_libs@
+       ;;
+     --cflags)
+       echo -I${prefix}/include
+diff --git a/tools/geos.pc.cmake b/tools/geos.pc.cmake
+index 53f43d9..0ebd4d5 100644
+--- a/tools/geos.pc.cmake
++++ b/tools/geos.pc.cmake
+@@ -9,4 +9,4 @@ Requires:
+ Version: @GEOS_VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lgeos_c
+-Libs.private: -lgeos
++Libs.private: -lgeos @cxx_libs@

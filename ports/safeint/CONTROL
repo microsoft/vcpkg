@@ -1,4 +1,0 @@
-Source: safeint
-Version: 3.24
-Homepage: https://github.com/dcleblanc/SafeInt
-Description: SafeInt is a class library for C++ that manages integer overflows

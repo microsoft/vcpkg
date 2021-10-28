@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kibaamor/knet
-    REF v1.0.1
-    SHA512 c9d3d876bef89d2b2c10f4f91ff3dc70a036e2437bf96fd57df8de07275b7b99b214ad332db94d7f1da587b22e6bd00bfde1d7d4b23277639ea0cef1f0a6f59c
+    REF v1.0.2
+    SHA512 fb101d10d3bb08e565618923a10bc39586a934ae562ba7241c079f781baaafbc511e0bd2de13db6263246dede5e602d578e1fbdf45c84a6fecc4d3ddad4735e9
     HEAD_REF master
 )
 

@@ -101,6 +101,19 @@ set_target_properties(speexdsp PROPERTIES PUBLIC_HEADER "${LIBSPEEXDSP_HEADERS_P
 set_target_properties(speexdsp PROPERTIES VERSION "${LIBSPEEXDSP_VERSION}")
 set_target_properties(speexdsp PROPERTIES SOVERSION "${LIBSPEEXDSP_SOVERSION}")
 
+# pkgconfig file
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix \${prefix})
+SET(bindir \${exec_prefix}/${CMAKE_INSTALL_BINDIR})
+SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
+SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+if(CMAKE_SYSTEM_NAME MATCHES BSD)
+  set(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
+endif(CMAKE_SYSTEM_NAME MATCHES BSD)
+set(PACKAGE_VERSION "${LIBSPEEXDSP_VERSION}")
+configure_file(speexdsp.pc.in speexdsp.pc @ONLY)
+install(FILES ${PROJECT_BINARY_DIR}/speexdsp.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
 install(TARGETS speexdsp
         ARCHIVE DESTINATION "lib"
         RUNTIME DESTINATION "bin"

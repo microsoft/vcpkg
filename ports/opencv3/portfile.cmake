@@ -6,30 +6,46 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.10")
+set(OPENCV_VERSION "3.4.15")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 7ccdc7fef26436b2f643cce2a13c9f9f77e56d3fd0340117419df3c1665ca12416277b626cce3c056fdc14899805bbe9ece391f11d28c6adea716d47ce8894bc
+    SHA512 775149e56f0aa94d53eb024404866380d97ce423ef1c8343ee8f12c1377e454ae182b2528e86949b5f7250e551d464bd1a5de2e2d9f0d0e1dd3dc188a1db790d
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-eigen.patch
       0005-fix-vtk9.patch
-      0009-fix-uwp.patch
+      0006-fix-uwp.patch
+      0008-devendor-quirc.patch
+      0009-fix-protobuf.patch
+      0010-fix-uwp-tiff-imgcodecs.patch
+      0011-fix-caffe-io.patch
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(TARGET_IS_AARCH64 1)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(TARGET_IS_ARM 1)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(TARGET_IS_X86_64 1)
+else()
+  set(TARGET_IS_X86 1)
+endif()
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+ FEATURES
  "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUDA
  "cuda"     WITH_CUBLAS
+ "cuda"     WITH_CUDA
  "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
@@ -38,11 +54,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "lapack"   WITH_LAPACK
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
  "qt"       WITH_QT
+ "quirc"    WITH_QUIRC
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
  "vtk"      WITH_VTK
@@ -100,10 +118,10 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 70b4ecfaf9881390ad826a2aba24cced8514a680965ec7151df9926082fff53364bbe6be36458bb9ff466fda6f6f6ca2174eeac94c10a6bada989f07ed1c4da1
+      SHA512 639f5f869d68014fcc5041f5fe890c98635610d8b26c9964721e2fbe74ce8a12aef8f305364ff024fe0086bf2e7252c4fdd00a5de08854fdcd285c0f4916125a
       HEAD_REF master
       PATCHES
-        0004-add-missing-stdexcept-include.patch
+        0007-fix-hdf5.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -120,9 +138,9 @@ if("contrib" IN_LIST FEATURES)
           FILENAME "opencv_3rdparty-${COMMIT}.zip"
           SHA512 ${HASH}
       )
-      vcpkg_extract_source_archive(${OCV_DOWNLOAD})
+      vcpkg_extract_source_archive(extracted_ocv ARCHIVE "${OCV_DOWNLOAD}")
       file(MAKE_DIRECTORY "${DOWNLOADS}/opencv-cache/${ID}")
-      file(GLOB XFEATURES2D_I ${CURRENT_BUILDTREES_DIR}/src/opencv_3rdparty-${COMMIT}/*)
+      file(GLOB XFEATURES2D_I "${extracted_ocv}/*")
       foreach(FILE ${XFEATURES2D_I})
         file(COPY ${FILE} DESTINATION "${DOWNLOADS}/opencv-cache/${ID}")
         get_filename_component(XFEATURES2D_I_NAME "${FILE}" NAME)
@@ -237,10 +255,15 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_bgsegm OFF)
 endif()
 
-vcpkg_configure_cmake(
-    PREFER_NINJA
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
+        -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
+        -DAARCH64=${TARGET_IS_AARCH64}
+        -DX86_64=${TARGET_IS_X86_64}
+        -DX86=${TARGET_IS_X86}
+        -DARM=${TARGET_IS_ARM}
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
@@ -314,8 +337,6 @@ vcpkg_configure_cmake(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
-        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
-        -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
@@ -325,15 +346,15 @@ vcpkg_configure_cmake(
         ${ADDITIONAL_BUILD_FLAGS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME opencv CONFIG_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
+  file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-find_dependency(protobuf CONFIG)
-if(protobuf_FOUND)
+if(${BUILD_opencv_flann})
+  find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
@@ -374,14 +395,20 @@ find_dependency(Tesseract)")
   if("eigen" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
   endif()
+  if("lapack" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
   if(WITH_OPENMP)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("quirc" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
   endif()
   if("qt" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
@@ -412,20 +439,20 @@ find_dependency(Qt5 COMPONENTS OpenGL Concurrent Test)")
                    "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
-  file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+  file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
 
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
 
 if(VCPKG_TARGET_IS_ANDROID)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/README.android)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/README.android)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.android")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

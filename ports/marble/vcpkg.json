@@ -1,0 +1,14 @@
+{
+  "name": "marble",
+  "version-string": "19.08.2",
+  "port-version": 2,
+  "description": "Marble KDE library",
+  "homepage": "https://marble.kde.org",
+  "supports": "windows & x64 & !static",
+  "dependencies": [
+    "qt5-base",
+    "qt5-quickcontrols",
+    "qt5-svg",
+    "qt5-webchannel"
+  ]
+}

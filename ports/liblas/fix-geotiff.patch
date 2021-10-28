@@ -7,7 +7,7 @@ index d246a88..d0bba6f 100644
  set(WITH_GEOTIFF TRUE CACHE BOOL "Choose if GeoTIFF support should be built")
  
 -find_package (GeoTIFF 1.3.0 )
-+find_package (GeoTIFF CONFIG 1.3.0 )
++find_package (geotiff CONFIG REQUIRED)
  if(GEOTIFF_FOUND)
      set(WITH_GEOTIFF TRUE)
      # Confirm required API is available

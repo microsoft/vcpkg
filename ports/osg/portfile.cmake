@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-nvtt.patch
         use-boost-asio.patch
         fix-dependency-coin.patch
+        osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -52,6 +53,11 @@ if (VCPKG_TARGET_IS_WINDOWS AND OSG_DYNAMIC)
     set(ENABLE_NVTT OFF)
 endif()
 list(APPEND OPTIONS -DENABLE_NVTT=${ENABLE_NVTT})
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_FONTCONFIG=ON)
+    list(APPEND OPTIONS -DOSG_TEXT_USE_FONTCONFIG=OFF)
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_OSG_APPLICATIONS
@@ -137,3 +143,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

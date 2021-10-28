@@ -1,13 +1,26 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index 5a8956456..997bb8e81 100644
---- a/CMakeFilters.cmake	
+index d5f801e..141ab44 100644
+--- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
-@@ -100,7 +100,7 @@ option (HDF5_ENABLE_SZIP_SUPPORT "Use SZip Filter" OFF)
- if (HDF5_ENABLE_SZIP_SUPPORT)
-   option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
-   if (NOT SZIP_USE_EXTERNAL)
--    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
-+    find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT})
-     if (NOT SZIP_FOUND)
-       find_package (SZIP) # Legacy find
-       if (SZIP_FOUND)
+@@ -117,8 +117,20 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+         set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
+       endif ()
+     endif ()
++  else()
++    find_package(szip CONFIG REQUIRED)
+   endif ()
+-  if (SZIP_FOUND)
++  string(TOUPPER ${CMAKE_BUILD_TYPE} upper_build_type)
++  # SZIP_STATIC_LIBRARY will be used in cmake and pkgconfig, so it must be a absolute path
++  if (TARGET szip-shared)
++    if (WIN32)
++        get_target_property(SZIP_STATIC_LIBRARY szip-shared IMPORTED_IMPLIB_${upper_build_type})
++    else()
++        get_target_property(SZIP_STATIC_LIBRARY szip-shared IMPORTED_LOCATION_${upper_build_type})
++    endif()
++  elseif (TARGET szip-static)
++    get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_LOCATION_${upper_build_type})
++  elseif (SZIP_FOUND)
+     set (H5_HAVE_FILTER_SZIP 1)
+     set (H5_HAVE_SZLIB_H 1)
+     set (H5_HAVE_LIBSZ 1)

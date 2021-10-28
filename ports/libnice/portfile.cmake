@@ -10,11 +10,13 @@ vcpkg_extract_source_archive_ex(
    )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_RELEASE -DOPTIMIZE=1
     OPTIONS_DEBUG -DDEBUGGABLE=1
 )

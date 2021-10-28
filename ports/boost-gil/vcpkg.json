@@ -1,0 +1,20 @@
+{
+  "name": "boost-gil",
+  "version": "1.77.0",
+  "port-version": 1,
+  "description": "Boost gil module",
+  "homepage": "https://github.com/boostorg/gil",
+  "dependencies": [
+    "boost-assert",
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-iterator",
+    "boost-mp11",
+    "boost-numeric-conversion",
+    "boost-preprocessor",
+    "boost-variant2",
+    "boost-vcpkg-helpers"
+  ]
+}

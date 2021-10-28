@@ -3,9 +3,9 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/BehaviorTree/BehaviorTree.CPP/archive/3.5.1.tar.gz"
-    FILENAME "BehaviorTree.CPP.3.5.1.tar.gz"
-    SHA512 66db43225e692fa0f9073e63bdff765c037440372478792a9b442103a8bed945f5c3ae1d66266b86cb41d0006404a8297708a799ec0c7286c2beec6f964a4ac6
+    URLS "https://github.com/BehaviorTree/BehaviorTree.CPP/archive/3.5.6.tar.gz"
+    FILENAME "BehaviorTree.CPP.3.5.6.tar.gz"
+    SHA512 cd3b15eb7c5bab68239b697da166220b4df8dd7e6cf5e831f316d411e24be56c9ed74e54a3e3dd332164d740159eaf9ce62d005601fd65133809dab29430c9b7
 )
 
 vcpkg_extract_source_archive_ex(

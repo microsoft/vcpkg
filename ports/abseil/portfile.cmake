@@ -5,19 +5,21 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 0f3bb466b868b523cf1dc9b2aaaed65c77b28862 #LTS 20200923, Patch 2
-    SHA512 17e766a2f7a655a3877eb3accc5745a910b69a5e2426b7ce7f6d31095523dd32d48a709c5f8380488b4cb93ce9faadedc08f0481dbdbd00cf68831541d724b4d
+    REF 278e0a071885a22dcd2fd1b5576cc44757299343 #LTS 20210324, Patch 2
+    SHA512 a9e8e9169ebcfb8bc2eca28152ad2f655f48e6281ea932eb712333f3d0aa0b6fa1a9b184f3e2ddd75d932a54b501cc5c7bb29a1c9de5d2146f82fc5754653895
     HEAD_REF master
-    # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
-    # instead of the library replacement types
-    # in C++11 mode, force use of library replacement types, otherwise the automatic
-    # detection can cause ABI issues depending on which compiler options
-    # are enabled for consuming user code
-    PATCHES fix-cxx-standard.patch
+    PATCHES
+        # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
+        # instead of the library replacement types
+        # in C++11 mode, force use of library replacement types, otherwise the automatic
+        # detection can cause ABI issues depending on which compiler options
+        # are enabled for consuming user code
+        fix-cxx-standard.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cxx17 ABSL_USE_CXX17
+    FEATURES
+        cxx17 ABSL_USE_CXX17
 )
 
 vcpkg_configure_cmake(
@@ -29,6 +31,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/absl TARGET_PATH share/absl)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share

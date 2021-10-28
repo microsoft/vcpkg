@@ -1,6 +1,0 @@
-Source: ampl-mp
-Version: 2020-11-11
-Homepage: https://github.com/ampl/mp
-Description: An open-source library for mathematical programming
-Build-Depends: ampl-asl
-Supports: !uwp

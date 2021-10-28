@@ -1,0 +1,21 @@
+{
+  "name": "directxtk12",
+  "version-string": "oct2021",
+  "description": "A collection of helper classes for writing DirectX 12 code in C++.",
+  "homepage": "https://github.com/Microsoft/DirectXTK12",
+  "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

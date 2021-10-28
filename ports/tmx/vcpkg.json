@@ -1,0 +1,10 @@
+{
+  "name": "tmx",
+  "version-string": "1.1.0",
+  "port-version": 1,
+  "description": "A portable C library to load tiled maps in your games.",
+  "dependencies": [
+    "libxml2",
+    "zlib"
+  ]
+}

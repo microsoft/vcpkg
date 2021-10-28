@@ -1,4 +1,0 @@
-Source: boost-modular-build-helper
-Version: 1.75.0
-Port-Version: 2
-Build-Depends: boost-uninstall

@@ -5,9 +5,10 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    set(MKL_REQUIRED_VERSION 20200000)
+    set(MKL_REQUIRED_VERSION "20200000")
     set(ProgramFilesx86 "ProgramFiles(x86)")
     set(INTEL_ROOT $ENV{${ProgramFilesx86}}/IntelSWTools/compilers_and_libraries/windows)
+    set(ONEMKL_ROOT $ENV{${ProgramFilesx86}}/Intel/oneAPI/mkl/latest)
     
     set(FAILURE_MESSAGE "Could not find MKL. Before continuing, please download and install MKL  (${MKL_REQUIRED_VERSION} or higher) from:"
                         "\n    https://registrationcenter.intel.com/en/products/download/3178/\n"
@@ -32,7 +33,15 @@ else()
                         "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
 endif()
 
-find_path(MKL_ROOT include/mkl.h PATHS $ENV{MKLROOT} ${INTEL_ROOT}/mkl DOC "Folder contains MKL")
+find_path(MKL_ROOT include/mkl.h
+    PATHS
+    $ENV{MKLROOT}
+    ${INTEL_ROOT}/mkl
+    $ENV{ONEAPI_ROOT}/mkl/latest
+    ${ONEMKL_ROOT}
+    DOC
+    "Folder contains MKL"
+)
 
 if (MKL_ROOT STREQUAL "MKL_ROOT-NOTFOUND")
     message(FATAL_ERROR ${FAILURE_MESSAGE})

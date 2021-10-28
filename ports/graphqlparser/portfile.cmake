@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         win-cmake.patch
         static-compile-fix.patch
+        remove-invalid-bison-directive.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -39,3 +40,5 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/graphqlparser/copyright COPYONLY)
+
+vcpkg_fixup_pkgconfig()

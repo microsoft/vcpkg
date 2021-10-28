@@ -1,0 +1,7 @@
+{
+  "name": "mman",
+  "version-string": "git-f5ff813",
+  "port-version": 4,
+  "description": "A light implementation of the mmap functions for MinGW.",
+  "homepage": "https://github.com/witwall/mman-win32"
+}

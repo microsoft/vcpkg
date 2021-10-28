@@ -1,5 +1,6 @@
 # Ports Overlay (Jun 19, 2019)
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
 
 ## 1. Motivation
 

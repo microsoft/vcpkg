@@ -1,0 +1,27 @@
+From b4bf29e297dd75eb2f4af6ed143839e223833b4b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Mon, 9 Aug 2021 22:45:50 +0000
+Subject: [PATCH] Support static builds on Linux as well
+
+---
+ KF5WindowSystemConfig.cmake.in | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/KF5WindowSystemConfig.cmake.in b/KF5WindowSystemConfig.cmake.in
+index bcb7128..62580e9 100644
+--- a/KF5WindowSystemConfig.cmake.in
++++ b/KF5WindowSystemConfig.cmake.in
+@@ -11,6 +11,10 @@ if(NOT @BUILD_SHARED_LIBS@)
+     if(@WIN32@)
+         find_dependency(Qt5WinExtras @REQUIRED_QT_VERSION@)
+     endif()
++
++    if(@X11_FOUND@)
++        find_dependency(Qt5X11Extras @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5WindowSystemTargets.cmake")
+-- 
+GitLab
+

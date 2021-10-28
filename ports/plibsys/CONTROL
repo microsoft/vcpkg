@@ -1,6 +1,0 @@
-Source: plibsys
-Version: 0.0.4
-Port-Version: 4
-Homepage: https://github.com/saprykin/plibsys
-Description: Highly portable C system library: threads and synchronization, sockets, IPC, data structures and more.
-Supports: !uwp

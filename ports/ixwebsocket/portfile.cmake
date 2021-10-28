@@ -3,15 +3,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v11.0.4
-    SHA512 fb24a628600cf28acdcaed5d2268f6a6e36baa1cc31f54287d91fb979fe375b20931fa9346153eaaf5a5d17fc6d87f06ca03ce12e401b83095c16919d35454ce
+    REF 2149ac7ed60d7713a86446c4b93c6004f66415ac #v11.2.6
+    SHA512 737667f6e89156168db771fd2a6d3686cd51ddc753fa083ae399a84c689770a09fd86643bb2d838e9ae5a729067236f1d9b4ceece912145cfb83b29541a3d2c1
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    openssl   USE_OPEN_SSL
-    mbedtls   USE_MBED_TLS
-    sectransp USE_SECURE_TRANSPORT
+        openssl   USE_OPEN_SSL
+        mbedtls   USE_MBED_TLS
+        sectransp USE_SECURE_TRANSPORT
 )
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket TARGET_PATH share/${port})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

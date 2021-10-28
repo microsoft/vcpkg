@@ -1,0 +1,9 @@
+{
+  "name": "freexl",
+  "version-string": "1.0.6",
+  "description": "FreeXL is an open source library to extract valid data from within an Excel (.xls) spreadsheet",
+  "homepage": "https://www.gaia-gis.it/gaia-sins/freexl-sources",
+  "dependencies": [
+    "libiconv"
+  ]
+}

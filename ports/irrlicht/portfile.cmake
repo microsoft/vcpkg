@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "osx" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,7 +6,10 @@ vcpkg_from_sourceforge(
     REF 1.8/1.8.4
     FILENAME "irrlicht-1.8.4.zip"
     SHA512 de69ddd2c6bc80a1b27b9a620e3697b1baa552f24c7d624076d471f3aecd9b15f71dce3b640811e6ece20f49b57688d428e3503936a7926b3e3b0cc696af98d1
-    PATCHES fix-encoding.patch fix-sysctl.patch
+    PATCHES
+        fix-encoding.patch
+        fix-sysctl.patch
+        fix-osx-compilation.patch
 )
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
@@ -21,17 +24,16 @@ vcpkg_check_features(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS 
+    OPTIONS
         -DIRR_SHARED_LIB=${SHARED_LIB}
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
