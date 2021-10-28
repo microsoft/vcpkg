@@ -15,7 +15,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
                         "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
 else()
     set(MKL_REQUIRED_VERSION 2020.0.000)
-    file(GLOB MKL_PATHS "$ENV{MKLROOT}" "${INTEL_ROOT}/mkl" "${INTEL_ONEAPI_MKL_ROOT}" /opt/intel/compilers_and_libraries_*.*.*)
+    file(GLOB MKL_PATHS
+        "$ENV{MKLROOT}"
+        "${INTEL_ROOT}/mkl"
+        "${INTEL_ONEAPI_MKL_ROOT}"
+        "/opt/intel/compilers_and_libraries_*.*.*"
+        "/opt/intel/oneapi/mkl"
+    )
     foreach(MKL_PATH ${MKL_PATHS})
         get_filename_component(CURRENT_VERSION ${MKL_PATH} NAME)
         string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+$" VERSION_NUM ${CURRENT_VERSION})
