@@ -46,7 +46,7 @@ message(STATUS "Importing certstore done")
 
 # Configure and build
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_RELATIVE_PATHS=ON
         -DBUILD_TESTS=OFF
