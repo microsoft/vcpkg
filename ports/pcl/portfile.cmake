@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
-    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
+    REF pcl-1.12.0
+    SHA512 ce0544fdd82bcc415f81a9c74d58e5f6da2d0e0aaa54238a2601eca90386774155f1e032e6fb55a9edbf467ffa5ebf2ad695ec652ab437b323b8c6241f81193f
     HEAD_REF master
     PATCHES
         pcl_utils.patch
@@ -11,8 +11,6 @@ vcpkg_from_github(
         fix-link-libpng.patch
         remove-broken-targets.patch
         fix-check-sse.patch
-        realsense2.patch
-        add-gcc-version-check.patch
         fix-find-qhull.patch
 )
 
