@@ -10,7 +10,6 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-link-libpng.patch
         remove-broken-targets.patch
-        fix-check-sse.patch
         fix-find-qhull.patch
 )
 
