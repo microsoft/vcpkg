@@ -14,7 +14,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                         "\n    https://registrationcenter.intel.com/en/products/download/3178/\n"
                         "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
 else()
-    set(MKL_REQUIRED_VERSION 2020.0.000)
+    set(MKL_REQUIRED_VERSION "2020.0.000")
     file(GLOB MKL_PATHS
         "$ENV{MKLROOT}"
         "${INTEL_ROOT}/mkl"
