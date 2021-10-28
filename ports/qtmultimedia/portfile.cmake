@@ -2,12 +2,12 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES fix_windows_header_include.patch
-                    FindGObject.patch
-                    FindGStreamer.patch
+                    #FindGObject.patch
+                    #FindGStreamer.patch
                     remove_unistd.patch
                     3c74340.diff)
 
-#Maybe TODO: ALSA + PulseAudio? (Missing Ports)
+#Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
 
 # qt_find_package(ALSA PROVIDED_TARGETS ALSA::ALSA MODULE_NAME multimedia QMAKE_LIB alsa)
 # qt_find_package(AVFoundation PROVIDED_TARGETS AVFoundation::AVFoundation MODULE_NAME multimedia QMAKE_LIB avfoundation)
