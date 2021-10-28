@@ -40,3 +40,5 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/graphqlparser/copyright COPYONLY)
+
+vcpkg_fixup_pkgconfig()
