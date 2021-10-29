@@ -229,7 +229,7 @@ function(vcpkg_internal_meson_generate_cross_file additional_binaries) #https://
     elseif(CMAKE_HOST_UNIX)
         # at this stage, CMAKE_HOST_SYSTEM_PROCESSOR is not defined
         execute_process(
-            COMMAND "uname -m"
+            COMMAND uname -m
             OUTPUT_VARIABLE MACHINE
             COMMAND_ERROR_IS_FATAL ANY)
         
