@@ -55,86 +55,85 @@ function(vcpkg_configure_qmake)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     endif()
 
+    vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(config_type RELEASE)
-        set(triplet_name "${TARGET_TRIPLET}-rel")
-        set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(pkgconfig_packages_dir "${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
+            "${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
+            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
+            "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+            "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-        if(DEFINED ENV{PKG_CONFIG_PATH})
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
-        else()
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
-        endif()
+        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
         # Cleanup build directories
         file(REMOVE_RECURSE "${current_binary_dir}")
 
         configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_release.conf" "${current_binary_dir}/qt.conf")
     
-        message(STATUS "Configuring ${triplet_name}")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
         file(MAKE_DIRECTORY "${current_binary_dir}")
+
+        vcpkg_list(SET build_opt_param)
         if(DEFINED arg_BUILD_OPTIONS OR DEFINED arg_BUILD_OPTIONS_RELEASE)
-            set(build_opt -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_RELEASE})
+            vcpkg_list(SET build_opt_param -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_RELEASE})
         endif()
+
         vcpkg_execute_required_process(
             COMMAND "${qmake_executable}" CONFIG-=debug CONFIG+=release
                     ${arg_OPTIONS} ${arg_OPTIONS_RELEASE} ${arg_SOURCE_PATH}
                     -qtconf "${current_binary_dir}/qt.conf"
-                    ${build_opt}
+                    ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
-            LOGNAME "config-${triplet_name}"
+            LOGNAME "config-${TARGET_TRIPLET}-rel"
         )
-        message(STATUS "Configuring ${triplet_name} done")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         if(EXISTS "${current_binary_dir}/config.log")
-            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
-            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
+            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
+            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
         endif()
+
+        vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(config_type DEBUG)
-        set(triplet_name "${TARGET_TRIPLET}-dbg")
-        set(pkgconfig_installed_dir "${_VCPKG_INSTALLED_PKGCONF}${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(pkgconfig_installed_share_dir "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
-        set(pkgconfig_packages_dir "${PATH_SUFFIX_${config_type}}/lib/pkgconfig")
-        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${triplet_name}")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
+            "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
+            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
+            "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-        if(DEFINED ENV{PKG_CONFIG_PATH})
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
-        else()
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_installed_share_dir}" "${pkgconfig_packages_dir}" "${pkgconfig_packages_share_dir}")
-        endif()
+        set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
         # Cleanup build directories
         file(REMOVE_RECURSE "${current_binary_dir}")
 
         configure_file("${CURRENT_INSTALLED_DIR}/tools/qt5/qt_debug.conf" "${current_binary_dir}/qt.conf")
 
-        message(STATUS "Configuring ${triplet_name}")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         file(MAKE_DIRECTORY "${current_binary_dir}")
+
+        vcpkg_list(SET build_opt_param)
         if(DEFINED arg_BUILD_OPTIONS OR DEFINED arg_BUILD_OPTIONS_DEBUG)
-            set(build_opt -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_DEBUG})
+            vcpkg_list(SET build_opt_param -- ${arg_BUILD_OPTIONS} ${arg_BUILD_OPTIONS_DEBUG})
         endif()
         vcpkg_execute_required_process(
             COMMAND "${qmake_executable}" CONFIG-=release CONFIG+=debug
                     ${arg_OPTIONS} ${arg_OPTIONS_DEBUG} ${arg_SOURCE_PATH}
                     -qtconf "${current_binary_dir}/qt.conf"
-                    ${build_opt}
+                    ${build_opt_param}
             WORKING_DIRECTORY "${current_binary_dir}"
-            LOGNAME "config-${triplet_name}"
+            LOGNAME "config-${TARGET_TRIPLET}-dbg"
         )
-        message(STATUS "Configuring ${triplet_name} done")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
         if(EXISTS "${current_binary_dir}/config.log")
-            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
-            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${triplet_name}.log")
+            file(REMOVE "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
+            file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
         endif()
     endif()
 
