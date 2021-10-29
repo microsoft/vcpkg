@@ -1946,7 +1946,7 @@
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
-      "port-version": 1
+      "port-version": 2
     },
     "eathread": {
       "baseline": "1.32.09",
