@@ -10,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     REF ${GEOS_VERSION}
     PATCHES
+        disable-warning-4996.patch
         fix-exported-config.patch
         install-hpp-files.patch
 )

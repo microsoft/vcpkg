@@ -341,8 +341,6 @@ gainput:x64-uwp=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
-geos:arm-uwp=fail
-geos:x64-uwp=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -700,6 +698,8 @@ libressl:x86-windows        = skip
 libsoundio:arm64-windows=fail
 libsoundio:arm-uwp=fail
 libsoundio:x64-uwp=fail
+libspatialite:arm-uwp=fail
+libspatialite:x64-uwp=fail
 libsrt:arm-uwp=fail
 libsrt:x64-uwp=fail
 libssh:arm64-windows=fail
