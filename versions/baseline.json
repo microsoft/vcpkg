@@ -60,6 +60,10 @@
       "baseline": "5.2.6.0",
       "port-version": 1
     },
+    "alsa": {
+      "baseline": "1.2.5.1",
+      "port-version": 0
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 1
@@ -238,7 +242,7 @@
     },
     "avcpp": {
       "baseline": "2021-06-14",
-      "port-version": 0
+      "port-version": 1
     },
     "avisynthplus": {
       "baseline": "3.7.0",
@@ -502,7 +506,7 @@
     },
     "boinc": {
       "baseline": "7.18.1",
-      "port-version": 1
+      "port-version": 2
     },
     "bond": {
       "baseline": "9.0.3",
@@ -1134,7 +1138,7 @@
     },
     "brigand": {
       "baseline": "1.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "brotli": {
       "baseline": "1.0.9",
@@ -1346,7 +1350,7 @@
     },
     "cityhash": {
       "baseline": "2013-01-08",
-      "port-version": 1
+      "port-version": 2
     },
     "civetweb": {
       "baseline": "1.15",
@@ -1422,7 +1426,7 @@
     },
     "cminpack": {
       "baseline": "1.3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "cmocka": {
       "baseline": "2020-08-01",
@@ -2693,8 +2697,8 @@
       "port-version": 5
     },
     "hwloc": {
-      "baseline": "2.2.0",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "hyperscan": {
       "baseline": "5.3.0",
@@ -2807,6 +2811,10 @@
     "ilmbase": {
       "baseline": "2.3.0",
       "port-version": 1
+    },
+    "imath": {
+      "baseline": "3.1.3",
+      "port-version": 0
     },
     "imgui": {
       "baseline": "1.85",
@@ -3088,6 +3096,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5kcmutils": {
+      "baseline": "5.84.0",
+      "port-version": 0
+    },
     "kf5kio": {
       "baseline": "5.84.0",
       "port-version": 0
@@ -3217,8 +3229,8 @@
       "port-version": 1
     },
     "lazy-importer": {
-      "baseline": "2019-08-10",
-      "port-version": 1
+      "baseline": "2021-10-23",
+      "port-version": 0
     },
     "lcm": {
       "baseline": "1.4.0",
@@ -3414,7 +3426,7 @@
     },
     "libftdi": {
       "baseline": "0.20",
-      "port-version": 2
+      "port-version": 3
     },
     "libftdi1": {
       "baseline": "1.5",
@@ -4338,7 +4350,7 @@
     },
     "miniz": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "minizip": {
       "baseline": "1.2.11",
@@ -4946,7 +4958,7 @@
     },
     "opensubdiv": {
       "baseline": "3.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "opentelemetry-cpp": {
       "baseline": "1.0.1",
@@ -5002,7 +5014,7 @@
     },
     "osg-qt": {
       "baseline": "Qt5",
-      "port-version": 2
+      "port-version": 3
     },
     "osgearth": {
       "baseline": "3.2",
@@ -5390,7 +5402,7 @@
     },
     "qca": {
       "baseline": "2.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "qcustomplot": {
       "baseline": "2.0.1",
@@ -7193,7 +7205,7 @@
       "port-version": 1
     },
     "xorstr": {
-      "baseline": "2020-11-29",
+      "baseline": "2021-10-23",
       "port-version": 0
     },
     "xproperty": {
