@@ -6242,7 +6242,7 @@
     },
     "snappy": {
       "baseline": "1.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "sndfile": {
       "baseline": "0",
