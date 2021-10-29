@@ -427,6 +427,7 @@ healpix:x64-osx=fail
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
+hpx:arm64-windows=fail
 hpx:x64-linux=fail
 hunspell:x64-windows-static-md=fail
 ideviceinstaller:x64-windows-static-md=fail

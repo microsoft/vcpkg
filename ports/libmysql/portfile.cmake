@@ -19,9 +19,10 @@ vcpkg_from_github(
         system-libs.patch
         rename-version.patch
         export-cmake-targets.patch
+        004-added-limits-include.patch
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_70_0)
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
 
 set(STACK_DIRECTION)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -37,7 +38,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DWITHOUT_SERVER=ON
@@ -101,45 +102,45 @@ endif()
 
 vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/libmysql)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/libmysql)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/libmysql ${CURRENT_PACKAGES_DIR}/share/libmysql)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libmysql ${CURRENT_PACKAGES_DIR}/debug/share/libmysql)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/libmysql")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+file(RENAME "${CURRENT_PACKAGES_DIR}/libmysql" "${CURRENT_PACKAGES_DIR}/share/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libmysql" "${CURRENT_PACKAGES_DIR}/debug/share/libmysql")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-libmysql TARGET_PATH share/unofficial-libmysql)
 
 # switch mysql into /mysql
-file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/include2)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/include2 ${CURRENT_PACKAGES_DIR}/include/mysql)
+file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/mysql")
 
 ## delete useless vcruntime/scripts/bin/msg file
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/docs
-    ${CURRENT_PACKAGES_DIR}/debug/docs
-    ${CURRENT_PACKAGES_DIR}/lib/debug
-    ${CURRENT_PACKAGES_DIR}/lib/plugin
-    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/docs"
+    "${CURRENT_PACKAGES_DIR}/debug/docs"
+    "${CURRENT_PACKAGES_DIR}/lib/debug"
+    "${CURRENT_PACKAGES_DIR}/lib/plugin"
+    "${CURRENT_PACKAGES_DIR}/lib/plugin/debug"
 )
 
 ## remove misc files
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/LICENSE
-    ${CURRENT_PACKAGES_DIR}/README
-    ${CURRENT_PACKAGES_DIR}/debug/LICENSE
-    ${CURRENT_PACKAGES_DIR}/debug/README
+    "${CURRENT_PACKAGES_DIR}/LICENSE"
+    "${CURRENT_PACKAGES_DIR}/README"
+    "${CURRENT_PACKAGES_DIR}/debug/LICENSE"
+    "${CURRENT_PACKAGES_DIR}/debug/README"
 )
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h _contents)
+file(READ "${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" _contents)
 string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "${_contents}")
 
-file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # copy license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
