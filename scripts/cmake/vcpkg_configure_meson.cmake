@@ -500,7 +500,7 @@ function(vcpkg_configure_meson)
         if(NOT arg_NO_PKG_CONFIG)
             set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
             set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}/${path_suffix_${buildtype}}lib/pkgconfig/")
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_share_dir}" "$ENV{PKG_CONFIG_PATH}")
+            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_share_dir}" "$ENV{PKG_CONFIG_PATH}")
         endif()
 
         vcpkg_execute_required_process(
