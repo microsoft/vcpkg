@@ -9,7 +9,7 @@ index bc0e774..e3ca0bd 100644
 -  set(EXTRA_LIBS "-lstdc++")
 +  if(APPLE OR CMAKE_ANDROID_STL_TYPE MATCHES "^c\\+\\+")
 +    set(EXTRA_LIBS "-lc++")
-+  elseif(UNIX)
++  elseif(UNIX OR MINGW)
 +    set(EXTRA_LIBS "-lstdc++")
 +  else()
 +    set(EXTRA_LIBS "")
