@@ -15,8 +15,8 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/EASTLConfig.cmake.in" DESTINATION "${SOURCE
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DEASTL_BUILD_TESTS=OFF
-    -DEASTL_BUILD_BENCHMARK=OFF
+        -DEASTL_BUILD_TESTS=OFF
+        -DEASTL_BUILD_BENCHMARK=OFF
 )
 
 vcpkg_cmake_install()
