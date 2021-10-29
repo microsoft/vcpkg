@@ -131,7 +131,7 @@ function(z_vcpkg_internal_meson_generate_flags_properties_string out_var config_
     else()
         set(L_FLAG -L)
     endif()
-    set(PATH_SUFFIX_DEBUG /debug)
+    set(path_suffix_DEBUG "/debug") # Match 'path_suffix_${config_type}'
     set(LIBPATH_${config_type} "${L_FLAG}${CURRENT_INSTALLED_DIR}${path_suffix_${config_type}}/lib")
     z_vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${config_type} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${config_type}}")
     vcpkg_list(APPEND MESON_CFLAGS_${config_type} "-I${CURRENT_INSTALLED_DIR}/include")
