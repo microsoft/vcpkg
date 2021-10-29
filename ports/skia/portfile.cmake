@@ -6,9 +6,6 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
     REF a40ddcd63d40d647fcc5ed3b11acd2fa8ee834ed
-    PATCHES
-        "skia-unused-variable.patch"
-        "skia-revert-5619c3af3de044c4f06892eedf5294f1c107c72a.patch"
 )
 
 function(checkout_in_path PATH URL REF)
