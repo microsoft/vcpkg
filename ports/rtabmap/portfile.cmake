@@ -11,12 +11,14 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
     tools BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_APP=OFF
@@ -55,6 +57,10 @@ vcpkg_cmake_configure(
         -DWITH_MSCKF_VIO=OFF
         -DWITH_VINS=OFF
         -DWITH_FASTCV=OFF
+    MAYBE_UNUSED_VARIABLES
+        WITH_ORB_SLAM2
+        WITH_PYMATCHER
+        WITH_SUPERPOINT_TORCH
 )
 
 vcpkg_cmake_install()
