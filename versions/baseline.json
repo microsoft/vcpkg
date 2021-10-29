@@ -5014,7 +5014,7 @@
     },
     "osg-qt": {
       "baseline": "Qt5",
-      "port-version": 2
+      "port-version": 3
     },
     "osgearth": {
       "baseline": "3.2",
