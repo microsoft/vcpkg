@@ -17,6 +17,7 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
+        cocoa.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
