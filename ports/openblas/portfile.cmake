@@ -70,7 +70,7 @@ if(VCPKG_TARGET_IS_UWP)
 
     message(STATUS "Finished building Windows helper files")
 
-    vcpkg_configure_cmake(
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
@@ -79,8 +79,7 @@ if(VCPKG_TARGET_IS_UWP)
             "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
 
 elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_configure_cmake(
-        PREFER_NINJA
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
@@ -89,7 +88,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
-    vcpkg_configure_cmake(
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${COMMON_OPTIONS}
@@ -100,8 +99,8 @@ else()
 endif()
 
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/OpenBLAS)
 set(ENV{PATH} "${PATH_BACKUP}")
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc")
