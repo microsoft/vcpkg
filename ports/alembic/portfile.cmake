@@ -12,12 +12,24 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    # In debug mode with g++, alembic defines -Werror
+    # so we need to disable some warnings to avoid build errors,
+    # see https://github.com/alembic/alembic/issues/309
+    list(APPEND GXX_DEBUG_FLAGS
+        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-deprecated
+        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-error=implicit-fallthrough
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DALEMBIC_SHARED_LIBS=${ALEMBIC_SHARED_LIBS}
         -DUSE_HDF5=ON
         -DUSE_TESTS=OFF
+    OPTIONS_DEBUG
+        ${GXX_DEBUG_FLAGS}
 )
 
 vcpkg_cmake_install()
