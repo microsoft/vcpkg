@@ -88,21 +88,21 @@
         <sha512>1a98beebd1bb6929cbe98b86a3b77fb1ae4508b86cdcb64696b20c3a3336a2b5c8518e19a21092f1c98a46202c048dba819dc52bef122485ac34b888b77e59b2</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
         <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
         <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
         <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
     </tool>
     <tool name="installerbase" os="windows">
