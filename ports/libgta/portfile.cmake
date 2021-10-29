@@ -33,3 +33,5 @@ endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgta)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgta/COPYING ${CURRENT_PACKAGES_DIR}/share/libgta/copyright)
+
+vcpkg_fixup_pkgconfig()

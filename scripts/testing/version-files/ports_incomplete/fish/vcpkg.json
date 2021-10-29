@@ -1,5 +1,0 @@
-{
-  "name": "fish",
-  "version-string": "1.0.0",
-  "description": "This description causes an intentional discrepancy between the local SHA and the SHA in fish.json for version 1.0.0"
-}

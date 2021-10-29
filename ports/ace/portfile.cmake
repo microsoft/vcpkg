@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.2)
+set(ACE_VERSION 7.0.3)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 dd10db547e76716d8021e9f0faf9467cc86a9990eb03c60988979eb4a54c3b617a500c6afc53ea16a4b63ada903eaaf98df7456c8fd96b6adadfe459eaea86b9
+          SHA512 714d2c25bd4be44a03d350b2457b613b5d2d079fc294f287d10968ed02af5c9c82a2a0c10937acf46a4babfd4582cdc5fa23d6080dadd5cbc4f7f694037033f9
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 43d7e37ef26169f4ad1a9a6a7f5e0aabd03019f44386dad54cda0f2d61ca52cb34e5da3e62a4b9d06a30caec43732a2043b07f9de59f796b8d552b36c40fcff9
+          SHA512 e48df1c63bfd02f3a14d049efbcb9a2f476597deaa2b9259d4d852ddfea2319af14e6a1071139b091bff856619e11c650771bfe92c3220d198ec6e931cdd35de
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 4cde539074587c26c317581dbeaa0d057bf0d641db27dee84bb262af4859744158d91dc072b70c351e7be59c70345ea138511cbb3297ff090f7b9c71f5166610
+        SHA512 3232ea5437b5fa4a36f4b9d5586c1435a5e2f2dcb34770919a1d1dfe6ebe12e33b316f3c0a1275cdc40c12135800f8cb000ac12b4775f9c31d3ddc48b41bd375
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 8b2b1988a7cdda4a0ff5064def3cd750bf4fbcad074efbb41eedfa2f5e970874568610de2f8495679f1eeb2f7403be91e10392ca9aa6016d1cf8c051e595d6cb
+        SHA512 019ec5c9f23c103d659ec57f6c7bfda3d6d12fc4ca77373353d6232c5fa24c03ffba222af45bd4afe997f02a81f834546cfbcb0e667000857b6e12f2ca3effaa
     )
   endif()
 endif()
@@ -118,14 +118,36 @@ vcpkg_execute_build_process(
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
+if("xml" IN_LIST FEATURES)
+  vcpkg_execute_build_process(
+      COMMAND ${PERL} ${ACE_ROOT}/bin/mwc.pl -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" ${ACE_ROOT}/ACEXML/ACEXML.mwc ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+      WORKING_DIRECTORY ${ACE_ROOT}/ACEXML
+      LOGNAME mwc-xml-${TARGET_TRIPLET}
+  )
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
+    file(WRITE ${SOURCE_PATH}/Directory.Build.props "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                     <ItemDefinitionGroup>
+                                                     <ClCompile>
+                                                     <AdditionalOptions>/MP</AdditionalOptions>
+                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
+                                                     </ClCompile>
+                                                     <Link>
+                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
+                                                     </Link>
+                                                     </ItemDefinitionGroup>
+                                                     </Project>")
+  endif()
+
   file(RELATIVE_PATH PROJECT_SUBPATH ${SOURCE_PATH} ${WORKSPACE}.sln)
   vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
     SKIP_CLEAN
   )
 
@@ -262,14 +284,45 @@ if(VCPKG_TARGET_IS_WINDOWS)
     install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
   endif()
 
+  if("xml" IN_LIST FEATURES)
+    file(RELATIVE_PATH PROJECT_SUBPATH_XML ${SOURCE_PATH} ${ACE_ROOT}/ACEXML/ACEXML.sln)
+    vcpkg_install_msbuild(
+      SOURCE_PATH ${SOURCE_PATH}
+      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
+      LICENSE_SUBPATH COPYING
+      PLATFORM ${MSBUILD_PLATFORM}
+      SKIP_CLEAN
+    )
+
+    set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
+                               "ACEXML/parser/parser")
+    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
+  endif()
+
   # Remove dlls without any export
-  if("tao" IN_LIST FEATURES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.dll
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
+    endif()
+  endif()
+
+  # remove (erroneous) duplicate libs
+  if("tao" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+      file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosconcurrency.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosevent.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_coslifecycle.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnaming.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnotification.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_costrading.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_activator.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_locator.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_rtevent.lib)
     endif()
   endif()
 
@@ -296,6 +349,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME make-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
@@ -303,6 +363,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME install-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} install
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME install-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
 
   file(COPY ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
 
@@ -319,6 +386,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME realclean-${TARGET_TRIPLET}-dbg
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} realclean
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
+    )
+  endif()
 
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -326,6 +400,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME make-${TARGET_TRIPLET}-rel
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME make-xml-${TARGET_TRIPLET}-rel
+    )
+  endif()
   message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -333,6 +414,13 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     WORKING_DIRECTORY ${WORKING_DIR}
     LOGNAME install-${TARGET_TRIPLET}-rel
   )
+  if("xml" IN_LIST FEATURES)
+    vcpkg_execute_build_process(
+      COMMAND make ${_ace_makefile_macros} install
+      WORKING_DIRECTORY ${WORKING_DIR}/ACEXML
+      LOGNAME install-xml-${TARGET_TRIPLET}-rel
+    )
+  endif()
   if("tao" IN_LIST FEATURES)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
@@ -344,3 +432,5 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   # Handle copyright
   file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()
+
+vcpkg_fixup_pkgconfig()

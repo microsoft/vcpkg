@@ -1,6 +1,0 @@
-Source: libvmdk
-Version: 20200926
-Homepage: https://github.com/libyal/libvmdk
-Description: Library and tools to access the VMware Virtual Disk (VMDK) format
-Build-Depends: gettext,zlib
-Supports: !uwp

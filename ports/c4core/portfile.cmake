@@ -1,26 +1,21 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(
-    ON_ARCH "arm" "arm64"
-    ON_TARGET "OSX"
-)
-
 # Get c4core src
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
-    REF 2413e420fca270c20dfb7a962979d44e0d4c0337
-    SHA512 2b5877941a5a4bdac625d7c54fc2f0e54eea3ab0d7487d314fde29abf441fcd70ed60598b9c8614c2993a7152a508b9ab9b7b234a777d138d5142e1a9df4c023
+    REF 636f507c33f0c79dce491aec066455ff384d49dc
+    SHA512 3282876be5883b047e8d25ee392f62d2e9ae79af8fdd65c11b1e36d2fdb0648230fe6c7fb57472a4cbced166979351f12494215aa664977a113b74c26bb6f19b
     HEAD_REF master
 )
 
-set(CM_COMMIT_HASH 71c211187b8c52a13d5c59a7979f2ccf8429e350)
+set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 d15884d985a477df47ead9c5c486cfdeb1df8b6de4f308c36bd7a8c0e901fb876980a2a4f239abd8ecb1fb0baf75ad559ca0780b50c84070762f8cbfe55cb9d2
+    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
 )
 
 vcpkg_extract_source_archive_ex(
@@ -49,12 +44,12 @@ vcpkg_extract_source_archive_ex(
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME ${SOURCE_PATH_DEBUGBREAK} "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH 3377facde283d36fa3bd29080f46fb0589b74bd3)
+set(FF_COMMIT_HASH 8159e8bcf63c1b92f5a51fb550f966e56624b209)
 
 vcpkg_download_distfile(FAST_FLOAT_ARCHIVE
     URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
     FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 e2a7b869e422113b099f2ab95e42de8aed3b13f961fdc84583a908159936fdad00990ce664bc0c2491b7ca49e3323e17fb08f2208b2ceb577015c7d89cc4d785
+    SHA512 ae71f74d3bae782f62f037c034bea4e7f45462188c8285971c2959c6b2884d3bb58826681c0989f4290f26fa33237c1b63ceed77ed94f9e97c1cd01b4aa21cd3
 )
 
 vcpkg_extract_source_archive_ex(
@@ -85,9 +80,6 @@ endif()
 file(READ "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" _contents)
 string(REGEX REPLACE [[[ \t\r\n]*"\${PACKAGE_PREFIX_DIR}[\./\\]*"]] [["${PACKAGE_PREFIX_DIR}/../.."]] _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_contents}")
-
-# Fix path to header
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/c4/error.hpp" "<debugbreak/debugbreak.h>" "\"extern/debugbreak/debugbreak.h\"")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

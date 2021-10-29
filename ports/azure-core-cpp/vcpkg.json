@@ -1,11 +1,11 @@
 {
   "name": "azure-core-cpp",
-  "version-semver": "1.0.0",
+  "version-semver": "1.2.1",
   "description": [
     "Microsoft Azure Core SDK for C++",
     "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/core/azure-core",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/core/azure-core",
   "license": "MIT",
   "dependencies": [
     {

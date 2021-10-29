@@ -1,6 +1,6 @@
 {
   "name": "boost-iostreams",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "port-version": 1,
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
@@ -16,6 +16,7 @@
     "boost-detail",
     "boost-function",
     "boost-integer",
+    "boost-iterator",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -23,6 +24,7 @@
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-preprocessor",
+    "boost-random",
     "boost-range",
     "boost-regex",
     "boost-smart-ptr",
@@ -31,9 +33,41 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
     "bzip2",
-    "liblzma",
+    "lzma",
     "zlib",
     "zstd"
-  ]
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support bzip2 filters",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "lzma": {
+      "description": "Support LZMA/xz filters",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "zlib": {
+      "description": "Support zlib filters",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support zstd filters",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }

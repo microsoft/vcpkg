@@ -1,0 +1,13 @@
+{
+  "name": "teemo",
+  "version-string": "2.2",
+  "port-version": 1,
+  "description": "C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed.",
+  "homepage": "https://github.com/winsoft666/teemo",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    }
+  ]
+}

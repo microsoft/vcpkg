@@ -1,6 +1,7 @@
 {
   "name": "aom",
-  "version-semver": "3.1.0",
+  "version-semver": "3.2.0",
+  "port-version": 1,
   "description": "AV1 codec library",
   "homepage": "https://aomedia.googlesource.com/aom",
   "supports": "!uwp & !arm",

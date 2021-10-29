@@ -31,7 +31,11 @@ Manifest property | Versioning scheme
 `version-date`    | For dates in the format YYYY-MM-DD
 `version-string`  | For arbitrary strings
 
-A manifest must contain only one version declaration.
+A manifest must contain only one version declaration. 
+
+_NOTE: By design, vcpkg does not compare versions that use different schemes. For example, a package
+that has a `version-string: 7.1.3` cannot be compared with the same package using `version: 7.1.4`, even if the
+conversion seems obvious._
 
 #### `version`
 Accepts version strings that follow a relaxed, dot-separated-, semver-like scheme.
@@ -111,13 +115,10 @@ Example:
 
 You can get the current commit of your vcpkg instance either by adding an empty `"builtin-baseline"` field, installing, and examining the error message or by running `git rev-parse HEAD` in the root of the vcpkg instance.
 
-When resolving version constraints for a package, vcpkg will look for a baseline version:
-* First by looking at the baseline file in the given commit ID.
-* If the given commit ID does not contain a baseline file, vcpkg will fallback to use the local baseline file instead.
-* If there's no local baseline file, vcpkg will use the version currently available in the ports directory.
-
-_NOTE: If a baseline file is found, but it does not contain an entry for the package, the vcpkg invocation will fail._
-
+When resolving version constraints for a package, vcpkg will look for a baseline version by looking
+at the baseline file in the given commit ID.
+If the given commit ID doesn't have a `versions/baseline.json` file or if the baseline file exists
+but it does not declare a baseline version for the package the invocation will fail.
 ### `version>=`
 Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.
 
@@ -130,9 +131,9 @@ Example:
   "version-semver": "1.0.0",
   "dependencies": [
     { "name": "zlib", "version>=": "1.2.11#9" },
-    { "name": "fmt", "version>=": "7.1.3" }
+    { "name": "fmt", "version>=": "7.1.3#1" }
   ],
-  "builtin-baseline":"9fd3bd594f41afb8747e20f6ac9619f26f333cbe"
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc"
 }
 ```
 
@@ -153,7 +154,7 @@ For an override to take effect, the overridden package must form part of the dep
     { "name": "zlib", "version>=": "1.2.11#9" },
     "fmt"
   ],
-  "builtin-baseline":"9fd3bd594f41afb8747e20f6ac9619f26f333cbe",
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc",
   "overrides": [
     { "name": "fmt", "version": "6.0.0" }
   ]

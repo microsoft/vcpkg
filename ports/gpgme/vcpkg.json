@@ -1,0 +1,20 @@
+{
+  "name": "gpgme",
+  "version-string": "1.14.0",
+  "port-version": 1,
+  "description": "A library designed to make access to GnuPG easier for applications",
+  "homepage": "https://gnupg.org/software/gpgme/index.html",
+  "supports": "!windows",
+  "dependencies": [
+    "libassuan",
+    "libgpg-error"
+  ],
+  "default-features": [
+    "cpp"
+  ],
+  "features": {
+    "cpp": {
+      "description": "C++ bindings"
+    }
+  }
+}

@@ -28,6 +28,7 @@ vcpkg_configure_cmake(
         -DWITH_ZLIB=1
         -DWITH_JPEG=1
         -DWITH_UTILITIES=1
+        -DCMAKE_MACOSX_BUNDLE=0
 )
 
 vcpkg_install_cmake()
