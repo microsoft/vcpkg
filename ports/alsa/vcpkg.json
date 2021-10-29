@@ -1,0 +1,7 @@
+{
+  "name": "alsa",
+  "version": "1.2.5.1",
+  "description": "The Advanced Linux Sound Architecture (ALSA) - library",
+  "homepage": "https://www.alsa-project.org/",
+  "supports": "linux"
+}
