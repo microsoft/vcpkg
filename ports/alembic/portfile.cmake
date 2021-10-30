@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 0049c72d93e66e12d704d27e7ba36cd9c718667f2ce4f7baa1bee1613ed88ba53abea98f457e14f7f2144cb353810a4108d26c7dd1a1543ec2af576272f19036
     HEAD_REF master
     PATCHES
+        fix-runtime-destination.patch
         disable-warnings-as-error.patch
 )
 
@@ -35,17 +36,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_TARGET_IS_WINDOWS AND ALEMBIC_SHARED_LIBS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/Alembic.dll" "${CURRENT_PACKAGES_DIR}/bin/Alembic.dll")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake" "\${_IMPORT_PREFIX}/lib/Alembic.dll" "\${_IMPORT_PREFIX}/bin/Alembic.dll")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/Alembic.dll")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake" "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll" "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll")
-    endif()
-endif()
 
 set(TOOLS abcdiff abcecho abcechobounds abcls abcstitcher abctree)
 if(USE_HDF5)
