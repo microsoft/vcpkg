@@ -2246,7 +2246,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 21
+      "port-version": 22
     },
     "freeopcua": {
       "baseline": "20190125",
