@@ -9,7 +9,8 @@ index 798b8b9..c975d78 100644
 -    FIND_PACKAGE(Inventor)
 +    FIND_PACKAGE(coin CONFIG)
      FIND_PACKAGE(Jasper)
-     FIND_PACKAGE(OpenEXR)
+-    FIND_PACKAGE(OpenEXR)
++    FIND_PACKAGE(OpenEXR CONFIG)
      FIND_PACKAGE(OpenCascade)
 diff --git a/src/osgPlugins/Inventor/CMakeLists.txt b/src/osgPlugins/Inventor/CMakeLists.txt
 index 963a494..e34b6b8 100644
@@ -24,6 +25,6 @@ index 963a494..e34b6b8 100644
 -INCLUDE_DIRECTORIES(${INVENTOR_INCLUDE_DIR})
 -
 -SET(TARGET_ADDED_LIBRARIES ${INVENTOR_LIBRARY})
-+SET(TARGET_ADDED_LIBRARIES Coin::Coin)
++SET(TARGET_ADDED_LIBRARIES Coin::Coin OpenEXR::OpenEXR)
  
  SETUP_PLUGIN(iv iv)

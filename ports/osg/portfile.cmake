@@ -11,13 +11,13 @@ vcpkg_from_github(
         static.patch
         fix-sdl.patch
         fix-example-application.patch
-        disable-present3d-staticview-in-linux.patch #Due to some link error we cannot solve yet, disable them in linux.
+        disable-present3d-staticview-in-linux.patch # Due to some link error we cannot solve yet, disable them in linux.
         fix-curl.patch
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
         fix-nvtt.patch
         use-boost-asio.patch
-        fix-dependency-coin.patch
+        fix-dependencies.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
 )
 
@@ -27,6 +27,7 @@ else()
     set(OSG_DYNAMIC ON)
 endif()
 
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindOpenEXR.cmake)
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
 
 set(OSG_USE_UTF8_FILENAME ON)
