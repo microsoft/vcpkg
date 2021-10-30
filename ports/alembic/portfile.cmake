@@ -47,8 +47,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND ALEMBIC_SHARED_LIBS)
     endif()
 endif()
 
+set(TOOLS abcdiff abcecho abcechobounds abcls abcstitcher abctree)
+if(USE_HDF5)
+    list(APPEND TOOLS abcconvert)
+endif()
+
 vcpkg_copy_tools(
-    TOOL_NAMES abcconvert abcdiff abcecho abcechobounds abcls abcstitcher abctree
+    TOOL_NAMES ${TOOLS}
     AUTO_CLEAN
 )
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
