@@ -181,10 +181,10 @@ else
         Write-Host "Determining parent hashes using HEAD~1"
         $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
         $parentHashes = @("--parent-hashes=$parentHashesFile")
-        & git checkout HEAD~1 -- .
+        & git revert -n -m 1 HEAD
         & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
             | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
-        & git checkout HEAD -- .
+        & git reset --hard HEAD
         
         Write-Host "Running CI using parent hashes"
     }
