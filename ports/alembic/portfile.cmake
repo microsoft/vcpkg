@@ -14,12 +14,17 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        hdf5 USE_HDF5
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DALEMBIC_SHARED_LIBS=${ALEMBIC_SHARED_LIBS}
-        -DUSE_HDF5=ON
         -DUSE_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

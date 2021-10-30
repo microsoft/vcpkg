@@ -5,7 +5,6 @@
   "homepage": "https://alembic.io/",
   "supports": "!x86",
   "dependencies": [
-    "hdf5",
     "imath",
     {
       "name": "vcpkg-cmake",
@@ -15,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hdf5": {
+      "description": "Build with HDF5 support",
+      "dependencies": [
+        "hdf5"
+      ]
+    }
+  }
 }
