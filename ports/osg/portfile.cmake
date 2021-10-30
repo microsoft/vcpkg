@@ -78,7 +78,7 @@ vcpkg_cmake_configure(
          ${OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
