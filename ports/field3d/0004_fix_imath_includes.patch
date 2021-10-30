@@ -1,0 +1,136 @@
+--- a/export/StdMathLib.h
++++ b/export/StdMathLib.h
+@@ -38,17 +38,17 @@
+ #ifndef _INCLUDED_Field3D_StdMathLib_H_
+ #define _INCLUDED_Field3D_StdMathLib_H_
+ 
+-#include <OpenEXR/ImathBox.h> 
+-#include <OpenEXR/ImathBoxAlgo.h>
+-#include <OpenEXR/ImathColor.h>
+-#include <OpenEXR/ImathHalfLimits.h>
+-#include <OpenEXR/ImathMatrix.h>
+-#include <OpenEXR/ImathMatrixAlgo.h>
+-#include <OpenEXR/ImathPlane.h>
+-#include <OpenEXR/ImathRandom.h> 
+-#include <OpenEXR/ImathRoots.h>
+-#include <OpenEXR/ImathVec.h>
+-#include <OpenEXR/half.h> 
++#include <Imath/ImathBox.h>
++#include <Imath/ImathBoxAlgo.h>
++#include <Imath/ImathColor.h>
++#include <Imath/ImathMatrix.h>
++#include <Imath/ImathMatrixAlgo.h>
++#include <Imath/ImathPlane.h>
++#include <Imath/ImathRandom.h>
++#include <Imath/ImathRoots.h>
++#include <Imath/ImathVec.h>
++#include <Imath/half.h>
++#include <Imath/halfLimits.h>
+ 
+ //----------------------------------------------------------------------------//
+ 
+--- a/export/Curve.h
++++ b/export/Curve.h
+@@ -53,8 +53,8 @@
+ 
+ #include <boost/lexical_cast.hpp>
+ 
+-#include <OpenEXR/ImathFun.h>
+-#include <OpenEXR/ImathMatrix.h>
++#include <Imath/ImathFun.h>
++#include <Imath/ImathMatrix.h>
+ 
+ //----------------------------------------------------------------------------//
+ 
+--- a/export/FieldWrapper.h
++++ b/export/FieldWrapper.h
+@@ -6,7 +6,7 @@
+ //------------------------------------------------------------------------------
+ 
+ // Library includes
+-#include <OpenEXR/ImathMatrixAlgo.h>
++#include <Imath/ImathMatrixAlgo.h>
+ 
+ // Project includes
+ #include "DenseField.h"
+--- a/export/SpiMathLib.h
++++ b/export/SpiMathLib.h
+@@ -38,20 +38,20 @@
+ #ifndef _INCLUDED_Field3D_SpiMathLib_H_
+ #define _INCLUDED_Field3D_SpiMathLib_H_
+ 
+-#include <OpenEXR/half.h>
+-#include <OpenEXR/ImathHalfLimits.h>
+-
+-#include <OpenEXR/ImathBox.h>
+-#include <OpenEXR/ImathBoxAlgo.h>
+-#include <OpenEXR/ImathColor.h>
+-#include <OpenEXR/ImathMatrix.h>
+-#include <OpenEXR/ImathVec.h>
+-
+-#include <OpenEXR/ImathRoots.h>
+-#include <OpenEXR/ImathMatrixAlgo.h>
+-#include <OpenEXR/ImathRandom.h>
+-#include <OpenEXR/ImathPlane.h>
+-#include <OpenEXR/ImathQuat.h>
++#include <Imath/half.h>
++#include <Imath/halfLimits.h>
++
++#include <Imath/ImathBox.h>
++#include <Imath/ImathBoxAlgo.h>
++#include <Imath/ImathColor.h>
++#include <Imath/ImathMatrix.h>
++#include <Imath/ImathVec.h>
++
++#include <Imath/ImathRoots.h>
++#include <Imath/ImathMatrixAlgo.h>
++#include <Imath/ImathRandom.h>
++#include <Imath/ImathPlane.h>
++#include <Imath/ImathQuat.h>
+ 
+ //----------------------------------------------------------------------------//
+ 
+--- a/include/OgUtil.h
++++ b/include/OgUtil.h
+@@ -10,7 +10,7 @@
+ #include <iostream>
+ #include <string>
+ 
+-#include <OpenEXR/ImathVec.h>
++#include <Imath/ImathVec.h>
+ 
+ #include "All.h"
+ #include "UtilFoundation.h"
+--- a/include/UtilFoundation.h
++++ b/include/UtilFoundation.h
+@@ -68,7 +68,7 @@
+ 
+ #include <memory>
+ 
+-#include <half.h>
++#include <Imath/half.h>
+ 
+ #include <iomanip>
+ #include <iostream>
+--- a/include/OgIAttribute.h
++++ b/include/OgIAttribute.h
+@@ -9,7 +9,7 @@
+ 
+ #include "OgUtil.h"
+ 
+-#include <OpenEXR/ImathMatrix.h>
++#include <Imath/ImathMatrix.h>
+ 
+ //----------------------------------------------------------------------------//
+ 
+--- a/test/unit_tests/UnitTest.cpp
++++ b/test/unit_tests/UnitTest.cpp
+@@ -44,7 +44,7 @@
+ #include <boost/thread/thread.hpp>
+ #include <boost/thread/mutex.hpp>
+ 
+-#include <OpenEXR/ImathFrustum.h>
++#include <Imath/ImathFrustum.h>
+ 
+ #include "Field3D/DenseField.h"
+ #include "Field3D/EmptyField.h"

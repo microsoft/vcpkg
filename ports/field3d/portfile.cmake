@@ -1,7 +1,7 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
@@ -14,22 +14,24 @@ vcpkg_from_github(
         0001_fix_build_errors.patch
         0002_improve_win_compatibility.patch
         0003_hdf5_api.patch # Switches the HDF5 default API for this port to 1.10
+        0004_fix_imath_includes.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/FindILMBase.cmake")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DINSTALL_DOCS:BOOL=OFF"
+    MAYBE_UNUSED_VARIABLES
+        INSTALL_DOCS
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

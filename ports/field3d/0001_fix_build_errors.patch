@@ -28,16 +28,17 @@ index 1610c2e..b012008 100644
 +FIND_PACKAGE (Boost COMPONENTS regex thread program_options system REQUIRED)
  
 -FIND_PACKAGE (ILMBase)
-+FIND_PACKAGE (OpenEXR REQUIRED)
++FIND_PACKAGE (Imath CONFIG REQUIRED)
  
  # Allow the developer to select if Dynamic or Static libraries are built
  OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-@@ -79,26 +71,14 @@ IF ( CMAKE_HOST_UNIX )
+@@ -79,26 +71,15 @@ IF ( CMAKE_HOST_UNIX )
  ENDIF ( )
  IF ( CMAKE_HOST_WIN32 )
    ADD_DEFINITIONS (
 -    -D_HAS_ITERATOR_DEBUGGING=0 
      -D_CRT_SECURE_NO_WARNINGS=1
++    -DNOMINMAX
      )
  ENDIF ( )
  
@@ -83,7 +84,7 @@ index 1610c2e..b012008 100644
  ENDIF ()
  
 -TARGET_LINK_LIBRARIES ( Field3D ${Field3D_DSO_Libraries} ${Boost_LIBRARIES})
-+TARGET_LINK_LIBRARIES ( Field3D ${Field3D_DSO_Libraries} ${Boost_LIBRARIES} OpenEXR::IlmImf)
++TARGET_LINK_LIBRARIES ( Field3D ${Field3D_DSO_Libraries} ${Boost_LIBRARIES} Imath::Imath)
  
  # Parase version and soversion from export/ns.h
  
@@ -121,28 +122,3 @@ index 1610c2e..b012008 100644
  
  IF (DOXYGEN_FOUND)
    ADD_CUSTOM_TARGET ( doc
-@@ -249,7 +202,7 @@ IF (DOXYGEN_FOUND)
-     WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
-     )
-   IF (INSTALL_DOCS)
--    INSTALL (DIRECTORY 
-+    INSTALL (DIRECTORY
-       ${CMAKE_HOME_DIRECTORY}/docs
-       DESTINATION ${CMAKE_INSTALL_PREFIX}
-     )
-@@ -263,12 +216,11 @@ INSTALL ( TARGETS
- 
- FILE(GLOB Field3d_Includes  "${CMAKE_CURRENT_SOURCE_DIR}/export/*.h")
- 
--INSTALL ( FILES 
--  ${Field3d_Includes} 
-+INSTALL ( FILES
-+  ${Field3d_Includes}
-   DESTINATION include/Field3D
- )
- 
--INSTALL ( TARGETS f3dinfo 
-+INSTALL ( TARGETS f3dinfo
-   RUNTIME DESTINATION bin
- )
--
