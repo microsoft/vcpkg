@@ -18,6 +18,7 @@
     "clang",
     "default-options",
     "default-targets",
+    "flang",
     "lld",
     "tools"
   ],
