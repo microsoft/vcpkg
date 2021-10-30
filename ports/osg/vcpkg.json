@@ -17,6 +17,10 @@
       "name": "openimageio",
       "platform": "osx"
     },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
@@ -27,7 +31,7 @@
       ]
     },
     "docs": {
-      "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
+      "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads)"
     },
     "examples": {
       "description": "Enable to build OSG Examples",
