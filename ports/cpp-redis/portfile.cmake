@@ -58,3 +58,4 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_fixup_pkgconfig()
