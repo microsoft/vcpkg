@@ -23,9 +23,14 @@ The type and parameters of the binary source. Shared across runs of this script.
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
 
 .PARAMETER BuildReason
-The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
-If BinarySourceStub is not set, this parameter has no effect. If BinarySourceStub is set and this is
-not, binary caching will default to read-write mode.
+The reason Azure Pipelines is running this script. For invocations caused by `PullRequest`,
+modified ports are identified by changed hashes with regard to git HEAD~1 (subject to NoParentHashes),
+and ports marked as failing in the CI baseline (or which depend on such ports) are skipped.
+If BinarySourceStub is set and this parameter is set to a non-empty value other than `PullRequest`,
+binary caching will be in write-only mode.
+
+.PARAMETER NoParentHashes
+Indicates to not use parent hashes even for pull requests.
 
 .PARAMETER PassingIsPassing
 Indicates that 'Passing, remove from fail list' results should not be emitted as failures. (For example, this is used
@@ -49,6 +54,7 @@ Param(
     [String]$BuildReason = $null,
     [String[]]$AdditionalSkips = @(),
     [String[]]$OnlyTest = $null,
+    [switch]$NoParentHashes = $false,
     [switch]$PassingIsPassing = $false
 )
 
@@ -164,7 +170,26 @@ else
         $hostArgs = @("--host-exclude=$skipList")
     }
 
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs
+    $parentHashes = @()
+    if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
+    {
+        # Prefetch tools for better output
+        & "./vcpkg$executableExtension" fetch cmake
+        & "./vcpkg$executableExtension" fetch ninja
+        & "./vcpkg$executableExtension" fetch git
+
+        Write-Host "Determining parent hashes using HEAD~1"
+        $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
+        $parentHashes = @("--parent-hashes=$parentHashesFile")
+        & git checkout HEAD~1 -- .
+        & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
+            | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
+        & git checkout HEAD -- .
+        
+        Write-Host "Running CI using parent hashes"
+    }
+
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
 
     $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
