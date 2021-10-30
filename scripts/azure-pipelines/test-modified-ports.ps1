@@ -77,12 +77,13 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
+$cachingArgs = @()
 
 $skipFailures = $false
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
-    $commonArgs += @('--no-binarycaching')
+    $cachingArgs = @('--no-binarycaching')
 } else {
-    $commonArgs += @('--binarycaching')
+    $cachingArgs = @('--binarycaching')
     $binaryCachingMode = 'readwrite'
     if ([string]::IsNullOrWhiteSpace($BuildReason)) {
         Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
@@ -96,7 +97,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         $binaryCachingMode = 'write'
     }
 
-    $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
 if ($Triplet -eq 'x64-linux') {
@@ -141,7 +142,7 @@ if ($null -ne $OnlyTest)
 {
     $OnlyTest | % {
         $portName = $_
-        & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs $portName
+        & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs @cachingArgs $portName
         if (-not $?)
         {
             [System.Console]::Error.WriteLine( `
@@ -163,7 +164,7 @@ else
         $hostArgs = @("--host-exclude=$skipList")
     }
 
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs
+    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs
 
     $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
