@@ -30,7 +30,7 @@ function getMutex([string]$targetDir) {
         return New-Object System.Threading.Mutex($false, "VcpkgAppLocalDeployBinary")
     }
     catch {
-        return 0
+        Write-Error -Message $_ -ErrorAction Stop
     }
 }
 
