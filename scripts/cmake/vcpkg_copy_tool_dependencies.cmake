@@ -50,7 +50,16 @@ function(vcpkg_copy_tool_dependencies tool_dir)
         if (NOT Z_VCPKG_POWERSHELL_CORE)
             message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
         endif()
-        z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_PACKAGES_DIR}/bin")
-        z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_INSTALLED_DIR}/bin")
+        cmake_path(RELATIVE_PATH tool_dir
+            BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}"
+            OUTPUT_VARIABLE relative_tool_dir
+        )
+        if(relative_tool_dir MATCHES "/debug/")
+            z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_PACKAGES_DIR}/debug/bin")
+            z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_INSTALLED_DIR}/debug/bin")
+        else()
+            z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_PACKAGES_DIR}/bin")
+            z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_INSTALLED_DIR}/bin")
+        endif()
     endif()
 endfunction()
