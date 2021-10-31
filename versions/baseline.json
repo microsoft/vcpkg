@@ -6224,6 +6224,10 @@
       "baseline": "2018-08-31",
       "port-version": 5
     },
+    "sjpeg": {
+      "baseline": "2021-10-31",
+      "port-version": 0
+    },
     "skia": {
       "baseline": "2020-05-18",
       "port-version": 5
