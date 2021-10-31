@@ -22,7 +22,7 @@ function getMutex([string]$targetDir) {
     try {
         $sha512Hash = [System.Security.Cryptography.SHA512]::Create()
         if ($sha512Hash) {
-            $hash = computeHash $sha512Hash $targetDir
+            $hash = (computeHash $sha512Hash $targetDir) -replace ('/' ,'-')
             $mtxName = "VcpkgAppLocalDeployBinary-" + $hash
             return New-Object System.Threading.Mutex($false, $mtxName)
         }
