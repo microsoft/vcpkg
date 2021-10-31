@@ -1,5 +1,9 @@
 {
   "name": "dpp",
   "version": "9.0.9",
-  "description": "Extremely Lightweight C++ Discord Library"
+  "description": "Extremely Lightweight C++ Discord Library",
+  "dependencies": [
+    "libsodium",
+    "openssl"
+  ]
 }
