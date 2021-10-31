@@ -19,14 +19,19 @@ function computeHash([System.Security.Cryptography.HashAlgorithm]$alg, [string]$
 }
 
 function getMutex([string]$targetDir) {
-    $sha512Hash = [System.Security.Cryptography.SHA512]::Create()
-    if ($sha512Hash) {
-        $hash = computeHash $sha512Hash $targetDir
-        $mtxName = "VcpkgAppLocalDeployBinary-" + $hash
-        return New-Object System.Threading.Mutex($false, $mtxName)
-    }
+    try {
+        $sha512Hash = [System.Security.Cryptography.SHA512]::Create()
+        if ($sha512Hash) {
+            $hash = computeHash $sha512Hash $targetDir
+            $mtxName = "VcpkgAppLocalDeployBinary-" + $hash
+            return New-Object System.Threading.Mutex($false, $mtxName)
+        }
 
-    return New-Object System.Threading.Mutex($false, "VcpkgAppLocalDeployBinary")
+        return New-Object System.Threading.Mutex($false, "VcpkgAppLocalDeployBinary")
+    }
+    catch {
+        return 0
+    }
 }
 
 # Note: this function signature is depended upon by the qtdeploy.ps1 script introduced in 5.7.1-7
