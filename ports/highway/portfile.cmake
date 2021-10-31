@@ -16,6 +16,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# remove test-related pkg-config files that break vcpkg_fixup_pkgconfig
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libhwy-test.pc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libhwy-test.pc")
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
