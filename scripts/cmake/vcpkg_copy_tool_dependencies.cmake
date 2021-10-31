@@ -25,6 +25,11 @@ function(z_vcpkg_copy_tool_dependencies_search tool_dir path_to_search)
     else()
         set(count 0)
     endif()
+    if(PORT_DEBUG)
+        set(verbose "-verbose")
+    else()
+        set(verbose "")
+    endif()
     file(GLOB tools "${tool_dir}/*.exe" "${tool_dir}/*.dll" "${tool_dir}/*.pyd")
     foreach(tool IN LISTS tools)
         vcpkg_execute_required_process(
@@ -32,6 +37,7 @@ function(z_vcpkg_copy_tool_dependencies_search tool_dir path_to_search)
                 -file "${SCRIPTS}/buildsystems/msbuild/applocal.ps1"
                 -targetBinary "${tool}"
                 -installedDir "${path_to_search}"
+                ${verbose}
             WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
             LOGNAME copy-tool-dependencies-${count}
         )
