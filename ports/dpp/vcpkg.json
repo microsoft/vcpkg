@@ -5,6 +5,7 @@
   "dependencies": [
     "libsodium",
     "openssl",
+    "opus",
     {
       "name": "vcpkg-cmake",
       "host": true
