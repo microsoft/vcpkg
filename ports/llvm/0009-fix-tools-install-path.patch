@@ -7,10 +7,11 @@
  clang/utils/hmaptool/CMakeLists.txt         | 2 +-
  flang/cmake/modules/AddFlang.cmake          | 2 +-
  flang/tools/f18/CMakeLists.txt              | 4 ++--
+ flang/tools/flang-driver/CMakeLists.txt     | 2 +-
  lld/cmake/modules/AddLLD.cmake              | 2 +-
  lld/tools/lld/CMakeLists.txt                | 2 +-
  lldb/cmake/modules/AddLLDB.cmake            | 2 +-
- 12 files changed, 13 insertions(+), 13 deletions(-)
+ 13 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/clang-tools-extra/modularize/CMakeLists.txt b/clang-tools-extra/modularize/CMakeLists.txt
 index 4caae81c49b6..8c459c51cc34 100644
@@ -132,6 +133,16 @@ index 239859b5e5b9..12d00f904f8a 100644
 -  install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/flang DESTINATION bin)
 +  install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/flang DESTINATION tools/llvm)
  endif()
+diff --git a/flang/tools/flang-driver/CMakeLists.txt b/flang/tools/flang-driver/CMakeLists.txt
+index 4c7ad220d223..f4206913e76f 100644
+--- a/flang/tools/flang-driver/CMakeLists.txt
++++ b/flang/tools/flang-driver/CMakeLists.txt
+@@ -27,4 +27,4 @@ clang_target_link_libraries(flang-new
+   clangBasic
+ )
+ 
+-install(TARGETS flang-new DESTINATION bin)
++install(TARGETS flang-new DESTINATION tools/llvm)
 diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
 index 9883475d1aa5..48e46586f387 100644
 --- a/lld/cmake/modules/AddLLD.cmake
