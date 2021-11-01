@@ -46,15 +46,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT} )
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libevent/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py" "${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py")
 
-if(UNIX)
-    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    endif()
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
