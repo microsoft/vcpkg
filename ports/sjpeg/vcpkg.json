@@ -4,7 +4,6 @@
   "description": "Simple library for encoding baseline JPEG files",
   "homepage": "https://github.com/webmproject/sjpeg",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

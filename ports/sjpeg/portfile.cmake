@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "dynamic")
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
