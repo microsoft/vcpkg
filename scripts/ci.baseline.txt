@@ -1702,7 +1702,6 @@ lapack-reference:arm-uwp=skip
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-chromium-base:x64-windows-static-md=fail
 clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 gmp:x64-windows-static-md=fail
@@ -1722,7 +1721,6 @@ sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 teemo:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
-v8:x64-windows-static-md=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
