@@ -74,3 +74,5 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
