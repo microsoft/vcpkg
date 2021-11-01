@@ -3,6 +3,16 @@
   "version-string": "1.8.2",
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/edenhill/librdkafka",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "lz4": {
       "description": "Enable external LZ4 library support",
@@ -31,15 +41,5 @@
         "zstd"
       ]
     }
-  },
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  }
 }
