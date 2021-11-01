@@ -6202,7 +6202,7 @@
     },
     "simage": {
       "baseline": "1.8.1",
-      "port-version": 2
+      "port-version": 3
     },
     "simde": {
       "baseline": "0.7.2",
