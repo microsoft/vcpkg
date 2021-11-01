@@ -24,9 +24,6 @@
     },
     "errdesc": {
       "description": "When enabled, error details description can be obtained"
-    },
-    "pic": {
-      "description": "When enabled, generated code will be position independent. This may be useful if you want to embed sercomm into a dynamic library"
     }
   }
 }

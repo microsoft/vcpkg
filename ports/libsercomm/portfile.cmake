@@ -11,12 +11,10 @@ vcpkg_check_features(
     FEATURES
         errdesc WITH_ERRDESC
         devmon  WITH_DEVMON
-        pic     WITH_PIC
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
