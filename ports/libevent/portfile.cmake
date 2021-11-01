@@ -68,7 +68,7 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_t
     "${CURRENT_PACKAGES_DIR}"
     "${CURRENT_INSTALLED_DIR}"
 )
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 #Handle copyright

@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 659576d0f52d2271b6b53f638b407b873888b1cffe4f014c3149d33a961653c2fcf7ff270bc669a5647205b573ef2809907645a4c89ab6c030ad65bce15547ae
     HEAD_REF dev
     PATCHES
-      install_pkgpc.patch
-      fix-c4703-error.patch
+        install_pkgpc.patch
+        fix-c4703-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
@@ -38,12 +38,12 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zstd)
 
 # This enables find_package(ZSTD) and find_package(zstd) to find zstd on Linux(case sensitive filesystems)
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config.cmake")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-configVersion.cmake")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config-version.cmake")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(static_suffix "_static")
 else()
-    set(static_suffix )
+    set(static_suffix "")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc" "-lzstd" "-lzstd${static_suffix}")
@@ -65,5 +65,3 @@ endif()
 file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "ZSTD is dual licensed - see LICENSE and COPYING files\n")
-
-
