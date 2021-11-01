@@ -17,9 +17,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     snappy WITH_SNAPPY
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DRDKAFKA_BUILD_STATIC=${RDKAFKA_BUILD_STATIC}
         -DRDKAFKA_BUILD_EXAMPLES=OFF
@@ -27,24 +26,25 @@ vcpkg_configure_cmake(
         -DWITH_BUNDLED_SSL=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
+        -DENABLE_SHAREDPTR_DEBUG=ON
         -DENABLE_DEVEL=ON
         -DENABLE_REFCNT_DEBUG=ON
         -DENABLE_SHAREDPTR_DEBUG=ON
         -DWITHOUT_OPTIMIZATION=ON
     OPTIONS_RELEASE
+        -DENABLE_SHAREDPTR_DEBUG=OFF
         -DENABLE_DEVEL=OFF
         -DENABLE_REFCNT_DEBUG=OFF
         -DENABLE_SHAREDPTR_DEBUG=OFF
         -DWITHOUT_OPTIMIZATION=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/RdKafka
-    TARGET_PATH share/rdkafka
 )
 
 if("lz4" IN_LIST FEATURES)
