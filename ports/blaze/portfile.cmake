@@ -8,6 +8,8 @@ vcpkg_from_bitbucket(
         fix-vm-build.patch
 )
 
+# TODO use target_link_blaze
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

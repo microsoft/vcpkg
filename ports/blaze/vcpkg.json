@@ -7,5 +7,25 @@
   "dependencies": [
     "boost-exception",
     "lapack"
-  ]
+  ],
+  "default-features": [
+    "noblas"
+  ],
+  "features": {
+    "noblas": {
+      "description": "Do not use BLAS"
+    },
+    "openblas": {
+      "description": "Use OpenBLAS",
+      "dependencies": [
+          "openblas"
+      ]
+    },
+    "intel-mkl": {
+      "description": "Use MKL",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    }
+  }
 }
