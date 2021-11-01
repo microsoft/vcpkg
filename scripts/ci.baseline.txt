@@ -1222,7 +1222,6 @@ signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
 skia:arm64-windows=fail
 skia:arm-uwp=fail
-skia:x64-linux=fail
 skia:x64-uwp=fail
 skia:x86-windows=fail
 sleef:x86-windows=fail
