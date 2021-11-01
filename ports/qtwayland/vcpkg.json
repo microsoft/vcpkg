@@ -1,24 +1,27 @@
 {
   "name": "qtwayland",
-  "version-semver": "6.1.3",
-  "port-version": 2,
+  "version-semver": "6.2.0",
   "description": "A toolbox for making Qt based Wayland compositors",
   "homepage": "https://www.qt.io/",
   "supports": "!windows",
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false
-    },
-    "qtdeclarative",
-    "qtopcua"
-  ],
-  "default-features": [
-    "default-features"
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
     }
   }
 }

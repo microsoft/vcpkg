@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2021-09-08'
-  linux-pool: 'PrLin-2021-09-08'
+  windows-pool: 'PrWin-2021-10-13'
+  linux-pool: 'PrLin-2021-10-13'
   osx-pool: 'PrOsx-2021-07-27'
 
 jobs:
@@ -52,6 +52,16 @@ jobs:
 - template: osx/azure-pipelines.yml
   parameters:
     poolName: $(osx-pool)
+    ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+      mode: AllPorts
+    ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+      mode: NonTensorflow
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+  - template: osx/azure-pipelines.yml
+    parameters:
+      poolName: $(osx-pool)
+      mode: OnlyTensorflow
+      jobName: x64_osx_tensorflow
 
 - template: linux/azure-pipelines.yml
   parameters:
