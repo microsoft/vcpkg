@@ -1572,10 +1572,16 @@ urdfdom:x64-windows-static=fail
 usd:x86-windows=fail
 uthenticode:arm-uwp=fail
 uthenticode:x64-uwp=fail
+# gn update will require a more recent version of v8
 v8:arm64-windows=fail
 v8:arm-uwp=fail
+v8:x64-linux=fail
 v8:x64-osx=fail
 v8:x64-uwp=fail
+v8:x64-windows=fail
+v8:x64-windows-static=fail
+v8:x64-windows-static-md=fail
+v8:x86-windows=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
 vlpp:x64-osx=fail
