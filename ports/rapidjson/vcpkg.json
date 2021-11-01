@@ -3,5 +3,15 @@
   "version-date": "2021-11-01",
   "port-version": 1,
   "description": "A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>",
-  "homepage": "http://rapidjson.org/"
+  "homepage": "http://rapidjson.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

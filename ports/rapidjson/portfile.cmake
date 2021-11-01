@@ -8,7 +8,7 @@ vcpkg_from_github(
 )
 
 # Use RapidJSON's own build process, skipping examples and tests
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -17,9 +17,9 @@ vcpkg_configure_cmake(
         -DRAPIDJSON_BUILD_TESTS:BOOL=OFF
         -DCMAKE_INSTALL_DIR:STRING=cmake
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/doc")
 
