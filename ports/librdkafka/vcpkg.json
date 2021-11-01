@@ -1,7 +1,6 @@
 {
   "name": "librdkafka",
-  "version-string": "1.7.0",
-  "port-version": 2,
+  "version-string": "1.8.2",
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/edenhill/librdkafka",
   "features": {
