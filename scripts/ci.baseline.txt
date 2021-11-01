@@ -120,8 +120,17 @@ chartdir:x64-windows-static-md=fail
 chartdir:x64-osx=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
+# gn update will require a more recent version of chromium-base
 # Chromium Base requires a recent version of Clang to be installed.
+chromium-base:arm64-windows=fail
+chromium-base:arm-uwp=fail
 chromium-base:x64-linux=skip
+chromium-base:x64-osx=fail
+chromium-base:x64-uwp=fail
+chromium-base:x64-windows=fail
+chromium-base:x64-windows-static=fail
+chromium-base:x64-windows-static-md=fail
+chromium-base:x86-windows=fail
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
@@ -1417,10 +1426,15 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
+# gn update will require a more recent version of skia
 skia:arm64-windows=fail
 skia:arm-uwp=fail
 skia:x64-linux=fail
+skia:x64-osx=fail
 skia:x64-uwp=fail
+skia:x64-windows=fail
+skia:x64-windows-static=fail
+skia:x64-windows-static-md=fail
 skia:x86-windows=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
