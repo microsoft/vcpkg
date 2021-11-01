@@ -14,7 +14,7 @@ vcpkg_check_features(
         pic     WITH_PIC
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
@@ -22,10 +22,10 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Fix CMake files
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sercomm)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sercomm)
 
 vcpkg_fixup_pkgconfig()
 

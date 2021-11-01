@@ -4,6 +4,16 @@
   "description": "Multiplatform serial communications library",
   "homepage": "https://github.com/ingeniamc/sercomm",
   "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
     "devmon",
     "errdesc"
