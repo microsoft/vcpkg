@@ -1,0 +1,42 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index aeb46b4664..2ddbcd0ebe 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -452,7 +452,7 @@ optional("fontmgr_fontconfig") {
+   enabled = skia_enable_fontmgr_fontconfig
+ 
+   # The public header includes fontconfig.h and uses FcConfig*
+-  public_deps = [ "//third_party:fontconfig" ]
++  public_deps = [ "//third_party/fontconfig" ]
+   public = [ "include/ports/SkFontMgr_fontconfig.h" ]
+   deps = [ ":typeface_freetype" ]
+   sources = [ "src/ports/SkFontMgr_fontconfig.cpp" ]
+@@ -469,7 +469,7 @@ optional("fontmgr_FontConfigInterface") {
+ 
+   deps = [
+     ":typeface_freetype",
+-    "//third_party:fontconfig",
++    "//third_party/fontconfig",
+   ]
+   public = [
+     "include/ports/SkFontConfigInterface.h",
+diff --git a/third_party/BUILD.gn b/third_party/BUILD.gn
+index 63fa748d16..6760e0f41b 100644
+--- a/third_party/BUILD.gn
++++ b/third_party/BUILD.gn
+@@ -6,9 +6,9 @@
+ declare_args() {
+ }
+ 
+-config("system_fontconfig") {
+-  libs = [ "fontconfig" ]
+-}
+-group("fontconfig") {
+-  public_configs = [ ":system_fontconfig" ]
+-}
++#config("system_fontconfig") {
++#  libs = [ "fontconfig" ]
++#}
++#group("fontconfig") {
++#  public_configs = [ ":system_fontconfig" ]
++#}

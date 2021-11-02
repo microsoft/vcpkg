@@ -6,6 +6,8 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
     REF a40ddcd63d40d647fcc5ed3b11acd2fa8ee834ed
+    PATCHES
+        "use_vcpkg_fontconfig.patch"
 )
 
 function(checkout_in_path PATH URL REF)
@@ -105,9 +107,7 @@ replace_skia_dep(libwebp "/include"
     "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd"
     "webp;webpdemux;webpdecoder;libwebpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
-if(CMAKE_HOST_UNIX)
-    replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
-endif()
+replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
 
 set(OPTIONS "\
 skia_use_lua=false \
