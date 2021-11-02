@@ -40,3 +40,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+vcpkg_fixup_pkgconfig()
