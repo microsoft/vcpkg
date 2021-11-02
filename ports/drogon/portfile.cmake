@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_WINDOWS AND "ctl" IN_LIST FEATURES)
+if("ctl" IN_LIST FEATURES)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
