@@ -1,7 +1,3 @@
-if("ctl" IN_LIST FEATURES)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
@@ -41,7 +37,7 @@ vcpkg_cmake_configure(
         CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 # Fix CMake files
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Drogon)
