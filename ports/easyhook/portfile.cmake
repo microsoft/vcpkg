@@ -28,6 +28,16 @@ foreach(VCXPROJ IN ITEMS
         "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
         "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
     )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        ""
+    )
 endforeach()
 
 vcpkg_install_msbuild(
