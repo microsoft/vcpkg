@@ -12,6 +12,7 @@ vcpkg_from_github(
         vcpkg.patch
         drogon_config.patch
         static-brotli.patch
+        Fix-Drogon-not-building-caused-by-FindFilesystem-105.patch
 )
 
 vcpkg_check_features(
