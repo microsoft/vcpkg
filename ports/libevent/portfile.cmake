@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
+        fix-usage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -41,7 +42,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT} )
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libevent/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py" "${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py")
