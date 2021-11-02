@@ -1893,8 +1893,8 @@
       "port-version": 0
     },
     "drlibs": {
-      "baseline": "2019-08-12",
-      "port-version": 1
+      "baseline": "2021-11-02",
+      "port-version": 0
     },
     "drogon": {
       "baseline": "1.7.1",
