@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         libmount_static_dep.diff    # https://invent.kde.org/frameworks/kio/-/merge_requests/615
+        revert_blkid.diff           # https://invent.kde.org/frameworks/kio/-/commit/221a94a66c4d2f6e4f2dc938ee8a63a6ca739477
         ${PATCHES}
 )
 
