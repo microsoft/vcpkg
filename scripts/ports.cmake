@@ -188,3 +188,5 @@ elseif(CMD MATCHES "^CREATE$")
     message(STATUS "To launch an editor for these new files, run")
     message(STATUS "    .\\vcpkg edit ${PORT}")
 endif()
+
+# trigger ports
