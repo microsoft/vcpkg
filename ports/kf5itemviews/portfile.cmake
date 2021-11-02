@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemviews
-    REF v5.75.0
-    SHA512 929e223540d026121fd5b5d36ed2b5e5b53d55c617d9e5f9abc75f56b9441e3495530faeb7aa38a3dcffc67c551eec70a86bcdeaf22d6e9cf4921fd3812c4c89
+    REF v5.84.0
+    SHA512 d6a16ebbe57b6ac1b766d77b8b262b0ec72a5e256e5b3fbf7b95d901b4e45300eda2933f74a5a66cb6b2fec062fb4a6c9253e3376b13ab889f0bfd52c23cf5d4
 )
+
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_DESIGNERPLUGIN=OFF
 )

@@ -1,0 +1,7 @@
+{
+  "name": "range-v3",
+  "version-string": "0.11.0",
+  "port-version": 1,
+  "description": "Range library for C++11/14/17.",
+  "homepage": "https://github.com/ericniebler/range-v3"
+}

@@ -1,4 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09d57b2..57d3a2c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
@@ -29,7 +30,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
    MESSAGE(STATUS "Downloading FXdiv to ${CMAKE_BINARY_DIR}/FXdiv-source (define FXDIV_SOURCE_DIR to avoid it)")
    CONFIGURE_FILE(cmake/DownloadFXdiv.cmake "${CMAKE_BINARY_DIR}/FXdiv-download/CMakeLists.txt")
    EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-@@ -93,15 +92,7 @@ IF(NOT PTHREADPOOL_ALLOW_DEPRECATED_API)
+@@ -87,21 +86,13 @@ ELSE()
+ ENDIF()
+ 
+ ADD_LIBRARY(pthreadpool_interface INTERFACE)
+-TARGET_INCLUDE_DIRECTORIES(pthreadpool_interface INTERFACE include)
++TARGET_INCLUDE_DIRECTORIES(pthreadpool_interface INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ IF(NOT PTHREADPOOL_ALLOW_DEPRECATED_API)
+   TARGET_COMPILE_DEFINITIONS(pthreadpool_interface INTERFACE PTHREADPOOL_NO_DEPRECATED_API=1)
  ENDIF()
  INSTALL(FILES include/pthreadpool.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
@@ -46,7 +54,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  IF(PTHREADPOOL_SYNC_PRIMITIVE STREQUAL "condvar")
    TARGET_COMPILE_DEFINITIONS(pthreadpool PRIVATE PTHREADPOOL_USE_FUTEX=0)
-@@ -150,14 +141,14 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+@@ -150,18 +141,22 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  ENDIF()
  
  # ---[ Configure FXdiv
@@ -61,5 +69,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -TARGET_LINK_LIBRARIES(pthreadpool PRIVATE fxdiv)
 +TARGET_INCLUDE_DIRECTORIES(pthreadpool PRIVATE ${FXDIV_INCLUDE_DIRS})
  
- INSTALL(TARGETS pthreadpool
+-INSTALL(TARGETS pthreadpool
++INSTALL(TARGETS pthreadpool pthreadpool_interface
++  EXPORT unofficial-pthreadpool-config
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(EXPORT unofficial-pthreadpool-config NAMESPACE unofficial::
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/unofficial-pthreadpool
+ 
+ IF(PTHREADPOOL_BUILD_TESTS)
+   # ---[ Build google test

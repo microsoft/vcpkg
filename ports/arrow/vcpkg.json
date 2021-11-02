@@ -1,0 +1,89 @@
+{
+  "name": "arrow",
+  "version": "5.0.0",
+  "port-version": 1,
+  "description": "Cross-language development platform for in-memory analytics",
+  "homepage": "https://arrow.apache.org",
+  "supports": "x64",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-multiprecision",
+    "boost-system",
+    "brotli",
+    "bzip2",
+    "gflags",
+    "glog",
+    "lz4",
+    "openssl",
+    "re2",
+    "snappy",
+    "thrift",
+    "utf8proc",
+    "zlib",
+    "zstd"
+  ],
+  "default-features": [
+    "csv",
+    "filesystem",
+    "json",
+    "parquet"
+  ],
+  "features": {
+    "csv": {
+      "description": "CSV support"
+    },
+    "dataset": {
+      "description": "Dataset support"
+    },
+    "filesystem": {
+      "description": "Filesystem support"
+    },
+    "flight": {
+      "description": "Arrow Flight RPC support",
+      "dependencies": [
+        "abseil",
+        "c-ares",
+        "grpc",
+        "protobuf"
+      ]
+    },
+    "jemalloc": {
+      "description": "jemalloc allocator"
+    },
+    "json": {
+      "description": "JSON support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "mimalloc": {
+      "description": "mimalloc allocator"
+    },
+    "orc": {
+      "description": "ORC support",
+      "dependencies": [
+        "orc"
+      ]
+    },
+    "parquet": {
+      "description": "Parquet support"
+    },
+    "s3": {
+      "description": "S3 support",
+      "dependencies": [
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false,
+          "features": [
+            "cognito-identity",
+            "config",
+            "identity-management",
+            "s3",
+            "sts",
+            "transfer"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -11,12 +11,12 @@
     "libarchive",
     "liblzma",
     "libuv",
-    "nghttp2",
-    "qt5-base",
     {
-      "name": "qt5-winextras",
-      "platform": "windows"
+      "name": "ncurses",
+      "platform": "!(windows | uwp)"
     },
+    "nghttp2",
+    "qtbase",
     "zlib",
     "zstd"
   ]

@@ -14,10 +14,12 @@ configure_file(${SOURCE_PATH}/config.h.win32 ${SOURCE_PATH}/src/config.h COPYONL
 file(READ "${SOURCE_PATH}/src/libcroco.symbols" SYMBOLS)
 string(REGEX REPLACE ";[^\n]*\n" "" DEF "EXPORTS\n${SYMBOLS}")
 file(WRITE "${SOURCE_PATH}/src/libcroco.def" "${DEF}")
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()

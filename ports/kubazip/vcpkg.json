@@ -1,0 +1,7 @@
+{
+  "name": "kubazip",
+  "version-string": "0.1.19",
+  "port-version": 1,
+  "description": "A portable, simple zip library written in C",
+  "homepage": "https://github.com/kuba--/zip"
+}

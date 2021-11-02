@@ -1,8 +1,8 @@
 # vcpkg_fixup_cmake_targets
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_cmake_targets.md).
+**This function has been deprecated in favor of [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md) from the vcpkg-cmake-config port.**
 
-**This function has been deprecated in favor of `vcpkg_cmake_config_fixup` from the vcpkg-cmake-config port.**
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_cmake_targets.md).
 
 Merge release and debug CMake targets and configs to support multiconfig generators.
 

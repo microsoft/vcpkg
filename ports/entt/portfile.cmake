@@ -1,10 +1,18 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO skypjack/entt
-    REF 1e07b981f0b305400f854084c61c4efe2fd36206
-    SHA512 0a61d293b8f6d9eec07711f9ac87c185e158b42da7ca1f91c1ab189a573686a79efa0d15cc76d8e7a2770c6b625df20b8bce1aa16147c0af07cd722a3d32d583
-    HEAD_REF master
-)
+if ("experimental" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO skypjack/entt
+        HEAD_REF experimental
+    )
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO skypjack/entt
+        REF 2d5a3f24aa6dc38ed0c4eee9d4d625586d8e921e #v3.8.0
+        SHA512 36b7be2550be5a919548e5c91db218ed9b062804d4f43073d6fc6b432fa2d358b5d36098490359ca2392370b2bf1b99d20e564504eaac619f5cd7f9612d91e2e
+        HEAD_REF master
+    )
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

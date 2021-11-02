@@ -1,4 +1,3 @@
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -33,11 +32,12 @@ foreach(COMPONENT core c cpp glsl hlsl msl reflect util)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
 endforeach()
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*")
-file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+vcpkg_copy_tools(
+    TOOL_NAMES spirv-cross
+    AUTO_CLEAN
+)
 
-# cleanup
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-cross/copyright COPYONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

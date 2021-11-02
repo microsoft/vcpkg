@@ -1,7 +1,6 @@
+# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_build
 #[===[.md:
 # vcpkg_build_cmake
-
-**This function has been deprecated in favor of `vcpkg_cmake_build` from the vcpkg-cmake port.**
 
 Build a cmake project.
 
@@ -22,7 +21,7 @@ be passed.
 Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
+This command should be preceded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the
 "install" target
 

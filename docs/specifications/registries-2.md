@@ -459,7 +459,7 @@ This means that, even across different machines, the same registries will be use
 We will also be able to write down version resolution in this file as soon as that feature is added.
 
 It is recommended that one adds this `vcpkg-lock.json` to one's version control.
-This file is machine generated, and it is not specified how it's layed out;
+This file is machine generated, and it is not specified how it's laid out;
 however, for purposes of this RFC, we will define how it relates to git registries.
 
 In `vcpkg-lock.json`, in the top level object,

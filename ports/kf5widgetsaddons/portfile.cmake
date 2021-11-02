@@ -1,18 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwidgetsaddons
-    REF v5.75.0
-    SHA512 8854ddc56d8a30081d69d952d035ef303b3a30760fdee3ba8889029b373cb793807f984ce3fc06bd1d377fa3d5a768d3dbf99cb44a3b29a7589b2c4f77767360
+    REF v5.84.0
+    SHA512 2c92eb2eaea1c2ca1ca2acd8ccc95d64d5f91cce4b92d428644adc804e7b97ad19659231667e5d79f5672fe528ae70ca85926192297772d7734d5d72479d2716
     HEAD_REF master
 )
+
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_DESIGNERPLUGIN=OFF
 )

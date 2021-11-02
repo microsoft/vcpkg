@@ -1,0 +1,16 @@
+{
+  "name": "gperftools",
+  "version-string": "2019-09-02",
+  "port-version": 1,
+  "description": "A set of tools for performance profiling and memory checking",
+  "homepage": "https://github.com/gperftools/gperftools",
+  "supports": "!(arm | arm64 | uwp)",
+  "features": {
+    "override": {
+      "description": "Override allocators"
+    },
+    "tools": {
+      "description": "Build gperftools CLI tools"
+    }
+  }
+}

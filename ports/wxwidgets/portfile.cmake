@@ -3,12 +3,12 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.4
-    SHA512 108e35220de10afbfc58762498ada9ece0b3166f56a6d11e11836d51bfbaed1de3033c32ed4109992da901fecddcf84ce8a1ba47303f728c159c638dac77d148
+    REF 9c0a8be1dc32063d91ed1901fd5fcd54f4f955a1 #v3.1.5
+    SHA512 33817f766b36d24e5e6f4eb7666f2e4c1ec305063cb26190001e0fc82ce73decc18697e8005da990a1c99dc1ccdac9b45bb2bbe5ba73e6e2aa860c768583314c
     HEAD_REF master
     PATCHES
         disable-platform-lib-dir.patch
-        fix-stl-build-vs2019-16.6.patch
+        fix-build.patch
 )
 
 set(OPTIONS)
@@ -23,6 +23,13 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUA
     )
 endif()
 
+# This may be set to ON by users in a custom triplet.
+# wxUSE_STL=ON and wxUSE_STL=OFF are not API compatible which is why this must be set
+# in a custom triplet rather than a port feature.
+if(NOT DEFINED WXWIDGETS_USE_STL)
+    set(WXWIDGETS_USE_STL OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -33,8 +40,8 @@ vcpkg_configure_cmake(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
-        -DwxUSE_STL=ON
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
+        -DwxUSE_STL=${WXWIDGETS_USE_STL}
         ${OPTIONS}
 )
 

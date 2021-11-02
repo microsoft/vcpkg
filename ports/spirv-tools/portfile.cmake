@@ -4,11 +4,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF v2020.7
-    SHA512 34d870e5aaaa2ad744369521efd43bdfba5e47208bb31bc0e325322e3a6edbe7686d3f4d9a6ebff6e85625e1a00811ab0162e2b8f39dd18603b7ff6548897950
+    REF v2021.1
+    SHA512 e8478eacb86415f75a1e5b3f66a0508b01a9f7e9d8b070eb0329ca56be137f5543dd42125a1033cb8552c01f46e11affd7fda866231b3742c66de9b4341930d5
     PATCHES
         cmake-install.patch
         install-config-typo.patch
+        0001-don-t-use-MP4.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

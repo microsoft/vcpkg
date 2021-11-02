@@ -1,0 +1,20 @@
+{
+  "name": "v8",
+  "version": "9.1.269.39",
+  "port-version": 1,
+  "description": "Google Chrome's JavaScript engine",
+  "homepage": "https://v8.dev",
+  "supports": "!(arm | arm64 | uwp | osx)",
+  "dependencies": [
+    {
+      "name": "glib",
+      "platform": "linux"
+    },
+    "icu",
+    {
+      "name": "pthread",
+      "platform": "linux"
+    },
+    "zlib"
+  ]
+}

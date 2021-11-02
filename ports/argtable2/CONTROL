@@ -1,6 +1,0 @@
-Source: argtable2
-Version: 2.13
-Port-Version: 8
-Homepage: http://argtable.sourceforge.net
-Description: Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss.
-Supports: !uwp

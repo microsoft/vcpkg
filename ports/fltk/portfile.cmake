@@ -1,22 +1,23 @@
 # FLTK has many improperly shared global variables that get duplicated into every DLL
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
-    FILENAME "fltk-1.3.5.tar.gz"
-    SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
-)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO fltk/fltk
+    REF release-1.3.7
+    SHA512 aad131027e88fac3fe73d7e0abfc2602cdc195388f14b29b58d654cb49b780e6ff2ef4270935730b45cd3d366f9e8c8fa3c27a4f17b1f6e8c8fd1f9a0a73c308
     PATCHES
         findlibsfix.patch
-        add-link-libraries.patch
         config-path.patch
         include.patch
         fix-system-link.patch
 )
+
+# Remove these 2 lines when the next update
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/fltk_version.dat DESTINATION ${SOURCE_PATH})
+file(REMOVE ${SOURCE_PATH}/VERSION)
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
@@ -28,7 +29,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DOPTION_BUILD_EXAMPLES=OFF
+        -DFLTK_BUILD_TEST=OFF
         -DOPTION_LARGE_FILE=ON
         -DOPTION_USE_THREADS=ON
         -DOPTION_USE_SYSTEM_ZLIB=ON

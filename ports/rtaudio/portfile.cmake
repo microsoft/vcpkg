@@ -3,10 +3,14 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtaudio
-    REF 34a3752e0c8249dc1780d196cd24e745425f0c77
-    SHA512 00fea107f409f6dc43154aaf69aeffa1a3385031778b5f7d1ae1cc8337ed4ab92a7917cc9eade848dedd746016b6eff6234088619cb8d6a9a3f26a63efde493e
+    REF bc7ad66581947f810ff4460396bbbd1846b1e7c8
+    SHA512 ef5a41df15a8486550fb791ac21fcee4ecbf726fe9e91a56fcdd437cd554ea242f08c1061a9c6d5c261d721d86fbbcb32ce64db030976150862ed42a40137fc7
     HEAD_REF master
 )
+
+if(VCPKG_HOST_IS_LINUX)
+    message(WARNING "rtaudio requires ALSA on Linux; this is available on ubuntu via apt install libasound2-dev")
+endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(RTAUDIO_STATIC_MSVCRT ON)
@@ -14,21 +18,27 @@ else()
     set(RTAUDIO_STATIC_MSVCRT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio  RTAUDIO_API_ASIO
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+        -DRTAUDIO_API_JACK=OFF
+        -DRTAUDIO_API_PULSE=OFF
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-# Version 5.1.0 has the license text embedded in the README.md, so we are including it as a standalone file in the vcpkg port
-# Current master version of rtaudio has a LICENSE file which should be used instead for ports of future releases
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+vcpkg_fixup_pkgconfig()

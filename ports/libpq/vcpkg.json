@@ -1,7 +1,7 @@
 {
   "name": "libpq",
   "version": "12.2",
-  "port-version": 14,
+  "port-version": 18,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "supports": "!uwp",

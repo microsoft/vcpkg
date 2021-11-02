@@ -1,7 +1,0 @@
-Source: graphene
-Version: 1.10.2
-Port-Version: 0
-Homepage: https://www.gtk.org/
-Description: A thin layer of types for graphic libraries.
-Build-Depends: glib, gettext
-Supports: !(arm&windows)

@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -2029,6 +2029,9 @@ else
+        libintl = disabler()
+      endif
+   endif
++  if not libintl.found()
++    libintl = dependency('Intl', required : false, method : 'cmake')
++  endif
+   if not libintl.found()
+     libintl = subproject('proxy-libintl').get_variable('intl_dep')
+     libintl_deps = [libintl] + libintl_deps

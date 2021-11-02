@@ -1,8 +1,9 @@
 {
   "name": "iir1",
   "version": "1.8.0",
+  "port-version": 1,
   "description": "Realtime C++ filter library",
   "homepage": "https://github.com/berndporr/iir1",
   "license": "MIT",
-  "supports": "!uwp & !osx"
+  "supports": "!uwp"
 }

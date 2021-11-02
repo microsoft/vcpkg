@@ -2,8 +2,8 @@ vcpkg_from_sourceforge (
     OUT_SOURCE_PATH SOURCE_PATH
     REPO geographiclib
     REF distrib
-    FILENAME "GeographicLib-1.51.tar.gz"
-    SHA512 34487a09fa94a34d24179cfe9fd2e5fdda28675966703ca137cbfe6cc88760c2fbde55f76c464de060b58bfe0a516e22c0f59318cf85ae7cc01c5c6a73dd6ead
+    FILENAME "GeographicLib-1.52.tar.gz"
+    SHA512 98a4d33764db4a4755851a7db639fd9e055dcf4f1f949258e112fce2e198076b5896fcae2c1ea36b37fe1000d28eec326636a730e70f25bc19a1610423ba6859
     PATCHES cxx-library-only.patch
 )
 
@@ -52,3 +52,5 @@ file (INSTALL ${SOURCE_PATH}/LICENSE.txt
 # Install usage
 configure_file (${CMAKE_CURRENT_LIST_DIR}/usage
   ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+
+vcpkg_fixup_pkgconfig()

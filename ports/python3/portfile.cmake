@@ -4,8 +4,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
 endif()
 
 set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  2)
+set(PYTHON_VERSION_MINOR  10)
+set(PYTHON_VERSION_PATCH  0)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -13,7 +13,6 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
-    0006-fix-duplicate-symbols.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -22,17 +21,25 @@ endif()
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
 # required to build this port on Windows 7 itself due to Python using itself in its own build system.
 if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0007-restore-support-for-windows-7.patch)
+    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
     message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
 elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
+endif()
+
+# The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    vcpkg_get_windows_sdk(WINSDK_VERSION)
+    if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
+        list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
+    endif()
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 f13c7e50d2c7c00e67b801b0bbb6ab6a8b6bd16c706b3bdd9d2186de3830f0043d0b95d7993d65a169adc9097738906c07727f0df49cd2fb2916bdf0456896b6
+    SHA512 d83e0685c274be09da7833a3c24b7379ae0e43b43c131f11bfaccd5902f6a1c510a3ae67c42471a4281922ead3bd34856608ec47be7dd76ddd734e59906ba03b
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -62,10 +69,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-    configure_file(${SOURCE_PATH}/PC/pyconfig.h ${SOURCE_PATH}/PC/pyconfig.h)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in ${SOURCE_PATH}/PCbuild/python_vcpkg.props)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/openssl.props.in ${SOURCE_PATH}/PCbuild/openssl.props)
-    file(WRITE ${SOURCE_PATH}/PCbuild/libffi.props
+    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
+    file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
@@ -108,10 +115,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
+        TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
         SKIP_CLEAN
     )
 
@@ -153,7 +161,7 @@ else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--with-ensurepip"
-        [[--with-suffix=""]]
+        "--with-suffix="
         "--with-system-expat"
     )
     if(VCPKG_TARGET_IS_OSX)
@@ -161,13 +169,12 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
     # Makefiles, c files, __pycache__, and other junk.

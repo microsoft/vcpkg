@@ -1,14 +1,14 @@
 # Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
 # Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
 
-#patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES dual-osmesa.patch
-            dual-osmesa-part2.patch
-            swravx512.patch
-            )
+# Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
+set(PATCHES
+    # Fix swrAVX512 build
+    swravx512-post-static-link.patch
+)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
-IF(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
 endif()
 
@@ -16,10 +16,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF  df2977f871fc70ebd6be48c180d117189b5861b5 #v20.2.2
-    SHA512 6c51d817fe265ea6405c4e8afbb516f30cf697d00cf39f162473ea8a59c202bcdfbfe4b6f7c4a6fd2d4e98eb4a1604cb5e0a02558338bf415e53fe5421cbfbbe
-    HEAD_REF master # branch name
-    PATCHES ${PATCHES} #patch name
+    REF mesa-21.2.0
+    SHA512 4837e42474d69861fbce4fa03d120b56997094d61b3045c417bbab73774dda86e4b7adf54af98585511a3517860c33c77898e6171cd845f760bada4b000ff52d
+    HEAD_REF master
+    PATCHES ${PATCHES}
 ) 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -115,9 +115,7 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dglvnd=false)
 list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
-#list(APPEND MESA_OPTIONS -Dosmesa=['gallium','classic']) # classic has compiler errors. 
-list(APPEND MESA_OPTIONS -Dosmesa=['gallium'])
-
+list(APPEND MESA_OPTIONS -Dosmesa=true)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND MESA_OPTIONS -Dshared-swr=false)
@@ -160,9 +158,9 @@ endif()
 
 list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 
-
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
+    list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
 endif()
 
 vcpkg_configure_meson(

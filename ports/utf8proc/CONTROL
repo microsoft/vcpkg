@@ -1,4 +1,0 @@
-Source: utf8proc
-Version: 2.5.0
-Homepage: https://github.com/JuliaLang/utf8proc
-Description: Clean C library for processing UTF-8 Unicode data.

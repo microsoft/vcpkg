@@ -1,13 +1,16 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "cairo",
-  "version-string": "1.16.0",
-  "port-version": 10,
+  "version": "1.17.4",
+  "port-version": 2,
   "description": "Cairo is a 2D graphics library with support for multiple output devices. Currently supported output targets include the X Window System (via both Xlib and XCB), Quartz, Win32, image buffers, PostScript, PDF, and SVG file output. Experimental backends include OpenGL, BeOS, OS/2, and DirectFB.",
   "homepage": "https://cairographics.org",
   "dependencies": [
+    "dirent",
+    "expat",
     "libpng",
+    "lzo",
     "pixman",
+    "pthread",
     "zlib"
   ],
   "default-features": [
@@ -32,9 +35,6 @@
       "dependencies": [
         "glib"
       ]
-    },
-    "quartz": {
-      "description": "build with quartz support"
     },
     "x11": {
       "description": "build with x11 support"

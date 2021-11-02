@@ -1,6 +1,7 @@
 {
   "name": "glad",
   "version": "0.1.34",
+  "port-version": 1,
   "description": "Multi-Language Vulkan/GL/GLES/EGL/GLX/WGL Loader-Generator based on the official specs.",
   "homepage": "https://github.com/Dav1dde/glad",
   "documentation": "https://github.com/Dav1dde/glad/wiki",

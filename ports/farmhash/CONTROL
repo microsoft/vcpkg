@@ -1,6 +1,0 @@
-Source: farmhash
-Version: 1.1
-Port-Version: 2
-Homepage: https://github.com/google/farmhash
-Description: FarmHash, a family of hash functions.
-Supports: !arm
