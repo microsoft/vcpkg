@@ -10,7 +10,6 @@ vcpkg_from_github(
 # Use RapidJSON's own build process, skipping examples and tests
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DRAPIDJSON_BUILD_DOC:BOOL=OFF
         -DRAPIDJSON_BUILD_EXAMPLES:BOOL=OFF
