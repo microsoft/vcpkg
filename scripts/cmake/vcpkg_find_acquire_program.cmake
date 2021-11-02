@@ -47,10 +47,10 @@ Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_ac
 * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 #]===]
 
-macro(z_vcpkg_find_acquire_program_version_check)
-    if(VERSION_CMD)
+function(z_vcpkg_find_acquire_program_version_check)
+    if(version_command)
         vcpkg_execute_in_download_mode(
-            COMMAND ${${program}} ${VERSION_CMD}
+            COMMAND ${${program}} ${version_command}
             WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
             OUTPUT_VARIABLE program_version_output
         )
@@ -58,16 +58,16 @@ macro(z_vcpkg_find_acquire_program_version_check)
         #TODO: REGEX MATCH case for more complex cases!
         if(NOT program_version_output VERSION_GREATER_EQUAL program_version)
             message(STATUS "Found ${program_name}('${program_version_output}') but at least version ${program_version} is required! Trying to use internal version if possible!")
-            unset(${program})
-            set(${program} "${program}-NOTFOUND" CACHE INTERNAL "")
+            unset("${program}" PARENT_SCOPE)
+            set("${program}" "${program}-NOTFOUND" CACHE INTERNAL "")
         else()
             message(STATUS "Found external ${program_name}('${program_version_output}').")
         endif()
     endif()
-endmacro()
+endfunction()
 
 macro(z_vcpkg_find_acquire_program_find)
-    if(NOT "${interpreter}" STREQUAL "")
+    if("${interpreter}" STREQUAL "")
         find_program(${program} ${program_name} PATHS ${paths_to_search} NO_DEFAULT_PATH)
         if(NOT ${program})
             find_program(${program} ${program_name})
@@ -105,7 +105,7 @@ function(vcpkg_find_acquire_program program)
         return()
     endif()
 
-    set(raw_executable "ON")
+    set(raw_executable "OFF")
     set(program_name "")
     set(program_version "")
     set(rename_binary_to "")
