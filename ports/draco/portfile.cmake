@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-compile-error-uwp.patch
         fix-uwperror.patch
+        disable-symlinks.patch
 )
 
 vcpkg_cmake_configure(
