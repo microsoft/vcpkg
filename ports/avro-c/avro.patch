@@ -1,5 +1,5 @@
 diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
-index aa923e1..f8e8715 100644
+index aa923e1..9ee7937 100644
 --- a/lang/c/CMakeLists.txt
 +++ b/lang/c/CMakeLists.txt
 @@ -22,6 +22,9 @@ enable_testing()
@@ -12,7 +12,7 @@ index aa923e1..f8e8715 100644
  # Eliminates warning about linker paths when linking both zlib and
  # liblzma.
  cmake_policy(SET CMP0003 NEW)
-@@ -149,50 +152,58 @@ else (ZLIB_FOUND)
+@@ -149,50 +152,60 @@ else (ZLIB_FOUND)
      message("Disabled deflate codec. zlib not found.")
  endif (ZLIB_FOUND)
  
@@ -23,6 +23,9 @@ index aa923e1..f8e8715 100644
      set(SNAPPY_PKG libsnappy)
      add_definitions(-DSNAPPY_CODEC)
 +    set(SNAPPY_LIBRARIES Snappy::snappy)
++    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
++    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      include_directories(${SNAPPY_INCLUDE_DIRS})
      message("Enabled snappy codec")
 -else (SNAPPY_FOUND AND ZLIB_FOUND)
@@ -80,12 +83,12 @@ index aa923e1..f8e8715 100644
 +endif()
 +if(BUILD_DOCS)
  add_subdirectory(docs)
+-
 +endif()
- 
  add_custom_target(pretty
      "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake_pretty.cmake")
 diff --git a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
-index 29be14b..15a7eb2 100644
+index 29be14b..020346d 100644
 --- a/lang/c/src/avro/msinttypes.h
 +++ b/lang/c/src/avro/msinttypes.h
 @@ -54,6 +54,10 @@
@@ -95,37 +98,38 @@ index 29be14b..15a7eb2 100644
 +#if (_MSC_VER >= 1900)
 +#   include <inttypes.h>
 +#else
-+
++    
  typedef struct {
     intmax_t quot;
     intmax_t rem;
-@@ -311,5 +315,5 @@ imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom)
+@@ -311,5 +315,6 @@ imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom)
  #define wcstoimax _wcstoi64
  #define wcstoumax _wcstoui64
  
--
 +#endif // (_MSC_VER >= 1900)
+ 
  #endif // _MSC_INTTYPES_H_ ]
 diff --git a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
-index d02608a..ba317b3 100644
+index d02608a..54e8972 100644
 --- a/lang/c/src/avro/msstdint.h
 +++ b/lang/c/src/avro/msstdint.h
-@@ -42,6 +42,9 @@
+@@ -42,6 +42,10 @@
  
  #include <limits.h>
  
 +#if (_MSC_VER >= 1900)
 +#   include <stdint.h>
 +#else
++
  // For Visual Studio 6 in C++ mode and for many Visual Studio versions when
  // compiling for ARM we should wrap <wchar.h> include with 'extern "C++" {}'
  // or compiler give many errors like this:
-@@ -243,5 +246,5 @@ typedef uint64_t  uintmax_t;
+@@ -243,5 +247,6 @@ typedef uint64_t  uintmax_t;
  
  #endif // __STDC_CONSTANT_MACROS ]
  
--
 +#endif // (_MSC_VER >= 1900)
+ 
  #endif // _MSC_STDINT_H_ ]
 diff --git a/lang/c/src/avro/platform.h b/lang/c/src/avro/platform.h
 index 9293055..edfe1e0 100644
@@ -151,7 +155,7 @@ index f97ef6b..9c47d26 100644
  
  #ifdef _WIN32
 -#define snprintf _snprintf
-+//#define snprintf _snprintf
++// #define snprintf _snprintf
  #endif
  
  /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
@@ -259,7 +263,7 @@ index 7b38900..e3794d5 100644
  	const char *name = avro_schema_name(schema);
 -	const char *namespace = avro_schema_namespace(schema);
 -	const char *full_name = qualify_name(name, namespace);
-+	const char *namespaceX  = avro_schema_namespace(schema);
++	const char *namespaceX = avro_schema_namespace(schema);
 +	const char *full_name = qualify_name(name, namespaceX);
  	int rval = st_insert(st, (st_data_t) full_name, (st_data_t) schema);
  	return rval;

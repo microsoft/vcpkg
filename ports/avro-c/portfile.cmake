@@ -12,7 +12,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         avro.patch          # Private vcpkg build fixes
-        fix-link-error-on-linux.patch
 )
 
 vcpkg_cmake_configure(
