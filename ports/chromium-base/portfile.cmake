@@ -23,33 +23,31 @@ function(checkout_in_path PATH URL REF)
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
-# Commits are based on https://chromium.googlesource.com/chromium/src/+/refs/tags/86.0.4199.1
-set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/25ce732")
+# Commits are based on https://chromium.googlesource.com/chromium/src/+/refs/tags/97.0.4689.3
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/97.0.4689.3")
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party")
 
 set(CHROMIUM_GIT "https://chromium.googlesource.com/chromium/src")
 checkout_in_path(
     "${SOURCE_PATH}/base" 
     "${CHROMIUM_GIT}/base" 
-    "25ce73258703a5ac018da0e203fb3d4a98c2136e"
-    res/0001-base.patch)
+    "b911294b3ff29e26ef1e6565c8da96a57dcc7973")
 checkout_in_path(
     "${SOURCE_PATH}/build" 
     "${CHROMIUM_GIT}/build" 
-    "312532ee66abdacbe58afb5df7ddf05e3a6399f9"
-    res/0002-build.patch)
+    "2d39b33b5da4e3ca844a3959a9e9c6e73b6c4e9b")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/apple_apsl" 
     "${CHROMIUM_GIT}/third_party/apple_apsl" 
-    "4cc25bbf65194f6726f7f10da0a885818e35d53e")
+    "6c392aa25ba660e9f66b66f75bc678d8b15cbbf7")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/ced" 
     "${CHROMIUM_GIT}/third_party/ced" 
-    "4cd87a44674edd9fe1f01c4cb5f1b73907ce4236")
+    "b239c2580a1421fff9599a449d9c71bf50732a6b")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/modp_b64" 
     "${CHROMIUM_GIT}/third_party/modp_b64" 
-    "509f005fa65e652dc4a6f636da6fa1002b6dce16")
+    "ca6144fbeb44934d474cc8030a64de21947e2550")
 
 set(RES "${CMAKE_CURRENT_LIST_DIR}/res")
 file(COPY "${RES}/.gn" DESTINATION "${SOURCE_PATH}")
