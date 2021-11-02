@@ -10,11 +10,11 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    lz4     ENABLE_LZ4_EXT
-    ssl     WITH_SSL
-    zlib    WITH_ZLIB
-    zstd    WITH_ZSTD
-    snappy WITH_SNAPPY
+        lz4     ENABLE_LZ4_EXT
+        ssl     WITH_SSL
+        zlib    WITH_ZLIB
+        zstd    WITH_ZSTD
+        snappy  WITH_SNAPPY
 )
 
 vcpkg_cmake_configure(
