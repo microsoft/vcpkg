@@ -1,0 +1,19 @@
+{
+  "name": "imgui-sfml",
+  "version": "2.3",
+  "description": "ImGui binding for use with SFML",
+  "homepage": "https://github.com/eliasdaler/imgui-sfml",
+  "dependencies": [
+    "imgui",
+    "opengl",
+    "sfml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

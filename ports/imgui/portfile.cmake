@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 47fb332fb20921658732107e115aa397e9b08cbe
-       SHA512 92bfb20c9734dc37381d24325156c149f110b53dfabaf294e4bb2b0bccd618ab421aa347fa3c7fcaa1929b5bec8885246e7f49dc5fb6e81f1a8e80ff2d980f28
+       REF 1b215ecb018ba0fd170618366ddc4be9bd45f283
+       SHA512 afd79082c4439b47d5943df5f7ddbdf80dcf23cd120b8da99b67b2979728e604436dd656ef8e8ae0af2a9050f8ea56b2f8c109243326fb842d684027616843e7
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.84.1
-    SHA512 054beebda9a17758a9a6b9edf075279800a314b0e255e528bb9ac248b4911fd8fd2b5160079896d116b58fe6d993281ba9082780a31197faefd9f7adf32aec51
+    REF v1.85
+    SHA512 830ff36681a661d77754fb7818bb13cc63da58a293d343a8d6847a586f00c6e0bfc3ffe51cdf882849e5083d4ddca52cdbdc1b3abc9b794a96f89ae7628f1fc2
     HEAD_REF master
     )
 endif()
@@ -40,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
     sdl2-binding                IMGUI_BUILD_SDL2_BINDING
+    sdl2-renderer-binding       IMGUI_BUILD_SDL2_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
@@ -59,9 +60,8 @@ if ("libigl-imgui" IN_LIST FEATURES)
     file(INSTALL ${IMGUI_FONTS_DROID_SANS_H} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
@@ -70,7 +70,7 @@ vcpkg_configure_cmake(
         IMGUI_COPY_MARMALADE_BINDING
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
@@ -80,6 +80,6 @@ if ("wchar32" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alicevision/cctag
-    REF v1.0.0
-    SHA512 49028356215dd703727b2eedd6aa72d81af84e5ca36f8dc7e9caf85a85c7f500b3eeaaa7369314a40049a72593d70049b709b453c30ff352d98ab0dea3afef76
+    REF v1.0.1
+    SHA512 94992141094162d44cf45ad85324517638bf794d693c6a059d6ba5d5ccbedea4f98664a0cc49ebca78f85d2860b637dfcb9d5315114493643a6c7f8fabab3073
     HEAD_REF develop
 )
 
@@ -13,21 +13,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("cuda" IN_LIST FEATURES)
-    include(${CURRENT_INSTALLED_DIR}/share/vcpkg_find_cuda/vcpkg_find_cuda.cmake)
+    include(${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
     message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH  "${SOURCE_PATH}"
     OPTIONS -DCCTAG_BUILD_TESTS:BOOL=OFF ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CCTag)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CCTag)
 
 vcpkg_copy_pdbs()
 

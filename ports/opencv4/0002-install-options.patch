@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 49abe01..b51bcde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -616,7 +616,7 @@ endif()
@@ -11,8 +9,6 @@ index 49abe01..b51bcde 100644
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  
-diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 6e56a2e..11034db 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
 @@ -286,7 +286,6 @@ if(MSVC)
@@ -23,8 +19,6 @@ index 6e56a2e..11034db 100644
      set(OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_EXE_LINKER_FLAGS_RELEASE} /debug")
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
      set(OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_MODULE_LINKER_FLAGS_RELEASE} /debug")
-diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index 838852c..04906b3 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
 @@ -114,11 +114,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
@@ -50,8 +44,6 @@ index 838852c..04906b3 100644
    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows AND NOT OPENCV_SKIP_CMAKE_ROOT_CONFIG)
      ocv_gen_config("${CMAKE_BINARY_DIR}/win-install"
                     "${OPENCV_INSTALL_BINARIES_PREFIX}${OPENCV_INSTALL_BINARIES_SUFFIX}"
-diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
-index 1f0d720..0bb1ff7 100644
 --- a/data/CMakeLists.txt
 +++ b/data/CMakeLists.txt
 @@ -1,8 +1,6 @@

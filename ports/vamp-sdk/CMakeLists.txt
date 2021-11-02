@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(vamp-cmake)
 
-set(CMAKE_DEBUG_POSTFIX d)
-
 find_package(SndFile REQUIRED)
 
 set(VAMP_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/vamp/vamp.h)
@@ -64,6 +62,14 @@ message(${SDK_HEADERS})
 set_target_properties(vamp-sdk PROPERTIES PUBLIC_HEADER "${SDK_HEADERS}")
 set_target_properties(vamp-hostsdk PROPERTIES PUBLIC_HEADER
                                               "${HOST_SDK_HEADERS}")
+
+# The Visual Studio project files upstream intentionally output different
+# library file names than autotools.
+# https://github.com/tenacityteam/tenacity/pull/577#discussion_r702328284
+if(WIN32)
+    set_target_properties(vamp-sdk PROPERTIES OUTPUT_NAME VampPluginSDK)
+    set_target_properties(vamp-hostsdk PROPERTIES OUTPUT_NAME VampHostSDK)
+endif()
 
 set_property(TARGET vamp-sdk PROPERTY CXX_STANDARD 11)
 set_property(TARGET vamp-hostsdk PROPERTY CXX_STANDARD 11)

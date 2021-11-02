@@ -1,0 +1,8 @@
+{
+  "name": "vectorclass",
+  "version-string": "2.00.01",
+  "port-version": 1,
+  "description": "C++ class library for using the Single Instruction Multiple Data (SIMD) instructions in modern Microprocessors",
+  "homepage": "https://github.com/vectorclass/version2",
+  "supports": "!(arm | arm64)"
+}

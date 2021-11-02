@@ -1,0 +1,19 @@
+{
+  "name": "graphviz",
+  "version-semver": "2.49.1",
+  "port-version": 1,
+  "description": "Graph Visualization Tools",
+  "homepage": "https://graphviz.org/",
+  "dependencies": [
+    "cairo",
+    "getopt",
+    "libffi",
+    "libgd",
+    "pango",
+    "pkgconf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

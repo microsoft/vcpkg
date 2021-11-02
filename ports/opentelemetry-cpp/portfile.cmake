@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
-    REF v1.0.0-rc4
-    SHA512 93de3e61b6bd0a9237cf81dedbcdb078fb92c1dc562975c82134d791ad911d4d3c0e717f390a0a993fbeda5d5c90206c0e7a0c7085e58d9cfefbc9fd4ff209d2
+    REF v1.0.1
+    SHA512 ddaf5f52f5c100f385e09a6eb69f08fced2e890145939d35f969b05743733409e43f4747713259b68641511401c2c1e01a498b9b7a20fab0f52ee6f4b5d3c77c
     HEAD_REF main
 )
 

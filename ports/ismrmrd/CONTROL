@@ -1,5 +1,0 @@
-Source: ismrmrd
-Version: 1.5.0
-Description: ISMRM Raw Data Format
-Build-Depends: pugixml, hdf5, boost, fftw3
-Homepage: https://github.com/ismrmrd/ismrmrd

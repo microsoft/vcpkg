@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hazelcast/hazelcast-cpp-client
-    REF v4.1.1
-    SHA512 2f6d578c43dfc8c03f83a5b7c98fe67b7dc450cbc542031e625ec3bc91b9ec2e430e3ced670608a651fcf77775d2d4a333ca82689cae793e8b13a8e0438bbfb9
+    REF v4.2.0
+    SHA512 7dc91968c95930d966c9bf005c0756c3702b9f27d96543bd6beffd20be36f9d9840676be2e9473b68f5cfa420c39c6feef0d7538270c798633aad5d0714df56c
     HEAD_REF master
 )
 

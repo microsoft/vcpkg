@@ -1,4 +1,0 @@
-Source: qt5-graphicaleffects
-Version: 5.15.2
-Description: Qt5 GraphicalEffects Module.
-Build-Depends:  qt5-base[core], qt5-declarative

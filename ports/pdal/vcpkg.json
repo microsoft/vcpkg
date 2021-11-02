@@ -1,0 +1,15 @@
+{
+  "name": "pdal",
+  "version-string": "1.7.1",
+  "port-version": 12,
+  "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-system",
+    "gdal",
+    "geos",
+    "jsoncpp",
+    "laszip",
+    "libgeotiff"
+  ]
+}

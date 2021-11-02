@@ -1,0 +1,14 @@
+{
+  "name": "antlr4",
+  "version-string": "4.9.1",
+  "port-version": 1,
+  "description": "ANother Tool for Language Recognition",
+  "homepage": "https://www.antlr.org",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libuuid",
+      "platform": "!uwp & !windows & !osx"
+    }
+  ]
+}
