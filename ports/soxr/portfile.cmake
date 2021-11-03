@@ -35,3 +35,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
+
+vcpkg_fixup_pkgconfig()

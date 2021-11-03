@@ -32,6 +32,11 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/OpenMesh/cmake TARGET_PATH share/OpenMesh/cmake)
 
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/libdata" "${CURRENT_PACKAGES_DIR}/libdata")
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/OpenMesh/Tools/VDPM/xpm)
 # Only move dynamic libraries to bin on Windows
