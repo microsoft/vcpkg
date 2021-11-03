@@ -47,58 +47,77 @@ Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_ac
 * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 #]===]
 
-function(z_vcpkg_find_acquire_program_version_check)
-    if(version_command)
-        vcpkg_execute_in_download_mode(
-            COMMAND ${${program}} ${version_command}
-            WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
-            OUTPUT_VARIABLE program_version_output
-        )
-        string(STRIP "${program_version_output}" program_version_output)
-        #TODO: REGEX MATCH case for more complex cases!
-        if(NOT program_version_output VERSION_GREATER_EQUAL program_version)
-            message(STATUS "Found ${program_name}('${program_version_output}') but at least version ${program_version} is required! Trying to use internal version if possible!")
-            unset("${program}" PARENT_SCOPE)
-            set("${program}" "${program}-NOTFOUND" CACHE INTERNAL "")
-        else()
-            message(STATUS "Found external ${program_name}('${program_version_output}').")
-        endif()
+function(z_vcpkg_find_acquire_program_version_check out_var)
+    cmake_parse_arguments(PARSE_ARGV 2 arg
+        ""
+        "MIN_VERSION;PROGRAM_NAME"
+        "COMMAND"
+    )
+    vcpkg_execute_in_download_mode(
+        COMMAND ${arg_COMMAND}
+        WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
+        OUTPUT_VARIABLE program_version_output
+    )
+    string(STRIP "${program_version_output}" program_version_output)
+    #TODO: REGEX MATCH case for more complex cases!
+    if(NOT "${program_version_output}" VERSION_GREATER_EQUAL "${arg_MIN_VERSION}")
+        message(STATUS "Found ${arg_PROGRAM_NAME}('${program_version_output}') but at least version ${arg_MIN_VERSION} is required! Trying to use internal version if possible!")
+        set("${out_var}" OFF PARENT_SCOPE)
+    else()
+        message(STATUS "Found external ${arg_PROGRAM_NAME}('${program_version_output}').")
+        set("${out_var}" ON PARENT_SCOPE)
     endif()
 endfunction()
 
-macro(z_vcpkg_find_acquire_program_find)
+function(z_vcpkg_find_acquire_program_find_external)
+    if("${version_command}" STREQUAL "")
+        return() # can't check for the version being good
+    endif()
+
     if("${interpreter}" STREQUAL "")
-        find_program(${program} ${program_name} PATHS ${paths_to_search} NO_DEFAULT_PATH)
-        if(NOT ${program})
-            find_program(${program} ${program_name})
-            if(${program} AND NOT program_version_checked)
-                z_vcpkg_find_acquire_program_version_check()
-                set(program_version_checked ON)
-            elseif(program_version_checked)
-                message(FATAL_ERROR "Unable to find ${program_name} with min version of ${program_version}")
-            endif()
+        find_program(${program} ${program_name})
+        if(${program})
+            z_vcpkg_find_acquire_program_version_check(version_is_good
+                COMMAND ${${program}} ${version_command}
+                MIN_VERSION "${program_version}"
+                PROGRAM_NAME "${program_name}"
+            )
         endif()
     else()
-        vcpkg_find_acquire_program(${interpreter})
-        find_file(SCRIPT_${program} NAMES ${SCRIPTNAME} PATHS ${paths_to_search} NO_DEFAULT_PATH)
-        if(NOT SCRIPT_${program})
-            find_file(SCRIPT_${program} NAMES ${SCRIPTNAME})
-            if(SCRIPT_${program} AND NOT program_version_checked)
-                set(${program} ${${interpreter}} ${SCRIPT_${program}})
-                z_vcpkg_find_acquire_program_version_check()
-                set(program_version_checked ON)
-                if(NOT ${program})
-                    unset(SCRIPT_${program} CACHE)
-                endif()
-            elseif(program_version_checked)
-                message(FATAL_ERROR "Unable to find ${program_name} with min version of ${program_version}")
-            endif()
-        endif()
+        find_file(SCRIPT_${program} NAMES ${SCRIPTNAME})
         if(SCRIPT_${program})
-            set(${program} ${${interpreter}} ${SCRIPT_${program}})
+            vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${program}})
+            set("${program}" "${program_tmp}" CACHE INTERNAL "")
+            z_vcpkg_find_acquire_program_version_check(version_is_good
+                COMMAND ${${program}} ${version_command}
+                MIN_VERSION "${program_version}"
+                PROGRAM_NAME "${program_name}"
+            )
+    endif()
+
+    if(NOT version_is_good)
+        unset("${program}" PARENT_SCOPE)
+        set("${program}" "${program}-NOTFOUND" CACHE INTERNAL "")
+    endif()
+endfunction()
+
+function(z_vcpkg_find_acquire_program_find_internal)
+    if("${interpreter}" STREQUAL "")
+        find_program(${program}
+            ${program_name}
+            PATHS ${paths_to_search}
+            NO_DEFAULT_PATH)
+    else()
+        vcpkg_find_acquire_program("${interpreter}")
+        find_file(SCRIPT_${program}
+            NAMES ${SCRIPTNAME}
+            PATHS ${paths_to_search}
+            NO_DEFAULT_PATH)
+        if(SCRIPT_${program})
+            set("${program}" ${${interpreter}} ${SCRIPT_${program}} CACHE INTERNAL "")
         endif()
     endif()
-endmacro()
+endfunction()
 
 function(vcpkg_find_acquire_program program)
     if("${${program}}")
@@ -532,7 +551,10 @@ function(vcpkg_find_acquire_program program)
         set(full_subdirectory "${CMAKE_MATCH_1}")
     endif()
 
-    z_vcpkg_find_acquire_program_find()
+    z_vcpkg_find_acquire_program_find_internal()
+    if(NOT ${program})
+        z_vcpkg_find_acquire_program_find_external()
+    endif()
     if(NOT ${program})
         if(NOT VCPKG_HOST_IS_WINDOWS AND NOT supported_on_unix)
             set(EXAMPLE ".")
@@ -597,7 +619,7 @@ function(vcpkg_find_acquire_program program)
             )
         endif()
         unset(${program} CACHE)
-        z_vcpkg_find_acquire_program_find()
+        z_vcpkg_find_acquire_program_find_internal()
         if(NOT ${program})
             message(FATAL_ERROR "Unable to find ${program}")
         endif()
