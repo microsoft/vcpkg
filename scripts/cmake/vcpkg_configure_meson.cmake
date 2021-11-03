@@ -113,7 +113,7 @@ function(z_meson_convert_compiler_flags_to_list out_var _compiler_flags)
 endfunction()
 
 function(z_meson_convert_list_to_python_array out_var)
-    vcpkg_function_arguments(flag_list 1)
+    z_vcpkg_function_arguments(flag_list 1)
     vcpkg_list(REMOVE_ITEM flag_list "") # remove empty elements if any
     vcpkg_list(JOIN flag_list "', '" flag_list)
     set("${out_var}" "['${flag_list}']" PARENT_SCOPE)
