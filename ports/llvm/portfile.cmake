@@ -155,9 +155,8 @@ if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
-    list(APPEND FEATURE_OPTIONS
-        "-DPERL_EXECUTABLE=${PERL}"
-    )
+    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+    vcpkg_add_to_path(${PERL_PATH})
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND FEATURE_OPTIONS
             -DLIBOMP_DEFAULT_LIB_NAME=libompd
