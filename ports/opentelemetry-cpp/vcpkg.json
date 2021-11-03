@@ -35,7 +35,11 @@
       ]
     },
     "otlp": {
-      "description": "Whether to include the OpenTelemetry Protocol in the SDK"
+      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
+      "dependencies": [
+        "grpc",
+        "protobuf"
+      ]
     },
     "prometheus": {
       "description": "Whether to include the Prometheus Client in the SDK",
