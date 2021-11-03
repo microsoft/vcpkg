@@ -70,30 +70,24 @@ function(z_vcpkg_find_acquire_program_version_check out_var)
 endfunction()
 
 function(z_vcpkg_find_acquire_program_find_external)
-    if("${version_command}" STREQUAL "")
-        return() # can't check for the version being good
-    endif()
-
     if("${interpreter}" STREQUAL "")
         find_program(${program} ${program_name})
-        if(${program})
-            z_vcpkg_find_acquire_program_version_check(version_is_good
-                COMMAND ${${program}} ${version_command}
-                MIN_VERSION "${program_version}"
-                PROGRAM_NAME "${program_name}"
-            )
-        endif()
     else()
         find_file(SCRIPT_${program} NAMES ${SCRIPTNAME})
         if(SCRIPT_${program})
             vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${program}})
             set("${program}" "${program_tmp}" CACHE INTERNAL "")
-            z_vcpkg_find_acquire_program_version_check(version_is_good
-                COMMAND ${program_tmp} ${version_command}
-                MIN_VERSION "${program_version}"
-                PROGRAM_NAME "${program_name}"
-            )
         endif()
+    endif()
+
+    if("${version_command}" STREQUAL "")
+        set(version_is_good ON) # can't check for the version being good, so assume it is
+    else()
+        z_vcpkg_find_acquire_program_version_check(version_is_good
+            COMMAND ${${program}} ${version_command}
+            MIN_VERSION "${program_version}"
+            PROGRAM_NAME "${program_name}"
+        )
     endif()
 
     if(NOT version_is_good)
