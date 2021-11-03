@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-pre16
-    SHA512 dca4b930c78d0d330cde0a0255efae6042e11914eec37be35b1fc39eaf3855a47f5b2d07be17c8b4c67f569acfab2cfe7ff86aaeba60eed4bbf2be637b1bf192
+    REF v0.9.0-pre18
+    SHA512 711dd34617982427155eaa4cb39d0d0004ef6bb31ac29ee07899ac0b132ed868ea30d39f424dffd8dd0e1ad8bc1c733dd1ab9e3713b5772100ae1953b4ce6e08
     HEAD_REF master
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DSAIL_STATIC=${SAIL_STATIC}
         -DSAIL_COMBINE_CODECS=ON
+        -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         -DSAIL_BUILD_TESTS=OFF
 )

@@ -1,12 +1,20 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.31.1",
+  "version": "1.33.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "abseil"
+    "abseil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "bigquery",
@@ -68,9 +76,6 @@
           "host": true
         }
       ]
-    },
-    "firestore": {
-      "description": "Community contributions to interact with Firestore"
     },
     "iam": {
       "description": "The Google Cloud IAM C++ client library",
