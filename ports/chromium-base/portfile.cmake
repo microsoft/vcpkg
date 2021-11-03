@@ -31,15 +31,22 @@ set(CHROMIUM_GIT "https://chromium.googlesource.com/chromium/src")
 checkout_in_path(
     "${SOURCE_PATH}/base" 
     "${CHROMIUM_GIT}/base" 
-    "b911294b3ff29e26ef1e6565c8da96a57dcc7973")
+    "b911294b3ff29e26ef1e6565c8da96a57dcc7973"
+    res/0001-base.patch)
 checkout_in_path(
     "${SOURCE_PATH}/build" 
     "${CHROMIUM_GIT}/build" 
-    "2d39b33b5da4e3ca844a3959a9e9c6e73b6c4e9b")
+    "2d39b33b5da4e3ca844a3959a9e9c6e73b6c4e9b"
+    res/0002-build.patch)
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/apple_apsl" 
-    "${CHROMIUM_GIT}/third_party/apple_apsl" 
-    "6c392aa25ba660e9f66b66f75bc678d8b15cbbf7")
+    "${SOURCE_PATH}/third_party/abseil-cpp" 
+    "${CHROMIUM_GIT}/third_party/abseil-cpp" 
+    "aaec1f105751cd932396b0b18798ccdfc61cd148"
+    res/0003-abseil-cpp.patch)
+#checkout_in_path(
+#    "${SOURCE_PATH}/third_party/apple_apsl" 
+#    "${CHROMIUM_GIT}/third_party/apple_apsl" 
+#    "6c392aa25ba660e9f66b66f75bc678d8b15cbbf7")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/ced" 
     "${CHROMIUM_GIT}/third_party/ced" 

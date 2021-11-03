@@ -14,3 +14,5 @@ ignore_elf32_limitations = false
 
 # Use the system install of Xcode for tools like ibtool, libtool, etc.
 use_system_xcode = true
+
+use_perfetto_client_library = false
