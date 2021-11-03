@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         remove_explicit_shared_argument.patch # https://invent.kde.org/frameworks/kxmlgui/-/commit/d12e8f6266188ce7e221dc014a56071b8a5ef706
         add_support_for_static_builds.patch   # https://invent.kde.org/frameworks/kxmlgui/-/commit/2f1b948ad690942d4ec208c5676c11218f29181a
+        fix_static_resources.diff             # https://invent.kde.org/frameworks/kxmlgui/-/merge_requests/77
 )
 
 vcpkg_check_features(

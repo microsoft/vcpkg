@@ -1,0 +1,117 @@
+diff --git a/src/calendarevents/CMakeLists.txt b/src/calendarevents/CMakeLists.txt
+index e2e6e6f808e0e4f3569c0f1225f7d5b50798833c..aa0868118b64acaefd7c54add624e589cb0976a0 100644
+--- a/src/calendarevents/CMakeLists.txt
++++ b/src/calendarevents/CMakeLists.txt
+@@ -3,7 +3,7 @@ set(calendar-integration_SRCS
+     eventdata_p.cpp
+ )
+ 
+-add_library(KF5CalendarEvents SHARED ${calendar-integration_SRCS})
++add_library(KF5CalendarEvents ${calendar-integration_SRCS})
+ generate_export_header(KF5CalendarEvents BASE_NAME CalendarEvents)
+ add_library(KF5::CalendarEvents ALIAS KF5CalendarEvents)
+ 
+diff --git a/src/qmlcontrols/draganddrop/CMakeLists.txt b/src/qmlcontrols/draganddrop/CMakeLists.txt
+index e8127e44f7ed51514fc94337c9de524343e2a4bd..e649c4fe421f12e5f3a3d7833004886bf6a40dd6 100644
+--- a/src/qmlcontrols/draganddrop/CMakeLists.txt
++++ b/src/qmlcontrols/draganddrop/CMakeLists.txt
+@@ -9,7 +9,7 @@ set(declarativedragdrop_SRCS
+     MimeDataWrapper.cpp
+ )
+ 
+-add_library(draganddropplugin SHARED ${declarativedragdrop_SRCS})
++add_library(draganddropplugin ${declarativedragdrop_SRCS})
+ target_link_libraries(draganddropplugin
+         Qt5::Core
+         Qt5::Quick
+diff --git a/src/qmlcontrols/kcmcontrols/CMakeLists.txt b/src/qmlcontrols/kcmcontrols/CMakeLists.txt
+index a2e107ff7ae776f584f05b1d94130be6d2de4382..eec89dd219c345f50236f4d2d8e0004d4fb0741c 100644
+--- a/src/qmlcontrols/kcmcontrols/CMakeLists.txt
++++ b/src/qmlcontrols/kcmcontrols/CMakeLists.txt
+@@ -6,7 +6,7 @@ set(kcmcontrols_SRCS
+     settinghighlighterprivate.cpp
+ )
+ 
+-add_library(kcmcontrolsplugin SHARED ${kcmcontrols_SRCS})
++add_library(kcmcontrolsplugin ${kcmcontrols_SRCS})
+ target_link_libraries(kcmcontrolsplugin
+         Qt5::Core
+         Qt5::Quick
+diff --git a/src/qmlcontrols/kconfig/CMakeLists.txt b/src/qmlcontrols/kconfig/CMakeLists.txt
+index 59a68b2277dee3532d39b40d2240a1ba2d3e041d..73658100ce4d832088d8bf6479b3a04853addecb 100644
+--- a/src/qmlcontrols/kconfig/CMakeLists.txt
++++ b/src/qmlcontrols/kconfig/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(kconfigplugin_SRCS
+     kauthorizedproxy.cpp
+     )
+ 
+-add_library(kconfigplugin SHARED ${kconfigplugin_SRCS})
++add_library(kconfigplugin ${kconfigplugin_SRCS})
+ target_link_libraries(kconfigplugin
+         Qt5::Core
+         Qt5::Qml
+diff --git a/src/qmlcontrols/kcoreaddons/CMakeLists.txt b/src/qmlcontrols/kcoreaddons/CMakeLists.txt
+index 3f77f2d1bf067a545f74f31423a8facff8e38ff7..3c27e3bb3db2c8686ef97ef093051a3ead7ad475 100644
+--- a/src/qmlcontrols/kcoreaddons/CMakeLists.txt
++++ b/src/qmlcontrols/kcoreaddons/CMakeLists.txt
+@@ -6,7 +6,7 @@ set(kcoreaddonsplugin_SRCS
+     kuserproxy.cpp
+     )
+ 
+-add_library(kcoreaddonsplugin SHARED ${kcoreaddonsplugin_SRCS})
++add_library(kcoreaddonsplugin ${kcoreaddonsplugin_SRCS})
+ target_link_libraries(kcoreaddonsplugin
+         Qt5::Core
+         Qt5::Quick
+diff --git a/src/qmlcontrols/kioplugin/CMakeLists.txt b/src/qmlcontrols/kioplugin/CMakeLists.txt
+index 22a4f1e4326a2dbb721fd94ebbf74bdc0f8a7acf..2afcbdd3ef4aeee55da5a0800f7da0ce78edc909 100644
+--- a/src/qmlcontrols/kioplugin/CMakeLists.txt
++++ b/src/qmlcontrols/kioplugin/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(kioplugin_SRCS
+     krunproxy.cpp
+     )
+ 
+-add_library(kio SHARED ${kioplugin_SRCS})
++add_library(kio ${kioplugin_SRCS})
+ target_link_libraries(kio
+         Qt5::Core
+         Qt5::Qml
+diff --git a/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt b/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
+index 61fae96bb475af320a5f12d7b5c4178a0bf293f9..5afb253e4a4fce5f1448f8f74b966ea4ec387041 100644
+--- a/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
++++ b/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
+@@ -6,7 +6,7 @@ set(kquickcontrolsprivate_SRCS
+     translationcontext.cpp
+ )
+ 
+-add_library(kquickcontrolsprivateplugin SHARED ${kquickcontrolsprivate_SRCS})
++add_library(kquickcontrolsprivateplugin ${kquickcontrolsprivate_SRCS})
+ 
+ target_link_libraries(kquickcontrolsprivateplugin
+         Qt5::Core
+diff --git a/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt b/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
+index 71aacc6920e126e271b9192ed384d9753f469520..513eebfb18b8b6e093db540fb5e964cf8b1cbbe2 100644
+--- a/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
++++ b/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
+@@ -17,7 +17,7 @@ set(kquickcontrolsaddons_SRCS
+     icondialog.cpp
+ )
+ 
+-add_library(kquickcontrolsaddonsplugin SHARED ${kquickcontrolsaddons_SRCS})
++add_library(kquickcontrolsaddonsplugin ${kquickcontrolsaddons_SRCS})
+ 
+ target_link_libraries(kquickcontrolsaddonsplugin
+         Qt5::Core
+diff --git a/src/qmlcontrols/kwindowsystemplugin/CMakeLists.txt b/src/qmlcontrols/kwindowsystemplugin/CMakeLists.txt
+index 48378f7e93c5fd9641e11d7dd784992cf7f62f3e..6c8a01d249a67371caba84e8f9a263dcf728b60b 100644
+--- a/src/qmlcontrols/kwindowsystemplugin/CMakeLists.txt
++++ b/src/qmlcontrols/kwindowsystemplugin/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(kwindowsystemplugin_SRCS
+     kwindowsystemproxy.cpp
+     )
+ 
+-add_library(kwindowsystem SHARED ${kwindowsystemplugin_SRCS})
++add_library(kwindowsystem ${kwindowsystemplugin_SRCS})
+ target_link_libraries(kwindowsystem
+         Qt5::Core
+         Qt5::Qml

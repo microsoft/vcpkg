@@ -1,23 +1,15 @@
-set(GEOGRAM_VERSION 1.7.5)
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://gforge.inria.fr/frs/download.php/file/38314/geogram_${GEOGRAM_VERSION}.tar.gz"
-    FILENAME "geogram_${GEOGRAM_VERSION}_47dcbb8.tar.gz"
-    SHA512 47dcbb8a5c4e5f791feb8d9b209b04b575b0757e8b89de09c82ef2324a36d4056a1f3001537038c8a752045b0e6b6eedf5421ad49132214c0f60163ff095c36f
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GEOGRAM_VERSION}
+    REPO alicevision/geogram
+    REF 8b2ae6148c7ab1564fa2700673b4275296ce80d3 #1.7.6
+    SHA512 0ec0deded92c8d5d100b6e77f8cfbbbaf7b744c230e10abd0b86861960cda9713ff65209575fdc09034afcb0e9137428a20c00d399c09fd58ce541fed2105a2d
     PATCHES
-        fix-cmake-config-and-install.patch
-        fix-windows-dynamic.patch
+        fix-vcpkg-install.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
-
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -87,3 +79,5 @@ vcpkg_replace_string(
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
