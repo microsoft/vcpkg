@@ -23,7 +23,10 @@ staging directories.
 #]===]
 
 function(vcpkg_install_qmake)
-    vcpkg_build_qmake(${ARGN})
+    z_vcpkg_function_arguments(args)
+
+    vcpkg_build_qmake(${args})
+
     file(GLOB_RECURSE release_libs
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.a"
@@ -44,7 +47,7 @@ function(vcpkg_install_qmake)
     file(GLOB_RECURSE debug_bins
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
     )
-    if(NOT release_libs AND NOT debug_libs)
+    if("${release_libs}" STREQUAL "" AND "${debug_libs}" STREQUAL "")
         message(FATAL_ERROR "Build did not appear to produce any libraries. If this is intended, use `vcpkg_build_qmake()` directly.")
     endif()
     if(NOT "${release_libs}" STREQUAL "")
