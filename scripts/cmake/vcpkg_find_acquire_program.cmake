@@ -48,7 +48,7 @@ Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_ac
 #]===]
 
 function(z_vcpkg_find_acquire_program_version_check out_var)
-    cmake_parse_arguments(PARSE_ARGV 2 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         ""
         "MIN_VERSION;PROGRAM_NAME"
         "COMMAND"
@@ -89,10 +89,11 @@ function(z_vcpkg_find_acquire_program_find_external)
             vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${program}})
             set("${program}" "${program_tmp}" CACHE INTERNAL "")
             z_vcpkg_find_acquire_program_version_check(version_is_good
-                COMMAND ${${program}} ${version_command}
+                COMMAND ${program_tmp} ${version_command}
                 MIN_VERSION "${program_version}"
                 PROGRAM_NAME "${program_name}"
             )
+        endif()
     endif()
 
     if(NOT version_is_good)
