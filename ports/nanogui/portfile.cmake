@@ -17,6 +17,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DNANOGUI_BUILD_EXAMPLES=OFF
         -DNANOGUI_BUILD_PYTHON=OFF
+        -DNANOGUI_BUILD_GLAD=OFF
+        -DNANOGUI_BUILD_GLFW=OFF
 )
 
 vcpkg_cmake_install()
