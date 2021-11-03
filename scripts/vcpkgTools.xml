@@ -126,6 +126,13 @@
         <sha512>933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4</sha512>
         <archiveName>aria2-1.35.0-win-32bit-build1.zip</archiveName>
     </tool>
+    <tool name="aria2" os="osx">
+        <version>1.35.0</version>
+        <exeRelativePath>aria2-1.35.0/bin/aria2c</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2</url>
+        <sha512>3bb32b7d55347d1af37c6f4ebf0e20b38ce51c37a1baf92f7ad1762000539a03413dd679a6d902fdb1805fa71917300c9692aceee012eb06ecdff10491137aec</sha512>
+        <archiveName>aria2-1.35.0-osx-darwin.tar.bz2</archiveName>
+    </tool>
     <tool name="ninja" os="windows">
         <version>1.10.2</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
