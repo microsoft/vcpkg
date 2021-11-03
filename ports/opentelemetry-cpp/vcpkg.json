@@ -41,6 +41,12 @@
     },
     "zipkin": {
       "description": "Whether to include the Zipkin exporter in the SDK"
+    },
+    "otlp": {
+      "description": "Whether to include the OpenTelemetry Protocol in the SDK"
+    },
+    "zpages": {
+      "description": "Whether to include the Zpages Server in the SDK"
     }
   }
 }
