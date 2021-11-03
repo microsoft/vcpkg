@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.87.0
     SHA512 4e4a8d0a31013f617dd6e38f78f56459cbb61fc59c31db0db09ee6a4086bb3913515af502c783a58c6c964168948394063fdabb6906e2cdb99f661dd1f596e4d
     HEAD_REF master
+    PATCHES
+        dont_build_examples.diff    # https://invent.kde.org/frameworks/sonnet/-/merge_requests/34
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -13,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
 )
