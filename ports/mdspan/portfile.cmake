@@ -4,9 +4,9 @@ vcpkg_from_github(
   REPO
   kokkos/mdspan
   REF
-  9d1acac543053cbe6839273f550b1ece218e9696 # v0.1.0
+  aced2cebd362a1e15830da030bd16748131d28bd # stable as of 2021-11-03
   SHA512
-  fcb75063e22367f830dee2b7ecbccb0c0682d03e5b8959f4c3a8d3ba5f3e259b7a44ce42ade999e4c39273c34adb286f69f2ca94ce15cfbe294184983880975f
+  a1950430be537497fb84c4a8c5e681cacead93512775098f38ea6c1a20b95d0f7110d9d0802fbdcf8ce3c40ade766cc697773f6ea6fcf8c363b3ebee55620f7c
   HEAD_REF
   stable)
 

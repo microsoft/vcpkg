@@ -1,6 +1,6 @@
 {
   "name": "mdspan",
-  "version-semver": "0.1.0",
+  "version-date": "2021-11-03",
   "description": "Provide a production-quality implementation of the P0009 proposal as written in preparation for the addition of mdspan to the c++ standard library.",
   "homepage": "https://github.com/kokkos/mdspan",
   "dependencies": [
