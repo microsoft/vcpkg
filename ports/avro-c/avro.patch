@@ -23,7 +23,7 @@ index aa923e1..9ee7937 100644
      set(SNAPPY_PKG libsnappy)
      add_definitions(-DSNAPPY_CODEC)
 +    set(SNAPPY_LIBRARIES Snappy::snappy)
-+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    if (UNIX)
 +        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
 +    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      include_directories(${SNAPPY_INCLUDE_DIRS})
