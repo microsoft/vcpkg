@@ -88,20 +88,15 @@ function(z_meson_generate_native_file additional_binaries) #https://mesonbuild.c
         # string(APPEND native_config "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
-        string(REGEX REPLACE "( |^)(-|/)" ";\\2" win_c_standard_libraries "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
-        string(REGEX REPLACE "\\.lib " ".lib;" win_c_standard_libraries "${win_c_standard_libraries}")
-        list(TRANSFORM win_c_standard_libraries APPEND "'")
-        list(TRANSFORM win_c_standard_libraries PREPEND "'")
-        vcpkg_list(REMOVE_ITEM win_c_standard_libraries "''")
-        vcpkg_list(JOIN win_c_standard_libraries ", " win_c_standard_libraries)
-        string(APPEND native_config "c_winlibs = [${win_c_standard_libraries}]\n")
-        string(REGEX REPLACE "( |^)(-|/)" ";\\2" win_cxx_standard_libraries "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        string(REGEX REPLACE "\\.lib " ".lib;" win_cxx_standard_libraries "${win_cxx_standard_libraries}")
-        list(TRANSFORM win_cxx_standard_libraries APPEND "'")
-        list(TRANSFORM win_cxx_standard_libraries PREPEND "'")
-        vcpkg_list(REMOVE_ITEM win_cxx_standard_libraries "''")
-        vcpkg_list(JOIN win_cxx_standard_libraries ", " win_cxx_standard_libraries)
-        string(APPEND native_config "cpp_winlibs = [${win_cxx_standard_libraries}]\n")
+        set(c_winlibs "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+        set(cpp_winlibs "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        foreach(libvar IN ITEMS c_winlibs cpp_winlibs)
+            string(REGEX REPLACE "( |^)(-|/)" [[;\2]] "${libvar}" "${${libvar}}")
+            string(REPLACE ".lib " ".lib;" "${libvar}" "${${libvar}}")
+            vcpkg_list(REMOVE_ITEM "${libvar}" "")
+            vcpkg_list(JOIN "${libvar}" "', '" "${libvar}")
+            string(APPEND native_config "${libvar} = ['${${libvar}}']\n")
+        endforeach()
     endif()
 
     set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-nativ-${TARGET_TRIPLET}.log")
@@ -110,20 +105,18 @@ function(z_meson_generate_native_file additional_binaries) #https://mesonbuild.c
 endfunction()
 
 function(z_meson_convert_compiler_flags_to_list out_var _compiler_flags)
-    string(REPLACE ";" "\\\;" tmp_var "${_compiler_flags}")
-    string(REGEX REPLACE [=[( +|^)((\"(\\\"|[^"])+\"|\\\"|\\ |[^ ])+)]=] ";\\2" ${out_var} "${tmp_var}")
-    vcpkg_list(POP_FRONT ${out_var}) # The first element is always empty due to the above replacement
-    list(TRANSFORM ${out_var} STRIP) # Strip leading trailing whitespaces from each element in the list.
-    set(${out_var} "${${out_var}}" PARENT_SCOPE)
+    string(REPLACE ";" [[\;]] tmp_var "${_compiler_flags}")
+    string(REGEX REPLACE [=[( +|^)((\"(\\"|[^"])+"|\\"|\\ |[^ ])+)]=] ";\\2" tmp_var "${tmp_var}")
+    vcpkg_list(POP_FRONT tmp_var) # The first element is always empty due to the above replacement
+    list(TRANSFORM tmp_var STRIP) # Strip leading trailing whitespaces from each element in the list.
+    set("${out_var}" "${tmp_var}" PARENT_SCOPE)
 endfunction()
 
 function(z_meson_convert_list_to_python_array out_var)
-    set(flag_list ${ARGN})
-    list(TRANSFORM flag_list APPEND "'")
-    list(TRANSFORM flag_list PREPEND "'")
-    vcpkg_list(JOIN flag_list ", " ${out_var})
-    string(REPLACE "'', " "" ${out_var} "${${out_var}}") # remove empty elements if any
-    set(${out_var} "[${${out_var}}]" PARENT_SCOPE)
+    vcpkg_function_arguments(flag_list 1)
+    vcpkg_list(REMOVE_ITEM flag_list "") # remove empty elements if any
+    vcpkg_list(JOIN flag_list "', '" flag_list)
+    set("${out_var}" "['${flag_list}']" PARENT_SCOPE)
 endfunction()
 
 # Generates the required compiler properties for meson
@@ -196,12 +189,12 @@ function(z_meson_generate_native_file_config config_type) #https://mesonbuild.co
             set(crt_type md)
         endif()
         if(${config_type} STREQUAL "DEBUG")
-            set(crt_type ${crt_type}d)
+            string(APPEND crt_type "d")
         endif()
-        string(APPEND native_${config_type} "b_vscrt = '${crt_type}'\n")
+        string(APPEND "native_${config_type}" "b_vscrt = '${crt_type}'\n")
     endif()
     string(TOLOWER "${config_type}" lowerconfig)
-    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-nativ-${TARGET_TRIPLET}-${lowerconfig}.log")
+    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-native-${TARGET_TRIPLET}-${lowerconfig}.log")
     set(VCPKG_MESON_NATIVE_FILE_${config_type} "${native_config_name}" PARENT_SCOPE)
     file(WRITE "${native_config_name}" "${native_${config_type}}")
 endfunction()
@@ -251,8 +244,6 @@ function(z_meson_generate_cross_file additional_binaries) #https://mesonbuild.co
             set(build_cpu_fam x86)
             set(build_cpu i386)
         else()
-            unset(build_cpu_fam)
-            unset(build_cpu)
             # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
             message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
         endif()
