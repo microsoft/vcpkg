@@ -25,7 +25,7 @@ index aa923e1..9ee7937 100644
 +    set(SNAPPY_LIBRARIES Snappy::snappy)
 +    if (UNIX)
 +        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
-+    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    endif ()
      include_directories(${SNAPPY_INCLUDE_DIRS})
      message("Enabled snappy codec")
 -else (SNAPPY_FOUND AND ZLIB_FOUND)
