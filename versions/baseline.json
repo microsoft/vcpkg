@@ -2350,7 +2350,7 @@
     },
     "gdal": {
       "baseline": "3.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "gdcm": {
       "baseline": "3.0.7",
