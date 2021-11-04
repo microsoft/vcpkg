@@ -119,6 +119,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin"
     "${CURRENT_PACKAGES_DIR}/lib/cmake"
 )
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/uninstall.sh")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(COPY "${SOURCE_PATH}/THIRD-PARTY-NOTICES" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
