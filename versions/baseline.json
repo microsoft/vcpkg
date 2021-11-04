@@ -4994,7 +4994,7 @@
     },
     "optional-lite": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opus": {
       "baseline": "1.3.1",
