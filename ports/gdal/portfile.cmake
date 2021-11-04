@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
