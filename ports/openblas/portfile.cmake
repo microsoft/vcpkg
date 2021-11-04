@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-redefinition-function.patch
         fix-uwp-build.patch
         fix-marco-conflict.patch
+        install-tools.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -41,66 +42,41 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
+set(OPENBLAS_EXTRA_OPTIONS)
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_TARGET_IS_UWP)
-    message(STATUS "Building Windows helper files")
-    set(TEMP_CMAKE_SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
-    set(TEMP_CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
-    set(TEMP_TARGET_TRIPLET "${TARGET_TRIPLET}")
-    unset(VCPKG_CMAKE_SYSTEM_NAME)
-    unset(VCPKG_CMAKE_SYSTEM_VERSION)
-    set(TARGET_TRIPLET "x64-windows")
-
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${FEATURE_OPTIONS}
-            ${COMMON_OPTIONS}
-            -DTARGET=NEHALEM
-    )
-
-    # add just built path to environment for gen_config_h.exe,
-    # getarch.exe and getarch_2nd.exe
-    vcpkg_add_to_path("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-
-    # restore target build information
-    set(VCPKG_CMAKE_SYSTEM_NAME "${TEMP_CMAKE_SYSTEM_NAME}")
-    set(VCPKG_CMAKE_SYSTEM_VERSION "${TEMP_CMAKE_SYSTEM_VERSION}")
-    set(TARGET_TRIPLET "${TEMP_TARGET_TRIPLET}")
-
-    message(STATUS "Finished building Windows helper files")
-
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            ${COMMON_OPTIONS}
-            -DCMAKE_SYSTEM_PROCESSOR=AMD64
-            -DVS_WINRT_COMPONENT=TRUE
-            "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
-
-elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            ${COMMON_OPTIONS}
-            ${FEATURE_OPTIONS}
-    )
-else()
+if(VCPKG_TARGET_IS_UWP)    
+    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64
+                "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            ${COMMON_OPTIONS}
-            ${FEATURE_OPTIONS}
-            -DNOFORTRAN=ON
-            -DBU=_  #required for all blas functions to append extra _ using NAME
-            )
+    list(APPEND OPENBLAS_EXTRA_OPTIONS
+                -DNOFORTRAN=ON
+                -DBU=_  #required for all blas functions to append extra _ using NAME
+    )
 endif()
 
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${COMMON_OPTIONS}
+        ${OPENBLAS_EXTRA_OPTIONS}
+)
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/OpenBLAS)
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(TOOL_NAMES getarch AUTO_CLEAN)
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch_2nd${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(TOOL_NAMES getarch_2nd AUTO_CLEAN)
+endif()
+
 set(ENV{PATH} "${PATH_BACKUP}")
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc")
@@ -125,11 +101,11 @@ vcpkg_fixup_pkgconfig()
 # this is only to quite vcpkg
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/openblas_common.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(READ "${SOURCE_PATH}/cblas.h" CBLAS_H)
-string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/cblas.h" "${CBLAS_H}")
-
-vcpkg_copy_pdbs()
+vcpkg_replace_string(
+    "${SOURCE_PATH}/cblas.h"
+    "#include \"common.h\""
+    "#include \"openblas_common.h\""
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

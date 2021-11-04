@@ -6,6 +6,10 @@
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "dependencies": [
     {
+      "name": "openblas",
+      "host": true
+    },
+    {
       "name": "pthread",
       "platform": "!windows & !uwp"
     },
