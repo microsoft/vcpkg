@@ -2130,7 +2130,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 16
+      "port-version": 17
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -7157,8 +7157,8 @@
       "port-version": 0
     },
     "x264": {
-      "baseline": "157-303c484ec828ed0",
-      "port-version": 16
+      "baseline": "164-5db6aa6cab1b146",
+      "port-version": 0
     },
     "x265": {
       "baseline": "3.4",
