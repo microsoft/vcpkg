@@ -1933,8 +1933,8 @@
       "port-version": 2
     },
     "eastl": {
-      "baseline": "3.17.03",
-      "port-version": 1
+      "baseline": "3.18.00",
+      "port-version": 0
     },
     "easycl": {
       "baseline": "0.3",
