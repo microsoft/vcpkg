@@ -2118,7 +2118,7 @@
     },
     "fcl": {
       "baseline": "0.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "fdk-aac": {
       "baseline": "2.0.2",
