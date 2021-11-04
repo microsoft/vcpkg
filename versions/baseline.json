@@ -2676,6 +2676,10 @@
       "baseline": "2.3",
       "port-version": 0
     },
+    "highway": {
+      "baseline": "0.14.2",
+      "port-version": 0
+    },
     "hiredis": {
       "baseline": "1.0.2",
       "port-version": 1
