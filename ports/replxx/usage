@@ -1,4 +1,0 @@
-The package replxx is compatible with built-in CMake targets:
-
-    FIND_PACKAGE(replxx REQUIRED)
-    TARGET_LINK_LIBRARIES(main PRIVATE REPLXX::replxx)

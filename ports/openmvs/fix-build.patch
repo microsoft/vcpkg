@@ -108,7 +108,7 @@ index f4914bf..23d03e6 100644
 --- a/MvgMvsPipeline.py
 +++ b/MvgMvsPipeline.py.in
 @@ -91,12 +91,12 @@ def find(afile):
-     return None
+ 
  
  # Try to find openMVG and openMVS binaries in PATH
 -OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")

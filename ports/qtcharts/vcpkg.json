@@ -1,18 +1,36 @@
 {
   "name": "qtcharts",
-  "version-semver": "6.1.3",
+  "version-semver": "6.2.0",
   "description": "QtCharts module",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtdeclarative",
-    "qttools"
-  ],
-  "default-features": [
-    "default-features"
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "widgets"
+      ]
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "designer": {
+      "description": "Build Designer plugin",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
     }
   }
 }

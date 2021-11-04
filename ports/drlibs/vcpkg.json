@@ -1,7 +1,6 @@
 {
   "name": "drlibs",
-  "version-string": "2019-08-12",
-  "port-version": 1,
-  "description": "A collection of public domain single-file libraries for C/C++.",
+  "version-date": "2021-11-02",
+  "description": "Single-file audio decoding libraries for C/C++",
   "homepage": "https://github.com/mackron/dr_libs"
 }
