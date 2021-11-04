@@ -1126,7 +1126,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 1
+      "port-version": 2
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -2586,7 +2586,7 @@
     },
     "gtest": {
       "baseline": "1.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gtk": {
       "baseline": "4.3.0",
@@ -4922,7 +4922,7 @@
     },
     "openmesh": {
       "baseline": "8.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openmpi": {
       "baseline": "4.1.0",
@@ -5270,7 +5270,7 @@
     },
     "polyclipping": {
       "baseline": "6.4.2",
-      "port-version": 9
+      "port-version": 10
     },
     "polyhook2": {
       "baseline": "2021-05-09",
@@ -5778,7 +5778,7 @@
     },
     "quill": {
       "baseline": "1.6.3",
-      "port-version": 2
+      "port-version": 3
     },
     "quirc": {
       "baseline": "1.1",
