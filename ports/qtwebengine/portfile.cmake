@@ -73,7 +73,7 @@ endif()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
     URL git://code.qt.io/qt/qtwebengine-chromium.git
-    REF 202e34476e934633b3c2e4679a53c4b0847364a8
+    REF 6b7b3f1bf9f41c3ae7afc359c90c3cc80687f004
 )
 
 ##### qt_install_submodule
