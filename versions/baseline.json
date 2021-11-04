@@ -2354,7 +2354,7 @@
     },
     "gdcm": {
       "baseline": "3.0.7",
-      "port-version": 2
+      "port-version": 3
     },
     "gdcm2": {
       "baseline": "deprecated",
