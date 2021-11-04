@@ -10,9 +10,8 @@ vcpkg_from_github(
     HEAD_REF next
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DLIB_SUFFIX=
@@ -23,27 +22,17 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_CyrusSASL=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_fixup_pkgconfig()
 
-file(GLOB SHARE_DIR ${CURRENT_PACKAGES_DIR}/share/*)
-file(RENAME ${SHARE_DIR} ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/proton/LICENSE.txt"
+            "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/cmake/tmp)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/tmp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/Proton ${CURRENT_PACKAGES_DIR}/lib/cmake/tmp/Proton)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/Proton ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/tmp/Proton)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/tmp/Proton TARGET_PATH share/proton)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ProtonCpp TARGET_PATH share/protoncpp)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/proton")
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt
-            ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/share/qpid-proton/CMakeLists.txt)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qpid-proton/tests)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qpid-proton/examples)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/proton/version.h" "#define PN_INSTALL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
