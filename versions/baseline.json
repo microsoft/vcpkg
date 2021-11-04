@@ -5422,7 +5422,7 @@
     },
     "qpid-proton": {
       "baseline": "0.32.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qscintilla": {
       "baseline": "2.12.0",
