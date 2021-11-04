@@ -3781,8 +3781,8 @@
       "port-version": 5
     },
     "librdkafka": {
-      "baseline": "1.7.0",
-      "port-version": 2
+      "baseline": "1.8.2",
+      "port-version": 0
     },
     "libressl": {
       "baseline": "3.3.4",
