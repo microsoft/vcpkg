@@ -43,7 +43,10 @@ endif()
 # libjxl always builds static and dynamic libraries, so we delete the variant that we don't need
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE
+            "${CURRENT_PACKAGES_DIR}/bin"
+            "${CURRENT_PACKAGES_DIR}/debug/bin"
+        )
         file(REMOVE
             "${CURRENT_PACKAGES_DIR}/lib/jxl.lib"
             "${CURRENT_PACKAGES_DIR}/lib/jxl_threads.lib"
@@ -51,40 +54,22 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_threads.lib"
         )
     else()
-        file(REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl.so"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl.so.0.6"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl.so.0.6.1"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl_threads.so"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl_threads.so.0.6"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl_threads.so.0.6.1"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl.so"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl.so.0.6"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl.so.0.6.1"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl_threads.so"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl_threads.so.0.6"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl_threads.so.0.6.1"
-        )
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*.so*")
+        file(REMOVE ${FILES})
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*")
+        file(REMOVE ${FILES})
     endif()
 else()
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/jxl-static.lib"
-            "${CURRENT_PACKAGES_DIR}/lib/jxl_dec-static.lib"
-            "${CURRENT_PACKAGES_DIR}/lib/jxl_threads-static.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl-static.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_dec-static.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_threads-static.lib"
-        )
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*-static.lib")
+        file(REMOVE ${FILES})
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib")
+        file(REMOVE ${FILES})
     else()
-        file(REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl.a" 
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl_dec.a"
-            "${CURRENT_PACKAGES_DIR}/lib/libjxl_threads.a"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl.a"      
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl_dec.a"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/libjxl_threads.a"        
-        )
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*.a")
+        file(REMOVE ${FILES})
+        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
+        file(REMOVE ${FILES})        
     endif()
 endif()
 
