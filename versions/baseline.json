@@ -394,7 +394,7 @@
     },
     "bcg729": {
       "baseline": "1.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "bddisasm": {
       "baseline": "1.34.7",
