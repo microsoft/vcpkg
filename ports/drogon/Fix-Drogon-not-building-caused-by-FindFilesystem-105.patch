@@ -1,0 +1,58 @@
+From e2eb67478157bbdf5ff91ca5dea2f9435af4488f Mon Sep 17 00:00:00 2001
+From: Martin Chang <marty1885@users.noreply.github.com>
+Date: Thu, 21 Oct 2021 19:43:53 +0800
+Subject: [PATCH] Fix Drogon not building caused by FindFilesystem (#1056)
+
+* fix FindFilesystem not using the correct header for printf
+
+* fix FS not found on Yocto
+---
+ CMakeLists.txt                     | 6 +++++-
+ cmake_modules/FindFilesystem.cmake | 7 ++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b2b8d4..3f929a4 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -191,7 +191,11 @@ if(NEED_BOOST_FS)
+     option(HAS_STD_FILESYSTEM_PATH "use boost::filesystem" OFF)
+ else()
+     option(HAS_STD_FILESYSTEM_PATH "use std::filesystem" ON)
+-    target_link_libraries(${PROJECT_NAME} PUBLIC std::filesystem)
++    # HACK: Needed to be compiled on Yocto Linux
++    get_property(CAN_LINK_FS TARGET std::filesystem PROPERTY INTERFACE_LINK_LIBRARIES DEFINED)
++    if ( CAN_LINK_FS )
++      target_link_libraries(${PROJECT_NAME} PUBLIC std::filesystem)
++    endif()
+ endif()
+ 
+ # jsoncpp
+diff --git a/cmake_modules/FindFilesystem.cmake b/cmake_modules/FindFilesystem.cmake
+index c8d9a57..73dd763 100644
+--- a/cmake_modules/FindFilesystem.cmake
++++ b/cmake_modules/FindFilesystem.cmake
+@@ -194,7 +194,7 @@ set(_found FALSE)
+ if(CXX_FILESYSTEM_HAVE_FS)
+     # We have some filesystem library available. Do link checks
+     string(CONFIGURE [[
+-        #include <cstdlib>
++        #include <cstdio>
+         #include <@CXX_FILESYSTEM_HEADER@>
+ 
+         int main() {
+@@ -204,6 +204,11 @@ if(CXX_FILESYSTEM_HAVE_FS)
+         }
+     ]] code @ONLY)
+ 
++    # HACK: Needed to compile correctly on Yocto Linux
++    if(CMAKE_CXX_COMPILER_ID STREQUAL "GCC" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
++        OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
++        set(CMAKE_REQUIRED_FLAGS ${prev_req_flags} -std=c++17)
++    endif ()
+     # Check a simple filesystem program without any linker flags
+     _cmcm_check_cxx_source("${code}" CXX_FILESYSTEM_NO_LINK_NEEDED)
+ 
+-- 
+2.33.0
+
