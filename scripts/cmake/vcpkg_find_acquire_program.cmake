@@ -69,12 +69,18 @@ function(z_vcpkg_find_acquire_program_version_check out_var)
     endif()
 endfunction()
 
-function(z_vcpkg_find_acquire_program_find_external)
-    if("${interpreter}" STREQUAL "")
-        find_program("${program}" NAMES ${search_names})
+function(z_vcpkg_find_acquire_program_find_external program)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        ""
+        "INTERPRETER;MIN_VERSION;PROGRAM_NAME"
+        "NAMES;VERSION_COMMAND"
+    )
+
+    if("${arg_INTERPRETER}" STREQUAL "")
+        find_program("${program}" NAMES ${arg_NAMES})
     else()
-        find_file("SCRIPT_${program}" NAMES ${search_names})
-        if("${SCRIPT_${program}}")
+        find_file(SCRIPT_${program} NAMES ${arg_NAMES})
+        if(SCRIPT_${program})
             vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${program}})
             set("${program}" "${program_tmp}" CACHE INTERNAL "")
         endif()
@@ -84,9 +90,9 @@ function(z_vcpkg_find_acquire_program_find_external)
         set(version_is_good ON) # can't check for the version being good, so assume it is
     else()
         z_vcpkg_find_acquire_program_version_check(version_is_good
-            COMMAND ${${program}} ${version_command}
-            MIN_VERSION "${program_version}"
-            PROGRAM_NAME "${program_name}"
+            COMMAND ${${program}} ${arg_VERSION_COMMAND}
+            MIN_VERSION "${arg_MIN_VERSION}"
+            PROGRAM_NAME "${arg_PROGRAM_NAME}"
         )
     endif()
 
@@ -96,20 +102,25 @@ function(z_vcpkg_find_acquire_program_find_external)
     endif()
 endfunction()
 
-function(z_vcpkg_find_acquire_program_find_internal)
-    if("${interpreter}" STREQUAL "")
+function(z_vcpkg_find_acquire_program_find_internal program)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        ""
+        "INTERPRETER"
+        "NAMES;PATHS"
+    )
+    if("${arg_INTERPRETER}" STREQUAL "")
         find_program(${program}
-            NAMES ${search_names}
-            PATHS ${paths_to_search}
+            NAMES ${arg_NAMES}
+            PATHS ${arg_PATHS}
             NO_DEFAULT_PATH)
     else()
-        vcpkg_find_acquire_program("${interpreter}")
+        vcpkg_find_acquire_program("${arg_INTERPRETER}")
         find_file(SCRIPT_${program}
-            NAMES ${search_names}
-            PATHS ${paths_to_search}
+            NAMES ${arg_NAMES}
+            PATHS ${arg_PATHS}
             NO_DEFAULT_PATH)
         if(SCRIPT_${program})
-            set("${program}" ${${interpreter}} ${SCRIPT_${program}} CACHE INTERNAL "")
+            set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
         endif()
     endif()
 endfunction()
@@ -557,9 +568,19 @@ function(vcpkg_find_acquire_program program)
         set(search_names "${program_name}")
     endif()
 
-    z_vcpkg_find_acquire_program_find_internal()
+    z_vcpkg_find_acquire_program_find_internal("${program}"
+        INTERPRETER "${interpreter}"
+        PATHS ${paths_to_search}
+        NAMES ${search_names}
+    )
     if(NOT ${program})
-        z_vcpkg_find_acquire_program_find_external()
+        z_vcpkg_find_acquire_program_find_external("${program}"
+            PROGRAM_NAME "${program_name}"
+            MIN_VERSION "${program_version}"
+            INTERPRETER "${interpreter}"
+            NAMES ${search_names}
+            VERSION_COMMAND ${version_command}
+        )
     endif()
     if(NOT ${program})
         if(NOT VCPKG_HOST_IS_WINDOWS AND NOT supported_on_unix)
@@ -625,7 +646,11 @@ function(vcpkg_find_acquire_program program)
             )
         endif()
         unset("${program}" CACHE)
-        z_vcpkg_find_acquire_program_find_internal()
+        z_vcpkg_find_acquire_program_find_internal("${program}"
+            INTERPRETER "${interpreter}"
+            PATHS ${paths_to_search}
+            NAMES ${search_names}
+        )
         if(NOT ${program})
             message(FATAL_ERROR "Unable to find ${program}")
         endif()
