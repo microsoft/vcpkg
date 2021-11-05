@@ -32,7 +32,10 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/bsa")
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME bsa
+    CONFIG_PATH "lib/cmake/bsa"
+)
 
 file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/include
