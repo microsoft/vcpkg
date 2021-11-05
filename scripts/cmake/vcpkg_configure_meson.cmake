@@ -99,7 +99,7 @@ function(z_vcpkg_meson_generate_native_file additional_binaries) #https://mesonb
         endforeach()
     endif()
 
-    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-nativ-${TARGET_TRIPLET}.log")
+    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-native-${TARGET_TRIPLET}.log")
     set(vcpkg_meson_native_file "${native_config_name}" PARENT_SCOPE)
     file(WRITE "${native_config_name}" "${native_config}")
 endfunction()
@@ -201,7 +201,7 @@ function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbu
         if("${config_type}" STREQUAL "DEBUG")
             string(APPEND crt_type "d")
         endif()
-        string(APPEND "native_${config_type}" "b_vscrt = '${crt_type}'\n")
+        string(APPEND native_file "b_vscrt = '${crt_type}'\n")
     endif()
     string(TOLOWER "${config_type}" lowerconfig)
     set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-native-${TARGET_TRIPLET}-${lowerconfig}.log")
