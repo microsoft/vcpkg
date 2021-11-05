@@ -4064,6 +4064,10 @@
       "baseline": "2020-05-19",
       "port-version": 2
     },
+    "lief": {
+      "baseline": "0.11.5",
+      "port-version": 0
+    },
     "lilv": {
       "baseline": "0.24.10",
       "port-version": 0
