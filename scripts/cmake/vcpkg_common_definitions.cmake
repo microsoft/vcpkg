@@ -25,6 +25,8 @@ CURRENT_INSTALLED_DIR                    the absolute path to the installed file
 HOST_TRIPLET                             the name of the triplet corresponding to the host
 CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
 VCPKG_CROSSCOMPILING                     Whether vcpkg is cross-compiling: in other words, whether TARGET_TRIPLET and HOST_TRIPLET are different
+VCPKG_BUILD_RELEASE                      Whether release libs should be build or not
+VCPKG_BUILD_DEBUG                        Whether debug libs should be build or not
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -33,6 +35,17 @@ portfiles are able to use find_library calls to discover dependent libraries wit
 #]===]
 
 string(COMPARE NOTEQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILING)
+
+set(VCPKG_BUILD_RELEASE OFF)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(VCPKG_BUILD_RELEASE ON)
+endif()
+
+set(VCPKG_BUILD_DEBUG OFF)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(VCPKG_BUILD_DEBUG ON)
+endif()
+
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
     set(VCPKG_TARGET_IS_WINDOWS ON)

@@ -26,6 +26,8 @@ CURRENT_INSTALLED_DIR                    the absolute path to the installed file
 HOST_TRIPLET                             the name of the triplet corresponding to the host
 CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
 VCPKG_CROSSCOMPILING                     Whether vcpkg is cross-compiling: in other words, whether TARGET_TRIPLET and HOST_TRIPLET are different
+VCPKG_BUILD_RELEASE                      Whether release libs should be build or not
+VCPKG_BUILD_DEBUG                        Whether debug libs should be build or not
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
