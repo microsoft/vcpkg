@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openexr/openexr
-    REF v3.1.2
-    SHA512 34fb28f149e49bb23b2dc230dd5277229f2c780de66aff0acc819601e6802a1dbf83110b5df455dffd63be6eaa286d4aedb4b0af559b8b034d98c3208ee9d969
+    REF v3.1.3
+    SHA512 12a8f3660104e68ccea0856caf334d1fafbf0ee79115aae23cdce5b835299294ab8a23bafed282acfacd159ce9bc7f6ffc620b1e0df0d40f9ca0eb15a288964d
     HEAD_REF master
     PATCHES
         remove_symlinks.patch
