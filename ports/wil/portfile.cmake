@@ -18,7 +18,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/WIL)
 # Remove this line in the next update
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/WIL-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/wil-config.cmake")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/WIL-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/wilConfig.cmake")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
