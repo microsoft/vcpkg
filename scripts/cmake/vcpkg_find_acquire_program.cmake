@@ -144,6 +144,7 @@ function(vcpkg_find_acquire_program program)
     set(post_install_command "")
     set(paths_to_search "")
     set(version_command "")
+    vcpkg_list(SET sourceforge_args)
     set(brew_package_name "")
     set(apt_package_name "")
 
@@ -162,7 +163,7 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "NASM")
         set(program_name nasm)
         set(program_version 2.15.05)
-        set(paths_to_search ${DOWNLOADS}/tools/nasm/nasm-${program_version})
+        set(paths_to_search "${DOWNLOADS}/tools/nasm/nasm-${program_version}")
         set(brew_package_name "nasm")
         set(apt_package_name "nasm")
         set(download_urls
@@ -201,25 +202,25 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "GN")
         set(program_name gn)
         set(rename_binary_to "gn")
-        set(CIPD_DOWNLOAD_GN "https://chrome-infra-packages.appspot.com/dl/gn/gn")
+        set(cipd_download_gn "https://chrome-infra-packages.appspot.com/dl/gn/gn")
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
             set(supported_on_unix ON)
             set(program_version "xus7xtaPhpv5vCmKFOnsBVoB-PKmhZvRsSTjbQAuF0MC")
-            set(GN_PLATFORM "linux-amd64")
+            set(gn_platform "linux-amd64")
             set(download_sha512 "871e75d7f3597b74fb99e36bb41fe5a9f8ce8a4d9f167f4729fc6e444807a59f35ec8aca70c2274a99c79d70a1108272be1ad991678a8ceb39e30f77abb13135")
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
             set(supported_on_unix ON)
             set(program_version "qhxILDNcJ2H44HfHmfiU-XIY3E_SIXvFqLd2wvbIgOoC")
-            set(GN_PLATFORM "mac-amd64")
+            set(gn_platform "mac-amd64")
             set(download_sha512 "03ee64cb15bae7fceb412900d470601090bce147cfd45eb9b46683ac1a5dca848465a5d74c55a47df7f0e334d708151249a6d37bb021de74dd48b97ed4a07937")
         else()
             set(program_version "qUkAhy9J0P7c5racy-9wB6AHNK_btS18im8S06_ehhwC")
-            set(GN_PLATFORM "windows-amd64")
+            set(gn_platform "windows-amd64")
             set(download_sha512 "263e02bd79eee0cb7b664831b7898565c5656a046328d8f187ef7ae2a4d766991d477b190c9b425fcc960ab76f381cd3e396afb85cba7408ca9e74eb32c175db")
         endif()
         set(tool_subdirectory "${program_version}")
-        set(download_urls "${CIPD_DOWNLOAD_GN}/${GN_PLATFORM}/+/${program_version}")
-        set(download_filename "gn-${GN_PLATFORM}.zip")
+        set(download_urls "${cipd_download_gn}/${gn_platform}/+/${program_version}")
+        set(download_filename "gn-${gn_platform}.zip")
     elseif(program STREQUAL "GO")
         set(program_name go)
         set(tool_subdirectory 1.16.6.windows-386)
@@ -233,7 +234,7 @@ function(vcpkg_find_acquire_program program)
         if(CMAKE_HOST_WIN32)
             set(program_name python)
             set(program_version 3.10.0)
-            if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
                 set(tool_subdirectory "python-${program_version}-x86")
                 set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-win32.zip")
                 set(download_filename "python-${program_version}-embed-win32.zip")
@@ -244,8 +245,8 @@ function(vcpkg_find_acquire_program program)
                 set(download_filename "python-${program_version}-embed-amd64.zip")
                 set(download_sha512 23d81d007698383d8dc088da532dcb86c6ceca7eb78ba5688fc2e18ee7f33f53a5632282873762293b8164556dfb15870f8ffb7abd368faba0a3d8d5d5bc6297)
             endif()
-            set(paths_to_search ${DOWNLOADS}/tools/python/${tool_subdirectory})
-            set(post_install_command ${CMAKE_COMMAND} -E rm python310._pth)
+            set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
+            vcpkg_list(SET post_install_command "${CMAKE_COMMAND}" -E rm python310._pth)
         else()
             set(program_name python3)
             set(brew_package_name "python")
@@ -266,7 +267,7 @@ function(vcpkg_find_acquire_program program)
                 set(download_filename "python-${program_version}.amd64.msi")
                 set(download_sha512 6a81a413b80fd39893e7444fd47efa455d240cbb77a456c9d12f7cf64962b38c08cfa244cd9c50a65947c40f936c6c8c5782f7236d7b92445ab3dd01e82af23e)
             endif()
-            set(paths_to_search ${DOWNLOADS}/tools/python/${tool_subdirectory})
+            set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
             # macOS includes Python 2.7 built-in as `python`
             set(program_name python)
@@ -278,14 +279,14 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "RUBY")
         set(program_name "ruby")
         set(program_version 2.7.4-1)
-        set(paths_to_search ${DOWNLOADS}/tools/ruby/rubyinstaller-${program_version}-x86/bin)
-        set(download_urls https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-${program_version}/rubyinstaller-${program_version}-x86.7z)
-        set(download_filename rubyinstaller-${program_version}-x86.7z)
+        set(paths_to_search "${DOWNLOADS}/tools/ruby/rubyinstaller-${program_version}-x86/bin")
+        set(download_urls "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-${program_version}/rubyinstaller-${program_version}-x86.7z")
+        set(download_filename "rubyinstaller-${program_version}-x86.7z")
         set(download_sha512 4bf459c987b407bdda328c52d95060bf6ad48fc3e5ed5f64d4b205c5b4153c7a00cb6f9da6c0bcd5f2e001e9dc3dda0b72269ec4afdeffd658b93c085cd1d859)
     elseif(program STREQUAL "JOM")
         set(program_name jom)
         set(tool_subdirectory "jom-1.1.3")
-        set(paths_to_search ${DOWNLOADS}/tools/jom/${tool_subdirectory})
+        set(paths_to_search "${DOWNLOADS}/tools/jom/${tool_subdirectory}")
         set(download_urls
             "https://download.qt.io/official_releases/jom/jom_1_1_3.zip"
             "https://mirrors.ocf.berkeley.edu/qt/official_releases/jom/jom_1_1_3.zip"
@@ -353,7 +354,7 @@ function(vcpkg_find_acquire_program program)
         set(version_command --version)
     elseif(program STREQUAL "FLEX" OR program STREQUAL "BISON")
         if(CMAKE_HOST_WIN32)
-            set(SOURCEFORGE_ARGS
+            vcpkg_list(SET sourceforge_args
                 REPO winflexbison
                 FILENAME winflexbison-2.5.16.zip
                 SHA512 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123
@@ -396,12 +397,12 @@ function(vcpkg_find_acquire_program program)
                 "${DOWNLOADS}/tools/clang/${tool_subdirectory}/bin")
 
             if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-                set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITEW6432})
+                set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
             else()
-                set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
+                set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
             endif()
 
-            if(HOST_ARCH_ MATCHES "64")
+            if(host_arch MATCHES "64")
                 set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
                 set(download_filename "LLVM-${program_version}-win64.7z.exe")
                 set(download_sha512 67a9b54abad5143fa5f79f0cfc184be1394c9fc894fa9cee709943cb6ccbde8f0ea6003d8fcc20eccf035631abe4009cc0f694ac84e7879331cebba8125e4c7f)
@@ -416,7 +417,7 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "GPERF")
         set(program_name gperf)
         set(program_version 3.0.1)
-        set(paths_to_search ${DOWNLOADS}/tools/gperf/bin)
+        set(paths_to_search "${DOWNLOADS}/tools/gperf/bin")
         set(download_urls "https://sourceforge.net/projects/gnuwin32/files/gperf/${program_version}/gperf-${program_version}-bin.zip/download")
         set(download_filename "gperf-${program_version}-bin.zip")
         set(download_sha512 3f2d3418304390ecd729b85f65240a9e4d204b218345f82ea466ca3d7467789f43d0d2129fcffc18eaad3513f49963e79775b10cc223979540fa2e502fe7d4d9)
@@ -426,7 +427,7 @@ function(vcpkg_find_acquire_program program)
         set(tool_subdirectory "4daa6115")
         set(interpreter PERL)
         set(search_names "gas-preprocessor.pl")
-        set(paths_to_search ${DOWNLOADS}/tools/gas-preprocessor/${tool_subdirectory})
+        set(paths_to_search "${DOWNLOADS}/tools/gas-preprocessor/${tool_subdirectory}")
         set(rename_binary_to "gas-preprocessor.pl")
         set(download_urls "https://raw.githubusercontent.com/FFmpeg/gas-preprocessor/4daa611556a0558dfe537b4f7ad80f7e50a079c1/gas-preprocessor.pl")
         set(download_filename "gas-preprocessor-${tool_subdirectory}.pl")
@@ -434,14 +435,14 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "DARK")
         set(program_name dark)
         set(tool_subdirectory "wix311-binaries")
-        set(paths_to_search ${DOWNLOADS}/tools/dark/${tool_subdirectory})
+        set(paths_to_search "${DOWNLOADS}/tools/dark/${tool_subdirectory}")
         set(download_urls "https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip")
         set(download_filename "wix311-binaries.zip")
         set(download_sha512 74f0fa29b5991ca655e34a9d1000d47d4272e071113fada86727ee943d913177ae96dc3d435eaf494d2158f37560cd4c2c5274176946ebdb17bf2354ced1c516)
     elseif(program STREQUAL "SCONS")
         set(program_name scons)
         set(program_version 4.1.0)
-        set(tool_subdirectory ${program_version})
+        set(tool_subdirectory "${program_version}")
         set(interpreter PYTHON2)
         set(search_names "scons.py")
         set(download_urls "https://sourceforge.net/projects/scons/files/scons-local-${program_version}.zip/download")
@@ -451,15 +452,15 @@ function(vcpkg_find_acquire_program program)
         set(program_version 4.0.2)
         set(program_name swig)
         if(CMAKE_HOST_WIN32)
-            set(SOURCEFORGE_ARGS
+            vcpkg_list(SET sourceforge_args
                 REPO swig/swigwin
-                REF swigwin-${program_version}
+                REF "swigwin-${program_version}"
                 FILENAME "swigwin-${program_version}.zip"
                 SHA512 b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d
                 NO_REMOVE_ONE_LEVEL
                 WORKING_DIRECTORY "${DOWNLOADS}/tools/swig"
             )
-            set(tool_subdirectory b8f105f9b9-f0518bc3b7/swigwin-${program_version})
+            set(tool_subdirectory "b8f105f9b9-f0518bc3b7/swigwin-${program_version}")
         else()
             set(apt_package_name "swig")
             set(brew_package_name "swig")
@@ -468,9 +469,9 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "DOXYGEN")
         set(program_name doxygen)
         set(program_version 1.9.1)
-        set(SOURCEFORGE_ARGS
+        vcpkg_list(SET sourceforge_args
             REPO doxygen
-            REF rel-${program_version}
+            REF "rel-${program_version}"
             FILENAME "doxygen-${program_version}.windows.bin.zip"
             SHA512 c3eeb6b9fa4eab70fb6b0864fbbf94fb8050f3fee38d117cf470921a80e3569cc1c8b0272604d6731e05f01790cfaa70e159bec5d0882fc4f2d8ae4a5d52a21b
             NO_REMOVE_ONE_LEVEL
@@ -483,20 +484,20 @@ function(vcpkg_find_acquire_program program)
         set(rename_binary_to "bazel")
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
             set(supported_on_unix ON)
-            set(tool_subdirectory ${program_version}-linux)
+            set(tool_subdirectory "${program_version}-linux")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64")
             set(download_filename "bazel-${tool_subdirectory}-x86_64")
             set(raw_executable ON)
             set(download_sha512 50aa0894dbeedb9189a56f17baa8cecfa55c5f9c1f93a61b9ab5e10984754a400884fc9802b4979f536778e15f813a72807396b4b47694e4c05eadb841361c69)
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
             set(supported_on_unix ON)
-            set(tool_subdirectory ${program_version}-darwin)
+            set(tool_subdirectory "${program_version}-darwin")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64")
             set(download_filename "bazel-${tool_subdirectory}-x86_64")
             set(raw_executable ON)
             set(download_sha512 3500560c9d49d37a1ead2d2777d673c6f1874582883e141ecd5b3991005b1b6b8aab5f255c187133d771497c2a956f5c1e0dfad04dc453525634537e65b649af)
         else()
-            set(tool_subdirectory ${program_version}-windows)
+            set(tool_subdirectory "${program_version}-windows")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64.zip")
             set(download_filename "bazel-${tool_subdirectory}-x86_64.zip")
             set(download_sha512 3954ab54b465d62eef397767dac7ce21d06ac8ea3e1571d0e7b1f0ea8b5c2cf44eea5d252b85a63a1e1a08dbe9a219783cc23c2888673c35e2df03edfdc9e5a7)
@@ -504,15 +505,16 @@ function(vcpkg_find_acquire_program program)
     elseif(program STREQUAL "ARIA2")
         set(program_name aria2c)
         set(program_version 1.35.0)
-        set(paths_to_search ${DOWNLOADS}/tools/aria2c/aria2-${program_version}-win-32bit-build1)
+        set(paths_to_search "${DOWNLOADS}/tools/aria2c/aria2-${program_version}-win-32bit-build1")
         set(download_urls "https://github.com/aria2/aria2/releases/download/release-${program_version}/aria2-${program_version}-win-32bit-build1.zip")
         set(download_filename "aria2-${program_version}-win-32bit-build1.zip")
         set(download_sha512 933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4)
     elseif(program STREQUAL "PKGCONFIG")
         set(program_name pkg-config)
-        if(ENV{PKG_CONFIG})
+        if(DEFINED ENV{PKG_CONFIG})
             debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
-            set(PKGCONFIG $ENV{PKG_CONFIG} PARENT_SCOPE)
+            set(PKGCONFIG "$ENV{PKG_CONFIG}" CACHE INTERNAL "")
+            set(PKGCONFIG "${PKGCONFIG}" PARENT_SCOPE)
             return()
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
             # As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}
@@ -584,54 +586,66 @@ function(vcpkg_find_acquire_program program)
     endif()
     if(NOT ${program})
         if(NOT VCPKG_HOST_IS_WINDOWS AND NOT supported_on_unix)
-            set(EXAMPLE ".")
+            set(example ".")
             if(NOT "${brew_package_name}" STREQUAL "" AND VCPKG_HOST_IS_OSX)
-                set(EXAMPLE ":\n    brew install ${brew_package_name}")
+                set(example ":\n    brew install ${brew_package_name}")
             elseif(NOT "${apt_package_name}" STREQUAL "" AND VCPKG_HOST_IS_LINUX)
-                set(EXAMPLE ":\n    sudo apt-get install ${apt_package_name}")
+                set(example ":\n    sudo apt-get install ${apt_package_name}")
             endif()
-            message(FATAL_ERROR "Could not find ${program_name}. Please install it via your package manager${EXAMPLE}")
+            message(FATAL_ERROR "Could not find ${program_name}. Please install it via your package manager${example}")
         endif()
 
-        if(NOT "${SOURCEFORGE_ARGS}" STREQUAL "")
+        if(NOT "${sourceforge_args}" STREQUAL "")
             # Locally change editable to suppress re-extraction each time
             set(_VCPKG_EDITABLE 1)
-            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${SOURCEFORGE_ARGS})
+            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
             unset(_VCPKG_EDITABLE)
         else()
-            vcpkg_download_distfile(ARCHIVE_PATH
+            vcpkg_download_distfile(archive_path
                 URLS ${download_urls}
-                SHA512 ${download_sha512}
-                FILENAME ${download_filename}
+                SHA512 "${download_sha512}"
+                FILENAME "${download_filename}"
             )
 
-            file(MAKE_DIRECTORY ${full_subdirectory})
+            file(MAKE_DIRECTORY "${full_subdirectory}")
             if(raw_executable)
+                vcpkg_list(SET rename_binary_param)
                 if(NOT "${rename_binary_to}" STREQUAL "")
-                    file(INSTALL ${ARCHIVE_PATH} DESTINATION ${full_subdirectory} RENAME ${rename_binary_to} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-                else()
-                    file(COPY ${ARCHIVE_PATH} DESTINATION ${full_subdirectory} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+                    vcpkg_list(SET rename_binary_param RENAME "${rename_binary_to}")
                 endif()
+                file(COPY "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    ${rename_binary_param}
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
             else()
-                get_filename_component(ARCHIVE_EXTENSION ${download_filename} LAST_EXT)
-                string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
-                if(ARCHIVE_EXTENSION STREQUAL ".msi")
-                    file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-                    file(TO_NATIVE_PATH "${full_subdirectory}" DESTINATION_NATIVE_PATH)
+                cmake_path(GET download_filename EXTENSION archive_extension)
+                string(TOLOWER "${archive_extension}" archive_extension)
+                if("${archive_extension}" MATCHES [[\.msi$]])
+                    cmake_path(NATIVE_PATH archive_path archive_native_path)
+                    cmake_path(NATIVE_PATH full_subdirectory destination_native_path)
                     vcpkg_execute_in_download_mode(
-                        COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
-                        WORKING_DIRECTORY ${DOWNLOADS}
+                        COMMAND msiexec
+                            /a "${archive_native_path}"
+                            /qn "TARGETDIR=${destination_native_path}"
+                        WORKING_DIRECTORY "${DOWNLOADS}"
                     )
-                elseif("${ARCHIVE_PATH}" MATCHES [[\.7z\.exe$]])
+                elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
                     vcpkg_find_acquire_program(7Z)
                     vcpkg_execute_in_download_mode(
-                        COMMAND ${7Z} x "${ARCHIVE_PATH}" "-o${full_subdirectory}" -y -bso0 -bsp0
-                        WORKING_DIRECTORY ${full_subdirectory}
+                        COMMAND ${7Z} x
+                            "${archive_path}"
+                            "-o${full_subdirectory}"
+                            -y -bso0 -bsp0
+                        WORKING_DIRECTORY "${full_subdirectory}"
                     )
                 else()
                     vcpkg_execute_in_download_mode(
-                        COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-                        WORKING_DIRECTORY ${full_subdirectory}
+                        COMMAND "${CMAKE_COMMAND}" -E tar xzf "${archive_path}"
+                        WORKING_DIRECTORY "${full_subdirectory}"
                     )
                 endif()
             endif()
@@ -641,7 +655,7 @@ function(vcpkg_find_acquire_program program)
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
                 COMMAND ${post_install_command}
-                WORKING_DIRECTORY ${full_subdirectory}
+                WORKING_DIRECTORY "${full_subdirectory}"
                 LOGNAME "${program}-tool-post-install"
             )
         endif()
