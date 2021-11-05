@@ -1,0 +1,96 @@
+{
+  "name": "lief",
+  "version-string": "0.11.5",
+  "description": "LIEF - Library to Instrument Executable Formats",
+  "homepage": "https://lief.quarkslab.com",
+  "default-features": [
+    "pe",
+    "shared-lib"
+  ],
+  "features": {
+    "art": {
+      "description": "Build LIEF with ART module"
+    },
+    "asan": {
+      "description": "Enable Address sanitizer"
+    },
+    "c-api": {
+      "description": "C API"
+    },
+    "coverage": {
+      "description": "Perform code coverage"
+    },
+    "dex": {
+      "description": "Build LIEF with DEX module"
+    },
+    "disable-frozen": {
+      "description": "Disable Frozen even if it is supported"
+    },
+    "doc": {
+      "description": "Enable documentation"
+    },
+    "elf": {
+      "description": "Build LIEF with ELF module"
+    },
+    "enable-json": {
+      "description": "Enable JSON-related APIs"
+    },
+    "examples": {
+      "description": "Build LIEF C++ examples"
+    },
+    "extra-warnings": {
+      "description": "Enable extra warning from the compiler"
+    },
+    "force32": {
+      "description": "Force build LIEF 32 bits version"
+    },
+    "fuzzing": {
+      "description": "Fuzz LIEF"
+    },
+    "install-python": {
+      "description": "Install Python bindings"
+    },
+    "logging": {
+      "description": "Enable logging"
+    },
+    "logging-debug": {
+      "description": "Enable debug logging"
+    },
+    "lsan": {
+      "description": "Enable Leak sanitizer"
+    },
+    "macho": {
+      "description": "Build LIEF with MachO module"
+    },
+    "oat": {
+      "description": "Build LIEF with OAT module"
+    },
+    "pe": {
+      "description": "Build LIEF with PE  module"
+    },
+    "profiling": {
+      "description": "Enable performance profiling"
+    },
+    "python-api": {
+      "description": "Enable Python API"
+    },
+    "shared-lib": {
+      "description": "Enable shared lib"
+    },
+    "tests": {
+      "description": "Enable tests"
+    },
+    "tsan": {
+      "description": "Enable Thread sanitizer"
+    },
+    "usan": {
+      "description": "Enable undefined sanitizer"
+    },
+    "use-ccache": {
+      "description": "Use ccache to speed up compilation"
+    },
+    "vdex": {
+      "description": "Build LIEF with VDEX module"
+    }
+  }
+}
