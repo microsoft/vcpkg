@@ -22,5 +22,13 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "xmem": {
+      "description": "Compression support for the xmem codec",
+      "dependencies": [
+        "reproc"
+      ]
+    }
+  }
 }

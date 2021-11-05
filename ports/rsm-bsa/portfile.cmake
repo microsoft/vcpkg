@@ -12,10 +12,24 @@ if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "Build ${PORT} requires at least gcc 10.")
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xmem BSA_SUPPORT_XMEM
+)
+
+if (BSA_SUPPORT_XMEM)
+    vcpkg_fail_port_install(
+        ON_TARGET "LINUX"
+        MESSAGE "XMem support is only available for windows"
+    )
+endif()
+
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 		-DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/bsa")
