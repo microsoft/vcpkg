@@ -1,29 +1,41 @@
 vcpkg_buildpath_length_warning(37)
-vcpkg_fail_port_install(ON_TARGET "uwp" "osx")
+vcpkg_fail_port_install(ON_TARGET "uwp")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO apache/avro
-  REF release-1.9.2
-  SHA512 6a6980901eea964c050eb3d61fadf28712e2f02c36985bf8e5176b668bba48985f6a666554a1964435448de29b18d790ab86b787d0288a22fd9cba00746a7846
-  HEAD_REF master
-  PATCHES
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO apache/avro
+    REF 4e1fefca493029ace961b7ef8889a3722458565a #release-1.11.0
+    SHA512 6e787983d68bc6ecffd14ca585917f695bc1ae554de9146a436d342f32321c3e7878cdfa32989742e682ac12a6eb914b3e3b515ca3164f386c0281c8b50b53ad
+    HEAD_REF master
+    PATCHES
         avro.patch          # Private vcpkg build fixes
-        snappy-pr-793.patch # Snappy build fixes for Windows (PR-793)
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/lang/c
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/lang/c"
     OPTIONS
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_TESTS=OFF
+        -DBUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/lang/c/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_copy_tools(TOOL_NAMES avroappend avrocat AUTO_CLEAN)
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES avropipe avromod AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/lang/c/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
