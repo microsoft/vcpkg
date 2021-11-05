@@ -38,7 +38,7 @@ index ba8c36e81..eac441dee 100644
  endif()
  
 diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
-index 673a58eed..6df453bcd 100644
+index 673a58eed..c62b1fb3f 100644
 --- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
 @@ -53,7 +53,7 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
@@ -146,7 +146,22 @@ index 673a58eed..6df453bcd 100644
                         REQUIRED_VERSION
                         0.11.0
                         PC_PACKAGE_NAMES
-@@ -1480,6 +1476,7 @@ if(ARROW_WITH_PROTOBUF)
+@@ -1366,6 +1362,14 @@ if(ARROW_WITH_THRIFT)
+   # TODO: Don't use global includes but rather target_include_directories
+   include_directories(SYSTEM ${THRIFT_INCLUDE_DIR})
+ 
++  if(THRIFT_INCLUDE_DIR)
++    file(READ "${THRIFT_INCLUDE_DIR}/config.h" THRIFT_CONFIG_H_CONTENT)
++    string(REGEX MATCH "#define PACKAGE_VERSION \"[0-9.]+\"" THRIFT_VERSION_DEFINITION
++                "${THRIFT_CONFIG_H_CONTENT}")
++    string(REGEX MATCH "[0-9.]+" THRIFT_VERSION "${THRIFT_VERSION_DEFINITION}")
++    set(THRIFT_VERSION "${THRIFT_VERSION}")
++  endif()
++
+   string(REPLACE "." ";" VERSION_LIST ${THRIFT_VERSION})
+   list(GET VERSION_LIST 0 THRIFT_VERSION_MAJOR)
+   list(GET VERSION_LIST 1 THRIFT_VERSION_MINOR)
+@@ -1480,6 +1484,7 @@ if(ARROW_WITH_PROTOBUF)
      set(ARROW_PROTOBUF_REQUIRED_VERSION "2.6.1")
    endif()
    resolve_dependency(Protobuf
@@ -154,7 +169,7 @@ index 673a58eed..6df453bcd 100644
                       REQUIRED_VERSION
                       ${ARROW_PROTOBUF_REQUIRED_VERSION}
                       PC_PACKAGE_NAMES
-@@ -1490,6 +1487,10 @@ if(ARROW_WITH_PROTOBUF)
+@@ -1490,6 +1495,10 @@ if(ARROW_WITH_PROTOBUF)
    endif()
  
    # TODO: Don't use global includes but rather target_include_directories
@@ -165,7 +180,7 @@ index 673a58eed..6df453bcd 100644
    include_directories(SYSTEM ${PROTOBUF_INCLUDE_DIR})
  
    if(TARGET arrow::protobuf::libprotobuf)
-@@ -1538,12 +1539,18 @@ if(ARROW_WITH_PROTOBUF)
+@@ -1538,12 +1547,18 @@ if(ARROW_WITH_PROTOBUF)
  
    # Log protobuf paths as we often see issues with mixed sources for
    # the libraries and protoc.
@@ -184,7 +199,7 @@ index 673a58eed..6df453bcd 100644
    message(STATUS "Found libprotobuf: ${PROTOBUF_LIBRARY}")
    message(STATUS "Found protobuf headers: ${PROTOBUF_INCLUDE_DIR}")
  endif()
-@@ -1954,7 +1961,7 @@ endmacro()
+@@ -1954,7 +1969,7 @@ endmacro()
  if(ARROW_WITH_RAPIDJSON)
    set(ARROW_RAPIDJSON_REQUIRED_VERSION "1.1.0")
    resolve_dependency(RapidJSON
@@ -193,7 +208,7 @@ index 673a58eed..6df453bcd 100644
                       TRUE
                       REQUIRED_VERSION
                       ${ARROW_RAPIDJSON_REQUIRED_VERSION}
-@@ -2093,10 +2100,11 @@ macro(build_lz4)
+@@ -2093,10 +2108,11 @@ macro(build_lz4)
  endmacro()
  
  if(ARROW_WITH_LZ4)
@@ -207,7 +222,7 @@ index 673a58eed..6df453bcd 100644
    include_directories(SYSTEM ${LZ4_INCLUDE_DIR})
  endif()
  
-@@ -2160,7 +2168,7 @@ endmacro()
+@@ -2160,7 +2176,7 @@ endmacro()
  if(ARROW_WITH_ZSTD)
    # ARROW-13384: ZSTD_minCLevel was added in v1.4.0, required by ARROW-13091
    resolve_dependency(zstd
@@ -216,7 +231,7 @@ index 673a58eed..6df453bcd 100644
                       libzstd
                       REQUIRED_VERSION
                       1.4.0)
-@@ -2343,9 +2351,8 @@ macro(build_utf8proc)
+@@ -2343,9 +2359,8 @@ macro(build_utf8proc)
  endmacro()
  
  if(ARROW_WITH_UTF8PROC)
@@ -228,7 +243,7 @@ index 673a58eed..6df453bcd 100644
                       PC_PACKAGE_NAMES
                       libutf8proc)
  
-@@ -2353,7 +2360,7 @@ if(ARROW_WITH_UTF8PROC)
+@@ -2353,7 +2368,7 @@ if(ARROW_WITH_UTF8PROC)
  
    # TODO: Don't use global definitions but rather
    # target_compile_definitions or target_link_libraries
@@ -237,7 +252,7 @@ index 673a58eed..6df453bcd 100644
                        INTERFACE_COMPILER_DEFINITIONS)
    if(UTF8PROC_COMPILER_DEFINITIONS)
      add_definitions(-D${UTF8PROC_COMPILER_DEFINITIONS})
-@@ -2361,7 +2368,7 @@ if(ARROW_WITH_UTF8PROC)
+@@ -2361,7 +2376,7 @@ if(ARROW_WITH_UTF8PROC)
  
    # TODO: Don't use global includes but rather
    # target_include_directories or target_link_libraries
@@ -246,7 +261,7 @@ index 673a58eed..6df453bcd 100644
                        INTERFACE_INCLUDE_DIRECTORIES)
    include_directories(SYSTEM ${UTF8PROC_INCLUDE_DIR})
  endif()
-@@ -3270,7 +3277,7 @@ endmacro()
+@@ -3270,7 +3285,7 @@ endmacro()
  
  macro(build_grpc)
    resolve_dependency(c-ares
@@ -255,7 +270,7 @@ index 673a58eed..6df453bcd 100644
                       TRUE
                       PC_PACKAGE_NAMES
                       libcares)
-@@ -3493,7 +3500,7 @@ endmacro()
+@@ -3493,7 +3508,7 @@ endmacro()
  if(ARROW_WITH_GRPC)
    set(ARROW_GRPC_REQUIRED_VERSION "1.17.0")
    resolve_dependency(gRPC
@@ -264,7 +279,7 @@ index 673a58eed..6df453bcd 100644
                       TRUE
                       REQUIRED_VERSION
                       ${ARROW_GRPC_REQUIRED_VERSION}
-@@ -3503,6 +3510,10 @@ if(ARROW_WITH_GRPC)
+@@ -3503,6 +3518,10 @@ if(ARROW_WITH_GRPC)
    # TODO: Don't use global includes but rather target_include_directories
    get_target_property(GRPC_INCLUDE_DIR gRPC::grpc++ INTERFACE_INCLUDE_DIRECTORIES)
    include_directories(SYSTEM ${GRPC_INCLUDE_DIR})
