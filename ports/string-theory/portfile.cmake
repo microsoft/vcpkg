@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/string_theory)
+vcpkg_cmake_config_fixup(PACKAGE_NAME string_theory CONFIG_PATH lib/cmake/string_theory)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
