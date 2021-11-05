@@ -1,6 +1,7 @@
 {
   "name": "pcre2",
   "version-string": "10.37",
+  "port-version": 1,
   "description": "PCRE2 is a re-working of the original Perl Compatible Regular Expressions library",
   "homepage": "https://pcre.org/"
 }
