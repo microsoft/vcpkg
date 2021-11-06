@@ -562,7 +562,7 @@ function(vcpkg_configure_make)
 
     set(base_cmd)
     if(CMAKE_HOST_WIN32)
-        set(base_cmd ${BASH} --noprofile --norc --debug)
+        set(base_cmd ${bash_executable} --noprofile --norc --debug)
     else()
         find_program(base_cmd bash REQUIRED)
     endif()
@@ -807,7 +807,7 @@ function(vcpkg_configure_make)
         # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
         # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
         # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
-        if(VCPKG_TARGET_IS_ANDROID AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^GNU$")
+        if(VCPKG_TARGET_IS_ANDROID)
             set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
         endif()
 
