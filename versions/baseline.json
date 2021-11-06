@@ -294,7 +294,7 @@
     },
     "aws-checksums": {
       "baseline": "0.1.11",
-      "port-version": 1
+      "port-version": 2
     },
     "aws-crt-cpp": {
       "baseline": "0.15.1",
