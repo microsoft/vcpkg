@@ -10,7 +10,6 @@
     "expat",
     "geos",
     "giflib",
-    "hdf5",
     {
       "name": "json-c",
       "platform": "!windows | mingw"
@@ -22,19 +21,36 @@
     "libpq",
     "libwebp",
     "libxml2",
-    "netcdf-c",
     "openjpeg",
     "proj4",
     "sqlite3",
     "tiff",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
     "zlib",
     "zstd"
+  ],
+  "default-features": [
+    "hdf5",
+    "netcdf"
   ],
   "features": {
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [
         "cfitsio"
+      ]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
       ]
     },
     "libspatialite": {
@@ -47,6 +63,15 @@
       "description": "Add mysql support using libmariadb",
       "dependencies": [
         "libmariadb"
+      ]
+    },
+    "netcdf": {
+      "description": "Enable NetCDF support",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false
+        }
       ]
     },
     "system-libraries": {
