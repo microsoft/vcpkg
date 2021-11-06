@@ -9,8 +9,8 @@ vcpkg_from_github(
     SHA512 16661c012e18ac72b24c46caf5c02515c29a05e0a8dcf95076eff3a1f2e87c225245037480ed37068858fe6e04ff4a404f69877599b208ab9265d054ec117820
     HEAD_REF master
     PATCHES
-	dont-generate-extract-3rd-party-things.patch
-	use-if-instead-of-ifdef-in-writer.patch
+        dont-generate-extract-3rd-party-things.patch
+        use-if-instead-of-ifdef-in-writer.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
