@@ -61,7 +61,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/cpp
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${MALLOC_OPTIONS}
