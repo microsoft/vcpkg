@@ -609,18 +609,24 @@ function(vcpkg_find_acquire_program program)
 
             file(MAKE_DIRECTORY "${full_subdirectory}")
             if(raw_executable)
-                vcpkg_list(SET rename_binary_param)
                 if(NOT "${rename_binary_to}" STREQUAL "")
-                    vcpkg_list(SET rename_binary_param RENAME "${rename_binary_to}")
+                    file(INSTALL "${archive_path}"
+                        DESTINATION "${full_subdirectory}"
+                        RENAME "${rename_binary_to}"
+                        FILE_PERMISSIONS
+                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                            GROUP_READ GROUP_EXECUTE
+                            WORLD_READ WORLD_EXECUTE
+                    )
+                else()
+                    file(COPY "${archive_path}"
+                        DESTINATION "${full_subdirectory}"
+                        FILE_PERMISSIONS
+                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                            GROUP_READ GROUP_EXECUTE
+                            WORLD_READ WORLD_EXECUTE
+                    )
                 endif()
-                file(COPY "${archive_path}"
-                    DESTINATION "${full_subdirectory}"
-                    ${rename_binary_param}
-                    FILE_PERMISSIONS
-                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                        GROUP_READ GROUP_EXECUTE
-                        WORLD_READ WORLD_EXECUTE
-                )
             else()
                 cmake_path(GET download_filename EXTENSION archive_extension)
                 string(TOLOWER "${archive_extension}" archive_extension)
