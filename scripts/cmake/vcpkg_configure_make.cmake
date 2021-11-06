@@ -306,7 +306,7 @@ function(vcpkg_configure_make)
             list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4)
             vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
         endif()
-        if (arg_AUTOCONFIG AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT arg_BUILD_TRIPLET)
+        if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
             # --build: the machine you are building on
