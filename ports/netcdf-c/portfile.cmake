@@ -6,11 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-deps.patch
+        fix-dependency-zlib.patch
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
         fix-pkgconfig.patch
-        fix-dependency-zlib.patch
         fix-manpage-msys.patch
 )
 

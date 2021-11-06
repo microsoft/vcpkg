@@ -96,15 +96,6 @@ diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
 index ea9b029..8aeeab7 100644
 --- a/liblib/CMakeLists.txt
 +++ b/liblib/CMakeLists.txt
-@@ -58,7 +58,7 @@ ENDIF()
- 
- SET(TLL_LIBS "")
- 
--SET(TLL_LIBS ${TLL_LIBS} ${HAVE_LIBM} ${ZLIB_LIBRARY})
-+SET(TLL_LIBS ${TLL_LIBS} ${HAVE_LIBM} ZLIB::ZLIB)
- 
- # Add extra dependencies specified via NC_EXTRA_DEPS
- SET(TLL_LIBS ${TLL_LIBS} ${EXTRA_DEPS})
 @@ -68,27 +68,15 @@ IF(HAVE_LIBDL)
  ENDIF()
  
