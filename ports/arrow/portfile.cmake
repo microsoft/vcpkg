@@ -79,6 +79,8 @@ vcpkg_cmake_configure(
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DZSTD_MSVC_LIB_PREFIX=
+    MAYBE_UNUSED_VARIABLES
+        ZSTD_MSVC_LIB_PREFIX
 )
 
 vcpkg_cmake_install()
