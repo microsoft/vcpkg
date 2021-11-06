@@ -121,8 +121,8 @@
       "port-version": 0
     },
     "arb": {
-      "baseline": "2.18.1",
-      "port-version": 1
+      "baseline": "2.21.1",
+      "port-version": 0
     },
     "arcus": {
       "baseline": "4.10.0",
@@ -141,7 +141,7 @@
       "port-version": 0
     },
     "args": {
-      "baseline": "2021-03-14",
+      "baseline": "6.2.7",
       "port-version": 0
     },
     "argtable2": {
@@ -249,8 +249,8 @@
       "port-version": 1
     },
     "avro-c": {
-      "baseline": "1.9.2",
-      "port-version": 2
+      "baseline": "1.11.0",
+      "port-version": 0
     },
     "avro-cpp": {
       "baseline": "2021-06-01",
@@ -394,7 +394,7 @@
     },
     "bcg729": {
       "baseline": "1.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "bddisasm": {
       "baseline": "1.34.7",
@@ -1765,8 +1765,8 @@
       "port-version": 0
     },
     "dbg-macro": {
-      "baseline": "2019-07-11",
-      "port-version": 1
+      "baseline": "2021-11-02",
+      "port-version": 0
     },
     "dbghelp": {
       "baseline": "0.0",
@@ -1897,8 +1897,8 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.7.1",
-      "port-version": 2
+      "baseline": "1.7.3",
+      "port-version": 0
     },
     "dtl": {
       "baseline": "1.19",
@@ -2173,8 +2173,8 @@
       "port-version": 2
     },
     "flint": {
-      "baseline": "2.5.2",
-      "port-version": 5
+      "baseline": "2.8.0",
+      "port-version": 0
     },
     "fltk": {
       "baseline": "1.3.7",
@@ -2389,8 +2389,8 @@
       "port-version": 1
     },
     "getdns": {
-      "baseline": "1.6.0",
-      "port-version": 2
+      "baseline": "1.7.0",
+      "port-version": 0
     },
     "getopt": {
       "baseline": "0",
@@ -2641,7 +2641,7 @@
       "port-version": 1
     },
     "hazelcast-cpp-client": {
-      "baseline": "4.2.0",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "hdf5": {
@@ -3394,7 +3394,7 @@
     },
     "libevent": {
       "baseline": "2.1.12",
-      "port-version": 3
+      "port-version": 4
     },
     "libevhtp": {
       "baseline": "1.2.18",
@@ -3434,7 +3434,7 @@
     },
     "libftdi1": {
       "baseline": "1.5",
-      "port-version": 1
+      "port-version": 2
     },
     "libgcrypt": {
       "baseline": "1.9.4",
@@ -3558,7 +3558,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 7
+      "port-version": 8
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -4001,8 +4001,8 @@
       "port-version": 4
     },
     "libwebm": {
-      "baseline": "1.0.0.27",
-      "port-version": 7
+      "baseline": "1.0.0.28",
+      "port-version": 0
     },
     "libwebp": {
       "baseline": "1.2.1",
@@ -4270,6 +4270,10 @@
     },
     "mdnsresponder": {
       "baseline": "878.270.2",
+      "port-version": 0
+    },
+    "mdspan": {
+      "baseline": "2021-11-03",
       "port-version": 0
     },
     "mecab": {
@@ -4861,8 +4865,8 @@
       "port-version": 8
     },
     "opencolorio": {
-      "baseline": "2.0.1",
-      "port-version": 1
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -4970,7 +4974,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -5122,7 +5126,7 @@
     },
     "pcre2": {
       "baseline": "10.37",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal": {
       "baseline": "1.7.1",
@@ -5393,7 +5397,7 @@
       "port-version": 1
     },
     "pybind11": {
-      "baseline": "2.8.0",
+      "baseline": "2.8.1",
       "port-version": 0
     },
     "pystring": {
@@ -5458,7 +5462,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 11
+      "port-version": 12
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5973,7 +5977,7 @@
       "port-version": 0
     },
     "rsm-binary-io": {
-      "baseline": "2.0.2",
+      "baseline": "2.0.4",
       "port-version": 0
     },
     "rsm-bsa": {
@@ -6186,7 +6190,7 @@
     },
     "shapelib": {
       "baseline": "1.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "shiva": {
       "baseline": "1.0",
@@ -6210,7 +6214,7 @@
     },
     "simage": {
       "baseline": "1.8.1",
-      "port-version": 2
+      "port-version": 3
     },
     "simde": {
       "baseline": "0.7.2",
@@ -6266,7 +6270,7 @@
     },
     "snappy": {
       "baseline": "1.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "sndfile": {
       "baseline": "0",
@@ -6452,6 +6456,10 @@
       "baseline": "0.30",
       "port-version": 1
     },
+    "squirrel": {
+      "baseline": "2021-09-17",
+      "port-version": 0
+    },
     "sratom": {
       "baseline": "0.6.4",
       "port-version": 0
@@ -6526,7 +6534,7 @@
     },
     "symengine": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "systemc": {
       "baseline": "2.3.3",
