@@ -41,6 +41,10 @@
           "features": [
             "netcdf-4"
           ]
+        },
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
         }
       ]
     },

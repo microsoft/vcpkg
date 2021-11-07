@@ -44,6 +44,18 @@ if(NOT ENABLE_DAP AND NOT ENABLE_NCZARR)
     list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON")
 endif()
 
+if(ENABLE_HDF5)
+    # Fix hdf5 szip support detection for static linkage.
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX HDF5
+        MODULES hdf5
+        LIBRARIES
+    )
+    if(HDF5_LIBRARIES_RELEASE MATCHES "szip")
+        list(APPEND FEATURE_OPTIONS "-DUSE_SZIP=ON")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
