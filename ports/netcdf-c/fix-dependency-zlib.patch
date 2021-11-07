@@ -1,8 +1,8 @@
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
-index 5b578f7..0731460 100644
+index be72612..5e1692f 100644
 --- a/liblib/CMakeLists.txt
 +++ b/liblib/CMakeLists.txt
-@@ -58,7 +58,7 @@ ENDIF()
+@@ -67,7 +67,7 @@ ENDIF()
  
  SET(TLL_LIBS "")
  

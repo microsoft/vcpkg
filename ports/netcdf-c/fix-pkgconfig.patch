@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 57d2d4b..3de6f8c 100644
+index 390ac0a..4bcd909 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1892,6 +1892,20 @@ LIST(REMOVE_DUPLICATES LINKFLAGS)
+@@ -2100,6 +2100,20 @@ STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
  SET(LIBS ${NC_LIBS})
  SET(NC_LIBS "-lnetcdf")
  
