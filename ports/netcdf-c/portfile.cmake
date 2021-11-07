@@ -19,10 +19,12 @@ file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/windows/FindHDF5.cmake")
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(NC_USE_STATIC_CRT ON)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    set(CRT_OPTION "")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(CRT_OPTION -DNC_USE_STATIC_CRT=ON)
 else()
-    set(NC_USE_STATIC_CRT OFF)
+    set(CRT_OPTION -DNC_USE_STATIC_CRT=OFF)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -46,7 +48,7 @@ vcpkg_cmake_configure(
         -DENABLE_FILTER_TESTING=OFF
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
-        -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
+        ${CRT_OPTION}
         ${FEATURE_OPTIONS}
 )
 
