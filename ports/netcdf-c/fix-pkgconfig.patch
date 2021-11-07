@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 390ac0a..4bcd909 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2100,6 +2100,20 @@ STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
+@@ -2100,6 +2100,21 @@ STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
  SET(LIBS ${NC_LIBS})
  SET(NC_LIBS "-lnetcdf")
  
@@ -17,6 +17,7 @@ index 390ac0a..4bcd909 100644
 +replace_pkgconfig_module("-lhdf5_hl"   "hdf5_hl")
 +replace_pkgconfig_module("-lhdf5"      "hdf5")
 +replace_pkgconfig_module("-lmpi"       "ompi-c")
++replace_pkgconfig_module("-lzip"       "libzip")
 +replace_pkgconfig_module("-lCURL[^ ]*" "libcurl")
 +replace_pkgconfig_module("-lZLIB[^ ]*" "zlib")
 +

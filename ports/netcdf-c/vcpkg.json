@@ -16,6 +16,7 @@
   "default-features": [
     "dap",
     "hdf5",
+    "nczarr",
     "netcdf-4"
   ],
   "features": {
@@ -39,6 +40,44 @@
           "default-features": false,
           "features": [
             "netcdf-4"
+          ]
+        }
+      ]
+    },
+    "nczarr": {
+      "description": "Build with NCZarr cloud storage access support",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "netcdf-4"
+          ]
+        }
+      ]
+    },
+    "nczarr-s3": {
+      "description": "Build with NCZarr S3 support",
+      "dependencies": [
+        "aws-sdk-cpp",
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "nczarr"
+          ]
+        }
+      ]
+    },
+    "nczarr-zip": {
+      "description": "Build with NCZarr ZIP support",
+      "dependencies": [
+        "libzip",
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "nczarr"
           ]
         }
       ]

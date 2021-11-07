@@ -32,10 +32,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dap       ENABLE_DAP
         netcdf-4  ENABLE_NETCDF_4
         hdf5      ENABLE_HDF5
+        nczarr    ENABLE_NCZARR
+        nczarr-s3     ENABLE_NCZARR_S3
+        nczarr-zip    ENABLE_NCZARR_ZIP
         tools     BUILD_UTILITIES
     INVERTED_FEATURES
-        dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
-)
+        nczarr-zip    CMAKE_DISABLE_FIND_PACKAGE_Zip
+    )
+
+if(NOT ENABLE_DAP AND NOT ENABLE_NCZARR)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
