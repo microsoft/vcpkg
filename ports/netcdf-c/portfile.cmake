@@ -56,6 +56,11 @@ if(ENABLE_HDF5)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_UWP)
+    set(ENV{CFLAGS} "$ENV{CFLAGS} /wd4996 /wd4703")
+    set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} /wd4996 /wd4703")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
