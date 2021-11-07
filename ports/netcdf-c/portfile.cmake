@@ -31,11 +31,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dap       ENABLE_DAP
         netcdf-4  ENABLE_NETCDF_4
-        netcdf-4  USE_HDF5
+        hdf5      ENABLE_HDF5
         tools     BUILD_UTILITIES
     INVERTED_FEATURES
         dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
-        netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
 )
 
 vcpkg_cmake_configure(

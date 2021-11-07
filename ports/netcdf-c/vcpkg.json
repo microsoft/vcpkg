@@ -15,6 +15,7 @@
   ],
   "default-features": [
     "dap",
+    "hdf5",
     "netcdf-4"
   ],
   "features": {
@@ -24,16 +25,26 @@
         "curl"
       ]
     },
-    "netcdf-4": {
-      "description": "Build with netCDF-4/HDF5 support",
+    "hdf5": {
+      "description": "Build with HDF5 support",
       "dependencies": [
         {
           "name": "hdf5",
           "features": [
             "zlib"
           ]
+        },
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "netcdf-4"
+          ]
         }
       ]
+    },
+    "netcdf-4": {
+      "description": "Build with netCDF-4 support"
     },
     "tools": {
       "description": "Build utilities"
