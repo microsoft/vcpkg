@@ -23,7 +23,10 @@
     "dap": {
       "description": "Build with DAP remote access client support",
       "dependencies": [
-        "curl"
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
     "hdf5": {
@@ -31,6 +34,7 @@
       "dependencies": [
         {
           "name": "hdf5",
+          "default-features": false,
           "features": [
             "zlib"
           ]
@@ -76,7 +80,10 @@
     "nczarr-zip": {
       "description": "Build with NCZarr ZIP support",
       "dependencies": [
-        "libzip",
+        {
+          "name": "libzip",
+          "default-features": false
+        },
         {
           "name": "netcdf-c",
           "default-features": false,
