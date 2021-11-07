@@ -3,15 +3,15 @@ vcpkg_from_github(
     #REPO sccn/liblsl
     #REF v1.15.2 # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
     REPO chausner/liblsl
-    REF 79c0a38161e8669ef092cd5e48ba9bab17627a5e
-    SHA512 0d7e2c6db63675f0b030e0d251229dd7f247258588cf8ec8f4cf51411ad5b6021d865047a69ba50c0a7693997f4225065841a17d75884ffe7f49d86035892cf1    
+    REF 12213a69000a9be74229034beb7a684d95f3809e
+    SHA512 3b18d192e4bde7050402ed223153ac8243a2eec69390b7b0b1a1a07571153470d4c3e86b0e8caeba37604547420c1d5154e0ffa86a9aa719d84a89c3bedba79b    
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LSL_BUILD_STATIC)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLSL_BUILD_STATIC=${LSL_BUILD_STATIC}
         -DLSL_BUNDLED_BOOST=OFF # we use the boost vcpkg package instead
