@@ -16,14 +16,14 @@ else()
     )
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_install()
+vcpkg_cmake_fixup_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
