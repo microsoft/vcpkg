@@ -1,0 +1,22 @@
+diff --git a/cmake/pcre2-config.cmake.in b/cmake/pcre2-config.cmake.in
+index b313d6d..3fa6f9b 100644
+--- a/cmake/pcre2-config.cmake.in
++++ b/cmake/pcre2-config.cmake.in
+@@ -39,16 +39,14 @@ if (PCRE2_USE_STATIC_LIBS)
+   endif ()
+ 
+   set(PCRE2_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+-  set(PCRE2_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+ else ()
+   set(PCRE2_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+   if (MINGW AND PCRE2_NON_STANDARD_LIB_PREFIX)
+     set(PCRE2_PREFIX "")
+   endif ()
+ 
+-  set(PCRE2_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+   if (MINGW AND PCRE2_NON_STANDARD_LIB_SUFFIX)
+-    set(PCRE2_SUFFIX "-0.dll")
++    set(PCRE2_SUFFIX "-0")
+   endif ()
+ endif ()
+ find_library(PCRE2_8BIT_LIBRARY NAMES ${PCRE2_PREFIX}${PCRE2_8BIT_NAME}${PCRE2_SUFFIX} ${PCRE2_PREFIX}${PCRE2_8BIT_NAME}d${PCRE2_SUFFIX} DOC "8 bit PCRE2 library")
