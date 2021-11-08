@@ -177,7 +177,7 @@
       "port-version": 0
     },
     "asio-grpc": {
-      "baseline": "1.1.2",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "asiosdk": {
