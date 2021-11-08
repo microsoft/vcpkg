@@ -1,10 +1,8 @@
-set(PCRE2_VERSION 10.37)
-set(EXPECTED_SHA f15357d8f5400739f26a32fe03a0759607fd7a282a1a8a2bb169b971a8a00330eff3ba465842c4668ad968e3fd1fff4dc7f0631d0af8416947070ff7cd056e6f)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PhilipHazel/pcre2
-    REF pcre2-${PCRE2_VERSION}
-    SHA512   ${EXPECTED_SHA}
+    REF 35fee4193b852cb504892352bd0155de10809889 # pcre2-10.39
+    SHA512 a6e50f3354dc4172df05e887dd8646d4ce6a3584fe180b17dc27b42b094e13d1d1a7e5ab3cb15dd352764d81ac33cfd03e81b0c890d9ddec72d823ca6f8bd667
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
@@ -16,9 +14,9 @@ else()
     set(JIT ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+
     OPTIONS
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
@@ -26,9 +24,10 @@ vcpkg_configure_cmake(
         -DPCRE2_SUPPORT_JIT=${JIT}
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
-        -DPCRE2_BUILD_PCRE2GREP=OFF)
+        -DPCRE2_BUILD_PCRE2GREP=OFF
+)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/pcre2.h PCRE2_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -39,8 +38,8 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/pcre2.h "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
@@ -51,4 +50,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
