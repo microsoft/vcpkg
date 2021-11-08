@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_fixup_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake TARGET_PATH share)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
