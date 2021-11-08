@@ -42,6 +42,12 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+if (BUILD_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/pcre2-config.cmake"
+        "if (PCRE2_USE_STATIC_LIBS)"
+        "if (1)"
+    )
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
@@ -53,4 +59,5 @@ if(BUILD_STATIC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
