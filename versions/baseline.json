@@ -3222,7 +3222,7 @@
     },
     "lapack-reference": {
       "baseline": "3.8.0",
-      "port-version": 6
+      "port-version": 7
     },
     "lastools": {
       "baseline": "2020-05-09",
