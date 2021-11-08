@@ -59,7 +59,7 @@ index 7b12341..b6b1d0c 100644
      ${JPEG_LIBRARIES}
      ${ZLIB_LIBRARIES})
 diff --git a/libgeotiff/cmake/CMakeLists.txt b/libgeotiff/cmake/CMakeLists.txt
-index 47a2b00..b4e1bb1 100644
+index 47a2b00..3809ba3 100644
 --- a/libgeotiff/cmake/CMakeLists.txt
 +++ b/libgeotiff/cmake/CMakeLists.txt
 @@ -6,6 +6,7 @@
@@ -75,7 +75,7 @@ index 47a2b00..b4e1bb1 100644
    set (PROJECT_ROOT_DIR "..")
  endif ()
 +else()
-+  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME_LOWER}")
++  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
 +  set (PROJECT_ROOT_DIR "../..")
 +endif()
  
