@@ -4,8 +4,15 @@
   "description": "Libgeotiff is an open source library on top of libtiff for reading and writing GeoTIFF information tags.",
   "homepage": "https://github.com/OSGeo/libgeotiff",
   "dependencies": [
-    "libjpeg-turbo",
     "proj4",
     "tiff"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Install libgeotiff utility programs",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    }
+  }
 }

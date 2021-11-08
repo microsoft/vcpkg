@@ -15,6 +15,12 @@ set(SOURCE_PATH ${SOURCE_PATH}/libgeotiff)
 # Delete FindPROJ4.cmake
 file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+       tools    WITH_JPEG
+       tools    WITH_UTILITIES 
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,14 +28,15 @@ vcpkg_configure_cmake(
         -DGEOTIFF_BIN_SUBDIR=bin
         -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
-        -DWITH_JPEG=1
-        -DWITH_UTILITIES=1
         -DCMAKE_MACOSX_BUNDLE=0
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
-vcpkg_copy_tools(TOOL_NAMES applygeo geotifcp listgeo makegeo AUTO_CLEAN)
+if(WITH_UTILITIES)
+    vcpkg_copy_tools(TOOL_NAMES applygeo geotifcp listgeo makegeo AUTO_CLEAN)
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/GeoTIFF)
