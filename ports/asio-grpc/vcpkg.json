@@ -1,13 +1,9 @@
 {
   "name": "asio-grpc",
-  "version": "1.1.2",
-  "description": "Asynchronous gRPC with Boost.Asio executors",
+  "version": "1.3.0",
+  "description": "Asynchronous gRPC with Asio/unified executors",
   "homepage": "https://github.com/Tradias/asio-grpc",
   "dependencies": [
-    "boost-asio",
-    "boost-core",
-    "boost-intrusive",
-    "boost-lockfree",
     "grpc",
     {
       "name": "vcpkg-cmake",
@@ -18,11 +14,32 @@
       "host": true
     }
   ],
+  "default-features": [
+    "boost-asio"
+  ],
   "features": {
+    "boost-asio": {
+      "description": "Provide Boost.Asio based CMake target",
+      "dependencies": [
+        "boost-asio"
+      ]
+    },
     "boost-container": {
       "description": "Use Boost.Container instead of <memory_resource>",
       "dependencies": [
         "boost-container"
+      ]
+    },
+    "libunifex": {
+      "description": "Provide libunifex based CMake target",
+      "dependencies": [
+        "libunifex"
+      ]
+    },
+    "standalone-asio": {
+      "description": "Provide standalone Asio based CMake target",
+      "dependencies": [
+        "asio"
       ]
     }
   }

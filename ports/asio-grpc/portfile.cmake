@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tradias/asio-grpc
-    REF v1.1.2
-    SHA512 f55b219b9805f193b5673e91e58c3c5fc98957110fadf523c1729c92a06c8befe4ad58052c6e9aaabcf8327f2df31780d7e072a0923d77598974fa0145bf9e7f
+    REF v1.3.0
+    SHA512 adc4b53c9356bfdfbd5a24a59dadae4b4db853d7a9af4e31851ccbd4217fce9ec60de236fa3c20b269fc3d7502b86f7379b339544bad3bebc5b20b0c8e952da0
     HEAD_REF master
 )
 
