@@ -1,7 +1,12 @@
 {
   "name": "ois",
-  "version-string": "1.5",
-  "port-version": 3,
+  "version-string": "1.5.1",
   "description": "Cross Platform Object Oriented Input Lib System. Meant to be very robust and compatiable with many systems and operating systems.",
-  "homepage": "https://wgois.github.io/OIS/"
+  "homepage": "https://wgois.github.io/OIS/",
+  "dependencies":[
+	{
+	  "name": "vcpkg-cmake",
+	  "host": true
+	}
+  ]
 }
