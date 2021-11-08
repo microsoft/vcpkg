@@ -5,7 +5,15 @@
   "homepage": "https://github.com/OSGeo/libgeotiff",
   "dependencies": [
     "proj4",
-    "tiff"
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "tools": {

@@ -10,20 +10,14 @@ vcpkg_from_github(
         fix-staticbuild.patch
 )
 
-set(SOURCE_PATH ${SOURCE_PATH}/libgeotiff)
-
-# Delete FindPROJ4.cmake
-file(REMOVE ${SOURCE_PATH}/cmake/FindPROJ4.cmake)
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
        tools    WITH_JPEG
        tools    WITH_UTILITIES 
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/libgeotiff"
     OPTIONS
         -DGEOTIFF_BIN_SUBDIR=bin
         -DGEOTIFF_DATA_SUBDIR=share
@@ -32,21 +26,20 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(WITH_UTILITIES)
     vcpkg_copy_tools(TOOL_NAMES applygeo geotifcp listgeo makegeo AUTO_CLEAN)
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/GeoTIFF)
+vcpkg_cmake_config_fixup(PACKAGE_NAME GeoTIFF)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/GeoTIFF/geotiff-config.cmake "if (GeoTIFF_USE_STATIC_LIBS)" "if (1)")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/GeoTIFF/geotiff-config.cmake" "if (GeoTIFF_USE_STATIC_LIBS)" "if (1)")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/doc ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/doc" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+file(INSTALL "${SOURCE_PATH}/libgeotiff/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
