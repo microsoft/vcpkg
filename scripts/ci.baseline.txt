@@ -1029,9 +1029,6 @@ ogre-next:x64-windows        = skip
 ogre-next:x64-windows-static = skip
 ogre-next:x64-windows-static-md=skip
 ogre-next:x86-windows        = skip
-ois:arm64-windows=fail
-ois:arm-uwp=fail
-ois:x64-uwp=fail
 # ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
 # does not resolve the issue
 # src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
