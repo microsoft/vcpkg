@@ -8,6 +8,8 @@ vcpkg_from_github(
         pcre2-10.35_fix-uwp.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(JIT OFF)
 else()
@@ -16,8 +18,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-
     OPTIONS
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
@@ -28,27 +30,27 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/pcre2.h PCRE2_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
+if(BUILD_STATIC)
     string(REPLACE "defined(PCRE2_STATIC)" "1" PCRE2_H "${PCRE2_H}")
 else()
     string(REPLACE "defined(PCRE2_STATIC)" "0" PCRE2_H "${PCRE2_H}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/pcre2.h "${PCRE2_H}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(BUILD_STATIC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
