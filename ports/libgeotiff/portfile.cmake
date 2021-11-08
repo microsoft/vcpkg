@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         cmakelists.patch
         geotiff-config.patch
-        fix-proj4.patch
         fix-staticbuild.patch
         fix-config-version.patch
 )
@@ -24,7 +23,6 @@ vcpkg_configure_cmake(
         -DGEOTIFF_BIN_SUBDIR=bin
         -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
-        -DWITH_PROJ4=1
         -DWITH_ZLIB=1
         -DWITH_JPEG=1
         -DWITH_UTILITIES=1

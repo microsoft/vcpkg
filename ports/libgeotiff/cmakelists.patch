@@ -1,5 +1,5 @@
 diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
-index 43113fa..46331ad 100644
+index 275eff9..b4a3cee 100644
 --- a/libgeotiff/CMakeLists.txt
 +++ b/libgeotiff/CMakeLists.txt
 @@ -172,6 +172,7 @@ IF(WITH_TIFF)
@@ -59,7 +59,7 @@ index 7b12341..b6b1d0c 100644
      ${JPEG_LIBRARIES}
      ${ZLIB_LIBRARIES})
 diff --git a/libgeotiff/cmake/CMakeLists.txt b/libgeotiff/cmake/CMakeLists.txt
-index 47a2b00..3809ba3 100644
+index 47a2b00..b4e1bb1 100644
 --- a/libgeotiff/cmake/CMakeLists.txt
 +++ b/libgeotiff/cmake/CMakeLists.txt
 @@ -6,6 +6,7 @@
