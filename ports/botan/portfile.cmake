@@ -124,17 +124,25 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     BOTAN_BUILD(dbg)
 endif()
 
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc"
+        [[${prefix}/include/botan-2]]
+        [[${prefix}/include]]
+    )
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc"
+        [[${prefix}/include/botan-2]]
+        [[${prefix}/include]]
+    )
 endif()
 vcpkg_fixup_pkgconfig()
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 vcpkg_copy_pdbs()
 
