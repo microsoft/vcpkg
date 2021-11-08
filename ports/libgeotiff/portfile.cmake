@@ -23,6 +23,8 @@ vcpkg_cmake_configure(
         -DGEOTIFF_BIN_SUBDIR=bin
         -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
+        -DHAVE_TIFFOPEN=1
+        -DHAVE_TIFFMERGEFIELDINFO=1
         -DCMAKE_MACOSX_BUNDLE=0
         ${FEATURE_OPTIONS}
 )
