@@ -8,102 +8,79 @@ vcpkg_build_qmake()
 ```
 #]===]
 
+function(z_run_jom_build invoke_command targets log_prefix log_suffix)
+    message(STATUS "Package ${log_prefix}-${TARGET_TRIPLET}-${log_suffix}")
+    vcpkg_execute_build_process(
+        COMMAND "${invoke_command}" -j ${VCPKG_CONCURRENCY} ${targets}
+        NO_PARALLEL_COMMAND "${invoke_command}" -j 1 ${targets}
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${log_suffix}"
+        LOGNAME "package-${log_prefix}-${TARGET_TRIPLET}-${log_suffix}"
+    )
+endfunction()
+
 function(vcpkg_build_qmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS")
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "SKIP_MAKEFILES"
+        "BUILD_LOGNAME"
+        "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS"
+    )
+
+    # Make sure that the linker finds the libraries used
+    vcpkg_backup_env_variables(VARS PATH LD_LIBRARY_PATH CL _CL_)
+
+    # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
+    set(ENV{_CL_} "/utf-8")
 
     if(CMAKE_HOST_WIN32)
         if (VCPKG_QMAKE_USE_NMAKE)
             find_program(NMAKE nmake)
-            set(INVOKE "${NMAKE}")
-            get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
-            set(PATH_GLOBAL "$ENV{PATH}")
-            set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+            set(invoke_command "${NMAKE}")
+            get_filename_component(nmake_exe_path "${NMAKE}" DIRECTORY)
+            vcpkg_host_path_list(APPEND ENV{PATH} "${nmake_exe_path}")
             set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
         else()
             vcpkg_find_acquire_program(JOM)
-            set(INVOKE "${JOM}")
+            set(invoke_command "${JOM}")
         endif()
     else()
         find_program(MAKE make)
-        set(INVOKE "${MAKE}")
+        set(invoke_command "${MAKE}")
     endif()
-
-    # Make sure that the linker finds the libraries used
-    set(ENV_PATH_BACKUP "$ENV{PATH}")
 
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
 
-    if(NOT _csc_BUILD_LOGNAME)
-        set(_csc_BUILD_LOGNAME build)
+    if(NOT DEFINED arg_BUILD_LOGNAME)
+        set(arg_BUILD_LOGNAME build)
     endif()
 
-    function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
-        message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
-        vcpkg_execute_build_process(
-            COMMAND ${INVOKE} -j ${VCPKG_CONCURRENCY} ${TARGETS}
-            NO_PARALLEL_COMMAND ${INVOKE} -j 1 ${TARGETS}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
-            LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
-        )
-    endfunction()
+    set(short_name_debug "dbg")
+    set(path_suffix_debug "/debug")
+    set(targets_debug "${arg_DEBUG_TARGETS}")
 
-    # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
-    set(ENV_CL_BACKUP "$ENV{_CL_}")
-    set(ENV{_CL_} "/utf-8")
+    set(short_name_release "rel")
+    set(path_suffix_release "")
+    set(targets_release "${arg_RELEASE_TARGETS}")
 
-    #Replace with VCPKG variables if PR #7733 is merged
-    unset(BUILDTYPES)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(_buildname "DEBUG")
-        list(APPEND BUILDTYPES ${_buildname})
-        set(_short_name_${_buildname} "dbg")
-        set(_path_suffix_${_buildname} "/debug")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(_buildname "RELEASE")
-        list(APPEND BUILDTYPES ${_buildname})
-        set(_short_name_${_buildname} "rel")
-        set(_path_suffix_${_buildname} "")
-    endif()
-    unset(_buildname)
+    foreach(build_type IN ITEMS debug release)
+        set(current_installed_prefix "${CURRENT_INSTALLED_DIR}${path_suffix_${build_type}}")
 
-    foreach(_buildname ${BUILDTYPES})
-        set(_installed_prefix_ "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}")
-        set(_installed_libpath_ "${_installed_prefix_}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_installed_prefix_}/lib/manual-link/")
-
-        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/bin")
-        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/lib")
+        vcpkg_add_to_path(PREPEND "${current_installed_prefix}/lib" "${current_installed_prefix}/bin")
 
         # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
         if(CMAKE_HOST_UNIX)
-            if(DEFINED ENV{LD_LIBRARY_PATH})
-                set(_ld_library_path_defined_ TRUE)
-                set(_ld_library_path_backup_ $ENV{LD_LIBRARY_PATH})
-                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_ld_library_path_backup_}")
-            else()
-                set(_ld_library_path_defined_ FALSE)
-                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}")
-            endif()
+            set(ENV{LD_LIBRARY_PATH} "")
+            vcpkg_host_path_list(APPEND ENV{LD_LIBRARY_PATH} "${current_installed_prefix}/lib" "${current_installed_prefix}/lib/manual-link")
         endif()
-        
-        list(APPEND _csc_${_buildname}_TARGETS ${_csc_TARGETS})
-        if(NOT _csc_SKIP_MAKEFILES)
-            run_jom(qmake_all makefiles ${_short_name_${_buildname}})
-        endif()
-        run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_short_name_${_buildname}})
 
-        # Restore backup
-        if(CMAKE_HOST_UNIX)
-            if(_ld_library_path_defined_)
-                set(ENV{LD_LIBRARY_PATH} "${_ld_library_path_backup_}")                
-            else()
-                unset(ENV{LD_LIBRARY_PATH})
-            endif()
+        vcpkg_list(SET targets ${targets_${build_type}} ${arg_TARGETS})
+        if(NOT arg_SKIP_MAKEFILES)
+            z_run_jom_build("${invoke_command}" qmake_all makefiles "${short_name_${build_type}}")
         endif()
+        z_run_jom_build("${invoke_command}" "${targets}" "${arg_BUILD_LOGNAME}" "${short_name_${build_type}}")
+
+        vcpkg_restore_env_variables(VARS PATH LD_LIBRARY_PATH)
     endforeach()
 
-    # Restore the original value of ENV{PATH}
-    set(ENV{PATH} "${ENV_PATH_BACKUP}")
-    set(ENV{_CL_} "${ENV_CL_BACKUP}")
+    vcpkg_restore_env_variables(VARS CL _CL_)
 endfunction()

@@ -3,20 +3,21 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF 0a9d237ac2968463d36c4c9b4436871a6c3ea0ca # 0.20.3
-    SHA512 47438eb07e4687855e89664479644b93f826da722c3556c30ed4b1a51cecb41494582d3ae3337ff4e0925f6db7ebf74fe29871bf930bb2eb51f5198090ac8554
+    REF a921d615c5cb4eb55a8dfc608dae6efde13e9126
+    SHA512 7787d5f927f53554cec3044221011cbc78b654c504d96af29947266e25058194923c5463aefde73b93dcfb3930eedf731f6af4d0c311d8f2f0d7be2114393e05
     HEAD_REF master
-    PATCHES 
-        001_opencv.patch
+    PATCHES
+        fix-qt.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools BUILD_TOOLS
+    FEATURES
+        tools BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_APP=OFF
@@ -57,8 +58,8 @@ vcpkg_configure_cmake(
         -DWITH_FASTCV=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 
