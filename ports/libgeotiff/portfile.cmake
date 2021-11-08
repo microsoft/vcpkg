@@ -22,7 +22,6 @@ vcpkg_configure_cmake(
         -DGEOTIFF_BIN_SUBDIR=bin
         -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
-        -DWITH_ZLIB=1
         -DWITH_JPEG=1
         -DWITH_UTILITIES=1
         -DCMAKE_MACOSX_BUNDLE=0

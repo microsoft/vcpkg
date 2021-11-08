@@ -6,7 +6,6 @@
   "dependencies": [
     "libjpeg-turbo",
     "proj4",
-    "tiff",
-    "zlib"
+    "tiff"
   ]
 }
