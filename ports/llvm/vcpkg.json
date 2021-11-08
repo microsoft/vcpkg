@@ -1,6 +1,6 @@
 {
   "name": "llvm",
-  "version-string": "13.0.0",
+  "version": "13.0.0",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "supports": "!uwp",
