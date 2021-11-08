@@ -57,8 +57,6 @@ if(VCPKG_USE_INTERNAL_Fortran)
             message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
         endif()
     endif()
-else()
-    set(USE_OPTIMIZED_BLAS ON)
 endif()
 
 vcpkg_configure_cmake(
