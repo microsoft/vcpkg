@@ -4277,7 +4277,7 @@
       "port-version": 1
     },
     "mesa": {
-      "baseline": "21.2.0",
+      "baseline": "21.2.5",
       "port-version": 0
     },
     "meschach": {
