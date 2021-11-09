@@ -124,3 +124,8 @@ string(REPLACE "path = os.path.join(filedir, '..')" "path = os.path.join(filedir
 string(REPLACE "path = os.path.join('${CURRENT_PACKAGES_DIR}/share', 'glib-2.0')" "path = os.path.join('unuseable/share', 'glib-2.0')" _contents "${_contents}")
 
 file(WRITE "${_file}" "${_contents}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gdb")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/glib/glib-gettextize")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/glib/glib-gettextize" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+endif()
