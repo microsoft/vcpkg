@@ -2522,7 +2522,7 @@
     },
     "gperftools": {
       "baseline": "2019-09-02",
-      "port-version": 1
+      "port-version": 2
     },
     "gpgme": {
       "baseline": "1.14.0",
