@@ -9,28 +9,36 @@ vcpkg_from_github(
 )
 
 if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
-    # Bundle Basis Universal, a commit that's before the UASTC support (which
-    # is not implemented yet). The repo has big unrequired files in its
-    # history, so we're downloading just a snapshot instead of a git clone.
-    vcpkg_download_distfile(
-        _BASIS_UNIVERSAL_PATCHES
-        URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
-        FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
-        SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
-    )
-    set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
+    # Bundle Basis Universal
+    if(VCPKG_USE_HEAD_VERSION)
+        # v1_15_update2
+        set(_BASIS_VERSION "v1_15_update2")
+        set(_BASIS_SHA512 "a898a057b57ac64f6c0bf5fce0b599e23421ccdd015ea7bb668bce8b9292ef55b098f3d05854a2fb5363959932b75cd0a842664ae7d4f71f3537dc11301c1b32")
+    else()
+        # A commit that's before the UASTC support (which
+        # is not implemented yet). The repo has big unrequired files in its
+        # history, so we're downloading just a snapshot instead of a git clone.
+        vcpkg_download_distfile(
+            _BASIS_UNIVERSAL_PATCHES
+            URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
+            FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
+            SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
+        )
+        set(_BASIS_UNIVERSAL_PATCHES PATCHES ${_BASIS_UNIVERSAL_PATCHES})
+        set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
+        set(_BASIS_SHA512 "65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2")
+    endif()
     vcpkg_download_distfile(
         _BASIS_UNIVERSAL_ARCHIVE
         URLS "https://github.com/BinomialLLC/basis_universal/archive/${_BASIS_VERSION}.tar.gz"
         FILENAME "basis-universal-${_BASIS_VERSION}.tar.gz"
-        SHA512 65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2
+        SHA512 ${_BASIS_SHA512}
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH _BASIS_UNIVERSAL_SOURCE
         ARCHIVE ${_BASIS_UNIVERSAL_ARCHIVE}
         WORKING_DIRECTORY "${SOURCE_PATH}/src/external"
-        PATCHES
-            ${_BASIS_UNIVERSAL_PATCHES})
+        ${_BASIS_UNIVERSAL_PATCHES})
     # Remove potentially cached directory which would cause renaming to fail
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/external/basis-universal")
     # Rename the output folder so that magnum auto-detects it
@@ -46,8 +54,10 @@ endif()
 # Head only features
 set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
 if(NOT VCPKG_USE_HEAD_VERSION)
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glslangshaderconverter spirvtoolsshaderconverter)
-    message(WARNING "Features glslangshaderconverter and spirvtoolsshaderconverter are not avaliable when building non-head version.")
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES cgltfimporter glslangshaderconverter
+        ktximageconverter ktximporter openexrimageconverter openexrimporter
+        spirvtoolsshaderconverter stbdxtimageconverter)
+    message(WARNING "Features cgltfimporter, glslangshaderconverter, ktximageconverter, ktximporter, openexrimageconverter, openexrimporter, spirvtoolsshaderconverter and stbdxtimageconverter are not available when building non-head version.")
 endif()
 
 set(_COMPONENTS "")
