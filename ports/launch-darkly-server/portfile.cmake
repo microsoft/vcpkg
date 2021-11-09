@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO launchdarkly/c-server-sdk
@@ -26,8 +24,6 @@ endif()
 
 file(REMOVE_RECURSE
 	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/launch-darkly-server"
-	"${CURRENT_PACKAGES_DIR}/lib/launch-darkly-server"
 	)
     
 vcpkg_copy_pdbs()
