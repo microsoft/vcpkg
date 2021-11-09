@@ -17,8 +17,8 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl FindPostgreSQL)  # Outdated; Supplied by CMake
-    file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
+foreach(package IN ITEMS Curl GDAL GEOS GeoTIFF ICONV PostgreSQL)  # Outdated; Supplied by CMake
+    file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
 foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
