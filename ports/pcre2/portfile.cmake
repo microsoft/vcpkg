@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
-        fix-config-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -42,13 +41,10 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-if (BUILD_STATIC)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/pcre2-config.cmake"
-        "if (PCRE2_USE_STATIC_LIBS)"
-        "if (1)"
-    )
-endif()
+
+# The cmake file provided by pcre2 has some problems, so don't use it for now.
+#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
