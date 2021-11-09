@@ -1214,9 +1214,6 @@ qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
-quantlib:arm64-windows=fail
-quantlib:x64-windows=fail
-quantlib:x86-windows=fail
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1689,7 +1686,6 @@ netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
-quantlib:x64-windows-static-md=fail
 readosm:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
