@@ -181,4 +181,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif ()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lws_config.h" "${CURRENT_PACKAGES_DIR}" "")
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
