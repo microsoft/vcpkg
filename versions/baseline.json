@@ -2381,8 +2381,8 @@
       "port-version": 1
     },
     "geos": {
-      "baseline": "3.9.1",
-      "port-version": 3
+      "baseline": "3.10.0",
+      "port-version": 0
     },
     "geotrans": {
       "baseline": "3.8",
@@ -2458,7 +2458,7 @@
     },
     "glib": {
       "baseline": "2.66.4",
-      "port-version": 0
+      "port-version": 1
     },
     "glibmm": {
       "baseline": "2.68.1",
@@ -2686,7 +2686,7 @@
     },
     "hpx": {
       "baseline": "1.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -2702,7 +2702,7 @@
     },
     "hwloc": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hyperscan": {
       "baseline": "5.3.0",
@@ -3548,6 +3548,10 @@
       "baseline": "0.9.1",
       "port-version": 0
     },
+    "libjxl": {
+      "baseline": "0.6.1",
+      "port-version": 0
+    },
     "libkeyfinder": {
       "baseline": "2.2.5",
       "port-version": 1
@@ -3738,7 +3742,7 @@
     },
     "libpng": {
       "baseline": "1.6.37",
-      "port-version": 15
+      "port-version": 16
     },
     "libpopt": {
       "baseline": "1.16",
@@ -5410,7 +5414,7 @@
     },
     "python3": {
       "baseline": "3.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.1",
@@ -7350,7 +7354,7 @@
     },
     "zstr": {
       "baseline": "1.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "zug": {
       "baseline": "2021-04-23",
