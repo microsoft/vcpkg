@@ -1,6 +1,6 @@
 {
   "name": "boost-date-time",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost date_time module",
   "homepage": "https://github.com/boostorg/date_time",
   "dependencies": [
@@ -12,10 +12,8 @@
     },
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-io",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -29,6 +27,10 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

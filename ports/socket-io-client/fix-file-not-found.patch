@@ -1,8 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 19c5e54..9d2e1ec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -31,17 +31,20 @@ add_definitions(
+@@ -31,20 +31,24 @@ add_definitions(
      -D_WEBSOCKETPP_CPP11_FUNCTIONAL_
  )
  
@@ -18,15 +17,19 @@ index 19c5e54..9d2e1ec 100644
 -    ${CMAKE_CURRENT_LIST_DIR}/lib/asio/asio/include
  )
  
+ if (CMAKE_VERSION VERSION_GREATER "3.1")
  set_property(TARGET sioclient PROPERTY CXX_STANDARD 11)
  set_property(TARGET sioclient PROPERTY CXX_STANDARD_REQUIRED ON)
- 
+ else()
+ set_property(TARGET sioclient APPEND_STRING PROPERTY COMPILE_FLAGS "-std=c++11")
+ endif()
++
 +target_link_libraries(sioclient PRIVATE websocketpp::websocketpp asio asio::asio rapidjson)
 +
  if(BUILD_SHARED_LIBS)
  set_target_properties(sioclient
  	PROPERTIES
-@@ -56,15 +59,12 @@ if(OPENSSL_FOUND)
+@@ -56,16 +59,13 @@ if(OPENSSL_FOUND)
  add_library(sioclient_tls ${ALL_SRC})
  target_include_directories(sioclient_tls PRIVATE
      ${CMAKE_CURRENT_LIST_DIR}/src 
@@ -36,10 +39,11 @@ index 19c5e54..9d2e1ec 100644
      ${OPENSSL_INCLUDE_DIR}
  )
  
+ if (CMAKE_VERSION VERSION_GREATER "3.1")
  set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD 11)
  set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD_REQUIRED ON)
 -target_link_libraries(sioclient_tls PRIVATE ${OPENSSL_LIBRARIES} )
 +target_link_libraries(sioclient_tls PRIVATE ${OPENSSL_LIBRARIES} websocketpp::websocketpp asio asio::asio rapidjson)
- target_compile_definitions(sioclient_tls PRIVATE -DSIO_TLS)
- if(BUILD_SHARED_LIBS)
- set_target_properties(sioclient_tls
+ else()
+ set_property(TARGET sioclient_tls APPEND_STRING PROPERTY COMPILE_FLAGS "-std=c++11")
+ endif()

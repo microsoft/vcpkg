@@ -1,23 +1,27 @@
-set(QT_IS_LATEST OFF)
+# Reminder for myself and everybody else:
+# Qt cross module dependency information within the Qt respository is wrong and/or incomplete. 
+# Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
+# Often enough certain (bigger) dependencies are only used to build examples and/or tests. 
+# As such getting the correct dependency information relevant for vcpkg requires a manual search/check
+
+#set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        jpeg.patch
-        harfbuzz.patch
-        config_install.patch 
         allow_outside_prefix.patch 
-        buildcmake.patch
-        dont_force_cmakecache.patch
-        fix_find_dep.patch
-        20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
         clang-cl_source_location.patch
+        config_install.patch
+        dont_force_cmakecache.patch
+        fix_cmake_build.patch
+        harfbuzz.patch
+        fix_egl.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES
-                )
+        )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
@@ -58,6 +62,8 @@ FEATURES
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
+    "concurrent"          FEATURE_future
+    "concurrent"          FEATURE_thread
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
     "network"             FEATURE_network
@@ -87,12 +93,10 @@ INVERTED_FEATURES
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
-#list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_doubleconversion:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
-
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
@@ -205,6 +209,8 @@ set(TOOL_NAMES
         rcc 
         tracegen 
         uic
+        qtpaths
+        qtpaths6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -255,12 +261,13 @@ file(COPY
 qt_stop_on_update()
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
-if(VCPKG_TARGET_IS_WINDOWS)
+if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
 endif()
 set(other_files 
+        target_qt.conf
         qt-cmake-private-install.cmake 
         syncqt.pl
         android_cmakelist_patcher.sh
@@ -297,8 +304,10 @@ foreach(_config debug release)
     endforeach()
 endforeach()
 
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_CROSSCOMPILING)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
+    endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")

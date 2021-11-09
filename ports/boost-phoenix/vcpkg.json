@@ -1,6 +1,6 @@
 {
   "name": "boost-phoenix",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost phoenix module",
   "homepage": "https://github.com/boostorg/phoenix",
   "dependencies": [
@@ -8,7 +8,6 @@
     "boost-bind",
     "boost-config",
     "boost-core",
-    "boost-detail",
     "boost-function",
     "boost-fusion",
     "boost-mpl",

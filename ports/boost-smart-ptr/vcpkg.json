@@ -1,6 +1,6 @@
 {
   "name": "boost-smart-ptr",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost smart_ptr module",
   "homepage": "https://github.com/boostorg/smart_ptr",
   "dependencies": [

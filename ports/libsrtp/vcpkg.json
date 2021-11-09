@@ -1,6 +1,5 @@
 {
   "name": "libsrtp",
-  "version-string": "2.2.0",
-  "port-version": 1,
+  "version": "2.4.2",
   "description": "This package provides an implementation of the Secure Real-time Transport Protocol (SRTP), the Universal Security Transform (UST), and a supporting cryptographic kernel."
 }
