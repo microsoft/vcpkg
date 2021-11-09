@@ -3874,7 +3874,7 @@
     },
     "libsrt": {
       "baseline": "1.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libsrtp": {
       "baseline": "2.4.2",
