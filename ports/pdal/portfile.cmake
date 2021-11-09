@@ -41,11 +41,16 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/pdal/cmake)
 vcpkg_copy_pdbs()
 
-# Install PDAL executable
-file(GLOB _pdal_apps "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(COPY ${_pdal_apps} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/pdal")
-file(REMOVE ${_pdal_apps})
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+# Install and cleanup executables
+file(GLOB pdal_unsupported
+    "${CURRENT_PACKAGES_DIR}/bin/*.bat"
+    "${CURRENT_PACKAGES_DIR}/bin/pdal-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/*.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/pdal-config"
+)
+file(REMOVE ${pdal_unsupported})
+vcpkg_copy_tools(TOOL_NAMES pdal AUTO_CLEAN)
 
 # Post-install clean-up
 file(REMOVE_RECURSE
@@ -54,16 +59,5 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-else()
-    file(GLOB _pdal_bats "${CURRENT_PACKAGES_DIR}/bin/*.bat")
-    file(REMOVE ${_pdal_bats})
-    file(GLOB _pdal_bats "${CURRENT_PACKAGES_DIR}/debug/bin/*.bat")
-    file(REMOVE ${_pdal_bats})
-    file(GLOB _pdal_apps "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-    file(REMOVE ${_pdal_apps})
-endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
