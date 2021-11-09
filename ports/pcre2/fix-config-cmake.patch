@@ -1,14 +1,21 @@
 diff --git a/cmake/pcre2-config.cmake.in b/cmake/pcre2-config.cmake.in
-index b313d6d..3fa6f9b 100644
+index b313d6d..854a512 100644
 --- a/cmake/pcre2-config.cmake.in
 +++ b/cmake/pcre2-config.cmake.in
-@@ -39,16 +39,14 @@ if (PCRE2_USE_STATIC_LIBS)
+@@ -38,17 +38,19 @@ if (PCRE2_USE_STATIC_LIBS)
+     set(PCRE2_POSIX_NAME pcre2-posix-static)
    endif ()
  
-   set(PCRE2_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+-  set(PCRE2_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
 -  set(PCRE2_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
++  if (WIN32)
++    set(PCRE2_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
++  endif()
  else ()
-   set(PCRE2_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+-  set(PCRE2_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
++  if (WIN32)
++    set(PCRE2_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
++  endif()
    if (MINGW AND PCRE2_NON_STANDARD_LIB_PREFIX)
      set(PCRE2_PREFIX "")
    endif ()
