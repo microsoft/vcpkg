@@ -18,7 +18,7 @@ index bf6137e..890a8ac 100644
  endforeach(_dir)
  
  include(CMakeFindDependencyMacro)
-+find_dependency(Boost COMPONENTS system filesystem)
++find_dependency(Boost COMPONENTS filesystem)
  find_dependency(CURL CONFIG)
  find_dependency(GEOS CONFIG)
  find_dependency(GeoTIFF CONFIG)
@@ -26,16 +26,17 @@ diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
 index 19a2dd1..d498080 100644
 --- a/pdal/util/CMakeLists.txt
 +++ b/pdal/util/CMakeLists.txt
-@@ -8,6 +8,8 @@ endif()
+@@ -8,6 +8,9 @@ endif()
  
  include(${PDAL_CMAKE_DIR}/execinfo.cmake)
  
-+find_package(Boost COMPONENTS system filesystem REQUIRED)
++find_package(Boost COMPONENTS filesystem REQUIRED)
++set(PDAL_BOOST_LIB_NAME Boost::filesystem)
 +
  set(PDAL_UTIL_SOURCES
      "${PDAL_UTIL_DIR}/Bounds.cpp"
      "${PDAL_UTIL_DIR}/Charbuf.cpp"
-@@ -16,14 +18,14 @@ set(PDAL_UTIL_SOURCES
+@@ -16,14 +19,12 @@ set(PDAL_UTIL_SOURCES
      "${PDAL_UTIL_DIR}/Utils.cpp"
      )
  
@@ -44,10 +45,7 @@ index 19a2dd1..d498080 100644
  target_link_libraries(${PDAL_UTIL_LIB_NAME}
      PRIVATE
          ${EXECINFO_LIBRARY}
--        ${PDAL_BOOST_LIB_NAME}
-+    PUBLIC
-+        Boost::system
-+        Boost::filesystem
+         ${PDAL_BOOST_LIB_NAME}
  )
 -target_include_directories(${PDAL_UTIL_LIB_NAME} PRIVATE
 -    ${PDAL_VENDOR_DIR}/pdalboost)
@@ -58,136 +56,15 @@ diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
 index 7679f22..b18b674 100644
 --- a/pdal/util/FileUtils.cpp
 +++ b/pdal/util/FileUtils.cpp
-@@ -124,19 +124,19 @@ std::ostream *createFile(std::string const& name, bool asBinary)
- bool directoryExists(const std::string& dirname)
+@@ -74,6 +74,11 @@ std::string addTrailingSlash(std::string path)
+ 
+ } // unnamed namespace
+ 
++namespace pdalboost
++{
++    namespace filesystem = boost::filesystem;
++}
++
+ namespace FileUtils
  {
-     //ABELL - Seems we should be calling is_directory
--    return pdalboost::filesystem::exists(dirname);
-+    return boost::filesystem::exists(dirname);
- }
- 
- 
- bool createDirectory(const std::string& dirname)
- {
--    return pdalboost::filesystem::create_directory(dirname);
-+    return boost::filesystem::create_directory(dirname);
- }
- 
- 
- void deleteDirectory(const std::string& dirname)
- {
--    pdalboost::filesystem::remove_all(dirname);
-+    boost::filesystem::remove_all(dirname);
- }
- 
- 
-@@ -146,15 +146,15 @@ std::vector<std::string> directoryList(const std::string& dir)
- 
-     try
-     {
--        pdalboost::filesystem::directory_iterator it(dir);
--        pdalboost::filesystem::directory_iterator end;
-+        boost::filesystem::directory_iterator it(dir);
-+        boost::filesystem::directory_iterator end;
-         while (it != end)
-         {
-             files.push_back(it->path().string());
-             it++;
-         }
-     }
--    catch (pdalboost::filesystem::filesystem_error)
-+    catch (boost::filesystem::filesystem_error)
-     {
-         files.clear();
-     }
-@@ -194,13 +194,13 @@ void closeFile(std::istream* in)
- 
- bool deleteFile(const std::string& file)
- {
--    return pdalboost::filesystem::remove(file);
-+    return boost::filesystem::remove(file);
- }
- 
- 
- void renameFile(const std::string& dest, const std::string& src)
- {
--    pdalboost::filesystem::rename(src, dest);
-+    boost::filesystem::rename(src, dest);
- }
- 
- 
-@@ -211,9 +211,9 @@ bool fileExists(const std::string& name)
- 
-     try
-     {
--        return pdalboost::filesystem::exists(name);
-+        return boost::filesystem::exists(name);
-     }
--    catch (pdalboost::filesystem::filesystem_error)
-+    catch (boost::filesystem::filesystem_error)
-     {
-     }
-     return false;
-@@ -222,7 +222,7 @@ bool fileExists(const std::string& name)
- 
- uintmax_t fileSize(const std::string& file)
- {
--    return pdalboost::filesystem::file_size(file);
-+    return boost::filesystem::file_size(file);
- }
- 
- 
-@@ -243,7 +243,7 @@ std::string readFileIntoString(const std::string& filename)
- 
- std::string getcwd()
- {
--    const pdalboost::filesystem::path p = pdalboost::filesystem::current_path();
-+    const boost::filesystem::path p = boost::filesystem::current_path();
-     return addTrailingSlash(p.string());
- }
- 
-@@ -271,7 +271,7 @@ std::string toAbsolutePath(const std::string& filename)
- // otherwise, make it absolute (relative to current working dir) and return that
- std::string toAbsolutePath(const std::string& filename)
- {
--    return pdalboost::filesystem::absolute(filename).string();
-+    return boost::filesystem::absolute(filename).string();
- }
- 
- 
-@@ -283,7 +283,7 @@ std::string toAbsolutePath(const std::string& filename)
- std::string toAbsolutePath(const std::string& filename, const std::string base)
- {
-     const std::string newbase = toAbsolutePath(base);
--    return pdalboost::filesystem::absolute(filename, newbase).string();
-+    return boost::filesystem::absolute(filename, newbase).string();
- }
- 
- std::string getFilename(const std::string& path)
-@@ -304,8 +304,8 @@ std::string getFilename(const std::string& path)
- // Get the directory part of a filename.
- std::string getDirectory(const std::string& path)
- {
--    const pdalboost::filesystem::path dir =
--         pdalboost::filesystem::path(path).parent_path();
-+    const boost::filesystem::path dir =
-+         boost::filesystem::path(path).parent_path();
-     return addTrailingSlash(dir.string());
- }
- 
-@@ -326,13 +326,13 @@ std::string stem(const std::string& path)
- // Determine if the path represents a directory.
- bool isDirectory(const std::string& path)
- {
--    return pdalboost::filesystem::is_directory(path);
-+    return boost::filesystem::is_directory(path);
- }
- 
- // Determine if the path is an absolute path
- bool isAbsolutePath(const std::string& path)
- {
--    return pdalboost::filesystem::path(path).is_absolute();
-+    return boost::filesystem::path(path).is_absolute();
- }
- 
  
