@@ -1,9 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    #REPO sccn/liblsl
-    #REF v1.15.2 # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
-    REPO chausner/liblsl
-    REF 12213a69000a9be74229034beb7a684d95f3809e
+    REPO sccn/liblsl
+    REF a9a06c78d4218b76e1c906c04452eec697f02f8e # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
     SHA512 3b18d192e4bde7050402ed223153ac8243a2eec69390b7b0b1a1a07571153470d4c3e86b0e8caeba37604547420c1d5154e0ffa86a9aa719d84a89c3bedba79b    
     HEAD_REF master
 )
@@ -16,7 +14,7 @@ vcpkg_cmake_configure(
         -DLSL_BUILD_STATIC=${LSL_BUILD_STATIC}
         -DLSL_BUNDLED_BOOST=OFF # we use the boost vcpkg package instead
         -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
-        -Dlslgitrevision=v1.15.2
+        -Dlslgitrevision=v1.15.2-a9a06c
         -Dlslgitbranch=master
 )
 
