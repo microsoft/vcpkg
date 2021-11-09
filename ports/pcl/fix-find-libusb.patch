@@ -1,0 +1,68 @@
+diff --git a/cmake/Modules/FindOpenNI.cmake b/cmake/Modules/FindOpenNI.cmake
+index 249e896..29c5352 100644
+--- a/cmake/Modules/FindOpenNI.cmake
++++ b/cmake/Modules/FindOpenNI.cmake
+@@ -51,14 +51,16 @@ if(OPENNI_INCLUDE_DIR AND OPENNI_LIBRARY)
+   mark_as_advanced(OPENNI_INCLUDE_DIRS)
+ 
+   # Libraries
+-  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+-    find_package(libusb REQUIRED)
+-    set(OPENNI_LIBRARIES ${OPENNI_LIBRARY} libusb::libusb)
++  if(NOT WIN32)
++    find_package(libusb CONFIG REQUIRED)
++    set(OPENNI_LIBRARIES ${OPENNI_LIBRARIES} ${LIBUSB_LIBRARIES})
++    set(OPENNI_INCLUDES ${OPENNI_INCLUDES} ${LIBUSB_INCLUDE_DIRS})
+   else()
+     set(OPENNI_LIBRARIES ${OPENNI_LIBRARY})
+   endif()
+   unset(OPENNI_LIBRARY)
+   mark_as_advanced(OPENNI_LIBRARIES)
++  mark_as_advanced(OPENNI_INCLUDES)
+ 
+ endif()
+ 
+diff --git a/cmake/Modules/FindOpenNI2.cmake b/cmake/Modules/FindOpenNI2.cmake
+index 14ca206..1bf193e 100644
+--- a/cmake/Modules/FindOpenNI2.cmake
++++ b/cmake/Modules/FindOpenNI2.cmake
+@@ -41,14 +41,16 @@ if(OPENNI2_INCLUDE_DIR AND OPENNI2_LIBRARY)
+   mark_as_advanced(OPENNI2_INCLUDE_DIRS)
+ 
+   # Libraries
+-  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+-    find_package(libusb REQUIRED)
+-    set(OPENNI2_LIBRARIES ${OPENNI2_LIBRARY} libusb::libusb)
++  if(NOT WIN32)
++    find_package(libusb CONFIG REQUIRED)
++    set(OPENNI2_LIBRARIES ${OPENNI2_LIBRARY} ${LIBUSB_LIBRARIES})
++    set(OPENNI2_INCLUDES ${OPENNI2_INCLUDES} ${LIBUSB_INCLUDE_DIRS})
+   else()
+     set(OPENNI2_LIBRARIES ${OPENNI2_LIBRARY})
+   endif()
+   unset(OPENNI2_LIBRARY)
+   mark_as_advanced(OPENNI2_LIBRARIES)
++  mark_as_advanced(OPENNI2_INCLUDES)
+ 
+   set(OPENNI2_REDIST_DIR $ENV{OPENNI2_REDIST${OPENNI2_SUFFIX}})
+   mark_as_advanced(OPENNI2_REDIST_DIR)
+diff --git a/io/CMakeLists.txt b/io/CMakeLists.txt
+index ab91842..89b4252 100644
+--- a/io/CMakeLists.txt
++++ b/io/CMakeLists.txt
+@@ -45,6 +45,7 @@ if(WITH_OPENNI2)
+     include/pcl/io/openni2_grabber.h
+   )
+   set(OPENNI2_INCLUDES
++    ${OPENNI2_INCLUDES}
+     include/pcl/io/openni2/openni.h
+     include/pcl/io/openni2/openni2_metadata_wrapper.h
+     include/pcl/io/openni2/openni2_frame_listener.h
+@@ -82,6 +83,7 @@ if(WITH_OPENNI)
+   )
+ 
+   set(OPENNI_INCLUDES
++    ${OPENNI_INCLUDES}
+     include/pcl/io/openni_camera/openni_shift_to_depth_conversion.h
+     include/pcl/io/openni_camera/openni.h
+     include/pcl/io/openni_camera/openni_depth_image.h
