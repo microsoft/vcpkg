@@ -2,28 +2,28 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF v0.9.6-win
-        SHA512 ecbc641d9d7bae707387248060af91375cd0c80d50eee2ae1dd24f0f61eda0d3faf0ea835bf6a03a7d25b5708771c3e432b8ad135ae5d1620e705a1ef93bb84e
+        REF v0.9.7-win
+        SHA512 c23b8c1910c4ca5d57fa732e3084f56e17fdfead5561a8eab7be469d8f6081d830555365b2cf74e27956ffa88a6fb284dbde4654b23b130da9fbb4eb404686bd
         HEAD_REF windows
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF v0.9.6
-        SHA512 a9078223b3437bd73a3988310490ad867796707ccc25483120bca1249197a12abe07d09647df16f6efc63ba52b808d2bee8e2f2a10dd3e62335409fa06089621
+        REF v0.9.7
+        SHA512 4866d9cfe2d9ba30f2f7866819ee8f425b91082d7f86994c1194a6b4406e8ee99e22ce6b0bafeb22c5f098f7da30029fb6b12895c2ac45810d33c28d4bfad006
         HEAD_REF master
     )
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
