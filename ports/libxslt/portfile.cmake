@@ -139,6 +139,12 @@ else()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libxslt-plugins ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt-plugins)
     endif()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.so)
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/xsltConf.sh" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/xsltConf.sh" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../")
 endif()
 #
 # Cleanup
