@@ -14,24 +14,6 @@ index 90b79d9..5942ee5 100644
 +find_package(geos CONFIG REQUIRED)
 +set(GEOS_LIBRARY GEOS::geos GEOS::geos_c GEOS::geos_cxx_flags)
 \ No newline at end of file
-diff --git a/cmake/modules/FindPostgreSQL.cmake b/cmake/modules/FindPostgreSQL.cmake
-index 8178418..31b54d6 100644
---- a/cmake/modules/FindPostgreSQL.cmake
-+++ b/cmake/modules/FindPostgreSQL.cmake
-@@ -80,4 +80,11 @@ find_package_handle_standard_args(PostgreSQL
-   POSTGRESQL_LIBRARIES
-   POSTGRESQL_VERSION)
- 
--mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
-+include (CMakeFindDependencyMacro)
-+find_package(OpenSSL REQUIRED)
-+set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
-+if (WIN32)
-+    set(POSTGRESQL_LIBRARIES ${POSTGRESQL_LIBRARIES} Secur32)
-+endif()
-+
-+mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
-\ No newline at end of file
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 42cca1e..43b0ced 100644
 --- a/CMakeLists.txt

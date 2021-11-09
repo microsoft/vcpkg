@@ -9,7 +9,6 @@ vcpkg_from_github(
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
         fix-dependency.patch
-        libpq.patch
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
 )
@@ -17,7 +16,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
+foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl FindPostgreSQL)  # Outdated; Supplied by CMake
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
 endforeach()
 foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
