@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
         fix-dependency.patch
+        use-vcpkg-boost.patch
         fix-unix-compiler-options.patch
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
