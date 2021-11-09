@@ -783,9 +783,6 @@ live555:x64-windows-static-md=fail
 live555:x86-windows=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
-llvm:arm64-windows=fail
-llvm:arm-uwp=fail
-llvm:x64-uwp=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
 # Conflict with loadpng-c
