@@ -306,7 +306,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 3
+      "port-version": 4
     },
     "azmq": {
       "baseline": "2020-03-03",
