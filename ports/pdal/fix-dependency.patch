@@ -44,6 +44,15 @@ index 42cca1e..43b0ced 100644
  add_subdirectory(vendor/arbiter)
  add_subdirectory(vendor/kazhdan)
  if (NOT PDAL_HAVE_JSONCPP)
+@@ -266,7 +265,7 @@ target_include_directories(${PDAL_BASE_LIB_NAME}
+ target_link_libraries(${PDAL_BASE_LIB_NAME}
+     PUBLIC
+         ${CMAKE_THREAD_LIBS_INIT}
+-        ${GDAL_LIBRARY}
++        ${GDAL_LIBRARIES}
+         ${GEOS_LIBRARY}
+         ${GEOTIFF_LIBRARY}
+         ${LASZIP_LIBRARY}
 diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
 index a03ef14..9d073e6 100644
 --- a/PDALConfig.cmake.in
