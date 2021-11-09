@@ -52,7 +52,7 @@ endif()
 set(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD ON CACHE INTERNAL "guard variable")
 
 function(vcpkg_cmake_config_fixup)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "PACKAGE_NAME;CONFIG_PATH;NO_PREFIX_CORRECTION" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_config_fixup was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
