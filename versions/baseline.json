@@ -7118,7 +7118,7 @@
     },
     "winpcap": {
       "baseline": "4.1.3",
-      "port-version": 5
+      "port-version": 6
     },
     "winreg": {
       "baseline": "4.1.2",
