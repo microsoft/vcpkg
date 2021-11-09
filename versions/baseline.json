@@ -6501,8 +6501,8 @@
       "port-version": 1
     },
     "string-theory": {
-      "baseline": "3.4",
-      "port-version": 1
+      "baseline": "3.5",
+      "port-version": 0
     },
     "string-view-lite": {
       "baseline": "1.6.0",
