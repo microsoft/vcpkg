@@ -3,7 +3,7 @@
   "version": "13.0.0",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
-  "supports": "!uwp",
+  "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
