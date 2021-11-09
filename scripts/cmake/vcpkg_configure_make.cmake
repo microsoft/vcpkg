@@ -318,7 +318,7 @@ function(vcpkg_configure_make)
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
             if(CMAKE_HOST_WIN32)
                 set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                                                                           # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
             endif()
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32) # we don't need to specify the additional flags if we build nativly, this does not hold when we are not on windows
                 string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
@@ -472,37 +472,42 @@ function(vcpkg_configure_make)
         if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^Clang$")
             string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
 
-            if(VCPKG_HOST_IS_WINDOWS)
-                z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
-                z_vcpkg_determine_host_mingw(BUILD_MINGW)
-                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-${BUILD_MINGW}")  # This is required since we are running in a msys
-                                                                                           # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-            elseif(VCPKG_HOST_IS_OSX)
-                z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
-                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin${VCPKG_CMAKE_HOST_SYSTEM_VERSION}")
-            elseif(VCPKG_HOST_IS_LINUX)
-                z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
-                set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-linux-gnu")
-            endif()
-
             if (DEFINED ENV{ANDROID_API_LEVEL})
                 set(ANDROID_API_LEVEL $ENV{ANDROID_API_LEVEL} CACHE STRING "")
             else()
                 set(ANDROID_API_LEVEL ${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION} CACHE STRING "")
             endif()
 
-            z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
+            if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
+                if(VCPKG_HOST_IS_WINDOWS)
+                    z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
+                    z_vcpkg_determine_host_mingw(BUILD_MINGW)
+                    set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-${BUILD_MINGW}")  # This is required since we are running in a msys
+                                                                                      # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+                elseif(VCPKG_HOST_IS_OSX)
+                    z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
+                    set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_VERSION}")
+                elseif(VCPKG_HOST_IS_LINUX)
+                    z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
+                    set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-linux-gnu")
+                endif()
+
+                z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
+                if (TARGET_ARCH MATCHES "armv7-a")
+                    string(APPEND arg_BUILD_TRIPLET " --host=arm-linux-androideabi")
+                else()
+                    string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-linux-android")
+                endif()
+            endif()
+            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
 
             if (TARGET_ARCH MATCHES "armv7-a")
-                string(APPEND arg_BUILD_TRIPLET " --host=arm-linux-androideabi")
                 string(APPEND configure_env " CC=armv7a-linux-androideabi${ANDROID_API_LEVEL}-clang")
                 string(APPEND configure_env " CXX=armv7a-linux-androideabi${ANDROID_API_LEVEL}-clang++")
             else()
-                string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-linux-android")
                 string(APPEND configure_env " CC=${TARGET_ARCH}-linux-android${ANDROID_API_LEVEL}-clang")
                 string(APPEND configure_env " CXX=${TARGET_ARCH}-linux-android${ANDROID_API_LEVEL}-clang++")
             endif()
-            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
 
             string(APPEND configure_env " AR=llvm-ar")
             string(APPEND configure_env " RANLIB=llvm-ranlib")
