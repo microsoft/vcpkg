@@ -5122,7 +5122,7 @@
     },
     "pcre": {
       "baseline": "8.45",
-      "port-version": 0
+      "port-version": 1
     },
     "pcre2": {
       "baseline": "10.37",
