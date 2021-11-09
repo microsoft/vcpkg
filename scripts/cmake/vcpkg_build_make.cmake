@@ -107,6 +107,7 @@ function(vcpkg_build_make)
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
+
     else()
         if(VCPKG_HOST_IS_OPENBSD)
             find_program(Z_VCPKG_MAKE gmake REQUIRED)
@@ -135,7 +136,7 @@ function(vcpkg_build_make)
                 set(path_suffix "")
             endif()
 
-            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}${arg_SUBPATH}")
+            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}/${arg_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
 
             z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
