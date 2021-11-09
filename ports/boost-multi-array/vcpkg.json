@@ -1,6 +1,6 @@
 {
   "name": "boost-multi-array",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost multi_array module",
   "homepage": "https://github.com/boostorg/multi_array",
   "dependencies": [
@@ -14,7 +14,6 @@
     "boost-mpl",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

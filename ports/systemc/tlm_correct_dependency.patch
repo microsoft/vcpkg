@@ -1,8 +1,0 @@
---- cmake\SystemCTLMConfig.cmake.in	Sat Oct 13 00:19:07 2018
-+++ cmake\SystemCTLMConfig.cmake.in.fixed	Mon Jan 28 15:23:44 2019
-@@ -2,4 +2,4 @@
- 
- # TLM is part of the SystemC language library.
- include(CMakeFindDependencyMacro)
--find_dependency (SystemC @SystemCLanguage_VERSION_MAJOR@.@SystemCLanguage_VERSION_MINOR@.@SystemCLanguage_VERSION_PATCH@.@SystemCLanguage_VERSION_RELEASE_DATE@ EXACT)
-+find_dependency (SystemCLanguage @SystemCLanguage_VERSION_MAJOR@.@SystemCLanguage_VERSION_MINOR@.@SystemCLanguage_VERSION_PATCH@.@SystemCLanguage_VERSION_RELEASE_DATE@ EXACT)

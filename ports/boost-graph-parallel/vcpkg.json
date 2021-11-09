@@ -1,13 +1,20 @@
 {
   "name": "boost-graph-parallel",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost graph_parallel module",
   "homepage": "https://github.com/boostorg/graph_parallel",
+  "supports": "!uwp",
   "dependencies": [
+    "boost-algorithm",
     "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-concept-check",
     "boost-config",
     "boost-container-hash",
+    "boost-core",
     "boost-detail",
     "boost-dynamic-bitset",
     {
@@ -19,18 +26,30 @@
     "boost-graph",
     "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    {
+      "name": "boost-mpi",
+      "platform": "!uwp"
+    },
     "boost-mpl",
     "boost-optional",
     "boost-property-map",
+    "boost-property-map-parallel",
     "boost-random",
     "boost-serialization",
     "boost-smart-ptr",
     "boost-static-assert",
     "boost-tuple",
     "boost-type-traits",
-    "boost-utility",
     "boost-variant",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
