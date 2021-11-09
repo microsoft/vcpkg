@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 456d3fc256a5a26843ecf16014242514b165ae5fa35f088d57aa54a744d19e2c38bd0bed9b6a4b76948c8a49cf87a06a4c722be5a910ed41dfd9c9b9a66b398d
     PATCHES
         patch-relocatable-rpath.patch
+        fix-aws-root.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
