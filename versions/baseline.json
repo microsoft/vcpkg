@@ -5462,7 +5462,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 13
+      "port-version": 12
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6870,7 +6870,7 @@
     },
     "unicorn-lib": {
       "baseline": "2020-03-02",
-      "port-version": 2
+      "port-version": 1
     },
     "units": {
       "baseline": "2.3.1",
