@@ -4010,7 +4010,7 @@
     },
     "libwebsockets": {
       "baseline": "4.2.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libxdiff": {
       "baseline": "0.23",
