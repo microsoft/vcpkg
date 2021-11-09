@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
     REF a9a06c78d4218b76e1c906c04452eec697f02f8e # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
-    SHA512 3b18d192e4bde7050402ed223153ac8243a2eec69390b7b0b1a1a07571153470d4c3e86b0e8caeba37604547420c1d5154e0ffa86a9aa719d84a89c3bedba79b    
+    SHA512 b58665e836e6a1fc6b7669f7ba1208e14468b5f6b8ba3fdd06936cc47c8b32a027de49a4e252c8b6fabc13f846af30b7d209c6ba79842d165049f4baad7e4da9    
     HEAD_REF master
 )
 
