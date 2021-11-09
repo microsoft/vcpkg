@@ -13,7 +13,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(COPYRIGHT
     URLS "https://www.winpcap.org/misc/copyright.htm"
     FILENAME "Wpcap_license.htm"
-    SHA512 661e848f229612a4354e8243cdb0cb7ef387abc8933412b8c09ccfcaa3335143a958ea9ec9da558f89afe71afea29f0548872e3544ea51144c297a1aa1276718
+    SHA512 bb2519e8f3d02c408fa3f2ef339adda1cc31338d05d2fa4ce25d5369427243fd3e2abc4b21aa654b2be5791f53c2281847a4a15778ffcb90576fd166140c7d2e
 )
 
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
