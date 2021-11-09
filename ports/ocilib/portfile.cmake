@@ -19,7 +19,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH proj/dll/ocilib_dll_vs2019.sln
         INCLUDES_SUBPATH include
         LICENSE_SUBPATH LICENSE
@@ -28,25 +28,25 @@ if(VCPKG_TARGET_IS_WINDOWS)
         USE_VCPKG_INTEGRATION
         ALLOW_ROOT_INCLUDES)
 
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     endif()
 else()
     vcpkg_configure_make(
         COPY_SOURCE
         AUTOCONFIG
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS 
             --with-oracle-import=runtime
     )
 
     vcpkg_install_make()
-
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc/${PORT} ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-    file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    vcpkg_fixup_pkgconfig()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
