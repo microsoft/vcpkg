@@ -57,3 +57,22 @@ index f079ec7..8e366e8 100644
 +set(PDAL_VENDOR_NANOFLANN_DIR ${PDAL_VENDOR_DIR}/nanoflann)
 
 \ No newline at end of file
+diff --git a/cmake/macros.cmake b/cmake/macros.cmake
+index 3091544..4c65311 100644
+--- a/cmake/macros.cmake
++++ b/cmake/macros.cmake
+@@ -77,12 +77,13 @@ macro(PDAL_ADD_FREE_LIBRARY _name _library_type)
+     # Don't install static libraries - they're already built into libpdalXXX
+     if (NOT ${_library_type} STREQUAL "STATIC")
+         target_compile_definitions(${_name} PRIVATE PDAL_DLL_EXPORT)
++    endif()
++    if (1)
+         install(TARGETS ${_name}
+             EXPORT PDALTargets
+             RUNTIME DESTINATION ${PDAL_BIN_INSTALL_DIR}
+             LIBRARY DESTINATION ${PDAL_LIB_INSTALL_DIR}
+             ARCHIVE DESTINATION ${PDAL_LIB_INSTALL_DIR})
+-    else()
+         set_target_properties(${_name} PROPERTIES
+             POSITION_INDEPENDENT_CODE TRUE)
+     endif()

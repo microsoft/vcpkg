@@ -1,7 +1,6 @@
 {
   "name": "pdal",
-  "version": "1.7.1",
-  "port-version": 13,
+  "version": "2.3.0",
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "dependencies": [
     "boost-filesystem",

@@ -9,60 +9,63 @@ index 2adc310..679b4e7 100644
 -add_subdirectory(vendor/pdalboost)
  add_subdirectory(vendor/arbiter)
  add_subdirectory(vendor/kazhdan)
- if (NOT PDAL_HAVE_JSONCPP)
+ add_subdirectory(pdal/util)
 diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
 index bf6137e..890a8ac 100644
 --- a/PDALConfig.cmake.in
 +++ b/PDALConfig.cmake.in
 @@ -16,6 +16,7 @@ foreach(_dir @PDAL_CONFIG_LIBRARY_DIRS@)
- endforeach(_dir)
+ set_and_check(PDAL_LIBRARY_DIRS "@PACKAGE_LIB_INSTALL_DIR@")
  
  include(CMakeFindDependencyMacro)
-+find_dependency(Boost COMPONENTS filesystem)
++find_dependency(Boost COMPONENTS filesystem system)
  find_dependency(CURL CONFIG)
- find_dependency(GEOS CONFIG)
  find_dependency(GeoTIFF CONFIG)
+ include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
 diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
 index 19a2dd1..d498080 100644
 --- a/pdal/util/CMakeLists.txt
 +++ b/pdal/util/CMakeLists.txt
 @@ -8,6 +8,9 @@ endif()
+     set(BACKTRACE_SOURCE BacktraceNone.cpp)
+ endif()
  
- include(${PDAL_CMAKE_DIR}/execinfo.cmake)
- 
-+find_package(Boost COMPONENTS filesystem REQUIRED)
-+set(PDAL_BOOST_LIB_NAME Boost::filesystem)
++find_package(Boost COMPONENTS filesystem system REQUIRED)
++set(PDAL_BOOST_LIB_NAME Boost::filesystem Boost::system)
 +
  set(PDAL_UTIL_SOURCES
      "${PDAL_UTIL_DIR}/Bounds.cpp"
      "${PDAL_UTIL_DIR}/Charbuf.cpp"
-@@ -16,14 +19,12 @@ set(PDAL_UTIL_SOURCES
-     "${PDAL_UTIL_DIR}/Utils.cpp"
-     )
+@@ -16,16 +19,14 @@ set(PDAL_UTIL_SOURCES
+     "${PDAL_UTIL_DIR}/private/${BACKTRACE_SOURCE}"
+ )
  
 -PDAL_ADD_FREE_LIBRARY(${PDAL_UTIL_LIB_NAME} SHARED ${PDAL_UTIL_SOURCES})
 +PDAL_ADD_FREE_LIBRARY(${PDAL_UTIL_LIB_NAME} ${PDAL_UTIL_SOURCES})
  target_link_libraries(${PDAL_UTIL_LIB_NAME}
      PRIVATE
-         ${EXECINFO_LIBRARY}
+         ${BACKTRACE_LIBRARIES}
          ${PDAL_BOOST_LIB_NAME}
+         ${CMAKE_DL_LIBS}
+         ${CMAKE_THREAD_LIBS_INIT}
  )
 -target_include_directories(${PDAL_UTIL_LIB_NAME} PRIVATE
 -    ${PDAL_VENDOR_DIR}/pdalboost)
  
- if (UNIX AND NOT APPLE)
-     target_link_libraries(${PDAL_UTIL_LIB_NAME}
+ set_target_properties(${PDAL_UTIL_LIB_NAME} PROPERTIES
+     VERSION "${PDAL_BUILD_VERSION}"
 diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
 index 7679f22..b18b674 100644
 --- a/pdal/util/FileUtils.cpp
 +++ b/pdal/util/FileUtils.cpp
-@@ -74,6 +74,11 @@ std::string addTrailingSlash(std::string path)
+@@ -74,6 +74,12 @@ std::string addTrailingSlash(std::string path)
  
  } // unnamed namespace
  
 +namespace pdalboost
 +{
 +    namespace filesystem = boost::filesystem;
++    namespace system = boost::system;
 +}
 +
  namespace FileUtils

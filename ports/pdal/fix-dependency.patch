@@ -1,43 +1,27 @@
-diff --git a/cmake/geos.cmake b/cmake/geos.cmake
-index 90b79d9..5942ee5 100644
---- a/cmake/geos.cmake
-+++ b/cmake/geos.cmake
-@@ -1,8 +1,5 @@
- #
- # GEOS (required)
- #
--find_package(GEOS QUIET 3.3)
--set_package_properties(GEOS PROPERTIES TYPE REQUIRED
--    PURPOSE "Provides general purpose geometry support")
--
--include_directories("${GEOS_INCLUDE_DIR}")
-+find_package(GEOS CONFIG REQUIRED)
-+set(GEOS_LIBRARY GEOS::geos)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 42cca1e..43b0ced 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -266,7 +265,7 @@ target_include_directories(${PDAL_BASE_LIB_NAME}
  target_link_libraries(${PDAL_BASE_LIB_NAME}
-     PUBLIC
+     PRIVATE
          ${CMAKE_THREAD_LIBS_INIT}
 -        ${GDAL_LIBRARY}
 +        ${GDAL_LIBRARIES}
-         ${GEOS_LIBRARY}
          ${GEOTIFF_LIBRARY}
          ${LASZIP_LIBRARY}
+         ${LIBXML2_LIBRARIES}
 diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
 index a03ef14..9d073e6 100644
 --- a/PDALConfig.cmake.in
 +++ b/PDALConfig.cmake.in
-@@ -15,6 +15,10 @@ foreach(_dir @PDAL_CONFIG_LIBRARY_DIRS@)
-   list(APPEND PDAL_LIBRARY_DIRS ${_foo})
- endforeach(_dir)
+@@ -15,6 +15,9 @@ foreach(_dir @PDAL_CONFIG_LIBRARY_DIRS@)
+ set_and_check(PDAL_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ set_and_check(PDAL_LIBRARY_DIRS "@PACKAGE_LIB_INSTALL_DIR@")
  
 +include(CMakeFindDependencyMacro)
 +find_dependency(CURL CONFIG)
-+find_dependency(GEOS CONFIG)
 +find_dependency(GeoTIFF CONFIG)
  include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
  
- if (WIN32)
+ #

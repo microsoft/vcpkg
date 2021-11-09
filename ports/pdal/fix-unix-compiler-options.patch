@@ -11,21 +11,3 @@ index 679b4e7..08965d9 100644
      #
      # This allows the rpath reference for the reexported library (above) to
      # be found.
-diff --git a/cmake/unix_compiler_options.cmake b/cmake/unix_compiler_options.cmake
-index 035a2b9..3e6058b 100644
---- a/cmake/unix_compiler_options.cmake
-+++ b/cmake/unix_compiler_options.cmake
-@@ -24,7 +24,6 @@ function(PDAL_TARGET_COMPILE_SETTINGS target)
-         ${PDAL_CXX_STANDARD}
-         -Wextra
-         -Wpedantic
--        -Werror
-         -Wall
-         -Wno-unused-parameter
-         -Wno-unused-variable
-@@ -36,5 +35,4 @@ function(PDAL_TARGET_COMPILE_SETTINGS target)
-         -Wno-unknown-pragmas
-         -Wno-deprecated-declarations
-         )
--    target_include_directories(${target} SYSTEM PUBLIC /usr/local/include)
- endfunction()
