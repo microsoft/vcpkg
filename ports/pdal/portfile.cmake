@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-dependency.patch
         use-vcpkg-boost.patch
         fix-unix-compiler-options.patch
+        fix-find-library-suffix.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
