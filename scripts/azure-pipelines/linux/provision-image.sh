@@ -48,6 +48,15 @@ APT_PACKAGES="$APT_PACKAGES libwayland-dev"
 # Additionally required by all GN projects
 APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
 
+# Additionally required by libctl
+APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
+
+# Additionally required by gtk
+APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
+
+# Additionally required by kf5kio
+APT_PACKAGES="$APT_PACKAGES libmount-dev"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
