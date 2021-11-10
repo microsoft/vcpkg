@@ -5129,8 +5129,8 @@
       "port-version": 1
     },
     "pcre2": {
-      "baseline": "10.37",
-      "port-version": 1
+      "baseline": "10.39",
+      "port-version": 0
     },
     "pdal": {
       "baseline": "1.7.1",
@@ -5466,7 +5466,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 12
+      "port-version": 13
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6874,7 +6874,7 @@
     },
     "unicorn-lib": {
       "baseline": "2020-03-02",
-      "port-version": 1
+      "port-version": 2
     },
     "units": {
       "baseline": "2.3.1",
