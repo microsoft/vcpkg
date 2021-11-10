@@ -1,7 +1,7 @@
 {
   "name": "unicorn-lib",
-  "version-string": "2020-03-02",
-  "port-version": 1,
+  "version-date": "2020-03-02",
+  "port-version": 2,
   "description": "Unicode library for C++ by Ross Smith",
   "homepage": "https://github.com/CaptainCrowbar/unicorn-lib",
   "dependencies": [
