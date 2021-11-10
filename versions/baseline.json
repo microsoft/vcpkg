@@ -4938,7 +4938,7 @@
     },
     "openmpi": {
       "baseline": "4.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openmvg": {
       "baseline": "1.6",
