@@ -281,27 +281,27 @@
     "openexrimageconverter": {
       "description": "OpenExrImageConverter plugin",
       "dependencies": [
-        "openexr",
         {
           "name": "magnum",
           "default-features": false,
           "features": [
             "trade"
           ]
-        }
+        },
+        "openexr"
       ]
     },
     "openexrimporter": {
       "description": "OpenExrImporter plugin",
       "dependencies": [
-        "openexr",
         {
           "name": "magnum",
           "default-features": false,
           "features": [
             "trade"
           ]
-        }
+        },
+        "openexr"
       ]
     },
     "opengeximporter": {
