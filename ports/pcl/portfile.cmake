@@ -59,12 +59,28 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         # FEATURES
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
+if (WITH_OPENNI2)
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pcl_io-1.12.pc" PCL_IO_PC_DBG)
+        string(REPLACE "libopenni2" "" PCL_IO_PC_DBG "${PCL_IO_PC_DBG}")
+        string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2" PCL_IO_PC_DBG "${PCL_IO_PC_DBG}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pcl_io-1.12.pc" "${PCL_IO_PC_DBG}")
+    endif()
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pcl_io-1.12.pc" PCL_IO_PC_REL)
+        string(REPLACE "libopenni2" "" PCL_IO_PC_REL "${PCL_IO_PC_REL}")
+        string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2" PCL_IO_PC_REL "${PCL_IO_PC_REL}")
+        file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pcl_io-1.12.pc" "${PCL_IO_PC_REL}")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
