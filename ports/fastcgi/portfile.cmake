@@ -18,9 +18,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
       CFG=debug
   )
 
-  file(RENAME ${SOURCE_PATH}/include/fcgi_config_x86.h ${SOURCE_PATH}/include/fcgi_config.h)
+  file(RENAME "${SOURCE_PATH}/include/fcgi_config_x86.h" "${SOURCE_PATH}/include/fcgi_config.h")
   vcpkg_build_nmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libfcgi
     PROJECT_NAME libfcgi.mak
     OPTIONS_RELEASE
@@ -29,12 +29,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
         "${NMAKE_OPTIONS_DBG}"
   )
 
-  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME ${PORT})
-  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME ${PORT})
+  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
   if (NOT VCPKG_CRT_LINKAGE STREQUAL static)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libfcgi/Release/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libfcgi/Debug/libfcgi.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
   endif()
 
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
@@ -47,7 +47,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
 
 
   vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
     )
@@ -55,14 +55,15 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   vcpkg_install_make()
 
   # switch ${PORT} into /${PORT}
-  file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/include2)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/include2 ${CURRENT_PACKAGES_DIR}/include/${PORT})
+  file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+  vcpkg_fixup_pkgconfig()
 else() # Other build system
   vcpkg_fail_port_install(ALWAYS)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.TERMS DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TERMS" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
