@@ -1,19 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
-    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
+    REF f36a69a5e89953708990c4669317f989d532cf08 # pcl-1.12.0
+    SHA512 dbbd0adbb08949ddef2789e0021b6ca9727be33c7193d0bb135c61def09a42ed6a71333f06b6fad407010ecb4b73c19f087f7520386b92a008e90c254eafe422
     HEAD_REF master
     PATCHES
-        pcl_utils.patch
-        pcl_config.patch
-        boost-1.70.patch
-        fix-link-libpng.patch
-        remove-broken-targets.patch
-        fix-check-sse.patch
-        realsense2.patch
         add-gcc-version-check.patch
+        fix-check-sse.patch
         fix-find-qhull.patch
+        fix-numeric-literals-flag.patch
+        pcl_config.patch
+        pcl_utils.patch
+        remove-broken-targets.patch
+        fix-cmake_find_library_suffixes.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
@@ -40,9 +39,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vtk     WITH_VTK
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         # BUILD
         -DBUILD_surface_on_nurbs=ON
@@ -59,8 +57,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
