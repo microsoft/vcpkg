@@ -26,7 +26,7 @@ if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
-    message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev libxext-dev\n")
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
 endif()
 
 vcpkg_cmake_configure(
@@ -65,7 +65,7 @@ if(NOT BINS)
     )
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib")
