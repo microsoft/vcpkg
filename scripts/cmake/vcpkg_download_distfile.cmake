@@ -69,7 +69,8 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
     endif()
 
     file(SHA512 "${file_path}" file_hash)
-    if(NOT "${file_hash}" STREQUAL "${sha512}")
+    string(TOLOWER "${sha512}" sha512_lower)
+    if(NOT "${file_hash}" STREQUAL "${sha512_lower}")
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
