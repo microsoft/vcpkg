@@ -1,0 +1,7 @@
+{
+  "name": "libctl",
+  "version-string": "4.5.0",
+  "description": "libctl is a Guile-based library for supporting flexible control files in scientific simulations.",
+  "homepage": "https://github.com/NanoComp/libctl",
+  "supports": "linux"
+}

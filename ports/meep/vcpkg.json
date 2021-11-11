@@ -1,0 +1,15 @@
+{
+  "name": "meep",
+  "version-string": "1.15.0",
+  "description": "free finite-difference time-domain (FDTD) software for electromagnetic simulations",
+  "homepage": "https://github.com/NanoComp/meep",
+  "supports": "linux",
+  "dependencies": [
+    "fftw3",
+    "hdf5",
+    "lapack",
+    "libctl",
+    "openblas",
+    "vcpkg-gfortran"
+  ]
+}
