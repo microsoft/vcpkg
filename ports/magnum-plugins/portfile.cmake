@@ -34,8 +34,8 @@ if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
         FILENAME "basis-universal-${_BASIS_VERSION}.tar.gz"
         SHA512 ${_BASIS_SHA512}
     )
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH _BASIS_UNIVERSAL_SOURCE
+    vcpkg_extract_source_archive(
+        _BASIS_UNIVERSAL_SOURCE
         ARCHIVE ${_BASIS_UNIVERSAL_ARCHIVE}
         WORKING_DIRECTORY "${SOURCE_PATH}/src/external"
         ${_BASIS_UNIVERSAL_PATCHES})
