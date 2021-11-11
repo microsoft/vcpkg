@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.3)
+set(ACE_VERSION 7.0.4)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 714d2c25bd4be44a03d350b2457b613b5d2d079fc294f287d10968ed02af5c9c82a2a0c10937acf46a4babfd4582cdc5fa23d6080dadd5cbc4f7f694037033f9
+          SHA512 d302c97366d28e84b7501f569a8c0c980a4e0283244cb2a458856689541ded75e21e29c2b588644c909e546bd3bf59567de97cc367970a93df35155d534ca57d
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 e48df1c63bfd02f3a14d049efbcb9a2f476597deaa2b9259d4d852ddfea2319af14e6a1071139b091bff856619e11c650771bfe92c3220d198ec6e931cdd35de
+          SHA512 b4e68b91fd53ef02fa3e2e918bb31d963a4db6c424571e2c8b4462aae60cc61ba5f3f4ea16031982928400205f7171090b1385646d86627094d62cd7d43b0657
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 3232ea5437b5fa4a36f4b9d5586c1435a5e2f2dcb34770919a1d1dfe6ebe12e33b316f3c0a1275cdc40c12135800f8cb000ac12b4775f9c31d3ddc48b41bd375
+        SHA512 bddd6a357a849dd01a8720c08b4be51a4c1461481a42504d8cd79349ef307eae41189de67589bebc07b0a475ea56f7aa1da08b30145ac21a713ff001227785b5
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 019ec5c9f23c103d659ec57f6c7bfda3d6d12fc4ca77373353d6232c5fa24c03ffba222af45bd4afe997f02a81f834546cfbcb0e667000857b6e12f2ca3effaa
+        SHA512 081c45e1aa19be2a31c3a55b5ecdd8db008ca06be033cd2df598b842b743c3b0120d750d5aa7401247c5b47c45cf35f638cb206f925ce2e432ce8011ce5b7850
     )
   endif()
 endif()
@@ -88,6 +88,7 @@ endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
+# ACE 7.0.5 will have support for vs2022
 if(VCPKG_TARGET_IS_WINDOWS)
   if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
     set(SOLUTION_TYPE vs2019)
@@ -310,7 +311,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endif()
 
-  # remove (erroneous) duplicate libs
+  # remove (erroneous) duplicate libs, can be removed with ACE 7.0.5
   if("tao" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       file(REMOVE

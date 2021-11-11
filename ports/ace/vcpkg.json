@@ -2,6 +2,7 @@
   "name": "ace",
   "version": "7.0.3",
   "port-version": 2,
+  "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
   "features": {
