@@ -18,17 +18,40 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
-foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL)
+foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL ZSTD)
     file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
 
 unset(ENV{OSGEO4W_HOME})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        draco       BUILD_PLUGIN_DRACO
+        e57         BUILD_PLUGIN_E57
+        hdf5        BUILD_PLUGIN_HDF
+        i3s         BUILD_PLUGIN_I3S
+        laszip      WITH_LASZIP
+        lzma        WITH_LZMA
+        pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
+        zstd        WITH_ZSTD
+)
+if(BUILD_PLUGIN_DRACO)
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DPOSTGRESQL_LIBRARIES=PostgreSQL::PostgreSQL
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
+        -DWITH_LAZPERF:BOOL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        POSTGRESQL_LIBRARIES
 )
 
 vcpkg_cmake_install()
