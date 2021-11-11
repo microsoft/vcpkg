@@ -33,7 +33,7 @@ index 14ca206..8471067 100644
      set(OPENNI2_LIBRARIES ${OPENNI2_LIBRARY})
    endif()
 diff --git a/io/CMakeLists.txt b/io/CMakeLists.txt
-index ab91842..3f7e966 100644
+index ab91842..189063c 100644
 --- a/io/CMakeLists.txt
 +++ b/io/CMakeLists.txt
 @@ -334,7 +334,7 @@ set(LIB_NAME "pcl_${SUBSYS_NAME}")
@@ -45,3 +45,12 @@ index ab91842..3f7e966 100644
  
  target_include_directories(${LIB_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
  
+@@ -356,7 +356,7 @@ if(PNG_FOUND)
+ endif()
+ 
+ if(LIBUSB_FOUND)
+-  target_link_libraries("${LIB_NAME}" libusb::libusb)
++  target_link_libraries("${LIB_NAME}" ${LIBUSB_LIBRARIES})
+ endif()
+ 
+ if(WITH_OPENNI2)
