@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
@@ -19,14 +21,11 @@ foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL)
     file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" VCPKG_BUILD_STATIC_LIBS)
-
 unset(ENV{OSGEO4W_HOME})
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPDAL_BUILD_STATIC:BOOL=${VCPKG_BUILD_STATIC_LIBS}
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
 )

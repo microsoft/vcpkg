@@ -11,17 +11,3 @@ index 42cca1e..43b0ced 100644
          ${GEOTIFF_LIBRARY}
          ${LASZIP_LIBRARY}
          ${LIBXML2_LIBRARIES}
-diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
-index a03ef14..9d073e6 100644
---- a/PDALConfig.cmake.in
-+++ b/PDALConfig.cmake.in
-@@ -15,6 +15,9 @@ foreach(_dir @PDAL_CONFIG_LIBRARY_DIRS@)
- set_and_check(PDAL_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
- set_and_check(PDAL_LIBRARY_DIRS "@PACKAGE_LIB_INSTALL_DIR@")
- 
-+include(CMakeFindDependencyMacro)
-+find_dependency(CURL CONFIG)
-+find_dependency(GeoTIFF CONFIG)
- include("${CMAKE_CURRENT_LIST_DIR}/PDALTargets.cmake")
- 
- #
