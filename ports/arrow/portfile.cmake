@@ -9,17 +9,17 @@ vcpkg_from_github(
         fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindLz4.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindSnappy.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindThrift.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindGLOG.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/Findutf8proc.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindRapidJSONAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindgRPCAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindgflagsAlt.cmake
+file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindLz4.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindSnappy.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindThrift.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindGLOG.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/Findutf8proc.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindRapidJSONAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindgRPCAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindgflagsAlt.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -78,7 +78,7 @@ vcpkg_cmake_configure(
         -DARROW_WITH_SNAPPY=ON
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
-        -DZSTD_MSVC_LIB_PREFIX=
+        -DZSTD_MSVC_LIB_PREFIX=""
     MAYBE_UNUSED_VARIABLES
         ZSTD_MSVC_LIB_PREFIX
 )
@@ -87,7 +87,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
@@ -96,9 +96,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
