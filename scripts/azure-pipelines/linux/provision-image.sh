@@ -60,9 +60,6 @@ APT_PACKAGES="$APT_PACKAGES libmount-dev"
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
-# Additionally required by gtk
-APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
-
 sudo apt -y install $APT_PACKAGES
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
