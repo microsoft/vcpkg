@@ -336,6 +336,10 @@
       "baseline": "2020-06-17",
       "port-version": 3
     },
+    "azure-security-keyvault-certificates-cpp": {
+      "baseline": "4.0.0-beta.1",
+      "port-version": 0
+    },
     "azure-security-keyvault-common-cpp": {
       "baseline": "4.0.0-beta.3",
       "port-version": 0
@@ -2094,7 +2098,7 @@
     },
     "fastcgi": {
       "baseline": "2020-09-11",
-      "port-version": 1
+      "port-version": 2
     },
     "fastfeat": {
       "baseline": "391d5e9",
@@ -2350,7 +2354,7 @@
     },
     "gdal": {
       "baseline": "3.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2522,7 +2526,7 @@
     },
     "gperftools": {
       "baseline": "2019-09-02",
-      "port-version": 1
+      "port-version": 2
     },
     "gpgme": {
       "baseline": "1.14.0",
@@ -2718,7 +2722,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 15
+      "port-version": 16
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -3445,8 +3449,8 @@
       "port-version": 1
     },
     "libgeotiff": {
-      "baseline": "1.6.0",
-      "port-version": 4
+      "baseline": "1.7.0",
+      "port-version": 0
     },
     "libgit2": {
       "baseline": "1.3.0",
@@ -3562,7 +3566,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 8
+      "port-version": 9
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -3750,7 +3754,7 @@
     },
     "libpq": {
       "baseline": "12.2",
-      "port-version": 19
+      "port-version": 20
     },
     "libpqxx": {
       "baseline": "7.6.0",
@@ -4886,7 +4890,7 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 6
+      "port-version": 7
     },
     "opencv3": {
       "baseline": "3.4.15",
@@ -4938,7 +4942,7 @@
     },
     "openmpi": {
       "baseline": "4.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openmvg": {
       "baseline": "1.6",
@@ -5134,7 +5138,7 @@
     },
     "pdal": {
       "baseline": "1.7.1",
-      "port-version": 12
+      "port-version": 13
     },
     "pdal-c": {
       "baseline": "1.8",
@@ -5466,7 +5470,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 13
+      "port-version": 14
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5634,7 +5638,7 @@
     },
     "qtbase": {
       "baseline": "6.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.2.1",
