@@ -60,7 +60,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/cpp
+    SOURCE_PATH "${SOURCE_PATH}/cpp"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${MALLOC_OPTIONS}
@@ -93,8 +93,8 @@ endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
