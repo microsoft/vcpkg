@@ -9,15 +9,6 @@ vcpkg_from_github(
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 
-if(VCPKG_HOST_IS_WINDOWS)
-    set(ENV{FC} "gfortran")
-    message(STATUS "Switching to MinGW toolchain, including ${SCRIPTS}/toolchains/mingw.cmake")
-    include("${SCRIPTS}/toolchains/mingw.cmake")
-    set(ENV{FFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf make)
-    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-endif()
-
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
@@ -30,23 +21,12 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
-# remove debug include folder
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include/)
-
-# remove debug bin folder
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
-
-# remove bin folder
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
-
 vcpkg_copy_pdbs()
 
-# remove debug share folder
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
-
-# remove share folder
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/)
 
-# Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
