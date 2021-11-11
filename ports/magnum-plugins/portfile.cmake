@@ -74,9 +74,8 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_PLUGINS_STATIC}
@@ -85,7 +84,7 @@ vcpkg_configure_cmake(
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE

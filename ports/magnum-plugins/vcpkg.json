@@ -8,6 +8,10 @@
     {
       "name": "magnum",
       "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "default-features": [
