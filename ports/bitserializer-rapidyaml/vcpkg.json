@@ -1,0 +1,15 @@
+{
+  "name": "bitserializer-rapidyaml",
+  "version-string": "alias",
+  "port-version": 2,
+  "description": "Deprecated alias for bitserializer-rapidyaml",
+  "supports": "!osx",
+  "dependencies": [
+    {
+      "name": "bitserializer",
+      "features": [
+        "rapidyaml-archive"
+      ]
+    }
+  ]
+}

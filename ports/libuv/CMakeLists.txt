@@ -32,6 +32,7 @@ file(GLOB UV_SOURCES_LINUX
     src/unix/procfs-exepath.c
     src/unix/sysinfo-loadavg.c
     src/unix/sysinfo-memory.c
+    src/unix/epoll.c
 )
 file(GLOB UV_SOURCES_DARWIN
     src/unix/proctitle.c
@@ -54,7 +55,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsSt
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_WIN})
     target_compile_definitions(libuv PRIVATE WIN32_LEAN_AND_MEAN "_WIN32_WINNT=0x0600")
     target_link_libraries(libuv PRIVATE iphlpapi psapi shell32 userenv ws2_32)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif(APPLE)
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_DARWIN})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_UNIX} ${UV_SOURCES_FREEBSD})

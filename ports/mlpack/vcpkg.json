@@ -1,7 +1,7 @@
 {
   "name": "mlpack",
   "version": "3.4.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "mlpack is a fast, flexible machine learning library, written in C++, that aims to provide fast, extensible implementations of cutting-edge machine learning algorithms.",
   "homepage": "https://github.com/mlpack/mlpack",
   "supports": "uwp",
@@ -17,6 +17,9 @@
     "stb"
   ],
   "features": {
+    "openmp": {
+      "description": "use OpenMP for parallelization."
+    },
     "tools": {
       "description": "Build command-line executables."
     }

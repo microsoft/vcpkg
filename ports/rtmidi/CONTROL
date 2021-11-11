@@ -1,6 +1,0 @@
-Source: rtmidi
-Version: 4.0.0
-Port-Version: 2
-Homepage: https://github.com/thestk/rtmidi
-Description: A set of C++ classes that provide a common API for realtime MIDI input/output across Linux (ALSA & JACK), Macintosh OS X (CoreMidi & JACK) and Windows (Multimedia)
-Supports: !uwp

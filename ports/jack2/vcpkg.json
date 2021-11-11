@@ -1,0 +1,17 @@
+{
+  "name": "jack2",
+  "version-semver": "1.9.19",
+  "description": "Cross-platform API that enables device sharing and inter-application audio routing",
+  "homepage": "https://jackaudio.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,29 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ivmai/bdwgc
-    # REF v8.0.4
-    # SHA512 f3c178c9cab9d9df9ecdad5ac5661c916518d29b0eaca24efe569cb757c386c118ad4389851107597d99ff1bbe99b46383cce73dfd01be983196aa57c9626a4a
-    REF 0c8905e84d16bd5e14ed91e21904fd7ab9d197e2
-    SHA512 b38fe86d0dfaacd502971e39ea7df83a3dbf5542711f6b0462b7a6d48dbcf43da07a41a60ee96bca6403a2d2adaac0815a64667f3c80549ca57c5ebbe0e9672d
+    REF 59f15da55961928b05972d386054fb980bdc8cf0 # v8.2.0-20211013
+    SHA512 f6b91f0ad9691d02b04d609d06b9d9aaf30a6e0bb93a5985f9e178128bc3a0b180a3366ecddafab43697fb28c6d0d5e814f99a7bbacad8da4550d3b6ea92bef6
     HEAD_REF master
-    PATCHES
-        001-install-libraries.patch 
 )
 
-
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
-    OPTIONS 
-        -Dbuild_tests=OFF
+    OPTIONS
         -Dbuild_cord=OFF
-    OPTIONS_DEBUG 
-        -Dinstall_headers=OFF 
+        -Denable_threads=OFF # TODO: add libatomic_ops package and turn on threads
+    OPTIONS_DEBUG
+        -Dinstall_headers=OFF
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/bdwgc)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/README.QUICK DESTINATION ${CURRENT_PACKAGES_DIR}/share/bdwgc RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README.QUICK" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()

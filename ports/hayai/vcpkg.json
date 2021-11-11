@@ -1,0 +1,7 @@
+{
+  "name": "hayai",
+  "version-string": "2019-08-10",
+  "port-version": 1,
+  "description": "C++ benchmarking framework",
+  "homepage": "https://github.com/nickbruun/hayai"
+}

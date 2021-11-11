@@ -1,6 +1,7 @@
 {
   "name": "boost-gil",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
+  "port-version": 1,
   "description": "Boost gil module",
   "homepage": "https://github.com/boostorg/gil",
   "dependencies": [
@@ -8,16 +9,11 @@
     "boost-concept-check",
     "boost-config",
     "boost-core",
-    {
-      "name": "boost-filesystem",
-      "platform": "!uwp"
-    },
     "boost-integer",
     "boost-iterator",
     "boost-mp11",
     "boost-numeric-conversion",
     "boost-preprocessor",
-    "boost-utility",
     "boost-variant2",
     "boost-vcpkg-helpers"
   ]

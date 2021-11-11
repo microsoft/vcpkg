@@ -1,6 +1,0 @@
-Source: rest-rpc
-Version: 0.07
-Port-Version: 1
-Homepage: https://github.com/qicosmos/rest_rpc
-Description: c++11, high performance, cross platform, easy to use rpc framework
-Build-Depends: asio

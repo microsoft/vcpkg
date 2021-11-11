@@ -1,0 +1,84 @@
+From 7b0a5566acbdb6ff8e7eca3e5e75aacbf2abff9f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Sat, 28 Aug 2021 17:08:46 +0200
+Subject: [PATCH] Add missing static dependency to Config.cmake.in
+
+- move find_package(Qt5X11Extras) to root CMakeLists.txt
+---
+ CMakeLists.txt              |  5 +++++
+ KF5GuiAddonsConfig.cmake.in |  5 ++++-
+ src/CMakeLists.txt          | 24 ++++++++++--------------
+ 3 files changed, 19 insertions(+), 15 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 337122e..80633e5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,11 @@ if (NOT APPLE AND NOT WIN32)
+     find_package(XCB MODULE COMPONENTS XCB)
+ endif()
+ 
++set(WITH_XCB)
++if (NOT APPLE AND X11_FOUND AND X11_Xkb_FOUND AND XCB_XCB_FOUND)
++    find_package(Qt5X11Extras ${REQUIRED_QT_VERSION} NO_MODULE)
++endif()
++
+ if (WITH_WAYLAND)
+     find_package(Qt5WaylandClient ${REQUIRED_QT_VERSION} NO_MODULE)
+     find_package(QtWaylandScanner REQUIRED)
+diff --git a/KF5GuiAddonsConfig.cmake.in b/KF5GuiAddonsConfig.cmake.in
+index a3c3e58..ae17f6b 100644
+--- a/KF5GuiAddonsConfig.cmake.in
++++ b/KF5GuiAddonsConfig.cmake.in
+@@ -6,9 +6,12 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Qt5Gui @REQUIRED_QT_VERSION@)
+ 
+ if (NOT @BUILD_SHARED_LIBS@)
++    if (@Qt5X11Extras_FOUND@)
++        find_dependency(Qt5X11Extras @REQUIRED_QT_VERSION@)
++    endif()
+     if (@WITH_WAYLAND@)
+         find_dependency(Wayland REQUIRED Client)
+-        find_dependency(Qt5WaylandClient)
++        find_dependency(Qt5WaylandClient @REQUIRED_QT_VERSION@)
+         find_dependency(QtWaylandScanner)
+     endif()
+ endif()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1dd66e8..ae0e0aa 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -58,20 +58,16 @@ target_include_directories(KF5GuiAddons INTERFACE "$<INSTALL_INTERFACE:${KDE_INS
+ target_compile_definitions(KF5GuiAddons INTERFACE "$<INSTALL_INTERFACE:KGUIADDONS_LIB>")
+ target_link_libraries(KF5GuiAddons PUBLIC Qt5::Gui)
+ 
+-set(WITH_XCB)
+-if (NOT APPLE AND X11_FOUND AND X11_Xkb_FOUND AND XCB_XCB_FOUND)
+-    find_package(Qt5X11Extras ${REQUIRED_QT_VERSION} NO_MODULE)
+-    if (Qt5X11Extras_FOUND)
+-        add_library(kmodifierkey_xcb MODULE util/kmodifierkeyinfoprovider_xcb.cpp)
+-        target_include_directories (kmodifierkey_xcb PRIVATE
+-            ${X11_Xkb_INCLUDE_PATH}
+-            ${X11_Xlib_INCLUDE_PATH}
+-            ${XCB_XCB_INCLUDE_DIR}
+-        )
+-        target_link_libraries(kmodifierkey_xcb PRIVATE ${X11_LIBRARIES} ${XCB_XCB_LIBRARY} Qt5::X11Extras KF5::GuiAddons)
+-        install( TARGETS kmodifierkey_xcb DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kguiaddons/kmodifierkey/)
+-    endif()
+-endif ()
++if (Qt5X11Extras_FOUND)
++    add_library(kmodifierkey_xcb MODULE util/kmodifierkeyinfoprovider_xcb.cpp)
++    target_include_directories (kmodifierkey_xcb PRIVATE
++        ${X11_Xkb_INCLUDE_PATH}
++        ${X11_Xlib_INCLUDE_PATH}
++        ${XCB_XCB_INCLUDE_DIR}
++    )
++    target_link_libraries(kmodifierkey_xcb PRIVATE ${X11_LIBRARIES} ${XCB_XCB_LIBRARY} Qt5::X11Extras KF5::GuiAddons)
++    install( TARGETS kmodifierkey_xcb DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kguiaddons/kmodifierkey/)
++endif()
+ 
+ ecm_generate_headers(KGuiAddons_HEADERS
+   HEADER_NAMES
+-- 
+GitLab
+

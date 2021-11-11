@@ -81,12 +81,14 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/zstdd.patch                #Fix detection of zstd in debug builds
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
+                            patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
                             #CMake fixes
                             ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
+                            patches/limits_include.patch       # Add missing includes to build with gcc 11
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -170,8 +172,8 @@ endif()
 find_library(MYSQL_RELEASE NAMES libmysql mysqlclient PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(MYSQL_DEBUG NAMES libmysql libmysqld mysqlclient mysqlclientd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-find_library(PCRE2_RELEASE NAMES pcre2-16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_RELEASE NAMES pcre2-16 pcre2-16-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16-static pcre2-16d pcre2-16-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
 find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -306,6 +308,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND CORE_OPTIONS -fontconfig)
+    if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
+        FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
+        string(REPLACE "QMAKE_APPLE_DEVICE_ARCHS = x86_64" "QMAKE_APPLE_DEVICE_ARCHS = arm64" _tmp_contents ${_tmp_contents})
+        FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
+    endif()
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()

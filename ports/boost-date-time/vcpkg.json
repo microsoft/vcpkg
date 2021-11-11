@@ -1,7 +1,6 @@
 {
   "name": "boost-date-time",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.77.0",
   "description": "Boost date_time module",
   "homepage": "https://github.com/boostorg/date_time",
   "dependencies": [
@@ -11,14 +10,10 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
-    "boost-detail",
-    "boost-integer",
     "boost-io",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
@@ -32,6 +27,10 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

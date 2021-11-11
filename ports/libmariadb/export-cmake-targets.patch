@@ -1,5 +1,5 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 083a863..6c8d932 100644
+index c109a20..e1fa3f1 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
 @@ -405,6 +405,7 @@ ELSE()
@@ -10,7 +10,7 @@ index 083a863..6c8d932 100644
  
  TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE ${SYSTEM_LIBS})
  
-@@ -457,13 +458,25 @@ ENDIF()
+@@ -453,13 +454,25 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
            COMPONENT Development

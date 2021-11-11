@@ -1,14 +1,11 @@
 {
   "name": "boost-utility",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "description": "Boost utility module",
   "homepage": "https://github.com/boostorg/utility",
   "dependencies": [
     "boost-config",
-    "boost-container-hash",
     "boost-core",
-    "boost-detail",
-    "boost-integer",
     "boost-io",
     "boost-preprocessor",
     "boost-throw-exception",

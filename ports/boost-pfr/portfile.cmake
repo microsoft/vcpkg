@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/pfr
-    REF boost-1.75.0
-    SHA512 68f4c111451f8d9d695d083b713ffb6efaa6d81e5b83ffa8ee901cd43e1eb41abe75a80be03b039036d53625c5629daa12a999217d1ac8aebc5806d1916f6ace
+    REF boost-1.77.0
+    SHA512 2b77f879d9ac7f9c1d137d353c6a0665a243292adae75d71d3c324bba6ca3a22b4ef80b511757e95e33d3aa6a2597e86f67a6a70bf81089bbbb476bcbfe3ad06
     HEAD_REF master
 )
 

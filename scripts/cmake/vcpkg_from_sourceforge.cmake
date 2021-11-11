@@ -3,6 +3,10 @@
 
 Download and extract a project from sourceforge.
 
+This function automatically checks a set of sourceforge mirrors.
+Additional mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
+list variable in the triplet.
+
 ## Usage:
 ```cmake
 vcpkg_from_sourceforge(
@@ -43,6 +47,8 @@ The REPO is `soxr`, REF is not exist, and the FILENAME is `soxr-0.1.3-Source.tar
 ### SHA512
 The SHA512 hash that should match the archive.
 
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+
 ### WORKING_DIRECTORY
 If specified, the archive will be extracted into the working directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
 
@@ -52,9 +58,6 @@ Note that the archive will still be extracted into a subfolder underneath that d
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
-
-### DISABLE_SSL
-Disable ssl when downloading source.
 
 ### NO_REMOVE_ONE_LEVEL
 Specifies that the default removal of the top level folder should not occur.
@@ -67,67 +70,51 @@ Specifies that the default removal of the top level folder should not occur.
 #]===]
 
 function(vcpkg_from_sourceforge)
-    set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME WORKING_DIRECTORY)
-    set(multipleValuesArgs PATCHES)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+        "DISABLE_SSL;NO_REMOVE_ONE_LEVEL"
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;FILENAME;WORKING_DIRECTORY"
+        "PATCHES")
 
-    if(NOT DEFINED _vdus_OUT_SOURCE_PATH)
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
     endif()
-
-    if(NOT DEFINED _vdus_SHA512)
+    if(NOT DEFINED arg_SHA512)
         message(FATAL_ERROR "SHA512 must be specified.")
     endif()
-
-    if(NOT DEFINED _vdus_REPO)
+    if(NOT DEFINED arg_REPO)
         message(FATAL_ERROR "The sourceforge repository must be specified.")
     endif()
 
-    if(DEFINED _vdus_WORKING_DIRECTORY)
-        set(WORKING_DIRECTORY WORKING_DIRECTORY "${_vdus_WORKING_DIRECTORY}")
-    else()
-        set(WORKING_DIRECTORY)
-    endif()
 
-    if (_vdus_DISABLE_SSL)
-        set(URL_PROTOCOL http:)
-    else()
-        set(URL_PROTOCOL https:)
+    if(arg_DISABLE_SSL)
+        message(WARNING "DISABLE_SSL has been deprecated and has no effect")
     endif()
     
-    set(SOURCEFORGE_HOST ${URL_PROTOCOL}//sourceforge.net/projects)
+    set(sourceforge_host "https://sourceforge.net/projects")
 
-    string(FIND ${_vdus_REPO} "/" FOUND_ORG)
-    if (NOT FOUND_ORG EQUAL -1)
-        string(SUBSTRING "${_vdus_REPO}" 0 ${FOUND_ORG} ORG_NAME)
-        math(EXPR FOUND_ORG "${FOUND_ORG} + 1") # skip the slash
-        string(SUBSTRING "${_vdus_REPO}" ${FOUND_ORG} -1 REPO_NAME)
-        if (REPO_NAME MATCHES "/")
-            message(FATAL_ERROR "REPO should contain at most one slash (found ${_vdus_REPO}).")
-        endif()
-        set(ORG_NAME ${ORG_NAME}/)
+    if(arg_REPO MATCHES "^([^/]*)$") # just one element
+        set(org_name "${CMAKE_MATCH_1}")
+        set(repo_name "")
+    elseif(arg_REPO MATCHES "^([^/]*)/([^/]*)$") # two elements
+        set(org_name "${CMAKE_MATCH_1}")
+        set(repo_name "${CMAKE_MATCH_2}")
     else()
-        set(ORG_NAME ${_vdus_REPO}/)
-        set(REPO_NAME )
+        message(FATAL_ERROR "REPO (${arg_REPO}) is not a valid repo name. It must be:
+    - an organization name without any slashes, or
+    - an organization name followed by a repository name separated by a single slash")
     endif()
     
-    if (DEFINED _vdus_REF)
-        set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}files/${REPO_NAME}/${_vdus_REF}/${_vdus_FILENAME}")
+    if(DEFINED arg_REF)
+        set(url "${sourceforge_host}/${org_name}/files/${repo_name}/${arg_REF}/${arg_FILENAME}")
+    elseif(DEFINED repo_name)
+        set(url "${sourceforge_host}/${org_name}/${repo_name}/files/${arg_FILENAME}")
     else()
-        set(URL "${SOURCEFORGE_HOST}/${ORG_NAME}${REPO_NAME}/files/${_vdus_FILENAME}")
+        set(url "${sourceforge_host}/${org_name}/files/${arg_FILENAME}")
     endif()
         
-    set(NO_REMOVE_ONE_LEVEL )
-    if (_vdus_NO_REMOVE_ONE_LEVEL)
-        set(NO_REMOVE_ONE_LEVEL "NO_REMOVE_ONE_LEVEL")
-    endif()
+    string(SUBSTRING "${arg_SHA512}" 0 10 sanitized_ref)
 
-    string(SUBSTRING "${_vdus_SHA512}" 0 10 SANITIZED_REF)
-
-    set(Z_VCPKG_SOURCEFORGE_MIRRORS ${SOURCEFORGE_MIRRORS})
-    list(APPEND Z_VCPKG_SOURCEFORGE_MIRRORS
+    set(sourceforge_mirrors
         cfhcable        # United States
         pilotfiber      # New York, NY
         gigenet         # Chicago, IL
@@ -149,26 +136,43 @@ function(vcpkg_from_sourceforge)
         ufpr            # Curitiba, Brazil
         tenet           # Wynberg, South Africa
     )
+    if(DEFINED SOURCEFORGE_MIRRORS AND NOT DEFINED VCPKG_SOURCEFORGE_EXTRA_MIRRORS)
+        message(WARNING "Extension point SOURCEFORGE_MIRRORS has been deprecated.
+    Please use the replacement VCPKG_SOURCEFORGE_EXTRA_MIRRORS variable instead.")
+        list(APPEND sourceforge_mirrors "${SOURCEFORGE_MIRRORS}")
+        list(REMOVE_DUPLICATES sourceforge_mirrors)
+    elseif(DEFINED VCPKG_SOURCEFORGE_EXTRA_MIRRORS)
+        list(APPEND sourceforge_mirrors "${VCPKG_SOURCEFORGE_EXTRA_MIRRORS}")
+        list(REMOVE_DUPLICATES sourceforge_mirrors)
+    endif()
 
-    set(URLS "${URL}/download")
-    foreach(SOURCEFORGE_MIRROR IN LISTS Z_VCPKG_SOURCEFORGE_MIRRORS)
-        list(APPEND URLS "${URL}/download?use_mirror=${SOURCEFORGE_MIRROR}")
+    set(all_urls "${url}/download")
+    foreach(mirror IN LISTS sourceforge_mirrors)
+        list(APPEND all_urls "${url}/download?use_mirror=${mirror}")
     endforeach()
-
+    
     vcpkg_download_distfile(ARCHIVE
-        URLS ${URLS}
-        SHA512 "${_vdus_SHA512}"
-        FILENAME "${_vdus_FILENAME}"
+        URLS ${all_urls}
+        SHA512 "${arg_SHA512}"
+        FILENAME "${arg_FILENAME}"
     )
 
+    set(no_remove_one_level_param "")
+    set(working_directory_param "")
+    if(arg_NO_REMOVE_ONE_LEVEL)
+        set(no_remove_one_level_param "NO_REMOVE_ONE_LEVEL")
+    endif()
+    if(DEFINED arg_WORKING_DIRECTORY)
+        set(working_directory_param "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
+    endif()
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
-        REF "${SANITIZED_REF}"
-        ${NO_REMOVE_ONE_LEVEL}
-        ${WORKING_DIRECTORY}
-        PATCHES ${_vdus_PATCHES}
+        REF "${sanitized_ref}"
+        ${no_remove_one_level_param}
+        ${working_directory_param}
+        PATCHES ${arg_PATCHES}
     )
 
-    set(${_vdus_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
+    set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

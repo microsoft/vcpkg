@@ -1,21 +1,28 @@
-set(QT_IS_LATEST OFF)
+# Reminder for myself and everybody else:
+# Qt cross module dependency information within the Qt respository is wrong and/or incomplete. 
+# Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
+# Often enough certain (bigger) dependencies are only used to build examples and/or tests. 
+# As such getting the correct dependency information relevant for vcpkg requires a manual search/check
+
+#set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        jpeg.patch
-        harfbuzz.patch
-        config_install.patch 
         allow_outside_prefix.patch 
-        buildcmake.patch
+        clang-cl_source_location.patch
+        config_install.patch
         dont_force_cmakecache.patch
-        fix_find_dep.patch
+        fix_cmake_build.patch
+        harfbuzz.patch
+        fix_egl.patch
+        cocoa.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES
-                )
+        )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
@@ -56,6 +63,8 @@ FEATURES
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
+    "concurrent"          FEATURE_future
+    "concurrent"          FEATURE_thread
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
     "network"             FEATURE_network
@@ -85,12 +94,10 @@ INVERTED_FEATURES
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
-#list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_doubleconversion:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
-
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
@@ -203,6 +210,8 @@ set(TOOL_NAMES
         rcc 
         tracegen 
         uic
+        qtpaths
+        qtpaths6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -253,12 +262,13 @@ file(COPY
 qt_stop_on_update()
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
-if(VCPKG_TARGET_IS_WINDOWS)
+if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
 endif()
 set(other_files 
+        target_qt.conf
         qt-cmake-private-install.cmake 
         syncqt.pl
         android_cmakelist_patcher.sh
@@ -274,10 +284,10 @@ foreach(_config debug release)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin")
         continue()
     endif()
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}")
     foreach(script IN LISTS script_files)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
-            set(target_script "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}${script}${script_suffix}")
+            set(target_script "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${script}${script_suffix}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
             file(READ "${target_script}" _contents)
             if(_config MATCHES "debug")
@@ -290,13 +300,15 @@ foreach(_config debug release)
     endforeach()
     foreach(other IN LISTS other_files)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}${other}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${other}")
         endif()
     endforeach()
 endforeach()
 
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_CROSSCOMPILING)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
+    endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
@@ -308,20 +320,23 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
+if(NOT VCPKG_TARGET_IS_IOS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/ios")
+endif() 
 
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
 set(REL_PATH)
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/qt_release.conf" @ONLY)
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY)
 set(BACKUP_CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 set(BACKUP_CURRENT_HOST_INSTALLED_DIR "${CURRENT_HOST_INSTALLED_DIR}")
 set(CURRENT_INSTALLED_DIR "./../../../")
 set(CURRENT_HOST_INSTALLED_DIR "./../../../")
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/qt.conf")
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf")
 set(REL_PATH debug/)
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/qt.debug.conf")
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.debug.conf")
 set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")
 set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/qt_debug.conf" @ONLY)
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
@@ -331,19 +346,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
             list(APPEND DLLS_TO_COPY "${CURRENT_INSTALLED_DIR}/bin/${_file}.dll")
         endif()
     endforeach()
-    file(COPY ${DLLS_TO_COPY} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
+    file(COPY ${DLLS_TO_COPY} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 set(hostinfofile "${CURRENT_PACKAGES_DIR}/share/Qt6HostInfo/Qt6HostInfoConfig.cmake")
 file(READ "${hostinfofile}" _contents)
-string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/qt6/bin")]] _contents "${_contents}")
-string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/qt6/bin")]] _contents "${_contents}")
+string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/Qt6/bin")]] _contents "${_contents}")
+string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
 
 set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
 if(EXISTS "${coretools}")
     file(READ "${coretools}" _contents)
-    string(REPLACE [[ "${_IMPORT_PREFIX}/tools/qt6/bin/qmake.exe"]] [["${_IMPORT_PREFIX}/tools/qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
+    string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [["${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
     file(WRITE "${coretools}" "${_contents}")
 endif()

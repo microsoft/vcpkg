@@ -1,0 +1,29 @@
+diff --git a/KF5XmlGuiConfig.cmake.in b/KF5XmlGuiConfig.cmake.in
+index 6238ab5f..8c249eb1 100644
+--- a/KF5XmlGuiConfig.cmake.in
++++ b/KF5XmlGuiConfig.cmake.in
+@@ -12,5 +12,21 @@ find_dependency(Qt5Xml @REQUIRED_QT_VERSION@)
+ find_dependency(KF5Config "@KF_DEP_VERSION@")
+ find_dependency(KF5ConfigWidgets "@KF_DEP_VERSION@")
+ 
++if (NOT @BUILD_SHARED_LIBS@) 
++    find_dependency(Qt5Network "@REQUIRED_QT_VERSION@")
++    find_dependency(Qt5PrintSupport "@REQUIRED_QT_VERSION@")
++
++    if (@KF5GlobalAccel_FOUND@)
++        find_dependency(KF5GlobalAccel "@KF_DEP_VERSION@")
++    endif()
++
++    find_dependency(KF5CoreAddons "@KF_DEP_VERSION@") 
++    find_dependency(KF5GuiAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5WidgetsAddons "@KF_DEP_VERSION@")
++    find_dependency(KF5ItemViews "@KF_DEP_VERSION@")
++    find_dependency(KF5I18n "@KF_DEP_VERSION@")
++    find_dependency(KF5IconThemes "@KF_DEP_VERSION@")
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF5XmlGuiTargets.cmake")
+ @PACKAGE_INCLUDE_QCHTARGETS@
+-- 
+GitLab
+

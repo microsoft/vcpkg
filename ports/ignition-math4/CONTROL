@@ -1,5 +1,0 @@
-Source: ignition-math4
-Version: 4.0.0-1
-Homepage: https://ignitionrobotics.org/libs/math
-Build-Depends: ignition-cmake0
-Description: Math API for robotic applications

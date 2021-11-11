@@ -1,0 +1,7 @@
+{
+  "name": "freeglut",
+  "version-string": "3.2.1",
+  "port-version": 7,
+  "description": "Open source implementation of GLUT with source and binary backwards compatibility.",
+  "homepage": "https://sourceforge.net/projects/freeglut/"
+}
