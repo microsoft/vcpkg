@@ -38,7 +38,7 @@ index ba8c36e81..eac441dee 100644
  endif()
  
 diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
-index 673a58eed..c62b1fb3f 100644
+index 673a58eed..8c2c1e2fb 100644
 --- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
 @@ -53,7 +53,7 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
@@ -290,6 +290,16 @@ index 673a58eed..c62b1fb3f 100644
  
    if(GRPC_VENDORED)
      set(GRPCPP_PP_INCLUDE TRUE)
+@@ -4019,7 +4038,8 @@ if(ARROW_S3)
+                             s3
+                             transfer
+                             identity-management
+-                            sts)
++                            sts
++                 CONFIG)
+   endif()
+ 
+   # Restore previous value of BUILD_SHARED_LIBS
 diff --git a/cpp/src/arrow/adapters/orc/CMakeLists.txt b/cpp/src/arrow/adapters/orc/CMakeLists.txt
 index ca901b07d..4512a175f 100644
 --- a/cpp/src/arrow/adapters/orc/CMakeLists.txt
