@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c87e35a..24b619f 100644
+index 1c3146b..ae06ea3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,6 +84,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
@@ -12,32 +12,23 @@ index c87e35a..24b619f 100644
  set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
  set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
  
-@@ -2079,7 +2082,6 @@ target_link_libraries(grpc
-   gpr
-   ${_gRPC_SSL_LIBRARIES}
-   address_sorting
+@@ -1504,7 +1507,6 @@ target_link_libraries(gpr
+   absl::synchronization
+   absl::time
+   absl::optional
 -  upb
  )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc "-framework CoreFoundation")
-@@ -2624,7 +2626,6 @@ target_link_libraries(grpc_unsecure
-   absl::statusor
-   gpr
-   address_sorting
--  upb
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
-@@ -3805,7 +3806,7 @@ if(gRPC_INSTALL)
- endif()
+ if(_gRPC_PLATFORM_ANDROID)
+   target_link_libraries(gpr
+@@ -3927,6 +3929,7 @@ endif()
  
  endif()
--
+ 
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
  add_library(upb
    third_party/upb/upb/decode_fast.c
    third_party/upb/upb/decode.c
-@@ -3863,7 +3864,7 @@ if(gRPC_INSTALL)
+@@ -3984,7 +3987,7 @@ if(gRPC_INSTALL)
    )
  endif()
  
@@ -59,7 +50,7 @@ index 3623f4a..df6ced5 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index f2a0e50..c1c65f5 100644
+index f2a0e50..ac6d397 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
 @@ -12,9 +12,21 @@
@@ -84,3 +75,4 @@ index f2a0e50..c1c65f5 100644
 +    set(upb ${_gRPC_UPB_LIBRARIES})
 +    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
 +endif()
+\ No newline at end of file
