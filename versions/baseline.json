@@ -4570,7 +4570,7 @@
     },
     "nanodbc": {
       "baseline": "2.13.0",
-      "port-version": 5
+      "port-version": 6
     },
     "nanoflann": {
       "baseline": "1.3.2",
