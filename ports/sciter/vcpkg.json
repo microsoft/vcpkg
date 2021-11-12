@@ -2,5 +2,5 @@
   "name": "sciter",
   "version-string": "deprecated",
   "description": "Sciter is an embeddable HTML/CSS/scripting engine.",
-  "homepage": "https://github.com/c-smile/sciter-js-sdk"
+  "homepage": "https://github.com/c-smile/sciter-sdk"
 }
