@@ -58,6 +58,12 @@ vcpkg_cmake_configure(
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
         -DWITH_OPENNI=OFF
+        -DWITH_ENSENSO=OFF
+        -DWITH_DAVIDSDK=OFF
+        -DWITH_DSSDK=OFF
+        -DWITH_RSSDK=OFF
+        -DWITH_RSSDK2=OFF
+        -DWITH_OPENMP=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
