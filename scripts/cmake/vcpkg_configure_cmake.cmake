@@ -161,6 +161,7 @@ function(vcpkg_configure_cmake)
 
     set(generator "")
     set(generator_arch "")
+    set(generator_toolset "")
     if(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(arg_PREFER_NINJA AND ninja_can_be_used)
@@ -169,15 +170,19 @@ function(vcpkg_configure_cmake)
         set(generator "Ninja")
 
     else()
-        if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+        if(NOT DEFINED VCPKG_GENERATOR_TOOLSET)
+            set(VCPKG_GENERATOR_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
+        endif()
+
+        if("${VCPKG_GENERATOR_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
             set(generator "Visual Studio 12 2013")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+        elseif("${VCPKG_GENERATOR_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
             set(generator "Visual Studio 14 2015")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
+        elseif("${VCPKG_GENERATOR_TOOLSET}" STREQUAL "v141")
             set(generator "Visual Studio 15 2017")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
+        elseif("${VCPKG_GENERATOR_TOOLSET}" STREQUAL "v142")
             set(generator "Visual Studio 16 2019")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
+        elseif("${VCPKG_GENERATOR_TOOLSET}" STREQUAL "v143")
             set(generator "Visual Studio 17 2022")
         endif()
 
@@ -190,6 +195,8 @@ function(vcpkg_configure_cmake)
         elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
             set(generator_arch "ARM64")
         endif()
+
+        set(generator_toolset "-DCMAKE_GENERATOR_TOOLSET=${VCPKG_PLATFORM_TOOLSET}")
 
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
@@ -310,12 +317,12 @@ function(vcpkg_configure_cmake)
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
         -G "${generator}"
         -DCMAKE_BUILD_TYPE=Release
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"  ${generator_toolset})
     vcpkg_list(SET dbg_command
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
         -G "${generator}"
         -DCMAKE_BUILD_TYPE=Debug
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug")
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug" ${generator_toolset})
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
