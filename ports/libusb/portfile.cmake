@@ -55,6 +55,7 @@ else()
         AUTOCONFIG
     )
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
 endif()
 
 configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
