@@ -486,7 +486,7 @@ function(vcpkg_configure_make)
                                                                                       # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
                 elseif(VCPKG_HOST_IS_OSX)
                     z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
-                    set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_VERSION}")
+                    set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin")
                 elseif(VCPKG_HOST_IS_LINUX)
                     z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
                     set(arg_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-linux-gnu")

@@ -9,9 +9,8 @@ vcpkg_from_github(
     HEAD_REF stable
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DHPX_WITH_VCPKG=ON
         -DHPX_WITH_TESTS=OFF
@@ -20,10 +19,10 @@ vcpkg_configure_cmake(
         -DHPX_WITH_RUNTIME=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # post build cleanup
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/HPX)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/HPX)
 
 file(GLOB_RECURSE CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/hpx/*.cmake")
 foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
@@ -50,39 +49,39 @@ vcpkg_replace_string(
     "list(APPEND CMAKE_MODULE_PATH")
 
 file(INSTALL
-    ${SOURCE_PATH}/LICENSE_1_0.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    "${SOURCE_PATH}/LICENSE_1_0.txt"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE ${DLLS})
 endif()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/lib/hpx/*.dll)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/hpx/*.dll")
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/hpx)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/hpx")
     file(REMOVE ${DLLS})
 endif()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE ${DLLS})
 endif()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/hpx/*.dll)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/hpx/*.dll")
 if(DLLS)
-    file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/hpx)
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/hpx")
     file(REMOVE ${DLLS})
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/hpxcxx" "\"${CURRENT_PACKAGES_DIR}\"" "os.path.dirname(os.path.dirname(os.path.realpath(__file__)))")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/hpxcxx" "\"${CURRENT_PACKAGES_DIR}/debug\"" "os.path.dirname(os.path.dirname(os.path.realpath(__file__)))")
 
 vcpkg_copy_pdbs()
