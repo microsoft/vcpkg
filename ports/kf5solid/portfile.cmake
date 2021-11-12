@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_config_cmake.patch # https://invent.kde.org/frameworks/solid/-/merge_requests/53
+        fix-libmount.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
