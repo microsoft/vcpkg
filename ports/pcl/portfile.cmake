@@ -57,6 +57,7 @@ vcpkg_cmake_configure(
         # WITH
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
+        -DWITH_OPENNI=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
@@ -69,16 +70,26 @@ vcpkg_copy_pdbs()
 
 if (WITH_OPENNI2)
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pcl_io-1.12.pc" PCL_IO_PC_DBG)
-        string(REPLACE "libopenni2" "" PCL_IO_PC_DBG "${PCL_IO_PC_DBG}")
-        string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2 " PCL_IO_PC_DBG "${PCL_IO_PC_DBG}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pcl_io-1.12.pc" "${PCL_IO_PC_DBG}")
+        file(GLOB PCL_PKGCONFIG_DBGS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+        foreach (PCL_PKGCONFIG IN LISTS PCL_PKGCONFIG_DBGS)
+            file(READ "${PCL_PKGCONFIG}" PCL_PC_DBG)
+            if (PCL_PC_DBG MATCHES "libopenni2")
+                string(REPLACE "libopenni2" "" PCL_PC_DBG "${PCL_PC_DBG}")
+                string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2 " PCL_PC_DBG "${PCL_PC_DBG}")
+                file(WRITE "${PCL_PKGCONFIG}" "${PCL_PC_DBG}")
+            endif()
+        endforeach()
     endif()
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pcl_io-1.12.pc" PCL_IO_PC_REL)
-        string(REPLACE "libopenni2" "" PCL_IO_PC_REL "${PCL_IO_PC_REL}")
-        string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2 " PCL_IO_PC_REL "${PCL_IO_PC_REL}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pcl_io-1.12.pc" "${PCL_IO_PC_REL}")
+        file(GLOB PCL_PKGCONFIG_RELS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+        foreach (PCL_PKGCONFIG IN LISTS PCL_PKGCONFIG_RELS)
+            file(READ "${PCL_PKGCONFIG}" PCL_PC_REL)
+            if (PCL_PC_REL MATCHES "libopenni2")
+                string(REPLACE "libopenni2" "" PCL_PC_REL "${PCL_PC_REL}")
+                string(REPLACE "Libs: " "Libs: -lKinect10 -lOpenNI2 " PCL_PC_REL "${PCL_PC_REL}")
+                file(WRITE "${PCL_PKGCONFIG}" "${PCL_PC_REL}")
+            endif()
+        endforeach()
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
