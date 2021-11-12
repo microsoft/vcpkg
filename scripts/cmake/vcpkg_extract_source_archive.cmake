@@ -79,17 +79,15 @@ you can use the `WORKING_DIRECTORY` argument to do the same.
 
 function(z_vcpkg_extract_source_archive_deprecated_mode archive working_directory)
     cmake_path(GET archive FILENAME archive_filename)
-    if(NOT EXISTS "${working_directory}/${archive_filename}.extracted")
-        message(STATUS "Extracting source ${archive}")
-        file(MAKE_DIRECTORY "${working_directory}")
-        vcpkg_execute_required_process(
-            ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${CMAKE_COMMAND}" -E tar xjf "${archive}"
-            WORKING_DIRECTORY "${working_directory}"
-            LOGNAME extract
-        )
-        file(TOUCH "${working_directory}/${archive_filename}.extracted")
-    endif()
+    file(REMOVE_RECURSE "${working_directory}")
+    message(STATUS "Extracting source ${archive}")
+    file(MAKE_DIRECTORY "${working_directory}")
+    vcpkg_execute_required_process(
+        ALLOW_IN_DOWNLOAD_MODE
+        COMMAND "${CMAKE_COMMAND}" -E tar xjf "${archive}"
+        WORKING_DIRECTORY "${working_directory}"
+        LOGNAME extract
+    )
 endfunction()
 
 function(vcpkg_extract_source_archive)
