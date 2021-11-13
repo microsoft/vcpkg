@@ -22,7 +22,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-	OPTIONS ${QTKEYCHAIN_OPTIONS}
+    OPTIONS ${QTKEYCHAIN_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -33,7 +33,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME Qt5Keychain CONFIG_PATH lib/cmake/Qt5Keych
 
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
-	"${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
