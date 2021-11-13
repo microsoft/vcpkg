@@ -1,8 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0c11507..38df45c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -634,9 +634,14 @@ if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES M
+   if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
+     message(FATAL_ERROR "Could not compile universal protoc.")
+   endif()
+-  set(PROTOBUF_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
+-  set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
+ endif()
++find_package(protobuf CONFIG REQUIRED)
++find_program(PROTOBUF_PROTOC_EXECUTABLE
++    NAMES   protoc
++    PATHS   ${_VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools
++)
++set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE ${PROTOBUF_PROTOC_EXECUTABLE})
++include(cmake/ProtoBuf.cmake)
+ 
+ # ---[ Misc checks to cope with various compiler modes
+ include(cmake/MiscCheck.cmake)
+@@ -650,7 +655,8 @@ if(USE_FBGEMM AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND CMAKE_SIZEOF_VO
+   set(USE_FBGEMM OFF)
+ endif()
+ 
+-include(cmake/Dependencies.cmake)
++# we will import vcpkg ports instead of CAFFE2_THIRD_PARTY_ROOT
++include(cmake/vcpkg-dependencies.cmake)
+ 
+ if(USE_FBGEMM)
+   string(APPEND CMAKE_CXX_FLAGS " -DUSE_FBGEMM")
 diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-index b590615..4466abf 100644
+index 3901f73..a000cdc 100644
 --- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 +++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-@@ -315,112 +315,13 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
+@@ -322,112 +322,13 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
  set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/conv_utils.h)
  set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack_func.h)
  
@@ -123,13 +154,14 @@ index b590615..4466abf 100644
  install(TARGETS pytorch_qnnpack
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 7bef849..968d248 100644
+index 26210cb..c2f59e9 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -99,13 +99,6 @@ endif()
+@@ -106,15 +106,6 @@ endif()
+ # Note: the folders that are being commented out have not been properly
  # addressed yet.
  
- if(NOT MSVC AND USE_XNNPACK)
+-if(NOT MSVC AND USE_XNNPACK)
 -  if(NOT TARGET fxdiv)
 -    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
 -    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
@@ -137,14 +169,52 @@ index 7bef849..968d248 100644
 -      "${FXDIV_SOURCE_DIR}"
 -      "${CMAKE_BINARY_DIR}/FXdiv")
 -  endif()
- endif()
+-endif()
  
  add_subdirectory(core)
-@@ -856,7 +849,6 @@ if(USE_CUDA OR USE_ROCM)
+ add_subdirectory(serialize)
+@@ -798,6 +789,9 @@ if(HAVE_SOVERSION)
+ endif()
+ torch_compile_options(torch_cpu)  # see cmake/public/utils.cmake
+ 
++find_package(Eigen3 CONFIG REQUIRED)
++target_link_libraries(torch_cpu PRIVATE Eigen3::Eigen) # for caffe2 operators
++
+ if(USE_PRECOMPILED_HEADERS)
+   target_precompile_headers(torch_cpu PRIVATE
+       "$<$<COMPILE_LANGUAGE:CXX>:ATen/ATen.h>")
+@@ -990,10 +984,6 @@ if(USE_CUDA OR USE_ROCM)
+   target_include_directories(${TORCHLIB_FLAVOR} PRIVATE "${CMAKE_BINARY_DIR}/include")
  endif()
  
- if(NOT MSVC AND USE_XNNPACK)
+-if(NOT MSVC AND USE_XNNPACK)
 -  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
- endif()
- 
+-endif()
+-
  # ==========================================================
+ # formerly-libtorch flags
+ # ==========================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38df45c..4045217 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -621,19 +621,6 @@ endif()
+ # The below means we are cross compiling for arm64 or x86_64 on MacOSX
+ if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
+   set(CROSS_COMPILING_MACOSX TRUE)
+-  # We need to compile a universal protoc to not fail protobuf build
+-  # We set CMAKE_TRY_COMPILE_TARGET_TYPE to STATIC_LIBRARY (vs executable) to succeed the cmake compiler check for cross-compiling
+-  set(protoc_build_command "./scripts/build_host_protoc.sh --other-flags -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY -DCMAKE_C_COMPILER_WORKS=1 -DCMAKE_CXX_COMPILER_WORKS=1")
+-  # We write to a temp scriptfile because CMake COMMAND dislikes double quotes in commands
+-  file(WRITE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh "#!/bin/bash\n${protoc_build_command}")
+-  file(COPY ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh DESTINATION ${PROJECT_SOURCE_DIR}/scripts/ FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
+-  execute_process(COMMAND ./scripts/tmp_protoc_script.sh
+-                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+-                  RESULT_VARIABLE BUILD_HOST_PROTOC_RESULT)
+-  file(REMOVE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh ${PROJECT_SOURCE_DIR}/scripts/tmp_protoc_script.sh)
+-  if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
+-    message(FATAL_ERROR "Could not compile universal protoc.")
+-  endif()
+ endif()
+ find_package(protobuf CONFIG REQUIRED)
+ find_program(PROTOBUF_PROTOC_EXECUTABLE

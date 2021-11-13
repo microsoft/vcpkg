@@ -1,16 +1,18 @@
-diff --git a/caffe2/onnx/backend.cc b/caffe2/onnx/backend.cc
-index ffe0258..538cb6a 100644
---- a/caffe2/onnx/backend.cc
-+++ b/caffe2/onnx/backend.cc
-@@ -8,7 +8,7 @@
+diff --git a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
+index 614e274..b59a4d4 100644
+--- a/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
++++ b/aten/src/ATen/native/quantized/cpu/qembeddingbag_prepack.cpp
+@@ -8,7 +8,9 @@
+ #include <torch/library.h>
  
- #ifndef C10_MOBILE
- #include "onnx/checker.h"
--#include "onnx/optimizer/optimize.h"
-+#include "onnxoptimizer/optimize.h"
- #endif
+ #include <c10/util/irange.h>
+-
++#if defined(USE_FBGEMM)
++#include <fbgemm/QuantUtils.h>
++#endif
+ torch::class_<EmbeddingPackedParamsBase> register_embedding_params();
  
- #include "google/protobuf/io/coded_stream.h"
+ /*
 diff --git a/caffe2/onnx/onnxifi_graph_info.h b/caffe2/onnx/onnxifi_graph_info.h
 index 06c1ce4..67fe01d 100644
 --- a/caffe2/onnx/onnxifi_graph_info.h
@@ -37,10 +39,65 @@ index 26ae914..02fbe94 100644
  namespace caffe2 {
  namespace onnx {
 diff --git a/caffe2/opt/onnxifi_op.cc b/caffe2/opt/onnxifi_op.cc
-index 624e91f..f7335f2 100644
+index bf6005f..0885c6f 100644
 --- a/caffe2/opt/onnxifi_op.cc
 +++ b/caffe2/opt/onnxifi_op.cc
-@@ -56,10 +56,10 @@ void setInputTensorDescriptorTypeAndBuffer(
+@@ -112,6 +112,7 @@ void copyDescriptor(
+     onnxTensorDescriptorV1* to) {
+   to->dataType = from->dataType;
+   to->buffer = from->buffer;
++
+   to->isOffline = from->isOffline;
+   to->quantizationParams = from->quantizationParams;
+   to->quantizationAxis = from->quantizationAxis;
+@@ -153,6 +154,7 @@ void BlobToTensorDescriptor(
+       blob->TypeName());
+   desc->tag = ONNXIFI_TAG_TENSOR_DESCRIPTOR_V1;
+   desc->memoryType = ONNXIFI_MEMORY_TYPE_CPU;
++
+   desc->isOffline = false;
+ 
+   if (is_int8tensor) {
+diff --git a/caffe2/opt/onnxifi_op.h b/caffe2/opt/onnxifi_op.h
+index 9e3aa80..de11512 100644
+--- a/caffe2/opt/onnxifi_op.h
++++ b/caffe2/opt/onnxifi_op.h
+@@ -306,7 +306,7 @@ class OnnxifiOp final : public Operator<Context> {
+       onnxGraph graph{nullptr};
+ 
+       static const uint64_t auxPropertiesListAOT[] = {
+-          ONNXIFI_OPTIMIZATION_AOT, ONNXIFI_GRAPH_PROPERTY_NONE};
++          ONNXIFI_OPTIMIZATION_LOW_DELAY, ONNXIFI_GRAPH_PROPERTY_NONE};
+       auto ret = lib_->onnxInitGraph(
+           backend,
+           use_glow_aot_ ? auxPropertiesListAOT : nullptr,
+@@ -318,7 +318,7 @@ class OnnxifiOp final : public Operator<Context> {
+           static_cast<uint32_t>(max_seq_size_),
+           defered_blob_reader);
+       if (ret != ONNXIFI_STATUS_SUCCESS) {
+-        if (ret == ONNXIFI_STATUS_FATAL_ERROR) {
++        if (ret == ONNXIFI_STATUS_INTERNAL_ERROR) {
+           C10_THROW_ERROR(
+               OnnxfiBackendSystemError, "Fatal error during onnxInitGraph");
+         } else {
+diff --git a/caffe2/opt/onnxifi_op.cc b/caffe2/opt/onnxifi_op.cc
+index 0885c6f..ad50265 100644
+--- a/caffe2/opt/onnxifi_op.cc
++++ b/caffe2/opt/onnxifi_op.cc
+@@ -626,8 +626,6 @@ string mapOnnxStatusToString(onnxStatus status) {
+       return "ONNXIFI_STATUS_BACKEND_UNAVAILABLE";
+     case ONNXIFI_STATUS_INTERNAL_ERROR:
+       return "ONNXIFI_STATUS_INTERNAL_ERROR";
+-    case ONNXIFI_STATUS_FATAL_ERROR:
+-      return "ONNXIFI_STATUS_FATAL_ERROR";
+     default:
+       return "ONNXIFI_STATUS_STRING_NOT_MAPPED";
+   }
+diff --git a/caffe2/opt/onnxifi_op.cc b/caffe2/opt/onnxifi_op.cc
+index ad50265..8f2156c 100644
+--- a/caffe2/opt/onnxifi_op.cc
++++ b/caffe2/opt/onnxifi_op.cc
+@@ -58,10 +58,10 @@ void setInputTensorDescriptorTypeAndBuffer(
      CAFFE_THROW(
          "Unsupported Int8Tensor type in ONNXIFI: ", cpu_tensor.dtype().name());
    }
@@ -55,10 +112,10 @@ index 624e91f..f7335f2 100644
  }
  
  template <typename T>
-@@ -110,11 +110,11 @@ void copyDescriptor(
-     onnxTensorDescriptorV1* to) {
+@@ -113,11 +113,11 @@ void copyDescriptor(
    to->dataType = from->dataType;
    to->buffer = from->buffer;
+ 
 -  to->isOffline = from->isOffline;
 -  to->quantizationParams = from->quantizationParams;
 -  to->quantizationAxis = from->quantizationAxis;
@@ -72,16 +129,16 @@ index 624e91f..f7335f2 100644
    to->dimensions = from->dimensions;
    to->shape = from->shape;
  }
-@@ -150,7 +150,7 @@ void BlobToTensorDescriptor(
-       blob->TypeName());
+@@ -155,7 +155,7 @@ void BlobToTensorDescriptor(
    desc->tag = ONNXIFI_TAG_TENSOR_DESCRIPTOR_V1;
    desc->memoryType = ONNXIFI_MEMORY_TYPE_CPU;
+ 
 -  desc->isOffline = false;
 +  // desc->isOffline = false;
  
    if (is_int8tensor) {
      // Data type
-@@ -178,7 +178,7 @@ void BlobToTensorDescriptor(
+@@ -183,7 +183,7 @@ void BlobToTensorDescriptor(
      desc->dimensions = shape.size();
      shapes->emplace_back(shape.cbegin(), shape.cend());
      desc->shape = shapes->back().data();
@@ -90,7 +147,7 @@ index 624e91f..f7335f2 100644
    }
  }
  
-@@ -504,10 +504,10 @@ void OnnxifiOp<CPUContext>::setOutputShapeAndType(
+@@ -532,10 +532,10 @@ void OnnxifiOp<CPUContext>::setOutputShapeAndType(
      output_tensor->t.Resize(tensor_dims_int64);
      setOutputTensorDescriptorTypeAndBuffer(
          type, &output_tensor->t, &tensor_descriptor);
@@ -106,19 +163,10 @@ index 624e91f..f7335f2 100644
      CAFFE_THROW(
          "OnnxifiOp does not support output tensor with multi-quantization params: ",
 diff --git a/caffe2/opt/onnxifi_op.h b/caffe2/opt/onnxifi_op.h
-index caffae6..4a6efb1 100644
+index de11512..458bf47 100644
 --- a/caffe2/opt/onnxifi_op.h
 +++ b/caffe2/opt/onnxifi_op.h
-@@ -302,7 +302,7 @@ class OnnxifiOp final : public Operator<Context> {
-       onnxGraph graph{nullptr};
- 
-       static const uint64_t auxPropertiesListAOT[] = {
--          ONNXIFI_OPTIMIZATION_AOT, ONNXIFI_GRAPH_PROPERTY_NONE};
-+          ONNXIFI_OPTIMIZATION_LOW_DELAY, ONNXIFI_GRAPH_PROPERTY_NONE};
-       auto ret = lib_->onnxInitGraph(
-           backend,
-           use_glow_aot_ ? auxPropertiesListAOT : nullptr,
-@@ -310,11 +310,9 @@ class OnnxifiOp final : public Operator<Context> {
+@@ -314,9 +314,7 @@ class OnnxifiOp final : public Operator<Context> {
            (const void*)(onnx_model_str.c_str()),
            weight_descs.size(),
            weight_descs.data(),
@@ -127,8 +175,5 @@ index caffae6..4a6efb1 100644
 -          defered_blob_reader);
 +          &graph);
        if (ret != ONNXIFI_STATUS_SUCCESS) {
--        if (ret == ONNXIFI_STATUS_FATAL_ERROR) {
-+        if (ret == ONNXIFI_STATUS_INTERNAL_ERROR) {
+         if (ret == ONNXIFI_STATUS_INTERNAL_ERROR) {
            C10_THROW_ERROR(
-               OnnxfiBackendSystemError, "Fatal error during onnxInitGraph");
-         } else {

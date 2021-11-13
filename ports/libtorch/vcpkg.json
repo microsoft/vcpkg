@@ -1,23 +1,24 @@
 {
   "name": "libtorch",
-  "version-semver": "1.8.1",
+  "version-semver": "1.10.0",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
-  "supports": "x64",
+  "supports": "x64 & (osx | linux)",
   "dependencies": [
     "cpuinfo",
     "eigen3",
     "fmt",
+    "gemmlowp",
     "gflags",
     "glog",
     "lmdb",
+    "onnx",
     "onnx-optimizer",
     "protobuf",
     {
       "name": "protobuf",
       "host": true
     },
-    "python3",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -29,7 +30,6 @@
     }
   ],
   "default-features": [
-    "eigen3",
     "xnnpack"
   ],
   "features": {
@@ -64,19 +64,10 @@
         }
       ]
     },
-    "eigen3": {
-      "description": "BLAS with Eigen 3"
-    },
     "fbgemm": {
       "description": "Build with FBGEMM (quantized 8-bit server operators)",
       "dependencies": [
         "fbgemm"
-      ]
-    },
-    "fftw3": {
-      "description": "Build with FFTW (Fastest Fourier Transform in the West)",
-      "dependencies": [
-        "fftw3"
       ]
     },
     "leveldb": {
@@ -86,22 +77,10 @@
         "snappy"
       ]
     },
-    "mkl": {
-      "description": "BLAS with Intel MKL and MKLDNN (x86, x86_64, and AArch64)",
-      "dependencies": [
-        "intel-mkl"
-      ]
-    },
     "nnpack": {
       "description": "Build with NNPack",
       "dependencies": [
         "nnpack"
-      ]
-    },
-    "opencl": {
-      "description": "Build with OpenCL",
-      "dependencies": [
-        "opencl"
       ]
     },
     "opencv3": {
@@ -109,9 +88,6 @@
       "dependencies": [
         "opencv3"
       ]
-    },
-    "python": {
-      "description": "Build with Python3 + NumPy"
     },
     "qnnpack": {
       "description": "Build with QNNPack",
