@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-InstallPath.patch
         fix-iconv.patch
         export-cmake-targets.patch
+        pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
