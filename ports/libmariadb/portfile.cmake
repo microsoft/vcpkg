@@ -19,7 +19,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES 
-        zlib WITH_EXTERNAL_ZLIB
         iconv WITH_ICONV
 )
 
@@ -36,6 +35,7 @@ vcpkg_cmake_configure(
         -DINSTALL_PLUGINDIR=plugins/${PORT}
         -DWITH_UNIT_TESTS=OFF
         -DWITH_CURL=OFF
+        -DWITH_EXTERNAL_ZLIB=ON
         -DWITH_SSL=${WITH_SSL}
 )
 

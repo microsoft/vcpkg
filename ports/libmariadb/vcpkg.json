@@ -4,8 +4,7 @@
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
   "homepage": "https://github.com/MariaDB/mariadb-connector-c",
   "default-features": [
-    "openssl",
-    "zlib"
+    "openssl"
   ],
   "dependencies": [
     {
@@ -15,7 +14,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "features": {
     "iconv": {
@@ -31,10 +31,7 @@
       ]
     },
     "zlib": {
-      "description": "Use internal zlib",
-      "dependencies": [
-        "zlib"
-      ]
+      "description": "Obsolete. zlib is always used. This feature is left for compatibility."
     }
   }
 }
