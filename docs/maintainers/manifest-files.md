@@ -375,7 +375,8 @@ platform-expression-binary =
 | platform-expression-or ;
 
 platform-expression-keyword =
-  "and" ;
+| "and"
+| "or" (* to allow for future extension *);
 platform-expression-identifier =
   ( ( identifier-character, { identifier-character } ) - platform-expression-keyword ), optional-whitespace ) ;
 
