@@ -5165,7 +5165,7 @@
       "port-version": 0
     },
     "pegtl": {
-      "baseline": "3.2.1",
+      "baseline": "3.2.2",
       "port-version": 0
     },
     "pegtl-2": {
