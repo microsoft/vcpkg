@@ -1938,7 +1938,7 @@
     },
     "eastl": {
       "baseline": "3.18.00",
-      "port-version": 0
+      "port-version": 1
     },
     "easycl": {
       "baseline": "0.3",
@@ -2133,8 +2133,8 @@
       "port-version": 5
     },
     "ffmpeg": {
-      "baseline": "4.4",
-      "port-version": 18
+      "baseline": "4.4.1",
+      "port-version": 0
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -3007,6 +3007,10 @@
     "kd-soap": {
       "baseline": "1.9.0",
       "port-version": 1
+    },
+    "kdbindings": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "kealib": {
       "baseline": "1.4.14",
@@ -4861,8 +4865,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.5.0",
-      "port-version": 3
+      "baseline": "7.6.0",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -5121,7 +5125,7 @@
       "port-version": 5
     },
     "pcapplusplus": {
-      "baseline": "21.05",
+      "baseline": "21.11",
       "port-version": 0
     },
     "pcg": {
@@ -5254,7 +5258,7 @@
     },
     "plplot": {
       "baseline": "5.13.0",
-      "port-version": 11
+      "port-version": 12
     },
     "plustache": {
       "baseline": "0.4.0",
@@ -5422,7 +5426,7 @@
     },
     "python3": {
       "baseline": "3.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "qca": {
       "baseline": "2.3.1",
@@ -7054,7 +7058,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
