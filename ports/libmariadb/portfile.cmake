@@ -44,6 +44,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DINSTALL_INCLUDEDIR=include/mysql  # legacy port decisiong
+        -DINSTALL_LIBDIR=lib
         -DINSTALL_PLUGINDIR=plugins/${PORT}
         -DWITH_UNIT_TESTS=OFF
         -DWITH_CURL=OFF
@@ -58,15 +60,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# copy & remove header files
-file(REMOVE
-    "${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in"
-    "${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in"
-    "${CURRENT_PACKAGES_DIR}/include/mariadb/CMakeLists.txt"
-    "${CURRENT_PACKAGES_DIR}/include/mariadb/Makefile.am"
-)
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/mariadb" "${CURRENT_PACKAGES_DIR}/include/mysql")
 
 # copy license file
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
