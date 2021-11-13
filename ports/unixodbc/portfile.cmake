@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
 )
@@ -18,6 +18,7 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -30,5 +31,5 @@ file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/etc"
      "${CURRENT_PACKAGES_DIR}/share/man"
      )
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -278,6 +278,9 @@ else()
     else()
         list(APPEND BUILD_OPTS --without-readline)
     endif()
+    if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
+        list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         COPY_SOURCE
@@ -329,3 +332,4 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_fixup_pkgconfig()
