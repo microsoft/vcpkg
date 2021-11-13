@@ -3721,7 +3721,7 @@
       "port-version": 1
     },
     "libosmium": {
-      "baseline": "2.17.0",
+      "baseline": "2.17.1",
       "port-version": 0
     },
     "libosmscout": {
