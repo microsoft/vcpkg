@@ -4269,8 +4269,8 @@
       "port-version": 5
     },
     "matroska": {
-      "baseline": "1.6.2",
-      "port-version": 1
+      "baseline": "1.6.3",
+      "port-version": 0
     },
     "mbedtls": {
       "baseline": "2.24.0",
