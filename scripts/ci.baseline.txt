@@ -336,8 +336,6 @@ gainput:x64-uwp=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
-geos:arm-uwp=fail
-geos:x64-uwp=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -529,8 +527,6 @@ libcds:arm-uwp=fail
 libcds:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
-libgeotiff:arm-uwp=fail
-libgeotiff:x64-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
@@ -691,6 +687,8 @@ libressl:x86-windows        = skip
 libsoundio:arm64-windows=fail
 libsoundio:arm-uwp=fail
 libsoundio:x64-uwp=fail
+libspatialite:arm-uwp=fail
+libspatialite:x64-uwp=fail
 libsrt:arm-uwp=fail
 libsrt:x64-uwp=fail
 libssh:arm64-windows=fail
@@ -1029,9 +1027,6 @@ ogre-next:x64-windows        = skip
 ogre-next:x64-windows-static = skip
 ogre-next:x64-windows-static-md=skip
 ogre-next:x86-windows        = skip
-ois:arm64-windows=fail
-ois:arm-uwp=fail
-ois:x64-uwp=fail
 # ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
 # does not resolve the issue
 # src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
