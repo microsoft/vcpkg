@@ -10,7 +10,7 @@ index c109a20..e1fa3f1 100644
  
  TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE ${SYSTEM_LIBS})
  
-@@ -453,13 +454,25 @@ ENDIF()
+@@ -453,13 +454,30 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
@@ -23,12 +23,17 @@ index c109a20..e1fa3f1 100644
          LIBRARY DESTINATION lib
          ARCHIVE DESTINATION lib)
  
-+install(EXPORT unofficial-libmariadb-targets DESTINATION share/unofficial-libmariadb)
++install(EXPORT unofficial-libmariadb-targets
++    NAMESPACE unofficial::
++    DESTINATION share/unofficial-libmariadb
++)
 +
 +file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake"
 +[[include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)
-+find_dependency(OpenSSL)
++if("]] "${WITH_SSL}" [[" STREQUAL "OPENSSL")
++    find_dependency(OpenSSL)
++endif()
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libmariadb-targets.cmake")
 +]])
 +
