@@ -29,9 +29,8 @@ else()
     set(WITH_SSL OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DINSTALL_PLUGINDIR=plugin/${PORT}
@@ -40,23 +39,13 @@ vcpkg_configure_cmake(
         -DWITH_SSL=${WITH_SSL}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
 
 vcpkg_fixup_pkgconfig()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    # remove debug header
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-endif()
-
-if(VCPKG_BUILD_TYPE STREQUAL "debug")
-    # move headers
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/include
-        ${CURRENT_PACKAGES_DIR}/include)
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES mariadb_config AUTO_CLEAN)
@@ -64,18 +53,18 @@ endif()
 
 # remove plugin folder
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/lib/mariadb
-    ${CURRENT_PACKAGES_DIR}/debug/lib/mariadb)
+    "${CURRENT_PACKAGES_DIR}/lib/mariadb"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/mariadb"
+)
 
 # copy & remove header files
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in
-    ${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in
-    ${CURRENT_PACKAGES_DIR}/include/mariadb/CMakeLists.txt
-    ${CURRENT_PACKAGES_DIR}/include/mariadb/Makefile.am)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/include/mariadb
-    ${CURRENT_PACKAGES_DIR}/include/mysql)
+    "${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in"
+    "${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in"
+    "${CURRENT_PACKAGES_DIR}/include/mariadb/CMakeLists.txt"
+    "${CURRENT_PACKAGES_DIR}/include/mariadb/Makefile.am"
+)
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/mariadb" "${CURRENT_PACKAGES_DIR}/include/mysql")
 
 # copy license file
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
