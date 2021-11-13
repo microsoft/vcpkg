@@ -3,7 +3,7 @@ index c109a20..e1fa3f1 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
 @@ -405,6 +405,7 @@ ELSE()
-   TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE mariadbclient)
+   ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
  ENDIF()
 +TARGET_INCLUDE_DIRECTORIES(libmariadb PUBLIC $<INSTALL_INTERFACE:include/mysql>)

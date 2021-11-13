@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
-    REF 7d304d26c787a3f0430624db977b615aba56e4bb # v3.1.12
-    SHA512 16e74b2cbe401492ef294e2442a00ef1739089152a88d9263ca4d17b65260554b330630e9405813fd9089fa445d676e3b6aa91ac94128ad6b0a299e8b7edc1b3
+    REF b2bb1b213c79169b7c994a99f21f47f11be465d4 # v3.1.15
+    SHA512 51ebd2e9fd505eebc7691c60fe0b86cfc5368f8b370fba6c3ec8f5514319ef1e0de4910ad5e093cd7d5e5c7782120e22e8c85c94af9389fa4e240cedf012d755
     HEAD_REF 3.1
     PATCHES
         arm64.patch
@@ -15,7 +15,6 @@ vcpkg_from_github(
         fix-InstallPath.patch
         fix-iconv.patch
         export-cmake-targets.patch
-        fix-build-error-with-cmake3.20.patch #This can be removed in next release, which has been merged to upstream.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
