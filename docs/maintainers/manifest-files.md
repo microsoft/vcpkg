@@ -366,16 +366,18 @@ identifier-character =
 | digit ;
 
 platform-expression =
-| platform-expression-not-or-binary
+| platform-expression-binary
 | platform-expression-alternate (* comma-style or *) ;
 
-platform-expression-not-or-binary =
+platform-expression-binary =
 | platform-expression-not
 | platform-expression-and
 | platform-expression-or ;
 
+platform-expression-keyword =
+  "and" ;
 platform-expression-identifier =
-| identifier-character, { identifier-character }, optional-whitespace ;
+  ( ( identifier-character, { identifier-character } ) - platform-expression-keyword ), optional-whitespace ) ;
 
 platform-expression-simple =
 | platform-expression-identifier
@@ -386,14 +388,13 @@ platform-expression-not =
 | "!", optional-whitespace, platform-expression-simple ;
 
 platform-expression-and =
-| platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
-| platform-expression-not, { "and", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { ( "&" | "and" ), optional-whitespace, platform-expression-not }
 
 platform-expression-or =
 | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
 
 platform-expression-alternate =
-| platform-expression-not-or-binary, { ",", optional-whitespace, platform-expression-not-or-binary }, 
+| platform-expression-binary, { ",", optional-whitespace, platform-expression-binary }, 
 
 top-level-platform-expression = optional-whitespace, platform-expression ;
 ```
