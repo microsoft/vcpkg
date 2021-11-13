@@ -57,14 +57,8 @@ endif()
 
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND FEATURE_OPTIONS -DBLAS=Accelerate) # Accelerate.framework will be used for Apple platforms
-elseif("eigen3" IN_LIST FEATURES AND "mkl" IN_LIST FEATURES)
-    message(FATAL_ERROR "'eigen3' and 'mkl' feature can't be used together")
-elseif("eigen3" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DBLAS=Eigen)
-elseif("mkl" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DBLAS=MKL)
 else()
-    message(FATAL_ERROR "One of 'eigen3' or 'mkl' feature must be used for BLAS")
+    list(APPEND FEATURE_OPTIONS -DBLAS=Eigen)
 endif()
 
 if("tbb" IN_LIST FEATURES)
@@ -114,7 +108,7 @@ vcpkg_cmake_configure(
         -DUSE_BREAKPAD=OFF
         -DUSE_FFTW=OFF
         -DCAFFE2_USE_EIGEN_FOR_BLAS=ON
-        # BLAS=MKL
+        # BLAS=MKL not supported
         -DUSE_MKLDNN=OFF
         -DUSE_MKLDNN_CBLAS=OFF
         -DCAFFE2_USE_MKL=OFF
