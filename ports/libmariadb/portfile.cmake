@@ -33,7 +33,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DINSTALL_PLUGINDIR=plugin/${PORT}
+        -DINSTALL_PLUGINDIR=plugins/${PORT}
         -DWITH_UNIT_TESTS=OFF
         -DWITH_CURL=OFF
         -DWITH_SSL=${WITH_SSL}
@@ -50,12 +50,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES mariadb_config AUTO_CLEAN)
 endif()
-
-# remove plugin folder
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/lib/mariadb"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/mariadb"
-)
 
 # copy & remove header files
 file(REMOVE
