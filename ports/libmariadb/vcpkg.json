@@ -3,6 +3,7 @@
   "version-semver": "3.1.15",
   "description": "MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases",
   "homepage": "https://github.com/MariaDB/mariadb-connector-c",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
