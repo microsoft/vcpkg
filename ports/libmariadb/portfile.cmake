@@ -2,6 +2,15 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
+string(REGEX MATCHALL "openssl|schannel" ssl_backends ${FEATURES})
+if(ssl_backends MATCHES ";")
+    message(FATAL_ERROR "Only one SSL backend must be selected.")
+endif()
+
+if("schannel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature schannel not supported on non-Windows platforms.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
@@ -25,6 +34,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("openssl" IN_LIST FEATURES)
     set(WITH_SSL OPENSSL)
+elseif("schannel" IN_LIST FEATURES)
+    set(WITH_SSL ON)
 else()
     set(WITH_SSL OFF)
 endif()

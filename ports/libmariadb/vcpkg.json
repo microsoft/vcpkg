@@ -16,7 +16,7 @@
     "zlib"
   ],
   "default-features": [
-    "openssl"
+    "ssl"
   ],
   "features": {
     "iconv": {
@@ -26,9 +26,33 @@
       ]
     },
     "openssl": {
-      "description": "Enable SSL support",
+      "description": "SSL support (OpenSSL)",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "schannel": {
+      "description": "SSL support (Secure Channel)"
+    },
+    "ssl": {
+      "description": "Default SSL backend",
+      "dependencies": [
+        {
+          "name": "libmariadb",
+          "default-features": false,
+          "features": [
+            "schannel"
+          ],
+          "platform": "windows | mingw"
+        },
+        {
+          "name": "libmariadb",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !mingw"
+        }
       ]
     },
     "zlib": {
