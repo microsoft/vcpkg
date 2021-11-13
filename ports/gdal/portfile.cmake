@@ -20,6 +20,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
+# `vcpkg clean` stumbles over one subdir
+file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
@@ -200,7 +202,6 @@ else()
         set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
     endfunction()
     # parameters in the same order as the dependencies in vcpkg.json
-    add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
     add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
     add_config("--with-expat=yes"    "Expat support:             yes")
     add_config("--with-geos=yes"     "GEOS support:              yes")
@@ -242,6 +243,12 @@ else()
         add_config("--with-mysql=yes"  "MySQL support:             yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
         add_config("--with-mysql=no"   "MySQL support:             no")
+    endif()
+
+    if ("cfitsio" IN_LIST FEATURES)
+        add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-cfitsio=no"   "CFITSIO support:           no")
     endif()
 
     if(DISABLE_SYSTEM_LIBRARIES)

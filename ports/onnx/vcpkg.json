@@ -1,11 +1,9 @@
 {
   "name": "onnx",
-  "version-semver": "1.9.0",
-  "port-version": 1,
+  "version-semver": "1.10.1",
   "description": "Open standard for machine learning interoperability",
   "homepage": "https://onnx.ai",
-  "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & static",
   "dependencies": [
     "protobuf",
     {

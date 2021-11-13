@@ -1,6 +1,7 @@
 {
   "name": "libkeyfinder",
   "version-string": "2.2.5",
+  "port-version": 1,
   "description": "Musical key detection for digital audio",
   "homepage": "https://github.com/mixxxdj/libkeyfinder",
   "license": "GPL-3.0-or-later",
