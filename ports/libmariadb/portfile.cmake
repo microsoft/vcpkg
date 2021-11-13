@@ -48,10 +48,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_copy_tools(TOOL_NAMES mariadb_config AUTO_CLEAN)
-endif()
-
 # copy & remove header files
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in"

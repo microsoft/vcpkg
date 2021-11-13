@@ -1,5 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0be0fb1..33565f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -393,7 +393,7 @@ ENDIF()
+ INCLUDE(${CC_SOURCE_DIR}/plugins/CMakeLists.txt)
+ ADD_SUBDIRECTORY(include)
+ ADD_SUBDIRECTORY(libmariadb)
+-IF(NOT WIN32)
++IF(1)
+   ADD_SUBDIRECTORY(mariadb_config)
+ ENDIF()
+ 
 diff --git a/mariadb_config/CMakeLists.txt b/mariadb_config/CMakeLists.txt
-index 70e619b..b846682 100644
+index 70e619b..7a22fa1 100644
 --- a/mariadb_config/CMakeLists.txt
 +++ b/mariadb_config/CMakeLists.txt
 @@ -30,6 +30,15 @@ IF(${rllength} GREATER 0)
@@ -18,6 +31,22 @@ index 70e619b..b846682 100644
  FOREACH (LIB_NAME ${SYSTEM_LIBS})
    GET_LIB_NAME(${LIB_NAME} LIB_OUT)
    SET(extra_dynamic_LDFLAGS "${extra_dynamic_LDFLAGS} ${LIB_OUT}")
+@@ -50,6 +59,7 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/mariadb_config.c.in
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libmariadb.pc.in
+                ${CMAKE_CURRENT_BINARY_DIR}/libmariadb.pc @ONLY)
+ 
++if(0)
+ ADD_EXECUTABLE(mariadb_config ${CMAKE_CURRENT_BINARY_DIR}/mariadb_config.c)
+ 
+ IF(CMAKE_SYSTEM_NAME MATCHES AIX)
+@@ -61,6 +71,7 @@ ENDIF()
+ INSTALL(TARGETS mariadb_config
+         DESTINATION "bin"
+         COMPONENT Development)
++endif()
+ 
+ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmariadb.pc
+         DESTINATION "${INSTALL_PCDIR}"
 diff --git a/mariadb_config/libmariadb.pc.in b/mariadb_config/libmariadb.pc.in
 index 968181a..3f0410d 100644
 --- a/mariadb_config/libmariadb.pc.in
