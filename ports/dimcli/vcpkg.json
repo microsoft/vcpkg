@@ -1,7 +1,12 @@
 {
   "name": "dimcli",
-  "version-semver": "5.0.2",
-  "port-version": 2,
+  "version-semver": "6.2.0",
   "description": "C++ command line parser toolkit",
-  "homepage": "https://github.com/gknowles/dimcli"
+  "homepage": "https://github.com/gknowles/dimcli",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

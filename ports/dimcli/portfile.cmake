@@ -1,27 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF a4dbb4b1c8a3825fc304bbbad3438dbe1840feae # v5.0.2
-    SHA512 25cc9002fd46856854545934f385d8578f207b1ce01802a172e49e008cdf1db0db11db7cefeef18258b99c13570af9193e83f5826613d8b0a118d7bae3f0d03f
+    REF v6.2.0
+    SHA512 173d28f8d905b423c298afbeb8709b9fe06289f71242202b9d48055b1f3415bcaccb4f1c77d60d827c49829bc6944023cd4c581f1b04a00e947daa945adc81df
     HEAD_REF master
 )
 
-set(staticCrt OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(staticCrt ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LINK_STATIC_RUNTIME)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DLINK_STATIC_RUNTIME:BOOL=${staticCrt}
+        -DLINK_STATIC_RUNTIME:BOOL=${LINK_STATIC_RUNTIME}
         -DINSTALL_LIBS:BOOL=ON
         -DBUILD_PROJECT_NAME=dimcli
+        -DBUILD_TESTING:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Remove includes from ${CMAKE_INSTALL_PREFIX}/debug
+# Remove includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
