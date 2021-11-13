@@ -52,6 +52,10 @@ vcpkg_cmake_configure(
         -DWITH_CURL=OFF
         -DWITH_EXTERNAL_ZLIB=ON
         -DWITH_SSL=${WITH_SSL}
+        -DREMOTEIO_PLUGIN_TYPE=OFF
+        -DAUTH_GSSAPI_PLUGIN_TYPE=OFF
+    MAYBE_UNUSED_VARIABLES
+        AUTH_GSSAPI_PLUGIN_TYPE
 )
 
 vcpkg_cmake_install()
