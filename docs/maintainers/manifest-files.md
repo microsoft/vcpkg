@@ -366,6 +366,10 @@ identifier-character =
 | digit ;
 
 platform-expression =
+| platform-expression-not-or-binary
+| platform-expression-alternate (* comma-style or *) ;
+
+platform-expression-not-or-binary =
 | platform-expression-not
 | platform-expression-and
 | platform-expression-or ;
@@ -383,17 +387,22 @@ platform-expression-not =
 
 platform-expression-and =
 | platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "and", optional-whitespace, platform-expression-not } ;
 
 platform-expression-or =
 | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
 
+platform-expression-alternate =
+| platform-expression-not-or-binary, { ",", optional-whitespace, platform-expression-not-or-binary }, 
+
 top-level-platform-expression = optional-whitespace, platform-expression ;
 ```
 
-Basically, there are four kinds of expressions -- identifiers, negations, ands, and ors.
+Basically, there are five kinds of expressions -- identifiers, negations, ands, ors, and alternates.
 Negations may only negate an identifier or a grouped expression.
-Ands and ors are a list of `&` or `|` separated identifiers, negated expressions, and grouped expressions.
-One may not mix `&` and `|` without parentheses for grouping.
+Ands and ors are a list of `&`, `and`, or `|` separated identifiers, negated expressions, and grouped expressions.
+One may not mix `&` or `and`, and `|`, without parentheses for grouping; however, `&` and `and` are allowed to be mixed.
+Alternates allow one to describe a set of choices without adding parentheses, in order to support media query syntax.
 
 These predefined identifier expressions are computed from standard triplet settings:
 - `native` - `TARGET_TRIPLET` == `HOST_TRIPLET`;
@@ -401,6 +410,7 @@ These predefined identifier expressions are computed from standard triplet setti
 - `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
+- `arm32` = `VCPKG_TARGET_ARCHITECTURE` == `"arm"`
 - `arm64` - `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
 - `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` or `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
 - `mingw` - `VCPKG_CMAKE_SYSTEM_NAME` == `"MinGW"`
@@ -422,11 +432,22 @@ This field is optional and defaults to true.
 
 [EBNF]: https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form
 
-#### Example:
+#### Examples
 ```json
 {
-  "supports": "!uwp & !(arm & !arm64)"
+  "supports": "!uwp & !arm32"
 }
 ```
 
-This means "doesn't support uwp, nor arm32 (but does support arm64)".
+This means "doesn't support uwp, nor arm32".
+
+```json
+{
+  "supports": "(uwp | osx) & arm64, ((windows & !uwp) | linux | osx) & x64, emscripten & wasm32"
+}
+```
+
+This means "supports the following platforms":
+- uwp or osx on arm64
+- non-uwp windows, linux, and osx on x64
+- and emscripten on wasm32
