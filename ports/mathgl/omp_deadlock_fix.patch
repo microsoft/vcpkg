@@ -1,0 +1,12 @@
+--- a/src/font.cpp	2019-03-14 14:16:47.000000000 +0800
++++ b/src/font.cpp	2021-11-14 17:37:04.109018600 +0800
+@@ -731,7 +731,9 @@
+ //-----------------------------------------------------------------------------
+ void mglFont::FillY12()
+ {
++#ifndef WIN32	// win32 don't initialized threads before main()
+ #pragma omp parallel
++#endif
+ 	for(long i=0;i<long(glyphs.size());i++)
+ 	{
+ 		for(int s=0;s<4;s++)

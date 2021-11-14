@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
     PATCHES
         type_fix.patch
         fix_cmakelists_and_cpp.patch
+        omp_deadlock_fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
