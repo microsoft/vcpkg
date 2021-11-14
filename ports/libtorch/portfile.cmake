@@ -12,6 +12,30 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+# run `pip install ${package}`
+function(vcpkg_pip_install)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "PACKAGE" "INSTALL_OPTIONS")
+    if(NOT DEFINED Python3_EXECUTABLE)
+        message(FATAL_ERROR "Undefined: Python3_EXECUTABLE")
+    endif()
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} -m pip install ${arg_PACKAGE} ${arg_INSTALL_OPTIONS}
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+        OUTPUT_FILE install-${arg_PACKAGE}-out.log
+        ERROR_FILE  install-${arg_PACKAGE}-err.log
+        RESULT_VARIABLE INSTALL_RETURN_CODE
+        COMMAND_ECHO NONE
+        ENCODING UTF-8
+    )
+    if(INSTALL_RETURN_CODE) # non-zero means failure
+        message(FATAL_ERROR "PIP install failed. Check ${CURRENT_BUILDTREES_DIR}/install-${arg_PACKAGE}-err.log")
+    endif()
+endfunction()
+vcpkg_pip_install(PACKAGE typing-extensions)
+vcpkg_pip_install(PACKAGE pyyaml)
+
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake DESTINATION ${SOURCE_PATH}/cmake)
 
