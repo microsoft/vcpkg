@@ -8,17 +8,13 @@ vcpkg_from_github(
         fix-ios-build.patch
 )
 
-if(MSVC)
-    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
-
-    set(EXTRA_ARGS "-DSTATIC_CRT=${STATIC_CRT}")
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        ${EXTRA_ARGS}
+        "-DSTATIC_CRT=${STATIC_CRT}"
         -DBUILD_DEPS=OFF
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
