@@ -1,8 +1,9 @@
 {
   "name": "fontconfig",
   "version": "2.13.94",
+  "port-version": 1
   "description": "Library for configuring and customizing font access.",
-  "homepage": "https://www.freedesktop.org/software/fontconfig/front.html",
+  "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "dependencies": [
     "dirent",
     "expat",
