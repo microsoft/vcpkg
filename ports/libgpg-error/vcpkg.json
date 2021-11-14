@@ -1,7 +1,6 @@
 {
   "name": "libgpg-error",
-  "version": "1.42",
-  "port-version": 4,
+  "version": "1.43",
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
   "dependencies": [

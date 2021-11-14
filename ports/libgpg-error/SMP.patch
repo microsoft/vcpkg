@@ -265,7 +265,7 @@ index e4b7e40..e0c28b6 100644
  
  
 diff --git a/src/mkheader.c b/src/mkheader.c
-index 77826da..eb6ac32 100644
+index 77826da..7267473 100644
 --- a/src/mkheader.c
 +++ b/src/mkheader.c
 @@ -16,7 +16,12 @@
@@ -524,9 +524,9 @@ index 4cce17f..c224625 100644
 +#   endif
 +#endif
 +
- /* Return a pointer to a string containing a description of the error
-    code in the error value ERR.  This function is not thread-safe.  */
- const char *
+ #if defined(ENABLE_NLS) && defined(HAVE_LANGINFO_CODESET)
+ #include <langinfo.h>
+ #endif
 diff --git a/src/sysutils.c b/src/sysutils.c
 index 8f70a66..024802c 100644
 --- a/src/sysutils.c
@@ -625,6 +625,68 @@ index 5bb1bcf..d1f1b71 100644
  
  /* Enable tracing.  The value is the module name to be printed.  */
  /*#define ENABLE_TRACING "estream" */
+diff --git a/src/w32-gettext.c b/src/w32-gettext.c
+index 7c4c9b0..1f4e82e 100644
+--- a/src/w32-gettext.c
++++ b/src/w32-gettext.c
+@@ -649,7 +649,11 @@ my_nl_locale_name (const char *categoryname)
+         return retval;
+ 
+       /* Use native Win32 API locale ID.  */
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++      lcid = LOCALE_USER_DEFAULT;
++#else
+       lcid = GetThreadLocale ();
++#endif
+       /* Strip off the sorting rules, keep only the language part.  */
+       langid = LANGIDFROMLCID (lcid);
+     }
+@@ -1216,14 +1220,23 @@ load_domain (const char *filename)
+     if (!wfilename)
+       fh = INVALID_HANDLE_VALUE;
+     else
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++      fh = CreateFile2 (wfilename, GENERIC_READ, FILE_SHARE_WRITE, OPEN_EXISTING, NULL);
++#else
+       fh = CreateFileW (wfilename, GENERIC_READ, FILE_SHARE_WRITE, NULL,
+                         OPEN_EXISTING, 0, NULL);
++#endif
+     xfree (wfilename);
++    if (fh == INVALID_HANDLE_VALUE)
++        return NULL;
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++    WIN32_FILE_ATTRIBUTE_DATA fileinfo;
++    GetFileAttributesEx(wfilename, GetFileExInfoStandard, &fileinfo);
++    size = fileinfo.nFileSizeHigh;
++#else
++    size = GetFileSize(fh, NULL);
++#endif
+   }
+-  if (fh == INVALID_HANDLE_VALUE)
+-    return NULL;
+-
+-  size = GetFileSize (fh, NULL);
+   if (size == INVALID_FILE_SIZE)
+     {
+       CloseHandle (fh);
+@@ -1425,6 +1438,9 @@ wchar_to_cp (const wchar_t *string, size_t length, size_t *retlen,
+ static char *
+ wchar_to_native (const wchar_t *string, size_t length, size_t *retlen)
+ {
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PC_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
++  unsigned int cpno = CP_ACP;
++#else
+   unsigned int cpno = GetConsoleOutputCP ();
+ 
+   /* GetConsoleOutputCP returns the 8-Bit codepage that should be used
+@@ -1432,6 +1448,7 @@ wchar_to_native (const wchar_t *string, size_t length, size_t *retlen)
+      to the codepage GUI programs should use (CP_ACP). */
+   if (!cpno)
+     cpno = GetACP ();
++#endif
+ 
+   return wchar_to_cp (string, length, retlen, cpno);
+ }
 diff --git a/src/w32-iconv.c b/src/w32-iconv.c
 index 888b722..faad56b 100644
 --- a/src/w32-iconv.c
