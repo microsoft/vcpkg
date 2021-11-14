@@ -22,14 +22,15 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig() 
-vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-error.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/gpg-errord.lib")
     endif()
 endif()
+
+vcpkg_fixup_pkgconfig() 
+vcpkg_copy_pdbs()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgpg-error/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
