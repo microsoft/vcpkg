@@ -3849,8 +3849,8 @@
       "port-version": 0
     },
     "libsigcpp": {
-      "baseline": "3.0.3",
-      "port-version": 1
+      "baseline": "3.0.7",
+      "port-version": 0
     },
     "libsigcpp-3": {
       "baseline": "3.0.3",
