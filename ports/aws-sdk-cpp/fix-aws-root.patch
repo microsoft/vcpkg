@@ -1,0 +1,16 @@
+diff --git a/cmake/AWSSDKConfig.cmake b/cmake/AWSSDKConfig.cmake
+index 83eac0b..96bdbe7 100644
+--- a/cmake/AWSSDKConfig.cmake
++++ b/cmake/AWSSDKConfig.cmake
+@@ -63,11 +63,9 @@ endif()
+ 
+ 
+ # Compute the default installation root relative to this file.
+-# from prefix/lib/cmake/AWSSDK/xx.cmake to prefix
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+-get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+ get_filename_component(AWS_NATIVE_SDK_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
+ 
+ set(CPP_STANDARD "11" CACHE STRING "Flag to upgrade the C++ standard used. The default is 11. The minimum is 11.")

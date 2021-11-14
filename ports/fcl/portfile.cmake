@@ -3,16 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flexible-collision-library/fcl
-    REF 97455a46de121fb7c0f749e21a58b1b54cd2c6be # 0.6.1
-    SHA512 1ed1f43866a2da045fcb82ec54a7812c3fc46306386bc04ccf33b5e169773743b2985997373a63bf480098a321600321fdf5061b1448b48e993cf92cad032891
+    REF 0.7.0
+    SHA512 95612476f4706fcd60812204ec7495a956c4e318cc6ace9526ac93dc765605ddf73b2d0d9ff9f4c9c739e43c5f8e24670113c86e02868a2949ab234c3bf82374
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(FCL_STATIC_LIBRARY ON)
-else()
-    set(FCL_STATIC_LIBRARY OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FCL_STATIC_LIBRARY)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(FCL_USE_X64_SSE ON)
@@ -20,24 +16,26 @@ else()
     set(FCL_USE_X64_SSE OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         -DFCL_STATIC_LIBRARY=${FCL_STATIC_LIBRARY}
         -DFCL_BUILD_TESTS=OFF
         -DFCL_USE_X64_SSE=${FCL_USE_X64_SSE}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fcl)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fcl)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

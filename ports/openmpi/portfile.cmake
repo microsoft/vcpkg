@@ -34,6 +34,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make(DISABLE_PARALLEL)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -431,4 +431,9 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   # Handle copyright
   file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
 endif()
+
+vcpkg_fixup_pkgconfig()
