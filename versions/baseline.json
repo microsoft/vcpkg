@@ -5829,8 +5829,8 @@
       "port-version": 4
     },
     "rang": {
-      "baseline": "3.1.0",
-      "port-version": 1
+      "baseline": "3.2",
+      "port-version": 0
     },
     "range-v3": {
       "baseline": "0.11.0",
