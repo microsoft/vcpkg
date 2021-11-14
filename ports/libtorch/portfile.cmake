@@ -115,9 +115,9 @@ vcpkg_cmake_configure(
         -DUSE_NUMA=${VCPKG_TARGET_IS_LINUX} # Linux package `libnuma-dev`
         -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX}
         -DUSE_MPI=${VCPKG_TARGET_IS_LINUX} # Linux package `libopenmpi-dev`
-        -DUSE_METAL=${VCPKG_TARGET_IS_OSX}
-        -DUSE_PYTORCH_METAL=${VCPKG_TARGET_IS_OSX}
-        -DUSE_PYTORCH_METAL_EXPORT=${VCPKG_TARGET_IS_OSX}
+        -DUSE_METAL=OFF
+        -DUSE_PYTORCH_METAL=OFF
+        -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_BLAS=ON # Eigen, MKL, or Accelerate
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON
