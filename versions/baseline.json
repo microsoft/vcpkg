@@ -3181,7 +3181,7 @@
       "port-version": 3
     },
     "kissfft": {
-      "baseline": "2020-03-30",
+      "baseline": "2021-11-14",
       "port-version": 1
     },
     "klein": {
