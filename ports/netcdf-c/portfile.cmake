@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-linkage-error.patch
         fix-pkgconfig.patch
         fix-manpage-msys.patch
+        fix-dependency-libzip.patch
 )
 
 #Remove outdated find modules
@@ -36,8 +37,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         nczarr-s3     ENABLE_NCZARR_S3
         nczarr-zip    ENABLE_NCZARR_ZIP
         tools     BUILD_UTILITIES
-    INVERTED_FEATURES
-        nczarr-zip    CMAKE_DISABLE_FIND_PACKAGE_Zip
     )
 
 if(NOT ENABLE_DAP AND NOT ENABLE_NCZARR)
