@@ -201,6 +201,32 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
+        #If there is a release lib path without an immediate guarding expression, it is usually an error.
+        if(NOT DEFINED VCPKG_BUILD_TYPE AND NOT "${VCPKG_CMAKE_CONFIG_NO_LIB_PATH_CHECK}")
+            set(message_type FATAL_ERROR)
+        else()
+            set(message_type WARNING)
+        endif()
+        set(unprocessed "${contents}")
+        set(processed "")
+        while(unprocessed)
+            string(SUBSTRING "${unprocessed}" 1 -1 to_check)
+            string(FIND ":${to_check}" "${CURRENT_INSTALLED_DIR}/lib/" pos)
+            if(pos EQUAL -1)
+                break()
+            endif()
+            string(SUBSTRING "${unprocessed}" 0 ${pos} prefix)
+            string(APPEND processed "${prefix}")
+            string(SUBSTRING "${unprocessed}" ${pos} -1 unprocessed)
+            string(SUBSTRING "${unprocessed}" 0 50 info)
+            message(STATUS "${main_cmake}:${pos}:${info}")
+            if(NOT prefix MATCHES "(>:|optimized;)\$")
+                string(REGEX REPLACE "^.*\n" "" processed "${processed}")
+                string(REGEX REPLACE "\n.*\$" "" hit "${unprocessed}")
+                message(${message_type} "${main_cmake}: Unguarded release path /lib/ path at [>>>]:\n   ${processed}[>>>]${hit}")
+            endif()
+        endwhile()
+
         #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
         #an imported target for it. We could add more logic here to identify defect target files.
