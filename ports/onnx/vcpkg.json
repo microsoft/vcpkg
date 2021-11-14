@@ -11,6 +11,10 @@
       "host": true
     },
     {
+      "name": "python3",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -20,11 +24,11 @@
     }
   ],
   "features": {
-    "protobuf-lite": {
-      "description": "Use lite protobuf instead of full"
-    },
     "pybind11": {
-      "description": "Build Python binaries"
+      "description": "Build Python binaries",
+      "dependencies": [
+        "pybind11"
+      ]
     }
   }
 }

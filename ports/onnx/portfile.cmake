@@ -1,5 +1,6 @@
 # uwp: LOAD_LIBRARY_SEARCH_DEFAULT_DIRS undefined identifier
 vcpkg_fail_port_install(ON_TARGET "uwp")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,9 +9,15 @@ vcpkg_from_github(
     SHA512 927b6d74dcf41b62c1290674cebb8e6c054acf101214352a0c5414d9b2eafa2d1e144f4d361452cd7494fb228e26c2ce2676fb1212aff1eeb3f889dc2faf5438
     PATCHES
         fix-cmakelists.patch
+        wrap-onnxifi-targets.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
+    list(APPEND PLATFORM_OPTIONS
+        -DONNX_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
+    )
+endif()
 
 # ONNX_USE_PROTOBUF_SHARED_LIBS: find the library and check its file extension
 find_library(PROTOBUF_LIBPATH NAMES protobuf PATHS "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/lib" REQUIRED)
@@ -23,8 +30,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        pybind11      BUILD_ONNX_PYTHON
-        protobuf-lite ONNX_USE_LITE_PROTO
+        pybind11 BUILD_ONNX_PYTHON
 )
 
 # Like protoc, python is required for codegen.
@@ -44,16 +50,15 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
+        ${FEATURE_OPTIONS} ${PLATFORM_OPTIONS}
         -DPython3_EXECUTABLE=${PYTHON3}
         -DONNX_ML=ON
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED}
-        -DONNX_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
+        -DONNX_USE_LITE_PROTO=OFF
+        -DONNXIFI_ENABLE_EXT=OFF
         -DONNX_BUILD_TESTS=OFF
         -DONNX_BUILD_BENCHMARKS=OFF
-    MAYBE_UNUSED_VARIABLES
-        ONNX_USE_MSVC_STATIC_RUNTIME
 )
 
 if("pybind11" IN_LIST FEATURES)
