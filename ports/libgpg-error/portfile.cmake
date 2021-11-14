@@ -2,11 +2,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set (PATCHES SMP.patch msvc.patch)
 endif()
 
-vcpkg_from_github(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/libgpg-error
-    REF libgpg-error-1.42
-    SHA512 f5a1c1874ac1dee36ee01504f1ab0146506aa7af810879e192eac17a31ec81945fe850953ea1c57188590c023ce3ff195c7cab62af486b731fa1534546d66ba3
+    URL git://git.gnupg.org/libgpg-error.git
+    FETCH_REF libgpg-error-1.43
+    REF d7fb04832a71a2c1509d45027798f184ca274f8d # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgpg-error.git;a=tag;h=refs/tags/libgpg-error-1.43
     HEAD_REF master
     PATCHES ${PATCHES}
 )
