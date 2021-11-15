@@ -26,6 +26,7 @@ vcpkg_from_github(
         export-cmake-targets.patch
         pkgconfig.patch
         no-extra-static-lib.patch
+        fix-openssl.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
