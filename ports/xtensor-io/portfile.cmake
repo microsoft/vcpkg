@@ -20,6 +20,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+foreach(bit "64" "32" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xtensor-io/xtensor_io_config.hpp" "#pragma cling add_library_path(\"${CURRENT_PACKAGES_DIR}/lib${bit}\")" "")
+endforeach()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

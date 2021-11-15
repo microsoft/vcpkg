@@ -1,12 +1,10 @@
 {
   "name": "gdal",
-  "version-semver": "3.2.2",
-  "port-version": 5,
+  "version-semver": "3.4.0",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!arm",
+  "supports": "!(arm & windows)",
   "dependencies": [
-    "cfitsio",
     "curl",
     "expat",
     "geos",
@@ -14,7 +12,7 @@
     "hdf5",
     {
       "name": "json-c",
-      "platform": "!windows"
+      "platform": "!windows | mingw"
     },
     "libgeotiff",
     "libjpeg-turbo",
@@ -32,6 +30,12 @@
     "zstd"
   ],
   "features": {
+    "cfitsio": {
+      "description": "Enable cfitsio support",
+      "dependencies": [
+        "cfitsio"
+      ]
+    },
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [

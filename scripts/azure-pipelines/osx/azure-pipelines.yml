@@ -27,9 +27,9 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
-  - group: osx-binary-caching-credentials
-  - name: BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-url),$(sas)"
+  - group: vcpkg-binary-caching-credentials
+  - name: X_VCPKG_BINARY_SOURCE_STUB
+    value: "x-azblob,$(root-bin-url),$(sas-bin)"
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
@@ -67,7 +67,7 @@ jobs:
       arguments: >
         -Triplet "x64-osx"
         -BuildReason "$(Build.Reason)"
-        -BinarySourceStub "${{ variables.BINARY_SOURCE_STUB }}"
+        -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
         -ArtifactStagingDirectory "$(Build.ArtifactStagingDirectory)"
         ${{ variables.PowershellExtraArguments }}
