@@ -19,7 +19,7 @@ Bash:
 echo "url=https://github.com"$'\n'"path=Microsoft/vcpkg"$'\n'"username=unused"$'\n'"password=$MY_PAT"$'\n' | git credential approve
 ```
 
-## `git config --global http.<uri>.extraheader`
+## Bearer auth
 
 For systems which need bearer auth, you can use `git config`:
 
