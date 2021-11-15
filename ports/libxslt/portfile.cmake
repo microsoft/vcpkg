@@ -5,10 +5,13 @@ vcpkg_download_distfile(
     SHA512 d08a06616d732993f2131826ca06fafc2e9f561cb1edb17eaf2adaf78e276bb03cba92a773143eb939da04781f5b5e0a09b351d8e4622a941de3cb3d11da731c
 )
 
+# Get this value from configure.ac:21
+set(LIBEXSLT_VERSION 0.8.20)
+set(VERSION 1.1.34)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF  v1.1.34
+    REF v${VERSION}
     SHA512 fc57affb236e5f7602ee53c8090a854c6b950d1e6526ae3488bca41d8d421ec70433d88eb227c71c2a61213bc364517bdad907125e36486da1754fe9e460601f
     HEAD_REF master
     PATCHES
@@ -82,9 +85,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS rebuild
     )
 
-    vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
-    vcpkg_copy_pdbs()
-
     # The makefile builds both static and dynamic libraries, so remove the ones we don't want
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
@@ -99,30 +99,42 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     endif()
-else()
-    if(VCPKG_TARGET_IS_OSX)
-      set(LIBICONV "-liconv")
-    else()
-      set(LIBICONV "")
-    endif()
 
+    set(prefix "")
+    set(exec_prefix "")
+    set(libdir "\${prefix}/lib")
+    set(includedir "\${prefix}/include")
+    set(XSLT_INCLUDEDIR "-I\${includedir}")
+    set(XSLT_LIBDIR "-L\${libdir}")
+    set(XSLT_LIBS "-lxslt")
+    set(XSLT_PRIVATE_LIBS "")
+    set(EXSLT_INCLUDEDIR "-I\${includedir}")
+    set(EXSLT_LIBDIR "-L\${libdir}")
+    set(EXSLT_LIBS "-lexslt")
+    set(EXSLT_PRIVATE_LIBS "")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    configure_file("${SOURCE_PATH}/libxslt.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxslt.pc" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxslt.pc" "\nRequires: " "\nRequires: liblzma ")
+    configure_file("${SOURCE_PATH}/libexslt.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libexslt.pc" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libexslt.pc" "\nRequires: " "\nRequires: libxslt ")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(COPY_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
+else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
+            --without-python
+            --without-plugins
             --with-crypto
-            --with-libxml-include-prefix="${CURRENT_INSTALLED_DIR}/include"
         OPTIONS_DEBUG
             --with-mem-debug
             --with-debug
             --with-debugger
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzmad ${LIBICONV}"
-        OPTIONS_RELEASE
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/lib -lxml2 -lz -llzma ${LIBICONV}"
     )
 
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
 
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/xsltConf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xsltConf.sh")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libxslt-plugins" "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt-plugins")
@@ -135,6 +147,10 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
 endif()
+
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
+vcpkg_copy_pdbs()
 
 #
 # Cleanup

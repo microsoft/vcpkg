@@ -7,6 +7,11 @@
   "supports": "!uwp",
   "dependencies": [
     "liblzma",
-    "libxml2"
+    "libxml2",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true,
+      "platform": "!windows"
+    }
   ]
 }
