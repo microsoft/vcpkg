@@ -64,19 +64,6 @@
         }
       ]
     },
-    "nczarr-s3": {
-      "description": "Build with NCZarr S3 support",
-      "dependencies": [
-        "aws-sdk-cpp",
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "nczarr"
-          ]
-        }
-      ]
-    },
     "nczarr-zip": {
       "description": "Build with NCZarr ZIP support",
       "dependencies": [

@@ -34,7 +34,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         netcdf-4  ENABLE_NETCDF_4
         hdf5      ENABLE_HDF5
         nczarr    ENABLE_NCZARR
-        nczarr-s3     ENABLE_NCZARR_S3
         nczarr-zip    ENABLE_NCZARR_ZIP
         tools     BUILD_UTILITIES
     )
