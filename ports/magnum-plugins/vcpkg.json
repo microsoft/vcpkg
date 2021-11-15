@@ -58,7 +58,8 @@
           "features": [
             "trade"
           ]
-        }
+        },
+        "zstd"
       ]
     },
     "basisimporter": {
@@ -70,7 +71,8 @@
           "features": [
             "trade"
           ]
-        }
+        },
+        "zstd"
       ]
     },
     "cgltfimporter": {
