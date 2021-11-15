@@ -1,0 +1,13 @@
+{
+  "name": "ptyqt",
+  "version-string": "0.5.5",
+  "port-version": 1,
+  "description": "PtyQt - C++ library for work with PseudoTerminals",
+  "dependencies": [
+    "qt5-base",
+    {
+      "name": "winpty",
+      "platform": "windows"
+    }  
+  ]
+}
