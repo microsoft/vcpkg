@@ -39,8 +39,9 @@ file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: fals
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibMount=ON
 )
 
 vcpkg_cmake_install()
