@@ -12,7 +12,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DDISABLE_PKGCONFIG=1
+    OPTIONS 
+        -DDISABLE_PKGCONFIG=1
 )
 
 vcpkg_cmake_install()
@@ -22,4 +23,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Matroska)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/matroska" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
