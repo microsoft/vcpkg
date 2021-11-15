@@ -1,7 +1,7 @@
 {
-  "name": "qtkeychain",
+  "name": "qtkeychain-qt6",
   "version": "0.13.1",
-  "description": "(Unaffiliated with Qt) Platform-independent Qt5 API for storing passwords securely",
+  "description": "(Unaffiliated with Qt) Platform-independent Qt6 API for storing passwords securely",
   "homepage": "https://github.com/frankosterfeld/qtkeychain",
   "license": "BSD-3-Clause",
   "dependencies": [
@@ -9,7 +9,12 @@
       "name": "libsecret",
       "platform": "!(windows | uwp | osx)"
     },
-    "qt5-tools",
+    {
+      "name": "qttools",
+      "features": [
+        "linguist"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
