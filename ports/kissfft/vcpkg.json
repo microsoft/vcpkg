@@ -1,7 +1,6 @@
 {
   "name": "kissfft",
-  "version-string": "2021-11-14",
-  "port-version": 1,
+  "version-date": "2021-11-14",
   "description": "A Fast Fourier Transform (FFT) library that tries to Keep it Simple, Stupid",
   "homepage": "https://github.com/mborgerding/kissfft",
   "dependencies": [
