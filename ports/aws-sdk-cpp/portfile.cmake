@@ -13,7 +13,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
 set(EXTRA_ARGS)
-if(APPLE)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 elseif (VCPKG_TARGET_IS_ANDROID)
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
