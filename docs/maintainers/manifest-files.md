@@ -365,6 +365,9 @@ identifier-character =
 | lowercase-alpha
 | digit ;
 
+platform-expression-list =
+| platform-expression { ",", optional-whitespace, platform-expression } ;
+
 platform-expression =
 | platform-expression-not
 | platform-expression-and
@@ -380,14 +383,17 @@ platform-expression-simple =
 platform-expression-not =
 | platform-expression-simple
 | "!", optional-whitespace, platform-expression-simple ;
+| "not", optional-whitespace, platform-expression-simple ;
 
 platform-expression-and =
 | platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "and", optional-whitespace, platform-expression-not } ;
 
 platform-expression-or =
 | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "or", optional-whitespace, platform-expression-not } (* to allow for future extension *) ;
 
-top-level-platform-expression = optional-whitespace, platform-expression ;
+top-level-platform-expression = optional-whitespace, platform-expression-list ;
 ```
 
 Basically, there are four kinds of expressions -- identifiers, negations, ands, and ors.
