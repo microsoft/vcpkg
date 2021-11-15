@@ -15,9 +15,9 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "kf5notifications"  CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
-    "kf5wallet"         CMAKE_DISABLE_FIND_PACKAGE_KF5Wallet
+    INVERTED_FEATURES
+        "kf5notifications"  CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
+        "kf5wallet"         CMAKE_DISABLE_FIND_PACKAGE_KF5Wallet
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
