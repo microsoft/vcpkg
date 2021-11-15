@@ -31,6 +31,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES 
         iconv WITH_ICONV
+        mariadbclient VCPKG_MARIADBCLIENT
 )
 
 if("openssl" IN_LIST FEATURES)

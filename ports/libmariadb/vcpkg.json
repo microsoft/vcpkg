@@ -25,6 +25,9 @@
         "libiconv"
       ]
     },
+    "mariadbclient": {
+      "description": "Build the static mariadbclient library"
+    },
     "openssl": {
       "description": "SSL support (OpenSSL)",
       "dependencies": [
