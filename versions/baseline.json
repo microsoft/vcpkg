@@ -6849,8 +6849,8 @@
       "port-version": 1
     },
     "trompeloeil": {
-      "baseline": "38",
-      "port-version": 1
+      "baseline": "41",
+      "port-version": 0
     },
     "tsl-hopscotch-map": {
       "baseline": "2.3.0",
