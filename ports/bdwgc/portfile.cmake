@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ivmai/bdwgc
-    REF 59f15da55961928b05972d386054fb980bdc8cf0 # v8.2.0-20211013
-    SHA512 f6b91f0ad9691d02b04d609d06b9d9aaf30a6e0bb93a5985f9e178128bc3a0b180a3366ecddafab43697fb28c6d0d5e814f99a7bbacad8da4550d3b6ea92bef6
+    REF 5fab1a01931a1a6934ccf1d5eaa1e51f0a8dac4d # v8.2.0-20211115
+    SHA512 b1a97aad10df33bb242985eb48f1bb2d3082d88f26c34014efce3d0f233bcd18a0f43f1bd960600ad9e22bcb19ebf04e573c74dfc1abfb771aa6b8525053c14b
     HEAD_REF master
 )
 
@@ -10,8 +10,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        -Dbuild_cord=OFF
-        -Denable_threads=OFF # TODO: add libatomic_ops package and turn on threads
+        -Denable_cplusplus=ON
+        -DCFLAGS_EXTRA=-I${CURRENT_INSTALLED_DIR}/include # for libatomic_ops
     OPTIONS_DEBUG
         -Dinstall_headers=OFF
 )
