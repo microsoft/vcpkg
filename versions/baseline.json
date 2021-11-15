@@ -2417,8 +2417,8 @@
       "port-version": 5
     },
     "ghc-filesystem": {
-      "baseline": "1.5.4",
-      "port-version": 1
+      "baseline": "1.5.10",
+      "port-version": 0
     },
     "gherkin-c": {
       "baseline": "2019-10-07",
