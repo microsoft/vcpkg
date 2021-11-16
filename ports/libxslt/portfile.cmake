@@ -85,6 +85,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS rebuild
     )
 
+    vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
+
     # The makefile builds both static and dynamic libraries, so remove the ones we don't want
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
@@ -149,7 +151,6 @@ else()
 endif()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 #
