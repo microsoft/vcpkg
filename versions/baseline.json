@@ -4306,7 +4306,7 @@
     },
     "memorymodule": {
       "baseline": "2019-12-31",
-      "port-version": 1
+      "port-version": 2
     },
     "mesa": {
       "baseline": "21.2.0",
