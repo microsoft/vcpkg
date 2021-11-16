@@ -385,28 +385,28 @@ platform-expression-simple =
 | platform-expression-grouped ;
 
 platform-expression-unary-keyword-operand =
-| required-whitespace, platform-expression-simple ;
+| required-whitespace, platform-expression-simple
 | platform-expression-grouped ;
 
 platform-expression-not =
 | platform-expression-simple
-| "!", optional-whitespace, platform-expression-simple ;
+| "!", optional-whitespace, platform-expression-simple
 | "not", platform-expression-unary-keyword-operand ;
 
 platform-expression-binary-keyword-first-operand =
-| platform-expression-not, required-whitespace ;
+| platform-expression-not, required-whitespace
 | platform-expression-grouped ;
 
 platform-expression-binary-keyword-second-operand =
-| required-whitespace, platform-expression-not ;
+| required-whitespace, platform-expression-not
 | platform-expression-grouped ;
 
 platform-expression-and =
-| platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "&", optional-whitespace, platform-expression-not }
 | platform-expression-binary-keyword-first-operand, { "and", platform-expression-binary-keyword-second-operand } ;
 
 platform-expression-or =
-| platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "|", optional-whitespace, platform-expression-not }
 | platform-expression-binary-keyword-first-operand, { "or", platform-expression-binary-keyword-second-operand } (* to allow for future extension *) ;
 
 top-level-platform-expression = optional-whitespace, platform-expression-list ;
