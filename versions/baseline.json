@@ -6797,8 +6797,8 @@
       "port-version": 2
     },
     "tmx": {
-      "baseline": "1.1.0",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "tmxlite": {
       "baseline": "1.3.0",
