@@ -120,7 +120,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/libexslt.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libexslt.pc" @ONLY)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libexslt.pc" "\nRequires: " "\nRequires: libxslt ")
     if(NOT VCPKG_BUILD_TYPE)
-        file(COPY_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(COPY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     endif()
 else()
     vcpkg_configure_make(
