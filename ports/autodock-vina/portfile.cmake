@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ccsb-scripps/AutoDock-Vina
-    REF v1.2.2
-    SHA512 a6117137292b9b77afd3dff4a5ca31c65c9e85edd0b2351795fb2cccc06eca5b865b7dc054bb2859d0cf32abb6f6a72aaf62647e6d53709be879cc12a0336ba8
+    REF v1.2.3
+    SHA512 ea3d3008553665af5fbafa3b4dfe379df257d9c5b957d81a91ec8b92f06a8d0f4c2dfc30b515a64c0bc6dcc70acedfdd498c3bb9a21cac58e43d4da37d2ff606
     HEAD_REF develop
-    PATCHES 
-        01-windows.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
