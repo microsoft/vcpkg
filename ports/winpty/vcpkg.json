@@ -1,7 +1,7 @@
 {
   "name": "winpty",
   "version-string": "0.4.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "winpty is a Windows software package providing an interface similar to a Unix pty-master for communicating with Windows console programs",
   "supports": "windows",
   "dependencies": [

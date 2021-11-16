@@ -1,7 +1,7 @@
 {
   "name": "ptyqt",
   "version-string": "0.6.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "PtyQt - C++ library for work with PseudoTerminals",
   "dependencies": [
     "qt5-base",
