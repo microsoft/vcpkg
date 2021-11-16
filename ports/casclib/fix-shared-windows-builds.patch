@@ -14,7 +14,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 +
  set(LINK_LIBS)
 -find_package(ZLIB)
-+find_package(ZLIB CONFIG REQUIRED)
++find_package(ZLIB REQUIRED)
  if (ZLIB_FOUND)
      set(LINK_LIBS ${LINK_LIBS} ZLIB::ZLIB)
      add_definitions(-DCASC_USE_SYSTEM_ZLIB)
