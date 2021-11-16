@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/APSI
-    REF 7fbeefbd42f4884da95073d40de22ba46fc0f1f5
-    SHA512 dfa4b7571b355646004d5b8823f250b56cda6e84d348a6a013f45fbf5c119e49bda28ac8a75f8ec06738814c50e34e66805994c7bc780ddfd57cc2067ffa745a
+    REF 4e412e6c89a2729a09aa2a998b212dec0fa9a0fc
+    SHA512 8cabe842884a90bd3de5156af964f68efe77c55c1ff773ce3a64a0c4e3380868dd5ee79f4db2033278eba2c7cf5561c225b1625313a7ac89f068218d5cb9f40c
     HEAD_REF main
 )
 
@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "APSI" CONFIG_PATH "lib/cmake/APSI-0.3")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "APSI" CONFIG_PATH "lib/cmake/APSI-0.5")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
