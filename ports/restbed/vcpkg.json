@@ -1,7 +1,8 @@
 {
   "name": "restbed",
-  "version-string": "4.8",
+  "version": "4.8",
   "description": "Corvusoft's Restbed framework brings asynchronous RESTful functionality to C++14 applications.",
+  "homepage": "https://github.com/corvusoft/restbed",
   "dependencies": [
     "asio",
     {
