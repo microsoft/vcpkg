@@ -354,6 +354,7 @@ whitespace-character =
 | ? U+000D "CARRIAGE RETURN" ?
 | ? U+0020 "SPACE" ? ;
 optional-whitespace = { whitespace-character } ;
+required-whitespace = whitespace-character, { optional-whitespace } ;
 
 lowercase-alpha =
 | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
@@ -376,22 +377,37 @@ platform-expression =
 platform-expression-identifier =
 | identifier-character, { identifier-character }, optional-whitespace ;
 
+platform-expression-grouped =
+| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
+
 platform-expression-simple =
 | platform-expression-identifier
-| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
+| platform-expression-grouped ;
+
+platform-expression-unary-keyword-operand =
+| required-whitespace, platform-expression-simple ;
+| platform-expression-grouped ;
 
 platform-expression-not =
 | platform-expression-simple
 | "!", optional-whitespace, platform-expression-simple ;
-| "not", optional-whitespace, platform-expression-simple ;
+| "not", platform-expression-unary-keyword-operand ;
+
+platform-expression-binary-keyword-first-operand =
+| platform-expression-not, required-whitespace ;
+| platform-expression-grouped ;
+
+platform-expression-binary-keyword-second-operand =
+| required-whitespace, platform-expression-not ;
+| platform-expression-grouped ;
 
 platform-expression-and =
 | platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
-| platform-expression-not, { "and", optional-whitespace, platform-expression-not } ;
+| platform-expression-binary-keyword-first-operand, { "and", platform-expression-binary-keyword-second-operand } ;
 
 platform-expression-or =
 | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
-| platform-expression-not, { "or", optional-whitespace, platform-expression-not } (* to allow for future extension *) ;
+| platform-expression-binary-keyword-first-operand, { "or", platform-expression-binary-keyword-second-operand } (* to allow for future extension *) ;
 
 top-level-platform-expression = optional-whitespace, platform-expression-list ;
 ```
