@@ -5885,8 +5885,8 @@
       "port-version": 0
     },
     "re2": {
-      "baseline": "2021-09-01",
-      "port-version": 1
+      "baseline": "2021-11-01",
+      "port-version": 0
     },
     "readerwriterqueue": {
       "baseline": "1.0.5",
