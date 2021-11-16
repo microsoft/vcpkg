@@ -59,7 +59,7 @@ else()
     set(THRIFT_USE_SHARED ${ARROW_DEPENDENCY_USE_SHARED})
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
     OPTIONS
@@ -82,7 +82,7 @@ vcpkg_configure_cmake(
         -DZSTD_MSVC_LIB_PREFIX=
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -90,7 +90,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
