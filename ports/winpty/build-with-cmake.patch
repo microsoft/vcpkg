@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..a416e47
 --- /dev/null
 +++ b/CMakeLists.txt
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,163 @@
 +cmake_minimum_required(VERSION 3.12.0)
 +
 +set(PROJECT_VERSION "0.4.3")
@@ -58,7 +58,7 @@ index 0000000..a416e47
 +    src/shared/winpty_snprintf.h
 +)
 +
-+add_library( winpty STATIC ${WINPTYLIB_SOURCE_FILES} )
++add_library( winpty ${BUILD_TYPE} ${WINPTYLIB_SOURCE_FILES} )
 +
 +#winpty agent executable
 +set(WINPTYAGENT_SOURCE_FILES
@@ -157,7 +157,13 @@ index 0000000..a416e47
 +
 +add_executable(winpty-debugserver ${WINPTYAGENT_SOURCE_FILES})
 +
-+install(TARGETS winpty DESTINATION ${WINPTY_INSTALL_LIB_DIR})
++
++if("${BUILD_TYPE}" STREQUAL "STATIC")
++    install(TARGETS winpty DESTINATION ${WINPTY_INSTALL_LIB_DIR})
++else()
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/winpty.dll DESTINATION ${WINPTY_INSTALL_BIN_DIR})
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/winpty.lib DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++endif()
 +install(TARGETS winpty-agent DESTINATION ${WINPTY_INSTALL_BIN_DIR})
 +install(TARGETS winpty-debugserver DESTINATION ${WINPTY_INSTALL_BIN_DIR})
 +install(FILES src/include/winpty.h src/include/winpty_constants.h DESTINATION ${WINPTY_INSTALL_INCLUDE_DIR})
