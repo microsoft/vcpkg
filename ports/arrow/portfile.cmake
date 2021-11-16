@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
@@ -67,6 +65,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${MALLOC_OPTIONS}
+        -DCMAKE_SYSTEM_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_TESTS=OFF

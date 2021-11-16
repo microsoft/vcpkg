@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
-  "supports": "x64",
+  "supports": "x64 | (arm64 & !windows)",
   "dependencies": [
     "boost-filesystem",
     "boost-multiprecision",
