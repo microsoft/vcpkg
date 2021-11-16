@@ -114,7 +114,7 @@
     },
     "apr-util": {
       "baseline": "1.6.1",
-      "port-version": 4
+      "port-version": 5
     },
     "apsi": {
       "baseline": "0.3.1",
