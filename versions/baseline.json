@@ -4801,8 +4801,8 @@
       "port-version": 1
     },
     "ocilib": {
-      "baseline": "4.7.1",
-      "port-version": 2
+      "baseline": "4.7.3",
+      "port-version": 0
     },
     "octomap": {
       "baseline": "1.9.5",
