@@ -57,6 +57,45 @@ Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targe
 * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 #]===]
 
+# If there is a release lib path without an immediate guarding expression, it is usually an error.
+function(z_vcpkg_cmake_config_check_for_release_libs filepath contents)
+    if("${VCPKG_CMAKE_CONFIG_STRICT_CHECKS}")
+        set(message_type SEND_ERROR)
+    else()
+        set(message_type WARNING)
+    endif()
+    cmake_path(RELATIVE_PATH filepath BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}")
+    set(unprocessed "${contents}")
+    set(processed "")
+    set(messages "")
+    while(unprocessed)
+        string(SUBSTRING "${unprocessed}" 1 -1 to_check)
+        string(FIND ":${to_check}" "${CURRENT_INSTALLED_DIR}/lib/" pos)
+        if(pos EQUAL -1)
+            break()
+        endif()
+        string(SUBSTRING "${unprocessed}" 0 ${pos} prefix)
+        string(APPEND processed "${prefix}")
+        string(SUBSTRING "${unprocessed}" ${pos} -1 unprocessed)
+        if(NOT prefix MATCHES "(>:|optimized;)\$")
+            string(REGEX REPLACE "^.*\n" "" processed "${processed}")
+            string(REGEX REPLACE "\n.*\$" "" hit "${unprocessed}")
+            string(APPEND messages
+                "Unguarded release path '<INSTALLED>/lib/' in ${filepath} at [>>>]:\n"
+                "   ${processed}[>>>]${hit}\n"
+            )
+        endif()
+    endwhile()
+    cmake_path(GET filepath FILENAME filename)
+    set(out_log "${CURRENT_BUILDTREES_DIR}/warnings-${TARGET_TRIPLET}-${filename}.log")
+    if(messages)
+        file(WRITE "${out_log}" "${messages}")
+        message(${message_type} "${messages}")
+    else()
+        file(REMOVE "${out_log}")
+    endif()
+endfunction()
+
 function(vcpkg_fixup_cmake_targets)
     if(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake-config; using both vcpkg-cmake-config and vcpkg_fixup_cmake_targets in the same port is unsupported.")
@@ -216,6 +255,7 @@ function(vcpkg_fixup_cmake_targets)
         #and/or
         #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
         #with ${CURRENT_INSTALLED_DIR} being fully expanded
+        z_vcpkg_cmake_config_check_for_release_libs("${MAIN_CMAKE}" "${_contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
         file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
