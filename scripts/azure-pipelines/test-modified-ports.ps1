@@ -191,6 +191,11 @@ else
 
     & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
 
+    if ($LASTEXITCODE -ne 0)
+    {
+        & "./vcpkg$executableExtension" ci $Triplet --debug --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
+    }
+
     $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
     Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
