@@ -2,8 +2,7 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-string(REGEX MATCHALL "openssl|schannel" ssl_backends ${FEATURES})
-if(ssl_backends MATCHES ";")
+if("openssl" IN_LIST FEATURES AND "schannel" IN_LIST FEATURES)
     message(FATAL_ERROR "Only one SSL backend must be selected.")
 endif()
 
