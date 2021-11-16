@@ -835,10 +835,6 @@ mecab:x64-windows        = skip
 mecab:x64-windows-static = skip
 mecab:x64-windows-static-md=skip
 mecab:x86-windows        = skip
-memorymodule:arm-uwp=fail
-memorymodule:x64-linux=fail
-memorymodule:x64-osx=fail
-memorymodule:x64-uwp=fail
 # Due to static crt.
 mesa:x64-windows-static=fail
 mesa:x64-windows-static-md=fail
