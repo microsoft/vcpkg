@@ -2342,7 +2342,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
