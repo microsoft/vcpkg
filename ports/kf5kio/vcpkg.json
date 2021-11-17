@@ -1,6 +1,7 @@
 {
   "name": "kf5kio",
   "version": "5.84.0",
+  "port-version": 1,
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
   "dependencies": [
@@ -31,6 +32,13 @@
     "kf5jobwidgets",
     "kf5service",
     "kf5solid",
+    {
+      "name": "kf5solid",
+      "features": [
+        "libmount"
+      ],
+      "platform": "linux"
+    },
     "kf5textwidgets",
     "kf5widgetsaddons",
     "kf5windowsystem",
@@ -38,6 +46,10 @@
     {
       "name": "libiconv",
       "platform": "windows & static"
+    },
+    {
+      "name": "libmount",
+      "platform": "linux"
     },
     "qt5-base",
     {
