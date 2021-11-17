@@ -2,6 +2,8 @@ diff --git a/clapack-config.cmake.in b/clapack-config.cmake.in
 index cd19f1d..49af4f0 100644
 --- a/clapack-config.cmake.in
 +++ b/clapack-config.cmake.in
-@@ -1 +1 @@
+@@ -1 +3 @@
 -include("@CLAPACK_BINARY_DIR@/clapack-targets.cmake")
++include(CMakeFindDependencyMacro)
++find_dependency(BLAS)
 +include("${CMAKE_CURRENT_LIST_DIR}/clapack-targets.cmake")

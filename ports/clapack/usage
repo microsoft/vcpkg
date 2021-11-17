@@ -1,0 +1,4 @@
+The package @PORT@:@TARGET_TRIPLET@ provides an implementation of LAPACK for CMake:
+
+    find_package(LAPACK REQUIRED)
+    target_link_libraries(main PRIVATE LAPACK::LAPACK)

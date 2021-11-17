@@ -1,13 +1,14 @@
 {
   "name": "faiss",
   "version-semver": "1.7.1",
+  "port-version": 1,
   "description": "Faiss is a library for efficient similarity search and clustering of dense vectors.",
   "homepage": "https://github.com/facebookresearch/faiss",
   "license": "MIT",
   "supports": "!uwp & !osx & !x86",
   "dependencies": [
     "lapack",
-    "openblas",
+    "blas",
     {
       "name": "vcpkg-cmake",
       "host": true

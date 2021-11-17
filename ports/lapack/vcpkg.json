@@ -1,16 +1,16 @@
 {
   "name": "lapack",
   "version-string": "3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Metapackage for packages which provide LAPACK",
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "arm & windows"
+      "platform": "(arm | staticcrt) & windows"
     },
     {
       "name": "lapack-reference",
-      "platform": "!arm | !windows"
+      "platform": "!(arm | staticcrt) | !windows"
     }
   ]
 }

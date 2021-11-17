@@ -103,26 +103,18 @@ else()
             )
 endif()
 
-
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/OpenBLAS TARGET_PATH share/openblas)
 set(ENV{PATH} "${PATH_BACKUP}")
 
-set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc")
-if(EXISTS "${pcfile}")
-    file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
-    #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" "Name: blas\nDescription:\nVersion:\nRequires: openblas")
 endif()
-set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
-if(EXISTS "${pcfile}")
-    file(READ "${pcfile}" _contents)
-    set(_contents "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
-    file(WRITE "${pcfile}" "${_contents}")
-    #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" "Name: blas\nDescription:\nVersion:\nRequires: openblas")
 endif()
 vcpkg_fixup_pkgconfig()
+
 #maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
 
 # openblas do not make the config file , so I manually made this
