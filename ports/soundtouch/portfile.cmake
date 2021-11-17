@@ -1,11 +1,11 @@
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_from_gitlab(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.com
+    GITHUB_HOST https://codeberg.org
     REPO soundtouch/soundtouch
     REF 2.3.1
-    SHA512 1eea5c06dc5af633b5c16902c6a951593190daf75bd6aa12e00c745080f9363e9c45ab52ddc434bd905e4195b306cc38c9143e813430c15c19a275ae1a82df24
+    SHA512 c9d110b06cafb79968c94c4d206360b9ea9673d63eaf1470b097a39acf18b5b9cd53759f2656ff8963c6eee6a36fecdf1ea9aa7dc014fbf8bbee0dcfb8e4e438
     HEAD_REF master
 )
 
