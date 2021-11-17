@@ -3962,7 +3962,7 @@
     },
     "libudns": {
       "baseline": "0.4",
-      "port-version": 3
+      "port-version": 4
     },
     "libui": {
       "baseline": "2018-11-03",
