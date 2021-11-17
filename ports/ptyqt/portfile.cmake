@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kafeg/ptyqt
-    REF 0.6.2
-    SHA512 75e69af5d8f3633e11ef9726f9673a628ac67bb1bda0a1dca921c64a6d22421a6fe51d08b267d3f461a6a68d27a1eadb7e8dacf07fe1b82737575c4150bfe5ed
-    HEAD_REF master)
+    REF 0.6.3
+    SHA512 7a490a6d0cca500d202b0524abf8596d70872c224eea778efd941ad2a995a8a53d295e3ac000ca8fb63e02467f1191ae6bddfd8469fe5df2aca8af972d06fcff
+    HEAD_REF master
+)
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -lrt")
@@ -20,11 +21,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
 endif()
 
-set(OPTIONS "")
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_TYPE SHARED)
-    list(APPEND OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE)
 else()
     set(BUILD_TYPE STATIC)
 endif()
@@ -35,17 +33,10 @@ vcpkg_cmake_configure(
         -DNO_BUILD_TESTS=1
         -DNO_BUILD_EXAMPLES=1
         -DBUILD_TYPE=${BUILD_TYPE}
-        ${OPTIONS}
-        )
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# cleanup
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-endif()
-
-#license
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ptyqt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ptyqt/LICENSE ${CURRENT_PACKAGES_DIR}/share/ptyqt/copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

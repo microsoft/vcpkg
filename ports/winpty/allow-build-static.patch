@@ -1,24 +1,20 @@
 diff --git a/src/include/winpty.h b/src/include/winpty.h
-index 2a196a5..d8a69ad 100644
+index fdfe4bc..7864d96 100644
 --- a/src/include/winpty.h
 +++ b/src/include/winpty.h
-@@ -32,11 +32,14 @@
+@@ -32,11 +32,15 @@
   * When compiled with __declspec(dllexport), with either MinGW or MSVC, the
   * winpty functions are unadorned--no underscore prefix or '@nn' suffix--so
   * GetProcAddress can be used easily. */
--#ifdef COMPILING_WINPTY_DLL
--#define WINPTY_API __declspec(dllexport)
--#else
--#define WINPTY_API __declspec(dllimport)
--#endif
-+//#ifdef COMPILING_WINPTY_DLL
-+//#define WINPTY_API __declspec(dllexport)
-+//#else
-+//#define WINPTY_API __declspec(dllimport)
-+//#endif
-+
-+//just empty definition for static lib
++#ifndef BUILD_STATIC
+ #ifdef COMPILING_WINPTY_DLL
+ #define WINPTY_API __declspec(dllexport)
+ #else
+ #define WINPTY_API __declspec(dllimport)
+ #endif
++#else
 +#define WINPTY_API
++#endif
  
  #ifdef __cplusplus
  extern "C" {

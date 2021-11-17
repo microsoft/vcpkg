@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..a416e47
 --- /dev/null
 +++ b/CMakeLists.txt
-@@ -0,0 +1,163 @@
+@@ -0,0 +1,169 @@
 +cmake_minimum_required(VERSION 3.12.0)
 +
 +set(PROJECT_VERSION "0.4.3")
@@ -14,6 +14,12 @@ index 0000000..a416e47
 +add_definitions(-DUNICODE)
 +add_definitions(-D_UNICODE)
 +add_definitions(-DNOMINMAX)
++
++if("${BUILD_TYPE}" STREQUAL "STATIC")
++    add_definitions(-DBUILD_STATIC)
++else()
++    add_definitions(-DCOMPILING_WINPTY_DLL)
++endif()
 +
 +set(CMAKE_CXX_STANDARD 11)
 +set(CMAKE_INCLUDE_CURRENT_DIR ON)

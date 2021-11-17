@@ -1714,8 +1714,3 @@ wangle:x64-windows-static-md=fail
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
 
-# WinPty does not support UWP and PtyQt follows it
-winpty:arm-uwp=fail
-winpty:x64-uwp=fail
-ptyqt:arm-uwp=fail
-ptyqt:x64-uwp=fail
