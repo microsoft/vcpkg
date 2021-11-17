@@ -241,7 +241,7 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
-        if(MACHINE MATCHES "arm64")
+        if(MACHINE MATCHES "arm64|aarch64")
             set(build_cpu_fam aarch64)
             set(build_cpu armv8)
         elseif(MACHINE MATCHES "x86_64|amd64")
