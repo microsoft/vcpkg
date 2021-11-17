@@ -1237,8 +1237,8 @@
       "port-version": 4
     },
     "casclib": {
-      "baseline": "1.50b",
-      "port-version": 2
+      "baseline": "2021-11-16",
+      "port-version": 0
     },
     "catch": {
       "baseline": "alias",
