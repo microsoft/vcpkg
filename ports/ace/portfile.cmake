@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.4)
+set(ACE_VERSION 7.0.5)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 d302c97366d28e84b7501f569a8c0c980a4e0283244cb2a458856689541ded75e21e29c2b588644c909e546bd3bf59567de97cc367970a93df35155d534ca57d
+          SHA512 3ea0cc7b35433d7c41f51137caacd394a976cf4d5c2972a35015901b3ba172bacff0216a3146bf632b929a63853b7123019382c22d14c6d64e43a71a61b88023
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 b4e68b91fd53ef02fa3e2e918bb31d963a4db6c424571e2c8b4462aae60cc61ba5f3f4ea16031982928400205f7171090b1385646d86627094d62cd7d43b0657
+          SHA512 65c6557f72a57dc137882bbf6cbb009ae2e403c9848e3e4c3165f1ed55865c5e08fc0226dcf715b33bfa501b13b3863f5c40403791b0dcd29b7c88fec20a9660
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 bddd6a357a849dd01a8720c08b4be51a4c1461481a42504d8cd79349ef307eae41189de67589bebc07b0a475ea56f7aa1da08b30145ac21a713ff001227785b5
+        SHA512 73707c92a0533ab60f090cfb620d508755b8267e2b83fb52d9903c4d780d2e2b504545433fdbe34801d4895cf938ecc5a5f26c34528851080bcce07f5a501ac1
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 081c45e1aa19be2a31c3a55b5ecdd8db008ca06be033cd2df598b842b743c3b0120d750d5aa7401247c5b47c45cf35f638cb206f925ce2e432ce8011ce5b7850
+        SHA512 6e5e43e600763e612c292cb88443e4dce1be94d049e2a784c5a4d4720314b484cccec4f7f05534c6ef824d86bef8bfe4ff5bce5f7998896cdaa599302b5b2562
     )
   endif()
 endif()
@@ -88,9 +88,10 @@ endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
-# ACE 7.0.5 will have support for vs2022
 if(VCPKG_TARGET_IS_WINDOWS)
-  if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+  if(VCPKG_PLATFORM_TOOLSET MATCHES "v143")
+    set(SOLUTION_TYPE vs2022)
+  elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
     set(SOLUTION_TYPE vs2019)
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
     set(SOLUTION_TYPE vs2017)
@@ -308,22 +309,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/bin/ACEXML_XML_Svc_Conf_Parser.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd.dll
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
-    endif()
-  endif()
-
-  # remove (erroneous) duplicate libs, can be removed with ACE 7.0.5
-  if("tao" IN_LIST FEATURES)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosconcurrency.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosevent.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_coslifecycle.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnaming.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnotification.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_costrading.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_activator.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_locator.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_rtevent.lib)
     endif()
   endif()
 
