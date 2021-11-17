@@ -37,9 +37,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME LibAlkimia5 CONFIG_PATH lib/cmake/LibAlkim
 vcpkg_copy_pdbs()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES onlinequoteseditor5
-    )
+    vcpkg_copy_tools(TOOL_NAMES onlinequoteseditor5 AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
