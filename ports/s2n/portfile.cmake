@@ -8,13 +8,24 @@ vcpkg_from_github(
         use-openssl-crypto.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tests   BUILD_TESTING
+)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/s2n/cmake)
+
+if(BUILD_TESTING)
+    message(STATUS Testing)
+    vcpkg_cmake_build(TARGET test LOGFILE_BASE test)
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tests": {
+      "description": "Build and run the tests"
+    }
+  }
 }
