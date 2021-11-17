@@ -1,6 +1,6 @@
 {
   "name": "xcb-proto",
-  "version-string": "1.14.1",
+  "version": "1.14.1",
   "description": "XML-XCB protocol descriptions used by libxcb for the X11 protocol & extensions",
   "homepage": "https://xcb.freedesktop.org/",
   "dependencies": [

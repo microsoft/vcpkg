@@ -1,6 +1,6 @@
 {
   "name": "xcb",
-  "version-string": "1.14",
+  "version": "1.14",
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "dependencies": [
