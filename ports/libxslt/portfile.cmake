@@ -98,8 +98,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
         # Rename the libs to match the dynamic lib names
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+        if(NOT VCPKG_BUILD_TYPE)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libxslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+        endif()
     endif()
 
     set(prefix "")
@@ -146,7 +148,9 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/libxslt/man3")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libxslt/debug/bin/xslt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../")
+    endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#define LIBXSLT_DEFAULT_PLUGINS_PATH() \"${CURRENT_INSTALLED_DIR}/lib/libxslt-plugins\"" "")
 endif()
 
