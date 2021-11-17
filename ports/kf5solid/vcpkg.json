@@ -1,7 +1,7 @@
 {
   "name": "kf5solid",
   "version": "5.84.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Desktop hardware abstraction",
   "homepage": "https://api.kde.org/frameworks/solid/html/index.html",
   "dependencies": [
@@ -16,5 +16,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "libmount": {
+      "description": "Used by the UDisks backend on Linux",
+      "supports": "linux",
+      "dependencies": [
+        "libmount"
+      ]
+    }
+  }
 }
