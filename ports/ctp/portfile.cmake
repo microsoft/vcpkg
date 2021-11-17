@@ -1,6 +1,5 @@
 message(STATUS "Note: the downloading server may only be avilable from 8:00AM-5:00PM (UTC+8), Mon-Fri (except public holidays in China)")
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP" ON_ARCH "arm")
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(TRADEAPI_ARCHIVE

@@ -52,7 +52,7 @@ endif()
 set(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD ON CACHE INTERNAL "guard variable")
 
 function(vcpkg_cmake_config_fixup)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "PACKAGE_NAME;CONFIG_PATH;NO_PREFIX_CORRECTION" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_config_fixup was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -216,7 +216,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
         # Patch out any remaining absolute references
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()

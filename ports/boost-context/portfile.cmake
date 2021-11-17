@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.76.0
-    SHA512 f004e38d63b73e96492ab7267a2e4c3b9993eebc7df6e17fbc5daeb4feb002ee8be815ad8db26ec954471678eefd3609d12a81a34adab3115032209002b663eb
+    REF boost-1.77.0
+    SHA512 a65c27fe09bddfc1398331414f88f8fe2606ee147b2db2c5690dad8af860c03c6a4e61ecd750f43243bdcee5e5217cee77d469deb57b9ea0b181161e82b7a5cf
     HEAD_REF master
 )
 
@@ -28,9 +28,3 @@ boost_modular_build(
 )
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-
-# boost-context removed all.hpp, which is used by FindBoost to determine that context is installed
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp)
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp
-        "#error \"#include <boost/context/all.hpp> is no longer supported by boost_context.\"")
-endif()

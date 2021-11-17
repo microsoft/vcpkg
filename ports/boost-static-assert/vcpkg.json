@@ -1,11 +1,10 @@
 {
   "name": "boost-static-assert",
-  "version": "1.76.0",
+  "version": "1.77.0",
   "description": "Boost static_assert module",
   "homepage": "https://github.com/boostorg/static_assert",
   "dependencies": [
     "boost-config",
-    "boost-detail",
     "boost-vcpkg-helpers"
   ]
 }

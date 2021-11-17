@@ -1,25 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/s2n-tls
-    REF b5b313b9ccddf268b30c642798f1d2a58d49ecd6 # v1.0.17
-    SHA512 59750c9a3c9330e2b26b84d45665b222d23475090736d8299f81352c839a09af10be0d49d34ced1dadae65ca255e819df45b648387e26b7dca31d74782fdb834
+    REF 4513f8d707a68388990886d353e7cfe46cc6454b # v1.1.1
+    SHA512 6586e330733982ed3b70fd320e63575639d5793d69ffa06b2a46ed487d55d8271b46df611d62cc48410654b394d599de65edd9cdc860dea13255161d843f1f48
     PATCHES fix-cmake-target-path.patch
+            remove-libcrypto-messages.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
 )
 
 vcpkg_cmake_install()
-
-file(GLOB SHARED_CMAKE_FILES
-     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
-     )
-file(COPY "${SHARED_CMAKE_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/s2n/cmake)
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
 	"${CURRENT_PACKAGES_DIR}/lib/s2n"
 	)
 

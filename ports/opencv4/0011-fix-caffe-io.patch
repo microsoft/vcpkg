@@ -1,0 +1,13 @@
+diff --git a/modules/dnn/src/caffe/caffe_io.cpp b/modules/dnn/src/caffe/caffe_io.cpp
+index 2fc4d84..779d0dd 100644
+--- a/modules/dnn/src/caffe/caffe_io.cpp
++++ b/modules/dnn/src/caffe/caffe_io.cpp
+@@ -1111,7 +1111,7 @@ static const int kProtoReadBytesLimit = INT_MAX;  // Max size of 2 GB minus 1 by
+ 
+ bool ReadProtoFromBinary(ZeroCopyInputStream* input, Message *proto) {
+     CodedInputStream coded_input(input);
+-    coded_input.SetTotalBytesLimit(kProtoReadBytesLimit, 536870912);
++    coded_input.SetTotalBytesLimit(kProtoReadBytesLimit);
+ 
+     return proto->ParseFromCodedStream(&coded_input);
+ }
