@@ -3613,8 +3613,8 @@
       "port-version": 1
     },
     "libmariadb": {
-      "baseline": "3.1.12",
-      "port-version": 2
+      "baseline": "3.1.15",
+      "port-version": 0
     },
     "libmaxminddb": {
       "baseline": "1.4.3",
@@ -5286,7 +5286,7 @@
     },
     "poco": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "podofo": {
       "baseline": "0.9.7",
