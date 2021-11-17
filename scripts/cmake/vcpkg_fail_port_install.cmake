@@ -50,6 +50,10 @@ function(vcpkg_fail_port_install)
         set(arg_MESSAGE "")
     endif()
 
+    message(WARNING "This function has been deprecated, please use the keyword supports to replace it in 'vcpkg.json'.\n"
+        "See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md#specification\n"
+    )
+
     set(fail_port)
     # Target fail check
     if(DEFINED arg_ON_TARGET)
