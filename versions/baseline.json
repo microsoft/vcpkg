@@ -17,7 +17,7 @@
       "port-version": 1
     },
     "ace": {
-      "baseline": "7.0.4",
+      "baseline": "7.0.5",
       "port-version": 0
     },
     "activemq-cpp": {
