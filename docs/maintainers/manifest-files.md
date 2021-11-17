@@ -386,7 +386,7 @@ platform-expression-simple =
 
 platform-expression-unary-keyword-operand =
 | required-whitespace, platform-expression-simple
-| platform-expression-grouped ;
+| optional-whitespace, platform-expression-grouped ;
 
 platform-expression-not =
 | platform-expression-simple
