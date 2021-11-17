@@ -5417,8 +5417,8 @@
       "port-version": 10
     },
     "ptyqt": {
-      "baseline": "0.6.2",
-      "port-version": 2
+      "baseline": "0.6.3",
+      "port-version": 0
     },
     "pugixml": {
       "baseline": "1.11.4",
@@ -7158,7 +7158,7 @@
     },
     "winpty": {
       "baseline": "0.4.3",
-      "port-version": 2
+      "port-version": 0
     },
     "winreg": {
       "baseline": "4.1.2",
