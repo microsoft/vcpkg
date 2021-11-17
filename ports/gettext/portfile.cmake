@@ -157,3 +157,7 @@ endif()
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/gettext/user-email")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
+endif()
