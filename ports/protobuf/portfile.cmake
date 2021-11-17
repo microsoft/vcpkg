@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.18.0
-    SHA512 2c8ff451b54120e4670f7ea8c92c0c7d70f4bb781979f74f59ddcb7c9cc74fe3e8910fc579d2686fb0e1aafa35fb9548ccab667accf2358c71cfd17ba38d7826
+    REF 7c40b2df1fdf6f414c1c18c789715a9c948a0725 #3.19.1
+    SHA512 6505fb43ad9ed4ed292294bb090cc86aa2cce8a6a8ad873c69f4aed0cb9897e17c3ef571bed80753387526086b0a4e84f037ba96ef9450e8914eb8b3f752cdc0
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        fix-uwp-build.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -32,7 +31,7 @@ if (VCPKG_DOWNLOAD_MODE)
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/cmake
+    SOURCE_PATH "${SOURCE_PATH}/cmake"
     PREFER_NINJA
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
@@ -57,23 +56,23 @@ function(protobuf_try_remove_recurse_wait PATH_TO_REMOVE)
     endif()
 endfunction()
 
-protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
+protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake"
         "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
     )
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake DEBUG_MODULE)
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake" DEBUG_MODULE)
     string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
     string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake" "${DEBUG_MODULE}")
 endif()
 
-protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
+protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -82,27 +81,27 @@ if(protobuf_BUILD_PROTOC_BINARIES)
         vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.18.0.0 AUTO_CLEAN)
     endif()
 else()
-    file(COPY ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
 endif()
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
     "if(ON)"
 )
 if(NOT protobuf_BUILD_LIBPROTOC)
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"
         "_protobuf_find_libraries(Protobuf_PROTOC protoc)"
         ""
     )
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
+    protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/bin")
+    protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h"
         "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
         "\#ifndef PROTOBUF_USE_DLLS\n\#define PROTOBUF_USE_DLLS\n\#endif // PROTOBUF_USE_DLLS\n\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
     )
@@ -111,7 +110,7 @@ endif()
 vcpkg_copy_pdbs()
 set(packages protobuf protobuf-lite)
 foreach(_package IN LISTS packages)
-    set(_file ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc)
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")
     if(EXISTS "${_file}")
         vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
     endif()
@@ -120,8 +119,8 @@ endforeach()
 vcpkg_fixup_pkgconfig()
 
 if(NOT protobuf_BUILD_PROTOC_BINARIES)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/protobuf-targets-vcpkg-protoc.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-targets-vcpkg-protoc.cmake COPYONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/protobuf-targets-vcpkg-protoc.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-targets-vcpkg-protoc.cmake" COPYONLY)
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
