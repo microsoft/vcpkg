@@ -54,9 +54,6 @@ APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 # Additionally required by gtk
 APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 
-# Additionally required by kf5kio
-APT_PACKAGES="$APT_PACKAGES libmount-dev"
-
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
