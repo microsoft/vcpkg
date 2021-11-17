@@ -258,13 +258,13 @@ if(CMAKE_HOST_WIN32)
 
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ":skia"
 )
