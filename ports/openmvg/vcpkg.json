@@ -11,14 +11,6 @@
         "suitesparse"
       ]
     },
-	{
-		"name": "vcpkg-cmake",
-		"host": true
-	},
-	{
-		"name": "vcpkg-cmake-config",
-		"host": true
-	},
     "clp",
     "coinutils",
     "eigen3",
@@ -28,6 +20,14 @@
     "libpng",
     "osi",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "vlfeat",
     "zlib"
   ],
