@@ -17,12 +17,27 @@
       "host": true
     }
   ],
+  "default-features": [
+    "platform-default-features"
+  ],
   "features": {
     "libmount": {
       "description": "Used by the UDisks backend on Linux",
       "supports": "linux",
       "dependencies": [
         "libmount"
+      ]
+    },
+    "platform-default-features": {
+      "description": "Enable platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "kf5solid",
+          "features": [
+            "libmount"
+          ],
+          "platform": "linux"
+        }
       ]
     }
   }

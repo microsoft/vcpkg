@@ -32,13 +32,6 @@
     "kf5jobwidgets",
     "kf5service",
     "kf5solid",
-    {
-      "name": "kf5solid",
-      "features": [
-        "libmount"
-      ],
-      "platform": "linux"
-    },
     "kf5textwidgets",
     "kf5widgetsaddons",
     "kf5windowsystem",
