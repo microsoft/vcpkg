@@ -1,7 +1,6 @@
 {
   "name": "kubernetes",
   "version": "0.0.1",
-  "port-version": 1,
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "supports": "!uwp",
