@@ -36,7 +36,7 @@ function(z_vcpkg_gn_install_get_target_type out_var)
     endif()
 
     execute_process(
-        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
+        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -55,7 +55,7 @@ function(z_vcpkg_gn_install_get_desc out_var)
     endif()
 
     execute_process(
-        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
+        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE

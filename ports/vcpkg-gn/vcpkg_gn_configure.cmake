@@ -40,7 +40,7 @@ function(z_vcpkg_gn_configure_generate)
 
     message(STATUS "Generating build (${arg_CONFIG})...")
     vcpkg_execute_required_process(
-        COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
+        COMMAND "${VCPKG_GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
