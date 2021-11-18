@@ -17,7 +17,7 @@ else()
 endif() 
 
 
-find_package(freetype NO_MODULE REQUIRED)
+find_package(freetype REQUIRED)
 find_package(JPEG REQUIRED)
 find_path(HARFBUZZ_INCLUDE hb.h PATH_SUFFIXES harfbuzz)
 find_library(HARFBUZZ_LIBRARIES harfbuzz)
@@ -47,7 +47,7 @@ target_include_directories(libmupdf
 )
 target_link_libraries(libmupdf PRIVATE
   openjp2
-  freetype
+  Freetype::Freetype
   ${JPEG_LIBRARIES}
   ${HARFBUZZ_LIBRARIES}
   ${JBIG2DEC_LIB}

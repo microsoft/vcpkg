@@ -25,8 +25,8 @@ if(APPLE)
     target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
 endif()
 
-find_package(freetype CONFIG REQUIRED)
-target_link_libraries(harfbuzz INTERFACE freetype)
+find_package(freetype REQUIRED)
+target_link_libraries(harfbuzz INTERFACE Freetype::Freetype)
 
 if ("graphite2" IN_LIST HARFBUZZ_FEATURES)
     find_library(GRAPHITE2_LIBRARY_DEBUG NAMES graphite2 PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
