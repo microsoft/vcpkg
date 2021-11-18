@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 1.1.1
     SHA512 e8cc4b7486a9a29fb729ab9fd9e3c4a2155573f38cec16f5a53db3b416fc1119ea5f5a61243a8d37cb0b64580c5df1b632ff165dc7ff47421fa567dafffaacd8
     HEAD_REF master
+    PATCHES
+        disable-alt-packaging.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
