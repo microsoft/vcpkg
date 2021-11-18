@@ -212,18 +212,18 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         #and/or
         #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
         #with ${CURRENT_INSTALLED_DIR} being fully expanded
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
-
-        # Patch out any remaining absolute references
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        if (contents MATCHES ".*${cmake_current_packages_dir}.*")
-            string(PREPEND contents
+        string(REPLACE "${cmake_current_packages_dir}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
+
+        string(FIND "${contents}" [[${VCPKG_IMPORT_PREFIX}]] index)
+        if (NOT index STREQUAL "-1")
+           string(PREPEND contents
 [[
-get_filename_component(_IMPORT_PACKAGE_PREFIX "${CMAKE_CURRENT_LIST_DIR}" PATH)
-get_filename_component(_IMPORT_PACKAGE_PREFIX "${_IMPORT_PACKAGE_PREFIX}" PATH)
+get_filename_component(VCPKG_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(VCPKG_IMPORT_PREFIX "${VCPKG_IMPORT_PREFIX}" PATH)
 ]]
         )
-            string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PACKAGE_PREFIX}]] contents "${contents}")
         endif()
 
         file(WRITE "${main_cmake}" "${contents}")
