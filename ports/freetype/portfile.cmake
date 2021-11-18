@@ -41,6 +41,19 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freetype2.pc"
+        "\${includedir}/freetype2"
+        "\${includedir}"
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freetype2.pc"
+        "\${includedir}/freetype2"
+        "\${includedir}"
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
