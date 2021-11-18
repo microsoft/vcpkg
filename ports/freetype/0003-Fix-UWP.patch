@@ -1,18 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index db48e9f..5c35276 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -328,6 +328,10 @@ else ()
-   list(APPEND BASE_SRCS src/base/ftdebug.c)
- endif ()
- 
-+if(MSVC)
-+  add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
-+endif()
-+
- if (BUILD_FRAMEWORK)
-   list(APPEND BASE_SRCS builds/mac/freetype-Info.plist)
- endif ()
 diff --git a/include/freetype/freetype.h b/include/freetype/freetype.h
 index 4f2eaca..1e01fe4 100644
 --- a/include/freetype/freetype.h

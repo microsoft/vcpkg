@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 0eb780b..add36da 100644
+--- a/meson.build
++++ b/meson.build
+@@ -259,7 +259,7 @@ else
+ endif
+ 
+ # BZip2 support
+-bzip2_dep = cc.find_library('bz2',
++bzip2_dep = dependency('bzip2',
+   required: get_option('bzip2'))
+ 
+ if bzip2_dep.found()
