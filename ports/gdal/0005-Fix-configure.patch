@@ -1,17 +1,17 @@
 diff --git a/gdal/configure.ac b/gdal/configure.ac
-index 1f88370..1098b39 100644
+index 30cd613..43f1daf 100644
 --- a/gdal/configure.ac
 +++ b/gdal/configure.ac
-@@ -45,6 +45,8 @@ dnl Compute the canonical host-system (the system we are building for)
+@@ -48,6 +48,8 @@ dnl Compute the canonical host-system (the system we are building for)
  dnl type variable $host
  AC_CANONICAL_HOST
  
 +PKG_PROG_PKG_CONFIG([0.21])
 +
  dnl Enable as much warnings as possible
- AX_CFLAGS_WARN_ALL(C_WFLAGS)
- AX_CXXFLAGS_WARN_ALL(CXX_WFLAGS)
-@@ -1343,12 +1345,15 @@ AC_MSG_CHECKING([for libtiff])
+ AC_LANG_PUSH([C])
+ AX_COMPILER_VENDOR
+@@ -1336,12 +1338,15 @@ AC_MSG_CHECKING([for libtiff])
  
  if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then
  
