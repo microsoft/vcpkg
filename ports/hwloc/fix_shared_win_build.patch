@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index 44180d1aa..6bba9c435 100644
+index 44180d1..6bba9c4 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -101,10 +101,11 @@ AM_PROG_CC_C_O
@@ -28,18 +28,19 @@ index 44180d1aa..6bba9c435 100644
  # Setup the hwloc core
  HWLOC_SETUP_CORE([], [], [AC_MSG_ERROR([Cannot build hwloc core])], [1])
 diff --git a/hwloc/Makefile.am b/hwloc/Makefile.am
-index 48cc81c5b..5aac67d4f 100644
+index 2f5034e..f629e0a 100644
 --- a/hwloc/Makefile.am
 +++ b/hwloc/Makefile.am
-@@ -191,16 +191,15 @@ if HWLOC_HAVE_WINDOWS
+@@ -189,16 +189,16 @@ if HWLOC_HAVE_WINDOWS
  
  LC_MESSAGES=C
  export LC_MESSAGES
 -ldflags += -Xlinker --output-def -Xlinker .libs/libhwloc.def
++
  
  if HWLOC_HAVE_MS_LIB
 -dolib$(EXEEXT): dolib.c
--	$(CC_FOR_BUILD) $< -o $@
+-	$(CC_FOR_BUILD) $(HWLOC_CPPFLAGS) $< -o $@
 -.libs/libhwloc.lib: libhwloc.la dolib$(EXEEXT)
 -	[ ! -r .libs/libhwloc.def ] || ./dolib$(EXEEXT) "$(HWLOC_MS_LIB)" $(HWLOC_MS_LIB_ARCH) .libs/libhwloc.def $(libhwloc_so_version) .libs/libhwloc.lib
 +# dolib$(EXEEXT): dolib.c
