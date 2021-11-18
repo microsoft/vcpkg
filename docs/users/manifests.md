@@ -156,6 +156,7 @@ Then, you might just ask for:
 }
 ```
 
+<a name="platform"></a>
 #### `"platform"` Field
 
 The `"platform"` field defines the platforms where the dependency should be installed - for example,
@@ -169,15 +170,16 @@ you might need to use sha256, and so you use platform primitives on Windows, but
 ```
 
 This is a string field which takes boolean expressions of the form `<identifier>`,
-`!expression`, `expression { & expression & expression...}`, and `expression { | expression | expression...}`,
+`!expression`, `expression & expression [ & expression ...]`, and `expression | expression [ | expression ...]`,
 along with parentheses to denote precedence.
 For example, a dependency that's only installed on the Windows OS, for the ARM64 architecture,
 and on Linux on x64, would be written `(windows & arm64) | (linux & x64)`.
 
 The common identifiers are:
 
-- The operating system: `windows`, `uwp`, `linux`, `osx` (includes macOS), `android`, `emscripten`
-- The architecture: `x86`, `x64`, `wasm32`, `arm64`, `arm` (includes both arm32 and arm64 due to backwards compatibility)
+- The operating system: `windows` (includes `mingw`), `uwp`, `mingw`, `linux`, `osx` (includes macOS), `ios`, `android`, `emscripten`
+- The architecture: `x86`, `x64`, `wasm32`, `arm`, `arm64`, `arm32`
+- The library linkage: `static`
 
 although one can define their own.
 
