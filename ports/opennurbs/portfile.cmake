@@ -4,24 +4,26 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aminya/opennurbs
     REF tags/${VERSION}_cmake
-    SHA512 8d3c9faaf5ee44bee0433ec2e5fcf0b4f1489f044d6cab85035524ffa0b265db0be7866ce746854e604af536da6c16eb577c08faa6dd4dbd51bfd94ed2283801 
+    SHA512 f3f87289b05bf82374b7f7108a7689898c114f4aefa286fecb07edb47a66424155cb3fe48155a4b23c7460dc106175e5288cd2686f98cce59f8587536dbeb49e 
     HEAD_REF master
 )
 
-# The shared library needs to be fixed
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  # shared libraries are only supported on Windows
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(opennurbs_SHARED ON)
+  set(OPENNURBS_SHARED ON)
 else()
-  set(opennurbs_SHARED OFF)
+  set(OPENNURBS_SHARED OFF)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -Dopennurbs_SHARED=${OPENMESH_BUILD_SHARED}
+        -DOPENNURBS_SHARED=${OPENNURBS_SHARED}
 )
 
 vcpkg_cmake_build(TARGET opennurbs)
