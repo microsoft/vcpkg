@@ -2266,7 +2266,7 @@
     },
     "freetype": {
       "baseline": "2.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "freetype-gl": {
       "baseline": "2020-09-14",
