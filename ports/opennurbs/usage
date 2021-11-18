@@ -1,0 +1,4 @@
+The package opennurbs provides CMake targets:
+
+    find_package(opennurbs REQUIRED)
+    target_link_libraries(main PRIVATE opennurbs::opennurbs)
