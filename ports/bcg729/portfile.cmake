@@ -21,6 +21,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME Bcg729)
+file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/Bcg729/cmake/*.cmake")
+file(COPY ${cmake_files} DESTINATION "${CURRENT_PACKAGES_DIR}/share/bcg729")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Bcg729/cmake")
+file(GLOB_RECURSE remaining_files "${CURRENT_PACKAGES_DIR}/share/Bcg729/*")
+if(NOT remaining_files)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Bcg729")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
