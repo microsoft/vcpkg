@@ -14,17 +14,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(ZYDIS_BUILD_SHARED_LIB OFF)
-else()
-    set(ZYDIS_BUILD_SHARED_LIB ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    "-DZYDIS_BUILD_SHARED_LIB=${ZYDIS_BUILD_SHARED_LIB}"
-    "-DZYDIS_ZYCORE_PATH=${ZYCORE_SOURCE_PATH}"
+        "-DZYDIS_BUILD_SHARED_LIB=${ZYDIS_BUILD_SHARED_LIB}"
+        "-DZYDIS_ZYCORE_PATH=${ZYCORE_SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
@@ -34,19 +30,17 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(EXES)
-    file(REMOVE ${EXES})
-endif()
+vcpkg_copy_tools(TOOL_NAMES ZydisDisasm ZydisInfo AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
