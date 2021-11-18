@@ -1,12 +1,11 @@
-# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_configure
 #[===[.md:
-# vcpkg_configure_gn
+# vcpkg_gn_configure
 
 Generate Ninja (GN) targets
 
 ## Usage:
 ```cmake
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH <SOURCE_PATH>
     [OPTIONS <OPTIONS>]
     [OPTIONS_DEBUG <OPTIONS_DEBUG>]
@@ -28,8 +27,12 @@ Options to be passed to the debug target.
 ### OPTIONS_RELEASE (space-separated string)
 Options to be passed to the release target.
 #]===]
+if(Z_VCPKG_GN_CONFIGURE_GUARD)
+    return()
+endif()
+set(Z_VCPKG_GN_CONFIGURE_GUARD ON CACHE INTERNAL "guard variable")
 
-function(z_vcpkg_configure_gn_generate)
+function(z_vcpkg_gn_configure_generate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: generate was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -43,14 +46,11 @@ function(z_vcpkg_configure_gn_generate)
     )
 endfunction()
 
-function(vcpkg_configure_gn)
-    if(Z_VCPKG_GN_CONFIGURE_GUARD)
-        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_configure_gn in the same port is unsupported.")
-    endif()
-
+function(vcpkg_gn_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "vcpkg_configure_gn was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(WARNING "vcpkg_gn_configure was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     if(NOT DEFINED arg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
@@ -63,7 +63,7 @@ function(vcpkg_configure_gn)
     vcpkg_find_acquire_program(GN)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        z_vcpkg_configure_gn_generate(
+        z_vcpkg_gn_configure_generate(
             SOURCE_PATH "${arg_SOURCE_PATH}"
             CONFIG "${TARGET_TRIPLET}-dbg"
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_DEBUG}"
@@ -71,7 +71,7 @@ function(vcpkg_configure_gn)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        z_vcpkg_configure_gn_generate(
+        z_vcpkg_gn_configure_generate(
             SOURCE_PATH "${arg_SOURCE_PATH}"
             CONFIG "${TARGET_TRIPLET}-rel"
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
