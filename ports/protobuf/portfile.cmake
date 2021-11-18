@@ -31,7 +31,7 @@ if (VCPKG_DOWNLOAD_MODE)
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH "${SOURCE_PATH}/cmake"
+    SOURCE_PATH ${SOURCE_PATH}/cmake
     PREFER_NINJA
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
@@ -78,7 +78,7 @@ if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.18.0.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.19.1.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
