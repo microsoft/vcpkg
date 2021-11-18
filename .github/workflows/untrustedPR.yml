@@ -38,7 +38,9 @@ jobs:
           git config user.email github-actions
           git config user.name github-actions@github.com
 
-          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
+          cat .github-pr.changed-portfiles | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
+          cat .github-pr.changed-portfiles | while read filename; do grep -q 'vcpkg_fail_port_install' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-vcpkg_fail_port_install
           ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
@@ -58,6 +60,7 @@ jobs:
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
             const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).trim()
+            const deprecated_fail_port = (await fs.readFile('.github-pr.deprecated-vcpkg_fail_port_install', 'utf8')).trim()
 
             let approve = true;
             var output = ''
@@ -102,7 +105,11 @@ jobs:
               output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
               output += "```\n"
               output += `The following files are affected:\n${cmake}\n`
-              output += "</details>\n"
+              output += "</details>\n\n"
+            }
+            if (deprecated_fail_port !== "") {
+              output += "If you feel able to do so, please remove `vcpkg_fail_port_install(...)` function calls and replace them with an equivalent [`supports` expression](https://github.com/microsoft/vcpkg/blob/master/docs/users/manifests.md#supports) in the following `vcpkg.json` files:\n"
+              output += deprecated_fail_port
             }
 
             if (approve) {
