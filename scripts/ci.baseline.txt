@@ -1713,4 +1713,3 @@ wangle:x64-windows-static-md=fail
 # See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
-

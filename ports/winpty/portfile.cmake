@@ -5,9 +5,10 @@ vcpkg_from_github(
     SHA512 8f5539c1af2a1127219278446c1d028079867cecdeb03c4f208c7d8176e8802e8075ce1b6992e0ef73db34c69e58f73d3828698d865deb35cb883821ee245e4d
     HEAD_REF master
     PATCHES 
-        build-with-cmake.patch
         allow-build-static.patch
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_TYPE SHARED)
