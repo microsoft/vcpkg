@@ -1241,8 +1241,8 @@
       "port-version": 4
     },
     "casclib": {
-      "baseline": "1.50b",
-      "port-version": 2
+      "baseline": "2021-11-16",
+      "port-version": 0
     },
     "catch": {
       "baseline": "alias",
@@ -1525,7 +1525,7 @@
       "port-version": 0
     },
     "cpp-ipc": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "cpp-jwt": {
@@ -2066,7 +2066,7 @@
     },
     "faad2": {
       "baseline": "2.9.1",
-      "port-version": 3
+      "port-version": 4
     },
     "fadbad": {
       "baseline": "2.1.0",
@@ -2410,7 +2410,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 6
+      "port-version": 7
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -2833,7 +2833,7 @@
       "port-version": 0
     },
     "imgui-sfml": {
-      "baseline": "2.3",
+      "baseline": "2.4",
       "port-version": 0
     },
     "imguizmo": {
@@ -3617,8 +3617,8 @@
       "port-version": 1
     },
     "libmariadb": {
-      "baseline": "3.1.12",
-      "port-version": 2
+      "baseline": "3.1.15",
+      "port-version": 0
     },
     "libmaxminddb": {
       "baseline": "1.4.3",
@@ -3933,7 +3933,7 @@
       "port-version": 3
     },
     "libtcod": {
-      "baseline": "1.18.0",
+      "baseline": "1.19.0",
       "port-version": 0
     },
     "libtheora": {
@@ -4066,7 +4066,7 @@
     },
     "libxslt": {
       "baseline": "1.1.34",
-      "port-version": 2
+      "port-version": 3
     },
     "libyaml": {
       "baseline": "0.2.5",
@@ -4853,7 +4853,7 @@
       "port-version": 1
     },
     "onnx": {
-      "baseline": "1.10.1",
+      "baseline": "1.10.2",
       "port-version": 0
     },
     "onnx-optimizer": {
@@ -5093,7 +5093,7 @@
       "port-version": 0
     },
     "palsigslot": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "pango": {
@@ -5290,7 +5290,7 @@
     },
     "poco": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "podofo": {
       "baseline": "0.9.7",
