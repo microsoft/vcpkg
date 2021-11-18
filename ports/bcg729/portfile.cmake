@@ -29,9 +29,18 @@ if(NOT remaining_files)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Bcg729")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
+
+file(READ "${SOURCE_PATH}/LICENSE.txt" GPL3)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[
+bcg729 is dual licensed, and is available either:
+ - under a GNU/GPLv3 license, for free (open source). See below.
+ - under a proprietary license, for a fee, to be used in closed source applications.
+   Contact Belledonne Communications (https://www.linphone.org/contact)
+   for any question about costs and services.
+
+
+]] ${GPL3})
