@@ -10,10 +10,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
-    REF 74deb33d12bf275a3b3a9afc833f4760be90f031 # v1.6
-    SHA512 6e74effbc66f5d5e7c2d5edd7dacf3c0fa7eec1cb666244db8e4147c08d2e6faca98c1164ca1305a5013d247d479184742e5156232d4d8430615af31811e216e
+    REF d0fe73dd426ae4001631a51272cff71047522df9 # v2.0
+    SHA512  1d5c68971ad63ced46d8b9070bdacc1065b4ba950fe919e11f952a004def87d4d83a474d48aee714c21b12106d7d81187d3670d8a2e6daf2d3c5fceb008a5de3
     PATCHES
-        build_fixes.patch
+        fix-build.patch
         0001-eigen_3.4.0.patch
 )
 
@@ -53,9 +53,8 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVG_USE_OPENMP=${OpenMVG_USE_OPENMP}
         -DOpenMVG_BUILD_SHARED=OFF
@@ -74,29 +73,29 @@ vcpkg_configure_cmake(
         -DOpenMVG_USE_INTERNAL_LEMON=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/openMVG/cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/openMVG/cmake)
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test
-                    ${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data
-                    ${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
+                    "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
+                    "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl")
 
 if(OpenMVG_BUILD_SHARED)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         # release
-        file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-        file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        file(REMOVE_RECURSE ${DLL_FILES})
+        file(GLOB DLL_FILES  "${CURRENT_PACKAGES_DIR}/lib/*.dll")
+        file(COPY "${DLL_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${DLL_FILES}")
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # debug
-        file(GLOB DLL_FILES  ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-        file(COPY ${DLL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(REMOVE_RECURSE ${DLL_FILES})
+        file(GLOB DLL_FILES  "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+        file(COPY "${DLL_FILES"} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${DLL_FILES}")
     endif()
 endif()
 vcpkg_copy_pdbs()
@@ -107,10 +106,10 @@ if("software" IN_LIST FEATURES)
             openMVG_main_AlternativeVO.app
             ui_openMVG_MatchesViewer.app
         )
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/openMVG_main_AlternativeVO.app)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ui_openMVG_MatchesViewer.app)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/openMVG_main_AlternativeVO.app)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ui_openMVG_MatchesViewer.app)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/openMVG_main_AlternativeVO.app")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/ui_openMVG_MatchesViewer.app")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/openMVG_main_AlternativeVO.app")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/ui_openMVG_MatchesViewer.app")
     else()
         vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
             openMVG_main_AlternativeVO
@@ -164,9 +163,9 @@ if("software" IN_LIST FEATURES)
         )
     endif()
 
-    file(COPY ${SOURCE_PATH}/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    set(OPENMVG_SOFTWARE_SFM_BUILD_DIR ${CURRENT_INSTALLED_DIR}/tools/${PORT})
-    set(OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY ${CURRENT_INSTALLED_DIR}/tools/${PORT})
+    file(COPY "${SOURCE_PATH}/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    set(OPENMVG_SOFTWARE_SFM_BUILD_DIR "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
+    set(OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
     configure_file("${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py" @ONLY)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py" @ONLY)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
@@ -174,4 +173,4 @@ if("software" IN_LIST FEATURES)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
