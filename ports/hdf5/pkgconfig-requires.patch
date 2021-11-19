@@ -10,17 +10,14 @@ index 141ab44..66b7efa 100644
      else ()
        if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
          EXTERNAL_ZLIB_LIBRARY (${HDF5_ALLOW_EXTERNAL_SUPPORT})
-@@ -128,8 +129,10 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+@@ -134,6 +135,7 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
      else()
-         get_target_property(SZIP_STATIC_LIBRARY szip-shared IMPORTED_LOCATION_${upper_build_type})
+       set(SZIP_STATIC_LIBRARY szip-static)
      endif()
 +    set(szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
-   elseif (TARGET szip-static)
-     get_target_property(SZIP_STATIC_LIBRARY szip-static IMPORTED_LOCATION_${upper_build_type})
-+    set(szip_PC_LIBS_PRIVATE "${SZIP_STATIC_LIBRARY}")
-   elseif (SZIP_FOUND)
-     set (H5_HAVE_FILTER_SZIP 1)
-     set (H5_HAVE_SZLIB_H 1)
+   else ()
+     if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
+       EXTERNAL_SZIP_LIBRARY (${HDF5_ALLOW_EXTERNAL_SUPPORT} ${HDF5_ENABLE_SZIP_ENCODING})
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b75fdd2..a2e88fd 100644
 --- a/CMakeLists.txt
