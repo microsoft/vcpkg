@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-external-dependencies.patch
+        fix-external-dependencies2.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
