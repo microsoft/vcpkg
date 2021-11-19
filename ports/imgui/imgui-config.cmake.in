@@ -21,7 +21,7 @@ if (@IMGUI_BUILD_VULKAN_BINDING@)
 endif()
 
 if (@IMGUI_FREETYPE@)
-    find_dependency(freetype CONFIG)
+    find_dependency(Freetype)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")
