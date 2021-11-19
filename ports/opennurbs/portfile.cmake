@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aminya/opennurbs
     REF tags/${VERSION}_cmake
-    SHA512 a8287a7f7d277062295f4e15ddbd1e7717956a77e2d874d7f24652bc08817b8181cf6bef6ff8ee9ab8586496c12594ab0aac13cbe569d2e3c6b9fa07675a58a2 
+    SHA512 4e3174b216fa28ef85c4a3187154a2804f9fd6af43e771191b0234f7a128f0db86c915ba23885701c4c829907f8a4753b2162ec55acc883f2f5c6fbfbfdd790e  
     HEAD_REF master
 )
 
@@ -13,11 +13,7 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(OPENNURBS_SHARED ON)
-else()
-  set(OPENNURBS_SHARED OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENNURBS_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
