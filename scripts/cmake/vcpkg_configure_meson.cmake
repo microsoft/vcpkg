@@ -318,7 +318,7 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
 
     string(APPEND cross_file "[host_machine]\n")
     string(APPEND cross_file "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" meson_system_name)
@@ -342,6 +342,14 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
     endif()
     if(DEFINED build_cpu)
         string(APPEND cross_file "cpu = '${build_cpu}'\n")
+    endif()
+
+    if (VCPKG_TARGET_IS_UWP)
+        string(APPEND cross_file "[built-in options]\n")
+        string(APPEND cross_file "c_args = ['-DWINAPI_FAMILY=WINAPI_FAMILY_APP']\n")
+        string(APPEND cross_file "c_link_args = ['-APPCONTAINER', 'WindowsApp.lib']\n")
+        string(APPEND cross_file "cpp_args = ['-DWINAPI_FAMILY=WINAPI_FAMILY_APP']\n")
+        string(APPEND cross_file "cpp_link_args = ['-APPCONTAINER', 'WindowsApp.lib']\n")
     endif()
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
