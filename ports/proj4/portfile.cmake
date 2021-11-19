@@ -1,13 +1,12 @@
-set(VERSION 8.0.0) # Variable used for pc file
+set(VERSION 8.1.1) # Variable used for pc file
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 353f0e14ba6c11bfcec8a30b3f322842e8a3103546e0fd40871e341c859ca7ae2b9411425be5b588eb45cc5716255d2ea81d6357407bcfb9506a0edb161376f5
+    SHA512 a26d4191905ac01ce8052290dbd065038bb59bdf5ee4ead0b8ba948de7fcc9d7bffd897533a07ffc2e9824b59210fa2a6cec652e512794a9ef9b07ce40e7e213
     HEAD_REF master
     PATCHES
         fix-filemanager-uwp.patch
-        fix-sqlite3-bin.patch
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         tools-cmake.patch

@@ -1,8 +1,8 @@
 {
   "name": "proj4",
-  "version-semver": "8.0.0",
+  "version-semver": "8.1.1",
   "description": "PROJ.4 library for cartographic projections",
-  "homepage": "https://github.com/OSGeo/PROJ",
+  "homepage": "https://proj.org/",
   "dependencies": [
     {
       "name": "sqlite3",
