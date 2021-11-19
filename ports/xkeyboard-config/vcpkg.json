@@ -1,0 +1,12 @@
+{
+  "name": "xkeyboard-config",
+  "version": "2.34",
+  "description": "X Keyboard Extension",
+  "homepage": "https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config",
+  "dependencies": [
+    "tool-meson",
+    "libxslt",
+    "xkbcommon",
+    "xlib"
+  ]
+}
