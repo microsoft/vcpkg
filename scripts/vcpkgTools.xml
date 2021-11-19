@@ -8,25 +8,25 @@
         <archiveName>python-3.10.0-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.22.0-rc3</version>
-        <exeRelativePath>cmake-3.22.0-rc3-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0-rc3/cmake-3.22.0-rc3-windows-i386.zip</url>
-        <sha512>7d93baab45cf222e3a2deb638e447745cc547c531dcf9b7fdde8da06ff1d6f07dace7a906059a3e69e4c7801b6668f7d917e701cb9118b9f0a3ee95d5bc08de2</sha512>
-        <archiveName>cmake-3.22.0-rc3-windows-i386.zip</archiveName>
+        <version>3.22.0</version>
+        <exeRelativePath>cmake-3.22.0-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-windows-i386.zip</url>
+        <sha512>452271c8060ceeb3f80dc5ce3c974fbafaea6f90d287a87fb1de5b45aec288dcaccaf4ee325ffb4a3c440ccd6a08085789af6a15480e752f8d68633fc3e8c840</sha512>
+        <archiveName>cmake-3.22.0-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.22.0-rc3</version>
-        <exeRelativePath>cmake-3.22.0-rc3-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0-rc3/cmake-3.22.0-rc3-macos-universal.tar.gz</url>
-        <sha512>6235d95a3228bce1ba0e9cd1e6e70769dda28a736547a9ada0e8dd35e506121b2131b27ca01496c9684253fa13084015a4c7f939d27557e2d39abd5812615fff</sha512>
-        <archiveName>cmake-3.22.0-rc3-macos-universal.tar.gz</archiveName>
+        <version>3.22.0</version>
+        <exeRelativePath>cmake-3.22.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-macos-universal.tar.gz</url>
+        <sha512>e23d0326ab80a8dc509cb7f4cfe50276f9520f06c8521d6979cb21cd4cf1c55bdc0156a33d02cfc53d07935615b578a0ca98eaa53a44c548e2984b8b7dd4d084</sha512>
+        <archiveName>cmake-3.22.0-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.22.0-rc3</version>
-        <exeRelativePath>cmake-3.22.0-rc3-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0-rc3/cmake-3.22.0-rc3-linux-x86_64.tar.gz</url>
-        <sha512>28a229b873937efb2ab0dad37e5e07a84b4e658013542202c6a3abba73abf808ae3a5413842da5075fdf33a1b91a5889ce9ecee08e42456f74ec632efaa34e7c</sha512>
-        <archiveName>cmake-3.22.0-rc3-linux-x86_64.tar.gz</archiveName>
+        <version>3.22.0</version>
+        <exeRelativePath>cmake-3.22.0-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-linux-x86_64.tar.gz</url>
+        <sha512>048798c82890f79906e4e1a78f8494c30e0d2cec1a678d30b1e40e6684243d07512fae55e20e3e730d4d2ecaecfaa2b375e48f84c4f751861615ce94c8297b16</sha512>
+        <archiveName>cmake-3.22.0-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.20.4</version>
