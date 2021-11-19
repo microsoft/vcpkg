@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aminya/opennurbs
     REF tags/${VERSION}_cmake
-    SHA512 8d3c9faaf5ee44bee0433ec2e5fcf0b4f1489f044d6cab85035524ffa0b265db0be7866ce746854e604af536da6c16eb577c08faa6dd4dbd51bfd94ed2283801  
+    SHA512 f72aa207c18ddfcfc0fe5e367f985c3b56886d076ab3683ea47c890afacdb2856b1bd46407c6215647b446f028fd0ed3b91956ce6c92d65d573194e4798d2df4  
     HEAD_REF master
 )
 
