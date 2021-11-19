@@ -58,7 +58,7 @@ function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$tar
             Write-Verbose "  ${targetBinaryName}: Copying $sourceBinaryFilePath"
             Copy-Item $sourceBinaryFilePath $targetBinaryDir
         }
-        if ($copiedFilesLog) { Add-Content $copiedFilesLog targetBinaryFilePath -Encoding UTF8 }
+        if ($copiedFilesLog) { Add-Content $copiedFilesLog $targetBinaryFilePath -Encoding UTF8 }
         if ($tlogFile) { Add-Content $tlogFile $targetBinaryFilePath -Encoding Unicode }
     } finally {
         if ($mtx) {
