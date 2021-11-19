@@ -26,6 +26,7 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0004-add-ffmpeg-missing-defines.patch
       0005-fix-cuda.patch
+      fix-path-contains-++-error.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
