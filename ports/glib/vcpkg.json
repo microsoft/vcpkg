@@ -11,7 +11,10 @@
     "libffi",
     "libiconv",
     "pcre",
-    "tool-meson",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
