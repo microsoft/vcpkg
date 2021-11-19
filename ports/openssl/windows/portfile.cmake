@@ -52,6 +52,11 @@ set(OPENSSL_MAKEFILE "makefile")
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
+set(OPENSSL_INSTALL_TARGETS install_sw)
+if(NOT DEFINED OPENSSL_NO_INSTALL_SSLDIRS)
+    set(OPENSSL_INSTALL_TARGETS ${OPENSSL_INSTALL_TARGETS} install_ssldirs)
+endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     # Copy openssl sources.
@@ -63,11 +68,15 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Copying openssl release source files... done")
     set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
-    set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+    if (DEFINED OPENSSL_OPENSSLDIR)
+        set(OPENSSLDIR_RELEASE ${OPENSSL_OPENSSLDIR})
+    else()
+        set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+    endif()
 
     message(STATUS "Configure ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
-        COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
+        COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${CURRENT_PACKAGES_DIR}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME configure-perl-${TARGET_TRIPLET}-rel
     )
@@ -84,7 +93,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} ${OPENSSL_INSTALL_TARGETS}
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
@@ -102,11 +111,15 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Copying openssl debug source files... done")
     set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
-    set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+    if (DEFINED OPENSSL_OPENSSLDIR)
+        set(OPENSSLDIR_DEBUG ${OPENSSL_OPENSSLDIR}/debug)
+    else()
+        set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+    endif()
 
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-        COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
+        COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${CURRENT_PACKAGES_DIR}/debug" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME configure-perl-${TARGET_TRIPLET}-dbg
     )
@@ -121,7 +134,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
+        COMMAND nmake -f "${OPENSSL_MAKEFILE}" ${OPENSSL_INSTALL_TARGETS}
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
@@ -149,7 +162,10 @@ file(REMOVE
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe")
-file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
+
+if(NOT DEFINED OPENSSL_NO_INSTALL_SSLDIRS)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
+endif()
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
 
