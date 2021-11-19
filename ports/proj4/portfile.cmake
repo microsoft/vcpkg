@@ -1,9 +1,9 @@
-set(VERSION 7.2.1) # Variable used for pc file
+set(VERSION 8.0.0) # Variable used for pc file
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 e6e77266dcd70c939c16667c916cccab8de161221d2ef600cfca43382f50da2dc8d790561556b4416adbb4ac6fba939004e0cc936c278e0e808dc3566e9a70d4
+    SHA512 353f0e14ba6c11bfcec8a30b3f322842e8a3103546e0fd40871e341c859ca7ae2b9411425be5b588eb45cc5716255d2ea81d6357407bcfb9506a0edb161376f5
     HEAD_REF master
     PATCHES
         fix-filemanager-uwp.patch
