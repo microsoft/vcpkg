@@ -39,10 +39,6 @@
       "host": true
     },
     {
-      "name": "vcpkg-tool-meson",
-      "host": true
-    },
-    {
       "name": "yasm-tool-helper",
       "platform": "windows"
     }
