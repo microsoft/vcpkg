@@ -12,39 +12,38 @@ vcpkg_from_github(
         pkgconfig.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(EXTRA_FEATURES tiff ENABLE_TIFF tools BUILD_PROJSYNC tools ENABLE_CURL)
-  set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
-else()
-  set(TOOL_NAMES cct cs2cs geod gie proj projinfo)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        net   ENABLE_CURL
+        tiff  ENABLE_TIFF
         tools BUILD_CCT
         tools BUILD_CS2CS
         tools BUILD_GEOD
         tools BUILD_GIE
         tools BUILD_PROJ
         tools BUILD_PROJINFO
-        ${EXTRA_FEATURES}
+        # BUILD_PROJSYNC handled below
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(WARNING "ENABLE_TIFF ENABLE_CURL and BUILD_PROJSYNC will be off when building static")
-  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DBUILD_PROJSYNC=OFF)
+vcpkg_list(SET TOOL_NAMES cct cs2cs geod gie proj projinfo)
+if("net" IN_LIST FEATURES AND "tools" IN_LIST FEATURES)
+    set(BUILD_PROJSYNC TRUE)
+    vcpkg_list(APPEND TOOL_NAMES projsync)
+else()
+    set(BUILD_PROJSYNC FALSE)
 endif()
+vcpkg_list(APPEND FEATURE_OPTIONS -DBUILD_PROJSYNC=${BUILD_PROJSYNC})
 
-set(EXE_SQLITE3 "${CURRENT_HOST_INSTALLED_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+find_program(EXE_SQLITE3 NAMES "sqlite3" PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" NO_DEFAULT_PATH REQUIRED)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/${PORT}
     -DBUILD_TESTING=OFF
-    -DEXE_SQLITE3=${EXE_SQLITE3}
+    "-DEXE_SQLITE3=${EXE_SQLITE3}"
 )
 
 vcpkg_cmake_install()

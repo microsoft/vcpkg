@@ -26,7 +26,15 @@ index 7d736d129..2be8f8be9 100644
  if(NOT SQLITE3_FOUND)
    message(SEND_ERROR "sqlite3 dependency not found!")
  endif()
-@@ -171,6 +186,7 @@ if(ENABLE_CURL)
+@@ -151,6 +165,7 @@ if(ENABLE_TIFF)
+   find_package(TIFF REQUIRED)
+   if(TIFF_FOUND)
+     set(TIFF_ENABLED TRUE)
++    set(TIFF_LIBRARY TIFF::TIFF)
+   else()
+     message(SEND_ERROR
+       "libtiff dependency not found! Use ENABLE_TIFF=OFF to force it off")
+@@ -171,6 +188,7 @@ if(ENABLE_CURL)
    find_package(CURL REQUIRED)
    if(CURL_FOUND)
      set(CURL_ENABLED TRUE)
@@ -34,17 +42,19 @@ index 7d736d129..2be8f8be9 100644
    else()
      message(SEND_ERROR "curl dependency not found!")
    endif()
-
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
 index 23f997abd..8baef00f0 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -7,6 +7,11 @@
+@@ -7,6 +7,14 @@
  #  @PROJECT_VARIANT_NAME@_LIBRARY_DIRS = /usr/local/lib
  #  @PROJECT_VARIANT_NAME@_BINARY_DIRS = /usr/local/bin
  #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
 +include(CMakeFindDependencyMacro)
 +find_dependency(unofficial-sqlite3 CONFIG)
++if(@ENABLE_TIFF@)
++    find_dependency(TIFF)
++endif()
 +if(@ENABLE_CURL@)
 +    find_dependency(CURL CONFIG)
 +endif()
