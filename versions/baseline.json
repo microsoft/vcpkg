@@ -6917,8 +6917,8 @@
       "port-version": 3
     },
     "unixodbc": {
-      "baseline": "2.3.7",
-      "port-version": 4
+      "baseline": "2.3.9",
+      "port-version": 0
     },
     "unqlite": {
       "baseline": "1.1.9",
