@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
     PREFER_NINJA
     OPTIONS
         -DOPENNURBS_SHARED=${OPENNURBS_SHARED}
+        -DCMAKE_FIND_FRAMEWORK=LAST
 )
 
 vcpkg_cmake_build(TARGET opennurbs)
