@@ -67,7 +67,7 @@ vcpkg_configure_cmake(
         -DLIEF_USE_CRT_RELEASE=MD
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
