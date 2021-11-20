@@ -50,7 +50,17 @@ INVERTED_FEATURES
     "disable-frozen" LIEF_DISABLE_FROZEN    # Disable Frozen even if it is supported
 )
 
-vcpkg_configure_cmake(
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  LIEF_SHARED_LIB)
+
+if (LIEF_SHARED_LIB)
+    set(LIEF_CRT_DEBUG MDd)
+    set(LIEF_CRT_RELEASE MD)
+else()
+    set(LIEF_CRT_DEBUG MTd)
+    set(LIEF_CRT_RELEASE MT)
+endif()
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
 
@@ -58,13 +68,10 @@ vcpkg_configure_cmake(
         # -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT_DIR}\\scripts\\buildsystems\\vcpkg.cmake"
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG    
-        # -DCMAKE_DEBUG_POSTFIX=d
-        # -DLIEF_USE_CRT_DEBUG=MTd
-        -DLIEF_USE_CRT_DEBUG=MDd
+        -DLIEF_USE_CRT_DEBUG=${LIEF_CRT_DEBUG}
 
     OPTIONS_RELEASE
-        # -DLIEF_USE_CRT_RELEASE=MT
-        -DLIEF_USE_CRT_RELEASE=MD
+        -DLIEF_USE_CRT_RELEASE=${LIEF_CRT_RELEASE}
 )
 
 vcpkg_cmake_install()
