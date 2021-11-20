@@ -1080,7 +1080,6 @@ openmpi:x86-windows=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 opennurbs:x64-uwp=fail
-opennurbs:arm64-windows=fail
 opennurbs:arm-uwp=fail
 openscap:x64-linux=fail
 openscap:x64-osx=fail
