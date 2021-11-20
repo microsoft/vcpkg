@@ -7417,8 +7417,8 @@
       "port-version": 3
     },
     "zziplib": {
-      "baseline": "0.13.71",
-      "port-version": 3
+      "baseline": "0.13.72",
+      "port-version": 0
     }
   }
 }
