@@ -4680,6 +4680,10 @@
       "baseline": "35",
       "port-version": 0
     },
+    "nifly": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "nifticlib": {
       "baseline": "2020-04-30",
       "port-version": 1
