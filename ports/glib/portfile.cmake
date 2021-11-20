@@ -48,7 +48,6 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dbuild_tests=false
         -Dinstalled_tests=false
         ${OPTIONS}
         -Dinternal_pcre=false
