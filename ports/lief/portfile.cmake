@@ -1,4 +1,10 @@
-vcpkg_fail_port_install(ON_CRT_LINKAGE "dynamic"  ON_LIBRARY_LINKAGE "static" )
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" )
+    if ("${VCPKG_CRT_LINKAGE}" STREQUAL "dynamic" )
+        vcpkg_fail_port_install(MESSAGE "${PORT} doesn't support static-md" ALWAYS)
+    endif()
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -54,12 +60,17 @@ INVERTED_FEATURES
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  LIEF_SHARED_LIB)
 
-if (LIEF_SHARED_LIB)
-    set(LIEF_CRT_DEBUG MDd)
-    set(LIEF_CRT_RELEASE MD)
+if(VCPKG_TARGET_IS_WINDOWS)
+    if (LIEF_SHARED_LIB)
+        set(LIEF_CRT_DEBUG MDd)
+        set(LIEF_CRT_RELEASE MD)
+    else()
+        set(LIEF_CRT_DEBUG MTd)
+        set(LIEF_CRT_RELEASE MT)
+    endif()
 else()
-    set(LIEF_CRT_DEBUG MTd)
-    set(LIEF_CRT_RELEASE MT)
+    set(LIEF_CRT_DEBUG "")
+    set(LIEF_CRT_RELEASE "")
 endif()
 
 vcpkg_cmake_configure(
