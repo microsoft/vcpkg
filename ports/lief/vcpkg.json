@@ -1,6 +1,6 @@
 {
   "name": "lief",
-  "version-string": "0.11.5",
+  "version": "0.11.5",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "default-features": [
