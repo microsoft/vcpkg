@@ -286,8 +286,10 @@ function(vcpkg_configure_make)
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(cm_TOOLS CC CXX AR AS LD RANLIB STRIP)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS})
+    vcpkg_backup_env_variables(VARS ${cm_TOOLS})
 
 
     # FC fotran compiler | FF Fortran 77 compiler 
@@ -506,11 +508,6 @@ function(vcpkg_configure_make)
                 endif()
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
-
-            string(APPEND configure_env " AR=llvm-ar")
-            string(APPEND configure_env " RANLIB=llvm-ranlib")
-            string(APPEND configure_env " READELF=llvm-readelf")
-            string(APPEND configure_env " STRIP=llvm-strip")
         endif()
     endif()
 
@@ -904,7 +901,7 @@ function(vcpkg_configure_make)
     endif()
 
     # Restore environment
-    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS ${cm_FLAGS} ${cm_TOOLS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
