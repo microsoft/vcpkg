@@ -77,6 +77,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Dglx=false) #Requires Mesa3D for gl.pc
     list(APPEND OPTIONS -Dsecure-rpc=false) #Problem encountered: secure-rpc requested, but neither libtirpc or libc RPC support were found
     list(APPEND OPTIONS -Dlisten_tcp=true)
+    list(APPEND OPTIONS -Dlisten_local=false)
     list(APPEND OPTIONS -Dxwin=true)
     set(ENV{INCLUDE} "$ENV{INCLUDE};${CURRENT_INSTALLED_DIR}/include")
 else()
