@@ -1,0 +1,80 @@
+{
+  "name": "vcpkg-ci-llvm",
+  "version-string": "0",
+  "description": "LLVM features testing within CI.",
+  "supports": "!uwp & !(arm & windows)",
+  "default-features": [
+    "all-targets",
+    "flang",
+    "lldb",
+    "polly",
+    "utils"
+  ],
+  "features": {
+    "all-targets": {
+      "description": "Test all targets",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "default-options",
+            "lld",
+            "target-all",
+            "tools"
+          ]
+        }
+      ]
+    },
+    "flang": {
+      "description": "Test Flang",
+      "supports": "!(x86 & windows)",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "flang"
+          ]
+        }
+      ]
+    },
+    "lldb": {
+      "description": "Test LLDB",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "lldb"
+          ]
+        }
+      ]
+    },
+    "polly": {
+      "description": "Test Polly",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "polly"
+          ]
+        }
+      ]
+    },
+    "utils": {
+      "description": "Test Utils",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": true,
+          "features": [
+            "utils"
+          ]
+        }
+      ]
+    }
+  }
+}
