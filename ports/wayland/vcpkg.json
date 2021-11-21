@@ -1,0 +1,13 @@
+{
+  "name": "wayland",
+  "version-string": "1.19.0",
+  "description": "Core Wayland window system code and protocol",
+  "homepage": "https://wayland.freedesktop.org",
+  "supports": "!windows",
+  "dependencies": [
+    "expat",
+    "libffi",
+    "libxml2",
+    "tool-meson"
+  ]
+}
