@@ -13,29 +13,19 @@ vcpkg_extract_source_archive_ex(
         fix-makefiles.patch
 )
 
+set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
+
 if (VCPKG_TARGET_IS_WINDOWS)
-  if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
-      set(SPATIALITE_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/spatialite.lib")
-      set(SPATIALITE_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib")
-      set(ICONV_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib")
-      set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib")
-      set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpat.lib")
-      set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatd.lib")
-  else()
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
-      set(SPATIALITE_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/spatialite.lib ${CURRENT_INSTALLED_DIR}/lib/freexl.lib ${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-      set(SPATIALITE_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib ${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-      set(ICONV_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/lib/charset.lib")
-      set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib")
-      set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpatMD.lib")
-      set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib")
+  list(APPEND PKGCONFIG_MODULES readosm spatialite)
+  x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        LIBS
+  )
+
+  set(ICONV_LIBS "iconv.lib")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(APPEND ICONV_LIBS " charset.lib")
   endif()
 
   if(VCPKG_TARGET_IS_UWP)
@@ -44,36 +34,24 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   set(LIBS_ALL_DBG
-      "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/readosm.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
-      ${LIBXML2_LIBS_DBG} \
-      ${GEOS_LIBS_DBG} \
-      ${ICONV_LIBS_DBG} \
-      ${SPATIALITE_LIBS_DBG} \
-      ${EXPAT_LIBS_DBG} \
+      "${PKGCONFIG_LIBS_DEBUG} \
+      ${ICONV_LIBS} \
       ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
+      "
   )
   set(LIBS_ALL_REL
-      "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/readosm.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
-      ${LIBXML2_LIBS_REL} \
-      ${GEOS_LIBS_REL} \
-      ${ICONV_LIBS_REL} \
-      ${SPATIALITE_LIBS_REL} \
-      ${EXPAT_LIBS_REL} \
+      "${PKGCONFIG_LIBS_RELEASE} \
+      ${ICONV_LIBS} \
       ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
+      "
   )
 
   file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
   list(APPEND OPTIONS_RELEASE
-      "LINK_FLAGS=${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
+      "LINK_FLAGS=${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}" "LIBS_ALL=/link ${LIBS_ALL_REL}"
   )
   list(APPEND OPTIONS_DEBUG
-      "LINK_FLAGS=/debug ${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
+      "LINK_FLAGS=/debug ${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=/link ${LIBS_ALL_DBG}"
   )
 
   vcpkg_install_nmake(
@@ -105,32 +83,23 @@ if (VCPKG_TARGET_IS_WINDOWS)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
-  if(VCPKG_TARGET_IS_LINUX)
-      set(LIBS "-lpthread -ldl -lm -lz -lstdc++")
-  else()
-      set(LIBS "-lpthread -ldl -lm -lz -lc++ -liconv -lc")
-  endif()
-
-  list(APPEND OPTIONS_RELEASE
-      "LIBXML2_LIBS=-lxml2 -llzma"
-      "GEOS_LDFLAGS=-lgeos_c -lgeos"
-  )
-  list(APPEND OPTIONS_DEBUG
-      "LIBXML2_LIBS=-lxml2 -llzmad"
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd"
+  x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES ${PKGCONFIG_MODULES}
+        LIBS
   )
 
   vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
     OPTIONS
-        "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-        "LIBS=${LIBS}"
-        "--disable-minizip"
+        --disable-minizip
+        --disable-readline
+        --enable-readosm
     OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
+        "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
     OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
+        "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
   )
 
   vcpkg_install_make()
