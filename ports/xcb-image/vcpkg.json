@@ -1,0 +1,10 @@
+{
+  "name": "xcb-image",
+  "version": "0.4.0",
+  "description": "XCB port of Xlib's XImage and XShmImage functions.",
+  "homepage": "https://xcb.freedesktop.org/",
+  "dependencies": [
+    "xcb",
+    "xcb-util"
+  ]
+}
