@@ -281,6 +281,9 @@ else()
     if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
         list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
     endif()
+    if(VCPKG_OSX_SYSROOT)
+        list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         COPY_SOURCE
