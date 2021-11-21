@@ -1,0 +1,17 @@
+{
+  "name": "xfont",
+  "version": "2.0.5",
+  "description": "X font handling library for server & utilities",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxp",
+  "dependencies": [
+    "bzip2",
+    "fontenc",
+    "freetype",
+    "x11",
+    "xext",
+    "xorg-macros",
+    "xproto",
+    "xtrans",
+    "zlib"
+  ]
+}
