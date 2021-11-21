@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     PATCHES makefile.patch #without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
             configure.patch
             fixes.patch
+            getpid_include.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
