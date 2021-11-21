@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index ccee8f19a..74a9c84ca 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -48,6 +48,6 @@ fi
+ AC_CHECK_FUNCS([strdup strcasecmp])
+ 
+ # Checks for pkg-config packages
+-PKG_CHECK_MODULES(XKBCOMP, [x11 xkbfile xproto >= 7.0.17])
++PKG_CHECK_MODULES(XKBCOMP, [x11 xkbfile x11-xcb xau xdmcp xproto >= 7.0.17])
+ 
+ AC_ARG_WITH([xkb_config_root],

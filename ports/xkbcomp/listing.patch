@@ -1,0 +1,14 @@
+diff --git a/listing.c b/listing.c
+index 322cbf240..ab61a58db 100644
+--- a/listing.c	
++++ b/listing.c
+@@ -74,6 +74,9 @@ SOFTWARE.
+ #include <ctype.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#ifdef _MSC_VER
++#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
++#endif
+ #include <X11/keysym.h>
+ 
+ #if defined(sgi)
