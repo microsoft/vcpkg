@@ -201,6 +201,12 @@ macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
 endmacro()
 
+macro(_vcpkg_setup_detected_env env_name cmake_var)
+    if(VCPKG_DETECTED_${cmake_var})
+        set(ENV{${env_name}} "${VCPKG_DETECTED_${cmake_var}}")
+    endif()
+endmacro()
+
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     # Allows to overwrite settings in custom triplets via the environment on windows
     if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
@@ -501,14 +507,6 @@ function(vcpkg_configure_make)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
 
-            if (TARGET_ARCH MATCHES "armv7-a")
-                string(APPEND configure_env " CC=armv7a-linux-androideabi${ANDROID_API_LEVEL}-clang")
-                string(APPEND configure_env " CXX=armv7a-linux-androideabi${ANDROID_API_LEVEL}-clang++")
-            else()
-                string(APPEND configure_env " CC=${TARGET_ARCH}-linux-android${ANDROID_API_LEVEL}-clang")
-                string(APPEND configure_env " CXX=${TARGET_ARCH}-linux-android${ANDROID_API_LEVEL}-clang++")
-            endif()
-
             string(APPEND configure_env " AR=llvm-ar")
             string(APPEND configure_env " RANLIB=llvm-ranlib")
             string(APPEND configure_env " READELF=llvm-readelf")
@@ -805,6 +803,14 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup environment
+        _vcpkg_setup_detected_env(CC CMAKE_C_COMPILER)
+        _vcpkg_setup_detected_env(CXX CMAKE_CXX_COMPILER)
+        _vcpkg_setup_detected_env(LD CMAKE_LINKER)
+        set(_tools AR RANLIB STRIP NM OBJDUMP DLLTOOL MT STRIP AS)
+        foreach (_toolname ${_tools})
+            _vcpkg_setup_detected_env(${_toolname} CMAKE_${_toolname})
+        endforeach()
+
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${current_buildtype}}")
