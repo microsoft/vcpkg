@@ -1,0 +1,12 @@
+{
+  "name": "fontenc",
+  "version-string": "1.1.4",
+  "description": "X font encoding library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libfontenc",
+  "dependencies": [
+    "font-util",
+    "xorg-macros",
+    "xproto",
+    "zlib"
+  ]
+}
