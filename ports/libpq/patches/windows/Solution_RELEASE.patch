@@ -2,7 +2,7 @@ diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
 index 51711c2bf..d33fdc3b0 100644
 --- a/src/tools/msvc/Solution.pm	
 +++ b/src/tools/msvc/Solution.pm
-@@ -650,7 +650,7 @@ sub AddProject
+@@ -658,7 +658,7 @@ sub AddProject
  	if ($self->{options}->{zlib})
  	{
  		$proj->AddIncludeDir($self->{options}->{zlib} . '\include');
@@ -11,16 +11,16 @@ index 51711c2bf..d33fdc3b0 100644
  	}
  	if ($self->{options}->{openssl})
  	{
-@@ -661,7 +661,7 @@ sub AddProject
- 		# changed their library names from:
+@@ -670,7 +670,7 @@ sub AddProject
  		# - libeay to libcrypto
  		# - ssleay to libssl
--		if ($digit1 >= '1' && $digit2 >= '1' && $digit3 >= '0')
-+		if ($digit1 >= '1' && $digit2 >= '1' && $digit3 >= '0') # This must be updated
+ 		if (   ($digit1 >= '3' && $digit2 >= '0' && $digit3 >= '0')
+-			|| ($digit1 >= '1' && $digit2 >= '1' && $digit3 >= '0'))
++			|| ($digit1 >= '1' && $digit2 >= '1' && $digit3 >= '0')) # This must be updated
  		{
  			my $dbgsuffix;
  			my $libsslpath;
-@@ -670,27 +670,27 @@ sub AddProject
+@@ -679,27 +679,27 @@ sub AddProject
  			# The format name of the libraries is slightly
  			# different between the Win32 and Win64 platform, so
  			# adapt.
@@ -56,7 +56,7 @@ index 51711c2bf..d33fdc3b0 100644
  			}
  
  			$proj->AddLibrary($self->{options}->{openssl} . $libsslpath,
-@@ -698,16 +698,16 @@ sub AddProject
+@@ -707,16 +707,16 @@ sub AddProject
  			$proj->AddLibrary($self->{options}->{openssl} . $libcryptopath,
  				$dbgsuffix);
  		}
@@ -77,7 +77,7 @@ index 51711c2bf..d33fdc3b0 100644
  			}
  			else
  			{
-@@ -715,60 +715,60 @@ sub AddProject
+@@ -715,76 +715,76 @@ sub AddProject
  				# to be here, so don't ask for it in last
  				# parameter.
  				$proj->AddLibrary(
@@ -97,15 +97,35 @@ index 51711c2bf..d33fdc3b0 100644
  	}
  	if ($self->{options}->{gss})
  	{
--		$proj->AddIncludeDir($self->{options}->{gss} . '\inc\krb5');
--		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\krb5_32.lib');
--		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\comerr32.lib');
--		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\gssapi32.lib');
-+		$proj->AddIncludeDir($self->{options}->{gss} . '\inc\krb5');  # This must be updated
-+		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\krb5_32.lib'); # This must be updated
-+		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\comerr32.lib');# This must be updated
-+		$proj->AddLibrary($self->{options}->{gss} . '\lib\i386\gssapi32.lib');# This must be updated
- 	}
+-		$proj->AddIncludeDir($self->{options}->{gss} . '\include');
++		$proj->AddIncludeDir($self->{options}->{gss} . '\include'); # This must be updated
+-		$proj->AddIncludeDir($self->{options}->{gss} . '\include\krb5');
++		$proj->AddIncludeDir($self->{options}->{gss} . '\include\krb5'); # This must be updated
+ 		if ($self->{platform} eq 'Win32')
+ 		{
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\i386\krb5_32.lib');
++				$self->{options}->{gss} . '\lib\i386\krb5_32.lib'); # This must be updated
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\i386\comerr32.lib');
++				$self->{options}->{gss} . '\lib\i386\comerr32.lib'); # This must be updated
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\i386\gssapi32.lib');
++				$self->{options}->{gss} . '\lib\i386\gssapi32.lib'); # This must be updated
+ 		}
+ 		else
+ 		{
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\amd64\krb5_64.lib');
++				$self->{options}->{gss} . '\lib\amd64\krb5_64.lib'); # This must be updated
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\amd64\comerr64.lib');
++				$self->{options}->{gss} . '\lib\amd64\comerr64.lib'); # This must be updated
+ 			$proj->AddLibrary(
+-				$self->{options}->{gss} . '\lib\amd64\gssapi64.lib');
++				$self->{options}->{gss} . '\lib\amd64\gssapi64.lib'); # This must be updated
+ 		}
+  	}
  	if ($self->{options}->{iconv})
  	{
  		$proj->AddIncludeDir($self->{options}->{iconv} . '\include');

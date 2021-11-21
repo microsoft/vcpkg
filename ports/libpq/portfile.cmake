@@ -1,4 +1,4 @@
-set(PORT_VERSION 12.2)
+set(PORT_VERSION 12.9)
 # NOTE: the python patches must be regenerated on version update
 
 macro(feature_unsupported)
@@ -32,7 +32,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 0e0ce8e21856e8f43e58b840c10c4e3ffae6d5207e0d778e9176e36f8e20e34633cbb06f0030a7c963c3491bb7e941456d91b55444c561cfc6f283fba76f33ee
+    SHA512 11697d8283f5df5a9c74c2406e94d1b6da6df8358ad48f3b773825aab98e8395f9fd4e3fc8b1e6ebad3743c3dadbda8b795d4fe84a447d7913223e136cf2b88f
 )
 
 set(PATCHES
