@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Dxorg-rules-symlinks=false
+            -Dxkb-base=$datadir/xkbcomp/X11/xkb
 )
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH "${PERL}" DIRECTORY)
