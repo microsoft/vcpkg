@@ -1,0 +1,51 @@
+diff --git a/os/auth.c b/os/auth.c
+index 611e4efb1..6e5b39b0c 100644
+--- a/os/auth.c
++++ b/os/auth.c
+@@ -35,6 +35,11 @@ from The Open Group.
+ #include <dix-config.h>
+ #endif
+ 
++#ifdef _MSC_VER
++#define _CRT_RAND_S
++#include <stdlib.h>
++#endif
++
+ #include   <X11/X.h>
+ #include   <X11/Xauth.h>
+ #include   "misc.h"
+@@ -316,10 +321,34 @@ GenerateRandomData(int len, char *buf)
+ #ifdef HAVE_ARC4RANDOM_BUF
+     arc4random_buf(buf, len);
+ #else
++#ifndef _MSC_VER
+     int fd;
+ 
+     fd = open("/dev/urandom", O_RDONLY);
+     read(fd, buf, len);
+     close(fd);
++#else    
++    errno_t         err = 0;
++    const unsigned int writeable_ints = len / 4; // (sizeof(int) / sizeof(char))
++    const unsigned int remaining_len = len - writeable_ints * sizeof(int);
++    unsigned int* pintbuf = (unsigned int*)buf;
++    for (int i = 0; i < writeable_ints; i++)
++    {
++        err = rand_s(pintbuf);
++        if (err!=0) {
++            //Do something
++        };
++        pintbuf++;
++    }
++    if (remaining_len != 0) {
++        unsigned int tmpbuf;
++        err = rand_s(&tmpbuf);
++        if (err!=0) {
++            //Do something
++        }
++        memcpy(pintbuf, &tmpbuf, remaining_len);
++    }
++    
++#endif
+ #endif
+ }

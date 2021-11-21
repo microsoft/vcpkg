@@ -1,0 +1,103 @@
+{
+  "name": "xserver",
+  "version": "21.1.1",
+  "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
+  "homepage": "https://gitlab.freedesktop.org/xorg/xserver",
+  "dependencies": [
+    "dbus",
+    "libepoxy",
+    "nettle",
+    "opengl",
+    {
+      "name": "pciaccess",
+      "platform": "!windows"
+    },
+    "pixman",
+    "pthread",
+    "tool-meson",
+    "x11",
+    "xau",
+    "xcb",
+    "xcb-image",
+    "xcb-keysyms",
+    "xcb-proto",
+    "xcb-render-util",
+    "xcb-util",
+    "xcb-util-m4",
+    "xcb-wm",
+    "xdmcp",
+    "xfont",
+    "xkbcommon",
+    "xkbcomp",
+    "xkbcomp",
+    "xkbfile",
+    "xorg-macros",
+    "xproto",
+    "xkeyboard-config",
+    {
+      "name": "xshmfence",
+      "platform": "!windows"
+    },
+    "xtrans",
+    "xv",
+    {
+      "name": "xxf86dga",
+      "platform": "!windows"
+    }
+  ],
+  "default-features" : [ "platformselect"],
+  "features": {
+    "platformselect": {
+      "description": "Build xwayland server",
+      "dependencies": [
+        {
+          "name": "xserver",
+          "default-features": false,
+          "features": [
+            "xwin"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "xserver",
+          "default-features": false,
+          "features": [
+            "xnest",
+            "xorg",
+            "xwayland",
+            "xwin"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "xnest": {
+      "description": "Build xnest server",
+      "dependencies": [
+        "x11",
+        "xau",
+        "xext"
+      ]
+    },
+    "xorg": {
+      "description": "Build xorg server"
+    },
+    "xwayland": {
+      "description": "Build xwayland server",
+      "dependencies": [
+        "drm",
+        "libepoxy",
+        "wayland",
+        "wayland-protocols"
+      ]
+    },
+    "xwin": {
+      "description": "Build xwin server",
+      "dependencies": [
+        "dirent",
+        "xcb-wm",
+        "xfixes"
+      ]
+    }
+  }
+}
