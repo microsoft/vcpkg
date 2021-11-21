@@ -78,9 +78,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(_file "${CURRENT_PACKAGES_DIR}/include/xcb/xkb.h")
-    file(READ "${_file}" _contents)
-    string(REPLACE "extern xcb_extension_t xcb_xkb_id;" "__declspec(dllimport) extern xcb_extension_t xcb_xkb_id;" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/xkb.h"
+                         "extern xcb_extension_t xcb_xkb_id;"
+                         "__declspec(dllimport) extern xcb_extension_t xcb_xkb_id;")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/xfixes.h"
+                         "extern xcb_extension_t xcb_xfixes_id;"
+                         "__declspec(dllimport) extern xcb_extension_t xcb_xfixes_id;")
 endif()
