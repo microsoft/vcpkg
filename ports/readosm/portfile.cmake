@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
+        pc-file.patch
 )
 
 set(PKGCONFIG_MODULES expat zlib)
@@ -51,6 +52,20 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+    set(infile "${SOURCE_PATH}/readosm.pc.in")
+    set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/readosm.pc")
+    set(VERSION "${READOSM_VERSION_STR}")
+    set(exec_prefix [[${prefix}]])
+    set(libdir [[${prefix}/lib]])
+    set(includedir [[${prefix}/include]])
+    list(JOIN pkg_config_modules " " requires_private)
+    configure_file("${infile}" "${outfile}" @ONLY)
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/readosm.pc")
+        set(includedir [[${prefix}/../include]])
+        configure_file("${infile}" "${outfile}" @ONLY)
+    endif()
+
 else()
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
@@ -67,8 +82,9 @@ else()
     )
 
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
