@@ -1,0 +1,13 @@
+{
+  "name": "xscrnsaver",
+  "version": "1.2.3",
+  "description": "Xlib-based X11 Screen Saver extension client library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxscrnsaver",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xext",
+    "xorg-macros",
+    "xproto"
+  ]
+}
