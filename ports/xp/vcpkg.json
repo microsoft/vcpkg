@@ -1,0 +1,15 @@
+{
+  "name": "xp",
+  "version": "1.0.3",
+  "description": "X Print Client Library (Legacy)",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxp",
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xau",
+    "xext",
+    "xorg-macros",
+    "xproto"
+  ]
+}
