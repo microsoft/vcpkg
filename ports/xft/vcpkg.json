@@ -1,0 +1,15 @@
+{
+  "name": "xft",
+  "version": "2.3.4",
+  "description": "X FreeType library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxft",
+  "dependencies": [
+    "bzip2",
+    "fontconfig",
+    "freetype",
+    "x11",
+    "xorg-macros",
+    "xproto",
+    "xrender"
+  ]
+}
