@@ -1,9 +1,9 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp" "osx")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO buck-yeh/bux
-    REF 8788509f0281e9a2af34c0399a45a5c9e66a4664 # v1.6.3
-    SHA512 a7045a93d91e497ca2b60965bb2f098eae714d00feef0d252747178739cdd981f44cb8983278c679761f61e037da05889f22fa161d26fca05af511fc56c1ac8f
+    REPO buck-yeh/bux-mariadb-client
+    REF bb078afd7e7287f9c3220b889e8206d5a841b185 # v1.0.1
+    SHA512 96cc0a40809f13d4a49e849306eed96dc2bc00998612344801df7d664f8a0a9cfa646b70927747d1decbca48cf5ff9502796b7738b106e9b68a4564abd981ce9
     HEAD_REF main
 )
 
