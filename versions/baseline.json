@@ -5965,7 +5965,7 @@
       "port-version": 1
     },
     "restinio": {
-      "baseline": "0.6.13",
+      "baseline": "0.6.14",
       "port-version": 0
     },
     "rexo": {
