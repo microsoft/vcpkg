@@ -57,6 +57,13 @@ if(NOT DEFINED OPENSSL_NO_INSTALL_SSLDIRS)
     set(OPENSSL_INSTALL_TARGETS ${OPENSSL_INSTALL_TARGETS} install_ssldirs)
 endif()
 
+if (DEFINED OPENSSL_ENGINESDIR)
+    vcpkg_replace_string("${SOURCE_PATH}/Configurations/windows-makefile.tmpl"
+        "ENGINESDIR=\\\"\$enginesdir"
+        "ENGINESDIR=\\\"${OPENSSL_ENGINESDIR}"
+    )
+endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     # Copy openssl sources.
