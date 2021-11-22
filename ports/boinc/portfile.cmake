@@ -14,6 +14,14 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if(VCPKG_TARGET_IS_LINUX)
+    if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "arm64")
+        set(OPTIONS --host=aarch64-linux)
+    elseif(${VCPKG_TARGET_ARCHITECTURE} MATCHES "armv6")
+        set(OPTIONS --host=armv6-linux)
+    elseif (${VCPKG_TARGET_ARCHITECTURE} MATCHES "arm")
+        set(OPTIONS --host=arm-linux)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
