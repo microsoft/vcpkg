@@ -1,7 +1,8 @@
+set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES ON)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PATCHES dllimport.patch)
@@ -34,8 +35,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         --with-lint=no
         --disable-selective-werror
         --enable-unix-transport=no)
-        
-        #https://gitlab.freedesktop.org/xorg/xserver/merge_requests/191/diffs
 endif()
 if(NOT XLSTPROC)
     find_program(XLSTPROC NAMES "xsltproc${VCPKG_HOST_EXECUTABLE_SUFFIX}" PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt" PATH_SUFFIXES "bin")
@@ -52,7 +51,9 @@ vcpkg_find_acquire_program(PERL)
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    OPTIONS ${OPTIONS}
+    OPTIONS 
+        LC_ALL=C
+        ${OPTIONS}
 )
 
 vcpkg_install_make()
@@ -65,5 +66,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+endif()
