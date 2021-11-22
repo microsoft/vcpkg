@@ -4,8 +4,8 @@
   "description": "X Keyboard Extension",
   "homepage": "https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config",
   "dependencies": [
-    "tool-meson",
     "libxslt",
+    "tool-meson",
     "xkbcommon",
     "xlib"
   ]

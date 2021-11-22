@@ -5,13 +5,13 @@
   "homepage": "https://www.x.org/wiki/",
   "dependencies": [
     "bzip2",
-    "xcb",
-    "xproto",
-    "xtrans",
     {
       "name": "libxslt",
       "host": true
-    }
+    },
+    "xcb",
+    "xproto",
+    "xtrans"
   ],
   "features": {
     "no-feature": {

@@ -7,10 +7,10 @@
     "bzip2",
     {
       "name": "libxml2",
+      "host": true,
       "features": [
         "tools"
-      ],
-      "host": true
+      ]
     },
     "xorg-macros"
   ]
