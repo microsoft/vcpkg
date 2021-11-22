@@ -38,10 +38,7 @@ endif()
 # Make path to cache in fonts.conf relative
 set(_file "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
 if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig" _contents "${_contents}")
-    string(REPLACE "/var" "/../var" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
+    vcpkg_replace_string("${_file}" "${CURRENT_PACKAGES_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var"
