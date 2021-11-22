@@ -1,6 +1,6 @@
 {
   "name": "pciaccess",
-  "version-string": "0.16",
+  "version": "0.16",
   "description": "Generic PCI access library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libpciaccess",
   "supports": "!windows",
