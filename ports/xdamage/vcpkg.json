@@ -1,0 +1,13 @@
+{
+  "name": "xdamage",
+  "version": "1.1.5",
+  "description": "X Damage Extension library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxdamage",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xfixes",
+    "xorg-macros",
+    "xproto"
+  ]
+}
