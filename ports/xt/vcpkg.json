@@ -1,0 +1,15 @@
+{
+  "name": "xt",
+  "version": "1.2.1",
+  "description": "X Toolkit Intrinsics library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxt",
+  "dependencies": [
+    "bzip2",
+    "glib",
+    "ice",
+    "sm",
+    "x11",
+    "xorg-macros",
+    "xproto"
+  ]
+}
