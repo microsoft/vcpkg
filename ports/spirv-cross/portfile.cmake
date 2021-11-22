@@ -32,10 +32,9 @@ foreach(COMPONENT core c cpp glsl hlsl msl reflect util)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
 endforeach()
 
-vcpkg_copy_tools(
-    TOOL_NAMES spirv-cross
-    AUTO_CLEAN
-)
+if(BUILD_CLI)
+    vcpkg_copy_tools(TOOL_NAMES spirv-cross AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
