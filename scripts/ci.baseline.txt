@@ -1673,7 +1673,9 @@ unicorn:x64-windows-static-md=fail
 v8:x64-windows-static-md=fail
 # xlib does not correctly crosscompile. Needs some patches to allow for 'internal' host makekeys (CC_FOR_BUILD)
 xlib:arm64-windows=fail
+# asm() insttructions are rejected by cl
 xt:x64-windows=fail
+xt:x86-windows=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
