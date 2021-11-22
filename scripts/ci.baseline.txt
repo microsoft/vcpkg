@@ -1664,6 +1664,7 @@ openscap:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
+spatialite-tools:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 teemo:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
