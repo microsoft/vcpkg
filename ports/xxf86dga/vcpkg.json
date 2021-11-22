@@ -1,0 +1,13 @@
+{
+  "name": "xxf86dga",
+  "version-string": "1.1.5",
+  "description": "Xlib-based library for the XFree86-DGA extension",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxxf86dga",
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "xext",
+    "xorg-macros",
+    "xproto"
+  ]
+}
