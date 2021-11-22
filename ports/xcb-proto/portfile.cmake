@@ -1,9 +1,9 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) 
-
+set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES ON)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 find_program(XMLLINT_PATH NAMES xmllint PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/libxml2")
 if(NOT XMLLINT_PATH)
@@ -33,7 +33,7 @@ vcpkg_from_gitlab(
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
 )
 
@@ -42,6 +42,9 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+endif()
+if(VCPGK_TARGET_IS_OSX)
+    message(FATAL_ERROR "NEED LOGS")
+endif()
