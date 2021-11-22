@@ -1,0 +1,14 @@
+{
+  "name": "xcursor",
+  "version": "1.2.0",
+  "description": "Xlib-based Cursor management library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcursor",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xfixes",
+    "xorg-macros",
+    "xproto",
+    "xrender"
+  ]
+}
