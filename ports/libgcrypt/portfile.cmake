@@ -10,7 +10,7 @@ vcpkg_from_git(
 
 vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-doc
         --disable-silent-rules
@@ -21,5 +21,8 @@ vcpkg_install_make()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgcrypt/bin/libgcrypt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
