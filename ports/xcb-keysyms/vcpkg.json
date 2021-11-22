@@ -6,7 +6,8 @@
   "dependencies": [
     "bzip2",
     "xorg-macros",
-    "xproto"
+    "xproto",
+    "xcb"
   ],
   "features": {
     "no-feature": {

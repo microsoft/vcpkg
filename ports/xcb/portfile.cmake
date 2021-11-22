@@ -1,7 +1,8 @@
+set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES  ON)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
@@ -38,9 +39,9 @@ vcpkg_add_to_path("${XLSTPROC_DIR}")
 set(ENV{XLSTPROC} "${XLSTPROC}")
 
 if(DEFINED ENV{PYTHONPATH})
-    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.9/site-packages/${VCPKG_HOST_PATH_SEPARATOR}$ENV{PYTHONPATH}")
+    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.10/site-packages/${VCPKG_HOST_PATH_SEPARATOR}$ENV{PYTHONPATH}")
 else()
-    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.9/site-packages/")
+    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.10/site-packages/")
 endif()
 
 vcpkg_configure_make(
@@ -65,4 +66,5 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VC
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xcb/xfixes.h"
                          "extern xcb_extension_t xcb_xfixes_id;"
                          "__declspec(dllimport) extern xcb_extension_t xcb_xfixes_id;")
+endif()
 endif()
