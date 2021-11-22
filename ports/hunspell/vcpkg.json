@@ -6,18 +6,20 @@
   "homepage": "https://github.com/hunspell/hunspell",
   "supports": "!((arm | uwp) & windows)",
   "dependencies": [
-    {
-      "name": "gettext",
-      "host": true,
-      "features": [
-        "tools"
-      ]
-    },
     "libiconv"
   ],
   "features": {
     "tools": {
-      "description": "Build hunspell tools"
+      "description": "Build hunspell tools",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     }
   }
 }
