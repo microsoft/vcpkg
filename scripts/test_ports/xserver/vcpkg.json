@@ -80,7 +80,10 @@
       ]
     },
     "xorg": {
-      "description": "Build xorg server"
+      "description": "Build xorg server",
+      "dependencies": [
+        "xcvt"
+      ]
     },
     "xwayland": {
       "description": "Build xwayland server",
