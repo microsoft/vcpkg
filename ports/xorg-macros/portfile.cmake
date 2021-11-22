@@ -35,6 +35,7 @@ string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/include" "includedir=\${pref
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xorg-macros.pc" "${_contents}")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/xorg-macros.pc")
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/xorg-macros.pc")
     file(READ "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/xorg-macros.pc" _contents)
@@ -47,10 +48,13 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/xorg-macros.pc"
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/xorg-macros.pc")
     file(RENAME  "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/xorg/debug/${PORT}/pkgconfig" "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
 vcpkg_fixup_pkgconfig()
 
 # # Handle copyright
