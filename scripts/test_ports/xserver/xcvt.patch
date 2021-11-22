@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 3a35f0ee9..5b61eeada 100644
+--- a/meson.build	
++++ b/meson.build
+@@ -194,7 +194,7 @@ if (host_machine.system() != 'darwin' and
+     endif
+ endif
+ xorgsdkdir = join_paths(get_option('prefix'), get_option('includedir'), 'xorg')
+-libxcvt_dep = dependency('libxcvt', required: build_xorg)
++libxcvt_dep = dependency('xcvt', required: build_xorg)
+ 
+ build_xnest = false
+ if (host_machine.system() != 'darwin' and
