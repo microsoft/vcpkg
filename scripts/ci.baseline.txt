@@ -128,6 +128,8 @@ civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 clblas:arm64-windows=fail
 clockutils:x64-linux=fail
+# CMake 3.4 needs libidn.so.11 (Ubuntu: libidn11)
+cmake-user:x64-linux=skip
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
