@@ -27,7 +27,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 foreach(COMPONENT core c cpp glsl hlsl msl reflect util)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "share/spirv_cross_${COMPONENT}/cmake" PACKAGE_NAME "spirv_cross_${COMPONENT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake PACKAGE_NAME spirv_cross_${COMPONENT})
 endforeach()
 
 if(BUILD_CLI)
