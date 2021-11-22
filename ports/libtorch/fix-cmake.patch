@@ -1,11 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0c11507..38df45c 100644
+index 0c11507..4045217 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -634,9 +634,14 @@ if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES M
-   if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
-     message(FATAL_ERROR "Could not compile universal protoc.")
-   endif()
+@@ -621,22 +621,14 @@ endif()
+ # The below means we are cross compiling for arm64 or x86_64 on MacOSX
+ if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
+   set(CROSS_COMPILING_MACOSX TRUE)
+-  # We need to compile a universal protoc to not fail protobuf build
+-  # We set CMAKE_TRY_COMPILE_TARGET_TYPE to STATIC_LIBRARY (vs executable) to succeed the cmake compiler check for cross-compiling
+-  set(protoc_build_command "./scripts/build_host_protoc.sh --other-flags -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY -DCMAKE_C_COMPILER_WORKS=1 -DCMAKE_CXX_COMPILER_WORKS=1")
+-  # We write to a temp scriptfile because CMake COMMAND dislikes double quotes in commands
+-  file(WRITE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh "#!/bin/bash\n${protoc_build_command}")
+-  file(COPY ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh DESTINATION ${PROJECT_SOURCE_DIR}/scripts/ FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
+-  execute_process(COMMAND ./scripts/tmp_protoc_script.sh
+-                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+-                  RESULT_VARIABLE BUILD_HOST_PROTOC_RESULT)
+-  file(REMOVE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh ${PROJECT_SOURCE_DIR}/scripts/tmp_protoc_script.sh)
+-  if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
+-    message(FATAL_ERROR "Could not compile universal protoc.")
+-  endif()
 -  set(PROTOBUF_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
 -  set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
  endif()
@@ -19,7 +32,7 @@ index 0c11507..38df45c 100644
  
  # ---[ Misc checks to cope with various compiler modes
  include(cmake/MiscCheck.cmake)
-@@ -650,7 +655,8 @@ if(USE_FBGEMM AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND CMAKE_SIZEOF_VO
+@@ -650,7 +642,8 @@ if(USE_FBGEMM AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND CMAKE_SIZEOF_VO
    set(USE_FBGEMM OFF)
  endif()
  
@@ -194,27 +207,3 @@ index 26210cb..c2f59e9 100644
  # ==========================================================
  # formerly-libtorch flags
  # ==========================================================
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 38df45c..4045217 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -621,19 +621,6 @@ endif()
- # The below means we are cross compiling for arm64 or x86_64 on MacOSX
- if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
-   set(CROSS_COMPILING_MACOSX TRUE)
--  # We need to compile a universal protoc to not fail protobuf build
--  # We set CMAKE_TRY_COMPILE_TARGET_TYPE to STATIC_LIBRARY (vs executable) to succeed the cmake compiler check for cross-compiling
--  set(protoc_build_command "./scripts/build_host_protoc.sh --other-flags -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY -DCMAKE_C_COMPILER_WORKS=1 -DCMAKE_CXX_COMPILER_WORKS=1")
--  # We write to a temp scriptfile because CMake COMMAND dislikes double quotes in commands
--  file(WRITE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh "#!/bin/bash\n${protoc_build_command}")
--  file(COPY ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh DESTINATION ${PROJECT_SOURCE_DIR}/scripts/ FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
--  execute_process(COMMAND ./scripts/tmp_protoc_script.sh
--                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
--                  RESULT_VARIABLE BUILD_HOST_PROTOC_RESULT)
--  file(REMOVE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh ${PROJECT_SOURCE_DIR}/scripts/tmp_protoc_script.sh)
--  if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
--    message(FATAL_ERROR "Could not compile universal protoc.")
--  endif()
- endif()
- find_package(protobuf CONFIG REQUIRED)
- find_program(PROTOBUF_PROTOC_EXECUTABLE
