@@ -190,6 +190,7 @@ dbghelp:x64-windows-static=skip
 dbghelp:x64-windows-static-md=skip
 dbghelp:x64-windows=skip
 dbghelp:x86-windows=skip
+dbus:x64-osx=fail
 dcmtk:arm-uwp=fail
 dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
