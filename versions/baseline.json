@@ -6477,8 +6477,8 @@
       "port-version": 1
     },
     "sqlite-orm": {
-      "baseline": "1.6",
-      "port-version": 1
+      "baseline": "1.7",
+      "port-version": 0
     },
     "sqlite3": {
       "baseline": "3.36.0",
