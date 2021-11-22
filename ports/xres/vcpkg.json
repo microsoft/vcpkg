@@ -1,0 +1,13 @@
+{
+  "name": "xres",
+  "version": "1.2.1",
+  "description": "Xlib-based X-Resource extension client library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxres",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xext",
+    "xorg-macros",
+    "xproto"
+  ]
+}
