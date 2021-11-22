@@ -43,10 +43,6 @@ else()
     set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.9/site-packages/")
 endif()
 
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    string(APPEND VCPKG_LINKER_FLAGS_RELEASE " -lpthreadVC3")
-#    string(APPEND VCPKG_LINKER_FLAGS_DEBUG " -lpthreadVC3d")
-#endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG

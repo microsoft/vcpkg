@@ -1,6 +1,6 @@
 {
   "name": "xv",
-  "version-string": "1.0.11",
+  "version": "1.0.11",
   "description": "Xlib-based library for the X Video (Xv) extension to the X Window System",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxv",
   "dependencies": [

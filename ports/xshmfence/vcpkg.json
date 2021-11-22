@@ -1,6 +1,6 @@
 {
   "name": "xshmfence",
-  "version-string": "1.3",
+  "version": "1.3",
   "description": "Shared memory 'SyncFence' synchronization primitive",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxshmfence",
   "supports": "!windows",

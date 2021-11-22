@@ -1,6 +1,6 @@
 {
   "name": "ice",
-  "version-string": "1.0.10",
+  "version": "1.0.10",
   "description": "Inter-Client Exchange Library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libice",
   "dependencies": [
