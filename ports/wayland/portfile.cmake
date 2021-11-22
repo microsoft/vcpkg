@@ -2,7 +2,7 @@ set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES ON) # For Testing
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
@@ -18,6 +18,7 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Ddtd_validation=false
             -Ddocumentation=false
+            -Dtests=false
 )
 vcpkg_install_meson()
 
@@ -62,4 +63,4 @@ if(EXISTS "${_file}")
     string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
-
+endif()
