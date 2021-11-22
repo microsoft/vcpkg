@@ -5,6 +5,10 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(PATCHES skip_rawcpp.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,6 +16,7 @@ vcpkg_from_gitlab(
     REF  b8766308d2f78bc572abe5198007cf7aeec9b761 #v1.19.3
     SHA512 dc7383b1579dc6ef0473161764096c8161f23a4c4ba2182e7abd7f73f443eb0520e02f1dfaaba2f8ebb43e0ed93c1e6e5e7cf517561476b858d2471a8ecaf907
     HEAD_REF master # branch name
+    PATCHES ${PATCHES}
 ) 
 
 vcpkg_configure_make(
