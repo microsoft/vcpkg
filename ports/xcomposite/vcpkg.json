@@ -1,0 +1,13 @@
+{
+  "name": "xcomposite",
+  "version": "0.4.5",
+  "description": "Xlib-based client library for the Composite extension to the X11 protocol",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcomposite",
+  "dependencies": [
+    "bzip2",
+    "x11",
+    "xfixes",
+    "xorg-macros",
+    "xproto"
+  ]
+}
