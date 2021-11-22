@@ -2,6 +2,7 @@
   "name": "opennurbs",
   "version-string": "v7.11.21285.13001",
   "description": "The openNURBS Initiative provides CAD, CAM, CAE, and computer graphics software developers the tools to accurately transfer 3D geometry between applications.",
+  "supports": "!uwp",
   "dependencies": [
     "dirent",
     {
