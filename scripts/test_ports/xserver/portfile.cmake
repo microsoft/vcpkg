@@ -11,7 +11,6 @@ vcpkg_from_gitlab(
     SHA512 c7b0cd797658e5582ec08698231f5c71368b5726e8d623f72ce3821c5e9cb18991c09cee59dd2f55a56f35599613fa800376c030cb60b159781ad78a63b89bf2
     HEAD_REF master # branch name
     PATCHES ${PATCHES} 
-            xcvt.patch
 ) 
 #https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
