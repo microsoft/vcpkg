@@ -1,6 +1,6 @@
 {
   "name": "wayland-protocols",
-  "version-string": "1.18",
+  "version": "1.18",
   "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
   "homepage": "https://wayland.freedesktop.org",
   "dependencies": [
