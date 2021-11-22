@@ -2,7 +2,7 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
-
+# Does not support cl due to one singular asm instruction. 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -17,6 +17,9 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    OPTIONS 
+        --with-xfile-search-path=X11
+        --with-appdefaultdir=share/X11/app-defaults
 )
 
 vcpkg_install_make()
