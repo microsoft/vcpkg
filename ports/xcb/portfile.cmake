@@ -39,18 +39,18 @@ vcpkg_add_to_path("${XLSTPROC_DIR}")
 set(ENV{XLSTPROC} "${XLSTPROC}")
 
 if(DEFINED ENV{PYTHONPATH})
-    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.10/site-packages/${VCPKG_HOST_PATH_SEPARATOR}$ENV{PYTHONPATH}")
+    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/tools/python3/site-packages/${VCPKG_HOST_PATH_SEPARATOR}$ENV{PYTHONPATH}")
 else()
-    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/lib/python3.10/site-packages/")
+    set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/tools/python3/site-packages/")
 endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS ${OPTIONS}
 )
 
-vcpkg_install_make(MAKE_OPTIONS -k --print-data-base)
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

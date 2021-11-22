@@ -38,7 +38,9 @@ vcpkg_configure_make(
     AUTOCONFIG
     OPTIONS
         ac_cv_path_PYTHON='${PYTHON3}'
-)
+        am_cv_python_pyexecdir=\\\${prefix}/tools/python3/site-packages
+        am_cv_python_pythondir=\\\${prefix}/tools/python3/site-packages
+        )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
@@ -47,7 +49,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
-if(VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "NEED LOGS")
 endif()
