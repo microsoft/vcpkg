@@ -1746,7 +1746,7 @@
     },
     "dartsim": {
       "baseline": "6.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "dataframe": {
       "baseline": "1.19.0",
