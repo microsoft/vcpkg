@@ -26,6 +26,7 @@ vcpkg_install_make()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
 endif()
 vcpkg_fixup_pkgconfig()
 
