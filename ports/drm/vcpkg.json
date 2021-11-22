@@ -1,0 +1,10 @@
+{
+  "name": "drm",
+  "version": "2.4.108",
+  "description": "Direct Rendering Manager library and headers",
+  "homepage": "https://gitlab.freedesktop.org/mesa/drm",
+  "dependencies": [
+    "pciaccess",
+    "tool-meson"
+  ]
+}
