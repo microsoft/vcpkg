@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
     REF  e60398b1755bfcdf09f040d3769131fe0d9762fc #1.19.0
     SHA512 f2f7dd9ff71e99cf3621ab45160f59b679de763e3fdef6fcef7e14947ad43ed7a86845a213c75bb7117fdda11a51035566225a12d3eb33e8c3fe2e4456eb801d
     HEAD_REF master # branch name
-    PATCHES ${PATCHES}
+    PATCHES tests.patch
 ) 
 
 vcpkg_configure_meson(

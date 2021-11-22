@@ -1,0 +1,15 @@
+diff --git a/meson.build b/meson.build
+index 11c35fa67..26d69ade5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -91,7 +91,9 @@ subdir('src')
+ if get_option('libraries')
+ 	subdir('cursor')
+ 	subdir('egl')
+-	subdir('tests')
++	if get_option('tests')
++		subdir('tests')
++	endif
+ 	if get_option('documentation')
+ 		subdir('doc')
+ 	endif
