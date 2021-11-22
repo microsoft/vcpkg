@@ -3,7 +3,7 @@
   "version": "0.16",
   "description": "Generic PCI access library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libpciaccess",
-  "supports": "!windows",
+  "supports": "!windows | !osx",
   "dependencies": [
     "xorg-macros",
     "zlib"
