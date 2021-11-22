@@ -275,18 +275,17 @@ Unfortunately, you'll have to add this to each profile.
 
 ### Vcpkg as a Submodule
 
-When using vcpkg as a submodule of your project,
-you can add the following to your CMakeLists.txt before the first `project()` call,
-instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
+When using vcpkg as a submodule of your project, copy the
+`docs/examples/InitializeVcpkg.cmake` module into your project and add
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
-  CACHE STRING "Vcpkg toolchain file")
+include(InitializeVcpkg)
 ```
 
-This will still allow people to not use vcpkg,
-by passing the `CMAKE_TOOLCHAIN_FILE` directly,
-but it will make the configure-build step slightly easier.
+before the first `project()` call. This automatically clones the submodule
+and sets `CMAKE_TOOLCHAIN_FILE`. It also allows users to use a vcpkg
+repository at a path specified by `VCPKG_ROOT` instead of the submodule or
+disable vcpkg by setting `VCPKG=OFF`.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
