@@ -1,19 +1,19 @@
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(SPATIALITE_TOOLS_VERSION_STR "5.0.0")
+set(SPATIALITE_TOOLS_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
     FILENAME "spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
-    SHA512 a1497824df2c45ffa1ba6b4ec53794c2c4779b6357885ee6f1243f2bff137c3e4dd93b0a802239ced73f66be22faf0081b83bf0ad4effb8a04052712625865d1
+    SHA512 dad52f6ed3c66ffd95f3a5c21225cd1b20641523af616f7e8defba8e4e46921da169e5f7bf9c53a355e132b6e74750d6db3fe02c870a3386f850df49c83bb8cd
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-linux-configure.patch
         fix-makefiles.patch
 )
+file(REMOVE "${SOURCE_PATH}/config.h")
 
 set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
 
