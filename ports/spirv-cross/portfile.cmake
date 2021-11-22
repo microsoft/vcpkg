@@ -16,7 +16,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
         -DSPIRV_CROSS_CLI=${BUILD_CLI}
