@@ -4,14 +4,14 @@ set(X_VCPKG_FORCE_VCPKG_X_LIBRARIES ON) #for testing
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland-protocols
     REF  cd153943618bcf157896a6d0f1154d0ad62078a7 #1.23 
-    SHA512 b9132ebe4a85556cdbf03bab2f874949b004f361c654c115b8a70ce25e582b153fbad7ff4b1b2206d456d5f8222f08129c002c7b80ae56495a5417d7b8bda0b1
+    SHA512 aae49d168e467d554ada638887511fa696a9fae900c93067d97f9e3d405068dc87883933f09ca2a3ef8a04631fdcffb629c178ec6e4c247f0c2ff6c1aaaaa952
     HEAD_REF master # branch name
 ) 
 
@@ -33,4 +33,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+endif()
