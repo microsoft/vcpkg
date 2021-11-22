@@ -47,12 +47,14 @@ file(TO_NATIVE_PATH "${XLSTPROC_DIR}" XLSTPROC_DIR_NATIVE)
 vcpkg_add_to_path("${XLSTPROC_DIR}")
 set(ENV{XLSTPROC} "${XLSTPROC}")
 
+if(VCPKG_TARGET_IS_OSX)
+    set(ENV{LC_ALL} C)
+endif()
 vcpkg_find_acquire_program(PERL)
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS 
-        LC_ALL=C
         ${OPTIONS}
 )
 
