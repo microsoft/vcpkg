@@ -3,7 +3,7 @@
   "version": "1.19.0",
   "description": "Core Wayland window system code and protocol",
   "homepage": "https://wayland.freedesktop.org",
-  "supports": "!windows",
+  "supports": "!windows | !osx",
   "dependencies": [
     "expat",
     "libffi",
