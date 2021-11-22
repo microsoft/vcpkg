@@ -608,7 +608,6 @@ libmariadb:x64-uwp            = skip
 libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
-libmariadb:x86-windows        = skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
 libmesh:arm64-windows=skip
 libmesh:arm-uwp=skip
@@ -1658,7 +1657,6 @@ gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail
-libspatialite:x64-windows-static-md=fail
 linenoise-ng:x64-windows-static-md=fail
 mmloader:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail

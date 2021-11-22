@@ -1,8 +1,8 @@
 diff --git a/libsrc/CMakeLists.txt b/libsrc/CMakeLists.txt
-index 65a3f87..30a008d 100644
+index 4583733..20ce3bf 100644
 --- a/libsrc/CMakeLists.txt
 +++ b/libsrc/CMakeLists.txt
-@@ -61,7 +61,7 @@ IF(HAVE_M4)
+@@ -64,7 +64,7 @@ IF(HAVE_M4)
  IF(NOT MSVC)
    ADD_CUSTOM_TARGET(manpage ALL
  
