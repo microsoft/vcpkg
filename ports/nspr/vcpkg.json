@@ -1,0 +1,8 @@
+{
+  "name": "nspr",
+  "version-string": "4.33",
+  "description": "Netscape portable runtime",
+  "homepage": "https://releases.mozilla.org/pub/nspr/",
+  "license": "MPL-2.0",
+  "supports": "windows & !(arm | uwp | static)"
+}
