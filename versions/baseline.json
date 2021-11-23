@@ -7060,6 +7060,10 @@
       "baseline": "2021-04-02",
       "port-version": 1
     },
+    "vcpkg-qmake": {
+      "baseline": "2021-10-23",
+      "port-version": 0
+    },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
       "port-version": 0
