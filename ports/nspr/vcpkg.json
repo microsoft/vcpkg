@@ -1,0 +1,6 @@
+{
+  "name": "nspr",
+  "version-string": "4.33",
+  "description": "Netscape portable runtime",
+  "homepage": "https://releases.mozilla.org/pub/nspr/"
+}
