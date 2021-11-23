@@ -1,6 +1,7 @@
 {
   "name": "pcl",
   "version": "1.12.0",
+  "port-version": 1,
   "description": "Point Cloud Library (PCL) is open source library for 2D/3D image and point cloud processing.",
   "homepage": "https://github.com/PointCloudLibrary/pcl",
   "supports": "!(arm64 & windows)",
@@ -42,13 +43,27 @@
         "cuda"
       ]
     },
+    "libusb": {
+      "description": "Build USB RGBD-Camera drivers",
+      "dependencies": [
+        "libusb"
+      ]
+    },
     "opengl": {
       "description": "OpenGL support for PCL"
     },
     "openni2": {
       "description": "OpenNI2 support for PCL",
       "dependencies": [
-        "openni2"
+        "openni2",
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "libusb"
+          ],
+          "platform": "!windows"
+        }
       ]
     },
     "pcap": {
