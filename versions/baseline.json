@@ -6042,7 +6042,7 @@
     },
     "rtaudio": {
       "baseline": "2021-08-15",
-      "port-version": 1
+      "port-version": 2
     },
     "rtlsdr": {
       "baseline": "2020-04-16",
