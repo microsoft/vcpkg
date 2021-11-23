@@ -1,13 +1,13 @@
-set(X264_VERSION 157)
+set(X264_VERSION 164)
 
 vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
-    REF 303c484ec828ed0d8bfe743500e70314d026c3bd
-    SHA512 faf210a3f9543028ed882c8348b243dd7ae6638e7b3ef43bec1326b717f23370f57c13d0ddb5e1ae94411088a2e33031a137b68ae9f64c18f8f33f601a0da54d
-    HEAD_REF master
+    REF 5db6aa6cab1b146e07b60cc1736a01f21da01154
+    SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
+    HEAD_REF stable
     PATCHES 
         "uwp-cflags.patch"
 )
@@ -17,8 +17,8 @@ get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
-    _vcpkg_determine_autotools_target_cpu(HOST_ARCH)
+    z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
+    z_vcpkg_determine_autotools_target_cpu(HOST_ARCH)
     list(APPEND OPTIONS --build=${BUILD_ARCH}-pc-mingw32)
     list(APPEND OPTIONS --host=${HOST_ARCH}-pc-mingw32)
     set(ENV{AS} "${NASM}")
