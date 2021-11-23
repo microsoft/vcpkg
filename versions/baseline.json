@@ -1701,7 +1701,7 @@
       "port-version": 7
     },
     "curl": {
-      "baseline": "7.79.1",
+      "baseline": "7.80.0",
       "port-version": 0
     },
     "curlpp": {
@@ -1746,7 +1746,7 @@
     },
     "dartsim": {
       "baseline": "6.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "dataframe": {
       "baseline": "1.19.0",
@@ -1825,7 +1825,7 @@
       "port-version": 1
     },
     "directxmesh": {
-      "baseline": "nov2021",
+      "baseline": "2021-11-08",
       "port-version": 0
     },
     "directxsdk": {
@@ -1833,15 +1833,15 @@
       "port-version": 4
     },
     "directxtex": {
-      "baseline": "nov2021",
+      "baseline": "2021-11-08",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "nov2021",
+      "baseline": "2021-11-08",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "nov2021",
+      "baseline": "2021-11-08",
       "port-version": 0
     },
     "dirent": {
@@ -2594,7 +2594,7 @@
     },
     "gtest": {
       "baseline": "1.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "gtk": {
       "baseline": "4.3.0",
@@ -3310,7 +3310,7 @@
     },
     "libassuan": {
       "baseline": "2.5.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libatomic-ops": {
       "baseline": "7.7.0",
@@ -3462,7 +3462,7 @@
     },
     "libgcrypt": {
       "baseline": "1.9.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libgd": {
       "baseline": "2.3.2",
@@ -3534,7 +3534,7 @@
     },
     "libical": {
       "baseline": "3.0.11",
-      "port-version": 0
+      "port-version": 1
     },
     "libiconv": {
       "baseline": "1.16",
@@ -3642,7 +3642,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.63",
-      "port-version": 6
+      "port-version": 7
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
@@ -3682,7 +3682,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 3
+      "port-version": 4
     },
     "libnice": {
       "baseline": "0.1.15",
@@ -4497,8 +4497,8 @@
       "port-version": 1
     },
     "mpg123": {
-      "baseline": "1.28.0",
-      "port-version": 1
+      "baseline": "1.29.2",
+      "port-version": 0
     },
     "mpi": {
       "baseline": "1",
@@ -5429,7 +5429,7 @@
       "port-version": 10
     },
     "ptyqt": {
-      "baseline": "0.6.3",
+      "baseline": "0.6.5",
       "port-version": 0
     },
     "pugixml": {
@@ -5898,7 +5898,7 @@
     },
     "rbdl-orb": {
       "baseline": "3.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "re2": {
       "baseline": "2021-11-01",
@@ -5965,7 +5965,7 @@
       "port-version": 1
     },
     "restinio": {
-      "baseline": "0.6.13",
+      "baseline": "0.6.14",
       "port-version": 0
     },
     "rexo": {
@@ -6753,8 +6753,8 @@
       "port-version": 3
     },
     "tinygltf": {
-      "baseline": "2020-07-28",
-      "port-version": 2
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "tinynpy": {
       "baseline": "1.0.0",
@@ -7001,7 +7001,7 @@
       "port-version": 0
     },
     "uvatlas": {
-      "baseline": "nov2021",
+      "baseline": "2021-11-08",
       "port-version": 0
     },
     "uvw": {
