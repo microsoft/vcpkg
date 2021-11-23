@@ -1,0 +1,12 @@
+diff -ur x64-windows-rel/nss/coreconf/config.gypi src/3.66-485ec2a7fc.clean/nss/coreconf/config.gypi
+--- a/nss/coreconf/config.gypi	2021-05-28 02:50:43.000000000 -0700
++++ b/nss/coreconf/config.gypi	2021-11-09 07:51:35.884650900 -0800
+@@ -44,7 +44,7 @@
+         }],
+         ['OS=="win"', {
+           'use_system_zlib%': 0,
+-          'nspr_libs%': ['libnspr4.lib', 'libplc4.lib', 'libplds4.lib'],
++          'nspr_libs%': ['nspr4.lib', 'plc4.lib', 'plds4.lib'],
+           'zlib_libs%': [],
+           #TODO
+           'moz_debug_flags%': '',
