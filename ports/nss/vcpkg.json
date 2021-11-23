@@ -1,0 +1,12 @@
+{
+  "name": "nss",
+  "version-string": "3.73.1",
+  "description": "Network Security Services from Mozilla",
+  "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
+  "license": "MPL-2.0",
+  "supports": "windows & !arm",
+  "dependencies": [
+    "nspr",
+    "sqlite3"
+  ]
+}
