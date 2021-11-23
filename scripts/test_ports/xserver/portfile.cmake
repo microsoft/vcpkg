@@ -19,7 +19,6 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 file(TO_NATIVE_PATH "${PYTHON3}" PYTHON3_NATIVE)
 set(ENV{PYTHON3} "${PYTHON3_NATIVE}")
-
 vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
 
 set(PYTHON_OPTION "--user")
@@ -32,12 +31,18 @@ if(NOT EXISTS "${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
             HEAD_REF master
         )
-        execute_process(COMMAND "${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
+        execute_process(COMMAND "${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION} COMMAND_ECHO STDOUT)
     endif()
-    execute_process(COMMAND "${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" lxml)
+    execute_process(COMMAND "${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" lxml COMMAND_ECHO STDOUT)
 else()
     find_program(PIP3 NAMES pip3 pip)
-    execute_process(COMMAND "${PIP3}" --user install lxml)
+    execute_process(COMMAND "${PIP3}" --user install lxml COMMAND_ECHO STDOUT)
+endif()
+
+if(VCPKG_TARGET_IS_LINUX)
+    message(STATUS "Trying to install lxml")
+    find_program(PIP3 NAMES pip3 pip)
+    execute_process(COMMAND "${PIP3}" --user install lxml COMMAND_ECHO STDOUT)
 endif()
 
 vcpkg_find_acquire_program(FLEX)
