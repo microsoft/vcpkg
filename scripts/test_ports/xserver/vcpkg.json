@@ -99,7 +99,11 @@
       "dependencies": [
         "dirent",
         "xcb-wm",
-        "xfixes"
+        "xfixes",
+        {
+          "name": "opengl-registry",
+          "platform": "!windows"
+        }
       ]
     }
   }
