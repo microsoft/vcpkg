@@ -48,9 +48,10 @@ function(v8_fetch)
                 LOGNAME build-${TARGET_TRIPLET})
   else()
         vcpkg_execute_required_process(
-                COMMAND ${GIT} clone --depth 1 ${V8_URL} ${V8_DESTINATION}
+                COMMAND ${GIT} clone --no-checkout --depth 1 ${V8_URL} ${V8_DESTINATION}
                 WORKING_DIRECTORY ${V8_SOURCE}
-                LOGNAME build-${TARGET_TRIPLET})
+                LOGNAME build-${TARGET_TRIPLET}
+                VALID_EXIT_CODE 255)
         vcpkg_execute_required_process(
                 COMMAND ${GIT} fetch --depth 1 origin ${V8_REF}
                 WORKING_DIRECTORY ${V8_SOURCE}/${V8_DESTINATION}

@@ -50,7 +50,7 @@ This should be a unique name for different triplets so that the logs don't confl
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE"
-        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
+        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE;VALID_EXIT_CODE"
         "COMMAND"
     )
 
@@ -110,7 +110,10 @@ Halting portfile execution.
         ${output_variable_param}
         ${error_variable_param}
     )
-    if(NOT error_code EQUAL 0)
+    if(NOT DEFINED arg_VALID_EXIT_CODE)
+        set(arg_VALID_EXIT_CODE 0)
+    endif()
+    if(NOT error_code EQUAL 0 AND NOT error_code EQUAL ${arg_VALID_EXIT_CODE})
         set(stringified_logs "")
         foreach(log IN ITEMS "${log_out}" "${log_err}")
             if(NOT EXISTS "${log}")
