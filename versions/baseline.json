@@ -6450,7 +6450,7 @@
     },
     "spirv-cross": {
       "baseline": "2021-01-15",
-      "port-version": 1
+      "port-version": 2
     },
     "spirv-headers": {
       "baseline": "2021-03-25",
