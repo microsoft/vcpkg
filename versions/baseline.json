@@ -2706,7 +2706,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 5
+      "port-version": 6
     },
     "hwloc": {
       "baseline": "2.5.0",
