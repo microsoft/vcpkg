@@ -8,19 +8,19 @@ vcpkg_from_github(
 
 file(
   COPY
-    ${SOURCE_PATH}/api/KHR
-    ${SOURCE_PATH}/api/EGL
-  DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    "${SOURCE_PATH}/api/KHR"
+    "${SOURCE_PATH}/api/EGL"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
 file(
   COPY
-    ${SOURCE_PATH}/api/egl.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    "${SOURCE_PATH}/api/egl.xml"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/opengl"
 )
 
 file(
-  INSTALL ${SOURCE_PATH}/sdk/docs/man/copyright.xml
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+  INSTALL "${SOURCE_PATH}/sdk/docs/man/copyright.xml"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   RENAME copyright
 )
