@@ -53,6 +53,10 @@
           "name": "giflib"
         },
         {
+          "$package": "JPEG",
+          "name": "libjpeg-turbo"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
