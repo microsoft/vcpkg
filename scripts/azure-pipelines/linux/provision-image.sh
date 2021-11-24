@@ -36,9 +36,6 @@ APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 # Additionally required by some packages to install additional python packages
 APT_PACKAGES="$APT_PACKAGES python3-pip"
 
-# Additionally required by rtaudio
-APT_PACKAGES="$APT_PACKAGES libasound2-dev"
-
 # Additionally required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
 
