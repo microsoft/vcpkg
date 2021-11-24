@@ -18,7 +18,8 @@ vcpkg_from_sourceforge(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wxwidgets BUILD_with_wxwidgets
+        wxwidgets PLD_wxwidgets
+        wxwidgets ENABLE_wxwidgets
 )
 
 vcpkg_cmake_configure(
