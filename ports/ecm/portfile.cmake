@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 d49397bcf0d49a95c86c9d9a4e653015ee8b3ef1261b2842439bba7ff3363ac06351fa2df4035c2cb36397d2fc64375a14966ada29f231df51ba26d8e196d6ef
     HEAD_REF master
     PATCHES
-        fix_canberra.patch
+        fix_canberra.patch       # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
+        fix_libmount.patch       # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/200
         fix_python_version.patch # Remove on next release
 )
 
