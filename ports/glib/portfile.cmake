@@ -33,6 +33,12 @@ else()
     list(APPEND OPTIONS -Dselinux=disabled)
 endif()
 
+if (libmount IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dlibmount=enabled)
+else()
+    list(APPEND OPTIONS -Dlibmount=disabled)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Diconv=external)
 else()
@@ -49,7 +55,6 @@ vcpkg_configure_meson(
 )
 #-Dnls=true
 #-Dlibelf=false
-#-Dlibmount=false
 #-Dxattr=true?
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)

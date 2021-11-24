@@ -1,7 +1,7 @@
 {
   "name": "glib",
   "version": "2.66.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
   "supports": "!uwp & !(windows & static)",
@@ -15,6 +15,13 @@
     "zlib"
   ],
   "features": {
+    "libmount": {
+      "description": "Build with libmount support.",
+      "supports": "linux",
+      "dependencies": [
+        "libmount"
+      ]
+    },
     "selinux": {
       "description": "Build with selinux support."
     }
