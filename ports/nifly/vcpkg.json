@@ -1,6 +1,6 @@
 {
   "name": "nifly",
-  "version-semver": "1.0.0",
+  "version": "1.0.0",
   "description": "A C++ library for working with the NIF file format",
   "homepage": "https://github.com/ousnius/nifly",
   "supports": "!uwp",
