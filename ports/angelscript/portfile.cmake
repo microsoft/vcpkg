@@ -13,16 +13,16 @@ vcpkg_extract_source_archive_ex(
        mark-threads-private.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure (
     SOURCE_PATH ${SOURCE_PATH}/angelscript/projects/cmake
     PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Angelscript)
+vcpkg_cmake_config_fixup (CONFIG_PATH lib/cmake/Angelscript)
 
 # Copy the addon files
 if("addons" IN_LIST FEATURES)
