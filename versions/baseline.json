@@ -169,8 +169,8 @@
       "port-version": 0
     },
     "arrow": {
-      "baseline": "6.0.0",
-      "port-version": 0
+      "baseline": "5.0.0",
+      "port-version": 2
     },
     "ashes": {
       "baseline": "2021-06-18",
