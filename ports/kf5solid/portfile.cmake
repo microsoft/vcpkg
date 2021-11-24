@@ -37,11 +37,15 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "libmount"          CMAKE_DISABLE_FIND_PACKAGE_LibMount
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibMount=ON
 )
 
 vcpkg_cmake_install()
