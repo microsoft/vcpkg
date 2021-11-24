@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")

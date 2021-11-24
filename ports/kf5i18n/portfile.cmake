@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_QMLDIR=qml
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
