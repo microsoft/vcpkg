@@ -5,8 +5,9 @@ vcpkg_from_github(
     SHA512 976c83b155c92bdab639752ad44046722dbc363b0341533a51b2123a36cdfb82b0ddefa4886e1def9b7f236b8569dc9f9c2b26c0ea83debb631e574d531c30df
     HEAD_REF master
     PATCHES
-        fix_canberra.patch       # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
-        fix_libmount.patch       # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/200
+        fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
+        fix_libmount.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/200
+        fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
 )
 
 vcpkg_cmake_configure(
@@ -29,5 +30,3 @@ file(INSTALL "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS" DESTINATION "${CURRENT_PACKA
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
-
