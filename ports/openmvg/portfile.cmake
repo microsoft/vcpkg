@@ -13,7 +13,7 @@ vcpkg_from_github(
     REF d0fe73dd426ae4001631a51272cff71047522df9 # v2.0
     SHA512  1d5c68971ad63ced46d8b9070bdacc1065b4ba950fe919e11f952a004def87d4d83a474d48aee714c21b12106d7d81187d3670d8a2e6daf2d3c5fceb008a5de3
     PATCHES
-        fix-build.patch
+        build_fixes.patch
         0001-eigen_3.4.0.patch
 )
 
