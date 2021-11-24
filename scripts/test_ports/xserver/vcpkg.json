@@ -64,8 +64,7 @@
           "features": [
             "xnest",
             "xorg",
-            "xwayland",
-            "xwin"
+            "xwayland"
           ],
           "platform": "!windows"
         }
