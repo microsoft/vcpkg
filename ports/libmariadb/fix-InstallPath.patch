@@ -23,11 +23,11 @@ index bcfd4de..c109a20 100644
 +  ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} ${EMPTY_FILE})
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
  ELSE()
--  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} mariadbclient.def)
-+  ADD_LIBRARY(libmariadb ${libmariadb_RC} mariadbclient.def)
-   TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE mariadbclient)
+-  ADD_LIBRARY(libmariadb SHARED ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
++  ADD_LIBRARY(libmariadb ${libmariadb_RC} ${MARIADB_OBJECTS} mariadbclient.def)
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
  ENDIF()
+ 
 @@ -453,13 +453,15 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
