@@ -2,6 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zenustech/openvdb
     REF 8f289924a081a3fd9f5fca1db4826944a8450fe3 # v7.2.3
+    SHA512 776558fdd911f0cc9e8d467bf8e00a1930d2e51bb8ccd5f36f95955fefecab65faf575a80fdaacfe83fd32808f8b9c2e0323b16823e0431300df7bc0c1dfde12
     HEAD_REF master
     PATCHES
         0003-fix-cmake.patch
