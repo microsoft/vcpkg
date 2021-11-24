@@ -134,7 +134,6 @@ if("software" IN_LIST FEATURES)
         openMVG_main_ExportUndistortedImages
         openMVG_main_FrustumFiltering
         openMVG_main_geodesy_registration_to_gps_position
-        openMVG_main_GlobalSfM
         openMVG_main_IncrementalSfM
         openMVG_main_IncrementalSfM2
         openMVG_main_ListMatchingPairs
