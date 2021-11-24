@@ -13,11 +13,9 @@ file(COPY "${SOURCE_PATH}/api/GLES3" DESTINATION "${CURRENT_PACKAGES_DIR}/includ
 file(COPY "${SOURCE_PATH}/api/GLSC" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(COPY "${SOURCE_PATH}/api/GLSC2" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(GLOB XML_FILES "${SOURCE_PATH}/xml/*.xml ${SOURCE_PATH}/xml/readme.pdf ${SOURCE_PATH}/xml/*.rnc ${SOURCE_PATH}/xml/reg.py")
+file(GLOB reg_files "${SOURCE_PATH}/xml/*.xml" "${SOURCE_PATH}/xml/readme.pdf" "${SOURCE_PATH}/xml/*.rnc" "${SOURCE_PATH}/xml/reg.py")
 file(COPY
-  "${SOURCE_PATH}/xml/gl.xml"
-  "${SOURCE_PATH}/xml/glx.xml"
-  "${SOURCE_PATH}/xml/wgl.xml"
+  ${reg_files}
   DESTINATION "${CURRENT_PACKAGES_DIR}/share/opengl"
 )
 
