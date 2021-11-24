@@ -44,6 +44,8 @@
   <!-- Include the triplet in ProjectStateLine to force VS2017 and later to fully rebuild if the user changes it.  -->
   <PropertyGroup>
     <ProjectStateLine>VcpkgTriplet=$(VcpkgTriplet):$(ProjectStateLine)</ProjectStateLine>
+
+    <ExternalIncludePath>%(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <!-- Determine the locations trees we want to consume. _ZVcpkgInstalledDir is special in that it doesn't have a default

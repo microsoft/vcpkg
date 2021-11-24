@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_config_cmake.patch # https://invent.kde.org/frameworks/solid/-/merge_requests/53
+        fix-libmount.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -36,9 +37,14 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    "libmount"          CMAKE_DISABLE_FIND_PACKAGE_LibMount
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 
