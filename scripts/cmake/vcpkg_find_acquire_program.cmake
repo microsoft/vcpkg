@@ -100,7 +100,7 @@ function(z_vcpkg_find_acquire_program_find_external program)
 
     if("${version_command}" STREQUAL "")
         set(version_is_good ON) # can't check for the version being good, so assume it is
-    elseif(${program}) # onyl do a version check if ${program} has a value
+    elseif(${program}) # only do a version check if ${program} has a value
         z_vcpkg_find_acquire_program_version_check(version_is_good
             ${arg_EXACT_VERSION_MATCH}
             COMMAND ${${program}} ${arg_VERSION_COMMAND}
