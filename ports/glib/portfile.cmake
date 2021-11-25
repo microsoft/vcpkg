@@ -7,12 +7,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
 endif()
 
-set(GLIB_MAJOR_MINOR 2.66)
-set(GLIB_PATCH 4)
+set(GLIB_MAJOR_MINOR 2.70)
+set(GLIB_PATCH 1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
     FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 b3bc3e6e5cca793139848940e5c0894f1c7e3bd3a770b213a1ea548ac54a2432aebb140ed54518712fb8af36382b3b13d5f7ffd3d87ff63cba9e2f55434f7260)
+    SHA512 639317c98ab72ad853608ab4d395484daff135c0222556c51ca93fd8533c5759db14478beda964e4feb02bb2737a46a4eda25063f98a9c6ba6ae4bc5d74bf5e1)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -41,8 +41,6 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Diconv=external)
-else()
-    #list(APPEND OPTIONS -Diconv=libc) ?
 endif()
 
 vcpkg_configure_meson(
@@ -50,11 +48,10 @@ vcpkg_configure_meson(
     OPTIONS
         -Dinstalled_tests=false
         ${OPTIONS}
-        -Dinternal_pcre=false
+        -Dtests=false
+        -Dxattr=false
+        -Dlibelf=disabled
 )
-#-Dnls=true
-#-Dlibelf=false
-#-Dxattr=true?
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
