@@ -4850,7 +4850,7 @@
     },
     "ompl": {
       "baseline": "1.5.1",
-      "port-version": 3
+      "port-version": 4
     },
     "omplapp": {
       "baseline": "1.5.1",
