@@ -1,7 +1,6 @@
 {
   "name": "rocksdb",
-  "version-string": "6.14.6",
-  "port-version": 1,
+  "version-string": "6.26.1",
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
   "homepage": "https://github.com/facebook/rocksdb",
   "default-features": [
