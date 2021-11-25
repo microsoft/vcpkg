@@ -1,7 +1,7 @@
 {
   "name": "libical",
   "version": "3.0.11",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Reference implementation of the iCalendar data type and serialization format",
   "homepage": "https://github.com/libical/libical",
   "dependencies": [
@@ -15,6 +15,13 @@
     }
   ],
   "features": {
+    "glib": {
+      "description": "Build libical-glib (GObject) interface",
+      "dependencies": [
+        "glib",
+        "libxml2"
+      ]
+    },
     "rscale": {
       "description": "Support for RSCALE element",
       "supports": "!static",

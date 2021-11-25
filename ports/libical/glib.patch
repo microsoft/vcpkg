@@ -1,0 +1,45 @@
+diff --git a/src/libical-glib/CMakeLists.txt b/src/libical-glib/CMakeLists.txt
+index f734024e..de5e6210 100644
+--- a/src/libical-glib/CMakeLists.txt
++++ b/src/libical-glib/CMakeLists.txt
+@@ -121,7 +121,7 @@ add_dependencies(ical-glib ical-header)
+ target_compile_options(ical-glib PRIVATE ${GLIB_CFLAGS})
+ target_compile_definitions(ical-glib PRIVATE -DG_LOG_DOMAIN="libical-glib" -DLIBICAL_GLIB_COMPILATION)
+ target_link_libraries(ical-glib PRIVATE ical ${GLIB_LIBRARIES})
+-if(NOT SHARED_ONLY)
++if(NOT SHARED_ONLY AND NOT STATIC_ONLY)
+   add_library(ical-glib-static STATIC ${LIBICAL_GLIB_SOURCES})
+   add_dependencies(ical-glib-static ical-header)
+   target_compile_options(ical-glib-static PUBLIC ${GLIB_CFLAGS} -DG_LOG_DOMAIN="libical-glib" -DLIBICAL_GLIB_COMPILATION)
+@@ -217,11 +217,11 @@ endif()
+ 
+ if(MSVC)
+   set_target_properties(ical-glib PROPERTIES PREFIX "lib")
+-  if(NOT SHARED_ONLY)
++  if(NOT SHARED_ONLY AND NOT STATIC_ONLY)
+     set_target_properties(ical-glib-static PROPERTIES PREFIX "lib")
+   endif()
+ else()
+-  if(NOT SHARED_ONLY)
++  if(NOT SHARED_ONLY AND NOT STATIC_ONLY)
+     set_target_properties(ical-glib-static PROPERTIES OUTPUT_NAME "ical-glib")
+   endif()
+ endif()
+@@ -230,7 +230,7 @@ set_target_properties(ical-glib PROPERTIES
+   SOVERSION ${LIBICAL_LIB_MAJOR_VERSION}
+ )
+ set_target_properties(ical-glib PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+-if(NOT SHARED_ONLY)
++if(NOT SHARED_ONLY AND NOT STATIC_ONLY)
+   set_target_properties(ical-glib-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+ endif()
+ 
+@@ -239,7 +239,7 @@ install(
+   EXPORT icalTargets
+   DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS}
+ )
+-if(NOT SHARED_ONLY)
++if(NOT SHARED_ONLY AND NOT STATIC_ONLY)
+   install(
+     TARGETS ical-glib-static
+     EXPORT icalTargets
