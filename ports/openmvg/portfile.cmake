@@ -94,7 +94,7 @@ if(OpenMVG_BUILD_SHARED)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # debug
         file(GLOB DLL_FILES  "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-        file(COPY "${DLL_FILES"} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY "${DLL_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(REMOVE_RECURSE "${DLL_FILES}")
     endif()
 endif()
@@ -134,7 +134,6 @@ if("software" IN_LIST FEATURES)
         openMVG_main_ExportUndistortedImages
         openMVG_main_FrustumFiltering
         openMVG_main_geodesy_registration_to_gps_position
-        openMVG_main_IncrementalSfM2
         openMVG_main_ListMatchingPairs
         openMVG_main_MatchesToTracks
         openMVG_main_openMVG2Agisoft
@@ -154,6 +153,9 @@ if("software" IN_LIST FEATURES)
         openMVG_main_SfM_Localization
         openMVG_main_SplitMatchFileIntoMatchFiles
         ui_openMVG_control_points_registration
+        openMVG_main_GeometricFilter
+        openMVG_main_PairGenerator
+        openMVG_main_SfM
     )
     if("opencv" IN_LIST FEATURES)
         vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
