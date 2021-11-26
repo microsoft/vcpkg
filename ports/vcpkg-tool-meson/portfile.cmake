@@ -22,14 +22,15 @@ set(extra_search_args EXACT_VERSION_MATCH)
 
 vcpkg_find_acquire_program(PYTHON3)
 
-z_vcpkg_find_acquire_program_find_external("${program}"
-    ${extra_search_args}
-    PROGRAM_NAME "${program_name}"
-    MIN_VERSION "${program_version}"
-    INTERPRETER "${interpreter}"
-    NAMES ${search_names}
-    VERSION_COMMAND ${version_command}
-)
+# Reenable if no patching of meson is required within vcpkg
+# z_vcpkg_find_acquire_program_find_external("${program}"
+#    ${extra_search_args}
+#    PROGRAM_NAME "${program_name}"
+#    MIN_VERSION "${program_version}"
+#    INTERPRETER "${interpreter}"
+#    NAMES ${search_names}
+#    VERSION_COMMAND ${version_command}
+# )
 
 if(NOT "${program}")
     vcpkg_download_distfile(archive_path
@@ -43,6 +44,10 @@ if(NOT "${program}")
                         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
                     )
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/meson-${ref}" "${CURRENT_PACKAGES_DIR}/tools/meson")
+    z_vcpkg_apply_patches(
+        SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
+        PATCHES meson-intl.patch
+    )
 endif()
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
