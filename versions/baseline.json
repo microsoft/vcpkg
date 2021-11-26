@@ -250,7 +250,7 @@
     },
     "avro-c": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "avro-cpp": {
       "baseline": "2021-06-01",
