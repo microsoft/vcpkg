@@ -7,7 +7,7 @@ index f62c4cc..af8af69 100644
   * International Journal of Geographical Information Science
   *
 - * "FlipScan" Constrained Edge Algorithm invented by Thomas Åhlén, thahlen@gmail.com
-+ * "FlipScan" Constrained Edge Algorithm invented by Thomas Ã…hlÃ©n, thahlen@gmail.com
++ * "FlipScan" Constrained Edge Algorithm invented by Thomas, thahlen@gmail.com
   */
  
  #ifndef SWEEP_H
