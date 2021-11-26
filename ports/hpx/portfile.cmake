@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
         -DHPX_WITH_EXAMPLES=OFF
         -DHPX_WITH_TOOLS=OFF
         -DHPX_WITH_RUNTIME=OFF
+        -DHPX_WITH_MALLOC=system
 )
 
 vcpkg_cmake_install()
