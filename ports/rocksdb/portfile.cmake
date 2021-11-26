@@ -18,17 +18,17 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    "lz4"     WITH_LZ4
-    "snappy"  WITH_SNAPPY
-    "zlib"    WITH_ZLIB
-    "zstd"    WITH_ZSTD
-    "bzip2"   WITH_BZ2
-    "tbb"     WITH_TBB
+      "lz4"     WITH_LZ4
+      "snappy"  WITH_SNAPPY
+      "zlib"    WITH_ZLIB
+      "zstd"    WITH_ZSTD
+      "bzip2"   WITH_BZ2
+      "tbb"     WITH_TBB
   INVERTED_FEATURES
-    "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+      "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
@@ -50,13 +50,14 @@ vcpkg_configure_cmake(
     ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rocksdb)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
