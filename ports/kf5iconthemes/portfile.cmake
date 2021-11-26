@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.84.0
-    SHA512 ca5645d6e4fde4f60c6f16c911539f4056060cc22afae275459632bc7069352b068b1727eb75b898d319e6eef3df9ddc35d8e22d4c1d05a657b112378e56731e
+    REF v5.87.0
+    SHA512 891b9667cbe57878ad08c81c9304ff380b8cb954dc09b3cd1d6ea7fd6c9efb0b1a08ef0d734fa17563e72196abc3e7674fb83957df0a0e2aa0ce868aa7505925
     HEAD_REF master
-    PATCHES
-        fix_config_cmake.patch
 )
 
 vcpkg_check_features(

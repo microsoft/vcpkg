@@ -1,7 +1,6 @@
 {
   "name": "kf5service",
-  "version": "5.84.0",
-  "port-version": 1,
+  "version": "5.87.0",
   "description": "Plugin framework for desktop services",
   "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
   "dependencies": [
@@ -15,10 +14,6 @@
     },
     "kf5config",
     "kf5coreaddons",
-    {
-      "name": "kf5crash",
-      "platform": "!android"
-    },
     {
       "name": "kf5dbusaddons",
       "platform": "!android"
