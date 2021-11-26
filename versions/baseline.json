@@ -4053,8 +4053,8 @@
       "port-version": 0
     },
     "libwebsockets": {
-      "baseline": "4.2.2",
-      "port-version": 4
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
