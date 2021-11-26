@@ -11,7 +11,7 @@
     "libiconv",
     "pcre",
     {
-      "name": "vcpkg-tool-meson",
+      "name": "tool-meson",
       "host": true
     },
     "zlib"
