@@ -2538,7 +2538,7 @@
     },
     "gpgme": {
       "baseline": "1.14.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gppanel": {
       "baseline": "2020-05-20",
