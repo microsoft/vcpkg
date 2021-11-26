@@ -1,5 +1,3 @@
-# libgit2 uses winapi functions not available in WindowsStore
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
