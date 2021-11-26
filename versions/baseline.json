@@ -3213,7 +3213,7 @@
       "port-version": 1
     },
     "kubernetes": {
-      "baseline": "2021-11-18",
+      "baseline": "2021-11-24",
       "port-version": 0
     },
     "kuku": {
