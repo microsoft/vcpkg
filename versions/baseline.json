@@ -6914,7 +6914,7 @@
     },
     "type-safe": {
       "baseline": "0.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "uchardet": {
       "baseline": "2021-09-03",
