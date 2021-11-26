@@ -3,8 +3,9 @@ vcpkg_from_github(
     REPO catchorg/Catch2
     REF v2.13.7
     SHA512 1c3cbdecc6a3b59360a97789c4784d79d027e1b63bdc42b0e152c3272f7bad647fcd1490aa5caf67f968a6311dc9624b5a70d5eb3fbc1d5179d520e09b76c9ed
-    HEAD_REF master
-    PATCHES fix-install-path.patch
+    HEAD_REF devel
+    PATCHES 
+        fix-install-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
