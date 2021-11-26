@@ -1,0 +1,10 @@
+cmake_path(SET z_vcpkg_libtool_dir NORMALIZE "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(ENV{PATH} "${z_vcpkg_libtool_dir}/tools/@PORT@/bin@VCPKG_HOST_PATH_SEPARATOR@$ENV{PATH}")
+set(LIBTOOL_EXECUTABLE "${z_vcpkg_libtool_dir}/tools/@PORT@/bin/libtool" CACHE PATH "The libtool executable")
+set(LIBTOOLIZE_EXECUTABLE "${z_vcpkg_libtool_dir}/tools/@PORT@/bin/libtoolize" CACHE PATH "The libtoolize executable")
+if(DEFINED ENV{ACLOCAL_PATH})
+    set(ENV{ACLOCAL_PATH} "@VCPKG_HOST_PATH_SEPARATOR@$ENV{ACLOCAL_PATH}")
+endif()
+set(ENV{ACLOCAL_PATH} "${z_vcpkg_libtool_dir}/share/@PORT@/aclocal$ENV{ACLOCAL_PATH}")
+
+include("${CMAKE_CURRENT_LIST_DIR}/x_vcpkg_update_libtool.cmake")

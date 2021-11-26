@@ -26,6 +26,7 @@ class CMakeDocumentation {
 }
 
 [String[]]$cmakeScriptsPorts = @(
+    'libtool'
     'vcpkg-cmake'
     'vcpkg-cmake-config'
     'vcpkg-pkgconfig-get-modules'

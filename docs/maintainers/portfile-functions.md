@@ -67,6 +67,10 @@
 
 ## Scripts from Ports
 
+### [libtool](ports/libtool.md)
+
+- [x\_vcpkg\_update\_libtool](ports/libtool/x_vcpkg_update_libtool.md)
+
 ### [vcpkg-cmake](ports/vcpkg-cmake.md)
 
 - [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)

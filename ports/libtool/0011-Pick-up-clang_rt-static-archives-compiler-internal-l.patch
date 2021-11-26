@@ -1,0 +1,13 @@
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index a3bc337..c783da0 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -7531,7 +7531,7 @@ if AC_TRY_EVAL(ac_compile); then
+   for p in `eval "$output_verbose_link_cmd"`; do
+     case $prev$p in
+ 
+-    -L* | -R* | -l*)
++    -L* | -R* | -l* | */libclang_rt.*.a)
+        # Some compilers place space between "-{L,R}" and the path.
+        # Remove the space.
+        if test x-L = "$p" ||

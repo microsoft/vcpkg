@@ -1,0 +1,66 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index b1170c2..21b45e2 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -7952,20 +7952,7 @@ EOF
+ 	  last_robj=
+ 	  k=1
+ 
+-	  if test -n "$save_libobjs" && test : != "$skipped_export" && test yes = "$with_gnu_ld"; then
+-	    output=$output_objdir/$output_la.lnkscript
+-	    func_verbose "creating GNU ld script: $output"
+-	    echo 'INPUT (' > $output
+-	    for obj in $save_libobjs
+-	    do
+-	      func_to_tool_file "$obj"
+-	      $ECHO "$func_to_tool_file_result" >> $output
+-	    done
+-	    echo ')' >> $output
+-	    func_append delfiles " $output"
+-	    func_to_tool_file "$output"
+-	    output=$func_to_tool_file_result
+-	  elif test -n "$save_libobjs" && test : != "$skipped_export" && test -n "$file_list_spec"; then
++	  if test -n "$save_libobjs" && test : != "$skipped_export" && test -n "$file_list_spec"; then
+ 	    output=$output_objdir/$output_la.lnk
+ 	    func_verbose "creating linker input file list: $output"
+ 	    : > $output
+@@ -7984,6 +7971,19 @@ EOF
+ 	    func_append delfiles " $output"
+ 	    func_to_tool_file "$output"
+ 	    output=$firstobj\"$file_list_spec$func_to_tool_file_result\"
++	  elif test -n "$save_libobjs" && test : != "$skipped_export" && test yes = "$with_gnu_ld"; then
++	    output=$output_objdir/$output_la.lnkscript
++	    func_verbose "creating GNU ld script: $output"
++	    echo 'INPUT (' > $output
++	    for obj in $save_libobjs
++	    do
++	      func_to_tool_file "$obj"
++	      $ECHO "$func_to_tool_file_result" >> $output
++	    done
++	    echo ')' >> $output
++	    func_append delfiles " $output"
++	    func_to_tool_file "$output"
++	    output=$func_to_tool_file_result
+ 	  else
+ 	    if test -n "$save_libobjs"; then
+ 	      func_verbose "creating reloadable object files..."
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index c783da0..21a7d60 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -5108,6 +5108,7 @@ _LT_EOF
+       _LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
+       _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[[BCDGRS]][[ ]]/s/.*[[ ]]\([[^ ]]*\)/\1 DATA/;s/^.*[[ ]]__nm__\([[^ ]]*\)[[ ]][[^ ]]*/\1 DATA/;/^I[[ ]]/d;/^[[AITW]][[ ]]/s/.* //'\'' | sort | uniq > $export_symbols'
+       _LT_TAGVAR(exclude_expsyms, $1)=['[_]+GLOBAL_OFFSET_TABLE_|[_]+GLOBAL__[FID]_.*|[_]+head_[A-Za-z0-9_]+_dll|[A-Za-z0-9_]+_dll_iname']
++      _LT_TAGVAR(file_list_spec, $1)='@'
+ 
+       if $LD --help 2>&1 | $GREP 'auto-import' > /dev/null; then
+         _LT_TAGVAR(archive_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags -o $output_objdir/$soname $wl--enable-auto-image-base -Xlinker --out-implib -Xlinker $lib'
+@@ -6682,6 +6683,7 @@ if test yes != "$_lt_caught_CXX_error"; then
+ 	  _LT_TAGVAR(allow_undefined_flag, $1)=unsupported
+ 	  _LT_TAGVAR(always_export_symbols, $1)=no
+ 	  _LT_TAGVAR(enable_shared_with_static_runtimes, $1)=yes
++	  _LT_TAGVAR(file_list_spec, $1)='@'
+ 
+ 	  if $LD --help 2>&1 | $GREP 'auto-import' > /dev/null; then
+ 	    _LT_TAGVAR(archive_cmds, $1)='$CC -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $output_objdir/$soname $wl--enable-auto-image-base -Xlinker --out-implib -Xlinker $lib'

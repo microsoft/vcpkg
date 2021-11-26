@@ -1,0 +1,15 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 06f3158..fd3d6bb 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6649,7 +6649,9 @@ func_mode_link ()
+ 		  eval libdir=`$SED -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+ 		  test -z "$libdir" && \
+ 		    func_fatal_error "'$deplib' is not a valid libtool archive"
+-		  test "$absdir" != "$libdir" && \
++		  abs_inode=`ls -i "$deplib" | awk '{print $1}'`
++		    lib_inode=`ls -i "$libdir/$(basename $deplib)" | awk '{print $1}'`
++		  test "$abs_inode" != "$lib_inode" && \
+ 		    func_warning "'$deplib' seems to be moved"
+ 
+ 		  path=-L$absdir

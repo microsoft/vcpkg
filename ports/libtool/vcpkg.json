@@ -1,0 +1,7 @@
+{
+  "name": "libtool",
+  "version-date": "2021-11-22",
+  "description": "The GNU Portable Library Tool",
+  "homepage": "https://www.gnu.org/software/libtool/",
+  "supports": "!uwp"
+}

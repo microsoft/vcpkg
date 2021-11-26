@@ -1,0 +1,18 @@
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 54cd172..06f3158 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5396,9 +5396,12 @@ func_mode_link ()
+       # --sysroot=*          for sysroot support
+       # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       # -stdlib=*            select c++ std lib with clang
++      # -{shared,static}-libgcc, -static-{libgfortran|libstdc++}
++      #                      link against specified runtime library
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -shared-libgcc|-static-libgcc|-static-libgfortran|-static-libstdc++)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
