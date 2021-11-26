@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knotifications
-    REF v5.84.0
-    SHA512 ee8d2d0531df726f3e372983e30c2365aab887e1a3cdf5fb9c1b788e78b490f984018a44934ce62116bf10827fbf9aeeaf23236a7024a0e3757a1da7e90dca6c
+    REF v5.87.0
+    SHA512 8b12a6af3675f54bb494b91c71f4284ec109c381aa92e54c3613c6beca96c5f20ef418e7d35f2bcdec197884ea796c4f1d4ab2937583cd6b78d8ef40204c51cb
     HEAD_REF master
-    PATCHES
-        fix_config_cmake.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
