@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdeclarative
-    REF v5.84.0
-    SHA512 5785c49173ccd22aaed040b2590d0f44b6e138bd5c8980ce0d4a31e2bd364f830a256be3dfb7806d206b2197d882c791f73c60f7c973749c4c3e1c7bbf541822
+    REF v5.87.0
+    SHA512 48480a30f91ffec9841668a0c263c8fab3144b0a973b2100715cfee7c132e159b004e6ddb3ed46ddb9e08f2be4251596a14e23a9184d2de4b256bd4c3df216d3
     HEAD_REF master
     PATCHES
-        fix_config_cmake.patch
         dont_force_shared.diff
 )
 

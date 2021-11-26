@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
-    REF v5.84.0
-    SHA512 e5905c0aa5343ce3d4cd3765cb81390fc89fb78aec3c8de8b31d1dada8074d04f549ff785f3988498d2e274d7cb08a35a83ba031d18562049e6ca41d18ea52ee
+    REF v5.87.0
+    SHA512 20d55c05d5cc2223667a6ca888c7d3e61ec3e1b0f576f0aeff57fce13edb763910fb0bb84d93f53d3965d4a48169fd0fdf2cb5f49946b0e32b25ba4d7645123b
     HEAD_REF master
     PATCHES
-        add_missing_static_dependencies.patch # https://invent.kde.org/frameworks/kguiaddons/-/merge_requests/25
         fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
 )
 
@@ -43,3 +42,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
-    REF v5.84.0
-    SHA512 53491f8576db8ebb48627e098fd8c3d4029c024bb9048d97daa1a8f5c39e594ca05dcd80ecb18ac591af7455457a0f14459c24cf44487727a26e34f977c5b81a
+    REF v5.87.0
+    SHA512 c6b09d2c67902370da3d6cba61aa0b6c13d496332e5ba9694fe43a6571229f60389164024643b9e56c0c1e5cced0d29942b4b7a0ba919dd86b47dbf4602cb74d
     PATCHES
-        27.patch # https://invent.kde.org/frameworks/kwindowsystem/-/merge_requests/27
-        28.patch # https://invent.kde.org/frameworks/kwindowsystem/-/merge_requests/28
+        xcb_private_dependency.diff
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -16,14 +15,14 @@ endif()
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5WindowSystem)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5WindowSystem CONFIG_PATH lib/cmake/KF5WindowSystem)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -34,3 +33,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

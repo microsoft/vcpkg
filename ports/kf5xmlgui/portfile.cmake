@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
-    REF v5.84.0
-    SHA512 39657ec545c1463cadec719e7c6dc546fb6d1804b5c2b86904bfffd01be173c3ead1533ec33f749343f5575785394fe659ca0be51af706911e5176d485ef7f20
+    REF v5.87.0
+    SHA512 1d471ec563533e1043afb985a7f7bb30ab489154d7270a164d5f24127a0e94aeca0c31a418965d97841f9afbda174eb5fd456e41a04225cd50ec213a3139002f
     HEAD_REF master
-    PATCHES
-        remove_explicit_shared_argument.patch # https://invent.kde.org/frameworks/kxmlgui/-/commit/d12e8f6266188ce7e221dc014a56071b8a5ef706
-        add_support_for_static_builds.patch   # https://invent.kde.org/frameworks/kxmlgui/-/commit/2f1b948ad690942d4ec208c5676c11218f29181a
-        fix_static_resources.diff             # https://invent.kde.org/frameworks/kxmlgui/-/merge_requests/77
 )
 
 vcpkg_check_features(
