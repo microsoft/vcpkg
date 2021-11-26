@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,17 +8,16 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-	SOURCE_PATH "${SOURCE_PATH}"
-	OPTIONS
-		-DBUILD_TESTING=OFF
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "cmake/")
 
 file(REMOVE_RECURSE
-	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/share"
-
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
