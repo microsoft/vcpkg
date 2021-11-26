@@ -504,6 +504,8 @@ if(QT_BUILD_LATEST)
     )
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 # #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 # file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
