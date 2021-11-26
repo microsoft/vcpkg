@@ -13,16 +13,3 @@ index aa4ad05..669adde 100644
      set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
      set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
  ENDIF()
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 0bc7194..db4a0ac 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -183,7 +183,7 @@ IF (PAHO_BUILD_STATIC)
- ENDIF()
- 
- INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h MQTTExportDeclarations.h
--    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/paho-mqtt)
- 
- IF (PAHO_WITH_SSL)
-     SET(OPENSSL_ROOT_DIR "" CACHE PATH "Directory containing OpenSSL libraries and includes")

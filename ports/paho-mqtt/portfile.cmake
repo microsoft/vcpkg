@@ -13,9 +13,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PAHO_BUILD_DYNAMIC)
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DPAHO_WITH_SSL=TRUE
     -DPAHO_BUILD_SHARED=${PAHO_BUILD_DYNAMIC}
@@ -23,8 +22,8 @@ vcpkg_configure_cmake(
     -DPAHO_ENABLE_TESTING=FALSE
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/eclipse-paho-mqtt-c TARGET_PATH share/eclipse-paho-mqtt-c)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME eclipse-paho-mqtt-c CONFIG_PATH lib/cmake/eclipse-paho-mqtt-c)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -33,5 +32,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/about.html" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
