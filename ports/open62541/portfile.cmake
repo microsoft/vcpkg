@@ -37,4 +37,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/open62541/types_generated_handling.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/open62541/types_generated_handling.h" "${SOURCE_PATH}" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/open62541/statuscodes.h" "${SOURCE_PATH}" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/open62541/nodeids.h" "${SOURCE_PATH}" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/open62541/types_generated.h" "${SOURCE_PATH}" "")
+endif()
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
