@@ -502,7 +502,7 @@
     },
     "blitz": {
       "baseline": "2020-03-25",
-      "port-version": 2
+      "port-version": 3
     },
     "blosc": {
       "baseline": "1.18.1",
