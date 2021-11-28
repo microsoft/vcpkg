@@ -18,7 +18,7 @@
     },
     "ace": {
       "baseline": "7.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -105,7 +105,7 @@
       "port-version": 1
     },
     "approval-tests-cpp": {
-      "baseline": "10.12.0",
+      "baseline": "10.12.1",
       "port-version": 0
     },
     "apr": {
@@ -250,7 +250,7 @@
     },
     "avro-c": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "avro-cpp": {
       "baseline": "2021-06-01",
@@ -306,7 +306,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.96",
-      "port-version": 5
+      "port-version": 6
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -1254,7 +1254,7 @@
     },
     "catch2": {
       "baseline": "2.13.7",
-      "port-version": 1
+      "port-version": 2
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1993,8 +1993,8 @@
       "port-version": 2
     },
     "egl-registry": {
-      "baseline": "2020-02-20",
-      "port-version": 1
+      "baseline": "2021-11-23",
+      "port-version": 0
     },
     "eigen3": {
       "baseline": "3.3.9",
@@ -2142,7 +2142,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2450,7 +2450,7 @@
     },
     "glad": {
       "baseline": "0.1.34",
-      "port-version": 1
+      "port-version": 3
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -2538,7 +2538,7 @@
     },
     "gpgme": {
       "baseline": "1.14.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gppanel": {
       "baseline": "2020-05-20",
@@ -2890,7 +2890,7 @@
     },
     "io2d": {
       "baseline": "2020-09-14",
-      "port-version": 2
+      "port-version": 3
     },
     "irrlicht": {
       "baseline": "1.8.4",
@@ -3213,7 +3213,7 @@
       "port-version": 1
     },
     "kubernetes": {
-      "baseline": "2021-11-18",
+      "baseline": "2021-11-24",
       "port-version": 0
     },
     "kuku": {
@@ -4053,8 +4053,8 @@
       "port-version": 0
     },
     "libwebsockets": {
-      "baseline": "4.2.2",
-      "port-version": 4
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4692,6 +4692,10 @@
       "baseline": "35",
       "port-version": 0
     },
+    "nifly": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "nifticlib": {
       "baseline": "2020-04-30",
       "port-version": 1
@@ -4880,6 +4884,10 @@
       "baseline": "1.5.1",
       "port-version": 0
     },
+    "oof": {
+      "baseline": "2021-11-23",
+      "port-version": 0
+    },
     "open62541": {
       "baseline": "1.2.2",
       "port-version": 0
@@ -4949,8 +4957,8 @@
       "port-version": 9
     },
     "opengl-registry": {
-      "baseline": "2020-03-25",
-      "port-version": 1
+      "baseline": "2021-11-17",
+      "port-version": 0
     },
     "openh264": {
       "baseline": "2021-03-16",
@@ -5166,7 +5174,7 @@
     },
     "pcre": {
       "baseline": "8.45",
-      "port-version": 1
+      "port-version": 2
     },
     "pcre2": {
       "baseline": "10.39",
@@ -5882,7 +5890,7 @@
     },
     "rapidjson": {
       "baseline": "2020-09-14",
-      "port-version": 1
+      "port-version": 2
     },
     "rapidxml": {
       "baseline": "1.13",
@@ -6009,8 +6017,8 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "6.14.6",
-      "port-version": 1
+      "baseline": "6.26.1",
+      "port-version": 0
     },
     "rpclib": {
       "baseline": "2.3.0",
@@ -6277,7 +6285,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "simdutf": {
@@ -6637,8 +6645,8 @@
       "port-version": 4
     },
     "teemo": {
-      "baseline": "2.2",
-      "port-version": 2
+      "baseline": "2.3",
+      "port-version": 0
     },
     "telnetpp": {
       "baseline": "2.1.2",
@@ -6778,7 +6786,7 @@
     },
     "tinyspline": {
       "baseline": "0.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinythread": {
       "baseline": "1.1",
@@ -6910,7 +6918,7 @@
     },
     "type-safe": {
       "baseline": "0.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "uchardet": {
       "baseline": "2021-09-03",
@@ -7238,7 +7246,7 @@
     },
     "x264": {
       "baseline": "164-5db6aa6cab1b146",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.4",
