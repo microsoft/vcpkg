@@ -3942,7 +3942,7 @@
     },
     "libtasn1": {
       "baseline": "4.17.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libtcod": {
       "baseline": "1.19.0",
@@ -3963,6 +3963,10 @@
     "libtommath": {
       "baseline": "1.2.0",
       "port-version": 2
+    },
+    "libtool": {
+      "baseline": "2021-11-22",
+      "port-version": 0
     },
     "libtorrent": {
       "baseline": "1.2.14",
