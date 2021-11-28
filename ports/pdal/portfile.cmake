@@ -47,6 +47,11 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pdal/cmake)
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig") # dependency gdal has no pkgconfig files
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pdal/Dimension.hpp" "${SOURCE_PATH}" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pdal/pdal_features.hpp" "#define PDAL_PLUGIN_INSTALL_PATH \"${CURRENT_PACKAGES_DIR}/bin\"" "")
+
 # Install PDAL executable
 file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(COPY ${_pdal_apps} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pdal)

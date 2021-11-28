@@ -1,0 +1,14 @@
+The package pdal provides CMake targets:
+
+    find_package(PDAL CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE pdalcpp pdal_util pdal_arbiter pdal_kazhdan)
+
+Add the following cmake code to your CMakeLists.txt to create definitions for DCMTK
+    if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
+        message(WARNING "No vcpkg install dir found, PDAL definitions are not set")
+    else()
+        target_compile_definitions(main
+            PUBLIC
+                "PDAL_PLUGIN_INSTALL_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
+        )
+    endif()
