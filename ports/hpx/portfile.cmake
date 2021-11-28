@@ -9,6 +9,15 @@ vcpkg_from_github(
     HEAD_REF stable
 )
 
+set(HPX_WITH_MALLOC system)
+if(VCPKG_TARGET_IS_LINUX)
+    # This is done at the request of the hpx maintainers; see
+    # https://github.com/microsoft/vcpkg/pull/21673#issuecomment-979904882
+    # It must match when gperftools is treated as a dependency of this port.
+    set(HPX_WITH_MALLOC tcmalloc)
+endif()
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -17,7 +26,7 @@ vcpkg_cmake_configure(
         -DHPX_WITH_EXAMPLES=OFF
         -DHPX_WITH_TOOLS=OFF
         -DHPX_WITH_RUNTIME=OFF
-        -DHPX_WITH_MALLOC=system
+        "-DHPX_WITH_MALLOC=${HPX_WITH_MALLOC}"
 )
 
 vcpkg_cmake_install()

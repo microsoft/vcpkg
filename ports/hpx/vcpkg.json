@@ -23,6 +23,10 @@
     "boost-throw-exception",
     "boost-variant",
     "boost-winapi",
+    {
+      "name": "gperftools",
+      "platform": "linux"
+    },
     "hwloc",
     {
       "name": "vcpkg-cmake",
