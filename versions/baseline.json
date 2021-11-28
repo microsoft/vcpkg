@@ -2410,7 +2410,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 7
+      "port-version": 8
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -3538,7 +3538,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 11
+      "port-version": 12
     },
     "libics": {
       "baseline": "1.6.5",
