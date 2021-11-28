@@ -16,7 +16,7 @@ endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
@@ -26,17 +26,18 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
 
 # Copy fluidsynth.exe to tools dir
 vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 
 # Remove unnecessary files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
