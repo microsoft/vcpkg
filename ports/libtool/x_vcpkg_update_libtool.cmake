@@ -23,6 +23,11 @@ By convention, this is usually set in the portfile as the variable `SOURCE_PATH`
 ### RECURSE
 Instead of just updating `${SOURCE_PATH}/build-aux/ltmain.sh`, look recursively
 for all files named `ltmain.sh`.
+
+## Examples
+
+* [gettext](https://github.com/microsoft/vcpkg/blob/master/ports/gettext/portfile.cmake)
+* [libiconv](https://github.com/microsoft/vcpkg/blob/master/ports/libiconv/portfile.cmake)
 #]===]
 if(Z_VCPKG_UPDATE_LIBTOOL_GUARD)
     return()

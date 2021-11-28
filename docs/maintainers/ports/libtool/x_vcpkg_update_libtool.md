@@ -25,5 +25,10 @@ By convention, this is usually set in the portfile as the variable `SOURCE_PATH`
 Instead of just updating `${SOURCE_PATH}/build-aux/ltmain.sh`, look recursively
 for all files named `ltmain.sh`.
 
+## Examples
+
+* [gettext](https://github.com/microsoft/vcpkg/blob/master/ports/gettext/portfile.cmake)
+* [libiconv](https://github.com/microsoft/vcpkg/blob/master/ports/libiconv/portfile.cmake)
+
 ## Source
 [ports/libtool/x\_vcpkg\_update\_libtool.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/libtool/x_vcpkg_update_libtool.cmake)
