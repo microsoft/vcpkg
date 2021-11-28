@@ -31,6 +31,8 @@ vcpkg_extract_source_archive_ex(
         gettext-tools_woe32dll_gettextsrc-exports.c.patch
         ${PATCHES}
 )
+x_vcpkg_update_libtool(SOURCE_PATH "${SOURCE_PATH}" RECURSE)
+
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
