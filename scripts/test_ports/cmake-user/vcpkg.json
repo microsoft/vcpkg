@@ -66,6 +66,10 @@
           "platform": "!windows & !uwp"
         },
         {
+          "$package": "TIFF",
+          "name": "tiff"
+        },
+        {
           "$package": "ZLIB",
           "name": "zlib"
         }
