@@ -49,6 +49,10 @@
           "name": "freetype"
         },
         {
+          "$package": "ICU",
+          "name": "icu"
+        },
+        {
           "$package": "Intl",
           "name": "gettext"
         },
