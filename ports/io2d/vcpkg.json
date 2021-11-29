@@ -6,14 +6,14 @@
   "dependencies": [
     {
       "name": "cairo",
+      "platform": "!osx"
+    },
+    {
+      "name": "cairo",
       "features": [
         "x11"
       ],
       "platform": "linux"
-    },
-    {
-      "name": "cairo",
-      "platform": "!osx"
     },
     {
       "name": "graphicsmagick",

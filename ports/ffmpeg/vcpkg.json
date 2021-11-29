@@ -133,14 +133,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "dav1d"
-          ],
-          "platform": "!(uwp | arm | x86 | osx)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "ssh"
           ],
           "platform": "!(uwp | arm) & !static"
@@ -152,6 +144,14 @@
             "opengl"
           ],
           "platform": "!uwp & !(windows & arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ],
+          "platform": "!(uwp | arm | x86 | osx)"
         },
         {
           "name": "ffmpeg",
