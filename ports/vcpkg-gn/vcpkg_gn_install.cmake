@@ -1,6 +1,5 @@
-# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_install
 #[===[.md:
-# vcpkg_install_gn
+# vcpkg_gn_install
 
 Installs a GN project.
 
@@ -8,7 +7,7 @@ In order to build a GN project without installing, use [`vcpkg_build_ninja()`].
 
 ## Usage:
 ```cmake
-vcpkg_install_gn(
+vcpkg_gn_install(
      SOURCE_PATH <SOURCE_PATH>
      [TARGETS <target>...]
 )
@@ -25,15 +24,19 @@ Note: includes must be handled separately
 
 [`vcpkg_build_ninja()`]: vcpkg_build_ninja.md
 #]===]
+if(Z_VCPKG_GN_INSTALL_GUARD)
+    return()
+endif()
+set(Z_VCPKG_GN_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 
-function(z_vcpkg_install_gn_get_target_type out_var)
+function(z_vcpkg_gn_install_get_target_type out_var)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: get_target_type was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     execute_process(
-        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
+        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -45,14 +48,14 @@ function(z_vcpkg_install_gn_get_target_type out_var)
     endif()
 endfunction()
 
-function(z_vcpkg_install_gn_get_desc out_var)
+function(z_vcpkg_gn_install_get_desc out_var)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET;WHAT_TO_DISPLAY" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: get_desc was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     execute_process(
-        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
+        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -62,7 +65,7 @@ function(z_vcpkg_install_gn_get_desc out_var)
     set("${out_var}" "${output}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_install_gn_install)
+function(z_vcpkg_gn_install_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;BUILD_DIR;INSTALL_DIR" "TARGETS")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -70,13 +73,13 @@ function(z_vcpkg_install_gn_install)
 
     foreach(target IN LISTS arg_TARGETS)
         # GN targets must start with a //
-        z_vcpkg_install_gn_get_desc(outputs
+        z_vcpkg_gn_install_get_desc(outputs
             SOURCE_PATH "${arg_SOURCE_PATH}"
             BUILD_DIR "${arg_BUILD_DIR}"
             TARGET "//${target}"
             WHAT_TO_DISPLAY outputs
         )
-        z_vcpkg_install_gn_get_target_type(target_type
+        z_vcpkg_gn_install_get_target_type(target_type
             SOURCE_PATH "${arg_SOURCE_PATH}"
             BUILD_DIR "${arg_BUILD_DIR}"
             TARGET "//${target}"
@@ -107,14 +110,11 @@ function(z_vcpkg_install_gn_install)
     endforeach()
 endfunction()
 
-function(vcpkg_install_gn)
-    if(Z_VCPKG_GN_INSTALL_GUARD)
-        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_install_gn in the same port is unsupported.")
-    endif()
-
+function(vcpkg_gn_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "TARGETS")
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "vcpkg_install_gn was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(WARNING "vcpkg_gn_install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     if(NOT DEFINED arg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
@@ -125,7 +125,7 @@ function(vcpkg_install_gn)
     vcpkg_find_acquire_program(GN)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        z_vcpkg_install_gn_install(
+        z_vcpkg_gn_install_install(
             SOURCE_PATH "${arg_SOURCE_PATH}"
             BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             INSTALL_DIR "${CURRENT_PACKAGES_DIR}/debug"
@@ -134,7 +134,7 @@ function(vcpkg_install_gn)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        z_vcpkg_install_gn_install(
+        z_vcpkg_gn_install_install(
             SOURCE_PATH "${arg_SOURCE_PATH}"
             BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             INSTALL_DIR "${CURRENT_PACKAGES_DIR}"
