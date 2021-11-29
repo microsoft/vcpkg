@@ -13,6 +13,7 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
+            "cmake-current",
             "find-package"
           ]
         },
@@ -27,7 +28,10 @@
       ]
     },
     "cmake-3-4": {
-      "description": "Use CMake 3.4 to build the test project"
+      "description": "Run the tests with CMake 3.4"
+    },
+    "cmake-current": {
+      "description": "Run the tests with vcpkg's current version of CMake"
     },
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
