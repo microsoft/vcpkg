@@ -43,6 +43,9 @@ Specifies the preferred library linkage.
 
 Valid options are `dynamic` and `static`. Note that libraries can ignore this setting if they do not support the preferred linkage type.
 
+### VCPKG_BUILD_TYPE
+You can set this value to `release` to only build release versions of the ports. By default this value is empty and release and debug versions of a port are built.
+
 ### VCPKG_CMAKE_SYSTEM_NAME
 Specifies the target platform.
 
@@ -124,6 +127,7 @@ When this option is set to (true|1|on), the compiler is ignored in the abi track
 
 ## Windows Variables
 
+<a name="VCPKG_ENV_PASSTHROUGH"></a>
 ### VCPKG_ENV_PASSTHROUGH
 Instructs vcpkg to allow additional environment variables into the build process.
 
