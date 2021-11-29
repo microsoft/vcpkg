@@ -3,11 +3,6 @@
   "version-string": "0.8.1",
   "description": "Extremely fast hash algorithm",
   "homepage": "https://github.com/Cyan4973/xxHash",
-  "features": {
-    "xxhsum": {
-      "description": "Build the xxhsum binary"
-    }
-  },
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,5 +12,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "xxhsum": {
+      "description": "Build the xxhsum binary"
+    }
+  }
 }
