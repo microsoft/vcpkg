@@ -1,4 +1,3 @@
-
 set(GTK_VERSION 4.4.0)
 
 vcpkg_from_gitlab(
@@ -11,9 +10,9 @@ vcpkg_from_gitlab(
     PATCHES
         0001-build.patch
         0002-windows-build.patch
-        0003-vs2022-rc.patch
+        0003-vs2022-rc.patch # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4063
         0004-macos-build.patch
-) 
+)
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
@@ -25,7 +24,7 @@ set(win32 false)
 set(osx false)
 if(VCPKG_TARGET_IS_LINUX)
     set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
-    set(x11 true)    
+    set(x11 true)
     # Enable the wayland gdk backend (only when building on Unix except for macOS)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     set(win32 true)
@@ -78,7 +77,7 @@ vcpkg_install_meson()
 
 # If somebody finds out how to access and forward env variables to
 # the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case. 
+# needs manual execution in the crosscompiling case.
 vcpkg_find_acquire_program(PYTHON3)
 foreach(_config release debug)
     if(_config STREQUAL "release")
@@ -116,9 +115,9 @@ vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-set(TOOL_NAMES gtk4-builder-tool 
-               gtk4-encode-symbolic-svg 
-               gtk4-query-settings 
+set(TOOL_NAMES gtk4-builder-tool
+               gtk4-encode-symbolic-svg
+               gtk4-query-settings
                gtk4-update-icon-cache)
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)
