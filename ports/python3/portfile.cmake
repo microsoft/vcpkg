@@ -13,6 +13,7 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
+    0008-fix-parallel-install.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
