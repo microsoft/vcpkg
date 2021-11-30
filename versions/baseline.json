@@ -206,11 +206,11 @@
     },
     "atk": {
       "baseline": "2.36.0",
-      "port-version": 2
+      "port-version": 1
     },
     "atkmm": {
       "baseline": "2.36.0",
-      "port-version": 2
+      "port-version": 1
     },
     "atlmfc": {
       "baseline": "0",
@@ -1214,11 +1214,11 @@
     },
     "cairo": {
       "baseline": "1.17.4",
-      "port-version": 3
+      "port-version": 2
     },
     "cairomm": {
       "baseline": "1.16.0",
-      "port-version": 1
+      "port-version": 0
     },
     "calceph": {
       "baseline": "3.5.0",
@@ -1758,7 +1758,7 @@
     },
     "dav1d": {
       "baseline": "0.8.2",
-      "port-version": 2
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "1.29.7",
@@ -2226,7 +2226,7 @@
     },
     "fontconfig": {
       "baseline": "2.13.94",
-      "port-version": 3
+      "port-version": 2
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2286,7 +2286,7 @@
     },
     "fribidi": {
       "baseline": "1.0.11",
-      "port-version": 1
+      "port-version": 0
     },
     "frozen": {
       "baseline": "2021-04-22",
@@ -2374,7 +2374,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.2",
-      "port-version": 2
+      "port-version": 1
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2470,11 +2470,11 @@
     },
     "glib": {
       "baseline": "2.70.1",
-      "port-version": 1
+      "port-version": 0
     },
     "glibmm": {
       "baseline": "2.68.1",
-      "port-version": 1
+      "port-version": 0
     },
     "glm": {
       "baseline": "0.9.9.8",
@@ -2546,7 +2546,7 @@
     },
     "graphene": {
       "baseline": "1.10.2",
-      "port-version": 2
+      "port-version": 1
     },
     "graphicsmagick": {
       "baseline": "1.3.36",
@@ -2590,11 +2590,11 @@
     },
     "gst-rtsp-server": {
       "baseline": "1.19.2",
-      "port-version": 1
+      "port-version": 0
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 2
+      "port-version": 1
     },
     "gtest": {
       "baseline": "1.11.0",
@@ -2602,11 +2602,11 @@
     },
     "gtk": {
       "baseline": "4.4.0",
-      "port-version": 1
+      "port-version": 0
     },
     "gtkmm": {
       "baseline": "4.0.1",
-      "port-version": 1
+      "port-version": 0
     },
     "gts": {
       "baseline": "0.7.6",
@@ -2646,7 +2646,7 @@
     },
     "harfbuzz": {
       "baseline": "3.0.0",
-      "port-version": 1
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -3418,7 +3418,7 @@
     },
     "libepoxy": {
       "baseline": "1.5.9",
-      "port-version": 1
+      "port-version": 0
     },
     "libevent": {
       "baseline": "2.1.12",
@@ -3510,7 +3510,7 @@
     },
     "libgxps": {
       "baseline": "0.3.2",
-      "port-version": 1
+      "port-version": 0
     },
     "libharu": {
       "baseline": "2017-08-15",
@@ -3866,7 +3866,7 @@
     },
     "libsecret": {
       "baseline": "0.20.4",
-      "port-version": 1
+      "port-version": 0
     },
     "libsercomm": {
       "baseline": "1.3.2",
@@ -4074,7 +4074,7 @@
     },
     "libxmlpp": {
       "baseline": "5.0.0",
-      "port-version": 2
+      "port-version": 1
     },
     "libxmp-lite": {
       "baseline": "4.4.1",
@@ -4330,7 +4330,7 @@
     },
     "mesa": {
       "baseline": "21.2.0",
-      "port-version": 1
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
@@ -4574,7 +4574,7 @@
     },
     "munit": {
       "baseline": "2019-04-06",
-      "port-version": 4
+      "port-version": 3
     },
     "muparser": {
       "baseline": "2.3.2",
@@ -4962,7 +4962,7 @@
     },
     "openh264": {
       "baseline": "2021-03-16",
-      "port-version": 3
+      "port-version": 2
     },
     "openigtlink": {
       "baseline": "3.0",
@@ -5121,8 +5121,8 @@
       "port-version": 0
     },
     "pango": {
-      "baseline": "1.48.4",
-      "port-version": 2
+      "baseline": "1.48.10",
+      "port-version": 0
     },
     "pangolin": {
       "baseline": "0.6",
@@ -5130,7 +5130,7 @@
     },
     "pangomm": {
       "baseline": "2.48.1",
-      "port-version": 1
+      "port-version": 0
     },
     "parallel-hashmap": {
       "baseline": "1.33",
@@ -5246,7 +5246,7 @@
     },
     "pistache": {
       "baseline": "2021-03-31",
-      "port-version": 3
+      "port-version": 2
     },
     "pixel": {
       "baseline": "0.3",
@@ -5254,11 +5254,11 @@
     },
     "pixman": {
       "baseline": "0.40.0",
-      "port-version": 1
+      "port-version": 0
     },
     "pkgconf": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 0
     },
     "platform-folders": {
       "baseline": "4.1.0",
@@ -5925,7 +5925,7 @@
       "port-version": 0
     },
     "readerwriterqueue": {
-      "baseline": "1.0.5",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "readline": {
@@ -6850,10 +6850,10 @@
     },
     "tomlplusplus": {
       "baseline": "2.5.0",
-      "port-version": 3
+      "port-version": 2
     },
     "tool-meson": {
-      "baseline": "2021-11-19",
+      "baseline": "0.58.1",
       "port-version": 0
     },
     "torch-th": {
@@ -7086,10 +7086,6 @@
     },
     "vcpkg-qmake": {
       "baseline": "2021-10-23",
-      "port-version": 0
-    },
-    "vcpkg-tool-meson": {
-      "baseline": "0.60.2",
       "port-version": 0
     },
     "vcpkg-tool-nodejs": {
