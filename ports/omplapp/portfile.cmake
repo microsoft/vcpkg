@@ -22,14 +22,11 @@ vcpkg_extract_source_archive_ex(
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
-file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)
-string(REPLACE "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)" _contents "${_contents}")
-string(REPLACE "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)" _contents "${_contents}")
-file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${_contents}")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DOMPL_VERSIONED_INSTALL=OFF
@@ -40,9 +37,9 @@ vcpkg_configure_cmake(
         -DOMPL_BUILD_PYTESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ompl/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
 
 # Remove debug distribution and other, move ompl_benchmark to tools/ dir
 vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
@@ -58,6 +55,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/omplapp/config.h" "#define OMPLAPP_RESOURCE_DIR \"${CURRENT_PACKAGES_DIR}/share/ompl/resources\"" "")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
