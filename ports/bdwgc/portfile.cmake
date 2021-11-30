@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ivmai/bdwgc
-    REF 5fab1a01931a1a6934ccf1d5eaa1e51f0a8dac4d # v8.2.0-20211115
-    SHA512 b1a97aad10df33bb242985eb48f1bb2d3082d88f26c34014efce3d0f233bcd18a0f43f1bd960600ad9e22bcb19ebf04e573c74dfc1abfb771aa6b8525053c14b
+    REF abbb921e0af973809f45b2f78f9f0d843bdabb8d # v8.3.0-20211130
+    SHA512 f529cc0153379819710f4d84ee25d4d666a1d9c531fc01b2d9ce8091eca13a6f2fa8a06866cccfeec00b43e8c318036d5162a1bf79e1f22155dce1aab30ae70a
     HEAD_REF master
 )
 
@@ -11,8 +11,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -Denable_cplusplus=ON
-        -DCFLAGS_EXTRA=-I${CURRENT_INSTALLED_DIR}/include # for libatomic_ops
+        -Dwith_libatomic_ops=ON
     OPTIONS_DEBUG
+        -Denable_gc_assertions=ON
         -Dinstall_headers=OFF
 )
 
@@ -21,7 +22,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/bdwgc)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/README.QUICK" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
