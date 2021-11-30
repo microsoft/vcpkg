@@ -1,6 +1,6 @@
 {
   "name": "xxhash",
-  "version-string": "0.8.1",
+  "version": "0.8.1",
   "description": "Extremely fast hash algorithm",
   "homepage": "https://github.com/Cyan4973/xxHash",
   "dependencies": [
