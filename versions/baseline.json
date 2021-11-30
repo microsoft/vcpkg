@@ -7122,7 +7122,7 @@
     },
     "vtk-m": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan": {
       "baseline": "1.1.82.1",
