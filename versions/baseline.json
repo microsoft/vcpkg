@@ -2558,7 +2558,7 @@
     },
     "graphqlparser": {
       "baseline": "0.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "graphviz": {
       "baseline": "2.49.1",
