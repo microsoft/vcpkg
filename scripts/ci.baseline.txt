@@ -1231,6 +1231,7 @@ quickfix:x64-windows-static-md=fail
 quickfix:x64-windows=fail
 quickfix:x86-windows=fail
 qwt:x64-osx=fail
+qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
 rabit:x64-osx=fail
 ragel:arm-uwp=fail
