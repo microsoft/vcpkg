@@ -5,7 +5,7 @@
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
 
-Vcpkg ayuda a manejar librerías de C y C++ en Windows, Linux y MacOS.
+Vcpkg ayuda a manejar bibliotecas de C y C++ en Windows, Linux y MacOS.
 Esta herramienta y ecosistema se encuentran en constante evolución ¡Siempre apreciamos contribuciones nuevas!
 
 Si nunca ha usado Vcpkg antes,
@@ -51,7 +51,7 @@ Antes de iniciar, siga la guía ya sea para [Windows](#inicio-rápido-windows),
 o [macOS y Linux](#inicio-rápido-unix) dependiendo del SO que use.
 
 Para más información, ver [Instalando y Usando Paquetes][getting-started:using-a-package].
-Si una librería que necesita no está presente en el catálogo de vcpkg,
+Si una biblioteca que necesita no está presente en el catálogo de vcpkg,
 puede [abrir una incidencia en el repositorio de GitHub][contributing:submit-issue] 
 donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un port a vcpkg.
 
@@ -82,13 +82,13 @@ ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas d
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
-Para instalar las librerías para su proyecto, ejecute:
+Para instalar las bibliotecas para su proyecto, ejecute:
 
 ```cmd
 > .\vcpkg\vcpkg install [paquetes a instalar]
 ```
 
-también puede buscar librerías que necesite usar el comando `search`:
+también puede buscar bibliotecas que necesite usar el comando `search`:
 
 ```cmd
 > .\vcpkg\vcpkg search [término de búsqueda]
@@ -102,7 +102,7 @@ ejecute el siguiente comando (puede requerir privilegios de administrador):
 ```
 
 Después de esto, puede crear un nuevo proyecto que no sea de CMake(MSBuild) o abrir uno existente.
-Todas las librerías estarán listas para ser incluidas y
+Todas las bibliotecas estarán listas para ser incluidas y
 usadas en su proyecto sin configuración adicional.
 
 Si está usando CMake con Visual Studio,
@@ -116,7 +116,7 @@ puede utilizar el archivo de herramientas incluido:
 > cmake --build [directorio de compilación]
 ```
 
-Con CMake, todavía necesitara `find_package` y las configuraciones adicionales de la librería.
+Con CMake, todavía necesitara `find_package` y las configuraciones adicionales de la biblioteca.
 Revise la [Sección de Cmake](#usando-vcpkg-con-cmake) para más información,
 incluyendo el uso de CMake con un IDE.
 
@@ -145,13 +145,13 @@ $ git clone https://github.com/microsoft/vcpkg
 $ ./vcpkg/bootstrap-vcpkg.sh
 ```
 
-Para instalar las librerías para su proyecto, ejecute:
+Para instalar las bibliotecas para su proyecto, ejecute:
 
 ```sh
 $ ./vcpkg/vcpkg install [paquetes a instalar]
 ```
 
-Nota: por defecto se instalarán las librerías x86, para instalar x64, ejecute:
+Nota: por defecto se instalarán las bibliotecas x86, para instalar x64, ejecute:
 
 ```cmd
 > .\vcpkg\vcpkg install [paquete a instalar]:x64-windows
@@ -163,7 +163,7 @@ O si desea instalar varios paquetes:
 > .\vcpkg\vcpkg install [paquetes a instalar] --triplet=x64-windows
 ```
 
-También puede buscar las librerías que necesita con el subcomando `search`:
+También puede buscar las bibliotecas que necesita con el subcomando `search`:
 
 ```sh
 $ ./vcpkg/vcpkg search [término de búsqueda]
@@ -176,7 +176,7 @@ $ cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcp
 $ cmake --build [directorio de compilación]
 ```
 
-Con CMake, todavía necesitara `find_package` y las configuraciones adicionales de la librería.
+Con CMake, todavía necesitara `find_package` y las configuraciones adicionales de la biblioteca.
 Revise la [Sección de CMake](#usando-vcpkg-con-cmake)
 para más información en cómo aprovechar mejor Vcpkg con CMake,
 y CMake tools para VSCode.
@@ -245,7 +245,7 @@ Posteriormente podrá compilar vcpkg junto con la [guía de inicio rápido](#ini
 #### Visual Studio Code con CMake Tools
 
 Agregando lo siguiente al espacio de trabajo `settings.json` permitirá que
-CMake Tools use automáticamente Vcpkg para las librerías:
+CMake Tools use automáticamente Vcpkg para las bibliotecas:
 
 ```json
 {
@@ -330,7 +330,7 @@ cree un archivo llamado `vcpkg.json`, y escriba lo siguiente:
 }
 ```
 
-Las librerías serán instaladas en el directorio `vcpkg_installed`,
+Las bibliotecas serán instaladas en el directorio `vcpkg_installed`,
 en el mismo directorio que su `vcpkg.json`.
 Si puede usar el regular conjunto de herramientas de CMake,
 o mediante la integración de Visual Studio/MSBuild,
