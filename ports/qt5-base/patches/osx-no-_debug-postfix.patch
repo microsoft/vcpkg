@@ -1,0 +1,116 @@
+diff --git a/examples/widgets/tools/plugandpaint/app/app.pro b/examples/widgets/tools/plugandpaint/app/app.pro
+index 558d359e..3de0822f 100644
+--- a/examples/widgets/tools/plugandpaint/app/app.pro
++++ b/examples/widgets/tools/plugandpaint/app/app.pro
+@@ -20,7 +20,7 @@ macx-xcode {
+ } else {
+     LIBS += -lpnp_basictools
+     if(!debug_and_release|build_pass):CONFIG(debug, debug|release) {
+-        mac:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)_debug
++        mac:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)
+         win32:LIBS = $$member(LIBS, 0) $$member(LIBS, 1)d
+     }
+ }
+diff --git a/mkspecs/features/create_cmake.prf b/mkspecs/features/create_cmake.prf
+index a732c49e..dec0d811 100644
+--- a/mkspecs/features/create_cmake.prf
++++ b/mkspecs/features/create_cmake.prf
+@@ -233,9 +233,9 @@ contains(CONFIG, plugin) {
+             else: CMAKE_PLUGIN_EXT = .a
+ 
+             CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}$${CMAKE_PLUGIN_EXT}
+-            CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}_debug$${CMAKE_PLUGIN_EXT}
++            CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}$${CMAKE_PLUGIN_EXT}
+             CMAKE_PRL_FILE_LOCATION_RELEASE = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}.prl
+-            CMAKE_PRL_FILE_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}_debug.prl
++            CMAKE_PRL_FILE_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${CMAKE_QT_STEM}.prl
+         } else {
+             isEmpty(CMAKE_STATIC_TYPE): CMAKE_PLUGIN_EXT = .so
+             else: CMAKE_PLUGIN_EXT = .a
+@@ -297,10 +297,10 @@ equals(TEMPLATE, aux): CMAKE_FEATURE_PROPERTY_PREFIX = "INTERFACE_"
+ mac {
+     CMAKE_FIND_OTHER_LIBRARY_BUILD = "true"
+     !isEmpty(CMAKE_STATIC_TYPE) {
+-        CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.a
++        CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.a
+         CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
+ 
+-        CMAKE_PRL_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.prl
++        CMAKE_PRL_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.prl
+         CMAKE_PRL_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.prl
+     } else {
+         qt_framework {
+@@ -309,7 +309,7 @@ mac {
+             CMAKE_LIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.framework/$${CMAKE_QT_STEM}
+             CMAKE_BUILD_IS_FRAMEWORK = "true"
+         } else {
+-            CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.$$eval(QT.$${MODULE}.VERSION).dylib
++            CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.$$eval(QT.$${MODULE}.VERSION).dylib
+             CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.$$eval(QT.$${MODULE}.VERSION).dylib
+         }
+     }
+diff --git a/mkspecs/features/qt_functions.prf b/mkspecs/features/qt_functions.prf
+index 7777e615..59be06f8 100644
+--- a/mkspecs/features/qt_functions.prf
++++ b/mkspecs/features/qt_functions.prf
+@@ -16,7 +16,7 @@ defineReplace(qtPlatformTargetSuffix) {
+     darwin {
+         CONFIG(debug, debug|release) {
+             !debug_and_release|build_pass: \
+-                return($${suffix}_debug)
++                return($${suffix})
+         }
+     }
+     return($$suffix)
+diff --git a/mkspecs/features/qt_helper_lib.prf b/mkspecs/features/qt_helper_lib.prf
+index bc20251b..2af6313c 100644
+--- a/mkspecs/features/qt_helper_lib.prf
++++ b/mkspecs/features/qt_helper_lib.prf
+@@ -64,7 +64,7 @@ win32|CONFIG(static, static|shared) {
+         win32: \
+             MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}d.$$suffix
+         else: darwin: \
+-            MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}_debug.$$suffix
++            MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}.$$suffix
+         else: \
+             error("'$$QMAKE_PLATFORM' does not do debug_and_release.")
+         MODULE_RELEASE_LIBS = $$DESTDIR/$$prefix$${TARGET}.$$suffix
+diff --git a/mkspecs/features/resolve_config.prf b/mkspecs/features/resolve_config.prf
+index 816c3b68..39d55c63 100644
+--- a/mkspecs/features/resolve_config.prf
++++ b/mkspecs/features/resolve_config.prf
+@@ -43,10 +43,10 @@ CONFIG(debug, debug|release) {
+         suffix =
+         qtConfig(debug_and_release) {
+             equals(build, debug): \
+-                suffix = _debug
++                suffix = 
+         } else {
+             contains(QT_CONFIG, debug): \
+-                suffix = _debug
++                suffix = 
+         }
+ 
+         library_suffix_$${build}.name = $$QMAKE_XCODE_LIBRARY_SUFFIX_SETTING
+diff --git a/qmake/doc/snippets/code/doc_src_qmake-manual.pro b/qmake/doc/snippets/code/doc_src_qmake-manual.pro
+index d36d926b..26e48d89 100644
+--- a/qmake/doc/snippets/code/doc_src_qmake-manual.pro
++++ b/qmake/doc/snippets/code/doc_src_qmake-manual.pro
+@@ -175,7 +175,7 @@ make all
+ 
+ #! [25]
+ build_pass:CONFIG(debug, debug|release) {
+-    unix: TARGET = $$join(TARGET,,,_debug)
++    unix: TARGET = $$join(TARGET,,,)
+     else: TARGET = $$join(TARGET,,,d)
+ }
+ #! [25]
+@@ -781,7 +781,7 @@ make install
+ 
+ #! [127]
+ CONFIG(debug, debug|release) {
+-    mac: TARGET = $$join(TARGET,,,_debug)
++    mac: TARGET = $$join(TARGET,,,)
+     win32: TARGET = $$join(TARGET,,d)
+ }
+ #! [127]

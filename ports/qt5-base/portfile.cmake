@@ -89,6 +89,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                             patches/limits_include.patch       # Add missing includes to build with gcc 11
+                            patches/osx-no-_debug-postfix.patch
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -506,16 +507,6 @@ endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()
-endif()
-if(VCPKG_TARGET_IS_OSX)
-    file(GLOB_RECURSE _debug_files "${CURRENT_PACKAGES_DIR}/debug/lib/*_debug.*")
-    foreach(_file ${_debug_libs})
-        string(REPLACE "_debug" "" _new_filename "${_file}")
-        file(RENAME "${_file}" "${_new_filename}")
-        if(_new_filename MATCHES "*.(la|prl|pc)")
-            vcpkg_replace_string("${_new_filename}" "_debug" "")
-        endif()
-    endforeach()
 endif()
 
 # #Code to get generated CMake files from CI
