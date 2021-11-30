@@ -172,6 +172,16 @@ Valid settings:
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
 
+
+### VCPKG_PLATFORM_TOOLSET_VERSION
+Specifies the detailed VS-basec C/C++ compiler toolchain to use.
+
+By default, [`VCPKG_PLATFORM_TOOLSET`] always chooses the latest installed minor version of the selected toolset.
+If you need more granularity, you can use this variable.
+Valid values are, for example, `14.25` or `14.27.29110`.
+
+
+
 ### VCPKG_LOAD_VCVARS_ENV
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.
 Setting `VCPKG_LOAD_VCVARS_ENV` to (true|1|on) changes this behavior so that the Visual Studio environment is setup following the same rules as if `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` was not set.
