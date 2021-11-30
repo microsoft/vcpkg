@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/GameNetworkingSockets
-    REF 5c793b9f1a507aa9670c8634817bde48b744428b # v1.3.0
+    REF 5c793b9f1a507aa9670c8634817bde48b744428b
     SHA512 6ed8edbfe0b899a1e0aaba4cc7cae2e101fb292b18becb29b0da47c0894d603cad5c4b0983caddbcf269537a2022bd2cc965a19530615a0aa68406278e127525
     HEAD_REF master
 )
@@ -11,17 +11,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "webrtc"    USE_STEAMWEBRTC
 )
 
-vcpkg_from_git(
-    OUT_SOURCE_PATH WEBRTC_SOURCE_PATH
-    URL https://webrtc.googlesource.com/src
-    REF 30a3e787948dd6cdd541773101d664b85eb332a6
-    HEAD_REF MAIN
-)
+if (USE_STEAMWEBRTC)
+    vcpkg_from_git(
+        OUT_SOURCE_PATH WEBRTC_SOURCE_PATH
+        URL https://webrtc.googlesource.com/src
+        REF 30a3e787948dd6cdd541773101d664b85eb332a6
+        HEAD_REF MAIN
+    )
 
-file(GLOB WEBRTC_SOURCE_FILES ${WEBRTC_SOURCE_PATH}/*)
-foreach(SOURCE_FILE ${WEBRTC_SOURCE_FILES})
-    file(COPY ${SOURCE_FILE} DESTINATION "${SOURCE_PATH}/src/external/webrtc/")
-endforeach()
+    if (NOT EXISTS "${SOURCE_PATH}/src/external/webrtc/rtc_base")
+        file(REMOVE_RECURSE "${SOURCE_PATH}/src/external/webrtc")
+        file(RENAME "${WEBRTC_SOURCE_PATH}" "${SOURCE_PATH}/src/external/webrtc")
+    endif()
+endif()
 
 set(CRYPTO_BACKEND OpenSSL)
 
