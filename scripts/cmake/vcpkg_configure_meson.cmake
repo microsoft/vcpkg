@@ -199,8 +199,6 @@ endfunction()
 
 function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbuild.com/Native-environments.html
     set(native_file "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    z_vcpkg_meson_generate_flags_properties_string(native_properties "${config_type}")
-    string(APPEND native_file "${native_properties}")
     #Setup CMake properties
     string(APPEND native_file "cmake_toolchain_file  = '${SCRIPTS}/buildsystems/vcpkg.cmake'\n")
     string(APPEND native_file "[cmake]\n")
@@ -230,6 +228,8 @@ function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbu
     string(APPEND native_file "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
 
     string(APPEND native_file "[built-in options]\n")
+    z_vcpkg_meson_generate_flags_properties_string(native_properties "${config_type}")
+    string(APPEND native_file "${native_properties}")
     if(VCPKG_TARGET_IS_WINDOWS)
         if(VCPKG_CRT_LINKAGE STREQUAL "static")
             set(crt_type mt)
@@ -359,9 +359,9 @@ endfunction()
 
 function(z_vcpkg_meson_generate_cross_file_config config_type) #https://mesonbuild.com/Native-environments.html
     set(cross_${config_type}_log "[properties]\n") #https://mesonbuild.com/Builtin-options.html
+    string(APPEND cross_${config_type}_log "[built-in options]\n")
     z_vcpkg_meson_generate_flags_properties_string(cross_properties ${config_type})
     string(APPEND cross_${config_type}_log "${cross_properties}")
-    string(APPEND cross_${config_type}_log "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
         if(VCPKG_CRT_LINKAGE STREQUAL "static")
             set(crt_type mt)
