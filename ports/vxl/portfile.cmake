@@ -15,6 +15,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_dependency.patch
+        testlib.patch
 )
 
 set(USE_WIN_WCHAR_T OFF)
