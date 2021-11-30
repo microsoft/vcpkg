@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "osx" "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO marzer/tomlplusplus
@@ -9,7 +7,7 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dgenerate_cmake_config=true
         -Dbuild_tests=false
