@@ -1,3 +1,6 @@
+cmake_policy(PUSH)
+cmake_policy(SET CMP0012 NEW)
+
 _find_package(${ARGS})
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
@@ -57,3 +60,4 @@ if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         endif()
     endif()
 endif()
+cmake_policy(POP)
