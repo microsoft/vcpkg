@@ -81,7 +81,7 @@
       "port-version": 7
     },
     "angelscript": {
-      "baseline": "2.35.0",
+      "baseline": "2.35.1",
       "port-version": 0
     },
     "angle": {
@@ -502,7 +502,7 @@
     },
     "blitz": {
       "baseline": "2020-03-25",
-      "port-version": 2
+      "port-version": 3
     },
     "blosc": {
       "baseline": "1.18.1",
@@ -514,7 +514,7 @@
     },
     "bond": {
       "baseline": "9.0.3",
-      "port-version": 2
+      "port-version": 3
     },
     "boolinq": {
       "baseline": "3.0.2",
@@ -1238,7 +1238,7 @@
     },
     "cartographer": {
       "baseline": "1.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "casclib": {
       "baseline": "2021-11-16",
@@ -1654,7 +1654,7 @@
     },
     "crossguid": {
       "baseline": "2021-10-22",
-      "port-version": 0
+      "port-version": 1
     },
     "crow": {
       "baseline": "0.3.3",
@@ -1706,7 +1706,7 @@
     },
     "curlpp": {
       "baseline": "2018-06-15",
-      "port-version": 5
+      "port-version": 6
     },
     "cute-headers": {
       "baseline": "2019-09-20",
@@ -1950,7 +1950,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 2
+      "port-version": 3
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
@@ -2114,7 +2114,7 @@
     },
     "fastor": {
       "baseline": "2021-11-22",
-      "port-version": 0
+      "port-version": 1
     },
     "fastrtps": {
       "baseline": "2.4.0",
@@ -2266,7 +2266,7 @@
     },
     "freerdp": {
       "baseline": "2.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "freetds": {
       "baseline": "1.2.11",
@@ -2469,8 +2469,8 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.66.4",
-      "port-version": 2
+      "baseline": "2.70.1",
+      "port-version": 0
     },
     "glibmm": {
       "baseline": "2.68.1",
@@ -2558,7 +2558,7 @@
     },
     "graphqlparser": {
       "baseline": "0.7.0",
-      "port-version": 3
+      "port-version": 4
     },
     "graphviz": {
       "baseline": "2.49.1",
@@ -2601,7 +2601,7 @@
       "port-version": 3
     },
     "gtk": {
-      "baseline": "4.3.0",
+      "baseline": "4.4.0",
       "port-version": 0
     },
     "gtkmm": {
@@ -2698,7 +2698,7 @@
     },
     "hpx": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -3366,7 +3366,7 @@
     },
     "libcopp": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libcrafter": {
       "baseline": "1.0",
@@ -3446,7 +3446,7 @@
     },
     "libflac": {
       "baseline": "1.3.3",
-      "port-version": 6
+      "port-version": 7
     },
     "libfort": {
       "baseline": "0.4.2",
@@ -3478,7 +3478,7 @@
     },
     "libgit2": {
       "baseline": "1.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libgnutls": {
       "baseline": "3.6.15",
@@ -3958,7 +3958,7 @@
     },
     "libtins": {
       "baseline": "4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libtomcrypt": {
       "baseline": "1.18.2",
@@ -4282,7 +4282,7 @@
     },
     "mathgl": {
       "baseline": "2.4.3",
-      "port-version": 7
+      "port-version": 8
     },
     "matio": {
       "baseline": "1.5.19",
@@ -4834,7 +4834,7 @@
     },
     "ode": {
       "baseline": "0.16.1",
-      "port-version": 2
+      "port-version": 3
     },
     "offscale-libetcd-cpp": {
       "baseline": "2019-07-10",
@@ -4862,7 +4862,7 @@
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "onednn": {
       "baseline": "2.4.3",
@@ -5178,7 +5178,7 @@
     },
     "pcre2": {
       "baseline": "10.39",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal": {
       "baseline": "1.7.1",
@@ -5326,7 +5326,7 @@
     },
     "poly2tri": {
       "baseline": "2020-07-21",
-      "port-version": 1
+      "port-version": 2
     },
     "polyclipping": {
       "baseline": "6.4.2",
@@ -5466,7 +5466,7 @@
     },
     "python3": {
       "baseline": "3.10.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.1",
@@ -5856,6 +5856,10 @@
       "baseline": "6.2.0",
       "port-version": 0
     },
+    "qwt-qt6": {
+      "baseline": "6.2.0",
+      "port-version": 0
+    },
     "qwtw": {
       "baseline": "3.1.0",
       "port-version": 1
@@ -5938,7 +5942,7 @@
     },
     "realsense2": {
       "baseline": "2.49.0",
-      "port-version": 1
+      "port-version": 2
     },
     "recast": {
       "baseline": "1.5.1",
@@ -6306,7 +6310,7 @@
     },
     "skia": {
       "baseline": "2020-05-18",
-      "port-version": 5
+      "port-version": 6
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -6501,8 +6505,8 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.36.0",
-      "port-version": 1
+      "baseline": "3.37.0",
+      "port-version": 0
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
@@ -6638,7 +6642,7 @@
     },
     "tcl": {
       "baseline": "core-9-0-a1",
-      "port-version": 4
+      "port-version": 5
     },
     "tclap": {
       "baseline": "1.2.2",
@@ -6846,7 +6850,7 @@
     },
     "tomlplusplus": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 2
     },
     "tool-meson": {
       "baseline": "0.58.1",
@@ -6861,7 +6865,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "tre": {
@@ -7072,6 +7076,10 @@
       "baseline": "3",
       "port-version": 1
     },
+    "vcpkg-gn": {
+      "baseline": "2021-11-16",
+      "port-version": 0
+    },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2021-04-02",
       "port-version": 1
@@ -7118,7 +7126,7 @@
     },
     "vtk-m": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan": {
       "baseline": "1.1.82.1",
