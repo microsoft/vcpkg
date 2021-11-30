@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
-    REF  386639c3b118cc973f714eb485877f480391f31f #v1.48.4
-    SHA512 d7de3bc3108826de9f0b34ca888e0c1eb97c1d0723b2dd68cfb1030fb78d1367e3ac4df88e4a5dea66b08854ef85ecf562d149a58f070351768d6ac144da8520
+    REF  dc5bde2a20cbb025c9d0ed29ed687740a4d027da #v1.48.10
+    SHA512 8454b2cb81fd57e140372b5c1e5786542e92bcad85d4718b7976dccbf694cfe0fec62938edc32e5de50991e2cda2b00e8d4e976921881069ca29976fe973f4ac
     HEAD_REF master # branch name
 ) 
 
@@ -28,7 +28,7 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tools(TOOL_NAMES pango-view pango-list AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
