@@ -4,6 +4,7 @@
   "description": "keymap handling library for toolkits and window systems",
   "homepage": "https://xkbcommon.org/",
   "dependencies": [
+    "getopt",
     "tool-meson",
     {
       "name": "wayland",

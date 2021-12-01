@@ -1,0 +1,39 @@
+diff --git a/meson.build b/meson.build
+index 3fdbe4709..c1272fff0 100644
+--- a/meson.build
++++ b/meson.build
+@@ -374,6 +374,8 @@ man_pages = []
+ # Tools
+ build_tools = have_getopt_long
+ if build_tools
++    getopt_dep = cc.find_library('getopt',required: true)
++    libxkbcommon_dep = [getopt_dep, libxkbcommon_dep]
+     libxkbcommon_tools_internal = static_library(
+         'tools-internal',
+         'tools/tools-common.h',
+diff --git a/tools/how-to-type.c b/tools/how-to-type.c
+index 0a6f79e68..c1205004d 100644
+--- a/tools/how-to-type.c
++++ b/tools/how-to-type.c
+@@ -25,7 +25,9 @@
+ 
+ #include <getopt.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ 
+ #include "xkbcommon/xkbcommon.h"
+diff --git a/tools/tools-common.c b/tools/tools-common.c
+index 254499d8c..2465a88c2 100644
+--- a/tools/tools-common.c
++++ b/tools/tools-common.c
+@@ -42,6 +42,7 @@
+ #ifdef _MSC_VER
+ #include <io.h>
+ #include <windows.h>
++#include <process.h>
+ #else
+ #include <unistd.h>
+ #include <termios.h>
