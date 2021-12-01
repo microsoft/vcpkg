@@ -110,6 +110,19 @@
         }
       ]
     },
+    "simulation": {
+      "description": "Build Point Cloud Library Simulation",
+      "dependencies": [
+        "glew",
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
     "tools": {
       "description": "Build PCL utilities",
       "dependencies": [
