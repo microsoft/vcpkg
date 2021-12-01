@@ -4,6 +4,7 @@
   "description": "ONNXIFI with Facebook Extension",
   "homepage": "https://github.com/houseroad/foxi",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
