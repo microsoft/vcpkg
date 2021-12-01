@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" "OSX")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/winpcap")
     message(FATAL_ERROR "FATAL ERROR: winpcap and libpcap are incompatible.")
 endif()
