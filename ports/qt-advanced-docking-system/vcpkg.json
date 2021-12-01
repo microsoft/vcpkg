@@ -1,7 +1,7 @@
 {
   "name": "qt-advanced-docking-system",
-  "version-string": "3.6.3",
-  "port-version": 2,
+  "version-string": "3.7.2",
+  "port-version": 3,
   "description": "Create customizable layouts using an advanced window docking system similar to what is found in many popular IDEs such as Visual Studio",
   "homepage": "https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System",
   "dependencies": [
