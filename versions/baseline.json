@@ -7069,7 +7069,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-11-18",
+      "baseline": "2021-12-01",
       "port-version": 0
     },
     "vcpkg-gfortran": {
