@@ -1,7 +1,7 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PATCHES symbol_visibility.patch)
@@ -36,5 +36,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # # Handle copyright
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright") #already installed by xproto
-
+endif()
 

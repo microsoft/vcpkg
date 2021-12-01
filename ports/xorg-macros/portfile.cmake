@@ -3,7 +3,7 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-endif()
+else()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(PATCHES skip_rawcpp.patch)
@@ -62,6 +62,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/xorg/debug/${PORT}/pkgconfig" "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig")
 vcpkg_fixup_pkgconfig()
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+endif()
