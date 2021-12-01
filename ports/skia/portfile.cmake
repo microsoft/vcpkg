@@ -1,7 +1,3 @@
-vcpkg_fail_port_install(
-    ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "ANDROID" "FREEBSD")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
