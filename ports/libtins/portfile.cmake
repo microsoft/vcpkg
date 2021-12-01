@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v4.3
     SHA512 29d606004fe9a440c9a53eede42fd5c6dbd049677d2cca2c5cfd26311ee2ca4c64ca3e665fbc81efd5bfab5577a5181ed0754c617e139317d9ae0cabba05aff7
     HEAD_REF master
+    PATCHES
+        fix-source-writes.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTINS_BUILD_SHARED)
