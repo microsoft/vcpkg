@@ -32,16 +32,19 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openni2 WITH_OPENNI2
-        qt      WITH_QT
-        pcap    WITH_PCAP
-        cuda    WITH_CUDA
-        cuda    BUILD_CUDA
-        cuda    BUILD_GPU
-        tools   BUILD_tools
-        opengl  WITH_OPENGL
-        vtk     WITH_VTK
-        libusb  WITH_LIBUSB
+        openni2         WITH_OPENNI2
+        qt              WITH_QT
+        pcap            WITH_PCAP
+        cuda            WITH_CUDA
+        cuda            BUILD_CUDA
+        cuda            BUILD_GPU
+        tools           BUILD_tools
+        opengl          WITH_OPENGL
+        vtk             WITH_VTK
+        libusb          WITH_LIBUSB
+        visualization   BUILD_visualization
+        examples        BUILD_examples
+        apps            BUILD_apps
 )
 
 vcpkg_cmake_configure(
