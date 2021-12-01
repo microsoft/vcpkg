@@ -42,3 +42,19 @@ index b406d0f..c5d04d5 100644
    install(TARGETS foxi_wrapper
      EXPORT ONNXTargets DESTINATION lib)
  endif()
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c5d04d5..cc7d18a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -61,9 +61,6 @@ set_target_properties(foxi_loader
+                                  C_EXTENSIONS
+                                  NO)
+ target_link_libraries(foxi_loader PUBLIC foxi ${CMAKE_DL_LIBS})
+-if(MSVC)
+-  add_msvc_runtime_flag(foxi_loader)
+-endif()
+ 
+ if (FALSE)
+   # ---[ FOXI wrapper
+
