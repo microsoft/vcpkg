@@ -199,6 +199,40 @@ function(z_vcpkg_set_powershell_path)
 endfunction()
 
 
+#[===[.md:
+# z_vcpkg_find_library_release
+
+Find the variant of a library to be used in release builds.
+This function is for vcpkg cmake wrappers.
+It ensures that <vcpkg>/lib is searched before <vcpkg>/debug/lib,
+regardless of current build type.
+#]===]
+function(z_vcpkg_find_library_release)
+    foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
+        list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
+        list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+    endforeach()
+    find_library(${ARGN})
+endfunction()
+
+
+#[===[.md:
+# z_vcpkg_find_library_debug
+
+Find the variant of a library to be used in debug builds.
+This function is for vcpkg cmake wrappers.
+It ensures that <vcpkg>/debug/lib is searched before <vcpkg>/lib,
+regardless of current build type.
+#]===]
+function(z_vcpkg_find_library_debug)
+    foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
+        list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" index)
+        list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
+    endforeach()
+    find_library(${ARGN})
+endfunction()
+
+
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
