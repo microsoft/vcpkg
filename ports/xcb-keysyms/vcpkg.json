@@ -5,9 +5,9 @@
   "homepage": "https://xcb.freedesktop.org/",
   "dependencies": [
     "bzip2",
+    "xcb",
     "xorg-macros",
-    "xproto",
-    "xcb"
+    "xproto"
   ],
   "features": {
     "no-feature": {

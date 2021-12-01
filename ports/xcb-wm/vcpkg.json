@@ -5,8 +5,8 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcb-wm/",
   "dependencies": [
     "bzip2",
+    "xcb",
     "xorg-macros",
-    "xproto",
-    "xcb"
+    "xproto"
   ]
 }
