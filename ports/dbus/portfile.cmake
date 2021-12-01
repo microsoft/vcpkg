@@ -22,8 +22,8 @@ vcpkg_cmake_configure(
         -DXSLTPROC_EXECUTABLE=FALSE
         -DENABLE_SYSTEMD=ON
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
-        "-DWITH_SYSTEMD_SYSTEMUNITDIR=${CURRENT_PACKAGES_DIR}/lib/systemd/system"
-        "-DWITH_SYSTEMD_USERUNITDIR=${CURRENT_PACKAGES_DIR}/lib/systemd/user"
+        "-DWITH_SYSTEMD_SYSTEMUNITDIR=lib/systemd/system"
+        "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DBus1")
