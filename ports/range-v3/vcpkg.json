@@ -1,7 +1,6 @@
 {
   "name": "range-v3",
   "version-date": "2021-11-02",
-  "port-version": 2,
   "description": "Range library for C++11/14/17/20.",
   "homepage": "https://github.com/ericniebler/range-v3",
   "dependencies": [
