@@ -25,5 +25,4 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_DEBUG
                     )
 
-file(GLOB_RECURSE BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*")
-message(STATUS "BIN_FILES:${BIN_FILES}")
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) #Debug tracing libraries are only build if CMAKE_BUILD_TYPE is equal to Debug
