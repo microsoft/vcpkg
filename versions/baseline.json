@@ -2858,7 +2858,7 @@
     },
     "influxdb-cxx": {
       "baseline": "0.6.7",
-      "port-version": 0
+      "port-version": 1
     },
     "infoware": {
       "baseline": "2021-06-16",
