@@ -26,6 +26,7 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0004-add-ffmpeg-missing-defines.patch
       0005-fix-cuda.patch
+      fix-path-contains-++-error.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
@@ -49,6 +50,15 @@ FEATURES
 set(WITH_MSMF ON)
 if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
+endif()
+
+set(WITH_GTK OFF)
+if("gtk" IN_LIST FEATURES)
+  if(VCPKG_TARGET_IS_LINUX)
+    set(WITH_GTK ON)
+  else()
+    message(WARNING "The gtk module cannot be enabled outside Linux")
+  endif()
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
@@ -92,6 +102,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENMP=OFF
         -DWITH_ZLIB=ON
+        -WITH_GTK=${WITH_GTK}
         -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
 )
 
@@ -101,17 +112,35 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(CUDA QUIET)
-find_package(Threads QUIET)
-find_package(PNG QUIET)
-find_package(OpenEXR QUIET)
+
+  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+find_dependency(Threads)")
+  if("tiff" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+  endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if("png" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(PNG)")
+  endif()
+  if("qt" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
-find_package(TIFF QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_dependency(Qt5 COMPONENTS Core Gui Widgets Test Concurrent)")
+    if("opengl" IN_LIST FEATURES)
+      string(APPEND DEPS_STRING "
+find_dependency(Qt5 COMPONENTS OpenGL)")
+    endif()
+  endif()
+
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
   file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" "${OPENCV_MODULES}")
 

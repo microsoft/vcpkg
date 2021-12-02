@@ -1,0 +1,15 @@
+ src/Wt/Render/CssParser.C | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Wt/Render/CssParser.C b/src/Wt/Render/CssParser.C
+index b8d409e..6bb47b4 100644
+--- a/src/Wt/Render/CssParser.C
++++ b/src/Wt/Render/CssParser.C
+@@ -39,6 +39,7 @@ using namespace Wt::Render;
+ #include <boost/phoenix.hpp>
+ #endif
+ #include <boost/spirit/include/classic_file_iterator.hpp>
++#include <boost/foreach.hpp>
+ 
+ #include <map>
+ 

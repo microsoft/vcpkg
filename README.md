@@ -14,7 +14,7 @@ check out our [Getting Started](#getting-started) section for how to start using
 For short description of available commands, once you've installed vcpkg,
 you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 
-* Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* Github: ports at [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg), program at [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
@@ -356,8 +356,9 @@ The code in this repository is licensed under the [MIT License](LICENSE.txt).
 
 vcpkg collects usage data in order to help us improve your experience.
 The data collected by Microsoft is anonymous.
-You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
-passing --disable-metrics to vcpkg on the command line,
-or by setting the VCPKG_DISABLE_METRICS environment variable.
+You can opt-out of telemetry by
+- running the bootstrap-vcpkg script with -disableMetrics
+- passing --disable-metrics to vcpkg on the command line
+- setting the VCPKG_DISABLE_METRICS environment variable
 
 Read more about vcpkg telemetry at docs/about/privacy.md
