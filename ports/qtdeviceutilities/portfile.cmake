@@ -11,3 +11,6 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
+
+file(GLOB_RECURSE BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*")
+message(STATUS "BIN_FILES:${BIN_FILES}")
