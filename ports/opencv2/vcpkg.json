@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 6,
+  "port-version": 8,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -16,16 +16,36 @@
     "zlib"
   ],
   "default-features": [
-    "eigen",
-    "jpeg",
-    "png",
-    "tiff"
+    "default-features"
   ],
   "features": {
     "cuda": {
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "eigen",
+            "jpeg",
+            "png",
+            "tiff"
+          ]
+        },
+        {
+          "name": "opencv2",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        }
       ]
     },
     "eigen": {
@@ -47,6 +67,12 @@
             "swscale"
           ]
         }
+      ]
+    },
+    "gtk": {
+      "description": "GDCM support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "jasper": {
