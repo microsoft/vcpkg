@@ -46,7 +46,8 @@
           "features": [
             "openni2",
             "qt",
-            "vtk"
+            "vtk",
+            "opengl"
           ]
         }
       ]

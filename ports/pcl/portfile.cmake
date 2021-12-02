@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-cmake_find_library_suffixes.patch
         fix-pkgconfig.patch # Remove this patch in the next update
         fix-find-libusb.patch
+        install-examples.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
@@ -45,6 +46,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         visualization   BUILD_visualization
         examples        BUILD_examples
         apps            BUILD_apps
+        apps            BUILD_apps_cloud_composer
+        apps            BUILD_apps_modeler
+        apps            BUILD_apps_point_cloud_editor
+        # These 2 apps need openni1
+        #apps            BUILD_apps_in_hand_scanner
+        #apps            BUILD_apps_3d_rec_framework
         simulation      BUILD_simulation
 )
 
@@ -107,7 +114,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(BUILD_tools)
+if(BUILD_tools OR BUILD_apps OR BUILD_examples)
     file(GLOB EXEFILES_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     file(GLOB EXEFILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     file(COPY ${EXEFILES_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/pcl")
@@ -115,4 +122,5 @@ if(BUILD_tools)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/pcl")
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
