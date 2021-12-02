@@ -29,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 #Install the header files
-file(GLOB HEADER_FILES "${SOURCE_PATH}/src/*.h")
+file(GLOB HEADER_FILES "${SOURCE_PATH}/src/*.h" "${SOURCE_PATH}/classincludes/*")
 file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
