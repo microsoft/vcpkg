@@ -2784,6 +2784,10 @@
       "baseline": "4.6.2",
       "port-version": 2
     },
+    "gtk3": {
+      "baseline": "3.24.34",
+      "port-version": 0
+    },
     "gtkmm": {
       "baseline": "4.6.0",
       "port-version": 0
