@@ -9,12 +9,19 @@
       "default-features": false
     },
     {
-      "name": "qtdeclarative",
-      "default-features": false,
-    },
-    {
       "name": "qtserialport",
       "default-features": false,
     }
-  ]
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }
