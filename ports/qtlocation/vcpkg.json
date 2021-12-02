@@ -17,29 +17,5 @@
       "platform": "linux"
     },
     "qtpositioning"
-  ],
-  "features": {
-    "nmea": {
-      "description": "Build with nmea",
-      "dependencies": [
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "network"
-          ]
-        },
-        "qtserialport"
-      ]
-    },
-    "qml": {
-      "description": "Build QML imports",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
-    }
-  }
+  ]
 }
