@@ -10,7 +10,7 @@
     },
     {
       "name": "qtserialport",
-      "default-features": false,
+      "default-features": false
     }
   ],
   "features": {
