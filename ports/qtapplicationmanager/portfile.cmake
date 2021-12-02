@@ -1,9 +1,18 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES bump-cmake-version.patch)
+set(${PORT}_PATCHES 
+        bump-cmake-version.patch
+        wrapper-fixes.patch
+    )
 
-set(TOOL_NAMES)
+set(TOOL_NAMES appman
+               appman-controller
+               appman-dumpqmltypes
+               appman-packager
+               appman-qmltestrunner
+               package-uploader
+    )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
