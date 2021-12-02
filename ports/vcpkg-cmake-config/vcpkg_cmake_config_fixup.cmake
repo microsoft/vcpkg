@@ -222,9 +222,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
         string(FIND "${contents}" [[${VCPKG_IMPORT_PREFIX}]] index)
         if (NOT index STREQUAL "-1")
-           string(PREPEND contents
-"get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)
-get_filename_component(VCPKG_IMPORT_PREFIX \"\${VCPKG_IMPORT_PREFIX}\" PATH)")
+           string(PREPEND contents "get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)")
         endif()
 
         file(WRITE "${main_cmake}" "${contents}")
