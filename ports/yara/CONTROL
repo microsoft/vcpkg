@@ -1,5 +1,0 @@
-Source: yara
-Version: 4.0.2
-Homepage: https://github.com/VirusTotal/yara
-Description: The pattern matching swiss knife
-Build-Depends: openssl, jansson

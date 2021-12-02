@@ -1,6 +1,6 @@
 {
   "name": "hazelcast-cpp-client",
-  "version-semver": "4.0.1",
+  "version-semver": "5.0.0",
   "description": "C++ client library for Hazelcast in-memory database.",
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
@@ -14,7 +14,15 @@
     "boost-property-tree",
     "boost-system",
     "boost-thread",
-    "boost-uuid"
+    "boost-uuid",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "example": {

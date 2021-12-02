@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.20)
 
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
@@ -20,7 +20,7 @@ foreach(prog IN LISTS PROGLIST)
 endforeach()
 set(COMPILERS ${VCPKG_LANGUAGES} RC)
 foreach(prog IN LISTS COMPILERS)
-    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER CMAKE_${prog}_COMPILER_ID)
 endforeach()
 # Variables to check
 foreach(_lang IN LISTS VCPKG_LANGUAGES)
@@ -29,6 +29,8 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_STANDARD)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
+    
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
@@ -79,7 +81,7 @@ foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
-    IF(WIN32)
+    if(CMAKE_HOST_WIN32)
         string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
     else()

@@ -1,0 +1,36 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index 485e38fc..471d61a5 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -87,6 +87,8 @@ else()
+   list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
+ endif()
+ 
++find_package(ZLIB REQUIRED)
++
+ find_package(Libevent CONFIG QUIET)
+ if(TARGET event)
+   message(STATUS "Found libevent from package config")
+@@ -246,6 +248,7 @@ target_link_libraries(fizz
+     ${OPENSSL_LIBRARIES}
+     sodium
+     Threads::Threads
++    ZLIB::ZLIB
+   PRIVATE
+     ${GLOG_LIBRARIES}
+     ${GFLAGS_LIBRARIES}
+diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
+index d9918469..679b0e61 100644
+--- a/fizz/cmake/fizz-config.cmake.in
++++ b/fizz/cmake/fizz-config.cmake.in
+@@ -25,7 +25,10 @@ endif()
+ 
+ set(FIZZ_LIBRARIES fizz::fizz)
+ 
++include(CMakeFindDependencyMacro)
+ find_dependency(Sodium)
++find_dependency(folly CONFIG)
++find_dependency(ZLIB)
+ 
+ if (NOT fizz_FIND_QUIETLY)
+   message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")

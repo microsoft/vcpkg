@@ -1,0 +1,13 @@
+{
+  "name": "sol2",
+  "version-string": "3.2.2",
+  "port-version": 2,
+  "description": "Sol v2.0 - a C++ <-> Lua API wrapper with advanced features and top notch performance - is here, and it's great",
+  "homepage": "https://github.com/ThePhD/sol2",
+  "dependencies": [
+    {
+      "name": "lua",
+      "platform": "windows"
+    }
+  ]
+}

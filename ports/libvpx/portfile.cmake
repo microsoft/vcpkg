@@ -1,17 +1,17 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.9.0)
+set(LIBVPX_VERSION 1.10.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF v${LIBVPX_VERSION}
-    SHA512 8d544552b35000ea5712aec220b78bb5f7dc210704b2f609365214cb95a4f5a0e343b362723d829cb4a9ac203b10d5443700ba84b28fd6b2fefbabb40663e298
+    SHA512 f88c588145b5164e98531b75215e119056cd806a9dbe6599bb9dab35c0af0ecd4b3daabee7d795e412a58aeb543d5c7dc0107457c4bd8f4d434e966e8e22a32d
     HEAD_REF master
     PATCHES
-        0001-vcxproj-nasm.patch
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-and-v142-support.patch
+        0004-remove-library-suffixes.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -33,7 +33,7 @@ vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -70,17 +70,25 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
     message(STATUS "Generating makefile")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
             "${SOURCE_PATH}/configure"
             --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
             ${LIBVPX_CRT_LINKAGE}
-            --disable-examples
-            --disable-tools
-            --disable-docs
+            ${OPTIONS}
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME configure-${TARGET_TRIPLET})
@@ -98,23 +106,22 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 
     # note: pdb file names are hardcoded in the lib file, cannot rename
+    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         else()
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmdd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         else()
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmtd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
     endif()
 
@@ -127,25 +134,42 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     file(
         INSTALL
-            ${LIBVPX_INCLUDE_DIR}
+            "${LIBVPX_INCLUDE_DIR}"
         DESTINATION
             "${CURRENT_PACKAGES_DIR}/include"
         RENAME
             "vpx")
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
+    endif()
+    
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)   
+    endif()
 
 else()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests")
+    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
 
     set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
-	
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
-    
+
+    if("realtime" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+    endif()
+
+    if("highbitdepth" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+    endif()
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
@@ -165,7 +189,11 @@ else()
 	elseif(VCPKG_TARGET_IS_LINUX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
     elseif(VCPKG_TARGET_IS_OSX)
-        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(LIBVPX_TARGET "arm64-darwin20-gcc")
+        else()
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        endif()
     else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
@@ -174,7 +202,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Configuring libvpx for Release")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -207,7 +235,7 @@ else()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Configuring libvpx for Debug")
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -235,10 +263,12 @@ else()
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
 
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
     endif()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(LIBVPX_CONFIG_DEBUG ON)
@@ -246,6 +276,6 @@ else()
     set(LIBVPX_CONFIG_DEBUG OFF)
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in ${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake" @ONLY)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

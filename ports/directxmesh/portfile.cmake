@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF jan2021b
-    SHA512 dab353d5033c32cf5667b95820cf3048e4773fa3fed16d24b25a515fbf4b6f6792ab5955dc9bb790c911b4cae1af1166aa0fdc4f5a639b3f4c3c81a2451a9a40
+    REF nov2021b
+    SHA512 be2137c02c7a5973eaf91eaacfc9174148ec6dc68b163507d8146beb87c1ffff512e2593f7fd000ea7be440529ed2deda415e0dacd53e4c7d9679e97c6440d3d
     HEAD_REF master
 )
 
@@ -26,27 +26,20 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
-  vcpkg_copy_tools(
-        TOOL_NAMES meshconvert
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
-    )
-
-elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jan2021/meshconvert.exe"
-    FILENAME "meshconvert-jan2021.exe"
-    SHA512 7df51baa495859aab418d194fd885cf37945ec2927122c18718b3a1a7d7ceb08c6853d084d74bf2bf2bc9ace47a351fd6b8d03706507f4966111ec1cb83f43a2
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/nov2021/meshconvert.exe"
+    FILENAME "meshconvert-nov2021.exe"
+    SHA512 0f97ac49ce292b1cb90372884f1d6a4fc10eb3e92125a854ee9b7030fd9d0564536cdd88199aa4838832ae2a1e9c2df2c9e32c106705b6b06f156994b9476360
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
@@ -55,7 +48,15 @@ elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-nov2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES meshconvert
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

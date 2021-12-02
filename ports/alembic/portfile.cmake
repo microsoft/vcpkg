@@ -1,72 +1,54 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "UWP")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fail_port_install(ON_ARCH "x86") # see https://github.com/alembic/alembic/issues/372
+endif()
 
 vcpkg_buildpath_length_warning(37)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 7e5cf9b896f4299117457f36a7bf47d962cd0ebf # 1.7.16
-    SHA512 aeb449890874fa3a89a72245f3e63a3370332d6becdf20bc77bd9c216bbe1e4578018bbe559c06df69db199799d071399f925a91c8fa816e0eec2d2420f091e9
+    REF 1.8.3
+    SHA512 0049c72d93e66e12d704d27e7ba36cd9c718667f2ce4f7baa1bee1613ed88ba53abea98f457e14f7f2144cb353810a4108d26c7dd1a1543ec2af576272f19036
     HEAD_REF master
     PATCHES
-        fix-find-openexr-ilmbase.patch
+        fix-runtime-destination.patch
+        disable-warnings-as-error.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindIlmBase.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindOpenEXR.cmake)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # In debug mode with g++, alembic defines -Werror
-    # so we need to disable some warnings to avoid build errors
-    list(APPEND GXX_DEBUG_FLAGS
-        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-deprecated
-        -DCMAKE_CXX_FLAGS_DEBUG=-Wno-error=implicit-fallthrough
-    )
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        hdf5 USE_HDF5
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DUSE_HDF5=ON
-    OPTIONS_DEBUG
-        ${GXX_DEBUG_FLAGS}
+        -DALEMBIC_SHARED_LIBS=${ALEMBIC_SHARED_LIBS}
+        -DUSE_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Alembic)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Alembic)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-    file(REMOVE ${EXE})
-    file(REMOVE ${DEBUG_EXE})
-
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/bin/Alembic.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll ${CURRENT_PACKAGES_DIR}/debug/bin/Alembic.dll)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake DEBUG_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll"
-                   "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-debug.cmake "${DEBUG_CONFIG}")
-
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake RELEASE_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}/lib/Alembic.dll"
-                   "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+set(TOOLS abcdiff abcecho abcechobounds abcls abcstitcher abctree)
+if(USE_HDF5)
+    list(APPEND TOOLS abcconvert)
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tools(
+    TOOL_NAMES ${TOOLS}
+    AUTO_CLEAN
+)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

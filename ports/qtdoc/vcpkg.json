@@ -1,0 +1,12 @@
+{
+  "name": "qtdoc",
+  "version-semver": "6.2.1",
+  "description": "Qt Documentation",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
+  ]
+}

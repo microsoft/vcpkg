@@ -19,18 +19,16 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-    PREFER_NINJA
     OPTIONS
         -DSOURCE_PATH=${MASTER_COPY_SOURCE_PATH}
         -DPERL=${PERL}
         -DMAKE=${MAKE}
-    OPTIONS_RELEASE
-        -DINSTALL_HEADERS=ON
+        -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(GLOB HEADERS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/include/openssl/*.h)
@@ -42,7 +40,3 @@ endforeach()
 
 file(INSTALL ${RESOLVED_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/openssl)
 file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl)
-endif()

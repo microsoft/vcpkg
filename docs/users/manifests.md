@@ -88,7 +88,7 @@ You shouldn't need to worry about this at all.
 
 **Experimental behind the `versions` feature flag**
 
-See [versioning.md](versioning.md#version%20schemes) for additional version types.
+See [versioning](versioning.md#version-schemes) for additional version types.
 
 ### `"description"`
 
@@ -189,7 +189,7 @@ A minimum version constraint on the dependency.
 
 This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
-See also [versioning](versioning.md#constraints) for more semantic details.
+See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 
@@ -425,6 +425,12 @@ Defaults to `OFF`.
 This variable can be set to a list of additional command line parameters to pass to the vcpkg tool during automatic
 installation.
 
+#### `VCPKG_PREFER_SYSTEM_LIBS`
+
+This variable controls whether vcpkg will appends instead of prepends its paths to `CMAKE_PREFIX_PATH`, `CMAKE_LIBRARY_PATH` and `CMAKE_FIND_ROOT_PATH` so that vcpkg libraries/packages are found after toolchain/system libraries/packages.
+
+Defaults to `OFF`.
+
 #### `VCPKG_FEATURE_FLAGS`
 
 This variable can be set to a list of feature flags to pass to the vcpkg tool during automatic installation to opt-in to
@@ -435,21 +441,29 @@ See the `--feature-flags=` command line option for more information.
 ## MSBuild Integration
 
 To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild).
-Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the
+Then, add a vcpkg.json above your project file (such as in the root of your source repository) and set the
 property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use
 Vcpkg Manifest`.
 
-As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/`
+As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/$(VcpkgTriplet)/`
 adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild
 projects.
 
-Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if
-you need to use different triplets for different projects in your solution, they must consume from different
-`vcpkg.json` files.
+### Known issues
+
+* Visual Studio 2015 does not correctly track edits to the `vcpkg.json` and `vcpkg-configuration.json` files, and will
+not respond to changes unless a `.cpp` is edited.
 
 ### MSBuild Properties
 
-These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+When using Visual Studio 2015 integration, these properties can be set in your project file before the
+
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+line, which unfortunately requires manual editing of the `.vcxproj` or passing on the msbuild command line with `/p:`.
+With 2017 or later integration, These properties can additionally be set via the Visual Studio GUI under
+`Project Properties -> Vcpkg` or via a common `.props` file imported between `Microsoft.Cpp.props` and
+`Microsoft.Cpp.targets`.
 
 #### `VcpkgEnabled` (Use Vcpkg)
 
@@ -489,7 +503,7 @@ vcpkg.json files will be ignored. This will default to true in the future.
 This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be
 manually restored via the vcpkg command line.
 
-#### `VcpkgInstalledDirectory` (Installed Directory)
+#### `VcpkgInstalledDir` (Installed Directory)
 
 This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is
 created and populated based on your manifest.

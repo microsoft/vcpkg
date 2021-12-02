@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 f692682689c0b0fcc3953a1cc157b6e1d2ce3ccab185189d6dc0807f1dd3ea2d1a9773d0b805079a30b3c8a3b0cf3ee83239ed48d7b08dc7762eba29c2033674
     HEAD_REF master
     PATCHES
-        0001-remove-CMAKE_CXX_STANDARD.patch
         0002-remove-test-subdirectory.patch
         0003-fix-gperf-not-recognized.patch
         0004-disable-clang-format.patch
@@ -43,3 +42,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_fixup_pkgconfig()

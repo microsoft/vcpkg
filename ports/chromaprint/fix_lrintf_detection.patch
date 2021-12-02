@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a0eecb..4fa5e8d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ set_property(CACHE FFT_LIB PROPERTY STRINGS avfft fftw3 fftw3f kissfft vdsp)
+ 
+ include(CMakePushCheckState)
+ include(CheckFunctionExists)
++include(CheckSymbolExists)
+ include(CheckCXXCompilerFlag)
+ 
+ find_package(Threads)
+@@ -37,8 +38,8 @@ endif()
+ 
+ cmake_push_check_state(RESET)
+ set(CMAKE_REQUIRED_LIBRARIES -lm)
+-check_function_exists(lrintf HAVE_LRINTF)
+-check_function_exists(round HAVE_ROUND)
++check_symbol_exists(lrintf math.h HAVE_LRINTF)
++check_symbol_exists(round math.h HAVE_ROUND)
+ cmake_pop_check_state()
+ 
+ add_definitions(

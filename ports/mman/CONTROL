@@ -1,4 +1,0 @@
-Source: mman
-Version: git-f5ff813-3
-Homepage: https://github.com/witwall/mman-win32
-Description: A light implementation of the mmap functions for MinGW.

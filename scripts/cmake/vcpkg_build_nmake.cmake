@@ -8,6 +8,7 @@ Build a msvc makefile project.
 vcpkg_build_nmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [NO_DEBUG]
+    [ENABLE_INSTALL]
     [TARGET <all>]
     [PROJECT_SUBPATH <${SUBPATH}>]
     [PROJECT_NAME <${MAKEFILE_NAME}>]
@@ -31,9 +32,6 @@ Specifies the sub directory containing the `makefile.vc`/`makefile.mak`/`makefil
 ### PROJECT_NAME
 Specifies the name of msvc makefile name.
 Default is `makefile.vc`
-
-### NO_DEBUG
-This port doesn't support debug mode.
 
 ### ENABLE_INSTALL
 Install binaries after build.
@@ -60,11 +58,7 @@ Additional options passed to generate during the Debug generation. These are in 
 The target passed to the nmake build command (`nmake/nmake install`). If not specified, no target will
 be passed.
 
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
-
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_nmake()`](vcpkg_configure_nmake.md).
 You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your makefile supports the
 "install" target
 
@@ -75,34 +69,39 @@ You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function
 #]===]
 
 function(vcpkg_build_nmake)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _bn
+    cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;TARGET"
     )
-    
-    if (NOT CMAKE_HOST_WIN32)
-        message(FATAL_ERROR "vcpkg_build_nmake only support windows.")
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    
-    if (_bn_OPTIONS_DEBUG STREQUAL _bn_OPTIONS_RELEASE)
-        message(FATAL_ERROR "Detected debug configuration is equal to release configuration, please use NO_DEBUG for vcpkg_build_nmake/vcpkg_install_nmake")
+    if(NOT DEFINED arg_SOURCE_PATH)
+        message(FATAL_ERROR "SOURCE_PATH must be specified")
     endif()
 
-    if(NOT _bn_LOGFILE_ROOT)
-        set(_bn_LOGFILE_ROOT "build")
+    if(arg_NO_DEBUG)
+        message(WARNING "NO_DEBUG argument to ${CMAKE_CURRENT_FUNCTION} is deprecated")
     endif()
-    
-    if (NOT _bn_PROJECT_NAME)
-        set(MAKEFILE_NAME makefile.vc)
-    else()
-        set(MAKEFILE_NAME ${_bn_PROJECT_NAME})
+    if(arg_ADD_BIN_TO_PATH)
+        message(WARNING "ADD_BIN_TO_PATH argument to ${CMAKE_CURRENT_FUNCTION} is deprecated - it never did anything")
     endif()
-    
-    set(MAKE )
-    set(MAKE_OPTS_BASE )
-    
+
+    if(NOT VCPKG_HOST_IS_WINDOWS)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} only support windows.")
+    endif()
+
+    if(NOT DEFINED arg_LOGFILE_ROOT)
+        set(arg_LOGFILE_ROOT "build")
+    endif()
+    if(NOT DEFINED arg_PROJECT_NAME)
+        set(arg_PROJECT_NAME makefile.vc)
+    endif()
+    if(NOT DEFINED arg_TARGET)
+        vcpkg_list(SET arg_TARGET all)
+    endif()
+
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
     # Load toolchains
@@ -114,119 +113,84 @@ function(vcpkg_build_nmake)
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
-    set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
-    if (_bn_ENABLE_INSTALL)
-        set(INSTALL_COMMAND install)
+    vcpkg_list(SET make_command ${NMAKE} /NOLOGO /G /U)
+    vcpkg_list(SET make_opts_base -f "${arg_PROJECT_NAME}" ${arg_TARGET})
+    if(arg_ENABLE_INSTALL)
+        vcpkg_list(APPEND make_opts_base install)
     endif()
-    if (_bn_TARGET)
-        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_bn_TARGET} ${INSTALL_COMMAND})
-    else()
-        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all ${INSTALL_COMMAND})
-    endif()
+
+
     # Add subpath to work directory
-    if (_bn_PROJECT_SUBPATH)
-        set(_bn_PROJECT_SUBPATH /${_bn_PROJECT_SUBPATH})
+    if(DEFINED arg_PROJECT_SUBPATH)
+        set(project_subpath "/${arg_PROJECT_SUBPATH}")
     else()
-        set(_bn_PROJECT_SUBPATH )
+        set(project_subpath "")
     endif()
-    
-    foreach(BUILDTYPE "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-            if(BUILDTYPE STREQUAL "debug")
-                # Skip debug generate
-                if (_bn_NO_DEBUG)
-                    continue()
-                endif()
+
+    vcpkg_backup_env_variables(VARS CL)
+    foreach(build_type IN ITEMS debug release)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL build_type)
+            if(build_type STREQUAL "debug")
                 # Generate obj dir suffix
-                set(SHORT_BUILDTYPE "-dbg")
-                set(CONFIG "Debug")
+                set(short_build_type "-dbg")
                 # Add install command and arguments
-                set(MAKE_OPTS ${MAKE_OPTS_BASE})
-                if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
-                    set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
+                set(make_opts "${make_opts_base}")
+                if (arg_ENABLE_INSTALL)
+                    vcpkg_list(APPEND make_opts "INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug")
                 endif()
-                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_DEBUG})
-                
-                unset(ENV{CL})
-                set(TMP_CL_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-                string(REPLACE "/" "-" TMP_CL_FLAGS "${TMP_CL_FLAGS}")
-                set(ENV{CL} "$ENV{CL} ${TMP_CL_FLAGS}")
+                vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
+                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+
+                set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
             else()
-                # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                if (_bn_NO_DEBUG)
-                    set(SHORT_BUILDTYPE "")
-                else()
-                    set(SHORT_BUILDTYPE "-rel")
-                endif()
-                set(CONFIG "Release")
+                set(short_build_type "-rel")
                 # Add install command and arguments
-                set(MAKE_OPTS ${MAKE_OPTS_BASE})
-                if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS INSTALLDIR=${CURRENT_PACKAGES_DIR})
-                    set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
+                set(make_opts "${make_opts_base}")
+                if (arg_ENABLE_INSTALL)
+                    vcpkg_list(APPEND make_opts "INSTALLDIR=${CURRENT_PACKAGES_DIR}")
                 endif()
-                set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_RELEASE})
-                
-                unset(ENV{CL})
-                set(TMP_CL_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
-                string(REPLACE "/" "-" TMP_CL_FLAGS "${TMP_CL_FLAGS}")
-                set(ENV{CL} "$ENV{CL} ${TMP_CL_FLAGS}")
+                vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
+
+                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+                set(prerun_variable_name arg_PRERUN_SHELL_RELEASE)
             endif()
-            
-            set(CURRENT_TRIPLET_NAME ${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-            set(OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${CURRENT_TRIPLET_NAME})
-            
-            file(REMOVE_RECURSE ${OBJ_DIR})
-            file(MAKE_DIRECTORY ${OBJ_DIR})
-            file(GLOB_RECURSE SOURCE_FILES ${_bn_SOURCE_PATH}/*)
-            foreach(ONE_SOUCRCE_FILE ${SOURCE_FILES})
-                get_filename_component(DST_DIR ${ONE_SOUCRCE_FILE} PATH)
-                string(REPLACE "${_bn_SOURCE_PATH}" "${OBJ_DIR}" DST_DIR "${DST_DIR}")
-                file(COPY ${ONE_SOUCRCE_FILE} DESTINATION ${DST_DIR})
-            endforeach()
-            
-            if (_bn_PRERUN_SHELL)
-                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
+
+            set(triplet_and_build_type "${TARGET_TRIPLET}${short_build_type}")
+            set(object_dir "${CURRENT_BUILDTREES_DIR}/${triplet_and_build_type}")
+
+            file(REMOVE_RECURSE "${object_dir}")
+            file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${object_dir}")
+
+            if(DEFINED arg_PRERUN_SHELL)
+                message(STATUS "Prerunning ${triplet_and_build_type}")
                 vcpkg_execute_required_process(
-                    COMMAND ${_bn_PRERUN_SHELL}
-                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                    LOGNAME "$prerun-${CURRENT_TRIPLET_NAME}"
+                    COMMAND ${arg_PRERUN_SHELL}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    LOGNAME "prerun-${triplet_and_build_type}"
                 )
             endif()
-            if (BUILDTYPE STREQUAL "debug" AND _bn_PRERUN_SHELL_DEBUG)
-                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
+            if(DEFINED "${prerun_variable_name}")
+                message(STATUS "Prerunning ${triplet_and_build_type}")
                 vcpkg_execute_required_process(
-                    COMMAND ${_bn_PRERUN_SHELL_DEBUG}
-                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-dbg"
-                )
-            endif()
-            if (BUILDTYPE STREQUAL "release" AND _bn_PRERUN_SHELL_RELEASE)
-                message(STATUS "Prerunning ${CURRENT_TRIPLET_NAME}")
-                vcpkg_execute_required_process(
-                    COMMAND ${_bn_PRERUN_SHELL_RELEASE}
-                    WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                    LOGNAME "prerun-${CURRENT_TRIPLET_NAME}-rel"
+                    COMMAND ${${prerun_variable_name}}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    LOGNAME "prerun-specific-${triplet_and_build_type}"
                 )
             endif()
 
-            if (NOT _bn_ENABLE_INSTALL)
-                message(STATUS "Building ${CURRENT_TRIPLET_NAME}")
+            if (NOT arg_ENABLE_INSTALL)
+                message(STATUS "Building ${triplet_and_build_type}")
             else()
-                message(STATUS "Building and installing ${CURRENT_TRIPLET_NAME}")
+                message(STATUS "Building and installing ${triplet_and_build_type}")
             endif()
 
             vcpkg_execute_build_process(
-                COMMAND ${MAKE} ${MAKE_OPTS}
-                WORKING_DIRECTORY ${OBJ_DIR}${_bn_PROJECT_SUBPATH}
-                LOGNAME "${_bn_LOGFILE_ROOT}-${CURRENT_TRIPLET_NAME}"
+                COMMAND ${make_command} ${make_opts}
+                WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}"
             )
 
-            if(_bn_ADD_BIN_TO_PATH)
-                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
-            endif()
+            vcpkg_restore_env_variables(VARS CL)
         endif()
     endforeach()
 endfunction()

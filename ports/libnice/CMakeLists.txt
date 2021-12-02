@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.19)
 project(libnice
 	LANGUAGES C
 	VERSION 0.1.15)
@@ -20,10 +20,8 @@ endif()
 configure_file(${CMAKE_SOURCE_DIR}/win32/vs9/config.h ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/win32/vs9/libnice.def ${CMAKE_SOURCE_DIR}/libnice.def COPYONLY)
 
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_LIBRARY glib-2.0)
-find_library(GOBJECT_LIBRARY gobject-2.0)
-find_library(GIO_LIBRARY gio-2.0)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 find_library(IPHLPAPI_LIBRARY iphlpapi)
 find_library(WS2_32_LIB ws2_32)
 find_library(ADVAPI32_LIB advapi32)
@@ -34,7 +32,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/random 
 	${CMAKE_CURRENT_SOURCE_DIR}/socket
 	${CMAKE_CURRENT_SOURCE_DIR}/stun
-	${GLIB_INCLUDE_DIR})
+	${GLIB2_INCLUDE_DIRS})
 
 
 SET (SRCS
@@ -132,9 +130,9 @@ if (MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
 endif()
 if (WIN32)
-    target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+    target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} PkgConfig::GLIB2 OpenSSL::SSL)
 else()
-    target_link_libraries(libnice ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+    target_link_libraries(libnice PkgConfig::GLIB2 OpenSSL::SSL)
 endif()
 install(TARGETS libnice
 RUNTIME DESTINATION bin

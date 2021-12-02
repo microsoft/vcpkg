@@ -14,7 +14,7 @@ check out our [Getting Started](#getting-started) section for how to start using
 For short description of available commands, once you've installed vcpkg,
 you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 
-* Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* Github: ports at [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg), program at [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
@@ -84,6 +84,18 @@ To install the libraries for your project, run:
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
+```
+
+Note: This will install x86 libraries by default. To install x64, run:
+
+```cmd
+> .\vcpkg\vcpkg install [package name]:x64-windows
+```
+
+Or
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
 ```
 
 You can also search for the libraries you need with the `search` subcommand:
@@ -312,7 +324,7 @@ including [installing and using a package](docs/examples/installing-and-using-pa
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
-Our docs are now also available online at ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
 See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
@@ -344,8 +356,9 @@ The code in this repository is licensed under the [MIT License](LICENSE.txt).
 
 vcpkg collects usage data in order to help us improve your experience.
 The data collected by Microsoft is anonymous.
-You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
-passing --disable-metrics to vcpkg on the command line,
-or by setting the VCPKG_DISABLE_METRICS environment variable.
+You can opt-out of telemetry by
+- running the bootstrap-vcpkg script with -disableMetrics
+- passing --disable-metrics to vcpkg on the command line
+- setting the VCPKG_DISABLE_METRICS environment variable
 
 Read more about vcpkg telemetry at docs/about/privacy.md

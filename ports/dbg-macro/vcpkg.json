@@ -1,0 +1,6 @@
+{
+  "name": "dbg-macro",
+  "version-date": "2021-11-02",
+  "description": "A dbg(...) macro for C++",
+  "homepage": "https://github.com/sharkdp/dbg-macro"
+}

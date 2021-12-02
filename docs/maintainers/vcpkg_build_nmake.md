@@ -9,6 +9,7 @@ Build a msvc makefile project.
 vcpkg_build_nmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [NO_DEBUG]
+    [ENABLE_INSTALL]
     [TARGET <all>]
     [PROJECT_SUBPATH <${SUBPATH}>]
     [PROJECT_NAME <${MAKEFILE_NAME}>]
@@ -32,9 +33,6 @@ Specifies the sub directory containing the `makefile.vc`/`makefile.mak`/`makefil
 ### PROJECT_NAME
 Specifies the name of msvc makefile name.
 Default is `makefile.vc`
-
-### NO_DEBUG
-This port doesn't support debug mode.
 
 ### ENABLE_INSTALL
 Install binaries after build.
@@ -61,11 +59,7 @@ Additional options passed to generate during the Debug generation. These are in 
 The target passed to the nmake build command (`nmake/nmake install`). If not specified, no target will
 be passed.
 
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
-
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_nmake()`](vcpkg_configure_nmake.md).
 You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your makefile supports the
 "install" target
 

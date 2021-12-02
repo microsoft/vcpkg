@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF 2514f0bd7da7e2af1bed4c5d1b84f031c4d12c10    #v3.14.0
-    SHA512 765fd12786b405eb8b7365f1117fa16d0e268f8677e829e0a91635bb4278295c5e488949726394f84d0993f8ea8205ca66eb1f79c88cc89ad5ac4a2df483d473
+    REF v3.18.0
+    SHA512 2c8ff451b54120e4670f7ea8c92c0c7d70f4bb781979f74f59ddcb7c9cc74fe3e8910fc579d2686fb0e1aafa35fb9548ccab667accf2358c71cfd17ba38d7826
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+        fix-uwp-build.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -14,7 +15,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" protobuf_BUILD_SHARED_
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    zlib protobuf_WITH_ZLIB
+    FEATURES
+        zlib protobuf_WITH_ZLIB
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -74,10 +76,10 @@ endif()
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(protobuf_BUILD_PROTOC_BINARIES)
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
     else()
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.14.0.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc protoc-3.18.0.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
@@ -87,6 +89,12 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake
     "if(protobuf_MODULE_COMPATIBLE)"
     "if(ON)"
 )
+if(NOT protobuf_BUILD_LIBPROTOC)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake
+        "_protobuf_find_libraries(Protobuf_PROTOC protoc)"
+        ""
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)

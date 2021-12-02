@@ -1,0 +1,15 @@
+{
+  "name": "qtcoap",
+  "version-semver": "6.2.1",
+  "description": "Qt CoAP client module",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    }
+  ]
+}

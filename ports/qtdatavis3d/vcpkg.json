@@ -1,0 +1,20 @@
+{
+  "name": "qtdatavis3d",
+  "version-semver": "6.2.1",
+  "description": "Qt 3D data visualization framework",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "testlib"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    }
+  ]
+}

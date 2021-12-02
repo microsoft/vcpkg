@@ -31,9 +31,13 @@ This should only be used for edge cases, such as patches that are known to fail 
 function(z_vcpkg_apply_patches)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "QUIET" "SOURCE_PATH" "PATCHES")
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "internal error: z_vcpkg_apply_patches was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
     find_program(GIT NAMES git git.cmd REQUIRED)
     if(DEFINED ENV{GIT_CONFIG_NOSYSTEM})
-        set(git_config_nosystem_backuP "$ENV{GIT_CONFIG_NOSYSTEM}")
+        set(git_config_nosystem_backup "$ENV{GIT_CONFIG_NOSYSTEM}")
     else()
         unset(git_config_nosystem_backup)
     endif()
@@ -43,7 +47,7 @@ function(z_vcpkg_apply_patches)
     foreach(patch IN LISTS arg_PATCHES)
         get_filename_component(absolute_patch "${patch}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         message(STATUS "Applying patch ${patch}")
-        set(logname patch-${TARGET_TRIPLET}-${patchnum})
+        set(logname "patch-${TARGET_TRIPLET}-${patchnum}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${logname}-out.log"
