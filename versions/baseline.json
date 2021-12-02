@@ -3533,8 +3533,8 @@
       "port-version": 0
     },
     "libhydrogen": {
-      "baseline": "2019-08-11",
-      "port-version": 1
+      "baseline": "1.0",
+      "port-version": 0
     },
     "libical": {
       "baseline": "3.0.11",
