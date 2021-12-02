@@ -5878,7 +5878,7 @@
     },
     "range-v3": {
       "baseline": "2021-11-02",
-      "port-version": 2
+      "port-version": 0
     },
     "range-v3-vs2015": {
       "baseline": "20151130-vcpkg5",
