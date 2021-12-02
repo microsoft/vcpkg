@@ -16,8 +16,8 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_QFACE
     URL git://code.qt.io/qt/qtinterfaceframework-qface.git
     REF 4f4027b4bb677eafad0bfb2593226b71ee2c98e6
-    FETCH_REF master
-    HEAD_REF master
+    FETCH_REF upstream/master
+    HEAD_REF upstream/master
 )
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
