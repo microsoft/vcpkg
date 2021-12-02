@@ -1,0 +1,21 @@
+{
+  "name": "qtapplicationmanager",
+  "version-semver": "6.2.2",
+  "description": "Qt component for application lifecycle management",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtwayland",
+      "default-features": false,
+      "platform": "!windows"
+    }
+  ]
+}
