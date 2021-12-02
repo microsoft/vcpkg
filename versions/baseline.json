@@ -3462,7 +3462,7 @@
     },
     "libftdi1": {
       "baseline": "1.5",
-      "port-version": 2
+      "port-version": 3
     },
     "libgcrypt": {
       "baseline": "1.9.4",
@@ -4006,7 +4006,7 @@
     },
     "libusb": {
       "baseline": "1.0.24",
-      "port-version": 6
+      "port-version": 7
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
