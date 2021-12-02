@@ -1,6 +1,7 @@
 {
   "name": "tinyspline",
   "version": "0.3.0",
+  "port-version": 1,
   "description": "Library for NURBS, B-Splines, and Bézier curves, allowing you to handle splines with ease",
   "homepage": "https://github.com/msteinbeck/tinyspline",
   "dependencies": [

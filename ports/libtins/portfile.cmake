@@ -13,26 +13,31 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
   set(ENABLE_PCAP TRUE)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBTINS_BUILD_SHARED=${LIBTINS_BUILD_SHARED}
         -DLIBTINS_ENABLE_PCAP=${ENABLE_PCAP}
         -DLIBTINS_ENABLE_CXX11=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") #Windows
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else() #Linux/Unix/Darwin
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libtins)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libtins)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libtins/libtinsConfig.cmake" "set(LIBTINS_INCLUDE_DIRS \"${SOURCE_PATH}/include\")" [[
+get_filename_component(LIBTINS_CMAKE_DIR "${LIBTINS_CMAKE_DIR}" PATH)
+get_filename_component(LIBTINS_CMAKE_DIR "${LIBTINS_CMAKE_DIR}" PATH)
+set(LIBTINS_INCLUDE_DIRS "${LIBTINS_CMAKE_DIR}/include")
+]])
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtins RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libtins" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
