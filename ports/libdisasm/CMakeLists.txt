@@ -36,6 +36,10 @@ include_directories(libdisasm)
 
 add_library(libdisasm ${SRCS})
 
+if (MSVC)
+    target_compile_options(libdisasm PRIVATE /wd4996)
+endif()
+
 install(
   TARGETS libdisasm
   RUNTIME DESTINATION bin
