@@ -1,0 +1,23 @@
+diff --git a/meson.build b/meson.build
+index a886081..1568783 100644
+--- a/meson.build
++++ b/meson.build
+@@ -981,12 +981,12 @@ subdir('docs/reference')
+ install_data('m4macros/gtk-3.0.m4', install_dir: join_paths(get_option('datadir'), 'aclocal'))
+ 
+ # Keep this in sync with post-install.py expected arguments
+-meson.add_install_script('build-aux/meson/post-install.py',
+-                         gtk_api_version,
+-                         gtk_binary_version,
+-                         join_paths(gtk_prefix, get_option('bindir')),
+-                         gtk_libdir,
+-                         gtk_datadir)
++#meson.add_install_script('build-aux/meson/post-install.py',
++#                         gtk_api_version,
++#                         gtk_binary_version,
++#                         join_paths(gtk_prefix, get_option('bindir')),
++#                         gtk_libdir,
++#                         gtk_datadir)
+ 
+ if host_machine.system() != 'windows'
+   # Install Valgrind suppression files (except on Windows,
