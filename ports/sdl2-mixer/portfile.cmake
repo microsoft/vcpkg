@@ -27,10 +27,13 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+if ("mpg123" IN_LIST FEATURES)
+    message(WARNING "Since sdl-mixer doesn't support latest version of mpg123, disable this feature temporarily.")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dynamic-load SDL_DYNAMIC_LOAD
-        mpg123 SDL_MIXER_ENABLE_MP3
         libflac SDL_MIXER_ENABLE_FLAC
         libmodplug SDL_MIXER_ENABLE_MOD
         libvorbis SDL_MIXER_ENABLE_OGGVORBIS
