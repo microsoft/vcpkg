@@ -208,10 +208,12 @@ It ensures that <vcpkg>/lib is searched before <vcpkg>/debug/lib,
 regardless of current build type.
 #]===]
 function(z_vcpkg_find_library_release)
-    foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
-        list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
-        list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
-    endforeach()
+    if(Z_VCPKG_BUILD_TYPE MATCHES "debug")
+        foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
+            list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
+            list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+        endforeach()
+    endif()
     find_library(${ARGN})
 endfunction()
 
@@ -225,10 +227,12 @@ It ensures that <vcpkg>/debug/lib is searched before <vcpkg>/lib,
 regardless of current build type.
 #]===]
 function(z_vcpkg_find_library_debug)
-    foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
-        list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" index)
-        list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
-    endforeach()
+    if(NOT Z_VCPKG_BUILD_TYPE MATCHES "debug")
+        foreach(var CMAKE_PREFIX_PATH CMAKE_LIBRARY_PATH CMAKE_FIND_ROOT_PATH)
+            list(FIND ${var} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" index)
+            list(INSERT ${var} ${index} "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" index)
+        endforeach()
+    endif()
     find_library(${ARGN})
 endfunction()
 
@@ -426,13 +430,18 @@ set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 
+if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
+    set(Z_VCPKG_BUILD_TYPE "debug" CACHE INTERNAL "The vcpkg build type")
+else()
+    set(Z_VCPKG_BUILD_TYPE "release" CACHE INTERNAL "The vcpkg build type")
+endif()
 function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
     set(vcpkg_paths
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}${suffix}"
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug${suffix}"
     )
-    if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
-        list(REVERSE vcpkg_paths) # Debug build: Put Debug paths before Release paths.
+    if(Z_VCPKG_BUILD_TYPE STREQUAL "debug")
+        list(REVERSE vcpkg_paths) # Put Debug paths before Release paths.
     endif()
     if(VCPKG_PREFER_SYSTEM_LIBS)
         list(APPEND "${list}" "${vcpkg_paths}")
