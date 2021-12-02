@@ -15,7 +15,8 @@
         "dbus"
       ],
       "platform": "linux"
-    }
+    },
+    "qtpositioning"
   ],
   "features": {
     "nmea": {

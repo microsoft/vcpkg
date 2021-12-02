@@ -1,0 +1,20 @@
+{
+  "name": "qtpositioning",
+  "version-semver": "6.2.2",
+  "description": "Qt Positioning",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false,
+    },
+    {
+      "name": "qtserialport",
+      "default-features": false,
+    }
+  ]
+}

@@ -47,6 +47,7 @@ set(QT_PORTS qt
              qtcharts
              ## New in 6.2
              qtconnectivity
+             qtpositioning
              qtlocation
              qtmultimedia
              qtremoteobjects
@@ -57,7 +58,9 @@ set(QT_PORTS qt
              qtwebengine
              qtwebsockets
              qtwebview
+             ## New in 6.2.2
              qtinterfaceframework
+             qtapplicationmanager
     )
 
 foreach(_port IN LISTS QT_PORTS)
@@ -99,6 +102,7 @@ set(qtwebchannel_REF            e55fa2e085466238e24d53abf4fc9ede7a7590e4)
 set(qtwebengine_REF             ad19d22d3aa5d692b4988f2ffb88868232e6fc0c) # Additional refs in portfile due to submodule
 set(qtwebsockets_REF            18c452968b3c3ad6c1e1b6512ebd96e9f895c571)
 set(qtwebview_REF               eb5a94f20e77a9639b07ae3d59c9d67529ffed66)
+set(qtpositioning_REF           1294c29be50fa5cdf2d78afffac0451f7b4bc16a)
 ### New in Qt 6.2.2
 set(qtapplicationmanager_REF    1009f73d1f5c07947cdc2318150279ad43fc4b04)
 set(qtqtinterfaceframework_REF  118fa138186144cf2d802405255f08662ed76d43)
