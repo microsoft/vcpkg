@@ -9,19 +9,18 @@ vcpkg_from_github(
         config_changes.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DBUILD_EXAMPLES=OFF
         -DVERSION_SHORT=3.7.2
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/gnu-lgpl-v2.1.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/license)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/qtadvanceddocking TARGET_PATH share/qtadvanceddocking)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/qtadvanceddocking TARGET_PATH share/qtadvanceddocking)
