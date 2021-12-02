@@ -12,13 +12,18 @@ set(TOOL_NAMES "")
 #	url = ../qtinterfaceframework-taglib.git
 #	branch = upstream/master
 
+set(VCPKG_USE_HEAD_VERSION ON) # Won't work without it 
+#set(UPDATE_PORT_GIT_OPTIONS
+#        HEAD_REF "2.0.5")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_QFACE
     URL git://code.qt.io/qt/qtinterfaceframework-qface.git
     REF 4f4027b4bb677eafad0bfb2593226b71ee2c98e6
     FETCH_REF upstream/master
-    HEAD_REF upstream/master
+    HEAD_REF 2.0.5
 )
+set(VCPKG_USE_HEAD_VERSION OFF)
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
