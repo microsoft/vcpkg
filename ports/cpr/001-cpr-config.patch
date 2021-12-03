@@ -1,8 +1,8 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index 77a36e4..db2d58b 100644
+index 24778b2..76e4ee0 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -30,6 +30,22 @@ set_target_properties(cpr
+@@ -29,6 +29,22 @@ set_target_properties(cpr
       PROPERTIES
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
