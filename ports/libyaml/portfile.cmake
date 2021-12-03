@@ -24,7 +24,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/yaml)
+vcpkg_cmake_config_fixup(PACKAGE_NAME yaml CONFIG_PATH share/yaml)
 
 vcpkg_fixup_pkgconfig()
 
