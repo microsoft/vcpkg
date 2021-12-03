@@ -233,6 +233,11 @@ function(vcpkg_extract_source_archive)
         ${quiet_param}
     )
 
+    if(DEFINED ENV{WSL_DISTRO_NAME})
+    #    message( "Executing 'bash -c \"sleep 1\"', for antivirus locked folders on WSL. Otherwise rename folder fails")
+        execute_process (COMMAND bash -c "sleep 1")
+    endif()
+    
     file(RENAME "${temp_source_path}" "${source_path}")
     file(REMOVE_RECURSE "${temp_dir}")
 
