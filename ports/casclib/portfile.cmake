@@ -1,31 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ladislav-zezula/CascLib
-    REF 1.50b
-    SHA512 f32cc592f454db4815c0dfd18a9c0076d85b1582e6974d241d1d4094269c42a978fa42186504988ced2c8f4a0b598f41e3ec8a95ddc3c0551af997e37708b1f5
+    REF 07bfe85fd0804cba49f072819af716274d82b855
+    SHA512 b333fe6318aa95629aa67613287ac71b1931c6443985e7e52412066d769f7996bffca1c19e890851eba976f572c7a11f14a8ff5fb95433577e1c9af8de0f34af
     HEAD_REF master
     PATCHES
-        ctype_for_mac.patch
+        fix-shared-windows-builds.patch
 )
 
-file(COPY 
-        ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt 
-        ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in
-    DESTINATION 
-        ${SOURCE_PATH}
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CASC_BUILD_SHARED_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CASC_BUILD_STATIC_LIB)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCASC_BUILD_SHARED_LIB=${CASC_BUILD_SHARED_LIB}
+        -DCASC_BUILD_STATIC_LIB=${CASC_BUILD_STATIC_LIB}
+        -DCASC_UNICODE=ON
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG 
-        -DINSTALL_HEADERS=OFF
-)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-vcpkg_install_cmake()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CascLib)
 
-vcpkg_fixup_cmake_targets()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE 
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/casclib 
-     RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

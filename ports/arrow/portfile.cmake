@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
@@ -61,12 +59,13 @@ else()
     set(THRIFT_USE_SHARED ${ARROW_DEPENDENCY_USE_SHARED})
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${MALLOC_OPTIONS}
+        -DCMAKE_SYSTEM_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_TESTS=OFF
@@ -83,7 +82,7 @@ vcpkg_configure_cmake(
         -DZSTD_MSVC_LIB_PREFIX=
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -91,7 +90,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
@@ -100,3 +99,5 @@ file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/shar
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+vcpkg_fixup_pkgconfig()
