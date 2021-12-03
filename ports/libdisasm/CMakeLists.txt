@@ -37,7 +37,7 @@ include_directories(libdisasm)
 add_library(libdisasm ${SRCS})
 
 if (MSVC)
-    target_compile_options(libdisasm PRIVATE /wd4996)
+    target_compile_definitions(libdisasm PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
 install(
