@@ -44,13 +44,6 @@
     },
     "qtinterfaceframework",
     {
-      "name": "qtpositioning",
-      "default-features": false,
-      "features": [
-        "qml"
-      ]
-    },
-    {
       "name": "qtlottie",
       "default-features": false,
       "features": [
@@ -70,6 +63,13 @@
     "qtnetworkauth",
     {
       "name": "qtopcua",
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtpositioning",
+      "default-features": false,
       "features": [
         "qml"
       ]

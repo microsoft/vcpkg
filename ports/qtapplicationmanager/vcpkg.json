@@ -4,8 +4,8 @@
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "libyaml",
     "libarchive",
+    "libyaml",
     {
       "name": "qtbase",
       "default-features": false
