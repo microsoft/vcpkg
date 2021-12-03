@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.87.0
-    SHA512 d37a0e28d6a78bbde3fbf0cb4669711edebc27b295beb7a29f60751cbd21448c3ea6f82e487b889e466908f2217d1477552cd4ae3399b761700f0789edfc02d4
+    REF v5.88.0
+    SHA512 2ec44db614de6c705dbf43915d28afd2f945cb71d12c5a1dac6d2f76592970c067a354b9e81dc5a05a676b5e33ef78172687b3ec0e895041d72d4b7cf06925bb
     HEAD_REF master
     PATCHES
         x11_private_dependency.diff
@@ -33,3 +33,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
