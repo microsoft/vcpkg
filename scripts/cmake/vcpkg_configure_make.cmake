@@ -480,12 +480,6 @@ function(vcpkg_configure_make)
         if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^Clang$")
             string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
 
-            if (DEFINED ENV{ANDROID_API_LEVEL})
-                set(ANDROID_API_LEVEL $ENV{ANDROID_API_LEVEL} CACHE STRING "")
-            else()
-                set(ANDROID_API_LEVEL ${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION} CACHE STRING "")
-            endif()
-
             if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
                 if(VCPKG_HOST_IS_WINDOWS)
                     z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
