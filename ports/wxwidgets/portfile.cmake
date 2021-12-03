@@ -24,10 +24,14 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUA
 endif()
 
 # This may be set to ON by users in a custom triplet.
-# wxUSE_STL=ON and wxUSE_STL=OFF are not API compatible which is why this must be set
-# in a custom triplet rather than a port feature.
+# The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
+# which is why they must be set in a custom triplet rather than a port feature.
 if(NOT DEFINED WXWIDGETS_USE_STL)
     set(WXWIDGETS_USE_STL OFF)
+endif()
+
+if(NOT DEFINED WXWIDGETS_USE_STD_CONTAINERS)
+    set(WXWIDGETS_USE_STD_CONTAINERS OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -42,6 +46,7 @@ vcpkg_configure_cmake(
         -DwxUSE_LIBTIFF=sys
         -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
+        -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         ${OPTIONS}
 )
 
