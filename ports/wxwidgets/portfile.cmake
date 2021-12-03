@@ -34,9 +34,8 @@ if(NOT DEFINED WXWIDGETS_USE_STD_CONTAINERS)
     set(WXWIDGETS_USE_STD_CONTAINERS OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DwxUSE_REGEX=builtin
         -DwxUSE_ZLIB=sys
