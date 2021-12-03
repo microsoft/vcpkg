@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
-    REF v5.87.0
-    SHA512 1d471ec563533e1043afb985a7f7bb30ab489154d7270a164d5f24127a0e94aeca0c31a418965d97841f9afbda174eb5fd456e41a04225cd50ec213a3139002f
+    REF v5.88.0
+    SHA512 ad8cd77de2fdd41cc7a918e8eefed9efd815ca68fc51ba15b222fcb862bff02a29894b241fbab6dea0050d0d93f0ba8aacffb028c4dc72cad96c1c49bdc06355
     HEAD_REF master
 )
 
@@ -42,3 +42,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

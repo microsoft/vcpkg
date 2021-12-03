@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/sonnet
-    REF v5.87.0
-    SHA512 4e4a8d0a31013f617dd6e38f78f56459cbb61fc59c31db0db09ee6a4086bb3913515af502c783a58c6c964168948394063fdabb6906e2cdb99f661dd1f596e4d
+    REF v5.88.0
+    SHA512 bfd56c43cd0bfefd0d12635aaca5a520d834ad7507c4d4a1a9dc6a0cb1271d1bc466cb8286aea57991f7a5cb10d9c10dddd8b4406be7e6eb79e26a46190527b2
     HEAD_REF master
-    PATCHES
-        dont_build_examples.diff    # https://invent.kde.org/frameworks/sonnet/-/merge_requests/34
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -18,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
@@ -46,4 +45,5 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/gentrigrams${VCPKG_HOST_EXECUTABL
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
