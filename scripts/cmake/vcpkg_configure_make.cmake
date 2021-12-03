@@ -478,8 +478,6 @@ function(vcpkg_configure_make)
     # Android - cross-compiling support
     if(VCPKG_TARGET_IS_ANDROID)
         if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^Clang$")
-            string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
-
             if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
                 if(VCPKG_HOST_IS_WINDOWS)
                     z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # machine you are building on => --build=
@@ -766,6 +764,11 @@ function(vcpkg_configure_make)
         vcpkg_list(JOIN tmp " " "${var}")
     endforeach()
 
+    set(_tools AR RANLIB STRIP NM OBJDUMP DLLTOOL MT STRIP AS)
+    foreach (_toolname ${_tools})
+        _vcpkg_setup_detected_env(${_toolname} CMAKE_${_toolname})
+    endforeach()
+
     foreach(current_buildtype IN LISTS all_buildtypes)
         foreach(ENV_VAR ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
             if(DEFINED ENV{${ENV_VAR}})
@@ -797,10 +800,6 @@ function(vcpkg_configure_make)
         _vcpkg_setup_detected_env(CC CMAKE_C_COMPILER)
         _vcpkg_setup_detected_env(CXX CMAKE_CXX_COMPILER)
         _vcpkg_setup_detected_env(LD CMAKE_LINKER)
-        set(_tools AR RANLIB STRIP NM OBJDUMP DLLTOOL MT STRIP AS)
-        foreach (_toolname ${_tools})
-            _vcpkg_setup_detected_env(${_toolname} CMAKE_${_toolname})
-        endforeach()
 
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
