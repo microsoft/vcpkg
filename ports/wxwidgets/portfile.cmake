@@ -49,7 +49,7 @@ vcpkg_cmake_configure(
         ${OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
