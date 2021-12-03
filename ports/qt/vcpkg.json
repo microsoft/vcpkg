@@ -31,7 +31,11 @@
     "qtconnectivity",
     "qtdatavis3d",
     "qtdeclarative",
-    "qtdeviceutilities",
+    {
+      "name": "qtdeviceutilities",
+      "default-features": false,
+      "platform": "linux"
+    },
     "qtdoc",
     {
       "name": "qtimageformats",
@@ -55,10 +59,17 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer",
         "qml",
         "widgets"
       ]
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "gstreamer"
+      ],
+      "platform": "!(static & windows)"
     },
     "qtnetworkauth",
     {
@@ -129,7 +140,8 @@
         "geolocation",
         "spellchecker",
         "webchannel"
-      ]
+      ],
+      "platform": "!static"
     },
     {
       "name": "qtwebsockets",
@@ -142,9 +154,16 @@
       "name": "qtwebview",
       "default-features": false,
       "features": [
-        "qml",
-        "webengine"
+        "qml"
       ]
+    },
+    {
+      "name": "qtwebview",
+      "default-features": false,
+      "features": [
+        "webengine"
+      ],
+      "platform": "!static"
     }
   ],
   "default-features": [

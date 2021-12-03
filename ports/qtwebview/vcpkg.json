@@ -24,6 +24,7 @@
     },
     "webengine": {
       "description": "Build with Webengine",
+      "supports": "!static",
       "dependencies": [
         {
           "name": "qtwebengine",
