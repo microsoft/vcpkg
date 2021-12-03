@@ -4,11 +4,6 @@
       "git-tree": "7deca6cd48a769d4b4f45e1b48febb9b8376bbb6",
       "version": "0.7.8",
       "port-version": 0
-    },
-    {
-      "git-tree": "763548f850936b875456db1bfdf29eaeba0417e0",
-      "version-string": "0.7.8",
-      "port-version": 1
     }
   ]
 }
