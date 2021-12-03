@@ -4086,7 +4086,7 @@
     },
     "libyaml": {
       "baseline": "0.2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "libyuv": {
       "baseline": "2021-04-15",
