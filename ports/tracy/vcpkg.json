@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
-  "supports": "!(uwp | x86) & !(arm & windows)",
+  "supports": "!x86 & !(windows | arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
