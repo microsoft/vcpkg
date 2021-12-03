@@ -1495,6 +1495,7 @@ torch-th:x64-windows-static=fail
 tracy:arm64-windows=fail
 tracy:x86-uwp=fail
 tracy:arm-uwp=fail
+tracy:arm64-uwp=fail
 tracy:x64-uwp=fail
 tre:x64-osx=fail
 treehopper:x64-windows-static=fail
