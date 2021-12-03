@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_UWP)
-    set(UWP_PATCH fix-uwp.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
@@ -12,8 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
-        fix_reset.patch
-        ${UWP_PATCH}
 )
 
 vcpkg_cmake_configure(

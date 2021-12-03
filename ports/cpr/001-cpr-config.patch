@@ -1,12 +1,11 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index 24778b2..76e4ee0 100644
+index 3f6b6bf..fb1c4b2 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -29,6 +29,22 @@ set_target_properties(cpr
-      PROPERTIES
+@@ -30,15 +30,26 @@ set_target_properties(cpr
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
-+ 
+  
 +set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 +install(TARGETS cpr
 +  EXPORT ${TARGETS_EXPORT_NAME}
@@ -25,3 +24,12 @@ index 24778b2..76e4ee0 100644
  
  # Import GNU common install directory variables
  include(GNUInstallDirs)
+ 
+ if(CPR_FORCE_USE_SYSTEM_CURL)
+-    install(TARGETS cpr
+-            EXPORT cprTargets
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+     # Include CMake helpers for package config files
+     # Follow this installation guideline: https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html
