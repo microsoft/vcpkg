@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
+        fix_reset.patch
         ${UWP_PATCH}
 )
 

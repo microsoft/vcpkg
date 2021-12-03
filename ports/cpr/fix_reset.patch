@@ -1,0 +1,15 @@
+diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
+index db2d58b..7cc8d91 100644
+--- a/cpr/CMakeLists.txt
++++ b/cpr/CMakeLists.txt
+@@ -51,10 +51,6 @@ endif()
+ include(GNUInstallDirs)
+ 
+ if(CPR_FORCE_USE_SYSTEM_CURL)
+-    install(TARGETS cpr
+-            EXPORT cprTargets
+-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+     # Include CMake helpers for package config files
+     # Follow this installation guideline: https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html
