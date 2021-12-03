@@ -10,6 +10,9 @@
   "homepage": "https://github.com/wxWidgets/wxWidgets",
   "supports": "!uwp",
   "dependencies": [
+    "expat",
+    "libpng",
+    "tiff",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,9 +21,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "expat",
-    "libpng",
-    "tiff",
     "zlib"
   ]
 }
