@@ -31,8 +31,6 @@ index a732c49e..dec0d811 100644
  mac {
      CMAKE_FIND_OTHER_LIBRARY_BUILD = "true"
      !isEmpty(CMAKE_STATIC_TYPE) {
--        CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.a
-+        CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.a
          CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
  
 -        CMAKE_PRL_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.prl
@@ -44,8 +42,6 @@ index a732c49e..dec0d811 100644
              CMAKE_LIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.framework/$${CMAKE_QT_STEM}
              CMAKE_BUILD_IS_FRAMEWORK = "true"
          } else {
--            CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.$$eval(QT.$${MODULE}.VERSION).dylib
-+            CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.$$eval(QT.$${MODULE}.VERSION).dylib
              CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.$$eval(QT.$${MODULE}.VERSION).dylib
          }
      }
@@ -57,8 +53,6 @@ index 7777e615..59be06f8 100644
      darwin {
          CONFIG(debug, debug|release) {
              !debug_and_release|build_pass: \
--                return($${suffix}_debug)
-+                return($${suffix})
          }
      }
      return($$suffix)
@@ -70,8 +64,6 @@ index bc20251b..2af6313c 100644
          win32: \
              MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}d.$$suffix
          else: darwin: \
--            MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}_debug.$$suffix
-+            MODULE_DEBUG_LIBS = $$DESTDIR/$$prefix$${TARGET}.$$suffix
          else: \
              error("'$$QMAKE_PLATFORM' does not do debug_and_release.")
          MODULE_RELEASE_LIBS = $$DESTDIR/$$prefix$${TARGET}.$$suffix
