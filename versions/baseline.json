@@ -6308,6 +6308,10 @@
       "baseline": "2021-10-31",
       "port-version": 0
     },
+    "skCrypter": {
+      "baseline": "2021-12-03",
+      "port-version": 0
+    },
     "skia": {
       "baseline": "2020-05-18",
       "port-version": 6
