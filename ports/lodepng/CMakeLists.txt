@@ -13,10 +13,6 @@ install(TARGETS lodepng EXPORT lodepng-targets)
 
 install(EXPORT lodepng-targets DESTINATION share/lodepng/)
 
-if(NOT DDISABLE_INSTALL_EXAMPLES)
-  install(DIRECTORY examples  DESTINATION share/lodepng/)
-endif()
-
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES lodepng.h lodepng_util.h  DESTINATION include)
 endif()

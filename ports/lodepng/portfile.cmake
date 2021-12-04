@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
         -DDISABLE_INSTALL_TOOLS=ON
-        -DDDISABLE_INSTALL_EXAMPLES=ON
 )
 
 vcpkg_cmake_install()
