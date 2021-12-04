@@ -290,6 +290,18 @@
         }
       ]
     },
+    "python": {
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "python"
+          ]
+        }
+      ]
+    },
     "qt": {
       "description": "Qt GUI support for opencv",
       "dependencies": [
