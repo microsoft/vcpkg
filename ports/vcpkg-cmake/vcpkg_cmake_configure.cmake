@@ -278,7 +278,7 @@ function(vcpkg_cmake_configure)
     endif()
 
     if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
+        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR targetting_uwp)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
