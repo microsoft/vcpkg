@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-install-directories.patch
         fix-dependencies.patch
+        fix-link-flags.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
