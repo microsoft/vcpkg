@@ -5522,7 +5522,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 16
+      "port-version": 17
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5542,7 +5542,7 @@
     },
     "qt5-declarative": {
       "baseline": "5.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-doc": {
       "baseline": "5.15.2",
