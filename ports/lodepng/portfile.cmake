@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
-        -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_cmake_install()
