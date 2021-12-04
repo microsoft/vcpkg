@@ -28,4 +28,4 @@ vcpkg_copy_pdbs()
 # Moves all .cmake files from /debug/share/lodepng/ to /share/lodepng/
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/lodepng.h" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
