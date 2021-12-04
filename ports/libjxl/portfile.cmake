@@ -15,6 +15,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools JPEGXL_ENABLE_TOOLS
 )
 
+if(VCPKG_TARGET_IS_UWP)
+    string(APPEND VCPKG_C_FLAGS " -D_CRT_SECURE_NO_WARNINGS /wd4146")
+    string(APPEND VCPKG_CXX_FLAGS " -D_CRT_SECURE_NO_WARNINGS /wd4146")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
