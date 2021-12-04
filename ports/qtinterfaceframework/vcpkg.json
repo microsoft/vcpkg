@@ -9,6 +9,11 @@
       "default-features": false
     },
     {
+      "name": "qtinterfaceframework",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "qtmultimedia",
       "default-features": false
     },
