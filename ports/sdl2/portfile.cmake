@@ -17,8 +17,8 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        vulkan  VIDEO_VULKAN
-        x11     X11_SHARED
+        vulkan  SDL_VULKAN
+        x11     SDL_X11_SHARED
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -33,8 +33,8 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
-        -DLIBC=ON
+        -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
+        -DSDL_LIBC=ON
 )
 
 vcpkg_cmake_install()
