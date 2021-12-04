@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(lodepng)
 
-add_library(lodepng  lodepng.cpp lodepng_util.cpp)
+add_library(lodepng lodepng.cpp)
 target_include_directories(lodepng PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
@@ -26,5 +26,5 @@ install(TARGETS lodepng-c EXPORT lodepng-c-targets)
 install(EXPORT lodepng-c-targets DESTINATION share/lodepng-c/)
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES lodepng.h lodepng_util.h  DESTINATION include)
+  install(FILES lodepng.h DESTINATION include)
 endif()
