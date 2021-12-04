@@ -3,6 +3,7 @@
   "version-semver": "6.2.2",
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
+  "supports" : "!(windows&arm)"
   "dependencies": [
     "libarchive",
     "libyaml",
