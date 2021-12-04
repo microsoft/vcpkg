@@ -8,11 +8,17 @@ vcpkg_from_github(
         fix-install-directories.patch
         fix-dependencies.patch
         fix-link-flags.patch
+        disable-jxl_extras.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools JPEGXL_ENABLE_TOOLS
+    INVERTED_FEATURES
+        tools CMAKE_DISABLE_FIND_PACKAGE_GIF
+        tools CMAKE_DISABLE_FIND_PACKAGE_JPEG
+        tools CMAKE_DISABLE_FIND_PACKAGE_PNG
+        tools CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -38,6 +44,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DJPEGXL_FORCE_SYSTEM_HWY=ON
+        -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
         ${FEATURE_OPTIONS}
         -DJPEGXL_ENABLE_FUZZERS=OFF
         -DJPEGXL_ENABLE_MANPAGES=OFF
@@ -48,9 +56,14 @@ vcpkg_cmake_configure(
         -DJPEGXL_ENABLE_OPENEXR=OFF
         -DJPEGXL_ENABLE_PLUGINS=OFF
         -DJPEGXL_ENABLE_SKCMS=OFF
-        -DJPEGXL_FORCE_SYSTEM_HWY=ON
-        -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+        -DJPEGXL_ENABLE_TCMALLOC=OFF
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GIF
+        CMAKE_DISABLE_FIND_PACKAGE_JPEG
+        CMAKE_DISABLE_FIND_PACKAGE_PNG
+        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_install()
