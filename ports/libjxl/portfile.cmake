@@ -48,32 +48,34 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             "${CURRENT_PACKAGES_DIR}/bin"
             "${CURRENT_PACKAGES_DIR}/debug/bin"
         )
-        file(REMOVE
+        set(FILES_TO_REMOVE
             "${CURRENT_PACKAGES_DIR}/lib/jxl.lib"
             "${CURRENT_PACKAGES_DIR}/lib/jxl_threads.lib"
             "${CURRENT_PACKAGES_DIR}/debug/lib/jxl.lib"
             "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_threads.lib"
         )
     else()
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*.so*")
-        file(REMOVE ${FILES})
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*")
-        file(REMOVE ${FILES})
+        file(GLOB FILES_TO_REMOVE
+            "${CURRENT_PACKAGES_DIR}/lib/*.so*"
+            "${CURRENT_PACKAGES_DIR}/lib/*.dylib*"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*.dylib*"
+        )
     endif()
 else()
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*-static.lib")
-        file(REMOVE ${FILES})
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib")
-        file(REMOVE ${FILES})
+        file(GLOB FILES_TO_REMOVE
+            "${CURRENT_PACKAGES_DIR}/lib/*-static.lib"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib"
+        )
     else()
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/lib/*.a")
-        file(REMOVE ${FILES})
-        file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
-        file(REMOVE ${FILES})        
+        file(GLOB FILES_TO_REMOVE
+            "${CURRENT_PACKAGES_DIR}/lib/*.a"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*.a"
+        )
     endif()
 endif()
-
+file(REMOVE ${FILES_TO_REMOVE})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
