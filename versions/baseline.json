@@ -4145,12 +4145,12 @@
       "port-version": 1
     },
     "lodepng": {
-      "baseline": "2020-03-15",
-      "port-version": 1
+      "baseline": "2021-12-04",
+      "port-version": 0
     },
     "lodepng-c": {
-      "baseline": "2021-03-01",
-      "port-version": 1
+      "baseline": "2021-12-04",
+      "port-version": 0
     },
     "log4cplus": {
       "baseline": "2.0.7",
