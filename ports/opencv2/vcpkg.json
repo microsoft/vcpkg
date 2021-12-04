@@ -105,6 +105,9 @@
         "libpng"
       ]
     },
+    "python": {
+      "description": "Python wrapper support for opencv"
+    },
     "qt": {
       "description": "Qt GUI support for opencv",
       "dependencies": [
