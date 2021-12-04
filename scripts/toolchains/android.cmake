@@ -1,8 +1,13 @@
 set(ANDROID_CPP_FEATURES "rtti exceptions" CACHE STRING "")
 set(CMAKE_SYSTEM_NAME Android CACHE STRING "")
 set(ANDROID_TOOLCHAIN clang CACHE STRING "")
-set(ANDROID_NATIVE_API_LEVEL ${CMAKE_SYSTEM_VERSION} CACHE STRING "")
 set(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION clang CACHE STRING "")
+
+if ($ENV{VCPKG_ANDROID_NATIVE_API_LEVEL} MATCHES "^[1-3][0-9]$")
+    set(ANDROID_NATIVE_API_LEVEL $ENV{VCPKG_ANDROID_NATIVE_API_LEVEL} CACHE STRING "")
+else()
+    set(ANDROID_NATIVE_API_LEVEL ${CMAKE_SYSTEM_VERSION} CACHE STRING "")
+endif()
 
 if (VCPKG_TARGET_TRIPLET MATCHES "^arm64-android")
     set(ANDROID_ABI arm64-v8a CACHE STRING "")
@@ -42,6 +47,29 @@ endif()
 if(NOT EXISTS "${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
     message(FATAL_ERROR "Could not find android ndk. Searched at ${ANDROID_NDK_HOME}")
 endif()
+
+# Android NDK revision
+file(READ "${ANDROID_NDK_HOME}/source.properties" ANDROID_NDK_SOURCE_PROPERTIES)
+
+set(ANDROID_NDK_REVISION_REGEX
+  "^Pkg\\.Desc = Android NDK\nPkg\\.Revision = ([0-9]+)\\.([0-9]+)\\.([0-9]+)(-beta([0-9]+))?")
+if(NOT ANDROID_NDK_SOURCE_PROPERTIES MATCHES "${ANDROID_NDK_REVISION_REGEX}")
+  message(SEND_ERROR "Failed to parse Android NDK revision: ${CMAKE_ANDROID_NDK}/source.properties.\n${ANDROID_NDK_SOURCE_PROPERTIES}")
+endif()
+
+set(ANDROID_NDK_MAJOR "${CMAKE_MATCH_1}")
+#set(ANDROID_NDK_MINOR "${CMAKE_MATCH_2}")
+#set(ANDROID_NDK_BUILD "${CMAKE_MATCH_3}")
+
+if (ANDROID_NDK_MAJOR STRLESS "16")
+    set(ANDROID_PLATFORM "android-${ANDROID_NATIVE_API_LEVEL}")
+else()
+    set(ANDROID_PLATFORM "${ANDROID_NATIVE_API_LEVEL}")
+endif()
+
+unset(ANDROID_NDK_MAJOR)
+unset(ANDROID_NDK_REVISION_REGEX)
+unset(ANDROID_NDK_SOURCE_PROPERTIES)
 
 include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
 
