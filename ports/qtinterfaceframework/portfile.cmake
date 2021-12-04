@@ -89,3 +89,7 @@ qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
 qt_install_copyright("${SOURCE_PATH}")
 
+if(NOT VCPKG_CROSSCOMPILING)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/ifcodegen")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ifcodegen" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/ifcodegen")
+endif()
