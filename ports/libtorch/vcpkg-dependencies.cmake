@@ -29,6 +29,9 @@ find_path(FP16_INCLUDE_DIRS "fp16.h")
 find_path(PSIMD_INCLUDE_DIRS "psimd.h")
 find_path(FXDIV_INCLUDE_DIRS "fxdiv.h")
 
+find_library(FOXI_LOADER_LIBPATH NAMES foxi_loader REQUIRED)
+list(APPEND Caffe2_DEPENDENCY_LIBS ${FOXI_LOADER_LIBPATH})
+
 find_package(gemmlowp CONFIG REQUIRED) # gemmlowp::gemmlowp
 find_package(gflags CONFIG REQUIRED) # gflags::gflags
 find_package(glog CONFIG REQUIRED) # glog::glog

@@ -8,6 +8,7 @@
     "cpuinfo",
     "eigen3",
     "fmt",
+    "foxi",
     "gemmlowp",
     "gflags",
     "glog",
