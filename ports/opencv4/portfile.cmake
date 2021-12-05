@@ -63,7 +63,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "png"       WITH_PNG
- "python"    WITH_PYTHON
  "quirc"     WITH_QUIRC
  "sfm"       BUILD_opencv_sfm
  "tiff"      WITH_TIFF
