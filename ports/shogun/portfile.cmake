@@ -11,6 +11,7 @@ vcpkg_from_github(
         cmake-config.in.patch
         fix-dirent.patch
         fix-ASSERT-not-found.patch
+        fix-cblas-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
