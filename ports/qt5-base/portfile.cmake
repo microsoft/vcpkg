@@ -89,7 +89,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                             patches/limits_include.patch       # Add missing includes to build with gcc 11
-                            patches/osx-no-_debug-postfix.patch
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -505,10 +504,15 @@ if(QT_BUILD_LATEST)
     )
 endif()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_OSX)
+    file(GLOB _debug_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*_debug.pc")
+    foreach(_file ${_debug_files})
+        string(REGEX REPLACE "_debug\.pc$" ".pc" _new_filename "${_file}")
+        file(CREATE_LINK "${_file}" "${_new_filename}")
+    endforeach()
+endif()
 # #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 # file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
