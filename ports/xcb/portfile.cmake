@@ -53,11 +53,11 @@ vcpkg_install_make()
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb.pc")
 if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau ")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau xdmcp ")
 endif()
 set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb.pc")
 if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau ")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau xdmcp ")
 endif()
 
 vcpkg_fixup_pkgconfig()
