@@ -14,14 +14,12 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE
                 -DCMAKE_DISABLE_FIND_PACKAGE_XCB=TRUE
-                -DCMAKE_DISABLE_FIND_PACKAGE_XCB_XCB=TRUE
         )
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        --trace-expand
         ${OPTIONS}
         -DBUILD_TESTING=OFF
 )
