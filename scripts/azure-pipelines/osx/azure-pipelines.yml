@@ -70,6 +70,7 @@ jobs:
         -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
         -ArtifactStagingDirectory "$(Build.ArtifactStagingDirectory)"
+        -Debug
         ${{ variables.PowershellExtraArguments }}
       pwsh: true
   - bash: |

@@ -83,6 +83,9 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
+if ($DebugPreference -eq "Continue") {
+    $commonArgs += "--debug"
+}
 $cachingArgs = @()
 
 $skipFailures = $false
