@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/cmake/cpr")
+
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
 vcpkg_copy_pdbs()
