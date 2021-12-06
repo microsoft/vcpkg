@@ -20,7 +20,6 @@ generate_export_header(unofficial-qjsonwebtoken BASE_NAME qjsonwebtoken)
 
 target_include_directories(unofficial-qjsonwebtoken 
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 install(TARGETS unofficial-qjsonwebtoken
