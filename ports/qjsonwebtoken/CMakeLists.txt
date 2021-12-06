@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12.0)
 
 set(PROJECT_VERSION "0.1.0")
-project(qjsonwebtoken VERSION 0.1.0 LANGUAGES CXX)
+project(qjsonwebtoken VERSION 0.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
