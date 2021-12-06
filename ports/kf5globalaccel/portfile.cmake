@@ -9,16 +9,23 @@ vcpkg_from_github(
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(OPTIONS -DCMAKE_DISABE_FIND_PACKAGE_X11=TRUE
+                -DCMAKE_DISABE_FIND_PACKAGE_XCB=TRUE
+        )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        ${OPTIONS}
         -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5GlobalAccel CONFIG_PATH lib/cmake/KF5GlobalAccel)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "KF5GlobalAccel" CONFIG_PATH "lib/cmake/KF5GlobalAccel")
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
