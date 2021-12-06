@@ -1,46 +1,29 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index d43fc1d..121975e 100644
+index d43fc1d..b2ff9a6 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -29,15 +29,27 @@ set_target_properties(cpr
-      PROPERTIES
+@@ -26,10 +26,15 @@ target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but fi
+ 
+ # Set version for shared libraries.
+ set_target_properties(cpr
+-     PROPERTIES
++     PROPERTIES 
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
-+	 
-+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-+install(TARGETS cpr
-+  EXPORT ${TARGETS_EXPORT_NAME}
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib)
-+
-+install(
-+  EXPORT ${TARGETS_EXPORT_NAME} 
-+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-+)
-+
+ 
 +if (NOT DISABLE_INSTALL_HEADERS)
 +  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../include/cpr DESTINATION include)
 +endif()
- 
++ 
++
  # Import GNU common install directory variables
  include(GNUInstallDirs)
  
- if(CPR_FORCE_USE_SYSTEM_CURL)
--    install(TARGETS cpr
--            EXPORT cprTargets
--            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
--            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -37,6 +42,7 @@ if(CPR_FORCE_USE_SYSTEM_CURL)
+     install(TARGETS cpr
+             EXPORT cprTargets
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
      # Include CMake helpers for package config files
-     # Follow this installation guideline: https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html
-@@ -59,9 +71,4 @@ if(CPR_FORCE_USE_SYSTEM_CURL)
- 
-     install(FILES ${PROJECT_BINARY_DIR}/cpr/cprConfig.cmake
-             ${PROJECT_BINARY_DIR}/cpr/cprConfigVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cpr)
--     
--else()
--    install(TARGETS cpr
--            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
--            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
- endif()
