@@ -5,6 +5,7 @@ else()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
+    set(PATCHES fix_msvc_build.patch with-getopt-build.patch)
 endif()
 
 # Get source code:
@@ -14,8 +15,7 @@ vcpkg_from_github(
     REF c60b77ea512bef92e481be38972b58dd71a34180 # v 0.10.3
     SHA512  66d268e8b7fe260070739d1236e3cdf9b159b9c7d3297a695f510c2503f80e427976ff0782956ef5b9d38ef0a1148edfe4df40d5ee977a252d68e6dfba4b1281
     HEAD_REF master
-    PATCHES fix_msvc_build.patch
-            with-getopt-build.patch
+    PATCHES ${PATCHES}
 )
 
 vcpkg_find_acquire_program(FLEX)
