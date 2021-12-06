@@ -13,7 +13,11 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -Ddoc=disabled
+)
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
@@ -72,7 +76,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows. 
+    # Unnecessary make rule creating the fontconfig cache dir on windows.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 
