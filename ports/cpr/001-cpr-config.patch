@@ -1,25 +1,19 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index d43fc1d..b2ff9a6 100644
+index d43fc1d..d6a3992 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -26,10 +26,15 @@ target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but fi
- 
- # Set version for shared libraries.
- set_target_properties(cpr
--     PROPERTIES
-+     PROPERTIES 
+@@ -29,6 +29,10 @@ set_target_properties(cpr
+      PROPERTIES
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
- 
++     
 +if (NOT DISABLE_INSTALL_HEADERS)
 +  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../include/cpr DESTINATION include)
 +endif()
-+ 
-+
+ 
  # Import GNU common install directory variables
  include(GNUInstallDirs)
- 
-@@ -37,6 +42,7 @@ if(CPR_FORCE_USE_SYSTEM_CURL)
+@@ -37,6 +41,7 @@ if(CPR_FORCE_USE_SYSTEM_CURL)
      install(TARGETS cpr
              EXPORT cprTargets
              ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
