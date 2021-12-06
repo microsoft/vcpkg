@@ -18,5 +18,10 @@
       "name": "yasm",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build yasm tools"
+    }
+  }
 }
