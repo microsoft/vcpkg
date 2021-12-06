@@ -61,10 +61,11 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 #xvfb
+# Dropped?
 if("xwayland" IN_LIST FEATURES)
-    list(APPEND OPTIONS -Dxwayland=true)
+    #list(APPEND OPTIONS -Dxwayland=true)
 else()
-    list(APPEND OPTIONS -Dxwayland=false)
+    #list(APPEND OPTIONS -Dxwayland=false)
 endif()
 if("xnest" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dxnest=true)
