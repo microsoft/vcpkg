@@ -5469,8 +5469,8 @@
       "port-version": 2
     },
     "qjsonwebtoken": {
-      "baseline": "0.1.1",
-      "port-version": 0
+      "baseline": "0.1.0",
+      "port-version": 1
     },
     "qnnpack": {
       "baseline": "2021-02-26",
