@@ -1,6 +1,7 @@
 {
   "name": "freetype",
   "version-semver": "2.11.0",
+  "port-version": 2,
   "description": "A library to render fonts.",
   "homepage": "https://www.freetype.org/",
   "dependencies": [

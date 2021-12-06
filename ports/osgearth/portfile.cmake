@@ -19,6 +19,8 @@ vcpkg_from_github(
         make-all-find-packages-required.patch
         fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
+        fix-imgui.patch
+        fix-gcc11-compilation.patch
 )
 
 # Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002

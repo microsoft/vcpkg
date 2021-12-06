@@ -136,7 +136,6 @@ vcpkg_configure_meson(
         -Dgstreamer:tests=disabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:tools=disabled
-        -Dgstreamer:gtk_doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
         # gst-plugins-base
@@ -147,6 +146,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:introspection=disabled
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
+        -Dgst-plugins-base:pango=disabled
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-good:qt5=disabled

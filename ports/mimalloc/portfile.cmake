@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF 752594e76423526e108413731518a26e3322b9ca  # v1.7.2
-    SHA512 fc96f6aa6972c167a956d8f928d9becd546689356d86e800df0f54c9c46cedf74d686168f44566fb4d0aa9cddf7a9444327acd2180cc91386c53658c6a5018f1
+    REF v2.0.2
+    SHA512 d6f1749a6df86346220fc190a3fd6aa67deff5439b26846c33ff95e91ce5fea73837ee39348dd432db3592575298e6e87856329d0236d2c6959abd8bf7756cdc
     HEAD_REF master
     PATCHES
         fix-cmake.patch
@@ -22,9 +22,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
-        -DMI_CHECK_FULL=ON
+        -DMI_DEBUG_FULL=ON
     OPTIONS_RELEASE
-        -DMI_CHECK_FULL=OFF
+        -DMI_DEBUG_FULL=OFF
     OPTIONS
         -DMI_INTERPOSE=ON
         -DMI_USE_CXX=OFF
