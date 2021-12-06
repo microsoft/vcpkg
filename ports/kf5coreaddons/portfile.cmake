@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
-    REF v5.84.0
-    SHA512 58a802d03bea135c192265651540f9f87066b20ee4af620a94a874ec3992c5e734d1ab1e4ccb082de97389fa3479fd3672ec586c3dd36c9b4a5422c7be98d119
+    REF v5.88.0
+    SHA512 2fd95d3f24341af52338ad8a1b88c53270fe41fce03a5c9f5bba45ba1516ff23fa7adda118d8f231c8d6ef6bb01c34e334da779ae84f16238128acbc9c01e7e8
     PATCHES
-        fix_static_build.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/122
         fix_cmake_config.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
 )
 
@@ -12,7 +11,7 @@ vcpkg_from_github(
 file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
 )
@@ -36,3 +35,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
