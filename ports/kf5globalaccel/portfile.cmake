@@ -12,9 +12,9 @@ vcpkg_from_github(
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(OPTIONS -DCMAKE_DISABE_FIND_PACKAGE_X11=TRUE
-                -DCMAKE_DISABE_FIND_PACKAGE_XCB=TRUE
-                -DCMAKE_DISABE_FIND_PACKAGE_XCB_XCB=TRUE
+    set(OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11=TRUE
+                -DCMAKE_DISABLE_FIND_PACKAGE_XCB=TRUE
+                -DCMAKE_DISABLE_FIND_PACKAGE_XCB_XCB=TRUE
         )
 endif()
 
