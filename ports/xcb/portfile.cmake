@@ -50,6 +50,16 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
+set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb.pc")
+if(EXISTS "${pcfile}")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau ")
+endif()
+set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb.pc")
+if(EXISTS "${pcfile}")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau ")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
