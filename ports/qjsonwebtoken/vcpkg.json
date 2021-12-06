@@ -2,8 +2,8 @@
   "name": "qjsonwebtoken",
   "version": "0.1.0",
   "description": "Qt C++ implementation of JSON Web Token (JWT)",
-  "supports": "!uwp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "qt5-base",
     {
