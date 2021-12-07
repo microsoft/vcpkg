@@ -4,8 +4,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
 endif()
 
 set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  7)
+set(PYTHON_VERSION_MINOR  10)
+set(PYTHON_VERSION_PATCH  0)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -13,7 +13,7 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
-    0006-fix-duplicate-symbols.patch
+    0008-fix-parallel-install.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -22,7 +22,7 @@ endif()
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
 # required to build this port on Windows 7 itself due to Python using itself in its own build system.
 if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0007-restore-support-for-windows-7.patch)
+    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
     message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
 elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
@@ -32,7 +32,7 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_get_windows_sdk(WINSDK_VERSION)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
-        list(APPEND PATCHES "0008-workaround-windows-11-sdk-rc-compiler-error.patch")
+        list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
     endif()
 endif()
 
@@ -40,7 +40,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 05de4e485fb6f5f21e4e48fb4d7ec0e9a420fab243cba08663e52b8062f86df3e4f57b8afd49ad94d363ca0972ab85efe132b980a7f84188c82814b6df0ba191
+    SHA512 d83e0685c274be09da7833a3c24b7379ae0e43b43c131f11bfaccd5902f6a1c510a3ae67c42471a4281922ead3bd34856608ec47be7dd76ddd734e59906ba03b
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -195,6 +195,8 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
@@ -212,3 +214,25 @@ message(STATUS "Installing cmake wrappers")
 _generate_finder(DIRECTORY "python" PREFIX "Python")
 _generate_finder(DIRECTORY "python3" PREFIX "Python3")
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    function(replace_dirs_in_config_file python_config_file)
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    endfunction()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+endif()

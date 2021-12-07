@@ -1,0 +1,31 @@
+From a9f8c032bb7915c075f0fb32a0bbfa633ca3b388 Mon Sep 17 00:00:00 2001
+Date: Wed, 7 Jul 2021 15:13:43 -0400
+Subject: [PATCH] Fix Qt
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5cdae617..fe98199b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -966,13 +966,13 @@ IF(ANDROID)
+    IF(BUILD_APP)
+       ADD_SUBDIRECTORY( app )
+    ENDIF(BUILD_APP)
++ELSEIF(NOT WITH_QT)
++    MESSAGE(WARNING "the GUI lib and the stand-alone application will not be compiled...")
+ ELSEIF(Qt5_FOUND OR (QT4_FOUND AND QT_QTCORE_FOUND AND QT_QTGUI_FOUND))
+    ADD_SUBDIRECTORY( guilib )
+    IF(BUILD_APP)
+       ADD_SUBDIRECTORY( app )
+    ENDIF(BUILD_APP)
+-ELSEIF(WITH_QT)
+-   MESSAGE(WARNING "Qt not found, the GUI lib and the stand-alone application will not be compiled...")
+ ENDIF()
+ 
+ IF(BUILD_TOOLS)
+-- 
+2.32.0.windows.1
+

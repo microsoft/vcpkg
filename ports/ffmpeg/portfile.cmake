@@ -13,6 +13,12 @@ if("ffprobe" IN_LIST FEATURES)
 endif()
 
 
+if("aom" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'aom' does not support 'uwp | arm'")
+    endif()
+endif()
+
 if("ass" IN_LIST FEATURES)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
         message(FATAL_ERROR "Feature 'ass' does not support 'uwp | arm'")
@@ -127,8 +133,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4
-    SHA512 ae7426ca476df9fa9dba52cab06c38e484f835653fb2da57e7c06f5589d887c0854ee17df93a2f57191d498c1264cb1c69312cf0a8214b476800382e2d260c4b
+    REF n4.4.1
+    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -145,6 +151,8 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
+        0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
+        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -218,6 +226,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 else()
     set(SHELL /bin/sh)
+endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_OSX AND VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(OPTIONS "--extra-cflags=-mmacosx-version-min=${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
+    set(OPTIONS "--extra-ldflags=-mmacosx-version-min=${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
 endif()
 
 set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}$ENV{${INCLUDE_VAR}}")
@@ -331,6 +347,12 @@ endif()
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
+endif()
+
+if("aom" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libaom")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libaom")
 endif()
 
 if("ass" IN_LIST FEATURES)
@@ -543,9 +565,6 @@ if("zlib" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 if (VCPKG_TARGET_IS_OSX)
     # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us

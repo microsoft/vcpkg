@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF b0204a7b6a33211f533a175e987a755f714bf7f3 # 1.9.96
     SHA512 456d3fc256a5a26843ecf16014242514b165ae5fa35f088d57aa54a744d19e2c38bd0bed9b6a4b76948c8a49cf87a06a4c722be5a910ed41dfd9c9b9a66b398d
     PATCHES
+        fix-config.patch
         patch-relocatable-rpath.patch
+        fix-aws-root.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -14,12 +16,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
-    set(EXTRA_ARGS
-            "-DCURL_HAS_H2_EXITCODE=0"
-            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
-            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
-            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
-            )
 elseif (VCPKG_TARGET_IS_ANDROID)
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
             "-DGIT_EXECUTABLE=--invalid-git-executable--"
@@ -28,11 +24,6 @@ elseif (VCPKG_TARGET_IS_ANDROID)
             "-DANDROID_BUILD_ZLIB=FALSE"
             "-DANDROID_BUILD_CURL=FALSE"
             "-DANDROID_BUILD_OPENSSL=FALSE"
-            "-DENABLE_HW_OPTIMIZATION=OFF"
-            "-DCURL_HAS_H2_EXITCODE=0"
-            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
-            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
-            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
             )
 else()
     set(rpath "\$ORIGIN")
