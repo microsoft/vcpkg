@@ -11,7 +11,7 @@ find_package(Qt5Core REQUIRED)
 set(HEADERS "src/QJsonWebToken" "src/qjsonwebtoken.h")
 set(SOURCES "src/qjsonwebtoken.cpp")
 
-add_library(unofficial-qjsonwebtoken INTERFACE ${SOURCES} )
+add_library(unofficial-qjsonwebtoken ${SOURCES} )
 set_target_properties(unofficial-qjsonwebtoken PROPERTIES OUTPUT_NAME qjsonwebtoken)
 target_link_libraries(unofficial-qjsonwebtoken Qt5::Core)
 
