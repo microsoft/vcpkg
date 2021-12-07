@@ -28,7 +28,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         -DFLTK_BUILD_TEST=OFF
         -DOPTION_LARGE_FILE=ON
         -DOPTION_USE_THREADS=ON
