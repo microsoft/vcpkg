@@ -1605,8 +1605,6 @@ yajl:arm-uwp=fail
 yajl:x64-uwp=fail
 yara:arm-uwp=fail
 yara:x64-uwp=fail
-# Host port, expected
-yasm:arm64-windows=fail
 yato:arm64-windows=fail
 yato:arm-uwp=fail
 yato:x64-uwp=fail
