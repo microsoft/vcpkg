@@ -1,0 +1,21 @@
+{
+  "name": "gmsh",
+  "version-string": "4.9.0",
+  "homepage": "https://gmsh.info",
+  "description": "Gmsh is an open source 3D finite element mesh generator with a built-in CAD engine and post-processor.",
+  "dependencies": [],
+
+  "default-features": [],
+  "features": [
+    {
+      "name": "fltk",
+      "description": "needed if build with GUI.",
+      "dependencies": [fltk]
+    },
+    {
+      "name": "opencascade",
+      "description": "boolean operations, constructive solid geometry features and STEP file import",
+      "dependencies": [opencascade]
+    }
+  ]
+}
