@@ -102,7 +102,7 @@
     },
     "aom": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "approval-tests-cpp": {
       "baseline": "10.12.1",
@@ -3326,7 +3326,7 @@
     },
     "libavif": {
       "baseline": "0.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -4098,7 +4098,7 @@
     },
     "libyuv": {
       "baseline": "2021-04-15",
-      "port-version": 0
+      "port-version": 1
     },
     "libzen": {
       "baseline": "0.4.38",
