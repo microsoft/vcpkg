@@ -45,16 +45,20 @@ else()
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks --without-pip "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-venv1-${TARGET_TRIPLET})
+	vcpkg_execute_required_process(COMMAND bash -c "source '${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/activate'" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-venv2-${TARGET_TRIPLET})
+
 	if(VCPKG_TARGET_IS_OSX)
 		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
 		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
 		set(ENV{BLAS} "None")
 		set(ENV{LAPACK} "None")
 		set(ENV{ATLAS} "None")
-		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U --force-reinstall pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	else()
-		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	endif()
+
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
