@@ -1,0 +1,38 @@
+From 8c16194c53d5bf70716dae2c6df67e77a1608dde Mon Sep 17 00:00:00 2001
+From: Ankur Verma <ankur.verma@outlook.com>
+Date: Wed, 28 Jul 2021 06:40:45 -0700
+Subject: [PATCH] fix-gcc11-compilation
+
+---
+ src/osgEarth/Units | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/osgEarth/Units b/src/osgEarth/Units
+index dd19afe..bfe826a 100644
+--- a/src/osgEarth/Units
++++ b/src/osgEarth/Units
+@@ -196,17 +196,17 @@ namespace osgEarth
+     class qualified_double
+     {
+     public:
+-        qualified_double<T>( double value, const Units& units ) : _value(value), _units(units) { }
++        qualified_double( double value, const Units& units ) : _value(value), _units(units) { }
+ 
+-        qualified_double<T>( const T& rhs ) : _value(rhs._value), _units(rhs._units) { }
++        qualified_double( const T& rhs ) : _value(rhs._value), _units(rhs._units) { }
+ 
+         // parses the qualified number from a parseable string (e.g., "123km")
+-        qualified_double<T>(const std::string& parseable, const Units& defaultUnits) : _value(0.0), _units(defaultUnits) {
++        qualified_double(const std::string& parseable, const Units& defaultUnits) : _value(0.0), _units(defaultUnits) {
+             Units::parse( parseable, _value, _units, defaultUnits );
+         }
+ 
+         // loads the qualified number from an old-school config (e.g., { value="123" units="km" } )
+-        qualified_double<T>( const Config& conf, const Units& defaultUnits ) : _value(0.0) {
++        qualified_double( const Config& conf, const Units& defaultUnits ) : _value(0.0) {
+             if ( conf.hasValue("value") ) {
+                 _value = conf.value<double>("value", 0.0);
+                 if ( !Units::parse( conf.value("units"), _units ) )
+-- 
+2.31.1
+

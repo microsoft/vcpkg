@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix_find_package.patch
         004-fix-find-sfml.patch
+        005-fix-imtextureid-define.patch
 )
 
 vcpkg_cmake_configure(
