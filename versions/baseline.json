@@ -4153,7 +4153,7 @@
       "port-version": 0
     },
     "lodepng-c": {
-      "baseline": "2021-12-04",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "log4cplus": {
