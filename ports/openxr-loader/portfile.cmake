@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK
-    REF 960c4a6aa8cc9f47e357c696b5377d817550bf88
-    SHA512 515494520a31491587418ab6cb1b28333481e0a20cb25d3f9bc875ac211faf1636641afdfee2ecdf816ea1222305ea52565992953b3bab68fffe40fa25e23145
+    REF release-1.0.20
+    SHA512 26629edd9dcd17bae8d1089bfeb479914f3c7f7cd595345fad3e4be18d8dc7e079fd2ac89906199acc61ae5ce14c15ea66bcd0dfb44411788ab1ee0468c91192
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH SDK_SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
-    REF 09cbbc9d3bc540a53d5f2d76b8074ddc0b96e933
-    SHA512 1fc777d7aaea585dd8e9f9ac60a71a7eb55017183f33e51f987b94af6bba8d7808771abf9fc377c6e2b613f282db08a095595b4bc6899d4eaa6eabb45405dc1b
+    REF release-1.0.20
+    SHA512 1f989b76c76cdece3c47b758a1c77a78a4bc91cb01504cc033a543da6bc85b18a4e981b35a2875cab454660fbb2443ea4d09e98079aae6e6253f768428012a20
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -31,7 +31,7 @@ vcpkg_from_github(
 )
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
-# vice-versa.  Might be better in future iterations to patch the CMakeLists.txt for OpenXR
+# vice-versa. Might be better in future iterations to patch the CMakeLists.txt for OpenXR
 if (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         set(DYNAMIC_LOADER OFF)
@@ -44,9 +44,8 @@ endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_API_LAYERS=OFF
         -DBUILD_TESTS=OFF
@@ -56,7 +55,7 @@ vcpkg_configure_cmake(
         -DBUILD_WITH_SYSTEM_JSONCPP=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Generate the OpenXR C++ bindings 
 set(ENV{OPENXR_REPO} ${SDK_SOURCE_PATH})
@@ -70,9 +69,9 @@ foreach(HEADER ${HEADER_LIST})
 endforeach()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/OpenXR)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/openxr TARGET_PATH share/OpenXR)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
