@@ -29,6 +29,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        --trace-expand
         -DFLTK_BUILD_TEST=OFF
         -DOPTION_LARGE_FILE=ON
         -DOPTION_USE_THREADS=ON
