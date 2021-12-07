@@ -8,7 +8,7 @@ index cc49726..25d6ff1 100644
  
 +if (MSVC)
 +  # Allow deprecated functions
-+  add_compile_options("/wd4996")
++  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 +endif()
 +
  SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
