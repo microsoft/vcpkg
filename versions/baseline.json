@@ -3374,7 +3374,7 @@
     },
     "libcrafter": {
       "baseline": "1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libcroco": {
       "baseline": "0.6.13",
