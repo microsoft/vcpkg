@@ -45,25 +45,25 @@ endif()
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_API_LAYERS=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_CONFORMANCE_TESTS=OFF
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DPYTHON_EXECUTABLE="${PYTHON3}"
         -DBUILD_WITH_SYSTEM_JSONCPP=ON
 )
 
 vcpkg_cmake_install()
 
 # Generate the OpenXR C++ bindings 
-set(ENV{OPENXR_REPO} ${SDK_SOURCE_PATH})
-file(STRINGS ${HPP_SOURCE_PATH}/headers.txt HEADER_LIST REGEX "^openxr.*")
+set(ENV{OPENXR_REPO} "${SDK_SOURCE_PATH}")
+file(STRINGS "${HPP_SOURCE_PATH}/headers.txt" HEADER_LIST REGEX "^openxr.*")
 foreach(HEADER ${HEADER_LIST})
     vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} ${HPP_SOURCE_PATH}/scripts/hpp_genxr.py -registry ${SDK_SOURCE_PATH}/specification/registry/xr.xml -o ${CURRENT_PACKAGES_DIR}/include/openxr ${HEADER}
-        WORKING_DIRECTORY ${HPP_SOURCE_PATH}
+        COMMAND ${PYTHON3} "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -registry "${SDK_SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr" ${HEADER}
+        WORKING_DIRECTORY "${HPP_SOURCE_PATH}"
         LOGNAME openxrhpp
     )
 endforeach()
@@ -74,8 +74,8 @@ else(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openxr)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
