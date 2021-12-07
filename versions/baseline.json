@@ -5053,8 +5053,8 @@
       "port-version": 1
     },
     "openxr-loader": {
-      "baseline": "1.0.18",
-      "port-version": 2
+      "baseline": "1.0.20",
+      "port-version": 0
     },
     "optional-bare": {
       "baseline": "1.1.0",
