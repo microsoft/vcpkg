@@ -1,0 +1,17 @@
+{
+  "name": "qtdeviceutilities",
+  "version-semver": "6.2.2",
+  "description": "Utils for Boot2Qt",
+  "homepage": "https://www.qt.io/",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    }
+  ]
+}
