@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.88.0
-    SHA512 f4db5c5ff1f1f72c27fd80ed4f2206fc9f17ac1eaff2486530884be989eaeaae77eff6f536909d961060ee4bed33498ef49ca22b5b22f90cc0bf6c5b8cb5bed0
+    REF v5.89.0-rc1
+    SHA512 c7f6ba99042832340e22cc7a48b4d326e820a2fb31a19be51726c36f6dbb2827119307856c19f7ca83e3076156ffa455000c8bebf75574a4aba069d37ba8f1aa
     HEAD_REF master
 )
 
@@ -28,5 +28,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
 

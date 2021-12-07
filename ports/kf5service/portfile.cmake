@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kservice
-    REF v5.88.0
-    SHA512 ffdd6564a28ffbc3724875df278064896a1cb1c8db1edda32a2543c352dbfeb6f5a6fec6b0c5effb714866c185e37d0a097f36ff4d03a1aa5625dba1585df6a6
+    REF v5.89.0-rc1
+    SHA512 babbbb7df2e82abdeb2f54c400315a59e4fde2bf9799d9691ec7c941a4a252c1a3841240abe45d551006cc5842938ddfee77f262d6086160bf00c714e682e485
     HEAD_REF master
 )
 
@@ -57,4 +57,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 

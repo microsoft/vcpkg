@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.88.0
-    SHA512 197fa4bfeabb459e22c7522d5358bf37c0bf5adc7b6a0605e1ef884dee8d1a02df7fb988b0e2d4821e5c889cd4de2c2fe0d9b7da0266f0869f6779edf57aa5be
+    REF v5.89.0-rc1
+    SHA512 0ba20350bb40c06b631b027fb5b038a5e88fc91e4b8dd5ff45a164c318f56ee5144e174c919e8ec93444798ee24f6b5a045210fb0bebf2ceb1dba56d62985916
     HEAD_REF master
 )
 
@@ -47,4 +47,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 

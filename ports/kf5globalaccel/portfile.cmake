@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.88.0
-    SHA512 cf0e9c2414944efc0e612ef9db171ac861a7fb686bd1f5ba2eb8e6e4bbc96b4970b41bb3811bc11145124f5ec3ad3b87d2b7933b482d5240413b355cb47a3306
+    REF v5.89.0-rc1
+    SHA512 a95a1edeeb28e7b3305f5ad00aedea13722d4dbff056f196b8c53380d1d88e02c4dd54bd23dc4c54c6c319cf9f935972f762c332c2702f635a36cadfdbd6a843
     HEAD_REF master
-    PATCHES
-        xcb_xtest_optional.diff # https://invent.kde.org/frameworks/kglobalaccel/-/merge_requests/30
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -33,3 +31,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

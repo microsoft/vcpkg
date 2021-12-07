@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kbookmarks
-    REF v5.88.0
-    SHA512 cb5ed71cf802b0bb9ccc94e65450cc7541fc90e14fe3b07780ffcfc72706fecfa887a41d90d7d56cf9bac7ef4d39cfd803a0d1f6b3bf139f5f09b6c54b88d89b
+    REF v5.89.0-rc1
+    SHA512 86faacc463971e3f2e9e72feacd188c8057bed95c67c5c9941e31e3e4fec7c6208c6800d1a0486d82a266606e36dcd0ba40440c0d6e2482dca3620529a74a9c8
     HEAD_REF master
 )
 
@@ -27,4 +27,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 

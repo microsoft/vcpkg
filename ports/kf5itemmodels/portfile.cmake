@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemmodels
-    REF v5.88.0
-    SHA512 dba2760da81de9c8e48b67bec2edb3b376b05328afec213190ffbc678918cea6b13b96afbe6300a7c1dc3b956dd82419f1de70fea60a587155ac278ce5e33b1f
+    REF v5.89.0-rc1
+    SHA512 b19488c4c5a6e0846b8fede65a313b3a240bb1c2d86e0ae26561c2390428216a143315632e16feaca7326aa688e4fe4f2be973c33f111abbf5780d27ba263e81
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -27,5 +27,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
 

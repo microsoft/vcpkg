@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.88.0
-    SHA512 2ec44db614de6c705dbf43915d28afd2f945cb71d12c5a1dac6d2f76592970c067a354b9e81dc5a05a676b5e33ef78172687b3ec0e895041d72d4b7cf06925bb
+    REF v5.89.0-rc1
+    SHA512 3dbde46ee8d0639a17329c1be64639cb619750bc4066c0645f205c43304b5dbab009d0c6a5ebe05d682d39d3466295bbe96cdc7bb8e707025fdd953773419bce
     HEAD_REF master
-    PATCHES
-        x11_private_dependency.diff
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -33,4 +31,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 

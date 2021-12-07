@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.88.0
-    SHA512 7272510a2df3a74bab5c4defca7dc6a4d7bdde4205ae75f9c22938f9458ad5fc5dbdc71fbe7d536b9dd96404fde5da3dbf098d400e03b48cb9906ec1d7a9bd4d
+    REF v5.89.0-rc1
+    SHA512 c1c9a69d6f6adbf6e28ea6f28594af12cf9ae786be84b0dae8b71e6cae77bce94f5030c16ae6aced3c2c2f60362e98892dbf6ea0124a2539b685b8bef953a5f2
     HEAD_REF master
 )
 
@@ -37,4 +37,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
