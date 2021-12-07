@@ -6186,7 +6186,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.0.4",
-      "port-version": 14
+      "port-version": 15
     },
     "sdl2-net": {
       "baseline": "2.0.1",
