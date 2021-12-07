@@ -15,9 +15,6 @@ add_library(unofficial-qjsonwebtoken ${SOURCES} )
 set_target_properties(unofficial-qjsonwebtoken PROPERTIES OUTPUT_NAME qjsonwebtoken)
 target_link_libraries(unofficial-qjsonwebtoken Qt5::Core)
 
-include(GenerateExportHeader)
-generate_export_header(unofficial-qjsonwebtoken BASE_NAME qjsonwebtoken)
-
 target_include_directories(unofficial-qjsonwebtoken 
     PUBLIC
         $<INSTALL_INTERFACE:include>
@@ -36,5 +33,4 @@ NAMESPACE
 DESTINATION
   share/qjsonwebtoken
 )
-install(FILES ${HEADERS}
-	${CMAKE_CURRENT_BINARY_DIR}/qjsonwebtoken_export.h DESTINATION include)
+install(FILES ${HEADERS} DESTINATION include)
