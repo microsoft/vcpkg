@@ -10,6 +10,7 @@ vcpkg_from_github(
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-disable-sdlmain-target-search-on-uwp.patch
         0004-sdl2-alias-on-static-build.patch
+        0005-sdl2-fix-mingw-checks.patch # Can be removed once >= SDL 2.0.18
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -65,7 +66,7 @@ if(NOT BINS)
     )
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib")
