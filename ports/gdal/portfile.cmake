@@ -166,7 +166,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -278,6 +277,7 @@ else()
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
             --with-mrsid=no
             --with-mrsid_lidar=no
