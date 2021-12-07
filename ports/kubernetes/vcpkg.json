@@ -1,6 +1,6 @@
 {
   "name": "kubernetes",
-  "version-date": "2021-11-18",
+  "version-date": "2021-11-24",
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "supports": "!uwp",
