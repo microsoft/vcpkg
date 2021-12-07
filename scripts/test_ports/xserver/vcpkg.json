@@ -33,7 +33,6 @@
     "xkbfile",
     "xorg-macros",
     "xproto",
-    "xkeyboard-config",
     {
       "name": "xshmfence",
       "platform": "!windows"
