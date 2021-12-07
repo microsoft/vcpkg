@@ -3,11 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookexperimental/libunifex
-    REF 070435602799b3bbbf0eb9d1973e422462c85726
-    SHA512 e7599cb36db455f1d89c9a26b9f9ccdaa9060a9b2cc841023df3cdbe69b46c8c393fa648b846e6d8f4f2bef0de76c8e3a8d32971ba5e1dc34b4ce09995444c09 
+    REF 9df21c58d34ce8a1cd3b15c3a7347495e29417a0
+    SHA512 2a1c6dbe0e66893be888c301e53b5d2813049047a817e9e1562acf2dec4ae79dec7db90409cd415c59238f2f3e2738e52f86a424041459390c720568ee52d860 
     HEAD_REF master
     PATCHES
-        fix-install.patch
+    #    fix-install.patch
         allow-warnings.patch
 )
 
