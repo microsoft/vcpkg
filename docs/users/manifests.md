@@ -445,13 +445,9 @@ Then, add a vcpkg.json above your project file (such as in the root of your sour
 property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use
 Vcpkg Manifest`.
 
-As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/`
+As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/$(VcpkgTriplet)/`
 adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild
 projects.
-
-Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if
-you need to use different triplets for different projects in your solution, they must consume from different
-`vcpkg.json` files.
 
 ### Known issues
 

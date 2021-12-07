@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.32.1
-    SHA512 385adb0e39ed0b3474609d90524bb3fe8c42d92d34626cde7b70b1eb4cd76dd22e9b5b9d0933d600ce7a585c63382d764a038fd8152a39bbbd8010524eb40e9b
+    REF v1.34.0
+    SHA512 a7a23ba5a4f60676fddff86c6a42031e85c931b4ad6bc6637d90eea403bad7906b9ee945d78c18625ebf8909c7ae6f77ae6b44f30be282d68bea603ee52c9a5e
     HEAD_REF main
 )
 
@@ -63,8 +63,8 @@ foreach(package
         pubsub_client
         spanner_client
         storage_client)
-    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
-    if(NOT IS_DIRECTORY "${config_path}")
+    set(config_path "lib/cmake/${package}")
+    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
     endif()
     vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}"
