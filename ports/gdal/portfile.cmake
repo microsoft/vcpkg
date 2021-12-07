@@ -185,10 +185,11 @@ else()
     file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
 
     set(CONF_OPTS
+        --with-gnm=yes
         --with-hide-internal-symbols=yes
+        --with-java=no
         --with-perl=no
         --with-python=no
-        --with-java=no
         )
     set(CONF_CHECKS "")
     function(add_config option check)
@@ -252,6 +253,8 @@ else()
             # Too much: --disable-all-optional-drivers
             # alphabetical order
             --with-armadillo=no
+            --with-blosc=no
+            --with-brunsli=no
             --with-charls=no
             --with-crypto=no
             --with-cryptopp=no
@@ -270,20 +273,24 @@ else()
             --with-heif=no
             --with-idb=no
             --with-ingres=no
-            --with-jasper=no
             --with-jp2lura=no
+            --with-jp2mrsid=no
+            --with-jasper=no
+            --with-jxl=no
             --with-kakadu=no
             --with-kea=no
+            --with-lerc=no
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
             --with-lz4=no
             --with-mdb=no
+            --with-mongocxx=no
+            --with-mongocxxv3=no
             --with-mrsid=no
             --with-mrsid_lidar=no
             --with-msg=no
-            --with-mongocxx=no
-            --with-mongocxxv3=no
+            --with-null=no
             --with-oci=no
             --with-odbc=no
             --with-ogdi=no
