@@ -1,10 +1,11 @@
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.onelab.info/
+    GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
     REF gmsh_4_9_0
     SHA512 e70a09741a86a9131094e77742078aec1cc94517e1d7c855c257bc93c21c057e25c7ac5168d31ec4d905d78f31d5704faf63bfd3a81b4b9e2ebbcfacf2fdaa8b
     HEAD_REF master
+    PATCHES fix-install.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
@@ -13,15 +14,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fltk        ENABLE_FLTK
         opencascade ENABLE_OCC
         opencascade ENABLE_OCC_CAF
         opencascade ENABLE_OCC_TBB
-        tools       ENABLE_BUILD_DYNAMIC
-        graphics    ENABLE_GRAPHICS
         mpi         ENABLE_MPI
         zipper      ENABLE_ZIPPER
-    
 )
 
 if (ENABLE_BUILD_DYNAMIC)
@@ -39,6 +36,12 @@ vcpkg_cmake_configure(
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
         ${FORTRAN_CMAKE}
         -DGMSH_RELEASE=ON
+        -DENABLE_BUILD_DYNAMIC=OFF
+        -DENABLE_FLTK=OFF
+        -DENABLE_GRAPHICS=OFF
+        -DENABLE_POST=OFF
+        -DENABLE_PLUGINS=OFF
+        -DENABLE_MESH=OFF
         -DENABLE_3M=OFF
         -DENABLE_ALGLIB=OFF
         -DENABLE_ANN=OFF
@@ -62,7 +65,6 @@ vcpkg_cmake_configure(
         -DENABLE_KBIPACK=OFF
         -DENABLE_MATHEX=OFF
         -DENABLE_MED=OFF
-        -DENABLE_MESH=OFF
         -DENABLE_METIS=OFF
         -DENABLE_MMG=OFF
         -DENABLE_MPEG_ENCODE=OFF
@@ -71,8 +73,8 @@ vcpkg_cmake_configure(
         -DENABLE_OPENMP=OFF
         -DENABLE_NUMPY=OFF
         -DENABLE_PETSC4PY=OFF
-        -DENABLE_ONELAB=OFF
         -DENABLE_ONELAB_METAMODEL=OFF
+        -DENABLE_ONELAB=OFF
         -DENABLE_OPENACC=OFF
         -DENABLE_OPTHOM=OFF
         -DENABLE_OS_SPECIFIC_INSTALL=OFF
@@ -81,8 +83,6 @@ vcpkg_cmake_configure(
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_PARSER=OFF
         -DENABLE_PETSC=OFF
-        -DENABLE_PLUGINS=ON
-        -DENABLE_POST=OFF
         -DENABLE_POPPLER=OFF
         -DENABLE_PRIVATE_API=OFF
         -DENABLE_PRO=OFF
@@ -105,6 +105,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/gmsh)
+vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
-file(INSTALL" ${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

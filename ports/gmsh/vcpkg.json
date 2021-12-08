@@ -8,19 +8,9 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
     }
   ],
   "features": {
-    "fltk": {
-      "description": "Enable FLTK graphical user interface (requires mesh/post)",
-      "dependencies": [
-        "fltk"
-      ]
-    },
     "graphics": {
       "description": "Enable building graphics lib even without GUI (advanced)",
       "dependencies": [
@@ -43,12 +33,6 @@
         "freetype",
         "opencascade",
         "tbb"
-      ]
-    },
-    "tools": {
-      "description": "Enable dynamic Gmsh executable (linked with shared library)",
-      "dependencies": [
-        "vcpkg-gfortran"
       ]
     },
     "zipper": {
