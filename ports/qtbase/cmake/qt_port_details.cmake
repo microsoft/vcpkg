@@ -105,7 +105,7 @@ set(qtwebview_REF               eb5a94f20e77a9639b07ae3d59c9d67529ffed66)
 set(qtpositioning_REF           1294c29be50fa5cdf2d78afffac0451f7b4bc16a)
 ### New in Qt 6.2.2
 set(qtapplicationmanager_REF    1009f73d1f5c07947cdc2318150279ad43fc4b04)
-set(qtinterfaceframework_REF    118fa138186144cf2d802405255f08662ed76d43)
+set(qtinterfaceframework_REF    c39926232ee04ded0ebbe971aeb047b6d92ee4d8)
 
 
 if(QT_UPDATE_VERSION)
