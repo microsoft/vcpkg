@@ -1,6 +1,6 @@
 {
   "name": "boost-format",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost format module",
   "homepage": "https://github.com/boostorg/format",
   "dependencies": [

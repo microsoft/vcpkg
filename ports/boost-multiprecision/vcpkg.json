@@ -1,6 +1,6 @@
 {
   "name": "boost-multiprecision",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost multiprecision module",
   "homepage": "https://github.com/boostorg/multiprecision",
   "dependencies": [
@@ -12,7 +12,6 @@
     "boost-math",
     "boost-predef",
     "boost-random",
-    "boost-rational",
     "boost-vcpkg-helpers"
   ]
 }
