@@ -4133,7 +4133,7 @@
       "port-version": 2
     },
     "llfio": {
-      "baseline": "2.0-20210922",
+      "baseline": "2.0-20211208",
       "port-version": 0
     },
     "llgl": {
@@ -4665,7 +4665,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-e691a6dc",
+      "baseline": "0.0.0-8089a948",
       "port-version": 0
     },
     "neon2sse": {
@@ -5101,7 +5101,7 @@
       "port-version": 0
     },
     "outcome": {
-      "baseline": "2.2.2-20210922",
+      "baseline": "2.2.2-20211208",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -6569,7 +6569,7 @@
       "port-version": 2
     },
     "status-code": {
-      "baseline": "1.0.0-ab3cd821",
+      "baseline": "1.0.0-20211208",
       "port-version": 1
     },
     "status-value-lite": {
