@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 8,
+  "port-version": 9,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -104,6 +104,9 @@
       "dependencies": [
         "libpng"
       ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv"
     },
     "qt": {
       "description": "Qt GUI support for opencv",
