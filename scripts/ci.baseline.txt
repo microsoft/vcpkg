@@ -1669,8 +1669,8 @@ xt:x64-windows=fail
 xt:x86-windows=fail
 # missing system libraries | xserver is only a test port for xlib on windows currently. 
 # on osx/linux the libraries are not installed by vcpkg  
-xserver:x64-linux
-xserver:x64-osx
+xserver:x64-linux=fail
+xserver:x64-osx=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
