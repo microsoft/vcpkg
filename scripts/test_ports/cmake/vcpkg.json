@@ -16,7 +16,10 @@
       "platform": "!(windows | uwp)"
     },
     "nghttp2",
-    "qtbase",
+    {
+        "name": "qtbase",
+        "features": [ "gui", "widgets"]
+    }
     "zlib",
     "zstd"
   ]
