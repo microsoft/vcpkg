@@ -1797,8 +1797,8 @@
       "port-version": 0
     },
     "decimal-for-cpp": {
-      "baseline": "1.16",
-      "port-version": 2
+      "baseline": "1.18",
+      "port-version": 0
     },
     "detours": {
       "baseline": "4.0.1",
