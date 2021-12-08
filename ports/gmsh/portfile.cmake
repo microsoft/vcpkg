@@ -1,69 +1,110 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   CURRENT_INSTALLED_DIR     = ${VCPKG_ROOT_DIR}\installed\${TRIPLET}
-#   DOWNLOADS                 = ${VCPKG_ROOT_DIR}\downloads
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#   VCPKG_TOOLCHAIN           = ON OFF
-#   TRIPLET_SYSTEM_ARCH       = arm x86 x64
-#   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
-#   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
-#   RELEASE_CONFIG            = "Release Static"" "Release DLL"
-#   VCPKG_TARGET_IS_WINDOWS
-#   VCPKG_TARGET_IS_UWP
-#   VCPKG_TARGET_IS_LINUX
-#   VCPKG_TARGET_IS_OSX
-#   VCPKG_TARGET_IS_FREEBSD
-#   VCPKG_TARGET_IS_ANDROID
-#   VCPKG_TARGET_IS_MINGW
-#   VCPKG_TARGET_EXECUTABLE_SUFFIX
-#   VCPKG_TARGET_STATIC_LIBRARY_SUFFIX
-#   VCPKG_TARGET_SHARED_LIBRARY_SUFFIX
-#
-# 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
-
-# # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "gmsh currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+    GITLAB_URL https://gitlab.onelab.info/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
-    REF 4.9.0
-    SHA512 a3d820b76e6f0730d1d5aa595bdefcca0cbf3f3b
-    HEAD_REF gmsh_4_9_0
-    [PATCHES <patch1.patch> <patch2.patch>...]
-    [FILE_DISAMBIGUATOR <N>]
+    REF gmsh_4_9_0
+    SHA512 e70a09741a86a9131094e77742078aec1cc94517e1d7c855c257bc93c21c057e25c7ac5168d31ec4d905d78f31d5704faf63bfd3a81b4b9e2ebbcfacf2fdaa8b
+    HEAD_REF master
 )
 
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-    fltk        WITH_FLTK
-    opencascade OCC OCC_CAF OCC_TBB
+    FEATURES
+        fltk        ENABLE_FLTK
+        opencascade ENABLE_OCC
+        opencascade ENABLE_OCC_CAF
+        opencascade ENABLE_OCC_TBB
+        tools       ENABLE_BUILD_DYNAMIC
+        graphics    ENABLE_GRAPHICS
+        mpi         ENABLE_MPI
+        zipper      ENABLE_ZIPPER
+    
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+if (ENABLE_BUILD_DYNAMIC)
+    include(vcpkg_find_fortran)
+    vcpkg_find_fortran(FORTRAN_CMAKE)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DENABLE_BUILD_LIB=${BUILD_LIB}
+        -DENABLE_BUILD_SHARED=${BUILD_SHARED}
+        -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
+        ${FORTRAN_CMAKE}
+        -DGMSH_RELEASE=ON
+        -DENABLE_3M=OFF
+        -DENABLE_ALGLIB=OFF
+        -DENABLE_ANN=OFF
+        -DENABLE_BAMG=OFF
+        -DENABLE_BLAS_LAPACK=OFF
+        -DENABLE_BLOSSOM=OFF
+        -DENABLE_BUILD_ANDROID=OFF
+        -DENABLE_BUILD_IOS=OFF
+        -DENABLE_CGNS=OFF
+        -DENABLE_CGNS_CPEX0045=OFF
+        -DENABLE_CAIRO=OFF
+        -DENABLE_PROFILE=OFF
+        -DENABLE_DINTEGRATION=OFF
+        -DENABLE_DOMHEX=OFF
+        -DENABLE_EIGEN=OFF
+        -DENABLE_GEOMETRYCENTRAL=OFF
+        -DENABLE_GETDP=OFF
+        -DENABLE_GMM=OFF
+        -DENABLE_GMP=OFF
+        -DENABLE_HXT=OFF
+        -DENABLE_KBIPACK=OFF
+        -DENABLE_MATHEX=OFF
+        -DENABLE_MED=OFF
+        -DENABLE_MESH=OFF
+        -DENABLE_METIS=OFF
+        -DENABLE_MMG=OFF
+        -DENABLE_MPEG_ENCODE=OFF
+        -DENABLE_MUMPS=OFF
+        -DENABLE_NETGEN=OFF
+        -DENABLE_OPENMP=OFF
+        -DENABLE_NUMPY=OFF
+        -DENABLE_PETSC4PY=OFF
+        -DENABLE_ONELAB=OFF
+        -DENABLE_ONELAB_METAMODEL=OFF
+        -DENABLE_OPENACC=OFF
+        -DENABLE_OPTHOM=OFF
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
+        -DENABLE_OSMESA=OFF
+        -DENABLE_P4EST=OFF
+        -DENABLE_PACKAGE_STRIP=ON
+        -DENABLE_PARSER=OFF
+        -DENABLE_PETSC=OFF
+        -DENABLE_PLUGINS=ON
+        -DENABLE_POST=OFF
+        -DENABLE_POPPLER=OFF
+        -DENABLE_PRIVATE_API=OFF
+        -DENABLE_PRO=OFF
+        -DENABLE_QUADMESHINGTOOLS=OFF
+        -DENABLE_QUADTRI=OFF
+        -DENABLE_REVOROPT=OFF
+        -DENABLE_RPATH=OFF # Should use dependencies in vcpkg
+        -DENABLE_SLEPC=OFF
+        -DENABLE_SOLVER=OFF
+        -DENABLE_SYSTEM_CONTRIB=ON
+        -DENABLE_TCMALLOC=OFF
+        -DENABLE_TESTS=OFF
+        -DENABLE_TOUCHBAR=OFF
+        -DENABLE_VISUDEV=OFF
+        -DENABLE_VOROPP=OFF
+        -DENABLE_WINSLOWUNTANGLER=OFF
+        -DENABLE_WRAP_JAVA=OFF
+        -DENABLE_WRAP_PYTHON=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# # Moves all .cmake files from /debug/share/gmsh/ to /share/gmsh/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
 # vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/gmsh)
 
-# # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gmsh RENAME copyright)
+file(INSTALL" ${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

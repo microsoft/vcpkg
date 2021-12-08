@@ -1,21 +1,61 @@
 {
   "name": "gmsh",
-  "version-string": "4.9.0",
-  "homepage": "https://gmsh.info",
+  "version": "4.9.0",
   "description": "Gmsh is an open source 3D finite element mesh generator with a built-in CAD engine and post-processor.",
-  "dependencies": [],
-
-  "default-features": [],
-  "features": [
+  "homepage": "https://gmsh.info",
+  "dependencies": [
+    "blas",
     {
-      "name": "fltk",
-      "description": "needed if build with GUI.",
-      "dependencies": [fltk]
+      "name": "vcpkg-cmake",
+      "host": true
     },
     {
-      "name": "opencascade",
-      "description": "boolean operations, constructive solid geometry features and STEP file import",
-      "dependencies": [opencascade]
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "fltk": {
+      "description": "Enable FLTK graphical user interface (requires mesh/post)",
+      "dependencies": [
+        "fltk"
+      ]
+    },
+    "graphics": {
+      "description": "Enable building graphics lib even without GUI (advanced)",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        "opengl",
+        "zlib"
+      ]
+    },
+    "mpi": {
+      "description": "Enable MPI (experimental, not used for meshing)",
+      "dependencies": [
+        "openmpi"
+      ]
+    },
+    "occ": {
+      "description": "Enable OpenCASCADE modules",
+      "dependencies": [
+        "caf",
+        "freetype",
+        "opencascade",
+        "tbb"
+      ]
+    },
+    "tools": {
+      "description": "Enable dynamic Gmsh executable (linked with shared library)",
+      "dependencies": [
+        "vcpkg-gfortran"
+      ]
+    },
+    "zipper": {
+      "description": "Enable Zip file compression/decompression",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }
