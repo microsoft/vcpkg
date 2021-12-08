@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.77.0",
+    $version = "1.78.0",
     $portsDir = $null
 )
 
@@ -24,14 +24,6 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost"                      = 2;
-    "boost-config"               = 2;
-    "boost-gil"                  = 1;
-    "boost-iostreams"            = 1;
-    "boost-modular-build-helper" = 3;
-    "boost-odeint"               = 1;
-    "boost-python"               = 1;
-    "boost-process"              = 2;
 }
 
 $portData = @{
@@ -571,7 +563,16 @@ if ($updateServicePorts) {
         -Description "Internal vcpkg port used to build Boost libraries" `
         -Dependencies @("boost-uninstall")
 
-    # Update Boost version in boost-modular-build.cmake
-    $boost_modular_build = "$portsDir/boost-modular-build-helper/boost-modular-build.cmake"
-    (Get-Content -LiteralPath "$boost_modular_build") -replace "set\(BOOST_VERSION ([0-9\.]+)\)", "set(BOOST_VERSION $version)" | Set-Content -LiteralPath "$boost_modular_build"
+    # Generate manifest files for boost-build
+    GeneratePortManifest `
+        -PortName "boost-build" `
+        -Homepage "https://github.com/boostorg/build" `
+        -Description "Boost.Build" `
+        -Dependencies @("boost-uninstall")
+
+    # Update Boost version in CMake files
+    [Array]$files_with_boost_version = @("$portsDir/boost-modular-build-helper/boost-modular-build.cmake", "$portsDir/boost-build/portfile.cmake")
+    foreach ($file in $files_with_boost_version) {
+        (Get-Content -LiteralPath "$file") -replace "set\(BOOST_VERSION ([0-9\.]+)\)", "set(BOOST_VERSION $version)" | Set-Content -LiteralPath "$file"
+    }
 }
