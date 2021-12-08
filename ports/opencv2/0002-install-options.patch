@@ -114,11 +114,14 @@
  
  if(GIT_EXECUTABLE)
    execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty --match "2.[0-9].[0-9]*"
-@@ -501,7 +470,6 @@ if(BUILD_DOCS)
+@@ -501,7 +470,9 @@ if(BUILD_DOCS)
  endif(BUILD_DOCS)
  
  # --- Python Support ---
 -include(cmake/OpenCVDetectPython.cmake)
++if(WITH_PYTHON)
++  include(cmake/OpenCVDetectPython.cmake)
++endif()
  
  # --- Java Support ---
  include(cmake/OpenCVDetectApacheAnt.cmake)
