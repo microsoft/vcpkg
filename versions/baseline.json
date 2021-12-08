@@ -4094,7 +4094,7 @@
     },
     "libyaml": {
       "baseline": "0.2.5",
-      "port-version": 2
+      "port-version": 3
     },
     "libyuv": {
       "baseline": "2021-04-15",
@@ -5694,11 +5694,11 @@
     },
     "qtapplicationmanager": {
       "baseline": "6.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtbase": {
       "baseline": "6.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.2.2",
