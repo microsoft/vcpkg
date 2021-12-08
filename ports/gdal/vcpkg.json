@@ -4,7 +4,6 @@
   "port-version": 4,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!(arm & windows)",
   "dependencies": [
     "curl",
     "expat",
@@ -34,8 +33,7 @@
     "zstd"
   ],
   "default-features": [
-    "hdf5",
-    "netcdf"
+    "supported-default-features"
   ],
   "features": {
     "cfitsio": {
@@ -47,10 +45,7 @@
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
-        {
-          "name": "hdf5",
-          "default-features": false
-        }
+        "hdf5"
       ]
     },
     "libspatialite": {
@@ -68,9 +63,20 @@
     "netcdf": {
       "description": "Enable NetCDF support",
       "dependencies": [
+        "netcdf-c"
+      ]
+    },
+    "supported-default-features": {
+      "description": "Default set of features, dependent on platform",
+      "dependencies": [
         {
-          "name": "netcdf-c",
-          "default-features": false
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5",
+            "netcdf"
+          ],
+          "platform": "!uwp & !(windows & arm64)"
         }
       ]
     },
