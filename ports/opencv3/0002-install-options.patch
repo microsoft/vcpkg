@@ -5,7 +5,7 @@
  
  # --- Python Support ---
 -if(NOT IOS)
-+if(FALSE)
++if(WITH_PYTHON)
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  

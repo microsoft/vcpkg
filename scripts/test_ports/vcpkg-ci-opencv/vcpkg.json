@@ -17,6 +17,7 @@
         "jpeg",
         "nonfree",
         "png",
+        "python",
         "quirc",
         "tiff",
         "webp"
@@ -24,6 +25,7 @@
     },
     {
       "name": "opencv",
+      "default-features": false,
       "features": [
         "gtk"
       ],
@@ -31,6 +33,7 @@
     },
     {
       "name": "opencv",
+      "default-features": false,
       "features": [
         "cuda",
         "cudnn",
@@ -43,6 +46,7 @@
     },
     {
       "name": "opencv",
+      "default-features": false,
       "features": [
         "gdcm",
         "ipp",
