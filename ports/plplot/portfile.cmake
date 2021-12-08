@@ -47,10 +47,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plplot)
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/plplot/examples/plplot-test-interactive.sh")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/plplot/examples/plplot-test-interactive.sh" "${CURRENT_PACKAGES_DIR}/share/plplot" "../")
-endif()
-
 # Remove unnecessary tool
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe"
@@ -70,6 +66,7 @@ endif()
 # Remove unwanted and duplicate directories
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/plplot/examples")
 
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
-    REF v5.87.0
-    SHA512 c6b09d2c67902370da3d6cba61aa0b6c13d496332e5ba9694fe43a6571229f60389164024643b9e56c0c1e5cced0d29942b4b7a0ba919dd86b47dbf4602cb74d
-    PATCHES
-        xcb_private_dependency.diff
+    REF v5.88.0
+    SHA512 6187074644df7b2386c569e3f4ade7fb718da11a63e92608c8ed507ddccf5e3fef9e66bdec6852b20a0ea781248f833a2a265ad6d59fe88f7e26a7914c784b17
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -33,4 +31,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
