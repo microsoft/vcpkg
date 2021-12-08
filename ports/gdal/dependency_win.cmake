@@ -252,6 +252,7 @@ macro(find_dependency_win)
         set(SPATIALITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib" )
     endif()
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
+    list(APPEND NMAKE_OPTIONS SPATIALITE_412_OR_LATER=yes)
   endif()
 
   if ("cfitsio" IN_LIST FEATURES)
