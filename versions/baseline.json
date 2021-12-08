@@ -5913,8 +5913,8 @@
       "port-version": 0
     },
     "rapidjson": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "2020-11-24",
+      "port-version": 0
     },
     "rapidxml": {
       "baseline": "1.13",
