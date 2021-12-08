@@ -97,7 +97,7 @@ will work:
 {
   "default-registry": {
     "kind": "git",
-    "repository": "https://git.example.com/vcpkg",
+    "repository": "https://internal/mirror/of/github.com/Microsoft/vcpkg",
     "baseline": "eefee7408133f3a0fef711ef9c6a3677b7e06fd7"
   },
   "registries": [

@@ -99,9 +99,14 @@ Examples:
 ## Version constraints
 
 ### `builtin-baseline`
-Accepts a Git commit ID. Vcpkg will try to find a baseline file in the given commit ID and use that to set the baseline versions (lower bounds) of all dependencies.
+Accepts a Git commit ID. Vcpkg will try to find a baseline file in the given
+commit ID and use that to set the baseline versions (lower bounds) of all
+dependencies.
 
-Baselines provide stability and ease of development for top-level manifest files. They are not considered from ports consumed as a dependency. If a minimum version constraint is required during transitive version resolution, the port should use `version>=`.
+Baselines provide stability and ease of development for top-level manifest
+files. They are not considered from ports consumed as a dependency. If a minimum
+version constraint is required during transitive version resolution, the port
+should use `version>=`.
 
 Example:
 ```json
@@ -113,12 +118,28 @@ Example:
 }
 ```
 
-You can get the current commit of your vcpkg instance either by adding an empty `"builtin-baseline"` field, installing, and examining the error message or by running `git rev-parse HEAD` in the root of the vcpkg instance.
+You can get the current commit of your vcpkg instance either by adding an empty
+`"builtin-baseline"` field, installing, and examining the error message or by
+running `git rev-parse HEAD` in the root of the vcpkg instance.
 
-When resolving version constraints for a package, vcpkg will look for a baseline version by looking
-at the baseline file in the given commit ID.
-If the given commit ID doesn't have a `versions/baseline.json` file or if the baseline file exists
-but it does not declare a baseline version for the package the invocation will fail.
+When resolving version constraints for a package, vcpkg will look for a baseline
+version by looking at the baseline file in the given commit ID. If the given
+commit ID doesn't have a `versions/baseline.json` file or if the baseline file
+exists but it does not declare a baseline version for the package the invocation
+will fail.
+
+This field is a convenience field that has the same semantic as replacing your
+default registry in
+[`vcpkg-configuration.json`](registries.md#configuration-default-registry).
+```json
+{
+  "default-registry": {
+    "kind": "builtin",
+    "baseline": "<baseline>"
+  }
+}
+```
+
 ### `version>=`
 Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.
 
