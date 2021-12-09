@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kservice
-    REF v5.84.0
-    SHA512 3867da989c8f70fccba63d91aeb0038ad6345e66ca7df6003f968628e4a54e076e9686acb501940ef8f540c39d5f1a70a949cbfdd1caa34e6c4d51daebff418d
+    REF v5.88.0
+    SHA512 ffdd6564a28ffbc3724875df278064896a1cb1c8db1edda32a2543c352dbfeb6f5a6fec6b0c5effb714866c185e37d0a097f36ff4d03a1aa5625dba1585df6a6
     HEAD_REF master
 )
 
@@ -38,10 +38,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Service)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Service CONFIG_PATH lib/cmake/KF5Service)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -56,3 +57,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
