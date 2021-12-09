@@ -1,6 +1,7 @@
 {
   "name": "influxdb-cxx",
   "version": "0.6.7",
+  "port-version": 1,
   "description": "InfluxDB C++ client library",
   "homepage": "https://github.com/offa/influxdb-cxx",
   "dependencies": [
