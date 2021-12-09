@@ -12,9 +12,8 @@ set(SDL_MIXER_DEFINES MUSIC_WAV)
 
 # MP3 support
 if(SDL_MIXER_ENABLE_MP3)
-    find_path(MPG123_INCLUDE_DIR mpg123.h)
-    find_library(MPG123_LIBRARY NAMES libmpg123 mpg123)
-    list(APPEND SDL_MIXER_INCLUDES ${MPG123_INCLUDE_DIR})
+    find_package(mpg123 CONFIG REQUIRED)
+    set(MPG123_LIBRARY MPG123::libmpg123)
     list(APPEND SDL_MIXER_DEFINES MUSIC_MP3_MPG123)
     list(APPEND SDL_MIXER_LIBRARIES ${MPG123_LIBRARY})
     if (SDL_DYNAMIC_LOAD)
@@ -25,9 +24,8 @@ endif()
 
 # FLAC support
 if(SDL_MIXER_ENABLE_FLAC)
-    find_path(FLAC_INCLUDE_DIR FLAC/all.h)
-    find_library(FLAC_LIBRARY FLAC)
-    list(APPEND SDL_MIXER_INCLUDES ${FLAC_INCLUDE_DIR})
+    find_package(flac CONFIG REQUIRED)
+    set(FLAC_LIBRARY FLAC::FLAC)
     list(APPEND SDL_MIXER_DEFINES MUSIC_FLAC)
     list(APPEND SDL_MIXER_LIBRARIES ${FLAC_LIBRARY})
     if (SDL_DYNAMIC_LOAD)
@@ -136,6 +134,25 @@ install(EXPORT SDL2_mixer
     FILE sdl2-mixer-config.cmake
     NAMESPACE SDL2::
 )
+
+set(prefix "")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+set(PACKAGE "SDL2_mixer")
+file(READ "SDL_mixer.h" header_contents)
+#    #define SDL_MIXER_MAJOR_VERSION 2
+#    #define SDL_MIXER_MINOR_VERSION 0
+#    #define SDL_MIXER_PATCHLEVEL    5
+string(REGEX MATCH "define *SDL_MIXER_MAJOR_VERSION *([0-9]+)" _ "${header_contents}")
+set(VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "define *SDL_MIXER_MINOR_VERSION *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+string(REGEX MATCH "define *SDL_MIXER_PATCHLEVEL *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+set(SDL_VERSION 0.0)
+configure_file(SDL2_mixer.pc.in "${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc" @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc DESTINATION lib/pkgconfig)
 
 if(NOT SDL_MIXER_SKIP_HEADERS)
     install(FILES SDL_mixer.h DESTINATION include/SDL2)

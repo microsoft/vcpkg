@@ -24,7 +24,7 @@ The path to the directory containing the tools. This will be set to `${CURRENT_P
 Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
 ### AUTO_CLEAN
-Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
+Auto clean the copied executables from `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 
 ## Examples
 

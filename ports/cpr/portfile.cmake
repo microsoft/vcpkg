@@ -1,23 +1,17 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_IS_UWP)
-    set(UWP_PATCH fix-uwp.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO whoshuu/cpr
-    REF f4622efcb59d84071ae11404ae61bd821c1c344b # v1.6.2
-    SHA512 7835b7613529798b5edaefc99c907bbc7144133a1fac62a2c9af09c8c7a09b2ea1864544c4c0385969ad3dc64806b8d258abbcd39add2004ed8428741286ff20
+    REPO libcpr/cpr
+    REF 1.7.0
+    SHA512 8d48c808f037cbfa284be7de08214cd93277ea419982ef7c2e50fa012ad3901248f7c4b24156cd0e926c22cd0901cb588423ba06202cd8abfa15e5df07527d00 
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
-        ${UWP_PATCH}
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DCPR_BUILD_TESTS=OFF
         -DCPR_FORCE_USE_SYSTEM_CURL=ON
@@ -25,14 +19,14 @@ vcpkg_configure_cmake(
         -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/cpr)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cpr)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

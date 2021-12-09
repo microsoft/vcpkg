@@ -1,6 +1,6 @@
 {
   "name": "directxtex",
-  "version-string": "aug2021",
+  "version-date": "2021-11-08",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -8,7 +8,15 @@
   "supports": "windows | linux",
   "dependencies": [
     "directx-headers",
-    "directxmath"
+    "directxmath",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "dx12": {
