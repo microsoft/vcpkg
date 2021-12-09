@@ -11,26 +11,33 @@ find_package(Qt5Core REQUIRED)
 set(HEADERS "src/QJsonWebToken" "src/qjsonwebtoken.h")
 set(SOURCES "src/qjsonwebtoken.cpp")
 
-add_library(unofficial-qjsonwebtoken ${SOURCES} )
-set_target_properties(unofficial-qjsonwebtoken PROPERTIES OUTPUT_NAME qjsonwebtoken)
-target_link_libraries(unofficial-qjsonwebtoken Qt5::Core)
+add_library(qjsonwebtoken INTERFACE ${SOURCES} )
+target_link_libraries(qjsonwebtoken INTERFACE Qt5::Core)
 
-target_include_directories(unofficial-qjsonwebtoken 
-    PUBLIC
-        $<INSTALL_INTERFACE:include>
+target_include_directories(qjsonwebtoken 
+    INTERFACE $<INSTALL_INTERFACE:include>
 )
-install(TARGETS unofficial-qjsonwebtoken
-    EXPORT qjsonwebtoken-export
+
+install(TARGETS qjsonwebtoken
+    EXPORT unofficial-qjsonwebtokenTargets
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
-install(EXPORT qjsonwebtoken-export
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-qjsonwebtoken-config.cmake"
+[[include(CMakeFindDependencyMacro)
+find_dependency(Qt5Core)
+include("unofficial-qjsonwebtokenTargets.cmake")
+]])
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-qjsonwebtoken-config.cmake DESTINATION share/unofficial-qjsonwebtoken)
+
+install(EXPORT unofficial-qjsonwebtokenTargets
 FILE
-  qjsonwebtokenTargets.cmake
+  unofficial-qjsonwebtokenTargets.cmake
 NAMESPACE
   unofficial-qjsonwebtoken::
 DESTINATION
-  share/qjsonwebtoken
+  share/unofficial-qjsonwebtoken
 )
-install(FILES ${HEADERS} DESTINATION include)
+install(FILES ${HEADERS} ${SOURCES} DESTINATION include)
