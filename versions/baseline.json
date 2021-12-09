@@ -1446,7 +1446,7 @@
     },
     "co": {
       "baseline": "2.0.3",
-      "port-version": 1
+      "port-version": 0
     },
     "coin": {
       "baseline": "4.0.0",
