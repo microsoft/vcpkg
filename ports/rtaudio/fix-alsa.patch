@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a59e8bb..1334f5a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,12 +123,12 @@ endif()
+ # ALSA
+ if (RTAUDIO_API_ALSA)
+   set(NEED_PTHREAD ON)
+-  find_package(ALSA)
++  find_package(ALSA REQUIRED)
+   if (NOT ALSA_FOUND)
+     message(FATAL_ERROR "ALSA API requested but no ALSA dev libraries found")
+   endif()
+   list(APPEND INCDIRS ${ALSA_INCLUDE_DIR})
+-  list(APPEND LINKLIBS ${ALSA_LIBRARY})
++  list(APPEND LINKLIBS ${ALSA_LIBRARY} dl)
+   list(APPEND PKGCONFIG_REQUIRES "alsa")
+   list(APPEND API_DEFS "-D__LINUX_ALSA__")
+   list(APPEND API_LIST "alsa")

@@ -133,8 +133,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4
-    SHA512 ae7426ca476df9fa9dba52cab06c38e484f835653fb2da57e7c06f5589d887c0854ee17df93a2f57191d498c1264cb1c69312cf0a8214b476800382e2d260c4b
+    REF n4.4.1
+    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -152,6 +152,7 @@ vcpkg_from_github(
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
+        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
 )
 
 if (SOURCE_PATH MATCHES " ")

@@ -19,6 +19,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         -DFCL_STATIC_LIBRARY=${FCL_STATIC_LIBRARY}
         -DFCL_BUILD_TESTS=OFF
         -DFCL_USE_X64_SSE=${FCL_USE_X64_SSE}
@@ -36,3 +37,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()
