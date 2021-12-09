@@ -12,23 +12,24 @@ vcpkg_from_github(
     0001-unofficial-brotli.patch
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DCANONICAL_PREFIXES=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/ DESTINATION ${CURRENT_PACKAGES_DIR}/tools/woff2)
+file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/woff2")
 file(REMOVE_RECURSE
-  ${CURRENT_PACKAGES_DIR}/bin
-  ${CURRENT_PACKAGES_DIR}/debug/bin
-  ${CURRENT_PACKAGES_DIR}/debug/include
+  "${CURRENT_PACKAGES_DIR}/bin"
+  "${CURRENT_PACKAGES_DIR}/debug/bin"
+  "${CURRENT_PACKAGES_DIR}/debug/include"
 )
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/woff2)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/woff2")
+
+vcpkg_fixup_pkgconfig()
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/woff2 RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/woff2" RENAME copyright)

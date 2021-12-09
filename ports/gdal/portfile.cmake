@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
@@ -15,8 +13,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF 348075f26f8e4c200a34818123beeb4abe53c876 # 3.3.2
-    SHA512 84bd7c74a079c4aa8cbefbbb1c4ab782e74a85d37d4c875a203760939f4f7c9175c40abc5184d8c1c521fd3b37bb90bc7bf046021ade22e510810535e3f61bd2
+    REF d699b38a744301368070ef780f797340da4a9c3c # 3.4.0
+    SHA512 709523740a51a0a2a144debcfa5fbc5a5b3d93cc3632856cfbc37f7ca52f2e83f4942d9a27d4c723ee19d2397cc91a4b1ba4543547afdfefb3980a7ba6684bd7
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
@@ -61,7 +59,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "PNGDIR=${PNG_INCLUDE_DIR}"
         "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
         ZLIB_EXTERNAL_LIB=1
-        ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
         MSVC_VER=1900
         )
 
@@ -169,7 +166,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -202,7 +198,6 @@ else()
         set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
     endfunction()
     # parameters in the same order as the dependencies in vcpkg.json
-    add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
     add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
     add_config("--with-expat=yes"    "Expat support:             yes")
     add_config("--with-geos=yes"     "GEOS support:              yes")
@@ -246,6 +241,12 @@ else()
         add_config("--with-mysql=no"   "MySQL support:             no")
     endif()
 
+    if ("cfitsio" IN_LIST FEATURES)
+        add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-cfitsio=no"   "CFITSIO support:           no")
+    endif()
+
     if(DISABLE_SYSTEM_LIBRARIES)
         list(APPEND CONF_OPTS
             # Too much: --disable-all-optional-drivers
@@ -276,6 +277,7 @@ else()
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
             --with-mrsid=no
             --with-mrsid_lidar=no
@@ -364,6 +366,11 @@ else()
         vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
     endif()
 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
