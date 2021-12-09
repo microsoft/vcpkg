@@ -1,5 +1,5 @@
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} currently requires the following tools from the system package manager:\n    autoconf-archive\n    texinfo\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive texinfo\n")
+    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\n    texinfo\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive texinfo\n")
 endif()
 
 set(VERSION 4.1.0)
