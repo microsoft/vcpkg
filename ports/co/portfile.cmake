@@ -8,9 +8,6 @@ vcpkg_from_github(
     REF 3fd22601de4d7a06548ca4d24ac36b4f82cde8c5 #v2.0.3
     SHA512 fc3188355d3d4a8d56ebcca1cb4285be5bb4769328536f140d4ff6fc58f1e5ffe426f8a95506dfbc617acdd88c13d9b0420a03900bf63f83aeec090d4099c199
     HEAD_REF master
-#    PATCHES
-#        install-dll.patch
-#        fix-event-destruct.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
