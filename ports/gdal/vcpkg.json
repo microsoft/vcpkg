@@ -17,7 +17,6 @@
     "libjpeg-turbo",
     "liblzma",
     "libpng",
-    "libpq",
     "libwebp",
     "libxml2",
     "openjpeg",
@@ -66,9 +65,23 @@
         "netcdf-c"
       ]
     },
+    "postgresql": {
+      "description": "Enable PostgreSQL support",
+      "dependencies": [
+        "libpq"
+      ]
+    },
     "supported-default-features": {
       "description": "Default set of features, dependent on platform",
       "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "postgresql"
+          ],
+          "platform": "!uwp"
+        },
         {
           "name": "gdal",
           "default-features": false,

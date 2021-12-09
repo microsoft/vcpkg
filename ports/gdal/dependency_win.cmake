@@ -47,20 +47,12 @@ macro(find_dependency_win)
   set(SQLITE_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" )
   set(SQLITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" )
 
-  # Setup PostgreSQL libraries + include path
-  set(PGSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
-  set(PGSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" )
-  set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib" )
-  
-  set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib" )
-  set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib" )
-  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
-  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
-
-  set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" )
-  set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib" )
-  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
-  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
+  if ("postgresql" IN_LIST FEATURES)
+      # Setup PostgreSQL libraries + include path
+      set(PGSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
+      set(PGSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpq.lib ${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib ${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" )
+      set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib")
+  endif()
 
   # Setup OpenJPEG libraries + include path
   set(OPENJPEG_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
