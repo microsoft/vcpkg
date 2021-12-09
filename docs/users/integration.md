@@ -73,6 +73,7 @@ To override the automatically chosen [triplet][], you can specify the MSBuild pr
 
 ## CMake Integration
 ```no-highlight
+vcpkg integrate install
 cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=[vcpkg-root]/scripts/buildsystems/vcpkg.cmake
 ```
 Projects configured with the Vcpkg toolchain file will have the appropriate Vcpkg folders added to the cmake search paths. This makes all libraries available to be found through `find_package()`, `find_path()`, and `find_library()`.
