@@ -1,22 +1,22 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index c52b352..b19c438 100644
+index 26e5a95..b69ff0e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -149,7 +149,7 @@ set_target_properties( exiv2lib_int PROPERTIES
- 
+@@ -150,7 +150,7 @@ set_target_properties( exiv2lib_int PROPERTIES
+ # NOTE: Cannot use target_link_libraries on OBJECT libraries with old versions of CMake
  target_include_directories(exiv2lib_int PRIVATE ${ZLIB_INCLUDE_DIR})
- target_include_directories(exiv2lib PRIVATE 
+ target_include_directories(exiv2lib SYSTEM PRIVATE 
 -    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/xmpsdk/include>
 +    ${PROJECT_SOURCE_DIR}/xmpsdk/include
-     ${ZLIB_INCLUDE_DIR}
  )
  
-@@ -215,7 +215,7 @@ else()
+ if (EXIV2_ENABLE_XMP OR EXIV2_ENABLE_EXTERNAL_XMP)
+@@ -224,7 +224,7 @@ else()
  endif()
  
  if( EXIV2_ENABLE_PNG )
--    target_link_libraries( exiv2lib PRIVATE $<BUILD_INTERFACE:${ZLIB_LIBRARIES}>)
-+    target_link_libraries( exiv2lib PRIVATE ${ZLIB_LIBRARIES})
+-	target_link_libraries( exiv2lib PRIVATE ZLIB::ZLIB)
++	target_link_libraries( exiv2lib PRIVATE ${ZLIB_LIBRARIES})
  endif()
  
  if( EXIV2_ENABLE_NLS )
