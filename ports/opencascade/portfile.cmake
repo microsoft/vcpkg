@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF 628c0211d53c7fe1036a85e7a7b2b067c9c50f7a #V7.5.0
-    SHA512 8d946e971417642264b318353fb34ebabf214bff5c705c60818da9e56e9cd658ed15b76b73d7207edffa398c23ad9982f4e9656b218b5edada325ca05c1283bb
+    REF 80ffc5f84dae96de6ed093d3e5d2466a9e368b27 #V7.6.0
+    SHA512 1dfee9c59eb6ea61735f0807d44ccf62019a2649f506a5a8197e04b1533592dc95d6d67ab7a3bb392785755ed60b6fc489bea049f658d4ae7d05dfe0d7d5bdcd
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
@@ -27,13 +25,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
-
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
 # We use the Unix install layout for Windows as it matches vcpkg
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
         -DINSTALL_DIR_LAYOUT=Unix
@@ -75,7 +73,6 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # debug creates libd and bind directories that need moving

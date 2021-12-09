@@ -1,11 +1,14 @@
 {
   "name": "munit",
   "version-string": "2019-04-06",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A small but full-featured unit testing framework for C",
   "homepage": "https://github.com/nemequ/munit",
   "supports": "!(arm | arm64 | uwp)",
   "dependencies": [
-    "tool-meson"
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
   ]
 }

@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF oct2021
-    SHA512 3fc1f8267a4708babe91e94f2062cd9d475b3682273e5c4f704cdb6093a5aae269cf573ad75fdd3dce59a6a79e6892a4cf5630a3160257e542edde9eb9dbb51a
+    REF nov2021b
+    SHA512 7f9b17e265836933c02b98c613e7c0503a74a6c3c1d97552bfbaf2f060b500019c74def80694f5e2ad6250f8bcceeac17677f264f677ff46851a9020ab604353
     HEAD_REF master
 )
 
@@ -64,23 +64,23 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("openexr" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     TEXASSEMBLE_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/sept2021/texassemble.exe"
-    FILENAME "texassemble-sept2021.exe"
-    SHA512 05539bae0f77bba1e6fa349ac483367d3f34f808857fd3c3bdecd2a956465101dbaec95cb4e61c15d5d65fd12cdc14fab17cede3a2719dc32bda8748b7a1c59a
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2021/texassemble.exe"
+    FILENAME "texassemble-nov2021.exe"
+    SHA512 a31151d368d41f50b58b417e8d27987fe0e3caa2c4e0d0abe7bef472db51429526277b0c554df2825c6892bb2021111f59d3d8f321ad68c71c0a153852d2c81f
   )
 
   vcpkg_download_distfile(
     TEXCONV_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/sept2021/texconv.exe"
-    FILENAME "texconv-sept2021.exe"
-    SHA512 9ec2415d2d1b665a0a67c01c916afb5946dedede3518e3a029b83e4a8bb86d8f22b2dc0afdc7dbe0824f8f9843a86e555f3e4705570703d4447a47f2719f5b5a
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2021/texconv.exe"
+    FILENAME "texconv-nov2021.exe"
+    SHA512 7cb70b3cbf46c78b99aa18c28b043fc5930b6b254729efd447868fcf8cb8b77987d41b570082bdfb3bab01452e67d17e81b966bf2534036a3415fa918ddc2956
   )
 
   vcpkg_download_distfile(
     TEXDIAG_EXE
-    URLS "https://github.com/Microsoft/DirectXTex/releases/download/sept2021/texdiag.exe"
-    FILENAME "texdiag-sept2021.exe"
-    SHA512 380660fa46438368a0f30684e0b9d9f4c267d76145bacbf4e5643889e00f869b0925250c1911397ce6a3890752de87f6105ef0e60d0e0334eb36fbc7f53deea7
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2021/texdiag.exe"
+    FILENAME "texdiag-nov2021.exe"
+    SHA512 7826c594fa42978da8a15bd771fafe4d4f5b97d611ce62a806ddff77204cabf63eea6ac24e3409c2720631681260b7e3fa6ad5f33b2162d2266457462e6b13c9
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
@@ -91,9 +91,9 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${TEXDIAG_EXE}
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-sept2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe")
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 
