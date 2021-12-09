@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cdd8ca4..1e33a39 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,6 +99,9 @@ find_package(Eigen3 REQUIRED)
+ find_package(freeimage CONFIG REQUIRED)
+ set(FREEIMAGE_LIBRARIES freeimage::FreeImage)
+ 
++find_package(lcms2 CONFIG REQUIRED)
++set(LCMS2_LIBRARIES  lcms2::lcms2)
++
+ find_package(Glog REQUIRED)
+ 
+ find_package(OpenGL REQUIRED)
+@@ -283,6 +286,7 @@ set(COLMAP_EXTERNAL_LIBRARIES
+     ${Boost_SYSTEM_LIBRARY}
+     ${GLOG_LIBRARIES}
+     ${FREEIMAGE_LIBRARIES}
++    ${LCMS2_LIBRARIES}
+     ${CERES_LIBRARIES}
+     ${OPENGL_gl_LIBRARY}
+     ${OPENGL_glu_LIBRARY}
