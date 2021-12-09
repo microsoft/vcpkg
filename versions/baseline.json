@@ -3649,8 +3649,8 @@
       "port-version": 1
     },
     "libmesh": {
-      "baseline": "1.5.0",
-      "port-version": 2
+      "baseline": "1.7.0-rc3",
+      "port-version": 0
     },
     "libmicrohttpd": {
       "baseline": "0.9.63",
