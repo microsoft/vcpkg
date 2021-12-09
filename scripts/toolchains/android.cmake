@@ -61,15 +61,13 @@ set(ANDROID_NDK_MAJOR "${CMAKE_MATCH_1}")
 #set(ANDROID_NDK_MINOR "${CMAKE_MATCH_2}")
 #set(ANDROID_NDK_BUILD "${CMAKE_MATCH_3}")
 
-if (ANDROID_NDK_MAJOR LESS_EQUAL "16")
-    set(ANDROID_PLATFORM "android-${ANDROID_NATIVE_API_LEVEL}")
-else()
+if(ANDROID_NDK_MAJOR GREATER 20)
     set(ANDROID_PLATFORM "${ANDROID_NATIVE_API_LEVEL}")
+elseif(ANDROID_NDK_MAJOR GREATER 18)
+    set(ANDROID_PLATFORM "android-${ANDROID_NDK_MAJOR}")
+else()
+    message(FATAL_ERROR "Android NDK r18 and older is not fixed yet")
 endif()
-
-unset(ANDROID_NDK_MAJOR)
-unset(ANDROID_NDK_REVISION_REGEX)
-unset(ANDROID_NDK_SOURCE_PROPERTIES)
 
 include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
 

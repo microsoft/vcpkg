@@ -7,8 +7,8 @@ set(OUTPUT_STRING)
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
                                         CMAKE_SYSTEM_VERSION
-                                        CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
+                                        CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
@@ -78,7 +78,7 @@ endif()
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
@@ -98,11 +98,17 @@ macro(_vcpkg_adjust_flags flag_var)
         if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-
                 foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
                     string(APPEND ${flag_var} " -arch ${arch}")
                 endforeach()
                 string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
+            endif()
+        endif()
+    endif()
+    if(CMAKE_SYSTEM_NAME MATCHES "Android")
+        if(ANDROID_NDK_MAJOR GREATER 22)
+            if("${flag_var}" MATCHES "CMAKE_(C|CXX)_FLAGS$")
+                string(APPEND ${flag_var} " --target=${CMAKE_ANDROID_ARCH_TRIPLE}${ANDROID_NATIVE_API_LEVEL}")
             endif()
         endif()
     endif()
@@ -121,7 +127,6 @@ foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
     endforeach()
 endforeach()
-
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 
