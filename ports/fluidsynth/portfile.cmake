@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+        -DLIB_INSTALL_DIR=lib
     OPTIONS_DEBUG
         -Denable-debug:BOOL=ON
     MAYBE_UNUSED_VARIABLES
