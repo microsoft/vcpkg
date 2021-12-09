@@ -21,7 +21,7 @@
       "dependencies": [
         {
           "name": "gettext",
-		  "host": true,
+          "host": true,
           "features": [
             "tools"
           ]
