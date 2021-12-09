@@ -1,6 +1,6 @@
 {
   "name": "xmsh",
-  "version": "0.5.2",
+  "version-string": "0.5.2",
   "port-version": 2,
   "description": "Reference Implementation of XMSH Library",
   "homepage": "https://gitlab.com/libxmsh/xmsh",
