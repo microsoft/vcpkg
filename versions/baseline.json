@@ -7358,10 +7358,11 @@
     },
     "xtensor-fftw": {
       "baseline": "2019-11-30",
+      
       "port-version": 2
     },
     "xtensor-io": {
-      "baseline": "0.12.8",
+      "baseline": "0.13.0",
       "port-version": 1
     },
     "xtl": {
