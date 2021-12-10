@@ -1,7 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.4.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "dependencies": [
@@ -25,8 +25,7 @@
     "tiff",
     {
       "name": "vcpkg-pkgconfig-get-modules",
-      "host": true,
-      "platform": "windows & !mingw"
+      "host": true
     },
     "zlib",
     "zstd"
