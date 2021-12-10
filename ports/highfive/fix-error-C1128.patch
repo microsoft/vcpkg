@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9d42b6e..0fd3f4c 100644
+index 9d42b6e..475f225 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -41,6 +41,8 @@ option(HIGHFIVE_BUILD_DOCS "Enable documentation building" ON)
@@ -7,7 +7,7 @@ index 9d42b6e..0fd3f4c 100644
  mark_as_advanced(HIGHFIVE_USE_INSTALL_DEPS)
  
 +# Allow big object
-+add_definitions(/bigobj)
++add_compile_options(/bigobj)
  
  # Check compiler cxx_std requirements
  # -----------------------------------
