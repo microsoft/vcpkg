@@ -38,7 +38,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMONGOCXX_HEADER_INSTALL_DIR=include
         -DBSONCXX_HEADER_INSTALL_DIR=include
@@ -62,12 +62,14 @@ set(LIBBSONCXX_VERSION_MINOR ${VERSION_MINOR})
 set(LIBBSONCXX_VERSION_PATCH ${VERSION_PATCH})
 set(LIBBSONCXX_PACKAGE_VERSION ${VERSION_FULL})
 
-get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)
-
-set(LIBBSONCXX_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include\")
-find_library(LIBBSONCXX_LIBRARY_PATH_RELEASE bsoncxx bsoncxx-static PATHS \"\${PACKAGE_PREFIX_DIR}/lib\" NO_DEFAULT_PATH)
-find_library(LIBBSONCXX_LIBRARY_PATH_DEBUG bsoncxx bsoncxx-static PATHS \"\${PACKAGE_PREFIX_DIR}/debug/lib\" NO_DEFAULT_PATH)
-set(LIBBSONCXX_LIBRARIES optimized \${LIBBSONCXX_LIBRARY_PATH_RELEASE} debug \${LIBBSONCXX_LIBRARY_PATH_DEBUG})
+include(CMakeFindDependencyMacro)
+find_dependency(bsoncxx CONFIG REQUIRED)
+get_filename_component(LIBBSONCXX_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../include\" ABSOLUTE)
+if (TARGET mongo::bsoncxx_shared)
+    set(LIBBSONCXX_LIBRARIES mongo::bsoncxx_shared)
+else()
+    set(LIBBSONCXX_LIBRARIES mongo::bsoncxx_static)
+endif()
 "
 )
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/libmongocxx/libmongocxx-config.cmake
@@ -80,48 +82,27 @@ set(LIBMONGOCXX_VERSION_PATCH ${VERSION_PATCH})
 set(LIBMONGOCXX_PACKAGE_VERSION ${VERSION_FULL})
 
 include(CMakeFindDependencyMacro)
-
-find_dependency(libbsoncxx)
-
-get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)
-
-set(LIBMONGOCXX_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include\" \${LIBBSONCXX_INCLUDE_DIRS})
-find_library(LIBMONGOCXX_LIBRARY_PATH_RELEASE NAMES mongocxx mongocxx-static PATHS \"\${PACKAGE_PREFIX_DIR}/lib\" NO_DEFAULT_PATH)
-find_library(LIBMONGOCXX_LIBRARY_PATH_DEBUG NAMES mongocxx mongocxx-static PATHS \"\${PACKAGE_PREFIX_DIR}/debug/lib\" NO_DEFAULT_PATH)
-set(LIBMONGOCXX_LIBRARIES optimized \${LIBMONGOCXX_LIBRARY_PATH_RELEASE} debug \${LIBMONGOCXX_LIBRARY_PATH_DEBUG} \${LIBBSONCXX_LIBRARIES})
+find_dependency(mongocxx CONFIG REQUIRED)
+get_filename_component(LIBMONGOCXX_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../include\" ABSOLUTE)
+if (TARGET mongo::bsoncxx_shared)
+    set(LIBMONGOCXX_LIBRARIES mongo::mongocxx_shared)
+else()
+    set(LIBMONGOCXX_LIBRARIES mongo::mongocxx_static)
+endif()
 "
 )
+
+vcpkg_fixup_pkgconfig()
 
 if (NOT BSONCXX_POLY STREQUAL MNMLSTC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party")
 endif()
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/bsoncxx/cmake"
-    "${CURRENT_PACKAGES_DIR}/include/bsoncxx/config/private"
-    "${CURRENT_PACKAGES_DIR}/include/bsoncxx/private"
-    "${CURRENT_PACKAGES_DIR}/include/bsoncxx/test"
-    "${CURRENT_PACKAGES_DIR}/include/bsoncxx/test_util"
-
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/cmake"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/config/private"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/exception/private"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/options/private"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/gridfs/private"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/private"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/test"
-    "${CURRENT_PACKAGES_DIR}/include/mongocxx/test_util"
-
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-    "${CURRENT_PACKAGES_DIR}/bin"
-    "${CURRENT_PACKAGES_DIR}/lib/cmake"
 )
 file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/uninstall.sh")
-
-vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(COPY "${SOURCE_PATH}/THIRD-PARTY-NOTICES" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
