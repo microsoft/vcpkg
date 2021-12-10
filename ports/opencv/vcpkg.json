@@ -1,6 +1,7 @@
 {
   "name": "opencv",
   "version": "4.5.4",
+  "port-version": 1,
   "description": "Computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -286,6 +287,18 @@
           "default-features": false,
           "features": [
             "png"
+          ]
+        }
+      ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "python"
           ]
         }
       ]

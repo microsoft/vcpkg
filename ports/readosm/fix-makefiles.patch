@@ -37,10 +37,8 @@ diff --git a/nmake.opt b/nmake.opt
 index 5e45c0e..61c44f9 100644
 --- a/nmake.opt
 +++ b/nmake.opt
-@@ -1,8 +1,8 @@
- # Directory tree where ReadOSM will be installed.
--INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INST_DIR)
+@@ -2,7 +2,7 @@
+ INSTDIR=C:\OSGeo4W
  
  # Uncomment the first for an optimized build, or the second for debug.
 -OPTFLAGS=	/nologo /Ox /fp:precise /W3 /MD /D_CRT_SECURE_NO_WARNINGS \

@@ -1,6 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.16",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
@@ -201,6 +202,9 @@
       "dependencies": [
         "libpng"
       ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv"
     },
     "qt": {
       "description": "Qt GUI support for opencv",
