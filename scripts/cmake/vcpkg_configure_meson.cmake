@@ -241,7 +241,7 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
-        if(MACHINE MATCHES "arm64")
+        if(MACHINE MATCHES "arm64|aarch64")
             set(build_cpu_fam aarch64)
             set(build_cpu armv8)
         elseif(MACHINE MATCHES "x86_64|amd64")
@@ -518,11 +518,15 @@ function(vcpkg_configure_meson)
         #Copy meson log files into buildtree for CI
         if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt")
             file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-${suffix_${buildtype}}.txt")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-${suffix_${buildtype}}.log")
+        endif()
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json")
+            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json" DESTINATION "${CURRENT_BUILDTREES_DIR}")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/intro-dependencies.json" "${CURRENT_BUILDTREES_DIR}/intro-dependencies-${suffix_${buildtype}}.log")
         endif()
         if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt")
             file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-${suffix_${buildtype}}.txt")
+            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-${suffix_${buildtype}}.log")
         endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}} done")
 

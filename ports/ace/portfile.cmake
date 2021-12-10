@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.3)
+set(ACE_VERSION 7.0.5)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 714d2c25bd4be44a03d350b2457b613b5d2d079fc294f287d10968ed02af5c9c82a2a0c10937acf46a4babfd4582cdc5fa23d6080dadd5cbc4f7f694037033f9
+          SHA512 3ea0cc7b35433d7c41f51137caacd394a976cf4d5c2972a35015901b3ba172bacff0216a3146bf632b929a63853b7123019382c22d14c6d64e43a71a61b88023
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 e48df1c63bfd02f3a14d049efbcb9a2f476597deaa2b9259d4d852ddfea2319af14e6a1071139b091bff856619e11c650771bfe92c3220d198ec6e931cdd35de
+          SHA512 65c6557f72a57dc137882bbf6cbb009ae2e403c9848e3e4c3165f1ed55865c5e08fc0226dcf715b33bfa501b13b3863f5c40403791b0dcd29b7c88fec20a9660
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 3232ea5437b5fa4a36f4b9d5586c1435a5e2f2dcb34770919a1d1dfe6ebe12e33b316f3c0a1275cdc40c12135800f8cb000ac12b4775f9c31d3ddc48b41bd375
+        SHA512 73707c92a0533ab60f090cfb620d508755b8267e2b83fb52d9903c4d780d2e2b504545433fdbe34801d4895cf938ecc5a5f26c34528851080bcce07f5a501ac1
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 019ec5c9f23c103d659ec57f6c7bfda3d6d12fc4ca77373353d6232c5fa24c03ffba222af45bd4afe997f02a81f834546cfbcb0e667000857b6e12f2ca3effaa
+        SHA512 6e5e43e600763e612c292cb88443e4dce1be94d049e2a784c5a4d4720314b484cccec4f7f05534c6ef824d86bef8bfe4ff5bce5f7998896cdaa599302b5b2562
     )
   endif()
 endif()
@@ -69,6 +69,12 @@ if("ssl" IN_LIST FEATURES)
 else()
     list(APPEND ACE_FEATURE_LIST "ssl=0")
 endif()
+if("xml-utils" IN_LIST FEATURES)
+    list(APPEND ACE_FEATURE_LIST "xerces3=1")
+    set(ENV{XERCESCROOT} ${CURRENT_INSTALLED_DIR})
+else()
+    list(APPEND ACE_FEATURE_LIST "xerces3=0")
+endif()
 list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -89,12 +95,14 @@ endif()
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
-  if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-    set(SOLUTION_TYPE vs2019)
+  if(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+    set(SOLUTION_TYPE vc14)
   elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
     set(SOLUTION_TYPE vs2017)
+  elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+    set(SOLUTION_TYPE vs2019)
   else()
-    set(SOLUTION_TYPE vc14)
+    set(SOLUTION_TYPE vs2022)
   endif()
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -310,22 +318,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endif()
 
-  # remove (erroneous) duplicate libs
-  if("tao" IN_LIST FEATURES)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosconcurrency.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosevent.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_coslifecycle.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnaming.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_cosnotification.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_costrading.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_activator.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_imr_locator.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/tao_rtevent.lib)
-    endif()
-  endif()
-
   vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
@@ -431,6 +423,9 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   # Handle copyright
   file(INSTALL ${ACE_ROOT}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
 endif()
 
 vcpkg_fixup_pkgconfig()

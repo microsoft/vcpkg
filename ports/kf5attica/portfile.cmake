@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/attica
-    REF v5.84.0
-    SHA512 dedaac49d85c791027a567f82909953f06337734c9302ab4147341eb5ebdb14e2a1ffcfdf49d9e0c97e17e065498392f9a1a900557fe8937fa0e680cda2235ea
+    REF v5.88.0
+    SHA512 09c04ae1572a165c8208c09db9bc3591584b7f327b56f78fcd7f9beb088a13ae69e41c593d4903b539ae52739a1c649359b668cfe8775bb2c61210152cb7be3f
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Attica)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Attica CONFIG_PATH lib/cmake/KF5Attica)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -27,3 +27,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+
