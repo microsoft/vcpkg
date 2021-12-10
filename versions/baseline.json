@@ -4430,7 +4430,7 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "mman": {
       "baseline": "git-f5ff813",
