@@ -1,26 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0c11507..4045217 100644
+index 0c11507..b47ebae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -621,22 +621,14 @@ endif()
+@@ -619,7 +619,7 @@ if(NOT CMAKE_BUILD_TYPE)
+ endif()
+ 
  # The below means we are cross compiling for arm64 or x86_64 on MacOSX
- if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
+-if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
++if(false)
    set(CROSS_COMPILING_MACOSX TRUE)
--  # We need to compile a universal protoc to not fail protobuf build
--  # We set CMAKE_TRY_COMPILE_TARGET_TYPE to STATIC_LIBRARY (vs executable) to succeed the cmake compiler check for cross-compiling
--  set(protoc_build_command "./scripts/build_host_protoc.sh --other-flags -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY -DCMAKE_C_COMPILER_WORKS=1 -DCMAKE_CXX_COMPILER_WORKS=1")
--  # We write to a temp scriptfile because CMake COMMAND dislikes double quotes in commands
--  file(WRITE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh "#!/bin/bash\n${protoc_build_command}")
--  file(COPY ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh DESTINATION ${PROJECT_SOURCE_DIR}/scripts/ FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
--  execute_process(COMMAND ./scripts/tmp_protoc_script.sh
--                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
--                  RESULT_VARIABLE BUILD_HOST_PROTOC_RESULT)
--  file(REMOVE ${PROJECT_SOURCE_DIR}/tmp_protoc_script.sh ${PROJECT_SOURCE_DIR}/scripts/tmp_protoc_script.sh)
--  if(NOT BUILD_HOST_PROTOC_RESULT EQUAL "0")
--    message(FATAL_ERROR "Could not compile universal protoc.")
--  endif()
--  set(PROTOBUF_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
--  set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
+   # We need to compile a universal protoc to not fail protobuf build
+   # We set CMAKE_TRY_COMPILE_TARGET_TYPE to STATIC_LIBRARY (vs executable) to succeed the cmake compiler check for cross-compiling
+@@ -637,6 +637,13 @@ if(NOT IOS AND CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES M
+   set(PROTOBUF_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
+   set(CAFFE2_CUSTOM_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/build_host_protoc/bin/protoc")
  endif()
 +find_package(protobuf CONFIG REQUIRED)
 +find_program(PROTOBUF_PROTOC_EXECUTABLE
@@ -32,130 +25,32 @@ index 0c11507..4045217 100644
  
  # ---[ Misc checks to cope with various compiler modes
  include(cmake/MiscCheck.cmake)
-@@ -650,7 +642,8 @@ if(USE_FBGEMM AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND CMAKE_SIZEOF_VO
+@@ -650,7 +657,7 @@ if(USE_FBGEMM AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND CMAKE_SIZEOF_VO
    set(USE_FBGEMM OFF)
  endif()
  
 -include(cmake/Dependencies.cmake)
-+# we will import vcpkg ports instead of CAFFE2_THIRD_PARTY_ROOT
-+include(cmake/vcpkg-dependencies.cmake)
++include(cmake/vcpkg-dependencies.cmake) # we will import vcpkg ports instead of CAFFE2_THIRD_PARTY_ROOT
  
  if(USE_FBGEMM)
    string(APPEND CMAKE_CXX_FLAGS " -DUSE_FBGEMM")
 diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-index 3901f73..a000cdc 100644
+index 3901f73..4954c3e 100644
 --- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 +++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-@@ -322,112 +322,13 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
- set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/conv_utils.h)
- set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack_func.h)
+@@ -380,6 +380,7 @@ else()
+   target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
+ endif()
  
--# ---[ Configure clog
--if(NOT TARGET clog)
--  set(CLOG_BUILD_TESTS OFF CACHE BOOL "")
--  set(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
--  add_subdirectory(
--    "${CLOG_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/clog")
--  # We build static version of clog but a dynamic library may indirectly depend on it
--  set_property(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
--endif()
--target_link_libraries(pytorch_qnnpack PUBLIC clog)
--
--# ---[ Configure cpuinfo
--if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
--  add_library(cpuinfo SHARED IMPORTED)
--  find_library(CPUINFO_LIBRARY cpuinfo)
--  if(NOT CPUINFO_LIBRARY)
--    message(FATAL_ERROR "Cannot find cpuinfo")
--  endif()
--  message("Found cpuinfo: ${CPUINFO_LIBRARY}")
--  set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
--elseif(NOT TARGET cpuinfo)
--  set(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
--  set(CPUINFO_BUILD_UNIT_TESTS OFF CACHE BOOL "")
--  set(CPUINFO_BUILD_MOCK_TESTS OFF CACHE BOOL "")
--  set(CPUINFO_BUILD_BENCHMARKS OFF CACHE BOOL "")
--  add_subdirectory(
--    "${CPUINFO_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo")
--endif()
--target_link_libraries(pytorch_qnnpack PRIVATE cpuinfo)
--
--# ---[ Configure pthreadpool
--if(NOT TARGET pthreadpool AND NOT USE_SYSTEM_PTHREADPOOL)
--  set(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
--  set(PTHREADPOOL_BUILD_BENCHMARKS OFF CACHE BOOL "")
--  add_subdirectory(
--    "${PTHREADPOOL_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/pthreadpool")
--elseif(NOT TARGET pthreadpool AND USE_SYSTEM_PTHREADPOOL)
--  add_library(pthreadpool SHARED IMPORTED)
--  find_library(PTHREADPOOL_LIBRARY pthreadpool)
--  if(NOT PTHREADPOOL_LIBRARY)
--    message(FATAL_ERROR "Cannot find pthreadpool")
--  endif()
--  message("-- Found pthreadpool: ${PTHREADPOOL_LIBRARY}")
--  set_target_properties(pthreadpool PROPERTIES
--    IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
--  add_library(pthreadpool_interface INTERFACE)
--endif()
--if(PYTORCH_QNNPACK_CUSTOM_THREADPOOL)
--  # Depend on pthreadpool interface, but not on implementation.
--  # This is used when QNNPACK user (e.g. Caffe2) provides its own threadpool implementation.
--  target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool_interface)
--else()
--  target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
--endif()
--
--# ---[ Configure FXdiv
--if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
--  set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
--  set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
--  add_subdirectory(
--    "${FXDIV_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/fxdiv")
--elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
--  find_file(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
--  if(NOT FXDIV_HDR)
--    message(FATAL_ERROR "Cannot find fxdiv")
--  endif()
--  add_library(fxdiv STATIC "${FXDIV_HDR}")
--  set_property(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
--endif()
--target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
--
--# ---[ Configure psimd
--if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
--  add_subdirectory(
--    "${PSIMD_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/psimd")
--elseif(NOT TARGET psimd AND USE_SYSTEM_PSIMD)
--  find_file(PSIMD_HDR psimd.h PATH_SUFFIXES include)
--  if(NOT PSIMD_HDR)
--    message(FATAL_ERROR "Cannot find psimd")
--  endif()
--  add_library(psimd STATIC "${PSIMD_HDR}")
--  set_property(TARGET psimd PROPERTY LINKER_LANGUAGE C)
--endif()
--target_link_libraries(pytorch_qnnpack PRIVATE psimd)
--
--# ---[ Configure FP16
--if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
--  set(FP16_BUILD_TESTS OFF CACHE BOOL "")
--  set(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
--  add_subdirectory(
--    "${FP16_SOURCE_DIR}"
--    "${CONFU_DEPENDENCIES_BINARY_DIR}/fp16")
--elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
--  find_file(FP16_HDR fp16.h PATH_SUFFIXES include)
--  if(NOT FP16_HDR)
--    message(FATAL_ERROR "Cannot find fp16")
--  endif()
--  add_library(fp16 STATIC "${FP16_HDR}")
--  set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
--endif()
--target_link_libraries(pytorch_qnnpack PRIVATE fp16)
++if(false) # use packages of vcpkg. see L433
+ # ---[ Configure FXdiv
+ if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
+   set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+@@ -428,6 +429,14 @@ elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
+   set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
+ endif()
+ target_link_libraries(pytorch_qnnpack PRIVATE fp16)
++endif()
 +target_link_libraries(pytorch_qnnpack PRIVATE
 +  unofficial::cpuinfo::clog unofficial::cpuinfo::cpuinfo
 +  unofficial::pthreadpool
@@ -167,26 +62,19 @@ index 3901f73..a000cdc 100644
  install(TARGETS pytorch_qnnpack
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 26210cb..c2f59e9 100644
+index 26210cb..5f4618e 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -106,15 +106,6 @@ endif()
+@@ -106,7 +106,7 @@ endif()
  # Note: the folders that are being commented out have not been properly
  # addressed yet.
  
 -if(NOT MSVC AND USE_XNNPACK)
--  if(NOT TARGET fxdiv)
--    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
--    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
--    add_subdirectory(
--      "${FXDIV_SOURCE_DIR}"
--      "${CMAKE_BINARY_DIR}/FXdiv")
--  endif()
--endif()
- 
- add_subdirectory(core)
- add_subdirectory(serialize)
-@@ -798,6 +789,9 @@ if(HAVE_SOVERSION)
++if(false)
+   if(NOT TARGET fxdiv)
+     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+     set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+@@ -798,6 +798,9 @@ if(HAVE_SOVERSION)
  endif()
  torch_compile_options(torch_cpu)  # see cmake/public/utils.cmake
  
@@ -196,14 +84,12 @@ index 26210cb..c2f59e9 100644
  if(USE_PRECOMPILED_HEADERS)
    target_precompile_headers(torch_cpu PRIVATE
        "$<$<COMPILE_LANGUAGE:CXX>:ATen/ATen.h>")
-@@ -990,10 +984,6 @@ if(USE_CUDA OR USE_ROCM)
+@@ -990,7 +993,7 @@ if(USE_CUDA OR USE_ROCM)
    target_include_directories(${TORCHLIB_FLAVOR} PRIVATE "${CMAKE_BINARY_DIR}/include")
  endif()
  
 -if(NOT MSVC AND USE_XNNPACK)
--  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
--endif()
--
- # ==========================================================
- # formerly-libtorch flags
- # ==========================================================
++if(false)
+   TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+ endif()
+ 
