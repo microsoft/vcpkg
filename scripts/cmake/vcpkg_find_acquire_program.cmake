@@ -49,7 +49,7 @@ Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_ac
 
 function(z_vcpkg_find_acquire_program_version_check out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        ""
+        "EXACT_VERSION_MATCH"
         "MIN_VERSION;PROGRAM_NAME"
         "COMMAND"
     )
@@ -60,8 +60,14 @@ function(z_vcpkg_find_acquire_program_version_check out_var)
     )
     string(STRIP "${program_version_output}" program_version_output)
     #TODO: REGEX MATCH case for more complex cases!
-    if(NOT "${program_version_output}" VERSION_GREATER_EQUAL "${arg_MIN_VERSION}")
-        message(STATUS "Found ${arg_PROGRAM_NAME}('${program_version_output}') but at least version ${arg_MIN_VERSION} is required! Trying to use internal version if possible!")
+    set(version_compare VERSION_GREATER_EQUAL)
+    set(version_compare_msg "at least")
+    if(arg_EXACT_VERSION_MATCH)
+        set(version_compare VERSION_EQUAL)
+        set(version_compare_msg "exact")
+    endif()
+    if(NOT "${program_version_output}" ${version_compare} "${arg_MIN_VERSION}")
+        message(STATUS "Found ${arg_PROGRAM_NAME}('${program_version_output}') but ${version_compare_msg} version ${arg_MIN_VERSION} is required! Trying to use internal version if possible!")
         set("${out_var}" OFF PARENT_SCOPE)
     else()
         message(STATUS "Found external ${arg_PROGRAM_NAME}('${program_version_output}').")
@@ -71,25 +77,32 @@ endfunction()
 
 function(z_vcpkg_find_acquire_program_find_external program)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        ""
+        "EXACT_VERSION_MATCH"
         "INTERPRETER;MIN_VERSION;PROGRAM_NAME"
         "NAMES;VERSION_COMMAND"
     )
+    if(arg_EXACT_VERSION_MATCH)
+        set(arg_EXACT_VERSION_MATCH EXACT_VERSION_MATCH)
+    endif()
 
     if("${arg_INTERPRETER}" STREQUAL "")
         find_program("${program}" NAMES ${arg_NAMES})
     else()
-        find_file(SCRIPT_${program} NAMES ${arg_NAMES})
-        if(SCRIPT_${program})
-            vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${program}})
+        find_file(SCRIPT_${arg_PROGRAM_NAME} NAMES ${arg_NAMES})
+        if(SCRIPT_${arg_PROGRAM_NAME})
+            vcpkg_list(SET program_tmp ${${interpreter}} ${SCRIPT_${arg_PROGRAM_NAME}})
             set("${program}" "${program_tmp}" CACHE INTERNAL "")
+        else()
+            set("${program}" "" CACHE INTERNAL "")
         endif()
+        unset(SCRIPT_${arg_PROGRAM_NAME} CACHE)
     endif()
 
     if("${version_command}" STREQUAL "")
         set(version_is_good ON) # can't check for the version being good, so assume it is
-    else()
+    elseif(${program}) # only do a version check if ${program} has a value
         z_vcpkg_find_acquire_program_version_check(version_is_good
+            ${arg_EXACT_VERSION_MATCH}
             COMMAND ${${program}} ${arg_VERSION_COMMAND}
             MIN_VERSION "${arg_MIN_VERSION}"
             PROGRAM_NAME "${arg_PROGRAM_NAME}"
@@ -98,7 +111,7 @@ function(z_vcpkg_find_acquire_program_find_external program)
 
     if(NOT version_is_good)
         unset("${program}" PARENT_SCOPE)
-        set("${program}" "${program}-NOTFOUND" CACHE INTERNAL "")
+        unset("${program}" CACHE)
     endif()
 endfunction()
 
@@ -122,6 +135,7 @@ function(z_vcpkg_find_acquire_program_find_internal program)
         if(SCRIPT_${program})
             set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
         endif()
+        unset(SCRIPT_${program} CACHE)
     endif()
 endfunction()
 
@@ -335,23 +349,26 @@ function(vcpkg_find_acquire_program program)
         set(download_filename "nuget.5.11.0.exe")
         set(raw_executable ON)
         set(download_sha512 06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7)
-    elseif(program STREQUAL "MESON")
-        set(program_version 0.58.1)
+    elseif(program STREQUAL "MESON") # Should always be found! 
         set(program_name meson)
         set(search_names meson meson.py)
         set(interpreter PYTHON3)
         set(apt_package_name "meson")
         set(brew_package_name "meson")
-        set(ref aeda7f249c4a5dbbecc52e44f382246a2377b5b0)
-        set(paths_to_search "${DOWNLOADS}/tools/meson/meson-${ref}")
-        set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
-        set(download_filename "meson-${ref}.tar.gz")
-        #set(paths_to_search ${DOWNLOADS}/tools/meson/meson-${program_version})
-        #set(download_urls "https://github.com/mesonbuild/meson/releases/download/${program_version}/meson-${program_version}.tar.gz")
-        #set(download_filename "meson-${program_version}.tar.gz")
-        set(download_sha512 18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2)
-        set(supported_on_unix ON)
         set(version_command --version)
+        set(extra_search_args EXACT_VERSION_MATCH)
+        if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/meson/version.txt")
+            file(READ "${CURRENT_HOST_INSTALLED_DIR}/share/meson/version.txt" program_version)
+            set(paths_to_search "${CURRENT_HOST_INSTALLED_DIR}/tools/meson")
+        else() # Old behavior 
+            set(program_version 0.58.1)
+            set(ref aeda7f249c4a5dbbecc52e44f382246a2377b5b0)
+            set(paths_to_search "${DOWNLOADS}/tools/meson/meson-${ref}")
+            set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
+            set(download_filename "meson-${ref}.tar.gz")
+            set(download_sha512 18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2)
+            set(supported_on_unix ON)
+        endif()
     elseif(program STREQUAL "FLEX" OR program STREQUAL "BISON")
         if(CMAKE_HOST_WIN32)
             vcpkg_list(SET sourceforge_args
@@ -577,6 +594,7 @@ function(vcpkg_find_acquire_program program)
     )
     if(NOT ${program})
         z_vcpkg_find_acquire_program_find_external("${program}"
+            ${extra_search_args}
             PROGRAM_NAME "${program_name}"
             MIN_VERSION "${program_version}"
             INTERPRETER "${interpreter}"
@@ -665,6 +683,7 @@ function(vcpkg_find_acquire_program program)
                 LOGNAME "${program}-tool-post-install"
             )
         endif()
+        unset("${program}")
         unset("${program}" CACHE)
         z_vcpkg_find_acquire_program_find_internal("${program}"
             INTERPRETER "${interpreter}"

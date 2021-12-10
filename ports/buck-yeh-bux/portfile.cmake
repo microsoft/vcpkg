@@ -1,9 +1,9 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "uwp" "osx")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO buck-yeh/bux
-    REF 9e971731ec8c50425754af030fbe16ec603c3d22 # v1.6.0
-    SHA512 2e689b4e1ffc2f5e472e0ee8c87857336b4e049969600c82c8f576e2c82939d65658bb6ef62fbe751c03b92f6f14d1b9bcf7a085d2848c0556e3039a5906261d
+    REF 8788509f0281e9a2af34c0399a45a5c9e66a4664 # v1.6.3
+    SHA512 a7045a93d91e497ca2b60965bb2f098eae714d00feef0d252747178739cdd981f44cb8983278c679761f61e037da05889f22fa161d26fca05af511fc56c1ac8f
     HEAD_REF main
 )
 

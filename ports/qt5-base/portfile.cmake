@@ -319,10 +319,19 @@ elseif(VCPKG_TARGET_IS_OSX)
         execute_process(COMMAND xcrun --show-sdk-version
                             OUTPUT_FILE OSX_SDK_VER.txt
                             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
-        message(STATUS "Detected OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" OSX_SDK_VERSION REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+        message(STATUS "Detected OSX SDK Version: ${OSX_SDK_VERSION}")
+        string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" OSX_SDK_VERSION ${OSX_SDK_VERSION})
+        message(STATUS "Major.Minor OSX SDK Version: ${OSX_SDK_VERSION}")
+
+        execute_process(COMMAND sw_vers -productVersion
+                            OUTPUT_FILE OSX_SYS_VER.txt
+                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
+        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SYS_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+        message(STATUS "Detected OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
         string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        message(STATUS "Major.Minor OSX SDK Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        message(STATUS "Major.Minor OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
         if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.15") # Max Version supported by QT. This version is defined in mkspecs/common/macx.conf as QT_MAC_SDK_VERSION_MAX
             message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.15")
@@ -494,6 +503,8 @@ if(QT_BUILD_LATEST)
             ${CURRENT_PACKAGES_DIR}/share/qt5
     )
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 # #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")

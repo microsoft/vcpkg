@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_configure
 #[===[.md:
 # vcpkg_configure_gn
 
@@ -43,8 +44,11 @@ function(z_vcpkg_configure_gn_generate)
 endfunction()
 
 function(vcpkg_configure_gn)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
+    if(Z_VCPKG_GN_CONFIGURE_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_configure_gn in the same port is unsupported.")
+    endif()
 
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_configure_gn was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
