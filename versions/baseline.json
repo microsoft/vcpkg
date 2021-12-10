@@ -2290,7 +2290,7 @@
     },
     "fribidi": {
       "baseline": "1.0.11",
-      "port-version": 1
+      "port-version": 2
     },
     "frozen": {
       "baseline": "2021-04-22",
