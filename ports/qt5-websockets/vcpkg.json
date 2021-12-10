@@ -7,7 +7,17 @@
     {
       "name": "qt5-base",
       "default-features": false
-    },
-    "qt5-declarative"
-  ]
+    }
+  ],
+  "default-features": [
+    "declarative"
+  ],
+  "features": {
+    "declarative": {
+      "description": "Build qt5-websockets with qt5-declarative support and provide data-types for QML",
+      "dependencies": [
+        "qt5-declarative"
+      ]
+    }
+  }
 }
