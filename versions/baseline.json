@@ -305,8 +305,8 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.9.96",
-      "port-version": 6
+      "baseline": "1.9.160",
+      "port-version": 0
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -1754,7 +1754,7 @@
     },
     "date": {
       "baseline": "3.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "dav1d": {
       "baseline": "0.8.2",
@@ -2390,7 +2390,7 @@
     },
     "gdal": {
       "baseline": "3.4.0",
-      "port-version": 3
+      "port-version": 4
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2722,7 +2722,7 @@
     },
     "hiredis": {
       "baseline": "1.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "hpx": {
       "baseline": "1.7.1",
@@ -3426,7 +3426,7 @@
     },
     "libde265": {
       "baseline": "1.0.8",
-      "port-version": 2
+      "port-version": 3
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -3942,7 +3942,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -4129,8 +4129,8 @@
       "port-version": 1
     },
     "libzen": {
-      "baseline": "0.4.38",
-      "port-version": 1
+      "baseline": "0.4.39",
+      "port-version": 0
     },
     "libzip": {
       "baseline": "1.8.0",
@@ -5433,7 +5433,7 @@
       "port-version": 1
     },
     "proj4": {
-      "baseline": "8.0.0",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "prometheus-cpp": {
@@ -5541,7 +5541,7 @@
       "port-version": 0
     },
     "qt-advanced-docking-system": {
-      "baseline": "3.7.2",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "qt5": {
@@ -5562,7 +5562,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 17
+      "port-version": 18
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5734,7 +5734,7 @@
     },
     "qtbase": {
       "baseline": "6.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.2.2",
@@ -6110,7 +6110,7 @@
     },
     "rsocket": {
       "baseline": "2020.05.04.00",
-      "port-version": 2
+      "port-version": 3
     },
     "rtabmap": {
       "baseline": "0.20.13",
@@ -6494,7 +6494,7 @@
     },
     "spatialite-tools": {
       "baseline": "5.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "spdk": {
       "baseline": "19.01.1",
@@ -7106,7 +7106,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 1
+      "port-version": 2
     },
     "valijson": {
       "baseline": "0.6",
@@ -7137,7 +7137,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-11-01",
+      "baseline": "2021-12-01",
       "port-version": 0
     },
     "vcpkg-gfortran": {
@@ -7318,7 +7318,7 @@
     },
     "wtl": {
       "baseline": "10.0.10320",
-      "port-version": 1
+      "port-version": 2
     },
     "wxchartdir": {
       "baseline": "1.0.0",
