@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         fix-config-cmake.patch
         fix_dependency.patch
-        fix-zlib.patch
 )
 
 vcpkg_configure_cmake(
