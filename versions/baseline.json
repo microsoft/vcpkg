@@ -1754,7 +1754,7 @@
     },
     "date": {
       "baseline": "3.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "dav1d": {
       "baseline": "0.8.2",
