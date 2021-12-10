@@ -41,7 +41,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_cmake_config__fixup(CONFIG_PATH lib/cmake/mlpack)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mlpack)
 
 vcpkg_copy_pdbs()
 
