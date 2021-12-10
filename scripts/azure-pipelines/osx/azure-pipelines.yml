@@ -5,18 +5,9 @@
 parameters:
 - name: poolName
   type: string
-- name: mode
-  type: string
-  values:
-    - 'AllPorts'
-    - 'NonTensorflow'
-    - 'OnlyTensorflow'
-- name: jobName
-  type: string
-  default: x64_osx
 
 jobs:
-- job: "${{ parameters.jobName }}"
+- job: x64_osx
   pool:
     name: ${{ parameters.poolName }}
   workspace:
