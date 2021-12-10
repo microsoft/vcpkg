@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc49726..25d6ff1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,11 @@ OPTION( TEST "Built unit tests" OFF )
+ 
+ SET( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
+ 
++if (MSVC)
++  # Allow deprecated functions
++  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
++endif()
++
+ SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
+ SET ( ly_src_dir	${ly_base_dir}/source )
+ SET ( ly_inc_dir	${ly_base_dir}/include )
