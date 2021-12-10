@@ -25,8 +25,9 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DSTATIC=${BUILD_STATIC}
         -DUSE_SYSTEM_ICU=True
         -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
