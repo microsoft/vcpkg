@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 89763d7..f648296 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -342,7 +342,7 @@ install(FILES ${docfiles}
+ ################################################################################
+ # pkg-config support
+ ################################################################################
+-if(UNIX OR MINGW)
++if(1)
+   configure_proj_pc()
+ 
+   install(FILES
+diff --git a/cmake/ProjUtilities.cmake b/cmake/ProjUtilities.cmake
+index 2e0db05..46e5de1 100644
+--- a/cmake/ProjUtilities.cmake
++++ b/cmake/ProjUtilities.cmake
+@@ -76,12 +76,20 @@ function(configure_proj_pc)
+   set(datadir "$\{datarootdir\}")
+   set(PACKAGE "proj")
+   set(VERSION ${PROJ_VERSION})
+-  set(SQLITE3_LIBS -lsqlite3)
++  set(LIBS_PRIVATE "")
++  if(WIN32 AND NOT MINGW)
++    string(APPEND LIBS_PRIVATE " -lole32 -lshell32")
++  elseif(NOT APPLE OR CMAKE_ANDROID_STL_TYPE MATCHES "^gnu")
++      string(APPEND LIBS_PRIVATE " -lstdc++ -lm")
++  else()
++      string(APPEND LIBS_PRIVATE " -lc++ -lm")
++  endif()
++  set(REQUIRES_PRIVATE "sqlite3")
+   if(TIFF_ENABLED)
+-    set(TIFF_LIBS -ltiff)
++    string(APPEND REQUIRES_PRIVATE " libtiff-4")
+   endif()
+   if(CURL_ENABLED)
+-    set(CURL_LIBS -lcurl)
++    string(APPEND REQUIRES_PRIVATE " libcurl")
+   endif()
+ 
+   configure_file(
+diff --git a/proj.pc.in b/proj.pc.in
+index 846310d..3feac38 100644
+--- a/proj.pc.in
++++ b/proj.pc.in
+@@ -10,5 +10,6 @@ Description: Coordinate transformation software library
+ Requires:
+ Version: @VERSION@
+ Libs: -L${libdir} -lproj
+-Libs.private: @SQLITE3_LIBS@ @TIFF_LIBS@ @CURL_LIBS@ -lstdc++
++Libs.private: @LIBS_PRIVATE@
++Requires.private: @REQUIRES_PRIVATE@
+ Cflags: -I${includedir}
