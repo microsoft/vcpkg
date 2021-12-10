@@ -78,7 +78,7 @@ endif()
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
-   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
