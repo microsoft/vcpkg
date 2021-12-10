@@ -24,4 +24,4 @@ The package halide provides CMake targets:
         PARAMS parallel=false output.type=float64)
 
 For more information see:
-    https://github.com/halide/Halide/blob/v13.0.0/README_cmake.md
+    https://github.com/halide/Halide/blob/@HALIDE_VERSION_TAG@/README_cmake.md

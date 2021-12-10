@@ -1,9 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+set(HALIDE_VERSION_TAG v13.0.2)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF fb39d7e3149c0ee1e848bb9957be2ea18765c35d # v13.0.1
+    REF ${HALIDE_VERSION_TAG}
     SHA512 f8246e8cfc9beee4f783ca31a80cd687453892a766038bddcf70a3b3f11ee28d73510a7b36360c46921cd45bbb6eab5fe04868d5ecfb87d9450b728c14374715
     HEAD_REF release/13.x
 )
@@ -69,4 +71,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
 
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
