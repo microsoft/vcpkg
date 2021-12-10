@@ -21,10 +21,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipper      ENABLE_ZIPPER
 )
 
-if (ENABLE_BUILD_DYNAMIC)
-    include(vcpkg_find_fortran)
-    vcpkg_find_fortran(FORTRAN_CMAKE)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
