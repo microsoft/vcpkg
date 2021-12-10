@@ -1,0 +1,21 @@
+{
+  "name": "freeimage",
+  "version": "3.18.0",
+  "port-version": 21,
+  "description": "Support library for graphics image formats",
+  "homepage": "https://sourceforge.net/projects/freeimage/",
+  "dependencies": [
+    "jxrlib",
+    "libjpeg-turbo",
+    "libpng",
+    "libraw",
+    {
+      "name": "libwebp",
+      "platform": "!uwp"
+    },
+    "openexr",
+    "openjpeg",
+    "tiff",
+    "zlib"
+  ]
+}

@@ -8,12 +8,13 @@ vcpkg_from_github(
     PATCHES
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
+        fix-usage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
-    openssl EVENT__DISABLE_OPENSSL
-    thread  EVENT__DISABLE_THREAD_SUPPORT
+        openssl EVENT__DISABLE_OPENSSL
+        thread  EVENT__DISABLE_THREAD_SUPPORT
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -28,9 +29,8 @@ else()
     set(LIBEVENT_STATIC_RUNTIME OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DEVENT__LIBRARY_TYPE=${LIBEVENT_LIB_TYPE}
         -DEVENT__MSVC_STATIC_RUNTIME=${LIBEVENT_STATIC_RUNTIME}
@@ -40,17 +40,17 @@ vcpkg_configure_cmake(
         -DEVENT__DISABLE_SAMPLES=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/libevent/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py ${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/libevent/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/event_rpcgen.py" "${CURRENT_PACKAGES_DIR}/tools/libevent/event_rpcgen.py")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 set(_target_suffix)
@@ -63,8 +63,8 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_t
     "${CURRENT_PACKAGES_DIR}"
     "${CURRENT_INSTALLED_DIR}"
 )
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 #Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

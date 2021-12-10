@@ -66,6 +66,9 @@ This environment variable, if set, suppresses the downloading of CMake and Ninja
 This environment variable can be set to a list of environment variables, separated by `;`, which will be propagated to
 the build environment.
 
+The values of the kept variables will not be tracked in package ABIs and will not cause rebuilds when they change. To
+pass in environment variables that should cause rebuilds on change, see [`VCPKG_ENV_PASSTHROUGH`](triplets.md#VCPKG_ENV_PASSTHROUGH).
+
 Example: `FOO_SDK_DIR;BAR_SDK_DIR`
 
 #### VCPKG_MAX_CONCURRENCY
@@ -87,3 +90,9 @@ This environment variable changes the metadata of produced NuGet packages. See [
 #### VCPKG_USE_NUGET_CACHE
 
 This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+
+#### X_VCPKG_ASSET_SOURCES
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.

@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512 2c516ad3ffe56cf646b2435d6ef3cf25e8c05aeb13d95dd18a7d0510d134d9990cba1b376063352ff99483cfc4e5d2af849afd2f9538f9136f22d44d34be362c
     HEAD_REF master
     PATCHES 0001-meson-fix-macOS-build-and-add-macOS-ci.patch
+            cairo_static_fix.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -32,7 +33,7 @@ else()
     list(APPEND OPTIONS -Dxlib=disabled)
 endif()
 list(APPEND OPTIONS -Dxcb=disabled)
-list(APPEND OPTIONS -Dxlib-xcb=disabled)
+#list(APPEND OPTIONS -Dxlib-xcb=disabled) don't forget this option with the next update!
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -54,7 +55,6 @@ vcpkg_configure_meson(
         -Dzlib=enabled
         -Dpng=enabled
         -Dspectre=auto
-        -Dsymbol-lookup=disabled
         -Dgtk2-utils=disabled
 )
 vcpkg_install_meson()

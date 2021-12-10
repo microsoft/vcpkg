@@ -1,4 +1,0 @@
-Source: qt5-websockets
-Version: 5.15.2
-Description: Qt5 Web Sockets Module - provides WebSocket communication compliant with RFC 6455
-Build-Depends:  qt5-base[core], qt5-declarative

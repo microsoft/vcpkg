@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF apr2021
-    SHA512 9e125c1b00c03cb0ff2f5297567e3d5c885acf5c3309208b7f846543eb4114129733676fe6f77b9c33adeb2ad50504927fff9fe48b7fe3f2c042432d0737564c
+    REF nov2021b
+    SHA512 be2137c02c7a5973eaf91eaacfc9174148ec6dc68b163507d8146beb87c1ffff512e2593f7fd000ea7be440529ed2deda415e0dacd53e4c7d9679e97c6440d3d
     HEAD_REF master
 )
 
@@ -26,21 +26,20 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/apr2021/meshconvert.exe"
-    FILENAME "meshconvert-apr2021.exe"
-    SHA512 0b2dd64f89d884734ad0c58690f50b84acbcd3ab61db79a5b2edf8effb9a756e38862cf599da9969cd30adc9a8f8fe6c8a3c0a3a4b4beef9be87dee8ad496871
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/nov2021/meshconvert.exe"
+    FILENAME "meshconvert-nov2021.exe"
+    SHA512 0f97ac49ce292b1cb90372884f1d6a4fc10eb3e92125a854ee9b7030fd9d0564536cdd88199aa4838832ae2a1e9c2df2c9e32c106705b6b06f156994b9476360
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
@@ -49,7 +48,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-nov2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

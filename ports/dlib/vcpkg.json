@@ -3,7 +3,12 @@
   "version": "19.22",
   "description": "Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++",
   "homepage": "https://github.com/davisking/dlib",
-  "supports": "!uwp",
+  "dependencies": [
+    "blas",
+    "lapack",
+    "libjpeg-turbo",
+    "libpng"
+  ],
   "default-features": [
     "fftw3",
     "sqlite3"

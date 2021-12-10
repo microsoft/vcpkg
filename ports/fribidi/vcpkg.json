@@ -1,0 +1,13 @@
+{
+  "name": "fribidi",
+  "version": "1.0.11",
+  "port-version": 1,
+  "description": "GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)",
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

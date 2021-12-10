@@ -1,22 +1,31 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2086,7 +2086,6 @@
+@@ -2348,7 +2348,6 @@
    execute_process(COMMAND sh ${SDL2_SOURCE_DIR}/build-scripts/updaterev.sh
      WORKING_DIRECTORY ${SDL2_BINARY_DIR})
  endif()
--if(NOT WINDOWS OR CYGWIN)
+-if(NOT WINDOWS OR CYGWIN OR MINGW)
+ 
    set(prefix ${CMAKE_INSTALL_PREFIX})
-   set(exec_prefix "\${prefix}")
-   set(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
-@@ -2129,7 +2129,6 @@
+ 
+@@ -2375,7 +2375,7 @@
+     set(SDL_STATIC_LIBS ${_SDL_STATIC_LIBS})
+     listtostrrev(SDL_LIBS _SDL_LIBS)
+     set(SDL_LIBS ${_SDL_LIBS})
+-  else()
++  elseif(NOT WINDOWS_STORE)
+     listtostr(EXTRA_LIBS _EXTRA_LIBS "-l")
+     set(SDL_STATIC_LIBS ${SDL_LIBS} ${EXTRA_LDFLAGS} ${_EXTRA_LIBS})
+     list(REMOVE_DUPLICATES SDL_STATIC_LIBS)
+@@ -2403,7 +2403,6 @@
      "${SDL2_BINARY_DIR}/sdl2-config" @ONLY)
    configure_file("${SDL2_SOURCE_DIR}/SDL2.spec.in"
      "${SDL2_BINARY_DIR}/SDL2.spec" @ONLY)
 -endif()
  
- ##### Info output #####
- message(STATUS "")
-@@ -2376,6 +2376,7 @@
+ macro(check_add_debug_flag FLAG SUFFIX)
+     check_c_compiler_flag(${FLAG} HAS_C_FLAG_${SUFFIX})
+@@ -2728,6 +2728,7 @@
    # TODO: what about the .spec file? Is it only needed for RPM creation?
    install(FILES "${SDL2_SOURCE_DIR}/sdl2.m4" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/aclocal")
  endif()

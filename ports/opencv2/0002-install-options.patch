@@ -1,5 +1,3 @@
-diff --git a/3rdparty/libtiff/CMakeLists.txt b/3rdparty/libtiff/CMakeLists.txt
-index b0e076f..3f7ade1 100644
 --- a/3rdparty/libtiff/CMakeLists.txt
 +++ b/3rdparty/libtiff/CMakeLists.txt
 @@ -102,7 +102,7 @@ if(UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR CV_ICC))
@@ -11,8 +9,6 @@ index b0e076f..3f7ade1 100644
  
  set_target_properties(${TIFF_LIBRARY}
      PROPERTIES
-diff --git a/3rdparty/openexr/CMakeLists.txt b/3rdparty/openexr/CMakeLists.txt
-index 9387616..54ecc1a 100644
 --- a/3rdparty/openexr/CMakeLists.txt
 +++ b/3rdparty/openexr/CMakeLists.txt
 @@ -55,7 +55,7 @@ if(MSVC AND CV_ICC)
@@ -24,8 +20,6 @@ index 9387616..54ecc1a 100644
  
  set_target_properties(IlmImf
      PROPERTIES
-diff --git a/3rdparty/tbb/CMakeLists.txt b/3rdparty/tbb/CMakeLists.txt
-index fd8ef32..fe571a2 100644
 --- a/3rdparty/tbb/CMakeLists.txt
 +++ b/3rdparty/tbb/CMakeLists.txt
 @@ -116,7 +116,7 @@ endif()
@@ -37,8 +31,6 @@ index fd8ef32..fe571a2 100644
    if(NOT __statvar EQUAL 0)
      message(FATAL_ERROR "Failed to download TBB sources (${__statvar}): ${tbb_url}")
    endif()
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90e16c2..6601820 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -275,23 +275,10 @@ if (ANDROID)
@@ -122,11 +114,14 @@ index 90e16c2..6601820 100644
  
  if(GIT_EXECUTABLE)
    execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty --match "2.[0-9].[0-9]*"
-@@ -501,7 +470,6 @@ if(BUILD_DOCS)
+@@ -501,7 +470,9 @@ if(BUILD_DOCS)
  endif(BUILD_DOCS)
  
  # --- Python Support ---
 -include(cmake/OpenCVDetectPython.cmake)
++if(WITH_PYTHON)
++  include(cmake/OpenCVDetectPython.cmake)
++endif()
  
  # --- Java Support ---
  include(cmake/OpenCVDetectApacheAnt.cmake)
@@ -182,8 +177,6 @@ index 146043f..1202225 100644
  endif(WITH_FFMPEG)
  
  # --- VideoInput/DirectShow ---
-diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index dacfbb1..3760866 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
 @@ -101,7 +101,7 @@ endif()
@@ -204,8 +197,6 @@ index dacfbb1..3760866 100644
    set(OpenCV_INCLUDE_DIRS_CONFIGCMAKE "\"\${OpenCV_CONFIG_PATH}/include\" \"\${OpenCV_CONFIG_PATH}/include/opencv\"")
    set(OpenCV2_INCLUDE_DIRS_CONFIGCMAKE "\"\"")
  
-diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 6f9fb0b..56f8879 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -86,10 +86,10 @@ macro(ocv_add_dependencies full_modname)
@@ -250,8 +241,6 @@ index 6f9fb0b..56f8879 100644
  
      set(OPENCV_MODULE_${m}_DEPS ${OPENCV_MODULE_${m}_DEPS} CACHE INTERNAL "Flattened dependencies of ${m} module")
      set(OPENCV_MODULE_${m}_DEPS_EXT ${OPENCV_MODULE_${m}_DEPS_EXT} CACHE INTERNAL "Extra dependencies of ${m} module")
-diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
-index e3177bd..f902b2b 100644
 --- a/data/CMakeLists.txt
 +++ b/data/CMakeLists.txt
 @@ -5,8 +5,6 @@ if(ANDROID)
@@ -270,8 +259,6 @@ index e3177bd..f902b2b 100644
 -endif()
 \ No newline at end of file
 +endif()
-diff --git a/modules/core/CMakeLists.txt b/modules/core/CMakeLists.txt
-index d9de52d..be604dc 100644
 --- a/modules/core/CMakeLists.txt
 +++ b/modules/core/CMakeLists.txt
 @@ -1,9 +1,9 @@
@@ -286,8 +273,6 @@ index d9de52d..be604dc 100644
  endif()
  
  ocv_module_include_directories("${OpenCV_SOURCE_DIR}/modules/dynamicuda/include/" ${ZLIB_INCLUDE_DIR})
-diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
-index d59e95a..ce7f87b 100644
 --- a/modules/highgui/CMakeLists.txt
 +++ b/modules/highgui/CMakeLists.txt
 @@ -15,23 +15,23 @@ endif()

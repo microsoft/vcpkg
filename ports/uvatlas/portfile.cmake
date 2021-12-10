@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF apr2021
-    SHA512 cbbcb5ca38d5ad27b1f355dba7d71cd605ab6a7588c1886d47f6426e932cdc62376f8fc85033010c2e742336aba632fd4f70b726340ab4ff4eb0343ddecac7db
+    REF nov2021b
+    SHA512 14227447265c138359f3d189adde04daded386d061ad43128a97759e862005840e89b140f8a8f330808fa90035d8fdc2aa18437ac5447d2f849d8426f32b9cbb
     HEAD_REF master
 )
 
@@ -14,27 +14,32 @@ if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        eigen ENABLE_USE_EIGEN
+)
+
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/apr2021/uvatlastool.exe"
-    FILENAME "uvatlastool-apr2021.exe"
-    SHA512 a54d8de9a94dbfb29e3e200b60ce177a56c3c3b2907f7903564168af9da9969efc2abdc7c8107f323cc808fc04648751a51cd4c6cafaeb72174967fdd300e489
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/nov2021/uvatlastool.exe"
+    FILENAME "uvatlastool-nov2021.exe"
+    SHA512 84de6bc74901f3ab888b90126cc1ac64de564eb33c605fffe37b2199ad132a53b01271f1f551fcc067c144c599380764b9e50884ce5df32f43b2c58777da0722
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -43,7 +48,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-nov2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

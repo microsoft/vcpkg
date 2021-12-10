@@ -23,7 +23,10 @@ then obviously beneficial changes like fixing typos are appreciated!
 
 A good service to check many at once is [Repology](https://repology.org/).
 If the library you are adding could be confused with another one,
-consider renaming to make it clear.
+consider renaming to make it clear. We prefer when names are longer and/or
+unlikely to conflict with any future use of the same name. If the port refers
+to a library on GitHub, a good practice is to prefix the name with the organization
+if there is any chance of confusion.
 
 ### Use GitHub Draft PRs
 
@@ -43,11 +46,52 @@ At this time, the following helpers are deprecated:
 2. `vcpkg_apply_patches()` should be replaced by the `PATCHES` arguments to the "extract" helpers (e.g. [`vcpkg_from_github()`](vcpkg_from_github.md))
 3. `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
 4. `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
+5. `vcpkg_configure_cmake` should be replaced by [`vcpkg_cmake_configure()`](ports/vcpkg-cmake/vcpkg_cmake_configure.md#vcpkg_cmake_configure) after removing `PREFER_NINJA` (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
+6. `vcpkg_build_cmake` should be replaced by [`vcpkg_cmake_build()`](ports/vcpkg-cmake/vcpkg_cmake_build.md#vcpkg_cmake_build) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
+7. `vcpkg_install_cmake` should be replaced by [`vcpkg_cmake_install()`](ports/vcpkg-cmake/vcpkg_cmake_install.md#vcpkg_cmake_install) (from port [`vcpkg-cmake`](ports/vcpkg-cmake.md#vcpkg-cmake))
+8. `vcpkg_fixup_cmake_targets` should be replaced by [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md#vcpkg_cmake_config_fixup) (from port [`vcpkg-cmake-config`](ports/vcpkg-cmake-config.md#vcpkg-cmake-config))
+
+Some of the replacement helper functions are in "tools ports" to allow consumers to pin their
+behavior at specific versions, to allow locking the behavior of the helpers at a particular
+version. Tools ports need to be added to your port's `"dependencies"`, like so:
+
+```json
+{
+  "name": "vcpkg-cmake",
+  "host": true
+},
+{
+  "name": "vcpkg-cmake-config",
+  "host": true
+}
+```
 
 ### Avoid excessive comments in portfiles
 
 Ideally, portfiles should be short, simple, and as declarative as possible.
 Remove any boiler plate comments introduced by the `create` command before submitting a PR.
+
+### Ports must not be path dependent
+
+Ports must not change their behavior based on which ports are already installed in a form that would change which contents that port installs. For example, given:
+
+```
+> vcpkg install a
+> vcpkg install b
+> vcpkg remove a
+```
+
+and
+
+```
+> vcpkg install b
+```
+
+the files installed by `b` must be the same, regardless of influence by the previous installation of `a`. This means that ports must not try to detect whether something is provided in the installed tree by another port before taking some action. A specific and common cause of such "path dependent" behavior is described below in "When defining features, explicitly control dependencies."
+
+### Unique port attribution rule
+
+In the entire vcpkg system, no two ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
 
 ## Features
 
@@ -154,7 +198,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-    -CMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+    -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 )
 ```
 

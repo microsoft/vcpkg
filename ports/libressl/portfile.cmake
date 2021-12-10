@@ -6,8 +6,8 @@ endif()
 
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-set(LIBRESSL_VERSION 2.9.1)
-set(LIBRESSL_HASH 7051911e566bb093c48a70da72c9981b870e3bf49a167ba6c934eece873084cc41221fbe3cd0c8baba268d0484070df7164e4b937854e716337540a87c214354)
+set(LIBRESSL_VERSION 3.3.4)
+set(LIBRESSL_HASH 11defdde8169d3653c24e149e698ffc5a8ead5ac0808111d1986cb11ef72e9912c463d4891d4635877021e73a8a045dbdbe5e83ec785a59150f170d2ca2031de)
 
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
@@ -26,12 +26,12 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "tools" LIBRESSL_APPS
+    FEATURES
+        "tools" LIBRESSL_APPS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBRESSL_TESTS=OFF
@@ -39,16 +39,10 @@ vcpkg_configure_cmake(
         -DLIBRESSL_APPS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-        set(EXECUTABLE_SUFFIX .exe)
-    endif()
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl${EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ocspcheck${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/ocspcheck${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+    vcpkg_copy_tools(TOOL_NAMES ocspcheck openssl DESTINATION "${CURRENT_PACKAGES_DIR}/tools/openssl" AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -59,6 +53,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/etc/ssl/certs"
+    "${CURRENT_PACKAGES_DIR}/debug/etc/ssl/certs"
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -68,7 +63,7 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if((VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")

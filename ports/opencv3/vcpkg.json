@@ -1,18 +1,22 @@
 {
   "name": "opencv3",
-  "version": "3.4.13",
+  "version": "3.4.16",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
-    "dnn",
-    "jpeg",
-    "png",
-    "quirc",
-    "tiff",
-    "webp"
+    "default-features"
   ],
   "features": {
     "contrib": {
@@ -47,6 +51,31 @@
         }
       ]
     },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "dnn",
+            "jpeg",
+            "png",
+            "quirc",
+            "tiff",
+            "webp"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "gtk"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
     "dnn": {
       "description": "Enable dnn module",
       "dependencies": [
@@ -67,7 +96,16 @@
     "ffmpeg": {
       "description": "ffmpeg support for opencv",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
       ]
     },
     "flann": {
@@ -80,6 +118,18 @@
       "description": "GDCM support for opencv",
       "dependencies": [
         "gdcm"
+      ]
+    },
+    "gstreamer": {
+      "description": "gstreamer support for opencv",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
+    "gtk": {
+      "description": "GTK support for opencv",
+      "dependencies": [
+        "gtk"
       ]
     },
     "halide": {
@@ -152,6 +202,9 @@
       "dependencies": [
         "libpng"
       ]
+    },
+    "python": {
+      "description": "Python wrapper support for opencv"
     },
     "qt": {
       "description": "Qt GUI support for opencv",

@@ -1,0 +1,23 @@
+{
+  "name": "opencensus-cpp",
+  "version-date": "2021-08-26",
+  "description": "OpenCensus is a toolkit for collecting application performance and behavior data. It currently includes an API for tracing and stats.",
+  "homepage": "https://github.com/census-instrumentation/opencensus-cpp",
+  "supports": "!windows",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "test": {
+      "description": "Build test"
+    }
+  }
+}

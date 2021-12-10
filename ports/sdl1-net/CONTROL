@@ -1,4 +1,0 @@
-Source: sdl1-net
-Version: 1.2.8-3
-Description: Networking library for SDL
-Build-Depends: sdl1

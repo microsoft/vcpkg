@@ -1,46 +1,8 @@
-diff -Naur a/lib/dgif_lib.c b/lib/dgif_lib.c
---- a/lib/dgif_lib.c	2016-04-02 21:34:00.000000000 +0600
-+++ b/lib/dgif_lib.c	2017-04-21 07:06:48.781271400 +0700
-@@ -12,7 +12,9 @@
- #include <limits.h>
- #include <stdint.h>
- #include <fcntl.h>
-+#ifndef _MSC_VER
- #include <unistd.h>
-+#endif
- #include <stdio.h>
- #include <string.h>
- 
-diff -Naur a/lib/egif_lib.c b/lib/egif_lib.c
---- a/lib/egif_lib.c	2016-01-22 16:36:36.000000000 +0600
-+++ b/lib/egif_lib.c	2017-04-21 07:07:08.728159900 +0700
-@@ -8,7 +8,9 @@
- 
- *****************************************************************************/
- 
-+#ifndef _MSC_VER
- #include <unistd.h>
-+#endif
- #include <stdint.h>
- #include <stdlib.h>
- #include <stdio.h>
-diff -Naur a/lib/gif_hash.c b/lib/gif_hash.c
---- a/lib/gif_hash.c	2014-05-16 17:46:53.000000000 +0700
-+++ b/lib/gif_hash.c	2017-04-21 07:07:17.718719500 +0700
-@@ -11,7 +11,9 @@
- 
- *****************************************************************************/
- 
-+#ifndef _MSC_VER
- #include <unistd.h>
-+#endif
- #include <stdint.h>
- #include <stdlib.h>
- #include <fcntl.h>
-diff -Naur a/lib/gif_hash.h b/lib/gif_hash.h
---- a/lib/gif_hash.h	2014-05-16 17:46:53.000000000 +0700
-+++ b/lib/gif_hash.h	2017-04-21 07:07:32.316346800 +0700
-@@ -7,7 +7,9 @@
+diff --git a/gif_hash.h b/gif_hash.h
+index 6a1b585..e6712e8 100644
+--- a/gif_hash.h
++++ b/gif_hash.h
+@@ -9,7 +9,9 @@ SPDX-License-Identifier: MIT
  #ifndef _GIF_HASH_H_
  #define _GIF_HASH_H_
  
