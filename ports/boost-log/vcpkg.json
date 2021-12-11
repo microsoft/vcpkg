@@ -7,10 +7,7 @@
   "dependencies": [
     "boost-align",
     "boost-array",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-atomic",
     "boost-bind",

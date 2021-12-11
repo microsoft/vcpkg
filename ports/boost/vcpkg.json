@@ -9,10 +9,7 @@
     "boost-align",
     "boost-any",
     "boost-array",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-assign",
     "boost-atomic",

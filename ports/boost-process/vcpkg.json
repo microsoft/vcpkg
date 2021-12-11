@@ -6,10 +6,7 @@
   "supports": "!emscripten",
   "dependencies": [
     "boost-algorithm",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-config",
     "boost-core",
     {

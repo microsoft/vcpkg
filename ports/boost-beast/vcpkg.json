@@ -5,10 +5,7 @@
   "homepage": "https://github.com/boostorg/beast",
   "supports": "!emscripten",
   "dependencies": [
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-bind",
     "boost-config",

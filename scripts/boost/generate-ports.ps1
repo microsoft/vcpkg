@@ -36,8 +36,12 @@ $portData = @{
         }
     };
     "boost-asio"             = @{
-        "dependencies" = @("openssl");
-        "supports"     = "!emscripten"
+        "features" = @{
+            "ssl" = @{
+                "description"  = "Build with SSL support";
+                "dependencies" = @(@{ "name" = "openssl"; "platform" = "!emscripten" });
+            }
+        }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
@@ -47,20 +51,20 @@ $portData = @{
         "supports"         = "!uwp";
         "features"         = @{
             "bzip2" = @{
+                "description"  = "Support bzip2 filters";
                 "dependencies" = @("bzip2");
-                "description"  = "Support bzip2 filters"
             };
             "lzma"  = @{
+                "description"  = "Support LZMA/xz filters";
                 "dependencies" = @("liblzma");
-                "description"  = "Support LZMA/xz filters"
             };
             "zlib"  = @{
+                "description"  = "Support zlib filters";
                 "dependencies" = @("zlib");
-                "description"  = "Support zlib filters"
             };
             "zstd"  = @{
+                "description"  = "Support zstd filters";
                 "dependencies" = @("zstd");
-                "description"  = "Support zstd filters"
             };
         };
     };
@@ -76,8 +80,8 @@ $portData = @{
         "supports"     = "!uwp";
         "features"     = @{
             "icu" = @{
+                "description"  = "ICU backend for Boost.Locale";
                 "dependencies" = @("icu");
-                "description"  = "ICU backend for Boost.Locale"
             }
         }
     };
@@ -92,8 +96,8 @@ $portData = @{
     "boost-odeint"           = @{
         "features" = @{
             "mpi" = @{
+                "description"  = "Support parallelization with MPI";
                 "dependencies" = @("boost-mpi");
-                "description"  = "Support parallelization with MPI"
             }
         }
     };
@@ -104,20 +108,20 @@ $portData = @{
         "supports"         = "!uwp&!(arm&windows)&!emscripten";
         "features"         = @{
             "python2" = @{
+                "description"  = "Build with Python2 support";
                 "dependencies" = @("python2");
-                "description"  = "Build with Python2 support"
             };
             "python3" = @{
+                "description"  = "Build with Python3 support";
                 "dependencies" = @("python3");
-                "description"  = "Build with Python3 support"
             }
         }
     };
     "boost-regex"            = @{
         "features" = @{
             "icu" = @{
+                "description"  = "ICU backend for Boost.Regex";
                 "dependencies" = @("icu");
-                "description"  = "ICU backend for Boost.Regex"
             }
         }
     }
