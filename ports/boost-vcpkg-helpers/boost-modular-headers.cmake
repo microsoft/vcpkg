@@ -1,7 +1,7 @@
 function(boost_modular_headers)
     cmake_parse_arguments(_bm "" "SOURCE_PATH" "" ${ARGN})
 
-    set(BOOST_VERSION 1.77.0)
+    set(BOOST_VERSION 1.78.0)
 
     if(NOT DEFINED _bm_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_headers.")
