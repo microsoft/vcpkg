@@ -229,7 +229,9 @@ endmacro()
 
 macro(z_vcpkg_setup_detected_env env_name cmake_var)
     if(VCPKG_DETECTED_${cmake_var})
-        set(ENV{${env_name}} "${VCPKG_DETECTED_${cmake_var}}")
+        if(NOT VCPKG_TARGET_IS_OSX)
+            set(ENV{${env_name}} "${VCPKG_DETECTED_${cmake_var}}")
+        endif()
     endif()
 endmacro()
 
