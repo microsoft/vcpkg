@@ -1,0 +1,20 @@
+diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
+index 7cecdac..29bc05b 100644
+--- a/src/osgEarth/CMakeLists.txt
++++ b/src/osgEarth/CMakeLists.txt
+@@ -909,11 +909,11 @@ IF(FILEGDB_FOUND)
+     LINK_WITH_VARIABLES(${LIB_NAME} FILEGDB_LIBRARY)
+ ENDIF()
+ 
+-IF(BLEND2D_FOUND)
++#IF(BLEND2D_FOUND)
+     add_definitions(-DOSGEARTH_HAVE_BLEND2D)
+-    include_directories(${BLEND2D_INCLUDES})
+-    link_with_variables(${LIB_NAME} BLEND2D_LIBRARY)
+-ENDIF()
++#    include_directories(${BLEND2D_INCLUDES})
++    target_link_libraries(${LIB_NAME} blend2d::blend2d)
++#ENDIF()
+ 
+ IF (WIN32)
+   LINK_EXTERNAL(${LIB_NAME} ${TARGET_EXTERNAL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIBRARY} )
