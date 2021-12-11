@@ -14,8 +14,8 @@ endif()
 
 
 if("aom" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'aom' does not support 'uwp | arm'")
+    if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND NOT VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'aom' does not support 'windows & arm & !uwp'")
     endif()
 endif()
 
@@ -44,7 +44,7 @@ if("fontconfig" IN_LIST FEATURES)
 endif()
 
 if("fribidi" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+    if (VCPKG_TARGET_IS_UWP)
         message(FATAL_ERROR "Feature 'fribidi' does not support 'uwp | arm'")
     endif()
 endif()
