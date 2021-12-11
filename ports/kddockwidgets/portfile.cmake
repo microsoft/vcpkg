@@ -4,11 +4,13 @@ vcpkg_from_github(
     REF 9990300006854afa4b4fa796912da067e770046a 
     SHA512 2207b3c021957d9be8652cad24c0b5e37b07fa02ffeeeb7dab57feaeade7973b580b853d6b69db15015b62cc1397459e27d032131292baaeb17a0633e287fa3c 
     HEAD_REF master
+    PATCHES
+        fix_find_package.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KD_STATIC)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -19,8 +21,8 @@ vcpkg_configure_cmake(
         -DKDDockWidgets_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/KDDockWidgets-qt6" TARGET_PATH "share/KDDockWidgets-qt6")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/KDDockWidgets-qt6" PACKAGE_NAME "KDDockWidgets-qt6")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
