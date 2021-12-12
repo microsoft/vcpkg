@@ -34,5 +34,10 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "numa": {
+      "description": "Enable NUMA support"
+    }
+  }
 }
