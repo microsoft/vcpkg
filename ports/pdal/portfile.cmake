@@ -44,6 +44,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DPDAL_PLUGIN_INSTALL_PATH=.
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DPOSTGRESQL_LIBRARIES=PostgreSQL::PostgreSQL
         -DWITH_TESTS:BOOL=OFF
