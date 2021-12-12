@@ -13,6 +13,7 @@ vcpkg_from_github(
         use-vcpkg-boost.patch
         fix-unix-compiler-options.patch
         fix-find-library-suffix.patch
+        no-pkgconfig-requires.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -57,6 +58,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PDAL)
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Install and cleanup executables
