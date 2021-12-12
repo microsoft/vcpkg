@@ -6,6 +6,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "readline-osx",
+      "platform": "osx"
+    },
+    {
       "name": "readline-win32",
       "platform": "windows"
     }
