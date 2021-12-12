@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.89.0-rc1
-    SHA512 a95a1edeeb28e7b3305f5ad00aedea13722d4dbff056f196b8c53380d1d88e02c4dd54bd23dc4c54c6c319cf9f935972f762c332c2702f635a36cadfdbd6a843
+    REF v5.89.0
+    SHA512 824e4d6204189290dcc542ef3004ad2e2e2f83620dbf381ab78edbef996f412996709b9b49b72aad7c23deeeb6be274906b4cbbbd49498be081330e89c5674de
     HEAD_REF master
 )
 
@@ -31,4 +31,3 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-

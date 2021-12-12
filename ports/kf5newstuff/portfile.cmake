@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.89.0-rc1
-    SHA512 bc2d5b17cee964faafa8d030bbaec7d5c8be42b5bad6542d22e2fd013b686bd98a0192626ccc6acc705a2e118ab695d8ff6204622c63dcf479e99468d1dd8b96
+    REF v5.89.0
+    SHA512 e031fc985ad29be177b438667c624c6706a45edd7029b8144d712e04b9b3f5c8bc7aebea9e2a09afe2a2f28db078f58969cb63bf7dccd5d2e1e05dcbc456766b
     HEAD_REF master
 )
 
@@ -36,5 +36,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 
 

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcmutils
-    REF v5.89.0-rc1
-    SHA512 5ff58e36b0a74e66bc388ff5af6bbb0219131c08e1cc2fdb4938e1bd79deb0baf64838738bf211b56afb4bf695eb17f1550c0cfe828790ae9d9f080d27f3ec75
+    REF v5.89.0
+    SHA512 9f12e906d9bd763906d6c9a0ebbefec1b7d1e958a217de5ed7ea418c8fcda1dbaccd8df89a849019aa81303fc4540b26872d205e7215285c4f312e8bbfcb97d0
     HEAD_REF master
 )
 
@@ -28,4 +28,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
 

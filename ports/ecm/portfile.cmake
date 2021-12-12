@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.89.0-rc1
-    SHA512 39e5ba0d290f3191facd6f50ceed10ca3870d0b7f76f5d072a24c419703cdff31543bb8238a41d83af8c064bbaea64215638fa0f2c2d0daf094efd477eeadde7
+    REF v5.89.0
+    SHA512 1c3f6ad5dbe1485d1602e297989d6cd53e7646aa99dc28ac1159d0aa22134c97efd74b2c01923e74732f59c861ce05486adb7cff7de050237a35b0980e92cbcf
     HEAD_REF master
     PATCHES
         fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
@@ -30,4 +30,3 @@ file(INSTALL "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS" DESTINATION "${CURRENT_PACKA
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-

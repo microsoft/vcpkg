@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
-    REF v5.89.0-rc1
-    SHA512 1f35f9591002ea55474777cd5667255948520e52330bee14251759f2d63ef66b9aee39a8d14488ed583fe7f14aeb8066d6e846917705e9bd3e2e4d10579dbb77
+    REF v5.89.0
+    SHA512 e77d5233b6549332f180be3dcf0459688d6565c24e1af409814aab92d415ebb2b8a04ad720dfa9ed6f017f3ab86fab766b909e30a860bb83c5ddd51def7c3e5f
     HEAD_REF master
     PATCHES
         use_cmake_to_find_zstd.patch # https://invent.kde.org/frameworks/karchive/-/merge_requests/24
@@ -36,6 +36,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-
-

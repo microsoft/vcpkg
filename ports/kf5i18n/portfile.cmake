@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.89.0-rc1
-    SHA512 ab9955e27d9904d1b55e3ad86fc5e655e9f560b0f10f1c4ccbd68f09de72762dbd17bea4388364dbe06ef26a0ce3fb4b2daf3bec7d06e70bd3081b9ea94efb9c
+    REF v5.89.0
+    SHA512 f83d8b9ef51cc05a2eccb175e602fd0530d0cb6bb0c21e582a82fdd2897d9f988c2d927f2dc986faaf7482ec1c81e8cea4a9e74fc557c88be9958393db71c2a9
     PATCHES ${PATCHES}
 )
 
@@ -36,5 +36,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-

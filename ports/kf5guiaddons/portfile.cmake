@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
-    REF v5.89.0-rc1
-    SHA512 2ad7816ce11d76edf46c227a444c7e3be2e0f54bafdffc8f8674b7c67a4334d9703ae9e8437d6eb3273da7b3d02782de6333f64277d109594fd77975208c4b8c
+    REF v5.89.0
+    SHA512 062a8da3a5d3f9da3288031f8e694fd6adb5b4f404071f2d66c7f4d5b15cbf10fedff58d9db928e45a052b69abbe38d7de57349638d8bb9a229798a553e3b9ed
     HEAD_REF master
     PATCHES
         fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
@@ -42,6 +42,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-
-
