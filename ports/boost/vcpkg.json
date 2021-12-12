@@ -138,7 +138,7 @@
     "boost-ptr-container",
     {
       "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten"
+      "platform": "!uwp & !(arm & windows) & !emscripten & !ios & !android"
     },
     "boost-qvm",
     "boost-random",

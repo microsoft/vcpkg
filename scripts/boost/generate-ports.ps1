@@ -44,7 +44,7 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
-    "boost-fiber"            = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
+    "boost-fiber"            = @{ "supports" = "!osx & !uwp & !arm & !emscripten" };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
@@ -68,15 +68,15 @@ $portData = @{
             };
         };
     };
-    "boost-context"          = @{ "supports" = "!uwp&!emscripten" };
+    "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-stacktrace"       = @{ "supports" = "!uwp" };
-    "boost-coroutine"        = @{ "supports" = "!arm&!uwp&!emscripten" };
+    "boost-coroutine"        = @{ "supports" = "!arm & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
     "boost-test"             = @{ "supports" = "!uwp" };
     "boost-wave"             = @{ "supports" = "!uwp" };
-    "boost-log"              = @{ "supports" = "!uwp&!emscripten" };
+    "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
-        "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp&!windows&!mingw" });
+        "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
         "supports"     = "!uwp";
         "features"     = @{
             "icu" = @{
@@ -88,6 +88,16 @@ $portData = @{
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
         "supports"     = "!uwp";
+        "features"     = @{
+            "python2" = @{
+                "description"  = "Build Python2 bindings";
+                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python2" ); "platform" = "!uwp & !(arm & windows) & !emscripten & !ios & !android" }, "python2");
+            };
+            "python3" = @{
+                "description"  = "Build Python3 bindings";
+                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !(arm & windows) & !emscripten & !ios & !android" }, "python3");
+            }
+        }
     };
     "boost-graph-parallel"   = @{
         "dependencies" = @("mpi");
@@ -105,7 +115,7 @@ $portData = @{
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");
-        "supports"         = "!uwp&!(arm&windows)&!emscripten";
+        "supports"         = "!uwp & !(arm & windows) & !emscripten & !ios & !android";
         "features"         = @{
             "python2" = @{
                 "description"  = "Build with Python2 support";

@@ -24,10 +24,6 @@
     },
     "boost-mpl",
     "boost-optional",
-    {
-      "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten"
-    },
     "boost-serialization",
     "boost-smart-ptr",
     "boost-static-assert",
@@ -40,5 +36,33 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "python2": {
+      "description": "Build Python2 bindings",
+      "dependencies": [
+        {
+          "name": "boost-python",
+          "features": [
+            "python2"
+          ],
+          "platform": "!uwp & !(arm & windows) & !emscripten & !ios & !android"
+        },
+        "python2"
+      ]
+    },
+    "python3": {
+      "description": "Build Python3 bindings",
+      "dependencies": [
+        {
+          "name": "boost-python",
+          "features": [
+            "python3"
+          ],
+          "platform": "!uwp & !(arm & windows) & !emscripten & !ios & !android"
+        },
+        "python3"
+      ]
+    }
+  }
 }

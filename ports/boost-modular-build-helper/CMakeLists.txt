@@ -10,14 +10,6 @@ set(USER_CONFIG_EXTRA_LINES)
 
 set(B2_OPTIONS)
 
-#### Handle ICU
-if(WIN32)
-    list(APPEND B2_OPTIONS "--disable-icu")
-else()
-    find_path(ICU_PATH include/unicode/utf.h)
-    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
-endif()
-
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -229,6 +221,48 @@ include(ProcessorCount)
 ProcessorCount(NUMBER_OF_PROCESSORS)
 if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
+endif()
+
+# Handle ICU
+if(WIN32)
+    list(APPEND B2_OPTIONS "--disable-icu")
+else()
+    find_path(ICU_PATH include/unicode/utf.h)
+    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
+endif()
+
+# Handle Python
+set(python_versions)
+
+if("python2" IN_LIST FEATURES)
+    # Find Python2 in the current installed directory
+    file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+    string(REPLACE "." "" PYTHON_VERSION_TAG "${python2_version}")
+
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n")
+    list(APPEND python_versions "${python2_version}")
+endif()
+
+if("python3" IN_LIST FEATURES)
+    # Find Python3 in the current installed directory
+    file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+    string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
+
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n")
+    list(APPEND python_versions "${python3_version}")
+endif()
+
+if(python_versions)
+    string(REPLACE ";" "," python_versions "${python_versions}")
+    list(APPEND B2_OPTIONS
+        python=${python_versions}
+    )
 endif()
 
 # Include port specific CMake fragment
