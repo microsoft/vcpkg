@@ -8,7 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
     #    fix-install.patch
-        allow-warnings.patch
+    #    allow-warnings.patch
+        fix-compile-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,7 +22,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_CXX_STANDARD:STRING=20
 )
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unifex CONFIG_PATH lib/cmake/unifex)
 vcpkg_copy_pdbs()
