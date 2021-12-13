@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version-semver": "6.2.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -15,6 +15,14 @@
       "name": "qtbase",
       "host": true,
       "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "doubleconversion"
+      ],
+      "platform": "windows"
     },
     "zlib"
   ],
