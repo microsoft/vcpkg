@@ -4437,8 +4437,8 @@
       "port-version": 4
     },
     "mmloader": {
-      "baseline": "2020-05-15",
-      "port-version": 1
+      "baseline": "2021-12-13",
+      "port-version": 0
     },
     "mmx": {
       "baseline": "2019-09-29",
