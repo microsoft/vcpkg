@@ -11,16 +11,15 @@ vcpkg_fail_port_install(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tishion/mmLoader
-    REF 1.0.0
-    SHA512 ceb2ab4b60d74209fa46d198cde6fd87a97d911abb875ac35383288a67828d0420bb38ff8d2f17dd4a3f46ba3abf554152d1246eeb05215258e8af64ac4a39de
+    REF 1.0.1
+    SHA512 c13e8198d4e690de593c6a0d540da531be9502a0f1c45493f3230431dfe3a57305e60cb72af5d7b34f4287587fdd1eea015c6d98198086a99b713b1da80f97b3
     HEAD_REF master
-    PATCHES
-        fix_c_and_cxx_flags.patch
 )
 
 # feature
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    shellcode BUILD_SHELLCODE_GEN
+    FEATURES
+        shellcode BUILD_SHELLCODE_GEN
 )
 
 # config
