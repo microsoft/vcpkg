@@ -1,5 +1,5 @@
 diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
-index ec3a43f..b4cc2b5 100644
+index ec3a43f..d8637cc 100644
 --- a/cmake/findDependencies.cmake
 +++ b/cmake/findDependencies.cmake
 @@ -42,7 +42,8 @@ if (EXIV2_ENABLE_XMP AND EXIV2_ENABLE_EXTERNAL_XMP)
@@ -8,7 +8,7 @@ index ec3a43f..b4cc2b5 100644
      if (EXIV2_ENABLE_XMP)
 -        find_package(EXPAT REQUIRED)
 +        find_package(expat CONFIG REQUIRED)
-+		set(EXPAT_FOUND 1)
++        set(EXPAT_FOUND 1)
      elseif (EXIV2_ENABLE_EXTERNAL_XMP)
          find_package(XmpSdk REQUIRED)
      endif ()
