@@ -55,7 +55,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if (WIN32 AND (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
+if (WIN32 AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
     #Release
     set(OSGEARTH_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     set(OSGEARTH_TOOL_PLUGIN_PATH "${OSGEARTH_TOOL_PATH}/${OSG_PLUGINS_SUBDIR}")
