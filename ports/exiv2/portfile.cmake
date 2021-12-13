@@ -7,8 +7,6 @@ vcpkg_from_github(
     REF ad5484cb1eaba3ad0e49b290d244f6b1ee9ff076  #v0.27.5
     SHA512 33b8c60990b05f1599860974d6fe44baba8369356acd2cab3ce4919a48bb44348ed0496ffc4581d9fd5eb8a1b36d48a0eaa3fafe4584bfd655d0a88e7a9458ef
     HEAD_REF master
-    PATCHES
-        fix-ninja-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
