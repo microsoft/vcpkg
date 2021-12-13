@@ -1,10 +1,13 @@
 {
   "name": "qtmultimedia",
-  "version-semver": "6.2.0",
-  "port-version": 1,
+  "version-semver": "6.2.2",
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
     {
       "name": "qtbase",
       "default-features": false,

@@ -17,6 +17,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Buildsystem Integration](users/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
+- [Authentication](users/authentication.md)
 - [Manifest Mode](users/manifests.md)
 - [Binary Caching](users/binarycaching.md)
 - [Asset Caching](users/assetcaching.md)

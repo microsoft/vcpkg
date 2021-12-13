@@ -1,5 +1,5 @@
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(HIREDIS_PATCHES support-static-in-win.patch)
 endif()
 
 vcpkg_from_github(
@@ -10,10 +10,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-feature-example.patch
-        support-static-in-win.patch
         fix-timeval.patch
         fix-include-path.patch
         fix-ssize_t.patch
+        ${HIREDIS_PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,6 +30,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_cmake_config_fixup()

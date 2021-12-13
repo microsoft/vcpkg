@@ -3,7 +3,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor-io
-    REF 2bc048b3f34731385f29e2f3b307103ee6d4e5ab # 0.12.8
+    REF ffada938383b0f24c9e0b07cea7d5780057e1d96 # 0.13.0
     SHA512 d7c5c85489aea9b9d8af7ee33a43dd8ab888e7f03da8b533ace39e143f89acbae4fe88bb10253931a3cc44041e1532bd76483686f7f20c00e2850647a574349c
     HEAD_REF master
 )
@@ -20,6 +20,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+foreach(bit "64" "32" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xtensor-io/xtensor_io_config.hpp" "#pragma cling add_library_path(\"${CURRENT_PACKAGES_DIR}/lib${bit}\")" "")
+endforeach()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
