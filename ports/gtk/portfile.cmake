@@ -1,15 +1,18 @@
-
-set(GTK_VERSION 4.3.0)
+set(GTK_VERSION 4.4.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  40ebed3a03aef096addc0af09fec4ec529d882a0 #v4.3.0
-    SHA512 6f68e1e2f18a4bf0299f0563ccf091cbee3a1dc1db0819565216d50f98f3f3ad4904eef746357d9bc2fdac8a5e29c5cbed5d4df5dd0f89bb941f7438ae3cd096
+    REF  f1f197e3b94a55d5cbfaae2498f991a0ae733b32 #v4.4.0
+    SHA512 80ffc2c2a2baae4a4097470a41d0b10d5df9086e60daa520aad845fe571e03486c4f87e295ae4f05aa0069df80fe40ad7655de4f9aecc21c2482bbe0b2b6e2fb
     HEAD_REF master # branch name
-    PATCHES build.patch
-) 
+    PATCHES
+        0001-build.patch
+        0002-windows-build.patch
+        0003-vs2022-rc.patch # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4063
+        0004-macos-build.patch
+)
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
@@ -21,7 +24,7 @@ set(win32 false)
 set(osx false)
 if(VCPKG_TARGET_IS_LINUX)
     set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
-    set(x11 true)    
+    set(x11 true)
     # Enable the wayland gdk backend (only when building on Unix except for macOS)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     set(win32 true)
@@ -45,13 +48,10 @@ vcpkg_configure_meson(
         -Dgtk_doc=false
         -Dman-pages=false
         -Dintrospection=disabled
-        -Dsassc=enabled             # Rebuild themes using sassc
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
-        -Dprint-cloudprint=disabled # Build the cloudprint print backend
         -Dvulkan=disabled           # Enable support for the Vulkan graphics API
-        -Dxinerama=disabled         # Enable support for the X11 Xinerama extension
         -Dcloudproviders=disabled   # Enable the cloudproviders support
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search
@@ -74,7 +74,7 @@ vcpkg_install_meson()
 
 # If somebody finds out how to access and forward env variables to
 # the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case. 
+# needs manual execution in the crosscompiling case.
 vcpkg_find_acquire_program(PYTHON3)
 foreach(_config release debug)
     if(_config STREQUAL "release")
@@ -112,9 +112,9 @@ vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-set(TOOL_NAMES gtk4-builder-tool 
-               gtk4-encode-symbolic-svg 
-               gtk4-query-settings 
+set(TOOL_NAMES gtk4-builder-tool
+               gtk4-encode-symbolic-svg
+               gtk4-query-settings
                gtk4-update-icon-cache)
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)
