@@ -134,7 +134,7 @@ function(vcpkg_qmake_configure)
         macro(qmake_add_flags qmake_var operation flags)
             string(STRIP "${flags}" striped_flags)
             if(striped_flags)
-                vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}"
+                vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}")
             endif()
         endmacro()
         
