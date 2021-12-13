@@ -21,13 +21,10 @@ vcpkg_from_github(
         remove-tool-debug-suffix.patch
         fix-imgui.patch
         fix-gcc11-compilation.patch
-        use-blend2d-target.patch
 )
 
 # Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002
 file(REMOVE "${SOURCE_PATH}/src/osgEarth/tinyxml.h")
-
-file(REMOVE "${SOURCE_PATH}/CMakeModules/FindBlend2D.cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
