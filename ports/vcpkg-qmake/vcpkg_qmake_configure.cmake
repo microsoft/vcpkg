@@ -32,6 +32,7 @@ The options passed after -- to qmake.
 
 #]===]
 include_guard(GLOBAL)
+
 function(vcpkg_qmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "QMAKE_OPTIONS;QMAKE_OPTIONS_RELEASE;QMAKE_OPTIONS_DEBUG;OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG")
 
@@ -147,15 +148,16 @@ function(vcpkg_qmake_configure)
         # Options might need to go into a response file? I am a bit concerned about cmd line length. 
         vcpkg_execute_required_process(
             COMMAND ${VCPKG_QMAKE_COMMAND} ${qmake_config_${buildtype}}
-                    ${arg_QMAKE_OPTIONS} ${arg_QMAKE_OPTIONS_DEBUG}
+                    ${arg_QMAKE_OPTIONS} ${arg_QMAKE_OPTIONS_${buildtype}}
                     ${VCPKG_QMAKE_OPTIONS} ${VCPKG_QMAKE_OPTIONS_${buildtype}} # Advanced users need a way to inject QMAKE variables via the triplet.
                     ${qmake_build_tools} ${qmake_comp_flags}
                     "${arg_SOURCE_PATH}"
                     -qtconf "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf"
                     ${options}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${config_triplet}
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}"
             LOGNAME config-${config_triplet}
         )
+        vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${config_triplet}")
         message(STATUS "Configuring ${config_triplet} done")
 
         vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
