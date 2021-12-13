@@ -107,8 +107,8 @@ This field indicates the commit of vcpkg which provides global minimum version
 information for your manifest. It is required for top-level manifest files using
 versioning.
 
-This field is a convenience field that has the same semantic as replacing your
-default registry in
+This is a convenience field that has the same semantic as replacing your default
+registry in
 [`vcpkg-configuration.json`](registries.md#configuration-default-registry).
 
 See [versioning](versioning.md#builtin-baseline) for more semantic details.
@@ -200,8 +200,9 @@ See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 
-This field pins exact versions for individual dependencies. `"overrides"` from
-transitive manifests (i.e. from dependencies) are ignored.
+This field pins exact versions for individual dependencies.
+
+`"overrides"` from transitive manifests (i.e. from dependencies) are ignored.
 
 See also [versioning](versioning.md#overrides) for more semantic details.
 

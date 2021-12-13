@@ -99,7 +99,7 @@ Examples:
 ## Version constraints
 
 ### `builtin-baseline`
-Accepts a Git commit ID. Vcpkg will try to find a baseline file in the given
+Accepts a Git commit ID. vcpkg will try to find a baseline file in the given
 commit ID and use that to set the baseline versions (lower bounds) of all
 dependencies.
 
@@ -181,95 +181,6 @@ For an override to take effect, the overridden package must form part of the dep
   ]
 }
 ```
-
-## Version files
-Vcpkg uses a set of metadata files to power its versioning feature.
-
-These files are located in the following locations:
-* `${VCPKG_ROOT}/versions/baseline.json`, (this file is common to all ports) and
-* `${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json` (one per port).
-
-For example, for `zlib` the relevant files are:
-* `${VCPKG_ROOT}/versions/baseline.json`
-* `${VCPKG_ROOT}/versions/z-/zlib.json`
-
-The vcpkg public CI checks validate that each time a port is added or updated its respective version files are also updated.
-
-### Baseline file
-The baseline file located in `${VCPKG_ROOT}/versions/baseline.json` is used to declared the current baseline versions of all packages.
-
-For example:
-```json
-{
-  "default": {
-    "3fd": { "baseline": "2.6.3", "port-version": 0 },
-    "7zip": { "baseline": "19.00", "port-version": 2 },
-    "abseil": { "baseline": "2020-09-23", "port-version": 1 }
-  }
-}
-```
-
-Provided that there are no local modifications to the ports, the versions of all packages in the baseline file should map to the version of their corresponding portfiles in the `ports/` directory.
-
-### Versions file
-Each port in vcpkg has a corresponding versions file, the location of a port's versions file follows the pattern:
-
-```sh
-${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json
-```
-
-For example, for `zlib` the corresponding versions file is:
-
-```sh
-${VCPKG_ROOT}/versions/z-/zlib.json
-```
-
-These files contain an array of all the versions available for a given port.
-For example, the contents of `versions/z-/zlib.json` declare the following versions:
-```json
-{
-  "versions": [
-    {
-      "git-tree": "827111046e37c98153d9d82bb6fa4183b6d728e4",
-      "version-string": "1.2.11",
-      "port-version": 9
-    },
-    {
-      "git-tree": "068430e3e24fa228c302c808ba99f8a48d126557",
-      "version-string": "1.2.11",
-      "port-version": 8
-    },
-    ...
-  ]
-}
-```
-Each version declared in this file uses the same syntax used in manifest files, but adds an extra `git-tree` property. The value of `git-tree` is the SHA hash, as calculated by Git, of the directory containing the portfiles for the declared version. You can ask Git for the object SHA via the syntax:
-```
-git rev-parse <commit>:<path>
-```
-For example,
-```
-git rev-parse HEAD:ports/zlib
-```
-
-### Updating the version files
-The recommended method to update these files is to run the `x-add-version` command.
-
-For example, if you have made changes to `zlib`:
-
-```
-vcpkg x-add-version zlib
-```
-
-If you're updating multiple ports at the same time, instead you can run:
-
-```
-vcpkg x-add-version --all
-```
-
-To update the files for all modified ports at once.
-
-_NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
 ## See Also
 
