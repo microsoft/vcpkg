@@ -1,0 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+variables:
+  osx-pool: 'PrOsx-2021-07-27'
+
+jobs:
+- template: osx/azure-pipelines.yml
+  parameters:
+    poolName: $(osx-pool)
