@@ -131,14 +131,20 @@ function(vcpkg_qmake_configure)
 
         set(qmake_comp_flags "")
         # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
-        vcpkg_list(APPEND qmake_comp_flags "QMAKE_LIBS+=${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}" 
-                                           "QMAKE_RC+=${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}"
-                                           "QMAKE_CFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}"
-                                           "QMAKE_CXXFLAGS_${buildtype}*=${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS*=${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_DLL*=${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}"
-                                           "QMAKE_LFLAGS_EXE*=${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}"
-                                           )
+        macro(qmake_add_flags qmake_var operation flags)
+            string(STRIP "${flags}" striped_flags)
+            if(striped_flags)
+                vcpkg_list(APPEND qmake_comp_flags "${qmake_var}${operation}${striped_flags}"
+            endif()
+        endmacro()
+        
+        qmake_add_flags("QMAKE_LIBS" "+=" "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        qmake_add_flags("QMAKE_RC" "+=" "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_CFLAGS_${buildtype}" "*=" "${VCPKG_DETECTED_CMAKE_C_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_CXXFLAGS_${buildtype}" "*=" "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS" "*=" "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_DLL" "*=" "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}")
+        qmake_add_flags("QMAKE_LFLAGS_EXE" "*=" "${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}")
 
         message(STATUS "Configuring ${config_triplet}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")

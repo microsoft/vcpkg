@@ -75,7 +75,7 @@ index 7da1485a0..b69b5ca71 100644
  ######################################################################
  
 -QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
-+QWT_INSTALL_FEATURES  = $$[QT_INSTALL_DATA]/features
++QWT_INSTALL_FEATURES  = $$[QT_INSTALL_DATA]/mkspecs/features
  # QWT_INSTALL_FEATURES  = $$[QT_INSTALL_PREFIX]/features
  
  ######################################################################
