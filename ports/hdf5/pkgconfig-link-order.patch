@@ -1,0 +1,11 @@
+diff --git a/config/libhdf5.pc.in b/config/libhdf5.pc.in
+index 4a2ebaa..3cb42d2 100644
+--- a/config/libhdf5.pc.in
++++ b/config/libhdf5.pc.in
+@@ -10,5 +10,5 @@ Version: @_PKG_CONFIG_VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} @_PKG_CONFIG_SH_LIBS@
+ Requires: @_PKG_CONFIG_REQUIRES@
+-Libs.private: @_PKG_CONFIG_LIBS_PRIVATE@ @_PKG_CONFIG_LIBS@
++Libs.private: @_PKG_CONFIG_LIBS@ @_PKG_CONFIG_LIBS_PRIVATE@
+ Requires.private: @_PKG_CONFIG_REQUIRES_PRIVATE@

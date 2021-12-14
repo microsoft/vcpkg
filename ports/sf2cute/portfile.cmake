@@ -32,5 +32,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf2cute RENAME copyright)
 
 if(BUILD_EXAMPLE)
-  vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/sf2cute)
+  vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/sf2cute)
 endif()

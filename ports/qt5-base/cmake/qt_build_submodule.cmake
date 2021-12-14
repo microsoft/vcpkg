@@ -85,7 +85,7 @@ function(qt_build_submodule SOURCE_PATH)
         configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/qt.conf) # This makes the tools at least useable for release
         set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
 
-        vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
         if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/*.dll")
             string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/qt5/bin/" "" DLL_DEPS_AVAIL "${DLL_DEPS_AVAIL}")
@@ -108,7 +108,7 @@ function(qt_build_submodule SOURCE_PATH)
         configure_file(${CURRENT_INSTALLED_DIR_BACKUP}/tools/qt5/qt_debug.conf ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/qt.conf) # This makes the tools at least useable for release
         set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
 
-        vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
         if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(GLOB_RECURSE DLL_DEPS_AVAIL "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/*.dll")
             string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/qt5/debug/bin/" "" DLL_DEPS_AVAIL "${DLL_DEPS_AVAIL}")

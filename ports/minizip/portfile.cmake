@@ -33,7 +33,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/minizip)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/minizip)
 
 if ("bzip2" IN_LIST FEATURES)
     file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/minizip/*.h")

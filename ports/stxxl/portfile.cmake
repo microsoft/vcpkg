@@ -57,7 +57,7 @@ endif()
 
 file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/stxxl_tool${EXECUTABLE_SUFFIX}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
@@ -70,3 +70,5 @@ file(REMOVE_RECURSE
 configure_file(${SOURCE_PATH}/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

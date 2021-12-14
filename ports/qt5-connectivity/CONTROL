@@ -1,5 +1,0 @@
-Source: qt5-connectivity
-Version: 5.15.2
-Port-Version: 1
-Description: Qt5 Connectivity module - Provides access to Bluetooth and NFC hardware
-Build-Depends:  qt5-base[core]

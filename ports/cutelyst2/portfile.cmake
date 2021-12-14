@@ -30,7 +30,7 @@ file(GLOB DEBUG_EXES ${CURRENT_PACKAGES_DIR}/debug/bin/cutelyst2 ${CURRENT_PACKA
 if(EXES OR DEBUG_EXES)
     file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/cutelyst2)
     file(REMOVE ${EXES} ${DEBUG_EXES})
-    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/cutelyst2)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cutelyst2)
 endif()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cutelyst2-plugins/ActionREST.dll)

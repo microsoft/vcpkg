@@ -155,18 +155,18 @@ Run the following commands:
 ```sh
 $ cd ~/Parallels
 $ echo '{ "provider": "parallels" }' >metadata.json
-$ tar zgvf <current date>.box ./metadata.json ./<name of VM>.pvm
+$ tar zcvf <macos version>.box ./metadata.json ./<name of VM>.pvm
 ```
 
 This will create a box file which contains all the necessary data.
 You can delete the `metadata.json` file after.
 
 Once you've done that, you can upload it to the fileshare,
-under `share/boxes/vcpkg-ci-base`, add it to `share/boxes/vcpkg-ci-base.json`,
+under `share/boxes/macos-base`, add it to `share/boxes/macos-base.json`,
 and finally add it to vagrant:
 
 ```sh
-$ vagrant box add ~/vagrant/share/boxes/vcpkg-ci-base.json
+$ vagrant box add ~/vagrant/share/boxes/macos-base.json
 ```
 
 Then, we'll create the final box,
@@ -184,9 +184,9 @@ $ vagrant package
 
 This will create a `package.box`, which is the box file for the base VM.
 Once you've created this box, if you're making it the new box for the CI,
-upload it to the fileshare, under `share/boxes/vcpkg-ci`.
+upload it to the fileshare, under `share/boxes/macos-ci`.
 Then, add the metadata about the box (the name and version) to
-`share/boxes/vcpkg-ci.json`.
+`share/boxes/macos-ci.json`.
 Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
 
 [base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
@@ -199,6 +199,9 @@ Once you've done that, add the software versions under [VM Software Versions](#v
 * 2021-04-16:
   * macOS: 11.2.3
   * Xcode CLTs: 12.4
+* 2021-07-27:
+  * macOS: 11.5.1
+  * Xcode CLTs: 12.5.1
 
 ### (Internal) Accessing the macOS fileshare
 

@@ -20,6 +20,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/guetzli)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/guetzli)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/guetzli RENAME copyright)

@@ -1,7 +1,0 @@
-{
-    "name": "without-default-baseline-test-2",
-    "version-string": "0",
-    "dependencies": [
-        "zlib"
-    ]
-}

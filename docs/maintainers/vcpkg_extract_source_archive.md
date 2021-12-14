@@ -2,27 +2,74 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive.md).
 
-Extract an archive into the source directory. Deprecated in favor of [`vcpkg_extract_source_archive_ex`](vcpkg_extract_source_archive_ex.md).
+Extract an archive into the source directory.
 
 ## Usage
+There are two "overloads" of this function. The first is deprecated:
+
 ```cmake
-vcpkg_extract_source_archive(
-    <${ARCHIVE}> [<${TARGET_DIRECTORY}>]
+vcpkg_extract_source_archive(<${ARCHIVE}> [<${TARGET_DIRECTORY}>])
+```
+
+This overload should not be used.
+
+The latter is suggested to use for all future `vcpkg_extract_source_archive`s.
+
+```cmake
+vcpkg_extract_source_archive(<out-var>
+    ARCHIVE <path>
+    [NO_REMOVE_ONE_LEVEL]
+    [PATCHES <patch>...]
+    [SOURCE_BASE <base>]
+    [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
 )
 ```
-## Parameters
-### ARCHIVE
-The full path to the archive to be extracted.
 
-This is usually obtained from calling [`vcpkg_download_distfile`](vcpkg_download_distfile.md).
+`vcpkg_extract_source_archive` takes an archive and extracts it.
+It replaces existing uses of `vcpkg_extract_source_archive_ex`.
+The simplest use of it is:
 
-### TARGET_DIRECTORY
-If specified, the archive will be extracted into the target directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
+```cmake
+vcpkg_download_distfile(archive ...)
+vcpkg_extract_source_archive(source_path ARCHIVE "${archive}")
+```
 
-This can be used to mimic git submodules, by extracting into a subdirectory of another archive.
+The general expectation is that an archives are laid out with a base directory,
+and all the actual files underneath that directory; in other words, if you
+extract the archive, you'll get something that looks like:
 
-## Notes
-This command will also create a tracking file named <FILENAME>.extracted in the TARGET_DIRECTORY. This file, when present, will suppress the extraction of the archive.
+```
+zlib-1.2.11/
+    doc/
+        ...
+    examples/
+        ...
+    ChangeLog
+    CMakeLists.txt
+    README
+    zlib.h
+    ...
+```
+
+`vcpkg_extract_source_archive` automatically removes this directory,
+and gives you the items under it directly. However, this only works
+when there is exactly one item in the top level of an archive.
+Otherwise, you'll have to pass the `NO_REMOVE_ONE_LEVEL` argument to
+prevent `vcpkg_extract_source_archive` from performing this transformation.
+
+If the source needs to be patched in some way, the `PATCHES` argument
+allows one to do this, just like other `vcpkg_from_*` functions.
+
+`vcpkg_extract_source_archive` extracts the files to
+`${CURRENT_BUILDTREES_DIR}/<base-directory>/<source-base>-<hash>.clean`.
+When in editable mode, no `.clean` is appended,
+to allow for a user to modify the sources.
+`base-directory` defaults to `src`,
+and `source-base` defaults to the stem of `<archive>`.
+You can change these via the `BASE_DIRECTORY` and `SOURCE_BASE` arguments
+respectively.
+If you need to extract to a location that is not based in `CURRENT_BUILDTREES_DIR`,
+you can use the `WORKING_DIRECTORY` argument to do the same.
 
 ## Examples
 

@@ -24,7 +24,7 @@ else()
 	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke)
 	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite)
 endif()
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/MOOS) 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/MOOS) 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
 

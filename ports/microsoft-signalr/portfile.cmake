@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aspnet/SignalR-Client-Cpp
-    REF v0.1.0-alpha2
-    SHA512 5a25bdf1f4587c7c008b743c0e97c5b293839b4a63bad89b3c37a1affccfa26df12b20f69a822e8d0eddb4491b3f0e513f017c39528a39990527aac44b3d6f5b
+    REF v0.1.0-alpha3
+    SHA512 7dbd75748535c7b7fef36afe246b132b243b8b4932c218a63aa18c7a44d6691c002144c6d2f5603ad63c03d018907436ad259fdfcc0d7749917931bdebef670b
     HEAD_REF main
 )
 
@@ -10,6 +10,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cpprestsdk USE_CPPRESTSDK
+        messagepack USE_MSGPACK
 )
 
 if("cpprestsdk" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)

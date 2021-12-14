@@ -57,7 +57,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools)
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools)
     endif()
     vcpkg_copy_pdbs()
 endif()

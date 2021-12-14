@@ -17,7 +17,6 @@ vcpkg_extract_source_archive_ex(
         libpq.patch
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
-        geotiff.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -52,7 +51,7 @@ vcpkg_copy_pdbs()
 file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(COPY ${_pdal_apps} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pdal)
 file(REMOVE ${_pdal_apps})
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 # Post-install clean-up
 file(REMOVE_RECURSE

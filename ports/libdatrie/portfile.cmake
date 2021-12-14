@@ -42,7 +42,7 @@ vcpkg_copy_pdbs()
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/trietool.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/trietool.exe)
-    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

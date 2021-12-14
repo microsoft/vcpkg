@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools WITH_DEPENDENCIES
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS ${FEATURE_OPTIONS}
@@ -23,10 +23,13 @@ vcpkg_configure_cmake(
     -DTOOLS_INSTALLDIR=tools/aubio
     -DBUILD_TOOLS=ON
   OPTIONS_DEBUG
-    -DDISABLE_INSTALL_HEADERS=1
     -DBUILD_TOOLS=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright and credentials
 file(COPY
@@ -38,5 +41,5 @@ file(COPY
     ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(TOOL_DIR  ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

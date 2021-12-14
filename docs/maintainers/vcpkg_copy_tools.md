@@ -31,7 +31,7 @@ These libraries will be copied into the same directory as the tool
 even if they are not statically determined as dependencies from inspection of their import tables.
 
 ### AUTO_CLEAN
-Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
+Auto clean the copied executables from `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 
 ## Examples
 

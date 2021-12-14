@@ -12,7 +12,7 @@
       "platform": "windows"
     },
     {
-      "name": "yasm",
+      "name": "yasm-tool",
       "host": true,
       "platform": "windows"
     }

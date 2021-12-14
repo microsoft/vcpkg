@@ -5,15 +5,15 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ofiwg/libfabric
-    REF v1.8.1
+    REF bcb41c462e1e38559c94096ac06e2f578b466882 # v1.13.2
     HEAD_REF master
-    SHA512 7c3879af3ad7dbda9e9bf9f43a2d213a8e41d50212008f29e912d3d0946efc381e6833c08206106e9f486c37eaef16103198247b328297209ef80dc66ca1b6e5
+    SHA512 b3ea464a402aa5b470ba5478350e23682488f785a3b2cb34df02f23d1663f097285f6795ab287db40b2a544c8e3969358a23165664e1fc39542038d726212e6c
     PATCHES
-      add_additional_includes.patch
+        add_additional_includes.patch
 )
 
-set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v141")
-set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
+set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v142")
+set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v142")
 
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,9 +31,8 @@ vcpkg_install_msbuild(
 )
 
 #Move includes under subdirectory to avoid colisions with other libraries
-file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/includetemp)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/includetemp ${CURRENT_PACKAGES_DIR}/include/libfabric)
+file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/includetemp")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+file(RENAME "${CURRENT_PACKAGES_DIR}/includetemp" "${CURRENT_PACKAGES_DIR}/include/libfabric")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

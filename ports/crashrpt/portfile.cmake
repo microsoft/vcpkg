@@ -28,9 +28,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHRPT_BUILD_SHARED_
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" CRASHRPT_LINK_CRT_AS_DLL)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    probe CRASHRPT_BUILD_PROBE
-    tests CRASHRPT_BUILD_TESTS
-    demos CRASHRPT_BUILD_DEMOS
+    FEATURES
+        probe CRASHRPT_BUILD_PROBE
+        tests CRASHRPT_BUILD_TESTS
+        demos CRASHRPT_BUILD_DEMOS
 )
 
 # PREFER_NINJA is not used below since CrashSender fails to build with errors like this one:
@@ -46,7 +47,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

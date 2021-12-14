@@ -49,7 +49,7 @@ if("tool" IN_LIST FEATURES)
         file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")
         file(COPY "${TGUI_SHARE_PATH}/gui-builder/themes" DESTINATION "${TGUI_TOOLS_PATH}")
         file(REMOVE_RECURSE "${TGUI_SHARE_PATH}/gui-builder")
-        vcpkg_copy_tool_dependencies(TOOL_DIR "${TGUI_TOOLS_PATH}")
+        vcpkg_copy_tool_dependencies("${TGUI_TOOLS_PATH}")
     endif()
 endif()
 

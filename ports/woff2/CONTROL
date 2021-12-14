@@ -1,6 +1,0 @@
-Source: woff2
-Version: 1.0.2
-Port-Version: 2
-Homepage: https://github.com/google/woff2
-Description: font compression reference code
-Build-Depends: brotli

@@ -1,0 +1,10 @@
+{
+  "name": "librabbitmq",
+  "version-string": "2020-06-03",
+  "port-version": 1,
+  "description": "A C-language AMQP client library for use with v2.0+ of the RabbitMQ broker.",
+  "homepage": "https://github.com/alanxz/rabbitmq-c",
+  "dependencies": [
+    "openssl"
+  ]
+}

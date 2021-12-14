@@ -1,0 +1,22 @@
+{
+  "name": "shiva",
+  "version-string": "1.0",
+  "port-version": 4,
+  "description": "Modern C++ Game Engine",
+  "homepage": "https://github.com/Milerius/shiva",
+  "dependencies": [
+    "boost-dll",
+    "boost-filesystem",
+    "boost-stacktrace",
+    "entt",
+    "lua",
+    {
+      "name": "luafilesystem",
+      "platform": "windows"
+    },
+    "nlohmann-json",
+    "pybind11",
+    "sol2",
+    "spdlog"
+  ]
+}

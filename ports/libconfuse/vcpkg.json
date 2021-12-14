@@ -1,0 +1,7 @@
+{
+  "name": "libconfuse",
+  "version-string": "2019-07-14",
+  "port-version": 2,
+  "description": "Small configuration file parser library for C",
+  "homepage": "https://github.com/martinh/libconfuse"
+}
