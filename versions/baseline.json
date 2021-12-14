@@ -5698,7 +5698,7 @@
     },
     "qtbase": {
       "baseline": "6.2.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qtcharts": {
       "baseline": "6.2.2",
@@ -5814,7 +5814,7 @@
     },
     "qttools": {
       "baseline": "6.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.2.2",
@@ -5878,7 +5878,7 @@
     },
     "qwt": {
       "baseline": "6.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -7113,7 +7113,7 @@
       "port-version": 1
     },
     "vcpkg-qmake": {
-      "baseline": "2021-10-23",
+      "baseline": "2021-12-13",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
