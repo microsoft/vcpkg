@@ -1,8 +1,9 @@
 {
   "name": "pdal-c",
-  "version-string": "1.8",
-  "port-version": 4,
+  "version-string": "2.1",
   "description": "C API for the Point Data Abstraction Library (PDAL)",
+  "homepage": "https://github.com/PDAL/CAPI#readme",
+  "supports": "!staticcrt",
   "dependencies": [
     {
       "name": "pdal",
