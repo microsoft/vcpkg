@@ -26,10 +26,18 @@ index e913cb2..570207e 100644
  add_dependencies(libfluidsynth-OBJ gentables)
 +endif()
 diff --git a/src/gentables/CMakeLists.txt b/src/gentables/CMakeLists.txt
-index 638f299..333afcb 100644
+index 638f299..e834e34 100644
 --- a/src/gentables/CMakeLists.txt
 +++ b/src/gentables/CMakeLists.txt
-@@ -34,3 +34,5 @@ if ( WIN32 )
+@@ -15,7 +15,6 @@ project (gentables C)
+ set ( CMAKE_BUILD_TYPE Debug )
+ 
+ # hardcode ".exe" as suffix to the binary, else in case of cross-platform cross-compiling the calling cmake will not know the suffix used here and fail to find the binary
+-set ( CMAKE_EXECUTABLE_SUFFIX ".exe" )
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR})
+@@ -34,3 +33,5 @@ if ( WIN32 )
  else ( WIN32 )
      target_link_libraries (make_tables "m")
  endif ()
