@@ -4,21 +4,34 @@ vcpkg_from_github(
     REF 926581851ed1a095ef5b8659f77b38272d57e624 #v2.2.3
     SHA512 df30a3df20ba4c1c3f248e718c47856761004b5a63285e55e46bc1a3dd61b0b2d4b0b1139d0edf64135de68d6592f84bcf5308c76a9774415769b8d3aa682a7a
     HEAD_REF master
-    PATCHES
-        force-x86-gentables.patch
+    PATCHES separate-gentables.patch
 )
 
+if ("buildtools" IN_LIST FEATURES)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}/src/gentables"
+    )
+
+    vcpkg_cmake_install()
+
+    vcpkg_copy_tools(TOOL_NAMES make_tables AUTO_CLEAN)
+
+    vcpkg_add_to_path(PREPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
+
 set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
-set(FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()
+
+if (NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DLIB_INSTALL_DIR=lib
     OPTIONS_DEBUG
