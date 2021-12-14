@@ -7406,7 +7406,7 @@
     },
     "yasm-tool-helper": {
       "baseline": "2020-03-11",
-      "port-version": 0
+      "port-version": 1
     },
     "yato": {
       "baseline": "1.0",
