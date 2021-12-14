@@ -7,8 +7,6 @@ vcpkg_from_github(
     SHA512 2a1c6dbe0e66893be888c301e53b5d2813049047a817e9e1562acf2dec4ae79dec7db90409cd415c59238f2f3e2738e52f86a424041459390c720568ee52d860 
     HEAD_REF master
     PATCHES
-    #    fix-install.patch
-    #    allow-warnings.patch
         fix-compile-error.patch
 )
 
