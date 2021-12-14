@@ -6121,7 +6121,7 @@
       "port-version": 5
     },
     "s2n": {
-      "baseline": "1.1.1",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "safeint": {
