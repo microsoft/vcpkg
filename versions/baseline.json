@@ -4154,7 +4154,7 @@
     },
     "lodepng": {
       "baseline": "2021-12-04",
-      "port-version": 0
+      "port-version": 1
     },
     "lodepng-c": {
       "baseline": "deprecated",
