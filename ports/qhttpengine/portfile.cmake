@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
         -DBUILD_DOC=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
-	-DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
