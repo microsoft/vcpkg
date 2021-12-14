@@ -101,6 +101,12 @@ function(vcpkg_qmake_configure)
     qmake_append_program(qmake_build_tools "QMAKE_RC" "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
     qmake_append_program(qmake_build_tools "QMAKE_MT" "${VCPKG_DETECTED_CMAKE_MT}")
 
+    if(VCPKG_TARGET_IS_LINUX) 
+        # This is the reason why users should probably use a 
+        # customized qt.conf with more domain knowledge. 
+        vcpkg_list(APPEND qmake_build_tools "QMAKE_AR+=qc")
+    endif()
+
     # QMAKE_OBJCOPY ?
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         qmake_append_program(qmake_build_tools "LINKER" "${VCPKG_DETECTED_CMAKE_LINKER}")
