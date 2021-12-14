@@ -1445,8 +1445,8 @@
       "port-version": 1
     },
     "co": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "2.0.3",
+      "port-version": 0
     },
     "coin": {
       "baseline": "4.0.0",
@@ -1873,8 +1873,8 @@
       "port-version": 5
     },
     "dlib": {
-      "baseline": "19.21",
-      "port-version": 6
+      "baseline": "19.22",
+      "port-version": 0
     },
     "dmlc": {
       "baseline": "2019-08-12",
@@ -2045,8 +2045,8 @@
       "port-version": 5
     },
     "exiv2": {
-      "baseline": "0.27.4",
-      "port-version": 2
+      "baseline": "0.27.5",
+      "port-version": 0
     },
     "expat": {
       "baseline": "2.4.1",
@@ -2290,7 +2290,7 @@
     },
     "fribidi": {
       "baseline": "1.0.11",
-      "port-version": 1
+      "port-version": 2
     },
     "frozen": {
       "baseline": "2021-04-22",
@@ -2690,7 +2690,7 @@
     },
     "highfive": {
       "baseline": "2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "highway": {
       "baseline": "0.14.2",
@@ -2969,7 +2969,7 @@
       "port-version": 2
     },
     "json-dto": {
-      "baseline": "0.2.15",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "json-schema-validator": {
@@ -3022,6 +3022,10 @@
     },
     "kdbindings": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "kddockwidgets": {
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "kealib": {
@@ -4026,7 +4030,7 @@
     },
     "libuuid": {
       "baseline": "1.0.3",
-      "port-version": 8
+      "port-version": 9
     },
     "libuv": {
       "baseline": "1.42.0",
@@ -4430,15 +4434,15 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "mman": {
       "baseline": "git-f5ff813",
       "port-version": 4
     },
     "mmloader": {
-      "baseline": "2020-05-15",
-      "port-version": 1
+      "baseline": "2021-12-13",
+      "port-version": 0
     },
     "mmx": {
       "baseline": "2019-09-29",
@@ -4458,7 +4462,7 @@
     },
     "mongo-cxx-driver": {
       "baseline": "3.6.5",
-      "port-version": 1
+      "port-version": 2
     },
     "mongoose": {
       "baseline": "7.1",
@@ -4510,7 +4514,7 @@
     },
     "mpfr": {
       "baseline": "4.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mpg123": {
       "baseline": "1.29.2",
@@ -4674,7 +4678,7 @@
     },
     "netcdf-c": {
       "baseline": "4.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -5090,7 +5094,7 @@
     },
     "osgearth": {
       "baseline": "3.2",
-      "port-version": 2
+      "port-version": 3
     },
     "osi": {
       "baseline": "0.108.6",
@@ -5473,8 +5477,8 @@
       "port-version": 1
     },
     "python3": {
-      "baseline": "3.10.0",
-      "port-version": 4
+      "baseline": "3.10.1",
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.4",
@@ -5742,7 +5746,7 @@
     },
     "qtkeychain": {
       "baseline": "0.13.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain-qt6": {
       "baseline": "0.13.2",
@@ -6029,7 +6033,7 @@
       "port-version": 0
     },
     "rmlui": {
-      "baseline": "4.2",
+      "baseline": "4.3",
       "port-version": 0
     },
     "roaring": {
@@ -6037,7 +6041,7 @@
       "port-version": 3
     },
     "robin-hood-hashing": {
-      "baseline": "3.11.3",
+      "baseline": "3.11.4",
       "port-version": 0
     },
     "robin-map": {
@@ -6077,8 +6081,8 @@
       "port-version": 1
     },
     "rsocket": {
-      "baseline": "2020.05.04.00",
-      "port-version": 3
+      "baseline": "2021.08.30.00",
+      "port-version": 0
     },
     "rtabmap": {
       "baseline": "0.20.13",
@@ -6694,7 +6698,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
@@ -6706,7 +6710,7 @@
     },
     "tesseract": {
       "baseline": "4.1.1",
-      "port-version": 8
+      "port-version": 9
     },
     "tfhe": {
       "baseline": "1.0.1",
@@ -6897,7 +6901,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.3",
+      "baseline": "1.5.4",
       "port-version": 0
     },
     "tre": {
@@ -7097,7 +7101,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2021-09-13",
+      "baseline": "2021-12-05",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7135,6 +7139,10 @@
     "visit-struct": {
       "baseline": "1.0",
       "port-version": 2
+    },
+    "vk-bootstrap": {
+      "baseline": "0.5",
+      "port-version": 0
     },
     "vlfeat": {
       "baseline": "2020-07-10",
@@ -7214,7 +7222,7 @@
     },
     "wil": {
       "baseline": "2021-08-03",
-      "port-version": 1
+      "port-version": 2
     },
     "wildmidi": {
       "baseline": "0.4.4",
@@ -7365,8 +7373,8 @@
       "port-version": 2
     },
     "xtensor-io": {
-      "baseline": "0.12.8",
-      "port-version": 1
+      "baseline": "0.13.0",
+      "port-version": 0
     },
     "xtl": {
       "baseline": "0.7.2",
