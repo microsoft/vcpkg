@@ -4,7 +4,10 @@
   "port-version": 4,
   "description": "C API for the Point Data Abstraction Library (PDAL)",
   "dependencies": [
-    "pdal",
+    {
+      "name": "pdal",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
