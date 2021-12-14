@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kafeg/optimus-cpp
-    REF d77f95a553fed6eda43b7aae6c6e59ce27a26e6f
+    REF 0.1.0
     SHA512 1e34aa5aa65a3fc2bbbd900c2fe83ee0e19697d2a1bf3cc7495609a1f9fb27bd0f76373726a6cbde482532d9ad3de0d4eac92c3a4fd2fee81c3d9fe2848ec604
     HEAD_REF main
 )
