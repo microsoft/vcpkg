@@ -8,8 +8,6 @@ vcpkg_from_github(
         add-install.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
