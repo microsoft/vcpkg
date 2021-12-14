@@ -48,7 +48,7 @@ function(vcpkg_qmake_configure)
         vcpkg_list(APPEND arg_QMAKE_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        vcpkg_list(APPEND _csc_QMAKE_OPTIONS "CONFIG*=static-runtime")
+        vcpkg_list(APPEND arg_QMAKE_OPTIONS "CONFIG*=static-runtime")
     endif()
 
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -120,15 +120,6 @@ function(vcpkg_qmake_configure)
         # Cleanup build directories
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
 
-        # Setup qt.conf
-        if(NOT VCPKG_QT_CONF_${buildtype})
-            set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf")
-        endif()
-        configure_file("${VCPKG_QT_CONF_${buildtype}}" "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf") # Needs probably more TODO for cross builds
-
-        vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-        vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
-
         set(qmake_comp_flags "")
         # Note sure about these. VCPKG_QMAKE_OPTIONS offers a way to opt out of these. (earlier values being overwritten by later values; = set +=append *=append unique -=remove)
         macro(qmake_add_flags qmake_var operation flags)
@@ -145,6 +136,20 @@ function(vcpkg_qmake_configure)
         qmake_add_flags("QMAKE_LFLAGS" "*=" "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${buildtype}}")
         qmake_add_flags("QMAKE_LFLAGS_DLL" "*=" "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${buildtype}}")
         qmake_add_flags("QMAKE_LFLAGS_EXE" "*=" "${VCPKG_DETECTED_CMAKE_EXE_LINKER_FLAGS_${buildtype}}")
+
+        # Setup qt.conf
+        if(NOT VCPKG_QT_CONF_${buildtype})
+            set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf")
+        else()
+            # Let the custom supplied qt.conf override everything.
+            # The file will still be configured so users might use the variables within this scope. 
+            set(qmake_build_tools "") 
+            set(qmake_comp_flags "")
+        endif()
+        configure_file("${VCPKG_QT_CONF_${buildtype}}" "${CURRENT_BUILDTREES_DIR}/${config_triplet}/qt.conf") # Needs probably more TODO for cross builds
+
+        vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+        vcpkg_host_path_list(PREPEND PKG_CONFIG_PATH "${prefix}/lib/pkgconfig" "${prefix}/share/pkgconfig")
 
         message(STATUS "Configuring ${config_triplet}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}")
