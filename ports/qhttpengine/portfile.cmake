@@ -6,19 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS ON)
-else()
-    set(BUILD_SHARED_LIBS OFF)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_DOC=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
