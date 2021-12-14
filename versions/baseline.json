@@ -5056,6 +5056,10 @@
       "baseline": "1.0.20",
       "port-version": 0
     },
+    "optimus-cpp": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "optional-bare": {
       "baseline": "1.1.0",
       "port-version": 1
