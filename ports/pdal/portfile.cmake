@@ -16,6 +16,7 @@ vcpkg_from_github(
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/pdalboost/boost" "${SOURCE_PATH}/vendor/pdalboost/libs")
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
 foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL ZSTD)

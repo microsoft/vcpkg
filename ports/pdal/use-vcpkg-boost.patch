@@ -1,8 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2adc310..679b4e7 100644
+index 83a396b..7ebcc3b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -174,7 +174,6 @@ if (WITH_TESTS)
+@@ -67,7 +67,8 @@ else()
+ endif()
+ set(PDAL_LIB_NAME pdalcpp)
+ set(PDAL_UTIL_LIB_NAME pdal_util)
+-set(PDAL_BOOST_LIB_NAME pdal_boost)
++find_package(Boost COMPONENTS filesystem system REQUIRED)
++set(PDAL_BOOST_LIB_NAME Boost::filesystem Boost::system)
+ set(PDAL_KAZHDAN_LIB_NAME pdal_kazhdan)
+ set(PDAL_TEST_SUPPORT_OBJS pdal_test_support)
+ 
+@@ -179,13 +180,11 @@ endif()
+ 
+ add_subdirectory(plugins)
+ 
+-#include_directories(vendor/pdalboost)
+ if (WITH_TESTS)
+     include (${PDAL_CMAKE_DIR}/gtest.cmake)
      add_subdirectory(test)
  endif()
  add_subdirectory(dimbuilder)
@@ -10,21 +26,19 @@ index 2adc310..679b4e7 100644
  add_subdirectory(vendor/arbiter)
  add_subdirectory(vendor/kazhdan)
  add_subdirectory(pdal/util)
+@@ -269,7 +268,6 @@ target_include_directories(${PDAL_BASE_LIB_NAME}
+         ${PROJECT_BINARY_DIR}/include
+         ${PDAL_VENDOR_DIR}
+         ${PDAL_VENDOR_DIR}/eigen
+-        ${PDAL_VENDOR_DIR}/pdalboost
+         ${LIBXML2_INCLUDE_DIR}
+         ${ZSTD_INCLUDE_DIRS}
+         ${NLOHMANN_INCLUDE_DIR}
 diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
-index 19a2dd1..d498080 100644
+index 6b3e889..8a42122 100644
 --- a/pdal/util/CMakeLists.txt
 +++ b/pdal/util/CMakeLists.txt
-@@ -8,6 +8,9 @@ endif()
-     set(BACKTRACE_SOURCE BacktraceNone.cpp)
- endif()
- 
-+find_package(Boost COMPONENTS filesystem system REQUIRED)
-+set(PDAL_BOOST_LIB_NAME Boost::filesystem Boost::system)
-+
- set(PDAL_UTIL_SOURCES
-     "${PDAL_UTIL_DIR}/Bounds.cpp"
-     "${PDAL_UTIL_DIR}/Charbuf.cpp"
-@@ -24,8 +27,6 @@ set(PDAL_UTIL_SOURCES
+@@ -40,8 +40,6 @@ target_link_libraries(${PDAL_UTIL_LIB_NAME}
          ${CMAKE_DL_LIBS}
          ${CMAKE_THREAD_LIBS_INIT}
  )
@@ -34,10 +48,10 @@ index 19a2dd1..d498080 100644
  set_target_properties(${PDAL_UTIL_LIB_NAME} PROPERTIES
      VERSION "${PDAL_BUILD_VERSION}"
 diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
-index 7679f22..b18b674 100644
+index ee47b55..4a57268 100644
 --- a/pdal/util/FileUtils.cpp
 +++ b/pdal/util/FileUtils.cpp
-@@ -74,6 +74,12 @@ std::string addTrailingSlash(std::string path)
+@@ -98,6 +98,12 @@ inline std::string const& toNative(std::string const& in) { return in; }
  
  } // unnamed namespace
  
