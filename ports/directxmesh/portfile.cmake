@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF nov2021
-    SHA512 d33ae04b5fc7dae715a0b9ceadcde02bb10807a8d26362b074caa31a631fba173f773ee49a143c44a1bdfdad19893bcca69a3bc806fbb26f74ca39194821a953
+    REF nov2021b
+    SHA512 be2137c02c7a5973eaf91eaacfc9174148ec6dc68b163507d8146beb87c1ffff512e2593f7fd000ea7be440529ed2deda415e0dacd53e4c7d9679e97c6440d3d
     HEAD_REF master
 )
 

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kjobwidgets
-    REF v5.84.0
-    SHA512 57aa8d5756e1c9ce955975bfb5dc33ed78aaa984420effbb3b79984f9fd46794f3da092185bbcefe0464228d8f504349f7efd3a0ae79406954dc9ea84b3553f8
+    REF v5.88.0
+    SHA512 9d945adc0194a8f5cfea702c5f60b2046f5b350094959fa67a648a8dc23d3445304e96f5a75e03ec33281e63e606fb0e0893ac79a3cc438c5b302c37b7882838
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5JobWidgets)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5JobWidgets CONFIG_PATH lib/cmake/KF5JobWidgets)
 
 vcpkg_copy_pdbs()
 
@@ -25,7 +25,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+

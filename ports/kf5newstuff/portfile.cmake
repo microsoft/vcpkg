@@ -1,16 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.84.0
-    SHA512 107f8c7915f5a7656ed729d03b59e5f53f8751d771487b96e517358f1149801981e27d5cafdf86f759be539305fc8f847c51a28a35947766200cc912072f5c8d
+    REF v5.88.0
+    SHA512 7ed98ec253a35b10694964ecdbfd77afa640032536d189eeef52a5e32fb0b591baeced6d163f469183dd1515f9ebd26bc60952066d4a884834e572682f5ff393
     HEAD_REF master
-    PATCHES
-        fix_static_builds.patch     # https://invent.kde.org/frameworks/knewstuff/-/merge_requests/139
-        fix_static_builds2.patch    # https://invent.kde.org/frameworks/knewstuff/-/merge_requests/140
 )
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
@@ -37,3 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
