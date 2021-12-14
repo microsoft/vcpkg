@@ -286,8 +286,6 @@ fftw3:arm-uwp=fail
 fftw3:x64-uwp=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
-fluidsynth:x64-osx=fail
-fluidsynth:x64-windows-static-md=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
