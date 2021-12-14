@@ -7,7 +7,10 @@
   "dependencies": [
     {
       "name": "yasm",
-      "host": true
+      "host": true,
+      "features": [
+        "tools"
+      ]
     }
   ]
 }
