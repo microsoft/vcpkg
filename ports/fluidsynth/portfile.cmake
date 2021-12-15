@@ -34,7 +34,8 @@ endif()
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DLIB_INSTALL_DIR=lib
         -Denable-pkgconfig=ON
