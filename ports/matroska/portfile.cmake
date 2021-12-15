@@ -5,22 +5,22 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libmatroska
-    REF 684560a3ce962a7abe89be93cc8ffa483f7f853f # release-1.6.2
-    SHA512 d9b0e392cc99d9eec99ef90431589778976508c5ccbd8bbb166f390653c27b4cc84de189f7cd3bf5b039ecb38a96b0e341cc39195099ec415cc48d40e0b78c01
+    REF release-1.6.3
+    SHA512 f4b4cd5b5e76c452fb559ead28c4bcb5ec4e28d74898f13c1709a6ab75d95cf82b319118445d7a7f895708bb0d5d1f3c09040d3e3263c6a2f2a27ffc92d35c2f
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DDISABLE_PKGCONFIG=1
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+        -DDISABLE_PKGCONFIG=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Matroska)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Matroska)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/matroska RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

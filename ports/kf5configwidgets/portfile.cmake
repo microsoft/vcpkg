@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.84.0
-    SHA512 da03f4cfc2a64b3ccccfe2b6b7f392f84aba2b975edbf6a5b08a14604ccb565a4491c7eb707af7191345b55ca81e864b7ee13fe648589a56f3226c26160ed024
+    REF v5.88.0
+    SHA512 7272510a2df3a74bab5c4defca7dc6a4d7bdde4205ae75f9c22938f9458ad5fc5dbdc71fbe7d536b9dd96404fde5da3dbf098d400e03b48cb9906ec1d7a9bd4d
     HEAD_REF master
-    PATCHES
-        add_support_for_static_builds.patch # https://invent.kde.org/frameworks/kconfigwidgets/-/merge_requests/71
 )
 
 vcpkg_check_features(
@@ -21,6 +19,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
         ${FEATURE_OPTIONS}
@@ -38,3 +37,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
