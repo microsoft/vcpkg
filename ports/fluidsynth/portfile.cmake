@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 6c807bdd37748411801e93c48fcd5789d5a6a278 #v2.2.4
     SHA512 5fab3b4d58fa47825cf6afc816828fb57879523b8d7659fb20deacdf5439e74fd4b0f2b3f03a8db89cc4106b3b36f2ec450a858e02af30245b6413db70060a11
     HEAD_REF master
-    PATCHES separate-gentables.patch
+    PATCHES
+        fix-dependencies.patch
+        separate-gentables.patch
 )
 
 if ("buildtools" IN_LIST FEATURES)
@@ -20,11 +22,12 @@ if ("buildtools" IN_LIST FEATURES)
 endif()
 
 set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
+vcpkg_list(SET FEATURE_OPTIONS)
 foreach(_feature IN LISTS feature_list)
     list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
 endforeach()
 
-if (NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if (VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 endif()
 
@@ -34,6 +37,8 @@ vcpkg_cmake_configure(
     OPTIONS 
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DLIB_INSTALL_DIR=lib
+        -Denable-pkgconfig=ON
+        -Denable-framework=OFF # Needs system permission to install framework
     OPTIONS_DEBUG
         -Denable-debug:BOOL=ON
     MAYBE_UNUSED_VARIABLES
