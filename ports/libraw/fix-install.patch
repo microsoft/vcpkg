@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 47f3869..136549b 100644
+index 1afe304..88c0294 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -544,7 +544,7 @@ SET_TARGET_PROPERTIES(raw_r PROPERTIES OUTPUT_NAME "raw_r")
- # -- Files to install -------------------------------------------------------------------------------------
+@@ -584,7 +584,7 @@ SET_TARGET_PROPERTIES(raw_r PROPERTIES COMPILE_PDB_NAME "raw_r")
+ if (LIBRAW_INSTALL)
  
  # Configure and install data file for packaging.
 -IF(NOT WIN32)
@@ -11,7 +11,7 @@ index 47f3869..136549b 100644
      CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake/data/libraw.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc @ONLY)
      INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
  
-@@ -570,8 +570,8 @@ INSTALL(FILES       ${CMAKE_CURRENT_SOURCE_DIR}/libraw/libraw.h
+@@ -610,8 +610,8 @@ INSTALL(FILES       ${LIBRAW_PATH}/libraw/libraw.h
  # Install Shared binary files.
  INSTALL(TARGETS raw
          RUNTIME DESTINATION bin
