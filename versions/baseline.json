@@ -7126,7 +7126,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
