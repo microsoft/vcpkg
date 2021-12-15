@@ -23,7 +23,8 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
   'Microsoft.VisualStudio.Component.VC.v141.x86.x64',
-  'Microsoft.VisualStudio.Component.VC.140'
+  'Microsoft.VisualStudio.Component.VC.140',
+  'Microsoft.VisualStudio.ComponentGroup.UWP.VC.BuildTools'
 )
 
 <#
