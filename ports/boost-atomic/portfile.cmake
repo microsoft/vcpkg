@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF boost-1.78.0
     SHA512 a6eba43c7038228fa7ce537b05429e263397bc914235d9ad9aa47badce5455f4905e15e5f1979c19088b47faca3091bd0dfcdb017290f796d34a36b682592345
     HEAD_REF master
+    PATCHES 0001-fix-compilation-for-uwp.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
