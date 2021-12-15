@@ -84,7 +84,7 @@ function(z_vcpkg_append_proglist var_to_append additional_binaries)
     endif()
 
     get_filename_component(CMAKE_PATH "${CMAKE_COMMAND}" DIRECTORY)
-    #vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
+    vcpkg_add_to_path("${CMAKE_PATH}" PREPEND) # Make CMake invokeable for Meson
     string(APPEND "${var_to_append}" "cmake = '${CMAKE_COMMAND}'\n")
 
     vcpkg_find_acquire_program(PYTHON3)
