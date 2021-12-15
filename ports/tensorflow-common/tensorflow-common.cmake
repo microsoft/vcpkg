@@ -1,5 +1,5 @@
-set(TF_VERSION 2.6.0)
-set(TF_VERSION_SHORT 2.6)
+set(TF_VERSION 2.7.0)
+set(TF_VERSION_SHORT 2.7)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -144,11 +144,10 @@ foreach(BUILD_TYPE dbg rel)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 d052da4b324f1b5ac9c904ac3cca270cefbf916be6e5968a6835ef3f8ea8c703a0b90be577ac5205edf248e8e6c7ee8817b6a1b383018bb77c381717c6205e05
+		SHA512 f1e892583c7b3a73d4d39ec65dc135a5b02c789b357d57414ad2b6d05ad9fbfc8ef81918ba6410e314abd6928b76f764e6ef64c0b0c84b58b50796634be03f39
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
