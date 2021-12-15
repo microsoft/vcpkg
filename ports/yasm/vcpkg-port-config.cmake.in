@@ -1,4 +1,12 @@
-set(Z_YASM_TOOL_HELPER_LIST_DIR "${CMAKE_CURRENT_LIST_DIR}")
+# For the exported file, we should set 'Z_YASM_TOOL_HELPER_LIST_DIR' before calling 'find_package'
+if (NOT DEFINED Z_YASM_TOOL_HELPER_LIST_DIR OR NOT Z_YASM_TOOL_HELPER_LIST_DIR)
+    # Get the host installed dir, use relative path here
+    set(Z_YASM_TOOL_HELPER_LIST_DIR "${CMAKE_CURRENT_LIST_DIR}")
+    get_filename_component(Z_YASM_TOOL_HELPER_LIST_DIR "${Z_YASM_TOOL_HELPER_LIST_DIR}" PATH)
+    get_filename_component(Z_YASM_TOOL_HELPER_LIST_DIR "${Z_YASM_TOOL_HELPER_LIST_DIR}" PATH)
+    get_filename_component(Z_YASM_TOOL_HELPER_LIST_DIR "${Z_YASM_TOOL_HELPER_LIST_DIR}" PATH)
+    set(Z_YASM_TOOL_HELPER_LIST_DIR "${Z_YASM_TOOL_HELPER_LIST_DIR}/@HOST_TRIPLET@")
+endif()
 
 function(yasm_tool_helper)
     cmake_parse_arguments(PARSE_ARGV 0 arg
@@ -11,7 +19,7 @@ function(yasm_tool_helper)
         message(FATAL_ERROR "Unexpected arguments to yasm_tool_helper: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    find_program(YASM yasm PATHS "${Z_YASM_TOOL_HELPER_LIST_DIR}/../../tools/yasm")
+    find_program(YASM yasm PATHS "${Z_YASM_TOOL_HELPER_LIST_DIR}/tools/yasm")
 
     if(arg_APPEND_TO_PATH)
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
