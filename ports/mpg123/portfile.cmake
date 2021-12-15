@@ -9,7 +9,7 @@ vcpkg_from_sourceforge(
     SHA512 ${MPG123_HASH}
     PATCHES
         no-executables.patch
-        fix-moudulejack.patch
+        fix-modulejack.patch
 )
 
 include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
