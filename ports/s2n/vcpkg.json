@@ -1,10 +1,11 @@
 {
   "name": "s2n",
-  "version": "1.1.1",
+  "version": "1.3.0",
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
   "supports": "!uwp & !windows",
   "dependencies": [
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tests": {
+      "description": "Build and run the tests"
+    }
+  }
 }
