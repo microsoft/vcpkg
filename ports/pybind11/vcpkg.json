@@ -1,8 +1,10 @@
 {
   "name": "pybind11",
   "version-semver": "2.8.1",
+  "port-version": 1,
   "description": "pybind11 is a lightweight header-only library that exposes C++ types in Python and vice versa, mainly to create Python bindings of existing C++ code",
   "homepage": "https://github.com/pybind/pybind11",
+  "supports": "!(arm & windows)",
   "dependencies": [
     "python3",
     {
