@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knotifications
-    REF v5.87.0
-    SHA512 8b12a6af3675f54bb494b91c71f4284ec109c381aa92e54c3613c6beca96c5f20ef418e7d35f2bcdec197884ea796c4f1d4ab2937583cd6b78d8ef40204c51cb
+    REF v5.88.0
+    SHA512 d805853d4cbc5652a28270210e9b09706f5e630287478caf3ad745692318c4ebe734b89eeb7d4aaa178fea850669afb136ead1aadb9e97442a84f7fd09d2655d
     HEAD_REF master
 )
 
@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
@@ -27,3 +28,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+

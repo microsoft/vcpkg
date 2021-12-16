@@ -1,6 +1,6 @@
 {
   "name": "llfio",
-  "version-string": "2.0-20210922",
+  "version-string": "2.0-20211208",
   "description": "P1031 low level file i/o and filesystem library for the C++ standard",
   "homepage": "https://github.com/ned14/llfio",
   "supports": "!(uwp | static)",

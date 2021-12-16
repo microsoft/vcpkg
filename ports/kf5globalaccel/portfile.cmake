@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.87.0
-    SHA512 2fde268730d840a56e09809e2486182b6df4b7567685bc5dce41fea48ae04d504f780ff5698ff1794142b6e25321296dc2b6332bf2f4160f68f9567123d3a96a
+    REF v5.88.0
+    SHA512 cf0e9c2414944efc0e612ef9db171ac861a7fb686bd1f5ba2eb8e6e4bbc96b4970b41bb3811bc11145124f5ec3ad3b87d2b7933b482d5240413b355cb47a3306
     HEAD_REF master
     PATCHES
         xcb_xtest_optional.diff # https://invent.kde.org/frameworks/kglobalaccel/-/merge_requests/30

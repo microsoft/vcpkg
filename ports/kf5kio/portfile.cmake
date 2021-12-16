@@ -5,12 +5,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.87.0
-    SHA512 ae16478ea1d4140d8168a87a25017861e5b3b2e4afb280ea01dc6822d3ce880961791ec37d658750fe48d81eccda6327d66ea7de0ca8d4515cec18a3b79f453e
+    REF v5.88.0
+    SHA512 c2f98b7286c4e9cef6e63a620077273630ea01cc74266170008731c080dde73dff9cbe289a0a2fe3c1423014ed2627cec3ead332ba90321b43b6a287a85ed5d9
     HEAD_REF master
     PATCHES
-        libmount_static_dep.diff    # https://invent.kde.org/frameworks/kio/-/merge_requests/615
-        revert_blkid.diff           # https://invent.kde.org/frameworks/kio/-/commit/221a94a66c4d2f6e4f2dc938ee8a63a6ca739477
         ${PATCHES}
 )
 
@@ -65,3 +63,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
