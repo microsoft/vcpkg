@@ -1,8 +1,7 @@
 {
   "name": "nanogui",
-  "version-string": "2019-09-23",
-  "port-version": 3,
-  "description": "NanoGUI is a minimalistic cross-platform widget library for OpenGL 3.x or higher.",
+  "version-string": "2021-11-24",
+  "description": "NanoGUI is a minimalistic cross-platform C++/Python widget library for OpenGL, GLES2/3, Metal, and WebAssembly/WebGL",
   "homepage": "https://github.com/mitsuba-renderer/nanogui",
   "supports": "!uwp",
   "dependencies": [
