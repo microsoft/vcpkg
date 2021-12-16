@@ -1,8 +1,13 @@
 {
   "name": "nmslib",
-  "version-string": "2.0.6",
-  "port-version": 1,
+  "version": "2.1.1",
   "description": "Non-Metric Space Library (NMSLIB) is an efficient similarity search library and a toolkit for evaluation of k-NN methods for generic non-metric spaces.",
   "homepage": "https://github.com/searchivarius/nmslib",
-  "supports": "!(arm | uwp)"
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

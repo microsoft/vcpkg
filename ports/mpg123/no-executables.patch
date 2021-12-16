@@ -1,0 +1,13 @@
+diff --git a/ports/cmake/src/CMakeLists.txt b/ports/cmake/src/CMakeLists.txt
+index c7ba36f..7147174 100644
+--- a/ports/cmake/src/CMakeLists.txt
++++ b/ports/cmake/src/CMakeLists.txt
+@@ -372,7 +372,7 @@ if(BUILD_LIBOUT123)
+ endif()
+ add_subdirectory("libsyn123")
+ 
+-if(UNIX)
++if(0)
+     add_subdirectory("tests")
+ 
+     if(BUILD_LIBOUT123)
