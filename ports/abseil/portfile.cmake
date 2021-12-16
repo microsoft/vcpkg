@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF 215105818dfde3174fe799600bb0f3cae233d0bf #LTS 20211102, Patch 1
     SHA512 75d234eac76be8790cf09e3e1144e4b4cf5cacb61e46961a9e4a35b37d0fa85243afdd5de5f47a006ef96af6fc91ecc0c233297c4c32258c08d46304b3361330
     HEAD_REF master
-        PATCHES
+    PATCHES
         # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
         # instead of the library replacement types
         # in C++11 mode, force use of library replacement types, otherwise the automatic
