@@ -1,0 +1,109 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 119867e..e726be9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,7 +30,32 @@ project(nanogui
+     ${NANOGUI_VERSION}
+ )
+ 
+-if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/src")
++if (DEFINED CMAKE_TOOLCHAIN_FILE)
++  if ("glad" IN_LIST FEATURES)
++    set(NANOGUI_BUILD_GLAD ON)
++  else ()
++    set(NANOGUI_BUILD_GLAD OFF)
++  endif ()
++
++  if ("glfw" IN_LIST FEATURES)
++    set(NANOGUI_BUILD_GLFW ON)
++  else ()
++    set(NANOGUI_BUILD_GLFW OFF)
++  endif ()
++
++  if ("glad" IN_LIST FEATURES)
++    set(NANOGUI_BUILD_GLAD ON)
++  else ()
++    set(NANOGUI_BUILD_GLAD OFF)
++  endif ()
++
++  if ("python" IN_LIST FEATURES)
++    set(NANOGUI_BUILD_PYTHON ON)
++  else ()
++    set(NANOGUI_BUILD_PYTHON OFF)
++  endif ()
++  # TODO: Set `NANOGUI_BACKEND`
++elseif (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/src")
+   message(FATAL_ERROR "The NanoGUI dependency repositories (GLFW, etc.) are missing! "
+     "You probably did not clone the project with --recursive. It is possible to recover "
+     "by calling \"git submodule update --init --recursive\"")
+@@ -227,7 +252,11 @@ if (NANOGUI_BUILD_GLFW)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+   endif()
+ 
+-  add_subdirectory(ext/glfw)
++  if (IS_DIRECTORY "ext/glfw" AND EXISTS "ext/glfw/CMakeLists.txt")
++    add_subdirectory(ext/glfw)
++  else ()
++    find_package(glfw3 CONFIG REQUIRED)
++  endif ()
+ 
+   # Two targets have now been defined: `glfw_objects`, which will be merged into
+   # NanoGUI at the end, and `glfw`.  The `glfw` target is the library itself
+@@ -244,15 +273,20 @@ if (NANOGUI_BUILD_GLFW)
+ endif()
+ 
+ if (NANOGUI_BUILD_GLAD)
+-  # Build and include GLAD on Windows
+-  list(APPEND NANOGUI_EXTRA
+-    ext/glad/src/glad.c
+-    ext/glad/include/glad/glad.h
+-    ext/glad/include/KHR/khrplatform.h)
+-  if (MSVC)
+-    set_source_files_properties(ext/glad/src/glad.c
+-      PROPERTIES COMPILE_FLAGS /wd4055)
+-  endif()
++  if (IS_DIRECTORY "ext/glad" AND EXISTS "ext/glad/CMakeLists.txt")
++    # Build and include GLAD on Windows
++    list(APPEND NANOGUI_EXTRA
++      ext/glad/src/glad.c
++      ext/glad/include/glad/glad.h
++      ext/glad/include/KHR/khrplatform.h)
++    if (MSVC)
++      set_source_files_properties(ext/glad/src/glad.c
++        PROPERTIES COMPILE_FLAGS /wd4055)
++    endif()
++  else ()
++    find_package(glad CONFIG REQUIRED)
++    list(APPEND NANOGUI_EXTRA "glad::glad")
++  endif ()
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "BSD")
+@@ -371,7 +405,7 @@ else()
+   set(NANOGUI_LIBRARY_TYPE "STATIC")
+ endif()
+ 
+-if (APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++if (APPLE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
+   # Use automatic reference counting for Objective-C portions
+   add_compile_options(-fobjc-arc)
+ endif()
+@@ -502,6 +536,9 @@ if (NANOGUI_INSTALL)
+           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
++  if (NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
++    set(CMAKE_INSTALL_INCLUDEDIR "include")
++  endif ()
+   install(DIRECTORY include/nanogui DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+           FILES_MATCHING PATTERN "*.h")
+ 
+@@ -522,6 +559,8 @@ if (NANOGUI_INSTALL)
+ 
+   set(NANOGUI_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/cmake/nanogui")
+ 
++  include(CMakePackageConfigHelpers)
++
+   configure_package_config_file(
+     resources/nanoguiConfig.cmake.in nanoguiConfig.cmake
+     INSTALL_DESTINATION ${NANOGUI_CMAKECONFIG_INSTALL_DIR})

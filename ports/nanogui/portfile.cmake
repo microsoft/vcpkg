@@ -3,11 +3,12 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mitsuba-renderer/nanogui
-    REF 0146a88b2214cd5c5c29e6dfa8d3d3d0e9ab6d9d # Commits on Oct 16, 2020
-    SHA512 0b0d0d077079e1a7186ec2cc640dbd48aebcefa0e1e0caa476128c6396b33d236cb5e8aaada4e1c8868a5d4aaefd90178206dd1569abab63c84af26d3309e2a5
+    REF 2d875ad0cd480b8eb01f441e2ef113a258f1effe  # Commits on Nov 24, 2021
+    SHA512 353b3449c2bf0a2e8e29aae62626184c36f882efe0c3e2edc8a43951f7053618d4fd996406997957c2ac6500d2b1b070e3396f346dc4e901dbdd167c58ea1bf3
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
+        toolchain-features.patch
+#       fix-dependencies.patch
 #       fix-package-seeking.diff
 #       fix-cmakelists.patch
 )
