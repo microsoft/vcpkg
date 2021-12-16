@@ -6,12 +6,9 @@ vcpkg_from_github(
     REF v2.1.0
     SHA512 07c671f83af93594d7792d770890205aad1a44803696f9567aa25f69a277fa5c3f4e9f9f5f0210ebd59f5cf75aff1f80ce532bd7bbd536a699724ceb6e3277fd
     HEAD_REF master
+    PATCHES
+        add-compile-definitions.patch
 )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND VCPKG_C_FLAGS " -DNOMINMAX")
-    string(APPEND VCPKG_CXX_FLAGS " -DNOMINMAX")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
