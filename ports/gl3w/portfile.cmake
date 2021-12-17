@@ -20,15 +20,14 @@ vcpkg_execute_required_process(
   LOGNAME gl3w-gen
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  PREFER_NINJA
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/GL/gl3w.h" "#define GL3W_API" "#define GL3W_API __declspec(dllimport)")
