@@ -22,7 +22,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 5
+      "port-version": 6
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -5064,6 +5064,10 @@
       "baseline": "1.0.20",
       "port-version": 0
     },
+    "optimus-cpp": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "optional-bare": {
       "baseline": "1.1.0",
       "port-version": 1
@@ -5186,7 +5190,7 @@
     },
     "pcl": {
       "baseline": "1.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "pcre": {
       "baseline": "8.45",
@@ -6218,7 +6222,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.0.4",
-      "port-version": 15
+      "port-version": 16
     },
     "sdl2-net": {
       "baseline": "2.0.1",
@@ -6702,7 +6706,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.7.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
