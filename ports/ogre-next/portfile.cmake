@@ -50,12 +50,7 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DOGRE_BUILD_PLUGIN_PFX=ON
-
         -DOGRE_CMAKE_DIR=share/ogre-next
-
-        -DCMAKE_CXX_FLAGS=\"/DWIN32 /D_WINDOWS /W3 /GR /EHsc\"
-        -DCMAKE_C_FLAGS=\"/DWIN32 /D_WINDOWS /W3\"
-        -DCMAKE_EXE_LINKER_FLAGS=/machine:x64
 		)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
