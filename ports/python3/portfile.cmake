@@ -149,7 +149,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    if(PYTHON_ALLOW_EXTENSIONS)
+    # The generated python executable must match the host arch
+    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
         message(STATUS "Bootstrapping pip")
         vcpkg_execute_required_process(COMMAND python -m ensurepip
             WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
