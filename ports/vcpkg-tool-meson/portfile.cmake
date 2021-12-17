@@ -47,6 +47,7 @@ if(NOT "${program}")
     z_vcpkg_apply_patches(
         SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
         PATCHES meson-intl.patch
+                fix_linker_detection.patch
     )
 endif()
 
