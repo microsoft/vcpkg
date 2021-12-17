@@ -17,6 +17,8 @@ if ("buildtools" IN_LIST FEATURES)
     vcpkg_cmake_install()
 
     vcpkg_copy_tools(TOOL_NAMES make_tables AUTO_CLEAN)
+
+    vcpkg_add_to_path(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
