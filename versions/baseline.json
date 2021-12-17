@@ -2450,7 +2450,7 @@
     },
     "gl3w": {
       "baseline": "2018-05-31",
-      "port-version": 3
+      "port-version": 4
     },
     "glad": {
       "baseline": "0.1.34",
