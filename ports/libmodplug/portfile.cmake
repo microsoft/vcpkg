@@ -4,7 +4,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(STATIC_PATCH "001-automagically-define-modplug-static.patch")
 endif()
 
-vcpkg_from_github(
+vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Konstanty/libmodplug
     REF ${MODPLUG_HASH}
