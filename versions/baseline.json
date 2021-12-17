@@ -3070,7 +3070,7 @@
     },
     "kf5config": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5configwidgets": {
       "baseline": "5.89.0",
@@ -3106,7 +3106,7 @@
     },
     "kf5holidays": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5i18n": {
       "baseline": "5.89.0",
@@ -3150,7 +3150,7 @@
     },
     "kf5plotting": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5service": {
       "baseline": "5.89.0",
@@ -6702,7 +6702,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
@@ -7302,7 +7302,7 @@
     },
     "x264": {
       "baseline": "164-5db6aa6cab1b146",
-      "port-version": 1
+      "port-version": 2
     },
     "x265": {
       "baseline": "3.4",
