@@ -6,9 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DGRAPHQL_BUILD_TESTS=OFF 
         -DGRAPHQL_UPDATE_VERSION=OFF 
@@ -22,16 +21,14 @@ vcpkg_configure_cmake(
         -DGRAPHQL_INSTALL_TOOLS_DIR=${CURRENT_PACKAGES_DIR}/debug/tools
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(
-    TOOL_NAMES schemagen
+    TOOL_NAMES schemagen clientgen
     SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
 
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
