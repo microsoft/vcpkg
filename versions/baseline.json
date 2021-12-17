@@ -5054,7 +5054,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openmvs": {
       "baseline": "1.1.1",
@@ -6374,7 +6374,7 @@
     },
     "shogun": {
       "baseline": "6.1.4",
-      "port-version": 6
+      "port-version": 7
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
@@ -6810,7 +6810,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 5
+      "port-version": 6
     },
     "think-cell-range": {
       "baseline": "498839d",
