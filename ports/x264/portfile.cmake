@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF 5db6aa6cab1b146e07b60cc1736a01f21da01154
     SHA512 d2cdd40d195fd6507abacc8b8810107567dff2c0a93424ba1eb00b544cb78a5430f00f9bcf8f19bd663ae77849225577da05bfcdb57948a8af9dc32a7c8b9ffd
     HEAD_REF stable
-    PATCHES 
+    PATCHES
         "uwp-cflags.patch"
 )
 
@@ -73,8 +73,9 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
+
+    if (NOT VCPKG_BUILD_TYPE)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
     endif()
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # force U_STATIC_IMPLEMENTATION macro

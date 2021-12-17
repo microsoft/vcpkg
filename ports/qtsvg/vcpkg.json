@@ -1,6 +1,6 @@
 {
   "name": "qtsvg",
-  "version-semver": "6.2.1",
+  "version-semver": "6.2.2",
   "description": "Qt SVG",
   "homepage": "https://www.qt.io/",
   "dependencies": [

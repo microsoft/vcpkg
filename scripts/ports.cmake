@@ -82,7 +82,7 @@ else()
     set(Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-vcpkg_minimum_required(VERSION 2021-08-03)
+vcpkg_minimum_required(VERSION 2021-11-02)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
