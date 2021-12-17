@@ -1,32 +1,25 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
-# NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "3.2.2")
-set(GDAL_VERSION_PKG "322")
-set(GDAL_PACKAGE_SUM "ce319e06c78bd076228b3710c127cdbd37c7d6fb23966b47df7287eaffe86a05d4ddcc78494c8bfcaf4db98a71f2ed50a01fb3ca2fe1c10cf0d2e812683c8e53")
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
-    FILENAME "gdal${GDAL_VERSION_PKG}.zip"
-    SHA512 ${GDAL_PACKAGE_SUM}
-    )
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
     0007-Control-tools.patch
-    )
+    0008-Fix-absl-string_view.patch
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO OSGeo/gdal
+    REF d699b38a744301368070ef780f797340da4a9c3c # 3.4.0
+    SHA512 709523740a51a0a2a144debcfa5fbc5a5b3d93cc3632856cfbc37f7ca52f2e83f4942d9a27d4c723ee19d2397cc91a4b1ba4543547afdfefb3980a7ba6684bd7
+    HEAD_REF master
     PATCHES ${GDAL_PATCHES}
-    )
+)
+# `vcpkg clean` stumbles over one subdir
+file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
@@ -35,6 +28,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NMAKE_OPTIONS "")
     set(NMAKE_OPTIONS_REL "")
     set(NMAKE_OPTIONS_DBG "")
+
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES --msvc-syntax proj INCLUDE_DIRS LIBS)
 
     include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
     find_dependency_win()
@@ -50,7 +45,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "HTMLDIR=${NATIVE_HTML_DIR}"
         "GEOS_DIR=${GEOS_INCLUDE_DIR}"
         "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-        "PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}"
+        "PROJ_INCLUDE=${PROJ_INCLUDE_DIRS}"
         "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
         "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
         "CURL_INC=-I${CURL_INCLUDE_DIR}"
@@ -66,7 +61,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "PNGDIR=${PNG_INCLUDE_DIR}"
         "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
         ZLIB_EXTERNAL_LIB=1
-        ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
         MSVC_VER=1900
         )
 
@@ -94,7 +88,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_REL}"
+        "PROJ_LIBRARY=${PROJ_LIBS_RELEASE}"
         "PNG_LIB=${PNG_LIBRARY_REL}"
         "GEOS_LIB=${GEOS_LIBRARY_REL}"
         "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
@@ -111,7 +105,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_DBG}"
+        "PROJ_LIBRARY=${PROJ_LIBS_DEBUG}"
         "PNG_LIB=${PNG_LIBRARY_DBG}"
         "GEOS_LIB=${GEOS_LIBRARY_DBG}"
         "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
@@ -134,7 +128,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     # Begin build process
     vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}"
+        SOURCE_PATH "${SOURCE_PATH}/gdal"
         TARGET devinstall
         OPTIONS_RELEASE
         "${NMAKE_OPTIONS_REL}"
@@ -174,7 +168,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -191,7 +184,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
     # See https://github.com/microsoft/vcpkg/issues/16990
-    file(TOUCH "${SOURCE_PATH}/config.rpath")
+    file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
 
     set(CONF_OPTS
         --with-hide-internal-symbols=yes
@@ -207,7 +200,6 @@ else()
         set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
     endfunction()
     # parameters in the same order as the dependencies in vcpkg.json
-    add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
     add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
     add_config("--with-expat=yes"    "Expat support:             yes")
     add_config("--with-geos=yes"     "GEOS support:              yes")
@@ -251,6 +243,12 @@ else()
         add_config("--with-mysql=no"   "MySQL support:             no")
     endif()
 
+    if ("cfitsio" IN_LIST FEATURES)
+        add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-cfitsio=no"   "CFITSIO support:           no")
+    endif()
+
     if(DISABLE_SYSTEM_LIBRARIES)
         list(APPEND CONF_OPTS
             # Too much: --disable-all-optional-drivers
@@ -281,6 +279,7 @@ else()
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
             --with-mrsid=no
             --with-mrsid_lidar=no
@@ -309,12 +308,7 @@ else()
             )
     endif()
 
-    # proj needs a C++ runtime library
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lc++")
-    else()
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
-    endif()
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES proj LIBS)
 
     if("tools" IN_LIST FEATURES)
         list(APPEND CONF_OPTS "--with-tools=yes")
@@ -323,14 +317,17 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
+        SOURCE_PATH "${SOURCE_PATH}/gdal"
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
-        ${CONF_OPTS}
+            ${CONF_OPTS}
+        OPTIONS_RELEASE
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_RELEASE}"
         OPTIONS_DEBUG
-        --enable-debug
-        --with-tools=no
+            --enable-debug
+            --with-tools=no
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_DEBUG}"
         )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)
@@ -369,10 +366,15 @@ else()
         vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
     endif()
 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/gdal/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

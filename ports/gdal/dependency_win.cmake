@@ -1,9 +1,4 @@
 macro(find_dependency_win)
-  # Setup proj4 libraries + include path
-  set(PROJ_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
-  set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
-  set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
-
   # Setup libpng libraries + include path
   set(PNG_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
   set(PNG_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" )
@@ -243,5 +238,15 @@ macro(find_dependency_win)
         set(SPATIALITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib" )
     endif()
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
+  endif()
+
+  if ("cfitsio" IN_LIST FEATURES)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" FITS_INCLUDE)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/cfitsio.lib" FITS_LIBRARY_REL)
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/cfitsio.lib" FITS_LIBRARY_DBG)
+    list(APPEND NMAKE_OPTIONS FITS_PLUGIN=YES)
+    list(APPEND NMAKE_OPTIONS FITS_INC_DIR=${FITS_INCLUDE})
+    list(APPEND NMAKE_OPTIONS_REL FITS_LIB=${FITS_LIBRARY_REL})
+    list(APPEND NMAKE_OPTIONS_DBG FITS_LIB=${FITS_LIBRARY_DBG})
   endif()
 endmacro()
