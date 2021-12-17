@@ -133,19 +133,19 @@
     "visualization": {
       "description": "Build visualization",
       "dependencies": [
+        "vtk"
+      ]
+    },
+    "vtk": {
+      "description": "An alias for visualization",
+      "dependencies": [
         {
           "name": "pcl",
           "default-features": false,
           "features": [
-            "vtk"
+            "visualization"
           ]
         }
-      ]
-    },
-    "vtk": {
-      "description": "VTK-Visualizations support for PCL",
-      "dependencies": [
-        "vtk"
       ]
     }
   }
