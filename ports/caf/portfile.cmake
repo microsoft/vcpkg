@@ -8,12 +8,9 @@ vcpkg_from_github(
         fix_dependency.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DCAF_ENABLE_CURL_EXAMPLES=OFF
         -DCAF_ENABLE_PROTOBUF_EXAMPLES=OFF
