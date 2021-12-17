@@ -21,10 +21,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipper      ENABLE_ZIPPER
 )
 
-if (ENABLE_BUILD_DYNAMIC)
-    include(vcpkg_find_fortran)
-    vcpkg_find_fortran(FORTRAN_CMAKE)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -34,7 +30,6 @@ vcpkg_cmake_configure(
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
-        ${FORTRAN_CMAKE}
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_SYSTEM_CONTRIB=ON
