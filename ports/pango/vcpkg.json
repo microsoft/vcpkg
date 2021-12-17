@@ -1,6 +1,6 @@
 {
   "name": "pango",
-  "version": "1.48.4",
+  "version": "1.48.10",
   "port-version": 1,
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
@@ -27,6 +27,10 @@
         "coretext"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Image loading library.",
   "homepage": "https://developer.gnome.org/gdk-pixbuf/",
   "dependencies": [
@@ -13,6 +13,10 @@
     },
     "libpng",
     "tiff",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "zlib"
   ]
 }

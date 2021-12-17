@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kubernetes-client/c
-    REF f16ac13090902373e3e3c9deef064659a3c9215e
-    SHA512 07857a6aae4116a51b776af7ba4ede12c1f479b535b5b8b2e373e73eac718b367e84eb87b60faeb1174be0562d35ac78f36469f2128294c028a96ecb181580eb
+    REF a019822652b57781647d4d262870fa38ef531ad9
+    SHA512 7547bade6878dd6402f760fb49248cb1dd031be11dda31c3758324cf833ca184efb127c637d28cb5c59cc172dcb211a49e5fa60f459c396fea2fcd781c1260a1
     HEAD_REF master
     PATCHES
         001-fix-destination.patch
