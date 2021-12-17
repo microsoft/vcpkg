@@ -59,7 +59,7 @@
           "features": [
             "python3"
           ],
-          "platform": "!uwp & !(arm & windows) & !emscripten & !ios & !android"
+          "platform": "!uwp & !emscripten & !ios & !android"
         },
         "python3"
       ]

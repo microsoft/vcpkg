@@ -44,10 +44,11 @@ $portData = @{
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
-    "boost-fiber"            = @{ "supports" = "!osx & !uwp & !arm & !emscripten";
-        "features"                = @{
+    "boost-fiber"            = @{
+        "supports" = "!osx & !uwp & !arm & !emscripten";
+        "features" = @{
             "numa" = @{
-                "description"  = "Enable NUMA support";
+                "description" = "Enable NUMA support";
             }
         } 
     };
@@ -101,7 +102,7 @@ $portData = @{
             };
             "python3" = @{
                 "description"  = "Build Python3 bindings";
-                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !(arm & windows) & !emscripten & !ios & !android" }, "python3");
+                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !emscripten & !ios & !android" }, "python3");
             }
         }
     };
@@ -121,7 +122,7 @@ $portData = @{
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");
-        "supports"         = "!uwp & !(arm & windows) & !emscripten & !ios & !android";
+        "supports"         = "!uwp & !emscripten & !ios & !android";
         "features"         = @{
             "python2" = @{
                 "description"  = "Build with Python2 support";
@@ -501,7 +502,7 @@ foreach ($library in $libraries) {
             elseif ($_ -eq "nondet_random.hpp") { "random" }
             elseif ($_ -match "cregex.hpp|regex_fwd.hpp") { "regex" }
             elseif ($_ -eq "archive") { "serialization" }
-            elseif ($_ -match "^signals$|last_value.hpp|signal.hpp|signals.hpp") { "signals" }
+            elseif ($_ -match "last_value.hpp|signal.hpp") { "signals" }
             elseif ($_ -match "enable_shared_from_this.hpp|intrusive_ptr.hpp|make_shared.hpp|make_unique.hpp|pointer_cast.hpp|pointer_to_other.hpp|scoped_array.hpp|scoped_ptr.hpp|shared_array.hpp|shared_ptr.hpp|weak_ptr.hpp") { "smart_ptr" }
             elseif ($_ -eq "cerrno.hpp") { "system" }
             elseif ($_ -eq "progress.hpp") { "timer" }

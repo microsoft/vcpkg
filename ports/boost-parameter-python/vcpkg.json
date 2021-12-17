@@ -10,7 +10,7 @@
     "boost-preprocessor",
     {
       "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten & !ios & !android"
+      "platform": "!uwp & !emscripten & !ios & !android"
     },
     "boost-vcpkg-helpers"
   ]
