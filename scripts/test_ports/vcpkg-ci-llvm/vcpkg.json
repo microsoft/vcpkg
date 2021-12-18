@@ -9,7 +9,7 @@
       "default-features": false,
       "features": [
         "clang",
-        "disable-abi-breaking-checks",
+        "enable-abi-breaking-checks",
         "disable-assertions",
         "disable-clang-static-analyzer",
         "enable-bindings",
