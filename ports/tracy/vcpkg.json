@@ -6,6 +6,10 @@
   "supports": "!(windows & (arm | uwp))",
   "dependencies": [
     {
+      "name": "pthreads",
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
