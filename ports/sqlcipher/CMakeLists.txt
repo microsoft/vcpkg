@@ -40,7 +40,7 @@ endif()
 target_include_directories(sqlcipher INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
-    target_link_libraries(sqlcipher PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+    target_link_libraries(sqlcipher PRIVATE Threads::Threads ${CMAKE_DL_LIBS} m)
 endif()
 
 target_link_libraries(sqlcipher PRIVATE ${OPENSSL_CRYPTO_LIBRARY})
