@@ -64,7 +64,7 @@
   <PropertyGroup>
     <_ZVcpkgCurrentInstalledDir>$(_ZVcpkgInstalledDir)\$(VcpkgTriplet)\</_ZVcpkgCurrentInstalledDir>
     <_ZVcpkgNormalizedConfiguration Condition="'$(UseDebugLibraries)' == 'true'">Debug</_ZVcpkgNormalizedConfiguration>
-    <_ZVcpkgNormalizedConfiguration Condition="'$(UseDebugLibraries)' == 'false'">Release</_ZVcpkgNormalizedConfiguration>
+    <_ZVcpkgNormalizedConfiguration Condition="'$(UseDebugLibraries)' != 'true'">Release</_ZVcpkgNormalizedConfiguration>
     <_ZVcpkgNormalizedConfiguration Condition="'$(UseDebugLibraries)' == '' and $(VcpkgConfiguration.StartsWith('Debug'))">Debug</_ZVcpkgNormalizedConfiguration>
     <_ZVcpkgNormalizedConfiguration Condition="'$(UseDebugLibraries)' == '' and ($(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel')">Release</_ZVcpkgNormalizedConfiguration>
 
