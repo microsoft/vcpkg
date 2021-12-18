@@ -23,8 +23,18 @@ vcpkg_from_github(
         00014-pkgconfig-upbdefs.patch
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+if(VCPKG_CROSSCOMPILING)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME 
+       AND (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm") 
+       AND (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+        # If both are windows on x86-64, turn on codegen feature automatically since it's not a crosscompiling.
+        # This is required because VCPKG_CROSSCOMPILING only checks if the triplets are different
+        # and does not care about the situations like HOST:x64-windows and TARGET:x64-windows-static
+        list(APPEND FEATURES codegen)
+    else()
+        # Add the path of generated plugins for host OS
+        vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+    endif()
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
