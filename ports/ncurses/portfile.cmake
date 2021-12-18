@@ -30,6 +30,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         --without-normal
     )
 endif()
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --disable-home-terminfo
+        --enable-term-driver
+        --disable-termcap
+    )
+endif()
 
 set(OPTIONS_DEBUG
     "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
