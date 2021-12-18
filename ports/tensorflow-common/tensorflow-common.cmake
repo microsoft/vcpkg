@@ -1,5 +1,5 @@
-set(TF_VERSION 2.6.0)
-set(TF_VERSION_SHORT 2.6)
+set(TF_VERSION 2.7.0)
+set(TF_VERSION_SHORT 2.7)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -144,11 +144,10 @@ foreach(BUILD_TYPE dbg rel)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 d052da4b324f1b5ac9c904ac3cca270cefbf916be6e5968a6835ef3f8ea8c703a0b90be577ac5205edf248e8e6c7ee8817b6a1b383018bb77c381717c6205e05
+		SHA512 f1e892583c7b3a73d4d39ec65dc135a5b02c789b357d57414ad2b6d05ad9fbfc8ef81918ba6410e314abd6928b76f764e6ef64c0b0c84b58b50796634be03f39
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/Update-bazel-max-version.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
@@ -201,17 +200,17 @@ foreach(BUILD_TYPE dbg rel)
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_DEBUG)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
 		set(BUILD_OPTS --compilation_mode=opt)
@@ -219,17 +218,17 @@ foreach(BUILD_TYPE dbg rel)
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_RELEASE)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	endif()
 

@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.88.0
-    SHA512 7ed98ec253a35b10694964ecdbfd77afa640032536d189eeef52a5e32fb0b591baeced6d163f469183dd1515f9ebd26bc60952066d4a884834e572682f5ff393
+    REF v5.89.0
+    SHA512 e031fc985ad29be177b438667c624c6706a45edd7029b8144d712e04b9b3f5c8bc7aebea9e2a09afe2a2f28db078f58969cb63bf7dccd5d2e1e05dcbc456766b
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -36,4 +36,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
