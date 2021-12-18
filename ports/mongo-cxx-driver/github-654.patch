@@ -1,0 +1,16 @@
+diff --git a/src/mongocxx/instance.cpp b/src/mongocxx/instance.cpp
+index f12bd84a8..acc570fa9 100644
+--- a/src/mongocxx/instance.cpp
++++ b/src/mongocxx/instance.cpp
+@@ -75,9 +75,10 @@ typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentine
+ std::atomic<instance*> current_instance{nullptr};
+ static_assert(std::is_standard_layout<decltype(current_instance)>::value,
+               "Must be standard layout");
++#if (!defined(_MSVC_STL_VERSION))
+ static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
+               "Must be trivially destructible");
+-
++#endif
+ }  // namespace
+ 
+ class instance::impl {

@@ -3,18 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 3e933cff04c27c97d0fb0b899ed0c883b4e02e3b # v2019.10.28.00
-    SHA512 522b677f9e6cb0dd7ce2dad226efd831877ce12352efa6a34e743d1ec7a02ba65e7425472a57e88832f68fa4503206d9846580e305da6a0843034455e510b68d
+    REF v2021.06.14.00
+    SHA512 ff55f933d55031128b5355707fd025649ad90d261d91ec5f9d793433a77e63d3c2527a7f0111d6a3151667ab29f4117f96a505bcb80c1a4a99bd60346f05f4de
     HEAD_REF master
     PATCHES
-        find-zlib.patch
-        fix-build_error.patch
+        fix-zlib.patch
 )
 
 # Prefer installed config files
 file(REMOVE
     ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
-    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
 )
 
@@ -31,17 +29,12 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fizz)
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
-string(REPLACE "lib/cmake/fizz" "share/fizz" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
-"include(CMakeFindDependencyMacro)
-find_dependency(folly CONFIG)
-find_dependency(ZLIB)
-${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake" "lib/cmake/fizz" "share/fizz")
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fizz RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test" "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,22 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -778,7 +778,7 @@ if(WITH_OPENVX)
+ endif()
+ 
+ if(WITH_QUIRC)
+-  add_subdirectory(3rdparty/quirc)
++  find_package(quirc CONFIG REQUIRED)
+   set(HAVE_QUIRC TRUE)
+ endif()
+ # ----------------------------------------------------------------------------
+--- a/modules/objdetect/CMakeLists.txt
++++ b/modules/objdetect/CMakeLists.txt
+@@ -2,7 +2,5 @@ set(the_description "Object Detection")
+ ocv_define_module(objdetect opencv_core opencv_imgproc opencv_calib3d WRAP java python js)
+ 
+ if(HAVE_QUIRC)
+-    get_property(QUIRC_INCLUDE GLOBAL PROPERTY QUIRC_INCLUDE_DIR)
+-    ocv_include_directories(${QUIRC_INCLUDE})
+-    ocv_target_link_libraries(${the_module} quirc)
++    ocv_target_link_libraries(${the_module} quirc::quirc)
+ endif()

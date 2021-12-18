@@ -1,13 +1,24 @@
 #header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/wil
-    REF fd6d99e737cc713dd3217663a502ab8c31d38820
-    SHA512 4b38fa803145b57349b3d68681fc4d0020665285f3fd94f71afe77466f39858e85127688856bc15f08d468e9f5cc8669ba65e7b024398edfb3b9320da61ea69d
+    REF 5a21cac10640f54b7ef886031f4d9ed427bef4c5
+    SHA512 b1a6703dd75eee66f81c54bb5c01bc9acc7354c113fd556afb2dd95361db7e9f94c9e958d9a0b897359084c9c08cb725bbe214fdaccf2e662c1ca4aa73c3345a
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wil RENAME copyright)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DWIL_BUILD_TESTS=OFF
+        -DWIL_BUILD_PACKAGING=ON
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/WIL)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

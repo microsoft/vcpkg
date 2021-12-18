@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(lz4 C)
 
-if(BUILD_SHARED_LIBS)
+if(MSVC AND BUILD_SHARED_LIBS)
     add_definitions(-DLZ4_DLL_EXPORT)
 endif()
 add_definitions(-DXXH_NAMESPACE=LZ4_)
@@ -40,10 +40,18 @@ list(REMOVE_ITEM lz4h "${CMAKE_CURRENT_LIST_DIR}/lib/xxhash.h")
 INSTALL(FILES ${lz4h} DESTINATION "${INSTALL_INCLUDE_DIR}")
 
 install(EXPORT lz4Config
-  FILE lz4Config.cmake
+  FILE lz4-config.cmake
   NAMESPACE lz4::
   DESTINATION "${INSTALL_CMAKE_DIR}"
 )
 
 # Export the package for use from the build-tree (this registers the build-tree with a global CMake-registry)
 export(PACKAGE lz4)
+
+# Create pkgconfig module file
+file(STRINGS "lib/lz4.h" LZ4_H REGEX "^#define LZ4_VERSION_(MAJOR|MINOR|RELEASE) ")
+string(REGEX REPLACE "^.*MAJOR +([0-9]+).*MINOR +([0-9]+).*RELEASE +([0-9]+).*$" "\\1.\\2.\\3" VERSION "${LZ4_H}")
+set(INCLUDEDIR [[${prefix}/include]])
+set(LIBDIR [[${prefix}/lib]])
+configure_file(lib/liblz4.pc.in lib/liblz4.pc)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/liblz4.pc" DESTINATION "lib/pkgconfig")

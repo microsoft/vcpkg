@@ -1,11 +1,9 @@
 #header-only library
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/uvw
-    REF 6ce60d4088bddce4d38a0aa81f99b03879d2f471
-    SHA512 125b517a68f7804ea895fe7f1ca9c63139a3855ef47d16de631ccfda9a2cb8217b5f7f489ed463f72267c6f55718045c60da52e97936ce39d9f1ebe7232b4ea4
+    REF 77af4a3fc4d932a52652807506fc50d0e58e875c # v2.7.0_libuv_v1.39
+    SHA512 b9ee4a60928fbcea84a9c551ce4d97095db68352546054116ecc8303eaeb46aecaef15ca2e5d3ebd14d8292be798fdea50b353ffdc727faa43c23cfd314ea407
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

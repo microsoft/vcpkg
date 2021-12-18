@@ -1,0 +1,42 @@
+diff --git a/apps/mosquitto_passwd/CMakeLists.txt b/apps/mosquitto_passwd/CMakeLists.txt
+index 13a7d826..31069306 100644
+--- a/apps/mosquitto_passwd/CMakeLists.txt
++++ b/apps/mosquitto_passwd/CMakeLists.txt
+@@ -13,6 +13,10 @@ if (WITH_TLS)
+ 		)
+ 
+ 
+-	target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
++	if(WIN32)
++		target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES} ws2_32 crypt32)
++	else()
++		target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
++	endif()
+ 	install(TARGETS mosquitto_passwd RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ endif (WITH_TLS)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 5da221dc..c3e9fce0 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -69,7 +69,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID)
+ endif (UNIX AND NOT APPLE AND NOT ANDROID)
+ 
+ if (WIN32)
+-	set (LIBRARIES ${LIBRARIES} ws2_32)
++	set (LIBRARIES ${LIBRARIES} ws2_32 crypt32)
+ endif (WIN32)
+ 
+ if (WITH_SRV)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9380a046..62ce99e5 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -189,7 +189,7 @@ if (UNIX)
+ endif (UNIX)
+ 
+ if (WIN32)
+-	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32)
++	set (MOSQ_LIBS ${MOSQ_LIBS} ws2_32 crypt32)
+ endif (WIN32)
+ 
+ if (WITH_WEBSOCKETS)

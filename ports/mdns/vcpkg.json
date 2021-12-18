@@ -1,0 +1,12 @@
+{
+  "name": "mdns",
+  "version": "1.4.1",
+  "description": "Public domain mDNS/DNS-SD library in C",
+  "homepage": "https://github.com/mjansson/mdns",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

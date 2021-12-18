@@ -1,0 +1,10 @@
+diff --git a/cmake/SqliteOrmConfig.cmake.in b/cmake/SqliteOrmConfig.cmake.in
+index e0635d2..30403cd 100644
+--- a/cmake/SqliteOrmConfig.cmake.in
++++ b/cmake/SqliteOrmConfig.cmake.in
+@@ -1,4 +1,4 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(SQLite3)
++find_dependency(unofficial-sqlite3)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/SqliteOrmTargets.cmake)

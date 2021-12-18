@@ -1,0 +1,54 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 941e9b96b..ea031828d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,30 +85,35 @@ include_directories(
+   ${CMAKE_CURRENT_SOURCE_DIR}/src
+   )
+ 
+-find_library(glib_LIBRARY NAMES glib libglib glib-2.0 libglib-2.0
+-             HINTS ${glib_BINARY_DIR})
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(GLIB2 glib-2.0 IMPORTED_TARGET)
+ 
+-get_filename_component(glib_LIBRARY_DIR ${glib_LIBRARY} DIRECTORY)
+-get_filename_component(glib_LIBRARY_NAME ${glib_LIBRARY} NAME)
+-string(REGEX REPLACE "\\.[^.]*$" "" glib_LIBRARY_NAME ${glib_LIBRARY_NAME})
++# find_library(glib_LIBRARY NAMES glib libglib glib-2.0 libglib-2.0
++             # HINTS ${glib_BINARY_DIR})
+ 
+-find_path(glib_H NAMES glib.h
+-          HINTS ${glib_LIBRARY_DIR}/../include)
+-get_filename_component(glib_INCLUDE_DIR ${glib_H} DIRECTORY)
++# get_filename_component(glib_LIBRARY_DIR ${glib_LIBRARY} DIRECTORY)
++# get_filename_component(glib_LIBRARY_NAME ${glib_LIBRARY} NAME)
++# string(REGEX REPLACE "\\.[^.]*$" "" glib_LIBRARY_NAME ${glib_LIBRARY_NAME})
+ 
+-set(glib_CONFIG_H)
+-find_path(glib_CONFIG_H NAMES glibconfig.h
+-          HINTS ${glib_LIBRARY_DIR}/${glib_LIBRARY_NAME}/include)
++# find_path(glib_H NAMES glib.h
++          # HINTS ${glib_LIBRARY_DIR}/../include)
++# get_filename_component(glib_INCLUDE_DIR ${glib_H} DIRECTORY)
+ 
+-get_filename_component(glibconfig_INCLUDE_DIR ${glib_CONFIG_H} DIRECTORY)
+-include_directories(${glib_INCLUDE_DIR} ${glib_CONFIG_H})
++# set(glib_CONFIG_H)
++# find_path(glib_CONFIG_H NAMES glibconfig.h
++          # HINTS ${glib_LIBRARY_DIR}/${glib_LIBRARY_NAME}/include)
++
++# get_filename_component(glibconfig_INCLUDE_DIR ${glib_CONFIG_H} DIRECTORY)
++# include_directories(${glib_INCLUDE_DIR} ${glib_CONFIG_H})
++include_directories(${GLIB2_INCLUDE_DIRS})
+ 
+ if (NOT WIN32 AND BUILD_SHARED_LIBS)
+ add_definitions(/DGTS_COMPILATION)
+ endif()
+ 
+ add_library(${kit} SHARED ${srcs})
+-target_link_libraries(${kit} ${glib_LIBRARY})
++target_include_directories(${kit} PUBLIC ${GLIB2_INCLUDE_DIRS})
++target_link_libraries(${kit} PkgConfig::GLIB2)
+ 
+ if(MSVC)
+   SET_TARGET_PROPERTIES(${kit} PROPERTIES LINK_FLAGS "/DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/src/gts.def\"")

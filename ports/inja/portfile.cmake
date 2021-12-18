@@ -1,12 +1,9 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pantor/inja
-    REF v2.1.0
-    SHA512 6b3a3a6a9e2adff14083a8e83c95fdc5ccf0c930acff40c4cf6c11d67b0df18fd941307e5d1f0c45dcfcb4c4afd0026b718ca510a2b297b9c6be048f5b144d42
+    REF 2d515078c647457436556763aca8d4bf7d11d5e8 # v3.3.0
+    SHA512 4e2f63297eede016772e4915cacfec57b49633f2a5fb80862bbd091d274f688ea1fbe958f97699e930fdee9f390ce0637513f4265190c171104d9eae9b12a59d
     HEAD_REF master
-    PATCHES
-        cmake-version.patch
 )
 
 vcpkg_configure_cmake(
@@ -28,4 +25,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 # Don't need built-in nlohmann-json as this package depends on nlohmann-json
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/inja/json")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/inja RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

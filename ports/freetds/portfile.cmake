@@ -1,26 +1,37 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.freetds.org/files/stable/freetds-1.1.6.tar.bz2"
-    FILENAME "freetds-1.1.6.tar.bz2"
-    SHA512 160c8638302fd36a3f42d031dbd58525cde899b64d320f6187ce5865ea2c049a1af63be419623e4cd18ccf229dd2ee7ec509bc5721c3371de0f31710dad7470d
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO freetds/freetds
+    REF 16f7a6280c7a19bfe5c60e5d61cc08e3f2dff991 # See https://github.com/microsoft/vcpkg/pull/14120#issuecomment-715896755
+    HEAD_REF master
+    SHA512 34ff10764156bac24444a74b636fafa56adc0097a62a3f3249d4bc09a0cdcaa88aa0c4f26761260c56dd47edf738ff68f647e045f32cac28e0be7f6760f7f90b
 )
 
-set(BUILD_freetds_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-    set(BUILD_freetds_openssl ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+)
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(GPERF)
+    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+    vcpkg_add_to_path(${GPERF_PATH})
+else()
+    if (NOT EXISTS /usr/bin/gperf)
+        message(FATAL_ERROR "freetds requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
+    endif()
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DWITH_OPENSSL=${BUILD_freetds_openssl}
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -60,4 +71,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

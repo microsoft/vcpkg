@@ -1,38 +1,23 @@
 include(qt_fix_makefile_install)
 
 function(install_qt)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL" "" "" ${ARGN})
-
-    if (_bc_DISABLE_PARALLEL)
-        set(NUMBER_OF_PROCESSORS "1")
-    else()
-        if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-            set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-        elseif(VCPKG_TARGET_IS_OSX)
-            execute_process(
-                COMMAND sysctl -n hw.ncpu
-                OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-            )
-            string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-            string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        else()
-            execute_process(
-                COMMAND nproc
-                OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-            )
-            string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-            string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-        endif()
-    endif()
-
-    message(STATUS "NUMBER_OF_PROCESSORS is ${NUMBER_OF_PROCESSORS}")
-
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}" /J ${NUMBER_OF_PROCESSORS})
+        if (VCPKG_QMAKE_USE_NMAKE)
+            find_program(NMAKE nmake REQUIRED)
+            set(INVOKE "${NMAKE}")
+            set(INVOKE_SINGLE "${NMAKE}")
+            get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+            set(PATH_GLOBAL "$ENV{PATH}")
+            set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+            set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+        else()
+            vcpkg_find_acquire_program(JOM)
+            set(INVOKE "${JOM}" /J ${VCPKG_CONCURRENCY})
+            set(INVOKE_SINGLE "${JOM}" /J 1)
+        endif()
     else()
         find_program(MAKE make)
-        set(INVOKE "${MAKE}" -j${NUMBER_OF_PROCESSORS})
+        set(INVOKE "${MAKE}" -j${VCPKG_CONCURRENCY})
         set(INVOKE_SINGLE "${MAKE}" -j1)
     endif()
     vcpkg_find_acquire_program(PYTHON3)
@@ -71,11 +56,27 @@ function(install_qt)
         set(_build_type_${_buildname} "release")
     endif()
     unset(_buildname)
-    
+
     foreach(_buildname ${BUILDTYPES})
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
-        
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
+
+        set(_installed_prefix_ "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}")
+        set(_installed_libpath_ "${_installed_prefix_}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_installed_prefix_}/lib/manual-link/")
+
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/bin")
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/lib")
+
+        # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
+        if(CMAKE_HOST_UNIX)
+            if(DEFINED ENV{LD_LIBRARY_PATH})
+                set(_ld_library_path_defined_ TRUE)
+                set(_ld_library_path_backup_ $ENV{LD_LIBRARY_PATH})
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_ld_library_path_backup_}")
+            else()
+                set(_ld_library_path_defined_ FALSE)
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}")
+            endif()
+        endif()
 
         if(VCPKG_TARGET_IS_OSX)
            # For some reason there will be an error on MacOSX without this clean!
@@ -86,14 +87,15 @@ function(install_qt)
                 LOGNAME cleaning-1-${_build_triplet}
             )
         endif()
-        
+
         message(STATUS "Building ${_build_triplet}")
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND ${INVOKE}
+            NO_PARALLEL_COMMAND ${INVOKE_SINGLE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )
-        
+
         if(VCPKG_TARGET_IS_OSX)
            # For some reason there will be an error on MacOSX without this clean!
             message(STATUS "Cleaning after build before install ${_build_triplet}")
@@ -103,7 +105,7 @@ function(install_qt)
                 LOGNAME cleaning-2-${_build_triplet}
             )
         endif()
-        
+
         message(STATUS "Fixing makefile installation path ${_build_triplet}")
         qt_fix_makefile_install("${CURRENT_BUILDTREES_DIR}/${_build_triplet}")
         message(STATUS "Installing ${_build_triplet}")
@@ -114,8 +116,14 @@ function(install_qt)
         )
         message(STATUS "Package ${_build_triplet} done")
         set(ENV{PATH} "${_path}")
-    endforeach()
-    
 
-    
+        # Restore backup
+        if(CMAKE_HOST_UNIX)
+            if(_ld_library_path_defined_)
+                set(ENV{LD_LIBRARY_PATH} "${_ld_library_path_backup_}")                
+            else()
+                unset(ENV{LD_LIBRARY_PATH})
+            endif()
+        endif()
+    endforeach()
 endfunction()

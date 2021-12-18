@@ -1,0 +1,24 @@
+diff --git a/src/corelib/configure.json b/src/corelib/configure.json
+index de8d26a12..068b80c51 100644
+--- a/src/corelib/configure.json
++++ b/src/corelib/configure.json
+@@ -106,13 +106,17 @@
+             "headers": [ "unicode/utypes.h", "unicode/ucol.h", "unicode/ustring.h" ],
+             "sources": [
+                 {
++                    "libs": "",
+                     "builds": {
+-                        "debug": "-lsicuind -lsicuucd -lsicudtd",
+-                        "release": "-lsicuin -lsicuuc -lsicudt"
++                        "debug": "-licuind -licuucd -licudtd",
++                        "release": "-licuin -licuuc -licudt"
+                     },
+                     "condition": "config.win32 && !features.shared"
+                 },
++                { "libs": "-licuind -licuucd -licudtd", "condition": "config.win32 && !features.shared"},
++                { "libs": "-licuin -licuuc -licudt", "condition": "config.win32 && !features.shared"},
+                 { "libs": "-licuin -licuuc -licudt", "condition": "config.win32 && features.shared" },
++                { "libs": "-licuind -licuucd -licudtd", "condition": "config.win32 && features.shared" },
+                 { "libs": "-licui18n -licuuc -licudata", "condition": "!config.win32" }
+             ],
+             "use": [

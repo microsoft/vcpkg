@@ -1,0 +1,5 @@
+The package openmesh provides CMake targets:
+
+    find_package(openmesh REQUIRED)
+    target_include_directories(main PRIVATE ${OPENMESH_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${OPENMESH_LIBRARIES})

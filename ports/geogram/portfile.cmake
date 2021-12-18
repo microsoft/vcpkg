@@ -1,52 +1,50 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-set(GEOGRAM_VERSION 1.6.9)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://gforge.inria.fr/frs/download.php/file/37779/geogram_${GEOGRAM_VERSION}.tar.gz"
-    FILENAME "geogram_${GEOGRAM_VERSION}.tar.gz"
-    SHA512 1b5c7540bef734c1908f213f26780aba63b4911a8022d5eb3f7c90eabe2cb69efd1f298b30cdc8e2c636a5b37c8c25832dd4aad0b7c2ff5f0a5b5caa17970136
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GEOGRAM_VERSION}
+    REPO alicevision/geogram
+    REF 8b2ae6148c7ab1564fa2700673b4275296ce80d3 #1.7.6
+    SHA512 0ec0deded92c8d5d100b6e77f8cfbbbaf7b744c230e10abd0b86861960cda9713ff65209575fdc09034afcb0e9137428a20c00d399c09fd58ce541fed2105a2d
     PATCHES
-        fix-cmake-config-and-install.patch
+        fix-vcpkg-install.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH}/cmake)
 
-set(GEOGRAM_WITH_GRAPHICS OFF)
-if("graphics" IN_LIST FEATURES)
-    set(GEOGRAM_WITH_GRAPHICS ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "graphics" GEOGRAM_WITH_GRAPHICS
+)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VORPALINE_BUILD_DYNAMIC FALSE)
-    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+    if (VCPKG_TARGET_IS_WINDOWS)
         set(VORPALINE_PLATFORM Win-vs-generic)
     endif()
-    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux")
+    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+        message("geogram on Windows with CRT dynamic linkage only supports dynamic library linkage. Building dynamic.")
+        set(VCPKG_LIBRARY_LINKAGE dynamic)
+        set(VORPALINE_PLATFORM Win-vs-dynamic-generic)
+    endif()
+    if (VCPKG_TARGET_IS_LINUX)
         message("geogram on Linux only supports dynamic library linkage. Building dynamic.")
         set(VCPKG_LIBRARY_LINKAGE dynamic)
         set(VORPALINE_PLATFORM Linux64-gcc-dynamic )
     endif()
-    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if (VCPKG_TARGET_IS_OSX)
         message("geogram on Darwin only supports dynamic library linkage. Building dynamic.")
         set(VCPKG_LIBRARY_LINKAGE dynamic)
         set(VORPALINE_PLATFORM Darwin-clang-dynamic)
     endif()
 else()
     set(VORPALINE_BUILD_DYNAMIC TRUE)
-    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+    if (VCPKG_TARGET_IS_WINDOWS)
         set(VORPALINE_PLATFORM Win-vs-generic)
     endif()
-    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Linux")
+    if (VCPKG_TARGET_IS_LINUX)
         set(VORPALINE_PLATFORM Linux64-gcc-dynamic )
     endif()
-    if (VCPKG_CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if (VCPKG_TARGET_IS_OSX)
         set(VORPALINE_PLATFORM Darwin-clang-dynamic)
     endif()
 endif()
@@ -57,11 +55,11 @@ vcpkg_configure_cmake(
     #PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DVORPALINE_BUILD_DYNAMIC=${VORPALINE_BUILD_DYNAMIC}
-        -DGEOGRAM_WITH_GRAPHICS=${GEOGRAM_WITH_GRAPHICS}
         -DGEOGRAM_LIB_ONLY=ON
         -DGEOGRAM_USE_SYSTEM_GLFW3=ON
         -DVORPALINE_PLATFORM=${VORPALINE_PLATFORM}
         -DGEOGRAM_WITH_VORPALINE=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -73,11 +71,13 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake TARGET_CONFIG)
-string(REPLACE [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
-               [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]] TARGET_CONFIG "${TARGET_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake "${TARGET_CONFIG}")
+vcpkg_replace_string(
+    ${CURRENT_PACKAGES_DIR}/share/geogram/GeogramTargets.cmake
+    [[INTERFACE_INCLUDE_DIRECTORIES "/src/lib;${_IMPORT_PREFIX}/include"]]
+    [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"]]
+    )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/geogram)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/geogram/license.dox ${CURRENT_PACKAGES_DIR}/share/geogram/copyright)
+file(INSTALL ${SOURCE_PATH}/doc/devkit/license.dox DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

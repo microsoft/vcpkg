@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # scylla_wrapper_dll supplies a DllMain
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 

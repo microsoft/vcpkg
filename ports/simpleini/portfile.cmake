@@ -7,6 +7,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/SimpleIni.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+# Install codes
+set(SIMPLEINI_SOURCE ${SOURCE_PATH}/SimpleIni.h
+                     ${SOURCE_PATH}/ConvertUTF.h
+                     ${SOURCE_PATH}/ConvertUTF.c
+)
+
+file(INSTALL ${SIMPLEINI_SOURCE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+# Install sample
+file(INSTALL ${SOURCE_PATH}/snippets.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/share/sample)
 
 file(INSTALL ${SOURCE_PATH}/LICENCE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

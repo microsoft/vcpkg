@@ -1,22 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac55f6b..e016967 100644
+index 4ff3401..46492d0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -166,12 +166,11 @@ endforeach()
+@@ -185,14 +185,13 @@ endforeach()
  
- foreach(lib brotlicommon brotlidec brotlienc brotlicommon-static brotlidec-static brotlienc-static)
+ foreach(lib IN LISTS BROTLI_SHARED_LIBS BROTLI_STATIC_LIBS)
    target_link_libraries(${lib} ${LIBM_LIBRARY})
 -  set_property(TARGET ${lib} APPEND PROPERTY INCLUDE_DIRECTORIES ${BROTLI_INCLUDE_DIRS})
    set_target_properties(${lib} PROPERTIES
      VERSION "${BROTLI_ABI_COMPATIBILITY}.${BROTLI_ABI_AGE}.${BROTLI_ABI_REVISION}"
-     SOVERSION "${BROTLI_ABI_COMPATIBILITY}"
-     POSITION_INDEPENDENT_CODE TRUE)
+     SOVERSION "${BROTLI_ABI_COMPATIBILITY}")
+   if(NOT BROTLI_EMSCRIPTEN)
+     set_target_properties(${lib} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+   endif()
 -  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BROTLI_INCLUDE_DIRS}")
 +  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>" $<INSTALL_INTERFACE:include>)
  endforeach()
  
- target_link_libraries(brotlidec brotlicommon)
-@@ -199,27 +198,35 @@ target_link_libraries(brotli ${BROTLI_LIBRARIES_STATIC})
+ if(NOT BROTLI_EMSCRIPTEN)
+@@ -223,27 +222,35 @@ if(NOT BROTLI_EMSCRIPTEN)
  if(NOT BROTLI_BUNDLED_MODE)
    install(
      TARGETS brotli
@@ -49,8 +51,8 @@ index ac55f6b..e016967 100644
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 +    CONFIGURATIONS Release
    )
-+
++  
 +  install(EXPORT brotli FILE unofficial-brotli-config.cmake NAMESPACE unofficial::brotli:: DESTINATION share/unofficial-brotli)
- endif()
+ endif()  # BROTLI_BUNDLED_MODE
+ endif()  # BROTLI_EMSCRIPTEN
  
- # Tests

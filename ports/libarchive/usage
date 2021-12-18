@@ -1,0 +1,5 @@
+The package libarchive is compatible with built-in CMake targets:
+
+    find_package(LibArchive REQUIRED)
+    target_include_directories(main PRIVATE ${LibArchive_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${LibArchive_LIBRARIES})

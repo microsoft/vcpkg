@@ -1,0 +1,281 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9602cce..dafb434 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,14 +5,6 @@
+ # Updated by jesnault (jerome.esnault@inria.fr) 2014-01-21
+ # -----------------------------------------------------------------
+ 
+-option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
+-include(cmake/HunterGate.cmake)
+-
+-HunterGate(
+-  URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
+-  SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
+-)
+-
+ PROJECT(SuiteSparseProject)
+ 
+ cmake_minimum_required(VERSION 3.1)
+@@ -47,29 +39,9 @@ else()
+     message(STATUS "Using user defined CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+ endif()
+ 
+-# Fix GKlib path:
+-IF(NOT WIN32)
+-  SET(GKLIB_PATH "${${PROJECT_NAME}_SOURCE_DIR}/SuiteSparse/metis-5.1.0/GKlib" CACHE INTERNAL "Path to GKlib (for METIS)" FORCE)
+-ENDIF()
+-
+-# allow creating DLLs in Windows without touching the source code:
+-IF(NOT ${CMAKE_VERSION} VERSION_LESS "3.4.0" AND WIN32)
+-	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+-ENDIF()
+-
+ ## get CMAKE_INSTALL_BINDIR and CMAKE_INSTALL_LIBDIR
+ include(GNUInstallDirs)
+ 
+-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+-  set(SUITESPARSE_LIB_POSTFIX "64")
+-else()
+-  set(SUITESPARSE_LIB_POSTFIX "")
+-endif()
+-
+-## get POSTFIX for lib install dir
+-set(LIB_POSTFIX "${SUITESPARSE_LIB_POSTFIX}" CACHE STRING "suffix for 32/64 inst dir placement")
+-mark_as_advanced(LIB_POSTFIX)
+-
+ # We want libraries to be named "libXXX" and "libXXXd" in all compilers:
+ # ------------------------------------------------------------------------
+ set(CMAKE_DEBUG_POSTFIX  "d")
+@@ -77,59 +49,6 @@ IF(MSVC)
+ 	set(SP_LIB_PREFIX "lib")  # Libs are: "libXXX"
+ ENDIF(MSVC)
+ 
+-## check if we can build metis
+-SET(BUILD_METIS_DEFAULT ON)
+-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/SuiteSparse/metis-5.1.0/CMakeLists.txt")
+-	SET(BUILD_METIS_DEFAULT OFF)
+-endif()
+-
+-SET(WITH_CUDA OFF CACHE BOOL "Build with CUDA support")
+-
+-SET(BUILD_METIS ${BUILD_METIS_DEFAULT} CACHE BOOL "Build METIS for partitioning?")
+-SET(METIS_DIR ${${PROJECT_NAME}_SOURCE_DIR}/SuiteSparse/metis-5.1.0 CACHE PATH "Source directory of METIS")
+-
+-if(BUILD_METIS)
+-	## prepare the installation :
+-	## using metis target here is not possible because this target is added in another branch of the CMake structure
+-	## TRICK: need to dynamically modify the metis CMakeLists.txt file before it going to parsed...
+-	## (very ugly/poor for a metis project get from SCM (git/svn/cvs) but it's works ;) and it doesn't matter if metis was get from .zip)
+-	if(EXISTS "${METIS_DIR}/libmetis/CMakeLists.txt")
+-		file(READ "${METIS_DIR}/libmetis/CMakeLists.txt" contentFile)
+-		string(REGEX MATCH "EXPORT 	SuiteSparseTargets" alreadyModified ${contentFile}) ## use a string pattern to check if we have to do the modif
+-		if(NOT alreadyModified)
+-			file(APPEND "${METIS_DIR}/libmetis/CMakeLists.txt"
+-			"
+-				set_target_properties(metis PROPERTIES PUBLIC_HEADER \"../include/metis.h\")
+-				install(TARGETS metis ## this line is also the string pattern to check if the modification had already done
+-						EXPORT 	SuiteSparseTargets
+-						RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-						LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-						ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-						PUBLIC_HEADER DESTINATION include
+-				)
+-			"
+-			)
+-		endif()
+-	endif()
+-    add_subdirectory(SuiteSparse/metis-5.1.0) ## important part for building metis from its src files
+-endif(BUILD_METIS)
+-
+-
+-## For EXPORT only :
+-## Previous version of cmake (>2.8.12) doesn't auto take into account external lib (here I mean blas and lapack) we need to link to for our current target we want to export.
+-## Or at least we need to investigate how to do with previous version.
+-## This may cause some trouble in case you want to build in static mode and then use it into another custom project.
+-## You will need to manually link your target into your custom project to the correct dependencies link interfaces.
+-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" GREATER 2.8.11) ## (policies introduced both in 2.8.12)
+-	set(EXPORT_USE_INTERFACE_LINK_LIBRARIES ON CACHE BOOL "")
+-	mark_as_advanced(EXPORT_USE_INTERFACE_LINK_LIBRARIES)
+-	if(EXPORT_USE_INTERFACE_LINK_LIBRARIES)
+-		cmake_policy(SET CMP0023 NEW) ## just for respecting the new target_link_libraries(...) signature procedure
+-		cmake_policy(SET CMP0022 NEW) ## use INTERFACE_LINK_LIBRARIES property for in-build targets and ignore old properties (IMPORTED_)?LINK_INTERFACE_LIBRARIES(_<CONFIG>)?
+-		## Here, next version of cmake 2.8.12 auto take into account the link interface dependencies (see generated cmake/SuiteSparse-config*.cmake into your install dir)
+-	endif()
+-endif()
+-
+ ## install_suitesparse_project(targetName headersList)
+ ## factorise the way we will install all projects (part of the suitesparse project)
+ ## <targetName> is the target of the current project you build
+@@ -176,16 +95,16 @@ macro(declare_suitesparse_library targetName srcsList headersList)
+ 		set(dsl_TARGET_PUBLIC_LINK "")
+ 	endif()
+ 	if(WITH_CUDA)
+-		find_package(CUDA)
++		find_package(CUDA REQUIRED)
+ 	endif()
+-	IF(${CUDA_FOUND})
++	IF(CUDA_FOUND)
+ 		INCLUDE_DIRECTORIES(${CUDA_INCLUDE_DIRS})
+ 		INCLUDE_DIRECTORIES(${SuiteSparse_GPUQREngine_INCLUDE})
+ 		INCLUDE_DIRECTORIES(${SuiteSparse_GPURuntime_INCLUDE})
+ 		CUDA_ADD_LIBRARY(${targetName} ${srcsList} ${headersList})
+-	ELSE(${CUDA_FOUND})
++	ELSE()
+ 		ADD_LIBRARY(${targetName} ${srcsList} ${headersList})
+-	ENDIF(${CUDA_FOUND})
++	ENDIF()
+ 	SET_TARGET_PROPERTIES(${targetName} PROPERTIES
+ 		OUTPUT_NAME ${SP_LIB_PREFIX}${targetName}
+ 	)
+@@ -211,44 +130,30 @@ MACRO(REMOVE_MATCHING_FILES_FROM_LIST match_expr lst_files)
+ ENDMACRO(REMOVE_MATCHING_FILES_FROM_LIST)
+ 
+ if(WITH_CUDA)
+-	FIND_PACKAGE(cuda)
+-	IF(${CUDA_FOUND})
++	FIND_PACKAGE(CUDA REQUIRED)
++	IF(CUDA_FOUND)
+ 		ADD_DEFINITIONS(-DGPU_BLAS)
+-	ENDIF(${CUDA_FOUND})
++	ENDIF()
+ endif()
+ 
+-hunter_add_package(LAPACK) # only in effect if HUNTER_ENABLED is set
+-# prefer LAPACK config file
+-find_package(LAPACK CONFIG)
+-if (LAPACK_FOUND AND TARGET blas AND TARGET lapack)
+-  message(STATUS "found lapack and blas config file. Linking targets lapack and blas")
+-  message(STATUS "- LAPACK_CONFIG: ${LAPACK_CONFIG}")
+-  set(SuiteSparse_LINKER_LAPACK_BLAS_LIBS lapack blas)
+-  # for suitesparse-config file set method used to find LAPACK (and BLAS)
+-  set(SuiteSparse_LAPACK_used_CONFIG YES)
+-else()
+-  # missing config file or targets, try BLAS and LAPACK
+-  find_package(BLAS)
+-  find_package(LAPACK)
+-  if (BLAS_FOUND AND LAPACK_FOUND)
++  find_package(BLAS REQUIRED)
++  find_package(LAPACK REQUIRED)
+     message(STATUS "found lapack and blas config file. Linking targets lapack and blas")
+     message(STATUS "- LAPACK_LIBRARIES: ${LAPACK_LIBRARIES}")
+     message(STATUS "- BLAS_LIBRARIES:   ${BLAS_LIBRARIES}")
+     set(SuiteSparse_LINKER_LAPACK_BLAS_LIBS ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+     # for suitesparse-config file set method used to find LAPACK (and BLAS)
+     set(SuiteSparse_LAPACK_used_CONFIG NO)
+-  else () # LAPACK is not found
+-    message(FATAL_ERROR "lapack not found")
+-  endif()
+-endif()
+ 
+-IF(BUILD_METIS)
++IF(USE_VCPKG_METIS)
++	find_package(metis REQUIRED)
+ 	set(SuiteSparse_LINKER_METIS_LIBS "metis")
+-	## namespaced library target for config
+-	set(SuiteSparse_EXPORTED_METIS_LIBS "SuiteSparse::metis")
++	set(SuiteSparse_EXPORTED_METIS_LIBS "metis")
++	set(SuiteSparse_FIND_DEPENDENCY_METIS "find_dependency(metis REQUIRED)")
+ else()
+ 	set(SuiteSparse_LINKER_METIS_LIBS "")
+ 	set(SuiteSparse_EXPORTED_METIS_LIBS "")
++	set(SuiteSparse_FIND_PACKAGE_METIS "")
+ ENDIF()
+ 
+ add_subdirectory(SuiteSparse)
+@@ -287,7 +192,7 @@ endmacro()
+ # get SuiteSparse version
+ get_SuiteSparse_Version()
+ 
+-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/suitesparse-${SuiteSparse_VERSION})
++set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/suitesparse)
+ ## create targets file
+ export(EXPORT SuiteSparseTargets
+ 	FILE "${CMAKE_CURRENT_BINARY_DIR}/suitesparse/suitesparse-targets.cmake"
+@@ -301,7 +206,7 @@ configure_file(cmake/SuiteSparse-config-install.cmake.in
+ ## do the EXPORT for allowing other project to easily use suitesparse with cmake
+ install(EXPORT SuiteSparseTargets
+ 	FILE
+-		SuiteSparse-targets.cmake
++		suitesparse-targets.cmake
+ 	NAMESPACE
+ 		SuiteSparse::
+ 	DESTINATION
+diff --git a/SuiteSparse/CMakeLists.txt b/SuiteSparse/CMakeLists.txt
+index c6e2834..6fdfb01 100644
+--- a/SuiteSparse/CMakeLists.txt
++++ b/SuiteSparse/CMakeLists.txt
+@@ -1,23 +1,5 @@
+ PROJECT(SuiteSparse)
+ 
+-# Set optimized building:
+-IF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+-	# only optimize for native processer when NOT cross compiling
+-	if(NOT CMAKE_CROSSCOMPILING)
+-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native")
+-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
+-	endif(NOT CMAKE_CROSSCOMPILING)
+-ENDIF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+-
+-# Global flags:
+-IF (BUILD_METIS)
+-	INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
+-ELSE (BUILD_METIS)
+-	ADD_DEFINITIONS(-DNPARTITION)
+-ENDIF ( BUILD_METIS)
+-
+ # Disable COMPLEX numbers: disable it by default, since it causes problems in some platforms.
+ SET(HAVE_COMPLEX OFF CACHE BOOL "Enables building SuiteSparse with complex numbers (disabled by default to avoid problems in some platforms)")
+ IF (NOT HAVE_COMPLEX)
+@@ -38,12 +20,12 @@ if(WITH_CUDA)
+ 	set(SUBPROJECTS_TO_ADD
+ 		${SUBPROJECTS_TO_ADD}
+ 		SuiteSparse_GPURuntime
+-		GPUQREngine	
++		GPUQREngine
+ 		)
+ endif()
+ 
+ set(SUBPROJECTS_TO_ADD
+-    ${SUBPROJECTS_TO_ADD} 
++    ${SUBPROJECTS_TO_ADD}
+ 	SuiteSparse_config
+ 	AMD
+ 	BTF
+diff --git a/cmake/SuiteSparse-config-install.cmake.in b/cmake/SuiteSparse-config-install.cmake.in
+index 1e587d1..fd8f3a7 100644
+--- a/cmake/SuiteSparse-config-install.cmake.in
++++ b/cmake/SuiteSparse-config-install.cmake.in
+@@ -2,20 +2,14 @@
+ get_filename_component(_SuiteSparse_SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_SELF_DIR}" PATH)
+ get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+-get_filename_component(_SuiteSparse_PREFIX "${_SuiteSparse_PREFIX}" PATH)
+ 
+ include(CMakeFindDependencyMacro)
+-if (@SuiteSparse_LAPACK_used_CONFIG@) # SuiteSparse_LAPACK_used_CONFIG
+-  # use config file which provides LAPACK (and BLAS) for us
+-  find_dependency(LAPACK CONFIG)
+-else()
+-  # try to find BLAS and LAPACK with modules
+   find_dependency(BLAS)
+   find_dependency(LAPACK)
+-endif ()
++  @SuiteSparse_FIND_DEPENDENCY_METIS@
+ 
+ # Load targets from the install tree.
+-include(${_SuiteSparse_SELF_DIR}/SuiteSparse-targets.cmake)
++include(${_SuiteSparse_SELF_DIR}/suitesparse-targets.cmake)
+ 
+ # Report SuiteSparse header search locations.
+ set(SuiteSparse_INCLUDE_DIRS ${_SuiteSparse_PREFIX}/include)
+@@ -39,3 +33,7 @@ set(SuiteSparse_LIBRARIES
+ 
+ unset(_SuiteSparse_PREFIX)
+ unset(_SuiteSparse_SELF_DIR)
++set(SUITESPARSE_FOUND TRUE)
++set(SuiteSparse_FOUND TRUE)
++set(SUITESPARSE_LIBRARIES ${SuiteSparse_LIBRARIES})
++set(SUITESPARSE_INCLUDE_DIRS ${SuiteSparse_INCLUDE_DIRS})

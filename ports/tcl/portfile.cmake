@@ -1,8 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 2abfa2c03ddc0419e6525f86c2c0323b2ba1932e
-    SHA512 d9bc83c389cf3b95ab64b75c57eb9a2b23b957503d2dadc2d3f6854e9e784d87d9b2059a82f35accb419693bfe675b523c4751af91efac700644e118ff689fd7)
+    REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
+    SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76
+    PATCHES force-shell-install.patch
+)
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
@@ -47,63 +49,101 @@ if (VCPKG_TARGET_IS_WINDOWS)
             INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug
             SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0
         OPTIONS_RELEASE
-            ${TCL_BUILD_OPTS}
             release
+            ${TCL_BUILD_OPTS}
             INSTALLDIR=${CURRENT_PACKAGES_DIR}
             SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0
     )
+
+
     # Install
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+    # Note: tcl shell requires it to be in a folder adjacent to the /lib/ folder, i.e. in a /bin/ folder
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+        file(GLOB_RECURSE TOOL_BIN
+                "${CURRENT_PACKAGES_DIR}/bin/*.exe"
+                "${CURRENT_PACKAGES_DIR}/bin/*.dll"
+        )
+        file(COPY ${TOOL_BIN} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/tcl/bin/")
+
+        # Remove .exes only after copying
+        file(GLOB_RECURSE TOOL_EXES
+                ${CURRENT_PACKAGES_DIR}/bin/*.exe
+        )
+        file(REMOVE ${TOOL_EXES})
+
         file(GLOB_RECURSE TOOLS
-                ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
-                ${CURRENT_PACKAGES_DIR}/lib/nmake/*
-                ${CURRENT_PACKAGES_DIR}/lib/reg1.3/*
-                ${CURRENT_PACKAGES_DIR}/lib/tcl8/*
-                ${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*
-                ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*
+                "${CURRENT_PACKAGES_DIR}/lib/dde1.4/*"
+                "${CURRENT_PACKAGES_DIR}/lib/nmake/*"
+                "${CURRENT_PACKAGES_DIR}/lib/reg1.3/*"
+                "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
+                "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
+                "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
         )
         
         foreach(TOOL ${TOOLS})
             get_filename_component(DST_DIR ${TOOL} PATH)
-            file(COPY ${TOOL} DESTINATION ${DST_DIR})
+            file(COPY "${TOOL}" DESTINATION ${DST_DIR})
         endforeach()
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/dde1.4
-                            ${CURRENT_PACKAGES_DIR}/lib/nmake
-                            ${CURRENT_PACKAGES_DIR}/lib/reg1.3
-                            ${CURRENT_PACKAGES_DIR}/lib/tcl8
-                            ${CURRENT_PACKAGES_DIR}/lib/tcl8.6
-                            ${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/dde1.4"
+                            "${CURRENT_PACKAGES_DIR}/lib/nmake"
+                            "${CURRENT_PACKAGES_DIR}/lib/reg1.3"
+                            "${CURRENT_PACKAGES_DIR}/lib/tcl8"
+                            "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
+                            "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
         )
     endif()
-    if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/nmake
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+        file(GLOB_RECURSE TOOL_BIN
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
+        )
+        file(COPY ${TOOL_BIN} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/bin/")
+
+        # Remove .exes only after copying
+        file(GLOB_RECURSE EXES
+                "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
+        )
+        file(REMOVE ${EXES})
+    
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/nmake"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
         )
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
     
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     
+    file(CHMOD_RECURSE
+            "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
+            "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
+        PERMISSIONS
+            OWNER_READ OWNER_WRITE
+            GROUP_READ GROUP_WRITE
+            WORLD_READ WORLD_WRITE
+    )
 else()
+    file(REMOVE "${SOURCE_PATH}/unix/configure")
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        NO_DEBUG
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH unix
     )
     
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
+    
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/tclConfig.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/tclConfig.sh")
 
-file(INSTALL ${SOURCE_PATH}/license.terms DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/license.terms" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

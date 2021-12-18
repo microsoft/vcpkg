@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 include(CMakePackageConfigHelpers)
 
 vcpkg_download_distfile(ARCHIVE
@@ -11,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
+file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
@@ -20,6 +20,7 @@ file(COPY
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )

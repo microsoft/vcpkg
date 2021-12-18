@@ -1,0 +1,7 @@
+{
+  "name": "gasol",
+  "version-string": "2018-01-04",
+  "port-version": 1,
+  "description": "A general Genetic Algorithm Solver in C++",
+  "homepage": "https://github.com/PytLab/GASol "
+}

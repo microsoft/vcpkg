@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b18a30a96..d89248aa1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,11 +66,21 @@ conan_init(cmake)
+ add_subdirectory(src)
+
+ # add usage example
+-add_subdirectory(example)
++option(BUILD_EXAMPLES "Build usage examples" OFF)
++if(BUILD_EXAMPLES)
++    add_subdirectory(example)
++endif()
+ 
+ # generate project documentation
+-add_subdirectory(docs)
++option(BUILD_DOCS "Generate docs" OFF)
++if(BUILD_DOCS)
++    add_subdirectory(docs)
++endif()
+ 
+ # add unit tests
+-enable_testing()
+-add_subdirectory(test)
++option(BUILD_TESTING "Build tests" OFF)
++if(BUILD_TESTING)
++    set_warnings(mp-units)
++    enable_testing()
++    add_subdirectory(test)
++endif()

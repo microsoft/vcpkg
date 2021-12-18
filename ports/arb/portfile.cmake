@@ -3,24 +3,25 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fredrik-johansson/arb
-    REF eeef7bdd349366be4d1691da05e49dcf9c01a394 # 2.17.0
-    SHA512 d4c53c0343bec32e0b6c0d3a41e92663b13f9648a08c28c56a3098dd77d71248718b414dbb70c116bd7e07648646bdb663c1b9560e41d971d5c12d2d0466e9a0
+    REF e3a633dcc1adafeb7ca9648669f2b1fa2f433ee1 # 2.21.1
+    SHA512 af864ea4f849d12dbaadec8cda7e6b1a7d349b7aa776966ec7f61ad7a5186dc3f280512218bcff28901e2d55d6c976525746e6de13925a9942ed947ac2253af6
     HEAD_REF master
+    PATCHES fix-build-error.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_MT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DMSVC_USE_MT=${MSVC_USE_MT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Remove duplicate headers
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

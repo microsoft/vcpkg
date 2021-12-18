@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
   URLS "http://www.fadbad.com/download/FADBAD++-2.1.tar.gz"
   FILENAME "FADBAD++-2.1.tar.gz"

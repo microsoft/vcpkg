@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b0ae7d5..5813c06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -472,7 +472,7 @@ if(WEBP_BUILD_CWEBP)
+   install(TARGETS cwebp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif()
+ 
+-if(WEBP_BUILD_LIBWEBPMUX)
++if(WEBP_BUILD_LIBWEBPMUX OR WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP OR TRUE)
+   parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/src/mux "WEBP_MUX_SRCS" "")
+   add_library(libwebpmux ${WEBP_MUX_SRCS})
+   target_link_libraries(libwebpmux webp)

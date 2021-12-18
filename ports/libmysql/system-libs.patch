@@ -1,8 +1,8 @@
 diff --git a/cmake/icu.cmake b/cmake/icu.cmake
-index ce9cc67..64445c5 100644
+index fde3a75..9f694b9 100644
 --- a/cmake/icu.cmake
 +++ b/cmake/icu.cmake
-@@ -40,49 +40,10 @@ SET(DEFAULT_ICU "bundled")
+@@ -38,49 +38,11 @@
  # install_root is either 'system' or is assumed to be a path.
  #
  MACRO (FIND_ICU install_root)
@@ -48,16 +48,34 @@ index ce9cc67..64445c5 100644
 -
 -  # Needed for version information.
 -  SET(ICU_COMMON_DIR ${ICU_INCLUDE_DIR})
--
-+  find_package(ICU REQUIRED COMPONENTS uc io dt in)
-+  set(ICU_SYSTEM_LIBRARIES ICU::uc ICU::io ICU::dt ICU::in)
-+  set(ICU_COMMON_DIR ${ICU_INCLUDE_DIR})
-+  SET(ICU_INCLUDE_DIRS ${ICU_INCLUDE_DIR})
+ 
++ find_package(ICU REQUIRED COMPONENTS uc io dt in)
++ set(ICU_SYSTEM_LIBRARIES ICU::uc ICU::io ICU::dt ICU::in)
++ set(ICU_COMMON_DIR ${ICU_INCLUDE_DIR})
++ SET(ICU_INCLUDE_DIRS ${ICU_INCLUDE_DIR})
  ENDMACRO()
  
  MACRO (MYSQL_USE_BUNDLED_ICU)
+diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
+index 3fa58da..88b53e7 100644
+--- a/cmake/libutils.cmake
++++ b/cmake/libutils.cmake
+@@ -350,12 +350,7 @@ MACRO(MERGE_CONVENIENCE_LIBRARIES)
+   # On Windows, ssleay32.lib/libeay32.lib or libssl.lib/libcrypto.lib
+   # must be merged into mysqlclient.lib
+   IF(WIN32 AND ${TARGET} STREQUAL "mysqlclient")
+-    SET(LINKER_EXTRA_FLAGS "")
+-    FOREACH(LIB ${SSL_LIBRARIES})
+-      STRING_APPEND(LINKER_EXTRA_FLAGS " ${LIB}")
+-    ENDFOREACH()
+-    SET_TARGET_PROPERTIES(${TARGET}
+-      PROPERTIES STATIC_LIBRARY_FLAGS "${LINKER_EXTRA_FLAGS}")
++    TARGET_LINK_LIBRARIES(${TARGET} PRIVATE ${SSL_LIBRARIES})
+   ENDIF()
+ 
+   IF(OSLIBS)
 diff --git a/cmake/lz4.cmake b/cmake/lz4.cmake
-index 6e576c3..60cb8ba 100644
+index 9aad130..68cbaba 100644
 --- a/cmake/lz4.cmake
 +++ b/cmake/lz4.cmake
 @@ -25,7 +25,7 @@
@@ -69,68 +87,49 @@ index 6e576c3..60cb8ba 100644
    IF (PATH_TO_LZ4 AND LZ4_SYSTEM_LIBRARY)
      SET(SYSTEM_LZ4_FOUND 1)
      INCLUDE_DIRECTORIES(SYSTEM ${PATH_TO_LZ4})
-diff --git a/cmake/lzma.cmake b/cmake/lzma.cmake
-index ac8aaa7..78d8e8d 100644
---- a/cmake/lzma.cmake
-+++ b/cmake/lzma.cmake
-@@ -24,15 +24,10 @@
- # bundled is the default
- 
- MACRO (FIND_SYSTEM_LZMA)
--  FIND_PATH(PATH_TO_LZMA NAMES lzma/lzma.h)
--  FIND_LIBRARY(LZMA_SYSTEM_LIBRARY NAMES lzma)
--  IF (PATH_TO_LZMA AND LZMA_SYSTEM_LIBRARY)
--    SET(SYSTEM_LZMA_FOUND 1)
--    SET(LZMA_INCLUDE_DIR ${PATH_TO_LZMA})
--    SET(LZMA_LIBRARY ${LZMA_SYSTEM_LIBRARY})
--    MESSAGE(STATUS "LZMA_INCLUDE_DIR ${LZMA_INCLUDE_DIR}")
--    MESSAGE(STATUS "LZMA_LIBRARY ${LZMA_LIBRARY}")
--  ENDIF()
-+  find_package(LibLZMA REQUIRED)
-+  set(LZMA_INCLUDE_DIR ${LZMA_INCLUDE_DIRS})
-+  set(LZMA_LIBRARY ${LZMA_LIBRARIES})
-+  set(SYSTEM_LZMA_FOUND 1)
- ENDMACRO()
- 
- MACRO (MYSQL_USE_BUNDLED_LZMA)
 diff --git a/cmake/ssl.cmake b/cmake/ssl.cmake
-index 8af9699..2bdfe14 100644
+index 52feade..1e71bd7 100644
 --- a/cmake/ssl.cmake
 +++ b/cmake/ssl.cmake
-@@ -104,6 +104,16 @@ ENDMACRO()
+@@ -93,7 +93,20 @@ ENDMACRO()
  # Provides the following configure options:
- # WITH_SSL=[yes|bundled|system|<path/to/custom/installation>]
+ # WITH_SSL=[yes|system|<path/to/custom/installation>]
  MACRO (MYSQL_CHECK_SSL)
 +  find_package(OpenSSL REQUIRED)
-+  set(OPENSSL_LIBRARY ${OPENSSL_SSL_LIBRARY} CACHE STRING "")
-+  set(CRYPTO_LIBRARY ${OPENSSL_CRYPTO_LIBRARY} CACHE STRING "")
++  set(OPENSSL_LIBRARY OpenSSL::SSL CACHE STRING "")
++  set(CRYPTO_LIBRARY OpenSSL::Crypto CACHE STRING "")
 +  FIND_PROGRAM(OPENSSL_EXECUTABLE openssl
 +        DOC "path to the openssl executable")
 +  SET(SSL_DEFINES "-DHAVE_OPENSSL")
-+  set(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
++  set(SSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
++  if(NOT WIN32)
++    find_package(Threads REQUIRED)
++    list(APPEND SSL_LIBRARIES Threads::Threads)
++  endif()
 +ENDMACRO()
-+
+ 
 +MACRO (MYSQL_CHECK_SSL_OLD)
    IF(NOT WITH_SSL)
-     IF(WIN32)
-       CHANGE_SSL_SETTINGS("bundled")
+     SET(WITH_SSL "system" CACHE STRING ${WITH_SSL_DOC_STRING} FORCE)
+   ENDIF()
 diff --git a/cmake/zlib.cmake b/cmake/zlib.cmake
-index e74b8c9..6695075 100644
+index 26c56fe..65bebb4 100644
 --- a/cmake/zlib.cmake
 +++ b/cmake/zlib.cmake
-@@ -51,27 +51,7 @@ MACRO (MYSQL_CHECK_ZLIB_WITH_COMPRESS)
+@@ -51,28 +51,7 @@ MACRO (MYSQL_CHECK_ZLIB_WITH_COMPRESS)
    IF(WITH_ZLIB STREQUAL "bundled")
      MYSQL_USE_BUNDLED_ZLIB()
    ELSE()
 -    SET(ZLIB_FIND_QUIETLY TRUE)
 -    INCLUDE(FindZLIB)
 -    IF(ZLIB_FOUND)
--     INCLUDE(CheckFunctionExists)
--      SET(CMAKE_REQUIRED_LIBRARIES z)
+-      INCLUDE(CheckFunctionExists)
+-      SET(SAVE_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+-      SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} z)
 -      CHECK_FUNCTION_EXISTS(crc32 HAVE_CRC32)
 -      CHECK_FUNCTION_EXISTS(compressBound HAVE_COMPRESSBOUND)
 -      CHECK_FUNCTION_EXISTS(deflateBound HAVE_DEFLATEBOUND)
--      SET(CMAKE_REQUIRED_LIBRARIES)
+-      SET(CMAKE_REQUIRED_LIBRARIES ${SAVE_CMAKE_REQUIRED_LIBRARIES})
 -      IF(HAVE_CRC32 AND HAVE_COMPRESSBOUND AND HAVE_DEFLATEBOUND)
 -        SET(ZLIB_LIBRARY ${ZLIB_LIBRARIES} CACHE INTERNAL "System zlib library")
 -        SET(WITH_ZLIB "system" CACHE STRING
@@ -144,7 +143,7 @@ index e74b8c9..6695075 100644
 -    IF(NOT ZLIB_FOUND)
 -      MYSQL_USE_BUNDLED_ZLIB()
 -    ENDIF()
-+    find_package(ZLIB REQUIRED)
-+    SET(ZLIB_LIBRARY ZLIB::ZLIB CACHE INTERNAL "System zlib library")
++   find_package(ZLIB REQUIRED)
++   SET(ZLIB_LIBRARY ZLIB::ZLIB CACHE INTERNAL "System zlib library")
    ENDIF()
  ENDMACRO()

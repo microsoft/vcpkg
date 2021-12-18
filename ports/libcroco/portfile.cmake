@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/libcroco/0.6/libcroco-0.6.13.tar.xz"
     FILENAME "libcroco-0.6.13.tar.xz"
@@ -16,10 +14,12 @@ configure_file(${SOURCE_PATH}/config.h.win32 ${SOURCE_PATH}/src/config.h COPYONL
 file(READ "${SOURCE_PATH}/src/libcroco.symbols" SYMBOLS)
 string(REGEX REPLACE ";[^\n]*\n" "" DEF "EXPORTS\n${SYMBOLS}")
 file(WRITE "${SOURCE_PATH}/src/libcroco.def" "${DEF}")
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
@@ -31,6 +31,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcroco RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME libcroco)

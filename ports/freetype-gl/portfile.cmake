@@ -3,9 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF a91a3dda326ceaf66b7279bf64ba07014d3f81b8
-    SHA512 8e04573dfb400e14e2c1d3a2cd851a66f8218ccfdaa4f701ed9369d7f040d7028582e72af9b236af42d9d3c6c128014670e8ae0261c6f4770affd1aea1454b1e
+    REF 1a8c007f3fe7b1441f9e5616bc23d7455f4b07dd # accessed on 2020-09-14
+    SHA512 ce858b5d5e892162daf6f5bff3476938e15cb9f04adbf2dc2b4c538bfda56b023278b3acb62940a9388c46b89edfd22c9c1c99891f8fcf9d926ffedb8af2b38e
     HEAD_REF master
+    PATCHES glew.patch
 )
 
 # make sure that no "internal" libraries are used by removing them

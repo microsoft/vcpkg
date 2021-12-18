@@ -1,0 +1,58 @@
+From 0f47aae05217884193a39690c2beef566f4ed3b1 Mon Sep 17 00:00:00 2001
+From: Stephen Aylward <stephen.aylward@kitware.com>
+Date: Sat, 25 Apr 2020 20:15:21 -0400
+Subject: [PATCH] BUG: CUFFTW paths were not being set and unnecessary FFTW
+ files used
+
+FindFFTW sets the FFTW_INCLUDES variable. The FFTW_INCLUDE_PATH var is
+specific to FFTW (not used by CUFFTW).
+
+FFTWGlobalConfiguration file is only needed if FFTW is being used,
+not if CUFFT is being used.
+---
+ CMake/FindFFTW.cmake                     | 2 +-
+ Modules/Filtering/FFT/CMakeLists.txt     | 2 +-
+ Modules/Filtering/FFT/src/CMakeLists.txt | 9 +++++----
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
+index 785edc2b628..e1935899cab 100644
+--- a/CMake/FindFFTW.cmake
++++ b/CMake/FindFFTW.cmake
+@@ -62,7 +62,7 @@ if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
+     find_path(FFTW_INCLUDE_PATH fftw3.h ${FFTW_INC_SEARCHPATH})
+   endif()
+ 
+-  if(FFTW_INCLUDE_PATH)
++  if(FFTW_INCLUDE_PATH OR CUFFTW_INCLUDE_PATH)
+     if(ITK_USE_CUFFTW)
+       file(TO_CMAKE_PATH "${CUFFTW_INCLUDE_PATH}" CUFFTW_INCLUDE_PATH)
+       set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
+diff --git a/Modules/Filtering/FFT/CMakeLists.txt b/Modules/Filtering/FFT/CMakeLists.txt
+index 7d9d1900b56..713530149cb 100644
+--- a/Modules/Filtering/FFT/CMakeLists.txt
++++ b/Modules/Filtering/FFT/CMakeLists.txt
+@@ -5,5 +5,5 @@ if(ITK_USE_CUFFTW)
+ else()
+   set(ITKFFT_LIBRARIES ITKFFT)
+ endif()
+-set(ITKFFT_INCLUDE_DIRS ${FFTW_INCLUDE_PATH})
++set(ITKFFT_INCLUDE_DIRS ${FFTW_INCLUDE})
+ itk_module_impl()
+diff --git a/Modules/Filtering/FFT/src/CMakeLists.txt b/Modules/Filtering/FFT/src/CMakeLists.txt
+index 3f3137b8cd4..bde3ee906f8 100644
+--- a/Modules/Filtering/FFT/src/CMakeLists.txt
++++ b/Modules/Filtering/FFT/src/CMakeLists.txt
+@@ -1,7 +1,8 @@
+-set(ITKFFT_SRCS
+-  itkFFTWGlobalConfiguration.cxx
+-  itkComplexToComplexFFTImageFilter.cxx
+-  )
++set(ITKFFT_SRCS itkComplexToComplexFFTImageFilter.cxx)
++
++if( ITK_USE_FFTWF OR ITK_USE_FFTWD AND NOT ITK_USE_CUFFTW)
++  list(APPEND ITKFFT_SRCS itkFFTWGlobalConfiguration.cxx )
++endif()
+ 
+ itk_module_add_library(ITKFFT ${ITKFFT_SRCS})
+ 

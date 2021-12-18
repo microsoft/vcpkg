@@ -1,76 +1,40 @@
-include(vcpkg_common_functions)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+if(VCPKG_TARGET_IS_LINUX AND NOT EXISTS "/usr/share/doc/libgles2/copyright")
+    message(STATUS "libgles2-mesa-dev must be installed before libepoxy can build. Install it with \"apt-get install libgles2-mesa-dev\".")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anholt/libepoxy
-    REF 1.5.3
-    SHA512 e831f4f918f08fd5f799501efc0e23b8d404478651634f5e7b35f8ebcc29d91abc447ab20da062dde5be75e18cb39ffea708688e6534f7ab257b949f9c53ddc8
-    HEAD_REF master)
+    REF 1.5.9
+    SHA512 2b7c269063dc1c156c1a2a525e27a0a323baaa7fa4ac091536e4cc5fc4c247efe9770d7979dbddb54deb14853008bb6f4d67fddd26d87cbd264eb1e6e65bc5a8
+    HEAD_REF master
+)
 
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            -Denable-glx=no
-            -Denable-egl=no)
-    vcpkg_install_meson()
-    vcpkg_copy_pdbs()
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
+    set(OPTIONS -Dglx=no -Degl=no -Dx11=false)
 else()
-    find_program(autoreconf autoreconf)
-    if (NOT autoreconf OR NOT EXISTS "/usr/share/doc/libgles2/copyright")
-        message(FATAL_ERROR "autoreconf and libgles2-mesa-dev must be installed before libepoxy can build. Install them with \"apt-get install dh-autoreconf libgles2-mesa-dev\".")
-    endif()
-    
-    find_program(MAKE make)
-    if (NOT MAKE)
-        message(FATAL_ERROR "MAKE not found")
-    endif()
-
-    file(REMOVE_RECURSE ${SOURCE_PATH}/m4)
-    file(MAKE_DIRECTORY ${SOURCE_PATH}/m4)
-    
-    set(LIBEPOXY_CONFIG_ARGS "--enable-x11=yes --enable-glx=yes --enable-egl=yes")
-    
-    vcpkg_execute_required_process(
-        COMMAND "autoreconf" -v --install
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME autoreconf-${TARGET_TRIPLET}
-    )
-    
-    message(STATUS "Configuring ${TARGET_TRIPLET}")
-    set(OUT_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/make-build-${TARGET_TRIPLET}-release)
-    
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE})
-    file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-    
-    vcpkg_execute_required_process(
-        COMMAND "./configure" --prefix=${OUT_PATH_RELEASE} "${LIBEPOXY_CONFIG_ARGS}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME config-${TARGET_TRIPLET}
-    )
-    
-    message(STATUS "Building ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process(
-        COMMAND make
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-release
-    )
-    
-    message(STATUS "Installing ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process(
-        COMMAND make install
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME install-${TARGET_TRIPLET}-release
-    )
-    file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/bin)
+    set(OPTIONS -Dglx=yes -Degl=yes -Dx11=true)
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -Dc_std=c99)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig)
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+        -Dtests=false
+)
+vcpkg_install_meson()
+vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libepoxy)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libepoxy/COPYING ${CURRENT_PACKAGES_DIR}/share/libepoxy/copyright)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

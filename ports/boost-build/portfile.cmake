@@ -1,24 +1,17 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    return()
-elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
     return()
 endif()
 
-set(BOOST_VERSION 1.70.0)
+set(BOOST_VERSION 1.77.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 be4e410a9656313519e089977a24da8f633db2182985f5d60e07e489f9eac8c887e8cab7e3cbd13f2b747bc3d9dab2899f174be1eaac73cfd7895015fb6b9b58
+    SHA512 35352daaa31b54ee0bfce764dda0863931ac0e90aa8e3facde26a7ba472ddd2d799fced7cfcca8fc3ffd7a0a7f7e7d095337ba28f200da10e5187b7ef39bb88b
     HEAD_REF master
-	PATCHES
-	    # Add the support of arm64-windows
-        arm64msvc.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -30,11 +23,16 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${BOOST_VERSION}/boostcpp.jam"
     FILENAME "boost-${BOOST_VERSION}-boostcpp.jam"
-    SHA512 7fac16c1f082821dd52cae39601f60bbdbd5ce043fbd19699da54c74fc5df1ed2ad6d3cefd3ae9a0a7697a2c34737f0c9e2b4bd3590c1f45364254875289cd17
+    SHA512 0daa0dd315f7e426e7b9ada9cc4dad03da2eb257456e551de3fb3b2a8244f0117ed41d9d1ff77b5a3eee7a3c5fb466d345b9bb2af46004fc630209043d4862e3
 )
 
+# https://github.com/boostorg/boost/pull/206
+# do not add version suffix for android
+file(READ "${BOOSTCPP_ARCHIVE}" _contents)
+string(REPLACE "aix &&" "aix android &&" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/boostcpp.jam" "${_contents}")
+
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)
-file(INSTALL ${BOOSTCPP_ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/boost-build RENAME boostcpp.jam)
 
 # This fixes the lib path to use desktop libs instead of uwp -- TODO: improve this with better "host" compilation
 string(REPLACE "\\store\\;" "\\;" LIB "$ENV{LIB}")
@@ -55,8 +53,13 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/tools/boost-build/src/tools/msvc.jam" "${_co
 
 message(STATUS "Bootstrapping...")
 if(CMAKE_HOST_WIN32)
+    if(VCPKG_TARGET_IS_MINGW)
+        set(TOOLSET mingw)
+    else()
+        set(TOOLSET msvc)
+    endif()
     vcpkg_execute_required_process(
-        COMMAND "${CURRENT_PACKAGES_DIR}/tools/boost-build/bootstrap.bat" msvc
+        COMMAND "${CURRENT_PACKAGES_DIR}/tools/boost-build/bootstrap.bat" ${TOOLSET}
         WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/boost-build
         LOGNAME bootstrap-${TARGET_TRIPLET}
     )

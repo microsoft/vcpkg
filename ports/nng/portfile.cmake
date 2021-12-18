@@ -1,41 +1,33 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF ddeac617c9914284038241870cb99ae174fb3755
-    SHA512 c45f322dfa3fba42db0561d95546159cc5e0768345d27f0bee53bdb71e77d5892e2e9bea50a625094ebf3c67b0c3fe0a8edea2660ebcb4fd0991fb0602055bc1
+    REF 9fcf039b573d153ba9bbc2beb5f11259ddacdcff # v1.5.1
+    SHA512 3db2668c3f971dc54156df2a3520645224fbb55460957da35940889c3148cb2cbc67c10cd23b9614ece70235d1f6003618310129eb9c40ced42db058c140dd58
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
-
-if("mbedtls" IN_LIST FEATURES)
-    set(NNG_ENABLE_TLS ON)
-else()
-    set(NNG_ENABLE_TLS OFF)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
-        -DNNG_TESTS=OFF
-        -DNNG_ENABLE_NNGCAT=OFF
-        -DNNG_ENABLE_TLS=${NNG_ENABLE_TLS}
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        mbedtls NNG_ENABLE_TLS
+        tools NNG_ENABLE_NNGCAT
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DNNG_TESTS=OFF
+        ${FEATURE_OPTIONS}
+)
 
-# Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nng)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/include/nng/nng.h
+    "${CURRENT_PACKAGES_DIR}/include/nng/nng.h"
     "defined(NNG_SHARED_LIB)"
     "0 /* defined(NNG_SHARED_LIB) */"
 )
@@ -54,7 +46,10 @@ else()
     )
 endif()
 
-# Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/nng/copyright COPYONLY)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES nngcat AUTO_CLEAN)
+endif()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

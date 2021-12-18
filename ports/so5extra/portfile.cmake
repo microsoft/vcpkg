@@ -1,12 +1,8 @@
-include(vcpkg_common_functions)
-
-set(VERSION 1.3.1.1)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/so5extra
-    REF v.${VERSION}
-    SHA512 aaf0d6bf86819a5c8c4e2c07318b46e34f22f0b4c2183690d8f21b8789a3c8c2533304998432397b8192193e32915ba4742eaff3481949add1a25602fb7347f1
+    REF 20f4c83ecde1509fbaf337dcf40f2f49dcf2690d # v.1.4.1.1
+    SHA512 a3df042b60afc4c57361b5b3c21f4b7c077f1b0ab7a4d33fda14cc915f10b22a42ef0acbb1c7c8b356ce31ee84f24391164120642faf96235549204c83b40294
 )
 
 vcpkg_configure_cmake(
@@ -22,3 +18,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/so5extra)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/so5extra RENAME copyright)
+

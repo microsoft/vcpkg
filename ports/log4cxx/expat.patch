@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5b44ef..e84e497 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,7 +33,7 @@ find_package(APR-Util REQUIRED)
+ find_package( Threads REQUIRED )
+ 
+ # Find expat for XML parsing
+-find_package(EXPAT REQUIRED)
++find_package(expat CONFIG REQUIRED)
+ 
+ # Request C++17, if available
+ # This *should* fallback to an older standard if it is not available
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b60e54f..b6138b3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -3,7 +3,7 @@ cmake_policy(SET CMP0079 NEW)
+ add_subdirectory(main)
+ target_compile_definitions(log4cxx PRIVATE ${LOG4CXX_COMPILE_DEFINITIONS} ${APR_COMPILE_DEFINITIONS} ${APR_UTIL_COMPILE_DEFINITIONS} )
+ target_include_directories(log4cxx INTERFACE $<INSTALL_INTERFACE:include> PRIVATE ${APR_INCLUDE_DIR} ${APR_UTIL_INCLUDE_DIR})
+-target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
++target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} expat::expat ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
+ if(WIN32)
+ 	# The ODBC appender is always enabled in the Windows configuration
+ 	target_link_libraries(log4cxx PRIVATE odbc32.lib)
+diff --git a/src/cmake/FindAPR-Util.cmake b/src/cmake/FindAPR-Util.cmake
+index d9cf4df..17a2457 100644
+--- a/src/cmake/FindAPR-Util.cmake
++++ b/src/cmake/FindAPR-Util.cmake
+@@ -38,7 +38,6 @@ if(EXISTS ${APR_UTIL_CONFIG_EXECUTABLE})
+       _apu_invoke(_apu_util_link_args  --link-ld)
+       string(REGEX MATCH "-L([^ ]+)" _apu_util_L_flag ${_apu_util_link_args})
+       find_library(APR_UTIL_LIBRARIES NAMES libaprutil-1.a PATHS "${CMAKE_MATCH_1}")
+-      _apu_invoke(XMLLIB_LIBRARIES --libs)
+       set(APR_UTIL_COMPILE_DEFINITIONS APU_DECLARE_STATIC)
+     else()
+       _apu_invoke(APR_UTIL_LIBRARIES   --link-ld)
+diff --git a/src/test/cpp/xml/CMakeLists.txt b/src/test/cpp/xml/CMakeLists.txt
+index 138c489..7b62f3e 100644
+--- a/src/test/cpp/xml/CMakeLists.txt
++++ b/src/test/cpp/xml/CMakeLists.txt
+@@ -4,5 +4,5 @@ add_executable(xmltests
+     xmllayouttestcase
+ )
+ 
+-target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT)
++target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} expat::expat)
+ set(ALL_LOG4CXX_TESTS ${ALL_LOG4CXX_TESTS} xmltests PARENT_SCOPE)

@@ -1,26 +1,18 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    message(FATAL_ERROR "Architecture not supported")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(VERSION 3.4.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
-    REF v3.1
-    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    REF v${VERSION}
+    SHA512 d399319efcca375fe901b05722e25eca31d11a4261c6a5d5079480bbc552d4e4b42de2026912689d3b2f886ebb3c8bebbea47102e38a2f6acbc526b8d5bba388
     HEAD_REF master
-    PATCHES
-        export-global-data.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libffiConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
@@ -28,18 +20,51 @@ vcpkg_configure_cmake(
         -DFFI_SKIP_HEADERS=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/ffi.h FFI_H)
-string(REPLACE "/* *know* they are going to link with the static library. */"
-"/* *know* they are going to link with the static library. */
+# Create pkgconfig file
+set(PACKAGE_VERSION ${VERSION})
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(toolexeclibdir "\${libdir}")
+set(includedir "\${prefix}/include")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
+endif()
+# debug
+set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(toolexeclibdir "\${libdir}")
+set(includedir "\${prefix}/../include")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
+endif()
+
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
+            "-lffi" "-llibffi")
+    endif()
+endif()
+vcpkg_fixup_pkgconfig()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h"
+        "   *know* they are going to link with the static library.  */"
+        "   *know* they are going to link with the static library.  */
 
 #define FFI_BUILDING
+"
+    )
+endif()
 
-" FFI_H "${FFI_H}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/ffi.h "${FFI_H}")
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libffi/LICENSE ${CURRENT_PACKAGES_DIR}/share/libffi/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

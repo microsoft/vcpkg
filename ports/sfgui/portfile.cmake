@@ -1,11 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TankOs/SFGUI
     REF 0.4.0
     SHA512 15456c6080b7095bcdcec08489b2b91b5cfc36cdf3c0b645b305072e7e835837eb4f95b59371ff176630b2b7ae51da475d8ea0bde5ff7fc0ba74c463bf5f54cf
     HEAD_REF master
+    PATCHES
+        "001-fix-corefoundation-link.patch"
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindSFML.cmake)

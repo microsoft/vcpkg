@@ -1,0 +1,73 @@
+diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
+index 73eee02f7..22d8bc159 100644
+--- a/CMake/FindPEGTL.cmake	
++++ b/CMake/FindPEGTL.cmake
+@@ -19,31 +19,42 @@
+ # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
+ # Redistribution and use is allowed according to the terms of the 2-clause BSD license.
+ 
+-find_path(PEGTL_INCLUDE_DIR
+-  NAMES pegtl/version.hpp
+-  PATH_SUFFIXES tao
+-  DOC "Path to PEGTL headers")
+-mark_as_advanced(PEGTL_INCLUDE_DIR)
++message(STATUS "Searching for PEGTL")
++find_package(PEGTL CONFIG NAMES PEGTL-2)
++if(TARGET taocpp::pegtl)
++    message(STATUS "Searching for PEGTL - found target taocpp::pegtl")
++    set_target_properties(taocpp::pegtl PROPERTIES IMPORTED_GLOBAL TRUE)
++    if(NOT TARGET PEGTL::PEGTL)
++    add_library(PEGTL::PEGTL ALIAS taocpp::pegtl)
++    endif()
++else()
++    find_path(PEGTL_INCLUDE_DIR
++      NAMES pegtl/version.hpp
++      PATH_SUFFIXES tao
++      DOC "Path to PEGTL headers")
++    mark_as_advanced(PEGTL_INCLUDE_DIR)
+ 
+-if (PEGTL_INCLUDE_DIR)
+-  file(STRINGS "${PEGTL_INCLUDE_DIR}/pegtl/version.hpp" _pegtl_version_header
+-    REGEX "TAO_PEGTL_VERSION")
+-  string(REGEX MATCH "define[ \t]+TAO_PEGTL_VERSION[ \t]+\"([0-9.]+)\"" _pegtl_version_match "${_pegtl_version_header}")
+-  set(PEGTL_VERSION "${CMAKE_MATCH_1}")
+-  unset(_pegtl_version_header)
+-  unset(_pegtl_version_match)
+-endif ()
++    if (PEGTL_INCLUDE_DIR)
++      file(STRINGS "${PEGTL_INCLUDE_DIR}/pegtl/version.hpp" _pegtl_version_header
++        REGEX "TAO_PEGTL_VERSION")
++      string(REGEX MATCH "define[ \t]+TAO_PEGTL_VERSION[ \t]+\"([0-9.]+)\"" _pegtl_version_match "${_pegtl_version_header}")
++      set(PEGTL_VERSION "${CMAKE_MATCH_1}")
++      unset(_pegtl_version_header)
++      unset(_pegtl_version_match)
++    endif ()
+ 
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(PEGTL
+-  REQUIRED_VARS PEGTL_INCLUDE_DIR
+-  VERSION_VAR PEGTL_VERSION)
++    include(FindPackageHandleStandardArgs)
++    find_package_handle_standard_args(PEGTL
++      REQUIRED_VARS PEGTL_INCLUDE_DIR
++      VERSION_VAR PEGTL_VERSION)
+ 
+-if (PEGTL_FOUND)
+-  set(PEGTL_INCLUDE_DIRS "${PEGTL_INCLUDE_DIR}")
+-  if (NOT TARGET PEGTL::PEGTL)
+-    add_library(PEGTL::PEGTL INTERFACE IMPORTED)
+-    set_target_properties(PEGTL::PEGTL PROPERTIES
+-      INTERFACE_INCLUDE_DIRECTORIES "${PEGTL_INCLUDE_DIR}")
+-  endif ()
+-endif ()
++    if (PEGTL_FOUND)
++      set(PEGTL_INCLUDE_DIRS "${PEGTL_INCLUDE_DIR}")
++      if (NOT TARGET PEGTL::PEGTL)
++        add_library(PEGTL::PEGTL INTERFACE IMPORTED)
++        set_target_properties(PEGTL::PEGTL PROPERTIES
++          INTERFACE_INCLUDE_DIRECTORIES "${PEGTL_INCLUDE_DIR}")
++      endif ()
++      message(STATUS "Searching for PEGTL - found")
++    endif ()
++endif ()
+\ No newline at end of file

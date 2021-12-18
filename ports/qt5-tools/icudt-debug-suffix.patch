@@ -1,0 +1,13 @@
+diff --git a/src/windeployqt/main.cpp b/src/windeployqt/main.cpp
+index 4e480bb..e15f076 100644
+--- a/src/windeployqt/main.cpp
++++ b/src/windeployqt/main.cpp
+@@ -1324,7 +1324,7 @@ static DeployResult deploy(const Options &options,
+                     const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
+                     if (optVerboseLevel > 1)
+                         std::wcout << "Adding ICU version " << icuVersion << '\n';
+-                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
++                    icuLibs.push_back(QStringLiteral("icudt") + (result.isDebug && platformHasDebugSuffix(options.platform) ? QStringLiteral("d") : QString()) + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
+                 }
+                 for (const QString &icuLib : qAsConst(icuLibs)) {
+                     const QString icuPath = findInPath(icuLib);

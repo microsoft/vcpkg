@@ -2,21 +2,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 9e78894..87aba5b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,7 +22,7 @@ PROJECT(hiredis VERSION "${VERSION}")
+@@ -22,4 +22,4 @@ PROJECT(hiredis VERSION "${VERSION}")
+ ENDIF()
  
- SET(ENABLE_EXAMPLES OFF CACHE BOOL "Enable building hiredis examples")
+-ADD_LIBRARY(hiredis SHARED ${hiredis_sources})
++ADD_LIBRARY(hiredis ${hiredis_sources})
  
--ADD_LIBRARY(hiredis SHARED
-+ADD_LIBRARY(hiredis
-     async.c
-     dict.c
-     hiredis.c
-@@ -60,7 +60,7 @@ IF(ENABLE_SSL)
-         ENDIF()
-     ENDIF()
-     FIND_PACKAGE(OpenSSL REQUIRED)
+@@ -60,5 +60,5 @@ IF(ENABLE_SSL)
+     SET(hiredis_ssl_sources 
+         ssl.c)
 -    ADD_LIBRARY(hiredis_ssl SHARED
 +    ADD_LIBRARY(hiredis_ssl
-         ssl.c)
-     TARGET_INCLUDE_DIRECTORIES(hiredis_ssl PRIVATE "${OPENSSL_INCLUDE_DIR}")
-     TARGET_LINK_LIBRARIES(hiredis_ssl PRIVATE ${OPENSSL_LIBRARIES})
+             ${hiredis_ssl_sources})
+ 

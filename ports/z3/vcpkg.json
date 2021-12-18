@@ -1,0 +1,8 @@
+{
+  "name": "z3",
+  "version": "4.8.12",
+  "port-version": 1,
+  "description": "Z3 is a theorem prover from Microsoft Research",
+  "homepage": "https://github.com/Z3Prover/z3",
+  "supports": "!uwp"
+}

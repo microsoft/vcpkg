@@ -1,0 +1,31 @@
+From 85292621ece3409a80929add91c971400ba724f3 Mon Sep 17 00:00:00 2001
+From: jzmaddock <john@johnmaddock.co.uk>
+Date: Fri, 10 Sep 2021 11:36:29 +0100
+Subject: [PATCH] Add emscripten testing and support. (#403)
+
+* Tentatively add emscripten testing and support.
+Fixes https://github.com/boostorg/config/issues/402.
+---
+ include/boost/config/platform/wasm.hpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/include/boost/config/platform/wasm.hpp b/include/boost/config/platform/wasm.hpp
+index c307812d..682b8485 100644
+--- a/include/boost/config/platform/wasm.hpp
++++ b/include/boost/config/platform/wasm.hpp
+@@ -9,6 +9,12 @@
+ 
+ #define BOOST_PLATFORM "Wasm"
+ 
++#ifdef __has_include
++#if __has_include(<unistd.h>)
++#  define BOOST_HAS_UNISTD_H
++#endif
++#endif
++
+ // boilerplate code:
+ #include <boost/config/detail/posix_features.hpp>
+ //
+-- 
+2.21.1 (Apple Git-122.3)
+

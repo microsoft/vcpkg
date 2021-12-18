@@ -1,0 +1,10 @@
+{
+  "name": "comms-ublox",
+  "version-semver": "0.20.2",
+  "description": "UBLOX (UBX) protocol definition, generated out of cc.ublox.commsdsl",
+  "homepage": "https://commschamp.github.io/",
+  "documentation": "https://github.com/commschamp/cc.ublox.generated",
+  "dependencies": [
+    "comms"
+  ]
+}

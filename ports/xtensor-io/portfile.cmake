@@ -1,31 +1,30 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtensor-io
-    REF 0.7.0
-    SHA512 6c8416c595d022ed60cd802deec6d63128d205d6fd13962098b6242ace4fa9e61122e5b05837a1aab3b64bc042da7cbf2f72f2328155c342de3a6db741d4d4ee
+    REPO xtensor-stack/xtensor-io
+    REF 2bc048b3f34731385f29e2f3b307103ee6d4e5ab # 0.12.8
+    SHA512 d7c5c85489aea9b9d8af7ee33a43dd8ab888e7f03da8b533ace39e143f89acbae4fe88bb10253931a3cc44041e1532bd76483686f7f20c00e2850647a574349c
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_GTEST=OFF
         -DDOWNLOAD_GBENCHMARK=OFF
+        -DHAVE_HighFive=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+foreach(bit "64" "32" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xtensor-io/xtensor_io_config.hpp" "#pragma cling add_library_path(\"${CURRENT_PACKAGES_DIR}/lib${bit}\")" "")
+endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

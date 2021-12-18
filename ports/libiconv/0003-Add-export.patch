@@ -1,0 +1,12 @@
+diff -uNr libiconv-1.16/libcharset/include/libcharset.h.in libiconv-1.16-work/libcharset/include/libcharset.h.in
+--- libiconv-1.16/libcharset/include/libcharset.h.in	2018-09-17 19:07:42.000000000 +0300
++++ libiconv-1.16-work/libcharset/include/libcharset.h.in	2019-12-04 17:15:50.000000000 +0300
+@@ -33,7 +33,7 @@
+    by the corresponding pathname with the current prefix instead.  Both
+    prefixes should be directory names without trailing slash (i.e. use ""
+    instead of "/").  */
+-extern void libcharset_set_relocation_prefix (const char *orig_prefix,
++extern void LIBCHARSET_DLL_EXPORTED libcharset_set_relocation_prefix (const char *orig_prefix,
+                                               const char *curr_prefix);
+ 
+ 

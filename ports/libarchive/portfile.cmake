@@ -1,64 +1,37 @@
-# libarchive uses winapi functions not available in WindowsStore
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF 614110e76d9dbb9ed3e159a71cbd75fa3b23efe3
-    SHA512 8feac2c0e22e5b7c05f3be97c774ad82d39bdea4b3fa3a2b297b85f8a5a9f548c528ef63f5495afd42fb75759e03a4108f3831b27103f899f8fe4ef7e8e2d1cf
+    REF 1b2c437b99b361c7692538fa373e99955e9b93ae      #v3.5.2
+    SHA512 df527dd333b01ed85f07831ba0bd4b1d0b5384fe12cfa53474ad39c04509105a3c8574a2d21a430e3584a931c8f6ae923bca95df83945f0c593c1ffaed3f62da
     HEAD_REF master
-    PATCHES
+    PATCHES 
+        disable-warnings.patch
         fix-buildsystem.patch
-        fix-dependencies.patch
-        fix-lz4.patch
-        fix-zstd.patch
         fix-cpu-set.patch
+        fix-dependencies.patch
+        pkgconfig-modules.patch
 )
 
-set(BUILD_libarchive_bzip2 OFF)
-if("bzip2" IN_LIST FEATURES)
-  set(BUILD_libarchive_bzip2 ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        bzip2   ENABLE_BZip2
+        libxml2 ENABLE_LIBXML2
+        lz4     ENABLE_LZ4
+        lzma    ENABLE_LZMA
+        lzo     ENABLE_LZO
+        openssl ENABLE_OPENSSL
+        zstd    ENABLE_ZSTD
+)
 
-set(BUILD_libarchive_libxml2 OFF)
-if("libxml2" IN_LIST FEATURES)
-  set(BUILD_libarchive_libxml2 ON)
-endif()
-
-set(BUILD_libarchive_lz4 OFF)
-if("lz4" IN_LIST FEATURES)
-  set(BUILD_libarchive_lz4 ON)
-endif()
-
-set(BUILD_libarchive_lzma OFF)
-if("lzma" IN_LIST FEATURES)
-  set(BUILD_libarchive_lzma ON)
-endif()
-
-set(BUILD_libarchive_lzo OFF)
-if("lzo" IN_LIST FEATURES)
-  set(BUILD_libarchive_lzo ON)
-endif()
-
-set(BUILD_libarchive_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-  set(BUILD_libarchive_openssl ON)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_BZip2=${BUILD_libarchive_bzip2}
-        -DENABLE_LIBXML2=${BUILD_libarchive_libxml2}
-        -DENABLE_LZ4=${BUILD_libarchive_lz4}
-        -DENABLE_LZMA=${BUILD_libarchive_lzma}
-        -DENABLE_LZO=${BUILD_libarchive_lzo}
-        -DENABLE_OPENSSL=${BUILD_libarchive_openssl}
+        ${FEATURE_OPTIONS}
+        -DENABLE_ZLIB=ON
         -DENABLE_PCREPOSIX=OFF
+        -DPOSIX_REGEX_LIB=NONE
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
@@ -68,21 +41,29 @@ vcpkg_configure_cmake(
         -DENABLE_CAT=OFF
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
-        -DENABLE_TEST=OFF
         -DENABLE_ICONV=OFF
-        -DPOSIX_REGEX_LIB=NONE
+        -DENABLE_LIBB2=OFF
+        -DENABLE_TEST=OFF
         -DENABLE_WERROR=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
-    file(READ ${HEADER} CONTENTS)
-    string(REPLACE "(!defined LIBARCHIVE_STATIC)" "0" CONTENTS "${CONTENTS}")
-    file(WRITE ${HEADER} "${CONTENTS}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+foreach(header "${CURRENT_PACKAGES_DIR}/include/archive.h" "${CURRENT_PACKAGES_DIR}/include/archive_entry.h")
+    vcpkg_replace_string("${header}" "(!defined LIBARCHIVE_STATIC)" "0")
 endforeach()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libarchive)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libarchive/COPYING ${CURRENT_PACKAGES_DIR}/share/libarchive/copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

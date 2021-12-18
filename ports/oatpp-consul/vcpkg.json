@@ -1,0 +1,9 @@
+{
+  "name": "oatpp-consul",
+  "version": "1.2.5",
+  "description": "OAT++ Modern web framework consul module.",
+  "homepage": "https://github.com/oatpp/oatpp-consul",
+  "dependencies": [
+    "oatpp"
+  ]
+}

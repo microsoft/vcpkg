@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 888742b..efdd817 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -140,7 +140,7 @@ else()
+ endif()
+ 
+ install(EXPORT "${PROJECT_NAME}-targets"
+-        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/${TARGET_DIR}"
++        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
+         NAMESPACE AWS::
+         COMPONENT Development)
+ 
+diff --git a/cmake/aws-checksums-config.cmake b/cmake/aws-checksums-config.cmake
+index 6de2e44..84d55d1 100644
+--- a/cmake/aws-checksums-config.cmake
++++ b/cmake/aws-checksums-config.cmake
+@@ -1,6 +1,2 @@
+-if (BUILD_SHARED_LIBS)
+-    include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
+-else()
+-    include(${CMAKE_CURRENT_LIST_DIR}/static/@PROJECT_NAME@-targets.cmake)
+-endif()
++include(${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake)
+ 

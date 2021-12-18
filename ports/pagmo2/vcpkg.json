@@ -1,0 +1,21 @@
+{
+  "name": "pagmo2",
+  "version": "2.16.1",
+  "description": "A C++ platform to perform parallel computations of optimisation tasks (global and local) via the asynchronous generalized island model.",
+  "homepage": "https://esa.github.io/pagmo2/",
+  "dependencies": [
+    "boost-any",
+    "boost-graph",
+    "boost-serialization",
+    "eigen3",
+    "tbb"
+  ],
+  "features": {
+    "nlopt": {
+      "description": "Enable the NLopt wrappers",
+      "dependencies": [
+        "nlopt"
+      ]
+    }
+  }
+}

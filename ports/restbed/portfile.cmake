@@ -1,36 +1,32 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-set(USE_OPENSSL OFF)
-if("openssl" IN_LIST FEATURES)
-    set(ADDITIONAL_PATCH "add_openssl_support.patch")
-    set(USE_OPENSSL ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl     BUILD_SSL 
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Corvusoft/restbed
-    REF 0f8af8d8ed183a88e208adeb22da0080d5d74d1e
-    SHA512 f0175a10c88f1ad4f16c8e4cff7ceea7b80c56b0724b59791c23e91f1ecf146dfdbda9e9238d31a35f21d8cdcc413b586cc633725dd0ba87de6b599a7087916f
+    REF 4.8
+    SHA512 989027c926b97a9dd02951c881dc41819014783da4848cc9ee50776545ba206830d35c2e775abd8c0f705f7b0611d5cd335dd1eb305cdcbf2c86100abaf1623c
     HEAD_REF master
     PATCHES
-        cmake.patch
-        ${ADDITIONAL_PATCH}
+        fix-cmake.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+file(REMOVE "${SOURCE_PATH}/cmake/Findopenssl.cmake")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_SSL=${USE_OPENSSL}
-        -DDISABLE_TESTS=ON
+        ${FEATURE_OPTIONS}
+        -DBUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-#Remove include debug files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+# Remove include debug files
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/restbed/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

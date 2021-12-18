@@ -1,0 +1,10 @@
+import("../third_party.gni")
+
+system("piex") {
+  include_dirs = @_INCLUDES@
+  if(is_debug) {
+    libs = @_LIBS_DBG@
+  } else {
+    libs = @_LIBS_REL@
+  }
+}

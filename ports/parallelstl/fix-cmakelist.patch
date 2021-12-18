@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 878b212..caa3cba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,7 +44,7 @@ add_library(pstl::ParallelSTL ALIAS ParallelSTL)
+ if (PARALLELSTL_USE_PARALLEL_POLICIES)
+     message(STATUS "Using Parallel Policies")
+     if (PARALLELSTL_BACKEND STREQUAL "tbb")
+-        find_package(TBB 2018 REQUIRED tbb OPTIONAL_COMPONENTS tbbmalloc)
++        find_package(TBB CONFIG REQUIRED tbb OPTIONAL_COMPONENTS tbbmalloc)
+         message(STATUS "Parallel STL uses TBB ${TBB_VERSION} (interface version: ${TBB_INTERFACE_VERSION})")
+         target_link_libraries(ParallelSTL INTERFACE TBB::tbb)
+       else()
+@@ -64,8 +64,7 @@ target_include_directories(ParallelSTL
+     INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/stdlib>
+-    $<INSTALL_INTERFACE:include>
+-    $<INSTALL_INTERFACE:stdlib>)
++    $<INSTALL_INTERFACE:include>)
+ 
+ target_compile_features(ParallelSTL
+     INTERFACE
+@@ -100,6 +99,8 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ParallelSTLConfig.cmake"
+         DESTINATION lib/cmake/ParallelSTL)
+ install(DIRECTORY include/pstl
+         DESTINATION include)
++file(GLOB STDLIB_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/stdlib/pstl/*)
++install(FILES ${STDLIB_HEADERS} DESTINATION include/pstl)
+ 
+ add_custom_target(install-pstl
+                   COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_install.cmake" -DCOMPONENT=ParallelSTL)

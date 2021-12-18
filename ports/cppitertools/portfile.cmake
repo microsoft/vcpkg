@@ -1,20 +1,25 @@
-# header-only library
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ryanhaining/cppitertools
-    REF 97bfd33cdc268426b20f189c13d3ed88f5e1f4c2
-    SHA512 7b8926cf00b5be17fa89a1d1aea883e60848187bb00d637c40a20f6e11811add4785f2f461e530a6cd557d3be16490799ffcd7ea90bd7b58fdca549c3df03e8c
+    REF 539a5be8359c4330b3f88ed1821f32bb5c89f5f6
+    SHA512 cab0cb8a6b711824c13ca013b3349b9decb84f2dab6305bfb1bdd013f7426d5b199c127dadabeaaafc2e7ff6ad442222dd0fffee9aaacfa27d3aeb82c344ae4f
     HEAD_REF master
 )
 
-file(GLOB INCLUDE_FILES ${SOURCE_PATH}/*.hpp)
-file(GLOB INCLUDE_INTERNAL_FILES ${SOURCE_PATH}/internal/*.hpp)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -Dcppitertools_INSTALL_CMAKE_DIR=share
+)
 
-file(COPY ${INCLUDE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${INCLUDE_INTERNAL_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/internal)
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug
+    ${CURRENT_PACKAGES_DIR}/share/cppitertools-config-version.cmake)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppitertools
+    RENAME copyright)

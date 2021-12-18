@@ -5,7 +5,7 @@ index aeb1c4e9..2ac531be 100644
 @@ -33,7 +33,13 @@ extern void _nl_locale_name_canonicalize (char *name);
  #endif
  
- #if defined _WIN32 || defined __WIN32__
+ #if defined _WIN32
 -# define WIN32_NATIVE
 +# if !defined(WINAPI_FAMILY)
 +#	define WIN32_NATIVE
@@ -22,10 +22,10 @@ index 670b8e6c..035a96bd 100644
 --- "a/gettext-runtime/intl/localcharset.c"
 +++ "b/gettext-runtime/intl/localcharset.c"
 @@ -36,6 +36,16 @@
- # define WINDOWS_NATIVE
+ # include <locale.h>
  #endif
  
-+#if defined _WIN32 || defined __WIN32__
++#if defined _WIN32
 +# if !defined(WINAPI_FAMILY)
 +#	define HAVE_ACP
 +# else
@@ -38,32 +38,32 @@ index 670b8e6c..035a96bd 100644
  #if defined __EMX__
  /* Assume EMX program runs on OS/2, even if compiled under DOS.  */
  # ifndef OS2
-@@ -361,7 +371,7 @@ STATIC
+@@ -830,7 +830,7 @@ STATIC
  const char *
  locale_charset (void)
  {
 -  const char *codeset;
 +  const char *codeset = NULL;
-   const char *aliases;
  
- #if !(defined WINDOWS_NATIVE || defined OS2)
-@@ -457,7 +467,7 @@ locale_charset (void)
+   /* This function must be multithread-safe.  To achieve this without using
+      thread-local storage, we use a simple strcpy or memcpy to fill this static
+@@ -912,7 +912,7 @@ locale_charset (void)
+     /* The canonical name cannot be determined.  */
+     codeset = "";
  
- # endif
+-# elif defined WINDOWS_NATIVE
++# elif defined WINDOWS_NATIVE && defined HAVE_ACP
  
--#elif defined WINDOWS_NATIVE
-+#elif defined WINDOWS_NATIVE && defined HAVE_ACP
- 
-   static char buf[2 + 10 + 1];
- 
+   char buf[2 + 10 + 1];
+   static char resultbuf[2 + 10 + 1];
 diff --git "a/gettext-runtime/intl/localename.c" "b/gettext-runtime/intl/localename.c"
 index 108dd6f1..ace3aa88 100644
 --- "a/gettext-runtime/intl/localename.c"
 +++ "b/gettext-runtime/intl/localename.c"
-@@ -54,7 +54,13 @@
+@@ -75,10 +75,16 @@
  #endif
  
- #if defined _WIN32 || defined __WIN32__
+ #if defined _WIN32 && !defined __CYGWIN__
 -# define WINDOWS_NATIVE
 +# if !defined(WINAPI_FAMILY)
 +#	define WINDOWS_NATIVE
@@ -72,6 +72,9 @@ index 108dd6f1..ace3aa88 100644
 +#		define WINDOWS_NATIVE
 +#   endif
 +# endif
+ # if !defined IN_LIBINTL
+ #  include "glthread/lock.h"
+ # endif
  #endif
  
  #if defined WINDOWS_NATIVE || defined __CYGWIN__ /* Native Windows or Cygwin */

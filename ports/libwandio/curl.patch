@@ -1,0 +1,22 @@
+diff --git a/configure.ac b/configure.ac
+index 4579fbb3d..f6be008c8 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -296,12 +304,14 @@ AC_ARG_WITH([http],
+ AS_IF([test "x$with_http" != "xno"],
+         [
+         # we need curl_easy_pause which was added in 7.18.0
+-        AC_CHECK_LIB(curl, curl_easy_pause, have_curl=yes, have_curl=no)
++        AC_SEARCH_LIBS(curl_easy_pause, [curl curl-d libcurl libcurl-d], have_curl=yes, have_curl=no, [-lCrypt32 -lWldap32 -lWs2_32 -ladvapi32])
++        # AC_CHECK_LIB(curl, curl_easy_pause, have_curl=yes, have_curl=no)
+ 	], [have_curl=no])
+ 
+ AS_IF([test "x$have_curl" = "xyes"], [
+-        if test "$ac_cv_lib_curl_curl_easy_pause" != "none required"; then
+-                LIBWANDIO_LIBS="$LIBWANDIO_LIBS -lcurl"
++        if test "$ac_cv_search_curl_easy_pause" != "none required"; then
++                LIBWANDIO_LIBS="$LIBWANDIO_LIBS -lCrypt32 -lWldap32 -lWs2_32 -ladvapi32 $ac_cv_search_curl_easy_pause"
++                LIBS="$LIBS"
+         fi
+         AC_DEFINE(HAVE_HTTP, 1, "Compiled with http support")
+         with_http=yes],

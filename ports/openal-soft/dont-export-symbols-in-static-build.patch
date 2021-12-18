@@ -1,5 +1,4 @@
 diff --git a/config.h.in b/config.h.in
-index a71b54f..8d84645 100644
 --- a/config.h.in
 +++ b/config.h.in
 @@ -1,6 +1,8 @@
@@ -8,6 +7,7 @@ index a71b54f..8d84645 100644
  #define AL_API  ${EXPORT_DECL}
  #define ALC_API ${EXPORT_DECL}
 +#endif
+
+ /* Define if HRTF data is embedded in the library */
+ #cmakedefine ALSOFT_EMBED_HRTF_DATA
  
- /* Define any available alignment declaration */
- #define ALIGN(x) ${ALIGN_DECL}

@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows")
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platforms" ON_TARGET "Windows") 
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,21 +6,29 @@ vcpkg_from_github(
     REF 582fa09bc58411cfe6f27facd7e6438924f779d2
     SHA512 78dd2d2f9df259483196905f80a904534632a835f742d1f8b3ad645ea80f2dad78356960a2b35e2678525786a7344fa248b708bd3f86101c43fb36c7abc05598
     HEAD_REF dev
+    PATCHES
+        use-vcpkg-libpcap.patch
+        makefile.patch
 )
-
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    SKIP_CONFIGURE
-)
-
+ 
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+endif()
+set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
 vcpkg_build_make()
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
 # Install manually because pfring cannot set prefix
-if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     
-    if (CMAKE_BUILD_TYPE STREQUAL debug)
+    if (VCPKG_BUILD_TYPE STREQUAL debug)
         file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")
         file(INSTALL ${PFRING_KO_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
         
@@ -36,7 +44,7 @@ if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL debug)
     endif()
 endif()
 
-if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL release)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     
     file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")

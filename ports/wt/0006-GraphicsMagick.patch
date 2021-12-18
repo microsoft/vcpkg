@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5012cfd1b..95f812685 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -338,7 +338,7 @@ ELSE (CMAKE_MAJOR_VERSION EQUAL 2 AND CMAKE_MINOR_VERSION LESS 8)
+ ENDIF (CMAKE_MAJOR_VERSION EQUAL 2 AND CMAKE_MINOR_VERSION LESS 8)
+ 
+ IF (${WT_WRASTERIMAGE_IMPLEMENTATION} STREQUAL "GraphicsMagick")
+-  IF (NOT GM_FOUND)
++  IF (0)
+     MESSAGE(FATAL_ERROR "WT_WRASTERIMAGE_IMPLEMENTATION set to GraphicsMagick but GM is not found. Indicate the location of your graphicsmagick library using -DGM_PREFIX=...")
+   ENDIF (NOT GM_FOUND)
+   SET(WT_HAS_WRASTERIMAGE true)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 78d82ee53..01ac5f42a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -595,8 +595,9 @@ ELSE(HAVE_HARU)
+ ENDIF(HAVE_HARU)
+ 
+ IF("${WT_WRASTERIMAGE_IMPLEMENTATION}" STREQUAL "GraphicsMagick")
+-  TARGET_LINK_LIBRARIES(wt PRIVATE ${GM_LIBRARIES})
+-  INCLUDE_DIRECTORIES(${GM_INCLUDE_DIRS})
++  find_package(unofficial-graphicsmagick REQUIRED)
++  TARGET_LINK_LIBRARIES(wt PRIVATE unofficial::graphicsmagick::graphicsmagick)
++  # INCLUDE_DIRECTORIES(${GM_INCLUDE_DIRS})
+   ADD_DEFINITIONS(-DHAVE_GRAPHICSMAGICK)
+ ELSEIF("${WT_WRASTERIMAGE_IMPLEMENTATION}" STREQUAL "skia")
+   TARGET_LINK_LIBRARIES(wt PRIVATE ${SKIA_LIBRARIES})

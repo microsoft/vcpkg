@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 111a603..109394f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,22 +25,12 @@ endif()
+ project(OpenEXRMetaProject)
+ 
+ 
+-# An "official" way to make this a super-project
+-# basically overrides the find_package to not find anything
+-# for stuff we're including locally
+-set(as_subproject IlmBase OpenEXR)
+-macro(find_package)
+-  if(NOT "${ARGV0}" IN_LIST as_subproject)
+-    _find_package(${ARGV})
+-  endif()
+-endmacro()
+-
+ 
+ # If you want to use ctest to configure, build and
+ # upload the results, cmake has builtin support for
+ # submitting to CDash, or any server who speaks the
+ # same protocol
+-# 
++#
+ # These settings will need to be set for your environment,
+ # and then a script such as the example in
+ #
+@@ -51,7 +41,7 @@ endmacro()
+ # cmake -S cmake/SampleCTestScript.cmake
+ #
+ # [or whatever you name the file you edit]
+-# 
++#
+ #set(CTEST_PROJECT_NAME "OpenEXR")
+ #set(CTEST_NIGHTLY_START_TIME "01:01:01 UTC")
+ #set(CTEST_DROP_METHOD "http") # there are others...
+diff --git a/OpenEXR/CMakeLists.txt b/OpenEXR/CMakeLists.txt
+index 390b27f..87b2d01 100644
+--- a/OpenEXR/CMakeLists.txt
++++ b/OpenEXR/CMakeLists.txt
+@@ -35,7 +35,6 @@ include(config/OpenEXRSetup.cmake)
+ 
+ # Everyone depends on IlmBase, and we currently rely on
+ # the version matched with our release
+-find_package(IlmBase ${OPENEXR_VERSION} EXACT REQUIRED CONFIG)
+ 
+ # generates config headers, package config files
+ add_subdirectory(config)
+diff --git a/OpenEXR/config/OpenEXRSetup.cmake b/OpenEXR/config/OpenEXRSetup.cmake
+index 5116726..34c7c87 100644
+--- a/OpenEXR/config/OpenEXRSetup.cmake
++++ b/OpenEXR/config/OpenEXRSetup.cmake
+@@ -33,7 +33,7 @@ endif()
+ # Whether to build & install the various command line utility programs
+ option(OPENEXR_BUILD_UTILS "Enables building of utility programs" ON)
+ 
+-# This is a variable here for use in controlling where include files are 
++# This is a variable here for use in controlling where include files are
+ # installed. Care must be taken when changing this, as many things
+ # probably assume this is OpenEXR
+ set(OPENEXR_OUTPUT_SUBDIR OpenEXR CACHE STRING "Destination sub-folder of the include path for install")
+diff --git a/OpenEXR_Viewers/CMakeLists.txt b/OpenEXR_Viewers/CMakeLists.txt
+index 5efa353..5246fa7 100644
+--- a/OpenEXR_Viewers/CMakeLists.txt
++++ b/OpenEXR_Viewers/CMakeLists.txt
+@@ -24,8 +24,6 @@ project(OpenEXR_Viewers VERSION ${OPENEXR_VIEWERS_VERSION})
+ #######################################
+ include(config/OpenEXRViewersSetup.cmake)
+ 
+-find_package(IlmBase ${OPENEXR_VIEWERS_VERSION} EXACT REQUIRED CONFIG)
+-find_package(OpenEXR ${OPENEXR_VIEWERS_VERSION} EXACT REQUIRED CONFIG)
+ 
+ # This is for newer cmake versions who know about vendor versions
+ set(OpenGL_GL_PREFERENCE GLVND)
+diff --git a/PyIlmBase/CMakeLists.txt b/PyIlmBase/CMakeLists.txt
+index 291b96e..7d5074f 100644
+--- a/PyIlmBase/CMakeLists.txt
++++ b/PyIlmBase/CMakeLists.txt
+@@ -27,7 +27,6 @@ project(PyIlmBase VERSION ${PYILMBASE_VERSION} LANGUAGES C CXX)
+ include(config/PyIlmBaseSetup.cmake)
+ 
+ # we have a strong dependence on IlmBase being an exact match
+-find_package(IlmBase ${PYILMBASE_VERSION} EXACT REQUIRED CONFIG)
+ 
+ # we are building a python extension, so of course we depend on
+ # python as well. Except we don't know which version...

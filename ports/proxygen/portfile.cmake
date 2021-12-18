@@ -3,10 +3,12 @@ vcpkg_fail_port_install(ON_TARGET "Windows")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF ac8a0f520b1d5fb91cd3f3ef681d4b37053b09f0 #v2019.10.21.00
-    SHA512 2a76fed7cf9947e1096b36d25fe7886c06655fa2faf6d4829fd07c682efdf2bd9003a4c9e4772a4ccfd72df81e7066df736d2330a5edf0e836da30dcc81d3b5f
+    REF v2021.06.14.00
+    SHA512 f5ab54514575f86897438f40a481796c34031101775b61a01581338c91686159995e4f822909e42eed4c006b2c6a6351887d469cc9df1df80711dba10cc15a19
     HEAD_REF master
-    PATCHES fix-tools-path.patch
+    PATCHES
+        remove-register.patch
+        fix-duplicated-target.patch # fixed in master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -31,9 +33,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-#Handle copyright
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

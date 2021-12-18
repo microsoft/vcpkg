@@ -1,0 +1,56 @@
+diff --git a/noiseutils/CMakeLists.txt b/noiseutils/CMakeLists.txt
+index 07747de..08c0bda 100644
+--- a/noiseutils/CMakeLists.txt
++++ b/noiseutils/CMakeLists.txt
+@@ -22,8 +22,11 @@ if(BUILD_SHARED_LIBS)
+ 	target_include_directories(${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+ 	
+ 	# install dynamic libraries (.dll or .so) into /bin
+-	install(TARGETS ${TARGET_NAME} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+-endif()
++	install(TARGETS ${TARGET_NAME}
++        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
++else()
+ 
+ #----------------------------------------
+ # build static lib (it's good practice to include a lib file for the dll)
+@@ -35,7 +38,7 @@ target_include_directories(${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+ # install static libraries (.lib) into /lib
+ install(TARGETS ${TARGET_NAME} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+ #----------------------------------------
+-
++endif()
+ # install include files into /include
+ install( FILES "${PROJECT_SOURCE_DIR}/noiseutils/noiseutils.h" 
+ 		DESTINATION "${CMAKE_INSTALL_PREFIX}/include/noise" )
+\ No newline at end of file
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2757f30..7a135c2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -62,8 +62,11 @@ if(BUILD_SHARED_LIBS)
+ 	set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${LIBNOISE_VERSION})
+ 	target_include_directories(${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+ 	target_compile_definitions(${TARGET_NAME} PRIVATE NOISE_BUILD_DLL)
+-	install(TARGETS ${TARGET_NAME} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+-endif()
++	install(TARGETS ${TARGET_NAME}
++        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
++else()
+ 
+ #----------------------------------------
+ # build static lib (it's good practice to include a lib file for the dll)
+@@ -76,7 +79,7 @@ target_compile_definitions(${TARGET_NAME} PUBLIC NOISE_STATIC)
+ # install static libraries (.lib) into /lib
+ install(TARGETS ${TARGET_NAME} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+ #----------------------------------------
+-
++endif()
+ # install include files into /include
+ install( DIRECTORY   "${PROJECT_SOURCE_DIR}/src/noise" 
+ 		 DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
+\ No newline at end of file

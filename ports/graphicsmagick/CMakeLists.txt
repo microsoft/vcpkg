@@ -50,6 +50,7 @@ string(REPLACE "#undef HAVE_VSNPRINTF" "#define HAVE_VSNPRINTF" CONFIG_H "${CONF
 string(REPLACE "#undef MagickLibSubdir" "#define MagickLibSubdir \"magick\"" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef MagickLibConfigSubDir" "#define MagickLibConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef MagickShareConfigSubDir" "#define MagickShareConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef HAVE_STDINT_H" "#define HAVE_STDINT_H" CONFIG_H "${CONFIG_H}")
 endif ()
 file(WRITE "magick/magick_config.h" "${CONFIG_H}")
 
@@ -111,7 +112,7 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		Magick++/lib/Pixels.cpp Magick++/lib/STL.cpp Magick++/lib/Thread.cpp
 		Magick++/lib/TypeMetric.cpp
 		wand/drawing_wand.c wand/magick_compat.c wand/magick_wand.c wand/pixel_wand.c
-		jbig/libjbig/jbig.c jbig/libjbig/jbig_tab.c)
+		jbig/libjbig/jbig.c jbig/libjbig/jbig_ar.c jbig/libjbig/jbig85.c)
 
 TARGET_LINK_LIBRARIES(graphicsmagick PRIVATE
     ZLIB::ZLIB
@@ -248,7 +249,7 @@ if (INSTALL_HEADERS)
     install(FILES magick/widget.h DESTINATION include/magick)
     install(FILES magick/xwindow.h DESTINATION include/magick)
  
-    install(FILES Magick++/lib/Magick++.h DESTINATION include/Magick++)
+    install(FILES Magick++/lib/Magick++.h DESTINATION include)
 
     install(FILES Magick++/lib/Magick++/Blob.h DESTINATION include/Magick++)
     install(FILES Magick++/lib/Magick++/BlobRef.h DESTINATION include/Magick++)

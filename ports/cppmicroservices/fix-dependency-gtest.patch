@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 136edff..9d29522 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -288,6 +288,10 @@ if(US_COMPILER_APPLE_CLANG OR US_COMPILER_CLANG)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+ endif()
+ 
++# Dependency
++find_package(GTest CONFIG REQUIRED)
++link_libraries(GTest::gtest GTest::gmock)
++
+ #-----------------------------------------------------------------------------
+ # Testing configuration
+ #-----------------------------------------------------------------------------
+@@ -338,7 +342,7 @@ if(US_BUILD_TESTING)
+   endif()
+ 
+   if(US_USE_SYSTEM_GTEST)
+-    find_package(GTest REQUIRED)
++    find_package(GTest CONFIG REQUIRED)
+   else()
+     # This keeps GTest CMake variables hidden from users unless they explicitly want to view/modify them.
+     us_cache_var(BUILD_GMOCK ON BOOL "Build GMock" ADVANCED FORCE)

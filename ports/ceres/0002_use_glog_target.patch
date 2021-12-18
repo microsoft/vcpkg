@@ -1,20 +1,20 @@
 diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
-index cc43fec..18b415b 100644
+index 3711222..8646bd0 100644
 --- a/internal/ceres/CMakeLists.txt
 +++ b/internal/ceres/CMakeLists.txt
-@@ -152,17 +152,9 @@ else (SCHUR_SPECIALIZATIONS)
- endif (SCHUR_SPECIALIZATIONS)
- 
- # Build the list of dependencies for Ceres based on the current configuration.
+@@ -174,17 +174,9 @@ endif (SCHUR_SPECIALIZATIONS)
+ find_package(Threads QUIET)
+ list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES Threads::Threads)
+
 -if (NOT MINIGLOG AND GLOG_FOUND)
 -  list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES ${GLOG_LIBRARIES})
--  if (GFLAGS_FOUND)
+-  if (gflags_FOUND)
 -    # If glog & gflags are both found, we assume that glog was built with
 -    # gflags, as it is awkward to perform a try_compile() to verify this
 -    # when gflags is an imported target (as it is in newer versions).
 -    # As glog #includes gflags/gflags.h in glog/logging.h if compiled with
 -    # gflags, it is thus a public dependency for Ceres in this case.
--    list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES ${GFLAGS_LIBRARIES})
+-    list(APPEND CERES_LIBRARY_PUBLIC_DEPENDENCIES gflags)
 -  endif()
 -endif (NOT MINIGLOG AND GLOG_FOUND)
 +if (NOT MINIGLOG)

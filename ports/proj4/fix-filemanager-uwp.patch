@@ -1,0 +1,71 @@
+diff --git a/src/filemanager.cpp b/src/filemanager.cpp
+index e6a9ed9..d85290b 100644
+--- a/src/filemanager.cpp
++++ b/src/filemanager.cpp
+@@ -48,6 +48,12 @@
+ 
+ #include "proj_config.h"
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define UWP 1
++#else
++#define UWP 0
++#endif
++
+ #ifdef _WIN32
+ #include <shlobj.h>
+ #include <windows.h>
+@@ -692,10 +698,21 @@ std::unique_ptr<File> FileWin32::open(PJ_CONTEXT *ctx, const char *filename,
+                                      ? FILE_ATTRIBUTE_READONLY
+                                      : FILE_ATTRIBUTE_NORMAL;
+     try {
++#if UWP
++        CREATEFILE2_EXTENDED_PARAMETERS extendedParameters;
++        ZeroMemory(&extendedParameters, sizeof(extendedParameters));
++        extendedParameters.dwSize = sizeof(extendedParameters);
++        extendedParameters.dwFileAttributes = dwFlagsAndAttributes;
++        HANDLE hFile = CreateFile2(
++            UTF8ToWString(std::string(filename)).c_str(), dwDesiredAccess,
++            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
++            dwCreationDisposition, &extendedParameters);
++#else // UWP
+         HANDLE hFile = CreateFileW(
+             UTF8ToWString(std::string(filename)).c_str(), dwDesiredAccess,
+             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr,
+             dwCreationDisposition, dwFlagsAndAttributes, nullptr);
++#endif // UWP
+         return std::unique_ptr<File>(hFile != INVALID_HANDLE_VALUE
+                                          ? new FileWin32(filename, ctx, hFile)
+                                          : nullptr);
+@@ -1211,6 +1228,9 @@ const char *proj_context_get_user_writable_directory(PJ_CONTEXT *ctx,
+             wPath.resize(wcslen(wPath.data()));
+             path = NS_PROJ::WStringToUTF8(wPath);
+ #else
++#if UWP
++        if (false) {
++#else // UWP
+         wchar_t *wPath;
+         if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &wPath) ==
+             S_OK) {
+@@ -1218,6 +1238,7 @@ const char *proj_context_get_user_writable_directory(PJ_CONTEXT *ctx,
+             std::string str = NS_PROJ::WStringToUTF8(ws);
+             path = str;
+             CoTaskMemFree(wPath);
++#endif // UWP
+ #endif
+         } else {
+             const char *local_app_data = getenv("LOCALAPPDATA");
+@@ -1311,11 +1332,13 @@ static std::string pj_get_relative_share_proj_internal_no_check() {
+ #if defined(_WIN32) || defined(HAVE_LIBDL)
+ #ifdef _WIN32
+     HMODULE hm = NULL;
++#if !UWP
+     if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                               GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           (LPCSTR)&pj_get_relative_share_proj, &hm) == 0) {
+         return std::string();
+     }
++#endif // UWP
+ 
+     DWORD path_size = 1024;
+ 
