@@ -1,0 +1,15 @@
+ build/Jamfile.v2 | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index 3efdb96..8a6b6dd 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -130,6 +130,7 @@ lib boost_fiber_numa
+       numa/algo/work_stealing.cpp
+     : 
+     <conditional>@numa
++    <library>boost_fiber
+     [ requires cxx11_auto_declarations
+                cxx11_constexpr
+                cxx11_defaulted_functions
