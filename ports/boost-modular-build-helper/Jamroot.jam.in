@@ -159,10 +159,8 @@ if "@PORT@" != "boost-python"
 {
     use-project /boost/python : . ;
 
-    lib boost_python : 2.7 : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_python27@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
-    lib boost_python : 2.7 : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_python27@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
-    lib boost_python : 3.10 : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_python310@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
-    lib boost_python : 3.10 : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_python310@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
+    lib boost_python : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_python@PYTHON_VERSION_TAG@@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_python : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_python@PYTHON_VERSION_TAG@@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_python ;
 }
 

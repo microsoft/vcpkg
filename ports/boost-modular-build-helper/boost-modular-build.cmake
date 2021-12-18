@@ -79,6 +79,19 @@ function(boost_modular_build)
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
+    if("python2" IN_LIST FEATURES)
+        # Find Python2 in the current installed directory
+        file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python2_version}")
+    endif()
+    if("python3" IN_LIST FEATURES)
+        # Find Python3 in the current installed directory
+        file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
+    endif()
+
     configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     set(configure_options)
