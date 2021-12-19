@@ -7,6 +7,7 @@ Configure a qmake-based project.
 VCPKG_OSX_DEPLOYMENT_TARGET: Determines QMAKE_MACOSX_DEPLOYMENT_TARGET
 VCPKG_QMAKE_COMMAND: Path to qmake. (default: "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 VCPKG_QT_CONF_(RELEASE|DEBUG): Path to qt.config being used for RELEASE/DEBUG. (default: "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_(release|debug).conf")
+VCPKG_QT_TARGET_MKSPEC: Qt mkspec to use
 VCPKG_QMAKE_OPTIONS(_RELEASE|_DEBUG)?: Extra options to pass to QMake
 
 ```cmake
@@ -109,12 +110,17 @@ function(vcpkg_qmake_configure)
 
     # QMAKE_OBJCOPY ?
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        qmake_append_program(qmake_build_tools "LINKER" "${VCPKG_DETECTED_CMAKE_LINKER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LIB" "${VCPKG_DETECTED_CMAKE_AR}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_LINKER}")
-        qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_LINKER}")
     else()
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    endif()
+
+    if(DEFINED VCPKG_QT_TARGET_MKSPEC)
+        vcpkg_list(APPEND arg_QMAKE_OPTIONS "-spec" "${VCPKG_QT_TARGET_MKSPEC}")
     endif()
 
     foreach(buildtype IN LISTS buildtypes)
