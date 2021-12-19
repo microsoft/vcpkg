@@ -339,9 +339,6 @@ gasol:x64-uwp=fail
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
-# Requires comsuppw[d].lib for UWP to be installed in CI
-gdal:arm-uwp=fail
-gdal:x64-uwp=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
