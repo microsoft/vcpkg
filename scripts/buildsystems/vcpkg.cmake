@@ -51,6 +51,9 @@ option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCP
 # requires CMake 3.14
 option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
 option(VCPKG_PREFER_SYSTEM_LIBS "Appends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found after toolchain/system libraries/packages." OFF)
+if(VCPKG_PREFER_SYSTEM_LIBS)
+    message(WARNING "VCPKG_PREFER_SYSTEM_LIBS has been deprecated. Use empty overlay ports instead.")
+endif()
 
 # Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
