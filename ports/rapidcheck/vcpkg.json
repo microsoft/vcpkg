@@ -1,6 +1,6 @@
 {
   "name": "rapidcheck",
-  "version-string": "2020-08-25",
+  "version-string": "2021-10-10",
   "port-version": 1,
   "description": "A property-based testing library for C++ (a la QuickCheck) with the goal of being simple to use with as little boilerplate as possible.",
   "homepage": "https://github.com/emil-e/rapidcheck"
