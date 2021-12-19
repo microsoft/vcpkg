@@ -1,0 +1,16 @@
+{
+  "name": "curses",
+  "version-date": "2021-12-19",
+  "description": "Curses API meta-port",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "ncurses",
+      "platform": "!windows | mingw"
+    },
+    {
+      "name": "pdcurses",
+      "platform": "windows & !mingw"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2021-07-24",
+  "version-date": "2021-12-19",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "default-features": [
     "ci"
@@ -58,8 +58,8 @@
         },
         {
           "$package": "Curses",
-          "name": "ncurses",
-          "platform": "!windows & !uwp"
+          "name": "curses",
+          "platform": "!uwp"
         },
         {
           "$package": "ZLIB",
