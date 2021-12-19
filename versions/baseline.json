@@ -5921,8 +5921,8 @@
       "port-version": 1
     },
     "rapidcheck": {
-      "baseline": "2020-08-25",
-      "port-version": 1
+      "baseline": "2021-10-10",
+      "port-version": 0
     },
     "rapidcsv": {
       "baseline": "8.53",
