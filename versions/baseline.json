@@ -1708,6 +1708,10 @@
       "baseline": "2018-06-15",
       "port-version": 6
     },
+    "curses": {
+      "baseline": "2021-12-19",
+      "port-version": 0
+    },
     "cute-headers": {
       "baseline": "2019-09-20",
       "port-version": 1
