@@ -791,7 +791,6 @@ luasocket:x64-osx=fail
 luasocket:x64-uwp=fail
 lzfse:arm-uwp=fail
 magnum:arm64-windows=skip
-mapnik:arm64-windows=fail
 marble:x64-windows-static=fail
 marble:x64-windows-static-md=fail
 marble:arm64-windows=fail
