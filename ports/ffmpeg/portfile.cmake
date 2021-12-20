@@ -278,7 +278,7 @@ else()
 endif()
 
 if (NOT "alsa" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --disable-avcodec")
+    set(OPTIONS "${OPTIONS} --disable-alsa")
 else()
     list(APPEND FFMPEG_PKGCONFIG_MODULES alsa)
 endif()
