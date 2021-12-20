@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 780163a..6738e77 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,8 @@ add_subdirectory (Source)
+ 
+ if (LUABRIDGE_TESTING)
+     set (gtest_force_shared_crt ON CACHE BOOL "Use /MD and /MDd" FORCE)
+-    add_subdirectory (third_party/gtest)
++    find_package(GTest CONFIG REQUIRED)
++    #add_subdirectory (third_party/gtest)
+ 
+     add_subdirectory (Tests)
+ endif ()

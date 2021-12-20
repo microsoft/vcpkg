@@ -1,6 +1,12 @@
 {
   "name": "luabridge",
-  "version-string": "2.6",
-  "port-version": 1,
-  "description": "A lightweight, dependency-free library for binding Lua to C++"
+  "version-string": "3.0-beta1",
+  "description": "A lightweight, dependency-free library for binding Lua to C++",
+  "dependencies": [
+    "gtest",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }
