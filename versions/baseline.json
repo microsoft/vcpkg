@@ -4173,7 +4173,7 @@
       "port-version": 6
     },
     "log4cxx": {
-      "baseline": "0.12.0",
+      "baseline": "0.12.1",
       "port-version": 0
     },
     "loguru": {
