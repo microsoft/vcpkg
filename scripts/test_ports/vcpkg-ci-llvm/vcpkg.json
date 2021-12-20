@@ -1,0 +1,38 @@
+{
+  "name": "vcpkg-ci-llvm",
+  "version-string": "0",
+  "description": "LLVM features testing within CI.",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "clang",
+        "enable-abi-breaking-checks",
+        "disable-assertions",
+        "disable-clang-static-analyzer",
+        "enable-bindings",
+        "enable-eh",
+        "enable-rtti",
+        "enable-terminfo",
+        "enable-threads",
+        "enable-zlib",
+        "lld",
+        "lldb",
+        "polly",
+        "target-all",
+        "tools",
+        "utils"
+      ]
+    },
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "flang"
+      ],
+      "platform": "!(x86 & windows)"
+    }
+  ]
+}
