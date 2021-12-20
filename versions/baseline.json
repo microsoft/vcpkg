@@ -5268,6 +5268,10 @@
       "baseline": "4.1.0",
       "port-version": 0
     },
+    "platform-interfaces": {
+      "baseline": "0.2.5",
+      "port-version": 0
+    },
     "plf-colony": {
       "baseline": "6.28",
       "port-version": 0
