@@ -5874,7 +5874,7 @@
     },
     "quazip": {
       "baseline": "1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "quickfast": {
       "baseline": "1.5",
