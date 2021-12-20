@@ -17,7 +17,7 @@ and appends the 'install' target
 
 #]===]
 
-function(vcpkg_qmake_fix_prl PACKAGE_DIR PRL_FILES)
+function(z_vcpkg_qmake_fix_prl PACKAGE_DIR PRL_FILES)
         file(TO_CMAKE_PATH "${PACKAGE_DIR}/lib" CMAKE_LIB_PATH)
         file(TO_CMAKE_PATH "${PACKAGE_DIR}/include/qt5" CMAKE_INCLUDE_PATH)
         file(TO_CMAKE_PATH "${PACKAGE_DIR}/include" CMAKE_INCLUDE_PATH2)
@@ -42,5 +42,5 @@ function(vcpkg_qmake_install)
     # Fix absolute paths in prl files
     file(GLOB_RECURSE prl_files "${CURRENT_PACKAGES_DIR}/**.prl")
     debug_message(STATUS "prl_files:${prl_files}")
-    vcpkg_qmake_fix_prl("${CURRENT_PACKAGES_DIR}" "${prl_files}")
+    z_vcpkg_qmake_fix_prl("${CURRENT_PACKAGES_DIR}" "${prl_files}")
 endfunction()

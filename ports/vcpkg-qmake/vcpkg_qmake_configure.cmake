@@ -116,7 +116,7 @@ function(vcpkg_qmake_configure)
         qmake_append_program(qmake_build_tools "QMAKE_LINK" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         qmake_append_program(qmake_build_tools "QMAKE_LINK_C" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-        qmake_append_program(qmake_build_tools "QMAKE_LINK_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+        qmake_append_program(qmake_build_tools "QMAKE_LINK_C_SHLIB" "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     endif()
 
     if(DEFINED VCPKG_QT_TARGET_MKSPEC)
@@ -180,7 +180,7 @@ function(vcpkg_qmake_configure)
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${config_triplet}"
             LOGNAME config-${config_triplet}
         )
-        vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${config_triplet}")
+        z_vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${config_triplet}")
         message(STATUS "Configuring ${config_triplet} done")
 
         vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)

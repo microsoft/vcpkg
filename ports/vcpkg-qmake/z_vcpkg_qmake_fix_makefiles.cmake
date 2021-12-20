@@ -1,5 +1,5 @@
 include_guard(GLOBAL)
-function(vcpkg_qmake_fix_makefiles BUILD_DIR)
+function(z_vcpkg_qmake_fix_makefiles BUILD_DIR)
     #Fix the installation location
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)

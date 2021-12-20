@@ -70,7 +70,7 @@ function(vcpkg_qmake_build)
         vcpkg_add_to_path(PREPEND "${current_installed_prefix}/lib" "${current_installed_prefix}/bin")
 
         # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
-        if(CMAKE_HOST_UNIX)
+        if(NOT VCPKG_HOST_IS_WINDOWS)
             set(ENV{LD_LIBRARY_PATH} "")
             vcpkg_host_path_list(APPEND ENV{LD_LIBRARY_PATH} "${current_installed_prefix}/lib" "${current_installed_prefix}/lib/manual-link")
         endif()
@@ -78,7 +78,7 @@ function(vcpkg_qmake_build)
         vcpkg_list(SET targets ${targets_${build_type}} ${arg_TARGETS})
         if(NOT arg_SKIP_MAKEFILES)
             z_run_jom_build("${invoke_command}" qmake_all makefiles "${short_name_${build_type}}")
-            vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_${build_type}}")
+            z_vcpkg_qmake_fix_makefiles("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_${build_type}}")
         endif()
         z_run_jom_build("${invoke_command}" "${targets}" "${arg_BUILD_LOGNAME}" "${short_name_${build_type}}")
 
