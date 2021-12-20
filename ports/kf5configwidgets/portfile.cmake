@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.87.0
-    SHA512 0c7205394d270ca867387c4db01af9517fc9a19a2f134dc0ec53aa78bd49ec645c66aab5f2b6d023b68a1e0b0fbddfe17e85db77b90c26df8d40cffe9e6a61ec
+    REF v5.89.0
+    SHA512 4dfc69c9b6126509df95d89172da0dfaaaa38cb497a3fda34b96a9fd25503998ab8124308a11e6894aed08feab4a122af775c2d375d0cac0736f85779e4d772e
     HEAD_REF master
 )
 
@@ -13,7 +13,7 @@ vcpkg_check_features(
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

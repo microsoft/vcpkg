@@ -1,6 +1,6 @@
 {
   "name": "kf5auth",
-  "version": "5.87.0",
+  "version": "5.89.0",
   "description": "Execute actions as privileged user",
   "homepage": "https://api.kde.org/frameworks/kauth/html/index.html",
   "dependencies": [

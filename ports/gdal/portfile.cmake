@@ -29,6 +29,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NMAKE_OPTIONS_REL "")
     set(NMAKE_OPTIONS_DBG "")
 
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES --msvc-syntax proj INCLUDE_DIRS LIBS)
+
     include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
     find_dependency_win()
 
@@ -43,7 +45,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "HTMLDIR=${NATIVE_HTML_DIR}"
         "GEOS_DIR=${GEOS_INCLUDE_DIR}"
         "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-        "PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}"
+        "PROJ_INCLUDE=${PROJ_INCLUDE_DIRS}"
         "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
         "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
         "CURL_INC=-I${CURL_INCLUDE_DIR}"
@@ -86,7 +88,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_REL}"
+        "PROJ_LIBRARY=${PROJ_LIBS_RELEASE}"
         "PNG_LIB=${PNG_LIBRARY_REL}"
         "GEOS_LIB=${GEOS_LIBRARY_REL}"
         "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
@@ -103,7 +105,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_DBG}"
+        "PROJ_LIBRARY=${PROJ_LIBS_DEBUG}"
         "PNG_LIB=${PNG_LIBRARY_DBG}"
         "GEOS_LIB=${GEOS_LIBRARY_DBG}"
         "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
@@ -166,7 +168,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -278,6 +279,7 @@ else()
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
             --with-mrsid=no
             --with-mrsid_lidar=no
@@ -306,12 +308,7 @@ else()
             )
     endif()
 
-    # proj needs a C++ runtime library
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lc++")
-    else()
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
-    endif()
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES proj LIBS)
 
     if("tools" IN_LIST FEATURES)
         list(APPEND CONF_OPTS "--with-tools=yes")
@@ -324,10 +321,13 @@ else()
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
-        ${CONF_OPTS}
+            ${CONF_OPTS}
+        OPTIONS_RELEASE
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_RELEASE}"
         OPTIONS_DEBUG
-        --enable-debug
-        --with-tools=no
+            --enable-debug
+            --with-tools=no
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_DEBUG}"
         )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)

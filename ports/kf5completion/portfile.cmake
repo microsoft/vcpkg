@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcompletion
-    REF v5.87.0
-    SHA512 39b8fdb11122c35e97592db84005729fa500b3d0f558573b9f632079f3ce9aef1dff7f62c80f927788e302fc11bb7173589ea5474ea4f4177e43e0aae33e35f9
+    REF v5.89.0
+    SHA512 26211e45497bfc324503213fdc31acc062fca9c203a192b92e06cd41385df6d207c592fb84bbed1e55627418685ff99347129704f09f98302d03e9ef57c4ed78
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_DESIGNERPLUGIN=OFF
 )
