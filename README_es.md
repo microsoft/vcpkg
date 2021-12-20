@@ -323,10 +323,8 @@ Para más información, revise la especificación de [manifiesto][getting-starte
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
-[getting-started:linux-gcc]: #installing-linux-developer-tools
-[getting-started:macos-dev-tools]: #installing-macos-developer-tools
-[getting-started:macos-brew]: #installing-gcc-on-macos
-[getting-started:macos-gcc]: #installing-gcc-on-macos
+[getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux
+[getting-started:macos-dev-tools]: #Instalando-Herramientas-de-desarrollo-en-macOS
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
 [getting-started:manifest-spec]: docs/specifications/manifests.md
 
