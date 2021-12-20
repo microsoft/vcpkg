@@ -1,6 +1,6 @@
 {
   "name": "s2geometry",
-  "version-string": "0.9.0",
+  "version": "0.9.0",
   "description": "S2 is a library for spherical geometry that aims to have the same robustness, flexibility, and performance as the very best planar geometry libraries.",
   "homepage": "https://s2geometry.io",
   "supports": "!windows"

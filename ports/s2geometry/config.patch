@@ -21,9 +21,9 @@ index 5ecd280..1a8367f 100644
          DESTINATION include/s2/util/units)
 -install(TARGETS s2 s2testing DESTINATION lib)
 + install(TARGETS s2 s2testing
-+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++         RUNTIME DESTINATION bin
++         ARCHIVE DESTINATION lib
++         LIBRARY DESTINATION lib)
 +install(TARGETS s2 
 +        EXPORT s2Targets
 +        )
