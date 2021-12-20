@@ -4189,8 +4189,8 @@
       "port-version": 3
     },
     "luabridge": {
-      "baseline": "2.6",
-      "port-version": 1
+      "baseline": "3.0-beta1",
+      "port-version": 0
     },
     "luafilesystem": {
       "baseline": "1.8.0",
