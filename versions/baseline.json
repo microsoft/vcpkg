@@ -1714,7 +1714,7 @@
     },
     "cutelyst2": {
       "baseline": "2.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cwalk": {
       "baseline": "1.2.6",
