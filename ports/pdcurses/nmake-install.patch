@@ -8,14 +8,14 @@ index 80c4689..1bae388 100644
  	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 +
 +install: all
-+	-mkdir $(INSTDIR)\lib
-+	copy pdcurses.lib $(INSTDIR)\lib
++	-mkdir $(INSTALLDIR)\lib
++	copy pdcurses.lib $(INSTALLDIR)\lib
 +!ifdef DLL
-+	-mkdir $(INSTDIR)\bin
-+	copy pdcurses.dll $(INSTDIR)\bin
++	-mkdir $(INSTALLDIR)\bin
++	copy pdcurses.dll $(INSTALLDIR)\bin
 +!endif
 +!ifndef SKIP_HEADERS
-+	-mkdir $(INSTDIR)\include
-+	copy $(PDCURSES_SRCDIR)\curses.h $(INSTDIR)\include
-+	copy $(PDCURSES_SRCDIR)\panel.h $(INSTDIR)\include
++	-mkdir $(INSTALLDIR)\include
++	copy $(PDCURSES_SRCDIR)\curses.h $(INSTALLDIR)\include
++	copy $(PDCURSES_SRCDIR)\panel.h $(INSTALLDIR)\include
 +!endif

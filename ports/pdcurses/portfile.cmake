@@ -10,7 +10,6 @@ vcpkg_from_github(
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     cmake_path(NATIVE_PATH SOURCE_PATH  PDCURSES_SRCDIR)
-    cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR  INSTDIR)
     set(DLL_OPTION "")
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(DLL_OPTION DLL=Y)
@@ -26,11 +25,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             UTF8=Y
             ${DLL_OPTION}
         OPTIONS_RELEASE
-            "INSTDIR=${INSTDIR}"
             "CFLAGS=-D_CRT_SECURE_NO_WARNINGS"
             "LDFLAGS="
         OPTIONS_DEBUG
-            "INSTDIR=${INSTDIR}\\debug"
             "CFLAGS=-D_CRT_SECURE_NO_WARNINGS -DPDCDEBUG"
             "LDFLAGS=-debug"
             DEBUG=Y
