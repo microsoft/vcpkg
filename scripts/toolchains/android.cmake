@@ -66,7 +66,7 @@ if(ANDROID_NDK_MAJOR GREATER 20)
 elseif(ANDROID_NDK_MAJOR GREATER 18)
     set(ANDROID_PLATFORM "android-${ANDROID_NDK_MAJOR}")
 else()
-    message(FATAL_ERROR "Android NDK r18 and older is not fixed yet")
+    message(FATAL_ERROR "Android NDK r18 and older is not supported yet")
 endif()
 
 include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
