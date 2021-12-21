@@ -27,6 +27,13 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
+        java    OGRE_BUILD_COMPONENT_JAVA
+        python  OGRE_BUILD_COMPONENT_PYTHON
+        csharp  OGRE_BUILD_COMPONENT_CSHARP
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
