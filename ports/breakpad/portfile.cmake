@@ -29,7 +29,7 @@ file(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-    -DINSTALL_HEADERS=ON
+        -DINSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
