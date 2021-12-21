@@ -2558,7 +2558,7 @@
     },
     "graphicsmagick": {
       "baseline": "1.3.37",
-      "port-version": 0
+      "port-version": 1
     },
     "graphite2": {
       "baseline": "1.3.14",
@@ -4010,7 +4010,7 @@
     },
     "libunifex": {
       "baseline": "2021-12-07",
-      "port-version": 0
+      "port-version": 1
     },
     "libunistring": {
       "baseline": "0.9.10",
