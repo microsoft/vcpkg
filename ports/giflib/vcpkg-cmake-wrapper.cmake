@@ -1,8 +1,8 @@
 include(SelectLibraryConfigurations)
 find_path(GIF_INCLUDE_DIR gif_lib.h PATH_SUFFIXES include PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
 
-find_library(GIF_LIBRARY_DEBUG NAMES gif libgif ungif libungif giflib giflib4 gifd libgifd ungifd libungifd giflibd giflib4d NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
-find_library(GIF_LIBRARY_RELEASE NAMES gif libgif ungif libungif giflib giflib4 NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
+find_library(GIF_LIBRARY_DEBUG NAMES gif libgif ungif libungif giflib giflib4 gifd libgifd ungifd libungifd giflibd giflib4d NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
+find_library(GIF_LIBRARY_RELEASE NAMES gif libgif ungif libungif giflib giflib4 NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
 select_library_configurations(GIF)
 set(GIF_INCLUDE_DIRS ${GIF_INCLUDE_DIR})
 set(GIF_LIBRARIES ${GIF_LIBRARY})
