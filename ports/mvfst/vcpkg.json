@@ -9,6 +9,14 @@
     "fizz",
     "fmt",
     "folly",
-    "glog"
+    "glog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
