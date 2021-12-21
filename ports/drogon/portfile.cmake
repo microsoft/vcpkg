@@ -8,6 +8,7 @@ vcpkg_from_github(
         vcpkg.patch
         drogon_config.patch
         static-brotli.patch
+        fs.patch
 )
 
 vcpkg_check_features(
