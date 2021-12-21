@@ -5,6 +5,7 @@
   "homepage": "https://s2geometry.io",
   "supports": "!windows",
   "dependencies": [
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
