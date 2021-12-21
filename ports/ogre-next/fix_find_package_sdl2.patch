@@ -1,0 +1,56 @@
+diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
+index 3f3e2d7..0cc9606 100644
+--- a/CMake/Dependencies.cmake
++++ b/CMake/Dependencies.cmake
+@@ -267,7 +267,7 @@ endif()
+ #######################################################################
+ 
+ # Find sdl2
+-find_package(SDL2)
++find_package(SDL2 CONFIG REQUIRED)
+ macro_log_feature(SDL2_FOUND "SDL2" "Simple DirectMedia Library" "https://www.libsdl.org/" FALSE "" "")
+ 
+ #######################################################################
+diff --git a/CMake/InstallDependencies.cmake b/CMake/InstallDependencies.cmake
+index f98b358..e5eb9ed 100644
+--- a/CMake/InstallDependencies.cmake
++++ b/CMake/InstallDependencies.cmake
+@@ -100,8 +100,6 @@ if (OGRE_INSTALL_DEPENDENCIES)
+ 	endif ()
+ 
+ 	if( OGRE_BUILD_SAMPLES2 )
+-	  install_debug(SDL2.dll)
+-	  install_release(SDL2.dll)
+ 	  install_debug(openvr_api.dll)
+ 	  install_release(openvr_api.dll)
+ 	  install_debug(openvr_api.pdb)
+diff --git a/Samples/2.0/Common/CMakeLists.txt b/Samples/2.0/Common/CMakeLists.txt
+index b21601e..4ef90bd 100644
+--- a/Samples/2.0/Common/CMakeLists.txt
++++ b/Samples/2.0/Common/CMakeLists.txt
+@@ -49,4 +49,4 @@ add_library(${OGRE_SAMPLES_COMMON_LIBRARY} STATIC ${SOURCE_FILES} ${HEADER_FILES
+ 
+ link_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+-target_link_libraries(${OGRE_SAMPLES_COMMON_LIBRARY} ${SDL2_LIBRARY} OgreHlmsPbs OgreHlmsUnlit)
++target_link_libraries(${OGRE_SAMPLES_COMMON_LIBRARY} SDL2::SDL2 OgreHlmsPbs OgreHlmsUnlit)
+diff --git a/Samples/2.0/Tutorials/EmptyProject/CMake/Dependencies/OGRE.cmake b/Samples/2.0/Tutorials/EmptyProject/CMake/Dependencies/OGRE.cmake
+index 5e80709..3ba9b5a 100644
+--- a/Samples/2.0/Tutorials/EmptyProject/CMake/Dependencies/OGRE.cmake
++++ b/Samples/2.0/Tutorials/EmptyProject/CMake/Dependencies/OGRE.cmake
+@@ -224,13 +224,13 @@ endif()
+ 
+ if( NOT IOS )
+ 	set( CMAKE_PREFIX_PATH "${OGRE_SOURCE}/Dependencies ${CMAKE_PREFIX_PATH}" )
+-	find_package( SDL2 )
++	find_package(SDL2 CONFIG REQUIRED)
+ 	if( NOT SDL2_FOUND )
+ 		message( "Could not find SDL2. https://www.libsdl.org/" )
+ 	else()
+ 		message( STATUS "Found SDL2" )
+ 		include_directories( ${SDL2_INCLUDE_DIR} )
+-		set( OGRE_DEPENDENCY_LIBS ${OGRE_DEPENDENCY_LIBS} ${SDL2_LIBRARY} )
++		set( OGRE_DEPENDENCY_LIBS ${OGRE_DEPENDENCY_LIBS} SDL2::SDL2 )
+ 	endif()
+ endif()
+ 

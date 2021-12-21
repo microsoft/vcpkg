@@ -16,6 +16,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
+		fix_find_package_sdl2.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
