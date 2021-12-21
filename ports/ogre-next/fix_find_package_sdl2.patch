@@ -24,6 +24,27 @@ index f98b358..e5eb9ed 100644
  	  install_debug(openvr_api.dll)
  	  install_release(openvr_api.dll)
  	  install_debug(openvr_api.pdb)
+diff --git a/CMake/Packages/FindSDL2.cmake b/CMake/Packages/FindSDL2.cmake
+index 4b42a51..793eb71 100644
+--- a/CMake/Packages/FindSDL2.cmake
++++ b/CMake/Packages/FindSDL2.cmake
+@@ -182,7 +182,7 @@ ENDIF(SDL2_LIBRARY_TEMP)
+ INCLUDE(FindPackageHandleStandardArgs)
+ 
+ FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2
+-                                  REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIR)
++                                  REQUIRED_VARS SDL2::SDL2 SDL2_INCLUDE_DIR)
+ 
+ if (WIN32)
+ 	set(SDL2_BIN_SEARCH_PATH ${OGRE_DEPENDENCIES_DIR}/bin ${CMAKE_SOURCE_DIR}/Dependencies/bin ${SDL2_HOME}/dll
+@@ -201,6 +201,6 @@ IF(SDL2_STATIC)
+   if (UNIX AND NOT APPLE)
+     EXECUTE_PROCESS(COMMAND sdl2-config --static-libs OUTPUT_VARIABLE SDL2_LINK_FLAGS)
+     STRING(REGEX REPLACE "(\r?\n)+$" "" SDL2_LINK_FLAGS "${SDL2_LINK_FLAGS}")
+-    SET(SDL2_LIBRARY ${SDL2_LINK_FLAGS})
++    SET(SDL2::SDL2 ${SDL2_LINK_FLAGS})
+   ENDIF()
+ ENDIF(SDL2_STATIC)
 diff --git a/Samples/2.0/Common/CMakeLists.txt b/Samples/2.0/Common/CMakeLists.txt
 index b21601e..4ef90bd 100644
 --- a/Samples/2.0/Common/CMakeLists.txt
