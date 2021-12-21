@@ -13,7 +13,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
-    set(LDFLAGS "-framework CoreFoundation")
+    set(LDFLAGS "-lCoreFoundation")
 else()
     set(LDFLAGS "")
 endif()
