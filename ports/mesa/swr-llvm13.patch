@@ -1,0 +1,334 @@
+diff --git a/src/gallium/drivers/swr/rasterizer/jitter/JitManager.cpp b/src/gallium/drivers/swr/rasterizer/jitter/JitManager.cpp
+index 44482939c7649a2bcc39f3b2eb75720de90bcef0..1124e3773b99430c8da5ccb061d92b1b3a1bf1a6 100644
+--- a/src/gallium/drivers/swr/rasterizer/jitter/JitManager.cpp
++++ b/src/gallium/drivers/swr/rasterizer/jitter/JitManager.cpp
+@@ -56,6 +56,14 @@
+ using namespace llvm;
+ using namespace SwrJit;
+ 
++#if LLVM_VERSION_MAJOR >= 7
++static constexpr llvm::sys::fs::OpenFlags OF_NONE = llvm::sys::fs::OF_None;
++static constexpr llvm::sys::fs::OpenFlags OF_TEXT = llvm::sys::fs::OF_Text;
++#else
++static constexpr llvm::sys::fs::OpenFlags OF_NONE = llvm::sys::fs::F_None;
++static constexpr llvm::sys::fs::OpenFlags OF_TEXT = llvm::sys::fs::F_Text;
++#endif
++
+ //////////////////////////////////////////////////////////////////////////
+ /// @brief Contructor for JitManager.
+ /// @param simdWidth - SIMD width to be used in generated program.
+@@ -437,7 +445,7 @@ void JitManager::DumpAsm(Function* pFunction, const char* fileName)
+         sprintf(fName, "%s.%s.asm", funcName, fileName);
+ #endif
+ 
+-        raw_fd_ostream filestream(fName, EC, llvm::sys::fs::F_None);
++        raw_fd_ostream filestream(fName, EC, OF_NONE);
+ 
+         legacy::PassManager* pMPasses         = new legacy::PassManager();
+         auto*                pTarget          = mpExec->getTargetMachine();
+@@ -490,7 +498,7 @@ void JitManager::DumpToFile(Module*                         M,
+ #else
+         sprintf(fName, "%s.%s.ll", funcName, fileName);
+ #endif
+-        raw_fd_ostream fd(fName, EC, llvm::sys::fs::F_None);
++        raw_fd_ostream fd(fName, EC, OF_NONE);
+         M->print(fd, annotater);
+         fd.flush();
+     }
+@@ -512,7 +520,7 @@ void JitManager::DumpToFile(Function* f, const char* fileName)
+ #else
+         sprintf(fName, "%s.%s.ll", funcName, fileName);
+ #endif
+-        raw_fd_ostream fd(fName, EC, llvm::sys::fs::F_None);
++        raw_fd_ostream fd(fName, EC, OF_NONE);
+         f->print(fd, nullptr);
+ 
+ #if defined(_WIN32)
+@@ -522,7 +530,7 @@ void JitManager::DumpToFile(Function* f, const char* fileName)
+ #endif
+         fd.flush();
+ 
+-        raw_fd_ostream fd_cfg(fName, EC, llvm::sys::fs::F_Text);
++        raw_fd_ostream fd_cfg(fName, EC, OF_TEXT);
+         WriteGraph(fd_cfg, (const Function*)f);
+ 
+         fd_cfg.flush();
+@@ -726,7 +734,7 @@ void JitCache::notifyObjectCompiled(const llvm::Module* M, llvm::MemoryBufferRef
+ 
+     {
+         std::error_code      err;
+-        llvm::raw_fd_ostream fileObj(objPath.c_str(), err, llvm::sys::fs::F_None);
++        llvm::raw_fd_ostream fileObj(objPath.c_str(), err, OF_NONE);
+         fileObj << Obj.getBuffer();
+         fileObj.flush();
+     }
+@@ -734,7 +742,7 @@ void JitCache::notifyObjectCompiled(const llvm::Module* M, llvm::MemoryBufferRef
+ 
+     {
+         std::error_code      err;
+-        llvm::raw_fd_ostream fileObj(filePath.c_str(), err, llvm::sys::fs::F_None);
++        llvm::raw_fd_ostream fileObj(filePath.c_str(), err, OF_NONE);
+ 
+         uint32_t objcrc = ComputeCRC(0, Obj.getBufferStart(), Obj.getBufferSize());
+ 
+diff --git a/src/gallium/drivers/swr/rasterizer/jitter/builder_gfx_mem.h b/src/gallium/drivers/swr/rasterizer/jitter/builder_gfx_mem.h
+index c361959b76ff0799f5102ad4b8ddf23d345105d9..64a690b47fac9ee99eba8f1259ffccf20f0e5fa0 100644
+--- a/src/gallium/drivers/swr/rasterizer/jitter/builder_gfx_mem.h
++++ b/src/gallium/drivers/swr/rasterizer/jitter/builder_gfx_mem.h
+@@ -41,31 +41,29 @@ namespace SwrJit
+         BuilderGfxMem(JitManager* pJitMgr);
+         virtual ~BuilderGfxMem() {}
+ 
+-        virtual Value* GEP(Value* Ptr, Value* Idx, Type* Ty = nullptr, bool isReadOnly = true, const Twine& Name = "");
+-        virtual Value* GEP(Type* Ty, Value* Ptr, Value* Idx, const Twine& Name = "");
+-        virtual Value*
+-        GEP(Value* Ptr, const std::initializer_list<Value*>& indexList, Type* Ty = nullptr);
+-        virtual Value*
+-        GEP(Value* Ptr, const std::initializer_list<uint32_t>& indexList, Type* Ty = nullptr);
++        virtual Value* GEP(Value* Ptr, Value* Idx, Type* Ty = nullptr, bool isReadOnly = true, const Twine& Name = "") override;
++        virtual Value* GEP(Type* Ty, Value* Ptr, Value* Idx, const Twine& Name = "") override;
++        virtual Value* GEP(Value* Ptr, const std::initializer_list<Value*>& indexList, Type* Ty = nullptr) override;
++        virtual Value* GEP(Value* Ptr, const std::initializer_list<uint32_t>& indexList, Type* Ty = nullptr) override;
+ 
+         virtual LoadInst* LOAD(Value*         Ptr,
+                                const char*    Name,
+                                Type*          Ty    = nullptr,
+-                               MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+         virtual LoadInst* LOAD(Value*         Ptr,
+                                const Twine&   Name  = "",
+                                Type*          Ty    = nullptr,
+-                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+         virtual LoadInst* LOAD(Value*         Ptr,
+                                bool           isVolatile,
+                                const Twine&   Name  = "",
+                                Type*          Ty    = nullptr,
+-                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+         virtual LoadInst* LOAD(Value*                                 BasePtr,
+                                const std::initializer_list<uint32_t>& offset,
+                                const llvm::Twine&                     Name  = "",
+                                Type*                                  Ty    = nullptr,
+-                               MEM_CLIENT                         usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                               MEM_CLIENT                             usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+         virtual CallInst* MASKED_LOAD(Value*         Ptr,
+                                       unsigned       Align,
+@@ -73,32 +71,32 @@ namespace SwrJit
+                                       Value*         PassThru = nullptr,
+                                       const Twine&   Name     = "",
+                                       Type*          Ty       = nullptr,
+-                                      MEM_CLIENT     usage    = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                                      MEM_CLIENT     usage    = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+-        virtual StoreInst* STORE(Value *Val, Value *Ptr, bool isVolatile = false, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
+-        
+-        virtual StoreInst* STORE(Value* Val, Value* BasePtr, const std::initializer_list<uint32_t>& offset, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++        virtual StoreInst* STORE(Value *Val, Value *Ptr, bool isVolatile = false, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+-        virtual CallInst* MASKED_STORE(Value *Val, Value *Ptr, unsigned Align, Value *Mask, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++        virtual StoreInst* STORE(Value* Val, Value* BasePtr, const std::initializer_list<uint32_t>& offset, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
++
++        virtual CallInst* MASKED_STORE(Value *Val, Value *Ptr, unsigned Align, Value *Mask, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+         virtual Value* GATHERPS(Value*         src,
+                                 Value*         pBase,
+                                 Value*         indices,
+                                 Value*         mask,
+                                 uint8_t        scale = 1,
+-                                MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                                MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+         virtual Value* GATHERDD(Value*         src,
+                                 Value*         pBase,
+                                 Value*         indices,
+                                 Value*         mask,
+                                 uint8_t        scale = 1,
+-                                MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                                MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+         virtual void SCATTERPS(Value*         pDst,
+                                Value*         vSrc,
+                                Value*         vOffsets,
+                                Value*         vMask,
+-                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
++                               MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL) override;
+ 
+         Value* TranslateGfxAddressForRead(Value*         xpGfxAddress,
+                                           Type*          PtrTy = nullptr,
+@@ -108,13 +106,13 @@ namespace SwrJit
+                                            Type*          PtrTy = nullptr,
+                                            const Twine&   Name  = "",
+                                            MEM_CLIENT     usage = MEM_CLIENT::MEM_CLIENT_INTERNAL);
+-        
++
+     protected:
+         void AssertGFXMemoryParams(Value* ptr, MEM_CLIENT usage);
+ 
+         virtual void NotifyPrivateContextSet();
+ 
+-        virtual Value* OFFSET_TO_NEXT_COMPONENT(Value* base, Constant* offset);
++        virtual Value* OFFSET_TO_NEXT_COMPONENT(Value* base, Constant* offset) override;
+ 
+         Value* TranslationHelper(Value* Ptr, Type* Ty, Value* pfnTranslateGfxAddress);
+         void   TrackerHelper(Value* Ptr, Type* Ty, MEM_CLIENT usage, bool isRead);
+diff --git a/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp b/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp
+index b5eb0a782b15214bcf954a7893cd628649a990fc..a16b5d11dbb2f2f1a0bcdc07e4d306b14a90dc4c 100644
+--- a/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp
++++ b/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.cpp
+@@ -82,7 +82,12 @@ namespace SwrJit
+         std::vector<Value*> indices;
+         for (auto i : indexList)
+             indices.push_back(i);
++#if LLVM_VERSION_MAJOR >= 13
++        Type *EltTy = cast<PointerType>(ptr->getType())->getElementType();
++        return IN_BOUNDS_GEP(EltTy, ptr, indices);
++#else
+         return IN_BOUNDS_GEP(ptr, indices);
++#endif
+     }
+ 
+     Value* Builder::IN_BOUNDS_GEP(Value* ptr, const std::initializer_list<uint32_t>& indexList)
+@@ -90,7 +95,12 @@ namespace SwrJit
+         std::vector<Value*> indices;
+         for (auto i : indexList)
+             indices.push_back(C(i));
++#if LLVM_VERSION_MAJOR >= 13
++        Type *EltTy = cast<PointerType>(ptr->getType())->getElementType();
++        return IN_BOUNDS_GEP(EltTy, ptr, indices);
++#else
+         return IN_BOUNDS_GEP(ptr, indices);
++#endif
+     }
+ 
+     LoadInst* Builder::LOAD(Value* Ptr, const char* Name, Type* Ty, MEM_CLIENT usage)
+@@ -130,6 +140,22 @@ namespace SwrJit
+         return Builder::LOAD(GEPA(basePtr, valIndices), name);
+     }
+ 
++    CallInst* Builder::MASKED_LOAD(Value*         Ptr,
++                                   unsigned       Align,
++                                   Value*         Mask,
++                                   Value*         PassThru,
++                                   const Twine&   Name,
++                                   Type*          Ty,
++                                   MEM_CLIENT     usage)
++    {
++#if LLVM_VERSION_MAJOR >= 13
++        Type *EltTy = cast<PointerType>(Ptr->getType())->getElementType();
++        return IRB()->CreateMaskedLoad(EltTy, Ptr, AlignType(Align), Mask, PassThru, Name);
++#else
++        return IRB()->CreateMaskedLoad(Ptr, AlignType(Align), Mask, PassThru, Name);
++#endif
++    }
++
+     LoadInst* Builder::LOADV(Value*                               basePtr,
+                              const std::initializer_list<Value*>& indices,
+                              const llvm::Twine&                   name)
+@@ -234,7 +260,12 @@ namespace SwrJit
+     /// @param pVecPassthru - SIMD wide vector of values to load when lane is inactive
+     Value* Builder::GATHER_PTR(Value* pVecSrcPtr, Value* pVecMask, Value* pVecPassthru)
+     {
++#if LLVM_VERSION_MAJOR >= 13
++        Type *EltTy = cast<PointerType>(pVecSrcPtr->getType())->getElementType();
++        return MASKED_GATHER(EltTy, pVecSrcPtr, AlignType(4), pVecMask, pVecPassthru);
++#else
+         return MASKED_GATHER(pVecSrcPtr, AlignType(4), pVecMask, pVecPassthru);
++#endif
+     }
+ 
+     void Builder::SCATTER_PTR(Value* pVecDstPtr, Value* pVecSrc, Value* pVecMask)
+diff --git a/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.h b/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.h
+index 429d5779a4db2a6a3b6c7a7d02169773c935bb95..6682ad892b4038d4b3172b932a34e31a89cd7790 100644
+--- a/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.h
++++ b/src/gallium/drivers/swr/rasterizer/jitter/builder_mem.h
+@@ -82,10 +82,7 @@ virtual CallInst* MASKED_LOAD(Value*         Ptr,
+                               Value*         PassThru = nullptr,
+                               const Twine&   Name     = "",
+                               Type*          Ty       = nullptr,
+-                              MEM_CLIENT usage    = MEM_CLIENT::MEM_CLIENT_INTERNAL)
+-{
+-    return IRB()->CreateMaskedLoad(Ptr, AlignType(Align), Mask, PassThru, Name);
+-}
++                              MEM_CLIENT usage    = MEM_CLIENT::MEM_CLIENT_INTERNAL);
+ 
+ virtual StoreInst* STORE(Value *Val, Value *Ptr, bool isVolatile = false, Type* Ty = nullptr, MEM_CLIENT usage = MEM_CLIENT::MEM_CLIENT_INTERNAL)
+ {
+diff --git a/src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp b/src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp
+index bd5f7588c9189275ddaf3075b0a75e2e8fc1ecf5..2a4cf74722bc9ef1831d25fe6c2bb2f510b8fceb 100644
+--- a/src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp
++++ b/src/gallium/drivers/swr/rasterizer/jitter/fetch_jit.cpp
+@@ -276,7 +276,8 @@ Function* FetchJit::Create(const FETCH_COMPILE_STATE& fetchState)
+     JitManager::DumpToFile(fetch, "src");
+ 
+ #if defined(_DEBUG)
+-    verifyFunction(*fetch);
++    // Note that false is returned if there are no errors
++    SWR_ASSERT(!verifyFunction(*fetch, &llvm::errs()));
+ #endif
+ 
+     ::FunctionPassManager setupPasses(JM()->mpCurrentModule);
+diff --git a/src/gallium/drivers/swr/swr_shader.cpp b/src/gallium/drivers/swr/swr_shader.cpp
+index 315036920fb3ad364d0039349e148c70e5ba1818..a643b46cd081c026b5a3558d22be557338d4f220 100644
+--- a/src/gallium/drivers/swr/swr_shader.cpp
++++ b/src/gallium/drivers/swr/swr_shader.cpp
+@@ -1557,8 +1557,10 @@ BuilderSWR::CompileGS(struct swr_context *ctx, swr_jit_gs_key &key)
+    AttributeSet attrSet = AttributeSet::get(
+       JM()->mContext, AttributeSet::FunctionIndex, attrBuilder);
+    pFunction->addAttributes(AttributeSet::FunctionIndex, attrSet);
+-#else
++#elif LLVM_VERSION_MAJOR < 14
+    pFunction->addAttributes(AttributeList::FunctionIndex, attrBuilder);
++#else
++   pFunction->addFnAttrs(attrBuilder);
+ #endif
+ 
+    BasicBlock *block = BasicBlock::Create(JM()->mContext, "entry", pFunction);
+@@ -1785,8 +1787,10 @@ BuilderSWR::CompileTES(struct swr_context *ctx, swr_jit_tes_key &key)
+    AttributeSet attrSet = AttributeSet::get(
+       JM()->mContext, AttributeSet::FunctionIndex, attrBuilder);
+    pFunction->addAttributes(AttributeSet::FunctionIndex, attrSet);
+-#else
++#elif LLVM_VERSION_MAJOR < 14
+    pFunction->addAttributes(AttributeList::FunctionIndex, attrBuilder);
++#else
++   pFunction->addFnAttrs(attrBuilder);
+ #endif
+ 
+    BasicBlock *block = BasicBlock::Create(JM()->mContext, "entry", pFunction);
+@@ -2086,8 +2090,10 @@ BuilderSWR::CompileTCS(struct swr_context *ctx, swr_jit_tcs_key &key)
+    AttributeSet attrSet = AttributeSet::get(
+       JM()->mContext, AttributeSet::FunctionIndex, attrBuilder);
+    pFunction->addAttributes(AttributeSet::FunctionIndex, attrSet);
+-#else
++#elif LLVM_VERSION_MAJOR < 14
+    pFunction->addAttributes(AttributeList::FunctionIndex, attrBuilder);
++#else
++   pFunction->addFnAttrs(attrBuilder);
+ #endif
+ 
+    BasicBlock *block = BasicBlock::Create(JM()->mContext, "entry", pFunction);
+@@ -2341,8 +2347,10 @@ BuilderSWR::CompileVS(struct swr_context *ctx, swr_jit_vs_key &key)
+    AttributeSet attrSet = AttributeSet::get(
+       JM()->mContext, AttributeSet::FunctionIndex, attrBuilder);
+    pFunction->addAttributes(AttributeSet::FunctionIndex, attrSet);
+-#else
++#elif LLVM_VERSION_MAJOR < 14
+    pFunction->addAttributes(AttributeList::FunctionIndex, attrBuilder);
++#else
++   pFunction->addFnAttrs(attrBuilder);
+ #endif
+ 
+    BasicBlock *block = BasicBlock::Create(JM()->mContext, "entry", pFunction);
+@@ -2646,8 +2654,10 @@ BuilderSWR::CompileFS(struct swr_context *ctx, swr_jit_fs_key &key)
+    AttributeSet attrSet = AttributeSet::get(
+       JM()->mContext, AttributeSet::FunctionIndex, attrBuilder);
+    pFunction->addAttributes(AttributeSet::FunctionIndex, attrSet);
+-#else
++#elif LLVM_VERSION_MAJOR < 14
+    pFunction->addAttributes(AttributeList::FunctionIndex, attrBuilder);
++#else
++   pFunction->addFnAttrs(attrBuilder);
+ #endif
+ 
+    BasicBlock *block = BasicBlock::Create(JM()->mContext, "entry", pFunction);
