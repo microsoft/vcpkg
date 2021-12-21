@@ -29,9 +29,14 @@ file(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+    -DINSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
+   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/client/linux/data" "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
+
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-breakpad TARGET_PATH share/unofficial-breakpad)
 
