@@ -71,6 +71,7 @@ function(vcpkg_execute_build_process)
     set(log_out "${log_prefix}-out.log")
     set(log_err "${log_prefix}-err.log")
     set(all_logs "${log_out}" "${log_err}")
+    set(log_collection "${CURRENT_BUILDTREES_DIR}/logs.txt")
 
     execute_process(
         COMMAND ${arg_COMMAND}
@@ -150,6 +151,7 @@ function(vcpkg_execute_build_process)
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${log_collection}" "error:${native_log}\n")
             endif()
         endforeach()
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
