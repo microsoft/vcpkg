@@ -4600,6 +4600,10 @@
       "baseline": "2016-01-09",
       "port-version": 4
     },
+    "mvfst": {
+      "baseline": "0.1",
+      "port-version": 0
+    },
     "mygui": {
       "baseline": "3.4.1",
       "port-version": 0
