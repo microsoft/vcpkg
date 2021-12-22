@@ -6,6 +6,14 @@
   "homepage": "https://github.com/google/breakpad",
   "supports": "!uwp",
   "dependencies": [
-    "libdisasm"
+    "libdisasm",
+    {
+      "name": "vcpjg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
