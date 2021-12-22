@@ -33,8 +33,7 @@ vcpkg_cmake_install()
    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/client/linux/data" "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
 
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad TARGET_PATH share/unofficial-breakpad)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad CONFIG_PATH share/unofficial-breakpad)
 
 vcpkg_copy_pdbs()
 
