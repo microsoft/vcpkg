@@ -35,7 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg8 WITH_JPEG8
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -52,7 +52,7 @@ vcpkg_configure_cmake(
         WITH_CRT_DLL
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Rename libraries for static builds
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -69,7 +69,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libjpeg-turbo TARGET_PATH share/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libjpeg-turbo)
 
 file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/share"
