@@ -120,9 +120,17 @@ function(vcpkg_from_git)
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
             LOGNAME "git-init-${TARGET_TRIPLET}"
         )
+        vcpkg_execute_in_download_mode(
+            COMMAND ${GIT} config remote.origin.url ${arg_URL}
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${git_working_directory}"
+        )
+        if(error_code)
+            message(FATAL_ERROR "Unable to update origin URL")
+        endif()
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${git_fetch_shallow_param} -n
+            COMMAND "${GIT}" fetch origin "${ref_to_use}" ${git_fetch_shallow_param} -n
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
