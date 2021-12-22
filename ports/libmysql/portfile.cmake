@@ -106,7 +106,7 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
 file(RENAME "${CURRENT_PACKAGES_DIR}/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/${PORT}" "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql CONFIG_PATH share/libmysql/unofficial-libmysql)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql CONFIG_PATH share/${PORT}/unofficial-libmysql)
 
 # switch mysql into /mysql
 file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
