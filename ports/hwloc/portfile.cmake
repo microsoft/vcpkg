@@ -12,14 +12,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 --disable-plugin-dlopen) 
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    set(LDFLAGS "-lCoreFoundation")
-else()
-    set(LDFLAGS "")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS "HWLOC_LDFLAGS=-no-undefined")
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "HWLOC_LDFLAGS=-framework CoreFoundation")
 endif()
 
 vcpkg_configure_make(
