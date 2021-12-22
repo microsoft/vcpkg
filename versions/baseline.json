@@ -6689,7 +6689,7 @@
       "port-version": 4
     },
     "teemo": {
-      "baseline": "2.4",
+      "baseline": "2.5",
       "port-version": 0
     },
     "telnetpp": {
