@@ -5,6 +5,7 @@
   "description": "Fast Library for Approximate Nearest Neighbors",
   "homepage": "https://github.com/mariusmuja/flann",
   "dependencies": [
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,8 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "lz4"
+    }
   ],
   "features": {
     "cuda": {
