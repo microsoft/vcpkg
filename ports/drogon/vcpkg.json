@@ -72,7 +72,8 @@
           "features": [
             "orm"
           ]
-        }
+        },
+        "hiredis"
       ]
     },
     "sqlite3": {
