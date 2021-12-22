@@ -98,10 +98,12 @@ $portData = @{
         "features"     = @{
             "python2" = @{
                 "description"  = "Build Python2 bindings";
+                "supports"     = "!static";
                 "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python2" ); "platform" = "!uwp & !(arm & windows) & !emscripten & !ios & !android" }, "python2");
             };
             "python3" = @{
                 "description"  = "Build Python3 bindings";
+                "supports"     = "!static";
                 "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !emscripten & !ios & !android" }, "python3");
             }
         }
@@ -126,6 +128,7 @@ $portData = @{
         "features"         = @{
             "python2" = @{
                 "description"  = "Build with Python2 support";
+                "supports"     = "!(arm & windows)";
                 "dependencies" = @("python2");
             };
             "python3" = @{

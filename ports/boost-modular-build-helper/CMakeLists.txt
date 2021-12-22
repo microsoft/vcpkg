@@ -240,7 +240,8 @@ if("python2" IN_LIST FEATURES)
     string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
-        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n")
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
     list(APPEND python_versions "${python2_version}")
 endif()
 
@@ -250,8 +251,25 @@ if("python3" IN_LIST FEATURES)
     string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
-        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n")
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
     list(APPEND python_versions "${python3_version}")
+endif()
+
+if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
+        "   <include>\"${CURRENT_INSTALLED_DIR}/include\"\n"
+    )
+    if(WIN32)
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>msmpi ;\n"
+        )
+    else()
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>openmpi ;\n"
+        )
+    endif()
 endif()
 
 if(python_versions)

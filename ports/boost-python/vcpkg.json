@@ -46,6 +46,7 @@
   "features": {
     "python2": {
       "description": "Build with Python2 support",
+      "supports": "!(arm & windows)",
       "dependencies": [
         "python2"
       ]

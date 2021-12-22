@@ -40,6 +40,7 @@
   "features": {
     "python2": {
       "description": "Build Python2 bindings",
+      "supports": "!static",
       "dependencies": [
         {
           "name": "boost-python",
@@ -53,6 +54,7 @@
     },
     "python3": {
       "description": "Build Python3 bindings",
+      "supports": "!static",
       "dependencies": [
         {
           "name": "boost-python",
