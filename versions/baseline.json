@@ -6253,8 +6253,8 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.12",
-      "port-version": 2
+      "baseline": "0.4.13",
+      "port-version": 0
     },
     "septag-sx": {
       "baseline": "2019-05-07",
