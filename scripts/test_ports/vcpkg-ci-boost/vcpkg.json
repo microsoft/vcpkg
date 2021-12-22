@@ -36,7 +36,8 @@
       "default-features": false,
       "features": [
         "python3"
-      ]
+      ],
+      "platform": "!static"
     },
     {
       "name": "boost-odeint",
