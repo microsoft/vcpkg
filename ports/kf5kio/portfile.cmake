@@ -5,12 +5,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
-    REF v5.87.0
-    SHA512 ae16478ea1d4140d8168a87a25017861e5b3b2e4afb280ea01dc6822d3ce880961791ec37d658750fe48d81eccda6327d66ea7de0ca8d4515cec18a3b79f453e
+    REF v5.89.0-rc2
+    SHA512 08df36c08b028998884983fa233aad5bfc05d4e9e5899ed85390015daa7e0703272edabc59189579957e9971435887c4486796061878ce0f252ac2259b78a799
     HEAD_REF master
     PATCHES
-        libmount_static_dep.diff    # https://invent.kde.org/frameworks/kio/-/merge_requests/615
-        revert_blkid.diff           # https://invent.kde.org/frameworks/kio/-/commit/221a94a66c4d2f6e4f2dc938ee8a63a6ca739477
         ${PATCHES}
 )
 
@@ -21,7 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

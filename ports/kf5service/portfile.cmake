@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kservice
-    REF v5.87.0
-    SHA512 6f9b71f0038e55ce190feac17231a44ef33815be0722b75d2589ab25d69609ca18140e95910fa58706faa000c897dc690ec04ec4f4c54c627cc80b2cce5870db
+    REF v5.89.0
+    SHA512 9809b7cb05b3164575e4f92cc979b34dad63945648e054621248fd92ce1c5885a048704ed11b1292446bb55940ed2c11e982a434bb0983c25de9938514b53c6d
     HEAD_REF master
 )
 
@@ -32,11 +32,11 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5DocTools=ON
 )
@@ -50,7 +50,7 @@ vcpkg_copy_tools(
      AUTO_CLEAN
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
