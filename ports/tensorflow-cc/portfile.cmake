@@ -6,7 +6,7 @@ endif()
 
 set(TF_LIB_SUFFIX "_cc")
 set(TF_PORT_SUFFIX "-cc")
-set(TF_INCLUDE_DIRS "${CURRENT_INSTALLED_DIR}/include/tensorflow-external ${CURRENT_INSTALLED_DIR}/include/tensorflow-external/src")
+set(TF_INCLUDE_DIRS "\${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external \${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src")
 list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/tensorflow-common")
 include(tensorflow-common)
 
