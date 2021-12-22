@@ -3910,7 +3910,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 5
+      "port-version": 6
     },
     "libsoundio": {
       "baseline": "2.0.0",
