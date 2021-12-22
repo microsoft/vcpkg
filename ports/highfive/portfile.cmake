@@ -41,9 +41,6 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/HighFive/CMake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-if(NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_OSX)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/HighFive")
-endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
