@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7ff331a..155cabe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,11 +75,17 @@ if (NOT PYTHON_EXECUTABLE)
+@@ -75,11 +75,18 @@ if (NOT PYTHON_EXECUTABLE)
  endif()
  endif()
  
@@ -19,6 +19,7 @@ index 7ff331a..155cabe 100644
 +    elseif (TARGET hdf5::hdf5-static)
 +        link_libraries(hdf5::hdf5-static)
 +    endif()
++    set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} hdf5")
 +endif()
  endif()
  
@@ -51,3 +52,16 @@ index 8aef8e0..747414f 100644
      mark_as_advanced( HDF5_IS_PARALLEL )
  endmacro(find_hdf5)
  
+
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index e8bb3f766..ad33998d9 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -4,6 +4,7 @@
+ include(CMakeFindDependencyMacro)
+ # Find lz4. This will create 'lz4::lz4' target
+ find_dependency(lz4)
++find_package(hdf5 REQUIRED)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
+ check_required_components("flann")
