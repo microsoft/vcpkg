@@ -506,6 +506,16 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_OSX)
+    file(GLOB _debug_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*_debug.pc")
+    foreach(_file ${_debug_files})
+        string(REGEX REPLACE "_debug\\.pc$" ".pc" _new_filename "${_file}")
+        string(REGEX MATCH "(Qt5[a-zA-Z]+)_debug\\.pc$" _not_used "${_file}")
+        set(_name ${CMAKE_MATCH_1})
+        file(STRINGS "${_file}" _version REGEX "^(Version):.+$")
+        file(WRITE "${_new_filename}" "Name: ${_name}\nDescription: Forwarding to the _debug version by vcpkg\n${_version}\nRequires: ${_name}_debug\n")
+    endforeach()
+endif()
 # #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 # file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
