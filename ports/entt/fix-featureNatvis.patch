@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f47f9d3..740e16d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -277,6 +277,9 @@ install(
+ )
+ 
+ install(DIRECTORY src/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++if(ENTT_HAS_NATVIS)
++	install(DIRECTORY natvis/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/natvis)
++endif()
+ 
+ export(PACKAGE EnTT)
+ 
