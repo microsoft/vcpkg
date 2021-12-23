@@ -3706,7 +3706,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 4
+      "port-version": 5
     },
     "libnice": {
       "baseline": "0.1.15",
@@ -5338,7 +5338,7 @@
     },
     "poco": {
       "baseline": "1.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "podofo": {
       "baseline": "0.9.7",

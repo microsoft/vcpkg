@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
@@ -101,14 +99,14 @@ endif()
 
 vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/libmysql")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/${PORT}")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
-file(RENAME "${CURRENT_PACKAGES_DIR}/libmysql" "${CURRENT_PACKAGES_DIR}/share/libmysql")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libmysql" "${CURRENT_PACKAGES_DIR}/debug/share/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/${PORT}" "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/libmysql/unofficial-libmysql)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql CONFIG_PATH share/${PORT}/unofficial-libmysql)
 
 # switch mysql into /mysql
 file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
