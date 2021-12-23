@@ -5,6 +5,8 @@
   "homepage": "https://s2geometry.io",
   "supports": "!windows",
   "dependencies": [
+    "gflags",
+    "glog",
     "gtest",
     "openssl",
     {
