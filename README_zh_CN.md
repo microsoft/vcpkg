@@ -61,7 +61,7 @@ vcpkg团队和贡献者可以看到它的地方，
 需求:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
-- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（包含英文语言包）
+- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
 
 首先，请**使用git clone** vcpkg并执行 bootstrap.bat 脚本。
 您可以将vcpkg安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
