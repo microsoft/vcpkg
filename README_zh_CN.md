@@ -62,7 +62,7 @@ vcpkg团队和贡献者可以看到它的地方，
 - [Git][getting-started:git]
 - [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
 
-首先，请**使用git clone** vcpkg并执行 bootstrap.bat 脚本。
+首先，**请使用git clone vcpkg** 并执行 bootstrap.bat 脚本。
 您可以将vcpkg安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
 我们建议您使用例如 `C:\src\vcpkg` 或 `C:\dev\vcpkg` 的安装目录，否则您可能遇到某些库构建系统的路径问题。
 
@@ -127,7 +127,7 @@ Linux平台的使用需求:
 macOS平台的使用需求:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
 
-首先，请**使用git clone** vcpkg并执行 bootstrap.sh 脚本。
+首先，**请使用git clone vcpkg** 并执行 bootstrap.sh 脚本。
 我们建议您将vcpkg作为cmake项目的子模块使用。
 
 ```sh
@@ -280,7 +280,7 @@ $ ./vcpkg integrate bash # 或 zsh
 和 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。
 
 我们的文档现在也可以从 [vcpkg.io](https://vcpkg.io/) 在线获取。
-我们真诚的希望您向我们提出此网站的任何建议! 请在[这里](https://github.com/vcpkg/vcpkg.github.io/issues) 打开issue.
+我们真诚的希望您向我们提出关于此网站的任何建议! 请在[这里](https://github.com/vcpkg/vcpkg.github.io/issues) 打开issue.
 
 观看4分钟 [demo视频](https://www.youtube.com/watch?v=y41WFKbQFTw)。
 
