@@ -5153,8 +5153,8 @@
       "port-version": 2
     },
     "pangomm": {
-      "baseline": "2.48.1",
-      "port-version": 1
+      "baseline": "2.50.0",
+      "port-version": 0
     },
     "parallel-hashmap": {
       "baseline": "1.33",
