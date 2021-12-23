@@ -61,6 +61,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "sdl2"
           ],
           "platform": "!osx"
@@ -238,6 +246,12 @@
             "openssl"
           ]
         }
+      ]
+    },
+    "alsa": {
+      "description": "Enable ALSA support",
+      "dependencies": [
+        "alsa"
       ]
     },
     "aom": {

@@ -12,6 +12,9 @@ if("ffprobe" IN_LIST FEATURES)
     vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffprobe' does not support 'uwp'")
 endif()
 
+if ("alsa" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
+    message(FATAL_ERROR "Feature 'alsa' only support 'linux'")
+endif()
 
 if("aom" IN_LIST FEATURES)
     if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND NOT VCPKG_TARGET_IS_UWP)
@@ -272,6 +275,10 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if (NOT "alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
