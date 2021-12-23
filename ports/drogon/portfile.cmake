@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.7.3
-    SHA512 20146bf59898704f3b44778fa46e919d9124ef8a33eb1cfcce7f437507c20920829a0074e1c9e2493a1764b8a36b1a91b03f117fd78e740253b15d2146dca628
+    REF v1.7.4
+    SHA512 ee2458e584beb1dc0e437cbdbdea211762aeac60acc7104d1a7bf6aa7629f70d0cc71a45978b27917373599806f6f183ec2494be7ec00c74694888a31e5fd5d1
     HEAD_REF master
     PATCHES
         vcpkg.patch
         drogon_config.patch
         static-brotli.patch
-        Fix-Drogon-not-building-caused-by-FindFilesystem-105.patch
+        fs.patch
 )
 
 vcpkg_check_features(
