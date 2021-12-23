@@ -1,18 +1,8 @@
 {
   "name": "flash-runtime-extensions",
   "version": "2.3",
+  "port-version": 0,
   "description": "Adobe AIR Native Extension API for Windows/MacOS/Linux",
   "homepage": "https://github.com/al-sabr/FlashRuntimeExtensions",
   "supports": "!(linux | osx)",
-  "dependencies": [
-   {
-     "name": "vcpkg-cmake",
-     "host": true
-   },
-   {
-     "name": "vcpkg-cmake-config",
-     "host": true
-   }
-  ]
-
 }
