@@ -45,6 +45,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mlpack)
 
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_pkgconfig()
+
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
         mlpack_adaboost
