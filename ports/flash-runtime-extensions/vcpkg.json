@@ -1,6 +1,8 @@
 {
   "name": "flash-runtime-extensions",
-  "version-string": "2.3",
-  "description": "Adobe AIR Native Extension API for Windows/MacOS/Linux"
+  "version": "2.3",
+  "port-version": 0,
+  "description": "Adobe AIR Native Extension API for Windows/MacOS/Linux",
+  "homepage": "https://github.com/facebookresearch/flashlight",
+  "supports": "!(linux | osx)",
 }
-
