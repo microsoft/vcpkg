@@ -25,7 +25,6 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
   - [快速开始: Unix](#快速开始-unix)
   - [安装 Linux Developer Tools](#安装-linux-developer-tools)
   - [安装 macOS Developer Tools](#安装-macos-developer-tools)
-    - [在 macOS 10.15 之前版本中安装 GCC](#在-macos-1015-之前版本中安装-gcc)
   - [在 CMake 中使用 vcpkg](#在-cmake-中使用-vcpkg)
     - [Visual Studio Code 中的 CMake Tools](#visual-studio-code-中的-cmake-tools)
     - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
