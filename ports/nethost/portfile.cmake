@@ -1,16 +1,13 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(COMMIT_HASH 188427d7e18102c45fc6d0e20c135e226f215992)
+set(COMMIT_HASH 3a25a7f1cc446b60678ed25c9d829420d6321eba)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/runtime
     REF ${COMMIT_HASH}
-    SHA512 5a93c66c87e2113f733702d938efd39456c99fb74b383097b8d877df21536fcbcba901606aa70db6c8f1a16421ea8f06822c5b0ab1d882631b6daecbed8d03cc
+    SHA512 a5a2debf553b37e95e654f4e66585a43a71e5d82fd2f22dd58fe0ab2e84c24515d4accb51ce4c690cca273ee33a0257ba2e2e3d73322e2d4be64476cacc80e95
     HEAD_REF master
-    PATCHES
-        0001-nethost-cmakelists.patch
-        0002-settings-cmake.patch
 )
 
 set(PRODUCT_VERSION "5.0.0")
@@ -43,9 +40,8 @@ endif()
 
 set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src/installer/corehost/cli/nethost
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src/native/corehost/"
     OPTIONS
         "-DSKIP_VERSIONING=1"
         "-DCLI_CMAKE_HOST_POLICY_VER:STRING=${PRODUCT_VERSION}"
@@ -58,11 +54,11 @@ vcpkg_configure_cmake(
         "-DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
