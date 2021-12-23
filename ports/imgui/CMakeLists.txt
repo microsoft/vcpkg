@@ -172,11 +172,6 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glut.h DESTINATION include)
     endif()
 
-    if(IMGUI_COPY_MARMALADE_BINDING)
-        file(GLOB MARMALADE_BINDING_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_marmalade.*)
-        install(FILES ${MARMALADE_BINDING_SRCS} DESTINATION include/bindings)
-    endif()
-
     if(IMGUI_BUILD_METAL_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.h DESTINATION include)
     endif()
