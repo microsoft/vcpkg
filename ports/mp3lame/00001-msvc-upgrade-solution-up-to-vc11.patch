@@ -223,7 +223,7 @@ index 0000000..faf101a
 +      <OutputFile>$(OutDir)lame.exe</OutputFile>
 +      <GenerateDebugInformation>true</GenerateDebugInformation>
 +      <SubSystem>Console</SubSystem>
-+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
++      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
 +      <AdditionalOptions>/APPCONTAINER /machine:x86 %(AdditionalOptions)</AdditionalOptions>
 +      <TargetMachine>NotSet</TargetMachine>
 +    </Link>
@@ -249,7 +249,7 @@ index 0000000..faf101a
 +    <Link>
 +      <OutputFile>$(OutDir)lame.exe</OutputFile>
 +      <SubSystem>Console</SubSystem>
-+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
++      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
 +      <AdditionalOptions>/APPCONTAINER /machine:x86 %(AdditionalOptions)</AdditionalOptions>
 +      <TargetMachine>NotSet</TargetMachine>
 +    </Link>
@@ -560,7 +560,7 @@ index 0000000..9dad9d5
 +      <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
 +      <AdditionalOptions>/APPCONTAINER /machine:x86 %(AdditionalOptions)</AdditionalOptions>
-+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
++      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
 +      <TargetMachine>NotSet</TargetMachine>
 +    </Link>
 +  </ItemDefinitionGroup>
@@ -589,7 +589,7 @@ index 0000000..9dad9d5
 +      <GenerateDebugInformation>true</GenerateDebugInformation>
 +      <ImportLibrary>$(OutDir)libmp3lame.lib</ImportLibrary>
 +      <AdditionalOptions>/APPCONTAINER /machine:x86 %(AdditionalOptions)</AdditionalOptions>
-+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
++      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
 +      <TargetMachine>NotSet</TargetMachine>
 +    </Link>
 +  </ItemDefinitionGroup>
