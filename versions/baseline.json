@@ -2613,7 +2613,7 @@
       "port-version": 1
     },
     "gtkmm": {
-      "baseline": "4.0.1",
+      "baseline": "4.4.0",
       "port-version": 1
     },
     "gts": {
