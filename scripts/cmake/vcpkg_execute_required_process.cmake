@@ -78,7 +78,6 @@ Halting portfile execution.
 
     set(log_out "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log")
     set(log_err "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
-    set(log_collection "${CURRENT_BUILDTREES_DIR}/logs.txt")
 
     set(timeout_param "")
     set(output_and_error_same OFF)
@@ -121,7 +120,7 @@ Halting portfile execution.
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
-                file(APPEND "${log_collection}" "error:${native_log}\n")
+                file(APPEND "${Z_VCPKG_LOG_COLLECTION_FILE}" "error:${native_log}\n")
             endif()
         endforeach()
 
