@@ -1,0 +1,32 @@
+diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
+index 421f1e0..1148c27 100644
+--- a/src/glog/logging.h.in
++++ b/src/glog/logging.h.in
+@@ -58,6 +58,27 @@
+ #define GLOG_MSVC_POP_WARNING()
+ #endif
+ 
++#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
++#define GLOG_OS_WINDOWS
++#elif defined(__CYGWIN__) || defined(__CYGWIN32__)
++#define GLOG_OS_CYGWIN
++#elif defined(linux) || defined(__linux) || defined(__linux__)
++#ifndef GLOG_OS_LINUX
++#define GLOG_OS_LINUX
++#endif
++#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
++#define GLOG_OS_MACOSX
++#elif defined(__FreeBSD__)
++#define GLOG_OS_FREEBSD
++#elif defined(__NetBSD__)
++#define GLOG_OS_NETBSD
++#elif defined(__OpenBSD__)
++#define GLOG_OS_OPENBSD
++#else
++// TODO(hamaji): Add other platforms.
++#error Platform not supported by glog. Please consider to contribute platform information by submitting a pull request on Github.
++#endif
++
+ #if @ac_cv_have_glog_export@
+ #include "glog/export.h"
+ #endif
