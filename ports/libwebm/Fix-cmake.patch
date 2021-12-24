@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a83d23b..0f5ede3 100644
+index a83d23b..fa27059 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,6 +8,8 @@
@@ -11,7 +11,7 @@ index a83d23b..0f5ede3 100644
  include(GNUInstallDirs)
  include("${CMAKE_CURRENT_SOURCE_DIR}/build/cxx_flags.cmake")
  
-@@ -330,6 +332,30 @@ add_library(webm ${libwebm_common_sources}
+@@ -330,6 +332,24 @@ add_library(webm ${libwebm_common_sources}
              $<TARGET_OBJECTS:mkvmuxer>
              $<TARGET_OBJECTS:mkvparser>)
  
@@ -24,12 +24,6 @@ index a83d23b..0f5ede3 100644
 +
 +install(
 +  FILES
-+    mkvmuxer/mkvmuxer.h
-+    mkvmuxer/mkvmuxertypes.h
-+    mkvmuxer/mkvmuxerutil.h
-+    mkvmuxer/mkvwriter.h
-+    mkvparser/mkvparser.h
-+    mkvparser/mkvreader.h
 +    webvtt/vttreader.h
 +    webvtt/webvttparser.h
 +    common/file_util.h
@@ -42,7 +36,7 @@ index a83d23b..0f5ede3 100644
  if (WIN32)
    # Use libwebm and libwebm.lib for project and library name on Windows (instead
    # webm and webm.lib).
-@@ -337,18 +363,22 @@ if (WIN32)
+@@ -337,18 +357,22 @@ if (WIN32)
    set_target_properties(webm PROPERTIES PREFIX lib)
  endif ()
  
