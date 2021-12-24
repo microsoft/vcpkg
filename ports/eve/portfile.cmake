@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Windows")
 message(WARNING "EVE requires a C++ 20 compliant compiler. GCC-11 and clang-12 are known to work.")
 
 vcpkg_from_github(
