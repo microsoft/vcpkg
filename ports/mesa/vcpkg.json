@@ -1,11 +1,14 @@
 {
   "name": "mesa",
-  "version": "21.2.0",
+  "version": "21.2.5",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "supports": "!(windows & arm)",
   "dependencies": [
-    "tool-meson",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "zlib",
     "zstd"
   ],

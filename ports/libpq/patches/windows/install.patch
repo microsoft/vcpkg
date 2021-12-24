@@ -2,35 +2,7 @@ diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
 index d109b2c90..75c7446e6 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
-@@ -63,8 +63,16 @@ sub Install
- 		do "./config.pl" if (-f "config.pl");
- 	}
- 
--	chdir("../../..")    if (-f "../../../configure");
--	chdir("../../../..") if (-f "../../../../configure");
-+	# Move to the root path depending on the current location.
-+	if (-f "../../../configure")
-+	{
-+		chdir("../../..");
-+	}
-+	elsif (-f "../../../../configure")
-+	{
-+		chdir("../../../..");
-+	}
-+
- 	my $conf = "";
- 	if (-d "debug")
- 	{
-@@ -106,7 +106,7 @@ sub Install
- 			}
- 		},
- 		@top_dir);
--	CopySetOfFiles('config files', $sample_files, $target . '/share/');
-+	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
- 	CopyFiles(
- 		'Import libraries',
- 		$target . '/lib/',
-@@ -78,10 +78,10 @@ sub Install
+@@ -86,10 +86,10 @@ sub Install
  	my $majorver = DetermineMajorVersion();
  	print "Installing version $majorver for $conf in $target\n";
  
@@ -44,7 +16,16 @@ index d109b2c90..75c7446e6 100644
  	if ($insttype eq "client")
  	{
  		EnsureDirectories($target, @client_dirs);
-@@ -120,35 +120,35 @@ sub Install
+@@ -114,7 +114,7 @@ sub Install
+ 			}
+ 		},
+ 		@top_dir);
+-	CopySetOfFiles('config files', $sample_files, $target . '/share/');
++	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
+ 	CopyFiles(
+ 		'Import libraries',
+ 		$target . '/lib/',
+@@ -128,35 +128,35 @@ sub Install
  		CopySetOfFiles(
  			'timezone names',
  			[ glob('src\timezone\tznames\*.txt') ],
@@ -88,7 +69,7 @@ index d109b2c90..75c7446e6 100644
  
  		my $pl_extension_files = [];
  		my @pldirs             = ('src/pl/plpgsql/src');
-@@ -167,7 +167,7 @@ sub Install
+@@ -175,7 +175,7 @@ sub Install
  			},
  			@pldirs);
  		CopySetOfFiles('PL Extension files',
@@ -97,7 +78,7 @@ index d109b2c90..75c7446e6 100644
  	}
  
  	GenerateNLSFiles($target, $config->{nls}, $majorver) if ($config->{nls});
-@@ -282,23 +282,26 @@ sub CopySolutionOutput
+@@ -290,23 +290,26 @@ sub CopySolutionOutput
  		{
  			if ($1 == 1)
  			{
@@ -128,7 +109,7 @@ index d109b2c90..75c7446e6 100644
  			}
  		}
  		elsif ($vcproj eq 'vcxproj'
-@@ -306,11 +309,11 @@ sub CopySolutionOutput
+@@ -317,11 +317,11 @@ sub CopySolutionOutput
  		{
  			if ($1 eq 'Application')
  			{
@@ -142,7 +123,7 @@ index d109b2c90..75c7446e6 100644
  				if ($is_sharedlib)
  				{
  					push(@{ $install_list{'bin'} }, "dll");
-@@ -319,10 +322,9 @@ sub CopySolutionOutput
+@@ -327,10 +330,9 @@ sub CopySolutionOutput
  			}
  			else    # 'StaticLibrary'
  			{
@@ -154,7 +135,7 @@ index d109b2c90..75c7446e6 100644
  			}
  		}
  		else
-@@ -339,7 +339,7 @@ sub CopySolutionOutput
+@@ -349,7 +349,7 @@ sub CopySolutionOutput
  				  || croak "Could not copy $pf.$ext\n";
  			}
  		}
@@ -167,11 +148,11 @@ index d109b2c90..75c7446e6 100644
  	print "Generating timezone files...";
  
  	my @args =
--	  ("$conf/zic/zic", '-d', "$target/share/timezone", '-p', "$posixrules");
-+	  ("$conf/zic/zic", '-d', "$target/share/libpq/timezone", '-p', "$posixrules");
+-	  ("$conf/zic/zic", '-d', "$target/share/timezone",
++	  ("$conf/zic/zic", '-d', "$target/share/libpq/timezone",
+ 	   '-p', "$posixrules", '-b', 'fat');
  	foreach (@tzfiles)
  	{
- 		my $tzfile = $_;
 @@ -391,7 +391,7 @@ sub GenerateTsearchFiles
  	$mf =~ /^LANGUAGES\s*=\s*(.*)$/m
  	  || die "Could not find LANGUAGES line in snowball Makefile\n";

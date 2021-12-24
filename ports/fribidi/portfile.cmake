@@ -6,15 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_meson(
+vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -Ddocs=false
-        -Dbin=false
-        -Dtests=false
 )
 
-vcpkg_install_meson()
+vcpkg_install_make(DISABLE_PARALLEL)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
@@ -26,6 +22,9 @@ else()
     string(REPLACE "#ifndef FRIBIDI_LIB_STATIC" "#if 1" FRIBIDI_COMMON_H "${FRIBIDI_COMMON_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h "${FRIBIDI_COMMON_H}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

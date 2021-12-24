@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.0</version>
+        <version>3.10.1</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.0/python-3.10.0-embed-win32.zip</url>
-        <sha512>0b007bfa02cdd48b3c260986493fa124a6b9d794da6eba2b4fad0d779fd655e9ae4e16daf5f02ff5b30a17abcfc1499bc6bee394c0f8abe933f2d4fe702af3cd</sha512>
-        <archiveName>python-3.10.0-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.1/python-3.10.1-embed-win32.zip</url>
+        <sha512>47bf00e4de74f33fe3d0c4f97773b221cf78c29f02257f43368f0414c88be1bdffc914e4e6516870c23cba84f4618edb8fe5a3ee43e41f492d812a90d93c1ea8</sha512>
+        <archiveName>python-3.10.1-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.21.1</version>
@@ -162,10 +162,31 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.1.4</version>
+        <version>7.2.0</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.4/PowerShell-7.1.4-win-x86.zip</url>
-        <sha512>cf30f80edb57f37501c4a380a8ddd8adf016a51a988a315e15ef517fdae42313ddf5260d8374db65ef12808ec980118bc8b543256df0c1d641a5b8355a80ba7b</sha512>
-        <archiveName>PowerShell-7.1.4-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.0/PowerShell-7.2.0-win-x86.zip</url>
+        <sha512>cd765b39559be296229f8aef4022f17f20d3bb3037944867918b3a12a901160020e250403abd15666622158eb764fa217b5e5ad9f4d6ad69906ce3c4e03a808b</sha512>
+        <archiveName>PowerShell-7.2.0-win-x86.zip</archiveName>
+    </tool>
+    <tool name="node" os="windows">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-win-x64\node.exe</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-win-x64.7z</url>
+        <sha512>0bb793fce8140bd59c17f3ac9661b062eac0f611d704117774f5cb2453d717da94b1e8b17d021d47baff598dc023fb7068ed1f8a7678e446260c3db3537fa888</sha512>
+        <archiveName>node-v16.12.0-win-x64.7z</archiveName>
+    </tool>
+    <tool name="node" os="linux">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-linux-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-linux-x64.tar.gz</url>
+        <sha512>45658083c35c13f2bc4b88d68a12c76213bdaf2235776e041c9937ce912a83cb49d655965568c99a5e139ff5c03b1e460c13ad8ab7f0c5570b531907715f6e0f</sha512>
+        <archiveName>node-v16.12.0-linux-x64.tar.gz</archiveName>
+    </tool>
+    <tool name="node" os="osx">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-darwin-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-darwin-x64.tar.gz</url>
+        <sha512>f758a90d3dcc3adf296abbed01b69a3a27e63c2085b7f604d83550714b1ac374f36e73fc02dd31bf60e532205d92e1605a05b35642142d20ac07c4bb98c69f70</sha512>
+        <archiveName>node-v16.12.0-darwin-x64.tar.gz</archiveName>
     </tool>
 </tools>
