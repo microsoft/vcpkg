@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2a879f2..e0d9ab5 100644
+index 2a879f2..8d3d17b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -356,13 +356,9 @@ endif()
@@ -57,18 +57,21 @@ index 86eaf84..15fe31a 100644
    if(OpenVDB_USES_ZLIB)
      list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
 diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
-index 9b6ba83..dc33b72 100644
+index 9b6ba83..08b6bb3 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
-@@ -127,7 +127,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BOOST_VERSION)
+@@ -127,9 +127,9 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BOOST_VERSION)
    endif()
  endif()
  
 -find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbb)
 +find_package(TBB CONFIG REQUIRED)
  if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
-   if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
+-  if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
++  if(${TBB_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
      message(DEPRECATION "Support for TBB versions < ${FUTURE_MINIMUM_TBB_VERSION} "
+       "is deprecated and will be removed.")
+   endif()
 @@ -138,7 +138,7 @@ endif()
  if(USE_IMATH_HALF)
    find_package(Imath CONFIG)

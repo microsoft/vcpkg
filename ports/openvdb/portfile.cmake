@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 d72a0eec6b7ce8e25fbe3100d4a291c35d7c2448f23131aaa9f247210f26e965198ef2991d9cf789afc754cbcddaace7a27ab62a2609a19a896034859c518699
     PATCHES
         0003-fix-cmake.patch
-        fix-case-sensitive.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
