@@ -7,10 +7,10 @@ vcpkg_from_github(
         0003-fix-cmake.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindIlmBase.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindBlosc.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindOpenEXR.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindIlmBase.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindBlosc.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindOpenEXR.cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
@@ -33,7 +33,7 @@ if ("ax" IN_LIST FEATURES)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DOPENVDB_BUILD_UNITTESTS=OFF
         -DOPENVDB_BUILD_PYTHON_MODULE=OFF
