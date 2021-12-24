@@ -22,7 +22,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 6
+      "port-version": 7
     },
     "ade": {
       "baseline": "0.1.1f",
@@ -1138,7 +1138,7 @@
     },
     "breakpad": {
       "baseline": "2020-09-14",
-      "port-version": 4
+      "port-version": 5
     },
     "brigand": {
       "baseline": "1.3.0",
@@ -1905,7 +1905,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.7.3",
+      "baseline": "1.7.4",
       "port-version": 0
     },
     "dtl": {
@@ -2438,7 +2438,7 @@
     },
     "giflib": {
       "baseline": "5.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ginkgo": {
       "baseline": "1.4.0",
@@ -2694,7 +2694,7 @@
     },
     "highfive": {
       "baseline": "2.3",
-      "port-version": 1
+      "port-version": 2
     },
     "highway": {
       "baseline": "0.14.2",
@@ -2841,7 +2841,7 @@
       "port-version": 1
     },
     "imgui": {
-      "baseline": "1.85",
+      "baseline": "1.86",
       "port-version": 0
     },
     "imgui-sfml": {
@@ -3706,7 +3706,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 4
+      "port-version": 5
     },
     "libnice": {
       "baseline": "0.1.15",
@@ -4438,7 +4438,7 @@
     },
     "mlpack": {
       "baseline": "3.4.1",
-      "port-version": 3
+      "port-version": 4
     },
     "mman": {
       "baseline": "git-f5ff813",
@@ -5338,7 +5338,7 @@
     },
     "poco": {
       "baseline": "1.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "podofo": {
       "baseline": "0.9.7",
