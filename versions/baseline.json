@@ -5049,7 +5049,7 @@
       "port-version": 1
     },
     "openvdb": {
-      "baseline": "8.1.0",
+      "baseline": "8.2.0",
       "port-version": 0
     },
     "openvpn3": {
