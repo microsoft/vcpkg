@@ -2172,6 +2172,10 @@
       "baseline": "2019-04-07",
       "port-version": 3
     },
+    "flash-runtime-extensions": {
+      "baseline": "2.3",
+      "port-version": 0
+    },
     "flashlight-cpu": {
       "baseline": "0.3",
       "port-version": 2
@@ -2179,10 +2183,6 @@
     "flashlight-cuda": {
       "baseline": "0.3",
       "port-version": 2
-    },
-    "flash-runtime-extensions": {
-      "baseline": "2.3.0",
-      "port-version": 0
     },
     "flatbuffers": {
       "baseline": "2.0.0",
