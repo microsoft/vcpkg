@@ -201,17 +201,17 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
-        #Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
-        #This happens if vcpkg built libraries are directly linked to a target instead of using
-        #an imported target for it. We could add more logic here to identify defect target files.
-        #Since the replacement here in a multi config build always requires a generator expression
-        #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
-        #least >:${CURRENT_INSTALLED_DIR}.
-        #In general the following generator expressions should be there:
-        #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
-        #and/or
-        #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
-        #with ${CURRENT_INSTALLED_DIR} being fully expanded
+        # Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
+        # This happens if vcpkg built libraries are directly linked to a target instead of using
+        # an imported target for it. We could add more logic here to identify defect target files.
+        # Since the replacement here in a multi config build always requires a generator expression
+        # in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
+        # least >:${CURRENT_INSTALLED_DIR}.
+        # In general the following generator expressions should be there:
+        # \$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
+        # and/or
+        # \$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
+        # with ${CURRENT_INSTALLED_DIR} being fully expanded.
         z_vcpkg_cmake_config_check_for_release_libs("${main_cmake}" "${contents}")
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
 
