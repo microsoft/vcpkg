@@ -4138,7 +4138,7 @@
     },
     "live555": {
       "baseline": "latest",
-      "port-version": 2
+      "port-version": 3
     },
     "llfio": {
       "baseline": "2.0-20211208",
