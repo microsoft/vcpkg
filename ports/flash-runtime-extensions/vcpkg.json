@@ -4,5 +4,5 @@
   "port-version": 0,
   "description": "Adobe AIR Native Extension API for Windows/MacOS/Linux",
   "homepage": "https://github.com/al-sabr/FlashRuntimeExtensions",
-  "supports": "!(linux | osx)",
+  "supports": "!(linux | osx)"
 }
