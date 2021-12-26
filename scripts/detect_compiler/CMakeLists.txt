@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(detect_compiler CXX)
+project(detect_compiler NONE)
 
 if(CMAKE_GENERATOR STREQUAL "Ninja" AND CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(CMAKE_C_COMPILER_WORKS 1)
