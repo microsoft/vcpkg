@@ -1361,8 +1361,8 @@
       "port-version": 2
     },
     "civetweb": {
-      "baseline": "2021-12-18",
-      "port-version": 0
+      "baseline": "1.15",
+      "port-version": 1
     },
     "cjson": {
       "baseline": "1.7.15",
