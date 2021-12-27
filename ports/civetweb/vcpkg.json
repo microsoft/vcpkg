@@ -1,10 +1,11 @@
 {
-  "name": "live555",
-  "version-date": "2021-12-18",
-  "description": "A complete RTSP server application",
-  "homepage": "https://www.live555.com/liveMedia",
+  "name": "civetweb",
+  "version": "1.15",
+  "port-version": 1,
+  "description": "Easy to use, powerful, C/C++ embeddable web server.",
+  "homepage": "https://github.com/civetweb/civetweb",
+  "supports": "!uwp",
   "dependencies": [
-    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,6 +13,15 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support",
+      "dependencies": [
+        "openssl"
+      ]
     }
-  ]
+  }
 }

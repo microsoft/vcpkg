@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1eb391f..60d6c89 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -361,15 +361,7 @@ if (CIVETWEB_ENABLE_CXX)
+     add_cxx_compiler_flag(-std=${CIVETWEB_CXX_STANDARD})
+   endif()
+   add_cxx_compiler_flag(-Wall)
+-  add_cxx_compiler_flag(-Wextra)
+-  add_cxx_compiler_flag(-Wshadow)
+-  add_cxx_compiler_flag(-Wmissing-prototypes)
+-  add_cxx_compiler_flag(-Weverything)
+   add_cxx_compiler_flag(/W4)
+-  add_cxx_compiler_flag(-Wno-padded)
+-  add_cxx_compiler_flag(/Wd4820) # padding
+-  add_cxx_compiler_flag(-Wno-unused-macros)
+-  add_cxx_compiler_flag(-Wno-format-nonliteral)
+   if (MINGW)
+     add_cxx_compiler_flag(-Wno-format)
+   endif()
+@@ -404,24 +396,13 @@ endif()
+ if (NOT ZEPHYR)
+   #Warnings: enable everything
+   add_c_compiler_flag(-Wall)
+-  add_c_compiler_flag(-Wextra)
+-  add_c_compiler_flag(-Wshadow)
+-  add_c_compiler_flag(-Wconversion)
+-  add_c_compiler_flag(-Wmissing-prototypes)
+-  add_c_compiler_flag(-Weverything)
+-  add_c_compiler_flag(-Wparentheses)
+   add_c_compiler_flag(/W4) # VisualStudio highest warning level
+ 
+   #Warnings: Disable some warnings
+-  add_c_compiler_flag(-Wno-padded) # padding in structures by compiler
+-  add_c_compiler_flag(-Wno-unused-macros) # so what?
+   Check_C_Compiler_Flag( HAVE_NO_RESERVED_ID_MACROS -Wno-reserved-id-macros)
+   if (HAVE_NO_RESERVED_ID_MACROS)
+   add_c_compiler_flag(-Wno-reserved-id-macros) # for system headers
+   endif (HAVE_NO_RESERVED_ID_MACROS)
+-  add_c_compiler_flag(-Wno-format-nonliteral) # printf(myFormatStringVar, ...)
+-  add_c_compiler_flag(-Wno-cast-qual) # const cast
+-  add_c_compiler_flag(/Wd4820) # padding
+ 
+   add_c_compiler_flag(-pedantic-errors)
+   add_c_compiler_flag(-fvisibility=hidden)
