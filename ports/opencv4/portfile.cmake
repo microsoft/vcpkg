@@ -25,6 +25,7 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
+      0011-remove-python2.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -70,8 +71,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"     BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "qt, "tbb"
-# As the respective value of their variables can be unset conditionally.
+# Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt, "tbb"
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
   if(NOT VCPKG_TARGET_IS_ANDROID)
@@ -123,6 +123,57 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_PYTHON OFF)
+if("python" IN_LIST FEATURES)
+  set(WITH_PYTHON ON)
+  vcpkg_find_acquire_program(PYTHON3)
+  get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+  vcpkg_add_to_path("${PYTHON3_DIR}")
+  vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+  set(ENV{PYTHON} "${PYTHON3}")
+
+  function(vcpkg_get_python_package PYTHON_DIR )
+      cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
+
+      if(NOT _vgpp_PYTHON_EXECUTABLE)
+          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
+      endif()
+      if(NOT _vgpp_PACKAGES)
+          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
+      endif()
+      if(NOT _vgpp_PYTHON_DIR)
+          get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
+      endif()
+
+      if (WIN32)
+          set(PYTHON_OPTION "")
+      else()
+          set(PYTHON_OPTION "--user")
+      endif()
+
+      if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+          if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+              vcpkg_from_github(
+                  OUT_SOURCE_PATH PYFILE_PATH
+                  REPO pypa/get-pip
+                  REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+                  SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+                  HEAD_REF master
+              )
+              execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
+          endif()
+          foreach(_package IN LISTS _vgpp_PACKAGES)
+              execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
+          endforeach()
+      else()
+          foreach(_package IN LISTS _vgpp_PACKAGES)
+              execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
+          endforeach()
+      endif()
+  endfunction()
+  vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES numpy)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -322,6 +373,16 @@ if("ffmpeg" IN_LIST FEATURES)
   endif()
 endif()
 
+if("halide" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS
+    # Halide 13 requires C++17
+    "-DCMAKE_CXX_STANDARD=17"
+    "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
+    "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
+    "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
+  )
+endif()
+
 if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
@@ -397,13 +458,12 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
-        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
+        -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_OPENCLAMDBLAS=OFF

@@ -47,7 +47,7 @@ index 1dab912..c09e97f 100644
 +    endif()
 +else()
 +    add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
-+    target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE ${pc_libyaml_LIBRARIES})
++    target_link_libraries(WrapLibYaml::WrapLibYaml INTERFACE PkgConfig::pc_libyaml)
  endif()
 -
 -add_library(WrapLibYaml::WrapLibYaml INTERFACE IMPORTED)
