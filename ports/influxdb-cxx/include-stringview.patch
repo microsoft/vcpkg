@@ -1,0 +1,12 @@
+diff --git a/src/Point.cxx b/src/Point.cxx
+index 8f7fc10..95b119e 100644
+--- a/src/Point.cxx
++++ b/src/Point.cxx
+@@ -30,6 +30,7 @@
+ #include <memory>
+ #include <sstream>
+ #include <iomanip>
++#include <string_view>
+ 
+ namespace influxdb
+ {

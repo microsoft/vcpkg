@@ -19,10 +19,31 @@ else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
+# Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
+foreach(VCXPROJ IN ITEMS
+    "${SOURCE_PATH}/EasyHookDll/EasyHookDll.vcxproj"
+    "${SOURCE_PATH}/Examples/UnmanagedHook/UnmanagedHook.vcxproj")
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        ""
+    )
+endforeach()
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH EasyHook.sln
-	TARGET EasyHookDll
+    TARGET EasyHookDll
     RELEASE_CONFIGURATION "netfx4-Release"
     DEBUG_CONFIGURATION "netfx4-Debug"
     PLATFORM ${BUILD_ARCH}

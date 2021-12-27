@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Starlink/ast/releases/download/v9.2.4/ast-9.2.4.tar.gz"
-    FILENAME "ast-9.2.4.tar.gz"
-    SHA512 84e6f243e6d9d77328b73b97355feb3990307fb9c8f9b2f30344d71e2f5e63a849cdce0090ff5b7cc16028e12d68516c885b13d76db841072c9d1d06a7742a9e
+    URLS "https://github.com/Starlink/ast/releases/download/v9.2.5/ast-9.2.5.tar.gz"
+    FILENAME "ast-9.2.5.tar.gz"
+    SHA512 2eee3df56ca49a9fbb6b103b26f41a63a7b77533bcc74bc4154b57567ee6da53d5c7ff1d38c4ad0ce330d9b902e35d40184fa9e985506c3dcbbb03071be65760
 )
 
 vcpkg_extract_source_archive_ex(
@@ -11,18 +11,23 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}    
 )
 
-set(CONFIGURE_OPTIONS "--without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
+set(CONFIGURE_OPTIONS
+    --without-fortran
+    --with-external-cminpack
+    star_cv_cnf_trail_type=long
+    star_cv_cnf_f2c_compatible=no
+)
 
 if ("yaml" IN_LIST FEATURES)
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-yaml")
+    list(APPEND CONFIGURE_OPTIONS --with-yaml)
 else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-yaml")
+    list(APPEND CONFIGURE_OPTIONS --without-yaml)
 endif()
 
 if ("pthreads" IN_LIST FEATURES)
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-pthreads")
+    list(APPEND CONFIGURE_OPTIONS --with-pthreads)
 else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-pthreads")
+    list(APPEND CONFIGURE_OPTIONS --without-pthreads)
 endif()
 
 vcpkg_configure_make(
@@ -31,8 +36,6 @@ vcpkg_configure_make(
     DETERMINE_BUILD_TRIPLET
     ADDITIONAL_MSYS_PACKAGES perl
     OPTIONS ${CONFIGURE_OPTIONS}
-    OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
-    OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
 )
 
 vcpkg_install_make()

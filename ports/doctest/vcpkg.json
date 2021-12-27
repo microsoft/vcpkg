@@ -1,7 +1,6 @@
 {
   "name": "doctest",
-  "version-string": "2.4.5",
-  "port-version": 1,
+  "version": "2.4.6",
   "description": "The fastest feature-rich C++ single-header testing framework for unit tests and TDD",
   "homepage": "https://github.com/onqtam/doctest"
 }

@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bitdefender/bddisasm
-    REF v1.34.2
-    SHA512 4ddcae67721f6f1c5f0073aca3996325d4fbb148365a63b03e295fc2b00b1f4c73439a1fe6aab60ab9778e182b7acf2807df7c40079a1ca7916fbb5393245717
+    REF v1.34.7
+    SHA512 e4bd0895b285030f0aba4d5666a5da66cee6e1766e68a9527d1c2ca6160690270d55819ab8f6357b0f61fd52fb13b87ca7c15ee5694185564cc9bb55b62eb9ff
     HEAD_REF master
 )
 
@@ -28,3 +28,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+vcpkg_fixup_pkgconfig()

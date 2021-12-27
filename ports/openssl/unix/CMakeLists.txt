@@ -128,6 +128,7 @@ else()
     set(SHARED no-shared)
     set(LIB_EXTS a)
 endif()
+set(INSTALL_PKG_CONFIGS "${BUILDDIR}/openssl.pc")
 foreach(lib ssl crypto)
     foreach(ext ${LIB_EXTS})
         list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
@@ -167,6 +168,7 @@ if(NOT IOS)
         COMMAND ${ENV_COMMAND} RANLIB=${CMAKE_RANLIB}
         COMMAND ${ENV_COMMAND} MAKE=${MAKE}
         COMMAND ${ENV_COMMAND} MAKEDEPPROG=${CMAKE_C_COMPILER}
+        COMMAND ${ENV_COMMAND} WINDRES=${CMAKE_RC_COMPILER}
         VERBATIM
         APPEND
     )
