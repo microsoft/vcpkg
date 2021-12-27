@@ -201,8 +201,13 @@ function GeneratePortManifest() {
                     $dep_name = $dependency
                 }
                 $manifest["dependencies"] = $manifest["dependencies"] `
-                | Where-Object { $_ -notmatch "$dep_name" } `
-                | Where-Object { $_.name -notmatch "$dep_name" }
+                | Where-Object { 
+                    if ($_.Contains("name")) {
+                        $_.name -notmatch "$dep_name"
+                    } else {
+                        $_ -notmatch "$dep_name"
+                    }
+                }
             }
         }
     }
@@ -595,12 +600,22 @@ if ($updateServicePorts) {
         -Dependencies @("boost-uninstall")
 
     # Update Boost version in CMake files
-    [Array]$files_with_boost_version = @(
+    $files_with_boost_version = @(
         "$portsDir/boost-build/portfile.cmake",
         "$portsDir/boost-modular-build-helper/boost-modular-build.cmake",
         "$portsDir/boost-vcpkg-helpers/boost-modular-headers.cmake"
     )
-    foreach ($file in $files_with_boost_version) {
-        (Get-Content -LiteralPath "$file") -replace "set\(BOOST_VERSION ([0-9\.]+)\)", "set(BOOST_VERSION $version)" | Set-Content -LiteralPath "$file"
+    $files_with_boost_version | % {
+        $content = Get-Content -LiteralPath $_ `
+            -Encoding UTF8 `
+            -Raw
+        $content = $content -replace `
+            "set\(BOOST_VERSION [0-9\.]+\)", `
+            "set(BOOST_VERSION $version)"
+
+        Set-Content -LiteralPath $_ `
+            -Value $content `
+            -Encoding UTF8 `
+            -NoNewline
     }
 }
