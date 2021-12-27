@@ -1,43 +1,34 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
-vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARGET "UWP")
+vcpkg_download_distfile(ARCHIVE
+    URLS "http://www.live555.com/liveMedia/public/live.2021.12.18.tar.gz"
+    FILENAME "live.2021.12.18.tar.gz"
+    SHA512 072ae92a1a63687e33c659627fbf562e6f2cdf73cf1c3199959aa3a713636ccd4113d56270c4793c86b42338000f180e16a7b2cf3d893402226a04360f8b2e97
+)
 
-vcpkg_from_github(
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO civetweb/civetweb
-    REF eefb26f82b233268fc98577d265352720d477ba4 # v1.15
-    SHA512 5ce962e31b3c07b7110cbc645458dba9c0e26e693fbe3b4a7ffe8a28563827049a22fc5596a911fbcea4d88a9adbef3f82000ff61027ff4387f40e4a4045c26d
-    HEAD_REF master
+    ARCHIVE ${ARCHIVE} 
+    PATCHES
+        fix-RTSPClient.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        ssl CIVETWEB_ENABLE_SSL
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA - See https://github.com/civetweb/civetweb/issues/1024
-    OPTIONS
-        -DCIVETWEB_BUILD_TESTING=OFF
-        -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
-        -DCIVETWEB_ENABLE_ASAN=OFF
-        -DCIVETWEB_ENABLE_CXX=ON
-        -DCIVETWEB_ENABLE_IPV6=ON
-        -DCIVETWEB_ENABLE_SERVER_EXECUTABLE=OFF
-        -DCIVETWEB_ENABLE_SSL_DYNAMIC_LOADING=OFF
-        -DCIVETWEB_ENABLE_WEBSOCKETS=ON
-        ${FEATURE_OPTIONS}
+vcpkg_cmake_install()
+
+file(GLOB HEADERS
+    "${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
+    "${SOURCE_PATH}/groupsock/include/*.h*"
+    "${SOURCE_PATH}/liveMedia/include/*.h*"
+    "${SOURCE_PATH}/UsageEnvironment/include/*.h*"
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/civetweb)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
