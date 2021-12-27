@@ -23,7 +23,7 @@ set_target_properties(libtess2 PROPERTIES LINKER_LANGUAGE CXX)
 install(TARGETS libtess2 EXPORT unofficial-libtess2-config)
 
 install(
-    FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/tesselator.h
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/tesselator.h
     TYPE INCLUDE
 )
 
