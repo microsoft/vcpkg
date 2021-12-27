@@ -5318,7 +5318,7 @@
     },
     "plplot": {
       "baseline": "5.13.0",
-      "port-version": 14
+      "port-version": 15
     },
     "plustache": {
       "baseline": "0.4.0",
