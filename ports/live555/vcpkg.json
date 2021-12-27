@@ -1,7 +1,6 @@
 {
   "name": "live555",
-  "version-string": "latest",
-  "port-version": 3,
+  "version-date": "2021-12-18",
   "description": "A complete RTSP server application",
   "homepage": "https://www.live555.com/liveMedia",
   "dependencies": [

@@ -1,16 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
 
-if(NOT VCPKG_USE_HEAD_VERSION)
-    # Live555 only makes the latest releases available for download on their site
-    message(FATAL_ERROR "Live555 does not have persistent releases. Please re-run the installation with --head.")
-endif()
-
-set(LIVE_VERSION latest)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live555-${LIVE_VERSION}.tar.gz"
-    FILENAME "live555-${LIVE_VERSION}.tar.gz"
-    SKIP_SHA512
+    URLS "http://www.live555.com/liveMedia/public/live.2021.12.18.tar.gz"
+    FILENAME "live.2021.12.18.tar.gz"
+    SHA512 072ae92a1a63687e33c659627fbf562e6f2cdf73cf1c3199959aa3a713636ccd4113d56270c4793c86b42338000f180e16a7b2cf3d893402226a04360f8b2e97
 )
 
 vcpkg_extract_source_archive_ex(
@@ -35,7 +28,7 @@ file(GLOB HEADERS
     "${SOURCE_PATH}/UsageEnvironment/include/*.h*"
 )
 
-file(COPY ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
