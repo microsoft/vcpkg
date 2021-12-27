@@ -232,7 +232,7 @@ else()
 endif()
 
 # Handle Python
-set(python_versions)
+set(python_versions "")
 
 if("python2" IN_LIST FEATURES)
     # Find Python2 in the current installed directory
@@ -272,11 +272,9 @@ if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     endif()
 endif()
 
-if(python_versions)
-    string(REPLACE ";" "," python_versions "${python_versions}")
-    list(APPEND B2_OPTIONS
-        python=${python_versions}
-    )
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
 endif()
 
 # Include port specific CMake fragment
