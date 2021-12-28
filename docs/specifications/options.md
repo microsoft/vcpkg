@@ -37,11 +37,12 @@ The options objects should have the same structure as the feature object. In the
       ],
       "default": "bar", // required
     },
-    "bar": { // an string option field, for example needed for https://github.com/itay-grudev/SingleApplication QAPPLICATION_CLASS macro or https://github.com/microsoft/vcpkg/discussions/19632
-      "description": "Base class", // required
+    "assert-action": { // an string option field, for example needed for https://github.com/microsoft/vcpkg/discussions/19632
+      // use https://github.com/ocornut/imgui/blob/master/imconfig.h#L17 as an example
+      "description": "Define assertion handler. Defaults to calling assert(). Use _EXPR to access the parameter.", // required
       "type": "string", // required
-      "examples": ["std::string", "QString", "char*"],  // not required
-      "default": "std::string"  // required
+      "examples": ["MyAssert(_EXPR)", "((void)(_EXPR))"],  // not required
+      "default": null  // required, allow null to use the default value of the lib
     }
   }
 }
