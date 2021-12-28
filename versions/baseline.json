@@ -1130,7 +1130,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 4
+      "port-version": 5
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -2786,7 +2786,7 @@
     },
     "ignition-math6": {
       "baseline": "6.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ignition-modularscripts": {
       "baseline": "2020-11-23",
@@ -4882,7 +4882,7 @@
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 2
+      "port-version": 3
     },
     "onednn": {
       "baseline": "2.4.3",
@@ -6202,7 +6202,7 @@
     },
     "sdformat9": {
       "baseline": "9.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl1": {
       "baseline": "1.2.15",
