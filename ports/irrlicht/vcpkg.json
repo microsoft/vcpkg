@@ -6,13 +6,13 @@
   "homepage": "http://irrlicht.sourceforge.net",
   "supports": "!(arm | uwp)",
   "dependencies": [
+    "bzip2",
+    "libjpeg-turbo",
+    "libpng",
     {
       "name": "mesa",
       "platform": "linux"
     },
-    "bzip2",
-    "libjpeg-turbo",
-    "libpng",
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"
