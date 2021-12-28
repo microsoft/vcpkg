@@ -1,6 +1,6 @@
 {
   "name": "platform-interfaces",
-  "version": "0.2.5",
+  "version-string ": "0.4.0_0.2.5",
   "description": "LinksPlatform's Platform.Interfaces Class Library",
   "homepage": "https://github.com/linksplatform/Interfaces"
 }
