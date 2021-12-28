@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf87798..1f76d80 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -469,6 +469,7 @@ endif (WITH_THREADS AND Threads_FOUND)
+ set (TEST_SRC_DIR \"${CMAKE_CURRENT_SOURCE_DIR}\")
+ 
+ configure_file (src/config.h.cmake.in config.h)
++configure_file (src/config.h.cmake.in glog/config.h)
+ configure_file (src/glog/logging.h.in glog/logging.h @ONLY)
+ configure_file (src/glog/raw_logging.h.in glog/raw_logging.h @ONLY)
+ configure_file (src/glog/stl_logging.h.in glog/stl_logging.h @ONLY)
+@@ -497,6 +498,7 @@ endif (WITH_PKGCONFIG)
+ set (GLOG_PUBLIC_H
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/export.h
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/logging.h
++  ${CMAKE_CURRENT_BINARY_DIR}/glog/config.h
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/raw_logging.h
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/stl_logging.h
+   ${CMAKE_CURRENT_BINARY_DIR}/glog/vlog_is_on.h
+diff --git a/src/glog/logging.h.in b/src/glog/logging.h.in
+index 1148c27..9857c4a 100644
+--- a/src/glog/logging.h.in
++++ b/src/glog/logging.h.in
+@@ -35,7 +35,6 @@
+ //
+ #ifndef _LOGGING_H_
+ #define _LOGGING_H_
+-
+ #include <cerrno>
+ #include <cstddef>
+ #include <cstring>
+@@ -48,6 +47,7 @@
+ # include <unistd.h>
+ #endif
+ #include <vector>
++#include "glog/config.h"
+ 
+ #if defined(_MSC_VER)
+ #define GLOG_MSVC_PUSH_DISABLE_WARNING(n) __pragma(warning(push)) \
