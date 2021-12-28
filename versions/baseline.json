@@ -6101,8 +6101,8 @@
       "port-version": 1
     },
     "rtaudio": {
-      "baseline": "2021-08-15",
-      "port-version": 2
+      "baseline": "2021-11-16",
+      "port-version": 0
     },
     "rtlsdr": {
       "baseline": "2020-04-16",
