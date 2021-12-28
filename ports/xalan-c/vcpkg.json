@@ -6,5 +6,19 @@
   "homepage": "https://github.com/apache/xalan-c",
   "dependencies": [
     "xerces-c"
-  ]
+  ],
+  "features": {
+    "icu": {
+      "description": "ICU support",
+      "dependencies": [
+        {
+          "name": "xalan-c",
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
+        }
+      ]
+    }
+  }
 }
