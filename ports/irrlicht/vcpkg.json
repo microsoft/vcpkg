@@ -6,6 +6,10 @@
   "homepage": "http://irrlicht.sourceforge.net",
   "supports": "!(arm | uwp)",
   "dependencies": [
+    {
+      "name": "mesa",
+      "platform": "linux"
+    },
     "bzip2",
     "libjpeg-turbo",
     "libpng",

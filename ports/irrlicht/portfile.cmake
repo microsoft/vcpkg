@@ -12,8 +12,7 @@ vcpkg_from_sourceforge(
 
 if(VCPKG_TARGET_IS_LINUX)
     message(
-"GLFW3 currently requires the following libraries from the system package manager:
-    libgl1-mesa
+"Irrlicht currently requires the following libraries from the system package manager:
     xf86vmode
 
 These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev libxxf86vm-dev")
