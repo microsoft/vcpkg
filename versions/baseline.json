@@ -7322,7 +7322,7 @@
     },
     "xalan-c": {
       "baseline": "1.12",
-      "port-version": 1
+      "port-version": 2
     },
     "xaudio2redist": {
       "baseline": "1.2.8",
