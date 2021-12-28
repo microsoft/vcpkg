@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 65b0c8a4520d1d282420c30ecd7c8525525d4dbb6e562e1e2e93d110f4eb686af43f098bf02460727fab1e1f9446dd00a99051e150c05ea40b1486a44fea1042
     HEAD_REF master
     PATCHES
-        001-tools-path.patch
         002-sdl-includes.patch
 )
 
@@ -71,9 +70,8 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
@@ -82,7 +80,7 @@ vcpkg_configure_cmake(
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
@@ -113,6 +111,27 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Special handling for plugins.
+#
+# For static plugins, in order to make MSBuild auto-linking magic work, where 
+# the linker implicitly takes everything from the root lib/ folder, the 
+# static libraries have to be moved out of lib/magnum/blah/ directly to lib/.
+# Possibly would be enough to do this just for Windows, doing it also on other
+# platforms for consistency.
+#
+# For dynamic plugins, auto-linking is not desirable as those are meant to be 
+# loaded dynamically at runtime instead. In order to prevent that, on Windows 
+# the *.lib files corresponding to the plugin *.dlls are removed. However, we 
+# cannot remove the *.lib files entirely here, as plugins from magnum-plugins 
+# are linked to them on Windows (e.g. AssimpImporter depends on 
+# AnyImageImporter). Thus the Any* plugin lib files are kept, but also not 
+# moved to the root lib/ folder, to prevent autolinking. A consequence of the 
+# *.lib file removal is that downstream projects can't implement Magnum plugins
+# that would depend on (and thus link to) these, but that's considered a very 
+# rare use case and so it's fine.
+#
+# See https://github.com/microsoft/vcpkg/pull/1235#issuecomment-308805989 for 
+# futher info.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -121,24 +140,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
 
-    file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*)
+    file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
     file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
-    # Unlike the magnum-plugins port, we cannot remove the lib files entirely here,
-    # As other importers might depend on them (e.g. AssimpImporter depends on AnyImageImporter)
-    # and modules are not allowed to have unresolved symbols, hence simply loading the
-    # dependencies in advance like on Unix does not work on Windows.
-    #
-    # On windows, plugins are "Modules" that cannot be linked as shared
-    # libraries, but are meant to be loaded at runtime.
-    # While this is handled adequately through the CMake project, the auto-magic
-    # linking with visual studio might try to link the import libs anyway.
-    #
-    # We delete most of the import libraries here to avoid the auto-magic linking
-    # for plugins which are loaded at runtime, but keep the afforementioned Any* plugins.
-    #
-    # See https://github.com/microsoft/vcpkg/pull/1235#issuecomment-308805989 for futher info.
     if(WIN32)
         file(GLOB_RECURSE LIB_TO_REMOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
         file(GLOB_RECURSE LIB_TO_KEEP ${CURRENT_PACKAGES_DIR}/lib/magnum/*Any*)

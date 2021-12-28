@@ -1,0 +1,40 @@
+{
+  "name": "kf5newstuff",
+  "version": "5.89.0",
+  "description": "Framework for downloading and sharing additional application data",
+  "homepage": "https://api.kde.org/frameworks/knewstuff/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5archive",
+    "kf5attica",
+    "kf5completion",
+    "kf5config",
+    "kf5coreaddons",
+    "kf5i18n",
+    "kf5iconthemes",
+    "kf5itemviews",
+    "kf5kio",
+    "kf5package",
+    "kf5service",
+    "kf5textwidgets",
+    "kf5widgetsaddons",
+    "kf5xmlgui",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

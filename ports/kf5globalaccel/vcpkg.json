@@ -1,0 +1,28 @@
+{
+  "name": "kf5globalaccel",
+  "version": "5.89.0",
+  "description": "lobal desktop keyboard shortcuts",
+  "homepage": "https://api.kde.org/frameworks/kglobalaccel/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5coreaddons",
+    "kf5crash",
+    "kf5dbusaddons",
+    "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

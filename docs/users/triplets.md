@@ -1,4 +1,4 @@
-# Triplet files
+# Triplet Files
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
 
@@ -42,6 +42,9 @@ Valid options are `dynamic` and `static`.
 Specifies the preferred library linkage.
 
 Valid options are `dynamic` and `static`. Note that libraries can ignore this setting if they do not support the preferred linkage type.
+
+### VCPKG_BUILD_TYPE
+You can set this value to `release` to only build release versions of the ports. By default this value is empty and release and debug versions of a port are built.
 
 ### VCPKG_CMAKE_SYSTEM_NAME
 Specifies the target platform.
@@ -118,8 +121,13 @@ See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file 
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
 
+### VCPKG_DISABLE_COMPILER_TRACKING
+
+When this option is set to (true|1|on), the compiler is ignored in the abi tracking.
+
 ## Windows Variables
 
+<a name="VCPKG_ENV_PASSTHROUGH"></a>
 ### VCPKG_ENV_PASSTHROUGH
 Instructs vcpkg to allow additional environment variables into the build process.
 
@@ -163,6 +171,13 @@ Valid settings:
 * The Visual Studio 2019 platform toolset is `v142`.
 * The Visual Studio 2017 platform toolset is `v141`.
 * The Visual Studio 2015 platform toolset is `v140`.
+
+### VCPKG_PLATFORM_TOOLSET_VERSION
+Specifies the detailed MSVC C/C++ compiler toolchain to use.
+
+By default, [`VCPKG_PLATFORM_TOOLSET`] always chooses the latest installed minor version of the selected toolset.
+If you need more granularity, you can use this variable.
+Valid values are, for example, `14.25` or `14.27.29110`.
 
 ### VCPKG_LOAD_VCVARS_ENV
 If `VCPKG_CHAINLOAD_TOOLCHAIN_FILE` is used, VCPKG will not setup the Visual Studio environment.

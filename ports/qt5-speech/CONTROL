@@ -1,4 +1,0 @@
-Source: qt5-speech
-Version: 5.15.2
-Description: Qt5 Speech Module
-Build-Depends:  qt5-base[core], atlmfc (windows), qt5-declarative, qt5-multimedia

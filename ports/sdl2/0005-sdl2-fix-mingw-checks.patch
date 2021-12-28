@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1475,7 +1475,7 @@ elseif(WINDOWS)
+     if(DEFINED MSVC_VERSION AND NOT ${MSVC_VERSION} LESS 1700)
+         set(USE_WINSDK_DIRECTX TRUE)
+     endif()
+-    if(NOT CMAKE_COMPILER_IS_MINGW AND NOT USE_WINSDK_DIRECTX)
++    if(NOT MINGW AND NOT USE_WINSDK_DIRECTX)
+       if("$ENV{DXSDK_DIR}" STREQUAL "")
+         message_error("DIRECTX requires the \$DXSDK_DIR environment variable to be set")
+       endif()
+@@ -1493,7 +1493,7 @@ elseif(WINDOWS)
+     check_include_file(dxgi.h HAVE_DXGI_H)
+     if(HAVE_D3D_H OR HAVE_D3D11_H OR HAVE_DDRAW_H OR HAVE_DSOUND_H OR HAVE_DINPUT_H)
+       set(HAVE_DIRECTX TRUE)
+-      if(NOT CMAKE_COMPILER_IS_MINGW AND NOT USE_WINSDK_DIRECTX)
++      if(NOT MINGW AND NOT USE_WINSDK_DIRECTX)
+       # TODO: change $ENV{DXSDL_DIR} to get the path from the include checks
+         link_directories($ENV{DXSDK_DIR}\\lib\\${PROCESSOR_ARCH})
+         include_directories($ENV{DXSDK_DIR}\\Include)

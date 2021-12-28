@@ -1,0 +1,7 @@
+{
+  "name": "libunibreak",
+  "version-string": "4.3",
+  "port-version": 1,
+  "description": "an implementation of the line breaking and word breaking algorithms as described in [Unicode Standard Annex 14] 1 and [Unicode Standard Annex 29] 2. Check the project's [home page] 3 for up-to-date information.",
+  "homepage": "https://github.com/adah1972/libunibreak"
+}

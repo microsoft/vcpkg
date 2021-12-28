@@ -1,13 +1,17 @@
 {
   "name": "ffmpeg",
-  "version": "4.4",
-  "port-version": 7,
+  "version": "4.4.1",
+  "port-version": 3,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
   ],
   "homepage": "https://ffmpeg.org",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
@@ -18,7 +22,6 @@
     "avdevice",
     "avfilter",
     "avformat",
-    "postproc",
     "swresample",
     "swscale"
   ],
@@ -58,9 +61,25 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "alsa"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "sdl2"
           ],
           "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "modplug"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -98,6 +117,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "aom"
+          ],
+          "platform": "!(uwp | arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "ass"
           ],
           "platform": "!(uwp | arm)"
@@ -114,14 +141,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ssh"
-          ],
-          "platform": "!(uwp | arm) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "dav1d"
           ],
           "platform": "!(uwp | arm | x86 | osx)"
@@ -130,9 +149,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "modplug"
+            "ssh"
           ],
-          "platform": "!(windows & static) & !uwp"
+          "platform": "!(uwp | arm) & !static"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!uwp & !(windows & arm)"
         },
         {
           "name": "ffmpeg",
@@ -141,14 +168,6 @@
             "tensorflow"
           ],
           "platform": "!(x86 | arm | uwp) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(windows & arm) & !osx"
         },
         {
           "name": "ffmpeg",
@@ -222,18 +241,23 @@
           "default-features": false,
           "features": [
             "all-gpl",
+            "fdk-aac",
             "nonfree",
             "openssl"
           ]
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "fdk-aac"
-          ],
-          "platform": "!arm & !uwp"
         }
+      ]
+    },
+    "alsa": {
+      "description": "Enable ALSA support",
+      "dependencies": [
+        "alsa"
+      ]
+    },
+    "aom": {
+      "description": "AV1 video encoding/decoding via libaom support in ffmpeg",
+      "dependencies": [
+        "aom"
       ]
     },
     "ass": {
@@ -302,9 +326,15 @@
       ]
     },
     "fdk-aac": {
-      "description": "AAC de/encoding via libfdk-aac",
+      "description": "AAC de/encoding via libfdk-aac, **including GPL-incompatible patent-encumbered HE-AAC**. If you do not require HE-AAC, use the built-in FFmpeg AAC codec.",
       "dependencies": [
-        "fdk-aac",
+        {
+          "name": "fdk-aac",
+          "default-features": false,
+          "features": [
+            "he-aac"
+          ]
+        },
         {
           "name": "ffmpeg",
           "default-features": false,
@@ -477,7 +507,18 @@
     "sdl2": {
       "description": "Sdl2 support",
       "dependencies": [
-        "sdl2"
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "features": [
+            "x11"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "sdl2",
+          "platform": "!linux"
+        }
       ]
     },
     "snappy": {

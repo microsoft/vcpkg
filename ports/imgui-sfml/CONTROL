@@ -1,5 +1,0 @@
-Source: imgui-sfml
-Version: 2.1-2
-Homepage: https://github.com/eliasdaler/imgui-sfml
-Description: ImGui binding for use with SFML
-Build-Depends: sfml, imgui, opengl

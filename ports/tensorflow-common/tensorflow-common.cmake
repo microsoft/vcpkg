@@ -1,5 +1,5 @@
-set(TF_VERSION 2.4.1)
-set(TF_VERSION_SHORT 2.4)
+set(TF_VERSION 2.7.0)
+set(TF_VERSION_SHORT 2.7)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -9,7 +9,7 @@ set(ENV{BAZEL_BIN_PATH} "${BAZEL}")
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	file(REMOVE_RECURSE ${PATH_TO_REMOVE})
 	if(EXISTS "${PATH_TO_REMOVE}")
-		vcpkg_execute_required_process(COMMAND ${CMAKE_COMMAND} -E sleep 5 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-sleep-${TARGET_TRIPLET})
+		vcpkg_execute_required_process(COMMAND ${CMAKE_COMMAND} -E sleep 5 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-sleep-${TARGET_TRIPLET})
 		file(REMOVE_RECURSE ${PATH_TO_REMOVE})
 	endif()
 endfunction()
@@ -39,20 +39,34 @@ if(CMAKE_HOST_WIN32)
 	set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
-	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-	vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-venv-${TARGET_TRIPLET})
+	vcpkg_add_to_path(PREPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin)
+	set(PYTHON3 ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3)
+	set(ENV{VIRTUAL_ENV} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv)
+
+	if(VCPKG_TARGET_IS_OSX)
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
+		# acceleration libs currently broken on macOS => force numpy user space reinstall without BLAS/LAPACK/ATLAS
+		# remove this work-around again, i.e. default to "else" branch, once acceleration libs are fixed upstream
+		set(ENV{BLAS} "None")
+		set(ENV{LAPACK} "None")
+		set(ENV{ATLAS} "None")
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U --force-reinstall numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequistes-pip-${TARGET_TRIPLET})
+	else()
+		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
+	endif()
+
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
 # check if numpy can be loaded
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-numpy-${TARGET_TRIPLET})
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
 set(ENV{TF_NEED_KAFKA} 0)
@@ -116,31 +130,34 @@ else()
 	endif()
 endif()
 
-foreach(BUILD_TYPE dbg rel)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND PORT_BUILD_CONFIGS "dbg")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  list(APPEND PORT_BUILD_CONFIGS "rel")
+endif()
+
+foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
 	set(WINDOWS_ONLY_PATCHES)
-	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
 	endif()
-	if(VCPKG_TARGET_IS_LINUX)
-		set(LINUX_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch")
-	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 be8273f464c1c1c392f3ab0190dbba36d56a0edcc7991c1a86f16604c859056d3188737d11c3b41ec7918e1cf46d13814c50c00be8f459dde9f0fb618740ee3c
+		SHA512 f1e892583c7b3a73d4d39ec65dc135a5b02c789b357d57414ad2b6d05ad9fbfc8ef81918ba6410e314abd6928b76f764e6ef64c0b0c84b58b50796634be03f39
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
-			${LINUX_ONLY_PATCHES}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -182,42 +199,44 @@ foreach(BUILD_TYPE dbg rel)
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+		elseif(VCPKG_TARGET_IS_OSX)
+			set(BUILD_OPTS --compilation_mode=fastbuild) # debug build on macOS currently broken
 		else()
-			set(BUILD_OPTS "--compilation_mode=dbg")
+			set(BUILD_OPTS --compilation_mode=dbg)
 		endif()
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_DEBUG)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
-		set(BUILD_OPTS "--compilation_mode=opt")
+		set(BUILD_OPTS --compilation_mode=opt)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_RELEASE)
-			list(APPEND COPTS "--copt='${OPT}'")
+			list(APPEND COPTS "--copt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
 		separate_arguments(VCPKG_CXX_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
-			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
+			list(APPEND CXXOPTS "--cxxopt=${OPT}")
 		endforeach()
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
-			list(APPEND LINKOPTS "--linkopt='${OPT}'")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	endif()
 
@@ -228,13 +247,13 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -253,35 +272,33 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-		if(NOT VCPKG_TARGET_IS_OSX)
-			if(VCPKG_TARGET_IS_WINDOWS)
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			else()
-				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
-					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-				)
-			endif()
+		if(VCPKG_TARGET_IS_WINDOWS)
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
+		else()
+			vcpkg_execute_build_process(
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
+				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
+			)
 		endif()
 		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" ${TF_LIB_SUFFIX}
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)

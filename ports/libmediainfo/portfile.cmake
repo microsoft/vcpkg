@@ -1,23 +1,31 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
-    REF v20.09
-    SHA512 0e9407d0a430c396b98f8e911e606bc4fa14914881540552bc81d78a57908aa4a54666f415474dda176527ed88148629660e3f2c090f648db8b75a92fec2449f
+    REF v21.03
+    SHA512 1317b27dc3ac1ad224ef9b7ca7c08a8f55983ac6984b5e8daf6309fa33094fbad8a0a5fbe0cff086b7a5c9233b3e24e26995b037d16adf83f63877f2c753f811
     HEAD_REF master
     PATCHES vcpkg_support_in_cmakelists.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/Project/CMake
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/Project/CMake"
     OPTIONS
         -DBUILD_ZENLIB=0
         -DBUILD_ZLIB=0
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/mediainfolib TARGET_PATH share/mediainfolib)
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/mediainfolib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/share/mediainfolib" "${CURRENT_PACKAGES_DIR}/share/MediaInfoLib")
+endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib" "${CURRENT_PACKAGES_DIR}/debug/share/MediaInfoLib")
+endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME MediaInfoLib CONFIG_PATH share/MediaInfoLib)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,50 @@
+{
+  "name": "kf5xmlgui",
+  "version": "5.89.0",
+  "description": "Framework for managing menu and toolbar actions",
+  "homepage": "https://api.kde.org/frameworks/kxmlgui/html/index.html",
+  "dependencies": [
+    "ecm",
+    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5archive",
+    "kf5config",
+    "kf5configwidgets",
+    "kf5coreaddons",
+    {
+      "name": "kf5globalaccel",
+      "platform": "!windows & !osx & !android"
+    },
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5iconthemes",
+    "kf5itemviews",
+    "kf5widgetsaddons",
+    "kf5windowsystem",
+    {
+      "name": "libiconv",
+      "platform": "windows & static"
+    },
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Enables a Qt Designer plugin"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4f002b5..cef79d6 100644
+index 4f002b5..d48f3f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -27,8 +27,6 @@ option(K4A_BUILD_DOCS "Build K4A doxygen documentation" OFF)
@@ -11,7 +11,7 @@ index 4f002b5..cef79d6 100644
  # Set the project version
  include(K4AProjectVersion)
  
-@@ -100,6 +98,36 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+@@ -100,6 +98,43 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
      set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
  endif()
  
@@ -21,25 +21,32 @@ index 4f002b5..cef79d6 100644
 +find_package(GTest CONFIG REQUIRED)
 +find_package(imgui CONFIG REQUIRED)
 +find_package(EBML CONFIG REQUIRED)
-+find_package(JPEG REQUIRED)
-+find_library(JPEG_TURBO turbojpeg REQUIRED)
++find_path(TURBOJPEG_INCLUDE_DIR NAMES turbojpeg.h PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" NO_DEFAULT_PATH REQUIRED)
++find_library(TURBOJPEG_LIBRARY_RELEASE NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH REQUIRED)
++add_library(libjpeg-turbo::libjpeg-turbo UNKNOWN IMPORTED)
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${TURBOJPEG_INCLUDE_DIR})
++set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_RELEASE ${TURBOJPEG_LIBRARY_RELEASE})
++if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
++    find_library(TURBOJPEG_LIBRARY_DEBUG NAMES turbojpeg PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH REQUIRED)
++    set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION_DEBUG ${TURBOJPEG_LIBRARY_DEBUG})
++endif()
 +find_package(Matroska CONFIG REQUIRED)
++add_definitions(-DMATROSKA_VERSION=2)
 +find_package(libsoundio CONFIG REQUIRED)
-+find_package(libusb CONFIG REQUIRED)
-+find_package(libuvc CONFIG REQUIRED)
++if (NOT WIN32)
++   find_package(libusb CONFIG REQUIRED)
++   find_package(libuvc CONFIG REQUIRED)
++   add_library(libuvc::libuvc ALIAS LibUVC::UVCStatic)
++   find_package(OpenSSL REQUIRED)
++   find_package(ZLIB REQUIRED)
++else()
++   find_library(LibUSB libusb-1.0 REQUIRED)
++endif()
 +find_package(libyuv CONFIG REQUIRED)
 +find_package(spdlog CONFIG REQUIRED)
-+find_package(OpenSSL REQUIRED)
-+find_package(ZLIB REQUIRED)
 +if (BUILD_TOOLS)
 +    find_package(gl3w CONFIG REQUIRED)
 +endif()
-+add_library(libuvc::libuvc ALIAS LibUVC::UVCStatic)
-+add_library(libjpeg-turbo::libjpeg-turbo STATIC IMPORTED)
-+set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${JPEG_INCLUDE_DIR})
-+set_property(TARGET libjpeg-turbo::libjpeg-turbo PROPERTY IMPORTED_LOCATION ${JPEG_LIBRARIES})
-+# add jpeg-turbo library to jpeg libraries.
-+set(JPEG_LIBRARIES ${JPEG_LIBRARIES} ${JPEG_TURBO})
 +# Fix embl error
 +if ("MSVC")
 +add_compile_options(/wd4828 /wd4251 /wd4275)
@@ -48,7 +55,7 @@ index 4f002b5..cef79d6 100644
  # Find all dependencies
  add_subdirectory(extern)
  
-@@ -160,10 +188,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+@@ -161,10 +196,16 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
      endif()
  endif()
  
@@ -69,17 +76,8 @@ index 4f002b5..cef79d6 100644
  
  if (K4A_BUILD_DOCS)
      find_package(Doxygen 1.8.14 EXACT)
-diff --git a/examples/transformation/CMakeLists.txt b/examples/transformation/CMakeLists.txt
---- a/examples/transformation/CMakeLists.txt
-+++ b/examples/transformation/CMakeLists.txt
-@@ -9,5 +9,5 @@ add_executable(transformation_example
- target_link_libraries(transformation_example PRIVATE
-     k4a::k4a
-     k4a::k4arecord
--    libjpeg-turbo::libjpeg-turbo
-+    ${JPEG_LIBRARIES}
-     )
 diff --git a/examples/viewer/opengl/CMakeLists.txt b/examples/viewer/opengl/CMakeLists.txt
+index 166fe2a..a3db07f 100644
 --- a/examples/viewer/opengl/CMakeLists.txt
 +++ b/examples/viewer/opengl/CMakeLists.txt
 @@ -14,6 +14,6 @@ add_executable(viewer_opengl
@@ -92,7 +90,7 @@ diff --git a/examples/viewer/opengl/CMakeLists.txt b/examples/viewer/opengl/CMak
      ${OPENGL_LIBRARIES})
 \ No newline at end of file
 diff --git a/extern/CMakeLists.txt b/extern/CMakeLists.txt
-index cb4f7b4..c3eab98 100644
+index cb4f7b4..3d00084 100644
 --- a/extern/CMakeLists.txt
 +++ b/extern/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -138,6 +136,7 @@ index 7140274..3bb6747 100644
      k4ainternal::logging)
  
 diff --git a/src/calibration/CMakeLists.txt b/src/calibration/CMakeLists.txt
+index e96b7d0..ed69f41 100644
 --- a/src/calibration/CMakeLists.txt
 +++ b/src/calibration/CMakeLists.txt
 @@ -11,7 +11,7 @@ target_include_directories(k4a_calibration PUBLIC
@@ -163,6 +162,7 @@ index bf5f34a..d37c4e6 100644
  
  // System dependencies
 diff --git a/src/capturesync/CMakeLists.txt b/src/capturesync/CMakeLists.txt
+index a434593..bcb19ba 100644
 --- a/src/capturesync/CMakeLists.txt
 +++ b/src/capturesync/CMakeLists.txt
 @@ -11,7 +11,7 @@ target_include_directories(k4a_capturesync PUBLIC
@@ -175,6 +175,7 @@ diff --git a/src/capturesync/CMakeLists.txt b/src/capturesync/CMakeLists.txt
  
  # Define alias for other targets to link against
 diff --git a/src/dewrapper/CMakeLists.txt b/src/dewrapper/CMakeLists.txt
+index 2756e43..f736fd1 100644
 --- a/src/dewrapper/CMakeLists.txt
 +++ b/src/dewrapper/CMakeLists.txt
 @@ -10,7 +10,7 @@ target_include_directories(k4a_dewrapper PUBLIC
@@ -187,6 +188,7 @@ diff --git a/src/dewrapper/CMakeLists.txt b/src/dewrapper/CMakeLists.txt
      k4ainternal::calibration
      k4ainternal::logging
 diff --git a/src/image/CMakeLists.txt b/src/image/CMakeLists.txt
+index c40999b..82406e2 100644
 --- a/src/image/CMakeLists.txt
 +++ b/src/image/CMakeLists.txt
 @@ -11,7 +11,7 @@ target_include_directories(k4a_image PUBLIC
@@ -199,6 +201,7 @@ diff --git a/src/image/CMakeLists.txt b/src/image/CMakeLists.txt
      k4ainternal::logging)
  
 diff --git a/src/logging/CMakeLists.txt b/src/logging/CMakeLists.txt
+index cbf0e4d..ca81c41 100644
 --- a/src/logging/CMakeLists.txt
 +++ b/src/logging/CMakeLists.txt
 @@ -11,7 +11,7 @@ target_include_directories(k4a_logging PUBLIC
@@ -211,6 +214,7 @@ diff --git a/src/logging/CMakeLists.txt b/src/logging/CMakeLists.txt
      k4ainternal::rwlock
      k4ainternal::global
 diff --git a/src/logging/logging.cpp b/src/logging/logging.cpp
+index 05264c5..41185de 100644
 --- a/src/logging/logging.cpp
 +++ b/src/logging/logging.cpp
 @@ -24,6 +24,9 @@
@@ -224,6 +228,7 @@ diff --git a/src/logging/logging.cpp b/src/logging/logging.cpp
  #pragma warning(default : 4702)
  #endif
 diff --git a/src/queue/CMakeLists.txt b/src/queue/CMakeLists.txt
+index 03d15f4..a42a135 100644
 --- a/src/queue/CMakeLists.txt
 +++ b/src/queue/CMakeLists.txt
 @@ -10,7 +10,7 @@ target_include_directories(k4a_queue PUBLIC
@@ -236,9 +241,10 @@ diff --git a/src/queue/CMakeLists.txt b/src/queue/CMakeLists.txt
      k4ainternal::logging
  )
 diff --git a/src/record/internal/CMakeLists.txt b/src/record/internal/CMakeLists.txt
+index 97c6cf3..e9f5b1a 100644
 --- a/src/record/internal/CMakeLists.txt
 +++ b/src/record/internal/CMakeLists.txt
-@@ -22,17 +22,17 @@ target_include_directories(k4a_playback PUBLIC
+@@ -22,16 +22,16 @@ target_include_directories(k4a_playback PUBLIC
  target_link_libraries(k4a_record PUBLIC 
      k4a::k4a
      k4ainternal::logging
@@ -254,14 +260,12 @@ diff --git a/src/record/internal/CMakeLists.txt b/src/record/internal/CMakeLists
 -    ebml::ebml
 -    matroska::matroska
 -    libyuv::libyuv
--    libjpeg-turbo::libjpeg-turbo
 +    EBML::ebml
 +    Matroska::matroska
 +    yuv
-+    ${JPEG_LIBRARIES}
+     libjpeg-turbo::libjpeg-turbo
  )
  
- # Define alias for other targets to link against
 diff --git a/src/record/sdk/CMakeLists.txt b/src/record/sdk/CMakeLists.txt
 index 2e23295..d150e70 100644
 --- a/src/record/sdk/CMakeLists.txt
@@ -278,6 +282,7 @@ index 2e23295..d150e70 100644
  
  target_link_libraries(k4arecord PUBLIC
 diff --git a/src/tewrapper/CMakeLists.txt b/src/tewrapper/CMakeLists.txt
+index e4a696e..6ee6696 100644
 --- a/src/tewrapper/CMakeLists.txt
 +++ b/src/tewrapper/CMakeLists.txt
 @@ -10,7 +10,7 @@ target_include_directories(k4a_tewrapper PUBLIC
@@ -290,6 +295,7 @@ diff --git a/src/tewrapper/CMakeLists.txt b/src/tewrapper/CMakeLists.txt
      k4ainternal::deloader)
  
 diff --git a/src/usbcommand/CMakeLists.txt b/src/usbcommand/CMakeLists.txt
+index f75bd55..5403216 100644
 --- a/src/usbcommand/CMakeLists.txt
 +++ b/src/usbcommand/CMakeLists.txt
 @@ -12,8 +12,8 @@ target_include_directories(k4a_usb_cmd PUBLIC
@@ -304,6 +310,7 @@ diff --git a/src/usbcommand/CMakeLists.txt b/src/usbcommand/CMakeLists.txt
      k4ainternal::image
      k4ainternal::logging)
 diff --git a/src/usbcommand/usb_cmd_priv.h b/src/usbcommand/usb_cmd_priv.h
+index 0aa502c..0405b58 100644
 --- a/src/usbcommand/usb_cmd_priv.h
 +++ b/src/usbcommand/usb_cmd_priv.h
 @@ -20,7 +20,7 @@
@@ -316,6 +323,7 @@ diff --git a/src/usbcommand/usb_cmd_priv.h b/src/usbcommand/usb_cmd_priv.h
  // Ensure we have LIBUSB_API_VERSION defined if not defined by libusb.h
  #ifndef LIBUSB_API_VERSION
 diff --git a/tests/Calibration/CMakeLists.txt b/tests/Calibration/CMakeLists.txt
+index ea6a9dd..c107269 100644
 --- a/tests/Calibration/CMakeLists.txt
 +++ b/tests/Calibration/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -330,6 +338,7 @@ diff --git a/tests/Calibration/CMakeLists.txt b/tests/Calibration/CMakeLists.txt
      k4ainternal::utcommon)
  
 diff --git a/tests/CaptureSync/CMakeLists.txt b/tests/CaptureSync/CMakeLists.txt
+index 0a9a8e2..f7bff42 100644
 --- a/tests/CaptureSync/CMakeLists.txt
 +++ b/tests/CaptureSync/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -344,6 +353,7 @@ diff --git a/tests/CaptureSync/CMakeLists.txt b/tests/CaptureSync/CMakeLists.txt
      k4ainternal::capturesync
      k4ainternal::image
 diff --git a/tests/ColorTests/FunctionalTest/CMakeLists.txt b/tests/ColorTests/FunctionalTest/CMakeLists.txt
+index 1e65ad7..709dfb0 100644
 --- a/tests/ColorTests/FunctionalTest/CMakeLists.txt
 +++ b/tests/ColorTests/FunctionalTest/CMakeLists.txt
 @@ -6,7 +6,7 @@ add_executable(color_ft color_ft.cpp)
@@ -356,19 +366,8 @@ diff --git a/tests/ColorTests/FunctionalTest/CMakeLists.txt b/tests/ColorTests/F
 +    aziotsharedutil)
  
  k4a_add_tests(TARGET color_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
-diff --git a/tests/ColorTests/UnitTest/CMakeLists.txt b/tests/ColorTests/UnitTest/CMakeLists.txt
---- a/tests/ColorTests/UnitTest/CMakeLists.txt
-+++ b/tests/ColorTests/UnitTest/CMakeLists.txt
-@@ -42,7 +42,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
- elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-     target_link_libraries(color_ut PRIVATE
-         libuvc::libuvc
--        libjpeg-turbo::libjpeg-turbo)
-+        ${JPEG_LIBRARIES})
- endif()
- 
- k4a_add_tests(TARGET color_ut TEST_TYPE UNIT)
 diff --git a/tests/DepthTests/FunctionalTest/CMakeLists.txt b/tests/DepthTests/FunctionalTest/CMakeLists.txt
+index 469c125..00f15f8 100644
 --- a/tests/DepthTests/FunctionalTest/CMakeLists.txt
 +++ b/tests/DepthTests/FunctionalTest/CMakeLists.txt
 @@ -6,7 +6,7 @@ add_executable(depth_ft depth_ft.cpp)
@@ -382,6 +381,7 @@ diff --git a/tests/DepthTests/FunctionalTest/CMakeLists.txt b/tests/DepthTests/F
  
  k4a_add_tests(TARGET depth_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
 diff --git a/tests/ExternLibraries/azure_c_shared/CMakeLists.txt b/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
+index a487cde..44170f4 100644
 --- a/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
 +++ b/tests/ExternLibraries/azure_c_shared/CMakeLists.txt
 @@ -6,7 +6,7 @@ add_executable(azure_c_shared_test
@@ -395,6 +395,7 @@ diff --git a/tests/ExternLibraries/azure_c_shared/CMakeLists.txt b/tests/ExternL
  
  k4a_add_tests(TARGET azure_c_shared_test TEST_TYPE UNIT)
 diff --git a/tests/IMUTests/FunctionalTest/CMakeLists.txt b/tests/IMUTests/FunctionalTest/CMakeLists.txt
+index cc6b3c2..d8762f6 100644
 --- a/tests/IMUTests/FunctionalTest/CMakeLists.txt
 +++ b/tests/IMUTests/FunctionalTest/CMakeLists.txt
 @@ -6,7 +6,7 @@ add_executable(imu_ft imu_ft.cpp)
@@ -408,6 +409,7 @@ diff --git a/tests/IMUTests/FunctionalTest/CMakeLists.txt b/tests/IMUTests/Funct
  
  k4a_add_tests(TARGET imu_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
 diff --git a/tests/Transformation/CMakeLists.txt b/tests/Transformation/CMakeLists.txt
+index 7f11a2f..c4ddaf8 100644
 --- a/tests/Transformation/CMakeLists.txt
 +++ b/tests/Transformation/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -422,6 +424,7 @@ diff --git a/tests/Transformation/CMakeLists.txt b/tests/Transformation/CMakeLis
      k4ainternal::transformation
      k4ainternal::utcommon
 diff --git a/tests/UnitTests/allocator_ut/CMakeLists.txt b/tests/UnitTests/allocator_ut/CMakeLists.txt
+index 913a7d8..0b7baeb 100644
 --- a/tests/UnitTests/allocator_ut/CMakeLists.txt
 +++ b/tests/UnitTests/allocator_ut/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -436,6 +439,7 @@ diff --git a/tests/UnitTests/allocator_ut/CMakeLists.txt b/tests/UnitTests/alloc
      k4ainternal::image
      k4ainternal::utcommon)
 diff --git a/tests/UnitTests/dynlib_ut/CMakeLists.txt b/tests/UnitTests/dynlib_ut/CMakeLists.txt
+index fbecc17..af73be2 100644
 --- a/tests/UnitTests/dynlib_ut/CMakeLists.txt
 +++ b/tests/UnitTests/dynlib_ut/CMakeLists.txt
 @@ -34,7 +34,7 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -448,6 +452,7 @@ diff --git a/tests/UnitTests/dynlib_ut/CMakeLists.txt b/tests/UnitTests/dynlib_u
      k4ainternal::utcommon)
  
 diff --git a/tests/UnitTests/queue_ut/CMakeLists.txt b/tests/UnitTests/queue_ut/CMakeLists.txt
+index cf9b040..ec4a024 100644
 --- a/tests/UnitTests/queue_ut/CMakeLists.txt
 +++ b/tests/UnitTests/queue_ut/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -462,6 +467,7 @@ diff --git a/tests/UnitTests/queue_ut/CMakeLists.txt b/tests/UnitTests/queue_ut/
      k4ainternal::image
      k4ainternal::queue
 diff --git a/tests/UnitTests/utcommon/CMakeLists.txt b/tests/UnitTests/utcommon/CMakeLists.txt
+index cca52c6..dfdd13d 100644
 --- a/tests/UnitTests/utcommon/CMakeLists.txt
 +++ b/tests/UnitTests/utcommon/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -476,6 +482,7 @@ diff --git a/tests/UnitTests/utcommon/CMakeLists.txt b/tests/UnitTests/utcommon/
  )
  
 diff --git a/tests/example/CMakeLists.txt b/tests/example/CMakeLists.txt
+index 3305a1a..be0b667 100644
 --- a/tests/example/CMakeLists.txt
 +++ b/tests/example/CMakeLists.txt
 @@ -3,6 +3,6 @@
@@ -487,6 +494,7 @@ diff --git a/tests/example/CMakeLists.txt b/tests/example/CMakeLists.txt
  
  k4a_add_tests(TARGET k4a_example_test HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
 diff --git a/tests/executables/CMakeLists.txt b/tests/executables/CMakeLists.txt
+index 7b03d15..6c070ee 100644
 --- a/tests/executables/CMakeLists.txt
 +++ b/tests/executables/CMakeLists.txt
 @@ -17,12 +17,12 @@ target_compile_definitions(executables_ft_custom PRIVATE -DUSE_CUSTOM_TEST_CONFI
@@ -505,6 +513,7 @@ diff --git a/tests/executables/CMakeLists.txt b/tests/executables/CMakeLists.txt
  k4a_add_tests(TARGET executables_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
  k4a_add_tests(TARGET executables_ft_custom HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL_CUSTOM)
 diff --git a/tests/global/CMakeLists.txt b/tests/global/CMakeLists.txt
+index ea0a0e5..d85728d 100644
 --- a/tests/global/CMakeLists.txt
 +++ b/tests/global/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -519,6 +528,7 @@ diff --git a/tests/global/CMakeLists.txt b/tests/global/CMakeLists.txt
      k4ainternal::utcommon)
  
 diff --git a/tests/multidevice/CMakeLists.txt b/tests/multidevice/CMakeLists.txt
+index 3fe044b..85f3058 100644
 --- a/tests/multidevice/CMakeLists.txt
 +++ b/tests/multidevice/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -533,6 +543,7 @@ diff --git a/tests/multidevice/CMakeLists.txt b/tests/multidevice/CMakeLists.txt
      k4ainternal::utcommon)
  
 diff --git a/tests/projections/cpp/CMakeLists.txt b/tests/projections/cpp/CMakeLists.txt
+index 2fdfa2c..09b5303 100644
 --- a/tests/projections/cpp/CMakeLists.txt
 +++ b/tests/projections/cpp/CMakeLists.txt
 @@ -6,6 +6,6 @@ add_executable(cpp_projection_ft cpp_projection_ft.cpp)
@@ -544,6 +555,7 @@ diff --git a/tests/projections/cpp/CMakeLists.txt b/tests/projections/cpp/CMakeL
  
  k4a_add_tests(TARGET cpp_projection_ft HARDWARE_REQUIRED TEST_TYPE FUNCTIONAL)
 diff --git a/tests/rwlock/CMakeLists.txt b/tests/rwlock/CMakeLists.txt
+index 5889435..c6c1f73 100644
 --- a/tests/rwlock/CMakeLists.txt
 +++ b/tests/rwlock/CMakeLists.txt
 @@ -4,8 +4,8 @@
@@ -558,6 +570,7 @@ diff --git a/tests/rwlock/CMakeLists.txt b/tests/rwlock/CMakeLists.txt
      k4ainternal::utcommon)
  
 diff --git a/tests/throughput/CMakeLists.txt b/tests/throughput/CMakeLists.txt
+index c544e1e..9489bf8 100644
 --- a/tests/throughput/CMakeLists.txt
 +++ b/tests/throughput/CMakeLists.txt
 @@ -6,8 +6,8 @@ add_executable(throughput_perf throughput_perf.cpp)
@@ -572,14 +585,12 @@ diff --git a/tests/throughput/CMakeLists.txt b/tests/throughput/CMakeLists.txt
      k4ainternal::logging
      k4ainternal::utcommon)
 diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
+index 98578c0..6ab38d9 100644
 --- a/tools/k4aviewer/CMakeLists.txt
 +++ b/tools/k4aviewer/CMakeLists.txt
-@@ -58,12 +58,13 @@ set(EXTERNAL_LIBRARIES
-     k4a::k4a
-     k4a::k4arecord
+@@ -60,10 +60,11 @@ set(EXTERNAL_LIBRARIES
      imgui::imgui
--    libjpeg-turbo::libjpeg-turbo
-+    ${JPEG_LIBRARIES}
+     libjpeg-turbo::libjpeg-turbo
      libsoundio::libsoundio
 -    LibUSB::LibUSB
 -    libyuv::libyuv
@@ -593,6 +604,7 @@ diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
  
  # On Windows, we need to call into setupapi to get USB container ID information
 diff --git a/tools/k4aviewer/k4aaudiomanager.cpp b/tools/k4aviewer/k4aaudiomanager.cpp
+index 243c800..ef85d45 100644
 --- a/tools/k4aviewer/k4aaudiomanager.cpp
 +++ b/tools/k4aviewer/k4aaudiomanager.cpp
 @@ -11,7 +11,7 @@

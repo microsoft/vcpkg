@@ -1,8 +1,75 @@
 {
   "name": "opensubdiv",
   "version-semver": "3.4.3",
-  "port-version": 1,
+  "port-version": 3,
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
-  "supports": "!arm & !uwp"
+  "supports": "!arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "Enable CUDA backend",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "dx": {
+      "description": "Enable DirectX support",
+      "dependencies": [
+        {
+          "name": "directxsdk",
+          "features": [
+            "xp"
+          ]
+        }
+      ]
+    },
+    "examples": {
+      "description": "Enable examples build"
+    },
+    "glew": {
+      "description": "Path to glew",
+      "dependencies": [
+        "glew"
+      ]
+    },
+    "glfw": {
+      "description": "Path to glfw",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "omp": {
+      "description": "Enable OpenMP backend"
+    },
+    "opencl": {
+      "description": "Enable OpenCL backend",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "ptex": {
+      "description": "Path to Ptex",
+      "dependencies": [
+        "ptex"
+      ]
+    },
+    "tbb": {
+      "description": "Enable TBB backend",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "true-deriv-eval": {
+      "description": "Enable true derivative evaluation for Gregory basis patches"
+    },
+    "tutorials": {
+      "description": "Enable tutorials build"
+    }
+  }
 }

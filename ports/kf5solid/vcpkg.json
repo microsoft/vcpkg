@@ -1,0 +1,43 @@
+{
+  "name": "kf5solid",
+  "version": "5.89.0",
+  "description": "Desktop hardware abstraction",
+  "homepage": "https://api.kde.org/frameworks/solid/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "platform-default-features"
+  ],
+  "features": {
+    "libmount": {
+      "description": "Used by the UDisks backend on Linux",
+      "supports": "linux",
+      "dependencies": [
+        "libmount"
+      ]
+    },
+    "platform-default-features": {
+      "description": "Enable platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "kf5solid",
+          "features": [
+            "libmount"
+          ],
+          "platform": "linux"
+        }
+      ]
+    }
+  }
+}
