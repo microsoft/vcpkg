@@ -70,8 +70,7 @@
           "default-features": false,
           "features": [
             "sdl2"
-          ],
-          "platform": "!osx"
+          ]
         },
         {
           "name": "ffmpeg",
@@ -110,8 +109,7 @@
           "default-features": false,
           "features": [
             "xml2"
-          ],
-          "platform": "!static"
+          ]
         },
         {
           "name": "ffmpeg",
@@ -126,8 +124,7 @@
           "default-features": false,
           "features": [
             "ass"
-          ],
-          "platform": "!(uwp | arm)"
+          ]
         },
         {
           "name": "ffmpeg",
@@ -143,7 +140,7 @@
           "features": [
             "dav1d"
           ],
-          "platform": "!(uwp | arm | x86 | osx)"
+          "platform": "!(uwp | arm | x86)"
         },
         {
           "name": "ffmpeg",
@@ -151,7 +148,7 @@
           "features": [
             "ssh"
           ],
-          "platform": "!(uwp | arm) & !static"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
@@ -159,7 +156,7 @@
           "features": [
             "opengl"
           ],
-          "platform": "!uwp & !(windows & arm)"
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -167,7 +164,7 @@
           "features": [
             "tensorflow"
           ],
-          "platform": "!(x86 | arm | uwp) & !static"
+          "platform": "!static"
         },
         {
           "name": "ffmpeg",
@@ -175,7 +172,7 @@
           "features": [
             "nvcodec"
           ],
-          "platform": "(windows | linux) & !uwp & !arm"
+          "platform": "(windows | linux) & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -183,15 +180,14 @@
           "features": [
             "tesseract"
           ],
-          "platform": "!uwp & !(windows & arm) & !static"
+          "platform": "!(windows & arm) & !static"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
             "fontconfig"
-          ],
-          "platform": "!(windows & static) & !(uwp | arm)"
+          ]
         }
       ]
     },
@@ -221,7 +217,7 @@
           "features": [
             "x265"
           ],
-          "platform": "!arm & !uwp"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
