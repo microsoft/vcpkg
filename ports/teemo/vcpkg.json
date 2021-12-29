@@ -1,6 +1,6 @@
 {
   "name": "teemo",
-  "version": "2.5",
+  "version": "2.5#2",
   "description": "C++ File Download Library, support Multithreading, Breakpoint Transmission, Speed Limit, Real-time Speed.",
   "homepage": "https://github.com/winsoft666/teemo",
   "supports": "!osx & !uwp & !arm",
