@@ -5,12 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO idealvin/co
-    REF 25915760f5cbcde1c5af625dd4d19a632ae43f12 #v2.0.2
-    SHA512 892d70923409306ab548cf4568f15ffd13949047a5a7810c68d60c1afd184eafd2076f62eb6249ae64b38c409255cb873fa28740ceab37b908b70174ddf6d077
+    REF 3fd22601de4d7a06548ca4d24ac36b4f82cde8c5 #v2.0.3
+    SHA512 fc3188355d3d4a8d56ebcca1cb4285be5bb4769328536f140d4ff6fc58f1e5ffe426f8a95506dfbc617acdd88c13d9b0420a03900bf63f83aeec090d4099c199
     HEAD_REF master
-    PATCHES
-        install-dll.patch
-        fix-event-destruct.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
