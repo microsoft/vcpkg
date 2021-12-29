@@ -6793,7 +6793,7 @@
       "port-version": 1
     },
     "vcglib": {
-      "baseline": "2021.07",
+      "baseline": "2021.10",
       "port-version": 0
     },
     "vcpkg-cmake": {
