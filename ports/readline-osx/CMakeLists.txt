@@ -3,7 +3,6 @@ project(readline C)
 
 add_definitions(-DREADLINE_LIBRARY)
 add_definitions(-DHAVE_CONFIG_H)
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 if(BUILD_SHARED_LIBS)
   add_definitions(-DBUILD_READLINE_DLL)
