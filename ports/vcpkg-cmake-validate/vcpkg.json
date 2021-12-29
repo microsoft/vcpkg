@@ -1,0 +1,5 @@
+{
+  "name": "vcpkg-cmake-validate",
+  "version-date": "2021-12-02",
+  "supports": "native"
+}

@@ -146,4 +146,28 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_cmake_validate(
+    FIND_PACKAGE CURL MODULE
+    LIBRARIES    CURL_LIBRARIES
+    HEADERS      curl/curl.h
+    FUNCTIONS    curl_global_init
+)
+vcpkg_cmake_validate(
+    FIND_PACKAGE CURL CONFIG
+    LIBRARIES    CURL::libcurl
+    HEADERS      curl/curl.h
+    FUNCTIONS    curl_global_init
+)
+set(components HTTP libz)
+if(CMAKE_USE_OPENSSL OR CMAKE_USE_SCHANNEL OR CMAKE_USE_SECTRANSP)
+    list(APPEND components HTTPS SSL)
+endif()
+vcpkg_cmake_validate(
+    CMAKE_VERSION 3.14
+    FIND_PACKAGE CURL MODULE COMPONENTS ${components}
+    LIBRARIES    CURL::libcurl
+    HEADERS      curl/curl.h
+    FUNCTIONS    curl_global_init
+)
+
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
