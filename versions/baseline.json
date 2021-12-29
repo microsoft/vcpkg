@@ -4998,7 +4998,7 @@
     },
     "openimageio": {
       "baseline": "2.3.7.2",
-      "port-version": 4
+      "port-version": 5
     },
     "openjpeg": {
       "baseline": "2.4.0",
