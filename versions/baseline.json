@@ -4412,6 +4412,10 @@
       "baseline": "2020-12-25",
       "port-version": 1
     },
+    "minio-cpp": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "minisat-master-keying": {
       "baseline": "2.3.6",
       "port-version": 0

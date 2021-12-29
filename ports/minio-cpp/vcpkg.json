@@ -5,7 +5,7 @@
   "supports": "!uwp",
   "dependencies": [
     "curlpp",
-    "pugixml",
-    "openssl"
+    "openssl",
+    "pugixml"
   ]
 }
