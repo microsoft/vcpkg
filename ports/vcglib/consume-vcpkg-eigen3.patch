@@ -1,0 +1,212 @@
+diff --git a/vcg/complex/algorithms/harmonic.h b/vcg/complex/algorithms/harmonic.h
+index 2c83d10..7cbafd4 100644
+--- a/vcg/complex/algorithms/harmonic.h
++++ b/vcg/complex/algorithms/harmonic.h
+@@ -24,7 +24,7 @@
+ #define __VCGLIB_HARMONIC_FIELD
+ 
+ #include <vcg/complex/complex.h>
+-#include <Eigen/Sparse>
++#include <eigen3/Eigen/Sparse>
+ 
+ namespace vcg {
+ namespace tri {
+diff --git a/vcg/complex/algorithms/implicit_smooth.h b/vcg/complex/algorithms/implicit_smooth.h
+index 1d0e3f4..76311e2 100644
+--- a/vcg/complex/algorithms/implicit_smooth.h
++++ b/vcg/complex/algorithms/implicit_smooth.h
+@@ -23,7 +23,7 @@
+ #ifndef __VCG_IMPLICIT_SMOOTHER
+ #define __VCG_IMPLICIT_SMOOTHER
+ 
+-#include <Eigen/Sparse>
++#include <eigen3/Eigen/Sparse>
+ #include <vcg/complex/algorithms/mesh_to_matrix.h>
+ #include <vcg/complex/algorithms/update/quality.h>
+ #include <vcg/complex/algorithms/smooth.h>
+diff --git a/vcg/complex/algorithms/inertia.h b/vcg/complex/algorithms/inertia.h
+index b2b6822..ec8b688 100644
+--- a/vcg/complex/algorithms/inertia.h
++++ b/vcg/complex/algorithms/inertia.h
+@@ -24,8 +24,8 @@
+ #define _VCG_INERTIA_
+ 
+ 
+-#include <Eigen/Core>
+-#include <Eigen/Eigenvalues>
++#include <eigen3/Eigen/Core>
++#include <eigen3/Eigen/Eigenvalues>
+ #include <vcg/complex/algorithms/update/normal.h>
+ 
+ namespace vcg
+diff --git a/vcg/complex/algorithms/parametrization/poisson_solver.h b/vcg/complex/algorithms/parametrization/poisson_solver.h
+index 941ba11..6b34072 100644
+--- a/vcg/complex/algorithms/parametrization/poisson_solver.h
++++ b/vcg/complex/algorithms/parametrization/poisson_solver.h
+@@ -24,7 +24,7 @@
+ #ifndef VCG_POISSON_SOLVER
+ #define VCG_POISSON_SOLVER
+ 
+-#include <Eigen/Sparse>
++#include <eigen3/Eigen/Sparse>
+ 
+ #include <vcg/complex/algorithms/clean.h>
+ #include <vcg/complex/algorithms/parametrization/distortion.h>
+diff --git a/vcg/complex/algorithms/update/curvature.h b/vcg/complex/algorithms/update/curvature.h
+index 5b9a536..2326d65 100644
+--- a/vcg/complex/algorithms/update/curvature.h
++++ b/vcg/complex/algorithms/update/curvature.h
+@@ -30,7 +30,7 @@
+ #include <vcg/complex/algorithms/point_sampling.h>
+ #include <vcg/complex/algorithms/intersection.h>
+ #include <vcg/complex/algorithms/inertia.h>
+-#include <Eigen/Core>
++#include <eigen3/Eigen/Core>
+ 
+ namespace vcg {
+ namespace tri {
+diff --git a/vcg/complex/algorithms/update/curvature_fitting.h b/vcg/complex/algorithms/update/curvature_fitting.h
+index 9de9fe3..e06c592 100644
+--- a/vcg/complex/algorithms/update/curvature_fitting.h
++++ b/vcg/complex/algorithms/update/curvature_fitting.h
+@@ -38,11 +38,11 @@
+ #include <vcg/complex/algorithms/inertia.h>
+ #include <vcg/complex/algorithms/nring.h>
+ 
+-#include <Eigen/Core>
+-#include <Eigen/QR>
+-#include <Eigen/LU>
+-#include <Eigen/SVD>
+-#include <Eigen/Eigenvalues>
++#include <eigen3/Eigen/Core>
++#include <eigen3/Eigen/QR>
++#include <eigen3/Eigen/LU>
++#include <eigen3/Eigen/SVD>
++#include <eigen3/Eigen/Eigenvalues>
+ 
+ 
+ namespace vcg {
+diff --git a/vcg/complex/algorithms/update/fitmaps.h b/vcg/complex/algorithms/update/fitmaps.h
+index d159864..91287e2 100644
+--- a/vcg/complex/algorithms/update/fitmaps.h
++++ b/vcg/complex/algorithms/update/fitmaps.h
+@@ -33,10 +33,10 @@
+ #include <vcg/complex/algorithms/update/bounding.h>
+ #include "vcg/complex/algorithms/update/curvature_fitting.h"
+ 
+-#include <Eigen/Core>
+-#include <Eigen/QR>
+-#include <Eigen/LU>
+-#include <Eigen/SVD>
++#include <eigen3/Eigen/Core>
++#include <eigen3/Eigen/QR>
++#include <eigen3/Eigen/LU>
++#include <eigen3/Eigen/SVD>
+ 
+ #include <vcg/complex/algorithms/nring.h>
+ 
+diff --git a/vcg/math/eigen.h b/vcg/math/eigen.h
+index 5cae402..81f32ff 100644
+--- a/vcg/math/eigen.h
++++ b/vcg/math/eigen.h
+@@ -53,10 +53,10 @@ struct ei_to_vcgtype;
+ }
+ 
+ #include "base.h"
+-#include "../../eigenlib/Eigen/LU"
+-#include "../../eigenlib/Eigen/Geometry"
+-#include "../../eigenlib/Eigen/Array"
+-#include "../../eigenlib/Eigen/Core"
++#include "../../eigen3/Eigen/LU"
++#include "../../eigen3/Eigen/Geometry"
++#include "../../eigen3/Eigen/Array"
++#include "../../eigen3/Eigen/Core"
+ 
+ // add support for unsigned char and short int
+ namespace Eigen {
+diff --git a/vcg/math/matrix44.h b/vcg/math/matrix44.h
+index 9bcc0e3..a79c1e3 100644
+--- a/vcg/math/matrix44.h
++++ b/vcg/math/matrix44.h
+@@ -31,8 +31,8 @@
+ #include <vector>
+ #include <array>
+ #include <iostream>
+-#include <Eigen/Core>
+-#include <Eigen/LU>
++#include <eigen3/Eigen/Core>
++#include <eigen3/Eigen/LU>
+ 
+ namespace vcg {
+ 
+diff --git a/vcg/math/polar_decomposition.h b/vcg/math/polar_decomposition.h
+index 7d4f03e..bd725d1 100644
+--- a/vcg/math/polar_decomposition.h
++++ b/vcg/math/polar_decomposition.h
+@@ -26,8 +26,8 @@
+ 
+ #include <vcg/math/matrix33.h>
+ #include <vcg/math/matrix44.h>
+-#include <Eigen/Dense>
+-#include <Eigen/SVD>
++#include <eigen3/Eigen/Dense>
++#include <eigen3/Eigen/SVD>
+ 
+ namespace vcg{
+ 
+diff --git a/vcg/math/quadric.h b/vcg/math/quadric.h
+index 0f4865b..8bfa5cd 100644
+--- a/vcg/math/quadric.h
++++ b/vcg/math/quadric.h
+@@ -26,7 +26,7 @@
+ #include <vcg/space/point3.h>
+ #include <vcg/space/plane3.h>
+ #include <vcg/math/matrix33.h>
+-#include <Eigen/Core>
++#include <eigen3/Eigen/Core>
+ 
+ namespace vcg {
+ namespace math {
+diff --git a/vcg/space/fitting3.h b/vcg/space/fitting3.h
+index 69b8fe1..6861969 100644
+--- a/vcg/space/fitting3.h
++++ b/vcg/space/fitting3.h
+@@ -29,8 +29,8 @@
+ #include <vcg/math/matrix44.h>
+ #include <vcg/math/matrix33.h>
+ 
+-#include <Eigen/Core>
+-#include <Eigen/Eigenvalues>
++#include <eigen3/Eigen/Core>
++#include <eigen3/Eigen/Eigenvalues>
+ 
+ namespace vcg {
+ 
+diff --git a/vcg/space/point_matching.h b/vcg/space/point_matching.h
+index 8d99fb8..e597022 100644
+--- a/vcg/space/point_matching.h
++++ b/vcg/space/point_matching.h
+@@ -27,8 +27,8 @@
+ #include <vcg/math/quaternion.h>
+ #include <vcg/math/matrix44.h>
+ 
+-#include <Eigen/Dense>
+-#include <Eigen/Eigenvalues>
++#include <eigen3/Eigen/Dense>
++#include <eigen3/Eigen/Eigenvalues>
+ #include  <iostream>
+ 
+ namespace vcg
+diff --git a/wrap/igl/smooth_field.h b/wrap/igl/smooth_field.h
+index 9629a88..01fca17 100644
+--- a/wrap/igl/smooth_field.h
++++ b/wrap/igl/smooth_field.h
+@@ -25,7 +25,7 @@
+ #define SMOOTHER_FIELD_H
+ 
+ //eigen stuff
+-#include <Eigen/Sparse>
++#include <eigen3/Eigen/Sparse>
+ 
+ //vcg stuff
+ #include <vcg/complex/algorithms/update/color.h>
