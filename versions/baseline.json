@@ -4070,7 +4070,7 @@
     },
     "libwebm": {
       "baseline": "1.0.0.28",
-      "port-version": 0
+      "port-version": 1
     },
     "libwebp": {
       "baseline": "1.2.1",
