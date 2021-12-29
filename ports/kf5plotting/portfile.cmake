@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kplotting
-    REF v5.87.0
-    SHA512 8437abe43e660b65e5c970039a343fee80c4e9bf1f3e1bf3b1a756fc211aa65192c0b6d7c10e42951a2fc5bec5ca8c45753d1ef009487865bb1e379025305410
+    REF v5.89.0
+    SHA512 4499f1820d2314041d78e48130f5f8ee30c677302c9a34a1f7e797d4ebd0ba4286278622c113907d9c224e753c528adc85cb55abd2d3132187553a5d7fbe382a
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 

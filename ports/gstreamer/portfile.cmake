@@ -136,7 +136,6 @@ vcpkg_configure_meson(
         -Dgstreamer:tests=disabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:tools=disabled
-        -Dgstreamer:gtk_doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
         # gst-plugins-base

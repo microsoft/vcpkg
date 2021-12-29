@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kbookmarks
-    REF v5.87.0
-    SHA512 0ba852d6ce908a61073e048dc1556f20d4e45c2312f2401e57c160f30099fe6f17f5368be2e4b536e7fa41f8a106fbde986dec04d214c3d74ee3029ddc575e44
+    REF v5.89.0
+    SHA512 590b95c049600745995c76c2c7b8033eb591f8b7c1a2b832068a0e0d668858e04b1ed4a1fc8d2ef3c7fe43c5f3b7b311a7d0626a1053706fd46cbc5506c222b8
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 

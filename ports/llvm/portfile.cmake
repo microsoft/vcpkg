@@ -1,4 +1,4 @@
-set(LLVM_VERSION "12.0.1")
+set(LLVM_VERSION "13.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${LLVM_VERSION}
-    SHA512 6eb0dc18e2c25935fabfdfc48b0114be0939158dfdef7b85b395fe2e71042672446af0e68750aae003c9847d10d1f63316fe95d3df738d18f249174292b1b9e1
+    SHA512 8004c05d32b9720fb3391783621690c1df9bd1e97e72cbff9192ed88a84b0acd303b61432145fa917b5b5e548c8cee29b24ef8547dcc8677adf4816e7a8a0eb2
     HEAD_REF master
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
@@ -14,7 +14,6 @@ vcpkg_from_github(
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
         0007-fix-compiler-rt-install-path.patch
-        0008-fix-libcxx-install.patch
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
@@ -112,9 +111,8 @@ if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
-    # Disable Flang on Windows (see http://lists.llvm.org/pipermail/flang-dev/2020-July/000448.html).
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Building Flang with MSVC is not supported. Disable it until issues are fixed.")
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        message(FATAL_ERROR "Building Flang with MSVC is not supported on x86. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
@@ -157,9 +155,8 @@ if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
-    list(APPEND FEATURE_OPTIONS
-        "-DPERL_EXECUTABLE=${PERL}"
-    )
+    get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+    vcpkg_add_to_path(${PERL_PATH})
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND FEATURE_OPTIONS
             -DLIBOMP_DEFAULT_LIB_NAME=libompd
@@ -236,9 +233,8 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESS
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/llvm
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CROSS_OPTIONS}
@@ -246,6 +242,7 @@ vcpkg_configure_cmake(
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_BUILD_TESTS=OFF
+        -DLLDB_ENABLE_CURSES=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
@@ -261,57 +258,63 @@ vcpkg_configure_cmake(
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
-file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/llvm_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME usage)
+function(llvm_cmake_package_config_fixup package_name)
+    cmake_parse_arguments("arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "FEATURE_NAME" "" ${ARGN})
+    if(NOT DEFINED arg_FEATURE_NAME)
+        set(arg_FEATURE_NAME ${package_name})
+    endif()
+    if("${arg_FEATURE_NAME}" STREQUAL "${PORT}" OR "${arg_FEATURE_NAME}" IN_LIST FEATURES)
+        set(args)
+        list(APPEND args PACKAGE_NAME "${package_name}")
+        if(arg_DO_NOT_DELETE_PARENT_CONFIG_PATH)
+            list(APPEND args "DO_NOT_DELETE_PARENT_CONFIG_PATH")
+        endif()
+        vcpkg_cmake_config_fixup(${args})
+        file(INSTALL "${SOURCE_PATH}/${package_name}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${package_name}" RENAME copyright)
+        if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${package_name}_usage")
+            file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/${package_name}_usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${package_name}" RENAME usage)
+        endif()
+    endif()
+endfunction()
 
-if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
-    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/clang_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME usage)
-endif()
+llvm_cmake_package_config_fixup("clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+llvm_cmake_package_config_fixup("llvm")
+
+set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)
-    # Remove empty include directory include/clang-tidy/plugin
-    file(GLOB_RECURSE INCLUDE_CLANG_TIDY_PLUGIN_FILES "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin/*")
-    if(NOT INCLUDE_CLANG_TIDY_PLUGIN_FILES)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
-    endif()
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
 endif()
 
 if("flang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/flang/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
-    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/flang_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME usage)
-    # Remove empty include directory /include/flang/Config
-    file(GLOB_RECURSE INCLUDE_FLANG_CONFIG_FILES "${CURRENT_PACKAGES_DIR}/include/flang/Config/*")
-    if(NOT INCLUDE_FLANG_CONFIG_FILES)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/flang/Config")
-    endif()
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CodeGen/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Dialect/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
 endif()
 
-if("lld" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/lld/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME copyright)
-    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/lld_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME usage)
-endif()
-
-if("mlir" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/mlir/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME copyright)
-    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/mlir_usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME usage)
-endif()
-
-if("polly" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/polly/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
-endif()
-
-if("pstl" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/ParallelSTL" TARGET_PATH "share/ParallelSTL" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
+if(empty_dirs)
+    foreach(empty_dir IN LISTS empty_dirs)
+        if(NOT EXISTS "${empty_dir}")
+            message(SEND_ERROR "Directory '${empty_dir}' is not exist. Please remove it from the checking.")
+        else()
+            file(GLOB_RECURSE files_in_dir "${empty_dir}/*")
+            if(files_in_dir)
+                message(SEND_ERROR "Directory '${empty_dir}' is not empty. Please remove it from the checking.")
+            else()
+                file(REMOVE_RECURSE "${empty_dir}")
+            endif()
+        endif()
+    endforeach()
 endif()
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
