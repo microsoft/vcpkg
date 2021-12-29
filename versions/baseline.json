@@ -3972,6 +3972,10 @@
       "baseline": "1.19.0",
       "port-version": 0
     },
+    "libtess2": {
+      "baseline": "2021-12-27",
+      "port-version": 0
+    },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
       "port-version": 3
