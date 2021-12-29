@@ -1,20 +1,25 @@
-set(MATHGL_VERSION "2.4.3")
+set(MATHGL_VERSION "2.5")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathgl/mathgl
     REF mathgl%20${MATHGL_VERSION}
     FILENAME "mathgl-${MATHGL_VERSION}.tar.gz"
-    SHA512 e47fc8171ce80c8b33a8f03d9375bc036455dae539b47cf4ee922f8fa36f5afcf8b3f0666997764e453eb698c0e8c03da36dd0ac2bf71c158e95309b247d27de
+    SHA512 1fe27962ffef8d7127c4e1294d735e5da4dd2d647397f09705c3ca860f90bd06fd447ff614e584f3d2b874a02262c5518be37d59e9e0a838dd5b8b64fd77ef9d
     PATCHES
-        type_fix.patch
         fix_cmakelists_and_cpp.patch
+        fix_attribute.patch
+        fix_default_graph_init.patch
+        fix_mglDataList.patch
+        fix_arma_sprintf.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
     hdf5    enable-hdf5
     fltk    enable-fltk
     gif     enable-gif
+    arma    enable-arma
     png     enable-png
     zlib    enable-zlib
     jpeg    enable-jpeg
@@ -38,7 +43,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
   file(REMOVE "${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake")
 else()
-  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mathgl)
+  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mathgl2)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
