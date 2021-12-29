@@ -33,18 +33,21 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "ass",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
             "avresample",
             "bzip2",
+            "fontconfig",
             "freetype",
             "iconv",
             "lzma",
             "mp3lame",
             "openjpeg",
             "opus",
+            "sdl2",
             "snappy",
             "soxr",
             "speex",
@@ -54,6 +57,7 @@
             "vorbis",
             "vpx",
             "webp",
+            "xml2",
             "zlib"
           ]
         },
@@ -64,13 +68,6 @@
             "alsa"
           ],
           "platform": "linux"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "sdl2"
-          ]
         },
         {
           "name": "ffmpeg",
@@ -100,6 +97,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "opengl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "openh264"
           ],
           "platform": "!uwp"
@@ -108,8 +113,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "xml2"
-          ]
+            "tensorflow"
+          ],
+          "platform": "!static"
         },
         {
           "name": "ffmpeg",
@@ -123,16 +129,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ass"
-          ]
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "aom"
+            "ssh"
           ],
-          "platform": "!(windows & arm & !uwp)"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
@@ -146,25 +145,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ssh"
+            "aom"
           ],
-          "platform": "!(uwp | arm)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "tensorflow"
-          ],
-          "platform": "!static"
+          "platform": "!(windows & arm & !uwp)"
         },
         {
           "name": "ffmpeg",
@@ -181,13 +164,6 @@
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ]
         }
       ]
     },
@@ -207,17 +183,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!(arm & windows)"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!(uwp | arm)"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
