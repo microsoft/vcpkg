@@ -144,13 +144,11 @@ index d109b2c90..75c7446e6 100644
  		  || croak "Could not copy $pf.pdb\n";
  		print ".";
  	}
-@@ -366,7 +366,7 @@ sub GenerateTimezoneFiles
+@@ -372,5 +372,5 @@ sub GenerateTimezoneFiles
  	print "Generating timezone files...";
  
- 	my @args =
--	  ("$conf/zic/zic", '-d', "$target/share/timezone",
-+	  ("$conf/zic/zic", '-d', "$target/share/libpq/timezone",
- 	   '-p', "$posixrules", '-b', 'fat');
+-	my @args = ("$conf/zic/zic", '-d', "$target/share/timezone");
++	my @args = ("$conf/zic/zic", '-d', "$target/share/libpq/timezone");
  	foreach (@tzfiles)
  	{
 @@ -391,7 +391,7 @@ sub GenerateTsearchFiles

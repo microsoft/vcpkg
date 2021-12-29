@@ -1,7 +1,6 @@
 {
   "name": "libpq",
-  "version": "12.9",
-  "port-version": 1,
+  "version": "14.1",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "supports": "!uwp",
@@ -17,7 +16,8 @@
   ],
   "default-features": [
     "openssl",
-    "zlib"
+    "zlib",
+    "lz4"
   ],
   "features": {
     "bonjour": {
@@ -110,6 +110,12 @@
       "description": "Use zlib (else --without-zlib)",
       "dependencies": [
         "zlib"
+      ]
+    },
+      "lz4": {
+      "description": "Use lz4 (else --without-lz4)",
+      "dependencies": [
+        "lz4"
       ]
     }
   }
