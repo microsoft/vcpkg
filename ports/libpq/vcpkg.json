@@ -15,9 +15,9 @@
     }
   ],
   "default-features": [
+    "lz4",
     "openssl",
-    "zlib",
-    "lz4"
+    "zlib"
   ],
   "features": {
     "bonjour": {
@@ -42,6 +42,12 @@
       "description": "Build with support for LLVM based JIT compilation (--with-llvm)",
       "dependencies": [
         "llvm"
+      ]
+    },
+    "lz4": {
+      "description": "Use lz4 (else --without-lz4)",
+      "dependencies": [
+        "lz4"
       ]
     },
     "nls": {
@@ -110,12 +116,6 @@
       "description": "Use zlib (else --without-zlib)",
       "dependencies": [
         "zlib"
-      ]
-    },
-      "lz4": {
-      "description": "Use lz4 (else --without-lz4)",
-      "dependencies": [
-        "lz4"
       ]
     }
   }
