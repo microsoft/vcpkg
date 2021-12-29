@@ -1,0 +1,17 @@
+{
+  "name": "readline",
+  "version-string": "0",
+  "port-version": 2,
+  "description": "GNU readline and history libraries",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "readline-osx",
+      "platform": "osx"
+    },
+    {
+      "name": "readline-win32",
+      "platform": "windows"
+    }
+  ]
+}

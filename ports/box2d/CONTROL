@@ -1,5 +1,0 @@
-Source: box2d
-Version: 2.4.0
-Description: An open source C++ engine for simulating rigid bodies in 2D.
-Homepage: https://box2d.org
-Supports: !uwp

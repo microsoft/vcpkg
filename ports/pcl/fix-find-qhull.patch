@@ -1,0 +1,56 @@
+From 7e3117fb47f58c7b1fb83e3a062a630b787a43bc Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:11:12 -0400
+Subject: [PATCH] fix find qhull
+
+---
+ CMakeLists.txt         | 5 +----
+ surface/CMakeLists.txt | 9 +++++++--
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1d9bb58f..7cf86f74b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -359,10 +359,7 @@ if(WITH_QHULL)
+   if(NOT PCL_SHARED_LIBS OR ((WIN32 AND NOT MINGW) AND NOT PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32))
+     set(QHULL_USE_STATIC ON)
+   endif()
+-  find_package(Qhull)
+-  if(QHULL_FOUND)
+-    include_directories(SYSTEM ${QHULL_INCLUDE_DIRS})
+-  endif()
++  find_package(Qhull CONFIG REQUIRED)
+ endif()
+ 
+ # Cuda
+diff --git a/surface/CMakeLists.txt b/surface/CMakeLists.txt
+index d8a8566ea..1953c5566 100644
+--- a/surface/CMakeLists.txt
++++ b/surface/CMakeLists.txt
+@@ -12,7 +12,7 @@ if(NOT build)
+   return()
+ endif()
+ 
+-if(QHULL_FOUND)
++if(Qhull_FOUND)
+   set(HULL_INCLUDES
+     "include/pcl/${SUBSYS_NAME}/concave_hull.h"
+     "include/pcl/${SUBSYS_NAME}/convex_hull.h"
+@@ -186,7 +186,12 @@ if(VTK_FOUND)
+   endif()
+ endif()
+ 
+-if(QHULL_FOUND)
++if(Qhull_FOUND)
++  if(QHULL_USE_STATIC)
++    set(QHULL_LIBRARIES Qhull::qhullcpp Qhull::qhullstatic Qhull::qhullstatic_r)
++  else()
++    set(QHULL_LIBRARIES Qhull::qhull_r Qhull::qhullcpp)
++  endif()
+   target_link_libraries("${LIB_NAME}" ${QHULL_LIBRARIES})
+ endif()
+ 
+-- 
+2.32.0.windows.1
+

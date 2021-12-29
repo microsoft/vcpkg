@@ -12,6 +12,6 @@ index 965f1ec..cf2acf4 100644
  
 -  if (NOT URDF_FOUND)
 +  if (NOT urdfdom_FOUND)
-     if (NOT DEFINED USE_INTERNAL_URDF)
-       message(STATUS "Couldn't find urdfdom >= 1.0, using internal copy")
-       set(USE_INTERNAL_URDF true)
+    find_package(urdfdom)
+    if (urdfdom_FOUND)
+      set(URDF_INCLUDE_DIRS ${urdfdom_INCLUDE_DIRS})

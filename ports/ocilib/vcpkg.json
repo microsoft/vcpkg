@@ -1,0 +1,7 @@
+{
+  "name": "ocilib",
+  "version": "4.7.3",
+  "description": "OCILIB is an open source and cross platform Oracle Driver that delivers efficient access to Oracle databases.",
+  "homepage": "https://vrogier.github.io/ocilib/",
+  "supports": "!(arm | uwp)"
+}

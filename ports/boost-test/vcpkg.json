@@ -1,6 +1,6 @@
 {
   "name": "boost-test",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "description": "Boost test module",
   "homepage": "https://github.com/boostorg/test",
   "supports": "!uwp",
@@ -8,17 +8,21 @@
     "boost-algorithm",
     "boost-assert",
     "boost-bind",
-    "boost-build",
-    "boost-compatibility",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-exception",
     "boost-function",
-    "boost-integer",
     "boost-io",
     "boost-iterator",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-optional",
@@ -27,6 +31,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

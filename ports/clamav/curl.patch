@@ -1,0 +1,38 @@
+commit 59516af244a840aa95a8f15f978ac24ec97178cf
+Author: jzaddach <jzaddach@cisco.com>
+Date:   Fri Nov 27 14:24:31 2020 +0100
+
+    Fix curl usage
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e85d03e20..9f1cd42c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -685,7 +685,7 @@ endif()
+ 
+ add_subdirectory( libclamav )
+ 
+-if(NOT LIBCLAMAV_ONLY)
++if(NOT ENABLE_LIBCLAMAV_ONLY)
+     add_subdirectory( shared )
+ 
+     add_subdirectory( libfreshclam )
+diff --git a/shared/CMakeLists.txt b/shared/CMakeLists.txt
+index d9c8b6bfe..30df5a1a4 100644
+--- a/shared/CMakeLists.txt
++++ b/shared/CMakeLists.txt
+@@ -59,9 +59,13 @@ target_link_libraries( shared_obj
+     PUBLIC
+         ClamAV::libclamav
+         ZLIB::ZLIB
+-        CURL::libcurl
+         OpenSSL::SSL
+         OpenSSL::Crypto )
++if(CURL_FOUND)
++    target_link_libraries( shared_obj
++        PUBLIC
++            CURL::libcurl )
++endif()
+ if(WIN32)
+     target_link_libraries( shared_obj
+         PUBLIC

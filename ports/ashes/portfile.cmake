@@ -5,8 +5,10 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO DragonJoker/Ashes
-	REF 01066539d667b21a20c97c2a70d9bf17555c8cc0
-	SHA512 f335d99ff044b388494cbbf7cbde3c9ee46eaecdc9339fc7f45fa781d23635dde3d3eaa237ed466ce50e5c1ea6e2729d8b5a6cc3930535d1252e564f32d6b778
+	REF 0f4e6d0ea308eb60ae32274acc9a4d345a4977ff
+	SHA512 0ce74780786d018e7a447c4e49d3cd83ad53b238a79fc484025e2034cd49a64253363cd592d2da367befa7cd5443b90eb1c5dae54b22756f7b4a0cdecb93c588
+    PATCHES 
+        fix-cast.patch
 )
 vcpkg_configure_cmake(
 	SOURCE_PATH ${SOURCE_PATH}
@@ -24,4 +26,4 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ashes)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ashes RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

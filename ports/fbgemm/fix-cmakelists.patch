@@ -1,0 +1,146 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f19a16..3c758d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+ include(GNUInstallDirs)
+ 
+ # function to extract filelists from defs.bzl file
+-find_package(PythonInterp)
+ function(get_filelist name outputvar)
+   execute_process(
+     COMMAND "${PYTHON_EXECUTABLE}" -c
+@@ -19,9 +18,6 @@ endfunction()
+ 
+ project(fbgemm VERSION 0.1 LANGUAGES CXX C)
+ 
+-set(FBGEMM_LIBRARY_TYPE "default" CACHE STRING
+-  "Type of library (shared, static, or default) to build")
+-set_property(CACHE FBGEMM_LIBRARY_TYPE PROPERTY STRINGS default static shared)
+ option(FBGEMM_BUILD_TESTS "Build fbgemm unit tests" ON)
+ option(FBGEMM_BUILD_BENCHMARKS "Build fbgemm benchmarks" ON)
+ option(FBGEMM_BUILD_DOCS "Build fbgemm documentation" OFF)
+@@ -101,18 +97,11 @@ set_target_properties(fbgemm_generic fbgemm_avx2 fbgemm_avx512 PROPERTIES
+ #2) MSVC uses /MD in default cxx compiling flags,
+ #need to change it to /MT in static case
+ if(MSVC)
+-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309")
+-  if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
++  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309 /wd4703")
++  if(NOT BUILD_SHARED_LIBS)
+     target_compile_definitions(fbgemm_generic PRIVATE ASMJIT_STATIC)
+     target_compile_definitions(fbgemm_avx2 PRIVATE ASMJIT_STATIC)
+     target_compile_definitions(fbgemm_avx512 PRIVATE ASMJIT_STATIC)
+-    foreach(flag_var
+-      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+-      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+-      if(${flag_var} MATCHES "/MD")
+-        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+-      endif(${flag_var} MATCHES "/MD")
+-    endforeach(flag_var)
+   endif()
+   target_compile_options(fbgemm_avx2 PRIVATE "/arch:AVX2")
+   target_compile_options(fbgemm_avx512 PRIVATE "/arch:AVX512")
+@@ -145,7 +134,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
+ message(WARNING "CMAKE_CXX_FLAGS_RELEASE is ${CMAKE_CXX_FLAGS_RELEASE}")
+ message(WARNING "==========")
+ 
+-if(NOT TARGET asmjit)
++find_package(asmjit CONFIG REQUIRED) # target 'asmjit::asmjit'
++if(FALSE)
+   #Download asmjit from github if ASMJIT_SRC_DIR is not specified.
+   if(NOT DEFINED ASMJIT_SRC_DIR)
+     set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/third_party/asmjit"
+@@ -164,7 +154,8 @@ if(NOT TARGET asmjit)
+   set_property(TARGET asmjit PROPERTY POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+-if(NOT TARGET cpuinfo)
++find_package(unofficial-cpuinfo CONFIG REQUIRED) # target 'unofficial::cpuinfo::cpuinfo'
++if(FALSE)
+   #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
+   if(NOT DEFINED CPUINFO_SOURCE_DIR)
+     set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/third_party/cpuinfo"
+@@ -185,49 +176,38 @@ endif()
+ target_include_directories(fbgemm_generic BEFORE
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
+-      PRIVATE "${ASMJIT_SRC_DIR}/src"
+-      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
++)
++target_link_libraries(fbgemm_generic PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
+ 
+ target_include_directories(fbgemm_avx2 BEFORE
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
+-      PRIVATE "${ASMJIT_SRC_DIR}/src"
+-      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
++)
++target_link_libraries(fbgemm_avx2 PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
+ 
+ target_include_directories(fbgemm_avx512 BEFORE
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
+       PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
+-      PRIVATE "${ASMJIT_SRC_DIR}/src"
+-      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
+-
+-if(FBGEMM_LIBRARY_TYPE STREQUAL "default")
+-  add_library(fbgemm
+-    $<TARGET_OBJECTS:fbgemm_generic>
+-    $<TARGET_OBJECTS:fbgemm_avx2>
+-    $<TARGET_OBJECTS:fbgemm_avx512>)
+-elseif(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
+-  add_library(fbgemm SHARED
+-    $<TARGET_OBJECTS:fbgemm_generic>
+-    $<TARGET_OBJECTS:fbgemm_avx2>
+-    $<TARGET_OBJECTS:fbgemm_avx512>)
++)
++target_link_libraries(fbgemm_avx512 PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
++
++add_library(fbgemm
++  $<TARGET_OBJECTS:fbgemm_generic>
++  $<TARGET_OBJECTS:fbgemm_avx2>
++  $<TARGET_OBJECTS:fbgemm_avx512>)
++if(BUILD_SHARED_LIBS)
+   set_property(TARGET fbgemm_generic PROPERTY POSITION_INDEPENDENT_CODE ON)
+   set_property(TARGET fbgemm_avx2 PROPERTY POSITION_INDEPENDENT_CODE ON)
+   set_property(TARGET fbgemm_avx512 PROPERTY POSITION_INDEPENDENT_CODE ON)
+   set_target_properties(fbgemm PROPERTIES
+     CXX_VISIBILITY_PRESET hidden)
+-elseif(FBGEMM_LIBRARY_TYPE STREQUAL "static")
+-  add_library(fbgemm STATIC
+-    $<TARGET_OBJECTS:fbgemm_generic>
+-    $<TARGET_OBJECTS:fbgemm_avx2>
+-    $<TARGET_OBJECTS:fbgemm_avx512>)
++else()
+   #MSVC need to define FBGEMM_STATIC for fbgemm_generic also to
+   #avoid generating _dllimport functions.
+   target_compile_definitions(fbgemm_generic PRIVATE FBGEMM_STATIC)
+   target_compile_definitions(fbgemm_avx2 PRIVATE FBGEMM_STATIC)
+   target_compile_definitions(fbgemm_avx512 PRIVATE FBGEMM_STATIC)
+   target_compile_definitions(fbgemm PRIVATE FBGEMM_STATIC)
+-else()
+-  message(FATAL_ERROR "Unsupported library type ${FBGEMM_LIBRARY_TYPE}")
+ endif()
+ 
+ if(USE_SANITIZER)
+@@ -239,9 +219,7 @@ target_include_directories(fbgemm BEFORE
+     PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
+     PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>)
+ 
+-target_link_libraries(fbgemm $<BUILD_INTERFACE:asmjit>
+-  $<BUILD_INTERFACE:cpuinfo>)
+-add_dependencies(fbgemm asmjit cpuinfo)
++target_link_libraries(fbgemm PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
+ 
+ install(TARGETS fbgemm EXPORT fbgemmLibraryConfig
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -254,7 +232,7 @@ install(FILES ${FBGEMM_PUBLIC_HEADERS}
+ install(EXPORT fbgemmLibraryConfig DESTINATION share/cmake/fbgemm
+   FILE fbgemmLibraryConfig.cmake)
+ 
+-if(MSVC)
++if(FALSE)
+   if(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
+     install(
+       FILES $<TARGET_PDB_FILE:fbgemm> $<TARGET_PDB_FILE:asmjit>

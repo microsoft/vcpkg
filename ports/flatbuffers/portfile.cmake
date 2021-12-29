@@ -3,17 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v1.12.0
-    SHA512 8a0b88d739fa4694a69d3630140fe89fdd70d50bba4dadd1758d9aa2920cda16700bcafb8d89fe2a09ac907d3f378240c3cb4abc7106318136799836aba4b063
+    REF v2.0.0
+    SHA512 26a06b572c0e4c9685743bd2d2162ac7dcd74b9324624cc3f3ef5b154c0cee7c52a04b77cdc184245d2d6ae38dfdcc4fd66001c318aa8ca001d2bf1d85d66a89
     HEAD_REF master
     PATCHES
         ignore_use_of_cmake_toolchain_file.patch
         no-werror.patch
-		fix-uwp-build.patch
+        fix-uwp-build.patch
 )
 
 set(OPTIONS)
-if(VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
     list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
 endif()
 
@@ -38,7 +38,7 @@ if(flatc_path)
         ${flatc_path}
         ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
     )
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -46,3 +46,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bi
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

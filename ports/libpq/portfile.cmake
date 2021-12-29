@@ -1,4 +1,5 @@
-set(PORT_VERSION 12.2)
+set(PORT_VERSION 12.9)
+# NOTE: the python patches must be regenerated on version update
 
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
@@ -31,7 +32,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 0e0ce8e21856e8f43e58b840c10c4e3ffae6d5207e0d778e9176e36f8e20e34633cbb06f0030a7c963c3491bb7e941456d91b55444c561cfc6f283fba76f33ee
+    SHA512 11697d8283f5df5a9c74c2406e94d1b6da6df8358ad48f3b773825aab98e8395f9fd4e3fc8b1e6ebad3743c3dadbda8b795d4fe84a447d7913223e136cf2b88f
 )
 
 set(PATCHES
@@ -42,9 +43,15 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
-        patches/windows/fix-compile-flag-Zi.patch
-        patches/linux/configure.patch)
+        patches/windows/fix-compile-flag-Zi.patch)
 
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
+    list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND PATCHES patches/linux/configure.patch)
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
@@ -107,7 +114,7 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 ## Do the build
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -271,16 +278,19 @@ else()
     else()
         list(APPEND BUILD_OPTS --without-readline)
     endif()
+    if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
+        list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
+    endif()
+    if(VCPKG_OSX_SYSROOT)
+        list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         COPY_SOURCE
+        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${BUILD_OPTS}
-            --with-includes=${CURRENT_INSTALLED_DIR}/include
-        OPTIONS_RELEASE
-            --with-libraries=${CURRENT_INSTALLED_DIR}/lib
         OPTIONS_DEBUG
-            --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
 
@@ -288,6 +298,9 @@ else()
       set(ENV{LIBPQ_LIBRARY_TYPE} shared)
     else()
       set(ENV{LIBPQ_LIBRARY_TYPE} static)
+    endif()
+    if(VCPKG_TARGET_IS_MINGW)
+        set(ENV{USING_MINGW} yes)
     endif()
     vcpkg_install_make()
 
@@ -297,11 +310,29 @@ else()
     if(NOT HAS_TOOLS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
     endif()
-    set(USE_DL ON)
+    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.a ${CURRENT_PACKAGES_DIR}/lib/libpq.dll.a)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/bin/libpq.dll)
+        endif()
+        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.a ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll.a)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libpq.dll)
+        endif()
+    endif()
+    if(VCPKG_TARGET_IS_MINGW)
+        set(USE_DL OFF)
+    else()
+        set(USE_DL ON)
+    endif()
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake @ONLY)
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_fixup_pkgconfig()

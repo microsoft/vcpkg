@@ -1,5 +1,7 @@
 # vcpkg_install_nmake
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_nmake.md).
+
 Build and install a msvc makefile project.
 
 ## Usage:
@@ -63,4 +65,4 @@ This command transparently forwards to [`vcpkg_build_nmake()`](vcpkg_build_nmake
 * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_install_nmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_nmake.cmake)
+[scripts/cmake/vcpkg\_install\_nmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_nmake.cmake)

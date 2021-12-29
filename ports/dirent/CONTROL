@@ -1,4 +1,0 @@
-Source: dirent
-Version: 1.23.2
-Homepage: https://github.com/tronkko/dirent
-Description: Dirent is a C/C++ programming interface that allows programmers to retrieve information about files and directories under Linux/UNIX. This project provides Linux compatible Dirent interface for Microsoft Windows.

@@ -1,20 +1,24 @@
 {
   "name": "boost-locale",
-  "version-string": "1.75.0",
+  "version": "1.77.0",
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-function",
-    "boost-integer",
     "boost-iterator",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-smart-ptr",
     "boost-static-assert",
-    "boost-system",
     "boost-thread",
     "boost-type-traits",
     "boost-unordered",
@@ -22,6 +26,10 @@
     {
       "name": "libiconv",
       "platform": "!uwp & !windows & !mingw"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ],
   "features": {

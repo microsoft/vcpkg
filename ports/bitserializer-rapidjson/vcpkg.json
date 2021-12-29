@@ -1,0 +1,14 @@
+{
+  "name": "bitserializer-rapidjson",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated alias for bitserializer-rapidjson",
+  "dependencies": [
+    {
+      "name": "bitserializer",
+      "features": [
+        "rapidjson-archive"
+      ]
+    }
+  ]
+}

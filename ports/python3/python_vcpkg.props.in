@@ -31,5 +31,11 @@
         ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
       </AdditionalDependencies>
     </Link>
+
+    <Lib>
+      <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
 </Project>

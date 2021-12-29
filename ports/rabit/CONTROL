@@ -1,6 +1,0 @@
-Source: rabit
-Version: 0.1-2
-Homepage: https://github.com/dmlc/rabit
-Description: rabit is a light weight library that provides a fault tolerant interface of Allreduce and Broadcast. It is designed to support easy implementations of distributed machine learning programs, many of which fall naturally under the Allreduce abstraction.
-Build-Depends: dmlc
-Supports: !uwp

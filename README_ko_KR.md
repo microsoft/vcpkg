@@ -11,7 +11,7 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 �
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
 * Discord: [\#include \<C++\>](https://www.includecpp.org), #🌏vcpkg 채널
-* Docs: [Documentation](docs/index.md)
+* Docs: [Documentation](docs/README.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -20,7 +20,7 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 �
 - [Vcpkg: 개요 둘러보기](#vcpkg-개요)
 - [목차](#목차)
 - [시작하기](#시작하기)
-  - [빠르게 시작하기: 원도우](#빠르게-시작하기-원도우)
+  - [빠르게 시작하기: 윈도우](#빠르게-시작하기-윈도우)
   - [빠르게 시작하기: 유닉스](#빠르게-시작하기-유닉스)
   - [리눅스 개발자 도구 설치하기](#리눅스-개발자-도구-설치하기)
   - [macOS 개발자 도구 설치하기](#macos-개발자-도구-설치하기)
@@ -39,7 +39,7 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 �
 # 시작하기
 
 먼저, 사용하는 운영체제에 따라 빠르게 시작하기 문서를 따라가세요.
-[원도우](#빠르게-시작하기-원도우) 또는 [macOS 그리고 Linux](#빠르게-시작하기-유닉스).
+[윈도우](#빠르게-시작하기-윈도우) 또는 [macOS 그리고 Linux](#빠르게-시작하기-유닉스).
 
 더 많은 정보를 얻고 싶다면, [패키지 설치 및 사용][getting-started:using-a-package] 문서를 참고하세요.
 만약 필요한 라이브러리가 vcpkg 카탈로그에 없는 경우, vcpkg 팀이나 커뮤니티가 볼 수 있는
@@ -54,7 +54,7 @@ vcpkg를 설치하고 작동 한 후,
 이것은 실험적인 기능이며 버그가 있을 수도 있습니다.
 시도해보고 문제가 있다면 [이슈을 여세요][contributing:submit-issue]!
 
-## 빠르게 시작하기: 원도우
+## 빠르게 시작하기: 윈도우
 
 필요조건:
 - Windows 7 이상
@@ -294,7 +294,7 @@ $ ./vcpkg integrate bash
 
 # 예제
 
-구체적인 연습은 [문서](docs/index.md)를 참고하세요,
+구체적인 연습은 [문서](docs/README.md)를 참고하세요,
 including [패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
 [zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
 및 [GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md).

@@ -1,5 +1,7 @@
 # vcpkg_install_make
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_make.md).
+
 Build and install a make project.
 
 ## Usage:
@@ -21,4 +23,4 @@ This command transparently forwards to [`vcpkg_build_make()`](vcpkg_build_make.m
 * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_install_make.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_make.cmake)
+[scripts/cmake/vcpkg\_install\_make.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_make.cmake)

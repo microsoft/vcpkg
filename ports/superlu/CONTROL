@@ -1,7 +1,0 @@
-Source: superlu
-Version: 2020-01-07
-Port-Version: 2
-Build-Depends: blas
-Description: Supernodal sparse direct solver.
-Homepage: https://github.com/xiaoyeli/superlu
-Supports: !(uwp|arm)

@@ -1,7 +1,6 @@
 {
   "name": "grpc",
-  "version-string": "1.33.1",
-  "port-version": 2,
+  "version-semver": "1.41.0",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [
@@ -10,15 +9,37 @@
       "name": "c-ares",
       "platform": "!uwp"
     },
+    {
+      "name": "grpc",
+      "host": true,
+      "features": [
+        "codegen"
+      ]
+    },
     "openssl",
     "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
     "re2",
     "upb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
     "absl-sync": {
       "description": "Use abseil synchronization module"
+    },
+    "codegen": {
+      "description": "Build code generator machinery"
     }
   }
 }

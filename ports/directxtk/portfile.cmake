@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF jan2021
-    SHA512 c0e8df3ef3a276169c219798978eb948947ba63f49fd08be914eee87ed4bb05a4e33e3a4d1c06c4e932f5ad8fa50a14e0b53a9b9f6f749aa15174f343a17555c
+    REF nov2021b
+    SHA512 d1c99cc7d1a95939b4dc28ee5c757e3b4eae2b7f923031b44f988b1ca93838e765d702f125a9a9fb38e6f5304721f88843e961b6ba9591066b511b530aad5280
     HEAD_REF master
 )
 
@@ -15,6 +15,7 @@ vcpkg_check_features(
     FEATURES
         xaudio2-9 BUILD_XAUDIO_WIN10
         xaudio2-8 BUILD_XAUDIO_WIN8
+        xaudio2redist BUILD_XAUDIO_WIN7
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -23,48 +24,48 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-if(NOT VCPKG_TARGET_IS_UWP)
-  vcpkg_copy_tools(
-        TOOL_NAMES XWBTool
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
-    )
-
-  vcpkg_install_msbuild(
-      SOURCE_PATH ${SOURCE_PATH}
-      PROJECT_SUBPATH MakeSpriteFont/MakeSpriteFont.csproj
-      PLATFORM AnyCPU
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(
+    MAKESPRITEFONT_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-nov2021.exe"
+    SHA512 0aab40aced022588d9c1089c5b2f297b0521497d0ae559ead98f99e1e73f2daf9f38ebecadb413095abd2a6c207183fbca582d47528c6f21258df3ac391134e5
   )
 
-elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(makespritefont
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/jan2021/MakeSpriteFont.exe"
-    FILENAME "makespritefont.exe"
-    SHA512 0cca19694fd3625c5130a85456f7bf1dabc8c5f893223c19da134a0c4d64de853f7871644365dcec86012543f3a59a96bfabd9e51947648f6d82480602116fc4
-  )
-
-  vcpkg_download_distfile(xwbtool
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/jan2021/XWBTool.exe"
-    FILENAME "xwbtool.exe"
-    SHA512 91c9d0da90697ba3e0ebe4afcc4c8e084045b76b26e94d7acd4fd87e5965b52dd61d26038f5eb749a3f6de07940bf6e3af8e9f19d820bf904fbdb2752b78fce9
+  vcpkg_download_distfile(
+    XWBTOOL_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2021/XWBTool.exe"
+    FILENAME "xwbtool-nov2021.exe"
+    SHA512 f2f291c496500e593c0a4795fee9fafc685666682f23a38a25546bb67ec083533a26f2ce0562b819abea44bd8b403a2f246fbf978e366c457eb8a0f836fd5a2e
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
   file(INSTALL
-    ${DOWNLOADS}/makespritefont.exe
-    ${DOWNLOADS}/xwbtool.exe
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk/)
+    ${MAKESPRITEFONT_EXE}
+    ${XWBTOOL_EXE}
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
+
+elseif(NOT VCPKG_TARGET_IS_UWP)
+
+  vcpkg_copy_tools(
+        TOOL_NAMES XWBTool
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+    )
+
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

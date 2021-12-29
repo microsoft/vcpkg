@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF dc68b09a53ec20683d3b3a12ed8d9cb12602bb9a
     SHA512 5145df795a73a8d74e983e143fd57441865f3082860efb89a3aa8c4d64c2eb6f0256a8049ccd5479dd77e53ef6638d9c903b29a8ef2b41a076003d9595912500
     HEAD_REF master
-    PATCHES system-install.patch
+    PATCHES
+        system-install.patch
+        fix-dependency-glm.patch
 )
 
 vcpkg_configure_cmake(

@@ -34,7 +34,7 @@ Call Stack (most recent call first):
 Error: build command failed
 ```
 
-Next, looking at the above logs (build-...-out.log and build-...-err.log).
+Next, looking at the above logs (build-xxx-out.log and build-xxx-err.log).
 
 ```no-highlight
 // build-x64-uwp-rel-out.log

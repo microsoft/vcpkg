@@ -12,7 +12,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
-* 文档: [Documentation](docs/index.md)
+* 文档: [Documentation](docs/README.md)
 
 [![当前生成状态](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -25,7 +25,6 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
   - [快速开始: Unix](#快速开始-unix)
   - [安装 Linux Developer Tools](#安装-linux-developer-tools)
   - [安装 macOS Developer Tools](#安装-macos-developer-tools)
-    - [在 macOS 10.15 之前版本中安装 GCC](#在-macos-1015-之前版本中安装-gcc)
   - [在 CMake 中使用 vcpkg](#在-cmake-中使用-vcpkg)
     - [Visual Studio Code 中的 CMake Tools](#visual-studio-code-中的-cmake-tools)
     - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
@@ -61,10 +60,10 @@ vcpkg团队和贡献者可以看到它的地方，
 需求:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
-- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（包含英文语言包）
+- [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
 
-首先，请下载vcpkg并执行 bootstrap.bat 脚本。
-它可以安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
+首先，**请使用git clone vcpkg** 并执行 bootstrap.bat 脚本。
+您可以将vcpkg安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
 我们建议您使用例如 `C:\src\vcpkg` 或 `C:\dev\vcpkg` 的安装目录，否则您可能遇到某些库构建系统的路径问题。
 
 ```cmd
@@ -76,6 +75,18 @@ vcpkg团队和贡献者可以看到它的地方，
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
+```
+
+请注意: vcpkg在Windows中默认编译并安装x86版本的库。 若要编译并安装x64版本，请执行:
+
+```cmd
+> .\vcpkg\vcpkg install [package name]:x64-windows
+```
+
+或
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
 ```
 
 您也可以使用 `search` 子命令来查找vcpkg中集成的库:
@@ -91,7 +102,7 @@ vcpkg团队和贡献者可以看到它的地方，
 ```
 
 在此之后，您可以创建一个非cmake项目 (或打开已有的项目)。
-在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件并无需添加额外配置。
+在您的项目中，所有已安装的库均可立即使用 `#include` 包含您需使用的库的头文件且无需添加额外配置。
 
 若您在 Visual Studio 中使用cmake工程，请查阅[这里](#visual-studio-cmake-工程中使用-vcpkg)。
 
@@ -102,7 +113,7 @@ vcpkg团队和贡献者可以看到它的地方，
 > cmake --build [build directory]
 ```
 
-在cmake中，您仍需通过 `find_package` 来使用第三方库。
+在cmake中，您仍需通过 `find_package` 来使用vcpkg中已安装的库。
 请查阅 [CMake 章节](#在-cmake-中使用-vcpkg) 获取更多信息，其中包含了在IDE中使用cmake的内容。
 
 对于其他工具 (包括Visual Studio Code)，请查阅 [集成指南][getting-started:integration]。
@@ -115,11 +126,8 @@ Linux平台的使用需求:
 
 macOS平台的使用需求:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
-- macOS 10.14 或更低版本中，您也需要:
-  - [Homebrew][getting-started:macos-brew]
-  - Homebrew 中 [g++][getting-started:macos-gcc] >= 6
 
-首先，请下载vcpkg并执行 bootstrap.sh 脚本。
+首先，**请使用git clone vcpkg** 并执行 bootstrap.sh 脚本。
 我们建议您将vcpkg作为cmake项目的子模块使用。
 
 ```sh
@@ -146,7 +154,7 @@ $ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts
 $ cmake --build [build directory]
 ```
 
-在cmake中，您仍需通过 `find_package` 来使用第三方库。
+在cmake中，您仍需通过 `find_package` 来使用vcpkg中已安装的库。
 为了您更好的在cmake或 VSCode CMake Tools 中使用vcpkg，
 请查阅 [CMake 章节](#在-cmake-中使用-vcpkg) 获取更多信息，
 其中包含了在IDE中使用cmake的内容。
@@ -177,33 +185,13 @@ $ scl enable devtoolset-7 bash
 
 ## 安装 macOS Developer Tools
 
-在 macOS 10.15 中，唯一需要做的是在终端中运行以下命令:
+在 macOS 中，您唯一需要做的是在终端中运行以下命令:
 
 ```sh
 $ xcode-select --install
 ```
 
 然后按照出现的窗口中的提示进行操作。
-
-在 macOS 10.14 及先前版本中，您也需要使用 homebrew 安装 g++。
-请遵循以下部分中的说明：
-
-### 在 macOS 10.15 之前版本中安装 GCC
-
-此条只在您的macOS版本低于 10.15 时是必须的。
-安装homebrew应当很轻松，请查阅 <brew.sh> 以获取更多信息。
-为了更简便，请使用以下命令:
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-```
-
-然后，为了获取最新版本的gcc，请运行以下命令：
-
-```sh
-$ brew install gcc
-```
-
 此时，您就可以使用 bootstrap.sh 编译vcpkg了。 请参阅 [快速开始](#快速开始-unix)
 
 ## 在 CMake 中使用 vcpkg
@@ -279,19 +267,20 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 或
 
 ```sh
-$ ./vcpkg integrate bash
+$ ./vcpkg integrate bash # 或 zsh
 ```
 
 然后重新启动控制台。
 
 ## 示例
 
-请查看 [文档](docs/index.md) 获取具体示例，
+请查看 [文档](docs/README.md) 获取具体示例，
 其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
 [使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
 和 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。
 
-我们的文档现在也可以从 [ReadTheDocs](https://vcpkg.readthedocs.io/) 在线获取。
+我们的文档现在也可以从 [vcpkg.io](https://vcpkg.io/) 在线获取。
+我们真诚的希望您向我们提出关于此网站的任何建议! 请在[这里](https://github.com/vcpkg/vcpkg.github.io/issues) 打开issue.
 
 观看4分钟 [demo视频](https://www.youtube.com/watch?v=y41WFKbQFTw)。
 
@@ -306,7 +295,7 @@ Vcpkg是一个开源项目，并通过您的贡献不断发展。
 请参阅我们的 [贡献准则](CONTRIBUTING.md) 了解更多详细信息。
 
 该项目采用了 [Microsoft开源行为准则][contributing:coc]。
-获取更多信息请查看 [行为准则FAQ][contributing:coc-faq] 或联系 [opencode@microsoft.com](mailto:opencode@microsoft.com)提出其他问题或意见。
+获取更多信息请查看 [行为准则FAQ][contributing:coc-faq] 或联系 [opencode@microsoft.com](mailto:opencode@microsoft.com) 提出其他问题或意见。
 
 [contributing:submit-issue]: https://github.com/microsoft/vcpkg/issues/new/choose
 [contributing:submit-pr]: https://github.com/microsoft/vcpkg/pulls
@@ -321,5 +310,9 @@ Vcpkg是一个开源项目，并通过您的贡献不断发展。
 
 vcpkg会收集使用情况数据，以帮助我们改善您的体验。
 Microsoft收集的数据是匿名的。
-您也可以通过使用 `-disableMetrics` 、在命令行上将`--disable-metrics`传递给vcpkg，或通过设置环境变量 `VCPKG_DISABLE_METRICS` 并重新运行 bootstrap-vcpkg 脚本来选择禁用数据收集。
+您也可以通过以下步骤禁用数据收集：
+- 将选项 `-disableMetrics` 传递给 bootstrap-vcpkg 脚本并重新运行此脚本
+- 向 vcpkg 命令传递选项 `--disable-metrics`
+- 设置环境变量 `VCPKG_DISABLE_METRICS`
+
 请在 [privacy.md](docs/about/privacy.md) 中了解有关 vcpkg 数据收集的更多信息。

@@ -1,0 +1,28 @@
+{
+  "name": "raylib",
+  "version-semver": "4.0.0",
+  "description": "A simple and easy-to-use library to enjoy videogames programming",
+  "homepage": "https://github.com/raysan5/raylib",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "use-audio"
+  ],
+  "features": {
+    "hidpi": {
+      "description": "Support high-DPI displays"
+    },
+    "use-audio": {
+      "description": "Build raylib with audio module"
+    }
+  }
+}

@@ -102,7 +102,9 @@ else()
         REF  9e2bea82b9fb606bffd2d3f648e05248e146e54f #v3.6
         SHA512 008089eba2ef197a0ec6a266baac485e72051e646d19861f3fb605915a591bc2dd38edcb4ea7eaad958ea5d56f7744d42c25b691b49921a1285edd22f9c90b7f
         HEAD_REF master
-        PATCHES fix-InstallLibPath.patch
+        PATCHES 
+		fix-InstallLibPath.patch
+		flags.patch
     )
 
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

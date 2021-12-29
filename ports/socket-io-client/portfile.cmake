@@ -3,20 +3,19 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO socketio/socket.io-client-cpp
-    REF 1.6.1
-    SHA512 01c9c172e58a16b25af07c6bde593507792726aca28a9b202ed9531d51cd7e77c7e7d536102e50265d66de96e9708616075902dfdcfc72983758755381bad707
+    REF 3.1.0
+    SHA512 a0adaa06ddb24297686a40b1e71a55bbab437093f828f76040c376b4adccb7d8b06eff4d8569dbde9b2e071257b3290e7e2bffd6354b33ecf67378ffa1d0cc13
     HEAD_REF master
-    PATCHES fix-install.patch
+    PATCHES
+        fix-file-not-found.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/socket-io-client/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

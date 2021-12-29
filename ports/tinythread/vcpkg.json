@@ -1,0 +1,7 @@
+{
+  "name": "tinythread",
+  "version-string": "1.1",
+  "port-version": 4,
+  "description": "Implements a fairly compatible subset of the C++11 thread management classes",
+  "homepage": "https://tinythreadpp.bitsnbites.eu/"
+}

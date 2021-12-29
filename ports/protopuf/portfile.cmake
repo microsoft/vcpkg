@@ -1,20 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PragmaTwice/protopuf
-    REF v1.0.0
-    SHA512 45644fd586da80a7bb9e434152f2b28b99d45f5679b9fcc173ff3f1abf42d8deb971641351cf67dc3408a86da25ed03154fe612f56983282da32dc3e29333f6c
+    REF v2.1.0
+    SHA512 328fe2a861009c8eaa38299bf1ba31d3a47d73220018d3539b8457bb1d5d512c05e9652769a0261f0ae18be4e1e4e839e5471dfabdf0e6d130361e719ff6aadc
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

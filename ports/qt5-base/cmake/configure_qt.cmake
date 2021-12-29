@@ -103,11 +103,12 @@ function(configure_qt)
                 -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
                 -qmldir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/qml
-                -headerdir ${CURRENT_INSTALLED_DIR}/include
+                -headerdir ${CURRENT_INSTALLED_DIR}/include/qt5
                 -libexecdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -bindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin
                 -libdir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
+                -I ${CURRENT_INSTALLED_DIR}/include/qt5
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -platform ${_csc_TARGET_PLATFORM}
@@ -141,7 +142,7 @@ function(configure_qt)
         string(REPLACE "${CMAKE_CURRENT_INSTALLED_DIR_PATH}" "\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
         #string(REPLACE "HostPrefix=\${CURRENT_PACKAGES_DIR}" "HostPrefix=\${CURRENT_INSTALLED_DIR}" _contents ${_contents})
         string(REPLACE "[EffectivePaths]\nPrefix=..\n" "" _contents ${_contents})
-        string(REPLACE "[EffectiveSourcePaths]\nPrefix=${_csc_SOURCE_PATH}\n" "" _contents ${_contents})
+        string(REGEX REPLACE "\\[EffectiveSourcePaths\\]\r?\nPrefix=[^\r\n]+\r?\n" "" _contents ${_contents})
         string(REPLACE "Sysroot=\n" "" _contents ${_contents})
         string(REPLACE "SysrootifyPrefix=false\n" "" _contents ${_contents})
         file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     

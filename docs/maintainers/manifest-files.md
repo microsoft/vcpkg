@@ -69,9 +69,18 @@ numbers, and hyphens, and it must not begin nor end with a hyphen.
 
 ### Version fields
 
-The library version. There is currently only one kind of version, a `"version-string"` -
-however, more version kinds will be added later. Additionally,
-`"port-version"` is used to differentiate between port changes that don't change the underlying library version.
+Currently there are different fields for special versioning. Namely:
+
+Manifest property | Versioning scheme
+------------------|------------------------------------
+`version`         | For dot-separated numeric versions
+`version-semver`  | For SemVer compliant versions
+`version-date`    | For dates in the format YYYY-MM-DD
+`version-string`  | For arbitrary strings
+
+See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md#22-package-versions for more details.
+
+Additionally, `"port-version"` is used to differentiate between port changes that don't change the underlying library version.
 
 #### `"version-string"`
 
@@ -185,7 +194,7 @@ for example the dependency object `{ "name": "zlib" }` is equivalent to just wri
 If the port is dependent on optional features of another library,
 those can be specified using the `"features"` field of the dependency object.
 If the port does not require any features from the dependency,
-this should be specifed with the `"default-features"` fields set to `false`.
+this should be specified with the `"default-features"` fields set to `false`.
 
 Dependencies can also be filtered based on the target triplet to support differing requirements.
 These filters use the same syntax as the `"supports"` field below,
@@ -345,6 +354,7 @@ whitespace-character =
 | ? U+000D "CARRIAGE RETURN" ?
 | ? U+0020 "SPACE" ? ;
 optional-whitespace = { whitespace-character } ;
+required-whitespace = whitespace-character, { optional-whitespace } ;
 
 lowercase-alpha =
 | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
@@ -356,29 +366,50 @@ identifier-character =
 | lowercase-alpha
 | digit ;
 
+platform-expression-list =
+| platform-expression { ",", optional-whitespace, platform-expression } ;
+
 platform-expression =
 | platform-expression-not
 | platform-expression-and
 | platform-expression-or ;
 
-platform-expression-identifier = 
+platform-expression-identifier =
 | identifier-character, { identifier-character }, optional-whitespace ;
+
+platform-expression-grouped =
+| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
 
 platform-expression-simple =
 | platform-expression-identifier
-| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
+| platform-expression-grouped ;
+
+platform-expression-unary-keyword-operand =
+| required-whitespace, platform-expression-simple
+| optional-whitespace, platform-expression-grouped ;
 
 platform-expression-not =
 | platform-expression-simple
-| "!", optional-whitespace, platform-expression-simple ;
+| "!", optional-whitespace, platform-expression-simple
+| "not", platform-expression-unary-keyword-operand ;
+
+platform-expression-binary-keyword-first-operand =
+| platform-expression-not, required-whitespace
+| platform-expression-grouped ;
+
+platform-expression-binary-keyword-second-operand =
+| required-whitespace, platform-expression-not
+| platform-expression-grouped ;
 
 platform-expression-and =
-| platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "&", optional-whitespace, platform-expression-not }
+| platform-expression-binary-keyword-first-operand, { "and", platform-expression-binary-keyword-second-operand } ;
 
 platform-expression-or =
-| platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "|", optional-whitespace, platform-expression-not }
+| platform-expression-binary-keyword-first-operand, { "or", platform-expression-binary-keyword-second-operand } (* to allow for future extension *) ;
 
-top-level-platform-expression = optional-whitespace, platform-expression ;
+top-level-platform-expression = optional-whitespace, platform-expression-list ;
 ```
 
 Basically, there are four kinds of expressions -- identifiers, negations, ands, and ors.
@@ -387,6 +418,8 @@ Ands and ors are a list of `&` or `|` separated identifiers, negated expressions
 One may not mix `&` and `|` without parentheses for grouping.
 
 These predefined identifier expressions are computed from standard triplet settings:
+- `native` - `TARGET_TRIPLET` == `HOST_TRIPLET`;
+  useful for ports which depend on their own built binaries in their build.
 - `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
