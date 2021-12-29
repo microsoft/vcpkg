@@ -213,7 +213,7 @@
           "features": [
             "x264"
           ],
-          "platform": "!arm"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",

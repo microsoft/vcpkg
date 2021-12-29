@@ -113,8 +113,8 @@ if("wavpack" IN_LIST FEATURES)
 endif()
 
 if("x264" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        message(FATAL_ERROR "Feature 'x264' does not support 'arm'")
+    if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Feature 'x264' does not support 'arm & windows'")
     endif()
 endif()
 
