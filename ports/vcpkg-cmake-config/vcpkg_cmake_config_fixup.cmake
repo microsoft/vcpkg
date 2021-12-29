@@ -213,7 +213,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
             get_filename_component(main_cmake_dir "${main_cmake}" DIRECTORY)
             # Calculate relative to be a sequence of "../"
             file(RELATIVE_PATH relative "${main_cmake_dir}" "${cmake_current_packages_dir}")
-            string(PREPEND contents "get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)")
+            string(PREPEND contents "get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)\n")
         endif()
 
         file(WRITE "${main_cmake}" "${contents}")
