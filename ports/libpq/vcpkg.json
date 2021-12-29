@@ -1,7 +1,6 @@
 {
   "name": "libpq",
-  "version": "12.9",
-  "port-version": 1,
+  "version": "14.1",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "supports": "!uwp",
@@ -16,6 +15,7 @@
     }
   ],
   "default-features": [
+    "lz4",
     "openssl",
     "zlib"
   ],
@@ -42,6 +42,12 @@
       "description": "Build with support for LLVM based JIT compilation (--with-llvm)",
       "dependencies": [
         "llvm"
+      ]
+    },
+    "lz4": {
+      "description": "Use lz4 (else --without-lz4)",
+      "dependencies": [
+        "lz4"
       ]
     },
     "nls": {

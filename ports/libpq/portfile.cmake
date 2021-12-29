@@ -1,4 +1,4 @@
-set(PORT_VERSION 12.9)
+set(PORT_VERSION 14.1)
 # NOTE: the python patches must be regenerated on version update
 
 macro(feature_unsupported)
@@ -32,7 +32,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 11697d8283f5df5a9c74c2406e94d1b6da6df8358ad48f3b773825aab98e8395f9fd4e3fc8b1e6ebad3743c3dadbda8b795d4fe84a447d7913223e136cf2b88f
+    SHA512 4a0bec157d5464bb9e5f5c0eb0efdede55526e03f6f4d660b87d161a47705eb152fa0878960b1581bce42a5ed28a1f457825ea54e8d22e34b5b8eb36473ceefd
 )
 
 set(PATCHES
@@ -43,7 +43,8 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
-        patches/windows/fix-compile-flag-Zi.patch)
+        patches/windows/fix-compile-flag-Zi.patch
+        )
 
 if(VCPKG_TARGET_IS_MINGW)
     list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
@@ -70,7 +71,7 @@ else()
 endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
 unset(buildenv_contents)
@@ -106,12 +107,12 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg
     set(INSTALL_PATH_SUFFIX_${_buildtype} "/debug")
     set(BUILDPATH_${_buildtype} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${_short}")
     file(REMOVE_RECURSE "${BUILDPATH_${_buildtype}}") #Clean old builds
-    set(PACKAGE_DIR_${_buildtype} ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}})
+    set(PACKAGE_DIR_${_buildtype} "${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}}")
     unset(_short)
     unset(_buildtype)
 endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -184,13 +185,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
            string(REPLACE "xml       => undef" "xml      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
            string(REPLACE "iconv     => undef" "iconv      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
         if("${FEATURES}" MATCHES "xslt")
            string(REPLACE "xslt      => undef" "xslt      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
-
         if("${FEATURES}" MATCHES "zlib")
            string(REPLACE "zlib      => undef" "zlib      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
+        if("${FEATURES}" MATCHES "lz4")
+           string(REPLACE "lz4       => undef" "lz4       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
@@ -241,27 +243,27 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/symbols")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/symbols")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
     if(NOT HAS_TOOLS)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
     else()
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
     set(USE_DL OFF)
 else()
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile DESTINATION ${SOURCE_PATH})
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
 
     if("openssl" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-openssl)
