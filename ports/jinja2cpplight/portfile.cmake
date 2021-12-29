@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_TARGET_IS_UWP)
     message(FATAL_ERROR "jinja2cpplight doesn't support UWP.")
 endif()

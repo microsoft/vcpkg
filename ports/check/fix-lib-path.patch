@@ -13,10 +13,10 @@ index b5e211e..2a92a1a 100644
  
  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/money.h DESTINATION include)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index e6346dd..8f5762a 100644
+index 38cbc53..d8a4272 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -70,3 +70,8 @@ set(HEADERS libcompat.h)
+@@ -75,5 +75,11 @@ set(HEADERS libcompat.h)
  
  add_library(compat STATIC ${SOURCES} ${HEADERS})
  
@@ -25,19 +25,21 @@ index e6346dd..8f5762a 100644
 +    LIBRARY DESTINATION lib/manual-link
 +    ARCHIVE DESTINATION lib/manual-link
 +)
-\ No newline at end of file
++
+ # vim: shiftwidth=2:softtabstop=2:tabstop=2:expandtab:autoindent
+ 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 37fcaf8..334fc9c 100644
+index 4a02dbe..ade4cfd 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -180,8 +180,8 @@ target_include_directories(checkShared
- 
- install(TARGETS check checkShared
-   EXPORT check-targets
--  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
--  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
-+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
-   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
- )
+@@ -191,8 +191,8 @@ if(NOT THIS_IS_SUBPROJECT)
+   install(TARGETS check checkShared
+     EXPORT check-targets
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/manual-link
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   )
+ endif()

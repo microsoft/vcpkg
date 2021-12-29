@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -39,3 +37,5 @@ vcpkg_copy_pdbs()
 
 # Put the licence file where vcpkg expects it
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/LICENSE ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/copyright)
+
+vcpkg_fixup_pkgconfig()

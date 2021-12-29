@@ -1,0 +1,24 @@
+{
+  "name": "kf5jobwidgets",
+  "version": "5.89.0",
+  "description": "Widgets for showing progress of asynchronous jobs",
+  "homepage": "https://api.kde.org/frameworks/kjobwidgets/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5coreaddons",
+    "kf5widgetsaddons",
+    "qt5-base",
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

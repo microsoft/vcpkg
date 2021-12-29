@@ -1,0 +1,25 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index b4f43f9..c90968f 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -137,4 +137,20 @@ add_library(table INTERFACE)
+ target_link_libraries(table INTERFACE
+   port)
+ 
++add_library(all_libs INTERFACE)
++target_link_libraries(all_libs
++  INTERFACE
++  upb
++  fastdecode
++  utf8_range
++  json
++  port
++  table
++  descriptor_upb_proto
++  reflection
++  textformat
++)
++set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
++set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
++set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
+ 

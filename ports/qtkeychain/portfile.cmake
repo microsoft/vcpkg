@@ -1,43 +1,37 @@
-include(vcpkg_common_functions)
+message(WARNING "qtkeychain is a third-party extension to Qt and is not affiliated with The Qt Company")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
-    REF v0.9.1
-    SHA512    c80bd25a5b72c175d0d4a985b952924c807bf67be33eeb89e2b83757727e642c10d8d737cea9744d2faad74c50c1b55d82b306135559c35c91a088c3b198b33a
+    REF v0.13.2
+    SHA512 10f8b1c959a126ba14614b797ea5640404a0b95c71e452225c74856eae90e966aac581ca393508a2106033c3d5ad70427ea6f7ef3f2997eddf6d09a7b4fa26eb
     HEAD_REF master
 )
 
-list(APPEND QTKEYCHAIN_OPTIONS -DCMAKE_DEBUG_POSTFIX=d)
-list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TEST_APPLICATION:BOOL=OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND QTKEYCHAIN_OPTIONS -DQTKEYCHAIN_STATIC:BOOL=ON)
-else()
-    list(APPEND QTKEYCHAIN_OPTIONS -DQTKEYCHAIN_STATIC:BOOL=OFF)
+# Opportunity to build without dependency on qt5-tools/qt5-declarative
+set(BUILD_TRANSLATIONS OFF)
+if("translations" IN_LIST FEATURES)
+    set(BUILD_TRANSLATIONS ON)
 endif()
 
-if (CMAKE_HOST_WIN32)
-    list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=ON)
-else()
-    list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=OFF)
-endif()
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
-	OPTIONS ${QTKEYCHAIN_OPTIONS}
+    OPTIONS
+        -DBUILD_WITH_QT6=OFF
+        -DBUILD_TEST_APPLICATION=OFF
+        -DBUILD_TRANSLATIONS=${BUILD_TRANSLATIONS}
 )
-
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qt5Keychain PACKAGE_NAME Qt5Keychain)
 
 # Remove unneeded dirs
-file(REMOVE_RECURSE 
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-	${CURRENT_PACKAGES_DIR}/lib/cmake
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qtkeychain)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qtkeychain/COPYING ${CURRENT_PACKAGES_DIR}/share/qtkeychain/copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

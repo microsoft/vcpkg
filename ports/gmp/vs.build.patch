@@ -1,0 +1,172 @@
+diff --git a/SMP/smp.props b/SMP/smp.props
+index e2ed214..fc70bd8 100644
+--- a/SMP/smp.props
++++ b/SMP/smp.props
+@@ -87,7 +87,7 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <TargetName>lib$(RootNamespace)d</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -95,7 +95,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <TargetName>lib$(RootNamespace)d</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -103,7 +103,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+     <TargetName>$(RootNamespace)d</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -111,7 +111,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+     <TargetName>$(RootNamespace)d</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -119,7 +119,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <TargetName>lib$(RootNamespace)</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -127,7 +127,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <TargetName>lib$(RootNamespace)</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -135,7 +135,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+     <TargetName>$(RootNamespace)</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -143,7 +143,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+     <TargetName>$(RootNamespace)</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+diff --git a/SMP/smp_winrt.props b/SMP/smp_winrt.props
+index 9b453a5..cb5f090 100644
+--- a/SMP/smp_winrt.props
++++ b/SMP/smp_winrt.props
+@@ -98,7 +98,7 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|Win32'">
+     <TargetName>lib$(RootNamespace)d_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -106,7 +106,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|x64'">
+     <TargetName>lib$(RootNamespace)d_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -114,7 +114,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|Win32'">
+     <TargetName>$(RootNamespace)d_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -122,7 +122,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|x64'">
+     <TargetName>$(RootNamespace)d_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -130,7 +130,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|Win32'">
+     <TargetName>lib$(RootNamespace)_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -138,7 +138,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|x64'">
+     <TargetName>lib$(RootNamespace)_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -146,7 +146,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|Win32'">
+     <TargetName>$(RootNamespace)_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+@@ -154,7 +154,7 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|x64'">
+     <TargetName>$(RootNamespace)_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+diff --git a/gmp.pc.in b/gmp.pc.in
+index bf1c799..d0c81be 100644
+--- a/gmp.pc.in
++++ b/gmp.pc.in
+@@ -8,4 +8,4 @@ Description: GNU Multiple Precision Arithmetic Library
+ URL: https://gmplib.org
+ Version: @PACKAGE_VERSION@
+ Cflags: -I${includedir}
+-Libs: -L${libdir} -lgmp
++Libs: -L${libdir} @LIBS@
+diff --git a/gmpxx.pc.in b/gmpxx.pc.in
+index 181cc70..2b697ce 100644
+--- a/gmpxx.pc.in
++++ b/gmpxx.pc.in
+@@ -9,4 +9,4 @@ URL: https://gmplib.org
+ Version: @PACKAGE_VERSION@
+ Requires: gmp
+ Cflags: -I${includedir}
+-Libs: -L${libdir} -lgmpxx
++Libs: -L${libdir} @LIBS@

@@ -1,31 +1,24 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brunocodutra/metal
-    REF v2.0.1
-    SHA512 6aca54e2f2a6d99466d247dbd57706caef33d2399989c2eb14e99d1419922eff753acb53248f8684c1ed11bb87d79b2e850637190e8949f69e0f5ee7304281dc
+    REF 2.1.3
+    SHA512 7a71f8bdbdb8a19084d0cabd4c78a4f2990514f2da56312aec8dfac02f6781c95f28bc33815ecbb3d9e3e8d2b47cc5dbcd4917751195a8318bea7c08fca29b23
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME Metal
     CONFIG_PATH lib/cmake/Metal
-    TARGET_PATH share/metal
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

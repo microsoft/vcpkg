@@ -1,0 +1,313 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "title": "Vcpkg manifest",
+  "description": "Vcpkg manifest file. See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md.",
+  "definitions": {
+    "identifier": {
+      "description": "Identifiers used for feature names.",
+      "allOf": [
+        {
+          "description": "Identifier are lowercase with digits and dashes.",
+          "type": "string",
+          "pattern": "[a-z0-9]+(-[a-z0-9]+)*"
+        },
+        {
+          "not": {
+            "description": "Identifiers must not be a Windows filesystem or vcpkg reserved name.",
+            "type": "string",
+            "pattern": "^(prn|aux|nul|con|lpt[1-9]|com[1-9]|core|default)$"
+          }
+        }
+      ]
+    },
+    "version-text": {
+      "type": "string",
+      "pattern": "[^#]+"
+    },
+    "has-schemed-version": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "version-string": {
+              "description": "Text used to identify an arbitrary version",
+              "type": "string",
+              "pattern": "^[^#]+$"
+            }
+          },
+          "required": [
+            "version-string"
+          ]
+        },
+        {
+          "properties": {
+            "version": {
+              "description": "A relaxed version string (1.2.3.4...)",
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d+)*$"
+            }
+          },
+          "required": [
+            "version"
+          ]
+        },
+        {
+          "properties": {
+            "version-semver": {
+              "description": "A semantic version string. See https://semver.org/",
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+([+-].+)?$"
+            }
+          },
+          "required": [
+            "version-semver"
+          ]
+        },
+        {
+          "properties": {
+            "version-date": {
+              "description": "A date version string (e.g. 2020-01-20)",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}(\\.\\d+)*$"
+            }
+          },
+          "required": [
+            "version-date"
+          ]
+        }
+      ]
+    },
+    "port-version": {
+      "description": "A non-negative integer indicating the port revision. If this field doesn't exist, it's assumed to be `0`.",
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "package-name": {
+      "description": "Name of a package.",
+      "allOf": [
+        {
+          "description": "Package name must be a dot-separated list of valid identifiers",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*(\\.[a-z0-9]+(-[a-z0-9]+)*)*$"
+        },
+        {
+          "not": {
+            "description": "Identifiers must not be a Windows filesystem or vcpkg reserved name.",
+            "type": "string",
+            "pattern": "(^|\\.)(prn|aux|nul|con|lpt[1-9]|com[1-9]|core|default)(\\.|$)"
+          }
+        }
+      ]
+    },
+    "description-field": {
+      "description": "A string or array of strings containing the description of a package or feature.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "dependency-object": {
+      "description": "Expanded form of a dependency with explicit features and platform.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/package-name"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/identifier"
+          }
+        },
+        "host": {
+          "type": "boolean",
+          "default": false
+        },
+        "default-features": {
+          "type": "boolean",
+          "default": true
+        },
+        "platform": {
+          "$ref": "#/definitions/platform-expression"
+        },
+        "version>=": {
+          "description": "Minimum required version",
+          "type": "string",
+          "pattern": "^[^#]+(#\\d+)?$"
+        }
+      },
+      "patternProperties": {
+        "^\\$": {}
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "dependency": {
+      "description": "A dependency fetchable by Vcpkg.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/package-name"
+        },
+        {
+          "$ref": "#/definitions/dependency-object"
+        }
+      ]
+    },
+    "override": {
+      "description": "A version override.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/identifier"
+        },
+        "version": {
+          "$ref": "#/definitions/version-text"
+        },
+        "port-version": {
+          "$ref": "#/definitions/port-version"
+        }
+      },
+      "patternProperties": {
+        "^\\$": {}
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "platform-expression": {
+      "description": "A specification of a set of platforms. See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md#definitions.",
+      "type": "string"
+    },
+    "feature": {
+      "description": "A package feature that can be activated by consumers.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/definitions/description-field"
+        },
+        "dependencies": {
+          "description": "Dependencies used by this feature.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
+        }
+      },
+      "patternProperties": {
+        "^\\$": {}
+      },
+      "required": [
+        "description"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "allOf": [
+    {
+      "properties": {
+        "name": {
+          "description": "The name of the top-level package",
+          "$ref": "#/definitions/package-name"
+        },
+        "version-string": {},
+        "version": {},
+        "version-date": {},
+        "version-semver": {},
+        "port-version": {
+          "$ref": "#/definitions/port-version"
+        },
+        "maintainers": {
+          "description": "An array of strings which contain the authors of a package",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "$ref": "#/definitions/description-field"
+        },
+        "homepage": {
+          "description": "A url which points to the homepage of a package.",
+          "type": "string",
+          "format": "uri"
+        },
+        "documentation": {
+          "description": "A url which points to the documentation of a package.",
+          "type": "string",
+          "format": "uri"
+        },
+        "license": {
+          "description": "An SPDX license expression at version 3.9.",
+          "type": "string"
+        },
+        "builtin-baseline": {
+          "description": "A vcpkg repository commit for version control.",
+          "type": "string"
+        },
+        "dependencies": {
+          "description": "Dependencies that are always required.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
+        },
+        "overrides": {
+          "description": "Version overrides for dependencies.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/override"
+          }
+        },
+        "dev-dependencies": {
+          "description": "Dependencies only required for developers (testing and the like).",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
+        },
+        "features": {
+          "description": "A map of features supported by the package",
+          "type": "object",
+          "patternProperties": {
+            "": {
+              "$ref": "#/definitions/feature"
+            }
+          }
+        },
+        "default-features": {
+          "description": "Features enabled by default with the package.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/identifier"
+          }
+        },
+        "supports": {
+          "$ref": "#/definitions/platform-expression"
+        }
+      },
+      "patternProperties": {
+        "^\\$": {}
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "$ref": "#/definitions/has-schemed-version"
+    }
+  ]
+}

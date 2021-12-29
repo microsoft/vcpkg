@@ -1,0 +1,17 @@
+{
+  "name": "arb",
+  "version": "2.21.1",
+  "description": "a C library for arbitrary-precision interval arithmetic",
+  "homepage": "https://github.com/fredrik-johansson/arb",
+  "dependencies": [
+    "flint",
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

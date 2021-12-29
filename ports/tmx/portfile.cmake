@@ -1,29 +1,26 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO baylej/tmx
-    REF tmx_1.0.0
+    REF tmx_1.2.0
     HEAD_REF master
-    SHA512 d045c45efd03f91a81dae471cb9ddc80d222b3ac52e13b729deeaf3e07d0a03b8e0956b30336ef410c72ddbbf33bea6811da5454b88d44b1db75683ef2a9383a
+    SHA512 cb29c67af560a1844e798d3fe2677a6b71866943b233c0700212b91de35f252a0a465c33911a2c432aa54be309e3ac10770bc95c6450227e39abe049c1fbbdd1
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxExports.cmake ${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxTargets.cmake)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/tmx)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tmx/tmxTargets.cmake ${CURRENT_PACKAGES_DIR}/share/tmx/tmxExports.cmake)
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxExports.cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake/tmx/tmxTargets.cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tmx)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/tmx/tmxTargets.cmake" "${CURRENT_PACKAGES_DIR}/share/tmx/tmxExports.cmake")
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/tmx/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

@@ -1,30 +1,23 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emil-e/rapidcheck
-    REF cf9e0d8bd8c94e9dc00dc0ab302352bfaf1a3ac5
-    SHA512 6cef62edbda391c3527d63db350842f669841ad2c751a64773250cd40bb65f26c2c394b107ef5530c2d3bd15b7079148fa9778d68a7346225bbb15227b1553c5
+    REF 08b505857e32d52a20b2240b5125d937d67a6d86
+    SHA512 d71d17354d2597a168be935e03b1330fc96ff12d6551b6bd34ef8f6c2ba69f7f9bff865afd6a6a59c48496bcc9ddf997b07112d80c761d909f7cd9ef93a7464b
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DRC_INSTALL_ALL_EXTRAS=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/rapidcheck/cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/rapidcheck/copyright COPYONLY)
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME rapidcheck)
+configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

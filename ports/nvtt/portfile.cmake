@@ -1,12 +1,12 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "x86")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO castano/nvidia-texture-tools
-    REF 2.1.1
-    SHA512 3e6fef5977ca29daa7dc97afe11d61de57a8556c9caf30902db8c5c167d9c38f736bcb62eebdaaf7558299b39975bc269d41ab980c813b67dd1fc85064c853c9
+    REF b1a90f36013522b9e5a3a2197859b72188752e3f  # 2.1.2
+    SHA512 13cf04a9856f150f7569c8c256c42fc6a5bc40586c9ca2b3ae553edf5bfcbccbba5b8538924079ed35effdd07b9e3ef4bfdb9733a2ec51f5a95f958885cc6cca
     HEAD_REF master
     PATCHES
         001-define-value-for-HAVE_UNISTD_H-in-mac-os.patch
@@ -14,6 +14,8 @@ vcpkg_from_github(
         bc7.patch
         squish.patch
         fix-build-error.patch
+        add-compile-options-for-osx.patch
+        skip-building-libsquish.patch
 )
 
 vcpkg_configure_cmake(
@@ -37,5 +39,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(REMOVE ${CURRENT_PACKAGES_DIR}/share/doc/nvtt/LICENSE)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/nvtt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/nvtt/LICENSE ${CURRENT_PACKAGES_DIR}/share/nvtt/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

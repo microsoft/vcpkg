@@ -1,0 +1,6 @@
+{
+  "name": "refl-cpp",
+  "version": "0.12.1",
+  "description": "A compile-time reflection library for modern C++ with support for overloads, templates, attributes and proxies",
+  "homepage": "https://github.com/veselink1/refl-cpp"
+}

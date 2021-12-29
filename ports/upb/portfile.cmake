@@ -1,29 +1,26 @@
-vcpkg_fail_port_install(ON_TARGET "Windows")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO protocolbuffers/upb
-	REF  9effcbcb27f0a665f9f345030188c0b291e32482
-	SHA512 416ff26ec21181d53be23e94203205072152ab3a8e4b3b28d16263a601995fd2d2f8afe5d8cfbecdac8543249482287b9fe6129314f7c9a7880660f5508bb85e
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO protocolbuffers/upb
+    REF  160625a9728b4031a21ad1e1c0146ea2c3a851eb # 2021-10-19
+    SHA512 13b205dd4278600e6ec05c829dc6c7e449747cccb118a3b83abc0ab5ef0ab180feb364ac84da8075471697fbba798ed3d9d763934d7fe9a64ac0560f5f9d3e83
     HEAD_REF master
-    PATCHES fix-cmakelists.patch
+    PATCHES
+        fix-uwp.patch
+        fix-cmakelists.patch
+        add-all-libs-target.patch
+        add-cmake-install.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    asan UPB_ENABLE_ASAN
-    ubsan UPB_ENABLE_UBSAN
-    tests ENABLE_TEST
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/cmake"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-)
-
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

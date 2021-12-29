@@ -16,7 +16,7 @@ function findExistingImportModuleDirectives([Parameter(Mandatory=$true)][string]
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $profileEntry = "Import-Module '$scriptsDir\posh-vcpkg'"
-$profilePath = $PROFILE # Implicit powershell variable
+$profilePath = $PROFILE # Implicit PowerShell variable
 $profileDir = Split-Path $profilePath -Parent
 if (!(Test-Path $profileDir))
 {
@@ -33,7 +33,7 @@ if ($existingImports.Count -gt 0)
     $existingImportsOut = $existingImports -join "`n    "
     Write-Host "`nposh-vcpkg is already imported to your PowerShell profile. The following entries were found:"
     Write-Host "    $existingImportsOut"
-    Write-Host "`nPlease make sure you have started a new Powershell window for the changes to take effect."
+    Write-Host "`nPlease make sure you have started a new PowerShell window for the changes to take effect."
     return
 }
 
@@ -53,4 +53,4 @@ if (Test-Path $profilePath)
 }
 
 Add-Content $profilePath -Value "`n$profileEntry" -Encoding UTF8
-Write-Host "`nSuccessfully added posh-vcpkg to your PowerShell profile. Please start a new Powershell window for the changes to take effect."
+Write-Host "`nSuccessfully added posh-vcpkg to your PowerShell profile. Please start a new PowerShell window for the changes to take effect."

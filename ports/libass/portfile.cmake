@@ -1,21 +1,14 @@
-
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libass/libass
-    REF 98727c3b78f44cb3bbc955fcf5d977ebd911d5ca
-    SHA512 d466108180cea598b817f89aa21a1021ed2a763580d9aad51b054aa120186af48ab4264907e49ddcb38479a28d87d5431751a28afee9cb83ad7623f002d99c57
+    REF 0.15.2
+    SHA512 ae3ea533e57ab3c386ce457dbaa39a256801b7340649d5ff80a51410481e73ab194724744b97d85cb6d111798e45eee594bb22da2f1f3c547fe8e331e0690127
     HEAD_REF master
-    PATCHES ConstantValues.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/libass.def DESTINATION ${SOURCE_PATH})
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libass RENAME copyright)
 
 # Since libass uses automake, make and configure, we use a custom CMake file
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -28,3 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

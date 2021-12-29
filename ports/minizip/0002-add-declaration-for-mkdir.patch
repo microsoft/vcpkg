@@ -1,0 +1,29 @@
+From 6c38b6f544b55f9fc554f0fe22e2cbaddfaed7f8 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Tue, 22 Sep 2020 14:15:04 -0700
+Subject: [PATCH 2/2] add declaration for mkdir
+
+It's invalid in C99 to implicitly declare mkdir
+
+---
+ contrib/minizip/miniunz.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/contrib/minizip/miniunz.c b/contrib/minizip/miniunz.c
+index 3d65401..5341af2 100644
+--- a/contrib/minizip/miniunz.c
++++ b/contrib/minizip/miniunz.c
+@@ -12,6 +12,10 @@
+          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
+ */
+ 
++#if !defined(_WIN32)
++#include <sys/stat.h>
++#endif
++
+ #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
+         #ifndef __USE_FILE_OFFSET64
+                 #define __USE_FILE_OFFSET64
+-- 
+2.24.3 (Apple Git-128)
+

@@ -1,0 +1,32 @@
+diff --git a/src/lib/openjp3d/CMakeLists.txt b/src/lib/openjp3d/CMakeLists.txt
+index b0469af1f..75048ef13 100644
+--- a/src/lib/openjp3d/CMakeLists.txt	
++++ b/src/lib/openjp3d/CMakeLists.txt
+@@ -34,8 +34,9 @@ endif()
+ # Install library
+ install(TARGETS ${OPENJP3D_LIBRARY_NAME}
+   EXPORT OpenJP3DTargets
+-  DESTINATION ${OPENJPEG_INSTALL_LIB_DIR}
+-  COMPONENT Libraries
++  RUNTIME DESTINATION ${OPENJPEG_INSTALL_BIN_DIR} COMPONENT Applications
++  LIBRARY DESTINATION ${OPENJPEG_INSTALL_LIB_DIR} COMPONENT Libraries
++  ARCHIVE DESTINATION ${OPENJPEG_INSTALL_LIB_DIR} COMPONENT Libraries
+ )
+ 
+ # Install includes files
+diff --git a/src/lib/openmj2/CMakeLists.txt b/src/lib/openmj2/CMakeLists.txt
+index 25294b20e..e3acfe8e7 100644
+--- a/src/lib/openmj2/CMakeLists.txt	
++++ b/src/lib/openmj2/CMakeLists.txt
+@@ -53,8 +53,9 @@ endif()
+ # Install library
+ install(TARGETS ${OPENMJ2_LIBRARY_NAME}
+   EXPORT OpenMJ2Targets
+-  DESTINATION ${OPENJPEG_INSTALL_LIB_DIR}
+-  COMPONENT Libraries
++  RUNTIME DESTINATION ${OPENJPEG_INSTALL_BIN_DIR} COMPONENT Applications
++  LIBRARY DESTINATION ${OPENJPEG_INSTALL_LIB_DIR} COMPONENT Libraries
++  ARCHIVE DESTINATION ${OPENJPEG_INSTALL_LIB_DIR} COMPONENT Libraries
+ )
+ 
+ # Install includes files

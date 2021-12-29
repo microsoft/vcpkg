@@ -1,0 +1,7 @@
+{
+  "name": "ijg-libjpeg",
+  "version-string": "9d",
+  "description": "Independent JPEG Group's JPEG software",
+  "homepage": "http://www.ijg.org/",
+  "supports": "!emscripten & !wasm32"
+}

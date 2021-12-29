@@ -1,0 +1,19 @@
+{
+  "name": "kf5itemviews",
+  "version": "5.89.0",
+  "description": "Widget addons for Qt Model/View",
+  "homepage": "https://api.kde.org/frameworks/kitemviews/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+diff --git a/src/plugins/hunspell/hunspellinputmethod/hunspellinputmethod_p.cpp b/src/plugins/hunspell/hunspellinputmethod/hunspellinputmethod_p.cpp
+index 8ee4d7503..0fb4461d2 100644
+--- a/src/plugins/hunspell/hunspellinputmethod/hunspellinputmethod_p.cpp
++++ b/src/plugins/hunspell/hunspellinputmethod/hunspellinputmethod_p.cpp
+@@ -29,7 +29,7 @@
+ 
+ #include <QtHunspellInputMethod/private/hunspellinputmethod_p_p.h>
+ #include <QtVirtualKeyboard/qvirtualkeyboardinputcontext.h>
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ #include <QStringList>
+ #include <QDir>
+ #include <QtCore/QLibraryInfo>
+diff --git a/src/plugins/hunspell/hunspellinputmethod/hunspellworker_p.h b/src/plugins/hunspell/hunspellinputmethod/hunspellworker_p.h
+index b79354429..a843bdfa6 100644
+--- a/src/plugins/hunspell/hunspellinputmethod/hunspellworker_p.h
++++ b/src/plugins/hunspell/hunspellinputmethod/hunspellworker_p.h
+@@ -50,7 +50,7 @@
+ #include <QLoggingCategory>
+ #include <QStringDecoder>
+ #include <QStringEncoder>
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ #include <QtHunspellInputMethod/qhunspellinputmethod_global.h>
+ 
+ QT_BEGIN_NAMESPACE

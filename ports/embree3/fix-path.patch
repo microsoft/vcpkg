@@ -1,0 +1,85 @@
+diff --git a/common/algorithms/CMakeLists.txt b/common/algorithms/CMakeLists.txt
+index 680c3ec..fea4a37 100644
+--- a/common/algorithms/CMakeLists.txt
++++ b/common/algorithms/CMakeLists.txt
+@@ -20,8 +20,11 @@ SET_PROPERTY(TARGET algorithms APPEND PROPERTY COMPILE_FLAGS " ${FLAGS_LOWEST}")
+ # ideally we would use target_link_libraries to provide the algorithms target
+ # with the TBB include directory information. Howeve, this is only possible in
+ # very recent versions of TBB and therefore we use the target property instead
++if (0)
+ GET_TARGET_PROPERTY(tasking_include_dirs tasking INCLUDE_DIRECTORIES)
+ if (tasking_include_dirs)
+   TARGET_INCLUDE_DIRECTORIES(algorithms PUBLIC "${tasking_include_dirs}")
+   GET_TARGET_PROPERTY(algorithms_include_dirs algorithms INCLUDE_DIRECTORIES)
+ endif()
++endif()
++TARGET_LINK_LIBRARIES(algorithms PUBLIC tasking)
+\ No newline at end of file
+diff --git a/common/cmake/embree-config.cmake b/common/cmake/embree-config.cmake
+index 2c08cd7..5087ca0 100644
+--- a/common/cmake/embree-config.cmake
++++ b/common/cmake/embree-config.cmake
+@@ -5,8 +5,6 @@ SET(EMBREE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/@EMBREE_RELATIVE_ROOT_DIR@)
+ GET_FILENAME_COMPONENT(EMBREE_ROOT_DIR "${EMBREE_ROOT_DIR}" ABSOLUTE)
+ 
+ SET(EMBREE_INCLUDE_DIRS ${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_INCLUDEDIR@)
+-SET(EMBREE_LIBRARY ${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_LIBDIR@/@EMBREE_LIBRARY_FULLNAME@)
+-SET(EMBREE_LIBRARIES ${EMBREE_LIBRARY})
+ 
+ SET(EMBREE_VERSION @EMBREE_VERSION@)
+ SET(EMBREE_VERSION_MAJOR @EMBREE_VERSION_MAJOR@)
+@@ -22,7 +20,6 @@ SET(EMBREE_ISA_AVX2  @EMBREE_ISA_AVX2@)
+ SET(EMBREE_ISA_AVX512 @EMBREE_ISA_AVX512@)
+ SET(EMBREE_ISA_AVX512SKX @EMBREE_ISA_AVX512@) # just for compatibility
+ 
+-SET(EMBREE_BUILD_TYPE @CMAKE_BUILD_TYPE@)
+ SET(EMBREE_ISPC_SUPPORT @EMBREE_ISPC_SUPPORT@)
+ SET(EMBREE_STATIC_LIB @EMBREE_STATIC_LIB@)
+ SET(EMBREE_TUTORIALS @EMBREE_TUTORIALS@)
+@@ -54,8 +51,6 @@ IF (EMBREE_STATIC_LIB)
+   INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/lexers-targets.cmake")
+   INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/tasking-targets.cmake")
+ 
+-  add_library(TBB::tbb SHARED IMPORTED)
+-  set_target_properties(TBB::tbb PROPERTIES IMPORTED_LOCATION "${EMBREE_ROOT_DIR}/@EMBREE_INSTALLED_TBB@")
+   
+ ENDIF()
+ 
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index 5429436..8c89f5b 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -24,7 +24,7 @@ ENDIF()
+ # Install MSVC runtime
+ ##############################################################
+ 
+-IF (WIN32)
++IF (0)
+   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+   INCLUDE(InstallRequiredSystemLibraries)
+   LIST(FILTER CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS INCLUDE REGEX ".*msvcp[0-9]+\.dll|.*vcruntime[0-9]+\.dll|.*vcruntime[0-9]+_[0-9]+\.dll")
+diff --git a/common/tasking/CMakeLists.txt b/common/tasking/CMakeLists.txt
+index 3085096..258d24e 100644
+--- a/common/tasking/CMakeLists.txt
++++ b/common/tasking/CMakeLists.txt
+@@ -10,7 +10,7 @@ ELSEIF (TASKING_TBB)
+   if (NOT ${EMBREE_TBB_ROOT} STREQUAL "")
+     set(TBB_ROOT ${EMBREE_TBB_ROOT})
+   endif()
+-  FIND_PACKAGE(TBB REQUIRED tbb)
++  FIND_PACKAGE(TBB CONFIG REQUIRED tbb)
+ 
+   ##############################################################
+   # Create tasking target and link against TBB. Also set include directory
+@@ -18,10 +18,7 @@ ELSEIF (TASKING_TBB)
+   # with the TBB header files
+   ##############################################################
+   ADD_LIBRARY(tasking STATIC taskschedulertbb.cpp)
+-  TARGET_LINK_LIBRARIES(tasking PUBLIC TBB)
+-  TARGET_INCLUDE_DIRECTORIES(tasking PUBLIC "${TBB_INCLUDE_DIRS}")
+-
+-  include(installTBB)
++  TARGET_LINK_LIBRARIES(tasking PUBLIC TBB::tbb)
+ 
+ ELSEIF (TASKING_PPL)
+   ADD_LIBRARY(tasking STATIC taskschedulerppl.cpp)

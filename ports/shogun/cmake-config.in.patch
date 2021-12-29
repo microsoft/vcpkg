@@ -1,0 +1,11 @@
+diff --git a/cmake/ShogunConfig.cmake.in b/cmake/ShogunConfig.cmake.in
+index e8e8035..a5097cb 100644
+--- a/cmake/ShogunConfig.cmake.in
++++ b/cmake/ShogunConfig.cmake.in
+@@ -2,5 +2,5 @@
+ 
+ set_and_check(shogun_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ 
+-include("@PACKAGE_CONFIG_PACKAGE_DIR@/ShogunTargets.cmake")
++include("@PACKAGE_CONFIG_PACKAGE_DIR@/../../../share/shogun/ShogunTargets.cmake")
+ check_required_components(shogun)

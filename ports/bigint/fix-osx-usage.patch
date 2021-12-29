@@ -1,0 +1,39 @@
+diff --git a/BigUnsigned.hh b/BigUnsigned.hh
+index adf1c00..9228753 100644
+--- a/BigUnsigned.hh
++++ b/BigUnsigned.hh
+@@ -20,7 +20,7 @@ public:
+ 	typedef unsigned long Blk;
+ 
+ 	typedef NumberlikeArray<Blk>::Index Index;
+-	NumberlikeArray<Blk>::N;
++	using NumberlikeArray<Blk>::N;
+ 
+ protected:
+ 	// Creates a BigUnsigned with a capacity; for internal use.
+@@ -84,8 +84,8 @@ public:
+ 	// BIT/BLOCK ACCESSORS
+ 
+ 	// Expose these from NumberlikeArray directly.
+-	NumberlikeArray<Blk>::getCapacity;
+-	NumberlikeArray<Blk>::getLength;
++	using NumberlikeArray<Blk>::getCapacity;
++	using NumberlikeArray<Blk>::getLength;
+ 
+ 	/* Returns the requested block, or 0 if it is beyond the length (as if
+ 	 * the number had 0s infinitely to the left). */
+diff --git a/BigUnsignedInABase.hh b/BigUnsignedInABase.hh
+index 8f9bdce..0ea89c6 100644
+--- a/BigUnsignedInABase.hh
++++ b/BigUnsignedInABase.hh
+@@ -100,8 +100,8 @@ public:
+ 	Base getBase() const { return base; }
+ 
+ 	// Expose these from NumberlikeArray directly.
+-	NumberlikeArray<Digit>::getCapacity;
+-	NumberlikeArray<Digit>::getLength;
++	using NumberlikeArray<Digit>::getCapacity;
++	using NumberlikeArray<Digit>::getLength;
+ 
+ 	/* Returns the requested digit, or 0 if it is beyond the length (as if
+ 	 * the number had 0s infinitely to the left). */

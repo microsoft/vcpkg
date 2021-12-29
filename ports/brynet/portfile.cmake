@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IronsDu/brynet
-    REF v1.0.5
-    SHA512 2c625a6dc6f7b1b578d74f97b0ccec90856caaedb0725db4c5892cfaa33e77cd502b01ee26b1789017c459f4b0a03eaf16ae859dc51ad4e6f362aca7c5833995
+    REF 1a48a74ba5c6074cf6f478d6a52e3c37ce3b9cc8 # v1.11.1
+    SHA512 5f04ee74a1ba8955ddb355286aa2bcd29d50b2a8bb7c2c3296fd000ab5e2060ceb3a5254e54e48f6c090f16883aea07178001532da39f28dcafbcf8df7a7304c 
     HEAD_REF master
 )
 

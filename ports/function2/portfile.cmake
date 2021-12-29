@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Naios/function2
-    REF d2acdb6c3c7612a6133cd03464ef941161258f4e
-    SHA512 298f39db3c4e7a599e41fef71d1f953f3c5e20bc9f4af378c67bd47c10b126efd7be80be4ad919370a1151c8c5bc111ccd9054757a1aaf1ccf3f87ca958a7e3a
+    REF 02ca99831de59c7c3a4b834789260253cace0ced # 4.2.0
+    SHA512 5b14d95584586c7365119f5171c86c7556ce402ae3c5db09e4e54e1225fc71e40f88ab77188986ecf9dac5eecbfd6330c5a7ecfe0375cb37773d007ebef1ba93
     HEAD_REF master
     PATCHES
         disable-testing.patch

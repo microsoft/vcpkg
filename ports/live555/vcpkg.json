@@ -1,0 +1,17 @@
+{
+  "name": "live555",
+  "version-date": "2021-12-18",
+  "description": "A complete RTSP server application",
+  "homepage": "https://www.live555.com/liveMedia",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,15 +1,11 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
-include(vcpkg_common_functions)
-
-set(VERSION 4.7.1)
+set(VERSION 4.9.1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 24d53278db56b199e6787242f22339f74e07d2cd3ed56f851ad905b110c2ba3cb001e1e2fcbc8624f0e93e00ba1fe1b23630dd1a736558c694655aeb1c3129da
+    SHA512 fe33005f73f8d408fcea8ebab62c0def119bbe0c075f04a66404d0df258126eb6caf0a8bbac34d5c4c9e79d4aa8896f32698a560d4be7d71a32dcc3457245cee
 )
 
 # license not exist in antlr folder.
@@ -24,9 +20,11 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES fixed_build.patch
-            uuid_discovery_fix.patch
-            export_guid.patch
+    PATCHES 
+        fixed_build.patch
+        uuid_discovery_fix.patch
+        export_guid.patch
+        fix_utfcpp_dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -82,12 +80,6 @@ else()
     endif()
 endif()
 
-file(GLOB HDRS LIST_DIRECTORIES true ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime/*)
-file(COPY ${HDRS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime)
-
 vcpkg_copy_pdbs()
 
-file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/antlr4 RENAME copyright)
-
-message(STATUS "Installing done")
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

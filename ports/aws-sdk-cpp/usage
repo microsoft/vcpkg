@@ -1,0 +1,12 @@
+The package @PORT@:@TARGET_TRIPLET@ provides CMake targets:
+
+    When using AWSSDK, AWSSDK_ROOT_DIR must be defined by the user.
+    find_package(AWSSDK CONFIG COMPONENTS core dynamodb kinesis s3 REQUIRED)
+    target_include_directories(main PRIVATE ${AWSSDK_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${AWSSDK_LIBRARIES})
+    
+    OR
+    
+    find_package(aws-cpp-sdk-core REQUIRED)
+    target_include_directories(main PRIVATE aws-cpp-sdk-core)
+    target_link_libraries(main PRIVATE aws-cpp-sdk-core)

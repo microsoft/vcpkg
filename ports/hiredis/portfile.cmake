@@ -1,34 +1,43 @@
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(HIREDIS_PATCHES support-static.patch)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redis/hiredis
-    REF e777b0295eeeda89ee2ecef6ec5cb54889033d94
-    SHA512 9486ce3e40580ca6a1da8a31c3e139eb8b5e17ac1b94bd0987f2435aeb2465ad271784d5e8e83dc6cbaf362f95c9e175efa5fbe80a63c56070ceb212d3d68470
+    REF v1.0.2
+    SHA512 86497a1c21869bbe535378885eee6dbd594ef96325966511a3513f81e501af0f5ac7fed864f3230372f3ac7a23c05bad477fa5aa90b9747c9fb1408028174f9b
     HEAD_REF master
     PATCHES
         fix-feature-example.patch
-        support-static-in-win.patch
+        fix-timeval.patch
+        fix-include-path.patch
+        fix-ssize_t.patch
+        ${HIREDIS_PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    ssl     ENABLE_SSL 
-    example ENABLE_EXAMPLES
+    FEATURES
+        ssl     ENABLE_SSL
+        example ENABLE_EXAMPLES
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup()
+if("ssl" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME hiredis_ssl CONFIG_PATH share/hiredis_ssl)
+endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,38 @@
+diff --git a/gdal/makefile.vc b/gdal/makefile.vc
+index 9e0bd44..8559f79 100644
+--- a/gdal/makefile.vc
++++ b/gdal/makefile.vc
+@@ -84,7 +84,7 @@ staticlib:	$(LIB_DEPENDS)
+ 	call <<clean_main_build_output.bat
+ $(CLEAN_MAIN_BUILD_OUTPUT_CMDS)
+ <<
+-	lib /nologo /out:$(GDAL_LIB_NAME) $(LIBOBJ) $(EXTERNAL_LIBS)
++	lib /nologo /LTCG /out:$(GDAL_LIB_NAME) $(LIBOBJ) $(EXTERNAL_LIBS)
+ 
+ appslib-target:
+ 	cd apps
+@@ -204,9 +204,6 @@ dll:	$(GDAL_DLL)
+ 
+ # build using cygwin
+ docs:
+-!IFDEF HTMLDIR
+-	make PYTHONHOME= -C doc html
+-!ENDIF
+ 
+ bindings:
+ 	-for %d in ( $(BINDINGS) ) do \
+@@ -236,12 +233,8 @@ install: default docs
+ 	cd ..\apps
+ 	$(MAKE) /f makefile.vc install
+ 	cd ..
+-	$(INSTALL) data\*.* $(DATADIR)
+-	$(INSTALL) LICENSE.TXT $(DATADIR)
+-!IFDEF HTMLDIR
+-	-mkdir $(HTMLDIR)
+-	xcopy /S /Y doc\build\html $(HTMLDIR)
+-!ENDIF
++	$(INSTALL) data\*.* "$(DATADIR)"
++	$(INSTALL) LICENSE.TXT "$(DATADIR)"
+ !IFDEF INCLUDE_OGR_FRMTS
+ 	cd ogr\ogrsf_frmts
+ 	$(MAKE) /f makefile.vc plugins-install

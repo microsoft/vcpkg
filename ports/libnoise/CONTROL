@@ -1,3 +1,0 @@
-Source: libnoise
-Version: 1.0.0
-Description: A general-purpose library that generates three-dimensional coherent noise. Useful for terrain generation and procedural texture generation. Uses a broad number of techniques (Perlin noise, ridged multifractal, etc.) and combinations of those techniques.

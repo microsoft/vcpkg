@@ -1,36 +1,72 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF 7110659a3f5181397bc2549cea15d5350cd25c9d
-    SHA512 e484a88e0040b69e489476ef20c06184d2dc2bf42452b965b4997a717c2d1f19ab7cd695563c4faacdb0ec8705d072bcfd568d7b3a32e4e8b8c632bcec57e15c
+    REF v1.1.1
+    SHA512 eeb15d0756f12136a1e7938a0eed97024d564eef3355f3bb6abf6c681e38919011e1a133d89ca360f463e7fed5feb8e0138a0fe9be4c25b6a13ba4b042aef3eb
     HEAD_REF master
+    PATCHES
+        fix-build.patch
+        fix-build-boost-1_77_0.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cuda   OpenMVS_USE_CUDA
+        openmp OpenMVS_USE_OPENMP
+)
+
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
+        -DOpenMVS_USE_NONFREE=ON
+        -DOpenMVS_USE_CERES=OFF
+        -DOpenMVS_USE_FAST_FLOAT2INT=ON
+        -DOpenMVS_USE_FAST_INVSQRT=OFF
+        -DOpenMVS_USE_FAST_CBRT=ON
+        -DOpenMVS_USE_SSE=ON
+        -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_BREAKPAD=OFF
-        -DOpenMVS_USE_CUDA=OFF
-        -DINSTALL_CMAKE_DIR:STRING=share/openmvs
-        -DINSTALL_BIN_DIR:STRING=bin
-        -DINSTALL_LIB_DIR:STRING=lib
-        -DINSTALL_INCLUDE_DIR:STRING=include
+    OPTIONS_RELEASE
+        -DOpenMVS_BUILD_TOOLS=ON
+    OPTIONS_DEBUG
+        -DOpenMVS_BUILD_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_cmake_targets()
+file(READ ${CURRENT_PACKAGES_DIR}/share/openmvs/OpenMVSTargets-release.cmake TARGETS_CMAKE)
+string(REPLACE "bin/InterfaceCOLMAP" "tools/openmvs/InterfaceCOLMAP" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/InterfaceVisualSFM" "tools/openmvs/InterfaceVisualSFM" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/DensifyPointCloud" "tools/openmvs/DensifyPointCloud" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/ReconstructMesh" "tools/openmvs/ReconstructMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/RefineMesh" "tools/openmvs/RefineMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/TextureMesh" "tools/openmvs/TextureMesh" TARGETS_CMAKE "${TARGETS_CMAKE}")
+string(REPLACE "bin/Viewer" "tools/openmvs/Viewer" TARGETS_CMAKE "${TARGETS_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/openmvs/OpenMVSTargets-release.cmake "${TARGETS_CMAKE}")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/openmvs)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openmvs)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES
+    DensifyPointCloud
+    InterfaceCOLMAP
+    InterfaceVisualSFM
+    ReconstructMesh
+    RefineMesh
+    TextureMesh
+    Viewer
+)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmvs RENAME copyright)
+set(OPENMVG_TOOLS_PATH "${CURRENT_INSTALLED_DIR}/tools/openmvg")
+set(OPENMVS_TOOLS_PATH "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
+set(SENSOR_WIDTH_CAMERA_DATABASE_TXT_PATH "${OPENMVG_TOOLS_PATH}/sensor_width_camera_database.txt")
+configure_file("${SOURCE_PATH}/MvgMvsPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/MvgMvsPipeline.py" @ONLY)
+file(INSTALL "${SOURCE_PATH}/build/Modules/FindVCG.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

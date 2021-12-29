@@ -1,0 +1,18 @@
+{
+  "name": "qt5-speech",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 Speech Module",
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-multimedia"
+  ]
+}

@@ -1,0 +1,24 @@
+diff --git a/libs/locale/build/Jamfile.v2 b/libs/locale/build/Jamfile.v2
+index 88a8cb1..e6a6b7f 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -17,6 +17,7 @@ import feature ;
+ # Features
+ 
+ feature.feature boost.locale.iconv : on off : optional propagated ;
++feature.feature boost.locale.force-found-iconv : on off : optional propagated ;
+ feature.feature boost.locale.icu : on off :  optional propagated ;
+ feature.feature boost.locale.posix : on off : optional propagated ;
+ feature.feature boost.locale.std : on off : optional propagated ;
+@@ -164,6 +164,11 @@     local flags-result ;
+     
+     local found-iconv ;
+     
++    if <boost.locale.force-found-iconv>on in $(properties)
++    {
++        found-iconv = true ;
++    }
++    
+     if <boost.locale.iconv>on in $(properties)
+       || ! <boost.locale.iconv> in $(properties:G) 
+         && ! <target-os>solaris in $(properties)

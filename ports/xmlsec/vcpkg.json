@@ -1,0 +1,10 @@
+{
+  "name": "xmlsec",
+  "version": "1.2.32",
+  "description": "XML Security Library is a C library based on LibXML2. The library supports major XML security standards.",
+  "homepage": "https://www.aleksey.com/xmlsec/",
+  "dependencies": [
+    "libxml2",
+    "openssl"
+  ]
+}

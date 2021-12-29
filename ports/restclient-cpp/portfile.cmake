@@ -5,11 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mrtazz/restclient-cpp
-    REF 0.5.1
-    SHA512 d5e17a984af44f863bc7cdc7307c2b06cae9252f86c6c6c2377cdb317f61b6419d8e9aedc5e5ccdb08fd1ee13848ec3b9ef8067a8d26dcf438a5c8793b5a2ce3
+    REF 0.5.2
+    SHA512 f6acc6a3d5cb852d6e507463d94d2f6192a941f0c26fef7c674e9ff7753cf5474522052a2065774050d01af5c6d2a3b86398f43cd2e4f5d03abcaac9a21ef4b7
     HEAD_REF master
-    PATCHES
-        0001_fix_cmake_linking.patch
 )
 
 vcpkg_configure_cmake(
@@ -26,6 +24,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restclient-cpp)
 
 vcpkg_copy_pdbs()
 
+# Remove includes in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright

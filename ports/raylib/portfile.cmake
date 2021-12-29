@@ -1,9 +1,7 @@
 # https://github.com/raysan5/raylib/issues/388
-if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
-    message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
@@ -15,26 +13,30 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF a9f33c9a8962735fed5dd1857709d159bc4056fc # 2.5.0
-    SHA512 36ee474d5f1791385a6841e20632e078c0d3a591076faed0a648533513a3218e2817b0bbf7a921cc003c9aaf6a07024fd48830697d9d85eba307be27bd884ad8
+    REF 4.0.0
+    SHA512 e9ffab14ab902e3327202e68ca139209ff24100dab62eb03fef50adf363f81e2705d81e709c58cf1514e68e6061c8963555bd2d00744daacc3eb693825fc3417
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
-if("non-audio" IN_LIST FEATURES)
-    set(USE_AUDIO OFF)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        hidpi SUPPORT_HIGH_DPI
+        use-audio USE_AUDIO
+)
+
+if(VCPKG_TARGET_IS_MINGW)
+    set(DEBUG_ENABLE_SANITIZERS OFF)
 else()
-    set(USE_AUDIO ON)
+    set(DEBUG_ENABLE_SANITIZERS ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -42,11 +44,11 @@ vcpkg_configure_cmake(
         -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
-        -DUSE_AUDIO=${USE_AUDIO}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DENABLE_ASAN=ON
-        -DENABLE_UBSAN=ON
+        -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
+        -DENABLE_UBSAN=${DEBUG_ENABLE_SANITIZERS}
         -DENABLE_MSAN=OFF
     OPTIONS_RELEASE
         -DENABLE_ASAN=OFF
@@ -54,11 +56,11 @@ vcpkg_configure_cmake(
         -DENABLE_MSAN=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
@@ -79,11 +81,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_fixup_pkgconfig()

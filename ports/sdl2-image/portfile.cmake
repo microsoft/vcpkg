@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(SDL2_IMAGE_VERSION "2.0.5")
 
 vcpkg_download_distfile(ARCHIVE
@@ -44,6 +42,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

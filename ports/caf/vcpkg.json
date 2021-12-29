@@ -1,0 +1,17 @@
+{
+  "name": "caf",
+  "version": "0.18.5",
+  "description": "an open source implementation of the actor model for C++ featuring lightweight & fast actor implementations, pattern matching for messages, network transparent messaging, and more.",
+  "homepage": "https://github.com/actor-framework/actor-framework",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

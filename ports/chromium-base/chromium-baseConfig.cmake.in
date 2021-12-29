@@ -1,0 +1,81 @@
+if(TARGET chromium-base)
+    return()
+endif()
+
+set(DEFINITIONS_DBG @DEFINITIONS_DBG@)
+set(DEFINITIONS_REL @DEFINITIONS_DBG@)
+
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+endif()
+
+add_library(chromium-base INTERFACE IMPORTED GLOBAL)
+add_library(chromium-base::chromium-base ALIAS chromium-base)
+
+set(LIBRARIES_ chromium_base chromium_base_static dynamic_annotations double_conversion)
+
+if(WIN32)
+    list(APPEND LIBRARIES_
+        cfgmgr32
+        powrprof
+        propsys
+        setupapi
+        userenv
+        wbemuuid
+        winmm
+        advapi32
+        comdlg32
+        dbghelp
+        dnsapi
+        gdi32
+        msimg32
+        odbc32
+        odbccp32
+        oleaut32
+        shell32
+        shlwapi
+        user32
+        usp10
+        uuid
+        version
+        wininet
+        winspool
+        ws2_32
+        delayimp
+        kernel32
+        ole32)
+elseif(APPLE)
+    list(APPEND LIBRARIES_ 
+        ApplicationServices
+        AppKit
+        CoreFoundation
+        IOKit
+        OpenDirectory
+        Security
+        bsm
+        pmenergy
+        pmsample)
+endif()
+
+foreach(LIB_NAME ${LIBRARIES_})
+    find_library(_LIB NAMES ${LIB_NAME} ${LIB_NAME}.dll)
+    target_link_libraries(chromium-base INTERFACE ${_LIB})
+    unset(_LIB CACHE)
+endforeach()
+
+if(UNIX AND NOT APPLE)
+    target_link_libraries(chromium-base INTERFACE -ldl -latomic -lpthread)
+endif()
+
+target_include_directories(chromium-base
+    INTERFACE ${_IMPORT_PREFIX}/include/chromium-base)
+
+target_compile_definitions(chromium-base INTERFACE
+        $<$<CONFIG:Debug>:${DEFINITIONS_DBG}>
+        $<$<CONFIG:Release>:${DEFINITIONS_REL}>)
+
+target_compile_features(chromium-base INTERFACE cxx_std_14)

@@ -1,0 +1,12 @@
+{
+  "name": "sophus",
+  "version": "1.0.0",
+  "port-version": 7,
+  "description": "Lie group library for C++",
+  "homepage": "https://github.com/strasdat/Sophus",
+  "dependencies": [
+    "ceres",
+    "eigen3",
+    "suitesparse"
+  ]
+}

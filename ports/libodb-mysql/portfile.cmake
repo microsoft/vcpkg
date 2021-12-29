@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-mysql-2.4.0.tar.gz"
     FILENAME "libodb-mysql-2.4.0.tar.gz"
@@ -10,8 +8,10 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/adapter_mysql_8.0.patch
+        adapter_mysql_8.0.patch
+        fix-redefinttion.patch
 )
+file(REMOVE "${SOURCE_PATH}/version")
 
 file(COPY
   ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
@@ -19,10 +19,12 @@ file(COPY
   DESTINATION ${SOURCE_PATH})
 
 set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
-set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
-set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
+find_library(MYSQL_LIB NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}" NO_DEFAULT_PATH REQUIRED)
+find_library(MYSQL_LIB_DEBUG NAMES libmysql mysqlclient PATH_SUFFIXES lib PATHS "${CURRENT_INSTALLED_DIR}/debug" NO_DEFAULT_PATH REQUIRED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
@@ -35,11 +37,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_mysqlConfig-debug.cmake LIBODB_DEBUG_TARGETS)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/odb/odb_mysqlConfig-debug.cmake "${LIBODB_DEBUG_TARGETS}")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/odb TARGET_PATH share/odb)
 
 vcpkg_copy_pdbs()
 
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

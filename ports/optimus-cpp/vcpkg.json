@@ -1,0 +1,13 @@
+{
+  "name": "optimus-cpp",
+  "version": "0.3.0",
+  "description": "ID hashing and Obfuscation using Knuth's Algorithm for C++",
+  "homepage": "https://github.com/kafeg/optimus-cpp",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

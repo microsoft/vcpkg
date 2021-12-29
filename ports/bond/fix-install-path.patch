@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index f2f8eaa..1b0c01c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -18,7 +18,7 @@ set (BOND_FIND_RAPIDJSON
+@@ -23,7 +23,7 @@ set (BOND_FIND_RAPIDJSON
  # settings so that we don't apply our settings to third-party code.
  add_subdirectory (thirdparty)
  
@@ -11,7 +11,7 @@ index f2f8eaa..1b0c01c 100644
  
  set (BOND_IDL ${CMAKE_CURRENT_SOURCE_DIR}/idl)
  set (BOND_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/cpp/inc)
-@@ -80,6 +80,6 @@ if (BOND_GBC_PATH)
+@@ -85,6 +85,6 @@ if (BOND_GBC_PATH)
  
    install (
      FILES ${BOND_GBC_PATH}
@@ -35,7 +35,7 @@ index 1dff9d0..9a11575 100644
 @@ -130,7 +130,7 @@ endif()
  
  install (FILES ${output}
-     PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+     PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 -    DESTINATION bin)
 +    DESTINATION ${completion_dir})
  

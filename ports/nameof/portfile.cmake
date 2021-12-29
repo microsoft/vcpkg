@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
-    REF v0.9.3
-    SHA512 be644edfa30b2f6b0461585910bccf1ee6b1828d7fc013c01a50bed85ed9a7e3630a67a8362c8f5c8b5e3b372537d726c7c002f86b3c08d5fc73d99d10197f56
+    REF v0.10.1
+    SHA512 9b3ed7a3f5dcf1ad309341102d2aaa07fc8e9d6db7e08e42c2d9b5453c822ec16d6c6910adf7c4af8879c4084cac362f4fb4c07559cc49594b72b4917816ef5d
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DNAMEOF_OPT_BUILD_EXAMPLES=OFF
         -DNAMEOF_OPT_BUILD_TESTS=OFF
+        -DNAMEOF_OPT_INSTALL=ON
 )
 
 vcpkg_install_cmake()

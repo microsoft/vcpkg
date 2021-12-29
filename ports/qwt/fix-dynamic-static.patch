@@ -1,5 +1,5 @@
 diff --git a/qwtconfig.pri b/qwtconfig.pri
-index 1fe6055..441c69b 100644
+index 0b054e0..f93fef6 100644
 --- a/qwtconfig.pri
 +++ b/qwtconfig.pri
 @@ -72,7 +72,10 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
@@ -12,4 +12,4 @@ index 1fe6055..441c69b 100644
 +}
  
  ######################################################################
- # QwtPlot enables all classes, that are needed to use the QwtPlot 
+ # QwtPlot enables all classes, that are needed to use the QwtPlot

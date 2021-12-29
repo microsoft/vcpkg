@@ -1,0 +1,23 @@
+set(REQUIRES )
+foreach(ARG IN_LISTS ${ARGS})
+    if (ARG STREQUAL "REQUIRED")
+        set(REQUIRES "REQUIRED")
+    endif()
+endforeach()
+
+_find_package(unofficial-lua CONFIG ${REQUIRES})
+
+if (@ENABLE_LUA_CPP@)
+    _find_package(unofficial-lua-cpp CONFIG ${REQUIRES})
+endif()
+
+get_filename_component(LUA_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(LUA_INCLUDE_DIR "${LUA_INCLUDE_DIR}" PATH)
+set(LUA_INCLUDE_DIR ${LUA_INCLUDE_DIR}/include)
+
+list(APPEND LUA_LIBRARIES lua)
+if (TARGET lua-cpp)
+    list(APPEND LUA_LIBRARIES lua-cpp)
+endif()
+
+set(LUA_FOUND 1)

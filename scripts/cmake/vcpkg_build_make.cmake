@@ -1,185 +1,240 @@
-## # vcpkg_build_make
-##
-## Build a linux makefile project.
-##
-## ## Usage:
-## ```cmake
-## vcpkg_build_make([TARGET <target>])
-## ```
-##
-## ### TARGET
-## The target passed to the configure/make build command (`./configure/make/make install`). If not specified, no target will
-## be passed.
-##
-## ### ADD_BIN_TO_PATH
-## Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
-##
-## ## Notes:
-## This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-## You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
-## "install" target
-##
-## ## Examples
-##
-## * [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
-## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-function(vcpkg_build_make)
-    cmake_parse_arguments(_bc "ADD_BIN_TO_PATH;ENABLE_INSTALL" "LOGFILE_ROOT" "" ${ARGN})
+#[===[.md:
+# vcpkg_build_make
 
-    if(NOT _bc_LOGFILE_ROOT)
-        set(_bc_LOGFILE_ROOT "build")
+Build a linux makefile project.
+
+## Usage:
+```cmake
+vcpkg_build_make([BUILD_TARGET <target>]
+                 [INSTALL_TARGET <target>]
+                 [ADD_BIN_TO_PATH]
+                 [ENABLE_INSTALL]
+                 [MAKEFILE <makefileName>]
+                 [LOGFILE_ROOT <logfileroot>]
+                 [DISABLE_PARALLEL]
+                 [SUBPATH <path>])
+```
+
+### BUILD_TARGET
+The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
+be passed.
+
+### INSTALL_TARGET
+The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
+
+### ADD_BIN_TO_PATH
+Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
+
+### ENABLE_INSTALL
+IF the port supports the install target use vcpkg_install_make() instead of vcpkg_build_make()
+
+### MAKEFILE
+Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
+
+### LOGFILE_ROOT
+Specifies a log file prefix.
+
+### DISABLE_PARALLEL
+The underlying buildsystem will be instructed to not parallelize
+
+### SUBPATH
+Additional subdir to invoke make in. Useful if only parts of a port should be built. 
+
+## Notes:
+This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
+"install" target
+
+## Examples
+
+* [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
+* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
+* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
+* [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+#]===]
+
+function(vcpkg_build_make)
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL"
+        "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
+        "OPTIONS"
+    )
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "vcpkg_make_build was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    
-    if (_VCPKG_PROJECT_SUBPATH)
-        set(_VCPKG_PROJECT_SUBPATH /${_VCPKG_PROJECT_SUBPATH}/)
+
+    if(NOT DEFINED arg_LOGFILE_ROOT)
+        set(arg_LOGFILE_ROOT "build")
     endif()
-    
-    set(MAKE )
-    set(MAKE_OPTS )
-    set(INSTALL_OPTS )
-    if (_VCPKG_MAKE_GENERATOR STREQUAL "make")
-        if (CMAKE_HOST_WIN32)
-            # Compiler requriements
-            vcpkg_find_acquire_program(YASM)
-            vcpkg_find_acquire_program(PERL)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-            get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-            
-            set(PATH_GLOBAL "$ENV{PATH}")
-            set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;${PERL_EXE_PATH}")
-            set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-            # Set make command and install command
-            set(MAKE ${BASH} --noprofile --norc -c "${_VCPKG_PROJECT_SUBPATH}make")
-            # Must use absolute path to call make in windows
-            set(MAKE_OPTS -j ${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install -j ${VCPKG_CONCURRENCY})
-        else()
-            # Compiler requriements
-            find_program(MAKE make REQUIRED)
-            set(MAKE make;)
-            # Set make command and install command
-            set(MAKE_OPTS -j;${VCPKG_CONCURRENCY})
-            set(INSTALL_OPTS install;-j;${VCPKG_CONCURRENCY})
-        endif()
-    elseif (_VCPKG_MAKE_GENERATOR STREQUAL "nmake")
-        find_program(NMAKE nmake REQUIRED)
-        get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
-        set(PATH_GLOBAL "$ENV{PATH}")
-        set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
-        set(ENV{CL} "$ENV{CL} /MP")
-        # Set make command and install command
-        set(MAKE ${NMAKE} /NOLOGO /G /U)
-        set(MAKE_OPTS -f makefile all)
-        set(INSTALL_OPTS install)
+
+    if(NOT DEFINED arg_BUILD_TARGET)
+        set(arg_BUILD_TARGET "all")
+    endif()
+
+    if (NOT DEFINED arg_MAKEFILE)
+        set(arg_MAKEFILE Makefile)
+    endif()
+
+    if(NOT DEFINED arg_INSTALL_TARGET)
+        set(arg_INSTALL_TARGET "install")
+    endif()
+
+    if(WIN32)
+        set(Z_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
     else()
-        message(FATAL_ERROR "${_VCPKG_MAKE_GENERATOR} not supported.")
+        string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
-    
-    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-    
-    foreach(BUILDTYPE "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-            if(BUILDTYPE STREQUAL "debug")
-                # Skip debug generate
-                if (_VCPKG_NO_DEBUG)
-                    continue()
-                endif()
-                set(SHORT_BUILDTYPE "-dbg")
+
+    vcpkg_list(SET make_opts)
+    vcpkg_list(SET install_opts)
+    if (CMAKE_HOST_WIN32)
+        set(path_backup "$ENV{PATH}")
+        vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper")
+        if(NOT DEFINED Z_VCPKG_MAKE)
+            vcpkg_acquire_msys(MSYS_ROOT)
+            find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
+        endif()
+        set(make_command "${Z_VCPKG_MAKE}")
+        vcpkg_list(SET make_opts ${arg_OPTIONS} ${arg_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET no_parallel_make_opts ${arg_OPTIONS} ${arg_MAKE_OPTIONS} -j 1 --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+
+        string(REPLACE " " [[\ ]] vcpkg_package_prefix "${CURRENT_PACKAGES_DIR}")
+        string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
+        vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
+        #TODO: optimize for install-data (release) and install-exec (release/debug)
+
+    else()
+        if(VCPKG_HOST_IS_OPENBSD)
+            find_program(Z_VCPKG_MAKE gmake REQUIRED)
+        else()
+            find_program(Z_VCPKG_MAKE make REQUIRED)
+        endif()
+        set(make_command "${Z_VCPKG_MAKE}")
+        vcpkg_list(SET make_opts ${arg_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET no_parallel_make_opts ${arg_MAKE_OPTIONS} V=1 -j 1 -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
+    endif()
+
+    # Since includes are buildtype independent those are setup by vcpkg_configure_make
+    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+
+    foreach(buildtype IN ITEMS "debug" "release")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
+            if("${buildtype}" STREQUAL "debug")
+                set(short_buildtype "-dbg")
+                set(cmake_buildtype "DEBUG")
+                set(path_suffix "/debug")
             else()
                 # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                if (_VCPKG_NO_DEBUG)
-                    set(SHORT_BUILDTYPE "")
-                else()
-                    set(SHORT_BUILDTYPE "-rel")
-                endif()
+                set(short_buildtype "-rel")
+                set(cmake_buildtype "RELEASE")
+                set(path_suffix "")
+            endif()
+
+            set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}/${arg_SUBPATH}")
+            message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
+
+            z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
+
+            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
+            else() # dynamic
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
+            endif()
+            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
+                set(LDFLAGS_${cmake_buildtype} "-L${Z_VCPKG_INSTALLED}${path_suffix}/lib -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
+                set(LINK_ENV_${cmake_buildtype} "$ENV{_LINK_} ${LINKER_FLAGS_${cmake_buildtype}}")
+            else()
+                set(LDFLAGS_${cmake_buildtype} "-L${Z_VCPKG_INSTALLED}${path_suffix}/lib -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link ${LINKER_FLAGS_${cmake_buildtype}}")
             endif()
             
-            if (CMAKE_HOST_WIN32)
-                # In windows we can remotely call make
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-            else()
-                set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-            endif()
-    
-            message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
+            # Setup environment
+            set(ENV{CPPFLAGS} "${CPPFLAGS_${cmake_buildtype}}")
+            set(ENV{CFLAGS} "${CFLAGS_${cmake_buildtype}}")
+            set(ENV{CXXFLAGS} "${CXXFLAGS_${cmake_buildtype}}")
+            set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${cmake_buildtype}}")
+            set(ENV{LDFLAGS} "${LDFLAGS_${cmake_buildtype}}")
+            vcpkg_host_path_list(PREPEND ENV{LIB} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            vcpkg_host_path_list(PREPEND ENV{LIBPATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            vcpkg_host_path_list(PREPEND ENV{LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
+            #vcpkg_host_path_list(PREPEND ENV{LD_LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/manual-link/")
 
-            if(_bc_ADD_BIN_TO_PATH)
-                set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(CMAKE_HOST_WIN32)
-                    set(_PATHSEP ";")
-                else()
-                    set(_PATHSEP ":")
-                endif()
-                if(BUILDTYPE STREQUAL "debug")
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin${_PATHSEP}$ENV{PATH}")
-                else()
-                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin${_PATHSEP}$ENV{PATH}")
-                endif()
+            if(LINK_ENV_${_VAR_SUFFIX})
+                set(config_link_backup "$ENV{_LINK_}")
+                set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
             endif()
 
-            if (CMAKE_HOST_WIN32)
+            if(arg_ADD_BIN_TO_PATH)
+                set(env_backup_path "$ENV{PATH}")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
+            endif()
+
+            vcpkg_list(SET make_cmd_line ${make_command} ${make_opts})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
+
+            if (arg_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                    COMMAND "${MAKE} ${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                        COMMAND ${no_parallel_make_cmd_line}
+                        WORKING_DIRECTORY "${working_directory}"
+                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
                 )
             else()
                 vcpkg_execute_build_process(
-                    COMMAND "${MAKE};${MAKE_OPTS}"
-                    WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                    LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
+                        COMMAND ${make_cmd_line}
+                        NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
+                        WORKING_DIRECTORY "${working_directory}"
+                        LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}"
                 )
             endif()
-    
-            if(_bc_ADD_BIN_TO_PATH)
-                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+
+            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}${short_buildtype}-out.log" logdata) 
+            if(logdata MATCHES "Warning: linker path does not have real file for library")
+                message(FATAL_ERROR "libtool could not find a file being linked against!")
+            endif()
+
+            if (arg_ENABLE_INSTALL)
+                message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
+                vcpkg_list(SET make_cmd_line ${make_command} ${install_opts})
+                vcpkg_execute_build_process(
+                    COMMAND ${make_cmd_line}
+                    WORKING_DIRECTORY "${working_directory}"
+                    LOGNAME "install-${TARGET_TRIPLET}${short_buildtype}"
+                )
+            endif()
+
+            if(config_link_backup)
+                set(ENV{_LINK_} "${config_link_backup}")
+                unset(config_link_backup)
+            endif()
+
+            if(arg_ADD_BIN_TO_PATH)
+                set(ENV{PATH} "${env_backup_path}")
             endif()
         endif()
     endforeach()
-    
-    if (_bc_ENABLE_INSTALL)
-        foreach(BUILDTYPE "debug" "release")
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-                if(BUILDTYPE STREQUAL "debug")
-                    # Skip debug generate
-                    if (_VCPKG_NO_DEBUG)
-                        continue()
-                    endif()
-                    set(SHORT_BUILDTYPE "-dbg")
-                else()
-                    # In NO_DEBUG mode, we only use ${TARGET_TRIPLET} directory.
-                    if (_VCPKG_NO_DEBUG)
-                        set(SHORT_BUILDTYPE "")
-                    else()
-                        set(SHORT_BUILDTYPE "-rel")
-                    endif()
-                endif()
-            
-                message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
-                if (CMAKE_HOST_WIN32)
-                    # In windows we can remotely call make
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE})
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE} ${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
-                else()
-                    set(WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_VCPKG_PROJECT_SUBPATH})
-                    vcpkg_execute_build_process(
-                        COMMAND "${MAKE};${INSTALL_OPTS}"
-                        WORKING_DIRECTORY ${WORKING_DIRECTORY}
-                        LOGNAME "install-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
-                    )
-                endif()
-            endif()
-        endforeach()
+
+    if (arg_ENABLE_INSTALL)
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" Z_VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
+        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${Z_VCPKG_INSTALL_PREFIX}" "${CURRENT_PACKAGES_DIR}")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
     endif()
-    
+
+    # Remove libtool files since they contain absolute paths and are not necessary. 
+    file(GLOB_RECURSE libtool_files "${CURRENT_PACKAGES_DIR}/**/*.la")
+    if(libtool_files)
+        file(REMOVE ${libtool_files})
+    endif()
+
     if (CMAKE_HOST_WIN32)
-        set(ENV{PATH} "${PATH_GLOBAL}")
+        set(ENV{PATH} "${path_backup}")
     endif()
+
+    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 endfunction()

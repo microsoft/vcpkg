@@ -1,0 +1,16 @@
+{
+  "name": "cxxopts",
+  "version-semver": "3.0.0",
+  "description": "This is a lightweight C++ option parser library, supporting the standard GNU style syntax for options",
+  "homepage": "https://github.com/jarro2783/cxxopts",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

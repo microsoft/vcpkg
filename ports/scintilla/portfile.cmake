@@ -1,22 +1,30 @@
 vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_download_distfile(ARCHIVE
-  URLS "http://www.scintilla.org/scintilla423.zip"
-  FILENAME "scintilla423.zip"
-  SHA512 82a595782119ce5bb48c39f4cb9b29605c4cdc276f605ebd3e3b3ecae003ef2132102e21be8943c8b36ec40957e2e50f4ebc0086a5096901fa0e8e5e178db750
+  URLS "https://www.scintilla.org/scintilla446.zip"
+  FILENAME "scintilla446.zip"
+  SHA512 db6fa38283401497d8331f97dc5b57ea11d998988001f06b95892de769de5829b9f567635f3c1f2d9cfbc4384024d11666d28224ce90c5813ceef865b0dec255
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  list(APPEND PATCHES 0001-static-lib.patch)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+  list(APPEND PATCHES 0002-static-crt.patch)
+endif()
+
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  REF 4.2.3
+  REF 4.4.6
+  PATCHES ${PATCHES}
 )
 
 vcpkg_install_msbuild(
   SOURCE_PATH ${SOURCE_PATH}
   PROJECT_SUBPATH Win32/SciLexer.vcxproj
-  INCLUDES_SUBPATH include
   LICENSE_SUBPATH License.txt
-  ALLOW_ROOT_INCLUDES
 )
+
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.*")

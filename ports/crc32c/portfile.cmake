@@ -1,26 +1,24 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/crc32c
-  REF 83c31e797274a5b26e9e4a5355ba394cd0cabc10
-  SHA512 829f8618c2769d274b400cf6de1dd2ab874d50d36e8cb086238aadae804154360b113faecd3c60e029a8d5ebc620d4b7cc7e1492775a4235d53989116227cd52
+  REF 1.1.2
+  SHA512 6325c52b5a6850b9f90086e0c0c86798c008af36e7cfd3a0216184a2d37b3bf7323481ddc6bfe4cbd5b31288b3ee6c69772d03085a13094cf95d00a9756a7196
   HEAD_REF master
-  PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001_export_symbols.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
     -DCRC32C_BUILD_TESTS=OFF
     -DCRC32C_BUILD_BENCHMARKS=OFF
     -DCRC32C_USE_GLOG=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Crc32c)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Crc32c)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -30,4 +28,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/crc32c RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

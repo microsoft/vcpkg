@@ -1,0 +1,4 @@
+The package libodb-mysql provides CMake integration:
+
+    find_package(odb CONFIG COMPONENTS libodb mysql REQUIRED)
+    target_link_libraries(main PRIVATE odb::libodb-mysql)

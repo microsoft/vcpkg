@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 526dfcf60..241f706b7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,7 +97,7 @@ endif()
+ 
+ include(CMakeDependentOption)
+ 
+-if(MSVC)
++if(MSVC AND NOT VCPKG_TOOLCHAIN)
+   option(WITH_GFLAGS "build with GFlags" OFF)
+   option(WITH_XPRESS "build with windows built in compression" OFF)
+   include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
+@@ -142,10 +142,7 @@ else()
+   endif()
+ 
+   if(WITH_SNAPPY)
+-    find_package(Snappy CONFIG)
+-    if(NOT Snappy_FOUND)
+-      find_package(Snappy REQUIRED)
+-    endif()
++    find_package(Snappy CONFIG REQUIRED)
+     add_definitions(-DSNAPPY)
+     list(APPEND THIRDPARTY_LIBS Snappy::snappy)
+   endif()
+@@ -169,16 +166,19 @@ else()
+   endif()
+ 
+   if(WITH_LZ4)
+-    find_package(lz4 REQUIRED)
++    find_package(lz4 CONFIG REQUIRED)
+     add_definitions(-DLZ4)
+     list(APPEND THIRDPARTY_LIBS lz4::lz4)
+   endif()
+ 
+   if(WITH_ZSTD)
+-    find_package(zstd REQUIRED)
++    find_package(zstd CONFIG REQUIRED)
+     add_definitions(-DZSTD)
+-    include_directories(${ZSTD_INCLUDE_DIR})
+-    list(APPEND THIRDPARTY_LIBS zstd::zstd)
++    if(TARGET zstd::libzstd_shared)
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_shared)
++    elseif(TARGET zstd::libzstd_static)
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_static)
++    endif()
+   endif()
+ endif()
+ 
+@@ -438,9 +438,9 @@ endif()
+ 
+ option(WITH_TBB "build with Threading Building Blocks (TBB)" OFF)
+ if(WITH_TBB)
+-  find_package(TBB REQUIRED)
++  find_package(TBB CONFIG REQUIRED)
+   add_definitions(-DTBB)
+-  list(APPEND THIRDPARTY_LIBS TBB::TBB)
++  list(APPEND THIRDPARTY_LIBS TBB::tbb)
+ endif()
+ 
+ # Stall notifications eat some performance from inserts

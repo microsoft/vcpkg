@@ -1,0 +1,7 @@
+{
+  "name": "fann",
+  "version": "2.2.0",
+  "port-version": 2,
+  "description": "Fast Artificial Neural Network (FANN) Library is a free open source neural network library, which implements multilayer artificial neural networks in C with support for both fully connected and sparsely connected networks.",
+  "homepage": "https://github.com/libfann/fann"
+}

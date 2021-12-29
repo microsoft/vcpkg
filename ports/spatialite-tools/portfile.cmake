@@ -1,118 +1,102 @@
-include(vcpkg_common_functions)
+# Allow empty include directory
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-option(BUILD_DEBUG_TOOLS "Build debug version of tools" OFF)
-
+set(SPATIALITE_TOOLS_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-4.3.0.tar.gz"
-    FILENAME "spatialite-tools-4.3.0.tar.gz"
-    SHA512 e1de27c1c65ff2ff0b08583113517bea74edf33fff59ad6e9c77492ea3ae87d9c0f17d7670ee6602b32eea73ad3678bb5410ef2c6fac6e213bf2e341a907db88
+    URLS "https://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
+    FILENAME "spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
+    SHA512 dad52f6ed3c66ffd95f3a5c21225cd1b20641523af616f7e8defba8e4e46921da169e5f7bf9c53a355e132b6e74750d6db3fe02c870a3386f850df49c83bb8cd
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
 )
+file(REMOVE "${SOURCE_PATH}/config.h")
 
-find_program(NMAKE nmake)
+set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
 
-set(LDIR "\"${CURRENT_INSTALLED_DIR}\"")
+if (VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND PKGCONFIG_MODULES readosm spatialite)
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        LIBS
+    )
 
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
-    set(CL_FLAGS_REL "/MD /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
-    set(GEOS_LIBS_REL "${LDIR}/lib/geos_c.lib")
-    set(GEOS_LIBS_DBG "${LDIR}/debug/lib/geos_cd.lib")
-    set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib")
-    set(LIBXML2_LIBS_DBG "${LDIR}/debug/lib/libxml2.lib")
-    set(SPATIALITE_LIBS_REL "${LDIR}/lib/spatialite.lib")
-    set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib")
-    set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib")
-    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib")
+    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
+    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    endif()
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
+    endif()
+
+    set(ICONV_LIBS "iconv.lib")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(APPEND ICONV_LIBS " charset.lib")
+    endif()
+
+    set(UWP_LIBS "")
+    if(VCPKG_TARGET_IS_UWP)
+        set(UWP_LIBS "windowsapp.lib /APPCONTAINER")
+    endif()
+
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
+
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS_RELEASE
+            "INSTDIR=${INST_DIR}"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} ${ICONV_LIBS} ${UWP_LIBS}"
+        OPTIONS_DEBUG
+            "INSTDIR=${INST_DIR}\\debug"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} ${ICONV_LIBS} ${UWP_LIBS}"
+        )
+
+    set(TOOL_EXES
+        shp_sanitize
+        spatialite_osm_filter
+        spatialite_osm_raw
+        spatialite_gml
+        spatialite_osm_map
+        exif_loader
+        spatialite_osm_net
+        spatialite_network
+        spatialite_tool
+        shp_doctor
+        spatialite
+    )
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
 else()
-    set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
-    set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
-    set(GEOS_LIBS_REL "${LDIR}/lib/libgeos_c.lib ${LDIR}/lib/libgeos.lib")
-    set(GEOS_LIBS_DBG "${LDIR}/debug/lib/libgeos_c.lib ${LDIR}/debug/lib/libgeos.lib")
-    set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib ${LDIR}/lib/lzma.lib ws2_32.lib")
-    set(LIBXML2_LIBS_DBG "${LDIR}/debug/lib/libxml2.lib ${LDIR}/debug/lib/lzma.lib ws2_32.lib")
-    set(SPATIALITE_LIBS_REL "${LDIR}/lib/spatialite.lib ${LDIR}/lib/freexl.lib")
-    set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib ${LDIR}/debug/lib/freexl.lib")
-    set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib ${LDIR}/lib/libcharset.lib")
-    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib ${LDIR}/debug/lib/libcharset.lib ")
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES ${PKGCONFIG_MODULES}
+        LIBS
+    )
+
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS
+            --disable-minizip
+            --disable-readline
+            --enable-readosm
+        OPTIONS_DEBUG
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
+        OPTIONS_RELEASE
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
+    )
+
+    vcpkg_install_make()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-set(LIBS_ALL_DBG
-    "${ICONV_LIBS_DBG} \
-    ${LDIR}/debug/lib/sqlite3.lib \
-    ${SPATIALITE_LIBS_DBG} \
-    ${LIBXML2_LIBS_DBG} \
-    ${GEOS_LIBS_DBG} \
-    ${LDIR}/debug/lib/readosm.lib \
-    ${LDIR}/debug/lib/expat.lib \
-    ${LDIR}/debug/lib/zlibd.lib \
-    ${LDIR}/debug/lib/proj_d.lib"
-   )
-set(LIBS_ALL_REL
-    "${ICONV_LIBS_REL} \
-    ${LDIR}/lib/sqlite3.lib \
-    ${SPATIALITE_LIBS_REL} \
-    ${LIBXML2_LIBS_REL} \
-    ${GEOS_LIBS_REL} \
-    ${LDIR}/lib/readosm.lib \
-    ${LDIR}/lib/expat.lib \
-    ${LDIR}/lib/zlib.lib \
-    ${LDIR}/lib/proj.lib"
-   )
-
-if(BUILD_DEBUG_TOOLS)
-	################
-	# Debug build
-	################
-	message(STATUS "Building ${TARGET_TRIPLET}-dgb")
-
-	file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-	vcpkg_execute_required_process(
-		COMMAND ${NMAKE} -f makefile.vc clean install
-		"INST_DIR=\"${INST_DIR_REL}\"" "INSTALLED_ROOT=${LDIR}" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
-		WORKING_DIRECTORY ${SOURCE_PATH}
-		LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-	)
-	message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-	set(EXE_FOLDER ${CURRENT_PACKAGES_DIR}/bin/)
-else()
-	################
-	# Release build
-	################
-	message(STATUS "Building ${TARGET_TRIPLET}-rel")
-
-	file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-	vcpkg_execute_required_process(
-		COMMAND ${NMAKE} -f makefile.vc clean install
-		"INST_DIR=\"${INST_DIR_REL}\"" "INSTALLED_ROOT=${LDIR}" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
-		WORKING_DIRECTORY ${SOURCE_PATH}
-		LOGNAME nmake-build-${TARGET_TRIPLET}-release
-	)
-	message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-	set(EXE_FOLDER ${CURRENT_PACKAGES_DIR}/bin/)
-endif()
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-file(GLOB EXES "${EXE_FOLDER}/*.exe")
-file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(REMOVE ${EXES})
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-
-if(NOT BUILD_DEBUG_TOOLS AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
-
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
-
-# Allow empty include directory
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,72 +1,69 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
-set(VERSION 0.9.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libssh.org/files/0.9/libssh-${VERSION}.tar.xz"
-    FILENAME "libssh-${VERSION}.tar.xz"
-    SHA512 8c91b31e49652d93c295ca62c2ff1ae30f26c263195a8bc2390e44f6e688959507f609125d342ee8180fc03cec2d73258ac72f864696281b53ba9ad244060865
-)
-
-#vcpkg_download_distfile(WINPATCH
-#    URLS "https://bugs.libssh.org/rLIBSSHf81ca6161223e3566ce78a427571235fb6848fe9?diff=1"
-#    FILENAME "libssh-f81ca616.patch"
-#    SHA512 f3f6088f8f1bf8fe6226c1aa7b355d877be7f2aa9482c5e3de74b6a35fc5b28d8f89221d3afa5a5d3a5900519a86e5906516667ed22ad98f058616a8120999cd
-#)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    URL https://git.libssh.org/projects/libssh.git
+    REF 47fd6e56c1058dca54afee1638c11fb6ec41911d # REFERENCE VERSION 0.9.6
     PATCHES
-        build-one-flavor.patch
-        install-config.patch
+        0001-export-pkgconfig-file.patch
+        0002-mingw_for_Android.patch
+        0003-create_symlink_unix_only.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" WITH_STATIC_LIB)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        mbedtls WITH_MBEDTLS
+        zlib    WITH_ZLIB
+)
 
-if(zlib IN_LIST FEATURES)
-	set(WITH_ZLIB ON)
-else()
-	set(WITH_ZLIB OFF)
-endif()
+if (VCPKG_TARGET_IS_ANDROID)
+	set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
+			"-DWITH_PCAP=FALSE"
+			)
+endif ()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DWITH_STATIC_LIB=${WITH_STATIC_LIB}
+        ${EXTRA_ARGS}
+        ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
-        -DWITH_TESTING=OFF
+        -DUNIT_TESTING=OFF
+        -DCLIENT_TESTING=OFF
+        -DSERVER_TESTING=OFF
         -DWITH_NACL=OFF
         -DWITH_GSSAPI=OFF
-        -DWITH_ZLIB=${WITH_ZLIB}
-        "-DCMAKE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share"
-)
+        -DWITH_SYMBOL_VERSIONING=OFF)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
+#Fixup pthread naming
+if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libssh.pc" "-lpthread" "-lpthreadVC3d")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libssh.pc" "-lpthread" "-lpthreadVC3")
+endif()
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(READ ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h _contents)
-    string(REPLACE "#ifdef LIBSSH_STATIC" "#if 1" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h "${_contents}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    vcpkg_replace_string(
+	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h" 
+	    "#ifdef LIBSSH_STATIC"
+	    "#if 1"
+	)	
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(READ ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake _contents)
-    string(REPLACE ".dll" ".lib" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake "${_contents}")
+    vcpkg_replace_string(
+	    "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
+	    ".dll"
+	    ".lib"
+	)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# The installed cmake config files are nonfunctional (0.7.5)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

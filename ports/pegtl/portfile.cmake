@@ -1,15 +1,13 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taocpp/pegtl
-    REF 697aaa06564c6ea9d13f95de081a2d2d46b39160
-    SHA512 453821966526569a2d1842ec0bebe6f65dee0241d6ab7d38255726243326356b6a972bf5ca58168e94f51dd87c74ce17fdefffd19fe67570fe9dc52f1f6a4f16
+    REF 3.2.2
+    SHA512 7ad055e38b362d6b90a49d5deb400948febfbcc30898e05548424bc758f38ffb3f69ca0db41e4480697f8916c90bdb3e48927a4db0caa7a20c8012b1a6d1fe08
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPEGTL_BUILD_TESTS=OFF
         -DPEGTL_BUILD_EXAMPLES=OFF
@@ -17,11 +15,11 @@ vcpkg_configure_cmake(
         -DPEGTL_INSTALL_CMAKE_DIR=share/pegtl/cmake
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/pegtl/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/pegtl/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pegtl/LICENSE ${CURRENT_PACKAGES_DIR}/share/pegtl/copyright)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pegtl/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

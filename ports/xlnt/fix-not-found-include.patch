@@ -1,0 +1,12 @@
+diff --git a/cmake/XlntConfig.cmake.in b/cmake/XlntConfig.cmake.in
+index 01fe4981..9cefa6e0 100644
+--- a/cmake/XlntConfig.cmake.in
++++ b/cmake/XlntConfig.cmake.in
+@@ -7,7 +7,6 @@
+ get_filename_component(XLNT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ 
+-set_and_check(XLNT_INCLUDE_DIR "@XLNT_INCLUDE_INSTALL_DIR@")
+ 
+ check_required_components(xlnt)
+ 
+ if(NOT TARGET xlnt::xlnt)

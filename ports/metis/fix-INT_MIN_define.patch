@@ -1,0 +1,34 @@
+diff --git a/include/metis.h b/include/metis.h
+index dc5406a..7732437 100644
+--- a/include/metis.h
++++ b/include/metis.h
+@@ -72,10 +72,14 @@ typedef __int64 int64_t;
+ #define PRId64       "I64d"
+ #define SCNd32       "ld"
+ #define SCNd64       "I64d"
++#ifdef _WIN32
++#include <stdint.h>
++#else
+ #define INT32_MIN    ((int32_t)_I32_MIN)
+ #define INT32_MAX    _I32_MAX
+ #define INT64_MIN    ((int64_t)_I64_MIN)
+ #define INT64_MAX    _I64_MAX
++#endif
+ #else
+ #include <inttypes.h>
+ #endif
+diff --git a/GKlib/gk_arch.h b/GKlib/gk_arch.h
+index 78b1431..7258763 100644
+--- a/GKlib/gk_arch.h
++++ b/GKlib/gk_arch.h
+@@ -32,8 +32,8 @@
+ 
+ 
+ #ifdef __MSC__ 
+-  #include "ms_stdint.h"
+-  #include "ms_inttypes.h"
++  #include <stdint.h>
++  #include <inttypes.h>
+   #include "ms_stat.h"
+ #else
+ #ifndef SUNOS

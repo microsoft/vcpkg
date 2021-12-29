@@ -1,86 +1,94 @@
-include(vcpkg_common_functions)
-
+set(READOSM_VERSION_STR "1.1.0a")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-1.1.0.tar.gz"
-    FILENAME "readosm-1.1.0.tar.gz"
-    SHA512 d3581f564c4461c6a1a3d5fd7d18a262c884b2ac935530064bfaebd6c05d692fb92cc600fb40e87e03f7160ebf0eeeb05f51a0e257935d056b233fe28fc01a11
+    URLS "https://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-${READOSM_VERSION_STR}.tar.gz"
+    FILENAME "readosm-${READOSM_VERSION_STR}.tar.gz"
+    SHA512 ec8516cdd0b02027cef8674926653f8bc76e2082c778b02fb2ebcfa6d01e21757aaa4fd5d5104059e2f5ba97190183e60184f381bfd592a635805aa35cd7a682
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
-        fix-version-macro.patch
+        pc-file.patch
 )
 
-find_program(NMAKE nmake)
+set(PKGCONFIG_MODULES expat zlib)
 
-set(LIBS_ALL_DBG "\"${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib\"")
-set(LIBS_ALL_REL "\"${CURRENT_INSTALLED_DIR}/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/lib/zlib.lib\"")
-
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-	set(CL_FLAGS_DBG "/MDd /Zi")
-	set(CL_FLAGS_REL "/MD /Ox")
-else()
-	set(CL_FLAGS_DBG "/MTd /Zi")
-	set(CL_FLAGS_REL "/MT /Ox")
-endif()
-
-################
-# Debug build
-################
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
-
-    vcpkg_execute_required_process(
-        COMMAND ${NMAKE} -f makefile.vc clean install
-        INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}"
-        "LIBS_ALL=${LIBS_ALL_DBG}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        LIBS
     )
-    vcpkg_copy_pdbs()
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-endif()
 
-################
-# Release build
-################
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
+    if(VCPKG_TARGET_IS_UWP)
+        set(UWP_LIBS windowsapp.lib)
+        set(UWP_LINK_FLAGS /APPCONTAINER)
+    endif()
 
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-    vcpkg_execute_required_process(
-        COMMAND ${NMAKE} -f makefile.vc clean install
-        INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}"
-        "LIBS_ALL=${LIBS_ALL_REL}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
+
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS_RELEASE
+            "INSTDIR=${INST_DIR}"
+            "LINK_FLAGS=${UWP_LINK_FLAGS}"
+            "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} ${UWP_LIBS}"
+        OPTIONS_DEBUG
+            "INSTDIR=${INST_DIR}\\debug"
+            "LINK_FLAGS=${UWP_LINK_FLAGS} /debug"
+            "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} ${UWP_LIBS}"
     )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/readosm RENAME copyright)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib")
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib")
+        endif()
+    else()
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/readosm.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib" "${CURRENT_PACKAGES_DIR}/lib/readosm.lib")
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib")
+        endif()
+    endif()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib)
+    set(infile "${SOURCE_PATH}/readosm.pc.in")
+    set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/readosm.pc")
+    set(VERSION "${READOSM_VERSION_STR}")
+    set(exec_prefix [[${prefix}]])
+    set(libdir [[${prefix}/lib]])
+    set(includedir [[${prefix}/include]])
+    list(JOIN pkg_config_modules " " requires_private)
+    configure_file("${infile}" "${outfile}" @ONLY)
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/readosm.pc")
+        set(includedir [[${prefix}/../include]])
+        configure_file("${infile}" "${outfile}" @ONLY)
+    endif()
+
 else()
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/readosm.lib)
-  file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib)
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/lib/readosm.lib)
-  endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib)
-  endif()
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES ${PKGCONFIG_MODULES}
+        LIBS
+    )
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS_RELEASE
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
+        OPTIONS_DEBUG
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
+    )
+
+    vcpkg_install_make()
 endif()
 
+vcpkg_fixup_pkgconfig()
 
-message(STATUS "Packaging ${TARGET_TRIPLET} done")
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

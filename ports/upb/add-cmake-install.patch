@@ -1,0 +1,41 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index c90968f..50637ec 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -8,7 +8,7 @@ else()
+     cmake_policy(VERSION 3.12)
+ endif()
+ 
+-cmake_minimum_required (VERSION 3.0)
++cmake_minimum_required (VERSION 3.14)
+ cmake_policy(SET CMP0048 NEW)
+ 
+ project(upb)
+@@ -154,3 +154,27 @@ set_target_properties(reflection PROPERTIES OUTPUT_NAME upb_reflection)
+ set_target_properties(fastdecode PROPERTIES OUTPUT_NAME upb_fastdecode)
+ set_target_properties(textformat PROPERTIES OUTPUT_NAME upb_textformat)
+ 
++install(
++  DIRECTORY ../upb
++  DESTINATION include
++  FILES_MATCHING
++  PATTERN "*.h"
++  PATTERN "*.hpp"
++  PATTERN "*.inc"
++  PATTERN "*.int.h"
++)
++target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
++install(TARGETS
++  upb
++  utf8_range
++  fastdecode
++  json
++  port
++  table
++  descriptor_upb_proto
++  reflection
++  textformat
++  all_libs
++  EXPORT upb-config
++)
++install(EXPORT upb-config NAMESPACE upb:: DESTINATION share/upb)

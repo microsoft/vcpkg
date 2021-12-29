@@ -1,0 +1,28 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index a6b432f..003615e 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -59,6 +59,10 @@ elseif(UNIX)
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
+ endif()
+ 
++if (MSVC)
++  add_compile_options(/wd4146 /wd4703 -D_CRT_SECURE_NO_WARNINGS)
++endif()
++
+ enable_testing()
+ 
+ add_library(port INTERFACE)
+diff --git a/upb/json_decode.c b/upb/json_decode.c
+index bb33744..1fadd26 100644
+--- a/upb/json_decode.c
++++ b/upb/json_decode.c
+@@ -1160,7 +1160,7 @@ static void jsondec_struct(jsondec *d, upb_msg *msg, const upb_msgdef *m) {
+ static void jsondec_wellknownvalue(jsondec *d, upb_msg *msg,
+                                    const upb_msgdef *m) {
+   upb_msgval val;
+-  const upb_fielddef *f;
++  const upb_fielddef *f = NULL;
+   upb_msg *submsg;
+ 
+   switch (jsondec_peek(d)) {

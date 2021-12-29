@@ -1,0 +1,44 @@
+{
+  "versions": [
+    {
+      "git-tree": "e544825ca69bfca4e3f54141bf62cacb1cd878ea",
+      "version": "1.7",
+      "port-version": 3
+    },
+    {
+      "git-tree": "d99bfeedaecfb8155ed9a404e3aa683f1b1df72a",
+      "version-string": "1.7-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "15274b3d9b4eb39d86c50e085b0110a56c0a2e83",
+      "version-string": "1.7-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "22076969c0b319d74c0353f8471aa0c5791d82b2",
+      "version-string": "1.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "6c6664e346ede2ca06e6bb7629f06c58a723a813",
+      "version-string": "MsixCoreInstaller-preview-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cf561286237c049f194fd880fdc894d490e05d7d",
+      "version-string": "MsixCoreInstaller-preview",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2c5bf5801aa8d5e58017c57e7c18530984d92b75",
+      "version-string": "1.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4b8358cee82445bdac186cf73a8624e1bd127f17",
+      "version-string": "1.0",
+      "port-version": 0
+    }
+  ]
+}

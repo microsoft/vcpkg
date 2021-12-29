@@ -1,0 +1,10 @@
+{
+  "name": "oatpp-curl",
+  "version": "1.2.5",
+  "description": "Oat++ Modern web framework curl module to use libcurl as a RequestExecutor on the oatpp's ApiClient.",
+  "homepage": "https://github.com/oatpp/oatpp-curl",
+  "dependencies": [
+    "curl",
+    "oatpp"
+  ]
+}

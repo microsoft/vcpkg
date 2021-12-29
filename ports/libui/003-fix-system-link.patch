@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a23b84d..9892dfc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -172,6 +172,12 @@ if(BUILD_SHARED_LIBS)
+ 	target_link_libraries(libui
+ 		PRIVATE ${_LIBUI_LIBS})
+ endif()
++
++if (APPLE)
++    find_library(Foundation Foundation)
++    find_library(AppKit AppKit)
++    target_link_libraries(libui PUBLIC $<$<PLATFORM_ID:Darwin>:${Foundation};${AppKit}>)
++endif()
+ # TODO INTERFACE libs don't inherit to grandhcildren?
+ # on Windows the linker for static libraries is different; don't give it the flags
+ if(BUILD_SHARED_LIBS)

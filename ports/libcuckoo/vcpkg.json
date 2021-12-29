@@ -1,0 +1,7 @@
+{
+  "name": "libcuckoo",
+  "version-string": "0.3",
+  "port-version": 1,
+  "description": "A high-performance, concurrent hash table",
+  "homepage": "https://github.com/efficient/libcuckoo"
+}

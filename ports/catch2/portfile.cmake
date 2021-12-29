@@ -1,28 +1,42 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF d10b9bd02e098476670f5eb0527d2c7281476e8a #v2.11.1
-    SHA512 c4a2f6bac4eb7abf8ad79aa1421b8b2ea623be3c946b02b9287fa2f95952b281a454eb56b80224fc1824e4d8c67317bc657eec4b4e65fb9709031602371e13b3
-    HEAD_REF master
+    REF v2.13.7
+    SHA512 1c3cbdecc6a3b59360a97789c4784d79d027e1b63bdc42b0e152c3272f7bad647fcd1490aa5caf67f968a6311dc9624b5a70d5eb3fbc1d5179d520e09b76c9ed
+    HEAD_REF devel
+    PATCHES 
+        fix-install-path.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DCATCH_BUILD_EXAMPLES=OFF
+        -DCATCH_BUILD_STATIC_LIBRARY=${BUILD_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/share/Catch2" "${CURRENT_PACKAGES_DIR}/share/catch2_")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/share/catch2_" "${CURRENT_PACKAGES_DIR}/share/catch2")
+endif()
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/Catch2" "${CURRENT_PACKAGES_DIR}/debug/share/catch2_")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/catch2_" "${CURRENT_PACKAGES_DIR}/debug/share/catch2")
+endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Catch2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Catch2")
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/catch2/catch.hpp)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/catch2/catch.hpp")
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/catch.hpp "#include <catch2/catch.hpp>")
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch.hpp>")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

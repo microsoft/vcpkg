@@ -1,0 +1,6 @@
+{
+  "name": "fplus",
+  "version-semver": "0.2.14-p0",
+  "description": "Functional Programming Library for C++. Write concise and readable C++ code",
+  "homepage": "https://github.com/Dobiasd/FunctionalPlus"
+}
