@@ -7,8 +7,8 @@ vcpkg_from_github(
 )
 
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/cpp/Platform.Interfaces DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/cpp/Platform.Interfaces" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/platform-interfaces/platform-interfaces-config.cmake
     "add_library(Platform.Interfaces INTERFACE)\n"
