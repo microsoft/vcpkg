@@ -12,9 +12,13 @@ vcpkg_from_github(
 if ("buildtools" IN_LIST FEATURES)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}/src/gentables"
+        LOGFILE_BASE configure-tools
     )
 
-    vcpkg_cmake_install()
+    vcpkg_cmake_build(
+        LOGFILE_BASE install-tools
+        TARGET install
+    )
 
     vcpkg_copy_tools(TOOL_NAMES make_tables AUTO_CLEAN)
 
