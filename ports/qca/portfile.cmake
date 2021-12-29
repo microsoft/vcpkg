@@ -11,8 +11,8 @@ vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.3.1
-    SHA512 e04a44fb395e24fd009bb6b005282880bef84ca492b5e15903f9ce3e5e3f93beae3a386a1a381507ed5b0c6550e64c6bf434328f9d965fa7f7d638c3e5d5948b
+    REF v2.3.4
+    SHA512 04583da17531538fc2a7ae18a1a4f89f1e8d303e2bb390520a8f55a20bab17f8407ab07aefef2a75587e2a0521f41b37a9fdd8430ec483daf5d02c05556b8ddb
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
@@ -77,6 +77,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -12,6 +12,9 @@ if("ffprobe" IN_LIST FEATURES)
     vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffprobe' does not support 'uwp'")
 endif()
 
+if ("alsa" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_LINUX)
+    message(FATAL_ERROR "Feature 'alsa' only support 'linux'")
+endif()
 
 if("aom" IN_LIST FEATURES)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
@@ -133,8 +136,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4
-    SHA512 ae7426ca476df9fa9dba52cab06c38e484f835653fb2da57e7c06f5589d887c0854ee17df93a2f57191d498c1264cb1c69312cf0a8214b476800382e2d260c4b
+    REF n4.4.1
+    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -272,6 +275,10 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if (NOT "alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)

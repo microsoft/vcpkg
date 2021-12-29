@@ -1,10 +1,10 @@
 {
   "name": "mlpack",
   "version": "3.4.1",
-  "port-version": 2,
+  "port-version": 5,
   "description": "mlpack is a fast, flexible machine learning library, written in C++, that aims to provide fast, extensible implementations of cutting-edge machine learning algorithms.",
   "homepage": "https://github.com/mlpack/mlpack",
-  "supports": "uwp",
+  "supports": "!uwp",
   "dependencies": [
     "armadillo",
     "boost-heap",
@@ -14,14 +14,25 @@
     "boost-serialization",
     "boost-serialization",
     "ensmallen",
-    "stb"
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "openmp": {
       "description": "use OpenMP for parallelization."
     },
     "tools": {
-      "description": "Build command-line executables."
+      "description": "Build command-line executables.",
+      "dependencies": [
+        "boost-format"
+      ]
     }
   }
 }

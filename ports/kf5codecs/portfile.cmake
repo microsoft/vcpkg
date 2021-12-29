@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcodecs
-    REF v5.84.0
-    SHA512 77f27883f588e9f4bd5458e4e4a596c494ff4fc0a7230ac757926db13d69f010a72f84d828ae83f48e5019ea96da58251c190dd6d38408f64089ac42501b7439
+    REF v5.89.0
+    SHA512 77104ab234d0b0baf00c2d3a37d366dc36c6f831c0fa011cb5ad965310e5317bbca3b569d9202123ed23b70137fe61ffec1689f51cccf8d60cc750913d36856f
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 find_program(GPERF_EXE NAMES gperf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" NO_DEFAULT_PATH)
 
@@ -23,11 +23,10 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Codecs CONFIG_PATH lib/cmake/KF5Codecs)
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/data")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

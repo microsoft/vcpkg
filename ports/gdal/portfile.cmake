@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
@@ -15,8 +13,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF 348075f26f8e4c200a34818123beeb4abe53c876 # 3.3.2
-    SHA512 84bd7c74a079c4aa8cbefbbb1c4ab782e74a85d37d4c875a203760939f4f7c9175c40abc5184d8c1c521fd3b37bb90bc7bf046021ade22e510810535e3f61bd2
+    REF d699b38a744301368070ef780f797340da4a9c3c # 3.4.0
+    SHA512 709523740a51a0a2a144debcfa5fbc5a5b3d93cc3632856cfbc37f7ca52f2e83f4942d9a27d4c723ee19d2397cc91a4b1ba4543547afdfefb3980a7ba6684bd7
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
@@ -30,6 +28,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NMAKE_OPTIONS "")
     set(NMAKE_OPTIONS_REL "")
     set(NMAKE_OPTIONS_DBG "")
+
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES --msvc-syntax proj INCLUDE_DIRS LIBS)
 
     include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
     find_dependency_win()
@@ -45,7 +45,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "HTMLDIR=${NATIVE_HTML_DIR}"
         "GEOS_DIR=${GEOS_INCLUDE_DIR}"
         "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-        "PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}"
+        "PROJ_INCLUDE=${PROJ_INCLUDE_DIRS}"
         "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
         "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
         "CURL_INC=-I${CURL_INCLUDE_DIR}"
@@ -61,7 +61,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "PNGDIR=${PNG_INCLUDE_DIR}"
         "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
         ZLIB_EXTERNAL_LIB=1
-        ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
         MSVC_VER=1900
         )
 
@@ -89,7 +88,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_REL}"
+        "PROJ_LIBRARY=${PROJ_LIBS_RELEASE}"
         "PNG_LIB=${PNG_LIBRARY_REL}"
         "GEOS_LIB=${GEOS_LIBRARY_REL}"
         "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
@@ -106,7 +105,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_DBG}"
+        "PROJ_LIBRARY=${PROJ_LIBS_DEBUG}"
         "PNG_LIB=${PNG_LIBRARY_DBG}"
         "GEOS_LIB=${GEOS_LIBRARY_DBG}"
         "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
@@ -169,7 +168,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -281,6 +279,7 @@ else()
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
             --with-mrsid=no
             --with-mrsid_lidar=no
@@ -309,12 +308,7 @@ else()
             )
     endif()
 
-    # proj needs a C++ runtime library
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lc++")
-    else()
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
-    endif()
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES proj LIBS)
 
     if("tools" IN_LIST FEATURES)
         list(APPEND CONF_OPTS "--with-tools=yes")
@@ -327,10 +321,13 @@ else()
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
-        ${CONF_OPTS}
+            ${CONF_OPTS}
+        OPTIONS_RELEASE
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_RELEASE}"
         OPTIONS_DEBUG
-        --enable-debug
-        --with-tools=no
+            --enable-debug
+            --with-tools=no
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_DEBUG}"
         )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)
@@ -369,6 +366,11 @@ else()
         vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
     endif()
 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
