@@ -1,17 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF ea786c46b7a1b5158789293d9b148b379fc9914c # v8.1.0
-    SHA512 3c4ab3db35b3eb019149ac455f0c7a262081e9866b7e49eaba05424bf837debccf0c987c2555d3c91a2cff2d1ba4b41862f544fd4684558f3a319616ef3c9eb3
-    HEAD_REF master
+    REF 89873d2bd29870cc9f176ed12b3f3a930ca38d1a # v8.2.0
+    SHA512 d72a0eec6b7ce8e25fbe3100d4a291c35d7c2448f23131aaa9f247210f26e965198ef2991d9cf789afc754cbcddaace7a27ab62a2609a19a896034859c518699
     PATCHES
         0003-fix-cmake.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindIlmBase.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindBlosc.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindOpenEXR.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindIlmBase.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindBlosc.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindOpenEXR.cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
@@ -34,7 +33,7 @@ if ("ax" IN_LIST FEATURES)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DOPENVDB_BUILD_UNITTESTS=OFF
         -DOPENVDB_BUILD_PYTHON_MODULE=OFF

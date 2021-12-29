@@ -1,0 +1,16 @@
+{
+  "name": "readline-osx",
+  "version": "8.1",
+  "description": "Implementation of readline for Mac OS",
+  "supports": "osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
