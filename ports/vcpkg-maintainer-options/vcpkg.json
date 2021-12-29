@@ -1,0 +1,31 @@
+{
+  "name": "vcpkg-maintainer-options",
+  "version-date": "2021-12-29",
+  "description": "Provides build-time options which support port maintainers. Normal ports should not depend on this port.",
+  "features": {
+    "current-cmake": {
+      "description": "Enables tests with the current version of CMake.",
+      "dependencies": [
+        {
+          "name": "vcpkg-maintainer-options",
+          "host": true,
+          "features": [
+            "current-cmake"
+          ]
+        }
+      ]
+    },
+    "minimum-cmake": {
+      "description": "Enables tests with the minimum version of CMake supported by the vcpkg toolchain amd the given feature.",
+      "dependencies": [
+        {
+          "name": "vcpkg-maintainer-options",
+          "host": true,
+          "features": [
+            "minimum-cmake"
+          ]
+        }
+      ]
+    }
+  }
+}
