@@ -766,9 +766,12 @@ function(vcpkg_configure_make)
         vcpkg_list(JOIN tmp " " "${var}")
     endforeach()
 
-    foreach(_toolname IN ITEMS AR AS MT NM RANLIB STRIP OBJDUMP DLLTOOL)
-        z_vcpkg_setup_detected_env(${_toolname} CMAKE_${_toolname})
+    foreach(tool IN ITEMS AR AS MT NM RANLIB STRIP OBJDUMP DLLTOOL)
+        z_vcpkg_setup_detected_env(${tool} "CMAKE_${tool}")
     endforeach()
+    z_vcpkg_setup_detected_env(CC CMAKE_C_COMPILER)
+    z_vcpkg_setup_detected_env(CXX CMAKE_CXX_COMPILER)
+    z_vcpkg_setup_detected_env(LD CMAKE_LINKER)
 
     foreach(current_buildtype IN LISTS all_buildtypes)
         foreach(ENV_VAR ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
@@ -796,11 +799,6 @@ function(vcpkg_configure_make)
         else()
             set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}")
         endif()
-
-        # Setup environment
-        z_vcpkg_setup_detected_env(CC CMAKE_C_COMPILER)
-        z_vcpkg_setup_detected_env(CXX CMAKE_CXX_COMPILER)
-        z_vcpkg_setup_detected_env(LD CMAKE_LINKER)
 
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${current_buildtype}}")
