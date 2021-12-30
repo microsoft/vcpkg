@@ -48,7 +48,7 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
@@ -83,10 +83,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY "${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
