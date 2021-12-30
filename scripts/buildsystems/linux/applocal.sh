@@ -3,7 +3,7 @@
 DESTDIR=$1
 PREFIX=$2
 EXECUTABLE=$3
-VCPKG_INSTALLED=$(dirname $4) # vcpkg has some weird "bin" suffix that may not even exist!
+VCPKG_INSTALLED=$4
 
 # if the executable is not an absolute path
 # we need to prefix the prefix directory
@@ -33,7 +33,6 @@ for DEPENDENCY in $(readelf -d "${DESTDIR}/${EXECUTABLE}" | grep "Shared library
         continue
     fi
 
-    echo "Installing vcpkg-provided dependency: ${DEPENDENCY_PATH}" >> /tmp/vcpkg.fixup
     mkdir -p ${DESTDIR}/${PREFIX}/lib
 
     if [ -L "${DEPENDENCY_PATH}" ]; then

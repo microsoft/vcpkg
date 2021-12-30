@@ -639,7 +639,7 @@ function(x_vcpkg_install_local_dependencies)
                 install(CODE "message(\"-- Installing app dependencies for ${target}...\")
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                         -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>\"
                         -OutVariable out)"
                     ${component_param}
                 )
