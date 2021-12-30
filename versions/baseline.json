@@ -3486,7 +3486,7 @@
     },
     "libgcrypt": {
       "baseline": "1.9.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libgd": {
       "baseline": "2.3.2",
