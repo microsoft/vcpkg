@@ -168,6 +168,15 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     Write-Host "Running CI using parent hashes"
 }
 
+# Pre-install maintainer options to enable additional checks
+$maintainerOptions = 'vcpkg-maintainer-options[*]'
+& "./vcpkg$executableExtension" install "${maintainerOptions}:$Triplet" @commonArgs @cachingArgs
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg install ${maintainerOptions}:$Triplet failed."
+}
+$skipList = "$skipList,vcpkg-maintainer-options" -replace "^,", ""
+
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
