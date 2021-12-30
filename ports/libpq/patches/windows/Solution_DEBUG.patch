@@ -11,7 +11,7 @@ index 2820ace22..7fddbf0fb 100644
  	}
  	if ($self->{options}->{openssl})
  	{
-@@ -989,8 +989,8 @@ sub AddProject
+@@ -989,8 +989,11 @@ sub AddProject
  				# On both Win32 and Win64 the same library
  				# names are used without a debugging context.
  				$dbgsuffix     = 0;
@@ -19,6 +19,9 @@ index 2820ace22..7fddbf0fb 100644
 -				$libcryptopath = '\lib\libcrypto.lib';
 +				$libsslpath    = '\debug\lib\libssl.lib'; #
 +				$libcryptopath = '\debug\lib\libcrypto.lib'; #
++				$proj->AddLibrary('crypt32.lib');
++				$proj->AddLibrary('ws2_32.lib');
++				$proj->AddLibrary('secur32.lib');
  			}
  
  			$proj->AddLibrary($self->{options}->{openssl} . $libsslpath,
@@ -31,7 +34,7 @@ index 2820ace22..7fddbf0fb 100644
  	}
  	if ($self->{options}->{gss})
  	{
-@@ -1051,17 +1051,17 @@ sub AddProject
+@@ -1051,21 +1051,21 @@ sub AddProject
  	}
  	if ($self->{options}->{iconv})
  	{
@@ -53,6 +56,13 @@ index 2820ace22..7fddbf0fb 100644
  		}
  		else
  		{
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icuin.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icuuc.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icudt.lib');
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuind.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuucd.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icudtd.lib'); #
+ 		}
 @@ -1074,22 +1074,22 @@ sub AddProject
  	{
  		$proj->AddIncludeDir($self->{options}->{xml} . '\include');

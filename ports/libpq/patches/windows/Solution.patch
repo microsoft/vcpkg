@@ -2,7 +2,7 @@ diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
 index 51711c2bf..d33fdc3b0 100644
 --- a/src/tools/msvc/Solution.pm	
 +++ b/src/tools/msvc/Solution.pm
-@@ -61,17 +61,21 @@ sub DeterminePlatform
+@@ -63,17 +63,21 @@ sub DeterminePlatform
  	my $self = shift;
  
  	if ($^O eq "MSWin32")
@@ -26,7 +26,7 @@ index 51711c2bf..d33fdc3b0 100644
  	print "Detected hardware platform: $self->{platform}\n";
  	return;
  }
-@@ -526,14 +526,14 @@ EOF
+@@ -757,14 +757,14 @@ EOF
                   || confess "Could not open pg_config_paths.h";
                 print $o <<EOF;
  #define PGBINDIR "/bin"

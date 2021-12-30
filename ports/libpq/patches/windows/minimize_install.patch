@@ -2,7 +2,7 @@ diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
 index d109b2c90..75c7446e6 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
-@@ -19,13 +19,13 @@ our (@ISA, @EXPORT_OK);
+@@ -22,13 +22,13 @@ our (@ISA, @EXPORT_OK);
  
  my $insttype;
  my @client_contribs = ('oid2name', 'pgbench', 'vacuumlo');
@@ -23,7 +23,7 @@ index d109b2c90..75c7446e6 100644
  
  sub lcopy
  {
-@@ -110,7 +110,7 @@ sub Install
+@@ -121,7 +121,7 @@ sub Install
  	CopyFiles(
  		'Import libraries',
  		$target . '/lib/',
