@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL git://git.gnupg.org/libgcrypt.git
