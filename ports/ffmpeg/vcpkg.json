@@ -144,17 +144,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "dav1d"
+            "aom"
           ],
-          "platform": "!(uwp | arm | x86)"
+          "platform": "!(windows & arm & !uwp)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "aom"
+            "dav1d"
           ],
-          "platform": "!(windows & arm & !uwp)"
+          "platform": "!(uwp | arm | x86 | osx)"
         },
         {
           "name": "ffmpeg",

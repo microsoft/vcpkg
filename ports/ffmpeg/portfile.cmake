@@ -18,6 +18,12 @@ if("avisynthplus" IN_LIST FEATURES)
     endif()
 endif()
 
+if("dav1d" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_OSX)
+        message(FATAL_ERROR "Feature 'dav1d' does not support 'osx'")
+    endif()
+endif()
+
 if("opencl" IN_LIST FEATURES)
     vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'opencl' does not support 'uwp'")
 endif()
