@@ -290,8 +290,7 @@ function(vcpkg_configure_make)
     set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     set(cm_TOOLS CC CXX AR AS LD RANLIB STRIP)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
-    vcpkg_backup_env_variables(VARS ${cm_FLAGS})
-    vcpkg_backup_env_variables(VARS ${cm_TOOLS})
+    vcpkg_backup_env_variables(VARS ${cm_FLAGS} ${cm_TOOLS})
 
 
     # FC fotran compiler | FF Fortran 77 compiler 
