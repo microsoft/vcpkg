@@ -6073,7 +6073,7 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "6.26.1",
+      "baseline": "6.27.3",
       "port-version": 0
     },
     "rpclib": {
