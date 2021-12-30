@@ -6718,11 +6718,11 @@
     },
     "tensorflow": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tensorflow-cc": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tensorflow-common": {
       "baseline": "2.7.0",
