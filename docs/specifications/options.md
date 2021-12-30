@@ -85,8 +85,9 @@ A dependency entry:
 If for an option no value is specified, the default value is used. If a dependency entry don't specify a value for an option, it does not care about the final value of the option. If a dependency entry specifies a value for an option, it is guaranteed that the option will have this value. If there are two dependency entries in the dependency tree that require a different value for an option of some port vcpkg should exit with an error.  
 For this reason, ports should only require a value for an option of one of their dependencies if it is really necessary. One use case can be that a port can have an Qt5 or Qt6 compatible API interface, so it can depend on Qt5 or Qt6. The end user can then select between the used Qt version. But if we now have a Qt5 or Qt6 only port, this port can require the value Qt5 or Qt6 from the dependency. 
 
-## Options in features
-The options object is allowed at the root of a manifest file. Additionally it is available at each feature object. Reason: Imagine we have a library `Foo` that has optional ssl support. Currently that would be realized by a feature called *ssl* that then depends on `openssl`. We now could make it an option with the values `None`, `OpenSSL`, `BoringSSL`, but then other ports that depends on `A` and need the ssl functionality have to decide between `OpenSSL` and `BoringSSL` or have to make it an option themselves, but in reality they don't care.  If we now allow options at a feature level, we can have a feature `ssl` that then has two options `OpenSSL` and `BoringSSL`. Then other ports can simply depend on `A` with the `ssl` feature.  
+## Possible extension: Options in features
+**Disclaimer**: Since no use case is currently known, it will not be implemented for the time being.  
+The options object is allowed at the root of a manifest file. Additionally it is available at each feature object. Reason: Imagine we have a library `Foo` that has a feature `bar` that then depends on some lib `A`, but this feature could also be implemented with library `B`. We now could make it an option with the values `None`, `libA`, `libB`, but then other ports that depends on `Foo` and need the `bar` feature have to decide between `A` and `B` or have to make it an option themselves, but in reality they don't care.  If we now allow options at a feature level, we can have a feature `bar` that then has two options `libA` and `libB`. Then other ports can simply depend on `Foo` with the `bar` feature.  
 
 ### Selection of options in features
 Imagine we have the following port:
@@ -95,36 +96,36 @@ Imagine we have the following port:
   "name": "feature-options",
   "description": "super nice",  
   "features": {
-    "ssl": {
-      "description": "SSL support",
+    "Foo": {
+      "description": "Super feature",
       "options": {
-        "ssl-lib": { 
+        "lib": { 
           "choices": [
             {
-              "name": "openssl",
-              "dependencies": ["openssl"]
+              "name": "libA",
+              "dependencies": ["A"]
             },
             {
-              "name": "boringssl",
-              "dependencies": ["boringssl"]
+              "name": "libB",
+              "dependencies": ["B"]
             }
           ],
-          "default": "openssl",
+          "default": "libA",
         },
       }      
     }
   }
 }
 ```
-If a end user want to select `boringssl` the following can be used:
+If a end user want to select `B` the following can be used:
 ```json5
 {
   "name": "feature-options",
   "features": [
     {
-      "name": "ssl",
+      "name": "bar",
       "options": {
-        "ssl-lib": "boringssl"
+        "lib": "libB"
       }
     }
   ]
@@ -132,7 +133,7 @@ If a end user want to select `boringssl` the following can be used:
 ```
 
 #### Textual representation
-The general representation should be `name[features[options...]...,options...]:triplet`. For the example above that would be `feature-options[ssl[ssl-lib=boringssl]]`
+The general representation should be `name[features[options...]...,options...]:triplet`. For the example above that would be `feature-options[Foo[lib=libB]]`
 
 ## Option selection in classic mode
 I am now sure how this should work, feel free to comment.  
