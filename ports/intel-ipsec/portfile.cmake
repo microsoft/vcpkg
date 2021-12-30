@@ -1,21 +1,21 @@
-IF (VCPKG_TARGET_IS_WINDOWS)
-    SET(EXEC_ENV "Windows")
-ELSE ()
-    SET(EXEC_ENV "${VCPKG_CMAKE_SYSTEM_NAME}")
-ENDIF ()
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(EXEC_ENV "Windows")
+else ()
+    set(EXEC_ENV "${VCPKG_CMAKE_SYSTEM_NAME}")
+endif ()
 
-IF (NOT EXEC_ENV STREQUAL "Linux")
-    MESSAGE(FATAL_ERROR "Intel(R) Multi-Buffer Crypto for IPsec Library currently only supports Linux/Windows platforms")
-    MESSAGE(STATUS "Well, it is not true, but I didnt manage to get it working on Windows")
-ENDIF ()
+if (NOT EXEC_ENV STREQUAL "Linux")
+    message(FATAL_ERROR "Intel(R) Multi-Buffer Crypto for IPsec Library currently only supports Linux/Windows platforms")
+    message(STATUS "Well, it is not true, but I didnt manage to get it working on Windows")
+endif ()
 
-IF (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    MESSAGE(FATAL_ERROR "Intel(R) Multi-Buffer Crypto for IPsec Library currently only supports x64 architecture")
-ELSEIF (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    MESSAGE(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-ENDIF ()
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    message(FATAL_ERROR "Intel(R) Multi-Buffer Crypto for IPsec Library currently only supports x64 architecture")
+elseif (NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif ()
 
-VCPKG_FROM_GITHUB(
+vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO intel/intel-ipsec-mb
         REF bde82c8737edc04d80549f0a68225ede7e5cefd #v1.1
@@ -23,36 +23,35 @@ VCPKG_FROM_GITHUB(
         HEAD_REF master
 )
 
-VCPKG_FIND_ACQUIRE_PROGRAM(NASM)
+vcpkg_find_acquire_program(NASM)
 
-EXEC_PROGRAM(${NASM}
+exec_program(${NASM}
              ARGS -v
              OUTPUT_VARIABLE NASM_OUTPUT
              )
-STRING(REGEX REPLACE "NASM version ([0-9]+\\.[0-9]+\\.[0-9]+).*" "\\1"
+string(REGEX REPLACE "NASM version ([0-9]+\\.[0-9]+\\.[0-9]+).*" "\\1"
        NASM_VERSION
        ${NASM_OUTPUT})
-IF (NASM_VERSION VERSION_LESS 2.13.03)
-    MESSAGE(FATAL_ERROR "NASM version 2.13.03 (or newer) is required to build this package")
-ENDIF ()
+if (NASM_VERSION VERSION_LESS 2.13.03)
+    message(FATAL_ERROR "NASM version 2.13.03 (or newer) is required to build this package")
+endif ()
 
-GET_FILENAME_COMPONENT(NASM_PATH ${NASM} DIRECTORY)
-SET(ENV{PATH} " $ENV{PATH};${NASM_PATH} ")
+get_filename_component(NASM_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} " $ENV{PATH};${NASM_PATH} ")
 
-VCPKG_CONFIGURE_CMAKE(
-        SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-        PREFER_NINJA
-        OPTIONS
-        -DSOURCE_PATH=${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
+    OPTIONS
+        -DSOURCE_PATH="${SOURCE_PATH}"
         -DEXEC_ENV=${VCPKG_CMAKE_SYSTEM_NAME}
         -DLIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE}
 )
 
-VCPKG_INSTALL_CMAKE()
+vcpkg_cmake_install()
 
-FILE(INSTALL ${SOURCE_PATH}/Release/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-FILE(INSTALL ${SOURCE_PATH}/Debug/lib/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-FILE(INSTALL ${SOURCE_PATH}/Release/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
-FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/intel-ipsecConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-FILE(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-FILE(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Release/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/Debug/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${SOURCE_PATH}/Release/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/intel-ipsecConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
