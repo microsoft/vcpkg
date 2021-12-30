@@ -51,16 +51,18 @@ The options objects should have the same structure as the feature object. In the
 ### Other types as option values
 Other possible types are:
 - booleans: Booleans can theoretically be emulated by a choices field with the choices `enabled` and `disabled` (or `yes`/`no`). But it can be less verbose to use boolean fields for that. Example:
-```json5
-"options": {
-    "avx": {
-      "description": "Enable AVX", // required
-      "type": "boolean", // required
-      "default": false // required
+  ```json5
+  "options": {
+      "some_option": {
+        "description": "Switch between ...", // required
+        "type": "boolean", // required
+        "default": false // required
+      }
     }
-  }
-```
-- numbers: We can also add a numbers field, but I don't know of any use case.
+  ```  
+  But since boolean fields are often covered by features (like enable dependency *xy*) and no use case is currently known, they will be not implemented.
+
+- numbers: We can also add a numbers field, but no use case is currently known.
 
 ### Textual representation
 When a port must be represented textually the form `name[features...]:triplet` is used, with options this should be extended to `name[features...,options...]:triplet` where options are key-value pairs of the form `key=value` separated by commas.  
