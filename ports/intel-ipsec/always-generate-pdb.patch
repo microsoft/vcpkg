@@ -1,0 +1,34 @@
+diff --git a/lib/win_x64.mak b/lib/win_x64.mak
+index 5978887..b826442 100644
+--- a/lib/win_x64.mak
++++ b/lib/win_x64.mak
+@@ -71,9 +71,9 @@ LIB_DIR = .\
+ 
+ !ifdef DEBUG
+ OPT = $(DEBUG_OPT)
+-DCFLAGS = /DDEBUG /Z7
++DCFLAGS = /DDEBUG
+ DAFLAGS = -gcv8
+-DLFLAGS = /DEBUG
++DLFLAGS =
+ !else
+ OPT = /O2 /Oi
+ DCFLAGS =
+@@ -98,7 +98,7 @@ DAFLAGS = $(DAFLAGS) -DSAFE_LOOKUP
+ 
+ CC = cl
+ CFLAGS_ALL = $(EXTRA_CFLAGS) /DNO_COMPAT_IMB_API_053 /I. /Iinclude /Ino-aesni \
+-	/nologo /Y- /W3 /WX- /Gm- /fp:precise /EHsc
++	/nologo /Y- /W3 /WX- /Gm- /fp:precise /EHsc /Z7
+ 
+ CFLAGS = $(CFLAGS_ALL) $(OPT) $(DCFLAGS)
+ CFLAGS_NO_SIMD = $(CFLAGS_ALL) /Od $(DCFLAGS)
+@@ -107,7 +107,7 @@ LIB_TOOL = lib
+ LIBFLAGS = /nologo /machine:X64 /nodefaultlib
+ 
+ LINK_TOOL = link
+-LINKFLAGS = $(DLFLAGS) /nologo /machine:X64
++LINKFLAGS = $(DLFLAGS) /nologo /machine:X64 /DEBUG /INCREMENTAL:NO
+ 
+ AS = nasm
+ AFLAGS = $(DAFLAGS) -Werror -fwin64 -Xvc -DWIN_ABI -Iinclude/ \
