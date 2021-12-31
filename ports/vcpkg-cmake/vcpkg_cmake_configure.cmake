@@ -237,9 +237,15 @@ function(vcpkg_cmake_configure)
         list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
+    set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    set(build_dir_debug "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        "${build_dir_release}"
+        "${build_dir_debug}")
+    file(MAKE_DIRECTORY "${build_dir_release}")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY "${build_dir_debug}")
+    endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
@@ -367,7 +373,8 @@ function(vcpkg_cmake_configure)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             set(line "build ../CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" -B .. ")
+            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_release}\" ")
+            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
 
             if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
                 list(JOIN arg_OPTIONS "\" \"" options)
@@ -384,7 +391,8 @@ function(vcpkg_cmake_configure)
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             set(line "build ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" -B \"../../${TARGET_TRIPLET}-dbg\" ")
+            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_debug}\" ")
+            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
 
             if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
                 list(JOIN arg_OPTIONS "\" \"" options)
@@ -400,13 +408,13 @@ function(vcpkg_cmake_configure)
             string(APPEND parallel_configure_contents "${line}\n\n")
         endif()
 
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure")
-        file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
+        file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
+        file(WRITE "${build_dir_release}/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
+            WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
         )
         list(APPEND config_logs
@@ -415,7 +423,6 @@ function(vcpkg_cmake_configure)
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "${configuring_message}-dbg")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND
                     "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
@@ -424,7 +431,7 @@ function(vcpkg_cmake_configure)
                     -G "${generator}"
                     "-DCMAKE_BUILD_TYPE=Debug"
                     "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+                WORKING_DIRECTORY "${build_dir_debug}"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
             list(APPEND config_logs
@@ -434,7 +441,6 @@ function(vcpkg_cmake_configure)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             message(STATUS "${configuring_message}-rel")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
                 COMMAND
                     "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
@@ -443,7 +449,7 @@ function(vcpkg_cmake_configure)
                     -G "${generator}"
                     "-DCMAKE_BUILD_TYPE=Release"
                     "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+                WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
             list(APPEND config_logs
