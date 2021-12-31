@@ -70,7 +70,6 @@ if(WIN32)
     else()
         if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
             if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
-                # I'm not sure if the toolset is gcc or clang here
                 set(USER_CONFIG_TOOLSET clang)
             else()
                 message(FATAL_ERROR "Unknown Clang frontend: ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
