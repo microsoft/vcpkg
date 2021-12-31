@@ -9,13 +9,8 @@ vcpkg_from_github(
         003-fix-FindGLFW.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
-    set(BUILD_PLUGINS_STATIC 1)
-else()
-    set(BUILD_STATIC 0)
-    set(BUILD_PLUGINS_STATIC 0)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_PLUGINS_STATIC)
 
 # Remove platform-specific feature that are not available
 # on current target platform from all features.
@@ -137,17 +132,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     # move plugin libs to conventional place
-    file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
+    file(GLOB_RECURSE LIB_TO_MOVE "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
     file(COPY ${LIB_TO_MOVE} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
 
-    file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
+    file(GLOB_RECURSE LIB_TO_MOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*")
     file(COPY ${LIB_TO_MOVE_DBG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum")
 else()
     if(WIN32)
-        file(GLOB_RECURSE LIB_TO_REMOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
-        file(GLOB_RECURSE LIB_TO_KEEP ${CURRENT_PACKAGES_DIR}/lib/magnum/*Any*)
+        file(GLOB_RECURSE LIB_TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
+        file(GLOB_RECURSE LIB_TO_KEEP "${CURRENT_PACKAGES_DIR}/lib/magnum/*Any*")
         if(LIB_TO_KEEP)
             list(REMOVE_ITEM LIB_TO_REMOVE ${LIB_TO_KEEP})
         endif()
@@ -155,8 +150,8 @@ else()
             file(REMOVE ${LIB_TO_REMOVE})
         endif()
 
-        file(GLOB_RECURSE LIB_TO_REMOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*)
-        file(GLOB_RECURSE LIB_TO_KEEP_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*Any*)
+        file(GLOB_RECURSE LIB_TO_REMOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*")
+        file(GLOB_RECURSE LIB_TO_KEEP_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*Any*")
         if(LIB_TO_KEEP_DBG)
             list(REMOVE_ITEM LIB_TO_REMOVE_DBG ${LIB_TO_KEEP_DBG})
         endif()
@@ -175,6 +170,4 @@ else()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
