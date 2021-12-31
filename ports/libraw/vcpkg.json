@@ -1,6 +1,6 @@
 {
   "name": "libraw",
-  "version-date": "2021-02-24",
+  "version-date": "2021-12-17",
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "dependencies": [
@@ -8,6 +8,10 @@
     "lcms",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
