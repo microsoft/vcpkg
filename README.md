@@ -249,7 +249,10 @@ Finally, in `CMake options`, add the following line:
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-Unfortunately, you'll have to add this to each profile.
+Alternatively you can add "PreLoad.cmake" file to the root of your project which contains the following line
+```cmake
+set(CMAKE_TOOLCHAIN_FILE /some/path/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE INTERNAL "" FORCE)
+```
 
 ### Vcpkg as a Submodule
 
