@@ -13,6 +13,9 @@ vcpkg_extract_source_archive_ex(
 vcpkg_install_msbuild(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH "WinSparkle-2017.sln"
+    LICENSE_SUBPATH "COPYING"
+    INCLUDES_SUBPATH "include"
+    ALLOW_ROOT_INCLUDES
     PLATFORM ${BUILD_ARCH}
     TARGET_PLATFORM_VERSION ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}
     PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET}
@@ -33,10 +36,10 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libstdc++-6.dll ${CURRENT_PACKAGES_DIR}/
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libtextstyle-0.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libtextstyle-0.dll)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libwinpthread-1.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libwinpthread-1.dll)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libcharset-1.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libcharset-1.dll)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/COPYING.lib ${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.lib)
 
-# Install includes
-file(INSTALL ${SOURCE_PATH}/include/winsparkle.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/winsparkle.h)
-file(INSTALL ${SOURCE_PATH}/include/winsparkle-version.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/winsparkle-version.h)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
