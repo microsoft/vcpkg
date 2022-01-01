@@ -15,23 +15,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         net   ENABLE_CURL
         tiff  ENABLE_TIFF
-        tools BUILD_CCT
-        tools BUILD_CS2CS
-        tools BUILD_GEOD
-        tools BUILD_GIE
-        tools BUILD_PROJ
-        tools BUILD_PROJINFO
-        # BUILD_PROJSYNC handled below
+        tools BUILD_APPS
 )
 
-vcpkg_list(SET TOOL_NAMES cct cs2cs geod gie invgeod invproj proj projinfo)
-if("net" IN_LIST FEATURES AND "tools" IN_LIST FEATURES)
-    set(BUILD_PROJSYNC TRUE)
-    vcpkg_list(APPEND TOOL_NAMES projsync)
-else()
-    set(BUILD_PROJSYNC FALSE)
+vcpkg_list(SET TOOL_NAMES cct cs2cs geod gie invgeod invproj proj projinfo projsync)
+if("tools" IN_LIST FEATURES AND NOT "net" IN_LIST FEATURES)
+    set(BUILD_PROJSYNC OFF)
+    vcpkg_list(APPEND FEATURE_OPTIONS -DBUILD_PROJSYNC=${BUILD_PROJSYNC})
+    vcpkg_list(REMOVE_ITEM TOOL_NAMES projsync)
 endif()
-vcpkg_list(APPEND FEATURE_OPTIONS -DBUILD_PROJSYNC=${BUILD_PROJSYNC})
 
 find_program(EXE_SQLITE3 NAMES "sqlite3" PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools" NO_DEFAULT_PATH REQUIRED)
 
