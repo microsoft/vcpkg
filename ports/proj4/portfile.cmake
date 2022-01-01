@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DNLOHMANN_JSON=external
         -DPROJ_LIB_SUBDIR=lib
         -DPROJ_INCLUDE_SUBDIR=include
         -DPROJ_DATA_SUBDIR=share/${PORT}
