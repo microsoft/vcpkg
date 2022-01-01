@@ -37,12 +37,13 @@ find_program(EXE_SQLITE3 NAMES "sqlite3" PATHS "${CURRENT_HOST_INSTALLED_DIR}/to
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
-    -DPROJ_LIB_SUBDIR=lib
-    -DPROJ_INCLUDE_SUBDIR=include
-    -DPROJ_DATA_SUBDIR=share/${PORT}
-    -DBUILD_TESTING=OFF
-    "-DEXE_SQLITE3=${EXE_SQLITE3}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DPROJ_LIB_SUBDIR=lib
+        -DPROJ_INCLUDE_SUBDIR=include
+        -DPROJ_DATA_SUBDIR=share/${PORT}
+        -DBUILD_TESTING=OFF
+        "-DEXE_SQLITE3=${EXE_SQLITE3}"
 )
 
 vcpkg_cmake_install()
