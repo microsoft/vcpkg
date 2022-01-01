@@ -41,6 +41,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Enforce consistency with src/lib_proj.cmake build time configuration.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/proj.h"
+        "#ifndef PROJ_DLL"
+        "#ifndef PROJ_DLL\n#  define PROJ_DLL\n#elif 0"
+    )
+endif()
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ CONFIG_PATH lib/cmake/proj DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ4 CONFIG_PATH lib/cmake/proj4)
 
