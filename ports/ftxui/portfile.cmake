@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
-    REF 0.11
-    SHA512 0
+    REF 4188ee2c046ced00cd3accba4cde2318587f8c8a #0.11
+    SHA512 c32d5abbd42b776935c851ca8510201f4856335ea5510ef5e126795a6be405a82ee4dc4526c60acebc1dc4a4e17c58d5027f219bc86628733e86d0e38885f99d
     HEAD_REF master
 )
 
