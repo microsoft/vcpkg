@@ -21,9 +21,6 @@ else()
     message(FATAL_ERROR "VULKAN_SDK env var not found!")
 endif()
 
-message(STATUS "INSTAL INCLUDE DIR: ${CMAKE_INSTALL_INCLUDEDIR}")
-
-
 vcpkg_cmake_install()
 # vcpkg_fixup_cmake_targets()
 
