@@ -1,0 +1,105 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 94ec7b3..3ef5b46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,26 +4,24 @@ project(spirv-reflect)
+ 
+ OPTION(SPIRV_REFLECT_BUILD_TESTS    "Build the SPIRV-Reflect test suite" OFF)
+ OPTION(SPIRV_REFLECT_ENABLE_ASSERTS "Enable asserts for debugging" OFF)
++OPTION(SPIRV_REFLECT_BUILD_EXAMPLES "Build the SPIRV-Reflect example" OFF)
+ 
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ set(CMAKE_CXX_STANDARD 14)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+ 
+-add_executable(spirv-reflect ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/examples/arg_parser.h
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/examples/arg_parser.cpp
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/examples/common.h
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/examples/common.cpp
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/common/output_stream.h
+-                             ${CMAKE_CURRENT_SOURCE_DIR}/common/output_stream.cpp)
++# Adding library target
++
++include(GNUInstallDirs)
++
++add_library(spirv-reflect ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
++                          ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c)
+ target_compile_options(spirv-reflect PRIVATE
+-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+-    $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
+-    $<$<CXX_COMPILER_ID:Clang>:-Wall -Werror>
+-    $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Werror>)
++        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
++        $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
++        $<$<CXX_COMPILER_ID:Clang>:-Wall -Werror>
++        $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Werror>)
+ if (SPIRV_REFLECT_ENABLE_ASSERTS)
+     target_compile_definitions(spirv-reflect PRIVATE SPIRV_REFLECT_ENABLE_ASSERTS)
+ endif()
+@@ -33,10 +31,59 @@ if(WIN32)
+     target_compile_definitions(spirv-reflect PRIVATE _CRT_SECURE_NO_WARNINGS)
+ endif()
+ 
+-add_subdirectory(examples)
+-add_subdirectory(util/stripper)
++# add_library(spirv-reflect INTERFACE)
++target_include_directories(spirv-reflect INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++
++install(
++    TARGETS spirv-reflect EXPORT spirv-reflect-config
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/
++)
++
++install(
++    EXPORT spirv-reflect-config
++    NAMESPACE spirv-reflect::
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/spirv-reflect
++)
++
++message(STATUS "INSTAL INCLUDE DIR: ${CMAKE_INSTALL_INCLUDEDIR}")
++
++install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+-install(TARGETS spirv-reflect RUNTIME DESTINATION bin)
++
++# End of added target
++
++if(SPIRV_REFLECT_BUILD_EXAMPLES)
++    add_executable(spirv-reflect-examples ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
++                                ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
++                                ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c
++                                ${CMAKE_CURRENT_SOURCE_DIR}/examples/arg_parser.h
++                                ${CMAKE_CURRENT_SOURCE_DIR}/examples/arg_parser.cpp
++                                ${CMAKE_CURRENT_SOURCE_DIR}/examples/common.h
++                                ${CMAKE_CURRENT_SOURCE_DIR}/examples/common.cpp
++                                ${CMAKE_CURRENT_SOURCE_DIR}/common/output_stream.h
++                                ${CMAKE_CURRENT_SOURCE_DIR}/common/output_stream.cpp)
++    target_compile_options(spirv-reflect-examples PRIVATE
++        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
++        $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
++        $<$<CXX_COMPILER_ID:Clang>:-Wall -Werror>
++        $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Werror>)
++    if (SPIRV_REFLECT_ENABLE_ASSERTS)
++        target_compile_definitions(spirv-reflect-examples PRIVATE SPIRV_REFLECT_ENABLE_ASSERTS)
++    endif()
++    set_target_properties(spirv-reflect-examples PROPERTIES CXX_STANDARD 11)
++    target_include_directories(spirv-reflect-examples PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
++    if(WIN32)
++        target_compile_definitions(spirv-reflect-examples PRIVATE _CRT_SECURE_NO_WARNINGS)
++    endif()
++
++    add_subdirectory(examples)
++    add_subdirectory(util/stripper)
++
++    install(TARGETS spirv-reflect-examples RUNTIME DESTINATION bin)
++endif()
+ 
+ if (SPIRV_REFLECT_BUILD_TESTS)
+     message("Tests are enabled!")
