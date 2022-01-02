@@ -10,7 +10,7 @@ vcpkg_from_github(
         cmake-install.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
@@ -24,11 +24,8 @@ endif()
 message(STATUS "INSTAL INCLUDE DIR: ${CMAKE_INSTALL_INCLUDEDIR}")
 
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 # vcpkg_fixup_cmake_targets()
-
-# file(COPY "${SOURCE_PATH}/spirv_reflect.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spirv-reflect/")
-# file(COPY "${SOURCE_PATH}/include/spirv/unified1/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spirv-reflect/include/spirv/unified1/")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
