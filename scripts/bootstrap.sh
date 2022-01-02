@@ -232,6 +232,11 @@ else
     vcpkgExtractTar "$tarballPath" "$srcBaseDir"
     cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
 
+    # Add Android log library if we're in Termux.
+    if [ "${TERMUX_VERSION}" != "" ] ; then
+        cmakeConfigOptions="$cmakeConfigOptions -DCMAKE_CXX_STANDARD_LIBRARIES=-llog"
+    fi
+
     if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
         cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
     fi
