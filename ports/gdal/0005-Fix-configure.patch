@@ -203,8 +203,8 @@ index 30cd613..43f1daf 100644
  dnl Expat 1.95.0 released in 2000-09-28
  EXPAT_REQ_VERSION="1.95.0"
 -AX_LIB_EXPAT($EXPAT_REQ_VERSION)
-+AC_CHECK_LIB(expat,XML_ParserCreate,HAVE_EXPAT=yes,AC_MSG_ERROR([vcpkg expat not found]))
-+EXPAT_LDFLAGS="-lexpat"
++PKG_CHECK_MODULES([EXPAT],[expat],[HAVE_EXPAT=yes],[AC_MSG_ERROR([vcpkg expat not found])])
++EXPAT_LDFLAGS="$EXPAT_LIBS"
 +EXPAT_INCLUDE=""
  
  if test "$HAVE_EXPAT" = "yes"; then
