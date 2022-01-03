@@ -1,7 +1,8 @@
 {
   "name": "lodepng-c",
-  "version-date": "2021-03-01",
-  "port-version": 1,
-  "description": "PNG encoder and decoder in C",
-  "homepage": "https://github.com/lvandeve/lodepng"
+  "version-string": "deprecated",
+  "description": "Legacy port. Use port lodepng instead.",
+  "dependencies": [
+    "lodepng"
+  ]
 }

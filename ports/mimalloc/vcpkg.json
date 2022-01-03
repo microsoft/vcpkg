@@ -1,6 +1,7 @@
 {
   "name": "mimalloc",
-  "version": "2.0.2",
+  "version": "2.0.3",
+  "port-version": 1,
   "description": "Compact general purpose allocator with excellent performance",
   "homepage": "https://github.com/microsoft/mimalloc",
   "supports": "!(arm | uwp)",

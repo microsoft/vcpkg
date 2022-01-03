@@ -34,10 +34,7 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
 # Additionally required by some packages to install additional python packages
-APT_PACKAGES="$APT_PACKAGES python3-pip"
-
-# Additionally required by rtaudio
-APT_PACKAGES="$APT_PACKAGES libasound2-dev"
+APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
 
 # Additionally required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
@@ -53,9 +50,6 @@ APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 
 # Additionally required by gtk
 APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
-
-# Additionally required by kf5kio
-APT_PACKAGES="$APT_PACKAGES libmount-dev"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"

@@ -8,6 +8,10 @@ include_directories(
     UsageEnvironment/include
 )
 
+if (WIN32)
+    add_definitions(-DNO_GETIFADDRS)
+endif(WIN32)
+
 if (NOT MSVC)
     add_compile_options(-DSOCKLEN_T=socklen_t)
 endif()
