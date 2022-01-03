@@ -53,7 +53,14 @@
     "nls": {
       "description": "Native Language Support (--enable-nls[=LANGUAGES])",
       "dependencies": [
-        "gettext"
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
       ]
     },
     "openssl": {
