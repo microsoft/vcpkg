@@ -316,7 +316,7 @@ else()
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
     vcpkg_configure_make(
-        ASUTOCONFIG
+        AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
         OPTIONS
