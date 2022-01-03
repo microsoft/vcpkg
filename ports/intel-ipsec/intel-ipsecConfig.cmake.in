@@ -11,7 +11,4 @@ if(NOT TARGET IPSEC::ipsec)
     foreach(f ${CONFIG_FILES})
         include(${f})
     endforeach()
-
-    set(_DIR)
-    set(_IMPORT_PREFIX)
 endif()

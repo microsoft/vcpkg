@@ -22,7 +22,7 @@ endif()
 set(DEBUG_LIB "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib")
 set(RELEASE_LIB "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib")
 
-if (CMAKE_HOST_WIN32)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_build_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH lib
@@ -74,7 +74,7 @@ else()
         file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         vcpkg_execute_build_process(
-            COMMAND "${MAKE}" -j ${MAKE_OPTIONS}
+            COMMAND "${MAKE}" "-j${VCPKG_CONCURRENCY}" ${MAKE_OPTIONS}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib"
             LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
