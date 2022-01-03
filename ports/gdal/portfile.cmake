@@ -64,8 +64,12 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         MSVC_VER=1900
         )
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND NMAKE_OPTIONS WIN64=YES)
+    endif()
+
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+        list(APPEND NMAKE_OPTIONS SSEFLAGS=/DNO_SSSE AVXFLAGS=/DNO_AVX)
     endif()
 
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -187,10 +191,11 @@ else()
     file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
 
     set(CONF_OPTS
+        --with-gnm=yes
         --with-hide-internal-symbols=yes
+        --with-java=no
         --with-perl=no
         --with-python=no
-        --with-java=no
         )
     set(CONF_CHECKS "")
     function(add_config option check)
@@ -204,16 +209,13 @@ else()
     add_config("--with-expat=yes"    "Expat support:             yes")
     add_config("--with-geos=yes"     "GEOS support:              yes")
     add_config("--with-gif=yes"      "LIBGIF support:            external")
-    add_config("--with-hdf5=yes"     "HDF5 support:              yes")
     add_config("--with-libjson=yes"  "checking for JSONC... yes")
     add_config("--with-geotiff=yes"  "LIBGEOTIFF support:        external")
     add_config("--with-jpeg=yes"     "LIBJPEG support:           external")
     add_config("--with-liblzma=yes"  "LIBLZMA support:           yes")
     add_config("--with-png=yes"      "LIBPNG support:            external")
-    add_config("--with-pg=yes"       "PostgreSQL support:        yes")
     add_config("--with-webp=yes"     "WebP support:              yes")
     add_config("--with-xml2=yes"     "libxml2 support:           yes")
-    add_config("--with-netcdf=yes"   "NetCDF support:            yes")
     add_config("--with-openjpeg=yes" "OpenJPEG support:          yes")
     add_config("--with-proj=yes"     "PROJ >= 6:                 yes")
     add_config("--with-sqlite3=yes"  "SQLite support:            yes")
@@ -237,6 +239,12 @@ else()
         add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
+    if ("postgresql" IN_LIST FEATURES)
+        add_config("--with-pg=yes"  "PostgreSQL support:        yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-pg=yes"  "PostgreSQL support:        no")
+    endif()
+
     if ("mysql-libmariadb" IN_LIST FEATURES)
         add_config("--with-mysql=yes"  "MySQL support:             yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
@@ -249,11 +257,25 @@ else()
         add_config("--with-cfitsio=no"   "CFITSIO support:           no")
     endif()
 
+    if ("hdf5" IN_LIST FEATURES)
+        add_config("--with-hdf5=yes"     "HDF5 support:              yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-hdf5=no"      "HDF5 support:              no")
+    endif()
+
+    if ("netcdf" IN_LIST FEATURES)
+        add_config("--with-netcdf=yes"   "NetCDF support:            yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-netcdf=no"    "NetCDF support:            no")
+    endif()
+
     if(DISABLE_SYSTEM_LIBRARIES)
         list(APPEND CONF_OPTS
             # Too much: --disable-all-optional-drivers
             # alphabetical order
             --with-armadillo=no
+            --with-blosc=no
+            --with-brunsli=no
             --with-charls=no
             --with-crypto=no
             --with-cryptopp=no
@@ -272,20 +294,24 @@ else()
             --with-heif=no
             --with-idb=no
             --with-ingres=no
-            --with-jasper=no
             --with-jp2lura=no
+            --with-jp2mrsid=no
+            --with-jasper=no
+            --with-jxl=no
             --with-kakadu=no
             --with-kea=no
+            --with-lerc=no
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
             --with-lz4=no
             --with-mdb=no
+            --with-mongocxx=no
+            --with-mongocxxv3=no
             --with-mrsid=no
             --with-mrsid_lidar=no
             --with-msg=no
-            --with-mongocxx=no
-            --with-mongocxxv3=no
+            --with-null=no
             --with-oci=no
             --with-odbc=no
             --with-ogdi=no
