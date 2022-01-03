@@ -216,6 +216,8 @@ function(vcpkg_build_make)
                 set(ENV{PATH} "${env_backup_path}")
             endif()
         endif()
+
+        vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
     endforeach()
 
     if (arg_ENABLE_INSTALL)
