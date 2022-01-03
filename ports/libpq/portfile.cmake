@@ -44,10 +44,10 @@ set(PATCHES
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
+        patches/fix-configure.patch
         )
 
 if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
     list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
 endif()
 if(VCPKG_TARGET_IS_LINUX)
@@ -214,8 +214,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}...")
             vcpkg_execute_required_process(
                 COMMAND ${PERL} build.pl ${_buildtype}
-                WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-                LOGNAME build-${TARGET_TRIPLET}-${_buildtype}
+                WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+                LOGNAME "build-${TARGET_TRIPLET}-${_buildtype}"
             )
             message(STATUS "Building libpq ${TARGET_TRIPLET}-${_buildtype}... done")
         else()
@@ -224,8 +224,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}...")
                 vcpkg_execute_required_process(
                     COMMAND ${PERL} build.pl ${_buildtype} ${build_lib}
-                    WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-                    LOGNAME build-${build_lib}-${TARGET_TRIPLET}-${_buildtype}
+                    WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+                    LOGNAME "build-${build_lib}-${TARGET_TRIPLET}-${_buildtype}"
                 )
                 message(STATUS "Building ${build_lib} ${TARGET_TRIPLET}-${_buildtype}... done")
             endforeach()
@@ -233,9 +233,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}...")
         vcpkg_execute_required_process(
-            COMMAND ${PERL} install.pl ${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}} client
-            WORKING_DIRECTORY ${BUILDPATH_${_buildtype}}/src/tools/msvc
-            LOGNAME install-${TARGET_TRIPLET}-${_buildtype}
+            COMMAND ${PERL} install.pl "${CURRENT_PACKAGES_DIR}${INSTALL_PATH_SUFFIX_${_buildtype}}" client
+            WORKING_DIRECTORY "${BUILDPATH_${_buildtype}}/src/tools/msvc"
+            LOGNAME "install-${TARGET_TRIPLET}-${_buildtype}"
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
@@ -292,9 +292,9 @@ else()
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
     endif()
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        ASUTOCONFIG
+        SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
-        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${BUILD_OPTS}
         OPTIONS_DEBUG
@@ -311,25 +311,25 @@ else()
     endif()
     vcpkg_install_make()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     if(NOT HAS_TOOLS)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     else()
-        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
     endif()
     if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.a ${CURRENT_PACKAGES_DIR}/lib/libpq.dll.a)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/bin/libpq.dll)
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpq.a" "${CURRENT_PACKAGES_DIR}/lib/libpq.dll.a")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libpq.dll" "${CURRENT_PACKAGES_DIR}/bin/libpq.dll")
         endif()
         if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.a ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll.a)
-            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libpq.dll)
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.a" "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll.a")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/libpq.dll")
         endif()
     endif()
     if(VCPKG_TARGET_IS_MINGW)
