@@ -15,6 +15,7 @@ vcpkg_from_github(
         0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         0023-fix-static-libs-export.patch
+        export-components.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -133,6 +134,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
