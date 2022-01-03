@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO al-sabr/FlashRuntimeExtensions
-    REF v2.3
-    SHA512 461e6bb7ec49cb7d687d6504f9b6261eca407c2a79ba29b59abfaf48625e4e077640b43b933fdefe3bdaa76a283cbf2c4495220534c41ca982b7c370ea73f9e5
+    REF v2.4
+    SHA512 16db340a9c8d868c64b9771e3ac9a20e775fa145f36158e798733b788fd99d1ac101bfae93b8f88b0e5a0a530e0261c1fbdf7d367031dd3108c14ee00a106c10
     HEAD_REF main
 )
 
