@@ -1,35 +1,19 @@
-vcpkg_fail_port_install(ON_TARGET "uwp" ON_ARCH "arm")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_from_sourceforge(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO portmedia
-    FILENAME "portmedia-code-r234.zip"
-    SHA512 cbc332d89bc465450b38245a83cc300dfd2e1e6de7c62284edf754ff4d8a9aa3dc49a395dcee535ed9688befb019186fa87fd6d8a3698898c2acbf3e6b7a0794
-    PATCHES
-        fix-build-install.patch
-        add-feature-options.patch
+    REPO PortMidi/portmidi
+    REF v2.0.1
+    SHA512 2c412e5b2e90fb375fbd14f22adbf31e0f3ca8ffbb421185e58bd2564da7e431395a9b50c4ba9a1330b2b17b08f0f9e31730f3a57bf8cd14210f3128c70c57a3
+    HEAD_REF master
+    PATCHES fix-macOS.patch
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/portmidi/trunk"
-    OPTIONS
-        -DJAVA_SUPPORT=OFF
-        -DJAVA_INCLUDE_PATH=
-        -DJAVA_INCLUDE_PATH2=
-        -DJAVA_JVM_LIBRARY=
-    MAYBE_UNUSED_VARIABLES
-        JAVA_INCLUDE_PATH
-        JAVA_INCLUDE_PATH2
-)
-
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/portmidi.h"
-        "#elif defined _PM_USEDLL" "#elif 1"
-    )
-endif()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PortMidi)
 
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(INSTALL "${SOURCE_PATH}/portmidi/trunk/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
