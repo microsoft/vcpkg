@@ -34,6 +34,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
     endif()
+    list(APPEND PATCHES "0009-python-embed.pc.patch")
 endif()
 
 vcpkg_from_github(
@@ -157,6 +158,30 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             LOGNAME "ensurepip-${TARGET_TRIPLET}"
         )
     endif()
+
+    # pkg-config files
+    set(prefix "${CURRENT_PACKAGES_DIR}")
+    set(libdir [[${prefix}/lib]])
+    set(ABIVERSION "${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}")
+    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(exec_prefix "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        set(includedir [[${prefix}/include]])
+        set(ABISUFFIX "")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(exec_prefix "\${prefix}/../tools/${PORT}")
+        set(includedir [[${prefix}/../include]])
+        set(ABISUFFIX "_d")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
 else()
