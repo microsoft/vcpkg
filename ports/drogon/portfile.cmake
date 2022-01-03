@@ -9,6 +9,7 @@ vcpkg_from_github(
         drogon_config.patch
         static-brotli.patch
         fs.patch
+        mac-system-uuid.patch
 )
 
 vcpkg_check_features(

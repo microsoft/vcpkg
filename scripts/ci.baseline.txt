@@ -584,6 +584,7 @@ libhdfs3:x64-windows-static=fail
 libhdfs3:x64-windows-static-md=fail
 libhdfs3:x86-windows=fail
 libhdfs3:x64-linux=fail
+libhdfs3:x64-osx=fail
 libhydrogen:arm64-windows=fail
 libics:arm-uwp=fail
 libics:x64-uwp=fail
@@ -721,17 +722,6 @@ libusb-win32:arm-uwp=fail
 libusb-win32:x64-linux=fail
 libusb-win32:x64-osx=fail
 libusb-win32:x64-uwp=fail
-libuuid:arm64-windows=fail
-libuuid:arm-uwp=fail
-
-# Causes build failures in vxl and podofo on osx
-# Conflicts with Darwin kernel sdk uuid.h (has missing definitions)
-libuuid:x64-osx = skip
-libuuid:x64-uwp=fail
-libuuid:x64-windows=fail
-libuuid:x64-windows-static=fail
-libuuid:x64-windows-static-md=fail
-libuuid:x86-windows=fail
 libuv:arm-uwp=fail
 libuv:x64-uwp=fail
 libvmdk:arm-uwp=fail
