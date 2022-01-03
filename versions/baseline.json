@@ -2693,7 +2693,7 @@
       "port-version": 0
     },
     "hidapi": {
-      "baseline": "0.11.0",
+      "baseline": "0.11.2",
       "port-version": 0
     },
     "highfive": {
