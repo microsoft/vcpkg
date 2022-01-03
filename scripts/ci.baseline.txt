@@ -843,7 +843,6 @@ minhook:x64-osx=fail
 minhook:x64-uwp=fail
 minifb:arm-uwp=fail
 minifb:x64-uwp=fail
-minio-cpp:x64-osx=fail
 minisat-master-keying:arm-uwp=fail
 minisat-master-keying:x64-uwp=fail
 miniupnpc:arm-uwp=fail
