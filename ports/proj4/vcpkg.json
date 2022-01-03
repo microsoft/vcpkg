@@ -1,9 +1,10 @@
 {
   "name": "proj4",
-  "version-semver": "8.1.1",
-  "description": "PROJ.4 library for cartographic projections",
+  "version-semver": "8.2.1",
+  "description": "PROJ library for cartographic projections",
   "homepage": "https://proj.org/",
   "dependencies": [
+    "nlohmann-json",
     {
       "name": "sqlite3",
       "default-features": false
