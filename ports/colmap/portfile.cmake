@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         fix-dependency-freeimage.patch
-        fix-dependency-lcms.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
