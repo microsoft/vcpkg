@@ -4946,7 +4946,7 @@
     },
     "opencolorio": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
