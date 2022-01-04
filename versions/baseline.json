@@ -6458,7 +6458,7 @@
     },
     "soqt": {
       "baseline": "1.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "sord": {
       "baseline": "0.16.4",
