@@ -44,6 +44,12 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
+if("botan" IN_LIST FEATURES)
+    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN="yes")
+else()
+    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN="no")
+endif()
+
 # Configure and build
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -54,6 +60,7 @@ vcpkg_cmake_configure(
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
+        ${QCA_OPTIONS}
     OPTIONS_DEBUG
         -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
