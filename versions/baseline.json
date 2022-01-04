@@ -5978,7 +5978,7 @@
     },
     "readline": {
       "baseline": "0",
-      "port-version": 2
+      "port-version": 3
     },
     "readline-osx": {
       "baseline": "2020-01-04",
