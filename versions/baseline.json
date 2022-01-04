@@ -5074,7 +5074,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.20",
-      "port-version": 0
+      "port-version": 1
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
