@@ -23,9 +23,7 @@
     "readline": {
       "description": "Enable readline.",
       "dependencies": [
-        {
-          "name": "readline"
-        }
+        "readline"
       ]
     },
     "tools": {
