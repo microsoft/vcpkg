@@ -3186,7 +3186,7 @@
     },
     "kf5windowsystem": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5xmlgui": {
       "baseline": "5.89.0",
