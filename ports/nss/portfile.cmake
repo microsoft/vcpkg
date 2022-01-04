@@ -165,7 +165,6 @@ vcpkg_copy_tools(
         "ssltap"
         "symkeyutil"
         "validation"
-    
     SEARCH_DIR "${VCPKG_BINARY_DIR}-rel/dist/Release/bin/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
 )
@@ -208,7 +207,6 @@ vcpkg_copy_tools(
         "ssltap"
         "symkeyutil"
         "validation"
-    
     SEARCH_DIR "${VCPKG_BINARY_DIR}-dbg/dist/Debug/bin/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
 )
