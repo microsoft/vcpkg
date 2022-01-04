@@ -5981,6 +5981,10 @@
       "port-version": 2
     },
     "readline-osx": {
+      "baseline": "2020-01-04",
+      "port-version": 0
+    },
+    "readline-unix": {
       "baseline": "8.1",
       "port-version": 0
     },
