@@ -1,24 +1,37 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1eb391f..60d6c89 100644
+index 1eb391f..fdac705 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -361,15 +361,7 @@ if (CIVETWEB_ENABLE_CXX)
+@@ -360,16 +360,18 @@ if (CIVETWEB_ENABLE_CXX)
+   else()
      add_cxx_compiler_flag(-std=${CIVETWEB_CXX_STANDARD})
    endif()
-   add_cxx_compiler_flag(-Wall)
+-  add_cxx_compiler_flag(-Wall)
 -  add_cxx_compiler_flag(-Wextra)
 -  add_cxx_compiler_flag(-Wshadow)
 -  add_cxx_compiler_flag(-Wmissing-prototypes)
 -  add_cxx_compiler_flag(-Weverything)
-   add_cxx_compiler_flag(/W4)
+-  add_cxx_compiler_flag(/W4)
 -  add_cxx_compiler_flag(-Wno-padded)
 -  add_cxx_compiler_flag(/Wd4820) # padding
 -  add_cxx_compiler_flag(-Wno-unused-macros)
 -  add_cxx_compiler_flag(-Wno-format-nonliteral)
++  if(UNIX)
++      add_cxx_compiler_flag(-Wall)
++      add_cxx_compiler_flag(-Wextra)
++      add_cxx_compiler_flag(-Wshadow)
++      add_cxx_compiler_flag(-Wmissing-prototypes)
++      add_cxx_compiler_flag(-Weverything)
++      add_cxx_compiler_flag(/W4)
++      add_cxx_compiler_flag(-Wno-padded)
++      add_cxx_compiler_flag(/Wd4820) # padding
++      add_cxx_compiler_flag(-Wno-unused-macros)
++      add_cxx_compiler_flag(-Wno-format-nonliteral)
++  endif()  
    if (MINGW)
      add_cxx_compiler_flag(-Wno-format)
    endif()
-@@ -404,24 +396,13 @@ endif()
+@@ -404,24 +406,13 @@ endif()
  if (NOT ZEPHYR)
    #Warnings: enable everything
    add_c_compiler_flag(-Wall)
