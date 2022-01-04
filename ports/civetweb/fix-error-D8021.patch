@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1eb391f..fdac705 100644
+index 1eb391f..ccf30ed 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -360,16 +360,18 @@ if (CIVETWEB_ENABLE_CXX)
@@ -27,25 +27,44 @@ index 1eb391f..fdac705 100644
 +      add_cxx_compiler_flag(/Wd4820) # padding
 +      add_cxx_compiler_flag(-Wno-unused-macros)
 +      add_cxx_compiler_flag(-Wno-format-nonliteral)
-+  endif()  
++  endif()
    if (MINGW)
      add_cxx_compiler_flag(-Wno-format)
    endif()
-@@ -404,24 +406,13 @@ endif()
+@@ -403,25 +405,30 @@ endif()
+ 
  if (NOT ZEPHYR)
    #Warnings: enable everything
-   add_c_compiler_flag(-Wall)
+-  add_c_compiler_flag(-Wall)
 -  add_c_compiler_flag(-Wextra)
 -  add_c_compiler_flag(-Wshadow)
 -  add_c_compiler_flag(-Wconversion)
 -  add_c_compiler_flag(-Wmissing-prototypes)
 -  add_c_compiler_flag(-Weverything)
 -  add_c_compiler_flag(-Wparentheses)
-   add_c_compiler_flag(/W4) # VisualStudio highest warning level
+-  add_c_compiler_flag(/W4) # VisualStudio highest warning level
++      add_c_compiler_flag(-Wall)
++      add_c_compiler_flag(/W4) # VisualStudio highest warning level      
++  if(UNIX)
++
++      add_c_compiler_flag(-Wextra)
++      add_c_compiler_flag(-Wshadow)
++      add_c_compiler_flag(-Wconversion)
++      add_c_compiler_flag(-Wmissing-prototypes)
++      add_c_compiler_flag(-Weverything)
++      add_c_compiler_flag(-Wparentheses)
++  endif()
  
    #Warnings: Disable some warnings
 -  add_c_compiler_flag(-Wno-padded) # padding in structures by compiler
 -  add_c_compiler_flag(-Wno-unused-macros) # so what?
++  if(UNIX)
++      add_c_compiler_flag(-Wno-padded) # padding in structures by compiler
++      add_c_compiler_flag(-Wno-unused-macros) # so what?
++      add_c_compiler_flag(-Wno-format-nonliteral) # printf(myFormatStringVar, ...)
++      add_c_compiler_flag(-Wno-cast-qual) # const cast
++      add_c_compiler_flag(/Wd4820) # padding
++  endif()
    Check_C_Compiler_Flag( HAVE_NO_RESERVED_ID_MACROS -Wno-reserved-id-macros)
    if (HAVE_NO_RESERVED_ID_MACROS)
    add_c_compiler_flag(-Wno-reserved-id-macros) # for system headers
