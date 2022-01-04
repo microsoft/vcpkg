@@ -3,5 +3,5 @@
   "version": "1.4.19",
   "description": "GNU m4 is an implementation of the traditional Unix macro processor.",
   "homepage": "https://github.com/autotools-mirror/m4",
-  "dependencies": []
+  "supports": "linux"
 }
