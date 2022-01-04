@@ -12,9 +12,6 @@ vcpkg_from_github(
     SHA512 f56cb58329a496ca1fe3537fe87d469038ac0e74a555990a4510d2c019d2ad14b556240c0d5087a9a25ac01d9b371b5c77ce5a719e71a85fcd56e9cd099bc31e
     HEAD_REF master
     PATCHES
-        #fix-config-cmake.patch
-        #fix_static_build.patch
-        #disable-test.patch
         fix-dependencies.patch
 )
 
