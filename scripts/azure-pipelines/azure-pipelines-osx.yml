@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  osx-pool: 'PrOsx-2021-07-27'
+  osx-pool: 'PrOsx-2022-01-03'
 
 jobs:
 - template: osx/azure-pipelines.yml

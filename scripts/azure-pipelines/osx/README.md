@@ -23,7 +23,8 @@ already set up (or read [these instructions] for how to set up a machine):
 
 1. [Create a new vagrant box](#creating-a-new-vagrant-box)
 2. [Create a new agent pool](#creating-a-new-azure-agent-pool)
-3. [Setup and run the vagrant VM](#)
+3. [Setup and run the vagrant VM](#running-the-vm)
+4. Update `azure-pipelines.yml` and `azure-pipelines-osx.yml` to point to the new macOS pool.
 
 [these instructions]: #setting-up-a-new-macos-machine
 
