@@ -325,7 +325,7 @@ file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUB
 if(LIBS)
     file(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")
 endif()
-file(GLOB DLLS \"${SUBDIR}/*.dll\")
+file(GLOB DLLS \"${SUBDIR}/*.dll\" \"${SUBDIR}/*.pyd\")
 if(DLLS)
     file(INSTALL \${DLLS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
 endif()
