@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0bd721d..4848c5f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -52,7 +52,7 @@ if (UNIX)
+     set(ads_SRCS linux/FloatingWidgetTitleBar.cpp ${ads_SRCS})
+     set(ads_HEADERS linux/FloatingWidgetTitleBar.h ${ads_HEADERS})
+ endif()
+-if(BUILD_STATIC)
++if(NOT BUILD_SHARED_LIBS)
+     add_library(qtadvanceddocking STATIC ${ads_SRCS} ${ads_HEADERS})
+     target_compile_definitions(qtadvanceddocking PUBLIC ADS_STATIC)
+ else()
