@@ -78,21 +78,6 @@ Installing anyways."
     }
 }
 
-$Installables.Brew | ForEach-Object {
-    $installable = $_
-    if ($null -eq (Get-Member -InputObject $installable -Name 'Kind')) {
-        brew install $installable.Name
-    } else {
-        switch ($installable.Kind) {
-            'cask' { brew install --cask $installable.Name }
-            default {
-                Write-Error "Invalid kind: $_. Expected either empty, or 'cask'."
-            }
-        }
-    }
-}
-brew upgrade
-
 $installedVagrantPlugins = @{}
 vagrant plugin list --machine-readable | ForEach-Object {
     $timestamp, $target, $type, $data = $_ -split ','

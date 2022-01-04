@@ -193,15 +193,18 @@ Once you've done that, add the software versions under [VM Software Versions](#v
 
 ### VM Software Versions
 
-* 2020-09-28:
-  * macOS: 10.15.6
-  * Xcode CLTs: 12
-* 2021-04-16:
-  * macOS: 11.2.3
-  * Xcode CLTs: 12.4
+* 2022-03-01:
+  * macOS: 12.1
+  * Xcode CLTs: 13.2
 * 2021-07-27:
   * macOS: 11.5.1
   * Xcode CLTs: 12.5.1
+* 2021-04-16:
+  * macOS: 11.2.3
+  * Xcode CLTs: 12.4
+* 2020-09-28:
+  * macOS: 10.15.6
+  * Xcode CLTs: 12
 
 ### (Internal) Accessing the macOS fileshare
 
