@@ -331,9 +331,8 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         set(ENV{USING_MINGW} yes)
     endif()
-    #file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
-    vcpkg_install_make( BUILD_TARGET world-contrib-recurse
-                        INSTALL_TARGET install-world)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
+    vcpkg_install_make()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
