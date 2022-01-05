@@ -5546,7 +5546,7 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 2
+      "port-version": 3
     },
     "python3": {
       "baseline": "3.10.1",

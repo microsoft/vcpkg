@@ -93,19 +93,54 @@ else()
 endif()
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
-    list(POP_FRONT python_config_files python_config_file)
-    vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    foreach(lib_suffix IN ITEMS "" "/debug")
+        set(python_config_file "${CURRENT_PACKAGES_DIR}${lib_suffix}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata.py")
+        if(NOT EXISTS "${python_config_file}")
+            continue()
+        endif()
+        
+        file(READ "${python_config_file}" contents)
 
-    file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
-    list(POP_FRONT python_config_files python_config_file)
-    vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))\n")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
-    vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+        string(PREPEND contents "import os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
+        # make contents a list of lines
+        string(REPLACE ";" "\\;" old_contents "${contents}")
+        string(REGEX REPLACE "\r?\n" ";" old_contents "${contents}")
+
+        set(new_contents "")
+        foreach(line IN LISTS old_contents)
+            if(line MATCHES "\"")
+                string(REGEX REPLACE
+                    "${CURRENT_PACKAGES_DIR}|${CURRENT_INSTALLED_DIR}"
+                    "\" + _base + \""
+                    line
+                    "${line}"
+                )
+                string(REGEX REPLACE
+                    "\"[^\"]*${CURRENT_BUILDTREES_DIR}[^\"]*\""
+                    "''"
+                    line
+                    "${line}"
+                )
+            else()
+                string(REGEX REPLACE
+                    "${CURRENT_PACKAGES_DIR}|${CURRENT_INSTALLED_DIR}"
+                    "' + _base + '"
+                    line
+                    "${line}"
+                )
+                string(REGEX REPLACE
+                    "'[^']*${CURRENT_BUILDTREES_DIR}[^']*'"
+                    "''"
+                    line
+                    "${line}"
+                )
+            endif()
+            list(APPEND new_contents "${line}")
+        endforeach()
+
+        list(JOIN new_contents "\n" contents)
+        file(WRITE "${python_config_file}" "${contents}")
+    endforeach()
 endif()
 
 # Handle copyright
