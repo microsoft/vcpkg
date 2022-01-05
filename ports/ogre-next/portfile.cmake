@@ -36,9 +36,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         csharp  OGRE_BUILD_COMPONENT_CSHARP
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
