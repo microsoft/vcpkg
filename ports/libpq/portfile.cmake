@@ -332,7 +332,8 @@ else()
         set(ENV{USING_MINGW} yes)
     endif()
     #file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
-    vcpkg_install_make()
+    vcpkg_install_make( BUILD_TARGET world-contrib-recurse
+                        INSTALL_TARGET install-world)
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
