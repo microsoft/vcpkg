@@ -1,43 +1,30 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.1",
-  "port-version": 4,
-  "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
+  "version-semver": "3.5.0",
+  "description": "[Experimental CMake build] The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "curl",
-    "expat",
-    "geos",
-    {
-      "name": "giflib",
-      "platform": "!windows | mingw"
-    },
-    {
-      "name": "json-c",
-      "platform": "!windows | mingw"
-    },
+    "json-c",
     "libgeotiff",
-    {
-      "name": "libiconv",
-      "platform": "windows & !mingw"
-    },
-    "libjpeg-turbo",
-    "liblzma",
-    "libpng",
-    "libwebp",
-    "libxml2",
-    "openjpeg",
+    "libiconv",
     "proj",
-    "sqlite3",
+    "qhull",
     "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
-    "zlib",
-    "zstd"
+    "zlib"
   ],
   "default-features": [
     "supported-default-features"
@@ -49,10 +36,34 @@
         "cfitsio"
       ]
     },
+    "curl": {
+      "description": "Enable CURL network support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "freexl": {
+      "description": "Enable FREEXL support",
+      "dependencies": [
+        "freexl"
+      ]
+    },
+    "geos": {
+      "description": "Enable GEOS support",
+      "dependencies": [
+        "geos"
+      ]
+    },
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
-        "hdf5"
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
       ]
     },
     "libspatialite": {
@@ -70,7 +81,10 @@
     "netcdf": {
       "description": "Enable NetCDF support",
       "dependencies": [
-        "netcdf-c"
+        {
+          "name": "netcdf-c",
+          "default-features": false
+        }
       ]
     },
     "poppler": {
@@ -91,9 +105,40 @@
         "libpq"
       ]
     },
+    "primary-features": {
+      "description": "Core dependencies and features for which this port doesn't offer individual control at the moment",
+      "dependencies": [
+        "expat",
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "curl",
+            "geos"
+          ]
+        },
+        "giflib",
+        "libjpeg-turbo",
+        "liblzma",
+        "libpng",
+        "libwebp",
+        "libxml2",
+        "openjpeg",
+        "pcre2",
+        "sqlite3",
+        "zstd"
+      ]
+    },
     "supported-default-features": {
       "description": "Default set of features, dependent on platform",
       "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "primary-features"
+          ]
+        },
         {
           "name": "gdal",
           "default-features": false,
@@ -114,7 +159,8 @@
       ]
     },
     "system-libraries": {
-      "description": "Include drivers which need additional libraries"
+      "$supports": "!windows",
+      "description": "This feature does nothing. It is retained for compatibility."
     },
     "tools": {
       "description": "Builds gdal and ogr executables"
