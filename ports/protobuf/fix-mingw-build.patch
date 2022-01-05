@@ -1,0 +1,20 @@
+--- a/src/google/protobuf/io/zero_copy_stream_impl.cc	2021-09-15 00:48:28.000000000 +0800
++++ b/src/google/protobuf/io/zero_copy_stream_impl.cc	2022-01-05 09:42:35.632457100 +0800
+@@ -32,7 +32,7 @@
+ //  Based on original Protocol Buffers design by
+ //  Sanjay Ghemawat, Jeff Dean, and others.
+ 
+-#ifndef _MSC_VER
++#ifndef _WIN32
+ #include <fcntl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+@@ -104,7 +104,7 @@
+       is_closed_(false),
+       errno_(0),
+       previous_seek_failed_(false) {
+-#ifndef _MSC_VER
++#ifndef _WIN32
+   int flags = fcntl(file_, F_GETFL);
+   flags &= ~O_NONBLOCK;
+   fcntl(file_, F_SETFL, flags);
