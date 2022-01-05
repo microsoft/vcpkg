@@ -3605,8 +3605,8 @@
       "port-version": 1
     },
     "libkeyfinder": {
-      "baseline": "2.2.5",
-      "port-version": 1
+      "baseline": "2.2.6",
+      "port-version": 0
     },
     "libkml": {
       "baseline": "1.3.0",
