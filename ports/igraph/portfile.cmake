@@ -48,7 +48,7 @@ vcpkg_cmake_configure(
         # Currently, external GMP provides no performance or functionality benefits.
         -DIGRAPH_USE_INTERNAL_GMP=ON
         # PLFIT is not yet available in vcpkg.
-        -DIGRAPH_USE_INTERNAL_PLFIT=OFF
+        -DIGRAPH_USE_INTERNAL_PLFIT=ON
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )
