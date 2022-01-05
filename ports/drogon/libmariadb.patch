@@ -1,0 +1,89 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85e8ee7..b9132df 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -358,10 +358,10 @@ endif (BUILD_POSTGRESQL)
+ 
+ if (BUILD_MYSQL)
+     # Find mysql, only mariadb client liberary is supported
+-    find_package(MySQL)
+-    if (MySQL_FOUND)
++    find_package(unofficial-libmariadb CONFIG REQUIRED)
++    if (unofficial-libmariadb_FOUND)
+         message(STATUS "Ok! We find the mariadb!")
+-        target_link_libraries(${PROJECT_NAME} PRIVATE MySQL_lib)
++        target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::libmariadb)
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
+             orm_lib/src/mysql_impl/MysqlConnection.cc
+@@ -370,7 +370,7 @@ if (BUILD_MYSQL)
+             ${private_headers}
+             orm_lib/src/mysql_impl/MysqlConnection.h
+             orm_lib/src/mysql_impl/MysqlResultImpl.h)
+-    endif (MySQL_FOUND)
++    endif (unofficial-libmariadb_FOUND)
+ endif (BUILD_MYSQL)
+ 
+ if (BUILD_SQLITE)
+@@ -531,15 +531,15 @@ set(private_headers
+     orm_lib/src/DbConnection.h
+     orm_lib/src/ResultImpl.h
+     orm_lib/src/TransactionImpl.h)
+-if (pg_FOUND OR MySQL_FOUND OR SQLite3_FOUND)
++if (pg_FOUND OR unofficial-libmariadb_FOUND OR SQLite3_FOUND)
+     set(DROGON_SOURCES
+         ${DROGON_SOURCES}
+         orm_lib/src/DbClientManager.cc)
+-else (pg_FOUND OR MySQL_FOUND OR SQLite3_FOUND)
++else (pg_FOUND OR unofficial-libmariadb_FOUND OR SQLite3_FOUND)
+     set(DROGON_SOURCES
+         ${DROGON_SOURCES}
+         lib/src/DbClientManagerSkipped.cc)
+-endif (pg_FOUND OR MySQL_FOUND OR SQLite3_FOUND)
++endif (pg_FOUND OR unofficial-libmariadb_FOUND OR SQLite3_FOUND)
+ 
+ set_target_properties(${PROJECT_NAME}
+     PROPERTIES CXX_STANDARD ${DROGON_CXX_STANDARD})
+@@ -547,25 +547,25 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED ON)
+ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
+ set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Drogon)
+ 
+-if (pg_FOUND OR MySQL_FOUND OR SQLite3_FOUND)
++if (pg_FOUND OR unofficial-libmariadb_FOUND OR SQLite3_FOUND)
+     if (pg_FOUND)
+         option(USE_POSTGRESQL "Enable PostgreSQL" ON)
+     else (pg_FOUND)
+         option(USE_POSTGRESQL "Disable PostgreSQL" OFF)
+     endif (pg_FOUND)
+ 
+-    if (MySQL_FOUND)
++    if (unofficial-libmariadb_FOUND)
+         option(USE_MYSQL "Enable Mysql" ON)
+-    else (MySQL_FOUND)
++    else (unofficial-libmariadb_FOUND)
+         option(USE_MYSQL "Disable Mysql" OFF)
+-    endif (MySQL_FOUND)
++    endif (unofficial-libmariadb_FOUND)
+ 
+     if (SQLite3_FOUND)
+         option(USE_SQLITE3 "Enable Sqlite3" ON)
+     else (SQLite3_FOUND)
+         option(USE_SQLITE3 "Disable Sqlite3" OFF)
+     endif (SQLite3_FOUND)
+-endif (pg_FOUND OR MySQL_FOUND OR SQLite3_FOUND)
++endif (pg_FOUND OR unofficial-libmariadb_FOUND OR SQLite3_FOUND)
+ 
+ set(COMPILER_COMMAND ${CMAKE_CXX_COMPILER})
+ set(COMPILER_ID ${CMAKE_CXX_COMPILER_ID})
+@@ -603,9 +603,9 @@ if (BUILD_TESTING)
+     if (pg_FOUND)
+         add_subdirectory(${PROJECT_SOURCE_DIR}/orm_lib/src/postgresql_impl/test)
+     endif (pg_FOUND)
+-    if (MySQL_FOUND)
++    if (unofficial-libmariadb_FOUND)
+         add_subdirectory(${PROJECT_SOURCE_DIR}/orm_lib/src/mysql_impl/test)
+-    endif (MySQL_FOUND)
++    endif (unofficial-libmariadb_FOUND)
+     if (SQLite3_FOUND)
+         add_subdirectory(${PROJECT_SOURCE_DIR}/orm_lib/src/sqlite3_impl/test)
+     endif (SQLite3_FOUND)
