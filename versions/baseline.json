@@ -4790,7 +4790,7 @@
     },
     "numactl": {
       "baseline": "2.0.14",
-      "port-version": 0
+      "port-version": 1
     },
     "numcpp": {
       "baseline": "2.6.0",
