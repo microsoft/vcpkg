@@ -1,7 +1,7 @@
 # Be sure to update both of these versions together.
-set(SQLITE_VERSION 3370000)
-set(PKGCONFIG_VERSION 3.37.0)
-set(SQLITE_HASH e33935e513e52c825ebdef8eab92a4a839731a3b8fffcd5910a5dbd305ffd4cb627bf10c3d191dd934d1d6707e4a199dd098073953322768d5210fc726eb22fd)
+set(SQLITE_VERSION 3370100)
+set(PKGCONFIG_VERSION 3.37.1)
+set(SQLITE_HASH b59343772dc4c6bb8e05fff6206eeb44861efa52c120c789ce6b733e974cf950657b6ab369aa405d75f45ed9cf1cb8128a76447bc63e9ce9822578d71581a7a3)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2021/sqlite-amalgamation-${SQLITE_VERSION}.zip"
