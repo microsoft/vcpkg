@@ -8,12 +8,19 @@
     "curl",
     "expat",
     "geos",
-    "giflib",
+    {
+      "name": "giflib",
+      "platform": "!windows | mingw"
+    },
     {
       "name": "json-c",
       "platform": "!windows | mingw"
     },
     "libgeotiff",
+    {
+      "name": "libiconv",
+      "platform": "windows & !mingw"
+    },
     "libjpeg-turbo",
     "liblzma",
     "libpng",
@@ -93,7 +100,6 @@
       ]
     },
     "system-libraries": {
-      "$supports": "!windows",
       "description": "Include drivers which need additional libraries"
     },
     "tools": {
