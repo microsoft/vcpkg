@@ -18,7 +18,7 @@
     },
     "ace": {
       "baseline": "7.0.5",
-      "port-version": 1
+      "port-version": 2
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -1253,8 +1253,8 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "2.13.7",
-      "port-version": 2
+      "baseline": "2.13.8",
+      "port-version": 0
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -2313,7 +2313,7 @@
       "port-version": 4
     },
     "ftxui": {
-      "baseline": "2021-06-17",
+      "baseline": "2021-10-17",
       "port-version": 0
     },
     "function2": {
@@ -2370,7 +2370,7 @@
     },
     "gdal": {
       "baseline": "3.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2422,7 +2422,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 7
+      "port-version": 8
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -2670,7 +2670,7 @@
     },
     "hdf5": {
       "baseline": "1.12.1",
-      "port-version": 1
+      "port-version": 3
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -2693,7 +2693,7 @@
       "port-version": 0
     },
     "hidapi": {
-      "baseline": "0.11.0",
+      "baseline": "0.11.2",
       "port-version": 0
     },
     "highfive": {
@@ -3186,7 +3186,7 @@
     },
     "kf5windowsystem": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5xmlgui": {
       "baseline": "5.89.0",
@@ -4246,7 +4246,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 8
+      "port-version": 9
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -4415,6 +4415,10 @@
     "minimp3": {
       "baseline": "2020-12-25",
       "port-version": 1
+    },
+    "minio-cpp": {
+      "baseline": "2022-01-03",
+      "port-version": 0
     },
     "minisat-master-keying": {
       "baseline": "2.3.6",
@@ -4946,7 +4950,7 @@
     },
     "opencolorio": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -5393,8 +5397,8 @@
       "port-version": 2
     },
     "portmidi": {
-      "baseline": "0.234",
-      "port-version": 3
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "portsmf": {
       "baseline": "0.238",
@@ -5425,7 +5429,7 @@
       "port-version": 1
     },
     "proj4": {
-      "baseline": "8.1.1",
+      "baseline": "8.2.1",
       "port-version": 0
     },
     "prometheus-cpp": {
@@ -5498,11 +5502,11 @@
     },
     "python3": {
       "baseline": "3.10.1",
-      "port-version": 3
+      "port-version": 4
     },
     "qca": {
       "baseline": "2.3.4",
-      "port-version": 1
+      "port-version": 2
     },
     "qcustomplot": {
       "baseline": "2.0.1",
@@ -7018,7 +7022,7 @@
     },
     "unixodbc": {
       "baseline": "2.3.9",
-      "port-version": 0
+      "port-version": 1
     },
     "unqlite": {
       "baseline": "1.1.9",
