@@ -4050,7 +4050,7 @@
     },
     "libuvc": {
       "baseline": "2020-11-24",
-      "port-version": 2
+      "port-version": 3
     },
     "libvmdk": {
       "baseline": "20200926",

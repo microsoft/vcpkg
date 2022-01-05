@@ -27,5 +27,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME libuvc CONFIG_PATH lib/cmake/libuvc)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+vcpkg_fixup_pkgconfig()
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
