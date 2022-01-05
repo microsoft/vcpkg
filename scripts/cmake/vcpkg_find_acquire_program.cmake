@@ -29,7 +29,7 @@ The current list of programs includes:
 * GIT
 * GN
 * GO
-* GYP
+* GYP_NSS
 * JOM
 * MESON
 * MOZBUILD
@@ -577,14 +577,14 @@ function(vcpkg_find_acquire_program program)
         set(download_urls "https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-${program_version}.exe")
         set(download_filename "mozbuild-${program_version}.7z.exe")
         set(download_sha512 ac33d15dd9c974ef8ad581f9b414520a9d5e3b9816ab2bbf3e305d0a33356cc22c356cd9761e64a19588d17b6c13f124e837cfb462a36b8da898899e7db22ded)
-    elseif (program STREQUAL "GYP")
-        set(program_name gyp)
-        set(program_version d6c5dd51dc3a60bf4ff32a5256713690a1a10376)
+    elseif (program STREQUAL "GYP_NSS")
+        set(program_name "gyp-nss")
+        set(program_version b3177c3f6c2c45a8ca098ae0f0ebb4536c624762)
         set(search_names "gyp")
-        set(paths_to_search "${DOWNLOADS}/tools/gyp/gyp-${program_version}")
-        set(download_urls "https://github.com/chromium/gyp/archive/${program_version}.zip")
-        set(download_filename "gyp-${program_version}.zip")
-        set(download_sha512 f85c4291afa8fba2e6b9021ad7b354c196d6b4aaa45b2aed6678f7df02cbb13369472404030deadaacaa6bb8d60045995af77ece96f119f42f7b8cdb244ba0a9)
+        set(paths_to_search "${DOWNLOADS}/tools/gyp-nss/gyp-nss-${program_version}")
+        set(download_urls "https://github.com/plq/gyp-nss/archive/${program_version}.zip")
+        set(download_filename "gyp-nss-${program_version}.zip")
+        set(download_sha512 7cd05e1bdcdb579e8226ecae2e925285e164349927f60350b87703afe9cbdc308f044bc9f6455318f99778b7b49304003aab47f6c587a13e6fbdaaa1533c558d )
     else()
         message(FATAL "unknown tool ${program} -- unable to acquire.")
     endif()

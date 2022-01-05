@@ -30,7 +30,7 @@ The current list of programs includes:
 * GIT
 * GN
 * GO
-* GYP
+* GYP_NSS
 * JOM
 * MESON
 * MOZBUILD
