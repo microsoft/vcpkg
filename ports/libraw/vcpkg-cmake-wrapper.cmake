@@ -7,6 +7,7 @@ if (@ENABLE_OPENMP@)
     find_package(OpenMP REQUIRED)
     if (OpenMP_FOUND)
         list(APPEND LibRaw_LIBRARIES gomp)
+        list(APPEND LibRaw_r_LIBRARIES gomp)
     endif()
 endif()
 
