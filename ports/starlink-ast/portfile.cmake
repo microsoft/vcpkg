@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Starlink/ast/releases/download/v9.2.5/ast-9.2.5.tar.gz"
-    FILENAME "ast-9.2.5.tar.gz"
-    SHA512 2eee3df56ca49a9fbb6b103b26f41a63a7b77533bcc74bc4154b57567ee6da53d5c7ff1d38c4ad0ce330d9b902e35d40184fa9e985506c3dcbbb03071be65760
+    URLS "https://github.com/Starlink/ast/releases/download/v9.2.6/ast-9.2.6.tar.gz"
+    FILENAME "ast-9.2.6.tar.gz"
+    SHA512 973a8e687bbc04061c7f186724201f90c81497c5dacf5eeb42df73655667a166ddee5aabf03ca51f05396c82d6a3c4a25b9e89566997a516bc99ccfa83a551b3
 )
 
 vcpkg_extract_source_archive_ex(
