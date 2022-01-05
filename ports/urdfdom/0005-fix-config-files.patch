@@ -1,0 +1,101 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f0d115d..175df77 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,16 +56,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}"
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+ 
+-enable_testing()
+-
+-add_subdirectory(urdf_parser)
+-
+ if(WIN32 AND NOT CYGWIN)
+   set(CMAKE_CONFIG_INSTALL_DIR CMake)
+ else()
+     set(CMAKE_CONFIG_INSTALL_DIR ${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME}/cmake/)
+ endif()
+ 
++enable_testing()
++
++add_subdirectory(urdf_parser)
++
+ set(PKG_NAME ${PROJECT_NAME})
+ set(PKG_LIBRARIES urdfdom_sensor urdfdom_model_state urdfdom_model urdfdom_world)
+ set(PKG_DEPENDS urdfdom_headers console_bridge)
+diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
+index fb81b47..3fe1b1c 100644
+--- a/cmake/urdfdom-config.cmake.in
++++ b/cmake/urdfdom-config.cmake.in
+@@ -3,25 +3,17 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
+ endif()
+ set(@PKG_NAME@_CONFIG_INCLUDED TRUE)
+ 
+-set(@PKG_NAME@_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include" "@TinyXML_INCLUDE_DIRS@")
++get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+ 
+-foreach(lib @PKG_LIBRARIES@)
+-  set(onelib "${lib}-NOTFOUND")
+-  find_library(onelib ${lib}
+-      PATHS "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@"
+-    NO_DEFAULT_PATH
+-    )
+-  if(NOT onelib)
+-    message(FATAL_ERROR "Library '${lib}' in package @PKG_NAME@ is not installed properly")
+-  endif()
+-  list(APPEND @PKG_NAME@_LIBRARIES ${onelib})
+-endforeach()
++set(@PKG_NAME@_INCLUDE_DIRS "${_IMPORT_PREFIX}/include" "@TinyXML_INCLUDE_DIRS@")
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(console_bridge)
+ 
+-foreach(dep @PKG_DEPENDS@)
+-  if(NOT ${dep}_FOUND)
+-    find_package(${dep})
+-  endif()
+-  list(APPEND @PKG_NAME@_INCLUDE_DIRS ${${dep}_INCLUDE_DIRS})
+-  list(APPEND @PKG_NAME@_LIBRARIES ${${dep}_LIBRARIES})
+-endforeach()
++include("${CMAKE_CURRENT_LIST_DIR}/urdfdom_modelTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/urdfdom_worldTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/urdfdom_sensorTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/urdfdom_model_stateTargets.cmake")
++
++set(@PKG_NAME@_LIBRARIES urdfdom::urdfdom_model urdfdom::urdfdom_world urdfdom::urdfdom_sensor urdfdom::urdfdom_model_state)
+diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
+index 731b57a..8623edf 100644
+--- a/urdf_parser/CMakeLists.txt
++++ b/urdf_parser/CMakeLists.txt
+@@ -39,10 +39,26 @@ if(BUILD_TESTING)
+   add_subdirectory(test)
+ endif()
+ 
+-INSTALL(TARGETS urdfdom_model DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-INSTALL(TARGETS urdfdom_world DESTINATION ${CMAKE_INSTALL_LIBDIR})
++INSTALL(TARGETS urdfdom_model DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT urdfdom_modelTargets)
++install(EXPORT urdfdom_modelTargets
++    NAMESPACE urdfdom::
++    DESTINATION ${CMAKE_CONFIG_INSTALL_DIR}
++)
++INSTALL(TARGETS urdfdom_world DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT urdfdom_worldTargets)
++install(EXPORT urdfdom_worldTargets
++    NAMESPACE urdfdom::
++    DESTINATION ${CMAKE_CONFIG_INSTALL_DIR}
++)
+ INSTALL(TARGETS check_urdf urdf_to_graphiz urdf_mem_test
+   DESTINATION ${CMAKE_INSTALL_BINDIR})
+-INSTALL(TARGETS urdfdom_sensor DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-INSTALL(TARGETS urdfdom_model_state DESTINATION ${CMAKE_INSTALL_LIBDIR})
++INSTALL(TARGETS urdfdom_sensor DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT urdfdom_sensorTargets)
++install(EXPORT urdfdom_sensorTargets
++    NAMESPACE urdfdom::
++    DESTINATION ${CMAKE_CONFIG_INSTALL_DIR}
++)
++INSTALL(TARGETS urdfdom_model_state DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT urdfdom_model_stateTargets)
++install(EXPORT urdfdom_model_stateTargets
++    NAMESPACE urdfdom::
++    DESTINATION ${CMAKE_CONFIG_INSTALL_DIR}
++)
+ INSTALL(DIRECTORY include/urdf_parser DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
