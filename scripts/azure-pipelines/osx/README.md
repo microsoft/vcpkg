@@ -41,13 +41,9 @@ You'll need some prerequisites:
 
 - An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>
-- Parallels - found at <https://parallels.com>
 - The software installed by `Install-Prerequisites.ps1`
 
-If you're updating the CI pool, make sure you update all of the software,
-including Parallels (which may require going to the website; they don't
-automatically update past a major version), the macOS version you're running,
-and the software defined by `configuration/installables.json`.
+If you're updating the CI pool, make sure you update macOS.
 
 First, you'll need to create a base VM;
 this is where you determine what version of macOS is installed.
@@ -172,9 +168,7 @@ Then, make sure that your software is up to date:
 $ ./Install-Prerequisites.ps1
 ```
 
-as well as checking to make sure Parallels and macOS are up to date
-(this may involve going to the Parallels website, since they don't
-seem to automatically update to the next major version).
+as well as checking to make sure macOS is up to date.
 
 Then, follow the instructions for [accessing the fileshare][access-fileshare].
 

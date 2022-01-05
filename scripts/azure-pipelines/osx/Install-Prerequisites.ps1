@@ -65,8 +65,19 @@ Installing anyways."
         Get-RemoteFile -OutFile $pathToDmg -Uri $_.DmgUrl -Sha256 $_.Sha256
 
         hdiutil attach $pathToDmg -mountpoint /Volumes/setup-installer
-        sudo installer -pkg "/Volumes/setup-installer/$($_.InstallerPath)" -target /
-        hdiutil detach /Volumes/setup-installer
+
+        if ($null -ne (Get-Member -InputObject $_ -Name 'InstallationCommands')) {
+            $_.InstallationCommands | % {
+                Write-Host "> $($_ -join ' ')"
+                & $_[0] $_[1..$_.Length] | Write-Host
+            }
+        } elseif ($null -ne (Get-Member -InputObject $_ -Name 'InstallerPath')) {
+            sudo installer -pkg "/Volumes/setup-installer/$($_.InstallerPath)" -target /
+            hdiutil detach /Volumes/setup-installer
+        } else {
+            Write-Error "$($_.Name) installer object has a DmgUrl, but neither an InstallerPath nor an InstallationCommands"
+            throw
+        }
     } elseif ($null -ne (Get-Member -InputObject $_ -Name 'PkgUrl')) {
         $pathToPkg = "~/Downloads/$($_.Name).pkg"
         Get-RemoteFile -OutFile $pathToPkg -Uri $_.PkgUrl -Sha256 $_.Sha256
