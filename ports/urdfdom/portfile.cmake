@@ -27,6 +27,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/urdfdom/cmake)
+    # Empty folders
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/urdfdom")
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
