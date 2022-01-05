@@ -15,7 +15,7 @@
       "Name": "Parallels",
       "VersionCommand": [ "cat", "/Applications/Parallels Desktop.app/Contents/Info.plist" ],
       "VersionRegex": "<key>CFBundleShortVersionString</key>[\\n\\t ]*<string>([0-9.]+)</string>",
-      "Version": "17.1.0",
+      "Version": "17.1.1",
       "DmgUrl": "https://download.parallels.com/desktop/v17/17.1.1-51537/ParallelsDesktop-17.1.1-51537.dmg",
       "Sha256": "BD7BE2DF4D1B3508C127CF1D9C1EF93CDDA63384BCF3893A77FBC9F1169765A9",
       "InstallationCommands": [
