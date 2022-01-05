@@ -334,6 +334,15 @@ else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
+
+    if("libspatialite" IN_LIST FEATURES)
+        list(APPEND extra_exports SPATIALITE)
+        x_vcpkg_pkgconfig_get_modules(
+            PREFIX SPATIALITE
+            MODULES spatialite
+            LIBS
+        )
+    endif()
 endif()
 
 string(COMPARE NOTEQUAL "${NMAKE_OPTIONS}" "" NMAKE_BUILD)
