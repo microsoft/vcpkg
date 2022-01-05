@@ -20,11 +20,12 @@ get_filename_component(NINJA_ROOT "${NINJA}" DIRECTORY)
 list(APPEND CMAKE_PROGRAM_PATH "${NINJA_ROOT}")
 vcpkg_add_to_path(APPEND "${NINJA_ROOT}")
 
-# setup mozbuild
-vcpkg_find_acquire_program(MOZBUILD)
-get_filename_component(MOZBUILD_ROOT ${MOZBUILD} DIRECTORY)
-get_filename_component(MOZBUILD_ROOT "${MOZBUILD_ROOT}" PATH)
+# setup mozbuild for windows
 if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(MOZBUILD)
+    get_filename_component(MOZBUILD_ROOT ${MOZBUILD} DIRECTORY)
+    get_filename_component(MOZBUILD_ROOT "${MOZBUILD_ROOT}" PATH)
+
     set(MOZBUILD_BINDIR "${MOZBUILD_ROOT}/bin")
     vcpkg_add_to_path(PREPEND "${MOZBUILD_BINDIR}")
 
@@ -36,17 +37,21 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
     find_program(MOZBUILD_BASH         bash PATHS "${MOZBUILD_MSYS_ROOT}/bin" NO_DEFAULT_PATH REQUIRED)
     message(STATUS "Found bash: ${MOZBUILD_BASH}")
+
+    set(MOZBUILD_PYTHON_ROOT "${MOZBUILD_ROOT}/python")
+    find_program(MOZBUILD_PYTHON     python PATHS "${MOZBUILD_ROOT}/python" NO_DEFAULT_PATH REQUIRED)
+    message(STATUS "Found python: ${MOZBUILD_PYTHON}")
+    vcpkg_add_to_path(PREPEND "${MOZBUILD_PYTHON_ROOT}")
+
+else()
+    # TODO: setup non-windows build environment
+
 endif()
 
-set(MOZBUILD_PYTHON_ROOT "${MOZBUILD_ROOT}/python")
-find_program(MOZBUILD_PYTHON     python PATHS "${MOZBUILD_ROOT}/python" NO_DEFAULT_PATH REQUIRED)
-message(STATUS "Found python: ${MOZBUILD_PYTHON}")
-vcpkg_add_to_path(PREPEND "${MOZBUILD_PYTHON_ROOT}")
-
-vcpkg_find_acquire_program(GYP)
-get_filename_component(GYP_ROOT ${GYP} DIRECTORY)
-vcpkg_add_to_path(PREPEND "${GYP_ROOT}")
-message("GYP_ROOT: ${GYP_ROOT}")
+vcpkg_find_acquire_program(GYP_NSS)
+get_filename_component(GYP_NSS_ROOT ${GYP_NSS} DIRECTORY)
+vcpkg_add_to_path(PREPEND "${GYP_NSS_ROOT}")
+message(STATUS "Found gyp: ${GYP_NSS}")
 
 # setup paths
 execute_process(
@@ -94,10 +99,9 @@ endif()
 
 set(VCPKG_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
-message(STATUS "Copying sources to build dirs ...")
+# build debug
+message(STATUS "Copying sources to debug build dir ...")
 file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
-file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
-
 message(STATUS "Building debug ...")
 vcpkg_execute_required_process(
     COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS}
@@ -105,12 +109,16 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
 )
 
+# build release
+message(STATUS "Copying sources to release dir ...")
+file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
 message(STATUS "Building release ...")
 vcpkg_execute_required_process(
     COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS} "--opt"
     WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
     LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
 )
+
 #
 # VCPKG FHS adjustments
 #
