@@ -321,8 +321,6 @@ else()
         COPY_SOURCE
         OPTIONS
             ${BUILD_OPTS}
-        OPTIONS_DEBUG
-            --enable-debug
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -333,7 +331,7 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         set(ENV{USING_MINGW} yes)
     endif()
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
+    #file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
     vcpkg_install_make()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
