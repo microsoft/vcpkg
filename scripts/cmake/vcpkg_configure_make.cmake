@@ -293,7 +293,7 @@ function(vcpkg_configure_make)
     vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
 
     #used on osx
-    vcpkg_backup_env_variables(VARS SDKROOT)
+    vcpkg_backup_env_variables(VARS SDKROOT MACOSX_DEPLOYMENT_TARGET)
 
     set(vcm_paths_with_spaces OFF)
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
@@ -884,7 +884,7 @@ function(vcpkg_configure_make)
     endif()
 
     # Restore environment
-    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH SDKROOT)
+    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH SDKROOT MACOSX_DEPLOYMENT_TARGET)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
