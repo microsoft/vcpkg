@@ -65,8 +65,8 @@ vcpkg_cmake_config_fixup()
 
 file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
 if(REL_CFGS)
-  file(COPY "${REL_CFGS}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(REMOVE "${REL_CFGS}")
+  file(COPY ${REL_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  file(REMOVE ${REL_CFGS})
 endif()
 
 file(GLOB DBG_CFGS "${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg")
@@ -77,6 +77,34 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+#Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
+#manual-link subfolder is here to the rescue!
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/release/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
+        else()
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
+        endif()
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
+        else()
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib)
+        endif()
+    endif()
+
+    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/ogre-next/*.cmake)
+    foreach(SHARE_FILE ${SHARE_FILES})
+        file(READ "${SHARE_FILE}" _contents)
+        string(REPLACE "lib/OgreMain" "lib/manual-link/OgreMain" _contents "${_contents}")
+        file(WRITE "${SHARE_FILE}" "${_contents}")
+    endforeach()
 endif()
 
 # Handle copyright
