@@ -65,7 +65,7 @@ index 0558ee0..d2fd425 100644
  
 +
 +
-+#cmakedefine ENABLE_PTHREAD
++
 +
 +#ifdef ENABLE_PTHREAD
 +#define MBEDTLS_THREADING_C
