@@ -4325,7 +4325,7 @@
       "port-version": 0
     },
     "mbedtls": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "mcpp": {
