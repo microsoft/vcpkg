@@ -242,7 +242,7 @@ else()
     if ("postgresql" IN_LIST FEATURES)
         add_config("--with-pg=yes"  "PostgreSQL support:        yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
-        add_config("--with-pg=yes"  "PostgreSQL support:        no")
+        add_config("--with-pg=no"   "PostgreSQL support:        no")
     endif()
 
     if ("mysql-libmariadb" IN_LIST FEATURES)

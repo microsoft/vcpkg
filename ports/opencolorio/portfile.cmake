@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/OpenColorIO")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenColorIO")
 
 vcpkg_copy_pdbs()
 
@@ -44,6 +44,11 @@ if(OCIO_BUILD_APPS)
         TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut
         AUTO_CLEAN
     )
+endif()
+
+vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ocio/setup_ocio.sh" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

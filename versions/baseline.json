@@ -18,7 +18,7 @@
     },
     "ace": {
       "baseline": "7.0.5",
-      "port-version": 1
+      "port-version": 2
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -517,7 +517,7 @@
       "port-version": 3
     },
     "boolinq": {
-      "baseline": "3.0.3",
+      "baseline": "3.0.4",
       "port-version": 0
     },
     "boost": {
@@ -1382,7 +1382,7 @@
     },
     "clblas": {
       "baseline": "2.12",
-      "port-version": 5
+      "port-version": 6
     },
     "clblast": {
       "baseline": "1.5.2",
@@ -1390,7 +1390,7 @@
     },
     "clfft": {
       "baseline": "2.12.2",
-      "port-version": 3
+      "port-version": 4
     },
     "cli": {
       "baseline": "2.0.0",
@@ -1418,7 +1418,7 @@
     },
     "clrng": {
       "baseline": "2020-12-01",
-      "port-version": 1
+      "port-version": 2
     },
     "clue": {
       "baseline": "1.0.0",
@@ -2217,7 +2217,7 @@
       "port-version": 4
     },
     "fmt": {
-      "baseline": "8.0.1",
+      "baseline": "8.1.0",
       "port-version": 0
     },
     "folly": {
@@ -2370,7 +2370,7 @@
     },
     "gdal": {
       "baseline": "3.4.0",
-      "port-version": 5
+      "port-version": 6
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2422,7 +2422,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 7
+      "port-version": 8
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -2482,7 +2482,7 @@
     },
     "glibmm": {
       "baseline": "2.68.1",
-      "port-version": 1
+      "port-version": 2
     },
     "glm": {
       "baseline": "0.9.9.8",
@@ -2525,7 +2525,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "1.34.1",
+      "baseline": "1.35.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2694,7 +2694,7 @@
     },
     "hidapi": {
       "baseline": "0.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "highfive": {
       "baseline": "2.3",
@@ -3054,7 +3054,7 @@
     },
     "kf5attica": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5auth": {
       "baseline": "5.89.0",
@@ -3186,7 +3186,7 @@
     },
     "kf5windowsystem": {
       "baseline": "5.89.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5xmlgui": {
       "baseline": "5.89.0",
@@ -3605,8 +3605,8 @@
       "port-version": 1
     },
     "libkeyfinder": {
-      "baseline": "2.2.5",
-      "port-version": 1
+      "baseline": "2.2.6",
+      "port-version": 0
     },
     "libkml": {
       "baseline": "1.3.0",
@@ -3678,7 +3678,7 @@
     },
     "libmodman": {
       "baseline": "2.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
@@ -3842,7 +3842,7 @@
     },
     "libraw": {
       "baseline": "201903",
-      "port-version": 5
+      "port-version": 6
     },
     "librdkafka": {
       "baseline": "1.8.2",
@@ -4050,7 +4050,7 @@
     },
     "libuvc": {
       "baseline": "2020-11-24",
-      "port-version": 2
+      "port-version": 3
     },
     "libvmdk": {
       "baseline": "20200926",
@@ -4294,7 +4294,7 @@
     },
     "marble": {
       "baseline": "19.08.2",
-      "port-version": 2
+      "port-version": 3
     },
     "marl": {
       "baseline": "2021-04-25",
@@ -4415,6 +4415,10 @@
     "minimp3": {
       "baseline": "2020-12-25",
       "port-version": 1
+    },
+    "minio-cpp": {
+      "baseline": "2022-01-03",
+      "port-version": 0
     },
     "minisat-master-keying": {
       "baseline": "2.3.6",
@@ -4614,7 +4618,7 @@
     },
     "mygui": {
       "baseline": "3.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nameof": {
       "baseline": "0.10.1",
@@ -4918,7 +4922,7 @@
     },
     "open62541": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -4946,7 +4950,7 @@
     },
     "opencolorio": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -4997,8 +5001,8 @@
       "port-version": 2
     },
     "openimageio": {
-      "baseline": "2.3.7.2",
-      "port-version": 5
+      "baseline": "2.3.10.1",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.4.0",
@@ -5074,7 +5078,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.20",
-      "port-version": 0
+      "port-version": 1
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -5393,7 +5397,7 @@
       "port-version": 2
     },
     "portmidi": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "portsmf": {
@@ -5502,7 +5506,7 @@
     },
     "qca": {
       "baseline": "2.3.4",
-      "port-version": 1
+      "port-version": 2
     },
     "qcustomplot": {
       "baseline": "2.0.1",
@@ -5978,9 +5982,13 @@
     },
     "readline": {
       "baseline": "0",
-      "port-version": 2
+      "port-version": 3
     },
     "readline-osx": {
+      "baseline": "2020-01-04",
+      "port-version": 0
+    },
+    "readline-unix": {
       "baseline": "8.1",
       "port-version": 0
     },
@@ -6162,7 +6170,7 @@
     },
     "sail": {
       "baseline": "0.9.0-pre19",
-      "port-version": 0
+      "port-version": 1
     },
     "sais": {
       "baseline": "2.4.1",
@@ -6339,6 +6347,10 @@
     "simage": {
       "baseline": "1.8.1",
       "port-version": 3
+    },
+    "simbody": {
+      "baseline": "2022-01-04",
+      "port-version": 0
     },
     "simde": {
       "baseline": "0.7.2",
@@ -7018,7 +7030,7 @@
     },
     "unixodbc": {
       "baseline": "2.3.9",
-      "port-version": 0
+      "port-version": 1
     },
     "unqlite": {
       "baseline": "1.1.9",
@@ -7042,7 +7054,7 @@
     },
     "urho3d": {
       "baseline": "2021-03-01",
-      "port-version": 1
+      "port-version": 2
     },
     "uriparser": {
       "baseline": "0.9.5",
@@ -7209,12 +7221,12 @@
       "port-version": 2
     },
     "vulkan-headers": {
-      "baseline": "1.2.184",
+      "baseline": "1.2.203",
       "port-version": 0
     },
     "vulkan-hpp": {
-      "baseline": "1.2.184",
-      "port-version": 1
+      "baseline": "1.2.203",
+      "port-version": 0
     },
     "vulkan-memory-allocator": {
       "baseline": "2021-07-07",
