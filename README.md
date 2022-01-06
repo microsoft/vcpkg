@@ -30,7 +30,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Quick Start: Unix](#quick-start-unix)
   - [Installing Linux Developer Tools](#installing-linux-developer-tools)
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
-    - [Installing GCC for macOS before 10.15](#installing-gcc-for-macos-before-1015)
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)

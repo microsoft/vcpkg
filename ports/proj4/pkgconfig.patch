@@ -15,39 +15,39 @@ diff --git a/cmake/ProjUtilities.cmake b/cmake/ProjUtilities.cmake
 index 2e0db05..46e5de1 100644
 --- a/cmake/ProjUtilities.cmake
 +++ b/cmake/ProjUtilities.cmake
-@@ -76,12 +76,20 @@ function(configure_proj_pc)
-   set(datadir "$\{datarootdir\}")
-   set(PACKAGE "proj")
+@@ -78,15 +78,21 @@ function(configure_proj_pc)
    set(VERSION ${PROJ_VERSION})
--  set(SQLITE3_LIBS -lsqlite3)
-+  set(LIBS_PRIVATE "")
-+  if(WIN32 AND NOT MINGW)
-+    string(APPEND LIBS_PRIVATE " -lole32 -lshell32")
-+  elseif(NOT APPLE OR CMAKE_ANDROID_STL_TYPE MATCHES "^gnu")
-+      string(APPEND LIBS_PRIVATE " -lstdc++ -lm")
-+  else()
-+      string(APPEND LIBS_PRIVATE " -lc++ -lm")
-+  endif()
+   # Build list for Libs.private
+   set(EXTRA_LIBS
+-    -lstdc++
+-    -lsqlite3
+     ${CMAKE_THREAD_LIBS_INIT}
+   )
 +  set(REQUIRES_PRIVATE "sqlite3")
    if(TIFF_ENABLED)
--    set(TIFF_LIBS -ltiff)
+-    list(APPEND EXTRA_LIBS -ltiff)
 +    string(APPEND REQUIRES_PRIVATE " libtiff-4")
    endif()
    if(CURL_ENABLED)
--    set(CURL_LIBS -lcurl)
+-    list(APPEND EXTRA_LIBS -lcurl)
 +    string(APPEND REQUIRES_PRIVATE " libcurl")
++  endif()
++  if(WIN32 AND NOT MINGW)
++    string(APPEND EXTRA_LIBS " -lole32 -lshell32")
++  elseif(NOT APPLE OR CMAKE_ANDROID_STL_TYPE MATCHES "^gnu")
++    string(APPEND EXTRA_LIBS " -lstdc++")
++  else()
++    string(APPEND EXTRA_LIBS " -lc++")
    endif()
- 
-   configure_file(
+   if(HAVE_LIBM)
+     list(APPEND EXTRA_LIBS -lm)
 diff --git a/proj.pc.in b/proj.pc.in
 index 846310d..3feac38 100644
 --- a/proj.pc.in
 +++ b/proj.pc.in
-@@ -10,5 +10,6 @@ Description: Coordinate transformation software library
- Requires:
+@@ -11,4 +11,5 @@ Requires:
  Version: @VERSION@
  Libs: -L${libdir} -lproj
--Libs.private: @SQLITE3_LIBS@ @TIFF_LIBS@ @CURL_LIBS@ -lstdc++
-+Libs.private: @LIBS_PRIVATE@
+ Libs.private: @EXTRA_LIBS@
 +Requires.private: @REQUIRES_PRIVATE@
  Cflags: -I${includedir}
