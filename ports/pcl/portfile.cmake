@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-cmake_find_library_suffixes.patch
         fix-pkgconfig.patch # Remove this patch in the next update
         fix-find-libusb.patch
+        install-examples.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
@@ -32,16 +33,26 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openni2 WITH_OPENNI2
-        qt      WITH_QT
-        pcap    WITH_PCAP
-        cuda    WITH_CUDA
-        cuda    BUILD_CUDA
-        cuda    BUILD_GPU
-        tools   BUILD_tools
-        opengl  WITH_OPENGL
-        vtk     WITH_VTK
-        libusb  WITH_LIBUSB
+        openni2         WITH_OPENNI2
+        qt              WITH_QT
+        pcap            WITH_PCAP
+        cuda            WITH_CUDA
+        cuda            BUILD_CUDA
+        cuda            BUILD_GPU
+        tools           BUILD_tools
+        opengl          WITH_OPENGL
+        vtk             WITH_VTK
+        libusb          WITH_LIBUSB
+        visualization   BUILD_visualization
+        examples        BUILD_examples
+        apps            BUILD_apps
+        apps            BUILD_apps_cloud_composer
+        apps            BUILD_apps_modeler
+        apps            BUILD_apps_point_cloud_editor
+        # These 2 apps need openni1
+        #apps            BUILD_apps_in_hand_scanner
+        #apps            BUILD_apps_3d_rec_framework
+        simulation      BUILD_simulation
 )
 
 vcpkg_cmake_configure(
@@ -103,7 +114,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if("tools" IN_LIST FEATURES) 
+if(BUILD_tools OR BUILD_apps OR BUILD_examples)
     file(GLOB EXEFILES_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     file(GLOB EXEFILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     file(COPY ${EXEFILES_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/pcl")
@@ -111,4 +122,5 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/pcl")
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

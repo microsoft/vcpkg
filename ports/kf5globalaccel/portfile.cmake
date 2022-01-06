@@ -1,19 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.87.0
-    SHA512 2fde268730d840a56e09809e2486182b6df4b7567685bc5dce41fea48ae04d504f780ff5698ff1794142b6e25321296dc2b6332bf2f4160f68f9567123d3a96a
+    REF v5.89.0
+    SHA512 824e4d6204189290dcc542ef3004ad2e2e2f83620dbf381ab78edbef996f412996709b9b49b72aad7c23deeeb6be274906b4cbbbd49498be081330e89c5674de
     HEAD_REF master
-    PATCHES
-        xcb_xtest_optional.diff # https://invent.kde.org/frameworks/kglobalaccel/-/merge_requests/30
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
 )
 

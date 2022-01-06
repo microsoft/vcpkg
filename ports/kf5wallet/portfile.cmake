@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwallet
-    REF v5.87.0
-    SHA512 cb37bbc69aeca97565a133abbc243fdf430726b14cf1305ab6d9078f25cfe2b1dfec7534c7747a511d0ef9c755592845b9f36194601f09be0c5ed6a5e8a6c960
+    REF v5.89.0
+    SHA512 83bf40e5bfa9129ecfdaecebaf16c289542867337daf29be664aeb562e7c6bc32af4c59b71fcfae3cbbf70438872426b5981844c3c275b311340e5b48deac021
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_KWALLETD=OFF
         -DBUILD_KWALLET_QUERY=OFF

@@ -7,20 +7,20 @@ vcpkg_from_git(
     PATCHES
         fix_cmakelists.patch
         fix-build-type.patch
+        deprecated-warning.patch
 )
 
 set(POSTFIX d)
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=${POSTFIX}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libyuv)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libyuv)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

@@ -1,7 +1,6 @@
 {
   "name": "qt-advanced-docking-system",
-  "version-string": "3.6.3",
-  "port-version": 2,
+  "version": "3.8.0",
   "description": "Create customizable layouts using an advanced window docking system similar to what is found in many popular IDEs such as Visual Studio",
   "homepage": "https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System",
   "dependencies": [
@@ -13,6 +12,14 @@
     {
       "name": "qt5-x11extras",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     "zlib"
   ]

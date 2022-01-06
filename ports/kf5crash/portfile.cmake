@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
-    REF v5.87.0
-    SHA512 c239419dd1a9a48ef87d901a0d54f8f918782b84a10be9c903d6b6c92490b710ab86c8049d4a950aa452ca2e29f90ce8ada4b3b4b90e57d3504925efa14915e6
+    REF v5.89.0
+    SHA512 8493f9264e7844eefadd7bfa1700fa25baec2db9fd3cc8c85069d8a3c6452982d00ec1bb8e870ff9011391866e94cf63dfc8207d27d87b1b9b76e14b6ad5943d
     HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,4 +27,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-

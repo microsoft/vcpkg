@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
   "version": "4.4.1",
-  "port-version": 1,
+  "port-version": 4,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -33,12 +33,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "ass",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
             "avresample",
             "bzip2",
+            "fontconfig",
             "freetype",
             "iconv",
             "lzma",
@@ -54,8 +56,17 @@
             "vorbis",
             "vpx",
             "webp",
+            "xml2",
             "zlib"
           ]
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "alsa"
+          ],
+          "platform": "linux"
         },
         {
           "name": "ffmpeg",
@@ -64,6 +75,14 @@
             "sdl2"
           ],
           "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "fribidi"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -85,6 +104,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "opengl"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "openh264"
           ],
           "platform": "!uwp"
@@ -93,7 +120,7 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "xml2"
+            "tensorflow"
           ],
           "platform": "!static"
         },
@@ -109,25 +136,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "ssh"
+          ],
+          "platform": "!(uwp | arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "aom"
           ],
-          "platform": "!(uwp | arm)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "ass"
-          ],
-          "platform": "!(uwp | arm)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "fribidi"
-          ],
-          "platform": "!(uwp | arm)"
+          "platform": "!(windows & arm & !uwp)"
         },
         {
           "name": "ffmpeg",
@@ -141,33 +160,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ssh"
-          ],
-          "platform": "!(uwp | arm) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(windows & arm)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "tensorflow"
-          ],
-          "platform": "!(x86 | arm | uwp) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "nvcodec"
           ],
-          "platform": "(windows | linux) & !uwp & !arm"
+          "platform": "(windows | linux) & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -175,15 +170,7 @@
           "features": [
             "tesseract"
           ],
-          "platform": "!uwp & !(windows & arm) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "!(windows & static) & !(uwp | arm)"
+          "platform": "!(windows & arm) & !static"
         }
       ]
     },
@@ -203,17 +190,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x264"
+            "x265"
           ],
-          "platform": "!arm"
+          "platform": "!(uwp | arm)"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "x265"
+            "x264"
           ],
-          "platform": "!arm & !uwp"
+          "platform": "!(arm & windows)"
         },
         {
           "name": "ffmpeg",
@@ -238,6 +225,12 @@
             "openssl"
           ]
         }
+      ]
+    },
+    "alsa": {
+      "description": "Enable ALSA support",
+      "dependencies": [
+        "alsa"
       ]
     },
     "aom": {

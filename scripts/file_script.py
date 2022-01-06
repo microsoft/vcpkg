@@ -3,7 +3,7 @@ import os.path
 import sys
 
 
-keyword = "include/"
+keyword = "/include/"
 
 def getFiles(path):
     files = os.listdir(path)
@@ -11,15 +11,16 @@ def getFiles(path):
 
 def gen_all_file_strings(path, files, headers, output):
     for file in files:
-        package = file[:file.find("_")]
+        components = file.split("_")
+        package = components[0] + ":" + components[2].replace(".list", "")
         f = open(path + file)
         for line in f:
-            idx = line.strip().find(keyword)
-            if idx >= 0 and line.strip()[-1] != "/":
-                headers.write(package + ":" + line[idx + len(keyword):])
-                output.write(package + ":" + line[idx-1:])
-            elif line.strip()[-1] != "/":
-                output.write(package + ":" + line[line.find("/"):])
+            if line.strip()[-1] == "/":
+                continue
+            filepath = line[line.find("/"):]
+            output.write(package + ":" + filepath)
+            if filepath.startswith(keyword):
+                headers.write(package + ":" + filepath[len(keyword):])
         f.close()
 
 def main(path):

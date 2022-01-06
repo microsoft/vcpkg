@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -72,6 +71,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Pangolin)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinConfig.cmake" "SET( Pangolin_CMAKEMODULES ${SOURCE_PATH}/src/../CMakeModules )" "")
 
 vcpkg_copy_pdbs()
 

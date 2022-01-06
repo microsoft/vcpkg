@@ -8,12 +8,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Opportunity to build without dependency on qt5-tools/qt5-declarative
+set(BUILD_TRANSLATIONS OFF)
+if("translations" IN_LIST FEATURES)
+    set(BUILD_TRANSLATIONS ON)
+endif()
+
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_WITH_QT6=OFF
         -DBUILD_TEST_APPLICATION=OFF
+        -DBUILD_TRANSLATIONS=${BUILD_TRANSLATIONS}
 )
 vcpkg_cmake_install()
 

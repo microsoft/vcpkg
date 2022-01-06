@@ -11,7 +11,7 @@ index aceed5ffd..f6ed215e8 100644
  $flexver = (split(/\s+/, $flexver))[1];
  $flexver =~ s/[^0-9.]//g;
  my @verparts = split(/\./, $flexver);
-@@ -48,7 +47,7 @@ close($mf);
+@@ -48,7 +48,7 @@ close($mf);
  my $basetarg = basename($output);
  my $flexflags = ($make =~ /^$basetarg:\s*FLEXFLAGS\s*=\s*(\S.*)/m ? $1 : '');
  
@@ -34,10 +34,10 @@ index 895e398c0..f5b524a5d 100644
  
  unless ($bisonver eq '1.875' || $bisonver ge '2.2')
 @@ -45,5 +45,5 @@ close($mf);
- my $basetarg = basename($output);
- my $headerflag = ($make =~ /^$basetarg:\s+BISONFLAGS\b.*-d/m ? '-d' : '');
-
--system("bison $headerflag $input -o $output");
-+system("win_bison $headerflag $input -o $output");
+ 
+ my $nodep = $bisonver ge '3.0' ? "-Wno-deprecated" : "";
+ 
+-system("bison $nodep $headerflag $input -o $output");
++system("win_bison $nodep $headerflag $input -o $output");
  exit $? >> 8;
 
