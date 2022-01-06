@@ -44,14 +44,14 @@ index e693bc1..7f5216a 100644
 @@ -1,9 +1,13 @@
  option(INSTALL_MBEDTLS_HEADERS "Install mbed TLS headers." ON)
  
-+#configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
++
 +
  if(INSTALL_MBEDTLS_HEADERS)
  
      file(GLOB headers "mbedtls/*.h")
      file(GLOB psa_headers "psa/*.h")
 +    
-+    #set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
++ 
  
      install(FILES ${headers}
          DESTINATION include/mbedtls
@@ -63,7 +63,7 @@ index 0558ee0..d2fd425 100644
   *  limitations under the License.
   */
  
-+#include "mbedtls/config_threading.h"
++
 +
 +#cmakedefine ENABLE_PTHREAD
 +
@@ -80,7 +80,7 @@ index 07599f5..27e426d 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
 @@ -189,7 +189,11 @@ if(HAIKU)
- endif(HAIKU)
+ endif(HAIKU) 
  
  if(LINK_WITH_PTHREAD)
 -    set(libs ${libs} pthread)
