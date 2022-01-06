@@ -10,8 +10,7 @@ vcpkg_from_github(
     0001_use_math_defines.patch
     0002_fix_exports.patch
     0004_fix-dependency-console_bridge.patch
-    0005-fix-config-files.patch
-    0006-fix-install-path.patch
+    0005-fix-config-and-install.patch
 )
 
 vcpkg_cmake_configure(
@@ -36,6 +35,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
     vcpkg_fixup_pkgconfig()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
