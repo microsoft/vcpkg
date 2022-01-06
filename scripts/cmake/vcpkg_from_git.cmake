@@ -87,7 +87,7 @@ function(vcpkg_from_git)
         vcpkg_list(SET working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
         vcpkg_list(SET git_fetch_shallow_param --depth 1)
         vcpkg_list(SET skip_patch_check_param SKIP_PATCH_CHECK)
-        set(ref_to_use "${arg_HEAD_REF}")
+        set(ref_to_fetch "${arg_HEAD_REF}")
         set(git_working_directory "${CURRENT_BUILDTREES_DIR}/src/git-tmp")
         string(REPLACE "/" "_-" sanitized_ref "${arg_HEAD_REF}")
 
@@ -103,10 +103,10 @@ function(vcpkg_from_git)
         endif()
 
         if(DEFINED arg_FETCH_REF)
-            set(ref_to_use "${arg_FETCH_REF}")
+            set(ref_to_fetch "${arg_FETCH_REF}")
             vcpkg_list(SET git_fetch_shallow_param)
         else()
-            set(ref_to_use "${arg_REF}")
+            set(ref_to_fetch "${arg_REF}")
         endif()
         string(REPLACE "/" "_-" sanitized_ref "${arg_REF}")
     endif()
@@ -115,10 +115,12 @@ function(vcpkg_from_git)
     set(archive "${DOWNLOADS}/${PORT}-${sanitized_ref}.tar.gz")
 
     if(NOT EXISTS "${archive}" OR always_redownload)
+        # _VCPKG_NO_DOWNLOADS => always_redownload = OFF,
+        # so the only way we get into this branch is if ${archive} doesn't exist
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${archive}' does not exist.")
         endif()
-        message(STATUS "Fetching ${arg_URL} ${ref_to_use}...")
+        message(STATUS "Fetching ${arg_URL} ${ref_to_fetch}...")
         find_program(GIT NAMES git git.cmd)
         file(MAKE_DIRECTORY "${DOWNLOADS}")
         # Note: git init is safe to run multiple times
@@ -130,7 +132,7 @@ function(vcpkg_from_git)
         )
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
-            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_use}" ${git_fetch_shallow_param} -n
+            COMMAND "${GIT}" fetch "${arg_URL}" "${ref_to_fetch}" ${git_fetch_shallow_param} -n
             WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME "git-fetch-${TARGET_TRIPLET}"
         )
