@@ -292,6 +292,9 @@ function(vcpkg_configure_make)
     #Used by cl
     vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
 
+    #used on osx
+    vcpkg_backup_env_variables(VARS SDKROOT)
+
     set(vcm_paths_with_spaces OFF)
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
@@ -482,6 +485,7 @@ function(vcpkg_configure_make)
 
     # macOS - cross-compiling support
     if(VCPKG_TARGET_IS_OSX)
+        set(ENV{SDKROOT} "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -490,7 +494,7 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+            if(VCPKG_CROSSCOMPILING) # we don't need to specify the additional flags if we build natively.
                 set(arg_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
@@ -879,7 +883,7 @@ function(vcpkg_configure_make)
     endif()
 
     # Restore environment
-    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH SDKROOT)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
