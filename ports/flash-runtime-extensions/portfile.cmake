@@ -1,4 +1,4 @@
-#set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
