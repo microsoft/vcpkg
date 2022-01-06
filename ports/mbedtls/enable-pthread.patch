@@ -44,7 +44,7 @@ index e693bc1..7f5216a 100644
 @@ -1,9 +1,13 @@
  option(INSTALL_MBEDTLS_HEADERS "Install mbed TLS headers." ON)
  
-+configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
++#configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
 +
  if(INSTALL_MBEDTLS_HEADERS)
  
