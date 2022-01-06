@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm")
-
 set(GDAL_PATCHES
     0001-Fix-debug-crt-flags.patch
     0002-Fix-build.patch
@@ -15,11 +13,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF 348075f26f8e4c200a34818123beeb4abe53c876 # 3.3.2
-    SHA512 84bd7c74a079c4aa8cbefbbb1c4ab782e74a85d37d4c875a203760939f4f7c9175c40abc5184d8c1c521fd3b37bb90bc7bf046021ade22e510810535e3f61bd2
+    REF d699b38a744301368070ef780f797340da4a9c3c # 3.4.0
+    SHA512 709523740a51a0a2a144debcfa5fbc5a5b3d93cc3632856cfbc37f7ca52f2e83f4942d9a27d4c723ee19d2397cc91a4b1ba4543547afdfefb3980a7ba6684bd7
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
+# `vcpkg clean` stumbles over one subdir
+file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
@@ -28,6 +28,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(NMAKE_OPTIONS "")
     set(NMAKE_OPTIONS_REL "")
     set(NMAKE_OPTIONS_DBG "")
+
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES --msvc-syntax proj INCLUDE_DIRS LIBS)
 
     include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
     find_dependency_win()
@@ -43,7 +45,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "HTMLDIR=${NATIVE_HTML_DIR}"
         "GEOS_DIR=${GEOS_INCLUDE_DIR}"
         "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-        "PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}"
+        "PROJ_INCLUDE=${PROJ_INCLUDE_DIRS}"
         "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
         "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
         "CURL_INC=-I${CURL_INCLUDE_DIR}"
@@ -59,12 +61,15 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "PNGDIR=${PNG_INCLUDE_DIR}"
         "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
         ZLIB_EXTERNAL_LIB=1
-        ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
         MSVC_VER=1900
         )
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND NMAKE_OPTIONS WIN64=YES)
+    endif()
+
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+        list(APPEND NMAKE_OPTIONS SSEFLAGS=/DNO_SSSE AVXFLAGS=/DNO_AVX)
     endif()
 
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -87,7 +92,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_REL}"
+        "PROJ_LIBRARY=${PROJ_LIBS_RELEASE}"
         "PNG_LIB=${PNG_LIBRARY_REL}"
         "GEOS_LIB=${GEOS_LIBRARY_REL}"
         "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
@@ -104,7 +109,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ${NMAKE_OPTIONS}
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        "PROJ_LIBRARY=${PROJ_LIBRARY_DBG}"
+        "PROJ_LIBRARY=${PROJ_LIBS_DEBUG}"
         "PNG_LIB=${PNG_LIBRARY_DBG}"
         "GEOS_LIB=${GEOS_LIBRARY_DBG}"
         "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
@@ -167,7 +172,6 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            testepsg
             )
         # vcpkg_copy_tools removed the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
@@ -187,10 +191,11 @@ else()
     file(TOUCH "${SOURCE_PATH}/gdal/config.rpath")
 
     set(CONF_OPTS
+        --with-gnm=yes
         --with-hide-internal-symbols=yes
+        --with-java=no
         --with-perl=no
         --with-python=no
-        --with-java=no
         )
     set(CONF_CHECKS "")
     function(add_config option check)
@@ -200,21 +205,17 @@ else()
         set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
     endfunction()
     # parameters in the same order as the dependencies in vcpkg.json
-    add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
     add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
     add_config("--with-expat=yes"    "Expat support:             yes")
     add_config("--with-geos=yes"     "GEOS support:              yes")
     add_config("--with-gif=yes"      "LIBGIF support:            external")
-    add_config("--with-hdf5=yes"     "HDF5 support:              yes")
     add_config("--with-libjson=yes"  "checking for JSONC... yes")
     add_config("--with-geotiff=yes"  "LIBGEOTIFF support:        external")
     add_config("--with-jpeg=yes"     "LIBJPEG support:           external")
     add_config("--with-liblzma=yes"  "LIBLZMA support:           yes")
     add_config("--with-png=yes"      "LIBPNG support:            external")
-    add_config("--with-pg=yes"       "PostgreSQL support:        yes")
     add_config("--with-webp=yes"     "WebP support:              yes")
     add_config("--with-xml2=yes"     "libxml2 support:           yes")
-    add_config("--with-netcdf=yes"   "NetCDF support:            yes")
     add_config("--with-openjpeg=yes" "OpenJPEG support:          yes")
     add_config("--with-proj=yes"     "PROJ >= 6:                 yes")
     add_config("--with-sqlite3=yes"  "SQLite support:            yes")
@@ -238,10 +239,34 @@ else()
         add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
+    if ("postgresql" IN_LIST FEATURES)
+        add_config("--with-pg=yes"  "PostgreSQL support:        yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-pg=no"   "PostgreSQL support:        no")
+    endif()
+
     if ("mysql-libmariadb" IN_LIST FEATURES)
         add_config("--with-mysql=yes"  "MySQL support:             yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
         add_config("--with-mysql=no"   "MySQL support:             no")
+    endif()
+
+    if ("cfitsio" IN_LIST FEATURES)
+        add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-cfitsio=no"   "CFITSIO support:           no")
+    endif()
+
+    if ("hdf5" IN_LIST FEATURES)
+        add_config("--with-hdf5=yes"     "HDF5 support:              yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-hdf5=no"      "HDF5 support:              no")
+    endif()
+
+    if ("netcdf" IN_LIST FEATURES)
+        add_config("--with-netcdf=yes"   "NetCDF support:            yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-netcdf=no"    "NetCDF support:            no")
     endif()
 
     if(DISABLE_SYSTEM_LIBRARIES)
@@ -249,6 +274,8 @@ else()
             # Too much: --disable-all-optional-drivers
             # alphabetical order
             --with-armadillo=no
+            --with-blosc=no
+            --with-brunsli=no
             --with-charls=no
             --with-crypto=no
             --with-cryptopp=no
@@ -267,19 +294,24 @@ else()
             --with-heif=no
             --with-idb=no
             --with-ingres=no
-            --with-jasper=no
             --with-jp2lura=no
+            --with-jp2mrsid=no
+            --with-jasper=no
+            --with-jxl=no
             --with-kakadu=no
             --with-kea=no
+            --with-lerc=no
             --with-libdeflate=no
             --with-libgrass=no
             --with-libkml=no
+            --with-lz4=no
             --with-mdb=no
+            --with-mongocxx=no
+            --with-mongocxxv3=no
             --with-mrsid=no
             --with-mrsid_lidar=no
             --with-msg=no
-            --with-mongocxx=no
-            --with-mongocxxv3=no
+            --with-null=no
             --with-oci=no
             --with-odbc=no
             --with-ogdi=no
@@ -302,12 +334,7 @@ else()
             )
     endif()
 
-    # proj needs a C++ runtime library
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lc++")
-    else()
-        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
-    endif()
+    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES proj LIBS)
 
     if("tools" IN_LIST FEATURES)
         list(APPEND CONF_OPTS "--with-tools=yes")
@@ -320,10 +347,13 @@ else()
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
-        ${CONF_OPTS}
+            ${CONF_OPTS}
+        OPTIONS_RELEASE
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_RELEASE}"
         OPTIONS_DEBUG
-        --enable-debug
-        --with-tools=no
+            --enable-debug
+            --with-tools=no
+            "--with-proj-extra-lib-for-test=${PROJ_LIBS_DEBUG}"
         )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)
@@ -362,6 +392,11 @@ else()
         vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
     endif()
 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

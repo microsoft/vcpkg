@@ -275,11 +275,11 @@ add_custom_target(boost ALL
 set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
 install(
     CODE "
-file(GLOB LIBS ${SUBDIR}/*.so.* ${SUBDIR}/*.so ${SUBDIR}/*.a ${SUBDIR}/*.dylib ${SUBDIR}/*.dylib.* ${SUBDIR}/*.lib)
+file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")
 if(LIBS)
     file(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")
 endif()
-file(GLOB DLLS ${SUBDIR}/*.dll)
+file(GLOB DLLS \"${SUBDIR}/*.dll\")
 if(DLLS)
     file(INSTALL \${DLLS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
 endif()

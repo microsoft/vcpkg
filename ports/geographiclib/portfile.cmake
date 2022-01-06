@@ -52,3 +52,5 @@ file (INSTALL ${SOURCE_PATH}/LICENSE.txt
 # Install usage
 configure_file (${CMAKE_CURRENT_LIST_DIR}/usage
   ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+
+vcpkg_fixup_pkgconfig()

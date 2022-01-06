@@ -4,11 +4,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 4695c42b51bc633e10b15c30ba580093ca0dda4f
-    SHA512 c0e6c77b6c859ac03a2169d8f71ee2d68e6b76dd0295a0656f278f31ccf531b02f2a5bc5cce7e78177872fba2e5dda95dc00685d6157043fa3a246a072ab7075
+    REF 14f913d6ab3b0903dd36a1cb2d22f7d5493b8bb8
+    SHA512 f90762594d46946ddc512bb19b21c4d6a2f1ce81b7500a326ad512fae3a3f77e49ef3eb727ff8f98a31596e4132528212e0fa146e2eee0a9965a16551cfd0386
     HEAD_REF master
     PATCHES
-        cairo-find-fix.patch
+        proj-find-fix.patch # Quiet search with version range somehow fails for proj8+
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -47,10 +47,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS   
         ${FEATURE_OPTIONS}
-        -DCOPY_LIBRARIES_FOR_EXECUTABLES=OFF
-        -DCOPY_FONTS_AND_PLUGINS_FOR_EXECUTABLES=OFF
         -DINSTALL_DEPENDENCIES=OFF
-        -DBUILD_TEST=OFF
+        -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARK=OFF
         -DBUILD_DEMO_CPP=OFF
         -DUSE_EXTERNAL_MAPBOX_GEOMETRY=ON

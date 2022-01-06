@@ -1,0 +1,152 @@
+diff --git a/src/autofit/afglobal.c b/src/autofit/afglobal.c
+index aedb74ddd..5d53dfb71 100644
+--- a/src/autofit/afglobal.c
++++ b/src/autofit/afglobal.c
+@@ -19,6 +19,7 @@
+ #include "afglobal.h"
+ #include "afranges.h"
+ #include "afshaper.h"
++#include "afws_dec.h"
+ #include <freetype/internal/ftdebug.h>
+ 
+ 
+@@ -32,11 +33,6 @@
+ #define FT_COMPONENT  afglobal
+ 
+ 
+-  /* get writing system specific header files */
+-#undef  WRITING_SYSTEM
+-#define WRITING_SYSTEM( ws, WS )  /* empty */
+-#include "afwrtsys.h"
+-
+ #include "aferrors.h"
+ 
+ 
+@@ -74,7 +70,7 @@
+   af_writing_system_classes[] =
+   {
+ 
+-#include "afwrtsys.h"
++#include "afws_itr.h"
+ 
+     NULL  /* do not remove */
+   };
+diff --git a/src/autofit/aftypes.h b/src/autofit/aftypes.h
+index e76b103ed..a036a0f56 100644
+--- a/src/autofit/aftypes.h
++++ b/src/autofit/aftypes.h
+@@ -198,7 +198,6 @@ extern void*  _af_debug_hints;
+    *   outline according to the results of the glyph analyzer.
+    */
+ 
+-#define AFWRTSYS_H_  /* don't load header files */
+ #undef  WRITING_SYSTEM
+ #define WRITING_SYSTEM( ws, WS )    \
+           AF_WRITING_SYSTEM_ ## WS,
+@@ -207,14 +206,12 @@ extern void*  _af_debug_hints;
+   typedef enum  AF_WritingSystem_
+   {
+ 
+-#include "afwrtsys.h"
++#include "afws_itr.h"
+ 
+     AF_WRITING_SYSTEM_MAX   /* do not remove */
+ 
+   } AF_WritingSystem;
+ 
+-#undef  AFWRTSYS_H_
+-
+ 
+   typedef struct  AF_WritingSystemClassRec_
+   {
+diff --git a/src/autofit/afws_dec.h b/src/autofit/afws_dec.h
+new file mode 100644
+index 000000000..39e707c5a
+--- /dev/null
++++ b/src/autofit/afws_dec.h
+@@ -0,0 +1,30 @@
++/****************************************************************************
++ *
++ * afws_dec.h
++ *
++ *   Auto-fitter writing systems (specification only).
++ *
++ * Copyright (C) 2013-2021 by
++ * David Turner, Robert Wilhelm, and Werner Lemberg.
++ *
++ * This file is part of the FreeType project, and may only be used,
++ * modified, and distributed under the terms of the FreeType project
++ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
++ * this file you indicate that you have read the license and
++ * understand and accept it fully.
++ *
++ */
++
++
++#ifndef AFWS_DEC_H_
++#define AFWS_DEC_H_
++
++  /* Since preprocessor directives can't create other preprocessor */
++  /* directives, we have to include the header files manually.     */
++
++#include "afdummy.h"
++#include "aflatin.h"
++#include "afcjk.h"
++#include "afindic.h"
++
++#endif /* AFWS_DEC_H_ */
+diff --git a/src/autofit/afwrtsys.h b/src/autofit/afws_itr.h
+similarity index 66%
+rename from src/autofit/afwrtsys.h
+rename to src/autofit/afws_itr.h
+index 39aa12112..2da77d459 100644
+--- a/src/autofit/afwrtsys.h
++++ b/src/autofit/afws_itr.h
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+  *
+- * afwrtsys.h
++ * afws_itr.h
+  *
+  *   Auto-fitter writing systems (specification only).
+  *
+@@ -15,23 +15,8 @@
+  *
+  */
+ 
+-
+-#ifndef AFWRTSYS_H_
+-#define AFWRTSYS_H_
+-
+-  /* Since preprocessor directives can't create other preprocessor */
+-  /* directives, we have to include the header files manually.     */
+-
+-#include "afdummy.h"
+-#include "aflatin.h"
+-#include "afcjk.h"
+-#include "afindic.h"
+-
+-#endif /* AFWRTSYS_H_ */
+-
+-
+-  /* The following part can be included multiple times. */
+-  /* Define `WRITING_SYSTEM' as needed.                 */
++  /* This header may be included multiple times. */
++  /* Define `WRITING_SYSTEM' as needed.          */
+ 
+ 
+   /* Add new writing systems here.  The arguments are the writing system */
+diff --git a/src/autofit/rules.mk b/src/autofit/rules.mk
+index 19b3bcadb..a5438ecba 100644
+--- a/src/autofit/rules.mk
++++ b/src/autofit/rules.mk
+@@ -48,7 +48,8 @@ AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)  \
+                $(AUTOF_DIR)/afscript.h \
+                $(AUTOF_DIR)/afstyles.h \
+                $(AUTOF_DIR)/aftypes.h  \
+-               $(AUTOF_DIR)/afwrtsys.h
++               $(AUTOF_DIR)/afws_dec.h \
++               $(AUTOF_DIR)/afws_itr.h
+ 
+ 
+ # AUTOF driver object(s)

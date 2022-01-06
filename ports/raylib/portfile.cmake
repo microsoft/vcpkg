@@ -16,8 +16,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF b6c8d343dca2ef19c23c50975328a028124cf3cb # 3.7.0
-    SHA512 565854b00452ae4ae17129f6ced83d842b06ee51a2b254cf02c881c36f9133e5cd605c07585428a7ec4c4e556d8edea908f1c09cd2ef826c30be35c9e5c2d009
+    REF 4.0.0
+    SHA512 e9ffab14ab902e3327202e68ca139209ff24100dab62eb03fef50adf363f81e2705d81e709c58cf1514e68e6061c8963555bd2d00744daacc3eb693825fc3417
     HEAD_REF master
 )
 
@@ -36,7 +36,7 @@ else()
     set(DEBUG_ENABLE_SANITIZERS ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -56,11 +56,11 @@ vcpkg_configure_cmake(
         -DENABLE_MSAN=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
@@ -83,3 +83,5 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+
+vcpkg_fixup_pkgconfig()

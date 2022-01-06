@@ -1,0 +1,15 @@
+{
+  "name": "libatomic-ops",
+  "version": "7.7.0",
+  "description": "The atomic_ops project (Atomic memory update operations portable implementation)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
