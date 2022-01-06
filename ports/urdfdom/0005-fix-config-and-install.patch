@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f0d115d..ee476e8 100644
+index f0d115d..9acbfbe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -58,14 +58,14 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}"
+@@ -58,17 +58,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}"
  
  enable_testing()
  
@@ -19,6 +19,10 @@ index f0d115d..ee476e8 100644
  set(PKG_NAME ${PROJECT_NAME})
  set(PKG_LIBRARIES urdfdom_sensor urdfdom_model_state urdfdom_model urdfdom_world)
  set(PKG_DEPENDS urdfdom_headers console_bridge)
++set(PKG_EXPORTS urdfdom)
+ set(cmake_conf_file "cmake/urdfdom-config.cmake")
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${cmake_conf_file}.in" "${CMAKE_BINARY_DIR}/${cmake_conf_file}" @ONLY)
+ install(FILES ${CMAKE_BINARY_DIR}/${cmake_conf_file}
 diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
 index fb81b47..8b4ef8f 100644
 --- a/cmake/urdfdom-config.cmake.in
