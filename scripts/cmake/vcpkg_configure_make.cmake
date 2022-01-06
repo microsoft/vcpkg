@@ -548,7 +548,7 @@ function(vcpkg_configure_make)
 
     file(RELATIVE_PATH relative_build_path "${CURRENT_BUILDTREES_DIR}" "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
 
-    set(base_cmd "")
+    unset(base_cmd)
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${bash_executable} --noprofile --norc --debug)
     else()
