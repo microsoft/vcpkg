@@ -75,7 +75,7 @@ We recommend somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`,
 since otherwise you may run into path issues for some port build systems.
 
 ```cmd
-> git clone https://github.com/microsoft/vcpkg
+> git clone https://github.com/microsoft/vcpkg --depth=1
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
