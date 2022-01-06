@@ -8,6 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/plf_hive.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${SOURCE_PATH}/plf_hive.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
