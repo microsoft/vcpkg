@@ -51,7 +51,7 @@ index e693bc1..7f5216a 100644
      file(GLOB headers "mbedtls/*.h")
      file(GLOB psa_headers "psa/*.h")
 +    
-+    set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
++    #set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
  
      install(FILES ${headers}
          DESTINATION include/mbedtls
