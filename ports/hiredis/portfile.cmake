@@ -1,5 +1,5 @@
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(HIREDIS_PATCHES support-static-in-win.patch)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(HIREDIS_PATCHES support-static.patch)
 endif()
 
 vcpkg_from_github(
