@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF ed4316166f67ec892603014634840d29f460f611 # v6.14.6
-  SHA512 a880a760f6f5a0a591c14fe942914a3ea85c387a901a922955bb2373ae903f96c6035cac8732d3000a3cbe6313016bfb21168bd3d8a7debf5a28c6e5c0aefb3f
+  REF fcf3d75f3f022a6a55ff1222d6b06f8518d38c7c # v6.27.3
+  SHA512 da78886dbd21339fbc9081e3f3de3aeac5b1124a0e4a879c936fae5248177bfc58ec5397d200e15ceeaf9cda2fb3850145e007a18ac0ba632dba084cc4064bfb
   HEAD_REF master
   PATCHES
     0002-only-build-one-flavor.patch
@@ -18,19 +18,18 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    "lz4"     WITH_LZ4
-    "snappy"  WITH_SNAPPY
-    "zlib"    WITH_ZLIB
-    "zstd"    WITH_ZSTD
-    "bzip2"   WITH_BZ2
-    "tbb"     WITH_TBB
+      "lz4"     WITH_LZ4
+      "snappy"  WITH_SNAPPY
+      "zlib"    WITH_ZLIB
+      "zstd"    WITH_ZSTD
+      "bzip2"   WITH_BZ2
+      "tbb"     WITH_TBB
   INVERTED_FEATURES
-    "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+      "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DWITH_GFLAGS=OFF
     -DWITH_TESTS=OFF
@@ -50,13 +49,14 @@ vcpkg_configure_cmake(
     ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rocksdb)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

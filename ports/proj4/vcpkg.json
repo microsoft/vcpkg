@@ -1,9 +1,10 @@
 {
   "name": "proj4",
-  "version-semver": "8.0.0",
-  "description": "PROJ.4 library for cartographic projections",
-  "homepage": "https://github.com/OSGeo/PROJ",
+  "version-semver": "8.2.1",
+  "description": "PROJ library for cartographic projections",
+  "homepage": "https://proj.org/",
   "dependencies": [
+    "nlohmann-json",
     {
       "name": "sqlite3",
       "default-features": false
@@ -25,9 +26,16 @@
     }
   ],
   "default-features": [
+    "net",
     "tiff"
   ],
   "features": {
+    "net": {
+      "description": "Enable network support",
+      "dependencies": [
+        "curl"
+      ]
+    },
     "tiff": {
       "description": "Enable TIFF support to read some grids",
       "dependencies": [
@@ -35,10 +43,7 @@
       ]
     },
     "tools": {
-      "description": "generate tools",
-      "dependencies": [
-        "curl"
-      ]
+      "description": "Build tools"
     }
   }
 }

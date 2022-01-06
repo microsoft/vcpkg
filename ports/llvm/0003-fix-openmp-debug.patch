@@ -2,10 +2,10 @@
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/openmp/runtime/src/CMakeLists.txt b/openmp/runtime/src/CMakeLists.txt
-index 822f9ca2b825..814e25864610 100644
+index bdb867e352f7..16a13fa959ea 100644
 --- a/openmp/runtime/src/CMakeLists.txt
 +++ b/openmp/runtime/src/CMakeLists.txt
-@@ -157,7 +157,7 @@ else()
+@@ -159,7 +159,7 @@ else()
  endif()
  
  set_target_properties(omp PROPERTIES
@@ -14,7 +14,7 @@ index 822f9ca2b825..814e25864610 100644
    LINK_FLAGS "${LIBOMP_CONFIGURED_LDFLAGS}"
    LINKER_LANGUAGE ${LIBOMP_LINKER_LANGUAGE}
  )
-@@ -232,7 +232,7 @@ if(WIN32)
+@@ -236,7 +236,7 @@ if(WIN32)
      # Create new import library that is just the previously created one + kmp_import.cpp
      add_library(ompimp STATIC ${LIBOMP_GENERATED_IMP_LIB} kmp_import.cpp)
      set_target_properties(ompimp PROPERTIES

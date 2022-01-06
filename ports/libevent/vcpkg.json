@@ -1,7 +1,7 @@
 {
   "name": "libevent",
   "version": "2.1.12",
-  "port-version": 4,
+  "port-version": 5,
   "description": "An event notification library",
   "homepage": "https://github.com/libevent/libevent",
   "supports": "!uwp",
