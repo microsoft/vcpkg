@@ -97,11 +97,9 @@ macro(_vcpkg_adjust_flags flag_var)
         if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-
                 foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
                     string(APPEND ${flag_var} " -arch ${arch}")
                 endforeach()
-                string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
             endif()
         endif()
     endif()
