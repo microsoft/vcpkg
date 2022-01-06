@@ -1,0 +1,26 @@
+diff --git a/TAO/orbsvcs/orbsvcs/TAO_CosProperty_Serv.pc.in b/TAO/orbsvcs/orbsvcs/TAO_CosProperty_Serv.pc.in
+index ae944d6d..44a9f237 100644
+--- a/TAO/orbsvcs/orbsvcs/TAO_CosProperty_Serv.pc.in
++++ b/TAO/orbsvcs/orbsvcs/TAO_CosProperty_Serv.pc.in
+@@ -5,7 +5,7 @@ includedir=@includedir@
+ 
+ Name: TAO_CosProperty_Serv
+ Description: TAO CosProperty Service Library
+-Requires: TAO_PortableServer_Skel
++Requires: TAO_PortableServer
+ Version: @VERSION@
+ Libs: -L${libdir} -lTAO_CosProperty_Serv
+ Cflags: -I${includedir}
+diff --git a/TAO/tao/Monitor/TAO_Monitor.pc.in b/TAO/tao/Monitor/TAO_Monitor.pc.in
+index 5a9a2c65..6b6d8da0 100644
+--- a/TAO/tao/Monitor/TAO_Monitor.pc.in
++++ b/TAO/tao/Monitor/TAO_Monitor.pc.in
+@@ -5,7 +5,7 @@ includedir=@includedir@
+ 
+ Name: TAO_Monitor
+ Description: TAO Monitor Library
+-Requires: TAO_PortableServer, TAO_ETCL_Parser, ACE_MonitorControl
++Requires: TAO_PortableServer, ACE_ETCL_Parser
+ Version: @VERSION@
+ Libs: -L${libdir} -lTAO_Monitor
+ Cflags: -I${includedir}
