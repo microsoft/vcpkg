@@ -5,8 +5,8 @@ set(VCPKG_LIBRARY_LINKAGE static)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
-    REF 8df2f8e7b9c7bb9390ac74bb7bace27edca81a2b # mbedtls-3.0.0
-    SHA512 7cc1412664a8e8d35b8d0c578cd2d0fc2b4aee82e1f9583aaf167e4adf893b5fd0c8fd686db11900c13418789e99ee03fc91ea37ac3ef922c28d51f54fa196ad
+    REF d65aeb37349ad1a50e0f6c9b694d4b5290d60e49 #v3.1.0
+    SHA512 a3fde5e6e206d0ab43282502fec45da14f1ccb24974db7a9348a18870d3c07b10fe72419ebf5130cec1b9e819ef804608b0f7b48670f619e328f5b798a8d9eb1
     HEAD_REF master
     PATCHES
         enable-pthread.patch
@@ -28,8 +28,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
