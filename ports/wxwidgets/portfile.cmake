@@ -99,6 +99,9 @@ endforeach()
 if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
     file(GLOB_RECURSE WX_SETUP_H_FILES_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/*.h)
     file(GLOB_RECURSE WX_SETUP_H_FILES_REL ${CURRENT_PACKAGES_DIR}/lib/*.h)
+
+    vcpkg_replace_string("${WX_SETUP_H_FILES_DBG}" "${CURRENT_PACKAGES_DIR}" "")
+    vcpkg_replace_string("${WX_SETUP_H_FILES_REL}" "${CURRENT_PACKAGES_DIR}" "")
     
     string(REPLACE "${CURRENT_PACKAGES_DIR}/debug/lib/" "" WX_SETUP_H_FILES_DBG "${WX_SETUP_H_FILES_DBG}")
     string(REPLACE "/setup.h" "" WX_SETUP_H_DBG_RELATIVE "${WX_SETUP_H_FILES_DBG}")
