@@ -8,25 +8,21 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${SHA512}
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE})
+vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH
+  SOURCE_PATH
+  ARCHIVE ${ARCHIVE})
 
-  vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    OPTIONS
-  )
+vcpkg_configure_make(
+  SOURCE_PATH "${SOURCE_PATH}"
+  AUTOCONFIG
+  OPTIONS
+)
 # cmake-format: on
 
-  vcpkg_install_make()
+vcpkg_install_make()
 
-  vcpkg_copy_pdbs()
-else()
-
-endif()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
