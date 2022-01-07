@@ -9,7 +9,7 @@ using @USER_CONFIG_TOOLSET@ : @USER_CONFIG_TOOLSET_VERSION@ : @USER_CONFIG_TOOLS
 
 project user-config : ;
 
-if "@USER_CONFIG_TOOLSET@" = "msvc"
+if "@USER_CONFIG_TOOLSET@" = "msvc" || "@USER_CONFIG_TOOLSET@" = "clang-win"
 {
     lib advapi32 ;
 

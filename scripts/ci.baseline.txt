@@ -289,8 +289,6 @@ fftw3:arm-uwp=fail
 fftw3:x64-uwp=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
-fluidsynth:x64-osx=fail
-fluidsynth:x64-windows-static-md=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -339,6 +337,9 @@ gainput:x64-uwp=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
+
+# Requires ATL for ARM64 to be installed in CI
+gdal:arm64-windows=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -756,15 +757,9 @@ licensepp:arm-uwp=fail
 licensepp:x64-uwp=fail
 linenoise-ng:arm-uwp=fail
 linenoise-ng:x64-uwp=fail
-live555:arm64-windows=fail
 live555:arm-uwp=fail
-live555:x64-linux=fail
 live555:x64-osx=fail
 live555:x64-uwp=fail
-live555:x64-windows=fail
-live555:x64-windows-static=fail
-live555:x64-windows-static-md=fail
-live555:x86-windows=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
 lmdb:arm-uwp=fail

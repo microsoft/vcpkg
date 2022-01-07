@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.85",
+  "version": "1.86",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "dependencies": [
@@ -55,9 +55,6 @@
     },
     "libigl-imgui": {
       "description": "Install the libigl-imgui headers"
-    },
-    "marmalade-binding": {
-      "description": "Make available Marmalade binding"
     },
     "metal-binding": {
       "description": "Make available Metal binding"
