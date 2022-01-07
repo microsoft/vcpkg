@@ -5037,8 +5037,8 @@
       "port-version": 1
     },
     "openssl": {
-      "baseline": "1.1.1l",
-      "port-version": 4
+      "baseline": "1.1.1m",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
