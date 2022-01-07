@@ -24,9 +24,9 @@ index 427e5e7..af31df4 100644
      find_package(urdfdom)
      if (urdfdom_FOUND)
        set(URDF_INCLUDE_DIRS ${urdfdom_INCLUDE_DIRS})
-@@ -73,6 +72,8 @@ if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+@@ -73,6 +72,7 @@ if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
      # what am I doing here? pkg-config and cmake
-     set(URDF_INCLUDE_DIRS ${URDF_INCLUDEDIR})
+-    set(URDF_INCLUDE_DIRS ${URDF_INCLUDEDIR})
      set(URDF_LIBRARY_DIRS ${URDF_LIBDIR})
 +    set(URDF_INCLUDE_DIRS ${urdfdom_INCLUDE_DIRS})
 +    set(URDF_LIBRARIES ${urdfdom_LIBRARIES})
