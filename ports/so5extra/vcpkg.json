@@ -5,9 +5,7 @@
   "homepage": "https://github.com/Stiffstream/so5extra",
   "license": "BSD-3-Clause",
   "dependencies": [
-    {
-      "name": "sobjectizer",
-    },
+    "sobjectizer",
     {
       "name": "vcpkg-cmake",
       "host": true
