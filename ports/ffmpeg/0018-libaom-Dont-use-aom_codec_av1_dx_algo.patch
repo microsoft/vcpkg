@@ -1,0 +1,26 @@
+From 6ff9f56f2b0bface43c6b0810cfda458695600f3 Mon Sep 17 00:00:00 2001
+From: Matt Oliver <protogonoi@gmail.com>
+Date: Wed, 20 Oct 2021 06:55:48 +1100
+Subject: [PATCH] libaom: Dont use aom_codec_av1_dx_algo.
+
+This fixes linking errors where variables cannot be correctly linked in from an external shared library such as with msvc.
+---
+ libavcodec/libaomdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavcodec/libaomdec.c b/libavcodec/libaomdec.c
+index 75ecc08970..d6b822fda2 100644
+--- a/libavcodec/libaomdec.c
++++ b/libavcodec/libaomdec.c
+@@ -223,7 +223,7 @@ static av_cold int aom_free(AVCodecContext *avctx)
+ 
+ static av_cold int av1_init(AVCodecContext *avctx)
+ {
+-    return aom_init(avctx, &aom_codec_av1_dx_algo);
++    return aom_init(avctx, aom_codec_av1_dx());
+ }
+ 
+ AVCodec ff_libaom_av1_decoder = {
+-- 
+2.33.1.windows.1
+

@@ -1,6 +1,6 @@
 {
   "name": "libmupdf",
-  "version-string": "1.18.1-so-3.11.14",
+  "version-string": "1.19.0-rc2",
   "description": "a lightweight PDF, XPS, and E-book library",
   "homepage": "https://github.com/ArtifexSoftware/mupdf",
   "supports": "!osx",
@@ -15,10 +15,6 @@
     "openjpeg",
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"

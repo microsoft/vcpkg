@@ -1,6 +1,7 @@
 {
   "name": "libtorrent",
   "version": "1.2.14",
+  "port-version": 1,
   "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",

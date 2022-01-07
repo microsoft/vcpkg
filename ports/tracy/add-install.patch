@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9fd34587..2ce57f6f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,9 @@ find_package(Threads REQUIRED)
+ 
+ add_library(TracyClient TracyClient.cpp)
+ target_compile_features(TracyClient PUBLIC cxx_std_11)
+-target_include_directories(TracyClient PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_include_directories(TracyClient PUBLIC 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> 
++    $<INSTALL_INTERFACE:include>)
+ target_link_libraries(
+     TracyClient
+     PUBLIC
+@@ -43,3 +45,32 @@ set_option(TRACY_NO_FRAME_IMAGE "Disable capture of frame images" OFF)
+ set_option(TRACE_NO_SAMPLING "Disable call stack sampling" OFF)
+ set_option(TRACY_NO_VERIFY "Disable zone validation for C API" OFF)
+ set_option(TRACY_NO_VSYNC_CAPTURE "Disable capture of hardware Vsync events" OFF)
++
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(TracyClient PRIVATE TRACY_EXPORTS)
++    target_compile_definitions(TracyClient PUBLIC TRACY_IMPORTS)
++endif()
++
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
++
++set(includes
++    ${CMAKE_CURRENT_LIST_DIR}/TracyC.h
++    ${CMAKE_CURRENT_LIST_DIR}/Tracy.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyD3D11.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyD3D12.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyLua.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyOpenCL.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyOpenGL.hpp
++    ${CMAKE_CURRENT_LIST_DIR}/TracyVulkan.hpp)
++
++install(TARGETS TracyClient
++        EXPORT TracyConfig
++        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
++        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(FILES ${includes}
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(EXPORT TracyConfig
++        FILE TracyConfig.cmake
++        DESTINATION share/Tracy)

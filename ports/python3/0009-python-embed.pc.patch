@@ -1,0 +1,11 @@
+diff --git a/Misc/python-embed.pc.in b/Misc/python-embed.pc.in
+index 2be9df8..a2e5ff7 100644
+--- a/Misc/python-embed.pc.in
++++ b/Misc/python-embed.pc.in
+@@ -9,5 +9,5 @@ Description: Embed Python into an application
+ Requires:
+ Version: @VERSION@
+ Libs.private: @LIBS@
+-Libs: -L${libdir} -lpython@VERSION@@ABIFLAGS@
++Libs: -L${libdir} -lpython@ABIVERSION@@ABIFLAGS@@ABISUFFIX@
+ Cflags: -I${includedir}/python@VERSION@@ABIFLAGS@

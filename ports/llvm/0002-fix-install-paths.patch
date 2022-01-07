@@ -9,10 +9,10 @@
  8 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/clang/cmake/modules/CMakeLists.txt b/clang/cmake/modules/CMakeLists.txt
-index d233f552f01f..26f502ad2d23 100644
+index 561665d58cad..3c73878a4483 100644
 --- a/clang/cmake/modules/CMakeLists.txt
 +++ b/clang/cmake/modules/CMakeLists.txt
-@@ -1,11 +1,11 @@
+@@ -3,11 +3,11 @@ include(LLVMDistributionSupport)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -27,7 +27,7 @@ index d233f552f01f..26f502ad2d23 100644
  
  get_property(CLANG_EXPORTS GLOBAL PROPERTY CLANG_EXPORTS)
 diff --git a/flang/cmake/modules/CMakeLists.txt b/flang/cmake/modules/CMakeLists.txt
-index 4822124ca412..1ca3eff8f14e 100644
+index e46498a6bc35..2e922f8ca89d 100644
 --- a/flang/cmake/modules/CMakeLists.txt
 +++ b/flang/cmake/modules/CMakeLists.txt
 @@ -1,11 +1,11 @@
@@ -45,7 +45,7 @@ index 4822124ca412..1ca3eff8f14e 100644
  
  get_property(FLANG_EXPORTS GLOBAL PROPERTY FLANG_EXPORTS)
 diff --git a/lld/cmake/modules/CMakeLists.txt b/lld/cmake/modules/CMakeLists.txt
-index fa505a533762..90413be34120 100644
+index 62d03fa901dd..09b0f54ee8c3 100644
 --- a/lld/cmake/modules/CMakeLists.txt
 +++ b/lld/cmake/modules/CMakeLists.txt
 @@ -1,11 +1,11 @@
@@ -63,10 +63,10 @@ index fa505a533762..90413be34120 100644
  
  get_property(LLD_EXPORTS GLOBAL PROPERTY LLD_EXPORTS)
 diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index b74adc11ade9..0638aea2f8f6 100644
+index 29e40f45fef8..e9094e9b8eb2 100644
 --- a/llvm/cmake/modules/AddLLVM.cmake
 +++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -974,7 +974,7 @@ function(process_llvm_pass_plugins)
+@@ -1033,7 +1033,7 @@ function(process_llvm_pass_plugins)
  
        ## Part 1: Extension header to be included whenever we need extension
        #  processing.
@@ -76,20 +76,22 @@ index b74adc11ade9..0638aea2f8f6 100644
        file(WRITE
            "${llvm_cmake_builddir}/LLVMConfigExtensions.cmake"
 diff --git a/llvm/cmake/modules/CMakeLists.txt b/llvm/cmake/modules/CMakeLists.txt
-index 4b8879f65fe4..9e097ab223b5 100644
+index 51b6a4fdc284..a818de2e116c 100644
 --- a/llvm/cmake/modules/CMakeLists.txt
 +++ b/llvm/cmake/modules/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,6 +1,6 @@
+ include(LLVMDistributionSupport)
+ 
 -set(LLVM_INSTALL_PACKAGE_DIR lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm)
 +set(LLVM_INSTALL_PACKAGE_DIR share/llvm)
  set(llvm_cmake_builddir "${LLVM_BINARY_DIR}/${LLVM_INSTALL_PACKAGE_DIR}")
  
  # First for users who use an installed LLVM, create the LLVMExports.cmake file.
 diff --git a/mlir/cmake/modules/CMakeLists.txt b/mlir/cmake/modules/CMakeLists.txt
-index b9fb9adce2ea..85a54f699f30 100644
+index 65efc4a14987..7c3213ab0c2b 100644
 --- a/mlir/cmake/modules/CMakeLists.txt
 +++ b/mlir/cmake/modules/CMakeLists.txt
-@@ -1,11 +1,11 @@
+@@ -3,11 +3,11 @@ include(LLVMDistributionSupport)
  # Generate a list of CMake library targets so that other CMake projects can
  # link against them. LLVM calls its version of this file LLVMExports.cmake, but
  # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -104,7 +106,7 @@ index b9fb9adce2ea..85a54f699f30 100644
  
  get_property(MLIR_EXPORTS GLOBAL PROPERTY MLIR_EXPORTS)
 diff --git a/polly/cmake/CMakeLists.txt b/polly/cmake/CMakeLists.txt
-index 211f95512717..2abe3803f910 100644
+index 7cc129ba2e90..9776391cd535 100644
 --- a/polly/cmake/CMakeLists.txt
 +++ b/polly/cmake/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -118,7 +120,7 @@ index 211f95512717..2abe3803f910 100644
    set(POLLY_EXPORTS_FILE_NAME "PollyExports-$<LOWER_CASE:$<CONFIG>>.cmake")
  else()
 diff --git a/pstl/CMakeLists.txt b/pstl/CMakeLists.txt
-index 8e6e1354707b..2ae7f7090025 100644
+index 8bea8843589b..3658c0a4414a 100644
 --- a/pstl/CMakeLists.txt
 +++ b/pstl/CMakeLists.txt
 @@ -81,10 +81,10 @@ install(TARGETS ParallelSTL

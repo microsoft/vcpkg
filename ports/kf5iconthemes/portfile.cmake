@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.84.0
-    SHA512 ca5645d6e4fde4f60c6f16c911539f4056060cc22afae275459632bc7069352b068b1727eb75b898d319e6eef3df9ddc35d8e22d4c1d05a657b112378e56731e
+    REF v5.89.0
+    SHA512 d876f4a67d667a881820280c51fac8ddcdb99414f8c810422dd20be370173c036abcec3168495009242d479520a379be0c8ee4bea637023584e52c9452d9b3b7
     HEAD_REF master
-    PATCHES
-        fix_config_cmake.patch
 )
 
 vcpkg_check_features(
@@ -15,7 +13,7 @@ vcpkg_check_features(
  )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

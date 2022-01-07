@@ -1,8 +1,8 @@
-diff --git a/GDALmake.opt.in b/GDALmake.opt.in
-index 07955b2..0d79ac3 100644
---- a/GDALmake.opt.in
-+++ b/GDALmake.opt.in
-@@ -660,3 +660,6 @@ O_OBJ =	$(foreach file,$(OBJ),../o/$(file))
+diff --git a/gdal/GDALmake.opt.in b/gdal/GDALmake.opt.in
+index e8d2b05..1f19a4b 100644
+--- a/gdal/GDALmake.opt.in
++++ b/gdal/GDALmake.opt.in
+@@ -662,3 +662,6 @@ O_OBJ =	$(foreach file,$(OBJ),../o/$(file))
  
  %-clean:
  	$(MAKE) -C $* clean
@@ -10,10 +10,10 @@ index 07955b2..0d79ac3 100644
 +
 +BUILD_TOOLS = @BUILD_TOOLS@
 \ No newline at end of file
-diff --git a/apps/GNUmakefile b/apps/GNUmakefile
+diff --git a/gdal/apps/GNUmakefile b/gdal/apps/GNUmakefile
 index 9624cf7..f91403d 100644
---- a/apps/GNUmakefile
-+++ b/apps/GNUmakefile
+--- a/gdal/apps/GNUmakefile
++++ b/gdal/apps/GNUmakefile
 @@ -43,6 +43,11 @@ NON_DEFAULT_LIST = 	multireadtest$(EXE) dumpoverviews$(EXE) \
  	gdaltorture$(EXE) gdal2ogr$(EXE) test_ogrsf$(EXE) \
  	gdalasyncread$(EXE) testreprojmulti$(EXE)
@@ -26,10 +26,10 @@ index 9624cf7..f91403d 100644
  default:	gdal-config-inst gdal-config $(BIN_LIST)
  
  all: default $(NON_DEFAULT_LIST)
-diff --git a/apps/makefile.vc b/apps/makefile.vc
+diff --git a/gdal/apps/makefile.vc b/gdal/apps/makefile.vc
 index 6e1fc9b..66f9b29 100644
---- a/apps/makefile.vc
-+++ b/apps/makefile.vc
+--- a/gdal/apps/makefile.vc
++++ b/gdal/apps/makefile.vc
 @@ -20,6 +20,7 @@ GNM_PROGRAMS =	gnmmanage.exe gnmanalyse.exe
  !ENDIF
  
@@ -60,11 +60,11 @@ index 6e1fc9b..66f9b29 100644
 +install:
 +!ENDIF
 \ No newline at end of file
-diff --git a/configure.ac b/configure.ac
-index b88676a..0a46a9c 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -6150,6 +6150,16 @@ case "${host_os}" in
+diff --git a/gdal/configure.ac b/gdal/configure.ac
+index 1098b39..e4d985e 100644
+--- a/gdal/configure.ac
++++ b/gdal/configure.ac
+@@ -6165,6 +6165,16 @@ case "${host_os}" in
          ;;
  esac
  
@@ -78,6 +78,6 @@ index b88676a..0a46a9c 100644
 +fi
 +AC_SUBST(BUILD_TOOLS,$BUILD_TOOLS)
 +
- AC_OUTPUT(GDALmake.opt)
+ AC_CONFIG_FILES([GDALmake.opt])
+ AC_OUTPUT
  
- dnl ---------------------------------------------------------------------------

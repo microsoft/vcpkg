@@ -1,7 +1,5 @@
 add_library(skia INTERFACE)
 add_library(skia::skia ALIAS skia)
-set(SKIA_DEP_DBG @SKIA_DEP_DBG@)
-set(SKIA_DEP_REL @SKIA_DEP_REL@)
 
 set(SKIA_LIBRARY_NAME_DBG @SKIA_LIBRARY_NAME_DBG@)
 set(SKIA_LIBRARY_NAME_REL @SKIA_LIBRARY_NAME_REL@)
@@ -17,6 +15,9 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
+
+set(SKIA_DEP_DBG @SKIA_DEP_DBG@)
+set(SKIA_DEP_REL @SKIA_DEP_REL@)
 
 find_library(SKIA_LIB NAMES skia skia.dll)
 target_link_libraries(skia INTERFACE "${SKIA_LIB}")

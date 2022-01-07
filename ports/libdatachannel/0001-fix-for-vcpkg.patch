@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 02b688c..03b185f 100644
+index c0e59d1..1d71e38 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -27,7 +27,6 @@ endif()
+@@ -28,7 +28,6 @@ endif()
  
  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
  set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
@@ -10,7 +10,7 @@ index 02b688c..03b185f 100644
  
  if(WIN32)
  	add_definitions(-DWIN32_LEAN_AND_MEAN)
-@@ -196,9 +195,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+@@ -197,12 +196,13 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
@@ -19,22 +19,25 @@ index 02b688c..03b185f 100644
 +find_library(USRSCTP_LIBRARY usrsctp REQUIRED)
 +find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
  
+ if(SCTP_DEBUG)
+ 	add_definitions(-DSCTP_DEBUG)
+ endif()
 +if(0)
  option(sctp_build_programs 0)
  option(sctp_build_shared_lib 0)
  set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-@@ -210,8 +210,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+@@ -214,8 +214,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
      target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
  endif()
  add_library(Usrsctp::Usrsctp ALIAS usrsctp)
--
--add_library(datachannel SHARED
 +endif()
+ 
+-add_library(datachannel SHARED
 +add_library(datachannel
  	${LIBDATACHANNEL_SOURCES}
  	${LIBDATACHANNEL_HEADERS}
  	${LIBDATACHANNEL_IMPL_SOURCES}
-@@ -235,16 +235,18 @@ target_include_directories(datachannel PUBLIC
+@@ -239,16 +240,18 @@ target_include_directories(datachannel PUBLIC
      $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -55,7 +58,7 @@ index 02b688c..03b185f 100644
  
  if(WIN32)
  	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
-@@ -339,11 +341,11 @@ else()
+@@ -351,11 +354,11 @@ else()
  		target_link_libraries(datachannel PRIVATE LibJuice::LibJuice)
  		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuice)
  	else()

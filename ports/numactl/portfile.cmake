@@ -6,10 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(FATAL_ERROR "Package only supports linux platform.")
-endif()
-
 message(
 "numactl currently requires the following libraries from the system package manager:
     autoconf libtool
@@ -66,6 +62,8 @@ vcpkg_execute_required_process(
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 configure_file(${SOURCE_PATH}/README.md ${CURRENT_PACKAGES_DIR}/share/numactl/copyright COPYONLY)

@@ -1,5 +1,14 @@
+From 1b2613e1df507fd868b4971294f9a28183ce2e6c Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:01:03 -0400
+Subject: [PATCH] remove broken targets
+
+---
+ tools/CMakeLists.txt | 9 ---------
+ 1 file changed, 9 deletions(-)
+
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index 1911f7b..11566a2 100644
+index 5bfe6e94c..7abf3d746 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -123,15 +123,6 @@ target_link_libraries(pcl_concatenate_points_pcd pcl_common pcl_io)
@@ -18,3 +27,6 @@ index 1911f7b..11566a2 100644
  PCL_ADD_EXECUTABLE(pcl_fast_bilateral_filter COMPONENT ${SUBSYS_NAME} SOURCES fast_bilateral_filter.cpp)
  target_link_libraries(pcl_fast_bilateral_filter pcl_common pcl_io pcl_filters)
  
+-- 
+2.32.0.windows.1
+
