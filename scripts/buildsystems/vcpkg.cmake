@@ -648,11 +648,13 @@ function(x_vcpkg_install_local_dependencies)
     elseif(Z_VCPKG_TARGET_TRIPLET_PLAT STREQUAL "linux")
         foreach(TARGET IN LISTS arg_TARGETS)
             get_target_property(TARGETTYPE "${TARGET}" TYPE)
+            get_target_property(TARGET_RPATH "${TARGET}" INSTALL_RPATH)
             if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
-                install(CODE "message(\" -- Installing app dependencies for ${TARGET}...\")
+                install(CODE "message(\" -- Installing app dependencies for ${TARGET} with RPATH ${TARGET_RPATH}...\")
                     execute_process(COMMAND /bin/sh \"${Z_VCPKG_TOOLCHAIN_DIR}/linux/applocal.sh\"
                         \"\$ENV{DESTDIR}\"
                         \"\${CMAKE_INSTALL_PREFIX}\"
+                        \"${TARGET_RPATH}\"
                         \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                         \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                         )"

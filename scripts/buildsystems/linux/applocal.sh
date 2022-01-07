@@ -2,8 +2,9 @@
 
 DESTDIR=$1
 PREFIX=$2
-EXECUTABLE=$3
-VCPKG_INSTALLED=$4
+RPATH=$3
+EXECUTABLE=$4
+VCPKG_INSTALLED=$5
 
 # if the executable is not an absolute path
 # we need to prefix the prefix directory
@@ -46,6 +47,12 @@ function copy_dependencies() {
             fi
 
             cp --no-dereference ${DEPENDENCY_PATH} ${DESTDIR}/${PREFIX}/lib/
+
+            # if the original target had an RPATH, the installed library
+            # should have the same RPATH as well
+            if [ ! -z "${RPATH}" ]; then
+                patchelf --set-rpath "${RPATH}" ${DESTDIR}/${PREFIX}/lib/${DEPENDENCY}
+            fi
         fi
 
         # copy dependencies for the library itself
