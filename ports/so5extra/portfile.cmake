@@ -5,15 +5,15 @@ vcpkg_from_github(
     SHA512 51b1e9521288c4cfbbf29aa9719b9da3ee0073e38af6fc275a5ec0a22b4bededf293b136aac0cf99a435b4411ccf0687556418fc25285f501a6f426f3a623c34
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/dev/so_5_extra
     PREFER_NINJA
     OPTIONS
         -DSO5EXTRA_INSTALL=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/so5extra)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/so5extra)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 

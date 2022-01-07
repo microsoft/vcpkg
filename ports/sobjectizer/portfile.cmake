@@ -8,7 +8,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOBJECTIZER_BUILD_STATIC )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOBJECTIZER_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/dev
     PREFER_NINJA
     OPTIONS
@@ -16,11 +16,11 @@ vcpkg_configure_cmake(
         -DSOBJECTIZER_BUILD_SHARED=${SOBJECTIZER_BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sobjectizer)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
