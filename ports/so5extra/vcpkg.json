@@ -7,7 +7,6 @@
   "dependencies": [
     {
       "name": "sobjectizer",
-      "version>=": "5.7.3"
     },
     {
       "name": "vcpkg-cmake",
