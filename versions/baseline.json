@@ -6429,11 +6429,11 @@
       "port-version": 1
     },
     "so5extra": {
-      "baseline": "1.4.1.1",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.2.6",
+      "baseline": "5.7.3",
       "port-version": 0
     },
     "soci": {
