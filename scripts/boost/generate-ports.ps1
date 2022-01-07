@@ -569,7 +569,7 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
-        -Dependencies @("boost-uninstall")
+        -Dependencies @("boost-uninstall", "vcpkg-cmake")
 
     # Update Boost version in boost-modular-build.cmake
     $boost_modular_build = "$portsDir/boost-modular-build-helper/boost-modular-build.cmake"
