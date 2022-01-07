@@ -5301,7 +5301,11 @@
       "port-version": 0
     },
     "plf-colony": {
-      "baseline": "6.28",
+      "baseline": "6.33",
+      "port-version": 0
+    },
+    "plf-hive": {
+      "baseline": "2021-12-11",
       "port-version": 0
     },
     "plf-list": {
