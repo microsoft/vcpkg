@@ -6421,7 +6421,7 @@
       "port-version": 1
     },
     "so5extra": {
-      "baseline": "1.4.1.1",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "sobjectizer": {
