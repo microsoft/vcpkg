@@ -6,10 +6,5 @@
   "dependencies": [
     "x11",
     "xorg-macros"
-  ],
-  "features": {
-    "no-feature": {
-      "description": "just a dummy"
-    }
-  }
+  ]
 }

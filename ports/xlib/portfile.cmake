@@ -25,6 +25,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{CPP} "cl_cpp_wrapper")
 endif()
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS 
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason

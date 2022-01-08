@@ -5,10 +5,5 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxtrans",
   "dependencies": [
     "xorg-macros"
-  ],
-  "features": {
-    "no-feature": {
-      "description": "just a dummy"
-    }
-  }
+  ]
 }

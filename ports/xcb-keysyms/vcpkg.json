@@ -8,10 +8,5 @@
     "xcb",
     "xorg-macros",
     "xproto"
-  ],
-  "features": {
-    "no-feature": {
-      "description": "just a dummy"
-    }
-  }
+  ]
 }

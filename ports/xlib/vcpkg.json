@@ -12,10 +12,5 @@
     "xcb",
     "xproto",
     "xtrans"
-  ],
-  "features": {
-    "no-feature": {
-      "description": "just a dummy"
-    }
-  }
+  ]
 }
