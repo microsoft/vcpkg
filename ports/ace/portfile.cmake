@@ -38,12 +38,19 @@ else()
   endif()
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES "ACETAO_dependencyFixed"
-)
-
+if("tao" IN_LIST FEATURES)
+#patch only applies to TAO configuration
+  vcpkg_extract_source_archive_ex(
+      OUT_SOURCE_PATH SOURCE_PATH
+      ARCHIVE ${ARCHIVE}
+      PATCHES "ACETAO_dependencyFixed"
+  )
+else()
+  vcpkg_extract_source_archive_ex(
+      OUT_SOURCE_PATH SOURCE_PATH
+      ARCHIVE ${ARCHIVE}
+  )
+endif()
 set(ACE_ROOT ${SOURCE_PATH})
 set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(ACE_SOURCE_PATH ${ACE_ROOT}/ace)
