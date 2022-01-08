@@ -4,11 +4,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp-curl
+    REPO oatpp/oatpp-ssdp
     REF ${OATPP_VERSION}
-    SHA512 d9437a6b3a214bf0f17561e905709d741cd7d5fcad30ec0cdddeaacb3a72142bf8b24034d13201cd416898ffd0ab07ca50ec66d4025406acee1518ae65dac45e
+    SHA512 ab6f10bb79cb058eb7ce4115327e2f2d85133753d02dc2b4339505cc2ed4ef8b6284b5e832d0e190de17b8ae70e0b9a99b1b074d0691ca9a613873e8d4e1ace8
     HEAD_REF master
-    PATCHES "fix-find-curl.patch"
+    PATCHES
+        fix_String_to_string.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,11 +17,11 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"   
+        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS" 
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-curl-${OATPP_VERSION})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-ssdp-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
