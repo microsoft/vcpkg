@@ -102,18 +102,14 @@ vcpkg_configure_meson(
     OPTIONS ${OPTIONS}
         -Dlisten_tcp=true
         -Ddocs=false
-    OPTIONS_RELEASE
-        -Dlog_dir=./logs/
-        -Dxkb_dir=./../../share/xkbcomp/X11/xkb
-        -Dxkb_output_dir=./xkb/out/
-        -Dxkb_bin_dir=./../xkbcomp/
-    OPTIONS_DEBUG
-        -Dlog_dir=./logs/
-        -Dxkb_dir=./../../../share/xkbcomp/X11/xkb
-        -Dxkb_output_dir=./xkb/out/
-        -Dxkb_bin_dir=./../../xkbcomp/
+        # Note: xserver will overwrite the base settings by trying to be relocatable.
+        # To start the server you need to copy over xkbcomp + deps from tools/xkbcomp/bin
+        # and you need to copy the rules from share/X11/xkb to tools/xserver/xkb
+        #-Dlog_dir=logs
+        #-Dxkb_dir=../../share/X11/xkb
+        #-Dxkb_output_dir=xkb/out
+        #-Dxkb_bin_dir=../xkbcomp/bin
 )
-# Seems like the xkb option don't really help. Manual moving of the xkb folder needed. 
 vcpkg_install_meson()
 
 vcpkg_fixup_pkgconfig()
