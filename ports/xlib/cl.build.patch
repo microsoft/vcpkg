@@ -76,27 +76,18 @@ index 56dba9673..d10de825e 100644
  	    }
  	    if(keysym) *keysym = XK_braille_blank | pattern;
  	    if(ret > 0) {
--		if (keysym) {
--		    if(status) *status = XLookupBoth;
--		} else {
--		    if(status) *status = XLookupChars;
-+            if (keysym) {
-+                if(status) *status = XLookupBoth;
-+            } else {
-+                if(status) *status = XLookupChars;
+ 		if (keysym) {
+ 		    if(status) *status = XLookupBoth;
+ 		} else {
+ 		    if(status) *status = XLookupChars;
  		}
  		memcpy(buffer, mb2, ret);
  	    } else {
--		if(keysym) {
--		    if(status) *status = XLookupKeySym;
--		} else {
--		    if(status) *status = XLookupNone;
--		}
-+            if(keysym) {
-+                if(status) *status = XLookupKeySym;
-+            } else {
-+                if(status) *status = XLookupNone;
-+            }
+ 		if(keysym) {
+ 		    if(status) *status = XLookupKeySym;
+ 		} else {
+ 		    if(status) *status = XLookupNone;
+ 		}
  	    }
 +#ifdef _MSC_VER
 +        free(mb2);
