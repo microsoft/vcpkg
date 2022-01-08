@@ -3918,7 +3918,7 @@
     },
     "libsoundio": {
       "baseline": "2.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libspatialindex": {
       "baseline": "1.9.3",
