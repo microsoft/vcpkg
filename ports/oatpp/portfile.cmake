@@ -10,12 +10,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(OATPP_MSVC_LINK_STATIC_RUNTIME TRUE)
+else()
+    set(OATPP_MSVC_LINK_STATIC_RUNTIME FALSE)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"       
+	"-DOATPP_MSVC_LINK_STATIC_RUNTIME=${OATPP_MSVC_LINK_STATIC_RUNTIME}"       
 )
 
 vcpkg_install_cmake()
