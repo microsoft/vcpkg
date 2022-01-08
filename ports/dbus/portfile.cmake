@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DBus1")
 vcpkg_fixup_pkgconfig() 
 
