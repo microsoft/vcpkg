@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 814b7929c5add4b0541ccad26fb81f28b71dc4d8 #v3.3.4
-    SHA512 8e34d011ab49940b405998312af4807e4c9837a44d95d873cb3723e7c141da6a10c1dfaf1652f03b31b911f0ae4515ded52cac02844435dc374b93d376921e43
+    REF 7d5a16ce714f0b5f4efa3262de22e4d948851525     #v3.3.5
+    SHA512 46f21d34eb4f7c3721fb42d5e817e208d7c70c2fbf1f1d61200ec22c052c9e93989ee3c693ec6b6c3498e5f61388286cfa97b97e10326548e94b6586b87184f7
     HEAD_REF master
 )
 
@@ -17,23 +17,22 @@ if(VCPKG_TARGET_IS_LINUX)
 These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGLFW_BUILD_EXAMPLES=OFF
         -DGLFW_BUILD_TESTS=OFF
         -DGLFW_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glfw3)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glfw3)
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

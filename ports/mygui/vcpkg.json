@@ -1,12 +1,20 @@
 {
   "name": "mygui",
-  "version-string": "2020-06-17",
+  "version": "3.4.1",
   "port-version": 1,
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "dependencies": [
     "freetype",
-    "sdl2-image"
+    "sdl2-image",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "opengl": {

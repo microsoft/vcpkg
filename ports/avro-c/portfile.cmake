@@ -27,6 +27,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# the files are broken and there is no way to fix it because the snappy dependency has no pkgconfig file
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 vcpkg_copy_tools(TOOL_NAMES avroappend avrocat AUTO_CLEAN)
 

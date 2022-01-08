@@ -1,145 +1,102 @@
-set(SPATIALITE_TOOLS_VERSION_STR "5.0.0")
+# Allow empty include directory
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+set(SPATIALITE_TOOLS_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
+    URLS "https://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
     FILENAME "spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
-    SHA512 a1497824df2c45ffa1ba6b4ec53794c2c4779b6357885ee6f1243f2bff137c3e4dd93b0a802239ced73f66be22faf0081b83bf0ad4effb8a04052712625865d1
+    SHA512 dad52f6ed3c66ffd95f3a5c21225cd1b20641523af616f7e8defba8e4e46921da169e5f7bf9c53a355e132b6e74750d6db3fe02c870a3386f850df49c83bb8cd
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-linux-configure.patch
         fix-makefiles.patch
 )
+file(REMOVE "${SOURCE_PATH}/config.h")
+
+set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
 
 if (VCPKG_TARGET_IS_WINDOWS)
-  if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
-      set(SPATIALITE_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/spatialite.lib")
-      set(SPATIALITE_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib")
-      set(ICONV_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib")
-      set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib")
-      set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpat.lib")
-      set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatd.lib")
-  else()
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
-      set(SPATIALITE_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/spatialite.lib ${CURRENT_INSTALLED_DIR}/lib/freexl.lib ${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-      set(SPATIALITE_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib ${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-      set(ICONV_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/lib/charset.lib")
-      set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib")
-      set(EXPAT_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libexpatMD.lib")
-      set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib")
-  endif()
+    list(APPEND PKGCONFIG_MODULES readosm spatialite)
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        LIBS
+    )
 
-  if(VCPKG_TARGET_IS_UWP)
-      set(UWP_LIBS windowsapp.lib)
-      set(UWP_LINK_FLAGS /APPCONTAINER)
-  endif()
+    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
+    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    endif()
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
+    endif()
 
-  set(LIBS_ALL_DBG
-      "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/readosm.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
-      ${LIBXML2_LIBS_DBG} \
-      ${GEOS_LIBS_DBG} \
-      ${ICONV_LIBS_DBG} \
-      ${SPATIALITE_LIBS_DBG} \
-      ${EXPAT_LIBS_DBG} \
-      ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
-  )
-  set(LIBS_ALL_REL
-      "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/readosm.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
-      ${LIBXML2_LIBS_REL} \
-      ${GEOS_LIBS_REL} \
-      ${ICONV_LIBS_REL} \
-      ${SPATIALITE_LIBS_REL} \
-      ${EXPAT_LIBS_REL} \
-      ${UWP_LIBS} \
-      ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
-  )
+    set(ICONV_LIBS "iconv.lib")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(APPEND ICONV_LIBS " charset.lib")
+    endif()
 
-  file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
-  list(APPEND OPTIONS_RELEASE
-      "LINK_FLAGS=${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
-  )
-  list(APPEND OPTIONS_DEBUG
-      "LINK_FLAGS=/debug ${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
-  )
+    set(UWP_LIBS "")
+    if(VCPKG_TARGET_IS_UWP)
+        set(UWP_LIBS "windowsapp.lib /APPCONTAINER")
+    endif()
 
-  vcpkg_install_nmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      OPTIONS
-          "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
-      OPTIONS_RELEASE
-          ${OPTIONS_RELEASE}
-      OPTIONS_DEBUG
-          ${OPTIONS_DEBUG}
-  )
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
-  list(APPEND TOOL_EXES
-      shp_sanitize
-      spatialite_osm_filter
-      spatialite_osm_raw
-      spatialite_gml
-      spatialite_osm_map
-      exif_loader
-      spatialite_osm_net
-      spatialite_network
-      spatialite_tool
-      shp_doctor
-      spatialite
-  )
-  vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS_RELEASE
+            "INSTDIR=${INST_DIR}"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} ${ICONV_LIBS} ${UWP_LIBS}"
+        OPTIONS_DEBUG
+            "INSTDIR=${INST_DIR}\\debug"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} ${ICONV_LIBS} ${UWP_LIBS}"
+        )
 
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
-  if(VCPKG_TARGET_IS_LINUX)
-      set(LIBS "-lpthread -ldl -lm -lz -lstdc++")
-  else()
-      set(LIBS "-lpthread -ldl -lm -lz -lc++ -liconv -lc")
-  endif()
+    set(TOOL_EXES
+        shp_sanitize
+        spatialite_osm_filter
+        spatialite_osm_raw
+        spatialite_gml
+        spatialite_osm_map
+        exif_loader
+        spatialite_osm_net
+        spatialite_network
+        spatialite_tool
+        shp_doctor
+        spatialite
+    )
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
 
-  list(APPEND OPTIONS_RELEASE
-      "LIBXML2_LIBS=-lxml2 -llzma"
-      "GEOS_LDFLAGS=-lgeos_c -lgeos"
-  )
-  list(APPEND OPTIONS_DEBUG
-      "LIBXML2_LIBS=-lxml2 -llzmad"
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd"
-  )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-  vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
-    OPTIONS
-        "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-        "LIBS=${LIBS}"
-        "--disable-minizip"
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE
-        ${OPTIONS_RELEASE}
-  )
+else()
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES ${PKGCONFIG_MODULES}
+        LIBS
+    )
 
-  vcpkg_install_make()
-  vcpkg_fixup_pkgconfig()
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS
+            --disable-minizip
+            --disable-readline
+            --enable-readosm
+        OPTIONS_DEBUG
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
+        OPTIONS_RELEASE
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
+    )
+
+    vcpkg_install_make()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# Allow empty include directory
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

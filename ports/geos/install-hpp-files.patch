@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20c8907..accc1a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -367,7 +367,7 @@ install(DIRECTORY
+   "${CMAKE_CURRENT_LIST_DIR}/include/geos"
+   "${CMAKE_CURRENT_BINARY_DIR}/include/geos"
+   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+-  FILES_MATCHING PATTERN "*.h")
++  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+ if(NOT DISABLE_GEOS_INLINE)
+   install(DIRECTORY
+     "${CMAKE_CURRENT_LIST_DIR}/include/geos"

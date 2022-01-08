@@ -41,6 +41,10 @@ if(SHARE_LEN EQUAL 0)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp" "#define ARMA_AUX_LIBS ${CURRENT_INSTALLED_DIR}/lib/openblas.lib;${CURRENT_INSTALLED_DIR}/lib/lapack.lib;${CURRENT_INSTALLED_DIR}/lib/openblas.lib" "")
+endif()
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt"  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
