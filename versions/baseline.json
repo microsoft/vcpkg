@@ -1609,7 +1609,7 @@
       "port-version": 0
     },
     "cppxaml": {
-      "baseline": "0.0.15",
+      "baseline": "0.0.16",
       "port-version": 0
     },
     "cppzmq": {
