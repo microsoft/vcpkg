@@ -1608,6 +1608,10 @@
       "baseline": "windows-sdk",
       "port-version": 0
     },
+    "cppxaml": {
+      "baseline": "0.0.15",
+      "port-version": 0
+    },
     "cppzmq": {
       "baseline": "4.8.1",
       "port-version": 0
