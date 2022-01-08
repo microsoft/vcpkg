@@ -12,7 +12,6 @@ vcpkg_from_gitlab(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DDBUS_BUILD_TESTS=OFF
         -DDBUS_ENABLE_XML_DOCS=OFF
