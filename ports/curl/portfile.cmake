@@ -1,15 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 9e560d11aad028de74addc0d1edfefa5667884f4 #curl-7_80_0
-    SHA512 f920f151e31f26de8d9a0f8f22aebe98435b0165c52bc169a1204f84f38671dea1eaa2833feceb8495e619b8b9becac0c8ad335ec6fe0c2c59e458bf9014c6c2
+    REF curl-7_81_0
+    SHA512 2aa2200c50bc0f6f70e402078ab0d2e8248f261f1f584ab619388c4a537593321765dcd20706ba420ebc7d1558f7170aa6b6edc8c13f2315770c5e2919b6f3d9
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
-        0006_fix_tool_depends.patch
-        0007_disable_tool_export_curl_target.patch
-        0011_fix_static_build.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
@@ -40,15 +37,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
-        openssl     CMAKE_USE_OPENSSL
-        mbedtls     CMAKE_USE_MBEDTLS
-        ssh         CMAKE_USE_LIBSSH2
+        openssl     CURL_USE_OPENSSL
+        mbedtls     CURL_USE_MBEDTLS
+        ssh         CURL_USE_LIBSSH2
         tool        BUILD_CURL_EXE
         c-ares      ENABLE_ARES
         sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
-        schannel    CMAKE_USE_SCHANNEL
-        sectransp   CMAKE_USE_SECTRANSP
+        schannel    CURL_USE_SCHANNEL
+        sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
