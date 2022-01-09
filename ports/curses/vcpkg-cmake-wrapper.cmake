@@ -1,17 +1,19 @@
-if(NOT DEFINED CURSES_NEED_NCURSES)
-    if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/ncurses/curses.h")
-        # Use vcpkg ncurses, override system curses
-        set(z_vcpkg_curses_need_ncurses TRUE)
-        set(CURSES_NEED_NCURSES TRUE)
-        set(CURSES_INCLUDE_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/ncurses" CACHE PATH "")
-    elseif(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/pdcurses.lib")
-        # Use vcpkg pdcurses, debug+release
-        include(SelectLibraryConfigurations)
-        find_library(z_vcpkg_pdcurses_LIBRARY_RELEASE NAMES pdcurses PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
-        find_library(z_vcpkg_pdcurses_LIBRARY_DEBUG NAMES pdcurses PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
-        select_library_configurations(z_vcpkg_pdcurses)
-        set(CURSES_CURSES_LIBRARY "${z_vcpkg_pdcurses_LIBRARY}" CACHE STRING "")
-    endif()
+if(CURSES_NEED_NCURSES)
+    # Let FindCurses.cmake choose the include path
+elseif("@CURSES_BACKEND@" STREQUAL "ncurses")
+    # Use vcpkg ncurses, override system curses
+    set(z_vcpkg_curses_need_ncurses TRUE)
+    set(CURSES_NEED_NCURSES TRUE)
+    set(CURSES_INCLUDE_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/ncurses" CACHE PATH "")
+elseif("@CURSES_BACKEND@" STREQUAL "pdcurses")
+    # Use vcpkg pdcurses, debug+release
+    include(SelectLibraryConfigurations)
+    find_library(z_vcpkg_pdcurses_LIBRARY_RELEASE NAMES pdcurses PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    find_library(z_vcpkg_pdcurses_LIBRARY_DEBUG NAMES pdcurses PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
+    select_library_configurations(z_vcpkg_pdcurses)
+    set(CURSES_CURSES_LIBRARY "${z_vcpkg_pdcurses_LIBRARY}" CACHE STRING "")
+else()
+    message(FATAL_ERROR "Unknown backend: '@CURSES_BACKEND@'")
 endif()
 _find_package(${ARGS})
 if(z_vcpkg_curses_need_ncurses)
