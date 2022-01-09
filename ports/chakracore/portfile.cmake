@@ -5,9 +5,9 @@ endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(NOT "$ENV{VCPKG_MAX_CONCURRENCY}" STREQUAL "")
-  set(NUM_CORES_FLAG "-j=$ENV{VCPKG_MAX_CONCURRENCY}")
+    set(NUM_CORES_FLAG "-j=$ENV{VCPKG_MAX_CONCURRENCY}")
 else()
-  set(NUM_CORES_FLAG "-j")
+    set(NUM_CORES_FLAG "-j")
 endif()
 
 vcpkg_from_github(
