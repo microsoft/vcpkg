@@ -56,6 +56,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ac_cv_func_memset=yes             # not detected in release builds
         ac_cv_header_pthread_h=no
         ac_cv_header_dirent_h=no
+        ac_cv_header_getopt_h=no
     )
 endif()
 
