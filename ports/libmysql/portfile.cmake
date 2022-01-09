@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
@@ -37,9 +35,8 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DWITHOUT_SERVER=ON
         -DWITH_UNIT_TESTS=OFF
@@ -68,7 +65,7 @@ vcpkg_configure_cmake(
         -DLINK_STATIC_RUNTIME_LIBRARIES=${STATIC_CRT_LINKAGE}
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 list(APPEND MYSQL_TOOLS
     comp_err
@@ -102,14 +99,14 @@ endif()
 
 vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/libmysql")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share" "${CURRENT_PACKAGES_DIR}/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/${PORT}")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
-file(RENAME "${CURRENT_PACKAGES_DIR}/libmysql" "${CURRENT_PACKAGES_DIR}/share/libmysql")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libmysql" "${CURRENT_PACKAGES_DIR}/debug/share/libmysql")
+file(RENAME "${CURRENT_PACKAGES_DIR}/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/${PORT}" "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-libmysql TARGET_PATH share/unofficial-libmysql)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql CONFIG_PATH share/${PORT}/unofficial-libmysql)
 
 # switch mysql into /mysql
 file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
@@ -135,9 +132,10 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/README"
 )
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" _contents)
-string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h" "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"")
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libmysql/mysql_config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

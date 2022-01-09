@@ -62,7 +62,12 @@ function(vcpkg_build_qmake)
     set(path_suffix_release "")
     set(targets_release "${arg_RELEASE_TARGETS}")
 
-    foreach(build_type IN ITEMS debug release)
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        set(items debug release)
+    else()
+        set(items release)
+    endif()
+    foreach(build_type IN ITEMS ${items})
         set(current_installed_prefix "${CURRENT_INSTALLED_DIR}${path_suffix_${build_type}}")
 
         vcpkg_add_to_path(PREPEND "${current_installed_prefix}/lib" "${current_installed_prefix}/bin")

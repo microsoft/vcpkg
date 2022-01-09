@@ -1,7 +1,6 @@
 {
   "name": "openimageio",
-  "version": "2.3.7.2",
-  "port-version": 4,
+  "version": "2.3.10.1",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "dependencies": [

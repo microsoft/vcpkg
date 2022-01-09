@@ -1,7 +1,7 @@
 {
   "name": "mongo-cxx-driver",
   "version": "3.6.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "MongoDB C++ Driver.",
   "homepage": "https://github.com/mongodb/mongo-cxx-driver",
   "dependencies": [

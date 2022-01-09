@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE ${ARCHIVE}
+        ARCHIVE "${ARCHIVE}"
         PATCHES
             use-vcpkg-expat.patch
             apr.patch
@@ -22,9 +22,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
       set(APU_DECLARE_STATIC ON)
     endif()
 
-    vcpkg_configure_cmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      PREFER_NINJA
+    vcpkg_cmake_configure(
+      SOURCE_PATH "${SOURCE_PATH}"
       OPTIONS
         -DAPU_DECLARE_EXPORT=${APU_DECLARE_EXPORT}
         -DAPU_DECLARE_STATIC=${APU_DECLARE_STATIC}
@@ -32,7 +31,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         -DDISABLE_INSTALL_HEADERS=ON
     )
 
-    vcpkg_install_cmake()
+    vcpkg_cmake_install()
     vcpkg_copy_pdbs()
 
     file(READ ${CURRENT_PACKAGES_DIR}/include/apu.h  APU_H)
@@ -43,7 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/apu.h "${APU_H}")
 
-else(VCPKG_TARGET_IS_WINDOWS)
+else()
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE} 
@@ -77,7 +76,15 @@ else(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_make()
 
+    vcpkg_fixup_pkgconfig()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    if(NOT VCPKG_BUILD_TYPE)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    endif()
+
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

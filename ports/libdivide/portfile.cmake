@@ -1,32 +1,33 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ridiculousfish/libdivide
-    REF v4.0.0
-    SHA512 662b8f479c3f822563d4f1c85c77c204f47e992391cd5ca3376d6e19e4d2132c28ad59b8e3179edd706fceeabf0d1bc7be5e713eeb669523952155a2d7770326
+    REF 5.0
+    SHA512 89581efab63a0668405196d4d8188e03f3b87027e9014ef7238e1d79fe369d8abbca0e44b00cf02b00be29c272feb34c9b9290313596adbef9b46ae0715c29dd
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    test BUILD_TESTS
+        test BUILD_TESTS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA 
-    OPTIONS ${FEATURE_OPTIONS}
-      -DLIBDIVIDE_SSE2=OFF
-      -DLIBDIVIDE_AVX2=OFF
-      -DLIBDIVIDE_AVX512=OFF
-      -DENABLE_VECTOR_EXTENSIONS=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIBDIVIDE_SSE2=OFF
+        -DLIBDIVIDE_AVX2=OFF
+        -DLIBDIVIDE_AVX512=OFF
+        -DLIBDIVIDE_NEON=OFF
+        -DENABLE_VECTOR_EXTENSIONS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright) 
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright) 

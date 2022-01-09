@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bd7c4f8..03b7ccf 100644
+index c36908b..390ac0a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -866,7 +866,7 @@ ENDIF()
+@@ -944,7 +944,7 @@ OPTION(ENABLE_BYTERANGE "Enable byte-range access to remote datasets.." OFF)
  
  # Check for the math library so it can be explicitly linked.
  IF(NOT WIN32)

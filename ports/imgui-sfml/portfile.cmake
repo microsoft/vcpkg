@@ -3,13 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eliasdaler/imgui-sfml
-    REF 82dc2033e51b8323857c3ae1cf1f458b3a933c35 #v2.3
-    SHA512 f27a0e65aa20229c73b27c4232269908dfeb5d78b1cef7299a179ecac6194d9829e148e95ed54b4500ffd36ada09fdbfadf67588c78bee87aff446ae80347bcf
+    REF 9cc8c57a4565551087be0d9aeb3ae55490aa1207 #v2.4
+    SHA512 d44d85e44d17d05c4e21f71acbf5bf544364a9bbe4871be896edd29f9926948cd1ea7627b7d54524f7da64c494638fc126744ced57ea7997a4b712dd26eb6183
     HEAD_REF master
     PATCHES
         0001-fix_find_package.patch
-        0002-fix_imgui_config.patch
         004-fix-find-sfml.patch
+        005-fix-imtextureid-define.patch
 )
 
 vcpkg_cmake_configure(
