@@ -1444,7 +1444,7 @@
       "baseline": "1.1.7",
       "port-version": 1
     },
-    "co": {
+    "cocoyaxi": {
       "baseline": "2.0.3",
       "port-version": 0
     },
