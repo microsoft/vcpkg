@@ -4,12 +4,6 @@ if(WIN32)
 endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-if(NOT "$ENV{VCPKG_MAX_CONCURRENCY}" STREQUAL "")
-    set(NUM_CORES_FLAG "-j=$ENV{VCPKG_MAX_CONCURRENCY}")
-else()
-    set(NUM_CORES_FLAG "-j")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
@@ -55,7 +49,7 @@ else()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND configs "debug")
         execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "${NUM_CORES_FLAG}"
+            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${BUILDTREE_PATH}"
 
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
@@ -68,7 +62,7 @@ else()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         list(APPEND configs "release")
         execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "${NUM_CORES_FLAG}"
+            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${BUILDTREE_PATH}"
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
