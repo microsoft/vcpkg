@@ -6,13 +6,12 @@ vcpkg_from_github(
     REF v2.1.0
     SHA512 07c671f83af93594d7792d770890205aad1a44803696f9567aa25f69a277fa5c3f4e9f9f5f0210ebd59f5cf75aff1f80ce532bd7bbd536a699724ceb6e3277fd
     HEAD_REF master
-    PATCHES
-        add-compile-definitions.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DPDALC_ENABLE_CODE_COVERAGE:BOOL=OFF
         -DPDALC_ENABLE_DOCS:BOOL=OFF
         -DPDALC_ENABLE_TESTS:BOOL=OFF
