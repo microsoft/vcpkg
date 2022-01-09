@@ -1702,7 +1702,7 @@
     },
     "curl": {
       "baseline": "7.80.0",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -5038,7 +5038,7 @@
     },
     "openssl": {
       "baseline": "1.1.1m",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -7156,12 +7156,20 @@
       "baseline": "2021-12-28",
       "port-version": 0
     },
+    "vcpkg-cmake-validate": {
+      "baseline": "2021-12-02",
+      "port-version": 0
+    },
     "vcpkg-gfortran": {
       "baseline": "3",
       "port-version": 1
     },
     "vcpkg-gn": {
       "baseline": "2021-11-16",
+      "port-version": 0
+    },
+    "vcpkg-maintainer-options": {
+      "baseline": "2021-12-29",
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
