@@ -10,6 +10,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${SDL2_IMAGE_VERSION}
+    PATCHES
+        0001-sdl2-image-potentially-uninitialized_local-pointer-variable-start.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
