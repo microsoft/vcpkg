@@ -6522,7 +6522,7 @@
     },
     "spdk-isal": {
       "baseline": "20181006",
-      "port-version": 1
+      "port-version": 2
     },
     "spdlog": {
       "baseline": "1.9.2",
