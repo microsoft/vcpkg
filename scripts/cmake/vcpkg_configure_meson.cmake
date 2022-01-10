@@ -476,10 +476,7 @@ function(vcpkg_configure_meson)
     endif()
 
     if(VCPKG_TARGET_IS_OSX)
-        vcpkg_backup_env_variables(VARS SDKROOT MACOSX_DEPLOYMENT_TARGET)
-
-        set(ENV{SDKROOT} "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
-        set(VCPKG_DETECTED_CMAKE_OSX_SYSROOT "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}" PARENT_SCOPE)
+        vcpkg_backup_env_variables(VARS MACOSX_DEPLOYMENT_TARGET)
 
         set(ENV{MACOSX_DEPLOYMENT_TARGET} "${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET}")
         set(VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET "${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET}" PARENT_SCOPE)
@@ -524,7 +521,7 @@ function(vcpkg_configure_meson)
     endforeach()
 
     if(VCPKG_TARGET_IS_OSX)
-        vcpkg_restore_env_variables(VARS SDKROOT MACOSX_DEPLOYMENT_TARGET)
+        vcpkg_restore_env_variables(VARS MACOSX_DEPLOYMENT_TARGET)
     endif()
     vcpkg_restore_env_variables(VARS INCLUDE)
 endfunction()
