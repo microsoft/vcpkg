@@ -2,7 +2,7 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "uwp")
 
 set(TF_LIB_SUFFIX "")
 set(TF_PORT_SUFFIX "")
-set(TF_INCLUDE_DIRS "${CURRENT_INSTALLED_DIR}/include")
+set(TF_INCLUDE_DIRS "\${TENSORFLOW_INSTALL_PREFIX}/include")
 list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/tensorflow-common")
 include(tensorflow-common)
 

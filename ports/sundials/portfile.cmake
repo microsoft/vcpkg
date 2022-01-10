@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LLNL/sundials
-    REF 73c280cd55ca2b42019c8a9aa54af10e41e27b9d # v5.7.0
-    SHA512 c70c53e5f5efe47255d23f36e71ffd75d61905a13a634a26bfbbd43c3c8764b7805db9a8cbe48c6cf69b2a1028701cb7118074bbbc01de71faf4f30bf0be22f9
+    REF v5.8.0
+    SHA512 30f6a7bddf813634e4266c36331673b52448b719f938f45a4efb6a96cfbeea4fe168fdded89309672b148f8ef8bc05997d838627e828573900ec169a41472372
     HEAD_REF master
     PATCHES
         install-dlls-in-bin.patch
@@ -11,16 +11,15 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -D_BUILD_EXAMPLES=OFF
         -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
 )
 
-vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_cmake_install(DISABLE_PARALLEL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -29,4 +28,4 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})

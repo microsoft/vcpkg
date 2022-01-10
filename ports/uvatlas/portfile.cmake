@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF sept2021
-    SHA512 bb2659e83aa04ad6a43b953f40535531f4f5766d3390b9ce8ea0d83b3146cb92fe27a44c7b744da91cc20f529aabf87794b3b19272c2bd27817e65b091ffe3f5
+    REF nov2021b
+    SHA512 14227447265c138359f3d189adde04daded386d061ad43128a97759e862005840e89b140f8a8f330808fa90035d8fdc2aa18437ac5447d2f849d8426f32b9cbb
     HEAD_REF master
 )
 
@@ -37,9 +37,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2021/uvatlastool.exe"
-    FILENAME "uvatlastool-sept2021.exe"
-    SHA512 56e5ca39f5e1d4fd5fc0f23dee0b2c4b814a53848614d3a470a68821177662e068e0d4e3db93446d32e734af4a6bad0f729d0691b2a3bb127e0395c14aa5a1e7
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/nov2021/uvatlastool.exe"
+    FILENAME "uvatlastool-nov2021.exe"
+    SHA512 84de6bc74901f3ab888b90126cc1ac64de564eb33c605fffe37b2199ad132a53b01271f1f551fcc067c144c599380764b9e50884ce5df32f43b2c58777da0722
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -48,7 +48,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT 
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-sept2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-nov2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

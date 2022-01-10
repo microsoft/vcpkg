@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/jsonnet
-  REF 3f58aa551c917d6a7a2c6d042ee27f93d895ac0b # v0.16.0
-  SHA512 448f4ff433a43ec21c3b67ea508d624e03dac420878e453e908a465cd517c79ae657f107c92e28a4ae2d2527baaf9a3ae1c6ea4c7e7e4f5062d3fad4e76e668c
+  REF v0.17.0
+  SHA512 D3EE6947163D8ABCED504FF37ECF365C0311164CBF243D4C635D34944F0831CA9FCE2470ACF00EB9A218F82A2E553B3F885DB9BD21BB9DCEFBD707FA0202925D
   HEAD_REF master
   PATCHES
     001-enable-msvc.patch
@@ -15,6 +15,7 @@ vcpkg_from_github(
     0004-incorporate-md5.patch
 )
 
+# see https://github.com/google/jsonnet/blob/v0.17.0/Makefile#L214
 if(VCPKG_TARGET_IS_WINDOWS)
   find_program(PWSH_PATH pwsh)
   vcpkg_execute_required_process(
@@ -38,9 +39,8 @@ else()
     set(BUILD_STATIC ON)
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_SHARED_BINARIES=${BUILD_SHARED}
     -DBUILD_STATIC_LIBS=${BUILD_STATIC}
@@ -50,10 +50,10 @@ vcpkg_configure_cmake(
     -DUSE_SYSTEM_JSON=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/jsonnet)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/jsonnet")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

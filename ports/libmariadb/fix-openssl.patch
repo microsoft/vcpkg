@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33565f5..d83176d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -280,7 +280,7 @@ IF(NOT WITH_SSL STREQUAL "OFF")
+     IF(OPENSSL_FOUND)
+       ADD_DEFINITIONS(-DHAVE_OPENSSL -DHAVE_TLS)
+       SET(SSL_SOURCES "${CC_SOURCE_DIR}/libmariadb/secure/openssl.c")
+-      SET(SSL_LIBRARIES ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY})
++      SET(SSL_LIBRARIES OpenSSL::SSL)
+       IF(WIN32)
+         CHECK_INCLUDE_FILES (${OPENSSL_INCLUDE_DIR}/openssl/applink.c HAVE_OPENSSL_APPLINK_C)
+       ENDIF()

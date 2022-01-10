@@ -15,9 +15,9 @@ diff --git a/src/agent.c b/src/agent.c
 index c2ba422..f1799f8 100644
 --- a/src/agent.c
 +++ b/src/agent.c
-@@ -51,6 +51,10 @@
- #include "userauth.h"
- #include "session.h"
+@@ -55,6 +55,10 @@
+ #include <stdlib.h>
+ #endif
  
 +#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
 +#define IS_UWP 1
@@ -42,7 +42,23 @@ index c2ba422..f1799f8 100644
 -#ifdef WIN32
 -    {"Pageant", &agent_ops_pageant},
 +#if defined(WIN32) && !defined(IS_UWP)
-+  {"Pageant", &agent_ops_pageant},
++    {"Pageant", &agent_ops_pageant},
+     {"OpenSSH", &agent_ops_openssh},
  #endif  /* WIN32 */
  #ifdef PF_UNIX
-     {"Unix", &agent_ops_unix},
+diff --git a/src/agent_win.c b/src/agent_win.c
+--- a/src/agent_win.c
++++ b/src/agent_win.c
+@@ -55,7 +55,11 @@
+ #include <stdlib.h>
+ #endif
+ 
+-#ifdef WIN32
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
++#define IS_UWP 1
++#endif  /* #if defined(WINAPI_FAMILY) */
++
++#if defined(WIN32) && !defined(IS_UWP)
+ /* Code to talk to OpenSSH was taken and modified from the Win32 port of
+  * Portable OpenSSH by the PowerShell team. Commit
+  * 8ab565c53f3619d6a1f5ac229e212cad8a52852c of

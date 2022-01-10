@@ -1,13 +1,16 @@
 --- a/SDL2Config.cmake
 +++ b/SDL2Config.cmake
-@@ -2,5 +2,14 @@
+@@ -1,5 +1,17 @@
  include("${CMAKE_CURRENT_LIST_DIR}/SDL2Targets.cmake")
  
 +# on static-only builds create an alias
 +if(NOT TARGET SDL2::SDL2 AND TARGET SDL2::SDL2-static)
-+  if(CMAKE_VERSION VERSION_LESS "3.18")
-+      # Aliasing local targets is not supported on CMake < 3.18, so make it global.
++  if(CMAKE_VERSION VERSION_LESS "3.11")
++      message(FATAL_ERROR "At least CMake 3.11 is required for this configuration.")
++  elseif(CMAKE_VERSION VERSION_LESS "3.18")
++      # Aliasing local targets is not supported on CMake < 3.18, so make all targets global.
 +      set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
++      set_target_properties(SDL2::SDL2main PROPERTIES IMPORTED_GLOBAL TRUE)
 +  endif()
 +  add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
 +endif()

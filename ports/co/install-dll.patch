@@ -1,0 +1,10 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9e03c9a..499b550 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -112,4 +112,5 @@ install(
+     TARGETS co
+     LIBRARY DESTINATION lib   # shared lib installed to   ${CMAKE_INSTALL_PREFIX}/lib
+     ARCHIVE DESTINATION lib   # static lib installed to   ${CMAKE_INSTALL_PREFIX}/lib
++    RUNTIME DESTINATION bin
+ )

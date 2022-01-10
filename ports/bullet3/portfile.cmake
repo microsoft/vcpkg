@@ -1,4 +1,6 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+if (NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+endif()
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -16,9 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         multithreading       BULLET2_MULTITHREADING
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
         -DBUILD_CPU_DEMOS=OFF
@@ -30,14 +31,15 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/bullet TARGET_PATH share/bullet)
+vcpkg_cmake_config_fixup(PACKAGE_NAME bullet CONFIG_PATH share/bullet)
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics/details")
-
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

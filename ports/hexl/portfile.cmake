@@ -4,9 +4,9 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/hexl
-    REF df6c26fdd2f2752e2bfa17981be113ff32946375
-    SHA512 c4353410091b019dad05326818d66bc74b438a26ec28192da20f13581781556b7aad11c3e9c2c2c9ed7ec66bc422152e2a2811206109b39939f30c91952ef765
-    HEAD_REF 1.2.1
+    REF 0858760dc957280e8eb8953af4b4b83879d7b8a4
+    SHA512 f2400c4bf32d22904f5917a396fdf6fc625a8832455437429abd54cae70da51cfc42a57dc176d1faeb76f7cd4569dd7499a8f302aef2ea8463d3e8ddc3132050
+    HEAD_REF 1.2.3
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "HEXL" CONFIG_PATH "lib/cmake/hexl-1.2.1")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "HEXL" CONFIG_PATH "lib/cmake/hexl-1.2.3")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
