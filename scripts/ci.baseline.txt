@@ -1507,7 +1507,6 @@ v8:x64-osx=fail
 v8:x64-uwp=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
-vlpp:x64-osx=fail
 vulkan:arm64-windows=fail
 vulkan:arm-uwp=fail
 vulkan:x64-linux=fail
