@@ -1,8 +1,18 @@
+From 7e3117fb47f58c7b1fb83e3a062a630b787a43bc Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:11:12 -0400
+Subject: [PATCH] fix find qhull
+
+---
+ CMakeLists.txt         | 5 +----
+ surface/CMakeLists.txt | 9 +++++++--
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2c50b8d..c5bdf35 100644
+index a1d9bb58f..7cf86f74b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -354,10 +354,7 @@ if(WITH_QHULL)
+@@ -359,10 +359,7 @@ if(WITH_QHULL)
    if(NOT PCL_SHARED_LIBS OR ((WIN32 AND NOT MINGW) AND NOT PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32))
      set(QHULL_USE_STATIC ON)
    endif()
@@ -15,7 +25,7 @@ index 2c50b8d..c5bdf35 100644
  
  # Cuda
 diff --git a/surface/CMakeLists.txt b/surface/CMakeLists.txt
-index e5e4231..2fb8a46 100644
+index d8a8566ea..1953c5566 100644
 --- a/surface/CMakeLists.txt
 +++ b/surface/CMakeLists.txt
 @@ -12,7 +12,7 @@ if(NOT build)
@@ -27,10 +37,10 @@ index e5e4231..2fb8a46 100644
    set(HULL_INCLUDES
      "include/pcl/${SUBSYS_NAME}/concave_hull.h"
      "include/pcl/${SUBSYS_NAME}/convex_hull.h"
-@@ -159,7 +159,12 @@ include_directories(SYSTEM
- link_directories(${VTK_LIBRARY_DIRS})
- PCL_ADD_LIBRARY(${LIB_NAME} COMPONENT ${SUBSYS_NAME} SOURCES ${srcs} ${incs} ${impl_incs} ${VTK_SMOOTHING_INCLUDES} ${POISSON_INCLUDES} ${OPENNURBS_INCLUDES} ${ON_NURBS_INCLUDES})
- target_link_libraries("${LIB_NAME}" pcl_common pcl_search pcl_kdtree pcl_octree ${VTK_LIBRARIES} ${ON_NURBS_LIBRARIES})
+@@ -186,7 +186,12 @@ if(VTK_FOUND)
+   endif()
+ endif()
+ 
 -if(QHULL_FOUND)
 +if(Qhull_FOUND)
 +  if(QHULL_USE_STATIC)
@@ -40,4 +50,7 @@ index e5e4231..2fb8a46 100644
 +  endif()
    target_link_libraries("${LIB_NAME}" ${QHULL_LIBRARIES})
  endif()
- PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS})
+ 
+-- 
+2.32.0.windows.1
+

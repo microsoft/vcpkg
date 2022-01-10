@@ -1,6 +1,6 @@
 {
   "name": "boost-spirit",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost spirit module",
   "homepage": "https://github.com/boostorg/spirit",
   "dependencies": [
@@ -9,7 +9,6 @@
     "boost-config",
     "boost-core",
     "boost-endian",
-    "boost-foreach",
     "boost-function",
     "boost-function-types",
     "boost-fusion",

@@ -1,0 +1,19 @@
+{
+  "name": "minio-cpp",
+  "version-date": "2022-01-03",
+  "description": "MinIO C++ Client SDK for Amazon S3 Compatible Cloud Storage",
+  "supports": "!uwp",
+  "dependencies": [
+    "curlpp",
+    "openssl",
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

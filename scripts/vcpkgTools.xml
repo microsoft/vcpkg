@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.0</version>
+        <version>3.10.1</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.0/python-3.10.0-embed-win32.zip</url>
-        <sha512>0b007bfa02cdd48b3c260986493fa124a6b9d794da6eba2b4fad0d779fd655e9ae4e16daf5f02ff5b30a17abcfc1499bc6bee394c0f8abe933f2d4fe702af3cd</sha512>
-        <archiveName>python-3.10.0-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.1/python-3.10.1-embed-win32.zip</url>
+        <sha512>47bf00e4de74f33fe3d0c4f97773b221cf78c29f02257f43368f0414c88be1bdffc914e4e6516870c23cba84f4618edb8fe5a3ee43e41f492d812a90d93c1ea8</sha512>
+        <archiveName>python-3.10.1-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.21.1</version>
@@ -88,22 +88,22 @@
         <sha512>1a98beebd1bb6929cbe98b86a3b77fb1ae4508b86cdcb64696b20c3a3336a2b5c8518e19a21092f1c98a46202c048dba819dc52bef122485ac34b888b77e59b2</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
-        <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
+        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
-        <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
+        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.10.0</version>
+        <version>5.11.0</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.10.0/nuget.exe</url>
-        <sha512>c4b7375e46cdb843096ce491b9809e0dc86773ba7b6333f13d49ec414b2953112df82ee8b833fd31be0cc7fe0fff1af88f3c07aa9553ad03f7f6c5a6eec2057e</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.11.0/nuget.exe</url>
+        <sha512>06a337c9404dec392709834ef2cdbdce611e104b510ef40201849595d46d242151749aef65bc2d7ce5ade9ebfda83b64c03ce14c8f35ca9957a17a8c02b8c4b7</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
@@ -125,6 +125,13 @@
         <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-win-32bit-build1.zip</url>
         <sha512>933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4</sha512>
         <archiveName>aria2-1.35.0-win-32bit-build1.zip</archiveName>
+    </tool>
+    <tool name="aria2" os="osx">
+        <version>1.35.0</version>
+        <exeRelativePath>aria2-1.35.0/bin/aria2c</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2</url>
+        <sha512>3bb32b7d55347d1af37c6f4ebf0e20b38ce51c37a1baf92f7ad1762000539a03413dd679a6d902fdb1805fa71917300c9692aceee012eb06ecdff10491137aec</sha512>
+        <archiveName>aria2-1.35.0-osx-darwin.tar.bz2</archiveName>
     </tool>
     <tool name="ninja" os="windows">
         <version>1.10.2</version>
@@ -155,10 +162,31 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.1.4</version>
+        <version>7.2.0</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.4/PowerShell-7.1.4-win-x86.zip</url>
-        <sha512>cf30f80edb57f37501c4a380a8ddd8adf016a51a988a315e15ef517fdae42313ddf5260d8374db65ef12808ec980118bc8b543256df0c1d641a5b8355a80ba7b</sha512>
-        <archiveName>PowerShell-7.1.4-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.0/PowerShell-7.2.0-win-x86.zip</url>
+        <sha512>cd765b39559be296229f8aef4022f17f20d3bb3037944867918b3a12a901160020e250403abd15666622158eb764fa217b5e5ad9f4d6ad69906ce3c4e03a808b</sha512>
+        <archiveName>PowerShell-7.2.0-win-x86.zip</archiveName>
+    </tool>
+    <tool name="node" os="windows">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-win-x64\node.exe</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-win-x64.7z</url>
+        <sha512>0bb793fce8140bd59c17f3ac9661b062eac0f611d704117774f5cb2453d717da94b1e8b17d021d47baff598dc023fb7068ed1f8a7678e446260c3db3537fa888</sha512>
+        <archiveName>node-v16.12.0-win-x64.7z</archiveName>
+    </tool>
+    <tool name="node" os="linux">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-linux-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-linux-x64.tar.gz</url>
+        <sha512>45658083c35c13f2bc4b88d68a12c76213bdaf2235776e041c9937ce912a83cb49d655965568c99a5e139ff5c03b1e460c13ad8ab7f0c5570b531907715f6e0f</sha512>
+        <archiveName>node-v16.12.0-linux-x64.tar.gz</archiveName>
+    </tool>
+    <tool name="node" os="osx">
+        <version>16.12.0</version>
+        <exeRelativePath>node-v16.12.0-darwin-x64/bin/node</exeRelativePath>
+        <url>https://nodejs.org/dist/v16.12.0/node-v16.12.0-darwin-x64.tar.gz</url>
+        <sha512>f758a90d3dcc3adf296abbed01b69a3a27e63c2085b7f604d83550714b1ac374f36e73fc02dd31bf60e532205d92e1605a05b35642142d20ac07c4bb98c69f70</sha512>
+        <archiveName>node-v16.12.0-darwin-x64.tar.gz</archiveName>
     </tool>
 </tools>

@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MyGUI/mygui
-    REF 26109822f36a4f7d72d5d8ecd41659897f085a40
-    SHA512 4d1f001e8c04d08ad911bc0345a2287b5e17e21284728cf23d7a930e8befb2f85902053e3c90283444bf9e32c7dada2f37c498e735d6314732b297d97ed339e4
+    REF 81e5c67e92920607d16bc2aee1ac32f6fd7d446b #v3.4.1
+    SHA512 b13e0a08559b3ddfe42ffcc6cf017fb20d50168785fb551e16f613c60b9ea28a65056a9bc42bdab876368f40dcba1772bc704ad0928c45d8b32e909abc0f1916 
     HEAD_REF master
     PATCHES
         fix-generation.patch
@@ -18,9 +18,8 @@ else()
     set(MYGUI_RENDERSYSTEM 1)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMYGUI_STATIC=TRUE
         -DMYGUI_BUILD_DEMOS=FALSE
@@ -33,12 +32,14 @@ vcpkg_configure_cmake(
         -DMYGUI_RENDERSYSTEM=${MYGUI_RENDERSYSTEM}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
+vcpkg_fixup_pkgconfig()
+
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

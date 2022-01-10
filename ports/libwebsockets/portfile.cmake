@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF 8d605f0649ed1ab6d27a443c7688598ea21fdb75 # v4.2.2
-    SHA512 824b7e7eded0fea41a1c22da8453b97a1ffd0f416e2d2ee3a23f799cfd449d1d0cc2f58de19a7d5dbd336e0ebceec16dd2a78cb80519d02bb49133047f99a9e2
+    REF a5aae049b2a386712e1be3b417915c0d44c7e675 # v4.3.0
+    SHA512 ab72201880360a3b0136497c1c1729656c3c07043f38cceec136f5671be15ab55c80136ec7480841175d3add711593ddde23cefd39ea9cb729ec0842950602dd
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
@@ -181,6 +181,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif ()
 
 vcpkg_copy_pdbs()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lws_config.h" "${CURRENT_PACKAGES_DIR}" "")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

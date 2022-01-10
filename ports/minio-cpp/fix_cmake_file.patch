@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6df202c..98eeeb0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -114,6 +114,6 @@ else (DOXYGEN_FOUND)
+   message("Doxygen need to be installed to generate the doxygen documentation")
+ endif (DOXYGEN_FOUND)
+
+ configure_file(miniocpp.pc.in miniocpp.pc @ONLY)
+-install(FILES ${CMAKE_BINARY_DIR}/miniocpp.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
++install(FILES ${CMAKE_BINARY_DIR}/miniocpp.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
