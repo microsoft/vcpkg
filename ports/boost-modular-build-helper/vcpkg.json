@@ -1,9 +1,10 @@
 {
   "name": "boost-modular-build-helper",
   "version": "1.77.0",
-  "port-version": 4,
+  "port-version": 6,
   "description": "Internal vcpkg port used to build Boost libraries",
   "dependencies": [
-    "boost-uninstall"
+    "boost-uninstall",
+    "vcpkg-cmake"
   ]
 }

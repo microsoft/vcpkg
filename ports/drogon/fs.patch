@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85e8ee7..c78dfc5 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -192,9 +192,11 @@ if(NEED_BOOST_FS)
+ else()
+     option(HAS_STD_FILESYSTEM_PATH "use std::filesystem" ON)
+     # HACK: Needed to be compiled on Yocto Linux
+-    get_property(CAN_LINK_FS TARGET std::filesystem PROPERTY INTERFACE_LINK_LIBRARIES SET)
+-    if ( CAN_LINK_FS )
+-      target_link_libraries(${PROJECT_NAME} PUBLIC std::filesystem)
++    if(TARGET std::filesystem)
++      get_property(CAN_LINK_FS TARGET std::filesystem PROPERTY INTERFACE_LINK_LIBRARIES SET)
++      if ( CAN_LINK_FS )
++        target_link_libraries(${PROJECT_NAME} PUBLIC std::filesystem)
++      endif()
+     endif()
+ endif()
+ 

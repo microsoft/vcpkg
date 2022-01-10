@@ -52,8 +52,6 @@ Param(
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
-    [String[]]$AdditionalSkips = @(),
-    [String[]]$OnlyTest = $null,
     [switch]$NoParentHashes = $false,
     [switch]$PassingIsPassing = $false
 )
@@ -141,66 +139,46 @@ if ($LASTEXITCODE -ne 0)
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
-    -SkipFailures:$skipFailures `
-    -AdditionalSkips $AdditionalSkips
+    -SkipFailures:$skipFailures
 
-if ($null -ne $OnlyTest)
+$hostArgs = @()
+if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
-    $OnlyTest | % {
-        $portName = $_
-        & "./vcpkg$executableExtension" install --triplet $Triplet @commonArgs @cachingArgs $portName
-        if (-not $?)
-        {
-            [System.Console]::Error.WriteLine( `
-                "REGRESSION: ${portName}:$triplet. If expected, remove ${portName} from the OnlyTest list." `
-            )
-        }
-    }
-
-    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
-    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+    # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
+    # The workaround is to pass the skip list as host-excludes as well.
+    $hostArgs = @("--host-exclude=$skipList")
 }
-else
+
+$parentHashes = @()
+if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
-    $hostArgs = @()
-    if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
-    {
-        # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
-        # The workaround is to pass the skip list as host-excludes as well.
-        $hostArgs = @("--host-exclude=$skipList")
-    }
+    # Prefetch tools for better output
+    & "./vcpkg$executableExtension" fetch cmake
+    & "./vcpkg$executableExtension" fetch ninja
+    & "./vcpkg$executableExtension" fetch git
 
-    $parentHashes = @()
-    if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
-    {
-        # Prefetch tools for better output
-        & "./vcpkg$executableExtension" fetch cmake
-        & "./vcpkg$executableExtension" fetch ninja
-        & "./vcpkg$executableExtension" fetch git
+    Write-Host "Determining parent hashes using HEAD~1"
+    $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
+    $parentHashes = @("--parent-hashes=$parentHashesFile")
+    & git revert -n -m 1 HEAD
+    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
+        | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
+    & git reset --hard HEAD
 
-        Write-Host "Determining parent hashes using HEAD~1"
-        $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
-        $parentHashes = @("--parent-hashes=$parentHashesFile")
-        & git revert -n -m 1 HEAD
-        & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
-            | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
-        & git reset --hard HEAD
-        
-        Write-Host "Running CI using parent hashes"
-    }
-
-    & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
-
-    $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
-    Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
-
-    if ($LASTEXITCODE -ne 0)
-    {
-        throw "vcpkg ci failed"
-    }
-
-    & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
-        -triplet $Triplet `
-        -baselineFile .\scripts\ci.baseline.txt `
-        -passingIsPassing:$PassingIsPassing
+    Write-Host "Running CI using parent hashes"
 }
+
+& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
+
+$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg ci failed"
+}
+
+& "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
+    -triplet $Triplet `
+    -baselineFile .\scripts\ci.baseline.txt `
+    -passingIsPassing:$PassingIsPassing
