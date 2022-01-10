@@ -13,6 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         0023-fix-static-libs-export.patch
         export-components.patch
+        curl-7.81.0-ssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
