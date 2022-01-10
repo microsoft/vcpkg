@@ -32,12 +32,3 @@ index 147efc76c..ea6d1a67b 100644
  
  static int was_called_state;
  
-@@ -56,7 +60,7 @@ emulate_getrandom_buf (
-     int	    value;
-     int	    i;
- 
--#ifdef ITIMER_REAL
-+#ifdef ITIMER_REAL 
-     {
- 	struct timeval  now;
- 	X_GETTIMEOFDAY (&now);
