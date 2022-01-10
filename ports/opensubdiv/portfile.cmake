@@ -1,3 +1,7 @@
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
@@ -9,6 +13,9 @@ vcpkg_from_github(
     PATCHES
         fix_compile-option.patch
         fix-version-search.patch
+        fix-build-type.patch
+        fix-mac-build.patch
+        fix-dependencies.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -29,28 +36,102 @@ else()
     set(STATIC_CRT_LNK OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS
-        -DNO_DX=ON
-        -DNO_CUDA=ON
-        -DNO_EXAMPLES=ON
-        -DNO_TUTORIALS=ON
-        -DNO_REGRESSION=ON
-        -DNO_TESTS=ON
-        -DMSVC_STATIC_CRT=${STATIC_CRT_LNK}
+if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    message(FATAL_ERROR "Feature 'cuda' can only build on x64 arch.")
+endif()
+
+if (("dx" IN_LIST FEATURES OR "omp" IN_LIST FEATURES) AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature 'dx' and 'omp' only support Windows.")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "true-deriv-eval"   OPENSUBDIV_GREGORY_EVAL_TRUE_DERIVATIVES
+    INVERTED_FEATURES
+        "cuda"      NO_CUDA
+        "dx"        NO_DX
+        "examples"  NO_EXAMPLES
+        "glew"      NO_GLEW
+        "glfw"      NO_GLFW
+        "glfw"      NO_GLFW_X11
+        "omp"       NO_OMP
+        "opencl"    NO_OPENCL
+        "ptex"      NO_PTEX
+        "tbb"       NO_TBB
+        "tutorials" NO_TUTORIALS
 )
 
-vcpkg_install_cmake()
+set(OSD_EXTRA_OPTS)
+if ("ptex" IN_LIST FEATURES)
+    list(APPEND OSD_EXTRA_OPTS -DPTEX_LOCATION=${CURRENT_INSTALLED_DIR})
+endif()
+if ("glew" IN_LIST FEATURES)
+    list(APPEND OSD_EXTRA_OPTS -DGLEW_LOCATION=${CURRENT_INSTALLED_DIR})
+endif()
+if ("glfw" IN_LIST FEATURES)
+    list(APPEND OSD_EXTRA_OPTS -DGLFW_LOCATION=${CURRENT_INSTALLED_DIR})
+endif()
+if ("dx" IN_LIST FEATURES)
+    list(APPEND OSD_EXTRA_OPTS -DDXSDK_LOCATION=${CURRENT_INSTALLED_DIR})
+endif()
 
-# # Moves all .cmake files from /debug/share/opensubdiv/ to /share/opensubdiv/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/opensubdiv)
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DMSVC_STATIC_CRT=${STATIC_CRT_LNK}
+        -DNO_LIB=OFF
+        -DNO_REGRESSION=ON
+        -DNO_DOC=ON
+        -DNO_TESTS=ON
+        -DNO_GLTESTS=ON
+        -DNO_CLEW=ON
+        -DNO_METAL=ON
+        -DNO_OPENGL=ON # missing glloader
+        ${FEATURE_OPTIONS}
+        ${OSD_EXTRA_OPTS}
+    MAYBE_UNUSED_VARIABLES
+        MSVC_STATIC_CRT
+)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if ("opencl" IN_LIST FEATURES OR "dx" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES stringify AUTO_CLEAN)
+endif()
+
+if ("examples" IN_LIST FEATURES)
+    if ("dx" IN_LIST FEATURES)
+        vcpkg_copy_tools(TOOL_NAMES dxViewer AUTO_CLEAN)
+        if ("ptex" IN_LIST FEATURES)
+            vcpkg_copy_tools(TOOL_NAMES dxPtexViewer AUTO_CLEAN)
+        endif()
+    endif()
+endif()
+
+if ("tutorials" IN_LIST FEATURES)
+    file(GLOB TUTORIALS_TOOLS "${CURRENT_PACKAGES_DIR}/bin/tutorials/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    set(TUTORIALS_TOOL_NAMES )
+    foreach(TUTORIALS_TOOL IN LISTS TUTORIALS_TOOLS)
+        get_filename_component(TUTORIALS_TOOL_NAME "${TUTORIALS_TOOL}" NAME_WE)
+        list(APPEND TUTORIALS_TOOL_NAMES "${TUTORIALS_TOOL_NAME}")
+    endforeach()
+    if (TUTORIALS_TOOL_NAMES)
+        vcpkg_copy_tools(TOOL_NAMES ${TUTORIALS_TOOL_NAMES} SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/tutorials/" AUTO_CLEAN)
+    endif()
+endif()
+
+# The header files are read only and can't remove when remove this port
+file(GLOB_RECURSE OSD_HDRS "${CURRENT_PACKAGES_DIR}/include/*.h")
+file(CHMOD_RECURSE ${OSD_HDRS} 
+        PERMISSIONS
+            OWNER_READ OWNER_WRITE
+            GROUP_READ GROUP_WRITE
+            WORLD_READ WORLD_WRITE
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/bin"
+                    "${CURRENT_PACKAGES_DIR}/debug/bin"
+)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

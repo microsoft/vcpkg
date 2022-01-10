@@ -13,7 +13,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(COPYRIGHT
     URLS "https://www.winpcap.org/misc/copyright.htm"
     FILENAME "Wpcap_license.htm"
-    SHA512 661e848f229612a4354e8243cdb0cb7ef387abc8933412b8c09ccfcaa3335143a958ea9ec9da558f89afe71afea29f0548872e3544ea51144c297a1aa1276718
+    SHA512 bb2519e8f3d02c408fa3f2ef339adda1cc31338d05d2fa4ce25d5369427243fd3e2abc4b21aa654b2be5791f53c2281847a4a15778ffcb90576fd166140c7d2e
 )
 
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
@@ -45,7 +45,7 @@ vcpkg_extract_source_archive_ex(
         "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
 )
 
-file(COPY "${CURRENT_PORT_DIR}/create_bin.bat" DESTINATION ${SOURCE_PATH})
+file(COPY "${CURRENT_PORT_DIR}/create_bin.bat" DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
@@ -57,12 +57,12 @@ vcpkg_execute_required_process(
     COMMAND "devenv.exe"
             "Packet.sln"
             /Upgrade
-    WORKING_DIRECTORY ${SOURCE_PATH}/packetNtx/Dll/Project
+    WORKING_DIRECTORY "${SOURCE_PATH}/packetNtx/Dll/Project"
     LOGNAME upgrade-Packet-${TARGET_TRIPLET}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CURRENT_PORT_DIR}/Packet.vcxproj DESTINATION ${SOURCE_PATH}/packetNtx/Dll/Project/)
+    file(COPY "${CURRENT_PORT_DIR}/Packet.vcxproj" DESTINATION "${SOURCE_PATH}/packetNtx/Dll/Project/")
 endif()
 
 vcpkg_build_msbuild(
@@ -90,7 +90,7 @@ vcpkg_execute_required_process(
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CURRENT_PORT_DIR}/wpcap.vcxproj DESTINATION ${SOURCE_PATH}/wpcap/PRJ/)
+    file(COPY "${CURRENT_PORT_DIR}/wpcap.vcxproj" DESTINATION "${SOURCE_PATH}/wpcap/PRJ/")
 endif()
 
 vcpkg_build_msbuild(
@@ -116,7 +116,7 @@ file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap-stdinc.h"
         "${SOURCE_PATH}/WpdPack/Include/remote-ext.h"
         "${SOURCE_PATH}/WpdPack/Include/Win32-Extensions.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap/bluetooth.h"
@@ -126,7 +126,7 @@ file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap/sll.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/usb.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/vlan.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/pcap)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/pcap")
 
 vcpkg_execute_required_process(
     COMMAND ${SOURCE_PATH}/create_lib.bat
@@ -142,17 +142,17 @@ endif()
 file(INSTALL
         "${PCAP_LIBRARY_PATH}/Packet.lib"
         "${PCAP_LIBRARY_PATH}/wpcap.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL
         "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
         "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/create_bin.bat
-        WORKING_DIRECTORY ${SOURCE_PATH}
+        COMMAND "${SOURCE_PATH}/create_bin.bat"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME create_bin-${TARGET_TRIPLET}
     )
 
@@ -164,14 +164,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
     file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION  ${CURRENT_PACKAGES_DIR}/debug/bin)
+        DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
-configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${COPYRIGHT} "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

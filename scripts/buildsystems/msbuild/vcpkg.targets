@@ -62,12 +62,13 @@
   </Choose>
 
   <PropertyGroup>
-    <_ZVcpkgCurrentInstalledDir>$(_ZVcpkgInstalledDir)\$(VcpkgTriplet)\</_ZVcpkgCurrentInstalledDir>
+    <_ZVcpkgCurrentInstalledDir>$(_ZVcpkgInstalledDir)$(VcpkgTriplet)\</_ZVcpkgCurrentInstalledDir>
     <_ZVcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</_ZVcpkgNormalizedConfiguration>
     <_ZVcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</_ZVcpkgNormalizedConfiguration>
 
     <_ZVcpkgConfigSubdir Condition="'$(_ZVcpkgNormalizedConfiguration)' == 'Debug'">debug\</_ZVcpkgConfigSubdir>
     <_ZVcpkgExecutable>$(_ZVcpkgRoot)vcpkg.exe</_ZVcpkgExecutable>
+    <ExternalIncludePath>$(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <PropertyGroup>

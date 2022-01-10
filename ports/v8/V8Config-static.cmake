@@ -8,7 +8,7 @@ if(UNIX)
     "ICU::in;ICU::uc;ICU::dt;ZLIB::ZLIB")
 elseif(WIN32)
   set(V8_IMPORTED_LINK_INTERFACE_LIBRARIES
-    "Winmm;DbgHelp;ZLIB::ZLIB;PkgConfig::GLIB2;ICU::in;ICU::uc;ICU::dt")
+    "Winmm;DbgHelp;ZLIB::ZLIB;ICU::in;ICU::uc;ICU::dt")
 endif()
 
 get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
