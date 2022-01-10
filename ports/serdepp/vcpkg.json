@@ -1,7 +1,7 @@
 {
   "name": "serdepp",
   "version-string": "0.1.3",
-    "description": "c++ universal serialize deserialize library like rust serde, support libraries: [nlohmann_json, fmt, yaml-cpp, toml11, rapidjson]",
+  "description": "c++ universal serialize deserialize library like rust serde, support libraries: [nlohmann_json, fmt, yaml-cpp, toml11, rapidjson]",
   "homepage": "https://github.com/injae/serdepp",
   "dependencies": [
     "magic-enum",
