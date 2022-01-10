@@ -1,5 +1,5 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "No implementation of readline is currently available for UWP targets")
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
+else()
+    include("${CMAKE_CURRENT_LIST_DIR}/win32/portfile.cmake")
 endif()
-
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
