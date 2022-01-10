@@ -6,19 +6,9 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
- vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES 
-     fmt           SERDEPP_USE_FMT
-     toml11        SERDEPP_USE_TOML11
-     yaml-cpp      SERDEPP_USE_YAML-CPP
-     rapidjson     SERDEPP_USE_RAPIDJSON
-     nlohmann-json SERDEPP_USE_NLOHMANN_JSON
- )
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA 
-    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
