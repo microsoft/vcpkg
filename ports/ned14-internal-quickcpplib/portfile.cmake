@@ -51,7 +51,7 @@ file(COPY "${OPT_SOURCE_PATH}/." DESTINATION "${SOURCE_PATH}/include/quickcpplib
 set(VCPKG_BUILD_TYPE release)
 
 # Use QuickCppLib's own build process, skipping examples and tests.
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -62,9 +62,9 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quickcpplib)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/quickcpplib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmakelib" "${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib/cmakelib")
