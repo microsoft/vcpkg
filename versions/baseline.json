@@ -2160,10 +2160,6 @@
       "baseline": "2019-12-19",
       "port-version": 1
     },
-    "field3d": {
-      "baseline": "1.7.3",
-      "port-version": 2
-    },
     "fixed-string": {
       "baseline": "0.1.0",
       "port-version": 1
