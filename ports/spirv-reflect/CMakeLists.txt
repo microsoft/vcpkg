@@ -4,10 +4,6 @@ project(spirv-reflect)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 14)
 
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-
-include(GNUInstallDirs)
-
 add_library(spirv-reflect ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
                           ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c)
 target_compile_options(spirv-reflect PRIVATE
@@ -24,8 +20,7 @@ if(WIN32)
     target_compile_definitions(spirv-reflect PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
-# add_library(spirv-reflect INTERFACE)
-target_include_directories(spirv-reflect INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(spirv-reflect INTERFACE $<INSTALL_INTERFACE:include>)
 
 install(
     TARGETS spirv-reflect EXPORT spirv-reflect-config
@@ -38,10 +33,8 @@ install(
 install(
     EXPORT spirv-reflect-config
     NAMESPACE spirv-reflect::
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/spirv-reflect
+    DESTINATION share/spirv-reflect
 )
 
-message(DEBUG "INSTAL INCLUDE DIR: ${CMAKE_INSTALL_INCLUDEDIR}")
-
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h" DESTINATION include)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION include)
