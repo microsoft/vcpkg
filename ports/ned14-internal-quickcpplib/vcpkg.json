@@ -14,5 +14,22 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cxx17": {
+      "description": "Do not polyfill C++17 entities"
+    },
+    "cxx20": {
+      "description": "Do not polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "cxx17"
+          ]
+        }
+      ]
+    }
+  }
 }
