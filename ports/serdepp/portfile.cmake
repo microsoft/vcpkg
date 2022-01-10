@@ -1,0 +1,35 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO injae/serdepp
+    REF v0.1.3.1
+    SHA512 4102f87748010b2369bbda0afbde2aa567cf33098d62e0b71130c1203b8cfa583d29e4ac486aa32dab3ce7960252095cb33fb9517c08d25703779fdebf6218f4
+    HEAD_REF main
+)
+
+ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+   FEATURES 
+     fmt           SERDEPP_USE_FMT
+     toml11        SERDEPP_USE_TOML11
+     yaml-cpp      SERDEPP_USE_YAML-CPP
+     rapidjson     SERDEPP_USE_RAPIDJSON
+     nlohmann-json SERDEPP_USE_NLOHMANN_JSON
+ )
+
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA 
+    OPTIONS ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/serdepp TARGET_PATH share/serdepp)
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/cmake
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/lib/cmake
+)
+
+# # Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/serdepp RENAME copyright)
