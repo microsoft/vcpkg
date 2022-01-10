@@ -65,24 +65,19 @@ vcpkg_cmake_configure(
         ${extra_config}
 )
 
-# LLFIO install assumes that the static library is always built
-vcpkg_cmake_build(TARGET _sl)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_cmake_build(TARGET _dl)
+    vcpkg_cmake_build(TARGET install.dl)
+else(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_cmake_build(TARGET install.sl)
 endif()
 
 if("run-tests" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET test)
 endif()
 
-vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/llfio)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 if("status-code" IN_LIST FEATURES)
     file(INSTALL "${CURRENT_PORT_DIR}/usage-status-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
