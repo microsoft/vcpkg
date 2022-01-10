@@ -1,6 +1,8 @@
-message(WARNING [=[
-LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's, Outcome's and LLFIO's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
-]=])
+if (NOT "cxx20" IN_LIST FEATURES)
+    message(WARNING [=[
+    LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's, Outcome's and LLFIO's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
+    ]=])
+endif()
 
 
 vcpkg_from_github(
@@ -42,6 +44,13 @@ set(extra_config)
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
   list(APPEND extra_config -DLLFIO_ASSUME_CROSS_COMPILING=On)
 endif()
+# setting CMAKE_CXX_STANDARD here to prevent llfio from messing with compiler flags
+# the cmake package config requires said C++ standard target transitively via quickcpplib
+if ("cxx20" IN_LIST FEATURES)
+    set(LLFIO_CXX_STANDARD -DCMAKE_CXX_STANDARD=20)
+elseif("cxx17" IN_LIST FEATURES)
+    set(LLFIO_CXX_STANDARD -DCMAKE_CXX_STANDARD=17)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -52,6 +61,7 @@ vcpkg_cmake_configure(
         ${LLFIO_FEATURE_OPTIONS}
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        ${LLFIO_CXX_STANDARD}
         ${extra_config}
 )
 
