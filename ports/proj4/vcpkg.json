@@ -1,6 +1,7 @@
 {
   "name": "proj4",
   "version-semver": "8.2.1",
+  "port-version": 1,
   "description": "PROJ library for cartographic projections",
   "homepage": "https://proj.org/",
   "dependencies": [
@@ -39,7 +40,14 @@
     "tiff": {
       "description": "Enable TIFF support to read some grids",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false,
+          "features": [
+            "lzma",
+            "zip"
+          ]
+        }
       ]
     },
     "tools": {
