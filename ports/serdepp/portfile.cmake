@@ -6,9 +6,10 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+find_package(Git REQUIRED)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_cmake_install()
