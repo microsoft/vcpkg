@@ -24,17 +24,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_add_to_path("${VCPKG_ROOT_DIR}/packages/protobuf_${TARGET_TRIPLET}/debug/bin")
 vcpkg_add_to_path("${VCPKG_ROOT_DIR}/packages/protobuf_${TARGET_TRIPLET}/bin")
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DUSE_EXTERNAL_TINY_PROCESS_LIBRARY=ON
         -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf.exe
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gazebo)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
 
 vcpkg_copy_tools(
     TOOL_NAMES gazebo gz gzclient gzserver

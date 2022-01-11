@@ -34,7 +34,15 @@
     "qwt",
     "sdformat9",
     "tbb",
-    "tiny-process-library"
+    "tiny-process-library",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "bullet",
