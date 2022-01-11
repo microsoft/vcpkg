@@ -43,7 +43,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPK
   list(APPEND extra_config -DLLFIO_ASSUME_CROSS_COMPILING=On)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -56,18 +56,18 @@ vcpkg_configure_cmake(
 )
 
 # LLFIO install assumes that the static library is always built
-vcpkg_build_cmake(TARGET _sl)
+vcpkg_cmake_build(TARGET _sl)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_build_cmake(TARGET _dl)
+    vcpkg_cmake_build(TARGET _dl)
 endif()
 
 if("run-tests" IN_LIST FEATURES)
-    vcpkg_build_cmake(TARGET test)
+    vcpkg_cmake_build(TARGET test)
 endif()
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/llfio)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/llfio)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

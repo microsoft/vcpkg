@@ -5,7 +5,15 @@
   "homepage": "https://github.com/ned14/llfio",
   "supports": "!(uwp | static)",
   "dependencies": [
-    "outcome"
+    "outcome",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "run-tests": {
