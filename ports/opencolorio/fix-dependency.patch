@@ -39,8 +39,50 @@ index 86a0225..4df4656 100644
  endif()
  
  if(OCIO_BUILD_OPENFX)
+diff --git a/src/OpenColorIO/CMakeLists.txt b/src/OpenColorIO/CMakeLists.txt
+index be50b7b..c66191e 100644
+--- a/src/OpenColorIO/CMakeLists.txt
++++ b/src/OpenColorIO/CMakeLists.txt
+@@ -204,7 +204,9 @@ if(BUILD_SHARED_LIBS AND WIN32)
+ endif()
+ 
+ target_include_directories(OpenColorIO
+-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PUBLIC
++    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
++    "$<INSTALL_INTERFACE:include>"
+ )
+ 
+ target_link_libraries(OpenColorIO
+@@ -214,8 +216,8 @@ target_link_libraries(OpenColorIO
+ 		expat::expat
+ 		${OCIO_HALF_LIB}
+ 		pystring::pystring
+-		sampleicc::sampleicc
+-		utils::strings
++		"$<BUILD_INTERFACE:sampleicc::sampleicc>"
++		"$<BUILD_INTERFACE:utils::strings>"
+ 		yaml-cpp
+ )
+ 
+@@ -229,13 +231,13 @@ endif()
+ 
+ if(NOT BUILD_SHARED_LIBS)
+ 	target_compile_definitions(OpenColorIO
+-		PRIVATE
++		PUBLIC
+ 			OpenColorIO_SKIP_IMPORTS
+ 	)
+ else()
+ 	# Only exports selected symbols.
+ 	target_compile_definitions(OpenColorIO
+-		PRIVATE
++		PUBLIC
+ 			OpenColorIO_EXPORTS
+ 	)
+ endif()
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index eebb2c1..0fbd485 100644
+index eebb2c1..7147dc3 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
 @@ -2,4 +2,14 @@

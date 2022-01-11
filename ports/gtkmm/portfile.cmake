@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/4.0/gtkmm-4.0.1.tar.xz"
-    FILENAME "gtkmm-4.0.1.tar.xz"
-    SHA512 5b9f9f32fe85ee7a281c9d3d3b266b1265924926058d778f48302808812cad7047c09440c317497fa0069816984d3556868a703a5488e0bfd8cd26fc64afcb1b
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/4.4/gtkmm-4.4.0.tar.xz"
+    FILENAME "gtkmm-4.4.0.tar.xz"
+    SHA512 d6f20213e9ea7a13e2b9822f220a5cdeaef9a9406abee813e0eebdb540839f25f4c19cc7669c24184bef471f5529a7897cd16ee679266148f3181dd2cfa39eb4
 )
 
 vcpkg_extract_source_archive_ex(

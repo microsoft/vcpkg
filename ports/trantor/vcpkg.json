@@ -1,6 +1,6 @@
 {
   "name": "trantor",
-  "version-semver": "1.5.3",
+  "version-semver": "1.5.4",
   "description": "A non-blocking I/O cross-platform TCP network library, using C++14",
   "homepage": "https://github.com/an-tao/trantor",
   "dependencies": [

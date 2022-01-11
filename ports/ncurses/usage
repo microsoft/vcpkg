@@ -1,0 +1,7 @@
+The package ncurses is compatible with built-in CMake variables:
+
+    set(CURSES_NEED_NCURSES TRUE)
+    find_package(Curses REQUIRED)
+    target_include_directories(main ${CURSES_INCLUDE_DIRS})
+    target_compile_options(main ${CURSES_CFLAGS})
+    target_link_libraries(main PRIVATE ${CURSES_LIBRARIES})

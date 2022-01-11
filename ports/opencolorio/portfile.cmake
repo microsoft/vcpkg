@@ -57,4 +57,9 @@ if(OCIO_BUILD_APPS)
     )
 endif()
 
+vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ocio/setup_ocio.sh" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../")
+endif()
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
