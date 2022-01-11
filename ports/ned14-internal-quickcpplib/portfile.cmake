@@ -56,19 +56,21 @@ vcpkg_cmake_configure(
     PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
-        -DQUICKCPPLIB_USE_VCPKG_BYTE_LITE=ON
-        -DQUICKCPPLIB_USE_VCPKG_GSL_LITE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_INSTALL_DATADIR=${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Doxygen
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/quickcpplib)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME quickcpplib
+    CONFIG_PATH lib/cmake/quickcpplib
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmakelib" "${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib/cmakelib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/scripts" "${CURRENT_PACKAGES_DIR}/share/ned14-internal-quickcpplib/scripts")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
