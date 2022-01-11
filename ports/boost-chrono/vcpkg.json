@@ -1,6 +1,6 @@
 {
   "name": "boost-chrono",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost chrono module",
   "homepage": "https://github.com/boostorg/chrono",
   "dependencies": [

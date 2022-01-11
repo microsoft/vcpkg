@@ -97,7 +97,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(GLOB PARQUET_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*)
+file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
+file(REMOVE_RECURSE ${PARQUET_FILES})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

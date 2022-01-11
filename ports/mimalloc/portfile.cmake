@@ -45,7 +45,7 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mimalloc)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
