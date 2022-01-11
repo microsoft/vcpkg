@@ -11,7 +11,7 @@ vcpkg_configure_make(
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
-    [NO_ADDITIONAL_PATHS]
+    [NO_ADDITIONAL_PATHS] [NO_CONFIGURE_CACHE]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
@@ -49,6 +49,11 @@ For ports having a configure script following the autotools rules for selecting 
 ### NO_ADDITIONAL_PATHS
 Don't pass any additional paths except for --prefix to the configure call
 
+### NO_CONFIGURE_CACHE
+Disable the passing of a cache file to configure (--config-cache). 
+The used cache file is given by the triplet variables `VCPKG_MAKE_CONFIGURE_CACHE(_RELEASE|_DEBUG)?`.
+The buildtype dependent values will overwrite the cache without a buildtype. 
+
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
 
@@ -62,13 +67,13 @@ Adds the appropriate Release and Debug `bin\` directories to the path during con
 do not pass '--disable-silent-rules --verbose' to configure
 
 ### OPTIONS
-Additional options passed to configure during the configuration.
+Additional options passed to configure during the configuration. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS to add additional options)
 
 ### OPTIONS_RELEASE
-Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
+Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE to add additional options)
 
 ### OPTIONS_DEBUG
-Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
+Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG to add additional options)
 
 ### CONFIG_DEPENDENT_ENVIRONMENT
 List of additional configuration dependent environment variables to set. 
@@ -228,7 +233,7 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET;NO_CONFIGURE_CACHE"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
@@ -743,6 +748,24 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
+        set(configure_cache "")
+        if(NOT arg_NO_CONFIGURE_CACHE)
+            set(cache_file "${target_dir}/${TARGET_TRIPLET}-${short_name_${current_buildtype}}.cache")
+            if(DEFINED VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype} AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" STREQUAL "")
+                if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}")
+                    message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}:'${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}' needs to be a valid and exisiting file path!")
+                endif()
+                file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" "${cache_file}")
+                set(configure_cache "--cache-file='${cache_file}'")
+            elseif(DEFINED VCPKG_MAKE_CONFIGURE_CACHE AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE}" STREQUAL "")
+                if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE}")
+                    message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE:'${VCPKG_MAKE_CONFIGURE_CACHE}' needs to be a valid and exisiting file path!")
+                endif()
+                file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE}" "${cache_file}")
+                set(configure_cache "--cache-file='${cache_file}'")
+            endif()
+        endif()
+
         # Setup PKG_CONFIG_PATH
         set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/pkgconfig")
         set(pkgconfig_installed_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
@@ -784,7 +807,7 @@ function(vcpkg_configure_make)
         endforeach()
         unset(lib_env_vars)
 
-        set(command "${base_cmd}" -c "${configure_env} ./${relative_build_path}/configure ${arg_BUILD_TRIPLET} ${arg_OPTIONS} ${arg_OPTIONS_${current_buildtype}}")
+        set(command "${base_cmd}" -c "${configure_env} ./${relative_build_path}/configure ${arg_BUILD_TRIPLET} ${configure_cache} ${arg_OPTIONS} ${arg_OPTIONS_${current_buildtype}}")
         
         if(arg_ADD_BIN_TO_PATH)
             set(path_backup $ENV{PATH})

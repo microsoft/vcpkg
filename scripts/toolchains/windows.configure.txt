@@ -1,0 +1,32 @@
+# Autoconfig stuff
+ac_cv_c_compiler_gnu=no
+ac_cv_c_undeclared_builtin_options='none needed'
+ac_cv_cxx_compiler_gnu=no
+ac_cv_exeext=.exe
+ac_cv_objext=obj
+ac_cv_func_memmove=yes
+ac_cv_func_memset=yes
+ac_cv_func_wcslen=yes
+ac_cv_func_setlocale=yes
+ac_cv_func_strftime=yes
+ac_cv_have_decl_snprintf=yes
+ac_cv_have_decl_strtoull=yes
+ac_cv_header_stdint_h=yes
+ac_cv_header_stdio_h=yes
+ac_cv_header_stdlib_h=yes
+ac_cv_header_string_h=yes
+ac_cv_header_sys_stat_h=yes
+ac_cv_header_sys_types_h=yes
+ac_cv_header_time_h=yes
+ac_cv_header_wchar_h=yes
+ac_cv_header_windows_h=yes
+ac_cv_lib_gdi32_main=yes
+ac_cv_sizeof_unsigned_int=4
+ac_cv_sizeof_unsigned_long=4
+ac_cv_sizeof_void_p=8
+ac_cv_type_ssize_t=no
+ac_cv_type_wchar_t=yes
+# ac_cv_prog_cc_c11='-std:c11' # Requires VS2019 and a recent windows sdk
+# Libtool settings
+lt_cv_prog_gnu_ld=no
+
