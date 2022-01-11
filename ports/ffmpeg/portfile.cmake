@@ -82,21 +82,25 @@ endif()
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     # ffmpeg nasm build gives link error on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
-    get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-    vcpkg_add_to_path(${YASM_EXE_PATH})
+    get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
+    vcpkg_add_to_path("${YASM_EXE_PATH}")
 else()
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-    vcpkg_add_to_path(${NASM_EXE_PATH})
+    get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+    vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
     set(LIB_PATH_VAR "LIB")
+    set(cflags "_CL_")
+    set(ldflags "_LINK_")
 else()
     set(INCLUDE_VAR "CPATH")
     set(LIB_PATH_VAR "LIBRARY_PATH")
+    set(cflags "CFLAGS")
+    set(ldflags "LDFLAGS")
 endif()
 
 set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
@@ -133,7 +137,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_acquire_msys(MSYS_ROOT)
     endif()
 
-    set(SHELL ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
     if(VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             set(OPTIONS "--target-os=mingw32 ${OPTIONS}")
@@ -159,7 +163,7 @@ set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPAR
 
 set(_csc_PROJECT_PATH ffmpeg)
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 set(FFMPEG_PKGCONFIG_MODULES libavutil)
 
@@ -580,11 +584,11 @@ message(STATUS "Building Options: ${OPTIONS}")
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
-    set(ENV{CFLAGS} "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
-    set(ENV{LDFLAGS} "${${linker_flags_var}_RELEASE}")
+    set(ENV{${cflags}} "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
+    set(ENV{${ldflags}} "${${linker_flags_var}_RELEASE}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_RELEASE}")
@@ -594,8 +598,8 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     vcpkg_execute_required_process(
         COMMAND ${SHELL} ./build.sh
-        WORKING_DIRECTORY ${BUILD_DIR}
-        LOGNAME build-${TARGET_TRIPLET}-rel
+        WORKING_DIRECTORY "${BUILD_DIR}"
+        LOGNAME "build-${TARGET_TRIPLET}-rel"
     )
 endif()
 
@@ -603,11 +607,11 @@ endif()
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
-    set(ENV{CFLAGS} "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
-    set(ENV{LDFLAGS} "${${linker_flags_var}_DEBUG}")
+    set(ENV{${cflags}} "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
+    set(ENV{${ldflags}} "${${linker_flags_var}_DEBUG}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_DEBUG}")
@@ -617,13 +621,13 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     vcpkg_execute_required_process(
         COMMAND ${SHELL} ./build.sh
-        WORKING_DIRECTORY ${BUILD_DIR}
-        LOGNAME build-${TARGET_TRIPLET}-dbg
+        WORKING_DIRECTORY "${BUILD_DIR}"
+        LOGNAME "build-${TARGET_TRIPLET}-dbg"
     )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
+    file(GLOB DEF_FILES "${CURRENT_PACKAGES_DIR}/lib/*.def" "${CURRENT_PACKAGES_DIR}/debug/lib/*.def")
 
     if(NOT VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -647,16 +651,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
             message(STATUS "Generating ${OUT_FILE_NATIVE}")
             vcpkg_execute_required_process(
                 COMMAND lib.exe /def:${DEF_FILE_NATIVE} /out:${OUT_FILE_NATIVE} ${LIB_MACHINE_ARG}
-                WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}
-                LOGNAME libconvert-${TARGET_TRIPLET}
+                WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
+                LOGNAME "libconvert-${TARGET_TRIPLET}"
             )
         endforeach()
     endif()
 
-    file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
-    file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+    file(GLOB EXP_FILES "${CURRENT_PACKAGES_DIR}/lib/*.exp" "${CURRENT_PACKAGES_DIR}/debug/lib/*.exp")
+    file(GLOB LIB_FILES "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     if(VCPKG_TARGET_IS_MINGW)
-        file(GLOB LIB_FILES_2 ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+        file(GLOB LIB_FILES_2 "${CURRENT_PACKAGES_DIR}/bin/*.lib" "${CURRENT_PACKAGES_DIR}/debug/bin/*.lib")
     endif()
     list(APPEND FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${LIB_FILES_2} ${DEF_FILES})
     if(FILES_TO_REMOVE)
@@ -674,10 +678,10 @@ if("ffplay" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ffplay AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 vcpkg_copy_pdbs()
@@ -846,11 +850,11 @@ elseif(LICENSE_STRING STREQUAL "License: GPL version 3 or later")
     set(LICENSE_FILE "COPYING.GPLv3")
 elseif(LICENSE_STRING STREQUAL "License: nonfree and unredistributable")
     set(LICENSE_FILE "COPYING.NONFREE")
-    file(WRITE ${SOURCE_PATH}/${LICENSE_FILE} ${LICENSE_STRING})
+    file(WRITE "${SOURCE_PATH}/${LICENSE_FILE}" "${LICENSE_STRING}")
 else()
     message(FATAL_ERROR "Failed to identify license (${LICENSE_STRING})")
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake @ONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/${LICENSE_FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/${LICENSE_FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
