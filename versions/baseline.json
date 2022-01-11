@@ -1322,7 +1322,7 @@
     },
     "chakracore": {
       "baseline": "2021-04-22",
-      "port-version": 0
+      "port-version": 1
     },
     "charls": {
       "baseline": "2.2.0",
