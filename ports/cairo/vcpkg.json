@@ -42,6 +42,9 @@
     },
     "x11": {
       "description": "build with x11 support"
+    },
+    "xrandr": {
+      "description": "build with xrandr support"
     }
   }
 }
