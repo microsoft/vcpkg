@@ -41,6 +41,7 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1318:"
     "LINK : fatal error LNK1104:"
     "LINK : fatal error LNK1201:"
+    "ld terminated with signal 9"
     # Multiple threads using the same directory at the same time cause conflicts, will try again.
     "Cannot create parent directory"
     "Cannot write file"
@@ -84,12 +85,13 @@ function(vcpkg_execute_build_process)
         file(READ "${log_err}" err_contents)
         set(all_contents "${out_contents}${err_contents}")
         if(all_contents MATCHES "${Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES}")
-            message(STATUS "Restarting Build without parallelism because memory exceeded")
+            message(WARNING "Please ensure your system has sufficient memory.")
             set(log_out "${log_prefix}-out-1.log")
             set(log_err "${log_prefix}-err-1.log")
             list(APPEND all_logs "${log_out}" "${log_err}")
 
             if(DEFINED arg_NO_PARALLEL_COMMAND)
+                message(STATUS "Restarting build without parallelism")
                 execute_process(
                     COMMAND ${arg_NO_PARALLEL_COMMAND}
                     WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
@@ -98,6 +100,7 @@ function(vcpkg_execute_build_process)
                     RESULT_VARIABLE error_code
                 )
             else()
+                message(STATUS "Restarting build")
                 execute_process(
                     COMMAND ${arg_COMMAND}
                     WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
@@ -134,8 +137,6 @@ function(vcpkg_execute_build_process)
                     break()
                 endif()
             endforeach()
-        elseif(all_contents MATCHES "fatal error: ld terminated with signal 9 [Killed]")
-            message(WARNING "ld was terminated with signal 9 [killed], please ensure your system has sufficient hard disk space and memory.")
         endif()
     endif()
 
