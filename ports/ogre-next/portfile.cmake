@@ -71,8 +71,8 @@ endif()
 
 file(GLOB DBG_CFGS "${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg")
 if(DBG_CFGS)
-  file(COPY "${DBG_CFGS}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  file(REMOVE "${DBG_CFGS}")
+  file(COPY ${DBG_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  file(REMOVE ${DBG_CFGS})
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
