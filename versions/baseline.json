@@ -2410,7 +2410,7 @@
     },
     "getdns": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "getopt": {
       "baseline": "0",
