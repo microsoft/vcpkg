@@ -726,7 +726,6 @@ libuuid:arm-uwp=fail
 
 # Causes build failures in vxl and podofo on osx
 # Conflicts with Darwin kernel sdk uuid.h (has missing definitions)
-libuuid:x64-osx = skip
 libuuid:x64-uwp=fail
 libuuid:x64-windows=fail
 libuuid:x64-windows-static=fail
