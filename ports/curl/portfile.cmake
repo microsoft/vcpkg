@@ -11,7 +11,6 @@ vcpkg_from_github(
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
-        0023-fix-static-libs-export.patch
         export-components.patch
         curl-7.81.0-ssl.patch
 )
@@ -82,6 +81,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
         ${SECTRANSP_OPTIONS}
