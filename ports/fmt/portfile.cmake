@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF d141cdbeb0fb422a3fb7173b285fd38e0d1772dc # v8.0.1
-    SHA512 1171f0305bed07497d2957b4053e8802030f448921c5bc1b066345dc1e77fbdb96d2c7f323452a32278ae4adb01e69e80b816119b0821e37d50980800e7406f8
+    REF 64dc8fbada9898fccddce0dda3cb0c9695712a3d # v8.1.0
+    SHA512 83fafbaf0901147f8e835906ad6d0c0a41d26f9e4a59c82b99c1e052b0df2a74fbe5aac4fa7aa3eba1483adc9a80b36bb1ed32c7b93f369a66bdb388347f95ff
     HEAD_REF master
     PATCHES
         fix-write-batch.patch

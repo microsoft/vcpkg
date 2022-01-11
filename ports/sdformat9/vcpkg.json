@@ -1,7 +1,7 @@
 {
   "name": "sdformat9",
-  "version-string": "9.4.0",
-  "port-version": 2,
+  "version": "9.4.0",
+  "port-version": 3,
   "description": "Simulation Description Format (SDF) parser and description files.",
   "homepage": "http://sdformat.org/",
   "supports": "!(linux | uwp)",

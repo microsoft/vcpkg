@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
-        -DUSE_EXTERNAL_URDF=ON
+        -DUSE_INTERNAL_URDF=OFF
         -DUSE_EXTERNAL_TINYXML=ON
 )
 
