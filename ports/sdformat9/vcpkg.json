@@ -7,7 +7,6 @@
   "supports": "!(linux | uwp)",
   "dependencies": [
     "ignition-math6",
-    "pkgconf",
     "tinyxml",
     "urdfdom",
     "urdfdom-headers",
