@@ -3,7 +3,7 @@
   "version-string": "2.1",
   "description": "C API for the Point Data Abstraction Library (PDAL)",
   "homepage": "https://github.com/PDAL/CAPI#readme",
-  "supports": "!staticcrt",
+  "supports": "!(windows & staticcrt)",
   "dependencies": [
     {
       "name": "pdal",
