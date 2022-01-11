@@ -32,18 +32,15 @@ if ("x11" IN_LIST FEATURES)
 else()
     list(APPEND OPTIONS -Dxlib=disabled)
 endif()
+list(APPEND OPTIONS -Dxcb=disabled)
+#list(APPEND OPTIONS -Dxlib-xcb=disabled) don't forget this option with the next update!
 
 if ("xrandr" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature xrandr only support UNIX.")
     endif()
     message(WARNING "You will need to install Xrandr dependencies to use feature xrandr:\napt install libxrandr-dev\n")
-    list(APPEND OPTIONS -Dxlib=enabled)
-else()
-    list(APPEND OPTIONS -Dxlib=disabled)
 endif()
-list(APPEND OPTIONS -Dxcb=disabled)
-#list(APPEND OPTIONS -Dxlib-xcb=disabled) don't forget this option with the next update!
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
