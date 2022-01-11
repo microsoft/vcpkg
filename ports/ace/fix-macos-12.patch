@@ -1,0 +1,31 @@
+--- /dev/null
++++ b/include/makeinclude/platform_macosx_monterey.GNU
+@@ -0,0 +1,2 @@
++include $(ACE_ROOT)/include/makeinclude/platform_macosx_bigsur.GNU
++
+
+--- a/include/makeinclude/platform_macosx.GNU
++++ b/include/makeinclude/platform_macosx.GNU
+@@ -24,6 +24,9 @@
+ MACOS_CODENAME_VER_11_1   := bigsur
+ MACOS_CODENAME_VER_11_2   := bigsur
+ MACOS_CODENAME_VER_11_latest := bigsur
++MACOS_CODENAME_VER_12_0   := monterey
++MACOS_CODENAME_VER_12_1   := monterey
++MACOS_CODENAME_VER_12_latest := monterey
+ 
+ MACOS_CODENAME = $(MACOS_CODENAME_VER_$(MACOS_MAJOR_VERSION)_$(MACOS_MINOR_VERSION))
+ 
+@@ -42,6 +45,12 @@ else ifeq ($(MACOS_MAJOR_VERSION), 11)
+     ## just use the latest known version
+     MACOS_CODENAME = $(MACOS_CODENAME_VER_11_latest)
+   endif
++else ifeq ($(MACOS_MAJOR_VERSION),12)
++  ifeq ($(shell test $(MACOS_MINOR_VERSION) -gt 1; echo $$?),0)
++    ## if the detected version is greater than the latest know version,
++    ## just use the latest known version
++    MACOS_CODENAME = $(MACOS_CODENAME_VER_12_latest)
++  endif
+ else
+   ## Unsupported major version
+   $(error Unsupported MacOS version $(MACOS_RELEASE_VERSION))
