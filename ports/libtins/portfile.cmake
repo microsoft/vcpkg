@@ -4,28 +4,27 @@ vcpkg_from_github(
     REF v4.3
     SHA512 29d606004fe9a440c9a53eede42fd5c6dbd049677d2cca2c5cfd26311ee2ca4c64ca3e665fbc81efd5bfab5577a5181ed0754c617e139317d9ae0cabba05aff7
     HEAD_REF master
+    PATCHES
+        fix-source-writes.patch
+        find-pcap_static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTINS_BUILD_SHARED)
-
-set(ENABLE_PCAP FALSE)
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  set(ENABLE_PCAP TRUE)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBTINS_BUILD_SHARED=${LIBTINS_BUILD_SHARED}
-        -DLIBTINS_ENABLE_PCAP=${ENABLE_PCAP}
         -DLIBTINS_ENABLE_CXX11=1
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") #Windows
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-else() #Linux/Unix/Darwin
+else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libtins)
 endif()
 
@@ -39,5 +38,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libtins" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()

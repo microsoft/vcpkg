@@ -4,6 +4,8 @@ vcpkg_from_sourceforge(
     REF 6.2.0
     FILENAME "qwt-6.2.0.zip"
     SHA512 a3946c6e23481b5a2193819a1c1298db5a069d514ca60de54accb3a249403f5acd778172ae6fae24fae252767b1e58deba524de6225462f1bafd7c947996aae9
+    PATCHES
+        fix-dynamic-static.patch
 )
 
 vcpkg_configure_qmake(

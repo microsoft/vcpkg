@@ -21,20 +21,35 @@ vcpkg_extract_source_archive_ex(
         ${STATIC_PATCH}
 )
 
-# Based on selected features different files get downloaded, so use the following command instead of patch.
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(Eigen3 REQUIRED)" "find_package(Eigen3 REQUIRED CONFIG)")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(ccd REQUIRED)" "find_package(ccd REQUIRED CONFIG)")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ode     OMPLAPP_WITH_ODE
+        opengl  OMPLAPP_WITH_OPENGL
+        threads OMPLAPP_WITH_THREADS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOMPL_VERSIONED_INSTALL=OFF
         -DOMPL_REGISTRATION=OFF
         -DOMPL_BUILD_DEMOS=OFF
         -DOMPL_BUILD_TESTS=OFF
         -DOMPL_BUILD_PYBINDINGS=OFF
         -DOMPL_BUILD_PYTESTS=OFF
+        # Not implement
+        -DOMPLAPP_WITH_PYTHON=OFF
+        -DOMPLAPP_WITH_TRIANGLE=OFF
+        -DOMPLAPP_WITH_OCTOMAP=OFF
+        -DOMPLAPP_WITH_FLANN=OFF # Requires 1.8.3
+        # Missing dependencies in vcpkg
+        -DOMPLAPP_WITH_SPOT=OFF
+        -DOMPLAPP_WITH_MORSE=OFF
+        -DOMPLAPP_WITH_DRAWSTUFF=OFF
+        -DOMPLAPP_WITH_PQP=OFF
+        -DOMPLAPP_WITH_DOXYGEN=OFF
 )
 
 vcpkg_cmake_install()
@@ -60,6 +75,14 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/omplapp/config.h" "#define
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ompl.pc" "assimp::assimp" "assimp")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ompl.pc" "assimp::assimp" "assimp")
+    endif()
+    vcpkg_fixup_pkgconfig()
 endif()
 
 # Handle copyright

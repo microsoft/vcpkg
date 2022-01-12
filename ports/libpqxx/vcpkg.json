@@ -1,7 +1,7 @@
 {
   "name": "libpqxx",
   "version-semver": "7.6.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The official C++ client API for PostgreSQL",
   "homepage": "https://www.postgresql.org/",
   "dependencies": [

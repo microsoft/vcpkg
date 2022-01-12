@@ -10,14 +10,6 @@ set(USER_CONFIG_EXTRA_LINES)
 
 set(B2_OPTIONS)
 
-#### Handle ICU
-if(WIN32)
-    list(APPEND B2_OPTIONS "--disable-icu")
-else()
-    find_path(ICU_PATH include/unicode/utf.h)
-    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
-endif()
-
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -51,25 +43,38 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
     list(APPEND B2_OPTIONS "asmflags=/safeseh")
 endif()
 
-if(MSVC)
-    set(USER_CONFIG_TOOLSET msvc)
-    if(MSVC_VERSION LESS 1900)
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 60")
+if(WIN32)
+    if(MSVC)
+        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+            set(USER_CONFIG_TOOLSET clang-win)
+        else()
+            set(USER_CONFIG_TOOLSET msvc)
+        endif()
+        if(MSVC_VERSION LESS 1900)
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 50")
+        endif()
     else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 50")
+        if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+            set(USER_CONFIG_TOOLSET clang)
+        else()
+            set(USER_CONFIG_TOOLSET gcc)
+        endif()
     endif()
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
     set(USER_CONFIG_TOOLSET clang)
     list(APPEND B2_OPTIONS target-os=darwin)
-elseif(WIN32)
-    set(USER_CONFIG_TOOLSET gcc)
-    list(APPEND B2_OPTIONS target-os=windows)
 elseif(ANDROID)
     set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=android)
 else()
-    set(USER_CONFIG_TOOLSET gcc)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(USER_CONFIG_TOOLSET clang)
+    else()
+        set(USER_CONFIG_TOOLSET gcc)
+    endif()
     list(APPEND B2_OPTIONS target-os=linux)
 endif()
 
@@ -231,6 +236,60 @@ if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
 
+# Handle ICU
+if(WIN32)
+    list(APPEND B2_OPTIONS "--disable-icu")
+else()
+    find_path(ICU_PATH include/unicode/utf.h)
+    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
+endif()
+
+# Handle Python
+set(python_versions "")
+
+if("python2" IN_LIST FEATURES)
+    # Find Python2 in the current installed directory
+    file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
+    list(APPEND python_versions "${python2_version}")
+endif()
+
+if("python3" IN_LIST FEATURES)
+    # Find Python3 in the current installed directory
+    file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
+    list(APPEND python_versions "${python3_version}")
+endif()
+
+if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
+        "   <include>\"${CURRENT_INSTALLED_DIR}/include\"\n"
+    )
+    if(WIN32)
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>msmpi ;\n"
+        )
+    else()
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>openmpi ;\n"
+        )
+    endif()
+endif()
+
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+endif()
+
 # Include port specific CMake fragment
 if(DEFINED BOOST_CMAKE_FRAGMENT)
     message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
@@ -279,7 +338,7 @@ file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUB
 if(LIBS)
     file(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")
 endif()
-file(GLOB DLLS \"${SUBDIR}/*.dll\")
+file(GLOB DLLS \"${SUBDIR}/*.dll\" \"${SUBDIR}/*.pyd\")
 if(DLLS)
     file(INSTALL \${DLLS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
 endif()
