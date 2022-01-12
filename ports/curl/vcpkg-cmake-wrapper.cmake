@@ -28,6 +28,10 @@ if(CURL_FOUND)
         set(_curl_link_libraries "")
     endif()
 
+    if("Libssh2::libssh2" IN_LIST _curl_link_libraries)
+        find_package(Libssh2 CONFIG QUIET)
+    endif()
+
     set(CURL_INCLUDE_DIRS "${_curl_include_dirs}")
     set(CURL_LIBRARY_DEBUG "${_curl_location_debug}")
     set(CURL_LIBRARY_RELEASE "${_curl_location_release}")
