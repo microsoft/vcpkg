@@ -1,0 +1,10 @@
+{
+  "name": "azure-security-keyvault-common-cpp",
+  "version-date": "2022-01-11",
+  "description": [
+    "Microsoft Azure Common Key Vault SDK for C++",
+    "This library was depreciated in the upstream."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/keyvault/azure-security-keyvault-common",
+  "license": "MIT"
+}
