@@ -1,7 +1,7 @@
-diff --git a/tools/clang-linux.jam b/tools/clang-linux.jam
+diff --git a/src/tools/clang-linux.jam b/src/tools/clang-linux.jam
 index 949e277..8934787 100644
---- a/tools/clang-linux.jam
-+++ b/tools/clang-linux.jam
+--- a/src/tools/clang-linux.jam
++++ b/src/tools/clang-linux.jam
 @@ -97,7 +97,7 @@ rule init ( version ? :  command * : options * ) {
  
  rule get-full-version ( command-string )
