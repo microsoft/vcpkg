@@ -1,8 +1,8 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index c578a1b..298362a 100644
+index b498ece..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -14,6 +14,6 @@ set (@PROJECT_NAME@_PLUGIN_SEARCH_PATH         "@PLUGIN_SEARCH_PATH_NATIVE@")
+@@ -30,7 +30,7 @@ endif ()
  #...logic to determine installedPrefix from the own location...
  #set (@PROJECT_NAME@_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@")
  
@@ -10,3 +10,4 @@ index c578a1b..298362a 100644
 +include("${CMAKE_CURRENT_LIST_DIR}/OpenImageIOTargets.cmake")
  
  check_required_components ("@PROJECT_NAME@")
+ 

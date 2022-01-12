@@ -33,7 +33,6 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
     - [Inicio rápido: Unix](#inicio-rápido-unix)
     - [Instalando Herramientas de desarrollo en Linux](#instalando-herramientas-de-desarrollo-en-linux)
     - [Instalando Herramientas de desarrollo en macOS](#instalando-herramientas-de-desarrollo-en-macos)
-      - [Instalando GCC en macOS previo a 10.15](#instalando-gcc-en-macos-previo-a-1015)
     - [Usando Vcpkg con CMake](#usando-vcpkg-con-cmake)
       - [Visual Studio Code con CMake Tools](#visual-studio-code-con-cmake-tools)
       - [Vcpkg con proyectos de Visual Studio(CMake)](#vcpkg-con-proyectos-de-visual-studiocmake)
@@ -134,9 +133,6 @@ Prerrequisitos para Linux:
 Prerrequisitos para macOS:
 
 - [Herramientas de desarrollo de Apple][getting-started:macos-dev-tools]
-- En macOS 10.14 o inferior, también necesita:
-  - [Homebrew][getting-started:macos-brew]
-  - [g++][getting-started:macos-gcc] >= 6 de Homebrew
 
 Primero, descargue y compile vcpkg, puede ser instalado donde sea,
 pero recomendamos usar vcpkg como submodulo para proyectos de CMake.
@@ -217,25 +213,6 @@ $ xcode-select --install
 ```
 
 Luego seguir los pasos que aparecerán en las ventanas que se muestran.
-
-En macOS 10.14 y previos, también requiere instalar g++ de homebrew;
-siguiendo los pasos en la sección siguiente.
-
-#### Instalando GCC en macOS previo a 10.15
-
-Este paso _solo_  es requerido si está usando una versión de macOS previa a 10.15.
-Instalar homebrew debería ser sencillo; visite <brew.sh> para mas información,
-pero de manera simple, ejecute el siguiente comando:
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-```
-
-luego, para obtener una versión actualizada de gcc, ejecute el comando:
-
-```sh
-$ brew install gcc
-```
 
 Posteriormente podrá compilar vcpkg junto con la [guía de inicio rápido](#inicio-rápido-unix)
 
@@ -346,10 +323,8 @@ Para más información, revise la especificación de [manifiesto][getting-starte
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
-[getting-started:linux-gcc]: #installing-linux-developer-tools
-[getting-started:macos-dev-tools]: #installing-macos-developer-tools
-[getting-started:macos-brew]: #installing-gcc-on-macos
-[getting-started:macos-gcc]: #installing-gcc-on-macos
+[getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux
+[getting-started:macos-dev-tools]: #Instalando-Herramientas-de-desarrollo-en-macOS
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
 [getting-started:manifest-spec]: docs/specifications/manifests.md
 
@@ -366,7 +341,7 @@ para activar el autocompletado en la terminal de elección ejecute:
 o
 
 ```sh
-$ ./vcpkg integrate bash
+$ ./vcpkg integrate bash # o zsh
 ```
 
 según la terminal que use, luego reinicie la consola.
