@@ -85,6 +85,11 @@ vcpkg_cmake_configure(
 
     OPTIONS_RELEASE
         -DLIEF_USE_CRT_RELEASE=${LIEF_CRT_RELEASE}
+    
+    MAYBE_UNUSED_VARIABLES
+        LIEF_SHARED_LIB
+        LIEF_USE_CRT_DEBUG
+        LIEF_USE_CRT_RELEASE
 )
 
 vcpkg_cmake_install()
