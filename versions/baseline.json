@@ -1657,7 +1657,7 @@
       "port-version": 1
     },
     "crow": {
-      "baseline": "0.3.3",
+      "baseline": "0.3.4",
       "port-version": 0
     },
     "cryptopp": {
