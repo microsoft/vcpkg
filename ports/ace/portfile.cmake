@@ -13,7 +13,6 @@ if("tao" IN_LIST FEATURES)
           SHA512 3ea0cc7b35433d7c41f51137caacd394a976cf4d5c2972a35015901b3ba172bacff0216a3146bf632b929a63853b7123019382c22d14c6d64e43a71a61b88023
       )
     else()
-      # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
@@ -28,8 +27,7 @@ else()
         FILENAME ACE-src-${ACE_VERSION}.zip
         SHA512 73707c92a0533ab60f090cfb620d508755b8267e2b83fb52d9903c4d780d2e2b504545433fdbe34801d4895cf938ecc5a5f26c34528851080bcce07f5a501ac1
     )
-  else(VCPKG_TARGET_IS_WINDOWS)
-    # VCPKG_TARGET_IS_LINUX
+  else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
@@ -41,6 +39,8 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+      fix-macos-12.patch
 )
 
 set(ACE_ROOT ${SOURCE_PATH})
@@ -77,10 +77,6 @@ else()
 endif()
 list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(MPC_STATIC_FLAG -static)
-endif()
-
 # Acquire Perl and add it to PATH (for execution of MPC)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
@@ -103,6 +99,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(SOLUTION_TYPE vs2019)
   else()
     set(SOLUTION_TYPE vs2022)
+  endif()
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+	set(MPC_STATIC_FLAG -static)
   endif()
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -327,6 +326,10 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   if("ssl" IN_LIST FEATURES)
     list(APPEND _ace_makefile_macros "ssl=1")
+  endif()
+
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND _ace_makefile_macros "static_libs_only=1")
   endif()
 
   set(ENV{INSTALL_PREFIX} ${CURRENT_PACKAGES_DIR})
