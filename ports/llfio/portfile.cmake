@@ -43,9 +43,18 @@ endif()
 # setting CMAKE_CXX_STANDARD here to prevent llfio from messing with compiler flags
 # the cmake package config requires said C++ standard target transitively via quickcpplib
 if ("cxx20" IN_LIST FEATURES)
-    set(LLFIO_CXX_STANDARD -DCMAKE_CXX_STANDARD=20)
+    list(APPEND extra_config -DCMAKE_CXX_STANDARD=20)
 elseif("cxx17" IN_LIST FEATURES)
-    set(LLFIO_CXX_STANDARD -DCMAKE_CXX_STANDARD=17)
+    list(APPEND extra_config -DCMAKE_CXX_STANDARD=17)
+endif()
+
+# quickcpplib parses CMAKE_MSVC_RUNTIME_LIBRARY and cannot support the default crt linkage generator expression from vcpkg
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -57,7 +66,6 @@ vcpkg_cmake_configure(
         ${LLFIO_FEATURE_OPTIONS}
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        ${LLFIO_CXX_STANDARD}
         ${extra_config}
 )
 
