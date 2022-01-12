@@ -18,6 +18,7 @@ vcpkg_configure_meson(
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
         -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
+        -Dc_std=c11 #Set C standard to avoid implicit declaration is invalid in C99
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
@@ -30,7 +31,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pango.pc")
 if(EXISTS "${_file}")
