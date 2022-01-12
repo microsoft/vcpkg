@@ -1,9 +1,4 @@
 macro(find_dependency_win)
-  # Setup proj4 libraries + include path
-  set(PROJ_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
-  set(PROJ_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/proj.lib")
-  set(PROJ_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib")
-
   # Setup libpng libraries + include path
   set(PNG_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
   set(PNG_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" )
@@ -47,20 +42,12 @@ macro(find_dependency_win)
   set(SQLITE_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" )
   set(SQLITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" )
 
-  # Setup PostgreSQL libraries + include path
-  set(PGSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
-  set(PGSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" )
-  set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib" )
-  
-  set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib" )
-  set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib" )
-  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
-  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
-
-  set(TMP_REL "${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" )
-  set(TMP_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib" )
-  set(PGSQL_LIBRARY_REL "${PGSQL_LIBRARY_REL} ${TMP_REL}")
-  set(PGSQL_LIBRARY_DBG "${PGSQL_LIBRARY_DBG} ${TMP_DBG}")
+  if ("postgresql" IN_LIST FEATURES)
+      # Setup PostgreSQL libraries + include path
+      set(PGSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
+      set(PGSQL_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libpq.lib ${CURRENT_INSTALLED_DIR}/lib/libpgcommon.lib ${CURRENT_INSTALLED_DIR}/lib/libpgport.lib" )
+      set(PGSQL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libpq.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libpgcommon.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libpgport.lib")
+  endif()
 
   # Setup OpenJPEG libraries + include path
   set(OPENJPEG_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
@@ -166,27 +153,36 @@ macro(find_dependency_win)
   endif()
 
   # Setup netcdf libraries
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-      if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib")
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" NETCDF_INCLUDE)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib" NETCDF_LIBRARY_REL)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/netcdf.lib" NETCDF_LIBRARY_DBG)
-          list(APPEND NMAKE_OPTIONS NETCDF_PLUGIN=NO)
-          list(APPEND NMAKE_OPTIONS NETCDF_SETTING=yes)
-          list(APPEND NMAKE_OPTIONS NETCDF_INC_DIR=${NETCDF_INCLUDE})
-          list(APPEND NMAKE_OPTIONS_REL NETCDF_LIB=${NETCDF_LIBRARY_REL})
-          list(APPEND NMAKE_OPTIONS_DBG NETCDF_LIB=${NETCDF_LIBRARY_DBG})
-      endif()
+  if("netcdf" IN_LIST FEATURES)
+      x_vcpkg_pkgconfig_get_modules(
+          PREFIX NETCDF
+          MODULES --msvc-syntax netcdf
+          INCLUDE_DIRS
+          LIBS
+      )
+      string(REGEX REPLACE "^/I" "" NETCDF_INC_DIR "${NETCDF_INCLUDE_DIRS}")
+      list(APPEND NMAKE_OPTIONS NETCDF_PLUGIN=NO)
+      list(APPEND NMAKE_OPTIONS NETCDF_SETTING=yes)
+      list(APPEND NMAKE_OPTIONS "NETCDF_INC_DIR=${NETCDF_INC_DIR}")
+      list(APPEND NMAKE_OPTIONS_REL "NETCDF_LIB=${NETCDF_LIBS_RELEASE}")
+      list(APPEND NMAKE_OPTIONS_DBG "NETCDF_LIB=${NETCDF_LIBS_DEBUG}")
   endif()
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" HDF5_DIR)
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib" HDF5_LIBRARY_DBG)
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/hdf5.lib" HDF5_LIBRARY_REL)
-    list(APPEND NMAKE_OPTIONS HDF5_PLUGIN=NO)
-    list(APPEND NMAKE_OPTIONS HDF5_H5_IS_DLL=YES)
-    list(APPEND NMAKE_OPTIONS HDF5_DIR=${HDF5_DIR})
-    list(APPEND NMAKE_OPTIONS_REL HDF5_LIB=${HDF5_LIBRARY_REL})
-    list(APPEND NMAKE_OPTIONS_DBG HDF5_LIB=${HDF5_LIBRARY_DBG})
+
+  # Setup hdf5 libraries
+  if("hdf5" IN_LIST FEATURES)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" HDF5_DIR)
+      x_vcpkg_pkgconfig_get_modules(
+          PREFIX HDF5
+          MODULES --msvc-syntax hdf5
+          LIBS
+      )
+      list(APPEND NMAKE_OPTIONS HDF5_PLUGIN=NO)
+      list(APPEND NMAKE_OPTIONS "HDF5_DIR=${HDF5_DIR}")
+      list(APPEND NMAKE_OPTIONS_REL "HDF5_LIB=${HDF5_LIBS_RELEASE}")
+      list(APPEND NMAKE_OPTIONS_DBG "HDF5_LIB=${HDF5_LIBS_DEBUG}")
+      if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+          list(APPEND NMAKE_OPTIONS HDF5_H5_IS_DLL=YES)
+      endif()
   endif()
 
   # Setup libkml libraries
@@ -243,6 +239,7 @@ macro(find_dependency_win)
         set(SPATIALITE_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib" )
     endif()
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
+    list(APPEND NMAKE_OPTIONS SPATIALITE_412_OR_LATER=yes)
   endif()
 
   if ("cfitsio" IN_LIST FEATURES)

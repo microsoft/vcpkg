@@ -16,7 +16,7 @@ Steps to reproduce the behavior:
 `./vcpkg install xxxx`
 
 **Failure logs** 
--Cut and past the appropriate build messages from the console output.
+-Cut and paste the appropriate build messages from the console output.
 -Please attach any additional failure logs mentioned in the console output.
 
 **Additional context**

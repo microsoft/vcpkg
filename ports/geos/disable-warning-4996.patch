@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index accc1a2..34d2055 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -174,7 +174,7 @@ target_compile_features(geos_cxx_flags INTERFACE cxx_std_11)
+ target_compile_options(geos_cxx_flags INTERFACE
+ 	"$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-ffp-contract=off>"
+ 	"$<$<CXX_COMPILER_ID:GNU>:-ffp-contract=off>"
+-	"$<$<CXX_COMPILER_ID:MSVC>:/fp:precise>"
++	$<$<CXX_COMPILER_ID:MSVC>:/fp:precise /wd4996>
+ 	)
+ 
+ # Use -ffloat-store for 32-bit builds (needed to make some tests pass)

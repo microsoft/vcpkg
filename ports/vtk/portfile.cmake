@@ -28,6 +28,8 @@ vcpkg_from_github(
         156fb524.patch
         d107698a.patch
         fix-gdal.patch
+        missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
+        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
 )
 
 # =============================================================================
@@ -146,7 +148,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
@@ -268,9 +270,9 @@ if("paraview" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python) #python headers
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python") #python headers
         file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
-        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
+        file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
     endif()
 endif()
 

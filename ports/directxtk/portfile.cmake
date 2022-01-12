@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF oct2021b
-    SHA512 203e930a9d7fb8dbf3a9e9266f00ee847ceaecb462a3c0450fac54fa2e36fda206d35ab7a1eac59eb83dd433f64e4c353a38dfa40691cd7326ba76b052931bf2
+    REF nov2021b
+    SHA512 d1c99cc7d1a95939b4dc28ee5c757e3b4eae2b7f923031b44f988b1ca93838e765d702f125a9a9fb38e6f5304721f88843e961b6ba9591066b511b530aad5280
     HEAD_REF master
 )
 
@@ -35,16 +35,16 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MAKESPRITEFONT_EXE
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/oct2021/MakeSpriteFont.exe"
-    FILENAME "makespritefont-oct2021.exe"
-    SHA512 abff446bfd4cbddbca45816ec3a2230e52d9afb81c100966e4bce7e52a6e02620fd8cdcb416943090564885f63d33c4a246f43ff585c8f5686c2c9877ec50698
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-nov2021.exe"
+    SHA512 0aab40aced022588d9c1089c5b2f297b0521497d0ae559ead98f99e1e73f2daf9f38ebecadb413095abd2a6c207183fbca582d47528c6f21258df3ac391134e5
   )
 
   vcpkg_download_distfile(
     XWBTOOL_EXE
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/oct2021/XWBTool.exe"
-    FILENAME "xwbtool-oct2021.exe"
-    SHA512 fda62e06fb9998c41795c6be42f00a1048dcae302b20437f2a39350215789f77acfc77c0f1ebbc5bedeb986229c94f35bd1a03be37cdf4fcf4c007110f7efaa4
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2021/XWBTool.exe"
+    FILENAME "xwbtool-nov2021.exe"
+    SHA512 f2f291c496500e593c0a4795fee9fafc685666682f23a38a25546bb67ec083533a26f2ce0562b819abea44bd8b403a2f246fbf978e366c457eb8a0f836fd5a2e
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -54,8 +54,8 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${XWBTOOL_EXE}
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-oct2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-oct2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-nov2021.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
 
 elseif(NOT VCPKG_TARGET_IS_UWP)
 

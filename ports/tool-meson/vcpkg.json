@@ -1,6 +1,9 @@
 {
   "name": "tool-meson",
-  "version": "0.58.1",
+  "version-date": "2021-11-19",
   "description": "Meson build system",
-  "homepage": "https://github.com/mesonbuild/meson"
+  "homepage": "https://github.com/mesonbuild/meson",
+  "dependencies": [
+    "vcpkg-tool-meson"
+  ]
 }
