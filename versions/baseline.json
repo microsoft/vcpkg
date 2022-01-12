@@ -6617,7 +6617,7 @@
       "port-version": 0
     },
     "starlink-ast": {
-      "baseline": "9.2.5",
+      "baseline": "9.2.7",
       "port-version": 0
     },
     "status-code": {
