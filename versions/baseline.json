@@ -3278,7 +3278,7 @@
     },
     "lcms": {
       "baseline": "2.12",
-      "port-version": 2
+      "port-version": 3
     },
     "leaf": {
       "baseline": "0.2.2",
@@ -4954,7 +4954,7 @@
     },
     "opencolorio": {
       "baseline": "2.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
