@@ -22,10 +22,15 @@ vcpkg_extract_source_archive_ex(
         fix-extra.patch
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
+        fix-win-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
+endif()
 
 list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
 
@@ -47,6 +52,7 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
     PROJECT_SUBPATH source
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
@@ -188,21 +194,6 @@ endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB DEBUG_PKGCONFIGS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-        foreach(pkg_file IN LISTS DEBUG_PKGCONFIGS)
-            vcpkg_replace_string("${pkg_file}" " -lm" "")
-        endforeach()
-    endif()
-   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB RELEASE_PKGCONFIGS  "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
-        foreach(pkg_file IN LISTS RELEASE_PKGCONFIGS)
-            vcpkg_replace_string("${pkg_file}" " -lm" "")
-        endforeach()
-    endif()
-endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
 
