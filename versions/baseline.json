@@ -4689,7 +4689,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-8089a948",
+      "baseline": "0.0.0-cad832c8",
       "port-version": 0
     },
     "neon2sse": {
