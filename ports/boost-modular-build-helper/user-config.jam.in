@@ -17,7 +17,7 @@ if "@PORT@" = "boost-mpi" || "@PORT@" = "boost-graph-parallel"
 
 project user-config : ;
 
-if "@USER_CONFIG_TOOLSET@" = "msvc"
+if "@USER_CONFIG_TOOLSET@" = "msvc" || "@USER_CONFIG_TOOLSET@" = "clang-win"
 {
     lib advapi32 ;
 

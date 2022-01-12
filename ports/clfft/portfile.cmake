@@ -8,25 +8,25 @@ vcpkg_from_github(
         tweak-install.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS
         -DBUILD_LOADLIBRARIES=OFF
         -DBUILD_EXAMPLES=OFF
         -DSUFFIX_LIB=
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clFFT)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/clFFT)
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/clfft/copyright)

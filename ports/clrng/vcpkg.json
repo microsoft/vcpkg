@@ -1,11 +1,19 @@
 {
   "name": "clrng",
-  "version-string": "2020-12-01",
-  "port-version": 1,
+  "version-date": "2020-12-01",
+  "port-version": 2,
   "description": "clRNG is a library for uniform random number generation in OpenCL.",
   "homepage": "https://github.com/clMathLibraries/clRNG",
   "supports": "!arm64",
   "dependencies": [
-    "opencl"
+    "opencl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
