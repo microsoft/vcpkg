@@ -20,7 +20,7 @@ index 9fd34587..2a42c862 100644
 +
 +if(BUILD_SHARED_LIBS)
 +    target_compile_definitions(TracyClient PRIVATE TRACY_EXPORTS)
-+    target_compile_definitions(TracyClient PUBLIC TRACY_IMPORTS)
++    target_compile_definitions(TracyClient INTERFACE TRACY_IMPORTS)
 +endif()
 +
 +include(CMakePackageConfigHelpers)
