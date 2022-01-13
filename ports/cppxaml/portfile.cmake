@@ -7,5 +7,5 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(INSTALL ${SOURCE_PATH}/inc/cppxaml DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/inc/cppxaml" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
