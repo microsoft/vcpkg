@@ -14,12 +14,6 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             -Dmmx=enabled
             -Dsse2=enabled
             -Dssse3=enabled)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    #x64 in general has all those intrinsics. (except for UWP for some reason)
-    list(APPEND OPTIONS
-            -Dmmx=enabled
-            -Dsse2=enabled
-            -Dssse3=enabled)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
    list(APPEND OPTIONS
                #-Darm-simd=enabled does not work with arm64-windows
