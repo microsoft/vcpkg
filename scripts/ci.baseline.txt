@@ -539,7 +539,6 @@ lief:x64-linux=fail
 lief:x64-uwp=fail
 lief:arm-uwp=fail
 lief:x64-osx=fail
-
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
 cpuid:arm64-windows=fail
