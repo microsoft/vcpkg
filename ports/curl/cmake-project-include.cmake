@@ -75,3 +75,8 @@ if(CURL_USE_LIBSSH2)
     get_target_property(LIBSSH2_INCLUDE_DIR Libssh2::libssh2 INTERFACE_INCLUDE_DIRECTORIES)
     set(LIBSSH2_LIBRARY Libssh2::libssh2)
 endif()
+
+if(USE_LIBIDN2)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBIDN2 REQUIRED libidn2)
+endif()

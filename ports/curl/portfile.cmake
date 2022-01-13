@@ -58,9 +58,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(OPTIONS_RELEASE "")
 set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
-    x_vcpkg_pkgconfig_get_modules(PREFIX libidn2 MODULES libidn2 LIBS)
-    list(APPEND OPTIONS_RELEASE "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_RELEASE}")
-    list(APPEND OPTIONS_DEBUG   "-DLIBIDN2_LIBRARIES=${libidn2_LIBS_DEBUG}")
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 set(SECTRANSP_OPTIONS "")

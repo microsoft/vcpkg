@@ -83,11 +83,7 @@
     "idn2": {
       "description": "idn2 support (libidn2)",
       "dependencies": [
-        "libidn2",
-        {
-          "name": "vcpkg-pkgconfig-get-modules",
-          "host": true
-        }
+        "libidn2"
       ]
     },
     "mbedtls": {
