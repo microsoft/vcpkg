@@ -49,7 +49,7 @@ else()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND configs "debug")
         execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug"
+            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${BUILDTREE_PATH}"
 
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
@@ -62,7 +62,7 @@ else()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         list(APPEND configs "release")
         execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}"
+            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${BUILDTREE_PATH}"
             OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
             ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
