@@ -12,7 +12,7 @@ vcpkg_configure_make(
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
-    [NO_ADDITIONAL_PATHS]
+    [NO_ADDITIONAL_PATHS] [NO_CONFIGURE_CACHE]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
@@ -50,6 +50,11 @@ For ports having a configure script following the autotools rules for selecting 
 ### NO_ADDITIONAL_PATHS
 Don't pass any additional paths except for --prefix to the configure call
 
+### NO_CONFIGURE_CACHE
+Disable the passing of a cache file to configure (--config-cache). 
+The used cache file is given by the triplet variables `VCPKG_MAKE_CONFIGURE_CACHE(_RELEASE|_DEBUG)?`.
+The buildtype dependent values will overwrite the cache without a buildtype. 
+
 ### AUTOCONFIG
 Need to use autoconfig to generate configure file.
 
@@ -63,13 +68,13 @@ Adds the appropriate Release and Debug `bin\` directories to the path during con
 do not pass '--disable-silent-rules --verbose' to configure
 
 ### OPTIONS
-Additional options passed to configure during the configuration.
+Additional options passed to configure during the configuration. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS to add additional options)
 
 ### OPTIONS_RELEASE
-Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
+Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE to add additional options)
 
 ### OPTIONS_DEBUG
-Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
+Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`. (The triplet can use VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG to add additional options)
 
 ### CONFIG_DEPENDENT_ENVIRONMENT
 List of additional configuration dependent environment variables to set. 
