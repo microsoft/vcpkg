@@ -1,8 +1,8 @@
 {
   "name": "avisynthplus",
   "version-semver": "3.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "An improved version of the AviSynth frameserver, with improved features and developer friendliness",
-  "homepage": "http://avs-plus.net/",
+  "homepage": "https://avs-plus.net/",
   "supports": "!arm & !uwp"
 }
