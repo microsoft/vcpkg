@@ -1,20 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b8de9fa..82dd632 100644
+index a83ac43..106c71c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -32,14 +32,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+@@ -73,14 +73,13 @@ if(DEPENDENCY_CHECK AND USE_SYSTEM_DATE)
+     find_package(date REQUIRED)
+ endif()
  
- include(CTest)
- 
--
--### Dependencies 
 -add_subdirectory(dependencies)
 -
- ### Main targets
+ ### Core targets
+ include(Sqlpp11TargetHelper)
+ 
  add_library(sqlpp11 INTERFACE)
  add_library(sqlpp11::sqlpp11 ALIAS sqlpp11)
  
 +find_package(date CONFIG REQUIRED)
  target_link_libraries(sqlpp11 INTERFACE date::date)
- 
  target_include_directories(sqlpp11 INTERFACE
+   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
