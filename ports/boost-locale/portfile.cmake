@@ -14,6 +14,7 @@ vcpkg_from_github(
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-locale requires a newer version of vcpkg in order to build.")
 endif()
+
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/vcpkg_boost_build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
@@ -24,5 +25,5 @@ vcpkg_boost_build(
     SOURCE_PATH ${SOURCE_PATH}
     BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
 )
-include(${CURRENT_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)
+include(${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)
 vcpkg_boost_copy_headers(SOURCE_PATH ${SOURCE_PATH})

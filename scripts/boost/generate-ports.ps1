@@ -278,11 +278,15 @@ function GeneratePort() {
         $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
     }
 
+    $portfileLines += @(
+        "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
+        "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg in order to build.`")"
+        "endif()"
+        ""
+    )
+
     if ($NeedsBuild) {
         $portfileLines += @(
-            "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
-            "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg in order to build.`")"
-            "endif()"
             "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/vcpkg_boost_build.cmake)"
         )
         # b2-options.cmake contains port-specific build options
@@ -315,7 +319,7 @@ function GeneratePort() {
     }
 
     $portfileLines += @(
-        "include(`${CURRENT_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)"
+        "include(`${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)"
         "vcpkg_boost_copy_headers(SOURCE_PATH `${SOURCE_PATH})"
     )
 

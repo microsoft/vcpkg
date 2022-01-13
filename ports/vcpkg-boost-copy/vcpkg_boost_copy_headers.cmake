@@ -14,8 +14,8 @@ function(vcpkg_boost_copy_headers)
     message(STATUS "Copying headers done")
 
     file(INSTALL
-        ${CURRENT_INSTALLED_DIR}/share/vcpkg-boost-copy/usage
-        ${CURRENT_INSTALLED_DIR}/share/vcpkg-boost-copy/copyright
+        ${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost-copy/usage
+        ${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost-copy/copyright
         DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     )
 endfunction()

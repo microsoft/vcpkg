@@ -8,5 +8,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-uuid requires a newer version of vcpkg in order to build.")
+endif()
+
+include(${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost-copy/vcpkg_boost_copy_headers.cmake)
 vcpkg_boost_copy_headers(SOURCE_PATH ${SOURCE_PATH})
