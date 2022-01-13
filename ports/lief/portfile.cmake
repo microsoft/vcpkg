@@ -1,7 +1,4 @@
 
-vcpkg_fail_port_install(ON_TARGET "UWP" "linux" "osx" ON_ARCH "x64" "arm")
-
-
 if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" )
     if ("${VCPKG_CRT_LINKAGE}" STREQUAL "dynamic" )
         vcpkg_fail_port_install(MESSAGE "${PORT} doesn't support static-md" ALWAYS)
