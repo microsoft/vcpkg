@@ -1,6 +1,7 @@
 {
   "name": "boost-multiprecision",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost multiprecision module",
   "homepage": "https://github.com/boostorg/multiprecision",
   "dependencies": [
@@ -12,6 +13,9 @@
     "boost-math",
     "boost-predef",
     "boost-random",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

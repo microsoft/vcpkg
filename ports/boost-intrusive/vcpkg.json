@@ -1,6 +1,7 @@
 {
   "name": "boost-intrusive",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost intrusive module",
   "homepage": "https://github.com/boostorg/intrusive",
   "dependencies": [
@@ -10,6 +11,9 @@
     "boost-core",
     "boost-move",
     "boost-static-assert",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

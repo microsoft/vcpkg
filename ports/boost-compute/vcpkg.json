@@ -1,6 +1,7 @@
 {
   "name": "boost-compute",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost compute module",
   "homepage": "https://github.com/boostorg/compute",
   "dependencies": [
@@ -34,6 +35,9 @@
     "boost-typeof",
     "boost-utility",
     "boost-uuid",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

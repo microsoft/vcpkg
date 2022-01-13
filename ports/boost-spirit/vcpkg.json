@@ -1,6 +1,7 @@
 {
   "name": "boost-spirit",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost spirit module",
   "homepage": "https://github.com/boostorg/spirit",
   "dependencies": [
@@ -33,6 +34,9 @@
     "boost-unordered",
     "boost-utility",
     "boost-variant",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

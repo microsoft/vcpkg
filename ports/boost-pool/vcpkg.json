@@ -1,6 +1,7 @@
 {
   "name": "boost-pool",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost pool module",
   "homepage": "https://github.com/boostorg/pool",
   "dependencies": [
@@ -9,7 +10,10 @@
     "boost-integer",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

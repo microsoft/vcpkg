@@ -1,6 +1,7 @@
 {
   "name": "boost-log",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost log module",
   "homepage": "https://github.com/boostorg/log",
   "supports": "!uwp & !emscripten",
@@ -31,10 +32,6 @@
     "boost-io",
     "boost-iterator",
     "boost-lexical-cast",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-move",
     "boost-mpl",
     "boost-optional",
@@ -56,9 +53,16 @@
     "boost-type-index",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
     "boost-winapi",
     "boost-xpressive",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

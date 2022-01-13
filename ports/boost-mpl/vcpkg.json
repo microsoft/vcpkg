@@ -1,6 +1,7 @@
 {
   "name": "boost-mpl",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost mpl module",
   "homepage": "https://github.com/boostorg/mpl",
   "dependencies": [
@@ -11,6 +12,9 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

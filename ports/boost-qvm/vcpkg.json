@@ -1,9 +1,13 @@
 {
   "name": "boost-qvm",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost qvm module",
   "homepage": "https://github.com/boostorg/qvm",
   "dependencies": [
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

@@ -1,6 +1,7 @@
 {
   "name": "boost-asio",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "dependencies": [
@@ -23,7 +24,10 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ],
   "features": {
     "ssl": {

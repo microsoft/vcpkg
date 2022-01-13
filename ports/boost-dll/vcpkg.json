@@ -1,6 +1,7 @@
 {
   "name": "boost-dll",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost dll module",
   "homepage": "https://github.com/boostorg/dll",
   "dependencies": [
@@ -21,7 +22,10 @@
     "boost-throw-exception",
     "boost-type-index",
     "boost-type-traits",
-    "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

@@ -1,12 +1,16 @@
 {
   "name": "boost-yap",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost yap module",
   "homepage": "https://github.com/boostorg/yap",
   "dependencies": [
     "boost-hana",
     "boost-preprocessor",
     "boost-type-index",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

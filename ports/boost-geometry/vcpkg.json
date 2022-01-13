@@ -1,6 +1,7 @@
 {
   "name": "boost-geometry",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost geometry module",
   "homepage": "https://github.com/boostorg/geometry",
   "dependencies": [
@@ -37,6 +38,9 @@
     "boost-utility",
     "boost-variant",
     "boost-variant2",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

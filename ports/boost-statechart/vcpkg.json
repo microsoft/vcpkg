@@ -1,6 +1,7 @@
 {
   "name": "boost-statechart",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost statechart module",
   "homepage": "https://github.com/boostorg/statechart",
   "dependencies": [
@@ -16,6 +17,9 @@
     "boost-static-assert",
     "boost-thread",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

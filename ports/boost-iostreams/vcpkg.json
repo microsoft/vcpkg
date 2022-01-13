@@ -1,6 +1,7 @@
 {
   "name": "boost-iostreams",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "supports": "!uwp",
@@ -16,10 +17,6 @@
     "boost-function",
     "boost-integer",
     "boost-iterator",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-mpl",
     "boost-numeric-conversion",
     "boost-preprocessor",
@@ -31,7 +28,14 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

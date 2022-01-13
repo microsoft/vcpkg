@@ -1,10 +1,14 @@
 {
   "name": "boost-describe",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost describe module",
   "homepage": "https://github.com/boostorg/describe",
   "dependencies": [
     "boost-mp11",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

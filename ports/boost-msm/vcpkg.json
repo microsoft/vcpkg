@@ -1,6 +1,7 @@
 {
   "name": "boost-msm",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost msm module",
   "homepage": "https://github.com/boostorg/msm",
   "dependencies": [
@@ -21,6 +22,9 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-typeof",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

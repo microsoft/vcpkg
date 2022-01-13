@@ -1,6 +1,7 @@
 {
   "name": "boost-fiber",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost fiber module",
   "homepage": "https://github.com/boostorg/fiber",
   "supports": "!osx & !uwp & !arm & !emscripten",
@@ -23,13 +24,16 @@
     },
     "boost-format",
     "boost-intrusive",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-predef",
     "boost-smart-ptr",
-    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

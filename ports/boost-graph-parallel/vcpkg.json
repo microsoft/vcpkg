@@ -1,6 +1,7 @@
 {
   "name": "boost-graph-parallel",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost graph_parallel module",
   "homepage": "https://github.com/boostorg/graph_parallel",
   "supports": "!uwp",
@@ -27,10 +28,6 @@
     "boost-iterator",
     "boost-lexical-cast",
     {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
-    {
       "name": "boost-mpi",
       "platform": "!uwp"
     },
@@ -45,8 +42,15 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-variant",
-    "boost-vcpkg-helpers",
     "mpi",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

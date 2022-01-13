@@ -1,6 +1,7 @@
 {
   "name": "boost-flyweight",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost flyweight module",
   "homepage": "https://github.com/boostorg/flyweight",
   "dependencies": [
@@ -18,6 +19,9 @@
     "boost-smart-ptr",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

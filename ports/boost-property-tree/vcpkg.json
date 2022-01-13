@@ -1,6 +1,7 @@
 {
   "name": "boost-property-tree",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost property_tree module",
   "homepage": "https://github.com/boostorg/property_tree",
   "dependencies": [
@@ -19,6 +20,9 @@
     "boost-static-assert",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

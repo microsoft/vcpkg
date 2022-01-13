@@ -1,11 +1,15 @@
 {
   "name": "boost-bind",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost bind module",
   "homepage": "https://github.com/boostorg/bind",
   "dependencies": [
     "boost-config",
     "boost-core",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

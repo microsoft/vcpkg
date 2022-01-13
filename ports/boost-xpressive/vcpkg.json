@@ -1,6 +1,7 @@
 {
   "name": "boost-xpressive",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost xpressive module",
   "homepage": "https://github.com/boostorg/xpressive",
   "dependencies": [
@@ -26,6 +27,9 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

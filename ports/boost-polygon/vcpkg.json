@@ -1,10 +1,14 @@
 {
   "name": "boost-polygon",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost polygon module",
   "homepage": "https://github.com/boostorg/polygon",
   "dependencies": [
     "boost-config",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

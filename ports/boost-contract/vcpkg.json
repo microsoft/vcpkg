@@ -1,6 +1,7 @@
 {
   "name": "boost-contract",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost contract module",
   "homepage": "https://github.com/boostorg/contract",
   "dependencies": [
@@ -15,10 +16,6 @@
     "boost-exception",
     "boost-function",
     "boost-function-types",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-mpl",
     "boost-optional",
     "boost-preprocessor",
@@ -28,7 +25,14 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-utility",
-    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

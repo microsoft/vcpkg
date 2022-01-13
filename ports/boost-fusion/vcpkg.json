@@ -1,6 +1,7 @@
 {
   "name": "boost-fusion",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost fusion module",
   "homepage": "https://github.com/boostorg/fusion",
   "dependencies": [
@@ -15,6 +16,9 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

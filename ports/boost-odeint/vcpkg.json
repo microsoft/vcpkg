@@ -1,6 +1,7 @@
 {
   "name": "boost-odeint",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "dependencies": [
@@ -24,7 +25,10 @@
     "boost-ublas",
     "boost-units",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ],
   "features": {
     "mpi": {

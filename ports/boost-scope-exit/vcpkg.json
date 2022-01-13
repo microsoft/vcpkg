@@ -1,6 +1,7 @@
 {
   "name": "boost-scope-exit",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost scope_exit module",
   "homepage": "https://github.com/boostorg/scope_exit",
   "dependencies": [
@@ -9,6 +10,9 @@
     "boost-preprocessor",
     "boost-type-traits",
     "boost-typeof",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

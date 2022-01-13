@@ -1,6 +1,7 @@
 {
   "name": "boost-accumulators",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost accumulators module",
   "homepage": "https://github.com/boostorg/accumulators",
   "dependencies": [
@@ -24,6 +25,9 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-ublas",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

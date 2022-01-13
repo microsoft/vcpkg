@@ -1,6 +1,7 @@
 {
   "name": "boost-gil",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost gil module",
   "homepage": "https://github.com/boostorg/gil",
   "dependencies": [
@@ -14,6 +15,9 @@
     "boost-numeric-conversion",
     "boost-preprocessor",
     "boost-variant2",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

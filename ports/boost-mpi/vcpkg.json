@@ -1,6 +1,7 @@
 {
   "name": "boost-mpi",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
   "supports": "!uwp",
@@ -18,10 +19,6 @@
     "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-mpl",
     "boost-optional",
     "boost-serialization",
@@ -30,8 +27,15 @@
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
     "mpi",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

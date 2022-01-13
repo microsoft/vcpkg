@@ -1,6 +1,7 @@
 {
   "name": "boost-ptr-container",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost ptr_container module",
   "homepage": "https://github.com/boostorg/ptr_container",
   "dependencies": [
@@ -18,6 +19,9 @@
     "boost-type-traits",
     "boost-unordered",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

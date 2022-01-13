@@ -1,6 +1,7 @@
 {
   "name": "boost-phoenix",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost phoenix module",
   "homepage": "https://github.com/boostorg/phoenix",
   "dependencies": [
@@ -18,6 +19,9 @@
     "boost-smart-ptr",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

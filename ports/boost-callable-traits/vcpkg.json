@@ -1,9 +1,13 @@
 {
   "name": "boost-callable-traits",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost callable_traits module",
   "homepage": "https://github.com/boostorg/callable_traits",
   "dependencies": [
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

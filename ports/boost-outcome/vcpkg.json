@@ -1,6 +1,7 @@
 {
   "name": "boost-outcome",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost outcome module",
   "homepage": "https://github.com/boostorg/outcome",
   "dependencies": [
@@ -8,6 +9,9 @@
     "boost-exception",
     "boost-system",
     "boost-throw-exception",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

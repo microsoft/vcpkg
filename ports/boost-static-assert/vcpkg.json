@@ -1,10 +1,14 @@
 {
   "name": "boost-static-assert",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost static_assert module",
   "homepage": "https://github.com/boostorg/static_assert",
   "dependencies": [
     "boost-config",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

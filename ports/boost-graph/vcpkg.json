@@ -1,6 +1,7 @@
 {
   "name": "boost-graph",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "dependencies": [
@@ -26,10 +27,6 @@
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-move",
     "boost-mpl",
     "boost-multi-index",
@@ -52,8 +49,15 @@
     "boost-typeof",
     "boost-unordered",
     "boost-utility",
-    "boost-vcpkg-helpers",
     "boost-xpressive",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

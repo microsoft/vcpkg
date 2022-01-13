@@ -1,12 +1,16 @@
 {
   "name": "boost-typeof",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost typeof module",
   "homepage": "https://github.com/boostorg/typeof",
   "dependencies": [
     "boost-config",
     "boost-preprocessor",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

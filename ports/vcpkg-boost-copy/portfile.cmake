@@ -3,7 +3,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 set(BOOST_VERSION 1.78.0)
 
 file(INSTALL
-    ${CMAKE_CURRENT_LIST_DIR}/boost-modular-headers.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg_boost_copy_headers.cmake
     ${CMAKE_CURRENT_LIST_DIR}/usage
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )

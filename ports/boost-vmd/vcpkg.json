@@ -1,10 +1,14 @@
 {
   "name": "boost-vmd",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost vmd module",
   "homepage": "https://github.com/boostorg/vmd",
   "dependencies": [
     "boost-preprocessor",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

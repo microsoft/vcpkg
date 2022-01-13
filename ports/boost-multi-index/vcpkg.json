@@ -1,6 +1,7 @@
 {
   "name": "boost-multi-index",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost multi_index module",
   "homepage": "https://github.com/boostorg/multi_index",
   "dependencies": [
@@ -22,6 +23,9 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

@@ -1,6 +1,7 @@
 {
   "name": "boost-tokenizer",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost tokenizer module",
   "homepage": "https://github.com/boostorg/tokenizer",
   "dependencies": [
@@ -11,6 +12,9 @@
     "boost-mpl",
     "boost-throw-exception",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

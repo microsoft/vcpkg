@@ -1,6 +1,7 @@
 {
   "name": "boost-thread",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost thread module",
   "homepage": "https://github.com/boostorg/thread",
   "dependencies": [
@@ -25,10 +26,6 @@
     "boost-io",
     "boost-iterator",
     "boost-lexical-cast",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-move",
     "boost-optional",
     "boost-predef",
@@ -40,8 +37,15 @@
     "boost-tuple",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
     "boost-winapi",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

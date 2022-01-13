@@ -1,6 +1,7 @@
 {
   "name": "boost-icl",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost icl module",
   "homepage": "https://github.com/boostorg/icl",
   "dependencies": [
@@ -19,6 +20,9 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

@@ -1,6 +1,7 @@
 {
   "name": "boost-move",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost move module",
   "homepage": "https://github.com/boostorg/move",
   "dependencies": [
@@ -8,7 +9,10 @@
     "boost-config",
     "boost-core",
     "boost-static-assert",
-    "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

@@ -24,7 +24,7 @@ if "@USER_CONFIG_TOOLSET@" = "msvc" || "@USER_CONFIG_TOOLSET@" = "clang-win"
 }
 else
 {
-    if "@CMAKE_SYSTEM_NAME@" = "Windows" # We are hopelessly stuck inside boost-modular-build-helper, only this works
+    if "@CMAKE_SYSTEM_NAME@" = "Windows"
     {
         lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
         lib icuuc : : <name>icuucd <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;

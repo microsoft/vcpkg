@@ -1,6 +1,7 @@
 {
   "name": "boost-detail",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost detail module",
   "homepage": "https://github.com/boostorg/detail",
   "dependencies": [
@@ -9,6 +10,9 @@
     "boost-preprocessor",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

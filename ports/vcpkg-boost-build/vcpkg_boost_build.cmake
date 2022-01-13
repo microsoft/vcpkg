@@ -12,20 +12,20 @@ else()
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}")
 endif()
 
-function(boost_modular_build)
-    cmake_parse_arguments(_bm "" "SOURCE_PATH;BOOST_CMAKE_FRAGMENT" "" ${ARGN})
+function(vcpkg_boost_build)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;BOOST_CMAKE_FRAGMENT" "")
 
-    if(NOT DEFINED _bm_SOURCE_PATH)
-        message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
+    if(NOT DEFINED arg_SOURCE_PATH)
+        message(FATAL_ERROR "SOURCE_PATH is a required argument to vcpkg_boost_build.")
     endif()
 
     # The following variables are used in the Jamroot.jam
     set(B2_REQUIREMENTS)
 
-    # Some CMake variables may be overridden in the file specified in ${_bm_BOOST_CMAKE_FRAGMENT}
-    if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
-        message(STATUS "Including ${_bm_BOOST_CMAKE_FRAGMENT}")
-        include(${_bm_BOOST_CMAKE_FRAGMENT})
+    # Some CMake variables may be overridden in the file specified in ${arg_BOOST_CMAKE_FRAGMENT}
+    if(DEFINED arg_BOOST_CMAKE_FRAGMENT)
+        message(STATUS "Including ${arg_BOOST_CMAKE_FRAGMENT}")
+        include(${arg_BOOST_CMAKE_FRAGMENT})
     endif()
 
     set(BOOST_BUILD_PATH "${BOOST_BUILD_INSTALLED_DIR}/tools/boost-build")
@@ -65,10 +65,10 @@ function(boost_modular_build)
     endif()
 
     set(_jamfile)
-    if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
-        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile.v2")
-    elseif(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile")
-        set(_jamfile "${_bm_SOURCE_PATH}/build/Jamfile")
+    if(EXISTS "${arg_SOURCE_PATH}/build/Jamfile.v2")
+        set(_jamfile "${arg_SOURCE_PATH}/build/Jamfile.v2")
+    elseif(EXISTS "${arg_SOURCE_PATH}/build/Jamfile")
+        set(_jamfile "${arg_SOURCE_PATH}/build/Jamfile")
     endif()
     if(_jamfile)
         file(READ "${_jamfile}" _contents)
@@ -95,11 +95,11 @@ function(boost_modular_build)
         string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${arg_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     set(configure_options)
-    if(_bm_BOOST_CMAKE_FRAGMENT)
-        list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+    if(arg_BOOST_CMAKE_FRAGMENT)
+        list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${arg_BOOST_CMAKE_FRAGMENT}")
     endif()
 
     vcpkg_cmake_configure(
@@ -110,7 +110,7 @@ function(boost_modular_build)
             "-DFEATURES=${FEATURES}"
             "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
             "-DB2_EXE=${B2_EXE}"
-            "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+            "-DSOURCE_PATH=${arg_SOURCE_PATH}"
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
             ${configure_options}

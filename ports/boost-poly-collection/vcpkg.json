@@ -1,6 +1,7 @@
 {
   "name": "boost-poly-collection",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost poly_collection module",
   "homepage": "https://github.com/boostorg/poly_collection",
   "dependencies": [
@@ -12,6 +13,9 @@
     "boost-mpl",
     "boost-type-erasure",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

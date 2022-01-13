@@ -1,10 +1,14 @@
 {
   "name": "boost-io",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost io module",
   "homepage": "https://github.com/boostorg/io",
   "dependencies": [
     "boost-config",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

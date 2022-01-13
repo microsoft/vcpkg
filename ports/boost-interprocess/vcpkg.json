@@ -1,6 +1,7 @@
 {
   "name": "boost-interprocess",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost interprocess module",
   "homepage": "https://github.com/boostorg/interprocess",
   "dependencies": [
@@ -14,7 +15,10 @@
     "boost-static-assert",
     "boost-type-traits",
     "boost-unordered",
-    "boost-vcpkg-helpers",
-    "boost-winapi"
+    "boost-winapi",
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

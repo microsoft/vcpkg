@@ -1,9 +1,13 @@
 {
   "name": "boost-leaf",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost leaf module",
   "homepage": "https://github.com/boostorg/leaf",
   "dependencies": [
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

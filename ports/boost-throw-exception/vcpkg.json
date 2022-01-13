@@ -1,11 +1,15 @@
 {
   "name": "boost-throw-exception",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost throw_exception module",
   "homepage": "https://github.com/boostorg/throw_exception",
   "dependencies": [
     "boost-assert",
     "boost-config",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

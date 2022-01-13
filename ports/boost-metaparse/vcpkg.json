@@ -1,6 +1,7 @@
 {
   "name": "boost-metaparse",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost metaparse module",
   "homepage": "https://github.com/boostorg/metaparse",
   "dependencies": [
@@ -10,6 +11,9 @@
     "boost-preprocessor",
     "boost-static-assert",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

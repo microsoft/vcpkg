@@ -1,9 +1,0 @@
-{
-  "name": "boost-vcpkg-helpers",
-  "version": "1.78.0",
-  "port-version": 1,
-  "description": "Internal vcpkg port used to modularize Boost",
-  "dependencies": [
-    "boost-uninstall"
-  ]
-}

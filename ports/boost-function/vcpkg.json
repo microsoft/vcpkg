@@ -1,6 +1,7 @@
 {
   "name": "boost-function",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost function module",
   "homepage": "https://github.com/boostorg/function",
   "dependencies": [
@@ -14,6 +15,9 @@
     "boost-type-index",
     "boost-type-traits",
     "boost-typeof",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

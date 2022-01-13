@@ -1,6 +1,7 @@
 {
   "name": "boost-any",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost any module",
   "homepage": "https://github.com/boostorg/any",
   "dependencies": [
@@ -11,6 +12,9 @@
     "boost-throw-exception",
     "boost-type-index",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

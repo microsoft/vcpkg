@@ -1,6 +1,7 @@
 {
   "name": "boost-random",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost random module",
   "homepage": "https://github.com/boostorg/random",
   "dependencies": [
@@ -15,17 +16,20 @@
     "boost-dynamic-bitset",
     "boost-integer",
     "boost-io",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-range",
     "boost-static-assert",
     "boost-system",
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,6 +1,7 @@
 {
   "name": "boost-dynamic-bitset",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost dynamic_bitset module",
   "homepage": "https://github.com/boostorg/dynamic_bitset",
   "dependencies": [
@@ -12,6 +13,9 @@
     "boost-move",
     "boost-static-assert",
     "boost-throw-exception",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

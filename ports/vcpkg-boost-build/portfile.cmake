@@ -2,7 +2,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 file(
     COPY
-        ${CMAKE_CURRENT_LIST_DIR}/boost-modular-build.cmake
+        ${CMAKE_CURRENT_LIST_DIR}/vcpkg_boost_build.cmake
         ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
         ${CMAKE_CURRENT_LIST_DIR}/Jamroot.jam.in
         ${CMAKE_CURRENT_LIST_DIR}/nothing.bat

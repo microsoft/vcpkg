@@ -1,6 +1,7 @@
 {
   "name": "boost-json",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost json module",
   "homepage": "https://github.com/boostorg/json",
   "dependencies": [
@@ -13,15 +14,18 @@
     "boost-config",
     "boost-container",
     "boost-exception",
-    {
-      "name": "boost-modular-build-helper",
-      "host": true
-    },
     "boost-mp11",
     "boost-system",
     "boost-throw-exception",
     "boost-utility",
-    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-boost-build",
+      "host": true
+    },
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

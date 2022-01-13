@@ -1,6 +1,7 @@
 {
   "name": "boost-parameter",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost parameter module",
   "homepage": "https://github.com/boostorg/parameter",
   "dependencies": [
@@ -14,6 +15,9 @@
     "boost-preprocessor",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }

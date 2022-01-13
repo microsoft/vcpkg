@@ -1,6 +1,7 @@
 {
   "name": "boost-unordered",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost unordered module",
   "homepage": "https://github.com/boostorg/unordered",
   "dependencies": [
@@ -17,6 +18,9 @@
     "boost-throw-exception",
     "boost-tuple",
     "boost-type-traits",
-    "boost-vcpkg-helpers"
+    {
+      "name": "vcpkg-boost-copy",
+      "host": true
+    }
   ]
 }
