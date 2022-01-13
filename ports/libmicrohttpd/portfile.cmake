@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm")
-
 set(MICROHTTPD_VERSION 0.9.75)
 
 vcpkg_download_distfile(ARCHIVE
@@ -13,7 +11,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES fix-msvc-project.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
