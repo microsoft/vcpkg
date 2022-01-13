@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-exception requires a newer version of vcpkg in order to build.")
+    message(FATAL_ERROR "boost-exception requires a newer version of vcpkg.")
 endif()
 
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/vcpkg_boost_build.cmake)

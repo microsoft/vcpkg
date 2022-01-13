@@ -280,7 +280,7 @@ function GeneratePort() {
 
     $portfileLines += @(
         "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
-        "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg in order to build.`")"
+        "    message(FATAL_ERROR `"$portName requires a newer version of vcpkg.`")"
         "endif()"
         ""
     )

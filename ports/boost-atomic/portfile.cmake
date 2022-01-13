@@ -17,7 +17,7 @@ string(REPLACE
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-atomic requires a newer version of vcpkg in order to build.")
+    message(FATAL_ERROR "boost-atomic requires a newer version of vcpkg.")
 endif()
 
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/vcpkg_boost_build.cmake)
