@@ -56,22 +56,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
+set(OPTIONS "")
 set(OPTIONS_RELEASE "")
 set(OPTIONS_DEBUG "")
 if("idn2" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
-set(SECTRANSP_OPTIONS "")
 if("sectransp" IN_LIST FEATURES)
-    set(SECTRANSP_OPTIONS -DCURL_CA_PATH=none)
+    list(APPEND OPTIONS -DCURL_CA_PATH=none)
 endif()
 
 # UWP targets
-set(UWP_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
-    set(UWP_OPTIONS
+    list(APPEND OPTIONS
         -DCURL_DISABLE_TELNET=ON
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
@@ -83,8 +82,7 @@ vcpkg_cmake_configure(
     OPTIONS 
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
-        ${UWP_OPTIONS}
-        ${SECTRANSP_OPTIONS}
+        ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
