@@ -1,5 +1,5 @@
 # This portfile is based (shamelessly copied and adapted a bit) on 'ogre' portfile.
-
+set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR OFF)
 if (EXISTS "${CURRENT_INSTALLED_DIR}/Media/HLMS/Blendfunctions_piece_fs.glslt")
     message(FATAL_ERROR "FATAL ERROR: ogre-next and ogre are incompatible.")
 endif()
@@ -27,17 +27,24 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
+if (("openvr" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL static))
+    set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR ON)
+    message ("OpenVR does not support building on static ")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
         java    OGRE_BUILD_COMPONENT_JAVA
         python  OGRE_BUILD_COMPONENT_PYTHON
         csharp  OGRE_BUILD_COMPONENT_CSHARP
+		openvr  CMAKE_DISABLE_FIND_PACKAGE_OPENVR
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+	    ${FEATURE_OPTIONS}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_COPY_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
@@ -61,7 +68,11 @@ vcpkg_cmake_configure(
         -DOGRE_CMAKE_DIR=share/ogre-next
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup()
+
+
 
 file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
 if(REL_CFGS)
@@ -112,5 +123,3 @@ file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_copy_pdbs()

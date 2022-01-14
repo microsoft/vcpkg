@@ -8,7 +8,6 @@
     "boost-thread",
     "freeimage",
     "freetype",
-    "openvr",
     "poco",
     "rapidjson",
     "sdl2",
@@ -34,6 +33,12 @@
     },
     "java": {
       "description": "Build Java (JNI) bindings"
+    },
+    "openvr": {
+      "description": "Build openvr bindings",
+      "dependencies": [
+        "openvr"
+      ]
     },
     "python": {
       "description": "Build Python bindings",
