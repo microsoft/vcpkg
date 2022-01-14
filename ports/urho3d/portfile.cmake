@@ -11,6 +11,7 @@ vcpkg_from_github(
         externalproject.patch
         add_options.patch
         fix-install.patch
+        fix-dependency-readline.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -21,16 +22,16 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        readline    URHO3D_ENABLE_READLINE
         tools       URHO3D_BUILD_TOOLS
         examples    URHO3D_BUILD_SAMPLES
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DURHO3D_LIB_TYPE=${URHO3D_LIB_TYPE}
-        -DURHO3D_C++11=ON
         -DURHO3D_PCH=OFF
 )
 
@@ -100,7 +101,7 @@ list(APPEND SDL_RELATED_HEADERS
     "${CURRENT_PACKAGES_DIR}/include/Urho3D/IO/NamedPipe.h"
     "${CURRENT_PACKAGES_DIR}/include/Urho3D/IO/RWOpsWrapper.h"
 )
-foreach (SDL_RELATED_HEADER ${SDL_RELATED_HEADERS})
+foreach (SDL_RELATED_HEADER IN LISTS SDL_RELATED_HEADERS)
     vcpkg_replace_string("${SDL_RELATED_HEADER}"
         "#include <SDL/"
         "#include <Urho3D/ThirdParty/SDL/"
