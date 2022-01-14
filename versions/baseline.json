@@ -3472,6 +3472,10 @@
       "baseline": "0.2.0",
       "port-version": 7
     },
+    "libfswatch": {
+      "baseline": "1.17.0",
+      "port-version": 0
+    },
     "libftdi": {
       "baseline": "0.20",
       "port-version": 3
