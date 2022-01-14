@@ -13,6 +13,7 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
+    0009-python.pc.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -33,7 +34,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
     endif()
-    list(APPEND PATCHES "0009-python-embed.pc.patch")
 endif()
 
 vcpkg_from_github(
@@ -46,6 +46,25 @@ vcpkg_from_github(
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/Makefile.pre.in" "$(INSTALL) -d -m $(DIRMODE)" "$(MKDIR_P)")
+
+function(make_python_pkgconfig)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "FILE;INSTALL_ROOT;EXEC_PREFIX;INCLUDEDIR;ABIFLAGS" "")
+
+    set(prefix "${CURRENT_PACKAGES_DIR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix ${arg_EXEC_PREFIX})
+    set(includedir ${arg_INCLUDEDIR})
+    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+    set(ABIFLAGS ${arg_ABIFLAGS})
+
+    string(REPLACE "python" "python-${VERSION}" out_file ${arg_FILE})
+    set(out_full_path "${arg_INSTALL_ROOT}/lib/pkgconfig/${out_file}")
+    configure_file("${SOURCE_PATH}/Misc/${arg_FILE}.in" ${out_full_path} @ONLY)
+
+    file(READ ${out_full_path} pkgconfig_file)
+    string(REPLACE "-lpython${VERSION}" "-lpython${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}" pkgconfig_file "${pkgconfig_file}")
+    file(WRITE ${out_full_path} "${pkgconfig_file}")
+endfunction()
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
@@ -161,25 +180,18 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     # pkg-config files
-    set(prefix "${CURRENT_PACKAGES_DIR}")
-    set(libdir [[${prefix}/lib]])
-    set(ABIVERSION "${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}")
-    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(exec_prefix "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        set(includedir [[${prefix}/include]])
-        set(ABISUFFIX "")
-        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
-        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+        make_python_pkgconfig(FILE python.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
+        make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(exec_prefix "\${prefix}/../tools/${PORT}")
-        set(includedir [[${prefix}/../include]])
-        set(ABISUFFIX "_d")
-        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
-        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+        make_python_pkgconfig(FILE python.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+        make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
     endif()
 
     vcpkg_fixup_pkgconfig()
