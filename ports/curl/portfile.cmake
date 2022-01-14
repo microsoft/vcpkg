@@ -11,6 +11,7 @@ vcpkg_from_github(
         0020-fix-pc-file.patch
         0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
+        mbedtls-ws2_32.patch
         export-components.patch
         curl-7.81.0-ssl.patch
 )
