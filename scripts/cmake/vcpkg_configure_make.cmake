@@ -773,7 +773,7 @@ function(vcpkg_configure_make)
         endif()
         set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-        vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+        vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
         foreach(lib_env_var IN LISTS lib_env_vars)
             if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib")
                 vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib")
