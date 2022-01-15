@@ -4,18 +4,23 @@
   "description": "A cross-platform file change monitor with multiple backends: Apple OS X File System Events, *BSD kqueue, Solaris/Illumos File Events Notification, Linux inotify, Microsoft Windows and a stat()-based backend.",
   "dependencies": [
     {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "gettext",
-    "libiconv",
-    {
-      "name": "pthreads",
-      "platform": "windows"
     }
   ]
 }
