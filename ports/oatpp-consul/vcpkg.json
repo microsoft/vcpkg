@@ -4,6 +4,14 @@
   "description": "OAT++ Modern web framework consul module.",
   "homepage": "https://github.com/oatpp/oatpp-consul",
   "dependencies": [
-    "oatpp"
+    "oatpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

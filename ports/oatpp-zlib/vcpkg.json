@@ -4,6 +4,14 @@
   "description": "Oat++ functionality for automatically compressing/decompressing content with deflate and gzip.",
   "homepage": "https://github.com/oatpp/oatpp-zlib",
   "dependencies": [
-    "oatpp"
+    "oatpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

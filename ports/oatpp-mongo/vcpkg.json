@@ -4,6 +4,14 @@
   "description": "Oat++ MongoDB adapter for Oat++ ORM (native client). It contains DTO to BSON mapper plus database driver.",
   "homepage": "https://github.com/oatpp/oatpp-mongo",
   "dependencies": [
-    "oatpp"
+    "oatpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

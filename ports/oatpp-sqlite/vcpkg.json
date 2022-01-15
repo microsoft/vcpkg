@@ -5,6 +5,14 @@
   "homepage": "https://github.com/oatpp/oatpp-sqlite",
   "dependencies": [
     "oatpp",
-    "sqlite3"
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

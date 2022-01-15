@@ -4,6 +4,14 @@
   "description": "Oat++ SSDP (Simple Service Discovery Protocol) submodule.",
   "homepage": "https://github.com/oatpp/oatpp-ssdp",
   "dependencies": [
-    "oatpp"
+    "oatpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

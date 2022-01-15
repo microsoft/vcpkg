@@ -4,6 +4,14 @@
   "description": "Oat++ OpenApi (Swagger) UI submodule.",
   "homepage": "https://github.com/oatpp/oatpp-swagger",
   "dependencies": [
-    "oatpp"
+    "oatpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
