@@ -3,7 +3,6 @@
   "version": "7.81.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://github.com/curl/curl",
-  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -16,22 +15,8 @@
     "zlib"
   ],
   "default-features": [
-    "brotli",
-    "c-ares",
-    "http2",
-    "idn",
-    "idn2",
-    "mbedtls",
     "non-http",
-    "openssl",
-    "schannel",
-    "ssh",
-    "ssl",
-    "sspi",
-    "tool",
-    "winidn",
-    "winldap",
-    "winssl"
+    "ssl"
   ],
   "features": {
     "brotli": {
