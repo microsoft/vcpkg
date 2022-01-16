@@ -4106,7 +4106,7 @@
     },
     "libxmp-lite": {
       "baseline": "4.4.1",
-      "port-version": 7
+      "port-version": 8
     },
     "libxslt": {
       "baseline": "1.1.34",
