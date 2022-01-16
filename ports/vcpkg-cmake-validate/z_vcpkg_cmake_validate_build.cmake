@@ -6,7 +6,7 @@ function(z_vcpkg_cmake_validate_build)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
         "COUNT;LABEL;CMAKE;VERSION"
-        "CMAKE_PROLOG;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
+        "CMAKE_PROLOGUE;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
     )
     if(NOT arg_FIND_PACKAGE)
         message(FATAL_ERROR "The FIND_PACKAGE argument is mandatory.")
@@ -82,7 +82,7 @@ function(z_vcpkg_cmake_validate_build)
                 "-DLABEL=${arg_LABEL}, ${build_type}"
                 "-DCMAKE_BUILD_TYPE=${build_type}"
                 "-DCMAKE_INSTALL_PREFIX=${build_prefix}/install"
-                "-DPROLOG=${arg_CMAKE_PROLOG}"
+                "-DPROLOGUE=${arg_CMAKE_PROLOGUE}"
                 "-DFIND_PACKAGE_ARGS=${arg_FIND_PACKAGE}"
                 "-DLIBRARIES=${arg_LIBRARIES}"
                 "-DHEADERS=${arg_HEADERS}"

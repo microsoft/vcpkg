@@ -6,7 +6,7 @@ Test the correctness of the cmake package information established by a find_pack
 ```cmake
 vcpkg_cmake_validate(
     [CMAKE_VERSION <version>]
-    [CMAKE_PROLOG <cmake statements>...]
+    [CMAKE_PROLOGUE <cmake statements>...]
     FIND_PACKAGE <Pkg> <find_package arguments>...
     [LIBRARIES <targets or variable names>...]
     [HEADERS <headername.h>...]
@@ -43,7 +43,7 @@ The minimum version of CMake which is required for this test.
 The test can also be executed with a higher version.
 If this parameter is missing, the test will be executed with all configured versions.
 
-### CMAKE_PROLOG
+### CMAKE_PROLOGUE
 
 Additional CMake statements to be added before the `project()` command.
 
@@ -85,7 +85,7 @@ function(vcpkg_cmake_validate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
         "CMAKE_VERSION"
-        "CMAKE_PROLOG;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
+        "CMAKE_PROLOGUE;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -151,7 +151,7 @@ function(vcpkg_cmake_validate)
             COUNT "${count}"
             LABEL "${label}"
             CMAKE ${cmake}
-            CMAKE_PROLOG ${arg_CMAKE_PROLOG}
+            CMAKE_PROLOGUE ${arg_CMAKE_PROLOGUE}
             FIND_PACKAGE ${arg_FIND_PACKAGE}
             LIBRARIES ${arg_LIBRARIES}
             HEADERS   ${arg_HEADERS}

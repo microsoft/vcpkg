@@ -4,13 +4,15 @@ if(NOT FIND_PACKAGE_ARGS)
 endif()
 
 set(LABEL "${FIND_PACKAGE_ARGS}" CACHE STRING "The label to be displayed to the user")
+set(PROLOGUE "" CACHE STRING "CMake code to be executed before the project() command")
+
 message(STATUS "Validating ${LABEL}, CMake ${CMAKE_VERSION}")
 
 # This project initially runs with no policies set until the tested call to
 # `find_package` returns. The prolog may modify the initial state if desired.
 cmake_minimum_required(VERSION 2.4)
 set(prolog "")
-foreach(item IN LISTS PROLOG)
+foreach(item IN LISTS PROLOGUE)
     string(APPEND prolog "${item}\n\n")
 endforeach()
 if(prolog)
