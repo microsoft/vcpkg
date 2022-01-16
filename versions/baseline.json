@@ -4382,7 +4382,7 @@
     },
     "mhook": {
       "baseline": "2.5.1",
-      "port-version": 2
+      "port-version": 3
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha3",
