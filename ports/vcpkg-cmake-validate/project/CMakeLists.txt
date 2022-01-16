@@ -102,8 +102,6 @@ if(NOT LIBRARIES)
     endif()
 endif()
 
-string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
-
 set(lib_vars_expanded "")
 set(lib_vars "")
 # Resolve libraries variables, but keep variable name for in-order messages.
@@ -123,7 +121,43 @@ foreach(input IN LISTS LIBRARIES)
     endif()
 endforeach()
 
+# During this test, _IMPORT_PREFIX resolves to the package staging dir.
+# But dependencies are in the target install dir.
+function(get_and_fixup_target_property var target property)
+    get_target_property(libs "${target}" "${property}")
+    if(libs)
+        set(checked "")
+        foreach(input IN LISTS libs)
+            # Try to handle generator expressions by looping
+            set(processed "")
+            string(FIND "${input}" "${CURRENT_PACKAGES_DIR}" index)
+            while(NOT index LESS 0)
+                string(SUBSTRING "${input}" 0 ${index} prefix)
+                string(APPEND processed "${prefix}")
+                string(SUBSTRING "${input}" ${index} -1 input)
+                string(REGEX MATCH "^(.[^>]*)(.*)" match "${input}")
+                set(input "${CMAKE_MATCH_2}")
+                set(filepath "${CMAKE_MATCH_1}")
+                if(NOT EXISTS "${filepath}")
+                    string(REPLACE "${CURRENT_PACKAGES_DIR}" "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" installed "${filepath}")
+                    if(EXISTS "${installed}")
+                        set(filepath "${installed}")
+                    endif()
+                endif()
+                string(APPEND processed "${filepath}")
+                string(FIND "${input}" "${CURRENT_PACKAGES_DIR}" index)
+            endwhile()
+            string(APPEND processed "${input}")
+            list(APPEND checked "${processed}")
+        endforeach()
+        set_target_properties("${target}" PROPERTIES "${property}" "${checked}")
+        set(libs "${checked}")
+    endif()
+    set("${var}" "${libs}" PARENT_SCOPE)
+endfunction()
+
 # Resolve target dependencies, but keep target name for in-order messages.
+string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
 set(lib_targets_expanded "")
 while(lib_vars_expanded)
     list(GET lib_vars_expanded 0 item)
@@ -140,39 +174,39 @@ while(lib_vars_expanded)
         get_target_property(mapped_config "${item}" "MAP_IMPORTED_CONFIG_${config}")
         if(mapped_config)
             string(TOUPPER "${mapped_config}" mapped_config)
+        else()
+            set(mapped_config "NOTFOUND")
         endif()
+        set(properties
+            "INTERFACE_LINK_LIBRARIES"
+        )
         get_target_property(type "${item}" "TYPE")
-        if(NOT type STREQUAL "INTERFACE_LIBRARY")
-            if(mapped_config)
-                get_target_property(lib "${item}" "IMPORTED_IMPLIB_${mapped_config}")
-                check_var(lib)
-                get_target_property(lib "${item}" "IMPORTED_LOCATION_${mapped_config}")
-                check_var(lib)
-            endif()
-            get_target_property(lib "${item}" "IMPORTED_IMPLIB_${config}")
-            check_var(lib)
-            if(NOT lib)
-                get_target_property(lib "${item}" "IMPORTED_IMPLIB")
-                check_var(lib)
-            endif()
-            get_target_property(lib "${item}" "IMPORTED_LOCATION_${config}")
-            check_var(lib)
-            if(NOT lib)
-                get_target_property(lib "${item}" "IMPORTED_LOCATION")
-                check_var(lib)
-            endif()
-            foreach(property IN ITEMS "LINK_INTERFACE_LIBRARIES_${config}" "LINK_INTERFACE_LIBRARIES" "INTERFACE_LINK_LIBRARIES")
-                get_target_property(libs "${item}" "${property}")
-                foreach(lib IN LISTS libs)
-                    check_var(lib)
-                endforeach()
-            endforeach()
+        if(NOT type STREQUAL "INTERFACE_LIBRARY" OR NOT CMAKE_VERSION VERSION_LESS 3.19)
+            list(APPEND properties
+                "IMPORTED_LINK_INTERFACE_LIBRARIES"
+                "IMPORTED_LINK_INTERFACE_LIBRARIES_${config}"
+                "IMPORTED_LINK_INTERFACE_LIBRARIES_${mapped_config}"
+            )
         endif()
-        get_target_property(libs "${item}" "INTERFACE_LINK_LIBRARIES")
-        foreach(lib IN LISTS libs)
-            check_var(lib)
-    endforeach()
-endif()
+        if(NOT type STREQUAL "INTERFACE_LIBRARY")
+            list(APPEND properties
+                "IMPORTED_IMPLIB"
+                "IMPORTED_IMPLIB_${config}"
+                "IMPORTED_IMPLIB_${mapped_config}"
+                "IMPORTED_LOCATION"
+                "IMPORTED_LOCATION_${config}"
+                "IMPORTED_LOCATION_${mapped_config}"
+                "LINK_INTERFACE_LIBRARIES"
+                "LINK_INTERFACE_LIBRARIES_${config}"
+            )
+        endif()
+        foreach(property IN LISTS properties)
+            get_and_fixup_target_property(libs "${item}" "${property}")
+            foreach(lib IN LISTS libs)
+                check_var(lib)
+            endforeach()
+        endforeach()
+    endif()
 endwhile()
 
 # Validate library file paths.
