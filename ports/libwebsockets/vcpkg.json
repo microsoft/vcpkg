@@ -5,7 +5,10 @@
   "homepage": "https://github.com/warmcat/libwebsockets",
   "supports": "!uwp",
   "dependencies": [
-    "libuv",
+    {
+      "name": "libuv",
+      "platform": "!emscripten"
+    },
     "openssl",
     "pthreads",
     {
