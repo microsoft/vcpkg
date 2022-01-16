@@ -8,7 +8,8 @@ vcpkg_cmake_validate(
     [CMAKE_MINIMUM_VERSION <version>]
     [CMAKE_PROLOGUE <cmake statements>...]
     FIND_PACKAGE <Pkg> <find_package arguments>...
-    [LIBRARIES <targets or variable names>...]
+    [LIBRARIES_VARIABLES <variable names>...]
+    [TARGETS <targets>...]
     [HEADERS <headername.h>...]
     [FUNCTIONS <function1> ...]
 )
@@ -55,15 +56,28 @@ Additional CMake statements to be added before the `project()` command.
 Arguments to pass to the `find_package` command. This parameter is required.
 The first argument is the canonical package name ("`<Pkg>`").
 
-### LIBRARIES
+### LIBRARIES_VARIABLES
 
-Names of variables or targets that shall be checked for existence after `find_package()`.
-Variable names must be given without `${` and `}`. The test project inspects the build
-system to find out whether the identifier names a defined variable or target.
+Names of output variables that shall be checked for being defined after
+`find_package()`. The test also expands the list of libraries to be linked
+(including transitive usage requirements if the variable contains target names),
+and checks if libraries located in the vcpkg installed tree match the build type
+of the test project.
 
-The test also expands the list of libraries to be linked, including transitive usage
-requirements, and checks if libraries located in the vcpkg installed tree match the
-build type of the test project.
+If the `TARGETS` parameter is not used, using `LIBRARY_VARIABLE will also look
+for a variable which defines the include directories, and use it for configuring
+the test project
+
+### TARGETS
+
+Names of targets that shall be checked for existence after `find_package()`.
+The test also expands the list of libraries to be linked, including transitive
+usage requirements, and checks if libraries located in the vcpkg installed tree
+match the build type of the test project.
+
+If this parameter is defined, the targets are assumed to carry all transitive
+usage requirements. Given library variables will still be checked, but not used
+for building the test project.
 
 ### HEADERS
 
@@ -88,7 +102,7 @@ function(vcpkg_cmake_validate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
         "CMAKE_MINIMUM_VERSION"
-        "CMAKE_PROLOGUE;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
+        "CMAKE_PROLOGUE;FIND_PACKAGE;LIBRARIES_VARIABLES;TARGETS;HEADERS;FUNCTIONS"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -140,8 +154,11 @@ function(vcpkg_cmake_validate)
     endif()
 
     set(label "`find_package(${arg_FIND_PACKAGE})`")
-    if(arg_LIBRARIES)
-        string(APPEND label ", libraries: ${arg_LIBRARIES}")
+    if(arg_LIBRARIES_VARIABLES)
+        string(APPEND label ", variables: ${arg_LIBRARIES_VARIABLES}")
+    endif()
+    if(arg_TARGETS)
+        string(APPEND label ", targets: ${arg_TARGETS}")
     endif()
     list(JOIN label " " label)
 
@@ -156,7 +173,8 @@ function(vcpkg_cmake_validate)
             CMAKE ${cmake}
             CMAKE_PROLOGUE ${arg_CMAKE_PROLOGUE}
             FIND_PACKAGE ${arg_FIND_PACKAGE}
-            LIBRARIES ${arg_LIBRARIES}
+            LIBRARIES_VARIABLES ${arg_LIBRARIES_VARIABLES}
+            TARGETS ${arg_TARGETS}
             HEADERS   ${arg_HEADERS}
             FUNCTIONS ${arg_FUNCTIONS}
         )

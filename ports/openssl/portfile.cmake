@@ -27,20 +27,20 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 vcpkg_cmake_validate(
     FIND_PACKAGE OpenSSL MODULE
-    LIBRARIES    OPENSSL_LIBRARIES
+    LIBRARIES_VARIABLES OPENSSL_LIBRARIES
     HEADERS      openssl/ssl.h
     FUNCTIONS    SSL_new
 )
 vcpkg_cmake_validate(
     FIND_PACKAGE OpenSSL MODULE
-    LIBRARIES    OpenSSL::SSL
+    TARGETS      OpenSSL::SSL
     HEADERS      openssl/ssl.h
     FUNCTIONS    SSL_new
 )
 vcpkg_cmake_validate(
     CMAKE_MINIMUM_VERSION 3.18
     FIND_PACKAGE OpenSSL MODULE
-    LIBRARIES    OpenSSL::applink
+    TARGETS      OpenSSL::applink
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

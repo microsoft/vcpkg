@@ -5,6 +5,8 @@ endif()
 
 set(LABEL "${FIND_PACKAGE_ARGS}" CACHE STRING "The label to be displayed to the user")
 set(PROLOGUE "" CACHE STRING "CMake code to be executed before the project() command")
+set(LIBARIES_VARIABLES "" CACHE STRING "List of libraries variables to be checked and used")
+set(TARGETS "" CACHE STRING "List of targets to be checked and used")
 
 message(STATUS "Validating ${LABEL}, CMake ${CMAKE_VERSION}")
 
@@ -64,69 +66,38 @@ if(NOT "${${found_var}}")
 endif()
 message(STATUS "${found_var}: ${${found_var}}")
 
-# Check (expected) targets and libraries
-set(assume_transitive_usage_requirements "")
-foreach(item IN LISTS LIBRARIES)
-    if(TARGET "${item}")
-        message(STATUS "Target: ${item}")
-        list(APPEND assume_transitive_usage_requirements ${item})
-    elseif(DEFINED "${item}")
-        message(STATUS "${item}: ${${item}}")
-    elseif(NOT DEFINED "${item}")
-        message(FATAL_ERROR "Validation failed: ${item} is neither a target nor a variable.")
-    endif()
-endforeach()
-
-# Check include dirs
-set(INCLUDE_DIRS "")
-if(NOT ";${FIND_PACKAGE_ARGS};" MATCHES ";CONFIG;")
+# Search include dirs variable if needed
+set(include_dirs "")
+if(LIBRARIES_VARIABLES AND NOT TARGETS)
     if(DEFINED ${package_upper}_INCLUDE_DIRS)
-        set(include_dirs "${package_upper}_INCLUDE_DIRS")
+        set(include_dirs_var "${package_upper}_INCLUDE_DIRS")
     elseif(DEFINED ${package}_INCLUDE_DIRS)
-        set(include_dirs "${package}_INCLUDE_DIRS")
+        set(include_dirs_var "${package}_INCLUDE_DIRS")
     elseif(DEFINED ${package_upper}_INCLUDE_DIR)
-        set(include_dirs "${package_upper}_INCLUDE_DIR")
+        set(include_dirs_var "${package_upper}_INCLUDE_DIR")
     elseif(DEFINED ${package}_INCLUDE_DIR)
-        set(include_dirs "${package}_INCLUDE_DIR")
-    elseif(NOT assume_transitive_usage_requirements)
+        set(include_dirs_var "${package}_INCLUDE_DIR")
+    else()
         message(FATAL_ERROR "Validation failed: <Pkg>_INCLUDE_DIR[S] is not set")
     endif()
-    if(include_dirs)
-        set(INCLUDE_DIRS "${${include_dirs}}")
-        message(STATUS "${include_dirs}: ${INCLUDE_DIRS}")
-    endif()
+    set(include_dirs "${${include_dirs_var}}")
+    message(STATUS "${include_dirs_var}: ${include_dirs}")
 endif()
 
-# Check libraries
-if(NOT LIBRARIES)
-    # Guess libraries variable
-    if(DEFINED ${package_upper}_LIBRARIES)
-        set(LIBRARIES "${package_upper}_LIBRARIES")
-    elseif(DEFINED ${package}_LIBRARIES)
-        set(LIBRARIES "${package}_LIBRARIES")
-    elseif(NOT assume_transitive_usage_requirements)
-        message(FATAL_ERROR "Validation failed: <Pkg>_LIBRARIES is not set")
-    endif()
-endif()
-
-set(lib_vars_expanded "")
-set(lib_vars "")
-# Resolve libraries variables, but keep variable name for in-order messages.
-foreach(input IN LISTS LIBRARIES)
-    list(APPEND lib_vars_expanded "${input}")
-    if(DEFINED "${input}")
-        list(APPEND lib_vars "${input}")
-        set(value "${${input}}")
-        if(CMAKE_BUILD_TYPE STREQUAL "Release")
-            string(REPLACE "debug;" "ignore:" value "${value}")
-        elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            string(REPLACE "optimized;" "ignore:" value "${value}")
-        endif()
-        list(APPEND lib_vars_expanded "${value}")
-    elseif(NOT TARGET "${input}")
-        message(FATAL_ERROR "Validation failed: ${input} is not a variable or target")
+# Check expected targets
+foreach(target IN LISTS TARGETS)
+    if(NOT TARGET "${target}")
+        message(FATAL_ERROR "Validation failed: Target ${target} is missing.")
     endif()
 endforeach()
+
+# Check expected libraries variables
+foreach(variable IN LISTS LIBRARIES_VARIABLES)
+    if(NOT DEFINED "${variable}")
+        message(FATAL_ERROR "Validation failed: Variable ${variable} is not defined.")
+    endif()
+endforeach()
+
 
 # During this test, _IMPORT_PREFIX resolves to the package staging dir.
 # But dependencies are in the target install dir.
@@ -138,7 +109,7 @@ function(get_and_fixup_target_property var target property)
             # Try to handle generator expressions by looping
             set(processed "")
             string(FIND "${input}" "${CURRENT_PACKAGES_DIR}" index)
-            while(NOT index LESS 0)
+            while(NOT index LESS "0")
                 string(SUBSTRING "${input}" 0 ${index} prefix)
                 string(APPEND processed "${prefix}")
                 string(SUBSTRING "${input}" ${index} -1 input)
@@ -163,69 +134,103 @@ function(get_and_fixup_target_property var target property)
     set("${var}" "${libs}" PARENT_SCOPE)
 endfunction()
 
-# Resolve target dependencies, but keep target name for in-order messages.
-string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
-set(lib_targets_expanded "")
-while(lib_vars_expanded)
-    list(GET lib_vars_expanded 0 item)
-    list(REMOVE_AT lib_vars_expanded 0)
-    list(APPEND lib_targets_expanded "${item}")
-    macro(check_var name)
-        if(TARGET "${${name}}")
-            list(APPEND lib_vars_expanded "${${name}}")
-        elseif(NOT "${${name}}" MATCHES "-NOTFOUND")
-            list(APPEND lib_targets_expanded "${${name}}")
-        endif()
-    endmacro()
-    if(TARGET "${item}")
-        get_target_property(mapped_config "${item}" "MAP_IMPORTED_CONFIG_${config}")
-        if(mapped_config)
-            string(TOUPPER "${mapped_config}" mapped_config)
-        else()
-            set(mapped_config "NOTFOUND")
-        endif()
-        set(properties
-            "INTERFACE_LINK_LIBRARIES"
+# Get the direct properties of the target which affect linking for the given config.
+function(get_target_libs out_list target config)
+    get_target_property(mapped_config "${target}" "MAP_IMPORTED_CONFIG_${config}")
+    if(mapped_config)
+        string(TOUPPER "${mapped_config}" mapped_config)
+    else()
+        set(mapped_config "NOTFOUND")
+    endif()
+    
+    get_target_property(type "${target}" "TYPE")
+    set(list_properties "INTERFACE_LINK_LIBRARIES")
+    set(filepath_properties "")
+    if(NOT type STREQUAL "INTERFACE_LIBRARY" OR NOT CMAKE_VERSION VERSION_LESS "3.19")
+        list(APPEND list_properties
+            "IMPORTED_LINK_INTERFACE_LIBRARIES"
+            "IMPORTED_LINK_INTERFACE_LIBRARIES_${config}"
+            "IMPORTED_LINK_INTERFACE_LIBRARIES_${mapped_config}"
+            "LINK_INTERFACE_LIBRARIES"
+            "LINK_INTERFACE_LIBRARIES_${config}"
         )
-        get_target_property(type "${item}" "TYPE")
-        if(NOT type STREQUAL "INTERFACE_LIBRARY" OR NOT CMAKE_VERSION VERSION_LESS 3.19)
-            list(APPEND properties
-                "IMPORTED_LINK_INTERFACE_LIBRARIES"
-                "IMPORTED_LINK_INTERFACE_LIBRARIES_${config}"
-                "IMPORTED_LINK_INTERFACE_LIBRARIES_${mapped_config}"
-            )
+        list(APPEND filepath_properties
+            "IMPORTED_IMPLIB"
+            "IMPORTED_IMPLIB_${config}"
+            "IMPORTED_IMPLIB_${mapped_config}"
+            "IMPORTED_LOCATION"
+            "IMPORTED_LOCATION_${config}"
+            "IMPORTED_LOCATION_${mapped_config}"
+        )
+    endif()
+
+    message(STATUS "Target ${target}:")
+    set(collected_libs "")
+    foreach(property IN LISTS filepath_properties)
+        get_and_fixup_target_property(filepath "${target}" "${property}")
+        if(filepath)
+            message(STATUS " * ${property}: ${filepath}")
+            list(APPEND collected_libs "${filepath}")
         endif()
-        if(NOT type STREQUAL "INTERFACE_LIBRARY")
-            list(APPEND properties
-                "IMPORTED_IMPLIB"
-                "IMPORTED_IMPLIB_${config}"
-                "IMPORTED_IMPLIB_${mapped_config}"
-                "IMPORTED_LOCATION"
-                "IMPORTED_LOCATION_${config}"
-                "IMPORTED_LOCATION_${mapped_config}"
-                "LINK_INTERFACE_LIBRARIES"
-                "LINK_INTERFACE_LIBRARIES_${config}"
-            )
+    endforeach()
+    foreach(property IN LISTS list_properties)
+        get_and_fixup_target_property(libs "${target}" "${property}")
+        if(libs)
+            message(STATUS " * ${property}: ${libs}")
+            append_applicable_libs(collected_libs libs "${config}")
         endif()
-        foreach(property IN LISTS properties)
-            get_and_fixup_target_property(libs "${item}" "${property}")
-            foreach(lib IN LISTS libs)
-                check_var(lib)
-            endforeach()
-        endforeach()
+    endforeach()
+    set("${out_list}" "${collected_libs}" PARENT_SCOPE)
+endfunction()
+
+# Copy libs that are relevant for the given config
+function(append_applicable_libs out_list list_var config)
+    if(config STREQUAL "DEBUG")
+        string(REGEX REPLACE ";optimized;[^;]*" ";" libs "generic;${${list_var}}")
+    else()
+        string(REGEX REPLACE ";debug;[^;]*" ";" libs "generic;${${list_var}}")
+    endif()
+    set(applicable_libs "${${out_list}}")
+    foreach(lib IN LISTS libs)
+        if(NOT lib MATCHES "^optimized\$|^debug\$|^generic\$")
+            list(APPEND applicable_libs "${lib}")
+        endif()
+    endforeach()
+    set("${out_list}" "${applicable_libs}" PARENT_SCOPE)
+endfunction()
+
+string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
+set(libs_backlog "${TARGETS}")
+foreach(variable IN LISTS LIBRARIES_VARIABLES)
+    set(link_libraries "${${variable}}")
+    if(NOT "${link_libraries}" STREQUAL "")
+        message(STATUS "${variable}: ${link_libraries}")
+        append_applicable_libs(libs_backlog link_libraries "${config}")
+    endif()
+endforeach()
+
+set(visited_targets "")
+set(libs_expanded "")
+while(libs_backlog)
+    list(GET libs_backlog 0 item)
+    list(REMOVE_AT libs_backlog 0)
+    if(TARGET "${item}")
+        if(NOT "${item}" IN_LIST visited_targets)
+            list(APPEND visited_targets "${item}")
+            get_target_libs(target_libs "${item}" "${config}")
+            append_applicable_libs(libs_backlog target_libs "${config}")
+        endif()
+    else()
+        list(APPEND libs_expanded "${item}")
     endif()
 endwhile()
 
+
 # Validate library file paths.
-list(REMOVE_DUPLICATES lib_targets_expanded)
-foreach(item IN LISTS lib_targets_expanded)
-    if(item IN_LIST lib_vars)
-        message(STATUS "Validating \${${item}}")
-        continue()
-    elseif(TARGET "${item}")
-        message(STATUS "Validating target ${item}")
-        continue()
-    endif()
+message(STATUS "Validating collected link items")
+list(REMOVE_ITEM libs_expanded "")
+list(REMOVE_DUPLICATES libs_expanded)
+foreach(item IN LISTS libs_expanded)
     set(prefix "${CURRENT_PACKAGES_DIR}/")
     string(FIND "${item}" "${prefix}" prefix_found)
     if(prefix_found LESS 0)
@@ -264,16 +269,12 @@ set(source_file "${CMAKE_CURRENT_BINARY_DIR}/src.cxx")
 file(GENERATE OUTPUT "${source_file}" CONTENT "${source}")
 
 add_executable(main "${source_file}")
-if(assume_transitive_usage_requirements)
-    message(STATUS "Assuming that include dirs are supplied by target ${assume_transitive_usage_requirements}")
+if(TARGETS)
+    target_link_libraries(main PRIVATE ${TARGETS})
 else()
-    target_include_directories(main PRIVATE ${INCLUDE_DIRS})
-endif()
-foreach(item IN LISTS LIBRARIES)
-    if(TARGET ${item})
-        target_link_libraries(main PRIVATE ${item})
-    else()
-        set(libs "${${item}}")
+    target_include_directories(main PRIVATE ${include_dirs})
+    foreach(var IN LISTS LIBRARIES_VARIABLES)
+        set(libs "${${var}}")
         target_link_libraries(main PRIVATE ${libs})
-    endif()
-endforeach()
+    endforeach()
+endif()
