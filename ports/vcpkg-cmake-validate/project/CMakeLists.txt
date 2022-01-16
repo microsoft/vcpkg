@@ -9,9 +9,14 @@ message(STATUS "Validating ${LABEL}, CMake ${CMAKE_VERSION}")
 # This project initially runs with no policies set until the tested call to
 # `find_package` returns. The prolog may modify the initial state if desired.
 cmake_minimum_required(VERSION 2.4)
+set(prolog "")
 foreach(item IN LISTS PROLOG)
-    cmake_language(CALL ${item})
+    string(APPEND prolog "${item}\n\n")
 endforeach()
+if(prolog)
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/prolog.cmake" "${prolog}")
+    include("${CMAKE_CURRENT_BINARY_DIR}/prolog.cmake")
+endif()
 
 project(cmake-user LANGUAGES CXX)
 
