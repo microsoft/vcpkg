@@ -532,7 +532,6 @@ libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
-libgpod:x64-osx=fail
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
 cpuid:arm64-windows=fail
