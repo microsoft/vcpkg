@@ -38,7 +38,7 @@ vcpkg_cmake_validate(
     FUNCTIONS    SSL_new
 )
 vcpkg_cmake_validate(
-    CMAKE_VERSION 3.18
+    CMAKE_MINIMUM_VERSION 3.18
     FIND_PACKAGE OpenSSL MODULE
     LIBRARIES    OpenSSL::applink
 )

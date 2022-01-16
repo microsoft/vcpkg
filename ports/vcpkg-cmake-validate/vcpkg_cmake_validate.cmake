@@ -5,7 +5,7 @@ Test the correctness of the cmake package information established by a find_pack
 
 ```cmake
 vcpkg_cmake_validate(
-    [CMAKE_VERSION <version>]
+    [CMAKE_MINIMUM_VERSION <version>]
     [CMAKE_PROLOGUE <cmake statements>...]
     FIND_PACKAGE <Pkg> <find_package arguments>...
     [LIBRARIES <targets or variable names>...]
@@ -37,11 +37,14 @@ To avoid impact on normal users, the test must be explicitly enabled via port
     vcpkg does.
 
 ## Parameters
-### CMAKE_VERSION
+### CMAKE_MINIMUM_VERSION
 
 The minimum version of CMake which is required for this test.
-The test can also be executed with a higher version.
-If this parameter is missing, the test will be executed with all configured versions.
+The test can also be executed with a higher version. If this parameter is missing,
+the test will be executed with all versions enabled for testing.
+
+This argument does not affect the active policies.
+Use `CMAKE_PROLOGUE` if a test needs certain policies to be enabled.
 
 ### CMAKE_PROLOGUE
 
@@ -84,7 +87,7 @@ endif()
 function(vcpkg_cmake_validate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "CMAKE_VERSION"
+        "CMAKE_MINIMUM_VERSION"
         "CMAKE_PROLOGUE;FIND_PACKAGE;LIBRARIES;HEADERS;FUNCTIONS"
     )
 
@@ -94,8 +97,8 @@ function(vcpkg_cmake_validate)
     if(NOT arg_FIND_PACKAGE)
         message(FATAL_ERROR "vcpkg_cmake_validate must be passed 'FIND_PACKAGE <Pkg> ...' arguments.")
     endif()
-    if(NOT arg_CMAKE_VERSION)
-        set(arg_CMAKE_VERSION "2.4")
+    if(NOT arg_CMAKE_MINIMUM_VERSION)
+        set(arg_CMAKE_MINIMUM_VERSION "2.4")
     endif()
 
     # Help identify repeated similar calls to vcpkg_cmake_validate.
@@ -115,7 +118,7 @@ function(vcpkg_cmake_validate)
     include("${options_enabled}/minimum-cmake.cmake" OPTIONAL RESULT_VARIABLE enable_minimum_cmake)
     vcpkg_list(SET cmake_versions)
     if(enable_minimum_cmake)
-        vcpkg_maintainer_options_minimum_cmake(OUT_VAR minimum_cmake VERSION "${arg_CMAKE_VERSION}")
+        vcpkg_maintainer_options_minimum_cmake(OUT_VAR minimum_cmake VERSION "${arg_CMAKE_MINIMUM_VERSION}")
         vcpkg_list(APPEND cmake_versions "${minimum_cmake}")
     endif()
     if(enable_current_cmake AND NOT cmake_versions MATCHES ";${CMAKE_VERSION}$")

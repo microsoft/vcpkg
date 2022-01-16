@@ -165,7 +165,7 @@ if(CMAKE_USE_OPENSSL OR CMAKE_USE_SCHANNEL OR CMAKE_USE_SECTRANSP)
     list(APPEND components HTTPS SSL)
 endif()
 vcpkg_cmake_validate(
-    CMAKE_VERSION 3.14
+    CMAKE_MINIMUM_VERSION 3.14
     FIND_PACKAGE CURL MODULE COMPONENTS ${components}
     LIBRARIES    CURL::libcurl
     HEADERS      curl/curl.h
