@@ -6,20 +6,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(staticCrt OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(staticCrt ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" staticCrt)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLINK_STATIC_RUNTIME:BOOL=${staticCrt}
         -DINSTALL_LIBS:BOOL=ON
         -DBUILD_PROJECT_NAME=dimcli
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 # Remove includes from ${CMAKE_INSTALL_PREFIX}/debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
