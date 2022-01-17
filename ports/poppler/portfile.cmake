@@ -34,6 +34,7 @@ vcpkg_configure_cmake(
         -DENABLE_GLOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
         -DENABLE_QT6=OFF
+        -DENABLE_UNSTABLE_API_ABI_HEADERS=ON
         ${FEATURE_OPTIONS}
 )
 
