@@ -1,0 +1,109 @@
+diff --git a/untracked/gdk/gdkmm/frametimings.cc b/untracked/gdk/gdkmm/frametimings.cc
+index 673254a..3e8beee 100644
+--- a/untracked/gdk/gdkmm/frametimings.cc
++++ b/untracked/gdk/gdkmm/frametimings.cc
+@@ -51,7 +51,7 @@ Glib::RefPtr<Gdk::FrameTimings> wrap(GdkFrameTimings* object, bool take_copy)
+     gdk_frame_timings_ref(object);
+ 
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<Gdk::FrameTimings>(reinterpret_cast<Gdk::FrameTimings*>(object));
++  return Glib::make_refptr_for_instance<Gdk::FrameTimings>(reinterpret_cast<Gdk::FrameTimings*>(object));
+ }
+ 
+ } // namespace Glib
+diff --git a/untracked/gtk/gtkmm/iconset.cc b/untracked/gtk/gtkmm/iconset.cc
+index 627b7b9..dacbef7 100644
+--- a/untracked/gtk/gtkmm/iconset.cc
++++ b/untracked/gtk/gtkmm/iconset.cc
+@@ -40,7 +40,7 @@ namespace Gtk
+ Glib::RefPtr<IconSet> IconSet::create(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
+ {
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<IconSet>(reinterpret_cast<IconSet*>(gtk_icon_set_new_from_pixbuf(Glib::unwrap(pixbuf))));
++  return Glib::make_refptr_for_instance<IconSet>(reinterpret_cast<IconSet*>(gtk_icon_set_new_from_pixbuf(Glib::unwrap(pixbuf))));
+ }
+ 
+ std::vector<IconSize> IconSet::get_sizes() const
+@@ -82,7 +82,7 @@ Glib::RefPtr<Gtk::IconSet> wrap(GtkIconSet* object, bool take_copy)
+     gtk_icon_set_ref(object);
+ 
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<Gtk::IconSet>(reinterpret_cast<Gtk::IconSet*>(object));
++  return Glib::make_refptr_for_instance<Gtk::IconSet>(reinterpret_cast<Gtk::IconSet*>(object));
+ }
+ 
+ } // namespace Glib
+@@ -95,7 +95,7 @@ namespace Gtk
+ Glib::RefPtr<IconSet> IconSet::create()
+ {
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<IconSet>(reinterpret_cast<IconSet*>(gtk_icon_set_new()));
++  return Glib::make_refptr_for_instance<IconSet>(reinterpret_cast<IconSet*>(gtk_icon_set_new()));
+ }
+ 
+ void IconSet::reference() const
+diff --git a/untracked/gtk/gtkmm/recentinfo.cc b/untracked/gtk/gtkmm/recentinfo.cc
+index 5a46d59..bfaa1d6 100644
+--- a/untracked/gtk/gtkmm/recentinfo.cc
++++ b/untracked/gtk/gtkmm/recentinfo.cc
+@@ -117,7 +117,7 @@ Glib::RefPtr<Gtk::RecentInfo> wrap(GtkRecentInfo* object, bool take_copy)
+     gtk_recent_info_ref(object);
+ 
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<Gtk::RecentInfo>(reinterpret_cast<Gtk::RecentInfo*>(object));
++  return Glib::make_refptr_for_instance<Gtk::RecentInfo>(reinterpret_cast<Gtk::RecentInfo*>(object));
+ }
+ 
+ } // namespace Glib
+diff --git a/untracked/gtk/gtkmm/targetlist.cc b/untracked/gtk/gtkmm/targetlist.cc
+index 1455ae6..94aa07e 100644
+--- a/untracked/gtk/gtkmm/targetlist.cc
++++ b/untracked/gtk/gtkmm/targetlist.cc
+@@ -90,7 +90,7 @@ Glib::RefPtr<Gtk::TargetList> wrap(GtkTargetList* object, bool take_copy)
+     gtk_target_list_ref(object);
+ 
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<Gtk::TargetList>(reinterpret_cast<Gtk::TargetList*>(object));
++  return Glib::make_refptr_for_instance<Gtk::TargetList>(reinterpret_cast<Gtk::TargetList*>(object));
+ }
+ 
+ } // namespace Glib
+diff --git a/untracked/gtk/gtkmm/csssection.cc b/untracked/gtk/gtkmm/csssection.cc
+index c7a1e91..f28f440 100644
+--- a/untracked/gtk/gtkmm/csssection.cc
++++ b/untracked/gtk/gtkmm/csssection.cc
+@@ -58,7 +58,7 @@ Glib::RefPtr<Gtk::CssSection> wrap(GtkCssSection* object, bool take_copy)
+     gtk_css_section_ref(object);
+ 
+   // See the comment at the top of this file, if you want to know why the cast works.
+-  return Glib::RefPtr<Gtk::CssSection>(reinterpret_cast<Gtk::CssSection*>(object));
++  return Glib::make_refptr_for_instance<Gtk::CssSection>(reinterpret_cast<Gtk::CssSection*>(object));
+ }
+ 
+ } // namespace Glib
+diff --git a/untracked/gtk/gtkmm/flowbox.h b/untracked/gtk/gtkmm/flowbox.h
+index aeee817..3bfd2a4 100644
+--- a/untracked/gtk/gtkmm/flowbox.h
++++ b/untracked/gtk/gtkmm/flowbox.h
+@@ -807,7 +807,7 @@ void FlowBox::bind_list_store(const Glib::RefPtr<Gio::ListStore<T_item>>& store,
+   auto slot_copy = new SlotCreateWidget<T_item>(std::forward<T_slot>(slot_create_widget));
+ 
+   gtk_flow_box_bind_model(gobj(),
+-    Glib::unwrap(Glib::RefPtr<Gio::ListModel>::cast_static(store)),
++    Glib::unwrap(std::static_pointer_cast<Gio::ListModel>(store)),
+     &proxy_bind_list_store_create_widget_callback<T_item>,
+     slot_copy, &Glib::destroy_notify_delete<SlotCreateWidget<T_item>>);
+ }
+diff --git a/untracked/gtk/gtkmm/listbox.h b/untracked/gtk/gtkmm/listbox.h
+index a3f6c91..fb2b767 100644
+--- a/untracked/gtk/gtkmm/listbox.h
++++ b/untracked/gtk/gtkmm/listbox.h
+@@ -738,7 +738,7 @@ void ListBox::bind_list_store(const Glib::RefPtr<Gio::ListStore<T_item>>& store,
+   auto slot_copy = new SlotCreateWidget<T_item>(std::forward<T_slot>(slot_create_widget));
+ 
+   gtk_list_box_bind_model(gobj(),
+-    Glib::unwrap(Glib::RefPtr<Gio::ListModel>::cast_static(store)),
++    Glib::unwrap(std::static_pointer_cast<Gio::ListModel>(store)),
+     &proxy_bind_list_store_create_widget_callback<T_item>,
+     slot_copy, &Glib::destroy_notify_delete<SlotCreateWidget<T_item>>);
+ }

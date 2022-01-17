@@ -1,0 +1,108 @@
+diff -ru a/untracked/gtk/gtkmm/accelgroup.cc b/untracked/gtk/gtkmm/accelgroup.cc
+--- a/untracked/gtk/gtkmm/accelgroup.cc	2021-05-21 23:08:23.503062700 +0700
++++ b/untracked/gtk/gtkmm/accelgroup.cc	2022-01-17 23:26:21.552703629 +0700
+@@ -334,9 +334,9 @@
+   return Glib::SignalProxy< void,guint,Gdk::ModifierType,GClosure* >(this, &AccelGroup_signal_accel_changed_info);
+ }
+ 
+-Glib::SignalProxyDetailedAnyType< void,guint,Gdk::ModifierType,GClosure* > AccelGroup::signal_accel_changed(const Glib::ustring& accel_name)
++Glib::SignalProxyDetailed< void,guint,Gdk::ModifierType,GClosure* > AccelGroup::signal_accel_changed(const Glib::ustring& accel_name)
+ {
+-  return Glib::SignalProxyDetailedAnyType< void,guint,Gdk::ModifierType,GClosure* >(this, &AccelGroup_signal_accel_changed_info, accel_name);
++  return Glib::SignalProxyDetailed< void,guint,Gdk::ModifierType,GClosure* >(this, &AccelGroup_signal_accel_changed_info, accel_name);
+ }
+ 
+ 
+diff -ru a/untracked/gtk/gtkmm/accelgroup.h b/untracked/gtk/gtkmm/accelgroup.h
+--- a/untracked/gtk/gtkmm/accelgroup.h	2021-05-21 23:08:23.503062700 +0700
++++ b/untracked/gtk/gtkmm/accelgroup.h	2022-01-17 23:07:13.586768132 +0700
+@@ -304,7 +304,7 @@
+    * @param accel_closure The GClosure of the accelerator.
+    */
+ 
+-  Glib::SignalProxyDetailedAnyType< void,guint,Gdk::ModifierType,GClosure* > signal_accel_changed(const Glib::ustring& accel_name);
++  Glib::SignalProxyDetailed< void,guint,Gdk::ModifierType,GClosure* > signal_accel_changed(const Glib::ustring& accel_name);
+ 
+ 
+   /** Is the accel group locked.
+diff -ru a/untracked/gtk/gtkmm/appchooserbutton.cc b/untracked/gtk/gtkmm/appchooserbutton.cc
+--- a/untracked/gtk/gtkmm/appchooserbutton.cc	2021-05-21 23:08:23.511062900 +0700
++++ b/untracked/gtk/gtkmm/appchooserbutton.cc	2022-01-17 23:26:21.556703606 +0700
+@@ -271,9 +271,9 @@
+   return Glib::SignalProxy< void,const Glib::ustring& >(this, &AppChooserButton_signal_custom_item_activated_info);
+ }
+ 
+-Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& > AppChooserButton::signal_custom_item_activated(const Glib::ustring& custom_item_name)
++Glib::SignalProxyDetailed< void,const Glib::ustring& > AppChooserButton::signal_custom_item_activated(const Glib::ustring& custom_item_name)
+ {
+-  return Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& >(this, &AppChooserButton_signal_custom_item_activated_info, custom_item_name);
++  return Glib::SignalProxyDetailed< void,const Glib::ustring& >(this, &AppChooserButton_signal_custom_item_activated_info, custom_item_name);
+ }
+ 
+ 
+diff -ru a/untracked/gtk/gtkmm/appchooserbutton.h b/untracked/gtk/gtkmm/appchooserbutton.h
+--- a/untracked/gtk/gtkmm/appchooserbutton.h	2021-05-21 23:08:23.511062900 +0700
++++ b/untracked/gtk/gtkmm/appchooserbutton.h	2022-01-17 23:07:13.586768132 +0700
+@@ -261,7 +261,7 @@
+    * @param item_name The name of the activated item.
+    */
+ 
+-  Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& > signal_custom_item_activated(const Glib::ustring& custom_item_name);
++  Glib::SignalProxyDetailed< void,const Glib::ustring& > signal_custom_item_activated(const Glib::ustring& custom_item_name);
+ 
+ 
+   /** The Gtk::AppChooserButton::property_show_dialog_item() property determines
+diff -ru a/untracked/gtk/gtkmm/levelbar.cc b/untracked/gtk/gtkmm/levelbar.cc
+--- a/untracked/gtk/gtkmm/levelbar.cc	2021-05-21 23:08:23.563063100 +0700
++++ b/untracked/gtk/gtkmm/levelbar.cc	2022-01-17 23:26:21.560703582 +0700
+@@ -298,9 +298,9 @@
+   return Glib::SignalProxy< void,const Glib::ustring& >(this, &LevelBar_signal_offset_changed_info);
+ }
+ 
+-Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& > LevelBar::signal_offset_changed(const Glib::ustring& offset_name)
++Glib::SignalProxyDetailed< void,const Glib::ustring& > LevelBar::signal_offset_changed(const Glib::ustring& offset_name)
+ {
+-  return Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& >(this, &LevelBar_signal_offset_changed_info, offset_name);
++  return Glib::SignalProxyDetailed< void,const Glib::ustring& >(this, &LevelBar_signal_offset_changed_info, offset_name);
+ }
+ 
+ 
+diff -ru a/untracked/gtk/gtkmm/levelbar.h b/untracked/gtk/gtkmm/levelbar.h
+--- a/untracked/gtk/gtkmm/levelbar.h	2021-05-21 23:08:23.563063100 +0700
++++ b/untracked/gtk/gtkmm/levelbar.h	2022-01-17 23:07:13.586768132 +0700
+@@ -361,7 +361,7 @@
+    * @param name The name of the offset that changed value.
+    */
+ 
+-  Glib::SignalProxyDetailedAnyType< void,const Glib::ustring& > signal_offset_changed(const Glib::ustring& offset_name);
++  Glib::SignalProxyDetailed< void,const Glib::ustring& > signal_offset_changed(const Glib::ustring& offset_name);
+ 
+ 
+   /** The Gtk::LevelBar::property_value() property determines the currently
+diff -ru a/untracked/gtk/gtkmm/widget.cc b/untracked/gtk/gtkmm/widget.cc
+--- a/untracked/gtk/gtkmm/widget.cc	2021-05-21 23:08:23.631063200 +0700
++++ b/untracked/gtk/gtkmm/widget.cc	2022-01-17 23:26:21.568703534 +0700
+@@ -6979,9 +6979,9 @@
+   return Glib::SignalProxy< void,GParamSpec* >(this, &Widget_signal_child_notify_info);
+ }
+ 
+-Glib::SignalProxyDetailedAnyType< void,GParamSpec* > Widget::signal_child_notify(const Glib::ustring& child_property_name)
++Glib::SignalProxyDetailed< void,GParamSpec* > Widget::signal_child_notify(const Glib::ustring& child_property_name)
+ {
+-  return Glib::SignalProxyDetailedAnyType< void,GParamSpec* >(this, &Widget_signal_child_notify_info, child_property_name);
++  return Glib::SignalProxyDetailed< void,GParamSpec* >(this, &Widget_signal_child_notify_info, child_property_name);
+ }
+ 
+ 
+diff -ru a/untracked/gtk/gtkmm/widget.h b/untracked/gtk/gtkmm/widget.h
+--- a/untracked/gtk/gtkmm/widget.h	2021-05-21 23:08:23.627063300 +0700
++++ b/untracked/gtk/gtkmm/widget.h	2022-01-17 23:07:13.586768132 +0700
+@@ -4177,7 +4177,7 @@
+    * @param pspec The GParamSpec of the changed child property.
+    */
+ 
+-  Glib::SignalProxyDetailedAnyType< void,GParamSpec* > signal_child_notify(const Glib::ustring& child_property_name);
++  Glib::SignalProxyDetailed< void,GParamSpec* > signal_child_notify(const Glib::ustring& child_property_name);
+ 
+ 
+   /**

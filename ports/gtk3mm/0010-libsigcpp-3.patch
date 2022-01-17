@@ -1,0 +1,155 @@
+diff --git a/untracked/gdk/gdkmm/frameclock.cc b/untracked/gdk/gdkmm/frameclock.cc
+index 62dd80e..7ab2bf6 100644
+--- a/untracked/gdk/gdkmm/frameclock.cc
++++ b/untracked/gdk/gdkmm/frameclock.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gdkmm/frameclock.h>
+ #include <gdkmm/private/frameclock_p.h>
++#include <gdkmm/types.h>
+ 
+ #include <gdk/gdk.h>
+ 
+diff -ru a/untracked/gdk/gdkmm/types.h b/untracked/gdk/gdkmm/types.h
+--- a/untracked/gdk/gdkmm/types.h	2021-05-21 23:08:23.419062400 +0700
++++ b/untracked/gdk/gdkmm/types.h	2022-01-17 23:07:13.586768132 +0700
+@@ -102,7 +102,43 @@
+   static GType value_type() G_GNUC_CONST;
+ };
+ 
++struct SignalProxyInfo;
++
++template<class R, class... T>
++class SignalProxy: public SignalProxy<R(T...)> {
++public:
++    SignalProxy(ObjectBase* obj, const SignalProxyInfo* info):
++        SignalProxy<R(T...)>(obj, info)
++    {}
++};
++
++template<class R, class... T>
++class SignalProxyDetailed: public SignalProxyDetailed<R(T...)> {
++public:
++    SignalProxyDetailed(ObjectBase* obj, const SignalProxyInfo* info, const Glib::ustring& detail_name):
++        SignalProxyDetailed<R(T...)>(obj, info, detail_name)
++    {}
++};
++
+ } // namespace Glib
++
++namespace sigc {
++
++template<class R, class... T>
++class slot: public slot<R(T...)> {
++public:
++    slot() = default;
++
++    /** Constructs a slot from an arbitrary functor.
++     * @param func The desired functor the new slot should be assigned to.
++     */
++    template<typename T_functor>
++    slot(const T_functor& func):
++        slot<R(T...)>(func)
++    {}
++};
++
++} // namespace sigc
+ #endif /* DOXYGEN_SHOULD_SKIP_THIS */
+ 
+ namespace Gdk
+diff --git a/untracked/gtk/gtkmm/adjustment.cc b/untracked/gtk/gtkmm/adjustment.cc
+index 14ce104..02dd98e 100644
+--- a/untracked/gtk/gtkmm/adjustment.cc
++++ b/untracked/gtk/gtkmm/adjustment.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/adjustment.h>
+ #include <gtkmm/private/adjustment_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /*
+diff --git a/untracked/gtk/gtkmm/celleditable.cc b/untracked/gtk/gtkmm/celleditable.cc
+index ec3373f..01993ce 100644
+--- a/untracked/gtk/gtkmm/celleditable.cc
++++ b/untracked/gtk/gtkmm/celleditable.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/celleditable.h>
+ #include <gtkmm/private/celleditable_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright 1998-2002 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/enums.h b/untracked/gtk/gtkmm/enums.h
+index 4f28117..ffb7073 100644
+--- a/untracked/gtk/gtkmm/enums.h
++++ b/untracked/gtk/gtkmm/enums.h
+@@ -7,6 +7,7 @@
+ 
+ #include <glibmm/ustring.h>
+ #include <sigc++/sigc++.h>
++#include <gdkmm/types.h>
+ 
+ /*
+  * Copyright (C) 2002 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/entrybuffer.cc b/untracked/gtk/gtkmm/entrybuffer.cc
+index 43f47d0..3b8f9c1 100644
+--- a/untracked/gtk/gtkmm/entrybuffer.cc
++++ b/untracked/gtk/gtkmm/entrybuffer.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/entrybuffer.h>
+ #include <gtkmm/private/entrybuffer_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright(C) 1998-2002 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/filefilter.cc b/untracked/gtk/gtkmm/filefilter.cc
+index a988f01..209781e 100644
+--- a/untracked/gtk/gtkmm/filefilter.cc
++++ b/untracked/gtk/gtkmm/filefilter.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/filefilter.h>
+ #include <gtkmm/private/filefilter_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright 2003 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/fontchooser.cc b/untracked/gtk/gtkmm/fontchooser.cc
+index 1bcee6d..22bcf79 100644
+--- a/untracked/gtk/gtkmm/fontchooser.cc
++++ b/untracked/gtk/gtkmm/fontchooser.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/fontchooser.h>
+ #include <gtkmm/private/fontchooser_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright 2011 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/editable.cc b/untracked/gtk/gtkmm/editable.cc
+index 9d2cd05..2f1073e 100644
+--- a/untracked/gtk/gtkmm/editable.cc
++++ b/untracked/gtk/gtkmm/editable.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/editable.h>
+ #include <gtkmm/private/editable_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright 1998-2002 The gtkmm Development Team
+diff --git a/untracked/gtk/gtkmm/recentfilter.cc b/untracked/gtk/gtkmm/recentfilter.cc
+index 50ef683..c3f00ea 100644
+--- a/untracked/gtk/gtkmm/recentfilter.cc
++++ b/untracked/gtk/gtkmm/recentfilter.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <gtkmm/recentfilter.h>
+ #include <gtkmm/private/recentfilter_p.h>
++#include <gdkmm/types.h>
+ 
+ 
+ /* Copyright (C) 2006 The gtkmm Development Team

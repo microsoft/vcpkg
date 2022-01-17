@@ -1,0 +1,78 @@
+--- a/meson.build	2021-05-21 23:08:23.311062000 +0700
++++ b/meson.build	2022-01-14 17:59:44.026867700 +0700
+@@ -5,7 +5,7 @@
+   version: '3.24.5',
+   license: 'LGPLv2.1+',
+   default_options: [
+-    'cpp_std=c++11'
++    'cpp_std=c++17'
+   ],
+   meson_version: '>= 0.54.0', # required for meson.override_dependency()
+                               # and dep.get_variable(internal:)
+@@ -110,10 +110,10 @@
+ gtk_dep = dependency('gtk+-3.0', version: gtk_req)
+ 
+ cairomm_req = '>= 1.12.0'
+-cairomm_dep = dependency('cairomm-1.0', version: cairomm_req)
++cairomm_dep = dependency('cairomm-1.16', version: cairomm_req)
+ 
+ pangomm_req = '>= 2.38.2'
+-pangomm_dep = dependency('pangomm-1.4', version: pangomm_req)
++pangomm_dep = dependency('pangomm-2.48', version: pangomm_req)
+ 
+ gdk_pixbuf_req = '>= 2.35.5'
+ gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: gdk_pixbuf_req)
+@@ -121,14 +121,14 @@
+ # atkmm is required in maintainer mode even if atkmm API shall not be built.
+ # gmmproc must be able to find atkmm's installed M4 files.
+ atkmm_req = '>= 2.24.2'
+-atkmm_dep = dependency('atkmm-1.6', version: atkmm_req, required: build_atkmm_api or maintainer_mode)
++atkmm_dep = dependency('atkmm-2.36', version: atkmm_req, required: build_atkmm_api or maintainer_mode)
+ 
+ epoxy_req = '>= 1.2'
+ epoxy_dep = dependency('epoxy', version: epoxy_req, required: build_demos)
+ 
+ # The -mm libraries do not yet have pkg-config files for MSVC builds,
+ # so check for them manually
+-glibmm_req_minor_ver = '4'
++glibmm_req_minor_ver = '68'
+ 
+ glibmm_dep = dependency('glibmm-2.@0@'.format(glibmm_req_minor_ver), version: glibmm_req)
+ giomm_dep = dependency('giomm-2.@0@'.format(glibmm_req_minor_ver), version: glibmm_req)
+@@ -172,8 +172,8 @@
+ gdkmm_requires = [
+   'giomm-2.@0@'.format(glibmm_req_minor_ver), glibmm_req,
+   'gtk+-3.0', gtk_req,
+-  'cairomm-1.0', cairomm_req,
+-  'pangomm-1.4', cairomm_req,
++  'cairomm-1.16', cairomm_req,
++  'pangomm-2.48', cairomm_req,
+   'gdk-pixbuf-2.0', gdk_pixbuf_req,
+ ]
+ 
+@@ -182,7 +182,7 @@
+ 
+ if build_atkmm_api
+   gtkmm_build_dep += [atkmm_dep]
+-  gtkmm_requires += ['atkmm-1.6', atkmm_req]
++  gtkmm_requires += ['atkmm-2.36', atkmm_req]
+ endif
+ 
+ # not Windows
+--- a/tools/extra_defs_gen/meson.build	2021-05-21 23:08:23.315062000 +0700
++++ b/tools/extra_defs_gen/meson.build	2022-01-14 18:07:53.735008500 +0700
+@@ -5,12 +5,12 @@
+ # Output: m4_files, install_m4dir
+ 
+ glibmm_generate_extra_defs_dep = cpp_compiler.find_library(
+-  'glibmm_generate_extra_defs@0@-2.4'.format(msvc14x_toolset_ver),
++  'glibmm_generate_extra_defs@0@-2.68'.format(msvc14x_toolset_ver),
+   required: glibmm_dep.type_name() != 'internal',
+ )
+ if not glibmm_generate_extra_defs_dep.found()
+   glibmm_generate_extra_defs_dep = dependency(
+-    '', fallback: ['glibmm-2.4', 'glibmm_generate_extra_defs_dep'],
++    '', fallback: ['glibmm-2.68', 'glibmm_generate_extra_defs_dep'],
+   )
+ endif
+ 

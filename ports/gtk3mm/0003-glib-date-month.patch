@@ -1,0 +1,13 @@
+diff --git a/untracked/gtk/gtkmm/calendar.cc b/untracked/gtk/gtkmm/calendar.cc
+index 9c82e4f..1b00e11 100644
+--- a/untracked/gtk/gtkmm/calendar.cc
++++ b/untracked/gtk/gtkmm/calendar.cc
+@@ -69,7 +69,7 @@ void Calendar::get_date(Glib::Date& date) const
+   get_date(year, month, day);
+ 
+   date.set_year(year);
+-  date.set_month(static_cast<Glib::Date::Month>(Glib::Date::JANUARY + month)); // Month from 1 to 12 instead from 0 to 11
++  date.set_month(static_cast<Glib::Date::Month>(static_cast<guint>(Glib::Date::Month::JANUARY) + month)); // Month from 1 to 12 instead from 0 to 11
+   date.set_day(day);
+ }
+ 

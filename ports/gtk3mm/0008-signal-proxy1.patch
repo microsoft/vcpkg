@@ -1,0 +1,45 @@
+diff --git a/untracked/gtk/gtkmm/entrycompletion.cc b/untracked/gtk/gtkmm/entrycompletion.cc
+index ba65126..5c5edfd 100644
+--- a/untracked/gtk/gtkmm/entrycompletion.cc
++++ b/untracked/gtk/gtkmm/entrycompletion.cc
+@@ -297,14 +297,14 @@ gboolean EntryCompletion_Class::match_selected_callback_custom(GtkEntryCompletio
+   return RType();
+ }
+ 
+-Glib::SignalProxy1< bool, const TreeModel::iterator& > EntryCompletion::signal_match_selected()
++Glib::SignalProxy< bool, const TreeModel::iterator& > EntryCompletion::signal_match_selected()
+ {
+-  return Glib::SignalProxy1< bool, const TreeModel::iterator& >(this, &EntryCompletion_signal_match_selected_info);
++  return Glib::SignalProxy< bool, const TreeModel::iterator& >(this, &EntryCompletion_signal_match_selected_info);
+ }
+ 
+-Glib::SignalProxy1< bool, const TreeModel::iterator& > EntryCompletion::signal_cursor_on_match()
++Glib::SignalProxy< bool, const TreeModel::iterator& > EntryCompletion::signal_cursor_on_match()
+ {
+-  return Glib::SignalProxy1< bool, const TreeModel::iterator& >(this, &EntryCompletion_signal_cursor_on_match_info);
++  return Glib::SignalProxy< bool, const TreeModel::iterator& >(this, &EntryCompletion_signal_cursor_on_match_info);
+ }
+ 
+ 
+diff --git a/untracked/gtk/gtkmm/entrycompletion.h b/untracked/gtk/gtkmm/entrycompletion.h
+index f15f845..fcea98c 100644
+--- a/untracked/gtk/gtkmm/entrycompletion.h
++++ b/untracked/gtk/gtkmm/entrycompletion.h
+@@ -459,7 +459,7 @@ public:
+    * @par Prototype:
+    * <tt>bool %on_match_selected(const TreeModel::iterator& iter)</tt>
+    */
+-  Glib::SignalProxy1< bool, const TreeModel::iterator& > signal_match_selected();
++  Glib::SignalProxy< bool, const TreeModel::iterator& > signal_match_selected();
+ 
+   /** Emitted when a match from the cursor is on a match
+    * of the list. The default behaviour is to replace the contents
+@@ -475,7 +475,7 @@ public:
+    *
+    * @newin{2,12}
+    */
+-  Glib::SignalProxy1< bool, const TreeModel::iterator& > signal_cursor_on_match();
++  Glib::SignalProxy< bool, const TreeModel::iterator& > signal_cursor_on_match();
+ 
+ 
+   /**

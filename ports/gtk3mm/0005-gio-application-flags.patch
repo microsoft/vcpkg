@@ -1,0 +1,83 @@
+diff -ru a/untracked/gtk/gtkmm/application.cc b/untracked/gtk/gtkmm/application.cc
+--- a/untracked/gtk/gtkmm/application.cc	2021-05-21 23:08:23.511062900 +0700
++++ b/untracked/gtk/gtkmm/application.cc	2022-01-17 23:26:21.556703606 +0700
+@@ -75,7 +75,7 @@
+   return application_class_.init();
+ }
+ 
+-Application::Application(const Glib::ustring& application_id, Gio::ApplicationFlags flags)
++Application::Application(const Glib::ustring& application_id, Gio::Application::Flags flags)
+ :
+   // Mark this class as non-derived to allow C++ vfuncs to be skipped.
+   //Note that GApplication complains about "" but allows nullptr, so we avoid passing "".
+@@ -87,7 +87,7 @@
+   gtk_init(nullptr, nullptr);
+ }
+ 
+-Application::Application(int& argc, char**& argv, const Glib::ustring& application_id, Gio::ApplicationFlags flags)
++Application::Application(int& argc, char**& argv, const Glib::ustring& application_id, Gio::Application::Flags flags)
+ :
+   // Mark this class as non-derived to allow C++ vfuncs to be skipped.
+   //Note that GApplication complains about "" but allows nullptr, so we avoid passing "".
+@@ -99,12 +99,12 @@
+   gtk_init(&argc, &argv);
+ }
+ 
+-Glib::RefPtr<Application> Application::create(const Glib::ustring& application_id, Gio::ApplicationFlags flags)
++Glib::RefPtr<Application> Application::create(const Glib::ustring& application_id, Gio::Application::Flags flags)
+ {
+   return Glib::RefPtr<Application>( new Application(application_id, flags) );
+ }
+ 
+-Glib::RefPtr<Application> Application::create(int& argc, char**& argv, const Glib::ustring& application_id, Gio::ApplicationFlags flags)
++Glib::RefPtr<Application> Application::create(int& argc, char**& argv, const Glib::ustring& application_id, Gio::Application::Flags flags)
+ {
+   return Glib::RefPtr<Application>( new Application(argc, argv, application_id, flags) );
+ }
+diff -ru a/untracked/gtk/gtkmm/application.h b/untracked/gtk/gtkmm/application.h
+--- a/untracked/gtk/gtkmm/application.h	2021-05-21 23:08:23.511062900 +0700
++++ b/untracked/gtk/gtkmm/application.h	2022-01-17 23:07:13.586768132 +0700
+@@ -33,7 +33,6 @@
+ #include <giomm/menumodel.h>
+ #include <giomm/menu.h>
+ #include <vector>
+-#include <glibmm/arrayhandle.h>
+ 
+ 
+ #ifndef DOXYGEN_SHOULD_SKIP_THIS
+@@ -267,7 +266,7 @@
+    *
+    * @newin{3,4}
+    */
+-  explicit Application(const Glib::ustring& application_id = Glib::ustring(), Gio::ApplicationFlags flags = Gio::APPLICATION_FLAGS_NONE);
++  explicit Application(const Glib::ustring& application_id = Glib::ustring(), Gio::Application::Flags flags = Gio::Application::Flags::NONE);
+   
+   
+   //This constructor does not correspond to anything in the C API.
+@@ -299,7 +298,7 @@
+    *
+    * @newin{3,4}
+    */
+-  explicit Application(int& argc, char**& argv, const Glib::ustring& application_id = Glib::ustring(), Gio::ApplicationFlags flags = Gio::APPLICATION_FLAGS_NONE);
++  explicit Application(int& argc, char**& argv, const Glib::ustring& application_id = Glib::ustring(), Gio::Application::Flags flags = Gio::Application::Flags::NONE);
+ 
+ public:
+ 
+@@ -319,7 +318,7 @@
+    *
+    * @newin{3,4}
+    */
+-  static Glib::RefPtr<Application> create(const Glib::ustring& application_id = Glib::ustring(), Gio::ApplicationFlags flags = Gio::APPLICATION_FLAGS_NONE);
++  static Glib::RefPtr<Application> create(const Glib::ustring& application_id = Glib::ustring(), Gio::Application::Flags flags = Gio::Application::Flags::NONE);
+ 
+   /** Creates a new Application instance.
+    *
+@@ -347,7 +346,7 @@
+    * @param flags The application flags.
+    * @newin{3,4}
+    */
+-  static Glib::RefPtr<Application> create(int& argc, char**& argv, const Glib::ustring& application_id = Glib::ustring(), Gio::ApplicationFlags flags = Gio::APPLICATION_FLAGS_NONE);
++  static Glib::RefPtr<Application> create(int& argc, char**& argv, const Glib::ustring& application_id = Glib::ustring(), Gio::Application::Flags flags = Gio::Application::Flags::NONE);
+ 
+  
+   /** Gets a list of the Gtk::Windows associated with @a application.
