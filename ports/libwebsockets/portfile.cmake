@@ -10,7 +10,7 @@ vcpkg_from_github(
         fix-dependency-libuv.patch
         fix-build-error.patch
         export-include-path.patch
-        fix-find-opnessl.patch
+        fix-find-openssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
