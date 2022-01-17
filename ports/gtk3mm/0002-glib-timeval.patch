@@ -1,0 +1,107 @@
+diff -ru a/untracked/gdk/gdkmm/pixbufanimationiter.cc b/untracked/gdk/gdkmm/pixbufanimationiter.cc
+--- a/untracked/gdk/gdkmm/pixbufanimationiter.cc	2021-05-21 23:08:23.415062400 +0700
++++ b/untracked/gdk/gdkmm/pixbufanimationiter.cc	2022-01-17 23:07:13.586768132 +0700
+@@ -28,17 +28,15 @@
+ namespace Gdk
+ {
+ 
+-bool PixbufAnimationIter::advance()
+-{
+-  return gdk_pixbuf_animation_iter_advance(gobj(), nullptr);
+-}
+-
+-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+-bool PixbufAnimationIter::advance(const Glib::TimeVal& current_time)
++bool PixbufAnimationIter::advance(gint64 current_time)
+ {
+-  return gdk_pixbuf_animation_iter_advance(gobj(), static_cast<const GTimeVal*>(&current_time));
++  // GTimeVal is deprecated, but gdk-pixbuf has no replacement for
++  // gdk_pixbuf_animation_iter_advance() without GTimeVal.
++  GTimeVal tv;
++  tv.tv_sec = current_time / 1000000;
++  tv.tv_usec = current_time % 1000000;
++  return gdk_pixbuf_animation_iter_advance(gobj(), &tv);
+ }
+-G_GNUC_END_IGNORE_DEPRECATIONS
+ 
+ } //namespace Gdk
+ 
+diff -ru a/untracked/gdk/gdkmm/pixbufanimationiter.h b/untracked/gdk/gdkmm/pixbufanimationiter.h
+--- a/untracked/gdk/gdkmm/pixbufanimationiter.h	2021-05-21 23:08:23.415062400 +0700
++++ b/untracked/gdk/gdkmm/pixbufanimationiter.h	2022-01-17 23:07:13.586768132 +0700
+@@ -26,7 +26,6 @@
+ 
+ #include <glibmm/object.h>
+ #include <gdkmm/pixbuf.h>
+-#include <glibmm/timeval.h>
+ #include <gdk-pixbuf/gdk-pixbuf.h>
+ 
+ 
+@@ -161,56 +160,30 @@
+    */
+   bool on_currently_loading_frame() const;
+ 
+-  //TODO: GTimeVal is deprecated, but gdk_pixbuf_animation_iter_advance() is not deprecated,
+-  // and there is not replacement for it.
+-  
+   /** Possibly advances an animation to a new frame. Chooses the frame based
+    * on the start time passed to Gdk::PixbufAnimation::get_iter().
+-   * 
+-   *  @a current_time would normally come from Glib::get_current_time(), and
++   *
++   * @a current_time would normally come from g_get_real_time(), and
+    * must be greater than or equal to the time passed to
+    * Gdk::PixbufAnimation::get_iter(), and must increase or remain
+-   * unchanged each time get_pixbuf() is
+-   * called. That is, you can't go backward in time; animations only
+-   * play forward.
+-   * 
+-   * If using the method overload that takes no current_time parameter then the 
+-   * current time will be used. So you only need to explicitly pass
+-   *  @a current_time if you're doing something odd like playing the animation
+-   * at double speed.
+-   * 
++   * unchanged each time get_pixbuf() is called.
++   * That is, you can't go backward in time; animations only play forward.
++   *
++   * As a shortcut, the default value of @a current_time is g_get_real_time().
++   * So you only need to explicitly pass @a current_time if you're doing
++   * something odd like playing the animation at double speed.
++   *
+    * If this function returns <tt>false</tt>, there's no need to update the animation
+    * display, assuming the display had been rendered prior to advancing;
+    * if <tt>true</tt>, you need to call get_pixbuf() and update the
+    * display with the new pixbuf.
+-   * 
+-   * @newin{2,14}
+-   * 
++   *
+    * @param current_time Current time.
+    * @return <tt>true</tt> if the image may need updating.
+    */
+-
+-  bool advance(const Glib::TimeVal& current_time);
++  bool advance(gint64 current_time = g_get_real_time());
+  
+ 
+-  //_WRAP_METHOD(bool advance(const Glib::TimeVal& current_time), gdk_pixbuf_animation_iter_advance,
+-  //  deprecated "Use ??? instead.")
+-
+-  /** Possibly advances an animation to a new frame. Chooses the frame based
+-   * on the start time passed to Gdk::PixbufAnimation::get_iter().
+-   *
+-   * If this function returns false, there's no need to update the animation
+-   * display, assuming the display had been rendered prior to advancing;
+-   * if true, you need to call get_pixbuf() and update the
+-   * display with the new pixbuf.
+-   *
+-   * @newin{2,14}
+-   *
+-   * @return true if the image may need updating.
+-   */
+-  bool advance();
+-
+-
+ public:
+ 
+ public:

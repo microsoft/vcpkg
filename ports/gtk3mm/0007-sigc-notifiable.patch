@@ -1,0 +1,40 @@
+diff --git a/untracked/gtk/gtkmm/main.cc b/untracked/gtk/gtkmm/main.cc
+index ac4a697..32a5d60 100644
+--- a/untracked/gtk/gtkmm/main.cc
++++ b/untracked/gtk/gtkmm/main.cc
+@@ -57,7 +57,7 @@ namespace
+  * been removed. Both the key snooper API and the GtkMainConnectionNode class
+  * can be removed in gtk+-4/gtkmm-4.
+  */
+-class GtkMainConnectionNode
++class GtkMainConnectionNode: public sigc::notifiable
+ {
+ public:
+   // A function taking a connection id, e.g. gtk_timeout_remove().
+@@ -65,7 +65,7 @@ public:
+ 
+   explicit GtkMainConnectionNode(const sigc::slot_base& slot);
+ 
+-  static void* notify(void* data);
++  static void notify(sigc::notifiable* data);
+ 
+   // Call this after installing the GTK+ callback.
+   void install(guint conn_id, RemoveFunc remove_func, bool has_destroy_notify);
+@@ -110,7 +110,7 @@ GtkMainConnectionNode::GtkMainConnectionNode(const sigc::slot_base& slot)
+ }
+ 
+ //static:
+-void* GtkMainConnectionNode::notify(void* data)
++void GtkMainConnectionNode::notify(sigc::notifiable* data)
+ {
+   // notification from the sigc++ side ...
+ 
+@@ -133,8 +133,6 @@ void* GtkMainConnectionNode::notify(void* data)
+     // destruction of slot_ notifies all objects referring to it.
+     delete self;
+   }
+-
+-  return nullptr;
+ }
+ 
+ void GtkMainConnectionNode::install(

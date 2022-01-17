@@ -1,0 +1,29 @@
+{
+  "name": "gtk3mm",
+  "version": "3.24.5",
+  "description": "gtkmm is the official C++ interface for the popular GUI library GTK+.",
+  "homepage": "https://www.gtkmm.org/",
+  "supports": "!uwp",
+  "dependencies": [
+    "atk",
+    "atkmm",
+    "cairo",
+    "cairomm",
+    "gdk-pixbuf",
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "glibmm",
+    "gtk3",
+    "libepoxy",
+    "pango",
+    "pangomm",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
