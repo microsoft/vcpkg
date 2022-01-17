@@ -5,11 +5,8 @@ vcpkg_from_gitlab(
     REF  26aadb2508f9022cbfc72e73b558c6791f5d46d9 #v1.50.3
     SHA512 09c2578300d391b406c14dfbf7f28968d326c6861f7eb1a3a8d1d8c4700d6e9f74c8621a3f2d181abe1f695324c6e5fc3a55eb038ebbe53a53be086983e3a186
     HEAD_REF master # branch name
+	PATCHES fix-macosbuild.patch
 ) 
-
-if (VCPKG_TARGET_IS_OSX)
-    list(APPEND OPTIONS -Dc_std=gnu11)
-endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,7 +19,6 @@ vcpkg_configure_meson(
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
         -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
-        ${OPTIONS}
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'

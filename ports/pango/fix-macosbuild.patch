@@ -1,0 +1,12 @@
+diff --git a/pango/pangofc-fontmap.c b/pango/pangofc-fontmap.c
+index d198df4..a9ea63e 100644
+--- a/pango/pangofc-fontmap.c
++++ b/pango/pangofc-fontmap.c
+@@ -34,6 +34,7 @@
+ 
+ #include "config.h"
+ #include <math.h>
++#include <fontconfig/fontconfig.h>
+ 
+ #include <gio/gio.h>
+
