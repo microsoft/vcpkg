@@ -288,7 +288,7 @@ function(vcpkg_configure_make)
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
-    set(cm_TOOLS CC CXX AR AS LD RANLIB STRIP)
+    set(cm_TOOLS CC CXX AR AS LD RANLIB READELF STRIP)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS} ${cm_TOOLS})
 
@@ -766,7 +766,7 @@ function(vcpkg_configure_make)
         vcpkg_list(JOIN tmp " " "${var}")
     endforeach()
 
-    foreach(tool IN ITEMS AR AS MT NM RANLIB STRIP OBJDUMP DLLTOOL)
+    foreach(tool IN ITEMS AR AS MT NM RANLIB READELF STRIP OBJDUMP DLLTOOL)
         z_vcpkg_setup_detected_env(${tool} "CMAKE_${tool}")
     endforeach()
     z_vcpkg_setup_detected_env(CC CMAKE_C_COMPILER)

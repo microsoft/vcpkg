@@ -15,7 +15,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
                                             CMAKE_OSX_SYSROOT)
 endif()
 # Programs to check
-set(PROGLIST AR RANLIB STRIP NM OBJDUMP DLLTOOL MT LINKER)
+set(PROGLIST AR RANLIB READELF STRIP NM OBJDUMP DLLTOOL MT LINKER)
 foreach(prog IN LISTS PROGLIST)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog})
 endforeach()
