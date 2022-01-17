@@ -7,6 +7,10 @@ vcpkg_from_gitlab(
     HEAD_REF master # branch name
 ) 
 
+if (VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS -Dc_std=gnu11)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -18,7 +22,7 @@ vcpkg_configure_meson(
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
         -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
-        -Dc_std=c11 #Set C standard to avoid implicit declaration is invalid in C99
+        ${OPTIONS}
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
