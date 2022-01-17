@@ -176,7 +176,6 @@ crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
 crashpad:x64-uwp=fail
 crashpad:x86-windows=fail
-crossguid:x64-osx=fail
 ctemplate:arm64-windows=fail
 ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
