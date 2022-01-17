@@ -363,15 +363,15 @@ gflags:arm-uwp=fail
 gflags:x64-uwp=fail
 
 # Conflicts with libevent
-gherkin-c:arm64-windows      = skip
-gherkin-c:arm-uwp            = skip
-gherkin-c:x64-linux=fail
-gherkin-c:x64-osx=fail
-gherkin-c:x64-uwp            = skip
-gherkin-c:x64-windows        = skip
-gherkin-c:x64-windows-static = skip
-gherkin-c:x64-windows-static-md=skip
-gherkin-c:x86-windows        = skip
+gherkin-c:arm64-windows         = skip
+gherkin-c:arm-uwp               = skip
+gherkin-c:x64-linux             = skip
+gherkin-c:x64-osx               = skip
+gherkin-c:x64-uwp               = skip
+gherkin-c:x64-windows           = skip
+gherkin-c:x64-windows-static    = skip
+gherkin-c:x64-windows-static-md = skip
+gherkin-c:x86-windows           = skip
 gl3w:arm64-windows=fail
 gl3w:arm-uwp=fail
 glew:arm64-windows=fail
