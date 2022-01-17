@@ -1818,7 +1818,7 @@
     },
     "dimcli": {
       "baseline": "5.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "directx-headers": {
       "baseline": "1.4.9",
