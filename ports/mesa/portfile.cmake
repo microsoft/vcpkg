@@ -26,6 +26,7 @@ vcpkg_from_gitlab(
     REPO mesa/mesa
     REF mesa-21.2.5
     SHA512 a9ead27f08e862738938cf728928b7937ff37e4c26967f2e46e40a3c8419159397f75b2f4ce43f9b453b35bb3716df581087fb7ba8434fafdfab9488c3db6f92
+    FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
