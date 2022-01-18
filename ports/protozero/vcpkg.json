@@ -1,9 +1,14 @@
 {
   "name": "protozero",
   "version-semver": "1.7.0",
+  "port-version": 1,
   "description": "Minimalist protocol buffer decoder and encoder in C++",
   "homepage": "https://github.com/mapbox/protozero",
   "dependencies": [
-    "protobuf"
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
