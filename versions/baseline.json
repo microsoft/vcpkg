@@ -2626,7 +2626,7 @@
     },
     "guetzli": {
       "baseline": "2020-09-14",
-      "port-version": 1
+      "port-version": 2
     },
     "guilite": {
       "baseline": "2021-07-31",
