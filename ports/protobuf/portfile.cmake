@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        fix-uwp-build.patch
         fix-mingw-build.patch
 )
 
