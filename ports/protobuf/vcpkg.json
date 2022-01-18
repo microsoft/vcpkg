@@ -1,11 +1,6 @@
 {
   "name": "protobuf",
-<<<<<<< HEAD
   "version-semver": "3.19.1",
-=======
-  "version-semver": "3.18.0",
-  "port-version": 1,
->>>>>>> 4184491f0780d4fae34d00044073dc058a23264b
   "description": "Protocol Buffers - Google's data interchange format",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "supports": "!(windows & static & !staticcrt)",
