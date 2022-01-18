@@ -22,7 +22,7 @@
       "features": [
         "pcre2"
       ],
-      "platform": "windows"
+      "platform": "windows & static"
     },
     "zlib"
   ],
