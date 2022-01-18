@@ -79,6 +79,20 @@ if("dist" IN_LIST FEATURES)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    # Linux package `libnuma-dev`
+    find_library(Numa_LIBPATH NAMES numa PATHS "/usr/lib" "/usr/lib/x86_64-linux-gnu")
+    if(Numa_LIBPATH)
+        message(STATUS "Detected numa: ${Numa_LIBPATH}")
+        list(APPEND FEATURE_OPTIONS -DDUSE_NUMA=ON)
+    else()
+        message(STATUS "To enable USE_NUMA build option, install 'libnuma-dev' package")
+        list(APPEND FEATURE_OPTIONS -DDUSE_NUMA=OFF)
+    endif()
+else()
+    list(APPEND FEATURE_OPTIONS -DDUSE_NUMA=OFF)
+endif()
+
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND FEATURE_OPTIONS -DBLAS=Accelerate) # Accelerate.framework will be used for Apple platforms
 else()
@@ -112,7 +126,6 @@ vcpkg_cmake_configure(
         -DBUILD_TEST=OFF -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_PYTHON=OFF
-        -DUSE_NUMA=${VCPKG_TARGET_IS_LINUX} # Linux package `libnuma-dev`
         -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX}
         -DUSE_MPI=${VCPKG_TARGET_IS_LINUX} # Linux package `libopenmpi-dev`
         -DUSE_METAL=OFF
@@ -142,6 +155,7 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         -DBUILD_LIBTORCH_CPU_WITH_DEBUG=ON
     MAYBE_UNUSED_VARIABLES
+        USE_NUMA
         USE_SYSTEM_BIND11
         USE_VULKAN_WRAPPER
         MKLDNN_CPU_RUNTIME
