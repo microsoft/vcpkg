@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF 14f913d6ab3b0903dd36a1cb2d22f7d5493b8bb8
     SHA512 f90762594d46946ddc512bb19b21c4d6a2f1ce81b7500a326ad512fae3a3f77e49ef3eb727ff8f98a31596e4132528212e0fa146e2eee0a9965a16551cfd0386
     HEAD_REF master
+    PATCHES
+        proj-find-fix.patch # Quiet search with version range somehow fails for proj8+
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

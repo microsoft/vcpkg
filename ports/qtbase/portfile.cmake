@@ -17,7 +17,6 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
-        cocoa.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
@@ -324,19 +323,31 @@ if(NOT VCPKG_TARGET_IS_IOS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/ios")
 endif() 
 
+file(RELATIVE_PATH installed_to_host "${CURRENT_INSTALLED_DIR}" "${CURRENT_HOST_INSTALLED_DIR}")
+file(RELATIVE_PATH host_to_installed "${CURRENT_HOST_INSTALLED_DIR}" "${CURRENT_INSTALLED_DIR}")
+if(installed_to_host)
+    string(APPEND installed_to_host "/")
+    string(APPEND host_to_installed "/")
+endif()
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
-set(REL_PATH)
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY)
+set(REL_PATH "")
+set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}")
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY) # For vcpkg-qmake
 set(BACKUP_CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 set(BACKUP_CURRENT_HOST_INSTALLED_DIR "${CURRENT_HOST_INSTALLED_DIR}")
 set(CURRENT_INSTALLED_DIR "./../../../")
-set(CURRENT_HOST_INSTALLED_DIR "./../../../")
+set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${installed_to_host}")
+
+## Configure installed qt.conf
+set(REL_HOST_TO_DATA "${host_to_installed}")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf")
 set(REL_PATH debug/)
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.debug.conf")
+
 set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")
 set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
-configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY)
+set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}")
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)

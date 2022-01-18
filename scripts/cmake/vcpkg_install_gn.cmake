@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_install
 #[===[.md:
 # vcpkg_install_gn
 
@@ -107,8 +108,11 @@ function(z_vcpkg_install_gn_install)
 endfunction()
 
 function(vcpkg_install_gn)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "TARGETS")
+    if(Z_VCPKG_GN_INSTALL_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_install_gn in the same port is unsupported.")
+    endif()
 
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "TARGETS")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_install_gn was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()

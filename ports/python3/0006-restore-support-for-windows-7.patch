@@ -73,7 +73,16 @@ diff --git a/PC/getpathp.c b/PC/getpathp.c
 index 53da3a6..3d58bbf 100644
 --- a/PC/getpathp.c
 +++ b/PC/getpathp.c
-@@ -250,14 +250,43 @@ ismodule(wchar_t *filename, int update_filename)
+@@ -90,7 +90,7 @@
+ #endif
+ 
+ #include <windows.h>
+-#include <pathcch.h>
++#include <Shlwapi.h>
+ 
+ #ifdef HAVE_SYS_TYPES_H
+ #include <sys/types.h>
+@@ -249,14 +249,43 @@ ismodule(wchar_t *filename, int update_filename)
     stuff as fits will be appended.
  */
  
@@ -164,15 +173,15 @@ index d7d3cf0..6e9c090 100644
  /* We only set these values when building Python - we don't want to force
     these values on extensions, as that will affect the prototypes and
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 2625d02..20e3d6e 100644
+index c39ba3e1a9..0ef3a05fb6 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -106,7 +106,7 @@
        <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
      <Link>
--      <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;ws2_32.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemGroup>

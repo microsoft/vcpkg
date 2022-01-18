@@ -19,31 +19,3 @@ index dc146d1..9b82544 100644
      ${PDAL_SRC_DIR}/compression/*.cpp)
  file(GLOB_RECURSE PRIVATE_SRCS
      ${PDAL_FILTERS_DIR}/private/*.cpp
-diff --git a/apps/CMakeLists.txt b/apps/CMakeLists.txt
-index b02aa4a..d60b041 100644
---- a/apps/CMakeLists.txt
-+++ b/apps/CMakeLists.txt
-@@ -66,9 +66,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pdal.pc
- if(UNIX OR APPLE)
-     # Autoconf compatibility variables to use the same script source.
-     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pdal-config.in"
--                   "${CMAKE_CURRENT_SOURCE_DIR}/pdal-config" @ONLY)
-+                   "${CMAKE_CURRENT_BINARY_DIR}/pdal-config" @ONLY)
- 
--    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/pdal-config"
-+    file(COPY "${CMAKE_CURRENT_BINARY_DIR}/pdal-config"
-         DESTINATION
-             "${PDAL_OUTPUT_BIN_DIR}/"
-         FILE_PERMISSIONS
-@@ -85,9 +85,9 @@ if(UNIX OR APPLE)
- elseif(WIN32)
-     # Autoconf compatibility variables to use the same script source.
-     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pdal-config-bat.in"
--                   "${CMAKE_CURRENT_SOURCE_DIR}/pdal-config.bat" @ONLY)
-+                   "${CMAKE_CURRENT_BINARY_DIR}/pdal-config.bat" @ONLY)
- 
--    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/pdal-config.bat"
-+    file(COPY "${CMAKE_CURRENT_BINARY_DIR}/pdal-config.bat"
-          DESTINATION
-             "${PDAL_OUTPUT_BIN_DIR}/"
-          FILE_PERMISSIONS

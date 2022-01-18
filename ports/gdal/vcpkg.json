@@ -1,16 +1,15 @@
 {
   "name": "gdal",
   "version-semver": "3.4.0",
-  "port-version": 1,
+  "port-version": 6,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!(arm & windows)",
+  "supports": "!uwp",
   "dependencies": [
     "curl",
     "expat",
     "geos",
     "giflib",
-    "hdf5",
     {
       "name": "json-c",
       "platform": "!windows | mingw"
@@ -19,22 +18,33 @@
     "libjpeg-turbo",
     "liblzma",
     "libpng",
-    "libpq",
     "libwebp",
     "libxml2",
-    "netcdf-c",
     "openjpeg",
     "proj4",
     "sqlite3",
     "tiff",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     "zlib",
     "zstd"
+  ],
+  "default-features": [
+    "supported-default-features"
   ],
   "features": {
     "cfitsio": {
       "description": "Enable cfitsio support",
       "dependencies": [
         "cfitsio"
+      ]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": [
+        "hdf5"
       ]
     },
     "libspatialite": {
@@ -47,6 +57,40 @@
       "description": "Add mysql support using libmariadb",
       "dependencies": [
         "libmariadb"
+      ]
+    },
+    "netcdf": {
+      "description": "Enable NetCDF support",
+      "dependencies": [
+        "netcdf-c"
+      ]
+    },
+    "postgresql": {
+      "description": "Enable PostgreSQL support",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "supported-default-features": {
+      "description": "Default set of features, dependent on platform",
+      "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "postgresql"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "hdf5",
+            "netcdf"
+          ],
+          "platform": "!uwp & !(windows & arm64)"
+        }
       ]
     },
     "system-libraries": {

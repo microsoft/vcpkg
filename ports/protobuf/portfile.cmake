@@ -7,6 +7,11 @@ vcpkg_from_github(
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+<<<<<<< HEAD
+=======
+        fix-uwp-build.patch
+        fix-mingw-build.patch
+>>>>>>> 4184491f0780d4fae34d00044073dc058a23264b
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
