@@ -1,10 +1,10 @@
 {
   "name": "x264",
   "version-string": "164-5db6aa6cab1b146",
-  "port-version": 1,
+  "port-version": 3,
   "description": "x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format",
   "homepage": "https://github.com/mirror/x264",
-  "supports": "!arm",
+  "supports": "!(arm & windows)",
   "dependencies": [
     {
       "name": "pthread",

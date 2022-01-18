@@ -5,6 +5,14 @@
 set(PATCHES
     # Fix swrAVX512 build
     swravx512-post-static-link.patch
+    # Fix swr build with MSVC
+    swr-msvc-2.patch
+    # Fix swr build with LLVM 13
+    swr-llvm13.patch
+    # Fix radv MSVC build with LLVM 13
+    radv-msvc-llvm13-2.patch
+    # Fix d3d10sw MSVC build
+    d3d10sw.patch
 )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
@@ -16,8 +24,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.2.0
-    SHA512 4837e42474d69861fbce4fa03d120b56997094d61b3045c417bbab73774dda86e4b7adf54af98585511a3517860c33c77898e6171cd845f760bada4b000ff52d
+    REF mesa-21.2.5
+    SHA512 24387ce5ea0f200b39f930a842fc56fa120dd5cc6a94d175374ce788356dc7ac73e6390a7ffa6a1f2b0eb212cc00f556c7204548118ececb69d3555f0a259bc0
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
@@ -192,6 +200,6 @@ file(REMOVE ${_double_files})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES2)
-# # Handle copyright
+# Handle copyright
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

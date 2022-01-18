@@ -1,7 +1,10 @@
+include_guard(GLOBAL)
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
+
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
 
-set(BOOST_VERSION 1.77.0)
+set(BOOST_VERSION 1.78.0)
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
 if("${CMAKE_MATCH_3}" GREATER 0)
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
@@ -79,6 +82,19 @@ function(boost_modular_build)
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
+    if("python2" IN_LIST FEATURES)
+        # Find Python2 in the current installed directory
+        file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python2_version}")
+    endif()
+    if("python3" IN_LIST FEATURES)
+        # Find Python3 in the current installed directory
+        file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+        string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+        string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
+    endif()
+
     configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     set(configure_options)
@@ -104,9 +120,15 @@ function(boost_modular_build)
 
     vcpkg_cmake_install()
 
-    vcpkg_copy_pdbs()
+    vcpkg_copy_pdbs(
+        BUILD_PATHS
+            "${CURRENT_PACKAGES_DIR}/bin/*.dll"
+            "${CURRENT_PACKAGES_DIR}/bin/*.pyd"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd"
+    )
 
-    file(GLOB INSTALLED_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
     foreach(LIB IN LISTS INSTALLED_LIBS)
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
@@ -124,10 +146,10 @@ function(boost_modular_build)
         string(REPLACE "-${BOOST_VERSION_ABI_TAG}" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
-        elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-            file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
+        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
+            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
         else()
-            file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
         endif()
     endforeach()
     # Similar for mingw
@@ -153,7 +175,7 @@ function(boost_modular_build)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/has_icu.lib")
     endif()
 
-    if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/lib")
         message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
     endif()
 
