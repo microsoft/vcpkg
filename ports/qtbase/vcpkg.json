@@ -16,6 +16,14 @@
       "host": true,
       "default-features": false
     },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "pcre2"
+      ],
+      "platform": "windows"
+    },
     "zlib"
   ],
   "default-features": [

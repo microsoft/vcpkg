@@ -24,13 +24,8 @@ if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
         )
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT "doubleconversion" IN_LIST FEATURES)
-        message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
-    endif()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT "pcre2" IN_LIST FEATURES)
-        message(FATAL_ERROR "${PORT} requires feature pcre2 on windows!" )
-    endif()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
+    message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
