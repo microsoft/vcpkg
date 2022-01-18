@@ -9,10 +9,6 @@
     "bzip2",
     "libjpeg-turbo",
     "libpng",
-    {
-      "name": "mesa",
-      "platform": "linux"
-    },
     "vcpkg-cmake",
     "vcpkg-cmake-config",
     "zlib"
