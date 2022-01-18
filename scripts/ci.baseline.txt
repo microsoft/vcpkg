@@ -408,7 +408,6 @@ gstreamer:x64-osx=fail
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 gts:x64-osx=fail
-guetzli:x64-osx=fail
 halide:x64-windows-static=fail
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
