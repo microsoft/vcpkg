@@ -817,7 +817,6 @@ mhook:arm-uwp=fail
 mhook:x64-linux=fail
 mhook:x64-osx=fail
 mhook:x64-uwp=fail
-milerius-sfml-imgui:x64-osx=fail
 milerius-sfml-imgui:x64-windows-static=fail
 minhook:arm64-windows=fail
 minhook:arm-uwp=fail
