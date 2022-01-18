@@ -4680,6 +4680,10 @@
       "baseline": "2019-08-28",
       "port-version": 1
     },
+    "nayuki-qr-code-generator": {
+      "baseline": "1.7.0",
+      "port-version": 0
+    },
     "nccl": {
       "baseline": "2.4.6",
       "port-version": 2
