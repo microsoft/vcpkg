@@ -744,6 +744,7 @@ function(append_dependencies_from_libs out)
     list(TRANSFORM contents REPLACE "^-Wl,-framework," "-l")
     list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
     list(TRANSFORM contents REPLACE "^-l" "")
+    list(FILTER contents EXCLUDE REGEX "^avresample$")
     list(FILTER contents EXCLUDE REGEX "^avutil$")
     list(FILTER contents EXCLUDE REGEX "^avcodec$")
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
@@ -824,6 +825,8 @@ extract_version_from_component(LIBAVFILTER_VERSION
     COMPONENT libavfilter)
 extract_version_from_component( LIBAVFORMAT_VERSION
     COMPONENT libavformat)
+extract_version_from_component(LIBAVRESAMPLE_VERSION
+    COMPONENT libavresample)
 extract_version_from_component(LIBSWRESAMPLE_VERSION
     COMPONENT libswresample)
 extract_version_from_component(LIBSWSCALE_VERSION
