@@ -5449,13 +5449,8 @@
       "port-version": 0
     },
     "protobuf": {
-<<<<<<< HEAD
-      "baseline": "3.19.1",
-      "port-version": 0
-=======
       "baseline": "3.18.0",
       "port-version": 1
->>>>>>> 4184491f0780d4fae34d00044073dc058a23264b
     },
     "protobuf-c": {
       "baseline": "1.4.0",
