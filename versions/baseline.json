@@ -2438,7 +2438,7 @@
     },
     "gherkin-c": {
       "baseline": "2019-10-07",
-      "port-version": 2
+      "port-version": 3
     },
     "giflib": {
       "baseline": "5.2.1",
