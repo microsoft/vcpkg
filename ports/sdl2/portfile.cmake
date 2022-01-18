@@ -9,6 +9,9 @@ vcpkg_from_github(
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-disable-sdlmain-target-search-on-uwp.patch
+        0004-Define-crt-macros.patch
+        0005-Fix-uwp-joystick.patch
+        0006-Update-SDL_sysurl.cpp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
