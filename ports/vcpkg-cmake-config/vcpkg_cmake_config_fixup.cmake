@@ -161,8 +161,15 @@ function(vcpkg_cmake_config_fixup)
     endif()
 
     #Fix ${_IMPORT_PREFIX} and absolute paths in cmake generated targets and configs;
-    #Since those can be renamed we have to check in every *.cmake
+    #Since those can be renamed we have to check in every *.cmake, but only once.
     file(GLOB_RECURSE main_cmakes "${release_share}/*.cmake")
+    if(DEFINED Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE)
+        list(REMOVE_ITEM main_cmakes ${Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE})
+        vcpkg_list(APPEND Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE ${main_cmakes})
+    else()
+        vcpkg_list(SET Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE ${main_cmakes})
+    endif()
+    set(Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE "${Z_VCPKG_CMAKE_CONFIG_FIXUP_IGNORE}" CACHE INTERNAL "")
 
     foreach(main_cmake IN LISTS main_cmakes)
         file(READ "${main_cmake}" contents)
