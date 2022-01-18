@@ -22,8 +22,6 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 * Discord: [\#include \<C++\>](https://www.includecpp.org), en el canal #🌏vcpkg
 * Docs: [Documentación](docs/README.md)
 
-[![Estado de compilación](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 ## Tabla de contenido
 
 - [Vcpkg](#vcpkg)
@@ -43,6 +41,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
   - [Ejemplos](#ejemplos)
   - [Contribuyendo](#contribuyendo)
   - [Licencia](#licencia)
+- [Seguridad](#seguridad)
   - [Telemetría](#telemetría)
 
 ## Primeros pasos
@@ -382,6 +381,16 @@ con cualquier pregunta adicional o comentarios.
 ## Licencia
 
 El código en este repositorio se encuentra licenciado mediante la [Licencia MIT](LICENSE.txt).
+Las bibliotecas proveídas por los `ports` están licenciadas mediante los terminos de los autores originales.
+Donde estén disponibles, vcpkg almacena las licencias asociadas en la siguiente ubicación `installed/<triplet>/share/<port>/copyright`.
+
+# Seguridad
+
+La mayoría de los `ports` en vcpkg construyen las bibliotecas usando su sistema de compilación preferido
+por los autores originales de las bibliotecas, y descargan el código fuente asi como las herramientas de compilación
+de sus ubicaciones de distribucion oficiales. Para aquellos que usan un firewall, el acceso dependerá de cuales `ports`
+están siendo instalados. Si tiene que instalarlos en un entorno aislado, puede instalarlos previamente en un entorno
+no aislado, generando un [caché del paquete](docs/users/assetcaching.md) compartido con el entorno aislado.
 
 ## Telemetría
 
