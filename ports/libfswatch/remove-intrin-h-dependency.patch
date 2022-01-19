@@ -1,11 +1,92 @@
 --- a/libfswatch/src/libfswatch/c++/windows_monitor.cpp
 +++ b/libfswatch/src/libfswatch/c++/windows_monitor.cpp
-@@ -29,8 +29,7 @@
- #  include <fcntl.h>
+@@ -22,7 +22,6 @@
+ #  include <cstdlib>
+
+ #define NOWINBASEINTERLOCK
+-#  include <intrin.h>
+ #  include <WinNls.h>
+ #  include <consoleapi2.h>
+ #  include <synchapi.h>
+
+--- a/libfswatch/src/libfswatch/c++/poll_monitor.cpp
++++ a/libfswatch/src/libfswatch/c++/poll_monitor.cpp
+@@ -18,8 +18,7 @@
+ #include <utility>
 
  #ifdef _MSC_VER
+ #include "libfswatch/libfswatch_config.h"
+-#include <intrin.h>
+ #include <Synchapi.h>
+
+ /* stolen from libcurl: */
+
+--- a/libfswatch/src/libfswatch/c++/path_utils.cpp
++++ a/libfswatch/src/libfswatch/c++/path_utils.cpp
+@@ -19,8 +19,7 @@
+ #include <cstdlib>
+
+ #ifdef _MSC_VER
+ #include "libfswatch/libfswatch_config.h"
+-#include <intrin.h>
+ #include <fileapi.h>
+ #define INVALID_HANDLE_VALUE (HANDLE)(-1)
+ #ifndef PATH_MAX
+
+--- a/libfswatch/src/libfswatch/c++/windows/win_handle.cpp
++++ a/libfswatch/src/libfswatch/c++/windows/win_handle.cpp
+@@ -17,8 +17,7 @@
+ #include "libfswatch/libfswatch_config.h"
+
+ #ifdef HAVE_WINDOWS
+
 -#  include <intrin.h>
+ #  include <handleapi.h>
+
+ #  include "gettext_defs.h"
+
+--- a/libfswatch/src/libfswatch/c++/windows/win_handle.hpp
++++ a/libfswatch/src/libfswatch/c++/windows/win_handle.hpp
+@@ -26,7 +26,6 @@
+ #  define FSW_WINDOWS_HANDLE_H
+
+ #  include "libfswatch/libfswatch_config.h"
+-#  include <intrin.h>
+ #  include <windef.h>
+ #  include <winnt.h>
+ #  include "fswatch_cxx_windows_export.h"
+
+--- a/libfswatch/src/libfswatch/c++/windows/win_error_message.cpp
++++ a/libfswatch/src/libfswatch/c++/windows/win_error_message.cpp
+@@ -17,8 +17,7 @@
+ #  include "libfswatch/libfswatch_config.h"
+
+ #ifdef HAVE_WINDOWS
+
  #define NOWINBASEINTERLOCK
- #else
- #  include <unistd.h>
- #endif /* _MSC_VER */@
+-#  include <intrin.h>
+ #  include <errhandlingapi.h>
+ #  include <windef.h>
+
+--- a/libfswatch/src/libfswatch/c++/windows/win_strings.cpp
++++ a/libfswatch/src/libfswatch/c++/windows/win_strings.cpp
+@@ -16,8 +16,7 @@
+ #include "libfswatch/libfswatch_config.h"
+
+-#include <intrin.h>
+ #include <WinNls.h>
+
+ #include "win_strings.hpp"
+
+ namespace fsw
+
+--- a/libfswatch/src/libfswatch/c++/windows/win_directory_change_event.cpp
++++ a/libfswatch/src/libfswatch/c++/windows/win_directory_change_event.cpp
+@@ -21,7 +21,6 @@
+ #ifdef _MSC_VER
+ #define NOWINBASEINTERLOCK
+-#  include <intrin.h>
+ #  include <windef.h>
+ #  include <handleapi.h>
+ #  include <winerror.h>
+ #  include <WinBase.h>
