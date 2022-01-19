@@ -14,11 +14,6 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-if(WIN32)
-    SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # dumpbin will fail on GCC
-    set(OPTIONS --disable-dependency-tracking)
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
