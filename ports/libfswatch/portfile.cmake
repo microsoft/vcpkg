@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            SamuelMarks/fswatch
-    REF             045f44c1c410f1f3c425e10d59c786a86401ccbd
-    SHA512          7333a33066b7dbf50304b405921b93229941455f70902e14162e3cc47e6822fa8cfa0ccce19bfebea73867f648fcdaeaab32ce48df9e01f4ef4149dac09b4dcb
+    REF             ca7c03d8094d8ff99cdba60798c4c5a4b805b856
+    SHA512          41b70ccf20b4daffb43af6bcaef147f055e983363fb8c43926575fe935471948140ab2a920cc0b8ea97e55c41091a838ef29874f337e0e4c9de82b2307ecbe2d
     HEAD_REF        multi-os-ci
 )
 
@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DBUILD_FSWATCH=OFF"
+        "-DBUILD_TESTS=ON"
 )
 vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/COPYING"
