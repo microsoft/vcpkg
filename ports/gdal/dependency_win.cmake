@@ -135,6 +135,13 @@ macro(find_dependency_win)
         list(APPEND NMAKE_OPTIONS_DBG "NETCDF_LIB=${NETCDF_LIBS_DEBUG}")
     endif()
 
+    if("poppler" IN_LIST FEATURES)
+        list(APPEND NMAKE_OPTIONS "POPPLER_ENABLED=YES")
+        list(APPEND NMAKE_OPTIONS "POPPLER_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include -I${CURRENT_INSTALLED_DIR}/poppler")
+        list(APPEND NMAKE_OPTIONS_REL "POPPLER_LIBS=${CURRENT_INSTALLED_DIR}/lib/poppler.lib ${CURRENT_INSTALLED_DIR}/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/lib/liblcms-1.lib advapi32.lib gdi32.lib")
+        list(APPEND NMAKE_OPTIONS_DBG "POPPLER_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/poppler.lib ${CURRENT_INSTALLED_DIR}/debug/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/debug/lib/liblcms-1.lib advapi32.lib gdi32.lib")
+    endif()
+
     if("postgresql" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "PG_INC_DIR=${CURRENT_INSTALLED_DIR}/include")
         x_vcpkg_pkgconfig_get_modules(PREFIX OPENSSL MODULES --msvc-syntax openssl LIBS)
