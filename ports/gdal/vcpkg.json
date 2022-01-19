@@ -1,7 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.0",
-  "port-version": 6,
+  "version-semver": "3.4.1",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "supports": "!uwp",
@@ -9,12 +8,19 @@
     "curl",
     "expat",
     "geos",
-    "giflib",
+    {
+      "name": "giflib",
+      "platform": "!windows | mingw"
+    },
     {
       "name": "json-c",
       "platform": "!windows | mingw"
     },
     "libgeotiff",
+    {
+      "name": "libiconv",
+      "platform": "windows & !mingw"
+    },
     "libjpeg-turbo",
     "liblzma",
     "libpng",
@@ -94,7 +100,6 @@
       ]
     },
     "system-libraries": {
-      "$supports": "!windows",
       "description": "Include drivers which need additional libraries"
     },
     "tools": {

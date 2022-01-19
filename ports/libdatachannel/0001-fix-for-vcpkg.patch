@@ -68,8 +68,8 @@ index c0e59d1..1d71e38 100644
  		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_JUICE=0)
 -		target_link_libraries(datachannel PRIVATE LibJuice::LibJuiceStatic)
 -		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuiceStatic)
-+		target_link_libraries(datachannel PRIVATE LibJuice::juice)
-+		target_link_libraries(datachannel-static PRIVATE LibJuice::juice)
++		target_link_libraries(datachannel PRIVATE LibJuice::LibJuice)
++		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuice)
  	endif()
  endif()
  
