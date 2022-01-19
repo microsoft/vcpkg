@@ -1,0 +1,11 @@
+--- a/libfswatch/src/libfswatch/c++/windows_monitor.cpp
++++ b/libfswatch/src/libfswatch/c++/windows_monitor.cpp
+@@ -29,8 +29,7 @@
+ #  include <fcntl.h>
+
+ #ifdef _MSC_VER
+-#  include <intrin.h>
+ #define NOWINBASEINTERLOCK
+ #else
+ #  include <unistd.h>
+ #endif /* _MSC_VER */@

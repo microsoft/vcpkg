@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF             045f44c1c410f1f3c425e10d59c786a86401ccbd
     SHA512          7333a33066b7dbf50304b405921b93229941455f70902e14162e3cc47e6822fa8cfa0ccce19bfebea73867f648fcdaeaab32ce48df9e01f4ef4149dac09b4dcb
     HEAD_REF        multi-os-ci
+    PATCHES
+        remove-intrin-h-dependency.patch
 )
 
 vcpkg_cmake_configure(
