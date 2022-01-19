@@ -64,7 +64,7 @@ function(vcpkg_cmake_build)
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
     else()
-        message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
+        message(WARNING "Unrecognized GENERATOR setting from vcpkg_cmake_configure().")
     endif()
 
     if(DEFINED arg_TARGET)
