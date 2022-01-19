@@ -1,0 +1,11 @@
+{
+  "name": "xau",
+  "version-semver": "1.0.9",
+  "description": "Functions for handling Xauthority files and entries.",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxau",
+  "dependencies": [
+    "bzip2",
+    "xorg-macros",
+    "xproto"
+  ]
+}

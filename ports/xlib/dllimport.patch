@@ -1,0 +1,44 @@
+diff --git a/include/X11/Xlibint.h b/include/X11/Xlibint.h
+index 603d05669..8596cb434 100644
+--- a/include/X11/Xlibint.h	
++++ b/include/X11/Xlibint.h
+@@ -389,23 +389,26 @@ struct _XLockPtrs {
+ #define _XLockMutex_fn (*_XLockMutex_fn_p)
+ #define _XUnlockMutex_fn (*_XUnlockMutex_fn_p)
+ #define _Xglobal_lock (*_Xglobal_lock_p)
++#define X_LOCK_EXTERN __declspec(dllimport) extern
++#else
++#define X_LOCK_EXTERN extern
+ #endif
+ 
+ /* in XlibInt.c */
+-extern void (*_XCreateMutex_fn)(
++X_LOCK_EXTERN void (*_XCreateMutex_fn)(
+     LockInfoPtr /* lock */
+ );
+-extern void (*_XFreeMutex_fn)(
++X_LOCK_EXTERN void (*_XFreeMutex_fn)(
+     LockInfoPtr /* lock */
+ );
+-extern void (*_XLockMutex_fn)(
++X_LOCK_EXTERN void (*_XLockMutex_fn)(
+     LockInfoPtr	/* lock */
+ #if defined(XTHREADS_WARN) || defined(XTHREADS_FILE_LINE)
+     , char * /* file */
+     , int /* line */
+ #endif
+ );
+-extern void (*_XUnlockMutex_fn)(
++X_LOCK_EXTERN void (*_XUnlockMutex_fn)(
+     LockInfoPtr	/* lock */
+ #if defined(XTHREADS_WARN) || defined(XTHREADS_FILE_LINE)
+     , char * /* file */
+@@ -413,7 +416,7 @@ extern void (*_XUnlockMutex_fn)(
+ #endif
+ );
+ 
+-extern LockInfoPtr _Xglobal_lock;
++X_LOCK_EXTERN LockInfoPtr _Xglobal_lock;
+ 
+ #if defined(XTHREADS_WARN) || defined(XTHREADS_FILE_LINE)
+ #define LockDisplay(d)	     if ((d)->lock_fns) (*(d)->lock_fns->lock_display)((d),__FILE__,__LINE__)

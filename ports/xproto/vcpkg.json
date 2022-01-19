@@ -1,0 +1,11 @@
+{
+  "name": "xproto",
+  "version-string": "2021.5",
+  "description": "X Window System unified protocol definitions",
+  "homepage": "https://gitlab.freedesktop.org/xorg/proto/xorgproto",
+  "dependencies": [
+    "libxslt",
+    "tool-meson",
+    "xorg-macros"
+  ]
+}

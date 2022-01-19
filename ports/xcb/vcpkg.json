@@ -1,0 +1,21 @@
+{
+  "name": "xcb",
+  "version": "1.14",
+  "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
+  "homepage": "https://xcb.freedesktop.org/",
+  "dependencies": [
+    "bzip2",
+    {
+      "name": "libxslt",
+      "host": true
+    },
+    "pthread",
+    "pthread-stubs",
+    "xau",
+    "xcb-proto",
+    "xcb-util-m4",
+    "xdmcp",
+    "xorg-macros",
+    "xproto"
+  ]
+}

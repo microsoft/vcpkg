@@ -1,0 +1,9 @@
+{
+  "name": "x11",
+  "version-semver": "1.6.9",
+  "description": "The X Window System is a network-transparent window system that was designed at MIT.",
+  "homepage": "https://www.x.org/wiki/",
+  "dependencies": [
+    "xlib"
+  ]
+}
