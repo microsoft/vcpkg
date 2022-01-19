@@ -16,7 +16,15 @@
     "fontconfig",
     "freetype",
     "libiconv",
-    "openjpeg"
+    "openjpeg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "splash",
