@@ -20,17 +20,17 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "pcre2"
+        "doubleconversion"
       ],
-      "platform": "windows & static"
+      "platform": "windows"
     },
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "doubleconversion"
+        "pcre2"
       ],
-      "platform": "windows"
+      "platform": "windows & static"
     },
     "zlib"
   ],
