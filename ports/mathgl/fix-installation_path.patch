@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5fd9f61..830a27b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+ 
+ #set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
+ set(MathGL_INSTALL_LIB_DIR "lib" CACHE PATH "Installation directory for libraries")
+-set(MathGL_INSTALL_BIN_DIR "bin" CACHE PATH "Installation directory for executables")
++set(MathGL_INSTALL_BIN_DIR "tools/mathgl" CACHE PATH "Installation directory for executables")
+ set(MathGL_INSTALL_INCLUDE_DIR "include" CACHE PATH "Installation directory for headers")
+ if(WIN32 AND NOT CYGWIN)
+ 	set(DEF_INSTALL_CMAKE_DIR cmake)

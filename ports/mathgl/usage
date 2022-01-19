@@ -1,0 +1,4 @@
+The package mathgl provides CMake targets:
+
+    find_package(MathGL2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mgl mgl-static)
