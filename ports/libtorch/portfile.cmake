@@ -15,7 +15,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generat
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # run `pip install ${package}`
-function(vcpkg_pip_install)
+function(pip_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "PACKAGE" "INSTALL_OPTIONS")
     if(NOT DEFINED Python3_EXECUTABLE)
         message(FATAL_ERROR "Undefined: Python3_EXECUTABLE")
