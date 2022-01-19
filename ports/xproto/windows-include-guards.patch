@@ -1,0 +1,41 @@
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 900257928..666ee6515 100644
+--- a/include/X11/Xwindows.h	
++++ b/include/X11/Xwindows.h
+@@ -41,6 +41,11 @@ The Open Group.
+  * do as it's no help at all to X11 clients which also need to use the
+  * Win32 API)
+  */
++#pragma once
++
++#ifndef _X11_XWINDOWS_H_
++#define _X11_XWINDOWS_H_
++
+ #undef _XFree86Server
+ #ifdef XFree86Server
+ # define _XFree86Server
+@@ -130,3 +135,4 @@ typedef int Status;
+ # undef _XFree86Server
+ #endif
+ 
++#endif
+diff --git a/include/X11/Xwinsock.h b/include/X11/Xwinsock.h
+index 92e0d2a33..1e3e8671b 100644
+--- a/include/X11/Xwinsock.h	
++++ b/include/X11/Xwinsock.h
+@@ -32,6 +32,10 @@ The Open Group.
+  * Conflicts come from the fact that including winsock.h actually pulls
+  * in the whole Windows API...
+  */
++#pragma once
++
++#ifndef _X11_XWINSOCK_H_
++#define _X11_XWINSOCK_H_
+ 
+ #undef _XFree86Server
+ #ifdef XFree86Server
+@@ -100,3 +104,4 @@ typedef int Status;
+ # undef _XFree86Server
+ #endif
+ 
++#endif
