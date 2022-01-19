@@ -34,6 +34,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
     endif()
+    list(APPEND PATCHES "0009-python-embed.pc.patch")
 endif()
 
 vcpkg_from_github(
@@ -149,13 +150,38 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    if(PYTHON_ALLOW_EXTENSIONS)
+    # The generated python executable must match the host arch
+    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
         message(STATUS "Bootstrapping pip")
         vcpkg_execute_required_process(COMMAND python -m ensurepip
             WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
             LOGNAME "ensurepip-${TARGET_TRIPLET}"
         )
     endif()
+
+    # pkg-config files
+    set(prefix "${CURRENT_PACKAGES_DIR}")
+    set(libdir [[${prefix}/lib]])
+    set(ABIVERSION "${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}")
+    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(exec_prefix "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        set(includedir [[${prefix}/include]])
+        set(ABISUFFIX "")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(exec_prefix "\${prefix}/../tools/${PORT}")
+        set(includedir [[${prefix}/../include]])
+        set(ABISUFFIX "_d")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
 else()

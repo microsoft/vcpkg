@@ -112,7 +112,7 @@ if(INSTALL_HEADERS)
     elseif(APPLE)
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|/*proj|/gcov")
     else()
-        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/client/linux/data|/client/linux/sender|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
+        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
         install(
             DIRECTORY src/third_party/lss
             DESTINATION include/third_party
