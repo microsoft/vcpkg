@@ -48,10 +48,10 @@ function(vcpkg_cmake_build)
         set(arg_LOGFILE_BASE "build")
     endif()
 
-    set(build_args)
-    set(target_args)
-    set(parallel_args)
-    set(no_parallel_args)
+    set(build_args "")
+    set(target_args "")
+    set(parallel_args "")
+    set(no_parallel_args "")
 
     if(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Ninja")
         set(build_args "-v") # verbose output
