@@ -2410,7 +2410,7 @@
     },
     "getdns": {
       "baseline": "1.7.0",
-      "port-version": 1
+      "port-version": 2
     },
     "getopt": {
       "baseline": "0",
@@ -2946,7 +2946,7 @@
     },
     "jasper": {
       "baseline": "2.0.33",
-      "port-version": 0
+      "port-version": 1
     },
     "jbig2dec": {
       "baseline": "0.19",
@@ -4354,7 +4354,7 @@
     },
     "mesa": {
       "baseline": "21.2.5",
-      "port-version": 1
+      "port-version": 2
     },
     "meschach": {
       "baseline": "1.2b",
@@ -6286,7 +6286,7 @@
     },
     "sentry-native": {
       "baseline": "0.4.13",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-sx": {
       "baseline": "2019-05-07",
