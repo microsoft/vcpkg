@@ -286,7 +286,7 @@
     },
     "aws-c-mqtt": {
       "baseline": "0.7.6",
-      "port-version": 1
+      "port-version": 2
     },
     "aws-c-s3": {
       "baseline": "0.1.25",
@@ -338,10 +338,6 @@
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.0.0-beta.1",
-      "port-version": 0
-    },
-    "azure-security-keyvault-common-cpp": {
-      "baseline": "4.0.0-beta.3",
       "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
@@ -826,7 +822,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.78.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-move": {
       "baseline": "1.78.0",
@@ -1658,7 +1654,7 @@
     },
     "crossguid": {
       "baseline": "2021-10-22",
-      "port-version": 1
+      "port-version": 2
     },
     "crow": {
       "baseline": "0.3.4",
@@ -2150,7 +2146,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 5
+      "port-version": 6
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2373,8 +2369,8 @@
       "port-version": 1
     },
     "gdal": {
-      "baseline": "3.4.0",
-      "port-version": 6
+      "baseline": "3.4.1",
+      "port-version": 0
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -2442,7 +2438,7 @@
     },
     "gherkin-c": {
       "baseline": "2019-10-07",
-      "port-version": 2
+      "port-version": 3
     },
     "giflib": {
       "baseline": "5.2.1",
@@ -2630,7 +2626,7 @@
     },
     "guetzli": {
       "baseline": "2020-09-14",
-      "port-version": 1
+      "port-version": 2
     },
     "guilite": {
       "baseline": "2021-07-31",
@@ -3401,7 +3397,7 @@
       "port-version": 1
     },
     "libdatachannel": {
-      "baseline": "0.16.0",
+      "baseline": "0.16.4",
       "port-version": 0
     },
     "libdatrie": {
@@ -3430,7 +3426,7 @@
     },
     "libdshowcapture": {
       "baseline": "0.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libe57": {
       "baseline": "1.1.312",
@@ -3601,7 +3597,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "0.9.1",
+      "baseline": "0.9.6",
       "port-version": 0
     },
     "libjxl": {
@@ -3973,7 +3969,7 @@
       "port-version": 3
     },
     "libtcod": {
-      "baseline": "1.19.0",
+      "baseline": "1.20.1",
       "port-version": 0
     },
     "libtess2": {
@@ -4082,7 +4078,7 @@
     },
     "libwebsockets": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4106,7 +4102,7 @@
     },
     "libxmp-lite": {
       "baseline": "4.4.1",
-      "port-version": 7
+      "port-version": 8
     },
     "libxslt": {
       "baseline": "1.1.34",
@@ -4153,7 +4149,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2.0-20211208",
+      "baseline": "2.0-20220112",
       "port-version": 0
     },
     "llgl": {
@@ -4358,7 +4354,7 @@
     },
     "mesa": {
       "baseline": "21.2.5",
-      "port-version": 0
+      "port-version": 1
     },
     "meschach": {
       "baseline": "1.2b",
@@ -4386,7 +4382,7 @@
     },
     "mhook": {
       "baseline": "2.5.1",
-      "port-version": 2
+      "port-version": 3
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha3",
@@ -4398,7 +4394,7 @@
     },
     "milerius-sfml-imgui": {
       "baseline": "1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "mimalloc": {
       "baseline": "2.0.3",
@@ -4410,7 +4406,7 @@
     },
     "minhook": {
       "baseline": "1.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "minifb": {
       "baseline": "2019-08-20",
@@ -4485,7 +4481,7 @@
       "port-version": 2
     },
     "mongoose": {
-      "baseline": "7.1",
+      "baseline": "7.5",
       "port-version": 0
     },
     "monkeys-audio": {
@@ -4693,7 +4689,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-8089a948",
+      "baseline": "0.0.0-cad832c8",
       "port-version": 0
     },
     "neon2sse": {
@@ -5282,7 +5278,7 @@
     },
     "piex": {
       "baseline": "2019-07-11",
-      "port-version": 1
+      "port-version": 2
     },
     "pistache": {
       "baseline": "2021-03-31",
@@ -6002,7 +5998,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "readosm": {
       "baseline": "1.1.0a",
@@ -6081,7 +6077,7 @@
       "port-version": 3
     },
     "robin-hood-hashing": {
-      "baseline": "3.11.4",
+      "baseline": "3.11.5",
       "port-version": 0
     },
     "robin-map": {
@@ -6126,7 +6122,7 @@
     },
     "rtabmap": {
       "baseline": "0.20.13",
-      "port-version": 1
+      "port-version": 2
     },
     "rtaudio": {
       "baseline": "2021-11-16",
@@ -6222,7 +6218,7 @@
     },
     "scylla-wrapper": {
       "baseline": "2018-08-26-16e6f435",
-      "port-version": 1
+      "port-version": 2
     },
     "sdformat10": {
       "baseline": "10.0.0",
@@ -7022,7 +7018,7 @@
     },
     "unicorn": {
       "baseline": "2020-09-14",
-      "port-version": 1
+      "port-version": 2
     },
     "unicorn-lib": {
       "baseline": "2020-03-02",
@@ -7282,7 +7278,7 @@
     },
     "wincrypt": {
       "baseline": "0.0",
-      "port-version": 3
+      "port-version": 4
     },
     "winlamb": {
       "baseline": "2020-10-15",
@@ -7302,7 +7298,7 @@
     },
     "winsock2": {
       "baseline": "0.0",
-      "port-version": 3
+      "port-version": 4
     },
     "wintoast": {
       "baseline": "1.2.0",
@@ -7521,8 +7517,8 @@
       "port-version": 3
     },
     "zstd": {
-      "baseline": "1.5.0",
-      "port-version": 1
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "zstr": {
       "baseline": "1.0.4",

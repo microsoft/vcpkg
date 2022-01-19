@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-dependency-libuv.patch
         fix-build-error.patch
         export-include-path.patch
+        fix-find-openssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
@@ -132,9 +133,15 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
 # option(LWS_WITH_LWS_DSH "Support lws_dsh_t Disordered Shared Heap" OFF)
 ##
 
+set(EXTRA_ARGS)
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(EXTRA_ARGS "-DLWS_WITH_LIBUV=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${EXTRA_ARGS}
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
         -DLWS_WITH_GENCRYPTO=ON
@@ -144,7 +151,6 @@ vcpkg_cmake_configure(
         -DLWS_IPV6=ON
         -DLWS_WITH_HTTP2=ON
         -DLWS_WITH_HTTP_STREAM_COMPRESSION=ON # Since zlib is already a dependency
-        -DLWS_WITH_LIBUV=ON
         -DLWS_WITH_EXTERNAL_POLL=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
