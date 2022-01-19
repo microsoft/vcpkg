@@ -226,9 +226,10 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 set(debug_libs "${CMAKE_MATCH_1}")
                 z_vcpkg_cmake_config_fixup_merge(merged_libs release_libs debug_libs)
                 string(REPLACE "${release_line}" "  INTERFACE_LINK_LIBRARIES \"${merged_libs}\"" updated_command "${matched_command}")
-                string(REPLACE " PROPERTIES" "\n  PROPERTIES" updated_command "${updated_command}") # Prevend 2nd match
+                string(REPLACE "set_target_properties" "set_target_properties::done" updated_command "${updated_command}") # Prevend 2nd match
                 string(REPLACE "${matched_command}" "${updated_command}" contents "${contents}")
             endwhile()
+            string(REPLACE "set_target_properties::done" "set_target_properties" contents "${contents}") # Restore original command
         endif()
 
         #Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
