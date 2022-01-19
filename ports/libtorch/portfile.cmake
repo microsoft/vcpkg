@@ -34,7 +34,7 @@ function(pip_install)
     endif()
 endfunction()
 pip_install(PACKAGE typing-extensions)
-vcpkg_pip_install(PACKAGE pyyaml)
+pip_install(PACKAGE pyyaml)
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake DESTINATION ${SOURCE_PATH}/cmake)
