@@ -24,6 +24,14 @@
       ],
       "platform": "windows & static"
     },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "doubleconversion"
+      ],
+      "platform": "windows"
+    },
     "zlib"
   ],
   "default-features": [
