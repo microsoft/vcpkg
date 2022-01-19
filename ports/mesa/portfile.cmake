@@ -170,10 +170,9 @@ list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when bu
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
     list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
+    set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
+    set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
 endif()
-
-set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
-set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
