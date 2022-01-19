@@ -33,7 +33,7 @@ function(pip_install)
         message(FATAL_ERROR "PIP install failed. Check ${CURRENT_BUILDTREES_DIR}/install-${arg_PACKAGE}-err.log")
     endif()
 endfunction()
-vcpkg_pip_install(PACKAGE typing-extensions)
+pip_install(PACKAGE typing-extensions)
 vcpkg_pip_install(PACKAGE pyyaml)
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
