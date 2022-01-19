@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "C++ command line parser toolkit",
   "homepage": "https://github.com/gknowles/dimcli",
-  "supports": "!osx & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
