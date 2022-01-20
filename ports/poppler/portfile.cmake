@@ -11,9 +11,11 @@ vcpkg_from_github(
         0005-export-cmake-targets.patch
 )
 
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
-vcpkg_add_to_path(${GPERF_PATH})
+if("gperf" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(GPERF)
+    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+    vcpkg_add_to_path(${GPERF_PATH})
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

@@ -13,8 +13,12 @@
       "name": "devil",
       "platform": "(windows | linux) & !arm"
     },
-    "fontconfig",
+    {
+      "name": "fontconfig",
+      "platform": "!(windows | android)"
+    },
     "freetype",
+    "gperf",
     "libiconv",
     "openjpeg",
     {
