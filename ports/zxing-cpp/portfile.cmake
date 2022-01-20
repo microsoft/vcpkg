@@ -26,7 +26,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/ZXing
-    TARGET_PATH share/ZXing
+    PACKAGE_NAME ZXing
     )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
