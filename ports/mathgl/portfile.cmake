@@ -36,20 +36,21 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${FEATURE_OPTIONS}
 )
+
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_TARGET_IS_UWP)
-  vcpkg_cmake_config_fixup(PACKAGE_NAME MathGL2 CONFIG_PATH lib/cmake/mathgl2)
-else()
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
   vcpkg_cmake_config_fixup(PACKAGE_NAME MathGL2 CONFIG_PATH cmake)
   file(REMOVE "${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake")
+else()
+  vcpkg_cmake_config_fixup(PACKAGE_NAME MathGL2 CONFIG_PATH lib/cmake/mathgl2)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if("-Denable-fltk=ON" IN_LIST FEATURE_OPTIONS)
+if("fltk" IN_LIST FEATURE_OPTIONS)
   list(APPEND TOOLS mgllab)
   list(APPEND TOOLS mglview)
   list(APPEND TOOLS udav)
@@ -60,8 +61,6 @@ vcpkg_copy_tools(
       SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/mathgl"
       AUTO_CLEAN
 )
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
