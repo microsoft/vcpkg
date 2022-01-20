@@ -1,7 +1,17 @@
-diff --color -ur /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846aceea.clean/CMakeLists.txt /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846aceea/CMakeLists.txt
---- /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846aceea.clean/CMakeLists.txt	2022-01-19 18:49:42.309363752 +0100
-+++ /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846aceea/CMakeLists.txt	2022-01-19 20:34:22.171542334 +0100
-@@ -578,7 +578,26 @@
+From 8d2aec6756830a1d42e0ea36ea6dbf5dce06e875 Mon Sep 17 00:00:00 2001
+From: Matthias Kuhn <matthias@opengis.ch>
+Date: Thu, 20 Jan 2022 08:25:44 +0100
+Subject: [PATCH] Export cmake targets
+
+---
+ CMakeLists.txt | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1573249a..fdebefc8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -579,7 +579,26 @@ target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
  if(CMAKE_USE_PTHREADS_INIT)
     target_link_libraries(poppler LINK_PRIVATE Threads::Threads)
  endif()
@@ -29,3 +39,6 @@ diff --color -ur /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846ac
  
  if(ENABLE_UNSTABLE_API_ABI_HEADERS)
    install(FILES
+-- 
+2.31.1
+
