@@ -1,6 +1,6 @@
 {
   "name": "gazebo11",
-  "version-date": "2022-01-10",
+  "version-date": "2022-01-20",
   "description": "Open source robotics simulator.",
   "homepage": "http://gazebosim.org",
   "dependencies": [
