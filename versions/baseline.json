@@ -570,7 +570,7 @@
     },
     "boost-build": {
       "baseline": "1.78.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-callable-traits": {
       "baseline": "1.78.0",
@@ -1701,7 +1701,7 @@
       "port-version": 7
     },
     "curl": {
-      "baseline": "7.80.0",
+      "baseline": "7.81.0",
       "port-version": 0
     },
     "curlpp": {
@@ -2526,7 +2526,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.35.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3574,7 +3574,7 @@
     },
     "libidn2": {
       "baseline": "2.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libigl": {
       "baseline": "2.3.0",
@@ -4676,6 +4676,10 @@
       "baseline": "2019-08-28",
       "port-version": 1
     },
+    "nayuki-qr-code-generator": {
+      "baseline": "1.7.0",
+      "port-version": 0
+    },
     "nccl": {
       "baseline": "2.4.6",
       "port-version": 2
@@ -5550,7 +5554,7 @@
     },
     "qt5-3d": {
       "baseline": "5.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-activeqt": {
       "baseline": "5.15.2",

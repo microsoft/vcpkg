@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v1.35.0
     SHA512 99eabb37ff32ddaf8f646415b50f3843e89fb119646428c16f03060c2787c8d86fa1ac0919ee60c4f6c7a3b71a14eb828ae26a7fc26d928543d72c7ba3268bff
     HEAD_REF main
+    PATCHES
+        support_absl_cxx17.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
@@ -74,7 +76,7 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/debug/share") 
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
