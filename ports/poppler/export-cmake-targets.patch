@@ -6,7 +6,7 @@ diff --color -ur /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846ac
     target_link_libraries(poppler LINK_PRIVATE Threads::Threads)
  endif()
 -install(TARGETS poppler RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(TARGETS poppler EXPORT unofficial-poppler-targets RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS poppler EXPORT unofficial-poppler-targets RUNTIME DESTINATION bin LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 +
 +install(EXPORT unofficial-poppler-targets
 +    NAMESPACE unofficial::
@@ -17,7 +17,7 @@ diff --color -ur /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846ac
 +find_dependency(Freetype)
 +find_dependency(LCMS2)
 +if(@ENABLE_CURL@)
-+    find_dependency(OpenSSL)
++    find_dependency(CURL)
 +endif()
 +if(@ENABLE_ZLIB@)
 +    find_dependency(ZLIB)
@@ -25,7 +25,7 @@ diff --color -ur /home/mkuhn/dev/vcpkg/buildtrees/poppler/src/er-20.12.1-0f846ac
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-targets.cmake")
 +]])
 +configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-poppler-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-poppler-config.cmake" @ONLY)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-poppler-config.cmake DESTINATION share/unofficial-poppler)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-poppler-config.cmake" DESTINATION share/unofficial-poppler)
  
  if(ENABLE_UNSTABLE_API_ABI_HEADERS)
    install(FILES
