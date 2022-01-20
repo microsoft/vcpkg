@@ -4346,7 +4346,7 @@
     },
     "mdnsresponder": {
       "baseline": "878.270.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mdspan": {
       "baseline": "2021-11-03",
@@ -7058,7 +7058,7 @@
     },
     "unrar": {
       "baseline": "5.8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "upb": {
       "baseline": "2021-10-19",
