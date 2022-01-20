@@ -17,6 +17,7 @@ add_library(image_type_recognition
 )
 
 target_link_libraries(image_type_recognition binary_parse)
+target_compile_features(image_type_recognition PUBLIC cxx_std_11)
 
 add_library(tiff_directory
   src/tiff_directory/tiff_directory.cc
@@ -30,6 +31,7 @@ add_library(piex
 )
 
 target_link_libraries(piex tiff_directory image_type_recognition binary_parse)
+target_compile_features(piex PUBLIC cxx_std_11)
 
 install(
   TARGETS piex

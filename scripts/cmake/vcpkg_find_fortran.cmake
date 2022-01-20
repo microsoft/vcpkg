@@ -55,8 +55,8 @@ function(vcpkg_find_fortran out_var)
                         2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-winpthreads-git-8.0.0.5906.c9a21571-1-any.pkg.tar.zst"
                         e87ad4f4071c6b5bba3b13a85abf6657bb494b73c57ebe65bc5a92e2cef1d9de354e6858d1338ee72809e3dc742ba69ce090aaad4560ae1d3479a61dbebf03c6
-                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-mpc-1.1.0-1-any.pkg.tar.xz"
-                        d236b815ec3cf569d24d96a386eca9f69a2b1e8af18e96c3f1e5a4d68a3598d32768c7fb3c92207ecffe531259822c1a421350949f2ffabd8ee813654f1af864
+                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-mpc-1.2.1-1-any.pkg.tar.zst"
+                        f4cda83c26bf4225a8c387e0710ea086896e9c89e7863b9a2947982636664b64ffa880cbddfe6d85f8cf7cb3be18296b04874026cdf8b1b702a2820dad135ba4
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-mpfr-4.1.0-2-any.pkg.tar.zst"
                         caac5cb73395082b479597a73c7398bf83009dbc0051755ef15157dc34996e156d4ed7881ef703f9e92861cfcad000888c4c32e4bf38b2596c415a19aafcf893
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-gcc-10.2.0-1-any.pkg.tar.zst"
@@ -93,8 +93,8 @@ function(vcpkg_find_fortran out_var)
                         a6969a5db1c55ba458c1a047d0a2a9d2db6cc24266ea47f740598b149a601995d2de734a0984ac5e57ee611d5982cbc03fd6fc0f498435e8d6401bf15724caad
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-winpthreads-git-8.0.0.5906.c9a21571-1-any.pkg.tar.zst"
                         87ae090a8de855de5580f158f4007f88d6dad341429620685dc736be55b1f060487552040327a76003618e214a11c1f8e5105ca2c7abe164908121627449d679
-                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-mpc-1.1.0-1-any.pkg.tar.xz"
-                        db075a1406690935db5780af293660385f56699881a1b2cd25ab252183643d71d646b0dadf1e34174df8f0744d51ce8b56dccd719e049efcaf9b7e08e80a7ef6
+                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-mpc-1.2.1-1-any.pkg.tar.zst"
+                        f2c137dbb0b6feea68dde9739c38b44dcb570324e3947adf991028e8f63c9ff50a11f47be15b90279ff40bcac7f320d952cfc14e69ba8d02cf8190c848d976a1
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-mpfr-4.1.0-2-any.pkg.tar.zst"
                         14739667242b8852f0d26547eb3297899a51fd1edafc7101b4e7489273e1efb9cb8422fc067361e3c3694c2afcc6c49fc89537f9f811ad5b9b595873112ee890
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-gcc-10.2.0-1-any.pkg.tar.zst"

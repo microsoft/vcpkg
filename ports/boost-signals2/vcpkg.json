@@ -1,6 +1,6 @@
 {
   "name": "boost-signals2",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost signals2 module",
   "homepage": "https://github.com/boostorg/signals2",
   "dependencies": [
