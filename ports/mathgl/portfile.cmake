@@ -1,5 +1,4 @@
 set(MATHGL_VERSION "2.5")
-set(TOOLS mgltask mglconv)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -50,6 +49,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+set(TOOLS mgltask mglconv)
 if("fltk" IN_LIST FEATURE_OPTIONS)
   list(APPEND TOOLS mgllab)
   list(APPEND TOOLS mglview)
