@@ -4338,7 +4338,7 @@
     },
     "mdnsresponder": {
       "baseline": "878.270.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mdspan": {
       "baseline": "2021-11-03",
