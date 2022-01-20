@@ -5,7 +5,10 @@
   "homepage": "https://gitlab.freedesktop.org/xorg/proto/xorgproto",
   "dependencies": [
     "libxslt",
-    "tool-meson",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "xorg-macros"
   ]
 }
