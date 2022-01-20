@@ -74,7 +74,7 @@ jobs:
             if (add_version_out !== "") {
               output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
               output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
-              output += "```\n" + add_version_out + "\n```\n</details>\n"
+              output += "```\n" + add_version_out + "\n```\n</details>\n\n"
               approve = false;
             }
             if (add_version !== "") {
@@ -104,7 +104,7 @@ jobs:
               output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
               output += "```\n"
               output += `The following files are affected:\n${cmake}\n`
-              output += "</details>\n"
+              output += "</details>\n\n"
             }
             if (missing_license !== "") {
               output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
