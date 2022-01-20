@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         cmake.dep.patch #patch name
         rt_pc_link.patch
         pkgconfig.patch
+        getpeereid.patch # missing check from configure.ac
 ) 
 
 vcpkg_cmake_configure(
