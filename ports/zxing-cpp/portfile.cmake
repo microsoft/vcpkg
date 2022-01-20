@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
-vcpkg_cmake_configure()(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
 
