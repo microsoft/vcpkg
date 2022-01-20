@@ -9,12 +9,11 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure()(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Install the pkgconfig file
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -25,7 +24,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(
+vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/ZXing
     TARGET_PATH share/ZXing
     )
