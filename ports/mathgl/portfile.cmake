@@ -39,7 +39,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(PACKAGE_NAME MathGL2 CONFIG_PATH cmake)
   file(REMOVE "${CURRENT_PACKAGES_DIR}/mathgl2-config.cmake")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/mathgl2-config.cmake")
