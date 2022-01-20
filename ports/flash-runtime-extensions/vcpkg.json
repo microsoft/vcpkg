@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "Adobe AIR Native Extension API for Windows/MacOS/Linux",
   "homepage": "https://github.com/al-sabr/FlashRuntimeExtensions",
-  "supports": "!(arm64 | (arm & uwp))",
+  "supports": "!(arm | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
