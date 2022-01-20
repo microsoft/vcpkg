@@ -1504,7 +1504,7 @@ xbyak:x64-uwp=fail
 xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
 # Crosscompiling xlib requires additional steps and patches to the Makefiles. 
-xlib:arm64-windows
+xlib:arm64-windows=fail
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
 # The xmsh upstream repository is gone, if we find no replacement before
