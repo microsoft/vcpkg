@@ -3237,7 +3237,7 @@
       "port-version": 1
     },
     "kubernetes": {
-      "baseline": "2021-11-24",
+      "baseline": "2022-01-19",
       "port-version": 0
     },
     "kuku": {
