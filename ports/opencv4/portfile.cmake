@@ -69,6 +69,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "vtk"       WITH_VTK
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
+ "1394"      WITH_1394
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt, "tbb"
