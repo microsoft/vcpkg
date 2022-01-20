@@ -4,23 +4,24 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp-zlib
+    REPO oatpp/oatpp-ssdp
     REF ${OATPP_VERSION}
-    SHA512 574f0440cbb2cd2bc14ad89e33538a1a300ad23ecc941629b74aa8ccb9aeae5158b1b57e2f1af09d7a6b9b97430a5685354677002dab2261120afa9c6ea74381
+    SHA512 ab6f10bb79cb058eb7ce4115327e2f2d85133753d02dc2b4339505cc2ed4ef8b6284b5e832d0e190de17b8ae70e0b9a99b1b074d0691ca9a613873e8d4e1ace8
     HEAD_REF master
+    PATCHES
+        fix_String_to_string.patch
+        fix_win_close.patch
 )
-
-set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
+        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-zlib CONFIG_PATH lib/cmake/oatpp-zlib-${OATPP_VERSION})
+vcpkg_cmake_config_fixup(PACKAGE_NAME oatpp-ssdp CONFIG_PATH lib/cmake/oatpp-ssdp-${OATPP_VERSION})
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
