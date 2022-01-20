@@ -39,6 +39,7 @@ jobs:
           git config user.name github-actions@github.com
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '"license": ' "$filename" || echo " - \`$filename\`" || true; done > .github-pr.missing-license
           ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
@@ -58,6 +59,7 @@ jobs:
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
             const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).trim()
+            const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
 
             let approve = true;
             var output = ''
@@ -72,7 +74,7 @@ jobs:
             if (add_version_out !== "") {
               output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
               output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
-              output += "```\n" + add_version_out + "\n```\n</details>\n"
+              output += "```\n" + add_version_out + "\n```\n</details>\n\n"
               approve = false;
             }
             if (add_version !== "") {
@@ -102,7 +104,14 @@ jobs:
               output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
               output += "```\n"
               output += `The following files are affected:\n${cmake}\n`
-              output += "</details>\n"
+              output += "</details>\n\n"
+            }
+            if (missing_license !== "") {
+              output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
+              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+
+              output += missing_license
+              output += "\n\nValid values for the license field are listed at <https://spdx.org/licenses/>\n\n"
             }
 
             if (approve) {
