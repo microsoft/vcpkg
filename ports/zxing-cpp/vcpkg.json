@@ -1,11 +1,13 @@
 {
   "name": "zxing-cpp",
-  "version-string": "2022-01",
-  "port-version": 4,
+  "version": "1.2.0",
   "description": "Barcode detection and decoding library.",
   "homepage": "https://github.com/nu-book/zxing-cpp",
   "dependencies": [
-    "fmt",
+    {
+      "name": "git",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
