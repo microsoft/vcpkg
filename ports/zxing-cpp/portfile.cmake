@@ -11,14 +11,17 @@ vcpkg_from_github(
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(SOURCE_PATH "${SOURCE_PATH}/wrappers/winrt")
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+else()
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DBUILD_BLACKBOX_TESTS=OFF
+            -DBUILD_EXAMPLES=OFF
+    )
 endIf()
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DBUILD_BLACKBOX_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-)
 
 vcpkg_cmake_install()
 
