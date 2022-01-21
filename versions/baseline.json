@@ -7533,8 +7533,8 @@
       "port-version": 0
     },
     "zxing-cpp": {
-      "baseline": "2022-01",
-      "port-version": 4
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "zydis": {
       "baseline": "3.2.1",
