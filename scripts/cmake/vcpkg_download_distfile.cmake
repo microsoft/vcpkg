@@ -12,7 +12,9 @@ vcpkg_download_distfile(
     URLS <http://mainUrl> <http://mirror1>...
     FILENAME <output.zip>
     SHA512 <5981de...>
+    [FILE_DISAMBIGUATOR <N>]
     [ALWAYS_REDOWNLOAD]
+    [HEADERS <h1> <h2>...]
 )
 ```
 ## Parameters
@@ -42,6 +44,9 @@ This switch is only valid when building with the `--head` command line flag.
 Avoid caching; this is a REST call or otherwise unstable.
 
 Requires `SKIP_SHA512`.
+
+### FILE_DISAMBIGUATOR
+A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
@@ -170,7 +175,7 @@ endfunction()
 function(vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
-        "FILENAME;SHA512"
+        "FILENAME;SHA512;FILE_DISAMBIGUATOR"
         "URLS;HEADERS"
     )
 
@@ -210,8 +215,17 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
     endif()
 
-    set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
-    set(download_file_path_part "${DOWNLOADS}/temp/${arg_FILENAME}")
+    if(DEFINED arg_FILE_DISAMBIGUATOR)
+        cmake_path(GET arg_FILENAME STEM filename_no_ext)
+        cmake_path(GET arg_FILENAME EXTENSION file_extension)
+        set(downloaded_file_path
+            "${DOWNLOADS}/${filename_no_ext}-${arg_FILE_DISAMBIGUATOR}${file_extension}")
+        set(download_file_path_part
+            "${DOWNLOADS}/temp/${filename_no_ext}-${arg_FILE_DISAMBIGUATOR}${file_extension}")
+    else()
+        set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
+        set(download_file_path_part "${DOWNLOADS}/temp/${arg_FILENAME}")
+    endif()
 
     # Works around issue #3399
     # Delete "temp0" directory created by the old version of vcpkg

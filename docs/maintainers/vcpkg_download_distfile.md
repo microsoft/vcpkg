@@ -13,7 +13,9 @@ vcpkg_download_distfile(
     URLS <http://mainUrl> <http://mirror1>...
     FILENAME <output.zip>
     SHA512 <5981de...>
+    [FILE_DISAMBIGUATOR <N>]
     [ALWAYS_REDOWNLOAD]
+    [HEADERS <h1> <h2>...]
 )
 ```
 ## Parameters
@@ -43,6 +45,9 @@ This switch is only valid when building with the `--head` command line flag.
 Avoid caching; this is a REST call or otherwise unstable.
 
 Requires `SKIP_SHA512`.
+
+### FILE_DISAMBIGUATOR
+A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
