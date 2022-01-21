@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
-if(${VCPKG_CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(SOURCE_PATH "${SOURCE_PATH}/wrappers/winrt")
 endIf()
 
@@ -29,6 +29,7 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(COPY ${SOURCE_PATH}/zxing.pc.in DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 endif()
+
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(
@@ -37,6 +38,6 @@ vcpkg_cmake_config_fixup(
     )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ZXing)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zxing-cpp RENAME copyright)
