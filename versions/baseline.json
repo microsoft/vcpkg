@@ -1146,7 +1146,7 @@
     },
     "brpc": {
       "baseline": "0.9.7",
-      "port-version": 3
+      "port-version": 4
     },
     "brunocodutra-metal": {
       "baseline": "2.1.3",
