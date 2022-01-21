@@ -2,7 +2,9 @@ cmake_minimum_required (VERSION 3.9)
 
 project (udis86)
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+if (MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 
 set(
   lib_sources
