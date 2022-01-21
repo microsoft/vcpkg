@@ -5,10 +5,6 @@
   "homepage": "https://github.com/nu-book/zxing-cpp",
   "dependencies": [
     {
-      "name": "git",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
