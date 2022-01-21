@@ -9,6 +9,10 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
+if(${VCPKG_CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+    set(SOURCE_PATH "${SOURCE_PATH}/wrappers/winrt")
+endIf()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
