@@ -39,8 +39,6 @@ endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-      fix-macos-12.patch
 )
 
 set(ACE_ROOT ${SOURCE_PATH})
