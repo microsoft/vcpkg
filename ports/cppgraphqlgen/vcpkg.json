@@ -3,6 +3,7 @@
   "version-semver": "4.1.1",
   "description": "C++ GraphQL schema service generator",
   "homepage": "https://github.com/microsoft/cppgraphqlgen",
+  "license": "MIT",
   "dependencies": [
     "boost-program-options",
     "pegtl",
