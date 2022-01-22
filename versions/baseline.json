@@ -4004,6 +4004,10 @@
       "baseline": "1.2.14",
       "port-version": 1
     },
+	"libtorrent2": {
+      "baseline": "2.0.5",
+      "port-version": 0
+    },
     "libu2f-server": {
       "baseline": "1.1.0",
       "port-version": 3
