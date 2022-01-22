@@ -1,71 +1,73 @@
-cmake_policy(PUSH)
-cmake_policy(SET CMP0012 NEW)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0057 NEW)
+set(OPENSSL_ROOT_DIR_BAK ${OPENSSL_ROOT_DIR})
+get_filename_component(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
+get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
 
-if(OPENSSL_USE_STATIC_LIBS AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "dynamic")
-    set(OPENSSL_FOUND 0)
-    message(WARNING "OPENSSL_USE_STATIC_LIBS is set, but vcpkg port openssl was built with dynamic linkage")
-    if(REQUIRED IN_LIST ARGS)
-        message(FATAL_ERROR "vcpkg OpenSSL linkage is incompatible with OPENSSL_USE_STATIC_LIBS")
-    endif()
-else()
-    set(OPENSSL_USE_STATIC_LIBS_BAK "${OPENSSL_USE_STATIC_LIBS}")
-    set(OPENSSL_USE_STATIC_LIBS FALSE)
-    set(OPENSSL_ROOT_DIR_BAK "${OPENSSL_ROOT_DIR}")
-    get_filename_component(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-    get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
-    get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
-    find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h PATH "${OPENSSL_ROOT_DIR}/include" NO_DEFAULT_PATH)
-    if(MSVC)
-        find_library(LIB_EAY_DEBUG NAMES libcrypto PATHS "${OPENSSL_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(LIB_EAY_RELEASE NAMES libcrypto PATHS "${OPENSSL_ROOT_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(SSL_EAY_DEBUG NAMES libssl PATHS "${OPENSSL_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(SSL_EAY_RELEASE NAMES libssl PATHS "${OPENSSL_ROOT_DIR}/lib" NO_DEFAULT_PATH)
-    elseif(WIN32)
-        find_library(LIB_EAY NAMES libcrypto crypto NAMES_PER_DIR)
-        find_library(SSL_EAY NAMES libssl ssl NAMES_PER_DIR)
+if(CMAKE_HOST_WIN32)
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" Z_VCPKG_PROGRAMFILES)
+    set(Z_VCPKG_PROGRAMFILESX86_NAME "PROGRAMFILES(x86)")
+    file(TO_CMAKE_PATH "$ENV{${Z_VCPKG_PROGRAMFILESX86_NAME}}" Z_VCPKG_PROGRAMFILESX86)
+    set(CMAKE_SYSTEM_IGNORE_PATH
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC/static"
+        "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC/static"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC/static"
+        "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC/static"
+        "C:/OpenSSL/"
+        "C:/OpenSSL-Win32/"
+        "C:/OpenSSL-Win64/"
+        "C:/OpenSSL-Win32/lib/VC"
+        "C:/OpenSSL-Win64/lib/VC"
+        "C:/OpenSSL-Win32/lib/VC/static"
+        "C:/OpenSSL-Win64/lib/VC/static"
+    )
+endif()
+
+_find_package(${ARGS})
+
+set(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR_BAK})
+
+if(OPENSSL_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    if(WIN32)
+        list(APPEND OPENSSL_LIBRARIES crypt32 ws2_32)
+        if(TARGET OpenSSL::Crypto)
+            set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "crypt32;ws2_32")
+        endif()
+        if(TARGET OpenSSL::SSL)
+            set_property(TARGET OpenSSL::SSL APPEND PROPERTY INTERFACE_LINK_LIBRARIES "crypt32;ws2_32")
+        endif()
     else()
-        find_library(OPENSSL_CRYPTO_LIBRARY NAMES crypto)
-        find_library(OPENSSL_SSL_LIBRARY NAMES ssl)
-    endif()
-
-    _find_package(${ARGS})
-
-    set(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR_BAK})
-    set(OPENSSL_USE_STATIC_LIBS ${OPENSSL_USE_STATIC_LIBS_BAK})
-
-    if(OPENSSL_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
-        if(WIN32)
-            list(APPEND OPENSSL_LIBRARIES crypt32 ws2_32)
+        cmake_policy(PUSH)
+        cmake_policy(SET CMP0057 NEW)
+        find_library(OPENSSL_DL_LIBRARY NAMES dl)
+        if(OPENSSL_DL_LIBRARY)
+            list(APPEND OPENSSL_LIBRARIES "dl")
             if(TARGET OpenSSL::Crypto)
-                set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "crypt32;ws2_32")
-            endif()
-            if(TARGET OpenSSL::SSL)
-                set_property(TARGET OpenSSL::SSL APPEND PROPERTY INTERFACE_LINK_LIBRARIES "crypt32;ws2_32")
-            endif()
-        else()
-            find_library(OPENSSL_DL_LIBRARY NAMES dl)
-            if(OPENSSL_DL_LIBRARY)
-                list(APPEND OPENSSL_LIBRARIES "dl")
-                if(TARGET OpenSSL::Crypto)
-                    set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "dl")
-                endif()
-            endif()
-
-            if("REQUIRED" IN_LIST ARGS)
-                find_package(Threads REQUIRED)
-            else()
-                find_package(Threads)
-            endif()
-            list(APPEND OPENSSL_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
-            if(TARGET OpenSSL::Crypto)
-                set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Threads::Threads")
-            endif()
-            if(TARGET OpenSSL::SSL)
-                set_property(TARGET OpenSSL::SSL APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Threads::Threads")
+                set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "dl")
             endif()
         endif()
+
+        if("REQUIRED" IN_LIST ARGS)
+           find_package(Threads REQUIRED)
+        else()
+           find_package(Threads)
+        endif()
+        list(APPEND OPENSSL_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+        if(TARGET OpenSSL::Crypto)
+            set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Threads::Threads")
+        endif()
+        if(TARGET OpenSSL::SSL)
+            set_property(TARGET OpenSSL::SSL APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Threads::Threads")
+        endif()
+        cmake_policy(POP)
     endif()
 endif()
-cmake_policy(POP)
