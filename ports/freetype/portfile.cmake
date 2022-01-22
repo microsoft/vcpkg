@@ -94,6 +94,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 endif()
 
+vcpkg_cmake_validate(
+    FIND_PACKAGE Freetype
+    LIBRARIES_VARIABLES FREETYPE_LIBRARIES
+    HEADERS ft2build.h freetype/freetype.h
+    FUNCTIONS FT_Init_FreeType
+)
+vcpkg_cmake_validate(
+    CMAKE_MINIMUM_VERSION 3.10
+    FIND_PACKAGE Freetype
+    TARGETS Freetype::Freetype
+    HEADERS ft2build.h freetype/freetype.h
+    FUNCTIONS FT_Init_FreeType
+)
+
 file(COPY
     "${SOURCE_PATH}/docs/FTL.TXT"
     "${SOURCE_PATH}/docs/GPLv2.TXT"
