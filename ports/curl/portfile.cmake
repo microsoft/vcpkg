@@ -15,7 +15,6 @@ vcpkg_from_github(
         0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         0023-fix-static-libs-export.patch
-        export-components.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -134,7 +133,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/curl-config")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -148,28 +146,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_cmake_validate(
-    FIND_PACKAGE CURL MODULE
-    LIBRARIES_VARIABLES CURL_LIBRARIES
-    HEADERS      curl/curl.h
-    FUNCTIONS    curl_global_init
-)
-vcpkg_cmake_validate(
-    FIND_PACKAGE CURL CONFIG
-    TARGETS      CURL::libcurl
-    HEADERS      curl/curl.h
-    FUNCTIONS    curl_global_init
-)
-set(components HTTP libz)
-if(CMAKE_USE_OPENSSL OR CMAKE_USE_SCHANNEL OR CMAKE_USE_SECTRANSP)
-    list(APPEND components HTTPS SSL)
-endif()
-vcpkg_cmake_validate(
-    CMAKE_MINIMUM_VERSION 3.14
-    FIND_PACKAGE CURL MODULE COMPONENTS ${components}
-    TARGETS      CURL::libcurl
-    HEADERS      curl/curl.h
-    FUNCTIONS    curl_global_init
-)
-
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

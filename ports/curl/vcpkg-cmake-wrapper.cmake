@@ -1,16 +1,14 @@
-cmake_policy(PUSH)
+list(REMOVE_ITEM ARGS "NO_MODULE")
+list(REMOVE_ITEM ARGS "CONFIG")
+list(REMOVE_ITEM ARGS "MODULE")
+
 cmake_policy(SET CMP0012 NEW)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0057 NEW)
 
-if(NOT CMAKE_VERSION VERSION_LESS 3.14 AND COMPONENTS IN_LIST ARGS)
-    include("${CMAKE_CURRENT_LIST_DIR}/CURLConfigComponents.cmake")
-endif()
-
-list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
 _find_package(${ARGS} CONFIG)
 
-if(CURL_FOUND)
+if(TARGET CURL::libcurl)
+    set(CURL_FOUND TRUE)
+
     get_target_property(_curl_include_dirs CURL::libcurl INTERFACE_INCLUDE_DIRECTORIES)
     get_target_property(_curl_link_libraries CURL::libcurl INTERFACE_LINK_LIBRARIES)
 
@@ -25,7 +23,7 @@ if(CURL_FOUND)
     endif()
 
     if(NOT _curl_link_libraries)
-        set(_curl_link_libraries "")
+        set(_curl_link_libraries)
     endif()
 
     set(CURL_INCLUDE_DIRS "${_curl_include_dirs}")
@@ -39,9 +37,8 @@ if(CURL_FOUND)
     set(CURL_LIBRARIES ${CURL_LIBRARY} ${_curl_link_libraries})
     set(CURL_VERSION_STRING "${CURL_VERSION}")
 
-    unset(_curl_include_dirs)
-    unset(_curl_link_libraries)
-    unset(_curl_location_debug)
-    unset(_curl_location_release)
+    set(_curl_include_dirs)
+    set(_curl_link_libraries)
+    set(_curl_location_debug)
+    set(_curl_location_release)
 endif()
-cmake_policy(POP)
