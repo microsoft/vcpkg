@@ -1,4 +1,37 @@
+get_filename_component(vcpkg_fontconfig_prefix "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+get_filename_component(vcpkg_fontconfig_prefix "${vcpkg_fontconfig_prefix}" DIRECTORY)
+find_path(Fontconfig_INCLUDE_DIR fontconfig/fontconfig.h PATHS "${vcpkg_fontconfig_prefix}" PATH_SUFFIXES include NO_DEFAULT_PATH)
+find_library(Fontconfig_LIBRARY_RELEASE NAMES fontconfig NAMES_PER_DIR PATHS "${vcpkg_fontconfig_prefix}" PATH_SUFFIXES lib NAMES_PER_DIR NO_DEFAULT_PATH)
+find_library(Fontconfig_LIBRARY_DEBUG NAMES fontconfigd fontconfig NAMES_PER_DIR PATHS "${vcpkg_fontconfig_prefix}" PATH_SUFFIXES debug/lib lib NAMES_PER_DIR NO_DEFAULT_PATH)
+unset(vcpkg_fontconfig_prefix)
+
+# CMake 3.22: FindFontconfig.cmake still needs a single filepath in Fontconfig_LIBRARY:
+# It is used for IMPORTED_LOCATION of Fontconfig::Fontconfig.
+find_library(Fontconfig_LIBRARY NAMES fontconfigd fontconfig NAMES_PER_DIR)
+
 _find_package(${ARGS})
+
+cmake_policy(PUSH)
+cmake_policy(SET CMP0012 NEW)
+cmake_policy(SET CMP0057 NEW)
+if(TARGET Fontconfig::Fontconfig)
+    get_target_property(vcpkg_fontconfig_configurations Fontconfig::Fontconfig IMPORTED_CONFIGURATIONS)
+    if(NOT "RELEASE" IN_LIST vcpkg_fontconfig_configurations)
+        set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+        set_target_properties(Fontconfig::Fontconfig PROPERTIES
+            IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+            IMPORTED_LOCATION_RELEASE "${Fontconfig_LIBRARY_RELEASE}"
+        )
+    endif()
+    if(NOT "DEBUG" IN_LIST vcpkg_fontconfig_configurations AND Fontconfig_LIBRARY_DEBUG)
+        set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+        set_target_properties(Fontconfig::Fontconfig PROPERTIES
+            IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
+            IMPORTED_LOCATION_DEBUG "${Fontconfig_LIBRARY_DEBUG}"
+        )
+    endif()
+    unset(vcpkg_fontconfig_configurations)
+endif()
 if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is installed it should be found!
     find_package(Freetype)
     if(Freetype_FOUND AND TARGET Fontconfig::Fontconfig)
@@ -19,9 +52,6 @@ if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is in
         list(APPEND Fontconfig_LIBRARIES "${EXPAT_LIBRARIES}")
     endif()
     include(SelectLibraryConfigurations)
-    find_library(Fontconfig_LIBRARY_DEBUG NAMES fontconfig fontconfigd NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
-    find_library(Fontconfig_LIBRARY_RELEASE NAMES fontconfig NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
-    select_library_configurations(Fontconfig)
     if(@VCPKG_TARGET_IS_LINUX@)
         find_library(UUID_LIBRARY_DEBUG NAMES uuid uuidd uuid_d  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_INSTALLED_DIR}/debug" NO_DEFAULT_PATH)
         find_library(UUID_LIBRARY_RELEASE NAMES uuid NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
@@ -44,3 +74,4 @@ if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is in
         list(APPEND Fontconfig_LIBRARIES "${UUID_LIBRARIES}")
     endif()
 endif()
+cmake_policy(POP)
