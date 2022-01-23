@@ -7,6 +7,8 @@ vcpkg_from_github(
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
+set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-vcpkg-iconv")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cairo       WITH_Cairo
@@ -16,10 +18,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
+    string(APPEND POPPLER_PC_REQUIRES " fontconfig")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=win32")
 else()
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=generic")
+endif()
+if("cairo" IN_LIST FEATURES)
+    string(APPEND POPPLER_PC_REQUIRES " cairo")
+endif()
+if("curl" IN_LIST FEATURES)
+    string(APPEND POPPLER_PC_REQUIRES " libcurl")
+endif()
+if("zlib" IN_LIST FEATURES)
+    string(APPEND POPPLER_PC_REQUIRES " zlib")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -47,6 +59,10 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/poppler.pc" "Libs:" "Requires.private: ${POPPLER_PC_REQUIRES}\nLibs:")
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/poppler.pc" "Libs:" "Requires.private: ${POPPLER_PC_REQUIRES}\nLibs:")
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
