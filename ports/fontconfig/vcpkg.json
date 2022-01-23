@@ -17,6 +17,10 @@
     },
     "pthread",
     {
+      "name": "vcpkg-cmake-validate",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-meson",
       "host": true
     }

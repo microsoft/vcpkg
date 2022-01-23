@@ -89,3 +89,18 @@ vcpkg_copy_tools(
     TOOL_NAMES fc-match fc-cat fc-list fc-pattern fc-query fc-scan fc-cache fc-validate fc-conflist
     AUTO_CLEAN
 )
+
+vcpkg_cmake_validate(
+    CMAKE_MINIMUM_VERSION 3.14
+    FIND_PACKAGE Fontconfig
+    LIBRARIES_VARIABLES Fontconfig_LIBRARIES
+    HEADERS fontconfig/fontconfig.h
+    FUNCTIONS FcInit
+)
+vcpkg_cmake_validate(
+    CMAKE_MINIMUM_VERSION 3.14
+    FIND_PACKAGE Fontconfig
+    TARGETS Fontconfig::Fontconfig
+    HEADERS fontconfig/fontconfig.h
+    FUNCTIONS FcInit
+)
