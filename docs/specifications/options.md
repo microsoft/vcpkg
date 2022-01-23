@@ -60,9 +60,9 @@ Other possible types are:
       }
     }
   ```  
-  But since boolean fields are often covered by features (like enable dependency *xy*) and no use case is currently known, they will be not implemented.
+  This feature would be useful for #22713 (option to enable namespace support in qt) or in #22409 (implicit conversions behaviour in nlohmann-json).
 
-- numbers: We can also add a numbers field, but no use case is currently known.
+- numbers: We can also add a numbers field, this could be useful for #22054 (option for larger thread stacks). Then you could pass the stack size as number.
 
 ### Textual representation
 When a port must be represented textually the form `name[features...]:triplet` is used, with options this should be extended to `name[features...,options...]:triplet` where options are key-value pairs of the form `key=value` separated by commas.  
