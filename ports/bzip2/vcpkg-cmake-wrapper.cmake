@@ -1,0 +1,7 @@
+get_filename_component(vcpkg_bzip2_prefix "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+get_filename_component(vcpkg_bzip2_prefix "${vcpkg_bzip2_prefix}" DIRECTORY)
+find_path(BZIP2_INCLUDE_DIR bzlib.h PATHS "${vcpkg_bzip2_prefix}" PATH_SUFFIXES include NO_DEFAULT_PATH)
+find_library(BZIP2_LIBRARY_RELEASE NAMES bz2 bzip2 libbz2 libbzip2 NAMES_PER_DIR PATHS "${vcpkg_bzip2_prefix}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
+find_library(BZIP2_LIBRARY_DEBUG NAMES bz2d bzip2d libbz2d libbzip2d NAMES_PER_DIR PATHS "${vcpkg_bzip2_prefix}" PATH_SUFFIXES debug/lib lib NO_DEFAULT_PATH)
+unset(vcpkg_bzip2_prefix)
+_find_package(${ARGS})

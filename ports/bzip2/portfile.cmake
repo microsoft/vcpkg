@@ -43,6 +43,8 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/bzip2")
+
 vcpkg_cmake_validate(
     FIND_PACKAGE BZip2
     LIBRARIES_VARIABLES BZIP2_LIBRARIES
