@@ -1,40 +1,74 @@
 {
   "name": "poppler",
-  "version": "20.12.1",
-  "port-version": 6,
-  "description": "a PDF rendering library",
+  "version": "22.0.1",
+  "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
+  "license": "GPL-2.0+",
   "dependencies": [
-    {
-      "name": "cairo",
-      "platform": "osx"
-    },
-    {
-      "name": "devil",
-      "platform": "(windows | linux) & !arm"
-    },
-    "fontconfig",
+    "boost-container",
+    "boost-move",
     "freetype",
     "libiconv",
-    "openjpeg"
+    "libjpeg-turbo",
+    "libpng",
+    "openjpeg",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
-    "splash",
+    "font-configuration",
     "zlib"
   ],
   "features": {
+    "cairo": {
+      "description": "Enable the Cairo graphics backend",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
     "curl": {
       "description": "curl for poppler",
       "dependencies": [
-        "curl"
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "font-configuration": {
+      "description": "Defaut font configuration backend",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!windows & !android"
+        }
+      ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "dependencies": [
+        "fontconfig"
       ]
     },
     "splash": {
-      "description": "Build the Splash graphics backend",
-      "dependencies": [
-        "boost-container",
-        "boost-move"
-      ]
+      "description": "The splash backend is always enabled. This option is kept for compatibility."
+    },
+    "unstable": {
+      "description": "Install legacy headers aka unstable API/ABI"
     },
     "zlib": {
       "description": "zlib for poppler",
