@@ -7,30 +7,27 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES fix-import-export-macros.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DBZIP2_SKIP_HEADERS=ON
         -DBZIP2_SKIP_TOOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/bzlib.h" BZLIB_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "defined(BZ_IMPORT)" "0" BZLIB_H "${BZLIB_H}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/bzlib.h" "defined(BZ_IMPORT)" "0")
 else()
-    string(REPLACE "defined(BZ_IMPORT)" "1" BZLIB_H "${BZLIB_H}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/bzlib.h" "defined(BZ_IMPORT)" "1")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/bzlib.h" "${BZLIB_H}")
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   set(BZIP2_PREFIX "${CURRENT_INSTALLED_DIR}")
