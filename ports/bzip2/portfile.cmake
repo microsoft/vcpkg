@@ -43,5 +43,19 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+vcpkg_cmake_validate(
+    FIND_PACKAGE BZip2
+    LIBRARIES_VARIABLES BZIP2_LIBRARIES
+    HEADERS bzlib.h
+    FUNCTIONS BZ2_bzCompressInit
+)
+vcpkg_cmake_validate(
+    CMAKE_MINIMUM_VERSION 3.12
+    FIND_PACKAGE BZip2
+    TARGETS BZip2::BZip2
+    HEADERS bzlib.h
+    FUNCTIONS BZ2_bzCompressInit
+)
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
