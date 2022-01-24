@@ -10,6 +10,7 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 dfe6ccede4bebdb3a39fbfea1dc55ddca57cced0d2656ee4bed1a5e5c9c434e1f2d892eb4e29bbb424cb9a02f2374a95fb9a020442bea580d39c242efad1b789
         HEAD_REF master
         PATCHES
+            fix-install-location.patch
             fix-utilityFunctions-conditions-preview.patch
             disable-error.patch
     )
@@ -21,6 +22,7 @@ else()
         SHA512 c30cba73692691fe1310b6180e3aeaf4d86b6276981c680cac31d605634e5dedbce3f823142dfebba4ae2f76ccead965a527d95df0e52af638a30ddec9818fbd
         HEAD_REF master
         PATCHES
+            fix-install-location.patch
             fix-utilityFunctions-conditions.patch
             disable-error.patch
     )

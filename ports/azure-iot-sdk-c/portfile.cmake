@@ -8,8 +8,8 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 6798b17d6768b3ccbd0eb66719b50f364cd951736eb71110e2dc9deca054a1566ff88b9e8c5e9b52536e4308cad6cd3cbebff3282c123083e3afaee5535e724b
         HEAD_REF public-preview
         PATCHES
+            fix-install-location.patch
             improve-external-deps.patch
-            fix-cmake.patch
             remove-werror.patch
     )
 else()
@@ -20,8 +20,8 @@ else()
         SHA512 8f1aa1020f3bb8b3e801f3977d11be50fd07d961c89ac921f795ef8a99312f12e1ddb2268ce3d2fb84b6a42bb5806cde410e6b51c7c4539a9a11a9ae512dbcd1
         HEAD_REF master
         PATCHES
+            fix-install-location.patch
             improve-external-deps.patch
-            fix-cmake.patch
             remove-werror.patch
     )
 endif()

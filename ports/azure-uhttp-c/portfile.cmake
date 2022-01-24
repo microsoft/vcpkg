@@ -7,6 +7,8 @@ if("public-preview" IN_LIST FEATURES)
         REF d84a20609a2b5a555920389451fb3c9a2ed3656c
         SHA512 4eadd7e120082cc3bcf696d6cd16bc7ee8e1082380dd7583fba7fad1bb95109f3456890495e25ae7675e656ef721fa12eff22eeb96d8a4cf359be5c96889cbd6
         HEAD_REF master
+        PATCHES
+            fix-install-location.patch
     )
 else()
     vcpkg_from_github(
@@ -15,6 +17,8 @@ else()
         REF 1cc70f4d21ad69768cafb9551b1b512118fba995
         SHA512 6604e82b347a1a4eb5072ab762fde7bd5ae9b32848a78da9103e0eb528b9ccd420a12dbc237dc0b5fe6db271d5cdcd24eedf1cde8ac058102fdd24c5a5a33f26
         HEAD_REF master
+        PATCHES
+            fix-install-location.patch
     )
 endif()
 
