@@ -1,14 +1,20 @@
 #the port uses inside the CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS, which is discouraged by vcpkg.
 
+set(FLANN_PATCHES
+    fix-build-error.patch
+)
+
+if("hdf5" IN_LIST FEATURES)
+    list(APPEND FLANN_PATCHES fix-dependency-hdf5.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flann-lib/flann
     REF  1d04523268c388dabf1c0865d69e1b638c8c7d9d
     SHA512 61e322222c2daa0b9677095e5ca231cba7c305ce754ad8e659eee350111c1e04351181c3af04e45ab6e5c9edea49c7b9ec6499bb0dbc080b87af36eb11c6ef7c
     HEAD_REF master
-    PATCHES
-        fix-build-error.patch
-        fix-dependency-hdf5.patch
+    PATCHES ${FLANN_PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
