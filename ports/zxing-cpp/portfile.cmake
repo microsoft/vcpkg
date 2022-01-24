@@ -12,9 +12,12 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DBUILD_BLACKBOX_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
+        -DCMAKE_CXX_FLAGS=-wd4996
+        -DCMAKE_CXX_FLAGS=-wd4996
 )
 
 vcpkg_cmake_install()
