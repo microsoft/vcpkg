@@ -2110,7 +2110,7 @@
     },
     "fastcgi": {
       "baseline": "2020-09-11",
-      "port-version": 2
+      "port-version": 3
     },
     "fastfeat": {
       "baseline": "391d5e9",
