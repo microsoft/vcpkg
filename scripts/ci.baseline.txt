@@ -1488,13 +1488,6 @@ yato:arm-uwp=fail
 yato:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
-zkpp:x86-windows=fail
-zkpp:x64-windows=fail
-zkpp:x64-windows-static=fail
-zkpp:x64-windows-static-md=fail
-zkpp:arm64-windows=fail
-zkpp:x64-uwp=fail
-zkpp:arm-uwp=fail
 
 # Official downloading server of CTP library is only guaranteed to be available during trading hours of China futures market
 # Skip CI to avoid random failures
