@@ -3005,7 +3005,7 @@
       "port-version": 3
     },
     "jsoncons": {
-      "baseline": "0.165.0",
+      "baseline": "0.168.3",
       "port-version": 1
     },
     "jsoncpp": {
