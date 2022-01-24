@@ -1,6 +1,3 @@
-#https://github.com/google/benchmark/issues/661
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
