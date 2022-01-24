@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
+  "license": "MIT",
   "supports": "osx | (!arm & !uwp)",
   "dependencies": [
     {
