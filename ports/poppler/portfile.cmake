@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF poppler-22.01.0
     SHA512 1edb8f0f4caa0a3f73ddb5a40e770d2590712f9bf8858c08854f80c9bd4ef1e5f75c2ec348e7369594b2d511ad96bfd52a7085ed64cc2f6b8e025feeb37357d0
     HEAD_REF master
+    PATCHES
+        export-unofficial-poppler.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
@@ -58,6 +60,9 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-poppler-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-poppler/unofficial-poppler-config.cmake" @ONLY)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-poppler)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/poppler.pc" "Libs:" "Requires.private: ${POPPLER_PC_REQUIRES}\nLibs:")
 if(NOT DEFINED VCPKG_BUILD_TYPE)
