@@ -7404,10 +7404,6 @@
       "baseline": "1.2.32",
       "port-version": 0
     },
-    "xmsh": {
-      "baseline": "0.5.2",
-      "port-version": 2
-    },
     "xnnpack": {
       "baseline": "2021-05-17",
       "port-version": 1
