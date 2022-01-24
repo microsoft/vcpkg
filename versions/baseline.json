@@ -1466,7 +1466,7 @@
     },
     "comms": {
       "baseline": "3.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "comms-ublox": {
       "baseline": "0.20.2",
