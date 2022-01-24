@@ -1174,7 +1174,7 @@
     },
     "bullet3": {
       "baseline": "3.17",
-      "port-version": 3
+      "port-version": 4
     },
     "bustache": {
       "baseline": "1.1.0",
@@ -1962,7 +1962,7 @@
     },
     "eathread": {
       "baseline": "1.32.09",
-      "port-version": 2
+      "port-version": 3
     },
     "ebml": {
       "baseline": "1.4.2",
@@ -2150,7 +2150,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 6
+      "port-version": 7
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2202,7 +2202,7 @@
     },
     "fltk": {
       "baseline": "1.3.8",
-      "port-version": 0
+      "port-version": 1
     },
     "fluidlite": {
       "baseline": "2020-08-27",
@@ -2366,7 +2366,7 @@
     },
     "gasol": {
       "baseline": "2018-01-04",
-      "port-version": 1
+      "port-version": 2
     },
     "gaussianlib": {
       "baseline": "2019-08-04",
@@ -2406,7 +2406,7 @@
     },
     "geographiclib": {
       "baseline": "1.52",
-      "port-version": 1
+      "port-version": 2
     },
     "geos": {
       "baseline": "3.10.0",
@@ -2730,7 +2730,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 6
+      "port-version": 7
     },
     "hwloc": {
       "baseline": "2.5.0",
@@ -3314,7 +3314,7 @@
     },
     "levmar": {
       "baseline": "2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libaaplus": {
       "baseline": "2.36",
@@ -4965,8 +4965,8 @@
       "port-version": 8
     },
     "opencolorio": {
-      "baseline": "2.1.0",
-      "port-version": 2
+      "baseline": "2.1.1",
+      "port-version": 0
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -5142,7 +5142,7 @@
     },
     "otl": {
       "baseline": "4.0.463",
-      "port-version": 0
+      "port-version": 1
     },
     "outcome": {
       "baseline": "2.2.2-20211208",
@@ -5282,7 +5282,7 @@
     },
     "physx": {
       "baseline": "4.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -6010,7 +6010,7 @@
     },
     "readline-unix": {
       "baseline": "8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "readline-win32": {
       "baseline": "5.0",
@@ -6238,7 +6238,7 @@
     },
     "sdformat10": {
       "baseline": "10.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sdformat6": {
       "baseline": "6.2.0",
@@ -6246,7 +6246,7 @@
     },
     "sdformat9": {
       "baseline": "9.4.0",
-      "port-version": 3
+      "port-version": 4
     },
     "sdl1": {
       "baseline": "1.2.15",

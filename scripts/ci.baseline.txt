@@ -71,9 +71,6 @@ botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 buck-yeh-bux:x64-linux=fail
 buck-yeh-bux-mariadb-client:x64-linux=fail
-bullet3:arm64-windows=fail
-bullet3:arm-uwp=fail
-bullet3:x64-uwp=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
@@ -249,10 +246,6 @@ duktape:x64-osx=skip
 eastl:arm-uwp=fail
 easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
-eathread:arm64-windows=fail
-eathread:arm-uwp=fail
-eathread:x64-uwp=fail
-eathread:x86-windows=fail
 ebml:arm-uwp=fail
 ebml:x64-uwp=fail
 ecsutil:arm64-windows=fail
@@ -283,8 +276,6 @@ fdlibm:arm-uwp=fail
 fdlibm:x64-uwp=fail
 fftw3:arm-uwp=fail
 fftw3:x64-uwp=fail
-fltk:arm-uwp=fail
-fltk:x64-uwp=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -330,9 +321,6 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
-gasol:arm64-windows=fail
-gasol:arm-uwp=fail
-gasol:x64-uwp=fail
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
