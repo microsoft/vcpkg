@@ -5,7 +5,6 @@
   "homepage": "https://github.com/CaptainCrowbar/unicorn-lib",
   "dependencies": [
     "pcre2",
-    "zlib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,6 +12,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
