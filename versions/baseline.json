@@ -3454,7 +3454,7 @@
     },
     "libevhtp": {
       "baseline": "1.2.18",
-      "port-version": 2
+      "port-version": 3
     },
     "libexif": {
       "baseline": "0.6.22",
