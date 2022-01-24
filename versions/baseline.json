@@ -4618,7 +4618,7 @@
     },
     "murmurhash": {
       "baseline": "2016-01-09",
-      "port-version": 4
+      "port-version": 5
     },
     "mvfst": {
       "baseline": "0.1",
