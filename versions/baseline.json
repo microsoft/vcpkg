@@ -5182,7 +5182,7 @@
     },
     "pangomm": {
       "baseline": "2.50.0",
-      "port-version": 0
+      "port-version": 1
     },
     "parallel-hashmap": {
       "baseline": "1.33",
