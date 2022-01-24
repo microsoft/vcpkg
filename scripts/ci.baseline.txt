@@ -1066,7 +1066,6 @@ paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pango:x64-windows-static=fail
 pango:x64-windows-static-md=fail
-pangomm:arm64-windows=fail
 pfring:arm64-windows=fail
 pfring:arm-uwp=fail
 pfring:x64-uwp=fail
