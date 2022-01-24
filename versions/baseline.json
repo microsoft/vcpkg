@@ -3314,7 +3314,7 @@
     },
     "levmar": {
       "baseline": "2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libaaplus": {
       "baseline": "2.36",
