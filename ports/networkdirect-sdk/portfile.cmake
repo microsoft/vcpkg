@@ -1,6 +1,3 @@
-#only supports windows
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE

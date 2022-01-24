@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86" "arm64")
-
 set(PORT_VERSION 4.0.0)
 
 vcpkg_from_github(
@@ -24,7 +22,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             ff951c2cd96d0fda87bacb505c93e4aa1f9aeb35f829c52b5a7862d05e167f69605a4927a0e7197b5ee2b2fa5cb56619ad7a6ba293ede4765fdcacedf2ed35da
         )
     vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
-    
+
     file(REMOVE
         "${SOURCE_PATH}/other_include/zstd.h"
         "${SOURCE_PATH}/other_include/zstd_errors.h")
