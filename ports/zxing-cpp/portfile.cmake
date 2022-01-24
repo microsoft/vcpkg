@@ -9,16 +9,24 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    WINDOWS_USE_MSBUILD
-    OPTIONS
-        -DBUILD_BLACKBOX_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DCMAKE_CXX_FLAGS=-wd4996
-        -DCMAKE_CXX_FLAGS=-wd4996
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+        WINDOWS_USE_MSBUILD
+        OPTIONS
+            -DBUILD_BLACKBOX_TESTS=OFF
+            -DBUILD_EXAMPLES=OFF
+            -DCMAKE_CXX_FLAGS=-wd4996
+            -DCMAKE_CXX_FLAGS=-wd4996
+    )
+else()
+    vcpkg_cmake_configure(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DBUILD_BLACKBOX_TESTS=OFF
+            -DBUILD_EXAMPLES=OFF
+    )
+endif()
 
 vcpkg_cmake_install()
 
