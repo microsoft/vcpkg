@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Fast Library for Approximate Nearest Neighbors",
   "homepage": "https://github.com/mariusmuja/flann",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "lz4",
     {
