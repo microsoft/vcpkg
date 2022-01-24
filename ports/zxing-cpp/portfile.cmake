@@ -11,7 +11,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         WINDOWS_USE_MSBUILD
         OPTIONS
             -DBUILD_BLACKBOX_TESTS=OFF
@@ -21,7 +21,7 @@ if(VCPKG_TARGET_IS_UWP)
     )
 else()
     vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -DBUILD_BLACKBOX_TESTS=OFF
             -DBUILD_EXAMPLES=OFF
@@ -32,10 +32,10 @@ vcpkg_cmake_install()
 
 # Install the pkgconfig file
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY ${SOURCE_PATH}/zxing.pc.in DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    file(COPY "${SOURCE_PATH}/zxing.pc.in" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY ${SOURCE_PATH}/zxing.pc.in DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(COPY "${SOURCE_PATH}/zxing.pc.in" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
 
 vcpkg_fixup_pkgconfig()
@@ -48,4 +48,4 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zxing-cpp RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/zxing-cpp" RENAME copyright)
