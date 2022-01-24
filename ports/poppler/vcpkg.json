@@ -4,6 +4,7 @@
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0+",
+  "supports": "!uwp",
   "dependencies": [
     "boost-container",
     "boost-move",
