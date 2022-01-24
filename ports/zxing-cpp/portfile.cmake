@@ -17,7 +17,6 @@ if(VCPKG_TARGET_IS_UWP)
             -DBUILD_BLACKBOX_TESTS=OFF
             -DBUILD_EXAMPLES=OFF
             -DCMAKE_CXX_FLAGS=-wd4996
-            -DCMAKE_CXX_FLAGS=-wd4996
     )
 else()
     vcpkg_cmake_configure(
@@ -29,17 +28,9 @@ else()
 endif()
 
 vcpkg_cmake_install()
-
-# Install the pkgconfig file
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY "${SOURCE_PATH}/zxing.pc.in" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY "${SOURCE_PATH}/zxing.pc.in" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-endif()
-
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
 vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/ZXing
     PACKAGE_NAME ZXing
