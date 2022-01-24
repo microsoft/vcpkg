@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF sdf9
     PATCHES
         fix-dependency-urdfdom.patch
+        fix-quote.patch
+        no-absolute.patch
 )
 
 # Ruby is required by the sdformat build process
