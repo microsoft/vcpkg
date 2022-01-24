@@ -1047,13 +1047,6 @@ paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pango:x64-windows-static=fail
 pango:x64-windows-static-md=fail
-pfring:arm64-windows=fail
-pfring:arm-uwp=fail
-pfring:x64-uwp=fail
-pfring:x64-windows=fail
-pfring:x64-windows-static=fail
-pfring:x64-windows-static-md=fail
-pfring:x86-windows=fail
 pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
