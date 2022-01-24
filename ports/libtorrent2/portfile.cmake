@@ -72,6 +72,7 @@ vcpkg_cmake_configure(
        -DPython3_USE_STATIC_LIBS=ON
 )
 
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibtorrentRasterbar CONFIG_PATH lib/cmake/LibtorrentRasterbar)
