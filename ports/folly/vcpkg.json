@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
-  "supports": "(windows & x64 & !uwp) | (!windows & x64 & arm64)",
+  "supports": "(windows & x64 & !uwp) | (!windows & (x64 | arm64))",
   "dependencies": [
     "boost-chrono",
     "boost-context",
