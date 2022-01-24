@@ -3,6 +3,7 @@
   "version-date": "2022-01-24",
   "description": "Unicode library for C++ by Ross Smith",
   "homepage": "https://github.com/CaptainCrowbar/unicorn-lib",
+  "license": "MIT",
   "dependencies": [
     "pcre2",
     {
