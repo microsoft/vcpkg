@@ -1461,17 +1461,6 @@ xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
-# The xmsh upstream repository is gone, if we find no replacement before
-# 2021-01-01 we will remove the port outright.
-xmsh:arm-uwp=skip
-xmsh:arm64-windows=skip
-xmsh:x64-linux=skip
-xmsh:x64-osx=skip
-xmsh:x64-uwp=skip
-xmsh:x64-windows-static=skip
-xmsh:x64-windows-static-md=skip
-xmsh:x64-windows=skip
-xmsh:x86-windows=skip
 yajl:arm-uwp=fail
 yajl:x64-uwp=fail
 yara:arm-uwp=fail
