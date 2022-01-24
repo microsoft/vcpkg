@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "Data interchange format and capability-based RPC system",
   "homepage": "https://capnproto.org/",
-  "supports": "!uwp & (!windows | !arm)",
+  "supports": "!windows | (!uwp & !arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
