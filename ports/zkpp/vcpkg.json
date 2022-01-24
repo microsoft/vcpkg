@@ -4,7 +4,7 @@
   "port-version": 2,
   "description": "A ZooKeeper client for C++.",
   "homepage": "https://github.com/tgockel/zookeeper-cpp",
-  "supports": "windows",
+  "supports": "!windows",
   "dependencies": [
     "zookeeper"
   ]
