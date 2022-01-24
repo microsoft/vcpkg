@@ -4677,8 +4677,8 @@
       "port-version": 2
     },
     "nanovg": {
-      "baseline": "2019-8-30",
-      "port-version": 4
+      "baseline": "2019-08-30",
+      "port-version": 5
     },
     "nativefiledialog": {
       "baseline": "2022-01-20",
