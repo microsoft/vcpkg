@@ -327,6 +327,7 @@
     },
     "ffmpeg": {
       "description": "Build the ffmpeg application",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "ffmpeg",
