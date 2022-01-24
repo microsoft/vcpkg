@@ -62,7 +62,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
   vcpkg_fixup_pkgconfig()
 else() # Other build system
-  vcpkg_fail_port_install(ALWAYS)
+  message(FATAL_ERROR "fastcgi only supports Windows, Linux, and MacOS.")
 endif()
 
 # Handle copyright
