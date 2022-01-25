@@ -50,7 +50,7 @@
     },
     "field3d": {
       "description": "Enable field3D support for openimageio",
-      "supports": "!windows & !uwp",
+      "supports": "!windows",
       "dependencies": [
         "field3d"
       ]
