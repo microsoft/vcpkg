@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" "iOS" "Android" ON_ARCH "x86" "arm")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -7,7 +5,7 @@ vcpkg_from_github(
 	REPO DragonJoker/Ashes
 	REF 0f4e6d0ea308eb60ae32274acc9a4d345a4977ff
 	SHA512 0ce74780786d018e7a447c4e49d3cd83ad53b238a79fc484025e2034cd49a64253363cd592d2da367befa7cd5443b90eb1c5dae54b22756f7b4a0cdecb93c588
-    PATCHES 
+    PATCHES
         fix-cast.patch
 )
 vcpkg_configure_cmake(

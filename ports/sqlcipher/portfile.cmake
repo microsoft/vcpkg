@@ -1,7 +1,5 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_fail_port_install( ON_TARGET "UWP" "OSX" "Linux")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
