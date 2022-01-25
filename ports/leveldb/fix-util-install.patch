@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98b87dc..5ea92f9 100644
+index 98b87dc..645c1d3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -429,6 +429,14 @@ if(LEVELDB_INSTALL)
+@@ -429,6 +429,21 @@ if(LEVELDB_INSTALL)
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/table_builder.h"
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/table.h"
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/write_batch.h"
@@ -13,7 +13,14 @@ index 98b87dc..5ea92f9 100644
 +      "${PROJECT_SOURCE_DIR}/util/logging.h"
 +      "${PROJECT_SOURCE_DIR}/util/mutexlock.h"
 +      "${PROJECT_SOURCE_DIR}/util/no_destructor.h"
-+      "${PROJECT_SOURCE_DIR}/util/random.h"    
++      "${PROJECT_SOURCE_DIR}/util/random.h"
++      "${PROJECT_SOURCE_DIR}/util/env_posix_test_helper.h
++      "${PROJECT_SOURCE_DIR}/util/env_windows_test_helper.h
++      "${PROJECT_SOURCE_DIR}/util/histogram.h
++      "${PROJECT_SOURCE_DIR}/util/posix_logger.h
++      "${PROJECT_SOURCE_DIR}/util/testharness.h
++      "${PROJECT_SOURCE_DIR}/util/testutil.h
++      "${PROJECT_SOURCE_DIR}/util/windows_logger.h
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb
    )
  
