@@ -1,8 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_ARCH "x86") # see https://github.com/alembic/alembic/issues/372
-endif()
-
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_from_github(

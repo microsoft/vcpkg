@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if("public-preview" IN_LIST FEATURES)
