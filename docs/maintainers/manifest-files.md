@@ -491,3 +491,13 @@ the MIT license or Apache 2.0:
   "license": "Apache-2.0 OR MIT"
 }
 ```
+
+Some major projects include exceptions;
+the Microsoft C++ standard library, and the LLVM project,
+are licensed under Apache 2.0 with the LLVM exception:
+
+```json
+{
+  "license": "Apache-2.0 WITH LLVM-exception"
+}
+```
