@@ -12,13 +12,13 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 vcpkg_find_acquire_program(PYTHON2)
 
 vcpkg_execute_required_process(
-    COMMAND "${PYTHON2}" "${SOURCE_PATH}/scripts/ud_itab.py" "${SOURCE_PATH}/docs/x86/optable.xml" "${SOURCE_PATH}/${PORT}/"
+    COMMAND "${PYTHON2}" "${SOURCE_PATH}/scripts/ud_itab.py" "${SOURCE_PATH}/docs/x86/optable.xml" "${SOURCE_PATH}/libudis86/"
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME python-${TARGET_TRIPLET}-generate-sources
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
         -DDISABLE_INSTALL_TOOLS=ON
