@@ -1,0 +1,10 @@
+{
+  "name": "nngpp",
+  "version-string": "1.3.0",
+  "port-version": 1,
+  "description": "C++ wrapper around the nanomsg NNG API.",
+  "homepage": "https://github.com/cwzx/nngpp",
+  "dependencies": [
+    "nng"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "mpmcqueue",
+  "version-string": "2019-07-26",
+  "port-version": 1,
+  "description": "A bounded multi-producer multi-consumer lock-free queue written in C++11",
+  "homepage": "https://github.com/rigtorp/MPMCQueue"
+}

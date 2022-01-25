@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a98540c..a3697cb 100644
+index 8386687..5ab9ed2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -479,6 +479,10 @@ if(WEBP_BUILD_VWEBP)
+@@ -540,6 +540,10 @@ if(WEBP_BUILD_VWEBP)
                                 PRIVATE ${GLUT_INCLUDE_DIR}
                                         ${CMAKE_CURRENT_BINARY_DIR}/src
                                         ${OPENGL_INCLUDE_DIR})

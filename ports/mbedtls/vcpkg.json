@@ -1,0 +1,19 @@
+{
+  "name": "mbedtls",
+  "version-string": "2.24.0",
+  "port-version": 3,
+  "description": "An open source, portable, easy to use, readable and flexible SSL library",
+  "homepage": "https://github.com/ARMmbed/mbedtls",
+  "supports": "!uwp",
+  "features": {
+    "pthreads": {
+      "description": "Multi-threading support",
+      "dependencies": [
+        {
+          "name": "pthreads",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}

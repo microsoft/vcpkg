@@ -3,25 +3,26 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
-    REF v1.1
-    SHA512 baa9149853dc08c602deeb1a04cf57643d1cb0733aee2776f4e99b210279aad3b4a1013ab1d790e91a3a95b7c72b9c12c6be25f2c30a76b69b5319b610cb8e7a
+    REF v1.1.1
+    SHA512 eeb15d0756f12136a1e7938a0eed97024d564eef3355f3bb6abf6c681e38919011e1a133d89ca360f463e7fed5feb8e0138a0fe9be4c25b6a13ba4b042aef3eb
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-build-boost-1_77_0.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cuda   OpenMVS_USE_CUDA
-    openmp OpenMVS_USE_OPENMP
+    FEATURES
+        cuda   OpenMVS_USE_CUDA
+        openmp OpenMVS_USE_OPENMP
 )
 
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DOpenMVS_USE_NONFREE=ON
         -DOpenMVS_USE_CERES=OFF
@@ -37,7 +38,7 @@ vcpkg_configure_cmake(
         -DOpenMVS_BUILD_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -4,8 +4,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
 endif()
 
 set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  6)
+set(PYTHON_VERSION_MINOR  10)
+set(PYTHON_VERSION_PATCH  1)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -13,7 +13,7 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
-    0006-fix-duplicate-symbols.patch
+    0008-fix-parallel-install.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -22,17 +22,26 @@ endif()
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
 # required to build this port on Windows 7 itself due to Python using itself in its own build system.
 if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0007-restore-support-for-windows-7.patch)
+    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
     message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
 elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
+endif()
+
+# The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    vcpkg_get_windows_sdk(WINSDK_VERSION)
+    if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
+        list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
+    endif()
+    list(APPEND PATCHES "0009-python-embed.pc.patch")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 a484de98044d180c3494ccf199f146516650cf7bc917b7d4a85f1e9b42b3938c2540f82298cb3f59332ae41c927e2335b4d91265de3496db4a14693a25a6a772
+    SHA512 23f99b77c7978282d43a6e442811de1d6e8cc9597c6d1143ec65ae986f64805c36a0a033632a4d1a89053a55854904bcf11415d91e2a3b4a5308c4a21de80098
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -62,10 +71,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-    configure_file(${SOURCE_PATH}/PC/pyconfig.h ${SOURCE_PATH}/PC/pyconfig.h)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in ${SOURCE_PATH}/PCbuild/python_vcpkg.props)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/openssl.props.in ${SOURCE_PATH}/PCbuild/openssl.props)
-    file(WRITE ${SOURCE_PATH}/PCbuild/libffi.props
+    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
+    file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
         "<?xml version='1.0' encoding='utf-8'?>
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
@@ -88,11 +97,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
         )
     endif()
-    string(REPLACE "\\" "" WindowsSDKVersion "$ENV{WindowsSDKVersion}")
-    list(APPEND OPTIONS
-        "/p:WindowsTargetPlatformVersion=${WindowsSDKVersion}"
-        "/p:DefaultWindowsSDKVersion=${WindowsSDKVersion}"
-    )
     if(VCPKG_TARGET_IS_UWP)
         list(APPEND OPTIONS "/p:IncludeUwp=true")
     else()
@@ -113,10 +117,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     endif()
 
     vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
         LICENSE_SUBPATH "LICENSE"
+        TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
         SKIP_CLEAN
     )
 
@@ -145,7 +150,8 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    if(PYTHON_ALLOW_EXTENSIONS)
+    # The generated python executable must match the host arch
+    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
         message(STATUS "Bootstrapping pip")
         vcpkg_execute_required_process(COMMAND python -m ensurepip
             WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
@@ -153,12 +159,36 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         )
     endif()
 
+    # pkg-config files
+    set(prefix "${CURRENT_PACKAGES_DIR}")
+    set(libdir [[${prefix}/lib]])
+    set(ABIVERSION "${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}")
+    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(exec_prefix "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        set(includedir [[${prefix}/include]])
+        set(ABISUFFIX "")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(exec_prefix "\${prefix}/../tools/${PORT}")
+        set(includedir [[${prefix}/../include]])
+        set(ABISUFFIX "_d")
+        configure_file("${SOURCE_PATH}/Misc/python.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/Misc/python-embed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/python-${VERSION}-embed.pc" @ONLY)
+    endif()
+
+    vcpkg_fixup_pkgconfig()
+
     vcpkg_clean_msbuild()
 else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--with-ensurepip"
-        [[--with-suffix=""]]
+        "--with-suffix="
         "--with-system-expat"
     )
     if(VCPKG_TARGET_IS_OSX)
@@ -166,7 +196,7 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
         OPTIONS_DEBUG "--with-pydebug"
     )
@@ -191,6 +221,8 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
@@ -208,3 +240,25 @@ message(STATUS "Installing cmake wrappers")
 _generate_finder(DIRECTORY "python" PREFIX "Python")
 _generate_finder(DIRECTORY "python3" PREFIX "Python3")
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    function(replace_dirs_in_config_file python_config_file)
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    endfunction()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+endif()

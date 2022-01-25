@@ -1,0 +1,7 @@
+{
+  "name": "charls",
+  "version-string": "2.2.0",
+  "port-version": 2,
+  "description": "CharLS, a C++ JPEG-LS library implementation.",
+  "homepage": "https://github.com/team-charls/charls"
+}

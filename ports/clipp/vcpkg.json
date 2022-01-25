@@ -1,0 +1,6 @@
+{
+  "name": "clipp",
+  "version-string": "2019-04-30",
+  "port-version": 1,
+  "description": "command line interfaces for modern C++"
+}

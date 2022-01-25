@@ -1,8 +1,9 @@
 {
   "name": "boost-mpi",
-  "version": "1.76.0",
+  "version": "1.78.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
+  "supports": "!uwp",
   "dependencies": [
     "boost-assert",
     {
@@ -17,17 +18,12 @@
     "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
-    "boost-math",
     {
       "name": "boost-modular-build-helper",
       "host": true
     },
     "boost-mpl",
     "boost-optional",
-    {
-      "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten"
-    },
     "boost-serialization",
     "boost-smart-ptr",
     "boost-static-assert",
@@ -35,6 +31,26 @@
     "boost-type-traits",
     "boost-utility",
     "boost-vcpkg-helpers",
-    "mpi"
-  ]
+    "mpi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "python3": {
+      "description": "Build Python3 bindings",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "boost-python",
+          "features": [
+            "python3"
+          ],
+          "platform": "!uwp & !emscripten & !ios & !android"
+        },
+        "python3"
+      ]
+    }
+  }
 }

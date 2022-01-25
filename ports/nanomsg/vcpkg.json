@@ -1,0 +1,14 @@
+{
+  "name": "nanomsg",
+  "version-string": "1.1.5",
+  "port-version": 4,
+  "description": [
+    "a simple high-performance implementation of several \"scalability protocols\".",
+    "These scalability protocols are light-weight messaging protocols which can be used to solve a number of very common messaging patterns, such as request/reply, publish/subscribe, surveyor/respondent, and so forth. These protocols can run over a variety of transports such as TCP, UNIX sockets, and even WebSocket."
+  ],
+  "features": {
+    "tool": {
+      "description": "nanomsg tool (nanocat)"
+    }
+  }
+}

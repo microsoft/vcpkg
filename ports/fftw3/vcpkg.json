@@ -1,0 +1,37 @@
+{
+  "name": "fftw3",
+  "version": "3.3.10",
+  "port-version": 3,
+  "description": "FFTW is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST).",
+  "homepage": "https://www.fftw.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "avx": {
+      "description": "Builds part of the library with avx, sse2, sse"
+    },
+    "avx2": {
+      "description": "Builds part of the library with avx2, fma, avx, sse2, sse"
+    },
+    "openmp": {
+      "description": "Builds openmp enabled lib"
+    },
+    "sse": {
+      "description": "Builds part of the library with sse"
+    },
+    "sse2": {
+      "description": "Builds part of the library with sse2, sse"
+    },
+    "threads": {
+      "description": "Enable threads in fftw3"
+    }
+  }
+}

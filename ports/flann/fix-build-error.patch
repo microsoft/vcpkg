@@ -28,7 +28,7 @@ index f4b94d2..33b2c26 100644
  option(BUILD_C_BINDINGS "Build C bindings" ON)
  option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
  option(BUILD_MATLAB_BINDINGS "Build Matlab bindings" ON)
-@@ -146,8 +148,8 @@ if (BUILD_CUDA_LIB)
+@@ -146,8 +148,9 @@ if (BUILD_CUDA_LIB)
      endif(CUDA_FOUND)
  endif(BUILD_CUDA_LIB)
  
@@ -36,6 +36,7 @@ index f4b94d2..33b2c26 100644
 -pkg_check_modules(LZ4 REQUIRED liblz4)
 +find_package(PkgConfig)
 +find_package(lz4 CONFIG REQUIRED)
++set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} liblz4")
  
  #set the C/C++ include path to the "include" directory
  include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)

@@ -1,6 +1,7 @@
 {
   "name": "gamedev-framework",
   "version-semver": "0.20.0",
+  "port-version": 1,
   "maintainers": [
     "Julien Bernard <julien.bernard@univ-fcomte.fr>",
     "Arthur Hugeat <hugeat.arthur@gmail.com>"
@@ -16,7 +17,18 @@
     "boost-heap",
     "freetype",
     "pugixml",
-    "sdl2",
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "sdl2",
+      "platform": "!linux"
+    },
     "stb",
     "zlib"
   ]

@@ -1,0 +1,7 @@
+{
+  "name": "pugixml",
+  "version-string": "1.11.4",
+  "port-version": 1,
+  "description": "Light-weight, simple and fast XML parser for C++ with XPath support",
+  "homepage": "https://github.com/zeux/pugixml"
+}

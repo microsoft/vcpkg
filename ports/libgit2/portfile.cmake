@@ -1,13 +1,14 @@
-# libgit2 uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF 7f4fa178629d559c037a1f72f79f79af9c1ef8ce#version 1.1.0
-    SHA512 2fdbbb263fe71dc6d04b64c2967e7acff1a5b6102e62d69c9a7ea1b6777ab74a1625e798438ea239d8b489648a9335833f937f893f73a66e16c658eae453ab62
+    REF v1.3.0
+    SHA512 842a648a67ff23ba9e6bf14b706ba9081164866e14000ebf3858442b7046925f05e1dbf00a7d740dc4bf32280e260730e23a9492e817094aa90736ae335ee76e
     HEAD_REF master
+    PATCHES
+        fix-configcmake.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
@@ -63,9 +64,8 @@ vcpkg_check_features(
         ssh USE_SSH
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_CLAR=OFF
         -DUSE_HTTP_PARSER=system
@@ -75,8 +75,10 @@ vcpkg_configure_cmake(
         ${GIT2_FEATURES}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-git2 CONFIG_PATH share/unofficial-git2)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

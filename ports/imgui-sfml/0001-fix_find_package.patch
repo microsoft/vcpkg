@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 53500fd..cb98701 100644
+index 3a974c4..8a1c6cd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -35,34 +35,14 @@ if (IMGUI_SFML_FIND_SFML)
+@@ -41,34 +41,14 @@ if (IMGUI_SFML_FIND_SFML)
  	if (NOT BUILD_SHARED_LIBS)
  		set(SFML_STATIC_LIBRARIES ON)
  	endif()
@@ -23,7 +23,7 @@ index 53500fd..cb98701 100644
 -endif()
 -
 -# This uses FindImGui.cmake provided in ImGui-SFML repo for now
--find_package(ImGui 1.68 REQUIRED)
+-find_package(ImGui 1.80 REQUIRED)
 -
 -# these headers will be installed alongside ImGui-SFML
 -set(IMGUI_PUBLIC_HEADERS
@@ -37,9 +37,9 @@ index 53500fd..cb98701 100644
 -)
 +find_package(imgui CONFIG REQUIRED)
  
- # CMake 3.11 and later prefer to choose GLVND, but we choose legacy OpenGL just because it's safer
- # (unless the OpenGL_GL_PREFERENCE was explicitly set)
-@@ -82,7 +62,7 @@ add_library(ImGui-SFML
+ if (IMGUI_SFML_IMGUI_DEMO)
+     list(APPEND IMGUI_SOURCES ${IMGUI_DEMO_SOURCES})
+@@ -92,7 +72,7 @@ add_library(ImGui-SFML
  add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
  
  target_link_libraries(ImGui-SFML

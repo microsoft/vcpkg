@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.76.0
-    SHA512 f004e38d63b73e96492ab7267a2e4c3b9993eebc7df6e17fbc5daeb4feb002ee8be815ad8db26ec954471678eefd3609d12a81a34adab3115032209002b663eb
+    REF boost-1.78.0
+    SHA512 ea2695df5301853209ed0db70cff632e27066dbd2dcfb3946022633427a45ad07f104eee7ac554038a45f4bf89fb8b39ee4d07f873aebb4571ed392d1e343879
     HEAD_REF master
 )
 
@@ -12,7 +12,6 @@ file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
 string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-context requires a newer version of vcpkg in order to build.")
 endif()
@@ -28,9 +27,3 @@ boost_modular_build(
 )
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-
-# boost-context removed all.hpp, which is used by FindBoost to determine that context is installed
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp)
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp
-        "#error \"#include <boost/context/all.hpp> is no longer supported by boost_context.\"")
-endif()

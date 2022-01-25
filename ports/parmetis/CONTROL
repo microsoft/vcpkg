@@ -1,6 +1,0 @@
-Source: parmetis
-Version: 4.0.3
-Port-Version: 4
-Homepage: https://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview
-Description: Parallel Graph Partitioning and Fill-reducing Matrix Ordering
-Build-Depends: metis, mpi

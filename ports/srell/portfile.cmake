@@ -1,0 +1,23 @@
+set(VERSION 3_001)
+
+vcpkg_download_distfile(
+	ARCHIVE
+	URLS "https://www.akenotsuki.com/misc/srell/srell${VERSION}.zip"
+	FILENAME "srell${VERSION}.zip"
+	SHA512 6FE1DAC49B713B8FA0E4B12099E2B35017CE853CC8C7045AA808401D8C6D15E16B50E6DDFDCB0EFA9DB31188D5B9B385081C1EEB2AC413701847688B38B61B76
+)
+
+vcpkg_extract_source_archive(
+	SOURCE_PATH
+	ARCHIVE "${ARCHIVE}"
+	NO_REMOVE_ONE_LEVEL
+)
+
+file(INSTALL
+	"${SOURCE_PATH}/srell.hpp"
+	"${SOURCE_PATH}/srell_ucfdata2.hpp"
+	"${SOURCE_PATH}/srell_updata.hpp"
+	DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,17 @@
+{
+  "name": "signalrclient",
+  "version-string": "1.0.0-beta1-9",
+  "port-version": 2,
+  "description": "C++ client for SignalR.",
+  "homepage": "https://github.com/SignalR/SignalR-Client-Cpp",
+  "dependencies": [
+    {
+      "name": "cpprestsdk",
+      "features": [
+        "default-features",
+        "websockets"
+      ]
+    },
+    "openssl"
+  ]
+}

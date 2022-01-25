@@ -1,8 +1,9 @@
 {
   "name": "quantlib",
-  "version": "1.22",
+  "version": "1.25",
   "description": "The QuantLib C++ library",
   "homepage": "https://www.quantlib.org/",
+  "supports": "!(windows & !static)",
   "dependencies": [
     "boost-accumulators",
     "boost-algorithm",
@@ -35,6 +36,14 @@
     "boost-type-traits",
     "boost-ublas",
     "boost-unordered",
-    "boost-utility"
+    "boost-utility",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

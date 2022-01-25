@@ -1,5 +1,0 @@
-Source: tre
-Version: 0.8.0
-Port-Version: 2
-Homepage: https://github.com/laurikari/tre
-Description: TRE is a lightweight, robust, and efficient POSIX compliant regexp matching library with some exciting features such as approximate (fuzzy) matching.

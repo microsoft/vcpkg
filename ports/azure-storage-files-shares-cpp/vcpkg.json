@@ -1,6 +1,6 @@
 {
   "name": "azure-storage-files-shares-cpp",
-  "version-semver": "12.1.0",
+  "version-semver": "12.2.0",
   "description": [
     "Microsoft Azure Storage Files Shares SDK for C++",
     "This library provides Azure Storage Files Shares SDK."
@@ -10,7 +10,8 @@
   "dependencies": [
     {
       "name": "azure-storage-common-cpp",
-      "default-features": false
+      "default-features": false,
+      "version>=": "12.2.0"
     },
     {
       "name": "vcpkg-cmake",

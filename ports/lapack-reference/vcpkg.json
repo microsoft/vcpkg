@@ -1,0 +1,44 @@
+{
+  "name": "lapack-reference",
+  "version-semver": "3.8.0",
+  "port-version": 6,
+  "description": "LAPACK — Linear Algebra PACKage",
+  "homepage": "http://www.netlib.org/lapack/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gfortran",
+      "platform": "windows"
+    }
+  ],
+  "default-features": [
+    "blas-select"
+  ],
+  "features": {
+    "blas-select": {
+      "description": "Use external optimized BLAS",
+      "dependencies": [
+        {
+          "name": "lapack-reference",
+          "default-features": false,
+          "features": [
+            "noblas"
+          ],
+          "platform": "!windows | !static"
+        }
+      ]
+    },
+    "cblas": {
+      "description": "Builds CBLAS"
+    },
+    "noblas": {
+      "description": "Use external optimized BLAS",
+      "dependencies": [
+        "blas"
+      ]
+    }
+  }
+}

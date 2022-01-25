@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF d045f1beff96dff0fccc7fa0c5acb1493a65338c
-    SHA512 9b5d3c4342608d8e3d9826d3b52cbefc1c21eb0094d0cae4add8bb0960f931e9080f248eb8ad8385fc0a08e2a1da10020185148ffd2ef02e7a4fac879e27aa69
+    REF 79234726053c45eede688400aa219fdec0810bd8
+    SHA512 634ad75d70f04cce220bfa9f6d13e8ddb293e8403ebd195e2c8b522b751a1a268021feea7843038037ed6d1b354b2e470ad565966a117613cf5371073afda9a4
     HEAD_REF main
 )
 
@@ -31,13 +31,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/SEAL-3.6")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/SEAL-3.7")
 
-if("hexl" IN_LIST FEATURES)
-    vcpkg_fixup_pkgconfig(SKIP_CHECK)
-else()
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

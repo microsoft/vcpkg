@@ -3,18 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/nowide
-    REF boost-1.76.0
-    SHA512 42acb8ef8d0c3ab01673814ada908dcfb6673c8fb6a4f056043b0a81bbeb9cc8bdd7b52febe0d06d5899d39af9717fa2e63f3678f7005e56d0bc4765e8a232c0
+    REF boost-1.78.0
+    SHA512 115ec3a2c98e316ecc1c657467c79cdddb28a07181929d3ac496db34f1b29faad460dfd47d98f110374534f2257db4b52088ed234ff1feeabff15a52ff525426
     HEAD_REF master
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
-string(REPLACE "check-target-builds ../config//cxx11_moveable_fstreams" "check-target-builds ../check_movable_fstreams.cpp" _contents "${_contents}")
-string(REPLACE "check-target-builds ../config//lfs_support" "check-target-builds ../check_lfs_support.cpp" _contents "${_contents}")
+string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-file(COPY "${SOURCE_PATH}/config/check_lfs_support.cpp" "${SOURCE_PATH}/config/check_movable_fstreams.cpp" DESTINATION "${SOURCE_PATH}/build/config")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-nowide requires a newer version of vcpkg in order to build.")
 endif()

@@ -1,3 +1,0 @@
-Source: bdwgc
-Version: 8.0.4-1
-Description: The Boehm-Demers-Weiser conservative C/C++ Garbage Collector (libgc, bdwgc, boehm-gc)

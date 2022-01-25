@@ -1,11 +1,10 @@
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dd08d31..7f364a7 100644
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0e13110..6adf1e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,5 +1,5 @@
--cmake_minimum_required(VERSION 2.6)
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.8.12)
 +cmake_minimum_required(VERSION 3.8)
  project("Pangolin")
  set(PANGOLIN_VERSION_MAJOR 0)
- set(PANGOLIN_VERSION_MINOR 5)
- set(PANGOLIN_VERSION ${PANGOLIN_VERSION_MAJOR}.${PANGOLIN_VERSION_MINOR})
+ set(PANGOLIN_VERSION_MINOR 6)

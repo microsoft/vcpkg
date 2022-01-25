@@ -23,7 +23,7 @@ The path to the directory containing the tools. This will be set to `${CURRENT_P
 Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
 ### AUTO_CLEAN
-Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
+Auto clean the copied executables from `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 
 ## Examples
 
@@ -58,6 +58,14 @@ function(vcpkg_copy_tools)
         set(tool_pdb "${arg_SEARCH_DIR}/${tool_name}.pdb")
         if(EXISTS "${tool_path}")
             file(COPY "${tool_path}" DESTINATION "${arg_DESTINATION}")
+        elseif(NOT "${VCPKG_TARGET_BUNDLE_SUFFIX}" STREQUAL "" AND NOT "${VCPKG_TARGET_BUNDLE_SUFFIX}" STREQUAL "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+            set(bundle_path "${arg_SEARCH_DIR}/${tool_name}${VCPKG_TARGET_BUNDLE_SUFFIX}")
+            if(EXISTS "${bundle_path}")
+                file(COPY "${bundle_path}" DESTINATION "${arg_DESTINATION}")
+            else()
+                message(FATAL_ERROR "Couldn't find tool \"${tool_name}\":
+    neither \"${tool_path}\" nor \"${bundle_path}\" exists")
+            endif()
         else()
             message(FATAL_ERROR "Couldn't find tool \"${tool_name}\":
     \"${tool_path}\" does not exist")

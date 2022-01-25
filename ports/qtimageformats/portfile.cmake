@@ -2,7 +2,7 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # Only plugins
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
+set(${PORT}_PATCHES no_target_promotion.patch)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES

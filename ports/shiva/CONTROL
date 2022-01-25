@@ -1,5 +1,0 @@
-Source: shiva
-Version: 1.0-3
-Homepage: https://github.com/Milerius/shiva
-Description: Modern C++ Game Engine
-Build-Depends: boost-stacktrace, boost-filesystem, boost-dll, entt, lua, luafilesystem (windows), sol2, pybind11, spdlog, nlohmann-json

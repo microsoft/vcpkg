@@ -1,7 +1,3 @@
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-  message(FATAL_ERROR "Folly only supports the x64 architecture.")
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # Required to run build/generate_escape_tables.py et al.
@@ -14,7 +10,7 @@ vcpkg_from_github(
     REPO facebook/folly
     REF v2021.06.14.00
     SHA512 aee5adc1a44d9b193f3f41b5fc9fa7575c677d8bf27ed3a3b612a2fbe53505f82481ce78f13fb41ae3ca81ca25446426fbdfdc578f503f919b4af5abe56ad71c
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
@@ -95,3 +91,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

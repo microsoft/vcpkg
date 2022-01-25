@@ -1,0 +1,7 @@
+{
+  "name": "status-code",
+  "version-string": "1.0.0-20211208",
+  "port-version": 1,
+  "description": "Proposed SG14 status_code for the C++ standard (https://wg21.link/P1028).",
+  "homepage": "https://github.com/ned14/status-code"
+}

@@ -1,6 +1,0 @@
-Source: sassc
-Version: 3.6.1
-Port-Version: 0
-Description: SassC is a wrapper around libsass (http://github.com/sass/libsass) used to generate a useful command-line application that can be installed and packaged for several operating systems.
-Homepage: https://github.com/sass/sassc
-Build-Depends: libsass, getopt

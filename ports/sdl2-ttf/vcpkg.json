@@ -1,0 +1,11 @@
+{
+  "name": "sdl2-ttf",
+  "version-string": "2.0.15",
+  "port-version": 5,
+  "description": "A library for rendering TrueType fonts with SDL",
+  "homepage": "https://www.libsdl.org/projects/SDL_ttf/",
+  "dependencies": [
+    "freetype",
+    "sdl2"
+  ]
+}

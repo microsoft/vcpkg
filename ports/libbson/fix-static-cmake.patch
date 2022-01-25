@@ -1,5 +1,5 @@
 diff --git a/src/libbson/build/cmake/libbson-static-1.0-config.cmake.in b/src/libbson/build/cmake/libbson-static-1.0-config.cmake.in
-index 92933fe..d98ebd3 100644
+index 92933fe01..931a829ae 100644
 --- a/src/libbson/build/cmake/libbson-static-1.0-config.cmake.in
 +++ b/src/libbson/build/cmake/libbson-static-1.0-config.cmake.in
 @@ -36,3 +36,7 @@ foreach (LIB @LIBBSON_LIBRARIES@)

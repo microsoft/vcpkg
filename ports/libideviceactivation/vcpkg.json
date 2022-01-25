@@ -1,0 +1,15 @@
+{
+  "name": "libideviceactivation",
+  "version": "1.3.17",
+  "description": "A library to handle the activation process of iOS devices",
+  "dependencies": [
+    "curl",
+    "libimobiledevice",
+    "libplist",
+    "libxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

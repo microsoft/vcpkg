@@ -1,0 +1,32 @@
+{
+  "name": "kf5textwidgets",
+  "version": "5.89.0",
+  "description": "Text editing widgets",
+  "homepage": "https://api.kde.org/frameworks/ktextwidgets/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5completion",
+    "kf5config",
+    "kf5configwidgets",
+    "kf5i18n",
+    "kf5sonnet",
+    "kf5widgetsaddons",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

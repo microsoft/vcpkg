@@ -74,21 +74,25 @@ This is a required field.
 
 ### Version fields
 
-There is, at this point, only one version field - `"version-string"`. However, more will be added in the future.
-You must have one (and only one) version field. There are different reasons to use each version field:
+There are four version field options, depending on how the port orders its
+releases.
 
-* `"version-string"` - used for packages that don't have orderable versions. This is pretty uncommon,
-  but since we don't have any versioning constraints yet, this is the only one that you can use.
+* [`"version"`](versioning.md#version) - Generic, dot-separated numeric
+  sequence.
+* [`"version-semver"`](versioning.md#version-semver) - [Semantic Version
+  2.0.0](https://semver.org/#semantic-versioning-specification-semver)
+* [`"version-date"`](versioning.md#version-date) - Used for packages which do
+  not have numeric releases (for example, Live-at-HEAD). Matches `YYYY-MM-DD`
+  with optional trailing dot-separated numeric sequence.
+* [`"version-string"`](versioning.md#version-string) - Used for packages that
+  don't have orderable versions. This should be rarely used, however all ports
+  created before the other version fields were introduced use this scheme.
 
-Additionally, the `"port-version"` field is used by registries of packages,
-as a way to version "the package gotten from `vcpkg install`" differently from the upstream package version.
-You shouldn't need to worry about this at all.
+Additionally, the optional `"port-version"` field is used to indicate revisions
+to the port with the same upstream source version. For pure consumers, this
+field should not be used.
 
-#### Additional version fields
-
-**Experimental behind the `versions` feature flag**
-
-See [versioning](versioning.md#version-schemes) for additional version types.
+See [versioning](versioning.md#version-schemes) for more details.
 
 ### `"description"`
 
@@ -99,11 +103,15 @@ while the remaining strings are treated as the full description.
 
 ### `"builtin-baseline"`
 
-**Experimental behind the `versions` feature flag**
+This field indicates the commit of vcpkg which provides global minimum version
+information for your manifest. It is required for top-level manifest files using
+versioning.
 
-This field indicates the commit of vcpkg which provides global minimum version information for your manifest. It is required for top-level manifest files using versioning.
+This is a convenience field that has the same semantic as replacing your default
+registry in
+[`vcpkg-configuration.json`](registries.md#configuration-default-registry).
 
-See also [versioning](versioning.md#builtin-baseline) for more semantic details.
+See [versioning](versioning.md#builtin-baseline) for more semantic details.
 
 ### `"dependencies"`
 
@@ -183,19 +191,18 @@ although one can define their own.
 
 #### `"version>="` Field
 
-**Experimental behind the `versions` feature flag**
-
 A minimum version constraint on the dependency.
 
-This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
+This field specifies the minimum version of the dependency, optionally using a
+`#N` suffix to denote port-version if non-zero.
 
 See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 
-**Experimental behind the `versions` feature flag**
+This field pins exact versions for individual dependencies.
 
-This field enables version resolution to be ignored for certain dependencies and to use specific versions instead.
+`"overrides"` from transitive manifests (i.e. from dependencies) are ignored.
 
 See also [versioning](versioning.md#overrides) for more semantic details.
 
@@ -274,8 +281,6 @@ and that's the `"default-features"` field, which is an array of feature names.
 ```
 
 ## Command Line Interface
-
-**Experimental behind the `manifests` feature flag**
 
 When invoked from any subdirectory of the directory containing `vcpkg.json`, `vcpkg install` with no package arguments
 will install all manifest dependencies into `<directory containing vcpkg.json>/vcpkg_installed/`. Most of `vcpkg
@@ -441,21 +446,31 @@ See the `--feature-flags=` command line option for more information.
 ## MSBuild Integration
 
 To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild).
-Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the
+Then, add a vcpkg.json above your project file (such as in the root of your source repository) and set the
 property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use
 Vcpkg Manifest`.
 
-As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/`
+As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/$(VcpkgTriplet)/`
 adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild
 projects.
 
-Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if
-you need to use different triplets for different projects in your solution, they must consume from different
-`vcpkg.json` files.
+### Known issues
+
+* Visual Studio 2015 does not correctly track edits to the `vcpkg.json` and `vcpkg-configuration.json` files, and will
+not respond to changes unless a `.cpp` is edited.
 
 ### MSBuild Properties
 
-These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+When using Visual Studio 2015 integration, these properties can be set in your project file before the
+
+```xml
+<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+```
+
+line, which unfortunately requires manual editing of the `.vcxproj` or passing on the msbuild command line with `/p:`.
+With 2017 or later integration, These properties can additionally be set via the Visual Studio GUI under
+`Project Properties -> Vcpkg` or via a common `.props` file imported between `Microsoft.Cpp.props` and
+`Microsoft.Cpp.targets`.
 
 #### `VcpkgEnabled` (Use Vcpkg)
 
@@ -495,7 +510,7 @@ vcpkg.json files will be ignored. This will default to true in the future.
 This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be
 manually restored via the vcpkg command line.
 
-#### `VcpkgInstalledDirectory` (Installed Directory)
+#### `VcpkgInstalledDir` (Installed Directory)
 
 This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is
 created and populated based on your manifest.

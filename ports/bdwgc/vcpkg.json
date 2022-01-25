@@ -1,0 +1,9 @@
+{
+  "name": "bdwgc",
+  "version": "8.2.0",
+  "port-version": 2,
+  "description": "The Boehm-Demers-Weiser conservative C/C++ Garbage Collector (libgc, bdwgc, boehm-gc)",
+  "dependencies": [
+    "libatomic-ops"
+  ]
+}

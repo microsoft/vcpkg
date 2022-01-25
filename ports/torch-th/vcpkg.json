@@ -1,0 +1,7 @@
+{
+  "name": "torch-th",
+  "version-string": "2019-04-19",
+  "port-version": 3,
+  "description": "Torch's TH library",
+  "homepage": "https://github.com/torch/torch7"
+}

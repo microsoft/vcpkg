@@ -1,0 +1,7 @@
+{
+  "name": "stb",
+  "version-string": "2020-09-14",
+  "port-version": 1,
+  "description": "public domain header-only libraries",
+  "homepage": "https://github.com/nothings/stb"
+}

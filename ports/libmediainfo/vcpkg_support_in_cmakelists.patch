@@ -1,5 +1,5 @@
 diff --git a/Project/CMake/CMakeLists.txt b/Project/CMake/CMakeLists.txt
-index 47c4ed13..f13ff531 100644
+index f983343..c6ba5ea 100644
 --- a/Project/CMake/CMakeLists.txt
 +++ b/Project/CMake/CMakeLists.txt
 @@ -88,7 +88,7 @@ endif()
@@ -11,7 +11,7 @@ index 47c4ed13..f13ff531 100644
  
  include_directories(${MediaInfoLib_SOURCES_PATH})
  include_directories(${MediaInfoLib_SOURCES_PATH}/ThirdParty/md5/)
-@@ -398,13 +398,7 @@ endif()
+@@ -400,13 +400,7 @@ endif()
  target_link_libraries(mediainfo ${ZenLib_LIBRARY} ${ZLIB_LIBRARIES})
  
  if(MSVC AND BUILD_SHARED_LIBS)
@@ -27,19 +27,20 @@ index 47c4ed13..f13ff531 100644
  
  if (APPLE)
 diff --git a/Source/ThirdParty/aes-gladman/aesopt.h b/Source/ThirdParty/aes-gladman/aesopt.h
-index 6ad9ca1e..a858396f 100644
+index d3ac0f9..eeefa40 100644
 --- a/Source/ThirdParty/aes-gladman/aesopt.h
 +++ b/Source/ThirdParty/aes-gladman/aesopt.h
-@@ -183,6 +183,6 @@ Issue Date: 20/12/2007
-        AES_REV_DKS must NOT be defined when such assembler files are
-        built
+@@ -183,7 +183,7 @@ Issue Date: 20/12/2007
+ 	AES_REV_DKS must NOT be defined when such assembler files are
+ 	built
  */
 -#if 1 && defined( _WIN64 ) && defined( _MSC_VER )
 +#if 1 && defined( _WIN64 ) && defined( _MSC_VER ) && defined( _M_AMD64 )
  #  define INTEL_AES_POSSIBLE
  #endif
+ 
 diff --git a/Source/ThirdParty/aes-gladman/brg_endian.h b/Source/ThirdParty/aes-gladman/brg_endian.h
-index 4c34f2b5..fae471b9 100644
+index b44c5cb..8c34364 100644
 --- a/Source/ThirdParty/aes-gladman/brg_endian.h
 +++ b/Source/ThirdParty/aes-gladman/brg_endian.h
 @@ -110,7 +110,8 @@ Issue Date: 20/12/2007

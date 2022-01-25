@@ -1,0 +1,15 @@
+{
+  "name": "libflac",
+  "version": "1.3.3",
+  "port-version": 7,
+  "description": "Library for manipulating FLAC files",
+  "homepage": "https://xiph.org/flac/",
+  "dependencies": [
+    "libogg"
+  ],
+  "features": {
+    "asm": {
+      "description": "Use any assembly optimization routines"
+    }
+  }
+}

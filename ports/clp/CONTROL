@@ -1,4 +1,0 @@
-Source: clp
-Version: 1.17.6
-Description: Clp (Coin-or linear programming) is an open-source linear programming solver written in C++. It is primarily meant to be used as a callable library, but a basic, stand-alone executable version is also available.
-Build-Depends: coinutils, osi

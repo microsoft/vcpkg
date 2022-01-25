@@ -1,0 +1,7 @@
+{
+  "name": "cgicc",
+  "version-string": "3.2.19",
+  "port-version": 5,
+  "description": "GNU Cgicc is an ANSI C++ compliant class library that greatly simplifies the creation of CGI applications for the World Wide Web",
+  "homepage": "https://www.gnu.org/software/cgicc/"
+}

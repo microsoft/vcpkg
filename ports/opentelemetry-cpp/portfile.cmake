@@ -11,8 +11,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
-    REF v1.0.0-rc4
-    SHA512 93de3e61b6bd0a9237cf81dedbcdb078fb92c1dc562975c82134d791ad911d4d3c0e717f390a0a993fbeda5d5c90206c0e7a0c7085e58d9cfefbc9fd4ff209d2
+    REF v1.0.1
+    SHA512 ddaf5f52f5c100f385e09a6eb69f08fced2e890145939d35f969b05743733409e43f4747713259b68641511401c2c1e01a498b9b7a20fab0f52ee6f4b5d3c77c
     HEAD_REF main
 )
 
@@ -23,7 +23,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
         jaeger WITH_JAEGER
+        otlp WITH_OTLP
+        zpages WITH_ZPAGES
 )
+
+# opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
+if(WITH_OTLP)
+    set(OTEL_PROTO_VERSION "0.11.0")
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
+        FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
+        SHA512 ff6c207fe9cc2b6a344439ab5323b3225cf532358d52caf0afee27d9b4cd89195f6da6b6e383fe94de52f60c772df8b477c1ea943db67a217063c71587b7bb92
+    )
+
+    vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party)
+    file(REMOVE_RECURSE ${SOURCE_PATH}/third_party/opentelemetry-proto)
+    file(RENAME ${SOURCE_PATH}/third_party/opentelemetry-proto-${OTEL_PROTO_VERSION} ${SOURCE_PATH}/third_party/opentelemetry-proto)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

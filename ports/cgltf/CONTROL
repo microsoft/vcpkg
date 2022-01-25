@@ -1,4 +1,0 @@
-Source: cgltf
-Version: 1.8
-Homepage: https://github.com/jkuhlmann/cgltf
-Description: Single-file glTF 2.0 loader and writer written in C99

@@ -33,7 +33,7 @@ else()
     list(APPEND OPTIONS -Dxlib=disabled)
 endif()
 list(APPEND OPTIONS -Dxcb=disabled)
-list(APPEND OPTIONS -Dxlib-xcb=disabled)
+#list(APPEND OPTIONS -Dxlib-xcb=disabled) don't forget this option with the next update!
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -55,7 +55,6 @@ vcpkg_configure_meson(
         -Dzlib=enabled
         -Dpng=enabled
         -Dspectre=auto
-        -Dsymbol-lookup=disabled
         -Dgtk2-utils=disabled
 )
 vcpkg_install_meson()

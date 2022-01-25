@@ -55,6 +55,7 @@ if(SDL_MIXER_ENABLE_OGGVORBIS)
     find_library(VORBISFILE_LIBRARY vorbisfile)
     list(APPEND SDL_MIXER_INCLUDES ${VORBIS_INCLUDE_DIR})
     list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
+    list(APPEND SDL_MIXER_LIBRARIES ${VORBISFILE_LIBRARY})
     if (SDL_DYNAMIC_LOAD)
         get_filename_component(VORBISFILE_LIBRARY_NAME "${VORBISFILE_LIBRARY}" NAME_WE)
         list(APPEND SDL_MIXER_LOAD_DEFINES -DOGG_DYNAMIC="${VORBISFILE_LIBRARY_NAME}${LIBRARY_SUFFIX}")
@@ -80,6 +81,7 @@ if(SDL_MIXER_ENABLE_FLUIDSYNTH)
     find_library(FLUIDSYNTH_LIBRARY fluidsynth)
     list(APPEND SDL_MIXER_INCLUDES ${FLUIDSYNTH_INCLUDE_DIR})
     list(APPEND SDL_MIXER_DEFINES MUSIC_MID_FLUIDSYNTH)
+    list(APPEND SDL_MIXER_LIBRARIES ${FLUIDSYNTH_LIBRARY})
     if (SDL_DYNAMIC_LOAD)
         get_filename_component(FLUIDSYNTH_LIBRARY_NAME "${FLUIDSYNTH_LIBRARY}" NAME_WE)
         list(APPEND SDL_MIXER_LOAD_DEFINES -DFLUIDSYNTH_DYNAMIC="${FLUIDSYNTH_LIBRARY_NAME}${LIBRARY_SUFFIX}")
@@ -134,6 +136,25 @@ install(EXPORT SDL2_mixer
     FILE sdl2-mixer-config.cmake
     NAMESPACE SDL2::
 )
+
+set(prefix "")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+set(PACKAGE "SDL2_mixer")
+file(READ "SDL_mixer.h" header_contents)
+#    #define SDL_MIXER_MAJOR_VERSION 2
+#    #define SDL_MIXER_MINOR_VERSION 0
+#    #define SDL_MIXER_PATCHLEVEL    5
+string(REGEX MATCH "define *SDL_MIXER_MAJOR_VERSION *([0-9]+)" _ "${header_contents}")
+set(VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "define *SDL_MIXER_MINOR_VERSION *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+string(REGEX MATCH "define *SDL_MIXER_PATCHLEVEL *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+set(SDL_VERSION 0.0)
+configure_file(SDL2_mixer.pc.in "${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc" @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SDL2_mixer.pc DESTINATION lib/pkgconfig)
 
 if(NOT SDL_MIXER_SKIP_HEADERS)
     install(FILES SDL_mixer.h DESTINATION include/SDL2)
