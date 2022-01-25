@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF a01d259db372bff5e049aa966da4efce7259af67 #2022-1-19
-    SHA512 b237a02519ff204946042a0b5f51c443c8e6c3ceed973dd51fbde9adfd67c619577ecc42b66c39f5eeaecd21330f7d08a0350ad900f5264e4e18b0c34f82e9ce
+    REF 1d3633742abcf307f1dcbd73a5093589a2d4da06 #2021-11-25 merge PR https://github.com/zeromq/libzmq/pull/4311
+    SHA512 0a7b3e04c6619dfb1d6904d06006184b0309f1951e4f31379492c9b20f139faa990620c08e7e9ef291db1287bdf3c1b5119f4938082a7809b26d0a5441d83769
     PATCHES fix-arm.patch
 )
 
