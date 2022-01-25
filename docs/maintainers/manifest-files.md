@@ -455,13 +455,39 @@ This means "doesn't support uwp, nor arm32 (but does support arm64)".
 
 ### `"license"`
 
-The license of the port.
+The license of the port. This is an [SPDX license expression],
+using [SPDX license identifiers].
 
-Valid values for the license field are listed at https://spdx.org/licenses/
+[SPDX license expression]: https://spdx.dev/ids/#how
+[SPDX license identifiers]: https://spdx.org/licenses/
 
-#### Example:
+#### Examples
+
+For libraries with simple licensing,
+only one license identifier may be needed;
+
+vcpkg, for example, would use this since it uses the MIT license:
+
 ```json
 {
-  "license": "Apache-2.0"
+  "license": "MIT"
+}
+```
+
+Many GPL'd projects allow either the GPL 2 or any later versions:
+
+```json
+{
+  "license": "GPL-2.0-or-later"
+}
+```
+
+Many Rust projects, in order to make certain they're useable with GPL,
+but also desiring the MIT license, will allow licensing under either
+the MIT license or Apache 2.0:
+
+```json
+{
+  "license": "Apache-2.0 OR MIT"
 }
 ```
