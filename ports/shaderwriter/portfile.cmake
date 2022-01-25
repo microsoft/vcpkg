@@ -1,5 +1,3 @@
-set(VERSION 2.0.0)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
     REF c6bb7ee45ac378bb90d71ddb8d02488bf526be32
