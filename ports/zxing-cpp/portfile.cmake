@@ -9,23 +9,20 @@ vcpkg_from_github(
     PATCHES ignore-pdb-install-symbols-in-lib.patch
 )
 
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        WINDOWS_USE_MSBUILD
-        OPTIONS
-            -DBUILD_BLACKBOX_TESTS=OFF
-            -DBUILD_EXAMPLES=OFF
-            -DCMAKE_CXX_FLAGS=-wd4996
-    )
-else()
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            -DBUILD_BLACKBOX_TESTS=OFF
-            -DBUILD_EXAMPLES=OFF
-    )
+set(EXTRA_CONFIGURE_OPTIONS )
+set(EXTRA_OPTIONS )
+if (VCPKG_TARGET_IS_UWP)
+   set(EXTRA_CONFIGURE_OPTIONS WINDOWS_USE_MSBUILD)
+   set(EXTRA_OPTIONS -DCMAKE_CXX_FLAGS=-wd4996)
 endif()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    ${EXTRA_CONFIGURE_OPTIONS}
+        OPTIONS
+        -DBUILD_BLACKBOX_TESTS=OFF
+        -DBUILD_EXAMPLES=OFF
+        ${EXTRA_OPTIONS}
+)
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
