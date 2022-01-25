@@ -23,6 +23,9 @@
     "boost": {
       "description": "Use Boost C++17 polyfill. The only option under MSVC."
     },
+    "cxx17": {
+      "description": "Use std C++17 polyfill."
+    },
     "mnmlstc": {
       "description": "Use MNMLSTC/core C++17 polyfill."
     },
