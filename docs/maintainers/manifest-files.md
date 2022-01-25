@@ -452,3 +452,16 @@ This field is optional and defaults to true.
 ```
 
 This means "doesn't support uwp, nor arm32 (but does support arm64)".
+
+### `"license"`
+
+The license of the port.
+
+Valid values for the license field are listed at https://spdx.org/licenses/
+
+#### Example:
+```json
+{
+  "license": "Apache-2.0"
+}
+```
