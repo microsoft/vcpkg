@@ -14,13 +14,13 @@ index 98b87dc..645c1d3 100644
 +      "${PROJECT_SOURCE_DIR}/util/mutexlock.h"
 +      "${PROJECT_SOURCE_DIR}/util/no_destructor.h"
 +      "${PROJECT_SOURCE_DIR}/util/random.h"
-+      "${PROJECT_SOURCE_DIR}/util/env_posix_test_helper.h
-+      "${PROJECT_SOURCE_DIR}/util/env_windows_test_helper.h
-+      "${PROJECT_SOURCE_DIR}/util/histogram.h
-+      "${PROJECT_SOURCE_DIR}/util/posix_logger.h
-+      "${PROJECT_SOURCE_DIR}/util/testharness.h
-+      "${PROJECT_SOURCE_DIR}/util/testutil.h
-+      "${PROJECT_SOURCE_DIR}/util/windows_logger.h
++      "${PROJECT_SOURCE_DIR}/util/env_posix_test_helper.h"
++      "${PROJECT_SOURCE_DIR}/util/env_windows_test_helper.h"
++      "${PROJECT_SOURCE_DIR}/util/histogram.h"
++      "${PROJECT_SOURCE_DIR}/util/posix_logger.h"
++      "${PROJECT_SOURCE_DIR}/util/testharness.h"
++      "${PROJECT_SOURCE_DIR}/util/testutil.h"
++      "${PROJECT_SOURCE_DIR}/util/windows_logger.h"
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb
    )
  
