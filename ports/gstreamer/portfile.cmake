@@ -65,7 +65,7 @@ file(RENAME ${GST_PLUGIN_UGLY_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/
 file(RENAME ${GST_MESON_PORTS_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers)
 
 if(VCPKG_TARGET_IS_OSX)
-    # In Darwin platform, there can be an old version of `bison`, 
+    # In Darwin platform, there can be an old version of `bison`,
     # Which can't be used for `gst-build`. It requires 2.4+
     vcpkg_find_acquire_program(BISON)
     execute_process(
@@ -215,9 +215,11 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:glib-checks=disabled
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    # note: can't find where z.lib comes from. replace it to appropriate library name manually
-    get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
-    vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        # note: can't find where z.lib comes from. replace it to appropriate library name manually
+        get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
+        vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
+    endif()
     get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
     vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
@@ -228,11 +230,10 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
                     ${CURRENT_PACKAGES_DIR}/include/GL
 )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h
             ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
 )
 
-file(INSTALL ${GST_BUILD_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
                     ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
@@ -243,21 +244,24 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/bin
     )
-    set(PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
-    set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gstreamer-full-1.0${CMAKE_SHARED_LIBRARY_SUFFIX}
+                ${CURRENT_PACKAGES_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gstreamer-full-1.0${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
 endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
-    )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if (NOT VCPKG_BUILD_TYPE)
+        file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
+                           ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
+        )
+        file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
                        ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
     )
     file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
+
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL ${GST_BUILD_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
