@@ -1,9 +1,24 @@
+vcpkg_download_distfile(patch4310
+    URLS "https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4310.diff"
+    FILENAME "4310.diff"
+    SHA512 64e6d37ab843e5b9aa9e56ba7904423ce0a2c6b4101dbd86b7b8b22c52c384ed7ea9764f9e0a53be04e7ade09923ca95452104e9760b66ebc0ed3ffef08a75c5
+)
+
+vcpkg_download_distfile(patch4311
+    URLS "https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4311.diff"
+    FILENAME "4311.diff"
+    SHA512 2b04e0ce4743d27070ea832c45e2d8fa0091c755757937cfa2a2bb43283ee38dc9f27343989e1ad8c45fda8a3cfaa012250b0c581e2f0407938cbb61b2a21e63
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF 1d3633742abcf307f1dcbd73a5093589a2d4da06 #2021-11-25 merge PR https://github.com/zeromq/libzmq/pull/4311
-    SHA512 0a7b3e04c6619dfb1d6904d06006184b0309f1951e4f31379492c9b20f139faa990620c08e7e9ef291db1287bdf3c1b5119f4938082a7809b26d0a5441d83769
-    PATCHES fix-arm.patch
+    REF v4.3.4
+    SHA512 ad828b1ab5a87983285a6b44b08240816ed1c4e2c73306ab1a851bf80df1892b5e2f92064a49fbadc1f4c75043625ace77dd25b64d5d1c2a7d1d61cc916fba0b
+    PATCHES 
+        fix-arm.patch
+        ${patch4310}
+        ${patch4311}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
