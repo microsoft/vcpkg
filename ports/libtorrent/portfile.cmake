@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 if(VCPKG_TARGET_IS_WINDOWS)
     # Building python bindings is currently broken on Windows
     if("python" IN_LIST FEATURES)

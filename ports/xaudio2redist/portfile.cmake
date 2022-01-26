@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "Linux" "OSX")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
