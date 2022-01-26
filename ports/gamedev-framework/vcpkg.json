@@ -1,7 +1,7 @@
 {
   "name": "gamedev-framework",
   "version-semver": "0.20.0",
-  "port-version": 1,
+  "port-version": 2,
   "maintainers": [
     "Julien Bernard <julien.bernard@univ-fcomte.fr>",
     "Arthur Hugeat <hugeat.arthur@gmail.com>"

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
     message(FATAL_ERROR "Can't build ${PORT} if gmp is installed. Please remove gmp, and try to install ${PORT} again if you need it.")
 endif()
@@ -41,20 +39,20 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_IS_LINUX)
         set(AUTOCONFIG "AUTOCONFIG")
     endif()
-    
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         ${AUTOCONFIG}
-        OPTIONS ${OPTIONS}  
+        OPTIONS ${OPTIONS}
     )
-    
+
     vcpkg_install_make()
-    
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     endif()
-    
+
     configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 elseif(VCPKG_TARGET_IS_WINDOWS)
@@ -95,7 +93,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
         OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_build_msbuild(
             PROJECT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/build.vc${MSVC_VERSION}/${DLL_OR_LIB}_mpir_cxx/${DLL_OR_LIB}_mpir_cxx.vcxproj
@@ -106,7 +104,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
             file(GLOB REL_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.lib)
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)       
+            file(GLOB DBG_LIBS_CXX ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.lib)
         endif()
     endif()
 
@@ -118,11 +116,11 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
             ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpirxx.h
         )
         file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-    
+
         file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.dll)
         file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Release/mpir.lib)
         list(APPEND REL_LIBS  ${REL_LIBS_CXX})
-        
+
         file(INSTALL ${REL_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         file(INSTALL ${REL_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
@@ -134,19 +132,19 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
             ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpirxx.h
         )
         file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-        
+
         file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.dll)
         file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/*/*/Debug/mpir.lib)
         list(APPEND DBG_LIBS  ${DBG_LIBS_CXX})
-        
+
         file(INSTALL ${DBG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(INSTALL ${DBG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-        
+
         if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
             file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
         endif()
     endif()
-    
+
     vcpkg_copy_pdbs()
 
     file(INSTALL ${SOURCE_PATH}/COPYING.lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
