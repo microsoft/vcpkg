@@ -5,7 +5,7 @@
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",
   "documentation": "https://libtorrent.org/reference.html",
-  "license":"BSD-2-Clause",
+  "license": "BSD-2-Clause",
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "boost-asio",
