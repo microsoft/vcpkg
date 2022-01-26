@@ -4001,10 +4001,6 @@
       "port-version": 2
     },
     "libtorrent": {
-      "baseline": "1.2.14",
-      "port-version": 2
-    },
-	"libtorrent2": {
       "baseline": "2.0.5",
       "port-version": 0
     },
