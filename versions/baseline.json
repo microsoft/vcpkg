@@ -166,7 +166,7 @@
     },
     "arpack-ng": {
       "baseline": "3.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "arrayfire": {
       "baseline": "3.8.0",
