@@ -4894,7 +4894,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 5
+      "port-version": 6
     },
     "ogre-next": {
       "baseline": "2019-10-20",
@@ -7190,7 +7190,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
