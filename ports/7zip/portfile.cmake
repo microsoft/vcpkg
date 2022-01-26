@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
-
 set(7ZIP_VERSION 19.00)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.7-zip.org/a/7z1900-src.7z"

@@ -1,10 +1,6 @@
 set(LIBUNISTRING_VERSION 0.9.10)
 set(LIBUNISTRING_FILENAME libunistring-${LIBUNISTRING_VERSION}.tar.gz)
 
-if(NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
-endif()
-
 vcpkg_download_distfile(ARCHIVE
     URLS
         "https://ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"

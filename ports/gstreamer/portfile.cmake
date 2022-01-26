@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
     REPO gstreamer/gst-build
