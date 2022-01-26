@@ -43,10 +43,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=ON" "OGRE_RESOURCEMANAGER_STRICT=1" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=OFF" "OGRE_RESOURCEMANAGER_STRICT=0" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
         -DOGRE_BUILD_TESTS=OFF
@@ -68,14 +68,11 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DFREETYPE_FOUND=ON
-# Optional stuff
-        ${FEATURE_OPTIONS}
-# vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
