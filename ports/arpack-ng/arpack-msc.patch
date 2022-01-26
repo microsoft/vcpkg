@@ -1,0 +1,128 @@
+diff --git a/ICB/arpack.h b/ICB/arpack.h
+index 865e269..f9f1053 100644
+--- a/ICB/arpack.h
++++ b/ICB/arpack.h
+@@ -7,8 +7,8 @@
+ extern "C" {
+ #endif
+ 
+-void cnaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, float tol, float _Complex* resid, a_int ncv, float _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, float _Complex* workd, float _Complex* workl, a_int lworkl, float* rwork, a_int* info);
+-void cneupd_c(a_int rvec, char const* howmny, a_int const* select, float _Complex* d, float _Complex* z, a_int ldz, float _Complex sigma, float _Complex* workev, char const* bmat, a_int n, char const* which, a_int nev, float tol, float _Complex* resid, a_int ncv, float _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, float _Complex* workd, float _Complex* workl, a_int lworkl, float* rwork, a_int* info);
++void cnaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, float tol, a_fcomplex* resid, a_int ncv, a_fcomplex* v, a_int ldv, a_int* iparam, a_int* ipntr, a_fcomplex* workd, a_fcomplex* workl, a_int lworkl, float* rwork, a_int* info);
++void cneupd_c(a_int rvec, char const* howmny, a_int const* select, a_fcomplex* d, a_fcomplex* z, a_int ldz, a_fcomplex sigma, a_fcomplex* workev, char const* bmat, a_int n, char const* which, a_int nev, float tol, a_fcomplex* resid, a_int ncv, a_fcomplex* v, a_int ldv, a_int* iparam, a_int* ipntr, a_fcomplex* workd, a_fcomplex* workl, a_int lworkl, float* rwork, a_int* info);
+ void dnaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, double tol, double* resid, a_int ncv, double* v, a_int ldv, a_int* iparam, a_int* ipntr, double* workd, double* workl, a_int lworkl, a_int* info);
+ void dneupd_c(a_int rvec, char const* howmny, a_int const* select, double* dr, double* di, double* z, a_int ldz, double sigmar, double sigmai, double * workev, char const* bmat, a_int n, char const* which, a_int nev, double tol, double* resid, a_int ncv, double* v, a_int ldv, a_int* iparam, a_int* ipntr, double* workd, double* workl, a_int lworkl, a_int* info);
+ void dsaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, double tol, double* resid, a_int ncv, double* v, a_int ldv, a_int* iparam, a_int* ipntr, double* workd, double* workl, a_int lworkl, a_int* info);
+@@ -17,8 +17,8 @@ void snaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int ne
+ void sneupd_c(a_int rvec, char const* howmny, a_int const* select, float* dr, float* di, float* z, a_int ldz, float sigmar, float sigmai, float * workev, char const* bmat, a_int n, char const* which, a_int nev, float tol, float* resid, a_int ncv, float* v, a_int ldv, a_int* iparam, a_int* ipntr, float* workd, float* workl, a_int lworkl, a_int* info);
+ void ssaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, float tol, float* resid, a_int ncv, float* v, a_int ldv, a_int* iparam, a_int* ipntr, float* workd, float* workl, a_int lworkl, a_int* info);
+ void sseupd_c(a_int rvec, char const* howmny, a_int const* select, float* d, float* z, a_int ldz, float sigma, char const* bmat, a_int n, char const* which, a_int nev, float tol, float* resid, a_int ncv, float* v, a_int ldv, a_int* iparam, a_int* ipntr, float* workd, float* workl, a_int lworkl, a_int* info);
+-void znaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, double tol, double _Complex* resid, a_int ncv, double _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, double _Complex* workd, double _Complex* workl, a_int lworkl, double* rwork, a_int* info);
+-void zneupd_c(a_int rvec, char const* howmny, a_int const* select, double _Complex* d, double _Complex* z, a_int ldz, double _Complex sigma, double _Complex* workev, char const* bmat, a_int n, char const* which, a_int nev, double tol, double _Complex* resid, a_int ncv, double _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, double _Complex* workd, double _Complex* workl, a_int lworkl, double* rwork, a_int* info);
++void znaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, double tol, a_dcomplex* resid, a_int ncv, a_dcomplex* v, a_int ldv, a_int* iparam, a_int* ipntr, a_dcomplex* workd, a_dcomplex* workl, a_int lworkl, double* rwork, a_int* info);
++void zneupd_c(a_int rvec, char const* howmny, a_int const* select, a_dcomplex* d, a_dcomplex* z, a_int ldz, a_dcomplex sigma, a_dcomplex* workev, char const* bmat, a_int n, char const* which, a_int nev, double tol, a_dcomplex* resid, a_int ncv, a_dcomplex* v, a_int ldv, a_int* iparam, a_int* ipntr, a_dcomplex* workd, a_dcomplex* workl, a_int lworkl, double* rwork, a_int* info);
+ 
+ #ifdef  __cplusplus
+ }
+diff --git a/ICB/arpack.hpp b/ICB/arpack.hpp
+index 4d753d1..7e16cee 100644
+--- a/ICB/arpack.hpp
++++ b/ICB/arpack.hpp
+@@ -186,10 +186,10 @@ inline void naupd(a_int& ido, bmat const bmat_option, a_int n,
+                   float* rwork, a_int& info) {
+   internal::cnaupd_c(&ido, internal::convert_to_char(bmat_option), n,
+                      internal::convert_to_char(ritz_option), nev, tol,
+-                     reinterpret_cast<_Complex float*>(resid), ncv,
+-                     reinterpret_cast<_Complex float*>(v), ldv, iparam, ipntr,
+-                     reinterpret_cast<_Complex float*>(workd),
+-                     reinterpret_cast<_Complex float*>(workl), lworkl,
++                     reinterpret_cast<a_fcomplex*>(resid), ncv,
++                     reinterpret_cast<a_fcomplex*>(v), ldv, iparam, ipntr,
++                     reinterpret_cast<a_fcomplex*>(workd),
++                     reinterpret_cast<a_fcomplex*>(workl), lworkl,
+                      rwork, &info);
+ }
+ 
+@@ -203,16 +203,16 @@ inline void neupd(a_int rvec, howmny const howmny_option, a_int* select,
+                   a_int lworkl, float* rwork, a_int& info) {
+   std::complex<float> sigma2 = sigma;
+   internal::cneupd_c(rvec, internal::convert_to_char(howmny_option), select,
+-                     reinterpret_cast<_Complex float*>(d),
+-                     reinterpret_cast<_Complex float*>(z), ldz,
+-                     *reinterpret_cast<_Complex float*>(&sigma2),
+-                     reinterpret_cast<_Complex float*>(workev),
++                     reinterpret_cast<a_fcomplex*>(d),
++                     reinterpret_cast<a_fcomplex*>(z), ldz,
++                     *reinterpret_cast<a_fcomplex*>(&sigma2),
++                     reinterpret_cast<a_fcomplex*>(workev),
+                      internal::convert_to_char(bmat_option), n,
+                      internal::convert_to_char(ritz_option), nev, tol,
+-                     reinterpret_cast<_Complex float*>(resid), ncv,
+-                     reinterpret_cast<_Complex float*>(v), ldv, iparam, ipntr,
+-                     reinterpret_cast<_Complex float*>(workd),
+-                     reinterpret_cast<_Complex float*>(workl), lworkl,
++                     reinterpret_cast<a_fcomplex*>(resid), ncv,
++                     reinterpret_cast<a_fcomplex*>(v), ldv, iparam, ipntr,
++                     reinterpret_cast<a_fcomplex*>(workd),
++                     reinterpret_cast<a_fcomplex*>(workl), lworkl,
+                      rwork, &info);
+ }
+ 
+@@ -224,10 +224,10 @@ inline void naupd(a_int& ido, bmat const bmat_option, a_int n,
+                   double* rwork, a_int& info) {
+   internal::znaupd_c(&ido, internal::convert_to_char(bmat_option), n,
+                      internal::convert_to_char(ritz_option), nev, tol,
+-                     reinterpret_cast<_Complex double*>(resid), ncv,
+-                     reinterpret_cast<_Complex double*>(v), ldv, iparam, ipntr,
+-                     reinterpret_cast<_Complex double*>(workd),
+-                     reinterpret_cast<_Complex double*>(workl), lworkl,
++                     reinterpret_cast<a_dcomplex*>(resid), ncv,
++                     reinterpret_cast<a_dcomplex*>(v), ldv, iparam, ipntr,
++                     reinterpret_cast<a_dcomplex*>(workd),
++                     reinterpret_cast<a_dcomplex*>(workl), lworkl,
+                      rwork, &info);
+ }
+ 
+@@ -241,16 +241,16 @@ inline void neupd(a_int rvec, howmny const howmny_option, a_int* select,
+                   a_int lworkl, double* rwork, a_int& info) {
+   std::complex<double> sigma2 = sigma;
+   internal::zneupd_c(rvec, internal::convert_to_char(howmny_option), select,
+-                     reinterpret_cast<_Complex double*>(d),
+-                     reinterpret_cast<_Complex double*>(z), ldz,
+-                     *reinterpret_cast<_Complex double*>(&sigma2),
+-                     reinterpret_cast<_Complex double*>(workev),
++                     reinterpret_cast<a_dcomplex*>(d),
++                     reinterpret_cast<a_dcomplex*>(z), ldz,
++                     *reinterpret_cast<a_dcomplex*>(&sigma2),
++                     reinterpret_cast<a_dcomplex*>(workev),
+                      internal::convert_to_char(bmat_option), n,
+                      internal::convert_to_char(ritz_option), nev, tol,
+-                     reinterpret_cast<_Complex double*>(resid), ncv,
+-                     reinterpret_cast<_Complex double*>(v), ldv, iparam, ipntr,
+-                     reinterpret_cast<_Complex double*>(workd),
+-                     reinterpret_cast<_Complex double*>(workl), lworkl,
++                     reinterpret_cast<a_dcomplex*>(resid), ncv,
++                     reinterpret_cast<a_dcomplex*>(v), ldv, iparam, ipntr,
++                     reinterpret_cast<a_dcomplex*>(workd),
++                     reinterpret_cast<a_dcomplex*>(workl), lworkl,
+                      rwork, &info);
+ }
+ }  // namespace arpack
+diff --git a/arpackdef.h.in b/arpackdef.h.in
+index d9e0143..9e604be 100644
+--- a/arpackdef.h.in
++++ b/arpackdef.h.in
+@@ -13,5 +13,13 @@
+ #define a_int            int
+ #define a_uint  unsigned int
+ #endif
++#ifdef _MSC_VER
++#include <complex.h>
++#define a_fcomplex _Fcomplex
++#define a_dcomplex _Dcomplex
++#else
++#define a_fcomplex float _Complex
++#define a_dcomplex double _Complex
++#endif
+ 
+ #endif
