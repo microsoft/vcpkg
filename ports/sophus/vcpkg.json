@@ -8,6 +8,10 @@
     "ceres",
     "eigen3",
     "fmt",
-    "suitesparse"
+    "suitesparse",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
