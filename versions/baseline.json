@@ -7501,8 +7501,8 @@
       "port-version": 1
     },
     "zeromq": {
-      "baseline": "2021-11-25",
-      "port-version": 0
+      "baseline": "4.3.4",
+      "port-version": 4
     },
     "zfp": {
       "baseline": "0.5.5",
