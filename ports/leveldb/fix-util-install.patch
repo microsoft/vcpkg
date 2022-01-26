@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98b87dc..645c1d3 100644
+index 98b87dc..e8baad7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -429,6 +429,21 @@ if(LEVELDB_INSTALL)
+@@ -429,6 +429,28 @@ if(LEVELDB_INSTALL)
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/table_builder.h"
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/table.h"
        "${PROJECT_SOURCE_DIR}/${LEVELDB_PUBLIC_INCLUDE_DIR}/write_batch.h"
@@ -21,6 +21,13 @@ index 98b87dc..645c1d3 100644
 +      "${PROJECT_SOURCE_DIR}/util/testharness.h"
 +      "${PROJECT_SOURCE_DIR}/util/testutil.h"
 +      "${PROJECT_SOURCE_DIR}/util/windows_logger.h"
++      "${PROJECT_SOURCE_DIR}/table/block.h"
++      "${PROJECT_SOURCE_DIR}/table/block_builder.h"
++      "${PROJECT_SOURCE_DIR}/table/filter_block.h"
++      "${PROJECT_SOURCE_DIR}/table/format.h"
++      "${PROJECT_SOURCE_DIR}/table/iterator_wrapper.h"
++      "${PROJECT_SOURCE_DIR}/table/merger.h"
++      "${PROJECT_SOURCE_DIR}/table/two_level_iterator.h"
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb
    )
  
