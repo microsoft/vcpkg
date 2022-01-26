@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "osx" "linux" "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/snoretoast
@@ -12,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC_RUNTIME=OFF
 )
