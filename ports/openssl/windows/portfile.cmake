@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -16,7 +14,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENSSL_SHARED shared)
 endif()
 
-set(CONFIGURE_OPTIONS 
+set(CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
     no-ssl2

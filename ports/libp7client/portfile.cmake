@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "osx")
-
 vcpkg_download_distfile(ARCHIVE
     URLS http://baical.net/files/libP7Client_v5.6.zip
     FILENAME libP7Client_v5.6.zip
