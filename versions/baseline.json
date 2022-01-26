@@ -1461,8 +1461,8 @@
       "port-version": 6
     },
     "colmap": {
-      "baseline": "3.6",
-      "port-version": 2
+      "baseline": "3.7",
+      "port-version": 0
     },
     "comms": {
       "baseline": "3.4.0",
