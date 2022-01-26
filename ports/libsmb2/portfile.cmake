@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "osx") 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -23,5 +22,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 #the debug/share folder is generated empty by the provided cmake system
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
- 
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,7 +1,7 @@
 {
   "name": "field3d",
-  "version-string": "1.7.3",
-  "port-version": 2,
+  "version": "1.7.3",
+  "port-version": 3,
   "description": "An open source library for storing voxel data. It provides C++ classes that handle in-memory storage and a file format based on HDF5 that allows the C++ objects to be written to and read from disk.",
   "homepage": "https://github.com/imageworks/Field3D",
   "supports": "!uwp",

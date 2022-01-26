@@ -1,7 +1,7 @@
 {
   "name": "rsm-mmio",
   "version-semver": "1.1.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A cross-platform memory-mapped io library for C++ ",
   "homepage": "https://github.com/Ryan-rsm-McKenzie/mmio",
   "supports": "!osx & !uwp",
