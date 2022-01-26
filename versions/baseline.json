@@ -7489,8 +7489,8 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.8.12",
-      "port-version": 2
+      "baseline": "4.8.14",
+      "port-version": 0
     },
     "z85": {
       "baseline": "1.0",
