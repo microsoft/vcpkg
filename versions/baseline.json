@@ -2182,7 +2182,7 @@
     },
     "flash-runtime-extensions": {
       "baseline": "2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "flashlight-cpu": {
       "baseline": "0.3",
