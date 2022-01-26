@@ -1,0 +1,14 @@
+https://github.com/LibRaw/LibRaw-cmake/issues/29
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cde6781..8e6be6f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -617,7 +617,7 @@ if (LIBRAW_INSTALL)
+     if(NOT BUILD_SHARED_LIBS AND "${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
+         message("ClangCl does not support pdb generation with static libraries")
+     elseif(MSVC)
+-        install(FILES ${PROJECT_BINARY_DIR}/raw.pdb ${PROJECT_BINARY_DIR}/raw_r.pdb
++        install(FILES ${PROJECT_BINARY_DIR}/raw${CMAKE_DEBUG_POSTFIX}.pdb ${PROJECT_BINARY_DIR}/raw_r${CMAKE_DEBUG_POSTFIX}.pdb
+                 DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                 CONFIGURATIONS Debug RelWithDebInfo
+                )

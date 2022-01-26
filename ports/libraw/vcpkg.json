@@ -1,7 +1,7 @@
 {
   "name": "libraw",
-  "version-string": "201903",
-  "port-version": 7,
+  "version-string": "202110",
+  "port-version": 0,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "dependencies": [
@@ -9,6 +9,10 @@
     "lcms",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
