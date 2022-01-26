@@ -1,6 +1,7 @@
 {
   "name": "cmake",
   "version-string": "3.20.0",
+  "port-version": 1,
   "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software.",
   "homepage": "https://cmake.org/",
   "dependencies": [
