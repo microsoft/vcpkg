@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7ff331a..155cabe 100644
+index 9f1dbcb74..5587c896e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,11 +75,18 @@ if (NOT PYTHON_EXECUTABLE)
+@@ -77,11 +77,19 @@ if (NOT PYTHON_EXECUTABLE)
  endif()
  endif()
  
+-find_hdf5()
 +if (WITH_HDF5)
- find_hdf5()
--if (NOT HDF5_FOUND)
++find_package(HDF5 CONFIG REQUIRED)
+ if (NOT HDF5_FOUND)
 -	message(WARNING "hdf5 library not found, some tests will not be run")
-+if (NOT hdf5_FOUND)
 +	message(ERROR "hdf5 library not found")
  else()
 -    include_directories(${HDF5_INCLUDE_DIR})
@@ -20,10 +20,12 @@ index 7ff331a..155cabe 100644
 +        link_libraries(hdf5::hdf5-static)
 +    endif()
 +    set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} hdf5")
++    set(CMAKE_EXTERNAL_DEPS "find_dependency(HDF5)")
 +endif()
  endif()
  
  if (USE_MPI OR HDF5_IS_PARALLEL)
+
 diff --git a/cmake/flann_utils.cmake b/cmake/flann_utils.cmake
 index 8aef8e0..747414f 100644
 --- a/cmake/flann_utils.cmake
@@ -52,16 +54,3 @@ index 8aef8e0..747414f 100644
      mark_as_advanced( HDF5_IS_PARALLEL )
  endmacro(find_hdf5)
  
-
-diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index e8bb3f766..ad33998d9 100644
---- a/cmake/Config.cmake.in
-+++ b/cmake/Config.cmake.in
-@@ -4,6 +4,7 @@
- include(CMakeFindDependencyMacro)
- # Find lz4. This will create 'lz4::lz4' target
- find_dependency(lz4)
-+find_package(hdf5 REQUIRED)
- 
- include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
- check_required_components("flann")
