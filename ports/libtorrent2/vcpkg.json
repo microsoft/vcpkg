@@ -6,6 +6,7 @@
   "homepage": "https://libtorrent.org",
   "documentation": "https://libtorrent.org/reference.html",
   "supports": "!uwp & !(windows & arm)",
+  "license":"BSD-2-Clause",
   "dependencies": [
     "boost-asio",
     "boost-chrono",
