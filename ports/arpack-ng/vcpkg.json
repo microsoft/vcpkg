@@ -5,7 +5,12 @@
   "description": "ARPACK",
   "homepage": "https://github.com/opencollab/arpack-ng",
   "dependencies": [
-	"blas",
+	  "blas",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake-config",
       "host": true
