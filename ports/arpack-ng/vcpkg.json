@@ -1,11 +1,11 @@
 {
   "name": "arpack-ng",
   "version-semver": "3.8.0",
-  "port-version": 6,
+  "port-version": 1,
   "description": "ARPACK",
   "homepage": "https://github.com/opencollab/arpack-ng",
   "dependencies": [
-	  "blas",
+    "blas",
     "lapack",
     {
       "name": "vcpkg-cmake",
