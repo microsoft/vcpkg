@@ -6457,8 +6457,8 @@
       "port-version": 0
     },
     "sockpp": {
-      "baseline": "0.7",
-      "port-version": 3
+      "baseline": "2022-01-24",
+      "port-version": 0
     },
     "soem": {
       "baseline": "1.4.0",
