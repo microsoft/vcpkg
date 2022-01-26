@@ -1669,8 +1669,8 @@
       "port-version": 1
     },
     "cspice": {
-      "baseline": "66",
-      "port-version": 5
+      "baseline": "67",
+      "port-version": 0
     },
     "ctbignum": {
       "baseline": "2019-08-02",
