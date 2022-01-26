@@ -1,9 +1,9 @@
 {
   "name": "sophus",
-  "version": "2021-09-14",
-  "port-version": 1,
+  "version-date": "2021-09-14",
   "description": "Lie group library for C++",
   "homepage": "https://github.com/strasdat/Sophus",
+  "license": "MIT",
   "dependencies": [
     "ceres",
     "eigen3",
