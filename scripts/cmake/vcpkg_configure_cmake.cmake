@@ -155,7 +155,8 @@ function(vcpkg_configure_cmake)
             set(ninja_host OFF)
         elseif(VCPKG_TARGET_IS_UWP)
             # Ninja and MSBuild have many differences when targeting UWP, so use MSBuild to maximize existing compatibility
-            set(ninja_can_be_used OFF)
+            # set(ninja_can_be_used OFF)
+            # Nonsense windows.cmake does just not correctly setup the compiler flags for UWP and Ninja
         endif()
     endif()
 
@@ -245,7 +246,11 @@ function(vcpkg_configure_cmake)
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+            if(VCPKG_TARGET_IS_UWP)
+                set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/uwp.cmake")
+            else()
+                set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+            endif()
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
