@@ -72,7 +72,7 @@ index 4579fbb3d..f6be008c8 100644
  AS_IF([test "x$with_zstd" != "xno"],
  	[
 -	AC_CHECK_LIB(zstd, ZSTD_createDStream, have_zstd=yes, have_zstd=no)
-+    AC_SEARCH_LIBS(ZSTD_createDStream, [zstd zstdd], have_zstd=yes, have_zstd=no)
++    AC_SEARCH_LIBS(ZSTD_createDStream, [zstd zstd_static], have_zstd=yes, have_zstd=no)
 +	# AC_CHECK_LIB(zstd, ZSTD_createDStream, have_zstd=yes, have_zstd=no)
  	], [have_zstd=no])
  

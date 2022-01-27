@@ -77,14 +77,14 @@ index 7db4bb9..ba20ba6 100644
 +
 +find_library(
 +    ZSTD_LIBRARY_DEBUG
-+    NAMES zstdd
++    NAMES zstd zstd_static NAMES_PER_DIR
 +    PATHS ${_prefix_path}/debug/lib
 +    NO_DEFAULT_PATH
 +)
 +
 +find_library(
 +    ZSTD_LIBRARY_RELEASE
-+    NAMES zstd
++    NAMES zstd zstd_static NAMES_PER_DIR
 +    PATHS ${_prefix_path}/lib
 +    NO_DEFAULT_PATH
 +)

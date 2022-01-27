@@ -1,7 +1,7 @@
 {
   "name": "libwandio",
   "version-string": "4.2.1",
-  "port-version": 4,
+  "port-version": 5,
   "description": "C library for simple and efficient file IO.",
   "homepage": "https://github.com/wanduow/wandio",
   "supports": "!windows",

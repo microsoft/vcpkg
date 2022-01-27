@@ -39,8 +39,7 @@ index 5a2dc373e..b1928831e 100644
 +eu_ZIPLIB(lzma,LZMA,[lzma lzmad],lzma_auto_decoder,[LZMA (xz)])
  AS_IF([test "x$with_lzma" = xyes], [LIBLZMA="liblzma"], [LIBLZMA=""])
  AC_SUBST([LIBLZMA])
--eu_ZIPLIB(zstd,ZSTD,zstd,ZSTD_decompress,[ZSTD (zst)])
-+eu_ZIPLIB(zstd,ZSTD,[zstd zstdd zstd_static zstd_staticd],ZSTD_decompress,[ZSTD (zst)])
+ eu_ZIPLIB(zstd,ZSTD,zstd,ZSTD_decompress,[ZSTD (zst)])
  AS_IF([test "x$with_zstd" = xyes], [LIBZSTD="libzstd"], [LIBLZSTD=""])
  AC_SUBST([LIBZSTD])
 -zip_LIBS="$LIBS"
