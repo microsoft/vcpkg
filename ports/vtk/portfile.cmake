@@ -296,6 +296,9 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
+endif()
 # =============================================================================
 # Usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

@@ -1,31 +1,20 @@
 set(LIBTIFF_VERSION 4.3.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.osgeo.org/libtiff/tiff-${LIBTIFF_VERSION}.tar.gz"
-    FILENAME "tiff-${LIBTIFF_VERSION}.tar.gz"
-    SHA512 e04a4a6c542e58a174c1e9516af3908acf1d3d3e1096648c5514f4963f73e7af27387a76b0fbabe43cf867a18874088f963796a7cd6e45deb998692e3e235493
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    REF ${LIBTIFF_VERSION}
-    PATCHES
-        cmakelists.patch
-        fix-pkgconfig.patch
-        FindCMath.patch
+    REPO libtiff/libtiff
+    REF v${LIBTIFF_VERSION}
+    SHA512 eaa2503dc1805283e0590b06e3e660a793fe849ae8b975b2d69369695d65a40640787c156574faaca856917be799eeb844e60f55555e1f219dd513cef66ea95d
+    HEAD_REF master
+    PATCHES cmakelists.patch
+    fix-pkgconfig.patch
+    FindCMath.patch
 )
 
 set(EXTRA_OPTIONS "")
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
-endif()
-
-if("cxx" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        MESSAGE "Feature 'cxx' is not supported on ${VCPKG_TARGET_ARCHITECTURE}."
-        ON_ARCH arm arm64
-    )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
