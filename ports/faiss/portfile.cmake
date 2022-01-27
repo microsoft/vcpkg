@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_ARCH "x86" ON_TARGET "uwp" "osx")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/faiss
     REF cff072b78ef019998990c6ba02df83dd7d3c8d38 # v1.7.1
-    SHA512 08d4acf30b6a2a0f326cb71035b58e65f05e70817edbf9dda7d5f8b53d4fb722909c2412d42dca4d88d0576a3da528c2db869fb4fd6fb2343b7acad80066051d 
+    SHA512 08d4acf30b6a2a0f326cb71035b58e65f05e70817edbf9dda7d5f8b53d4fb722909c2412d42dca4d88d0576a3da528c2db869fb4fd6fb2343b7acad80066051d
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
