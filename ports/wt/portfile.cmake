@@ -45,7 +45,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     GENERATOR Ninja
     OPTIONS
         -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
@@ -72,16 +72,22 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_GLEW=ON
 
         -DCMAKE_INSTALL_DIR=share
+        # see https://redmine.webtoolkit.eu/issues/9646
+        -DWTHTTP_CONFIGURATION=
+        -DCONFIGURATION=
+
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 # There is no way to suppress installation of the headers and resource files in debug build.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/var)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/var)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var" "${CURRENT_PACKAGES_DIR}/debug/var")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+# RUNDIR is only used for wtfcgi what we don't build. See https://redmine.webtoolkit.eu/issues/9646
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "#define RUNDIR \"${CURRENT_PACKAGES_DIR}/var/run/wt\"" "")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 vcpkg_copy_pdbs()
