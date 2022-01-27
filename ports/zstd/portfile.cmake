@@ -27,30 +27,18 @@ vcpkg_cmake_configure(
         -DZSTD_BUILD_PROGRAMS=0
         -DZSTD_BUILD_TESTS=0
         -DZSTD_BUILD_CONTRIB=0
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d) # this is against the maintainer guidelines. 
-        # Removing it probably requires a vcpkg-cmake-wrapper.cmake to correct downstreams FindZSTD.cmake
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zstd)
 
-# This enables find_package(ZSTD) and find_package(zstd) to find zstd on Linux(case sensitive filesystems)
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config.cmake")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstdConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/zstd-config-version.cmake")
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(static_suffix "_static")
-else()
-    set(static_suffix "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc" "-lzstd" "-lzstd_static")
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzstd.pc" "-lzstd" "-lzstd_static")
+    endif()
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzstd.pc" "-lzstd" "-lzstd${static_suffix}")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzstd.pc")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzstd.pc" "-lzstd" "-lzstd${static_suffix}d")
-endif()
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
