@@ -24,7 +24,7 @@ index 98b87dc..947eded 100644
 +      "${PROJECT_SOURCE_DIR}/util/testharness.h"
 +      "${PROJECT_SOURCE_DIR}/util/testutil.h"
 +      "${PROJECT_SOURCE_DIR}/util/windows_logger.h"
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/util
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/util
 +  )
  
 +  install(
@@ -36,7 +36,7 @@ index 98b87dc..947eded 100644
 +      "${PROJECT_SOURCE_DIR}/table/iterator_wrapper.h"
 +      "${PROJECT_SOURCE_DIR}/table/merger.h"
 +      "${PROJECT_SOURCE_DIR}/table/two_level_iterator.h"
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/table
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/table
 +  )
 +  
    include(CMakePackageConfigHelpers)
