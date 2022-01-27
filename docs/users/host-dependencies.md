@@ -58,6 +58,8 @@ endif()
 
 ## Host-only ports
 
-Some ports are host-only: script ports and tool ports are common examples.
-In this case, you can use the `"native"` supports expression to describe this.
-This supports expression is true when `TARGET_TRIPLET == HOST_TRIPLET` / `VCPKG_CROSSCOMPILING` is true.
+Some ports should only be depended upon via a host dependency; script ports and
+tool ports are common examples. In this case, you can use the `"native"`
+supports expression to describe this. This supports expression is true when
+`VCPKG_CROSSCOMPILING` is false (implying that `TARGET_TRIPLET ==
+HOST_TRIPLET`).
