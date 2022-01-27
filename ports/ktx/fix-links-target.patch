@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 356c160..ee534e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -308,10 +308,12 @@ macro(commom_lib_settings lib write)
+ 
+     if(WIN32)
+         find_package(zstd CONFIG REQUIRED)
+-        target_link_libraries(
+-            ${lib}
+-            $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+-        )        
++        if (BUILD_SHARED_LIBS)       
++            target_link_libraries(${lib} PRIVATE zstd::libzstd_shared)
++        elseif(BUILD_STATIC_LIBS)
++            target_link_libraries(${lib} PRIVATE zstd::libzstd_static)
++        endif() 
++       
+         # By wrapping in generator expression we force multi configuration generators (like Visual Studio)
+         # to take the exact path and not change it.
+         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${KTX_BUILD_DIR}/$<CONFIG>>)

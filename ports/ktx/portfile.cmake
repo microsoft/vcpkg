@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
+        fix-links-target.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -64,11 +65,9 @@ if(tools IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ktx)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
