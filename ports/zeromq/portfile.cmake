@@ -1,12 +1,12 @@
 vcpkg_download_distfile(patch4310
     URLS "https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4310.diff"
-    FILENAME "4310.diff"
+    FILENAME "zeromq-libzmq-4310.diff"
     SHA512 64e6d37ab843e5b9aa9e56ba7904423ce0a2c6b4101dbd86b7b8b22c52c384ed7ea9764f9e0a53be04e7ade09923ca95452104e9760b66ebc0ed3ffef08a75c5
 )
 
 vcpkg_download_distfile(patch4311
     URLS "https://patch-diff.githubusercontent.com/raw/zeromq/libzmq/pull/4311.diff"
-    FILENAME "4311.diff"
+    FILENAME "zeromq-libzmq-4311.diff"
     SHA512 2b04e0ce4743d27070ea832c45e2d8fa0091c755757937cfa2a2bb43283ee38dc9f27343989e1ad8c45fda8a3cfaa012250b0c581e2f0407938cbb61b2a21e63
 )
 
