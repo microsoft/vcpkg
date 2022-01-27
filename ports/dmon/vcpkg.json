@@ -1,0 +1,16 @@
+{
+  "name": "dmon",
+  "version": "0.0.1",
+  "description": "a tiny C library that monitors changes in a directory",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
