@@ -1,6 +1,6 @@
 vcpkg_download_distfile(patch1679
     URLS "https://patch-diff.githubusercontent.com/raw/apache/incubator-brpc/pull/1679.diff"
-    FILENAME "1679.diff"
+    FILENAME "apache-incubator-brpc-1679.diff"
     SHA512 4b1e5717b44aa6a741ddd49b1408e3e556f6d845d5e8a5cfccf2f2d7ebe39aed19c3dad703db7a9ebd0446ac1f225e7dbdd2ff1f23f34fd60c3ef59aaa07b789
 )
 
