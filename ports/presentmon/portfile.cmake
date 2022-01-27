@@ -1,8 +1,6 @@
 # The upstream doesn't export any symbols
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "linux" "osx" "uwp" "ios" "android" "freebsd")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GameTechDev/PresentMon

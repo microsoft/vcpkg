@@ -354,6 +354,7 @@ whitespace-character =
 | ? U+000D "CARRIAGE RETURN" ?
 | ? U+0020 "SPACE" ? ;
 optional-whitespace = { whitespace-character } ;
+required-whitespace = whitespace-character, { optional-whitespace } ;
 
 lowercase-alpha =
 | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
@@ -365,6 +366,9 @@ identifier-character =
 | lowercase-alpha
 | digit ;
 
+platform-expression-list =
+| platform-expression { ",", optional-whitespace, platform-expression } ;
+
 platform-expression =
 | platform-expression-not
 | platform-expression-and
@@ -373,21 +377,39 @@ platform-expression =
 platform-expression-identifier =
 | identifier-character, { identifier-character }, optional-whitespace ;
 
+platform-expression-grouped =
+| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
+
 platform-expression-simple =
 | platform-expression-identifier
-| "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
+| platform-expression-grouped ;
+
+platform-expression-unary-keyword-operand =
+| required-whitespace, platform-expression-simple
+| optional-whitespace, platform-expression-grouped ;
 
 platform-expression-not =
 | platform-expression-simple
-| "!", optional-whitespace, platform-expression-simple ;
+| "!", optional-whitespace, platform-expression-simple
+| "not", platform-expression-unary-keyword-operand ;
+
+platform-expression-binary-keyword-first-operand =
+| platform-expression-not, required-whitespace
+| platform-expression-grouped ;
+
+platform-expression-binary-keyword-second-operand =
+| required-whitespace, platform-expression-not
+| platform-expression-grouped ;
 
 platform-expression-and =
-| platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "&", optional-whitespace, platform-expression-not }
+| platform-expression-binary-keyword-first-operand, { "and", platform-expression-binary-keyword-second-operand } ;
 
 platform-expression-or =
-| platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+| platform-expression-not, { "|", optional-whitespace, platform-expression-not }
+| platform-expression-binary-keyword-first-operand, { "or", platform-expression-binary-keyword-second-operand } (* to allow for future extension *) ;
 
-top-level-platform-expression = optional-whitespace, platform-expression ;
+top-level-platform-expression = optional-whitespace, platform-expression-list ;
 ```
 
 Basically, there are four kinds of expressions -- identifiers, negations, ands, and ors.
@@ -430,3 +452,52 @@ This field is optional and defaults to true.
 ```
 
 This means "doesn't support uwp, nor arm32 (but does support arm64)".
+
+### `"license"`
+
+The license of the port. This is an [SPDX license expression],
+using [SPDX license identifiers].
+
+[SPDX license expression]: https://spdx.dev/ids/#how
+[SPDX license identifiers]: https://spdx.org/licenses/
+
+#### Examples
+
+For libraries with simple licensing,
+only one license identifier may be needed;
+
+vcpkg, for example, would use this since it uses the MIT license:
+
+```json
+{
+  "license": "MIT"
+}
+```
+
+Many GPL'd projects allow either the GPL 2 or any later versions:
+
+```json
+{
+  "license": "GPL-2.0-or-later"
+}
+```
+
+Many Rust projects, in order to make certain they're useable with GPL,
+but also desiring the MIT license, will allow licensing under either
+the MIT license or Apache 2.0:
+
+```json
+{
+  "license": "Apache-2.0 OR MIT"
+}
+```
+
+Some major projects include exceptions;
+the Microsoft C++ standard library, and the LLVM project,
+are licensed under Apache 2.0 with the LLVM exception:
+
+```json
+{
+  "license": "Apache-2.0 WITH LLVM-exception"
+}
+```

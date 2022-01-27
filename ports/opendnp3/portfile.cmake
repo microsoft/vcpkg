@@ -1,33 +1,38 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIBS)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dnp3/opendnp3
-    REF 3.1.0
-    SHA512 838a816a8d65d3c99dc489e0e3e4d25f0acdbe0f6f3cc21a6fdbaea11f84f7b1f54958097763d0eae8e1860ba209da4e5377cd3ea6ab08a48a25429860063179
+    REF 3.1.1
+    SHA512 2d7b26753fa03596ab73944236e5f1d82656f38248cc23fd00f7a2cdac27f481e5fe51e68b5896b6740db1a6d9560f0262e473648e001601125f4af8b4a652c2
     HEAD_REF master
 )
 
-file(COPY ${CURRENT_PORT_DIR}/opendnp3-config.cmake.in DESTINATION ${SOURCE_PATH})
+file(COPY "${CURRENT_PORT_DIR}/opendnp3-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DSTATICLIBS=${STATICLIBS} -DDNP3_TLS=ON
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIBS)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tls DNP3_TLS
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DDNP3_STATIC_LIBS=${STATICLIBS}
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/opendnp3)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

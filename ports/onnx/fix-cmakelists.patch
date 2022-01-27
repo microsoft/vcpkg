@@ -66,3 +66,21 @@ index 628dcaa..300e4ea 100644
  install(DIRECTORY ${ONNX_ROOT}/onnx
          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
          FILES_MATCHING
+@@ -639,7 +639,7 @@ endif()
+ 
+ if (NOT ANDROID AND NOT IOS)
+   # ---[ ONNXIFI wrapper
+-  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
++  add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
+   if(MSVC)
+     add_msvc_runtime_flag(onnxifi_wrapper)
+   endif()
+@@ -669,7 +669,7 @@ if (NOT ANDROID AND NOT IOS)
+ endif()
+ 
+ # ---[ ONNXIFI dummy backend
+-add_library(onnxifi_dummy SHARED onnx/onnxifi_dummy.c)
++add_library(onnxifi_dummy onnx/onnxifi_dummy.c)
+ 
+ if(ONNXIFI_ENABLE_EXT)
+   add_definitions(-DONNXIFI_ENABLE_EXT=ON)

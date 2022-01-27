@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(CALCEPH_VERSION "3.5.0")
 set(CALCEPH_HASH 12bb269d846aab93799656919cd9ca5a995248fb806727ea95667374b9380ca8f52c57dc6a5930c6995c13749bff1459c430eb2908b1533a8804fcb6b95c3de9)
 
@@ -16,7 +14,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    
+
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
@@ -29,7 +27,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/include/calceph.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+      file(INSTALL "${CURRENT_INSTALLED_DIR}/calceph/debug/lib/libcalceph.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
 	file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/calceph")
 
 else() # Build in UNIX
@@ -40,10 +40,10 @@ else() # Build in UNIX
       --enable-fortran=no
       --enable-thread=yes
     )
-    
+
     vcpkg_install_make()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    
+
 endif()
 
     file(INSTALL "${SOURCE_PATH}/README.rst" DESTINATION "${CURRENT_PACKAGES_DIR}/share/calceph" RENAME readme.rst)

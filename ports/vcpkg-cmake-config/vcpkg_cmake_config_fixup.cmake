@@ -168,7 +168,7 @@ function(vcpkg_cmake_config_fixup)
         endforeach()
     endif()
 
-    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs;
+    #Fix ${_IMPORT_PREFIX} and absolute paths in cmake generated targets and configs;
     #Since those can be renamed we have to check in every *.cmake
     file(GLOB_RECURSE main_cmakes "${release_share}/*.cmake")
 
@@ -201,22 +201,20 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
-        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+        #Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
-        #an imported target for it. We could add more logic here to identify defect target files.
-        #Since the replacement here in a multi config build always requires a generator expression
-        #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
-        #least >:${CURRENT_INSTALLED_DIR}.
-        #In general the following generator expressions should be there:
-        #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
-        #and/or
-        #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
-        #with ${CURRENT_INSTALLED_DIR} being fully expanded
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
-
-        # Patch out any remaining absolute references
+        #an imported target.
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${cmake_current_packages_dir}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${cmake_current_packages_dir}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
+        # If ${VCPKG_IMPORT_PREFIX} was actually used, inject a definition of it:
+        string(FIND "${contents}" [[${VCPKG_IMPORT_PREFIX}]] index)
+        if (NOT index STREQUAL "-1")
+            get_filename_component(main_cmake_dir "${main_cmake}" DIRECTORY)
+            # Calculate relative to be a sequence of "../"
+            file(RELATIVE_PATH relative "${main_cmake_dir}" "${cmake_current_packages_dir}")
+            string(PREPEND contents "get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)\n")
+        endif()
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
@@ -233,5 +231,3 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()
-
-

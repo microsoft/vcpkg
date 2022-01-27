@@ -19,7 +19,7 @@ index 53ef75197..d48fb02db 100644
 -		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c.lib \
 -		C:\OSGeo4W\lib\spatialite_i.lib C:\OSGeo4W\lib\sqlite3_i.lib \
 -		/Fe$(SPATIALITE_EXE)
-+	cl shell.obj $(LIBS_ALL) /Fe$(SPATIALITE_EXE)
++	cl shell.obj /Fe$(SPATIALITE_EXE) $(LIBS_ALL)
  	if exist $(SPATIALITE_EXE).manifest mt -manifest \
  		$(SPATIALITE_EXE).manifest -outputresource:$(SPATIALITE_EXE);1
  
@@ -119,15 +119,12 @@ index 53ef75197..d48fb02db 100644
  	if exist $(SPATIALITE_OSM_FILTER_EXE).manifest mt -manifest \
  		$(SPATIALITE_OSM_FILTER_EXE).manifest \
  		-outputresource:$(SPATIALITE_OSM_FILTER_EXE);1
-
 diff --git a/nmake.opt b/nmake.opt
 index 4f4a9538e..d9efecf7b 100644
 --- a/nmake.opt
 +++ b/nmake.opt
-@@ -1,8 +1,8 @@
- # Directory tree where SpatiaLite will be installed.
--INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INST_DIR)
+@@ -2,7 +2,7 @@
+ INSTDIR=C:\OSGeo4W
  
  # Uncomment the first for an optimized build, or the second for debug.
 -OPTFLAGS=	/nologo /Ox /fp:precise /W3 /MD /D_CRT_SECURE_NO_WARNINGS \
@@ -135,55 +132,3 @@ index 4f4a9538e..d9efecf7b 100644
  	/D_LARGE_FILE=1 /D_FILE_OFFSET_BITS=64 /D_LARGEFILE_SOURCE=1
  #OPTFLAGS=	/nologo /Zi /MD /Fdspatialite.pdb
  
-diff --git a/Makefile.am b/Makefile.am
-index 75ac806..d680b74 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -39,7 +39,7 @@ bin_PROGRAMS = spatialite \
- 	spatialite_dem
- endif
- 
--AM_CPPFLAGS = @CFLAGS@ @CPPFLAGS@ @LIBXML2_CFLAGS@
-+AM_CPPFLAGS = @CFLAGS@ @CPPFLAGS@ @LIBXML2_CFLAGS@ @RTTOPO_CFLAGS@
- AM_CPPFLAGS += -I$(top_srcdir)
- 
- spatialite_SOURCES = shell.c
-@@ -65,27 +65,27 @@ spatialite_osm_overpass_SOURCES = spatialite_osm_overpass.c
- spatialite_dem_SOURCES = spatialite_dem.c
- 
- spatialite_osm_map_LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@ 
-+	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_osm_overpass_LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@ @LIBXML2_LIBS@ 
-+	@LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_osm_raw_LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@
-+	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_osm_net_LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@
-+	@LIBFREEXL_LIBS@ @LIBREADOSM_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_gml_LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@ \
-+	@LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@ \
- 	-lexpat 
--spatialite_dem_LDADD = @LIBSPATIALITE_LIBS@ 
-+spatialite_dem_LDADD = @LIBSPATIALITE_LIBS@ @LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_LDADD = @LIBSPATIALITE_LIBS@ \
- 	@LIBFREEXL_LIBS@ \
--	@READLINE_LIBS@
-+	@READLINE_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- spatialite_xml_validator_LDADD = @LIBXML2_LIBS@
--spatialite_xml_load_LDADD = @LIBSPATIALITE_LIBS@ \
-+spatialite_xml_load_LDADD = @LIBSPATIALITE_LIBS@ @LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@\
- 	-lexpat
--spatialite_xml_collapse_LDADD = @LIBSPATIALITE_LIBS@
--spatialite_xml_print_LADD = @LIBSPATIALIATE_LIBS@
-+spatialite_xml_collapse_LDADD = @LIBSPATIALITE_LIBS@ @LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
-+spatialite_xml_print_LADD = @LIBSPATIALITE_LIBS@ @LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- LDADD = @LIBSPATIALITE_LIBS@ \
--	@LIBFREEXL_LIBS@
-+	@LIBFREEXL_LIBS@ @LIBXML2_LIBS@ @RTTOPO_LIBS@
- 
- EXTRA_DIST = makefile.vc nmake.opt makefile64.vc nmake64.opt \
- 	config-msvc.h \

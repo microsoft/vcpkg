@@ -20,8 +20,7 @@ The path to the ci.baseline.txt file.
 Param(
     [string]$Triplet,
     [string]$BaselineFile,
-    [switch]$SkipFailures = $false,
-    [String[]]$AdditionalSkips = @()
+    [switch]$SkipFailures = $false
 )
 
 $ErrorActionPreference = 'Stop'
@@ -81,5 +80,4 @@ if ($SkipFailures) {
 $skip_list = $baselineForTriplet `
     | Where-Object { $_ -match $targetRegex } `
     | ForEach-Object { $_ -replace ":.*$" }
-$skip_list += $AdditionalSkips
 [string]::Join(",", $skip_list)
