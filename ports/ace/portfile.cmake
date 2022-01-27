@@ -165,7 +165,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
   function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
-    foreach(RELATIVE_PATH "${RELATIVE_PATHS}")
+    foreach(RELATIVE_PATH ${RELATIVE_PATHS})
       file(
         GLOB
         HEADER_FILES
