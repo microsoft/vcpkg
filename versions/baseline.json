@@ -1884,6 +1884,10 @@
       "baseline": "2019-08-12",
       "port-version": 7
     },
+    "dmon": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "docopt": {
       "baseline": "2018-11-01",
       "port-version": 1
