@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
-
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")

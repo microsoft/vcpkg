@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
   "version": "4.4.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -278,6 +278,7 @@
     },
     "avisynthplus": {
       "description": "Reading of AviSynth script files",
+      "supports": "windows & !static",
       "dependencies": [
         "avisynthplus",
         {
@@ -300,6 +301,7 @@
     },
     "dav1d": {
       "description": "AV1 decoding via libdav1d",
+      "supports": "!osx",
       "dependencies": [
         "dav1d"
       ]
@@ -325,6 +327,7 @@
     },
     "ffmpeg": {
       "description": "Build the ffmpeg application",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -339,6 +342,7 @@
     },
     "ffplay": {
       "description": "Build the ffplay application",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -356,6 +360,7 @@
     },
     "ffprobe": {
       "description": "Build the ffprobe application",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -429,12 +434,14 @@
     },
     "opencl": {
       "description": "OpenCL processing",
+      "supports": "!uwp",
       "dependencies": [
         "opencl"
       ]
     },
     "opengl": {
       "description": "OpenGL rendering",
+      "supports": "!uwp",
       "dependencies": [
         "opengl",
         "opengl-registry"
@@ -539,12 +546,14 @@
     },
     "tensorflow": {
       "description": "TensorFlow as a DNN module backend for DNN based filters like sr",
+      "supports": "!static",
       "dependencies": [
         "tensorflow"
       ]
     },
     "tesseract": {
       "description": "Tesseract, needed for ocr filter",
+      "supports": "!static",
       "dependencies": [
         "tesseract"
       ]

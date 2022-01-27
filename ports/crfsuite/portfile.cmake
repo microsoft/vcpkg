@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET uwp)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -9,7 +7,6 @@ vcpkg_from_github(
     SHA512 e7f329f96fb0dc0e347b3e7a3e26b23ceb45e6fae7b59ace05633a24d58a31665826ebc5280e5a864f50598772791e4b5b3e7da7f46994655cbe03806f823f73
     HEAD_REF master
 )
-
 
 list(REMOVE_ITEM SOURCE_FILE "${SOURCE_PATH}/win32/liblbfgs/lbfgs.lib")
 list(REMOVE_ITEM SOURCE_FILE "${SOURCE_PATH}/win32/liblbfgs/lbfgs_debug.lib")

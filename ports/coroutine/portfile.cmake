@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 if(VCPKG_TARGET_IS_LINUX)
     message("Warning: `coroutine` requires libc++ and Clang or GCC 10+ on Linux")
 endif()
