@@ -1,0 +1,51 @@
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncdump/nccopy.c	2019-10-08 23:55:38.000000000 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncdump/nccopy.c	2022-01-25 04:43:00.340359700 +0700
+@@ -28,10 +28,7 @@
+ #undef DEBUGFILTER
+ 
+ #ifdef _MSC_VER
+-#include "XGetopt.h"
+ #define snprintf _snprintf
+-int opterr;
+-int optind;
+ #endif
+ 
+ /* default bytes of memory we are willing to allocate for variable
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncdump/ncdump.c	2019-10-08 23:55:38.000000000 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncdump/ncdump.c	2022-01-25 04:45:01.466989700 +0700
+@@ -20,9 +20,6 @@
+ 
+ #ifdef _MSC_VER
+ #define snprintf _snprintf
+-#include "XGetopt.h"
+-int opterr;
+-int optind;
+ #endif
+ 
+ #include <stdlib.h>
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncgen/main.c	2022-01-25 04:37:34.131754400 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncgen/main.c	2022-01-25 04:41:09.900845600 +0700
+@@ -13,10 +13,7 @@
+ #endif
+ 
+ #ifdef _MSC_VER
+-#include "XGetopt.h"
+ #define snprintf _snprintf
+-int opterr;
+-int optind;
+ #endif
+ 
+ /* Default is netcdf-3 mode 1 */
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncgen3/main.c	2019-10-08 23:55:38.000000000 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncgen3/main.c	2022-01-25 04:41:28.854511000 +0700
+@@ -16,10 +16,7 @@
+ #endif
+ 
+ #ifdef _MSC_VER
+-#include "XGetopt.h"
+ #define snprintf _snprintf
+-int opterr;
+-int optind;
+ #endif
+ 
+ #ifdef __hpux

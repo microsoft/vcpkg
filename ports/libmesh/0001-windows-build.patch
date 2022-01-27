@@ -1,0 +1,556 @@
+diff --git a/configure b/configure
+index 78c1cd204..e66a23380 100755
+--- a/configure
++++ b/configure
+@@ -3180,6 +3180,73 @@ $as_echo "$ac_res" >&6; }
+ 
+ } # ac_fn_cxx_check_decl
+ 
++# ac_fn_cxx_check_func LINENO FUNC VAR
++# ------------------------------------
++# Tests whether FUNC exists, setting the cache variable VAR accordingly
++ac_fn_cxx_check_func ()
++{
++  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
++$as_echo_n "checking for $2... " >&6; }
++if eval \${$3+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
++   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
++#define $2 innocuous_$2
++
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $2 (); below.
++    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
++    <limits.h> exists even on freestanding compilers.  */
++
++#ifdef __STDC__
++# include <limits.h>
++#else
++# include <assert.h>
++#endif
++
++#undef $2
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char $2 ();
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined __stub_$2 || defined __stub___$2
++choke me
++#endif
++
++int
++main ()
++{
++return $2 ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_cxx_try_link "$LINENO"; then :
++  eval "$3=yes"
++else
++  eval "$3=no"
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++fi
++eval ac_res=\$$3
++	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
++$as_echo "$ac_res" >&6; }
++  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
++
++} # ac_fn_cxx_check_func
++
+ # ac_fn_c_check_header_mongrel LINENO HEADER VAR INCLUDES
+ # -------------------------------------------------------
+ # Tests whether HEADER exists, giving a warning if it cannot be compiled using
+@@ -30077,6 +30144,30 @@ fi
+ 
+ done
+ 
++for ac_header in sys/time.h
++do :
++  ac_fn_cxx_check_header_mongrel "$LINENO" "sys/time.h" "ac_cv_header_sys_time_h" "$ac_includes_default"
++if test "x$ac_cv_header_sys_time_h" = xyes; then :
++  cat >>confdefs.h <<_ACEOF
++#define HAVE_SYS_TIME_H 1
++_ACEOF
++
++fi
++
++done
++
++for ac_header in process.h
++do :
++  ac_fn_cxx_check_header_mongrel "$LINENO" "process.h" "ac_cv_header_process_h" "$ac_includes_default"
++if test "x$ac_cv_header_process_h" = xyes; then :
++  cat >>confdefs.h <<_ACEOF
++#define HAVE_PROCESS_H 1
++_ACEOF
++
++fi
++
++done
++
+ for ac_header in csignal
+ do :
+   ac_fn_cxx_check_header_mongrel "$LINENO" "csignal" "ac_cv_header_csignal" "$ac_includes_default"
+@@ -30425,6 +30516,19 @@ cat >>confdefs.h <<_ACEOF
+ _ACEOF
+ 
+ 
++for ac_func in mkstemp gettimeofday
++do :
++  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
++ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
++if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
++  cat >>confdefs.h <<_ACEOF
++#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
++_ACEOF
++
++fi
++done
++
++
+ # Check for uname header.
+ for ac_header in sys/utsname.h
+ do :
+--- a/build-aux/compile	2022-01-26 21:31:18.033418700 +0700
++++ b/build-aux/compile	2019-10-08 23:55:38.000000000 +0700
+@@ -53,7 +53,7 @@
+ 	  MINGW*)
+ 	    file_conv=mingw
+ 	    ;;
+-	  CYGWIN*)
++	  CYGWIN* | MSYS*)
+ 	    file_conv=cygwin
+ 	    ;;
+ 	  *)
+@@ -67,7 +67,7 @@
+ 	mingw/*)
+ 	  file=`cmd //C echo "$file " | sed -e 's/"\(.*\) " *$/\1/'`
+ 	  ;;
+-	cygwin/*)
++	cygwin/* | msys/*)
+ 	  file=`cygpath -m "$file" || echo "$file"`
+ 	  ;;
+ 	wine/*)
+@@ -204,7 +204,7 @@
+ 	  set x "$@" "$1"
+ 	  shift
+ 	  ;;
+-	*.cc | *.CC | *.cxx | *.CXX | *.[cC]++)
++	*.cc | *.CC | *.cxx | *.CXX | *.[cC]++ | *.C)
+ 	  func_file_conv "$1"
+ 	  set x "$@" -Tp"$file"
+ 	  shift
+diff --git a/include/libmesh/Makefile.in b/include/libmesh/Makefile.in
+index 251bf5c03..14c26cea3 100644
+--- a/include/libmesh/Makefile.in
++++ b/include/libmesh/Makefile.in
+@@ -645,10 +645,11 @@ BUILT_SOURCES = auto_ptr.h default_coupling.h dirichlet_boundaries.h \
+ 	pointer_to_pointer_iter.h pool_allocator.h restore_warnings.h \
+ 	simple_range.h statistics.h string_to_enum.h timestamp.h \
+ 	topology_map.h tree.h tree_base.h tree_node.h utility.h \
+-	vectormap.h xdr_cxx.h parallel_communicator_specializations \
+-	$(am__append_1) $(am__append_3) $(am__append_5) \
+-	$(am__append_7) $(am__append_9) $(am__append_11) \
+-	libmesh_config.h
++	vectormap.h win_gettimeofday.h xdr_cxx.h \
++	parallel_communicator_specializations $(am__append_1) \
++	$(am__append_3) $(am__append_5) $(am__append_7) \
++	$(am__append_9) $(am__append_11) \
++	libmesh_config.h
+ DISTCLEANFILES = $(BUILT_SOURCES) $(am__append_2) $(am__append_4) \
+ 	$(am__append_6) $(am__append_8) $(am__append_10) \
+ 	$(am__append_12) libmesh_config.h
+@@ -2231,6 +2232,9 @@ utility.h: $(top_srcdir)/include/utils/utility.h
+ vectormap.h: $(top_srcdir)/include/utils/vectormap.h
+ 	$(AM_V_GEN)rm -f $@ && $(LN_S) -f $< $@
+ 
++win_gettimeofday.h: $(top_srcdir)/include/utils/win_gettimeofday.h
++	$(AM_V_GEN)rm -f $@ && $(LN_S) -f $< $@
++
+ xdr_cxx.h: $(top_srcdir)/include/utils/xdr_cxx.h
+ 	$(AM_V_GEN)rm -f $@ && $(LN_S) -f $< $@
+ 
+diff --git a/include/libmesh_config.h.in b/include/libmesh_config.h.in
+index 9587c1098..3ab8fea9f 100644
+--- a/include/libmesh_config.h.in
++++ b/include/libmesh_config.h.in
+@@ -392,6 +392,9 @@
+ /* Flag indicating if the library should be built with calls to getpwuid() */
+ #undef HAVE_GETPWUID
+ 
++/* Define to 1 if you have the `gettimeofday' function. */
++#undef HAVE_GETTIMEOFDAY
++
+ /* define if the compiler supports glibc backtrace */
+ #undef HAVE_GLIBC_BACKTRACE
+ 
+@@ -437,6 +440,9 @@
+ /* "The make directory command" */
+ #undef HAVE_MKDIR
+ 
++/* Define to 1 if you have the `mkstemp' function. */
++#undef HAVE_MKSTEMP
++
+ /* Flag indicating whether or not MPI is available */
+ #undef HAVE_MPI
+ 
+@@ -474,6 +480,9 @@
+    is available via PETSc */
+ #undef HAVE_PETSC_TAO
+ 
++/* Define to 1 if you have the <process.h> header file. */
++#undef HAVE_PROCESS_H
++
+ /* Define if you have POSIX threads libraries and header files. */
+ #undef HAVE_PTHREAD
+ 
+@@ -537,6 +546,9 @@
+ /* Define to 1 if you have the <sys/stat.h> header file. */
+ #undef HAVE_SYS_STAT_H
+ 
++/* Define to 1 if you have the <sys/time.h> header file. */
++#undef HAVE_SYS_TIME_H
++
+ /* Define to 1 if you have the <sys/types.h> header file. */
+ #undef HAVE_SYS_TYPES_H
+ 
+diff --git a/include/utils/perf_log.h b/include/utils/perf_log.h
+index 86092a274..bbdf312ee 100644
+--- a/include/utils/perf_log.h
++++ b/include/utils/perf_log.h
+@@ -30,7 +30,12 @@
+ #include <stack>
+ #include <string>
+ #include <vector>
+-#include <sys/time.h>
++#ifdef LIBMESH_HAVE_SYS_TIME_H
++#include <sys/time.h> // gettimeofday() on Unix
++#endif
++#ifndef LIBMESH_HAVE_GETTIMEOFDAY
++#include "libmesh/win_gettimeofday.h" // gettimeofday() on Windows
++#endif
+ 
+ namespace libMesh
+ {
+diff --git a/include/utils/perfmon.h b/include/utils/perfmon.h
+index 8cf3a7f37..f02b8bb4e 100644
+--- a/include/utils/perfmon.h
++++ b/include/utils/perfmon.h
+@@ -33,7 +33,12 @@ namespace Papi {
+ // C++ includes
+ #include <cstddef>
+ #include <string>
+-#include <sys/time.h>
++#ifdef LIBMESH_HAVE_SYS_TIME_H
++#include <sys/time.h> // gettimeofday() on Unix
++#endif
++#ifndef LIBMESH_HAVE_GETTIMEOFDAY
++#include "libmesh/win_gettimeofday.h" // gettimeofday() on Windows
++#endif
+ 
+ namespace libMesh
+ {
+diff --git a/include/utils/win_gettimeofday.h b/include/utils/win_gettimeofday.h
+new file mode 100644
+index 000000000..d0a9de2ce
+--- /dev/null
++++ b/include/utils/win_gettimeofday.h
+@@ -0,0 +1,43 @@
++/*
++ * This code is in public domain
++ */
++
++#ifndef _WIN_GETTIMEOFDAY_H_
++#define _WIN_GETTIMEOFDAY_H_
++
++#ifdef _MSC_VER
++#define NOMINMAX
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#include <stdint.h> // portable: uint64_t   MSVC: __int64
++
++// MSVC defines this in winsock2.h!?
++typedef struct timeval {
++    long tv_sec;
++    long tv_usec;
++} timeval;
++
++inline int gettimeofday(struct timeval * tp, struct timezone * tzp)
++{
++    // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
++    // until 00:00:00 January 1, 1970
++    static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
++
++    SYSTEMTIME  system_time;
++    FILETIME    file_time;
++    uint64_t    time;
++
++    GetSystemTime(&system_time);
++    SystemTimeToFileTime(&system_time, &file_time);
++    time =  ((uint64_t)file_time.dwLowDateTime );
++    time += ((uint64_t)file_time.dwHighDateTime) << 32;
++
++    tp->tv_sec  = (long) ((time - EPOCH) / 10000000L);
++    tp->tv_usec = (long) (system_time.wMilliseconds * 1000);
++    return 0;
++}
++#else // _MSC_VER
++#error "gettimeofday() is not implemented"
++#endif // _MSC_VER
++
++#endif // _WIN_GETTIMEOFDAY_H_
+diff --git a/src/base/win_mkstemp.h b/src/base/win_mkstemp.h
+new file mode 100644
+index 000000000..849550513
+--- /dev/null
++++ b/src/base/win_mkstemp.h
+@@ -0,0 +1,25 @@
++/*
++ * This code is in public domain
++ */
++
++#ifndef _WIN_MKSTEMP_H_
++#define _WIN_MKSTEMP_H_
++
++#ifdef _MSC_VER
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <io.h>
++
++inline int mkstemp(char *tmpl)
++{
++    char *fn = _mktemp(tmpl);
++    if (fn == NULL)
++        return -1;
++
++    return _open(fn, _O_RDWR | _O_CREAT | _O_EXCL, _S_IREAD | _S_IWRITE);
++}
++#else
++#error "mkstemp() is not implemented"
++#endif
++
++#endif // _WIN_MKSTEMP_H_
+diff --git a/src/base/print_trace.C b/src/base/print_trace.C
+index d51f0b814..5e71644e7 100644
+--- a/src/base/print_trace.C
++++ b/src/base/print_trace.C
+@@ -46,7 +46,14 @@
+ #include "libmesh/print_trace.h"
+ #include "libmesh/libmesh.h"
+ 
++#ifdef LIBMESH_HAVE_UNISTD_H
+-#include <unistd.h>  // needed for getpid()
++#include <unistd.h>  // needed for getpid() on Unix
++#endif
++#ifdef LIBMESH_HAVE_PROCESS_H
++#include <process.h> // for getpid() on Windows
++
++typedef int pid_t;
++#endif
+ #include <fstream>
+ #include <sstream>
+ #include <string>
+@@ -55,6 +60,9 @@
+ #include <cstdio> // std::remove
+ #include <cstdlib> // std::system
+ #include <sys/types.h> // pid_t
++#ifndef LIBMESH_HAVE_MKSTEMP
++#include "win_mkstemp.h"
++#endif
+ 
+ #if defined(LIBMESH_HAVE_GLIBC_BACKTRACE)
+ #include <execinfo.h>
+diff --git a/src/mesh/checkpoint_io.C b/src/mesh/checkpoint_io.C
+index 5b7e9207c..1e22627ba 100644
+--- a/src/mesh/checkpoint_io.C
++++ b/src/mesh/checkpoint_io.C
+@@ -40,7 +40,6 @@
+ #include <iostream>
+ #include <iomanip>
+ #include <cstdio>
+-#include <unistd.h>
+ #include <vector>
+ #include <string>
+ #include <cstring>
+@@ -47,6 +47,9 @@
+ #include <sstream> // for ostringstream
+ #include <unordered_map>
+ #include <unordered_set>
++#ifdef LIBMESH_HAVE_DIRECT_H
++#include <direct.h> // rmdir() on Windows
++#endif
+ 
+ namespace
+ {
+diff --git a/src/mesh/namebased_io.C b/src/mesh/namebased_io.C
+index 671749aea..044e5fa74 100644
+--- a/src/mesh/namebased_io.C
++++ b/src/mesh/namebased_io.C
+@@ -21,9 +21,6 @@
+ #include <fstream>
+ #include <vector>
+ 
+-#include <sys/types.h> // getpid
+-#include <unistd.h>
+-
+ // Local includes
+ #include "libmesh/libmesh_logging.h"
+ #include "libmesh/mesh_base.h"
+@@ -57,6 +47,15 @@
+ 
+ #include "libmesh/parallel.h" // broadcast
+ 
++#ifdef LIBMESH_HAVE_UNISTD_H
++#include <sys/types.h> // getpid
++#include <unistd.h>
++#endif
++#ifdef LIBMESH_HAVE_PROCESS_H
++#include <process.h>
++
++typedef int pid_t;
++#endif
+ 
+ namespace libMesh
+ {
+--- a/src/mesh/unstructured_mesh.C	2019-10-08 23:55:38.000000000 +0700
++++ b/src/mesh/unstructured_mesh.C	2022-01-24 10:21:22.473864700 +0700
+@@ -24,8 +24,4 @@
+ #include <unordered_map>
+ 
+-// C includes
+-#include <sys/types.h> // for pid_t
+-#include <unistd.h>    // for getpid(), unlink()
+-
+ // Local includes
+ #include "libmesh/boundary_info.h"
+--- a/src/numerics/petsc_matrix.C	2019-10-08 23:55:38.000000000 +0700
++++ b/src/numerics/petsc_matrix.C	2022-01-24 10:24:31.664512100 +0700
+@@ -17,7 +17,6 @@
+ 
+ 
+ // C++ includes
+-#include <unistd.h> // mkstemp
+ #include <fstream>
+ 
+ #include "libmesh/libmesh_config.h"
+@@ -30,6 +30,10 @@
+ #include "libmesh/petsc_vector.h"
+ #include "libmesh/parallel.h"
+ 
++#ifdef LIBMESH_HAVE_UNISTD_H
++#include <unistd.h> // mkstemp
++#endif
++
+ 
+ // For some reason, the blocked matrix API calls below seem to break with PETSC 3.2 & presumably earlier.
+ // For example:
+diff --git a/src/systems/fem_context.C b/src/systems/fem_context.C
+index 4f6685fb1..84906c997 100644
+--- a/src/systems/fem_context.C
++++ b/src/systems/fem_context.C
+@@ -81,19 +81,8 @@ void FEMContext::init_internal_data(const System & sys)
+   // Reserve space for the FEAbstract and QBase objects for each
+   // element dimension possibility (0,1,2,3)
+ 
+-  // Below is a workaround for the ICC 19. The original code was:
+-  //
+-  // _element_fe.resize(4);
+-  // _side_fe.resize(4);
+-
+-  _element_fe.clear();
+-  for (int i=0; i<4; ++i)
+-    _element_fe.push_back(std::map<FEType, std::unique_ptr<FEAbstract>>());
+-
+-  _side_fe.clear();
+-  for (int i=0; i<4; ++i)
+-    _side_fe.push_back(std::map<FEType, std::unique_ptr<FEAbstract>>());
+-
++  _element_fe = std::vector<std::map<FEType, std::unique_ptr<FEAbstract>>>(4);
++  _side_fe = std::vector<std::map<FEType, std::unique_ptr<FEAbstract>>>(4);
+   _element_fe_var.resize(4);
+   _side_fe_var.resize(4);
+ 
+--- a/src/utils/perf_log.C	2022-01-23 15:18:33.284466800 +0700
++++ b/src/utils/perf_log.C	2022-01-24 10:26:02.790736000 +0700
+@@ -23,7 +23,9 @@
+ #include <iomanip>
+ #include <cstring>
+ #include <ctime>
++#ifdef LIBMESH_HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <sys/types.h>
+ #include <vector>
+ #include <sstream>
+--- a/src/utils/utility.C	2019-10-08 23:55:38.000000000 +0700
++++ b/src/utils/utility.C	2022-01-24 10:29:14.465738100 +0700
+@@ -20,10 +20,15 @@
+ #include "libmesh/libmesh_config.h"
+ 
+ // System includes
+-#include <sys/time.h>
++#if LIBMESH_HAVE_SYS_STAT_H
+ #include <sys/stat.h>
++#endif
++#if LIBMESH_HAVE_SYS_TYPES_H
+ #include <sys/types.h>
++#endif
++#if LIBMESH_HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <sstream>
+ 
+ #ifdef LIBMESH_HAVE_SYS_UTSNAME_H
+diff --git a/src/utils/xdr_cxx.C b/src/utils/xdr_cxx.C
+index ea2cb0963..3dc8e647a 100644
+--- a/src/utils/xdr_cxx.C
++++ b/src/utils/xdr_cxx.C
+@@ -23,8 +23,6 @@
+ #include <sstream>
+ #include <fstream>
+ 
+-#include <unistd.h> // for getpid()
+-
+ // Local includes
+ #include "libmesh/xdr_cxx.h"
+ #include "libmesh/libmesh_logging.h"
+@@ -36,6 +32,13 @@
+ # include "libmesh/restore_warnings.h"
+ #endif
+ 
++#ifdef LIBMESH_HAVE_UNISTD_H
++#include <unistd.h> // for getpid() on Unix
++#endif
++#ifdef LIBMESH_HAVE_PROCESS_H
++#include <process.h> // for getpid() on Windows
++#endif
++
+ 
+ // Anonymous namespace for implementation details.
+ namespace {
+--- a/src/apps/meshtool.C	2019-10-08 23:55:38.000000000 +0700
++++ b/src/apps/meshtool.C	2022-01-24 19:24:03.701327100 +0700
+@@ -26,7 +26,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <string>
+-#include <unistd.h>
+ #include <vector>
+ 
+ // Local Includes

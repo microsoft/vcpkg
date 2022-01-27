@@ -1,0 +1,136 @@
+diff --git a/contrib/exodusii/5.22b/exodus/cbind/src/ex_utils.c b/contrib/exodusii/5.22b/exodus/cbind/src/ex_utils.c
+index d245d1051..baacf13a4 100644
+--- a/contrib/exodusii/5.22b/exodus/cbind/src/ex_utils.c
++++ b/contrib/exodusii/5.22b/exodus/cbind/src/ex_utils.c
+@@ -46,7 +46,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
+-#include <unistd.h>
+ 
+ #include "exodusII.h"
+ #include "exodusII_int.h"
+@@ -1255,8 +1254,8 @@ static void ex_swap64 (int64_t v[], int64_t i, int64_t j)
+ 
+ static int ex_int_median3(int v[], int iv[], int left, int right)
+ {
+-  ssize_t center;
+-  center = ((ssize_t)left + (ssize_t)right) / 2;
++  long long center;
++  center = ((long long)left + (long long)right) / 2;
+ 
+   if (v[iv[left]] > v[iv[center]])
+     ex_swap(iv, left, center);
+diff --git a/contrib/netcdf/netcdf-c-4.6.2/config.h.in b/contrib/netcdf/netcdf-c-4.6.2/config.h.in
+index 3084e7b25..f350e9bc2 100644
+--- a/contrib/netcdf/netcdf-c-4.6.2/config.h.in
++++ b/contrib/netcdf/netcdf-c-4.6.2/config.h.in
+@@ -535,7 +535,9 @@
+ /* Define strcasecmp, snprintf on Win32 systems. */
+ #ifdef _WIN32
+        #define strcasecmp _stricmp
++#if defined(__MSC__) && (_MSC_VER < 1900)
+        #define snprintf _snprintf
+ #endif
++#endif
+ 
+ #include "ncconfigure.h"
+--- a/contrib/netcdf/netcdf-c-4.6.2/libdispatch/dv2i.c	2019-10-08 23:55:38.000000000 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/libdispatch/dv2i.c	2022-01-20 23:08:31.806249700 +0700
+@@ -13,6 +13,7 @@
+ #include <stdarg.h>
+ #include "netcdf.h"
+ #include <math.h>
++#include <sys/types.h>
+ 
+ /** \defgroup v2_api The Version 2 API
+ 
+--- a/contrib/netcdf/netcdf-c-4.6.2/configure	2019-10-08 23:55:38.000000000 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/configure	2022-01-20 22:55:54.772783900 +0700
+@@ -18818,7 +18818,7 @@
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking if libtool needs -no-undefined flag to build shared libraries" >&5
+ $as_echo_n "checking if libtool needs -no-undefined flag to build shared libraries... " >&6; }
+ case "`uname`" in
+-     CYGWIN*|MINGW*|AIX*)
++     CYGWIN*|MINGW*|MSYS*|AIX*)
+      ## Add in the -no-undefined flag to LDFLAGS for libtool.
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+--- a/contrib/netcdf/netcdf-c-4.6.2/liblib/Makefile.in	2022-01-21 01:16:06.986465400 +0700
++++ b/contrib/netcdf/netcdf-c-4.6.2/liblib/Makefile.in	2022-01-21 01:15:45.814160900 +0700
+@@ -325,7 +325,7 @@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ ISCMAKE = @ISCMAKE@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS@ $(NOUNDEFINED)
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+diff --git a/contrib/netcdf/netcdf-c-4.6.2/ncgen/ncgen.h b/contrib/netcdf/netcdf-c-4.6.2/ncgen/ncgen.h
+index 739cd60db..01f563ad5 100644
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncgen/ncgen.h
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncgen/ncgen.h
+@@ -10,6 +10,7 @@
+ #include <float.h>
+ #include "../ncdump/isnan.h"
+ #define strcasecmp _stricmp
++#define YY_NO_UNISTD_H
+ #endif
+ 
+ #ifdef USE_NETCDF4
+diff --git a/contrib/netcdf/netcdf-c-4.6.2/ncgen3/genlib.h b/contrib/netcdf/netcdf-c-4.6.2/ncgen3/genlib.h
+index 45f139a68..488b0db78 100644
+--- a/contrib/netcdf/netcdf-c-4.6.2/ncgen3/genlib.h
++++ b/contrib/netcdf/netcdf-c-4.6.2/ncgen3/genlib.h
+@@ -9,6 +9,10 @@
+ #include <stdlib.h>
+ #include <limits.h>
+ 
++#ifndef HAVE_UNISTD_H
++#define YY_NO_UNISTD_H
++#endif
++
+ extern const char *progname;   /* for error messages */
+ extern const char *cdlname;    /* for error messages */
+ 
+diff --git a/contrib/metis/GKlib/gk_arch.h b/contrib/metis/GKlib/gk_arch.h
+index 2cb80ccf2..c3ce21377 100644
+--- a/contrib/metis/GKlib/gk_arch.h
++++ b/contrib/metis/GKlib/gk_arch.h
+@@ -59,6 +59,7 @@ typedef ptrdiff_t ssize_t;
+ #endif
+ 
+ #ifdef __MSC__
++#if _MSC_VER < 1900
+ /* MSC does not have rint() function */
+ #define rint(x) ((int)((x)+0.5))  
+ 
+@@ -68,4 +69,7 @@ typedef ptrdiff_t ssize_t;
+ #endif
+ #endif
+ 
++#define USE_GKREGEX
++#endif
++
+ #endif
+diff --git a/contrib/metis/GKlib/gkregex.c b/contrib/metis/GKlib/gkregex.c
+index 8a09caab7..04f148555 100644
+--- a/contrib/metis/GKlib/gkregex.c
++++ b/contrib/metis/GKlib/gkregex.c
+@@ -21,6 +21,15 @@
+ /* this is for removing a compiler warning */
+ void gkfooo() { return; }
+ 
++#if defined(_MSC_VER)
++#define __MSC__
++#endif
++#if defined(__ICC)
++#define __ICC__
++#endif
++
++#include "gk_arch.h"
++
+ #ifdef USE_GKREGEX
+ 
+ #ifdef HAVE_CONFIG_H

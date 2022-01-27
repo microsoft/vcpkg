@@ -1,0 +1,2039 @@
+diff --git a/include/base/libmesh_common.h b/include/base/libmesh_common.h
+index b85fb4d..a12d51d 100644
+--- a/include/base/libmesh_common.h
++++ b/include/base/libmesh_common.h
+@@ -651,4 +651,11 @@ inline int gettimeofday(struct timeval * tp, struct timezone * tzp)
+ #endif
+ 
+ 
++#ifdef _MSC_VER
++#define LIBMESH_EXPORT __declspec(dllexport)
++#else
++#define LIBMESH_EXPORT
++#endif
++
++
+ #endif // LIBMESH_LIBMESH_COMMON_H
+diff --git a/include/fe/fe_macro.h b/include/fe/fe_macro.h
+index 336d8c5..c03509a 100644
+--- a/include/fe/fe_macro.h
++++ b/include/fe/fe_macro.h
+@@ -26,57 +26,58 @@
+ // of the \p FE class.  Simply include this file, and
+ // instantiate at the end for the desired dimension(s).
+ #define INSTANTIATE_MAPS(_dim,_type)                                    \
+-  template Point FE<_dim, _type>::map(const Elem *, const Point &);     \
+-  template Point FE<_dim, _type>::map_xi(const Elem *, const Point &);  \
+-  template Point FE<_dim, _type>::map_eta(const Elem *, const Point &); \
+-  template Point FE<_dim, _type>::map_zeta(const Elem *, const Point &); \
+-  template void  FE<_dim, _type>::inverse_map(const Elem *, const std::vector<Point> &, std::vector<Point> &, Real, bool); \
+-  template Point FE<_dim, _type>::inverse_map(const Elem *, const Point &, Real, bool)
++  template LIBMESH_EXPORT Point FE<_dim, _type>::map(const Elem *, const Point &);     \
++  template LIBMESH_EXPORT Point FE<_dim, _type>::map_xi(const Elem *, const Point &);  \
++  template LIBMESH_EXPORT Point FE<_dim, _type>::map_eta(const Elem *, const Point &); \
++  template LIBMESH_EXPORT Point FE<_dim, _type>::map_zeta(const Elem *, const Point &); \
++  template LIBMESH_EXPORT void  FE<_dim, _type>::inverse_map(const Elem *, const std::vector<Point> &, std::vector<Point> &, Real, bool); \
++  template LIBMESH_EXPORT Point FE<_dim, _type>::inverse_map(const Elem *, const Point &, Real, bool)
+ 
+ #define INSTANTIATE_SUBDIVISION_MAPS                                    \
+-  template Point FE<2, SUBDIVISION>::map(const Elem *, const Point &);  \
+-  template Point FE<2, SUBDIVISION>::map_xi(const Elem *, const Point &); \
+-  template Point FE<2, SUBDIVISION>::map_eta(const Elem *, const Point &); \
+-  template Point FE<2, SUBDIVISION>::map_zeta(const Elem *, const Point &)
++  template LIBMESH_EXPORT Point FE<2, SUBDIVISION>::map(const Elem *, const Point &);  \
++  template LIBMESH_EXPORT Point FE<2, SUBDIVISION>::map_xi(const Elem *, const Point &); \
++  template LIBMESH_EXPORT Point FE<2, SUBDIVISION>::map_eta(const Elem *, const Point &); \
++  template LIBMESH_EXPORT Point FE<2, SUBDIVISION>::map_zeta(const Elem *, const Point &)
+ 
+ #ifdef LIBMESH_ENABLE_INFINITE_ELEMENTS
+ 
+ #define INSTANTIATE_SUBDIVISION_FE                                      \
+-  template FE<2,SUBDIVISION>::FE(const FEType & fet); \
+-  template unsigned int FE<2,SUBDIVISION>::n_shape_functions () const;  \
+-  template void         FE<2,SUBDIVISION>::attach_quadrature_rule (QBase *); \
+-  template unsigned int FE<2,SUBDIVISION>::n_quadrature_points () const; \
+-  template void         FE<2,SUBDIVISION>::reinit(const Elem *,const std::vector<Point> * const,const std::vector<Real> * const); \
+-  template void         FE<2,SUBDIVISION>::init_base_shape_functions(const std::vector<Point> &, const Elem *); \
+-  template void         FE<2,SUBDIVISION>::init_shape_functions(const std::vector<Point> &, const Elem *)
++  template LIBMESH_EXPORT FE<2,SUBDIVISION>::FE(const FEType & fet); \
++  template LIBMESH_EXPORT unsigned int FE<2,SUBDIVISION>::n_shape_functions () const;  \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::attach_quadrature_rule (QBase *); \
++  template LIBMESH_EXPORT unsigned int FE<2,SUBDIVISION>::n_quadrature_points () const; \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::reinit(const Elem *,const std::vector<Point> * const,const std::vector<Real> * const); \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::init_base_shape_functions(const std::vector<Point> &, const Elem *); \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::init_shape_functions(const std::vector<Point> &, const Elem *)
+ 
+ #else // LIBMESH_ENABLE_INFINITE_ELEMENTS
+ 
+ #define INSTANTIATE_SUBDIVISION_FE                                      \
+-  template FE<2,SUBDIVISION>::FE(const FEType & fet);                     \
+-  template unsigned int FE<2,SUBDIVISION>::n_shape_functions () const;  \
+-  template void         FE<2,SUBDIVISION>::attach_quadrature_rule (QBase *); \
+-  template unsigned int FE<2,SUBDIVISION>::n_quadrature_points () const; \
+-  template void         FE<2,SUBDIVISION>::reinit(const Elem *,const std::vector<Point> * const,const std::vector<Real> * const); \
+-  template void         FE<2,SUBDIVISION>::init_shape_functions(const std::vector<Point> &, const Elem *)
++  template LIBMESH_EXPORT FE<2,SUBDIVISION>::FE(const FEType & fet);                     \
++  template LIBMESH_EXPORT unsigned int FE<2,SUBDIVISION>::n_shape_functions () const;  \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::attach_quadrature_rule (QBase *); \
++  template LIBMESH_EXPORT unsigned int FE<2,SUBDIVISION>::n_quadrature_points () const; \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::reinit(const Elem *,const std::vector<Point> * const,const std::vector<Real> * const); \
++  template LIBMESH_EXPORT void         FE<2,SUBDIVISION>::init_shape_functions(const std::vector<Point> &, const Elem *)
+ 
+ #endif // LIBMESH_ENABLE_INFINITE_ELEMENTS
+ 
+ 
+ #ifndef LIBMESH_ENABLE_HIGHER_ORDER_SHAPES
+ 
+-#define INSTANTIATE_FE(_dim)   template class FE< (_dim), CLOUGH>;      \
+-  template class FE< (_dim), HERMITE>;                                  \
+-  template class FE< (_dim), HIERARCHIC>;                               \
+-  template class FE< (_dim), L2_HIERARCHIC>;                            \
+-  template class FE< (_dim), LAGRANGE>;                                 \
+-  template class FE< (_dim), LAGRANGE_VEC>;                             \
+-  template class FE< (_dim), L2_LAGRANGE>;                              \
+-  template class FE< (_dim), MONOMIAL>;                                 \
+-  template class FE< (_dim), SCALAR>;                                   \
+-  template class FE< (_dim), XYZ>;                                      \
+-  template class FE< (_dim), NEDELEC_ONE>;                              \
+-  template class FE< (_dim), MONOMIAL_VEC>
++#define INSTANTIATE_FE(_dim)                                \
++  template class LIBMESH_EXPORT FE< (_dim), CLOUGH>;        \
++  template class LIBMESH_EXPORT FE< (_dim), HERMITE>;       \
++  template class LIBMESH_EXPORT FE< (_dim), HIERARCHIC>;    \
++  template class LIBMESH_EXPORT FE< (_dim), L2_HIERARCHIC>; \
++  template class LIBMESH_EXPORT FE< (_dim), LAGRANGE>;      \
++  template class LIBMESH_EXPORT FE< (_dim), LAGRANGE_VEC>;  \
++  template class LIBMESH_EXPORT FE< (_dim), L2_LAGRANGE>;   \
++  template class LIBMESH_EXPORT FE< (_dim), MONOMIAL>;      \
++  template class LIBMESH_EXPORT FE< (_dim), SCALAR>;        \
++  template class LIBMESH_EXPORT FE< (_dim), XYZ>;           \
++  template class LIBMESH_EXPORT FE< (_dim), NEDELEC_ONE>;   \
++  template class LIBMESH_EXPORT FE< (_dim), MONOMIAL_VEC>
+ 
+ #define INSTANTIATE_ALL_MAPS(_dim)              \
+   INSTANTIATE_MAPS(_dim,CLOUGH);                \
+@@ -94,21 +95,22 @@
+ 
+ #else //LIBMESH_ENABLE_HIGHER_ORDER_SHAPES
+ 
+-#define INSTANTIATE_FE(_dim)   template class FE< (_dim), CLOUGH>;      \
+-  template class FE< (_dim), HERMITE>;                                  \
+-  template class FE< (_dim), HIERARCHIC>;                               \
+-  template class FE< (_dim), L2_HIERARCHIC>;                            \
+-  template class FE< (_dim), LAGRANGE>;                                 \
+-  template class FE< (_dim), LAGRANGE_VEC>;                             \
+-  template class FE< (_dim), L2_LAGRANGE>;                              \
+-  template class FE< (_dim), MONOMIAL>;                                 \
+-  template class FE< (_dim), SCALAR>;                                   \
+-  template class FE< (_dim), BERNSTEIN>;                                \
+-  template class FE< (_dim), SZABAB>;                                   \
+-  template class FE< (_dim), XYZ>;                                      \
+-  template class FE< (_dim), RATIONAL_BERNSTEIN>;                       \
+-  template class FE< (_dim), NEDELEC_ONE>;                              \
+-  template class FE< (_dim), MONOMIAL_VEC>
++#define INSTANTIATE_FE(_dim)                                     \
++  template class LIBMESH_EXPORT FE< (_dim), CLOUGH>;             \
++  template class LIBMESH_EXPORT FE< (_dim), HERMITE>;            \
++  template class LIBMESH_EXPORT FE< (_dim), HIERARCHIC>;         \
++  template class LIBMESH_EXPORT FE< (_dim), L2_HIERARCHIC>;      \
++  template class LIBMESH_EXPORT FE< (_dim), LAGRANGE>;           \
++  template class LIBMESH_EXPORT FE< (_dim), LAGRANGE_VEC>;       \
++  template class LIBMESH_EXPORT FE< (_dim), L2_LAGRANGE>;        \
++  template class LIBMESH_EXPORT FE< (_dim), MONOMIAL>;           \
++  template class LIBMESH_EXPORT FE< (_dim), SCALAR>;             \
++  template class LIBMESH_EXPORT FE< (_dim), BERNSTEIN>;          \
++  template class LIBMESH_EXPORT FE< (_dim), SZABAB>;             \
++  template class LIBMESH_EXPORT FE< (_dim), XYZ>;                \
++  template class LIBMESH_EXPORT FE< (_dim), RATIONAL_BERNSTEIN>; \
++  template class LIBMESH_EXPORT FE< (_dim), NEDELEC_ONE>;        \
++  template class LIBMESH_EXPORT FE< (_dim), MONOMIAL_VEC>
+ 
+ #define INSTANTIATE_ALL_MAPS(_dim)              \
+   INSTANTIATE_MAPS(_dim,CLOUGH);                \
+diff --git a/include/fe/inf_fe_macro.h b/include/fe/inf_fe_macro.h
+index 61f5584..abf1f1b 100644
+--- a/include/fe/inf_fe_macro.h
++++ b/include/fe/inf_fe_macro.h
+@@ -34,18 +34,19 @@
+  * file(s) \p inf_fe_instantiate_1D.h, \p inf_fe_instantiate_2D.h,
+  * and \p inf_fe_instantiate_3D.h for 1D, 2D and 3D, respectively.
+  */
+-#define INSTANTIATE_INF_FE(_dim,_map_type) template  class InfFE< _dim, INFINITE_MAP, _map_type >; \
+-  template  class InfFE< _dim, JACOBI_20_00, _map_type >;               \
+-  template  class InfFE< _dim, JACOBI_30_00, _map_type >;               \
+-  template  class InfFE< _dim, LEGENDRE,     _map_type >;               \
+-  template  class InfFE< _dim, LAGRANGE,     _map_type >
+-
+-#define INSTANTIATE_INF_FE_MBRF(_dim,_map_type,_return,_function)       \
+-  template _return InfFE< _dim,INFINITE_MAP,_map_type>::_function;      \
+-  template _return InfFE< _dim,JACOBI_20_00,_map_type>::_function;      \
+-  template _return InfFE< _dim,JACOBI_30_00,_map_type>::_function;      \
+-  template _return InfFE< _dim,LEGENDRE,_map_type>::_function;          \
+-  template _return InfFE< _dim,LAGRANGE,_map_type>::_function
++#define INSTANTIATE_INF_FE(_dim,_map_type)                               \
++  template  class LIBMESH_EXPORT InfFE< _dim, INFINITE_MAP, _map_type >; \
++  template  class LIBMESH_EXPORT InfFE< _dim, JACOBI_20_00, _map_type >; \
++  template  class LIBMESH_EXPORT InfFE< _dim, JACOBI_30_00, _map_type >; \
++  template  class LIBMESH_EXPORT InfFE< _dim, LEGENDRE,     _map_type >; \
++  template  class LIBMESH_EXPORT InfFE< _dim, LAGRANGE,     _map_type >
++
++#define INSTANTIATE_INF_FE_MBRF(_dim,_map_type,_return,_function)                 \
++  template _return LIBMESH_EXPORT InfFE< _dim,INFINITE_MAP,_map_type>::_function; \
++  template _return LIBMESH_EXPORT InfFE< _dim,JACOBI_20_00,_map_type>::_function; \
++  template _return LIBMESH_EXPORT InfFE< _dim,JACOBI_30_00,_map_type>::_function; \
++  template _return LIBMESH_EXPORT InfFE< _dim,LEGENDRE,_map_type>::_function;     \
++  template _return LIBMESH_EXPORT InfFE< _dim,LAGRANGE,_map_type>::_function
+ 
+ #else
+ 
+diff --git a/src/base/dof_map.C b/src/base/dof_map.C
+index 7b90126..4a1e8ff 100644
+--- a/src/base/dof_map.C
++++ b/src/base/dof_map.C
+@@ -2987,7 +2987,7 @@ std::string DofMap::get_info() const
+ }
+ 
+ 
+-template bool DofMap::is_evaluable<Elem>(const Elem &, unsigned int) const;
+-template bool DofMap::is_evaluable<Node>(const Node &, unsigned int) const;
++template LIBMESH_EXPORT bool DofMap::is_evaluable<Elem>(const Elem &, unsigned int) const;
++template LIBMESH_EXPORT bool DofMap::is_evaluable<Node>(const Node &, unsigned int) const;
+ 
+ } // namespace libMesh
+diff --git a/src/base/libmesh.C b/src/base/libmesh.C
+index 7452b30..8cb12c9 100644
+--- a/src/base/libmesh.C
++++ b/src/base/libmesh.C
+@@ -1039,46 +1039,46 @@ SolverPackage default_solver_package ()
+ 
+ 
+ //-------------------------------------------------------------------------------
+-template unsigned short command_line_value<unsigned short> (const std::string &, unsigned short);
+-template unsigned int   command_line_value<unsigned int>   (const std::string &, unsigned int);
+-template short          command_line_value<short>          (const std::string &, short);
+-template int            command_line_value<int>            (const std::string &, int);
+-template float          command_line_value<float>          (const std::string &, float);
+-template double         command_line_value<double>         (const std::string &, double);
+-template long double    command_line_value<long double>    (const std::string &, long double);
+-template std::string    command_line_value<std::string>    (const std::string &, std::string);
+-
+-template unsigned short command_line_value<unsigned short> (const std::vector<std::string> &, unsigned short);
+-template unsigned int   command_line_value<unsigned int>   (const std::vector<std::string> &, unsigned int);
+-template short          command_line_value<short>          (const std::vector<std::string> &, short);
+-template int            command_line_value<int>            (const std::vector<std::string> &, int);
+-template float          command_line_value<float>          (const std::vector<std::string> &, float);
+-template double         command_line_value<double>         (const std::vector<std::string> &, double);
+-template long double    command_line_value<long double>    (const std::vector<std::string> &, long double);
+-template std::string    command_line_value<std::string>    (const std::vector<std::string> &, std::string);
+-
+-template unsigned short command_line_next<unsigned short>  (std::string, unsigned short);
+-template unsigned int   command_line_next<unsigned int>    (std::string, unsigned int);
+-template short          command_line_next<short>           (std::string, short);
+-template int            command_line_next<int>             (std::string, int);
+-template float          command_line_next<float>           (std::string, float);
+-template double         command_line_next<double>          (std::string, double);
+-template long double    command_line_next<long double>     (std::string, long double);
+-template std::string    command_line_next<std::string>     (std::string, std::string);
+-
+-template void           command_line_vector<unsigned short>(const std::string &, std::vector<unsigned short> &);
+-template void           command_line_vector<unsigned int>  (const std::string &, std::vector<unsigned int> &);
+-template void           command_line_vector<short>         (const std::string &, std::vector<short> &);
+-template void           command_line_vector<int>           (const std::string &, std::vector<int> &);
+-template void           command_line_vector<float>         (const std::string &, std::vector<float> &);
+-template void           command_line_vector<double>        (const std::string &, std::vector<double> &);
+-template void           command_line_vector<long double>   (const std::string &, std::vector<long double> &);
++template LIBMESH_EXPORT unsigned short command_line_value<unsigned short> (const std::string &, unsigned short);
++template LIBMESH_EXPORT unsigned int   command_line_value<unsigned int>   (const std::string &, unsigned int);
++template LIBMESH_EXPORT short          command_line_value<short>          (const std::string &, short);
++template LIBMESH_EXPORT int            command_line_value<int>            (const std::string &, int);
++template LIBMESH_EXPORT float          command_line_value<float>          (const std::string &, float);
++template LIBMESH_EXPORT double         command_line_value<double>         (const std::string &, double);
++template LIBMESH_EXPORT long double    command_line_value<long double>    (const std::string &, long double);
++template LIBMESH_EXPORT std::string    command_line_value<std::string>    (const std::string &, std::string);
++
++template LIBMESH_EXPORT unsigned short command_line_value<unsigned short> (const std::vector<std::string> &, unsigned short);
++template LIBMESH_EXPORT unsigned int   command_line_value<unsigned int>   (const std::vector<std::string> &, unsigned int);
++template LIBMESH_EXPORT short          command_line_value<short>          (const std::vector<std::string> &, short);
++template LIBMESH_EXPORT int            command_line_value<int>            (const std::vector<std::string> &, int);
++template LIBMESH_EXPORT float          command_line_value<float>          (const std::vector<std::string> &, float);
++template LIBMESH_EXPORT double         command_line_value<double>         (const std::vector<std::string> &, double);
++template LIBMESH_EXPORT long double    command_line_value<long double>    (const std::vector<std::string> &, long double);
++template LIBMESH_EXPORT std::string    command_line_value<std::string>    (const std::vector<std::string> &, std::string);
++
++template LIBMESH_EXPORT unsigned short command_line_next<unsigned short>  (std::string, unsigned short);
++template LIBMESH_EXPORT unsigned int   command_line_next<unsigned int>    (std::string, unsigned int);
++template LIBMESH_EXPORT short          command_line_next<short>           (std::string, short);
++template LIBMESH_EXPORT int            command_line_next<int>             (std::string, int);
++template LIBMESH_EXPORT float          command_line_next<float>           (std::string, float);
++template LIBMESH_EXPORT double         command_line_next<double>          (std::string, double);
++template LIBMESH_EXPORT long double    command_line_next<long double>     (std::string, long double);
++template LIBMESH_EXPORT std::string    command_line_next<std::string>     (std::string, std::string);
++
++template LIBMESH_EXPORT void           command_line_vector<unsigned short>(const std::string &, std::vector<unsigned short> &);
++template LIBMESH_EXPORT void           command_line_vector<unsigned int>  (const std::string &, std::vector<unsigned int> &);
++template LIBMESH_EXPORT void           command_line_vector<short>         (const std::string &, std::vector<short> &);
++template LIBMESH_EXPORT void           command_line_vector<int>           (const std::string &, std::vector<int> &);
++template LIBMESH_EXPORT void           command_line_vector<float>         (const std::string &, std::vector<float> &);
++template LIBMESH_EXPORT void           command_line_vector<double>        (const std::string &, std::vector<double> &);
++template LIBMESH_EXPORT void           command_line_vector<long double>   (const std::string &, std::vector<long double> &);
+ 
+ #ifdef LIBMESH_DEFAULT_QUADRUPLE_PRECISION
+-template Real           command_line_value<Real>           (const std::string &, Real);
+-template Real           command_line_value<Real>           (const std::vector<std::string> &, Real);
+-template Real           command_line_next<Real>            (std::string, Real);
+-template void           command_line_vector<Real>          (const std::string &, std::vector<Real> &);
++template LIBMESH_EXPORT Real           command_line_value<Real>           (const std::string &, Real);
++template LIBMESH_EXPORT Real           command_line_value<Real>           (const std::vector<std::string> &, Real);
++template LIBMESH_EXPORT Real           command_line_next<Real>            (std::string, Real);
++template LIBMESH_EXPORT void           command_line_vector<Real>          (const std::string &, std::vector<Real> &);
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/base/single_predicates.C b/src/base/single_predicates.C
+index 41a1c72..19daa14 100644
+--- a/src/base/single_predicates.C
++++ b/src/base/single_predicates.C
+@@ -54,13 +54,13 @@ evaluable<T>::operator()(const T & it) const
+ 
+ 
+ // Instantiate with the useful values of T
+-#define INSTANTIATE_NODAL_PREDICATES(IterType)                          \
+-  template bool bid<IterType>::operator()(const IterType &) const;      \
+-  template bool bnd<IterType>::operator()(const IterType &) const;      \
+-  template bool evaluable<IterType>::operator()(const IterType &) const
++#define INSTANTIATE_NODAL_PREDICATES(IterType)                                    \
++  template LIBMESH_EXPORT bool bid<IterType>::operator()(const IterType &) const; \
++  template LIBMESH_EXPORT bool bnd<IterType>::operator()(const IterType &) const; \
++  template LIBMESH_EXPORT bool evaluable<IterType>::operator()(const IterType &) const
+ 
+-#define INSTANTIATE_ELEM_PREDICATES(IterType)                           \
+-  template bool evaluable<IterType>::operator()(const IterType &) const
++#define INSTANTIATE_ELEM_PREDICATES(IterType)                                     \
++  template LIBMESH_EXPORT bool evaluable<IterType>::operator()(const IterType &) const
+ 
+ // Handle commas in macro arguments
+ #define LIBMESH_COMMA ,
+diff --git a/src/error_estimation/exact_solution.C b/src/error_estimation/exact_solution.C
+index f1a1033..c08a512 100644
+--- a/src/error_estimation/exact_solution.C
++++ b/src/error_estimation/exact_solution.C
+@@ -819,7 +819,7 @@ void ExactSolution::_compute_error(const std::string & sys_name,
+ }
+ 
+ // Explicit instantiations of templated member functions
+-template void ExactSolution::_compute_error<Real>(const std::string &, const std::string &, std::vector<Real> &);
+-template void ExactSolution::_compute_error<RealGradient>(const std::string &, const std::string &, std::vector<Real> &);
++template LIBMESH_EXPORT void ExactSolution::_compute_error<Real>(const std::string &, const std::string &, std::vector<Real> &);
++template LIBMESH_EXPORT void ExactSolution::_compute_error<RealGradient>(const std::string &, const std::string &, std::vector<Real> &);
+ 
+ } // namespace libMesh
+diff --git a/src/fe/fe_base.C b/src/fe/fe_base.C
+index ad55e8c..c53a721 100644
+--- a/src/fe/fe_base.C
++++ b/src/fe/fe_base.C
+@@ -2432,7 +2432,7 @@ compute_periodic_constraints (DofConstraints & constraints,
+ 
+ // ------------------------------------------------------------
+ // Explicit instantiations
+-template class FEGenericBase<Real>;
+-template class FEGenericBase<RealGradient>;
++template class LIBMESH_EXPORT FEGenericBase<Real>;
++template class LIBMESH_EXPORT FEGenericBase<RealGradient>;
+ 
+ } // namespace libMesh
+diff --git a/src/fe/fe_boundary.C b/src/fe/fe_boundary.C
+index 0e2ae56..54721b5 100644
+--- a/src/fe/fe_boundary.C
++++ b/src/fe/fe_boundary.C
+@@ -37,7 +37,7 @@ namespace libMesh
+ //-------------------------------------------------------
+ // Full specializations for useless methods in 0D, 1D
+ #define REINIT_ERROR(_dim, _type, _func)                        \
+-  template <>                                                   \
++  template <>                                    \
+   void FE<_dim,_type>::_func(const Elem *,                      \
+                              const unsigned int,                \
+                              const Real,                        \
+@@ -45,7 +45,7 @@ namespace libMesh
+                              const std::vector<Real> * const)
+ 
+ #define SIDEMAP_ERROR(_dim, _type, _func)                       \
+-  template <>                                                   \
++  template <>                                    \
+   void FE<_dim,_type>::_func(const Elem *,                      \
+                              const Elem *,                      \
+                              const unsigned int,                \
+@@ -53,7 +53,7 @@ namespace libMesh
+                              std::vector<Point> &)
+ 
+ #define FACE_EDGE_SHAPE_ERROR(_dim, _func)                              \
+-  template <>                                                           \
++  template <>                                            \
+   void FEMap::_func<_dim>(const std::vector<Point> &,                   \
+                           const Elem *)                                 \
+   {                                                                     \
+@@ -1072,149 +1072,149 @@ void FEMap::compute_edge_map(int dim,
+ 
+ // Explicit FEMap Instantiations
+ FACE_EDGE_SHAPE_ERROR(0,init_face_shape_functions)
+-template void FEMap::init_face_shape_functions<1>(const std::vector<Point> &, const Elem *);
+-template void FEMap::init_face_shape_functions<2>(const std::vector<Point> &, const Elem *);
+-template void FEMap::init_face_shape_functions<3>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_face_shape_functions<1>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_face_shape_functions<2>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_face_shape_functions<3>(const std::vector<Point> &, const Elem *);
+ 
+ FACE_EDGE_SHAPE_ERROR(0,init_edge_shape_functions)
+-template void FEMap::init_edge_shape_functions<1>(const std::vector<Point> &, const Elem *);
+-template void FEMap::init_edge_shape_functions<2>(const std::vector<Point> &, const Elem *);
+-template void FEMap::init_edge_shape_functions<3>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_edge_shape_functions<1>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_edge_shape_functions<2>(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_edge_shape_functions<3>(const std::vector<Point> &, const Elem *);
+ 
+ //--------------------------------------------------------------
+ // Explicit FE instantiations
+-template void FE<1,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+ #ifdef LIBMESH_ENABLE_HIGHER_ORDER_SHAPES
+-template void FE<1,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<1,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<1,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+ #endif
+-template void FE<1,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<1,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-
+-template void FE<2,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,LAGRANGE_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,L2_LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,L2_HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,CLOUGH>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,HERMITE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,MONOMIAL>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,MONOMIAL_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,SCALAR>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<1,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++
++template LIBMESH_EXPORT void FE<2,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,LAGRANGE_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,L2_LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,L2_HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,CLOUGH>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,HERMITE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,MONOMIAL>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,MONOMIAL_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,SCALAR>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ #ifdef LIBMESH_ENABLE_HIGHER_ORDER_SHAPES
+-template void FE<2,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,SZABAB>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,RATIONAL_BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,SZABAB>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,RATIONAL_BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ #endif
+-template void FE<2,SUBDIVISION>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,XYZ>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,NEDELEC_ONE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<2,NEDELEC_ONE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<2,NEDELEC_ONE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,SUBDIVISION>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,XYZ>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,NEDELEC_ONE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<2,NEDELEC_ONE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<2,NEDELEC_ONE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ 
+ // Intel 9.1 complained it needed this in devel mode.
+-//template void FE<2,XYZ>::init_face_shape_functions(const std::vector<Point> &, const Elem *);
+-
+-template void FE<3,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,LAGRANGE_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,L2_LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,L2_HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,CLOUGH>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,HERMITE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,MONOMIAL>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,MONOMIAL_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,SCALAR>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++//template LIBMESH_EXPORT void FE<2,XYZ>::init_face_shape_functions(const std::vector<Point> &, const Elem *);
++
++template LIBMESH_EXPORT void FE<3,LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,LAGRANGE_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,LAGRANGE_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,LAGRANGE_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,L2_LAGRANGE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,L2_LAGRANGE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,L2_LAGRANGE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,L2_HIERARCHIC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,L2_HIERARCHIC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,L2_HIERARCHIC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,CLOUGH>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,CLOUGH>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,CLOUGH>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,HERMITE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,HERMITE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,HERMITE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,MONOMIAL>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,MONOMIAL>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,MONOMIAL>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,MONOMIAL_VEC>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,MONOMIAL_VEC>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,MONOMIAL_VEC>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,SCALAR>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,SCALAR>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,SCALAR>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ #ifdef LIBMESH_ENABLE_HIGHER_ORDER_SHAPES
+-template void FE<3,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,SZABAB>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,RATIONAL_BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,SZABAB>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,SZABAB>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,SZABAB>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,RATIONAL_BERNSTEIN>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,RATIONAL_BERNSTEIN>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,RATIONAL_BERNSTEIN>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ #endif
+-template void FE<3,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,XYZ>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,NEDELEC_ONE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+-template void FE<3,NEDELEC_ONE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
+-template void FE<3,NEDELEC_ONE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,XYZ>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,XYZ>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,XYZ>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,NEDELEC_ONE>::reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
++template LIBMESH_EXPORT void FE<3,NEDELEC_ONE>::side_map(Elem const *, Elem const *, const unsigned int, const std::vector<Point> &, std::vector<Point> &);
++template LIBMESH_EXPORT void FE<3,NEDELEC_ONE>::edge_reinit(Elem const *, unsigned int, Real, const std::vector<Point> * const, const std::vector<Real> * const);
+ 
+ // Intel 9.1 complained it needed this in devel mode.
+-//template void FE<3,XYZ>::init_face_shape_functions(const std::vector<Point> &, const Elem *);
++//template LIBMESH_EXPORT void FE<3,XYZ>::init_face_shape_functions(const std::vector<Point> &, const Elem *);
+ 
+ } // namespace libMesh
+diff --git a/src/fe/fe_map.C b/src/fe/fe_map.C
+index d3df939..ea1d405 100644
+--- a/src/fe/fe_map.C
++++ b/src/fe/fe_map.C
+@@ -2109,10 +2109,10 @@ Point FE<Dim,T>::map_zeta (const Elem * elem,
+ 
+ 
+ // Explicit instantiation of FEMap member functions
+-template void FEMap::init_reference_to_physical_map<0>( const std::vector<Point> &, const Elem *);
+-template void FEMap::init_reference_to_physical_map<1>( const std::vector<Point> &, const Elem *);
+-template void FEMap::init_reference_to_physical_map<2>( const std::vector<Point> &, const Elem *);
+-template void FEMap::init_reference_to_physical_map<3>( const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_reference_to_physical_map<0>( const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_reference_to_physical_map<1>( const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_reference_to_physical_map<2>( const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void FEMap::init_reference_to_physical_map<3>( const std::vector<Point> &, const Elem *);
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations using the macro from fe_macro.h
+diff --git a/src/fe/fe_transformation_base.C b/src/fe/fe_transformation_base.C
+index bb5e8be..67fd05b 100644
+--- a/src/fe/fe_transformation_base.C
++++ b/src/fe/fe_transformation_base.C
+@@ -65,7 +65,7 @@ std::unique_ptr<FETransformationBase<OutputShape>> FETransformationBase<OutputSh
+     }
+ }
+ 
+-template class FETransformationBase<Real>;
+-template class FETransformationBase<RealGradient>;
++template class LIBMESH_EXPORT FETransformationBase<Real>;
++template class LIBMESH_EXPORT FETransformationBase<RealGradient>;
+ 
+ } // namespace libMesh
+diff --git a/src/fe/fe_xyz.C b/src/fe/fe_xyz.C
+index ca42958..44d4da6 100644
+--- a/src/fe/fe_xyz.C
++++ b/src/fe/fe_xyz.C
+@@ -963,14 +963,14 @@ template <> bool FE<3,XYZ>::shapes_need_reinit() const { return true; }
+ // 2.) There is (IMHO) less chance of the linker calling the
+ // wrong version of one of these member functions, since there is
+ // only one FEXYZ.
+-template void  FEXYZ<0>::init_shape_functions(const std::vector<Point> &, const Elem *);
+-template void  FEXYZ<1>::init_shape_functions(const std::vector<Point> &, const Elem *);
+-template void  FEXYZ<2>::init_shape_functions(const std::vector<Point> &, const Elem *);
+-template void  FEXYZ<3>::init_shape_functions(const std::vector<Point> &, const Elem *);
+-
+-template void  FEXYZ<0>::compute_shape_functions(const Elem *,const std::vector<Point> &);
+-template void  FEXYZ<1>::compute_shape_functions(const Elem *,const std::vector<Point> &);
+-template void  FEXYZ<2>::compute_shape_functions(const Elem *,const std::vector<Point> &);
+-template void  FEXYZ<3>::compute_shape_functions(const Elem *,const std::vector<Point> &);
++template LIBMESH_EXPORT void  FEXYZ<0>::init_shape_functions(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void  FEXYZ<1>::init_shape_functions(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void  FEXYZ<2>::init_shape_functions(const std::vector<Point> &, const Elem *);
++template LIBMESH_EXPORT void  FEXYZ<3>::init_shape_functions(const std::vector<Point> &, const Elem *);
++
++template LIBMESH_EXPORT void  FEXYZ<0>::compute_shape_functions(const Elem *,const std::vector<Point> &);
++template LIBMESH_EXPORT void  FEXYZ<1>::compute_shape_functions(const Elem *,const std::vector<Point> &);
++template LIBMESH_EXPORT void  FEXYZ<2>::compute_shape_functions(const Elem *,const std::vector<Point> &);
++template LIBMESH_EXPORT void  FEXYZ<3>::compute_shape_functions(const Elem *,const std::vector<Point> &);
+ 
+ } // namespace libMesh
+diff --git a/src/fe/fe_xyz_boundary.C b/src/fe/fe_xyz_boundary.C
+index e340a32..185b2d5 100644
+--- a/src/fe/fe_xyz_boundary.C
++++ b/src/fe/fe_xyz_boundary.C
+@@ -226,8 +226,8 @@ void FEXYZ<Dim>::compute_face_values(const Elem * elem,
+ //--------------------------------------------------------------
+ // Explicit instantiations (doesn't make sense in 1D!) using fe_macro.h's macro
+ 
+-template class FEXYZ<2>;
+-template class FEXYZ<3>;
++template class LIBMESH_EXPORT FEXYZ<2>;
++template class LIBMESH_EXPORT FEXYZ<3>;
+ 
+ 
+ } // namespace libMesh
+diff --git a/src/fe/h1_fe_transformation.C b/src/fe/h1_fe_transformation.C
+index dafbcf5..9379b75 100644
+--- a/src/fe/h1_fe_transformation.C
++++ b/src/fe/h1_fe_transformation.C
+@@ -749,7 +749,7 @@ void H1FETransformation<RealGradient>::map_div(const unsigned int dim,
+ }
+ 
+ // Explicit Instantiations
+-template class H1FETransformation<Real>;
+-template class H1FETransformation<RealGradient>;
++template class LIBMESH_EXPORT H1FETransformation<Real>;
++template class LIBMESH_EXPORT H1FETransformation<RealGradient>;
+ 
+ } //namespace libMesh
+diff --git a/src/fe/hcurl_fe_transformation.C b/src/fe/hcurl_fe_transformation.C
+index 4a2a8cf..c59105c 100644
+--- a/src/fe/hcurl_fe_transformation.C
++++ b/src/fe/hcurl_fe_transformation.C
+@@ -249,7 +249,7 @@ void HCurlFETransformation<OutputShape>::map_curl(const unsigned int dim,
+     } // switch(dim)
+ }
+ 
+-template class HCurlFETransformation<RealGradient>;
++template class LIBMESH_EXPORT HCurlFETransformation<RealGradient>;
+ 
+ template<>
+ void HCurlFETransformation<Real>::init_map_phi(const FEGenericBase<Real> & ) const
+diff --git a/src/mesh/mesh_communication_global_indices.C b/src/mesh/mesh_communication_global_indices.C
+index 5366a35..e0db3f1 100644
+--- a/src/mesh/mesh_communication_global_indices.C
++++ b/src/mesh/mesh_communication_global_indices.C
+@@ -986,29 +986,29 @@ void MeshCommunication::find_global_indices (const Parallel::Communicator &,
+ 
+ 
+ //------------------------------------------------------------------
+-template void MeshCommunication::find_global_indices<MeshBase::const_node_iterator> (const Parallel::Communicator &,
++template LIBMESH_EXPORT void MeshCommunication::find_global_indices<MeshBase::const_node_iterator> (const Parallel::Communicator &,
+                                                                                      const libMesh::BoundingBox &,
+                                                                                      const MeshBase::const_node_iterator &,
+                                                                                      const MeshBase::const_node_iterator &,
+                                                                                      std::vector<dof_id_type> &) const;
+ 
+-template void MeshCommunication::find_global_indices<MeshBase::const_element_iterator> (const Parallel::Communicator &,
++template LIBMESH_EXPORT void MeshCommunication::find_global_indices<MeshBase::const_element_iterator> (const Parallel::Communicator &,
+                                                                                         const libMesh::BoundingBox &,
+                                                                                         const MeshBase::const_element_iterator &,
+                                                                                         const MeshBase::const_element_iterator &,
+                                                                                         std::vector<dof_id_type> &) const;
+-template void MeshCommunication::find_global_indices<MeshBase::node_iterator> (const Parallel::Communicator &,
++template LIBMESH_EXPORT void MeshCommunication::find_global_indices<MeshBase::node_iterator> (const Parallel::Communicator &,
+                                                                                const libMesh::BoundingBox &,
+                                                                                const MeshBase::node_iterator &,
+                                                                                const MeshBase::node_iterator &,
+                                                                                std::vector<dof_id_type> &) const;
+ 
+-template void MeshCommunication::find_global_indices<MeshBase::element_iterator> (const Parallel::Communicator &,
++template LIBMESH_EXPORT void MeshCommunication::find_global_indices<MeshBase::element_iterator> (const Parallel::Communicator &,
+                                                                                   const libMesh::BoundingBox &,
+                                                                                   const MeshBase::element_iterator &,
+                                                                                   const MeshBase::element_iterator &,
+                                                                                   std::vector<dof_id_type> &) const;
+-template void MeshCommunication::find_local_indices<MeshBase::const_element_iterator> (const libMesh::BoundingBox &,
++template LIBMESH_EXPORT void MeshCommunication::find_local_indices<MeshBase::const_element_iterator> (const libMesh::BoundingBox &,
+                                                                                        const MeshBase::const_element_iterator &,
+                                                                                        const MeshBase::const_element_iterator &,
+                                                                                        std::unordered_map<dof_id_type, dof_id_type> &) const;
+diff --git a/src/mesh/mesh_output.C b/src/mesh/mesh_output.C
+index 65ec2f6..636d989 100644
+--- a/src/mesh/mesh_output.C
++++ b/src/mesh/mesh_output.C
+@@ -162,8 +162,8 @@ void MeshOutput<MT>::write_nodal_data (const std::string & fname,
+ 
+ // Instantiate for our Mesh types.  If this becomes too cumbersome later,
+ // move any functions in this file to the header file instead.
+-template class MeshOutput<MeshBase>;
+-template class MeshOutput<UnstructuredMesh>;
+-template class MeshOutput<DistributedMesh>;
++template class LIBMESH_EXPORT MeshOutput<MeshBase>;
++template class LIBMESH_EXPORT MeshOutput<UnstructuredMesh>;
++template class LIBMESH_EXPORT MeshOutput<DistributedMesh>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/dense_matrix.C b/src/numerics/dense_matrix.C
+index 7839e8e..53e4c5d 100644
+--- a/src/numerics/dense_matrix.C
++++ b/src/numerics/dense_matrix.C
+@@ -25,18 +25,18 @@ namespace libMesh
+ //--------------------------------------------------------------
+ // Explicit instantiations
+ #define LIBMESH_VMA_INSTANTIATE(T1,T2,T3)               \
+-  template void DenseMatrix<T1>::vector_mult_add        \
++  template LIBMESH_EXPORT void DenseMatrix<T1>::vector_mult_add \
+   (DenseVector<                                         \
+    CompareTypes<T1,                                     \
+    CompareTypes<T2,T3>::supertype>::supertype> & dest,  \
+    const T2 factor,                                     \
+    const DenseVector<T3> & arg) const
+ 
+-template class DenseMatrix<Real>;
+-template void DenseMatrix<Real>::cholesky_solve(const DenseVector<Real> &, DenseVector<Real> &);
+-template void DenseMatrix<Real>::_cholesky_back_substitute(const DenseVector<Real> &, DenseVector<Real> &) const;
+-template void DenseMatrix<Real>::cholesky_solve(const DenseVector<Complex> &, DenseVector<Complex> &);
+-template void DenseMatrix<Real>::_cholesky_back_substitute(const DenseVector<Complex> &, DenseVector<Complex> &) const;
++template class LIBMESH_EXPORT DenseMatrix<Real>;
++template LIBMESH_EXPORT void DenseMatrix<Real>::cholesky_solve(const DenseVector<Real> &, DenseVector<Real> &);
++template LIBMESH_EXPORT void DenseMatrix<Real>::_cholesky_back_substitute(const DenseVector<Real> &, DenseVector<Real> &) const;
++template LIBMESH_EXPORT void DenseMatrix<Real>::cholesky_solve(const DenseVector<Complex> &, DenseVector<Complex> &);
++template LIBMESH_EXPORT void DenseMatrix<Real>::_cholesky_back_substitute(const DenseVector<Complex> &, DenseVector<Complex> &) const;
+ LIBMESH_VMA_INSTANTIATE(Real,int,Real);
+ #ifndef LIBMESH_DEFAULT_SINGLE_PRECISION
+ LIBMESH_VMA_INSTANTIATE(Real,float,Real);
+@@ -46,12 +46,12 @@ LIBMESH_VMA_INSTANTIATE(Real,double,Real);
+ #endif
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseMatrix<Complex>;
+-template void DenseMatrix<Complex>::cholesky_solve(const DenseVector<Complex> &,DenseVector<Complex> &);
+-template void DenseMatrix<Complex>::_cholesky_back_substitute(const DenseVector<Complex> &, DenseVector<Complex> &) const;
+-template void DenseMatrix<Real>::vector_mult (DenseVector<CompareTypes<Real,Complex>::supertype> & dest,
++template class LIBMESH_EXPORT DenseMatrix<Complex>;
++template LIBMESH_EXPORT void DenseMatrix<Complex>::cholesky_solve(const DenseVector<Complex> &,DenseVector<Complex> &);
++template LIBMESH_EXPORT void DenseMatrix<Complex>::_cholesky_back_substitute(const DenseVector<Complex> &, DenseVector<Complex> &) const;
++template LIBMESH_EXPORT void DenseMatrix<Real>::vector_mult (DenseVector<CompareTypes<Real,Complex>::supertype> & dest,
+                                               const DenseVector<Complex> & arg) const;
+-template void DenseMatrix<Real>::vector_mult_transpose (DenseVector<CompareTypes<Real,Complex>::supertype> & dest,
++template LIBMESH_EXPORT void DenseMatrix<Real>::vector_mult_transpose (DenseVector<CompareTypes<Real,Complex>::supertype> & dest,
+                                                         const DenseVector<Complex> & arg) const;
+ LIBMESH_VMA_INSTANTIATE(Real,int,Complex);
+ LIBMESH_VMA_INSTANTIATE(Complex,int,Complex);
+diff --git a/src/numerics/dense_matrix_base.C b/src/numerics/dense_matrix_base.C
+index ec4d10f..302e1ce 100644
+--- a/src/numerics/dense_matrix_base.C
++++ b/src/numerics/dense_matrix_base.C
+@@ -23,10 +23,10 @@ namespace libMesh
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DenseMatrixBase<Real>;
++template class LIBMESH_EXPORT DenseMatrixBase<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseMatrixBase<Complex>;
++template class LIBMESH_EXPORT DenseMatrixBase<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/dense_matrix_blas_lapack.C b/src/numerics/dense_matrix_blas_lapack.C
+index cf23a5e..45952f1 100644
+--- a/src/numerics/dense_matrix_blas_lapack.C
++++ b/src/numerics/dense_matrix_blas_lapack.C
+@@ -1132,51 +1132,51 @@ void DenseMatrix<T>::_matvec_blas(T,
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template void DenseMatrix<Real>::_multiply_blas(const DenseMatrixBase<Real> &, _BLAS_Multiply_Flag);
+-template void DenseMatrix<Real>::_lu_decompose_lapack();
+-template void DenseMatrix<Real>::_lu_back_substitute_lapack(const DenseVector<Real> &,
++template LIBMESH_EXPORT void DenseMatrix<Real>::_multiply_blas(const DenseMatrixBase<Real> &, _BLAS_Multiply_Flag);
++template LIBMESH_EXPORT void DenseMatrix<Real>::_lu_decompose_lapack();
++template LIBMESH_EXPORT void DenseMatrix<Real>::_lu_back_substitute_lapack(const DenseVector<Real> &,
+                                                             DenseVector<Real> &);
+-template void DenseMatrix<Real>::_matvec_blas(Real,
++template LIBMESH_EXPORT void DenseMatrix<Real>::_matvec_blas(Real,
+                                               Real,
+                                               DenseVector<Real> &,
+                                               const DenseVector<Real> &,
+                                               bool) const;
+-template void DenseMatrix<Real>::_svd_lapack(DenseVector<Real> &);
+-template void DenseMatrix<Real>::_svd_lapack(DenseVector<Real> &,
++template LIBMESH_EXPORT void DenseMatrix<Real>::_svd_lapack(DenseVector<Real> &);
++template LIBMESH_EXPORT void DenseMatrix<Real>::_svd_lapack(DenseVector<Real> &,
+                                              DenseMatrix<Number> &,
+                                              DenseMatrix<Number> &);
+-template void DenseMatrix<Real>::_svd_helper (char,
++template LIBMESH_EXPORT void DenseMatrix<Real>::_svd_helper (char,
+                                               char,
+                                               std::vector<Real> &,
+                                               std::vector<Number> &,
+                                               std::vector<Number> &);
+-template void DenseMatrix<Real>::_svd_solve_lapack (const DenseVector<Real> &, DenseVector<Real> &, Real) const;
+-template void DenseMatrix<Real>::_evd_lapack(DenseVector<Real> &,
++template LIBMESH_EXPORT void DenseMatrix<Real>::_svd_solve_lapack (const DenseVector<Real> &, DenseVector<Real> &, Real) const;
++template LIBMESH_EXPORT void DenseMatrix<Real>::_evd_lapack(DenseVector<Real> &,
+                                              DenseVector<Real> &,
+                                              DenseMatrix<Real> *,
+                                              DenseMatrix<Real> *);
+ 
+ #if !(LIBMESH_USE_REAL_NUMBERS)
+-template void DenseMatrix<Number>::_multiply_blas(const DenseMatrixBase<Number> &, _BLAS_Multiply_Flag);
+-template void DenseMatrix<Number>::_lu_decompose_lapack();
+-template void DenseMatrix<Number>::_lu_back_substitute_lapack(const DenseVector<Number> &,
++template LIBMESH_EXPORT void DenseMatrix<Number>::_multiply_blas(const DenseMatrixBase<Number> &, _BLAS_Multiply_Flag);
++template LIBMESH_EXPORT void DenseMatrix<Number>::_lu_decompose_lapack();
++template LIBMESH_EXPORT void DenseMatrix<Number>::_lu_back_substitute_lapack(const DenseVector<Number> &,
+                                                               DenseVector<Number> &);
+-template void DenseMatrix<Number>::_matvec_blas(Number,
++template LIBMESH_EXPORT void DenseMatrix<Number>::_matvec_blas(Number,
+                                                 Number,
+                                                 DenseVector<Number> &,
+                                                 const DenseVector<Number> &,
+                                                 bool) const;
+-template void DenseMatrix<Number>::_svd_lapack(DenseVector<Real> &);
+-template void DenseMatrix<Number>::_svd_lapack(DenseVector<Real> &,
++template LIBMESH_EXPORT void DenseMatrix<Number>::_svd_lapack(DenseVector<Real> &);
++template LIBMESH_EXPORT void DenseMatrix<Number>::_svd_lapack(DenseVector<Real> &,
+                                                DenseMatrix<Number> &,
+                                                DenseMatrix<Number> &);
+-template void DenseMatrix<Number>::_svd_helper (char,
++template LIBMESH_EXPORT void DenseMatrix<Number>::_svd_helper (char,
+                                                 char,
+                                                 std::vector<Real> &,
+                                                 std::vector<Number> &,
+                                                 std::vector<Number> &);
+-template void DenseMatrix<Number>::_svd_solve_lapack (const DenseVector<Number> &, DenseVector<Number> &, Real) const;
+-template void DenseMatrix<Number>::_evd_lapack(DenseVector<Number> &,
++template LIBMESH_EXPORT void DenseMatrix<Number>::_svd_solve_lapack (const DenseVector<Number> &, DenseVector<Number> &, Real) const;
++template LIBMESH_EXPORT void DenseMatrix<Number>::_evd_lapack(DenseVector<Number> &,
+                                                DenseVector<Number> &,
+                                                DenseMatrix<Number> *,
+                                                DenseMatrix<Number> *);
+diff --git a/src/numerics/dense_submatrix.C b/src/numerics/dense_submatrix.C
+index 1d7c64f..0821687 100644
+--- a/src/numerics/dense_submatrix.C
++++ b/src/numerics/dense_submatrix.C
+@@ -65,10 +65,10 @@ void DenseSubMatrix<T>::right_multiply (const DenseMatrixBase<T> & M3)
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DenseSubMatrix<Real>;
++template class LIBMESH_EXPORT DenseSubMatrix<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseSubMatrix<Complex>;
++template class LIBMESH_EXPORT DenseSubMatrix<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/dense_subvector.C b/src/numerics/dense_subvector.C
+index cf63187..a58e901 100644
+--- a/src/numerics/dense_subvector.C
++++ b/src/numerics/dense_subvector.C
+@@ -24,10 +24,10 @@ namespace libMesh
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DenseSubVector<Real>;
++template class LIBMESH_EXPORT DenseSubVector<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseSubVector<Complex>;
++template class LIBMESH_EXPORT DenseSubVector<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/dense_vector.C b/src/numerics/dense_vector.C
+index cc54205..8fc8fb5 100644
+--- a/src/numerics/dense_vector.C
++++ b/src/numerics/dense_vector.C
+@@ -26,10 +26,10 @@ namespace libMesh
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DenseVector<Real>;
++template class LIBMESH_EXPORT DenseVector<Real>;
+ 
+ //#ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseVector<Complex>;
++template class LIBMESH_EXPORT DenseVector<Complex>;
+ //#endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/dense_vector_base.C b/src/numerics/dense_vector_base.C
+index 2dedb66..3e50dc4 100644
+--- a/src/numerics/dense_vector_base.C
++++ b/src/numerics/dense_vector_base.C
+@@ -59,10 +59,10 @@ void DenseVectorBase<T>::print (std::ostream & os) const
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DenseVectorBase<Real>;
++template class LIBMESH_EXPORT DenseVectorBase<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class DenseVectorBase<Complex>;
++template class LIBMESH_EXPORT DenseVectorBase<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/distributed_vector.C b/src/numerics/distributed_vector.C
+index 1d39e5e..e553afb 100644
+--- a/src/numerics/distributed_vector.C
++++ b/src/numerics/distributed_vector.C
+@@ -620,6 +620,6 @@ void DistributedVector<T>::pointwise_mult (const NumericVector<T> &,
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class DistributedVector<Number>;
++template class LIBMESH_EXPORT DistributedVector<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/eigen_preconditioner.C b/src/numerics/eigen_preconditioner.C
+index ba864bd..a5121a4 100644
+--- a/src/numerics/eigen_preconditioner.C
++++ b/src/numerics/eigen_preconditioner.C
+@@ -49,7 +49,7 @@ void EigenPreconditioner<T>::init ()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EigenPreconditioner<Number>;
++template class LIBMESH_EXPORT EigenPreconditioner<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/eigen_sparse_matrix.C b/src/numerics/eigen_sparse_matrix.C
+index 30720b9..b3b4c0e 100644
+--- a/src/numerics/eigen_sparse_matrix.C
++++ b/src/numerics/eigen_sparse_matrix.C
+@@ -333,7 +333,7 @@ Real EigenSparseMatrix<T>::linfty_norm () const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EigenSparseMatrix<Number>;
++template class LIBMESH_EXPORT EigenSparseMatrix<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/eigen_sparse_vector.C b/src/numerics/eigen_sparse_vector.C
+index 52142b0..cf89a0d 100644
+--- a/src/numerics/eigen_sparse_vector.C
++++ b/src/numerics/eigen_sparse_vector.C
+@@ -475,7 +475,7 @@ Real EigenSparseVector<T>::min () const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EigenSparseVector<Number>;
++template class LIBMESH_EXPORT EigenSparseVector<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/laspack_matrix.C b/src/numerics/laspack_matrix.C
+index 99387f5..b5fbf88 100644
+--- a/src/numerics/laspack_matrix.C
++++ b/src/numerics/laspack_matrix.C
+@@ -482,7 +482,7 @@ void LaspackMatrix<T>::close()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class LaspackMatrix<Number>;
++template class LIBMESH_EXPORT LaspackMatrix<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/laspack_vector.C b/src/numerics/laspack_vector.C
+index 04499b9..687d847 100644
+--- a/src/numerics/laspack_vector.C
++++ b/src/numerics/laspack_vector.C
+@@ -477,7 +477,7 @@ Real LaspackVector<T>::min () const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class LaspackVector<Number>;
++template class LIBMESH_EXPORT LaspackVector<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/numeric_vector.C b/src/numerics/numeric_vector.C
+index af7a918..83eeb3a 100644
+--- a/src/numerics/numeric_vector.C
++++ b/src/numerics/numeric_vector.C
+@@ -392,6 +392,6 @@ void NumericVector<T>::add_vector (const NumericVector<T> & v,
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class NumericVector<Number>;
++template class LIBMESH_EXPORT NumericVector<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/petsc_matrix.C b/src/numerics/petsc_matrix.C
+index f891cef..6bc5cdc 100644
+--- a/src/numerics/petsc_matrix.C
++++ b/src/numerics/petsc_matrix.C
+@@ -1293,7 +1293,7 @@ void PetscMatrix<T>::swap(PetscMatrix<T> & m_in)
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class PetscMatrix<Number>;
++template class LIBMESH_EXPORT PetscMatrix<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/petsc_preconditioner.C b/src/numerics/petsc_preconditioner.C
+index 3d23cba..15fcae2 100644
+--- a/src/numerics/petsc_preconditioner.C
++++ b/src/numerics/petsc_preconditioner.C
+@@ -310,7 +310,7 @@ void PetscPreconditioner<T>::set_petsc_subpreconditioner_type(PCTYPE_CV_QUALIFIE
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class PetscPreconditioner<Number>;
++template class LIBMESH_EXPORT PetscPreconditioner<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/petsc_vector.C b/src/numerics/petsc_vector.C
+index 0e5797a..736104b 100644
+--- a/src/numerics/petsc_vector.C
++++ b/src/numerics/petsc_vector.C
+@@ -1542,7 +1542,7 @@ void PetscVector<T>::_restore_array() const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class PetscVector<Number>;
++template class LIBMESH_EXPORT PetscVector<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/preconditioner.C b/src/numerics/preconditioner.C
+index 28bcf1c..b57027a 100644
+--- a/src/numerics/preconditioner.C
++++ b/src/numerics/preconditioner.C
+@@ -100,6 +100,6 @@ Preconditioner<T>::build(const libMesh::Parallel::Communicator & comm,
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class Preconditioner<Number>;
++template class LIBMESH_EXPORT Preconditioner<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/sparse_matrix.C b/src/numerics/sparse_matrix.C
+index ce8db30..806d7f6 100644
+--- a/src/numerics/sparse_matrix.C
++++ b/src/numerics/sparse_matrix.C
+@@ -324,6 +324,6 @@ void SparseMatrix<T>::print(std::ostream & os, const bool sparse) const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class SparseMatrix<Number>;
++template class LIBMESH_EXPORT SparseMatrix<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/sparse_shell_matrix.C b/src/numerics/sparse_shell_matrix.C
+index af4a1d4..e40aaf3 100644
+--- a/src/numerics/sparse_shell_matrix.C
++++ b/src/numerics/sparse_shell_matrix.C
+@@ -43,6 +43,6 @@ void SparseShellMatrix<T>::vector_mult_add (NumericVector<T> & dest,
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class SparseShellMatrix<Number>;
++template class LIBMESH_EXPORT SparseShellMatrix<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/sum_shell_matrix.C b/src/numerics/sum_shell_matrix.C
+index 35dfbd5..9a2dd61 100644
+--- a/src/numerics/sum_shell_matrix.C
++++ b/src/numerics/sum_shell_matrix.C
+@@ -88,6 +88,6 @@ void SumShellMatrix<T>::get_diagonal (NumericVector<T> & dest) const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class SumShellMatrix<Number>;
++template class LIBMESH_EXPORT SumShellMatrix<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/tensor_shell_matrix.C b/src/numerics/tensor_shell_matrix.C
+index 19a100c..a52240b 100644
+--- a/src/numerics/tensor_shell_matrix.C
++++ b/src/numerics/tensor_shell_matrix.C
+@@ -52,6 +52,6 @@ void TensorShellMatrix<T>::get_diagonal (NumericVector<T> & dest) const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class TensorShellMatrix<Number>;
++template class LIBMESH_EXPORT TensorShellMatrix<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/trilinos_epetra_matrix.C b/src/numerics/trilinos_epetra_matrix.C
+index 83815a1..a36b432 100644
+--- a/src/numerics/trilinos_epetra_matrix.C
++++ b/src/numerics/trilinos_epetra_matrix.C
+@@ -518,7 +518,7 @@ void EpetraMatrix<T>::print_personal(std::ostream & os) const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EpetraMatrix<Number>;
++template class LIBMESH_EXPORT EpetraMatrix<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/trilinos_epetra_vector.C b/src/numerics/trilinos_epetra_vector.C
+index 6e4d362..a9a7f11 100644
+--- a/src/numerics/trilinos_epetra_vector.C
++++ b/src/numerics/trilinos_epetra_vector.C
+@@ -926,7 +926,7 @@ void EpetraVector<T>::destroyNonlocalData()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EpetraVector<Number>;
++template class LIBMESH_EXPORT EpetraVector<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/trilinos_preconditioner.C b/src/numerics/trilinos_preconditioner.C
+index 5e1eabd..035a479 100644
+--- a/src/numerics/trilinos_preconditioner.C
++++ b/src/numerics/trilinos_preconditioner.C
+@@ -258,7 +258,7 @@ TrilinosPreconditioner<T>::OperatorRangeMap() const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class TrilinosPreconditioner<Number>;
++template class LIBMESH_EXPORT TrilinosPreconditioner<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/numerics/type_tensor.C b/src/numerics/type_tensor.C
+index c571439..622644b 100644
+--- a/src/numerics/type_tensor.C
++++ b/src/numerics/type_tensor.C
+@@ -188,10 +188,10 @@ bool TypeTensor<Complex>::operator > (const TypeTensor<Complex> & rhs) const
+ 
+ // ------------------------------------------------------------
+ // Explicit instantiations
+-template class TypeTensor<Real>;
++template class LIBMESH_EXPORT TypeTensor<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class TypeTensor<Complex>;
++template class LIBMESH_EXPORT TypeTensor<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/numerics/type_vector.C b/src/numerics/type_vector.C
+index d6c636f..2483730 100644
+--- a/src/numerics/type_vector.C
++++ b/src/numerics/type_vector.C
+@@ -216,10 +216,10 @@ bool TypeVector<Complex>::operator >= (const TypeVector<Complex> & rhs) const
+ 
+ // ------------------------------------------------------------
+ // Explicit instantiations
+-template class TypeVector<Real>;
++template class LIBMESH_EXPORT TypeVector<Real>;
+ 
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template class TypeVector<Complex>;
++template class LIBMESH_EXPORT TypeVector<Complex>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/parallel/parallel_bin_sorter.C b/src/parallel/parallel_bin_sorter.C
+index 143d2be..9e296d9 100644
+--- a/src/parallel/parallel_bin_sorter.C
++++ b/src/parallel/parallel_bin_sorter.C
+@@ -141,10 +141,10 @@ void BinSorter<KeyType,IdxType>::binsort (const IdxType nbins,
+ 
+ 
+ // Explicitly instantiate for int, double
+-template class Parallel::BinSorter<int, unsigned int>;
+-template class Parallel::BinSorter<double, unsigned int>;
++template class LIBMESH_EXPORT Parallel::BinSorter<int, unsigned int>;
++template class LIBMESH_EXPORT Parallel::BinSorter<double, unsigned int>;
+ #ifdef LIBMESH_HAVE_LIBHILBERT
+-template class Parallel::BinSorter<Parallel::DofObjectKey, unsigned int>;
++template class LIBMESH_EXPORT Parallel::BinSorter<Parallel::DofObjectKey, unsigned int>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/parallel/parallel_histogram.C b/src/parallel/parallel_histogram.C
+index d27299e..4456f8f 100644
+--- a/src/parallel/parallel_histogram.C
++++ b/src/parallel/parallel_histogram.C
+@@ -107,10 +107,10 @@ void Histogram<KeyType,IdxType>::build_histogram ()
+ 
+ 
+ // Explicitly instantiate for int, double
+-template class Parallel::Histogram<int,    unsigned int>;
+-template class Parallel::Histogram<double, unsigned int>;
++template class LIBMESH_EXPORT Parallel::Histogram<int,    unsigned int>;
++template class LIBMESH_EXPORT Parallel::Histogram<double, unsigned int>;
+ #ifdef LIBMESH_HAVE_LIBHILBERT
+-template class Parallel::Histogram<Parallel::DofObjectKey, unsigned int>;
++template class LIBMESH_EXPORT Parallel::Histogram<Parallel::DofObjectKey, unsigned int>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/parallel/parallel_sort.C b/src/parallel/parallel_sort.C
+index 1a57003..1e262ae 100644
+--- a/src/parallel/parallel_sort.C
++++ b/src/parallel/parallel_sort.C
+@@ -272,10 +272,10 @@ const std::vector<KeyType> & Sort<KeyType,IdxType>::bin()
+ 
+ 
+ // Explicitly instantiate for int, double
+-template class Parallel::Sort<int, unsigned int>;
+-template class Parallel::Sort<double, unsigned int>;
++template class LIBMESH_EXPORT Parallel::Sort<int, unsigned int>;
++template class LIBMESH_EXPORT Parallel::Sort<double, unsigned int>;
+ #if defined(LIBMESH_HAVE_LIBHILBERT) && defined(LIBMESH_HAVE_MPI)
+-template class Parallel::Sort<Parallel::DofObjectKey, unsigned int>;
++template class LIBMESH_EXPORT Parallel::Sort<Parallel::DofObjectKey, unsigned int>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/quadrature/quadrature_composite.C b/src/quadrature/quadrature_composite.C
+index e155bff..9290ee0 100644
+--- a/src/quadrature/quadrature_composite.C
++++ b/src/quadrature/quadrature_composite.C
+@@ -156,9 +156,9 @@ void QComposite<QSubCell>::add_subelem_values (const std::vector<Elem const *> &
+ 
+ //--------------------------------------------------------------
+ // Explicit instantiations
+-template class QComposite<QGauss>;
+-template class QComposite<QTrap>;
+-template class QComposite<QSimpson>;
++template class LIBMESH_EXPORT QComposite<QGauss>;
++template class LIBMESH_EXPORT QComposite<QTrap>;
++template class LIBMESH_EXPORT QComposite<QSimpson>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/reduced_basis/rb_construction_base.C b/src/reduced_basis/rb_construction_base.C
+index a484724..1ccd8e0 100644
+--- a/src/reduced_basis/rb_construction_base.C
++++ b/src/reduced_basis/rb_construction_base.C
+@@ -636,9 +636,9 @@ void RBConstructionBase<Base>::set_training_random_seed(unsigned int seed)
+ 
+ // EigenSystem is only defined if we have SLEPc
+ #if defined(LIBMESH_HAVE_SLEPC)
+-template class RBConstructionBase<CondensedEigenSystem>;
++template class LIBMESH_EXPORT RBConstructionBase<CondensedEigenSystem>;
+ #endif
+ 
+-template class RBConstructionBase<LinearImplicitSystem>;
++template class LIBMESH_EXPORT RBConstructionBase<LinearImplicitSystem>;
+ 
+ } // namespace libMesh
+diff --git a/src/solution_transfer/meshfree_interpolation.C b/src/solution_transfer/meshfree_interpolation.C
+index e5bed0b..17ca23b 100644
+--- a/src/solution_transfer/meshfree_interpolation.C
++++ b/src/solution_transfer/meshfree_interpolation.C
+@@ -325,8 +325,8 @@ void InverseDistanceInterpolation<KDDim>::interpolate (const Point
+ 
+ // ------------------------------------------------------------
+ // Explicit Instantiations
+-template class InverseDistanceInterpolation<1>;
+-template class InverseDistanceInterpolation<2>;
+-template class InverseDistanceInterpolation<3>;
++template class LIBMESH_EXPORT InverseDistanceInterpolation<1>;
++template class LIBMESH_EXPORT InverseDistanceInterpolation<2>;
++template class LIBMESH_EXPORT InverseDistanceInterpolation<3>;
+ 
+ } // namespace libMesh
+diff --git a/src/solution_transfer/radial_basis_interpolation.C b/src/solution_transfer/radial_basis_interpolation.C
+index 7c7942d..c181edb 100644
+--- a/src/solution_transfer/radial_basis_interpolation.C
++++ b/src/solution_transfer/radial_basis_interpolation.C
+@@ -204,9 +204,9 @@ void RadialBasisInterpolation<KDDim,RBF>::interpolate_field_data (const std::vec
+ 
+ // ------------------------------------------------------------
+ // Explicit Instantiations
+-template class RadialBasisInterpolation<3, WendlandRBF<3,0>>;
+-template class RadialBasisInterpolation<3, WendlandRBF<3,2>>;
+-template class RadialBasisInterpolation<3, WendlandRBF<3,4>>;
+-template class RadialBasisInterpolation<3, WendlandRBF<3,8>>;
++template class LIBMESH_EXPORT RadialBasisInterpolation<3, WendlandRBF<3,0>>;
++template class LIBMESH_EXPORT RadialBasisInterpolation<3, WendlandRBF<3,2>>;
++template class LIBMESH_EXPORT RadialBasisInterpolation<3, WendlandRBF<3,4>>;
++template class LIBMESH_EXPORT RadialBasisInterpolation<3, WendlandRBF<3,8>>;
+ 
+ } // namespace libMesh
+diff --git a/src/solvers/eigen_solver.C b/src/solvers/eigen_solver.C
+index fc61398..f96eb95 100644
+--- a/src/solvers/eigen_solver.C
++++ b/src/solvers/eigen_solver.C
+@@ -104,7 +104,7 @@ void EigenSolver<T>::set_position_of_spectrum (Real pos, PositionOfSpectrum targ
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EigenSolver<Number>;
++template class LIBMESH_EXPORT EigenSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/eigen_sparse_linear_solver.C b/src/solvers/eigen_sparse_linear_solver.C
+index de0e339..6f64483 100644
+--- a/src/solvers/eigen_sparse_linear_solver.C
++++ b/src/solvers/eigen_sparse_linear_solver.C
+@@ -337,7 +337,7 @@ LinearConvergenceReason EigenSparseLinearSolver<T>::get_converged_reason() const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class EigenSparseLinearSolver<Number>;
++template class LIBMESH_EXPORT EigenSparseLinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/laspack_linear_solver.C b/src/solvers/laspack_linear_solver.C
+index 6dcb464..162e020 100644
+--- a/src/solvers/laspack_linear_solver.C
++++ b/src/solvers/laspack_linear_solver.C
+@@ -543,7 +543,7 @@ LinearConvergenceReason LaspackLinearSolver<T>::get_converged_reason() const
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class LaspackLinearSolver<Number>;
++template class LIBMESH_EXPORT LaspackLinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/linear_solver.C b/src/solvers/linear_solver.C
+index 5692e47..ac180e6 100644
+--- a/src/solvers/linear_solver.C
++++ b/src/solvers/linear_solver.C
+@@ -181,7 +181,7 @@ void LinearSolver<T>::set_solver_configuration(SolverConfiguration & solver_conf
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class LinearSolver<Number>;
++template class LIBMESH_EXPORT LinearSolver<Number>;
+ 
+ 
+ 
+diff --git a/src/solvers/nlopt_optimization_solver.C b/src/solvers/nlopt_optimization_solver.C
+index f85d273..d9d6b15 100644
+--- a/src/solvers/nlopt_optimization_solver.C
++++ b/src/solvers/nlopt_optimization_solver.C
+@@ -458,7 +458,7 @@ int NloptOptimizationSolver<T>::get_converged_reason()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class NloptOptimizationSolver<Number>;
++template class LIBMESH_EXPORT NloptOptimizationSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/nonlinear_solver.C b/src/solvers/nonlinear_solver.C
+index ac28996..036d818 100644
+--- a/src/solvers/nonlinear_solver.C
++++ b/src/solvers/nonlinear_solver.C
+@@ -85,6 +85,6 @@ void NonlinearSolver<T>::set_solver_configuration(SolverConfiguration & solver_c
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class NonlinearSolver<Number>;
++template class LIBMESH_EXPORT NonlinearSolver<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/solvers/optimization_solver.C b/src/solvers/optimization_solver.C
+index d94ea62..21faa72 100644
+--- a/src/solvers/optimization_solver.C
++++ b/src/solvers/optimization_solver.C
+@@ -86,6 +86,6 @@ OptimizationSolver<T>::build(sys_type & s, const SolverPackage solver_package)
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class OptimizationSolver<Number>;
++template class LIBMESH_EXPORT OptimizationSolver<Number>;
+ 
+ } // namespace libMesh
+diff --git a/src/solvers/petsc_linear_solver.C b/src/solvers/petsc_linear_solver.C
+index 574d9fc..6e821ce 100644
+--- a/src/solvers/petsc_linear_solver.C
++++ b/src/solvers/petsc_linear_solver.C
+@@ -1808,7 +1808,7 @@ PetscErrorCode PetscLinearSolver<T>::_petsc_shell_matrix_get_diagonal(Mat mat, V
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class PetscLinearSolver<Number>;
++template class LIBMESH_EXPORT PetscLinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/petsc_nonlinear_solver.C b/src/solvers/petsc_nonlinear_solver.C
+index e944a69..ac1cfbf 100644
+--- a/src/solvers/petsc_nonlinear_solver.C
++++ b/src/solvers/petsc_nonlinear_solver.C
+@@ -994,7 +994,7 @@ int PetscNonlinearSolver<T>::get_total_linear_iterations()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class PetscNonlinearSolver<Number>;
++template class LIBMESH_EXPORT PetscNonlinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/slepc_eigen_solver.C b/src/solvers/slepc_eigen_solver.C
+index 97d4d57..8f30eb7 100644
+--- a/src/solvers/slepc_eigen_solver.C
++++ b/src/solvers/slepc_eigen_solver.C
+@@ -923,7 +923,7 @@ PetscErrorCode SlepcEigenSolver<T>::_petsc_shell_matrix_get_diagonal(Mat mat, Ve
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class SlepcEigenSolver<Number>;
++template class LIBMESH_EXPORT SlepcEigenSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/tao_optimization_solver.C b/src/solvers/tao_optimization_solver.C
+index 627cb4c..1af76ed 100644
+--- a/src/solvers/tao_optimization_solver.C
++++ b/src/solvers/tao_optimization_solver.C
+@@ -654,7 +654,7 @@ int TaoOptimizationSolver<T>::get_converged_reason()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class TaoOptimizationSolver<Number>;
++template class LIBMESH_EXPORT TaoOptimizationSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/trilinos_aztec_linear_solver.C b/src/solvers/trilinos_aztec_linear_solver.C
+index 9c79c7d..3cd3279 100644
+--- a/src/solvers/trilinos_aztec_linear_solver.C
++++ b/src/solvers/trilinos_aztec_linear_solver.C
+@@ -276,7 +276,7 @@ void AztecLinearSolver<T>::set_solver_type()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class AztecLinearSolver<Number>;
++template class LIBMESH_EXPORT AztecLinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/solvers/trilinos_nox_nonlinear_solver.C b/src/solvers/trilinos_nox_nonlinear_solver.C
+index abb7cdb..19b1c5b 100644
+--- a/src/solvers/trilinos_nox_nonlinear_solver.C
++++ b/src/solvers/trilinos_nox_nonlinear_solver.C
+@@ -436,7 +436,7 @@ NoxNonlinearSolver<T>::get_total_linear_iterations()
+ 
+ //------------------------------------------------------------------
+ // Explicit instantiations
+-template class NoxNonlinearSolver<Number>;
++template class LIBMESH_EXPORT NoxNonlinearSolver<Number>;
+ 
+ } // namespace libMesh
+ 
+diff --git a/src/systems/equation_systems_io.C b/src/systems/equation_systems_io.C
+index 4e9b937..513195c 100644
+--- a/src/systems/equation_systems_io.C
++++ b/src/systems/equation_systems_io.C
+@@ -581,13 +581,13 @@ void EquationSystems::write(const std::string & name,
+ 
+ // template specialization
+ 
+-template void EquationSystems::read<Number> (const std::string & name, const unsigned int read_flags, bool partition_agnostic);
+-template void EquationSystems::read<Number> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
+-template void EquationSystems::_read_impl<Number> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::read<Number> (const std::string & name, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::read<Number> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::_read_impl<Number> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template void EquationSystems::read<Real> (const std::string & name, const unsigned int read_flags, bool partition_agnostic);
+-template void EquationSystems::read<Real> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
+-template void EquationSystems::_read_impl<Real> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::read<Real> (const std::string & name, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::read<Real> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
++template LIBMESH_EXPORT void EquationSystems::_read_impl<Real> (const std::string & name, const XdrMODE mode, const unsigned int read_flags, bool partition_agnostic);
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/systems/fem_context.C b/src/systems/fem_context.C
+index f5aeef6..21763af 100644
+--- a/src/systems/fem_context.C
++++ b/src/systems/fem_context.C
+@@ -1925,131 +1925,131 @@ FEMContext::build_new_fe( const FEGenericBase<OutputShape>* fe,
+ 
+ 
+ // Instantiate member function templates
+-template void FEMContext::interior_value<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::interior_values<Number>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::interior_value<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::interior_values<Number>(unsigned int, const NumericVector<Number> &,
+                                                   std::vector<Number> &) const;
+-template void FEMContext::interior_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::interior_values<Gradient>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::interior_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_values<Gradient>(unsigned int, const NumericVector<Number> &,
+                                                     std::vector<Gradient> &) const;
+ 
+-template void FEMContext::interior_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::interior_gradients<Gradient>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::interior_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_gradients<Gradient>(unsigned int, const NumericVector<Number> &,
+                                                        std::vector<Gradient> &) const;
+-template void FEMContext::interior_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
+-template void FEMContext::interior_gradients<Tensor>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::interior_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::interior_gradients<Tensor>(unsigned int, const NumericVector<Number> &,
+                                                      std::vector<Tensor> &) const;
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::interior_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
+-template void FEMContext::interior_hessians<Tensor>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::interior_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::interior_hessians<Tensor>(unsigned int, const NumericVector<Number> &,
+                                                     std::vector<Tensor> &) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::interior_hessian<??>(unsigned int, unsigned int, ??&) const;
+-//template void FEMContext::interior_hessians<??>(unsigned int, const NumericVector<Number> &,
++//template LIBMESH_EXPORT void FEMContext::interior_hessian<??>(unsigned int, unsigned int, ??&) const;
++//template LIBMESH_EXPORT void FEMContext::interior_hessians<??>(unsigned int, const NumericVector<Number> &,
+ //                                                std::vector<??> &) const;
+ #endif
+ 
+-template void FEMContext::interior_curl<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_curl<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::interior_div<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::interior_div<Number>(unsigned int, unsigned int, Number &) const;
+ 
+-template void FEMContext::side_value<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::side_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::side_values<Number>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::side_value<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::side_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::side_values<Number>(unsigned int, const NumericVector<Number> &,
+                                               std::vector<Number> &) const;
+-template void FEMContext::side_values<Gradient>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::side_values<Gradient>(unsigned int, const NumericVector<Number> &,
+                                                 std::vector<Gradient> &) const;
+ 
+-template void FEMContext::side_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::side_gradients<Gradient>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::side_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::side_gradients<Gradient>(unsigned int, const NumericVector<Number> &,
+                                                    std::vector<Gradient> &) const;
+-template void FEMContext::side_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
+-template void FEMContext::side_gradients<Tensor>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::side_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::side_gradients<Tensor>(unsigned int, const NumericVector<Number> &,
+                                                  std::vector<Tensor> &) const;
+ 
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::side_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
+-template void FEMContext::side_hessians<Tensor>(unsigned int, const NumericVector<Number> &,
++template LIBMESH_EXPORT void FEMContext::side_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::side_hessians<Tensor>(unsigned int, const NumericVector<Number> &,
+                                                 std::vector<Tensor> &) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::side_hessian<??>(unsigned int, unsigned int,
++//template LIBMESH_EXPORT void FEMContext::side_hessian<??>(unsigned int, unsigned int,
+ //                                           ??&) const;
+-//template void FEMContext::side_hessians<??>(unsigned int, const NumericVector<Number> &,
++//template LIBMESH_EXPORT void FEMContext::side_hessians<??>(unsigned int, const NumericVector<Number> &,
+ //                                            std::vector<??> &) const;
+ #endif
+ 
+-template void FEMContext::point_value<Number>(unsigned int, const Point &, Number &, const Real) const;
+-template void FEMContext::point_value<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_value<Number>(unsigned int, const Point &, Number &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_value<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
+ 
+-template void FEMContext::point_gradient<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
+-template void FEMContext::point_gradient<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_gradient<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_gradient<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::point_hessian<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_hessian<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::point_hessian<??>(unsigned int, const Point &, ??&) const;
++//template LIBMESH_EXPORT void FEMContext::point_hessian<??>(unsigned int, const Point &, ??&) const;
+ #endif
+ 
+-template void FEMContext::point_curl<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::point_curl<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
+ 
+-template void FEMContext::fixed_interior_value<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::fixed_interior_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_interior_value<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_interior_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::fixed_interior_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::fixed_interior_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_interior_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_interior_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::fixed_interior_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_interior_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::fixed_interior_hessian<??>(unsigned int, unsigned int, ??&) const;
++//template LIBMESH_EXPORT void FEMContext::fixed_interior_hessian<??>(unsigned int, unsigned int, ??&) const;
+ #endif
+ 
+-template void FEMContext::fixed_side_value<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::fixed_side_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_side_value<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_side_value<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::fixed_side_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::fixed_side_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_side_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_side_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::fixed_side_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::fixed_side_hessian<Tensor>(unsigned int, unsigned int, Tensor &) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::fixed_side_hessian<??>(unsigned int, unsigned int, ??&) const;
++//template LIBMESH_EXPORT void FEMContext::fixed_side_hessian<??>(unsigned int, unsigned int, ??&) const;
+ #endif
+ 
+-template void FEMContext::fixed_point_value<Number>(unsigned int, const Point &, Number &, const Real) const;
+-template void FEMContext::fixed_point_value<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::fixed_point_value<Number>(unsigned int, const Point &, Number &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::fixed_point_value<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
+ 
+-template void FEMContext::fixed_point_gradient<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
+-template void FEMContext::fixed_point_gradient<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::fixed_point_gradient<Gradient>(unsigned int, const Point &, Gradient &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::fixed_point_gradient<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
+ 
+ #ifdef LIBMESH_ENABLE_SECOND_DERIVATIVES
+-template void FEMContext::fixed_point_hessian<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
++template LIBMESH_EXPORT void FEMContext::fixed_point_hessian<Tensor>(unsigned int, const Point &, Tensor &, const Real) const;
+ //FIXME: Not everything is implemented yet for second derivatives of RealGradients
+-//template void FEMContext::fixed_point_hessian<??>(unsigned int, const Point &, ??&) const;
++//template LIBMESH_EXPORT void FEMContext::fixed_point_hessian<??>(unsigned int, const Point &, ??&) const;
+ #endif
+ 
+-template void FEMContext::interior_rate<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::interior_rate<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_rate<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::interior_rate<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::interior_rate_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
+-template void FEMContext::interior_rate_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
++template LIBMESH_EXPORT void FEMContext::interior_rate_gradient<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_rate_gradient<Tensor>(unsigned int, unsigned int, Tensor &) const;
+ 
+-template void FEMContext::side_rate<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::side_rate<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::side_rate<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::side_rate<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::interior_accel<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::interior_accel<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::interior_accel<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::interior_accel<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template void FEMContext::side_accel<Number>(unsigned int, unsigned int, Number &) const;
+-template void FEMContext::side_accel<Gradient>(unsigned int, unsigned int, Gradient &) const;
++template LIBMESH_EXPORT void FEMContext::side_accel<Number>(unsigned int, unsigned int, Number &) const;
++template LIBMESH_EXPORT void FEMContext::side_accel<Gradient>(unsigned int, unsigned int, Gradient &) const;
+ 
+-template FEGenericBase<Real> *
++template LIBMESH_EXPORT FEGenericBase<Real> *
+ FEMContext::build_new_fe(const FEGenericBase<Real>*,
+                          const Point &,
+                          const Real) const;
+ 
+-template FEGenericBase<RealGradient> *
++template LIBMESH_EXPORT FEGenericBase<RealGradient> *
+ FEMContext::build_new_fe(const FEGenericBase<RealGradient>*,
+                          const Point &,
+                          const Real) const;
+diff --git a/src/systems/system_io.C b/src/systems/system_io.C
+index a0ff2c2..e9de029 100644
+--- a/src/systems/system_io.C
++++ b/src/systems/system_io.C
+@@ -2356,15 +2356,15 @@ std::size_t System::write_serialized_vectors (Xdr & io,
+ 
+ 
+ 
+-template void System::read_parallel_data<Number> (Xdr & io, const bool read_additional_data);
+-template void System::read_serialized_data<Number> (Xdr & io, const bool read_additional_data);
+-template numeric_index_type System::read_serialized_vector<Number> (Xdr & io, NumericVector<Number> * vec);
+-template std::size_t System::read_serialized_vectors<Number> (Xdr & io, const std::vector<NumericVector<Number> *> & vectors) const;
++template LIBMESH_EXPORT void System::read_parallel_data<Number> (Xdr & io, const bool read_additional_data);
++template LIBMESH_EXPORT void System::read_serialized_data<Number> (Xdr & io, const bool read_additional_data);
++template LIBMESH_EXPORT numeric_index_type System::read_serialized_vector<Number> (Xdr & io, NumericVector<Number> * vec);
++template LIBMESH_EXPORT std::size_t System::read_serialized_vectors<Number> (Xdr & io, const std::vector<NumericVector<Number> *> & vectors) const;
+ #ifdef LIBMESH_USE_COMPLEX_NUMBERS
+-template void System::read_parallel_data<Real> (Xdr & io, const bool read_additional_data);
+-template void System::read_serialized_data<Real> (Xdr & io, const bool read_additional_data);
+-template numeric_index_type System::read_serialized_vector<Real> (Xdr & io, NumericVector<Number> * vec);
+-template std::size_t System::read_serialized_vectors<Real> (Xdr & io, const std::vector<NumericVector<Number> *> & vectors) const;
++template LIBMESH_EXPORT void System::read_parallel_data<Real> (Xdr & io, const bool read_additional_data);
++template LIBMESH_EXPORT void System::read_serialized_data<Real> (Xdr & io, const bool read_additional_data);
++template LIBMESH_EXPORT numeric_index_type System::read_serialized_vector<Real> (Xdr & io, NumericVector<Number> * vec);
++template LIBMESH_EXPORT std::size_t System::read_serialized_vectors<Real> (Xdr & io, const std::vector<NumericVector<Number> *> & vectors) const;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/systems/system_projection.C b/src/systems/system_projection.C
+index a6ed127..45c40d7 100644
+--- a/src/systems/system_projection.C
++++ b/src/systems/system_projection.C
+@@ -135,10 +135,10 @@ void convert_from_receive (SendT & received,
+ namespace libMesh {
+ typedef DynamicSparseNumberArray<Real, dof_id_type> DSNAN;
+ 
+-template void
++template LIBMESH_EXPORT void
+ DenseMatrix<Real>::cholesky_solve(const DenseVector<DSNAN> &,
+                                   DenseVector<DSNAN> &);
+-template void
++template LIBMESH_EXPORT void
+ DenseMatrix<Real>::_cholesky_back_substitute(const DenseVector<DSNAN> &,
+                                              DenseVector<DSNAN> &) const;
+ }
+diff --git a/src/systems/transient_system.C b/src/systems/transient_system.C
+index b7c581d..4a40d12 100644
+--- a/src/systems/transient_system.C
++++ b/src/systems/transient_system.C
+@@ -164,13 +164,13 @@ void TransientSystem<Base>::add_old_vectors()
+ 
+ // ------------------------------------------------------------
+ // TransientSystem instantiations
+-template class TransientSystem<LinearImplicitSystem>;
+-template class TransientSystem<NonlinearImplicitSystem>;
+-template class TransientSystem<ExplicitSystem>;
+-template class TransientSystem<System>;
+-template class TransientSystem<RBConstruction>;
++template class LIBMESH_EXPORT TransientSystem<LinearImplicitSystem>;
++template class LIBMESH_EXPORT TransientSystem<NonlinearImplicitSystem>;
++template class LIBMESH_EXPORT TransientSystem<ExplicitSystem>;
++template class LIBMESH_EXPORT TransientSystem<System>;
++template class LIBMESH_EXPORT TransientSystem<RBConstruction>;
+ #ifdef LIBMESH_HAVE_SLEPC
+-template class TransientSystem<EigenSystem>;
++template class LIBMESH_EXPORT TransientSystem<EigenSystem>;
+ #endif
+ 
+ } // namespace libMesh
+diff --git a/src/utils/location_maps.C b/src/utils/location_maps.C
+index 51a3091..3f04b22 100644
+--- a/src/utils/location_maps.C
++++ b/src/utils/location_maps.C
+@@ -199,7 +199,7 @@ void LocationMap<Elem>::fill(MeshBase & mesh)
+ 
+ 
+ 
+-template class LocationMap<Elem>;
+-template class LocationMap<Node>;
++template class LIBMESH_EXPORT LocationMap<Elem>;
++template class LIBMESH_EXPORT LocationMap<Node>;
+ 
+ } // namespace libMesh
+diff --git a/src/utils/statistics.C b/src/utils/statistics.C
+index 3186395..ee69e03 100644
+--- a/src/utils/statistics.C
++++ b/src/utils/statistics.C
+@@ -367,15 +367,15 @@ std::vector<dof_id_type> StatisticsVector<T>::cut_above(Real cut) const
+ 
+ //------------------------------------------------------------
+ // Explicit Instantiations
+-template class StatisticsVector<float>;
+-template class StatisticsVector<double>;
++template class LIBMESH_EXPORT StatisticsVector<float>;
++template class LIBMESH_EXPORT StatisticsVector<double>;
+ #ifdef LIBMESH_DEFAULT_TRIPLE_PRECISION
+-template class StatisticsVector<long double>;
++template class LIBMESH_EXPORT StatisticsVector<long double>;
+ #endif
+ #ifdef LIBMESH_DEFAULT_QUADRUPLE_PRECISION
+-template class StatisticsVector<Real>;
++template class LIBMESH_EXPORT StatisticsVector<Real>;
+ #endif
+-template class StatisticsVector<int>;
+-template class StatisticsVector<unsigned int>;
++template class LIBMESH_EXPORT StatisticsVector<int>;
++template class LIBMESH_EXPORT StatisticsVector<unsigned int>;
+ 
+ } // namespace libMesh
+diff --git a/src/utils/tree.C b/src/utils/tree.C
+index 53e0ca6..15b4f30 100644
+--- a/src/utils/tree.C
++++ b/src/utils/tree.C
+@@ -157,8 +157,8 @@ Tree<N>::operator() (const Point & p,
+ 
+ // ------------------------------------------------------------
+ // Explicit Instantiations
+-template class Tree<2>;
+-template class Tree<4>;
+-template class Tree<8>;
++template class LIBMESH_EXPORT Tree<2>;
++template class LIBMESH_EXPORT Tree<4>;
++template class LIBMESH_EXPORT Tree<8>;
+ 
+ } // namespace libMesh
+diff --git a/src/utils/tree_node.C b/src/utils/tree_node.C
+index 2a3e034..e78ccef 100644
+--- a/src/utils/tree_node.C
++++ b/src/utils/tree_node.C
+@@ -604,8 +604,8 @@ const Elem * TreeNode<N>::find_element_in_children (const Point & p,
+ 
+ // ------------------------------------------------------------
+ // Explicit Instantiations
+-template class TreeNode<2>;
+-template class TreeNode<4>;
+-template class TreeNode<8>;
++template class LIBMESH_EXPORT TreeNode<2>;
++template class LIBMESH_EXPORT TreeNode<4>;
++template class LIBMESH_EXPORT TreeNode<8>;
+ 
+ } // namespace libMesh
+diff --git a/src/utils/xdr_cxx.C b/src/utils/xdr_cxx.C
+index 2f7bd1f..7817f46 100644
+--- a/src/utils/xdr_cxx.C
++++ b/src/utils/xdr_cxx.C
+@@ -1700,56 +1700,56 @@ void Xdr::comment (std::string & comment_in)
+ 
+ 
+ //
+-template void Xdr::data<int>                              (int &,                             const char *);
+-template void Xdr::data<unsigned int>                     (unsigned int &,                    const char *);
+-template void Xdr::data<unsigned short int>               (unsigned short int &,              const char *);
+-template void Xdr::data<short int>                        (short int &,                       const char *);
+-template void Xdr::data<unsigned long int>                (unsigned long int &,               const char *);
+-template void Xdr::data<unsigned long long>               (unsigned long long &,              const char *);
+-template void Xdr::data<long int>                         (long int &,                        const char *);
+-template void Xdr::data<long long>                        (long long &,                       const char *);
+-template void Xdr::data<char>                             (char &,                            const char *);
+-template void Xdr::data<signed char>                      (signed char &,                     const char *);
+-template void Xdr::data<unsigned char>                    (unsigned char &,                   const char *);
+-template void Xdr::data<float>                            (float &,                           const char *);
+-template void Xdr::data<double>                           (double &,                          const char *);
+-template void Xdr::data<long double>                      (long double &,                     const char *);
+-template void Xdr::data<std::complex<float>>              (std::complex<float> &,             const char *);
+-template void Xdr::data<std::complex<double>>             (std::complex<double> &,            const char *);
+-template void Xdr::data<std::complex<long double>>        (std::complex<long double> &,       const char *);
+-template void Xdr::data<std::string>                      (std::string &,                     const char *);
+-template void Xdr::data<std::vector<int>>                 (std::vector<int> &,                const char *);
+-template void Xdr::data<std::vector<unsigned int>>        (std::vector<unsigned int> &,       const char *);
+-template void Xdr::data<std::vector<short int>>           (std::vector<short int> &,          const char *);
+-template void Xdr::data<std::vector<unsigned short int>>  (std::vector<unsigned short int> &, const char *);
+-template void Xdr::data<std::vector<long int>>            (std::vector<long int> &,           const char *);
+-template void Xdr::data<std::vector<long long>>           (std::vector<long long> &,          const char *);
+-template void Xdr::data<std::vector<unsigned long int>>   (std::vector<unsigned long int> &,  const char *);
+-template void Xdr::data<std::vector<unsigned long long>>  (std::vector<unsigned long long> &, const char *);
+-template void Xdr::data<std::vector<char>>                (std::vector<char> &,               const char *);
+-template void Xdr::data<std::vector<signed char>>         (std::vector<signed char> &,        const char *);
+-template void Xdr::data<std::vector<unsigned char>>       (std::vector<unsigned char> &,      const char *);
+-template void Xdr::data<std::vector<float>>               (std::vector<float> &,              const char *);
+-template void Xdr::data<std::vector<double>>              (std::vector<double> &,             const char *);
+-template void Xdr::data<std::vector<long double>>         (std::vector<long double> &,        const char *);
+-template void Xdr::data<std::vector<std::complex<float>>>  (std::vector<std::complex<float>> &,  const char *);
+-template void Xdr::data<std::vector<std::complex<double>>> (std::vector<std::complex<double>> &, const char *);
+-template void Xdr::data<std::vector<std::complex<long double>>> (std::vector<std::complex<long double>> &, const char *);
+-template void Xdr::data<std::vector<std::string>>        (std::vector<std::string> &,        const char *);
+-template void Xdr::data_stream<unsigned char>      (unsigned char * val,      const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<short int>          (short int * val,          const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<int>                (int * val,                const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<long long>          (long long * val,          const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<unsigned short int> (unsigned short int * val, const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<unsigned int>       (unsigned int * val,       const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<unsigned long int>  (unsigned long int * val,  const unsigned int len, const unsigned int line_break);
+-template void Xdr::data_stream<unsigned long long> (unsigned long long * val, const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data<int>                              (int &,                             const char *);
++template LIBMESH_EXPORT void Xdr::data<unsigned int>                     (unsigned int &,                    const char *);
++template LIBMESH_EXPORT void Xdr::data<unsigned short int>               (unsigned short int &,              const char *);
++template LIBMESH_EXPORT void Xdr::data<short int>                        (short int &,                       const char *);
++template LIBMESH_EXPORT void Xdr::data<unsigned long int>                (unsigned long int &,               const char *);
++template LIBMESH_EXPORT void Xdr::data<unsigned long long>               (unsigned long long &,              const char *);
++template LIBMESH_EXPORT void Xdr::data<long int>                         (long int &,                        const char *);
++template LIBMESH_EXPORT void Xdr::data<long long>                        (long long &,                       const char *);
++template LIBMESH_EXPORT void Xdr::data<char>                             (char &,                            const char *);
++template LIBMESH_EXPORT void Xdr::data<signed char>                      (signed char &,                     const char *);
++template LIBMESH_EXPORT void Xdr::data<unsigned char>                    (unsigned char &,                   const char *);
++template LIBMESH_EXPORT void Xdr::data<float>                            (float &,                           const char *);
++template LIBMESH_EXPORT void Xdr::data<double>                           (double &,                          const char *);
++template LIBMESH_EXPORT void Xdr::data<long double>                      (long double &,                     const char *);
++template LIBMESH_EXPORT void Xdr::data<std::complex<float>>              (std::complex<float> &,             const char *);
++template LIBMESH_EXPORT void Xdr::data<std::complex<double>>             (std::complex<double> &,            const char *);
++template LIBMESH_EXPORT void Xdr::data<std::complex<long double>>        (std::complex<long double> &,       const char *);
++template LIBMESH_EXPORT void Xdr::data<std::string>                      (std::string &,                     const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<int>>                 (std::vector<int> &,                const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<unsigned int>>        (std::vector<unsigned int> &,       const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<short int>>           (std::vector<short int> &,          const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<unsigned short int>>  (std::vector<unsigned short int> &, const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<long int>>            (std::vector<long int> &,           const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<long long>>           (std::vector<long long> &,          const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<unsigned long int>>   (std::vector<unsigned long int> &,  const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<unsigned long long>>  (std::vector<unsigned long long> &, const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<char>>                (std::vector<char> &,               const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<signed char>>         (std::vector<signed char> &,        const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<unsigned char>>       (std::vector<unsigned char> &,      const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<float>>               (std::vector<float> &,              const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<double>>              (std::vector<double> &,             const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<long double>>         (std::vector<long double> &,        const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<std::complex<float>>>  (std::vector<std::complex<float>> &,  const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<std::complex<double>>> (std::vector<std::complex<double>> &, const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<std::complex<long double>>> (std::vector<std::complex<long double>> &, const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<std::string>>        (std::vector<std::string> &,        const char *);
++template LIBMESH_EXPORT void Xdr::data_stream<unsigned char>      (unsigned char * val,      const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<short int>          (short int * val,          const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<int>                (int * val,                const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<long long>          (long long * val,          const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<unsigned short int> (unsigned short int * val, const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<unsigned int>       (unsigned int * val,       const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<unsigned long int>  (unsigned long int * val,  const unsigned int len, const unsigned int line_break);
++template LIBMESH_EXPORT void Xdr::data_stream<unsigned long long> (unsigned long long * val, const unsigned int len, const unsigned int line_break);
+ 
+ #ifdef LIBMESH_DEFAULT_QUADRUPLE_PRECISION
+-template void Xdr::data<Real>                             (Real &,                            const char *);
+-template void Xdr::data<std::complex<Real>>               (std::complex<Real> &,              const char *);
+-template void Xdr::data<std::vector<Real>>                (std::vector<Real> &,               const char *);
+-template void Xdr::data<std::vector<std::complex<Real>>>  (std::vector<std::complex<Real>> &, const char *);
++template LIBMESH_EXPORT void Xdr::data<Real>                             (Real &,                            const char *);
++template LIBMESH_EXPORT void Xdr::data<std::complex<Real>>               (std::complex<Real> &,              const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<Real>>                (std::vector<Real> &,               const char *);
++template LIBMESH_EXPORT void Xdr::data<std::vector<std::complex<Real>>>  (std::vector<std::complex<Real>> &, const char *);
+ #endif
+ 
+ } // namespace libMesh
