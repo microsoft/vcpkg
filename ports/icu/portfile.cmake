@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(ICU_VERSION_MAJOR 69)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
@@ -22,10 +20,15 @@ vcpkg_extract_source_archive_ex(
         fix-extra.patch
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
+        fix-win-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
+endif()
 
 list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
 
@@ -47,6 +50,7 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
     PROJECT_SUBPATH source
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
@@ -191,6 +195,5 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

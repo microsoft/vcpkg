@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 # Upstream uses CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS, which causes issues
 # https://github.com/thestk/rtmidi/blob/4.0.0/CMakeLists.txt#L20
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

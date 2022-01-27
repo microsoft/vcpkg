@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 413709d..cbe330b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1102,7 +1102,7 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/getdns DESTINATION ${CMAKE_INSTALL
+ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/man3 DESTINATION share/man)
+ 
+ set(docdir share/doc/getdns)
+-install(FILES AUTHORS ChangeLog COPYING LICENSE NEWS README.md DESTINATION ${docdir})
++#install(FILES AUTHORS ChangeLog COPYING LICENSE NEWS README.md DESTINATION ${docdir})
+ install(FILES spec/index.html DESTINATION ${docdir}/spec)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/getdns.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 

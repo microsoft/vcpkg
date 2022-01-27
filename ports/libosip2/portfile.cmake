@@ -18,8 +18,6 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
-
     # Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
     foreach(VCXPROJ IN ITEMS
         "${SOURCE_PATH}/platform/vsnet/osip2.vcxproj"
