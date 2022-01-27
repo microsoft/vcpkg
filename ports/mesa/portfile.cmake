@@ -5,6 +5,14 @@
 set(PATCHES
     # Fix swrAVX512 build
     swravx512-post-static-link.patch
+    # Fix swr build with MSVC
+    swr-msvc-2.patch
+    # Fix swr build with LLVM 13
+    swr-llvm13.patch
+    # Fix radv MSVC build with LLVM 13
+    radv-msvc-llvm13-2.patch
+    # Fix d3d10sw MSVC build
+    d3d10sw.patch
 )
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
@@ -16,8 +24,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.2.0
-    SHA512 4837e42474d69861fbce4fa03d120b56997094d61b3045c417bbab73774dda86e4b7adf54af98585511a3517860c33c77898e6171cd845f760bada4b000ff52d
+    REF mesa-21.2.5
+    SHA512 a9ead27f08e862738938cf728928b7937ff37e4c26967f2e46e40a3c8419159397f75b2f4ce43f9b453b35bb3716df581087fb7ba8434fafdfab9488c3db6f92
+    FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
@@ -161,6 +170,10 @@ list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when bu
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
     list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
+        set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
+    endif()
 endif()
 
 vcpkg_configure_meson(
@@ -174,14 +187,14 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 #installed by egl-registry
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/egl.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
 #installed by opengl-registry
 set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
     include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
@@ -190,8 +203,8 @@ set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h
 list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
 file(REMOVE ${_double_files})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES2)
-# # Handle copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
+# Handle copyright
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

@@ -4,11 +4,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF 14f913d6ab3b0903dd36a1cb2d22f7d5493b8bb8
-    SHA512 f90762594d46946ddc512bb19b21c4d6a2f1ce81b7500a326ad512fae3a3f77e49ef3eb727ff8f98a31596e4132528212e0fa146e2eee0a9965a16551cfd0386
+    REF cf5541d180496628b8717306ef1f3fa87b89a886
+    SHA512 e82c3fd3da14ae37ebe04623ce03e8558326842aabd00fd8945a1db1dfff54b386a5e941996945981011d90cabbc3efbd2bffd49f55a34e1711940098629f70f
     HEAD_REF master
-    PATCHES
-        proj-find-fix.patch # Quiet search with version range somehow fails for proj8+
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

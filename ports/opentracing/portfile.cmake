@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET uwp)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LOCAL_OPTIONS
         -DBUILD_STATIC_LIBS=OFF

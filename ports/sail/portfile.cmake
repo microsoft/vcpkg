@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-pre18
-    SHA512 711dd34617982427155eaa4cb39d0d0004ef6bb31ac29ee07899ac0b132ed868ea30d39f424dffd8dd0e1ad8bc1c733dd1ab9e3713b5772100ae1953b4ce6e08
+    REF v0.9.0-pre19
+    SHA512 6b85ac668b478c6b3430120127cc53e8f5d8f5ba7b30ccaf0cb2f1aa48d03e7c5b1618ca1112c593fbc8fa65e425ed5ef39b21deb37165189cd7d6f243111850
     HEAD_REF master
 )
 
@@ -43,9 +41,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
+# Unused because SAIL_COMBINE_CODECS is On
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
+
 # Handle usage
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
