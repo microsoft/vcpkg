@@ -1,5 +1,4 @@
 include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake/vcpkg-port-config.cmake")
-include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-config/vcpkg-port-config.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
 
 if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
@@ -162,7 +161,7 @@ function(qt_fixup_and_cleanup)
 
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
-            vcpkg_cmake_config_fixup(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp} TOOLS_PATH "tools/Qt6/bin")
+            vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp} TOOLS_PATH "tools/Qt6/bin")
             # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_fixup_cmake_targets is working against that. 
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
