@@ -365,7 +365,7 @@ while(NOT DEFINED Z_VCPKG_ROOT_DIR)
     elseif(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}")
         get_filename_component(Z_VCPKG_ROOT_DIR_TEMP "${Z_VCPKG_ROOT_DIR_CANDIDATE}" DIRECTORY)
         if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE)
-            break() # If unchanged, we have reached the root of the drive wihout find vcpkg.
+            break() # If unchanged, we have reached the root of the drive without finding vcpkg.
         endif()
         SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
         unset(Z_VCPKG_ROOT_DIR_TEMP)
