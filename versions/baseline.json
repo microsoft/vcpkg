@@ -2670,7 +2670,7 @@
     },
     "harfbuzz": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hayai": {
       "baseline": "2019-08-10",
