@@ -121,7 +121,7 @@ function(vcpkg_build_make)
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
-    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
@@ -250,5 +250,5 @@ function(vcpkg_build_make)
         set(ENV{PATH} "${path_backup}")
     endif()
 
-    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 endfunction()
