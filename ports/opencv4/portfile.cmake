@@ -26,6 +26,8 @@ vcpkg_from_github(
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
+      0012-fix-opengl.patch
+      0013-fix-gstreamer.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -53,6 +55,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cudnn"     WITH_CUDNN
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
+ "freetype"  WITH_FREETYPE
  "gdcm"      WITH_GDCM
  "gstreamer" WITH_GSTREAMER
  "halide"    WITH_HALIDE

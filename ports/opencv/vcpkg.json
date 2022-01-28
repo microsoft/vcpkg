@@ -122,6 +122,18 @@
         }
       ]
     },
+    "freetype": {
+      "description": "freetype support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [

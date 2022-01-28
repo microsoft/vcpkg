@@ -48,6 +48,7 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "freetype",
         "gdcm",
         "ipp",
         "jasper",

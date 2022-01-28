@@ -116,6 +116,12 @@
         }
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
@@ -210,7 +216,10 @@
       ]
     },
     "python": {
-      "description": "Python wrapper support for opencv"
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",
