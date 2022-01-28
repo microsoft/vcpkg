@@ -1,5 +1,7 @@
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\n    texinfo\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive texinfo\n")
+elseif (VCPKG_TARGET_IS_OSX)
+    message(WARNING "${PORT} currently requires the following packages:\n    texinfo\nThese can be installed on OSX systems via\n    brew install texinfo\n")
 endif()
 
 set(VERSION 4.1.0)
