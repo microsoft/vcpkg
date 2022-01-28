@@ -51,7 +51,7 @@ endfunction()
 function(qt_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA"
                       ""
-                      "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE")
+                      "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
     
     vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
@@ -94,8 +94,9 @@ function(qt_cmake_configure)
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
             #-DQT_USE_CCACHE
-            -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
-            -DQT_NO_MAKE_TESTS:BOOL=TRUE
+            -DQT_BUILD_EXAMPLES:BOOL=OFF
+            -DQT_BUILD_TESTS:BOOL=OFF
+            -DQT_BUILD_BENCHMARKS:BOOL=OFF
             ${PERL_OPTION}
             -DINSTALL_BINDIR:STRING=bin
             -DINSTALL_LIBEXECDIR:STRING=bin
@@ -110,13 +111,18 @@ function(qt_cmake_configure)
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
         OPTIONS_DEBUG
-            -DINPUT_debug:BOOL=ON
+            -DFEATURE_debug:BOOL=ON
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=../include/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
-            ${_qis_CONFIGURE_OPTIONS_DEBUG}
+            ${_qis_OPTIONS_DEBUG}
+        MAYBE_UNUSED
+            INSTALL_QMLDIR  # No qml files
+            INSTALL_TRANSLATIONSDIR # No translations
+            INSTALL_PLUGINSDIR # No plugins
+            ${_qis_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
@@ -242,7 +248,7 @@ endfunction()
 function(qt_install_submodule)
     cmake_parse_arguments(PARSE_ARGV 0 "_qis" "DISABLE_NINJA"
                           ""
-                          "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE")
+                          "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE;CONFIGURE_OPTIONS_MAYBE_UNUSED")
 
     set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
@@ -252,13 +258,19 @@ function(qt_install_submodule)
         return()
     endif()
 
+    # Disable warning for CMAKE_DISABLE_FIND_PACKAGE_<packagename>
+    string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^=]+" disabled_find_package "${_qis_CONFIGURE_OPTIONS}")
+    list(APPEND _qis_CONFIGURE_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
+
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
     endif()
     qt_cmake_configure(${_opt} 
                        OPTIONS ${_qis_CONFIGURE_OPTIONS}
                        OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
-                       OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
+                       OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE}
+                       OPTIONS_MAYBE_UNUSED ${_qis_CONFIGURE_OPTIONS_MAYBE_UNUSED}
+                       )
 
     vcpkg_cmake_install(ADD_BIN_TO_PATH)
 

@@ -88,6 +88,7 @@ vcpkg_from_github(
     REF 6236113734bb0a28467e5999e86fdd2834be8e01
     SHA512 38effe92aaebd7113ad3bf3b70c1b3564d6226a766aa968c80ab35fa90ae78d601486226f97d16fa5bd3abf314db19f9f0c90e31de91e87bda82cde27f0a57dc
     HEAD_REF master
+    PATCHES no_src_changes.patch
 )
 
 ##### qt_install_submodule
@@ -111,7 +112,7 @@ qt_cmake_configure(${_opt}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
