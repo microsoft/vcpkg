@@ -1,25 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a8011fb..9fc05c7 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -155,17 +155,6 @@ endif()
- # Use solution folders.
- set_property(GLOBAL PROPERTY USE_FOLDERS ON)
- 
--# build the parson library for json parsing
--add_library(parson
--    ./deps/parson/parson.c
--    ./deps/parson/parson.h
--)
--if (MSVC)
--    set_source_files_properties(../deps/parson/parson.c PROPERTIES COMPILE_FLAGS "/wd4244 /wd4232")
--endif()
--set(parson_h_install_files ./deps/parson/parson.h)
--set(parson_install_libs parson)
--
- if (IN_OPENWRT)
-     ADD_DEFINITIONS("$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
-     INCLUDE_DIRECTORIES("$ENV{TOOLCHAIN_DIR}/usr/include" "$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
 diff --git a/configs/azure_iot_sdksConfig.cmake b/configs/azure_iot_sdksConfig.cmake
 index b9c62e8..edf5847 100644
 --- a/configs/azure_iot_sdksConfig.cmake
@@ -35,48 +13,16 @@ index b9c62e8..edf5847 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/azure_iot_sdksTargets.cmake")
  
-diff --git a/dependencies.cmake b/dependencies.cmake
-index fd06df6..c0e06fa 100644
---- a/dependencies.cmake
-+++ b/dependencies.cmake
-@@ -18,6 +18,9 @@ if(${use_installed_dependencies})
-         endif ()
-     endif ()
- 
-+    find_package(unofficial-parson REQUIRED)
-+    link_libraries(unofficial::parson::parson)
-+
- else ()
-     add_subdirectory(c-utility)
- 
 diff --git a/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt b/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
-index 161872a..d53e111 100644
+index 33b5b8709..45ef7b87a 100644
 --- a/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
 +++ b/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
-@@ -31,12 +31,10 @@ set(${theseTestsName}_nuget_c_files
+@@ -22,11 +22,9 @@ set(${theseTestsName}_c_files
  
  set(${theseTestsName}_c_files
      ../../../certs/certs.c
 -    ../../../deps/parson/parson.c
  )
- 
- set(${theseTestsName}_h_files
-     ../../../certs/certs.h
--    ../../../deps/parson/parson.h
-     ../common_dt_e2e/iothubclient_common_dt_e2e.h
- )
- 
-diff --git a/iothub_client/tests/iothubclient_mqtt_dt_e2e/CMakeLists.txt b/iothub_client/tests/iothubclient_mqtt_dt_e2e/CMakeLists.txt
-index d472161..b0291e8 100644
---- a/iothub_client/tests/iothubclient_mqtt_dt_e2e/CMakeLists.txt
-+++ b/iothub_client/tests/iothubclient_mqtt_dt_e2e/CMakeLists.txt
-@@ -31,12 +31,10 @@ set(${theseTestsName}_nuget_c_files
- 
- set(${theseTestsName}_c_files
-     ../../../certs/certs.c
--    ../../../deps/parson/parson.c
- )
- 
  set(${theseTestsName}_h_files
      ../../../certs/certs.h
 -    ../../../deps/parson/parson.h
@@ -100,18 +46,25 @@ index d05d654..5872c8d 100644
      ../common_dt_e2e/iothubclient_common_dt_e2e.h
  )
  
-diff --git a/iothub_service_client/CMakeLists.txt b/iothub_service_client/CMakeLists.txt
-index e47473e..b073513 100644
---- a/iothub_service_client/CMakeLists.txt
-+++ b/iothub_service_client/CMakeLists.txt
-@@ -81,9 +81,7 @@ endif()
- setSdkTargetBuildProperties(iothub_service_client)
+diff --git a/deps/CMakeLists.txt b/deps/CMakeLists.txt
+index 22e24f851..7dc30beba 100644
+--- a/deps/CMakeLists.txt
++++ b/deps/CMakeLists.txt
+@@ -37,5 +37,4 @@ endif()
+ if(NOT ${use_installed_dependencies})
+     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/parson)
+ else()
+-    find_package(parson REQUIRED CONFIG)
+ endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b72bd41ed..b2812f1fd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -242,7 +242,6 @@ endif()
  
- if(NOT ${nuget_e2e_tests})
--    target_link_libraries(iothub_service_client uamqp parson)
--else()
--    target_link_libraries(iothub_service_client parson)
-+    target_link_libraries(iothub_service_client uamqp)
+ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/deps)
+ if(${use_installed_dependencies})
+-    find_package(parson REQUIRED CONFIG)
  endif()
  
- if (NOT ${ARCHITECTURE} STREQUAL "ARM")
+ include_directories(${MACRO_UTILS_INC_FOLDER})
