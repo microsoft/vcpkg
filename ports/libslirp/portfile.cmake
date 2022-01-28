@@ -11,7 +11,7 @@ vcpkg_acquire_msys(MSYS_ROOT)
 vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
 )
@@ -20,6 +20,6 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libslirp RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libslirp" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
