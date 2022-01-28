@@ -11,11 +11,9 @@ These can be installed on Ubuntu systems via sudo apt install autoconf libtool"
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alsa-project/alsa-lib
-    REF v1.2.5.1
-    SHA512 1c8613e520bd24ec2332b677a35d1c49171781f6408be61c79ec90d143d424d8df6e1c9e22e082d331022e0fe858145f7ea214a7b731ed5e306762194b49d50e
+    REF v1.2.6.1
+    SHA512 d1de9112ec0d600db6e5a20b558811a7a9f34d00a9b1dfb5332669b73732c1c1b8ddda57368edc199e255eba8bcb8a6767b4d9325c9860ade02d84dcaac6eb47
     HEAD_REF master
-    PATCHES
-        0001-control-empty-fix-the-static-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
