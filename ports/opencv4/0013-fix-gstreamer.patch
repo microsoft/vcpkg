@@ -1,5 +1,3 @@
-diff --git a/modules/videoio/cmake/detect_gstreamer.cmake b/modules/videoio/cmake/detect_gstreamer.cmake
-index fc6c347..94936d2 100644
 --- a/modules/videoio/cmake/detect_gstreamer.cmake
 +++ b/modules/videoio/cmake/detect_gstreamer.cmake
 @@ -44,6 +44,10 @@ if(NOT HAVE_GSTREAMER AND WIN32)
