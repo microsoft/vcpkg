@@ -42,6 +42,7 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1104:"
     "LINK : fatal error LNK1201:"
     "ld terminated with signal 9"
+    "Killed signal terminated program"
     # Multiple threads using the same directory at the same time cause conflicts, will try again.
     "Cannot create parent directory"
     "Cannot write file"

@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-gfortran",
-  "version-string": "3",
-  "port-version": 1,
+  "version": "3",
+  "port-version": 2,
   "description": "Metaport to install gfortran dependencies from msys if VCPKG_USE_EXTERNAL_Fortran is false",
   "supports": "windows & !arm"
 }
