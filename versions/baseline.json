@@ -313,8 +313,8 @@
       "port-version": 1
     },
     "azure-c-shared-utility": {
-      "baseline": "2021-09-09",
-      "port-version": 1
+      "baseline": "2022-01-21",
+      "port-version": 0
     },
     "azure-core-cpp": {
       "baseline": "1.3.1",
@@ -325,7 +325,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2021-09-09",
+      "baseline": "2022-01-21",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
@@ -333,8 +333,8 @@
       "port-version": 4
     },
     "azure-macro-utils-c": {
-      "baseline": "2020-06-17",
-      "port-version": 3
+      "baseline": "2022-01-21",
+      "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.0.0-beta.1",
@@ -373,15 +373,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2021-09-09",
+      "baseline": "2022-01-21",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2021-09-09",
+      "baseline": "2022-01-21",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2021-09-09",
+      "baseline": "2022-01-21",
       "port-version": 0
     },
     "b64": {
@@ -418,7 +418,7 @@
     },
     "benchmark": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "bento4": {
       "baseline": "1.5.1",
@@ -1146,7 +1146,7 @@
     },
     "brpc": {
       "baseline": "0.9.7",
-      "port-version": 4
+      "port-version": 5
     },
     "brunocodutra-metal": {
       "baseline": "2.1.3",
@@ -1461,8 +1461,8 @@
       "port-version": 6
     },
     "colmap": {
-      "baseline": "3.6",
-      "port-version": 2
+      "baseline": "3.7",
+      "port-version": 0
     },
     "comms": {
       "baseline": "3.4.0",
@@ -1670,7 +1670,7 @@
     },
     "cspice": {
       "baseline": "67",
-      "port-version": 0
+      "port-version": 1
     },
     "ctbignum": {
       "baseline": "2019-08-02",
@@ -2178,11 +2178,11 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 4
+      "port-version": 5
     },
     "flash-runtime-extensions": {
       "baseline": "2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "flashlight-cpu": {
       "baseline": "0.3",
@@ -2225,7 +2225,7 @@
       "port-version": 4
     },
     "fmt": {
-      "baseline": "8.1.0",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "folly": {
@@ -2289,8 +2289,8 @@
       "port-version": 2
     },
     "freetype": {
-      "baseline": "2.11.0",
-      "port-version": 2
+      "baseline": "2.11.1",
+      "port-version": 0
     },
     "freetype-gl": {
       "baseline": "2020-09-14",
@@ -2426,7 +2426,7 @@
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "gettext": {
       "baseline": "0.21",
@@ -2530,6 +2530,10 @@
     },
     "gmsh": {
       "baseline": "4.9.0",
+      "port-version": 0
+    },
+    "gobject-introspection": {
+      "baseline": "1.70.0",
       "port-version": 0
     },
     "google-cloud-cpp": {
@@ -2665,8 +2669,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "3.0.0",
-      "port-version": 2
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2734,7 +2738,7 @@
     },
     "hwloc": {
       "baseline": "2.5.0",
-      "port-version": 1
+      "port-version": 3
     },
     "hyperscan": {
       "baseline": "5.3.0",
@@ -5018,7 +5022,7 @@
     },
     "openimageio": {
       "baseline": "2.3.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openjpeg": {
       "baseline": "2.4.0",
@@ -5073,8 +5077,8 @@
       "port-version": 4
     },
     "opentelemetry-cpp": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "1.1.1",
+      "port-version": 0
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6112,10 +6116,6 @@
       "baseline": "1.1.4",
       "port-version": 1
     },
-    "rs-core-lib": {
-      "baseline": "2020-09-14",
-      "port-version": 1
-    },
     "rsasynccpp": {
       "baseline": "0.0.7",
       "port-version": 1
@@ -6257,8 +6257,8 @@
       "port-version": 4
     },
     "sdl2": {
-      "baseline": "2.0.16",
-      "port-version": 3
+      "baseline": "2.0.20",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -6457,8 +6457,8 @@
       "port-version": 0
     },
     "sockpp": {
-      "baseline": "0.7",
-      "port-version": 2
+      "baseline": "2022-01-24",
+      "port-version": 0
     },
     "soem": {
       "baseline": "1.4.0",
@@ -6485,8 +6485,8 @@
       "port-version": 1
     },
     "sophus": {
-      "baseline": "1.0.0",
-      "port-version": 7
+      "baseline": "2021-09-14",
+      "port-version": 0
     },
     "soqt": {
       "baseline": "1.6.0",
@@ -6538,7 +6538,7 @@
     },
     "spdk-isal": {
       "baseline": "20181006",
-      "port-version": 1
+      "port-version": 2
     },
     "spdlog": {
       "baseline": "1.9.2",
@@ -7029,16 +7029,16 @@
       "port-version": 2
     },
     "umock-c": {
-      "baseline": "2020-06-17",
-      "port-version": 2
+      "baseline": "2022-01-21",
+      "port-version": 0
     },
     "unicorn": {
       "baseline": "2020-09-14",
       "port-version": 2
     },
     "unicorn-lib": {
-      "baseline": "2020-03-02",
-      "port-version": 2
+      "baseline": "2022-01-24",
+      "port-version": 0
     },
     "units": {
       "baseline": "2.3.1",
@@ -7342,7 +7342,7 @@
     },
     "wt": {
       "baseline": "4.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "wtl": {
       "baseline": "10.0.10320",
@@ -7489,8 +7489,8 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.8.12",
-      "port-version": 2
+      "baseline": "4.8.14",
+      "port-version": 0
     },
     "z85": {
       "baseline": "1.0",
@@ -7498,7 +7498,7 @@
     },
     "zeromq": {
       "baseline": "4.3.4",
-      "port-version": 3
+      "port-version": 4
     },
     "zfp": {
       "baseline": "0.5.5",

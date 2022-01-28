@@ -1,6 +1,7 @@
 {
   "name": "cspice",
-  "version-string": "67",
+  "version": "67",
+  "port-version": 1,
   "description": "NASA C SPICE toolkit",
   "homepage": "https://naif.jpl.nasa.gov/naif/toolkit_C.html",
   "supports": "!((arm | arm64) & windows)",
