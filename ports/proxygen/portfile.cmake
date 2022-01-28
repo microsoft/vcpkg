@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         remove-register.patch
         fix-duplicated-target.patch # fixed in master
+        fix-zstd-mvfst-zlib-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
