@@ -477,6 +477,7 @@ vcpkg_cmake_configure(
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
+        -DBUILD_opencv_python3=${BUILD_opencv_python3}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
         -DBUILD_opencv_gapi=${BUILD_opencv_gapi}
