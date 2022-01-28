@@ -3,6 +3,7 @@
   "version": "14.1",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
+  "license": "PostgreSQL",
   "supports": "!uwp",
   "dependencies": [
     {
