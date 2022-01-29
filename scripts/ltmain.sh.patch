@@ -1,0 +1,25 @@
+diff --git a/ltmain.sh b/ltmain.sh
+index 000f40a..3898fca 100644
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -31,3 +31,20 @@ func_relative_path ()
+ 
++quote_subst()
++{
++    var=$1
++    arg=$2
++
++    quote_subst_result=
++    for ((i = 0; i < ${#arg}; i++)) do
++        c=${arg:$i:1}
++        case $c in
++        [\\\'\"\$])
++            c=\\$c;;
++        esac
++        quote_subst_result+=$c
++    done
++    eval "$var=\$quote_subst_result"
++}
++
+ PROGRAM=libtool
+ PACKAGE=libtool

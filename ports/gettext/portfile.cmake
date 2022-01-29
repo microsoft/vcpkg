@@ -83,7 +83,7 @@ function(build_libintl_only)
     if(DEFINED arg_BUILD_TYPE)
         set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     endif()
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}" PROJECT_SUBPATH "gettext-runtime"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
         ADD_BIN_TO_PATH # So configure can check for working iconv

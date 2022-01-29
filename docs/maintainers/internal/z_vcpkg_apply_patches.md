@@ -9,6 +9,7 @@ Apply a set of patches to a source tree.
 ```cmake
 z_vcpkg_apply_patches(
     SOURCE_PATH <path-to-source>
+    [RESULT <result-var>]
     [QUIET]
     PATCHES <patch>...
 )
@@ -16,6 +17,8 @@ z_vcpkg_apply_patches(
 
 The `<path-to-source>` should be set to `${SOURCE_PATH}` by convention,
 and is the path to apply the patches in.
+
+If `RESULT` is passed the result (TRUE/FALSE) is saved in the output variable.
 
 `z_vcpkg_apply_patches` will take the list of `<patch>`es,
 which are by default relative to the port directory,

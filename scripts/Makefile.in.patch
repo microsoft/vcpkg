@@ -1,0 +1,14 @@
+diff --git a/Makefile.in b/Makefile.in
+index 03de1f1..daacada 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -774,7 +774,6 @@ distclean-compile:
+ 
+-$(am__depfiles_remade):
++$(am__depfiles_remade)&:
+- 	@$(MKDIR_P) $(@D)
+-	@echo '# dummy' >$@-t && $(am__mv) $@-t $@
++	@for f in $(am__depfiles_remade); do if ! test -f $$f; then test -d $${f%/*} || $(MKDIR_P) $${f%/*}; echo '# dummy' >$$f; fi; done
+ 
+ am--depfiles: $(am__depfiles_remade)
+ 

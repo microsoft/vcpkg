@@ -8,6 +8,7 @@ Apply a set of patches to a source tree.
 ```cmake
 z_vcpkg_apply_patches(
     SOURCE_PATH <path-to-source>
+    [RESULT <result-var>]
     [QUIET]
     PATCHES <patch>...
 )
@@ -15,6 +16,8 @@ z_vcpkg_apply_patches(
 
 The `<path-to-source>` should be set to `${SOURCE_PATH}` by convention,
 and is the path to apply the patches in.
+
+If `RESULT` is passed the result (TRUE/FALSE) is saved in the output variable.
 
 `z_vcpkg_apply_patches` will take the list of `<patch>`es,
 which are by default relative to the port directory,
@@ -29,7 +32,7 @@ This should only be used for edge cases, such as patches that are known to fail 
 #]===]
 
 function(z_vcpkg_apply_patches)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "QUIET" "SOURCE_PATH" "PATCHES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "QUIET" "SOURCE_PATH;RESULT" "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "internal error: z_vcpkg_apply_patches was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -44,6 +47,7 @@ function(z_vcpkg_apply_patches)
 
     set(ENV{GIT_CONFIG_NOSYSTEM} 1)
     set(patchnum 0)
+    set(result TRUE)
     foreach(patch IN LISTS arg_PATCHES)
         get_filename_component(absolute_patch "${patch}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         message(STATUS "Applying patch ${patch}")
@@ -58,6 +62,7 @@ function(z_vcpkg_apply_patches)
         file(WRITE "${CURRENT_BUILDTREES_DIR}/${logname}-err.log" "${error}")
 
         if(error_code)
+            set(result FALSE)
             if(arg_QUIET)
                 message(STATUS "Applying patch ${patch} - failure silenced")
             else()
@@ -71,5 +76,9 @@ function(z_vcpkg_apply_patches)
         set(ENV{GIT_CONFIG_NOSYSTEM} "${git_config_nosystem_backup}")
     else()
         unset(ENV{GIT_CONFIG_NOSYSTEM})
+    endif()
+
+    if(arg_RESULT)
+      set("${arg_RESULT}" "${result}" PARENT_SCOPE)
     endif()
 endfunction()

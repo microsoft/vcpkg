@@ -430,15 +430,16 @@ function(vcpkg_configure_make)
         # Variables not correctly detected by configure. In release builds.
         list(APPEND arg_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
-        #list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
+        list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
         if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
             list(APPEND arg_OPTIONS gl_cv_host_cpu_c_abi=no)
             # Currently needed for arm64 because objdump yields: "unrecognised machine type (0xaa64) in Import Library Format archive"
-            list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
+#            list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]$")
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
-            list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
+#            list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
+        list(APPEND arg_OPTIONS acl_cv_libpath=none)
     endif()
 
     # Some PATH handling for dealing with spaces....some tools will still fail with that!
@@ -748,6 +749,41 @@ function(vcpkg_configure_make)
         endforeach()
         vcpkg_list(JOIN tmp " " "${var}")
     endforeach()
+
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(STATUS "Looking for ltmain.sh files in ${arg_SOURCE_PATH}")
+        file(GLOB_RECURSE ltmain_files "${arg_SOURCE_PATH}/ltmain.sh")
+        foreach(ltmain_file IN LISTS ltmain_files)
+            message(STATUS "Patching ${ltmain_file}")
+            get_filename_component(ltmain_dir "${ltmain_file}" DIRECTORY)
+            set(result FALSE)
+            z_vcpkg_apply_patches(SOURCE_PATH "${ltmain_dir}" RESULT result QUIET
+                PATCHES "${SCRIPTS}/ltmain.sh.patch"
+            )
+            if(result)
+                file(READ "${ltmain_file}" contents)
+
+                # _G_unquoted_arg=`printf '%s\n' "$1" |$SED "$sed_quote_subst"`
+                string(REGEX REPLACE [[([a-zA-Z0-9_]+)=`printf '%s\\n' ([^ \t]+) \| *\$SED "\$sed_quote_subst"`]] [[quote_subst \1 \2]] contents "${contents}")
+
+                # func_quote_for_eval_unquoted_result=`$ECHO "$1" | $SED "$sed_quote_subst"`
+                string(REGEX REPLACE [[([a-zA-Z0-9_]+)=`\$ECHO ([^ \t]+) \| *\$SED "\$sed_quote_subst"`]] [[quote_subst \1 \2]] contents "${contents}")
+
+                file(WRITE "${ltmain_file}" "${contents}")
+            endif()
+        endforeach()
+
+        # speed up for configure (executing depfiles commands): create all .Plo files at once 
+        message(STATUS "Looking for Makefile.in files in ${arg_SOURCE_PATH}")
+        file(GLOB_RECURSE make_files "${arg_SOURCE_PATH}/Makefile.in")
+        foreach(make_file IN LISTS make_files)
+            message(STATUS "Patching ${make_file}")
+            get_filename_component(make_dir "${make_file}" DIRECTORY)
+            z_vcpkg_apply_patches(SOURCE_PATH "${make_dir}" QUIET
+                PATCHES "${SCRIPTS}/Makefile.in.patch"
+            )
+        endforeach() 
+    endif()
 
     foreach(current_buildtype IN LISTS all_buildtypes)
         foreach(ENV_VAR ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
