@@ -117,12 +117,12 @@ function(qt_cmake_configure)
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
-            ${_qis_OPTIONS_DEBUG}
-        MAYBE_UNUSED
+            ${_qarg_OPTIONS_DEBUG}
+        MAYBE_UNUSED_VARIABLES
             INSTALL_QMLDIR  # No qml files
             INSTALL_TRANSLATIONSDIR # No translations
             INSTALL_PLUGINSDIR # No plugins
-            ${_qis_OPTIONS_MAYBE_UNUSED}
+            ${_qarg_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
