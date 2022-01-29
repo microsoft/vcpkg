@@ -86,6 +86,10 @@ function(qt_cmake_configure)
         endif()
     endif()
 
+    # Disable warning for CMAKE_DISABLE_FIND_PACKAGE_<packagename>
+    string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^:=]+" disabled_find_package "${_qarg_OPTIONS}")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${NINJA_OPTION}
@@ -257,10 +261,6 @@ function(qt_install_submodule)
     if(QT_UPDATE_VERSION)
         return()
     endif()
-
-    # Disable warning for CMAKE_DISABLE_FIND_PACKAGE_<packagename>
-    string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^=]+" disabled_find_package "${_qis_CONFIGURE_OPTIONS}")
-    list(APPEND _qis_CONFIGURE_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
