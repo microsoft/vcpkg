@@ -62,17 +62,10 @@ function(qt_cmake_configure)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()
 
-    if(CMAKE_HOST_WIN32)
-        if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
-        endif()
-        set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
-    else()
-        if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qarg_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl)
-        endif()
-        set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
+    if(NOT ${PORT} MATCHES "qtbase")
+        list(APPEND _qarg_OPTIONS "-DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
     endif()
+    set(PERL_OPTION "-DHOST_PERL:PATH=${PERL}")
 
     if(NOT _qarg_DISABLE_NINJA)
         set(NINJA_OPTION PREFER_NINJA)
@@ -121,7 +114,7 @@ function(qt_cmake_configure)
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
         OPTIONS_DEBUG
-            -DFEATURE_debug:BOOL=ON
+            # -DFEATURE_debug:BOOL=ON only needed by qtbase and auto detected?
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=../include/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
