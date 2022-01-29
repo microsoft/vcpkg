@@ -35,30 +35,17 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/liblzma)
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/lzma.h _contents)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "defined(LZMA_API_STATIC)" "1" _contents "${_contents}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lzma.h" "defined(LZMA_API_STATIC)" "1")
 else()
-    string(REPLACE "defined(LZMA_API_STATIC)" "0" _contents "${_contents}")
-endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzma.h "${_contents}")
-
-if (VCPKG_BUILD_TYPE STREQUAL debug)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include")
-else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lzma.h" "defined(LZMA_API_STATIC)" "0")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/lzma.h"
-        "if !defined(LZMA_API_STATIC)"
-        "if 0"
-    )
-endif()
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
 set(TOOLS xz xzdec)
 foreach(_tool IN LISTS TOOLS)
@@ -74,5 +61,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
