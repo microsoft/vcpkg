@@ -36,7 +36,7 @@ find_library(WEBPDECODER_DEBUG NAMES webpdecoder libwebpdecoder webpdecoderd lib
 
 #Dependent libraries
 find_library(LZMA_RELEASE lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(LZMA_DEBUG lzmad lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(LZMA_DEBUG lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     string(APPEND WEBP_RELEASE " -pthread")
