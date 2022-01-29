@@ -13,8 +13,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        "-DCMAKE_DEBUG_POSTFIX=d" # This was in the old vcpkg CMakeLists.txt and I don't intend to fix it all over vcpkg 
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -27,17 +25,13 @@ set(PACKAGE_VERSION 5.2.5)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(PTHREAD_CFLAGS -pthread)
 endif()
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  set(prefix "${CURRENT_INSTALLED_DIR}")
-  configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
-endif()
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+set(prefix "${CURRENT_INSTALLED_DIR}")
+configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
+if (NOT VCPKG_BUILD_TYPE)
   set(prefix "${CURRENT_INSTALLED_DIR}/debug")
   configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" "-llzma" "-llzmad")
 endif()
 vcpkg_fixup_pkgconfig()
-
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/liblzma)
 
@@ -48,7 +42,7 @@ include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 find_path(LibLZMA_INCLUDE_DIR NAMES lzma.h PATHS \"\${_IMPORT_PREFIX}/include\" NO_DEFAULT_PATH REQUIRED)
 if(NOT LibLZMA_LIBRARY)
     find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma PATHS \"\${_IMPORT_PREFIX}/lib\" NO_DEFAULT_PATH)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad PATHS \"\${_IMPORT_PREFIX}/debug/lib\" NO_DEFAULT_PATH)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzma PATHS \"\${_IMPORT_PREFIX}/debug/lib\" NO_DEFAULT_PATH)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
