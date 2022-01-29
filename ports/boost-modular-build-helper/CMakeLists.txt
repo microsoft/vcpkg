@@ -137,7 +137,7 @@ if(NOT CFLAGS STREQUAL "")
     string(REPLACE " " "\" <cflags>\"" CFLAGS "<cflags>\"${CFLAGS}\"")
 endif()
 if(NOT LDFLAGS STREQUAL "")
-    list(APPEND B2_OPTIONS linkflags="${LDFLAGS}")
+    list(APPEND B2_OPTIONS "linkflags=${LDFLAGS}")
     string(REPLACE " " "\" <linkflags>\"" LDFLAGS "<linkflags>\"${LDFLAGS}\"")
 endif()
 
