@@ -91,7 +91,8 @@ if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
     file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
 endif()
 
-qt_cmake_configure(OPTIONS ${FEATURE_OPTIONS}
+qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes. 
+                    OPTIONS ${FEATURE_OPTIONS}
                         -DGPerf_EXECUTABLE=${GPERF}
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}

@@ -49,7 +49,7 @@ endfunction()
 
 
 function(qt_cmake_configure)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA"
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA;DISABLE_PARALLEL_CONFIGURE"
                       ""
                       "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
     
@@ -77,10 +77,15 @@ function(qt_cmake_configure)
     if(NOT _qarg_DISABLE_NINJA)
         set(NINJA_OPTION PREFER_NINJA)
     endif()
+    
+    set(disable_parallel "")
+    if(_qarg_DISABLE_PARALLEL_CONFIGURE)
+        set(disable_parallel DISABLE_PARALLEL_CONFIGURE)
+    endif()
 
     if(VCPKG_CROSSCOMPILING)
-        list(APPEND _qarg_OPTIONS -DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR})
-        list(APPEND _qarg_OPTIONS -DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share)
+        list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR}")
+        list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share")
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 AND VCPKG_TARGET_IS_WINDOWS) # Remove if PR #16111 is merged
             list(APPEND _qarg_OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
         endif()
@@ -93,6 +98,7 @@ function(qt_cmake_configure)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${NINJA_OPTION}
+        ${disable_parallel}
         OPTIONS 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
