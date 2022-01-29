@@ -1,7 +1,6 @@
 {
   "name": "s2n",
   "version-date": "2022-01-24",
-  "port-version": 1,
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
   "supports": "!uwp & !windows",
