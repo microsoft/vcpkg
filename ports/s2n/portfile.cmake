@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DUNSAFE_TREAT_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,6 +1,3 @@
-# https://github.com/raysan5/raylib/issues/388
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:

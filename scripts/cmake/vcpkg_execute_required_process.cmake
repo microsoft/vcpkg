@@ -120,6 +120,7 @@ Halting portfile execution.
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
 

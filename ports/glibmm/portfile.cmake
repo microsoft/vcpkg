@@ -1,5 +1,4 @@
 # Glib uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/2.68/glibmm-2.68.1.tar.xz"
@@ -13,13 +12,15 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/glibmm-2.68/proc" "${CURRENT_PACKAGES_DIR}/lib/glibmm-2.68/proc")
 
 vcpkg_fixup_pkgconfig()
 

@@ -139,6 +139,9 @@ if(CMD MATCHES "^BUILD$")
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
 
+    set(Z_VCPKG_ERROR_LOG_COLLECTION_FILE "${CURRENT_BUILDTREES_DIR}/error-logs-${TARGET_TRIPLET}.txt")
+    file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
+
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
         include("${SCRIPTS}/build_info.cmake")

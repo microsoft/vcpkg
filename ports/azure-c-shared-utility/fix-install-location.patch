@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index deeaae7d..c0c84275 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -675,7 +675,7 @@ if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+     set(CMAKE_INSTALL_LIBDIR "lib")
+ endif()
+ 
+-set(package_location "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
++set(package_location "cmake")
+ 
+ if(${build_as_dynamic})
+     set(targets aziotsharedutil aziotsharedutil_dll)
+@@ -689,7 +689,7 @@ install (TARGETS ${targets} EXPORT aziotsharedutilTargets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot
+ )
+-install (FILES ${source_h_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azure_c_shared_utility)
++install (FILES ${source_h_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot/azure_c_shared_utility)
+ install (FILES ${micromock_h_files_full_path} ${INSTALL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot)
+ 
+ 
