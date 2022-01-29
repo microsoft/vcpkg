@@ -11,7 +11,7 @@ vcpkg_from_github(
 )
 
 vcpkg_build_nmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH "src"
     PROJECT_NAME "Makefile"
     OPTIONS "PROCESSOR_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
