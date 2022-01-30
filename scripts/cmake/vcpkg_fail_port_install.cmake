@@ -1,6 +1,5 @@
 # DEPRECATED: in favor of the `supports` field in [`manifest file`](manifest-files.md#supports) et al.
 
-
 #[===[.md:
 # vcpkg_fail_port_install
 
