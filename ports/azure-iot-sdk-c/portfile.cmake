@@ -11,6 +11,7 @@ if("public-preview" IN_LIST FEATURES)
             fix-install-location.patch
             improve-external-deps.patch
             remove-werror.patch
+            fix-iothubclient-includes.patch
     )
 else()
     vcpkg_from_github(
@@ -23,6 +24,7 @@ else()
             fix-install-location.patch
             improve-external-deps.patch
             remove-werror.patch
+            fix-iothubclient-includes.patch
     )
 endif()
 
