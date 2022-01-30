@@ -11,6 +11,7 @@ if("public-preview" IN_LIST FEATURES)
             fix-install-location.patch
             fix-utilityFunctions-conditions-preview.patch
             disable-error.patch
+            improve-dependencies.patch
     )
 else()
     vcpkg_from_github(
@@ -23,6 +24,7 @@ else()
             fix-install-location.patch
             fix-utilityFunctions-conditions.patch
             disable-error.patch
+            improve-dependencies.patch
     )
 endif()
 
