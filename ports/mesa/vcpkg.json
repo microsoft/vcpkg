@@ -1,6 +1,7 @@
 {
   "name": "mesa",
   "version": "21.2.5",
+  "port-version": 2,
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "supports": "!(windows & arm)",

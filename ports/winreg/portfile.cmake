@@ -1,6 +1,3 @@
-# WinReg - Header-only library
-vcpkg_fail_port_install(ON_TARGET "linux" "osx")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg

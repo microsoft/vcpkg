@@ -20,6 +20,8 @@ and this is something we recommend doing whenever possible.
 Otherwise, you can use `TARGET` to set the target to build.
 This function defaults to not passing a target to cmake.
 
+[`vcpkg_cmake_install()`]: vcpkg_cmake_install.md
+
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `build`, and thus the logfiles end up being something like
 `build-x86-windows-dbg.log`; if you use `vcpkg_cmake_install`,

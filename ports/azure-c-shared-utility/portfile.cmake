@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if("public-preview" IN_LIST FEATURES)
@@ -10,6 +8,7 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 dfe6ccede4bebdb3a39fbfea1dc55ddca57cced0d2656ee4bed1a5e5c9c434e1f2d892eb4e29bbb424cb9a02f2374a95fb9a020442bea580d39c242efad1b789
         HEAD_REF master
         PATCHES
+            fix-install-location.patch
             fix-utilityFunctions-conditions-preview.patch
             disable-error.patch
     )
@@ -17,10 +16,11 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 73a2039cc0de5ececf5755ebe731a6b5b98f85da
-        SHA512 6374b7b175a5c0206bee148c35eb6a3a79f1b149e87d2b51981a9fd1446809134a1aa0f28f4acf1318719ac5554f7bd8de225a5dca63eb6537012aed6b10e4cc
+        REF 1a27846886a74702d409a8f0e2d77a38163cefc7
+        SHA512 c30cba73692691fe1310b6180e3aeaf4d86b6276981c680cac31d605634e5dedbce3f823142dfebba4ae2f76ccead965a527d95df0e52af638a30ddec9818fbd
         HEAD_REF master
         PATCHES
+            fix-install-location.patch
             fix-utilityFunctions-conditions.patch
             disable-error.patch
     )

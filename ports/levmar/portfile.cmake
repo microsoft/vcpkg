@@ -1,7 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "levmar currently only checked on Windows" 
-    ON_TARGET "OSX" "Linux" "UWP"
-)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://users.ics.forth.gr/~lourakis/levmar/levmar-2.6.tgz"
     FILENAME "levmar-2.6.tgz"

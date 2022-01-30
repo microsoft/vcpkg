@@ -1,11 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
-set(VERSION 4.9.1)
+set(VERSION 4.9.3)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
+    URLS "https://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 fe33005f73f8d408fcea8ebab62c0def119bbe0c075f04a66404d0df258126eb6caf0a8bbac34d5c4c9e79d4aa8896f32698a560d4be7d71a32dcc3457245cee
+    SHA512 23995a6fa661ff038142fa7220a195db3a9a26744d516011dedc3192f152b06a8e31f6cc8f969f8927b86392a960d03e89572e753f033f950839a5bd38d4c722
 )
 
 # license not exist in antlr folder.
@@ -20,21 +18,20 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES 
+    PATCHES
         fixed_build.patch
         uuid_discovery_fix.patch
         export_guid.patch
         fix_utfcpp_dependency.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/dist
     OPTIONS_RELEASE -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dist
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc
                     ${CURRENT_PACKAGES_DIR}/debug/share

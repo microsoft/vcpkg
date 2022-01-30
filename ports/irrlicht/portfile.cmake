@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO irrlicht/Irrlicht%20SDK
@@ -12,7 +10,16 @@ vcpkg_from_sourceforge(
         fix-osx-compilation.patch
 )
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
+if(VCPKG_TARGET_IS_LINUX)
+    message(
+"Irrlicht currently requires the following libraries from the system package manager:
+    libgl1-mesa
+    xf86vmode
+
+These can be installed on Ubuntu systems via sudo apt-get install libgl1-mesa-dev libxxf86vm-dev")
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,7 +32,7 @@ vcpkg_check_features(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DIRR_SHARED_LIB=${SHARED_LIB}
         ${FEATURE_OPTIONS}
@@ -36,15 +43,15 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/irrlicht/")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/irrlicht/irrlicht-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/irrlicht-targets.cmake)")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/irrlicht/irrlicht-config.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/irrlicht-targets.cmake)")
 
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/irrlicht)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/irrlicht")
 endif()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
