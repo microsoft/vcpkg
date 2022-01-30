@@ -39,8 +39,7 @@ set(INPUT_OPTIONS)
 foreach(_input IN LISTS input_vars)
     if(_input MATCHES "(png|jpeg)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
-    elseif(_input MATCHES "(sql-sqlite)")
-        list(APPEND INPUT_OPTIONS -DINPUT_sqlite:STRING=) # Not yet used be the cmake build
+    elseif(_input MATCHES "(sql-sqlite)") # Not yet used be the cmake build
     else()
         list(APPEND INPUT_OPTIONS -DINPUT_${_input}:STRING=)
     endif()
@@ -240,6 +239,8 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_DEBUG
                         -DQT_NO_MAKE_TOOLS:BOOL=ON
                         -DFEATURE_debug:BOOL=ON
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                        FEATURE_appstore-compliant # only used for android/ios
                     )
 
 # Install CMake helper scripts
