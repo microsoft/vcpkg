@@ -2,12 +2,13 @@ diff --git a/configs/azure_iot_sdksConfig.cmake b/configs/azure_iot_sdksConfig.c
 index b9c62e8..edf5847 100644
 --- a/configs/azure_iot_sdksConfig.cmake
 +++ b/configs/azure_iot_sdksConfig.cmake
-@@ -1,5 +1,10 @@
+@@ -1,5 +1,11 @@
  #Copyright (c) Microsoft. All rights reserved.
  #Licensed under the MIT license. See LICENSE file in the project root for full license information.
 +include(CMakeFindDependencyMacro)
 +find_dependency(unofficial-parson)
 +find_dependency(uamqp)
++find_dependency(uhttp)
 +find_dependency(umqtt)
 +find_dependency(azure_c_shared_utility)
  
