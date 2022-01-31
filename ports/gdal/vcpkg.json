@@ -75,7 +75,13 @@
     "poppler": {
       "description": "Enable poppler support",
       "dependencies": [
-        "poppler"
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "unstable"
+          ]
+        }
       ]
     },
     "postgresql": {

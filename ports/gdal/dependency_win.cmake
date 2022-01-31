@@ -137,9 +137,11 @@ macro(find_dependency_win)
 
     if("poppler" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS "POPPLER_ENABLED=YES")
-        list(APPEND NMAKE_OPTIONS "POPPLER_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include -I${CURRENT_INSTALLED_DIR}/poppler")
-        list(APPEND NMAKE_OPTIONS_REL "POPPLER_LIBS=${CURRENT_INSTALLED_DIR}/lib/poppler.lib ${CURRENT_INSTALLED_DIR}/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/lib/liblcms-1.lib advapi32.lib gdi32.lib")
-        list(APPEND NMAKE_OPTIONS_DBG "POPPLER_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/poppler.lib ${CURRENT_INSTALLED_DIR}/debug/lib/freetype.lib ${CURRENT_INSTALLED_DIR}/debug/lib/liblcms-1.lib advapi32.lib gdi32.lib")
+        list(APPEND NMAKE_OPTIONS "POPPLER_MAJOR_VERSION=22" "POPPLER_MINOR_VERSION=1") # Bump as needed
+        list(APPEND NMAKE_OPTIONS "POPPLER_CFLAGS=-I${CURRENT_INSTALLED_DIR}/include -I${CURRENT_INSTALLED_DIR}/include/poppler")
+        x_vcpkg_pkgconfig_get_modules(PREFIX POPPLER MODULES --msvc-syntax poppler LIBS)
+        list(APPEND NMAKE_OPTIONS_REL "POPPLER_LIBS=${POPPLER_LIBS_RELEASE}")
+        list(APPEND NMAKE_OPTIONS_DBG "POPPLER_LIBS=${POPPLER_LIBS_DEBUG}")
     endif()
 
     if("postgresql" IN_LIST FEATURES)
