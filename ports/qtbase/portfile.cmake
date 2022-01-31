@@ -237,7 +237,6 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_relocatable:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
-                        -DQT_NO_MAKE_TOOLS:BOOL=ON
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore-compliant # only used for android/ios
