@@ -164,9 +164,9 @@ function(vcpkg_build_make)
             vcpkg_host_path_list(PREPEND ENV{LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link/")
             #vcpkg_host_path_list(PREPEND ENV{LD_LIBRARY_PATH} "${Z_VCPKG_INSTALLED}${path_suffix}/lib/" "${Z_VCPKG_INSTALLED}${path_suffix_${buildtype}}/lib/manual-link/")
 
-            if(LINK_ENV_${_VAR_SUFFIX})
+            if(LINK_ENV_${cmake_buildtype})
                 set(config_link_backup "$ENV{_LINK_}")
-                set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+                set(ENV{_LINK_} "${LINK_ENV_${cmake_buildtype}}")
             endif()
 
             if(arg_ADD_BIN_TO_PATH)
