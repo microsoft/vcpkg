@@ -1,5 +1,3 @@
-vcpkg_fail_port_install( ON_TARGET "linux" "osx")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(

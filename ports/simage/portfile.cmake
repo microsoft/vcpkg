@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(SIMAGE_VERSION 1.8.1)
 
 vcpkg_from_github(

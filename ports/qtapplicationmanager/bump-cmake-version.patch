@@ -1,0 +1,11 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f2236c0..904c5b7 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ 
+-cmake_minimum_required(VERSION 3.16)
++cmake_minimum_required(VERSION 3.19)
+ 
+ include(.cmake.conf)
+ project(QtApplicationManager # special case

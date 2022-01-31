@@ -7,29 +7,32 @@ vcpkg_from_github(
     PATCHES fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindSDL2.cmake
-            ${SOURCE_PATH}/cmake/FindSDL2_image.cmake
-            ${SOURCE_PATH}/cmake/FindSDL2_mixer.cmake
-            ${SOURCE_PATH}/cmake/FindSDL2_ttf.cmake
+file(REMOVE "${SOURCE_PATH}/cmake/FindSDL2.cmake"
+            "${SOURCE_PATH}/cmake/FindSDL2_image.cmake"
+            "${SOURCE_PATH}/cmake/FindSDL2_mixer.cmake"
+            "${SOURCE_PATH}/cmake/FindSDL2_ttf.cmake"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL2PP_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDL2PP_WITH_EXAMPLES=OFF
         -DSDL2PP_WITH_TESTS=OFF
         -DSDL2PP_STATIC=${SDL2PP_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cmake/Modules/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/include\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cmake/Modules/FindSDL2PP.cmake" "HINTS \"${CURRENT_PACKAGES_DIR}/lib\"" "")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,53 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fdb3673..da1f972 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -125,7 +125,6 @@ include(SelectHashes)
+ target_sources(git2internal PRIVATE ${SRC_SHA1})
+ 
+ # Specify regular expression implementation
+-FIND_PACKAGE(PCRE)
+ 
+ IF(REGEX_BACKEND STREQUAL "")
+ 	CHECK_SYMBOL_EXISTS(regcomp_l "regex.h;xlocale.h" HAVE_REGCOMP_L)
+@@ -159,8 +158,8 @@ ELSEIF(REGEX_BACKEND STREQUAL "pcre")
+ 	ADD_FEATURE_INFO(regex ON "using system PCRE")
+ 	SET(GIT_REGEX_PCRE 1)
+ 
+-	LIST(APPEND LIBGIT2_SYSTEM_INCLUDES ${PCRE_INCLUDE_DIRS})
+-	LIST(APPEND LIBGIT2_LIBS ${PCRE_LIBRARIES})
++    FIND_PACKAGE(unofficial-pcre CONFIG REQUIRED)
++	LIST(APPEND LIBGIT2_LIBS unofficial::pcre::pcre)
+ 	LIST(APPEND LIBGIT2_PC_REQUIRES "libpcre")
+ ELSEIF(REGEX_BACKEND STREQUAL "regcomp")
+ 	ADD_FEATURE_INFO(regex ON "using system regcomp")
+@@ -424,10 +423,28 @@ IF (MSVC_IDE)
+ ENDIF ()
+ 
+ # Install
+-INSTALL(TARGETS git2
++INSTALL(TARGETS git2 EXPORT unofficial-git2Targets
+ 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++
++install(EXPORT unofficial-git2Targets
++    NAMESPACE unofficial::git2::
++    DESTINATION share/unofficial-git2
++)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake.in"
++[[include(CMakeFindDependencyMacro)
++IF(@USE_BUNDLED_ZLIB@ STREQUAL "OFF")
++    find_dependency(ZLIB)
++ENDIF()
++IF(@REGEX_BACKEND@ STREQUAL "pcre")
++    find_dependency(unofficial-pcre CONFIG)
++ENDIF()
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-git2Targets.cmake")
++]])
++configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake" @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake DESTINATION share/unofficial-git2)
++
+ INSTALL(DIRECTORY ${libgit2_SOURCE_DIR}/include/git2 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ INSTALL(FILES ${libgit2_SOURCE_DIR}/include/git2.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

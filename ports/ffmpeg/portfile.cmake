@@ -1,132 +1,3 @@
-#Check for unsupported features
-
-if("ffmpeg" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffmpeg' does not support 'uwp'")
-endif()
-
-if("ffplay" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffplay' does not support 'uwp'")
-endif()
-
-if("ffprobe" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffprobe' does not support 'uwp'")
-endif()
-
-
-if("aom" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'aom' does not support 'uwp | arm'")
-    endif()
-endif()
-
-if("ass" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'ass' does not support 'uwp | arm'")
-    endif()
-endif()
-
-if("avisynthplus" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp | static'")
-    endif()
-endif()
-
-if("dav1d" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
-        message(FATAL_ERROR "Feature 'dav1d' does not support 'uwp | arm | x86 | osx'")
-    endif()
-endif()
-
-if("fontconfig" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-        message(FATAL_ERROR "Feature 'fontconfig' does not support 'uwp | arm | (windows & static)'")
-    endif()
-endif()
-
-if("fribidi" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'fribidi' does not support 'uwp | arm'")
-    endif()
-endif()
-
-if("ilbc" IN_LIST FEATURES)
-    if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'ilbc' does not support 'uwp & arm'")
-    endif()
-endif()
-
-if("modplug" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp'")
-    endif()
-endif()
-
-if("nvcodec" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR ((NOT VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_LINUX)))
-        message(FATAL_ERROR "Feature 'nvcodec' does not support '!(windows | linux) | uwp | arm'")
-    endif()
-endif()
-
-if("opencl" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'opencl' does not support 'uwp'")
-endif()
-
-if("opengl" IN_LIST FEATURES)
-    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'opengl' does not support 'uwp | (windows & arm)")
-    endif()
-endif()
-
-if("openh264" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'openh264' does not support 'uwp'")
-endif()
-
-if("sdl2" IN_LIST FEATURES)
-    vcpkg_fail_port_install(ON_TARGET "OSX" MESSAGE "Feature 'sdl2' does not support 'osx'")
-endif()
-
-if("ssh" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature 'ssh' does not support 'uwp | arm | static'")
-    endif()
-endif()
-
-if("tensorflow" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        message(FATAL_ERROR "Feature 'tensorflow' does not support 'x86 | arm | uwp | static'")
-    endif()
-endif()
-
-if("tesseract" IN_LIST FEATURES)
-    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature 'tesseract' does not support 'uwp | (windows & arm) | static'")
-    endif()
-endif()
-
-if("wavpack" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        message(FATAL_ERROR "Feature 'wavpack' does not support 'arm'")
-    endif()
-endif()
-
-if("x264" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        message(FATAL_ERROR "Feature 'x264' does not support 'arm'")
-    endif()
-endif()
-
-if("x265" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature 'x265' does not support 'uwp | arm'")
-    endif()
-endif()
-
-if("xml2" IN_LIST FEATURES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature 'xml2' does not support 'static'")
-    endif()
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
 endif()
@@ -147,9 +18,9 @@ vcpkg_from_github(
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
+        0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
+        0016-configure-dnn-needs-avformat.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
         ${PATCHES}
         0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
         0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
@@ -272,6 +143,10 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if (NOT "alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
@@ -590,7 +465,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
-    elseif(VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}") # VCPKG_TARGET_ARCHITECTURE = arm64
+    elseif(VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
         # get the number of architectures requested
         list(LENGTH VCPKG_OSX_ARCHITECTURES ARCHITECTURE_COUNT)
 
@@ -618,7 +493,7 @@ if(VCPKG_TARGET_IS_UWP)
     set(OPTIONS_CROSS " --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-set(OPTIONS_DEBUG "--debug") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_DEBUG "--debug") # Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
