@@ -30,7 +30,10 @@
     "ignition-msgs5",
     "ignition-transport8",
     "ogre",
-    "pkgconf",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "protobuf",
     "qwt",
     "sdformat9",
