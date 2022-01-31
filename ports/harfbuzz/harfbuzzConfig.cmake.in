@@ -8,8 +8,6 @@ endif()
 
 add_library(harfbuzz INTERFACE IMPORTED GLOBAL)
 add_library(harfbuzz::harfbuzz ALIAS harfbuzz)
-add_library(HARFBUZZ_LIBRARY ALIAS harfbuzz)
-add_library(HARFBUZZ_LIBRARIES ALIAS harfbuzz)
 
 find_library(HARFBUZZ_LIBRARY_DEBUG NAMES harfbuzz PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 if(HARFBUZZ_LIBRARY_DEBUG)
@@ -59,7 +57,13 @@ if ("icu" IN_LIST HARFBUZZ_FEATURES)
 endif()
 
 get_filename_component(_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
-target_include_directories(harfbuzz INTERFACE ${_INSTALL_DIR}/include/harfbuzz)
-if(HARFBUZZ_LIBRARY_RELEASE)
-  set(HARFBUZZ_FOUND TRUE CACHE BOOL "" FORCE)
+target_include_directories(harfbuzz INTERFACE "${_INSTALL_DIR}/include/harfbuzz")
+
+set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz PARENT_SCOPE)
+set(HARFBUZZ_LIBRARIES harfbuzz::harfbuzz PARENT_SCOPE)
+set(HARFBUZZ_INCLUDE_DIR "${_INSTALL_DIR}/include/harfbuzz")
+set(HARFBUZZ_INCLUDE_DIRS "${_INSTALL_DIR}/include/harfbuzz")
+
+if(HARFBUZZ_LIBRARY_RELEASE AND HARFBUZZ_INCLUDE_DIR)
+  set(HARFBUZZ_FOUND TRUE PARENT_SCOPE)
 endif()
