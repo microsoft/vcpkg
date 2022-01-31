@@ -2,6 +2,7 @@
   "$schema": "./vagrant-vm-configuration.schema.json",
   "brew": [
     "autoconf",
+    "autoconf-archive",
     "automake",
     "bison",
     "gettext",
