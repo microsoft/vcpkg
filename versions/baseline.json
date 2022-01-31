@@ -4005,8 +4005,8 @@
       "port-version": 2
     },
     "libtorrent": {
-      "baseline": "1.2.14",
-      "port-version": 2
+      "baseline": "2.0.5",
+      "port-version": 0
     },
     "libu2f-server": {
       "baseline": "1.1.0",
@@ -4301,7 +4301,7 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "2021-12-14",
+      "baseline": "2022-01-28",
       "port-version": 0
     },
     "marble": {
@@ -6301,8 +6301,8 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.13",
-      "port-version": 2
+      "baseline": "0.4.14",
+      "port-version": 0
     },
     "septag-sx": {
       "baseline": "2019-05-07",
@@ -6337,7 +6337,7 @@
       "port-version": 1
     },
     "shaderwriter": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "shapelib": {
