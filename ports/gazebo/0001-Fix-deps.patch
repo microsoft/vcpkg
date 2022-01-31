@@ -34,7 +34,7 @@ index 4085b5aaeb..f89ac88333 100644
    # Find GNU Triangulation Surface Library
    pkg_check_modules(gts gts)
 -  if (gts_FOUND)
-+  if (gts_FOUND AND GTS_FEATURE)
++  if (GTS_FEATURE)
      message (STATUS "Looking for GTS - found")
      set (HAVE_GTS TRUE)
    else ()
@@ -59,7 +59,7 @@ index 4085b5aaeb..f89ac88333 100644
    # Find libusb
    pkg_check_modules(libusb-1.0 libusb-1.0)
 -  if (NOT libusb-1.0_FOUND)
-+  if (NOT libusb-1.0_FOUND OR NO_LIBUSB_FEATURE)
++  if (NO_LIBUSB_FEATURE)
      BUILD_WARNING ("libusb-1.0 not found. USB peripherals support will be disabled.")
      set (HAVE_USB OFF CACHE BOOL "HAVE USB" FORCE)
    else()
@@ -68,7 +68,7 @@ index 4085b5aaeb..f89ac88333 100644
  # Find gdal
  include (FindGDAL)
 -if (NOT GDAL_FOUND)
-+if (NOT GDAL_FOUND OR NO_GDAL_FEATURE)
++if (NO_GDAL_FEATURE)
    message (STATUS "Looking for libgdal - not found")
    BUILD_WARNING ("GDAL not found, Digital elevation terrains support will be disabled.")
    set (HAVE_GDAL OFF CACHE BOOL "HAVE GDAL" FORCE)
@@ -77,7 +77,7 @@ index 4085b5aaeb..f89ac88333 100644
  # Find graphviz
  include (${gazebo_cmake_dir}/FindGraphviz.cmake)
 -if (NOT GRAPHVIZ_FOUND)
-+if (NOT GRAPHVIZ_FOUND OR NO_GRAPHVIZ_FEATURE)
++if (NO_GRAPHVIZ_FEATURE)
    message (STATUS "Looking for libgraphviz-dev - not found")
    BUILD_WARNING ("Graphviz not found, Model editor's schematic view will be disabled.")
    set (HAVE_GRAPHVIZ OFF CACHE BOOL "HAVE GRAPHVIZ" FORCE)
