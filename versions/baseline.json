@@ -413,8 +413,8 @@
       "port-version": 1
     },
     "behaviortree-cpp": {
-      "baseline": "3.5.6",
-      "port-version": 2
+      "baseline": "3.6.0",
+      "port-version": 0
     },
     "benchmark": {
       "baseline": "1.6.0",
