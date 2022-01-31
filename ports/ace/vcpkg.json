@@ -7,9 +7,6 @@
   "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
   "license": "DOC",
   "features": {
-    "fpic": {
-      "description": "Sets the -fPIC flag on compilation to generate Position Independent Code"
-    },
     "ssl": {
       "description": "Enable SSL/TLS features in ACE",
       "dependencies": [
