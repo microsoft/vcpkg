@@ -1,35 +1,42 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/BehaviorTree/BehaviorTree.CPP/archive/3.5.6.tar.gz"
-    FILENAME "BehaviorTree.CPP.3.5.6.tar.gz"
-    SHA512 cd3b15eb7c5bab68239b697da166220b4df8dd7e6cf5e831f316d411e24be56c9ed74e54a3e3dd332164d740159eaf9ce62d005601fd65133809dab29430c9b7
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        001_port_fixes.patch
-        002_fix_dependencies.patch
+    REPO BehaviorTree/BehaviorTree.CPP
+    REF 40b5cc9cd9a9b46746ddb27aa325f9b13aa749de
+    SHA512 102861bb615f5e42897457c8a688c3652de2823d216633448dba836c4f26b72643aabc9906482857f56ed70c009f7c020c1a4e8dd8c61481c3fc3cd39f23c198
+    HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "coroutines"  ENABLE_COROUTINES
+        "tools"       BUILD_TOOLS
+        "examples"    BUILD_EXAMPLES
+    INVERTED_FEATURES
+        "recorder"    CMAKE_DISABLE_FIND_PACKAGE_ZMQ
+        "curses"      CMAKE_DISABLE_FIND_PACKAGE_Curses
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=1
-        -DCMAKE_DISABLE_FIND_PACKAGE_Curses=1
-        -DBUILD_EXAMPLES=OFF
+        ${FEATURE_OPTIONS}
         -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/BehaviorTreeV3/cmake TARGET_PATH share/behaviortreev3)
+
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES bt3_log_cat bt3_plugin_manifest AUTO_CLEAN)
+endif()
+
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH lib/BehaviorTreeV3/cmake
+    PACKAGE_NAME BehaviorTreeV3
+)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

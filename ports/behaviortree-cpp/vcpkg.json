@@ -1,12 +1,44 @@
 {
   "name": "behaviortree-cpp",
-  "version": "3.5.6",
-  "port-version": 2,
+  "version": "3.6.0",
+  "license": "MIT",
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
   "supports": "!uwp",
   "dependencies": [
-    "boost-coroutine2",
-    "cppzmq"
-  ]
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "coroutines": {
+      "description": "enables coroutine support",
+      "dependencies": [
+        "boost-coroutine2"
+      ]
+    },
+    "tools": {
+      "description": "builds the tools"
+    },
+    "examples": {
+      "description": "build all examples"
+    },
+    "recorder": {
+      "description": "build PublisherZMQ and bt_recorder.",
+      "dependencies": [
+        "cppzmq"
+      ]
+    },
+    "curses": {
+      "description": "Adds curses (ManualNode)",
+      "dependencies": [
+        "ncurses"
+      ]
+    }
+  }
 }
