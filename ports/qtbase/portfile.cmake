@@ -57,7 +57,7 @@ endforeach()
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    "appstore-compliant"  FEATURE_appstore-compliant
+    "appstore-compliant"  FEATURE_appstore_compliant
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
@@ -239,7 +239,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
-                        FEATURE_appstore-compliant # only used for android/ios
+                        FEATURE_appstore_compliant # only used for android/ios
                     )
 
 # Install CMake helper scripts
