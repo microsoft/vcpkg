@@ -1,9 +1,9 @@
 {
   "name": "behaviortree-cpp",
   "version": "3.6.0",
-  "license": "MIT",
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -22,8 +22,11 @@
         "boost-coroutine2"
       ]
     },
-    "tools": {
-      "description": "builds the tools"
+    "curses": {
+      "description": "Adds curses (ManualNode)",
+      "dependencies": [
+        "ncurses"
+      ]
     },
     "examples": {
       "description": "build all examples"
@@ -34,11 +37,8 @@
         "cppzmq"
       ]
     },
-    "curses": {
-      "description": "Adds curses (ManualNode)",
-      "dependencies": [
-        "ncurses"
-      ]
+    "tools": {
+      "description": "builds the tools"
     }
   }
 }
