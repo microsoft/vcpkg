@@ -20,7 +20,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     endif()
 
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__" ) # VS adds /D "_WINDLL" for DLLs;
-    set(_vcpkg_common_flags "/nologo /Z7 /MP /sdl /GS /Gd /Gm- /W3 /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /WX- /Oy- /EHsc") #/ZW:nostdlib -> ZW is added by CMake
+    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc") 
+    #/ZW:nostdlib -> ZW is added by CMake # VS also normally adds /sdl but not cmake MSBUILD
     file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
     set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
 
@@ -40,8 +41,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     set(CMAKE_C_FLAGS_RELEASE "/Gy /O2 /Oi ${VCPKG_CRT_LINK_FLAG_PREFIX} ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")
 
     string(APPEND CMAKE_STATIC_LINKER_FLAGS_RELEASE_INIT " /nologo ") # VS adds /LTCG
-    string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE WindowsApp.lib /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO /NOLOGO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}") # VS adds /DEBUG:FULL /TLBID:1.  
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE WindowsApp.lib /DEBUG /WINMD /APPCONTAINER /MANIFESTUAC:NO /NOLOGO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}") # VS adds /DEBUG:FULL /TLBID:1.  
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE WindowsApp.lib /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}") # VS adds /DEBUG:FULL /TLBID:1.  
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE WindowsApp.lib /DEBUG /WINMD /APPCONTAINER /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_RELEASE}") # VS adds /DEBUG:FULL /TLBID:1.  
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF " CACHE STRING "") # VS uses /LTCG:incremental 
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF " CACHE STRING "")
 
