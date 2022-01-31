@@ -30,6 +30,7 @@ endif()
 # Configure features
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
     d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
     java     OGRE_BUILD_COMPONENT_JAVA
     python   OGRE_BUILD_COMPONENT_PYTHON
@@ -44,7 +45,7 @@ string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=ON" "OGRE_RESOURCEMANAGER_STRICT=1" 
 string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=OFF" "OGRE_RESOURCEMANAGER_STRICT=0" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOGRE_BUILD_DEPENDENCIES=OFF
@@ -119,7 +120,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
+file(GLOB share_cfgs ${CURRENT_PACKAGES_DIR}/share/OGRE/*.cfg)
+foreach(file ${share_cfgs})
+    vcpkg_replace_string("${file}" "${CURRENT_PACKAGES_DIR}" "../..")
+endforeach()
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
