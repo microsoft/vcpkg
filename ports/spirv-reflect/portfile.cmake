@@ -14,12 +14,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
-if(DEFINED ENV{VULKAN_SDK})
-    message(STATUS "VULKAN_SDK env var found: $ENV{VULKAN_SDK}")
-else()
-    message(FATAL_ERROR "VULKAN_SDK env var not found!")
-endif()
-
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
