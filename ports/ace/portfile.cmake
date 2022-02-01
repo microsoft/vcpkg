@@ -306,7 +306,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes("${SOURCE_COPY_PATH}" ${ACEXML_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
