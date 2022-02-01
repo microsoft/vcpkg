@@ -2065,7 +2065,7 @@
       "port-version": 0
     },
     "exprtk": {
-      "baseline": "2021-01-01",
+      "baseline": "2022-01-01",
       "port-version": 2
     },
     "ezc3d": {
@@ -2174,7 +2174,7 @@
     },
     "fizz": {
       "baseline": "2021.06.14.00",
-      "port-version": 0
+      "port-version": 1
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -3912,6 +3912,10 @@
       "baseline": "3.0.3",
       "port-version": 1
     },
+    "libslirp": {
+      "baseline": "4.6.1",
+      "port-version": 0
+    },
     "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 1
@@ -3994,7 +3998,7 @@
     },
     "libtins": {
       "baseline": "4.3",
-      "port-version": 4
+      "port-version": 5
     },
     "libtomcrypt": {
       "baseline": "1.18.2",
@@ -4005,8 +4009,8 @@
       "port-version": 2
     },
     "libtorrent": {
-      "baseline": "1.2.14",
-      "port-version": 2
+      "baseline": "2.0.5",
+      "port-version": 0
     },
     "libu2f-server": {
       "baseline": "1.1.0",
@@ -4301,7 +4305,7 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "2021-12-14",
+      "baseline": "2022-01-28",
       "port-version": 0
     },
     "marble": {
@@ -5986,7 +5990,7 @@
     },
     "raylib": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "rbdl": {
       "baseline": "2.6.0",
@@ -6301,8 +6305,8 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.13",
-      "port-version": 2
+      "baseline": "0.4.14",
+      "port-version": 0
     },
     "septag-sx": {
       "baseline": "2019-05-07",
@@ -6337,7 +6341,7 @@
       "port-version": 1
     },
     "shaderwriter": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "shapelib": {
@@ -7097,7 +7101,7 @@
       "port-version": 1
     },
     "utf8h": {
-      "baseline": "2021-10-21",
+      "baseline": "2021-11-18",
       "port-version": 0
     },
     "utf8proc": {
@@ -7181,8 +7185,8 @@
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2021-04-02",
-      "port-version": 1
+      "baseline": "2022-01-10",
+      "port-version": 0
     },
     "vcpkg-qmake": {
       "baseline": "2021-10-23",
