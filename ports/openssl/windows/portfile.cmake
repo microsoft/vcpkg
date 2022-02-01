@@ -122,8 +122,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         COMMAND nmake -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
-
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+        
+        message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+        
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
@@ -135,6 +138,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
 
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"
