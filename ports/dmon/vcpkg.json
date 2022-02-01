@@ -1,9 +1,14 @@
 {
   "name": "dmon",
-  "version": "0.0.1",
+  "version-date": "2022-01-27",
   "description": "a tiny C library that monitors changes in a directory",
+  "license": "BSD-2-Clause",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
