@@ -7296,6 +7296,10 @@
       "baseline": "0.0",
       "port-version": 4
     },
+    "winflexbison": {
+      "baseline": "2.5.25",
+      "port-version": 0
+    },
     "winlamb": {
       "baseline": "2020-10-15",
       "port-version": 0

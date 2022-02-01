@@ -1,0 +1,7 @@
+{
+  "name": "winflexbison",
+  "version-string": "2.5.25",
+  "description": "WinFlexBison is a Windows port of Flex (the fast lexical analyser) and GNU Bison (parser generator). Both win_flex and win_bison are based on upstream sources but depend on system libraries only.",
+  "homepage": "https://github.com/lexxmark/winflexbison",
+  "license": "GPL-3.0+"
+}
