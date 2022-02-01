@@ -6,11 +6,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_library(spirv-reflect ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h
                           ${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.c)
-target_compile_options(spirv-reflect PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-        $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
-        $<$<CXX_COMPILER_ID:Clang>:-Wall -Werror>
-        $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Werror>)
 if (SPIRV_REFLECT_ENABLE_ASSERTS)
     target_compile_definitions(spirv-reflect PRIVATE SPIRV_REFLECT_ENABLE_ASSERTS)
 endif()
