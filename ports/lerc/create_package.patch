@@ -10,15 +10,15 @@ index e90fcdd..17c79e8 100644
  
  install(
 -    TARGETS Lerc
-+    TARGETS Lerc EXPORT LercTargets
++    TARGETS Lerc EXPORT unofficial-LercTargets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
 +
-+install(EXPORT LercTargets
-+  FILE lercConfig.cmake
-+  NAMESPACE Esri::
-+  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/lerc"
++install(EXPORT unofficial-LercTargets
++  FILE unofficial-lercConfig.cmake
++  NAMESPACE unofficial::Esri::
++  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
 +)
