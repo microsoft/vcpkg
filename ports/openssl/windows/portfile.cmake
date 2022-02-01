@@ -129,8 +129,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -170,3 +172,5 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+
