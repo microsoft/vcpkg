@@ -1,10 +1,3 @@
-if("field3d" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        ON_TARGET WINDOWS UWP
-        MESSAGE "The field3d feature is not supported on Windows"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio

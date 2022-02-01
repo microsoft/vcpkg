@@ -1,6 +1,3 @@
-# Glib uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 # Glib relies on DllMain on Windows
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -94,7 +91,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-    
+
 IF(VCPKG_TARGET_IS_WINDOWS)
     set(SYSTEM_LIBRARIES dnsapi iphlpapi winmm lshlwapi)
 else()
