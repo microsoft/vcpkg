@@ -1,6 +1,6 @@
 {
   "name": "intel-ipsec",
-  "version-string": "0.52",
-  "port-version": 2,
-  "description": "Intel(R) Multi-Buffer Crypto for IPsec Library"
+  "version": "1.1",
+  "description": "Intel(R) Multi-Buffer Crypto for IPsec Library",
+  "supports": "x64 & (windows | linux) & !uwp"
 }
