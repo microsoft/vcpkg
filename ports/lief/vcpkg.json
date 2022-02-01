@@ -1,18 +1,31 @@
 {
   "name": "lief",
-  "version": "0.11.5",
+  "version": "0.12.0",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
-  "supports": "((x86 | x64) & ((windows & static) | windows)) & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "mbedtls",
+    "utfcpp",
+    "spdlog",
+    "frozen",
+    "boost-leaf"
   ],
   "default-features": [
+    "art",
+    "c-api",
+    "dex",
+    "elf",
+    "enable-json",
+    "logging",
+    "macho",
+    "oat",
     "pe",
-    "shared-lib"
+    "vdex"
   ],
   "features": {
     "art": {
@@ -40,7 +53,10 @@
       "description": "Build LIEF with ELF module"
     },
     "enable-json": {
-      "description": "Enable JSON-related APIs"
+      "description": "Enable JSON-related APIs",
+      "dependencies": [
+        "nlohmann-json"
+      ]
     },
     "examples": {
       "description": "Build LIEF C++ examples"
@@ -80,9 +96,6 @@
     },
     "python-api": {
       "description": "Enable Python API"
-    },
-    "shared-lib": {
-      "description": "Enable shared lib"
     },
     "tests": {
       "description": "Enable tests"

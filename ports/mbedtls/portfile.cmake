@@ -5,9 +5,9 @@ set(VCPKG_LIBRARY_LINKAGE static)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
-    REF 523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8 # mbedtls-2.24.0
-    SHA512 1ce78f34e8d87c2ce0454e0a08f4c6e5b3129d4b24cfa44162af21c2e8b5dc7feabf849e4fa547ce3781b5ce11aaf675cfed47412bae40091fbdd87bbcdbee07
-    HEAD_REF master
+    REF d65aeb37349ad1a50e0f6c9b694d4b5290d60e49 # v3.1.0
+    SHA512 a3fde5e6e206d0ab43282502fec45da14f1ccb24974db7a9348a18870d3c07b10fe72419ebf5130cec1b9e819ef804608b0f7b48670f619e328f5b798a8d9eb1
+    HEAD_REF development
     PATCHES
         enable-pthread.patch
 )
@@ -18,7 +18,7 @@ vcpkg_check_features(
     pthreads ENABLE_PTHREAD
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -28,9 +28,12 @@ vcpkg_configure_cmake(
         -DMBEDTLS_FATAL_WARNINGS=FALSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
