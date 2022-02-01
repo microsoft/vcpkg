@@ -1510,7 +1510,7 @@
     },
     "coroutine": {
       "baseline": "1.5.0",
-      "port-version": 3
+      "port-version": 4
     },
     "corrade": {
       "baseline": "2020.06",
@@ -4577,8 +4577,8 @@
       "port-version": 1
     },
     "ms-gsl": {
-      "baseline": "3.1.0",
-      "port-version": 1
+      "baseline": "4.0.0",
+      "port-version": 0
     },
     "ms-quic": {
       "baseline": "1.2.0",
@@ -6290,7 +6290,7 @@
     },
     "seal": {
       "baseline": "3.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "secp256k1": {
       "baseline": "2017-19-10",
