@@ -130,6 +130,13 @@ string(STRIP "${CFLAGS}" CFLAGS)
 string(REGEX REPLACE "[ \t\r\n]+" " " LDFLAGS "${LDFLAGS}")
 string(STRIP "${LDFLAGS}" LDFLAGS)
 
+# When building a static lib with MSVC, you need to use archiveflags instead of linkflags.
+# This is set via the b2 command line since putting <archiveflags> in the user-config.jam
+# file doesn't seem to work like it does for <linkflags>.
+if(MSVC AND NOT BUILD_SHARED_LIBS)
+    list(APPEND B2_OPTIONS "\"archiveflags=${LDFLAGS}\"")
+endif()
+
 if(NOT CXXFLAGS STREQUAL "")
     string(REPLACE " " " <cxxflags>" CXXFLAGS "<cxxflags>${CXXFLAGS}")
 endif()
