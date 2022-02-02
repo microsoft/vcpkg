@@ -2378,7 +2378,7 @@
     },
     "gdal": {
       "baseline": "3.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -5409,8 +5409,8 @@
       "port-version": 4
     },
     "poppler": {
-      "baseline": "20.12.1",
-      "port-version": 6
+      "baseline": "22.0.2",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
