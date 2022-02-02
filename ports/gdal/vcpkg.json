@@ -39,8 +39,7 @@
     "zstd"
   ],
   "default-features": [
-    "poppler",
-    "tools"
+    "supported-default-features"
   ],
   "features": {
     "cfitsio": {
