@@ -39,7 +39,7 @@ include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/../my-other-helper/vcpkg-port-config.cmake")
 
 # Finally, it is convention to put each public function into a separate file with a matching name
-include("${CMAKE_CURRENT_LIST_DIR}/my-helper-function-01.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/my-helper-function-02.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/my-helper-function-03.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/my_helper_function_01.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/my_helper_function_02.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/my_helper_function_03.cmake")
 ```
