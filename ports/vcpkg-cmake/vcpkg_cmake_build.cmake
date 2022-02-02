@@ -62,25 +62,50 @@ function(vcpkg_cmake_build)
                 endif()
             endif()
 
-            if(arg_DISABLE_PARALLEL)
-                vcpkg_execute_build_process(
-                    COMMAND
-                        "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
-                        -- ${build_param} ${no_parallel_param}
-                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}"
-                    LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}"
-                )
+            if (Z_VCPKG_OSX_SPLIT_BUILD)
+                foreach(OSX_ARCHITECTURE ${VCPKG_OSX_ARCHITECTURES})
+                    if (arg_DISABLE_PARALLEL)
+                        vcpkg_execute_build_process(
+                            COMMAND
+                                "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                                -- ${build_param} ${no_parallel_param}
+                            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}-${OSX_ARCHITECTURE}"
+                            LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_ttype}-${OSX_ARCHITECTURE}"
+                        )
+                    else()
+                        vcpkg_execute_build_process(
+                            COMMAND
+                                "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                                -- ${build_param} ${parallel_param}
+                            NO_PARALLEL_COMMAND
+                                "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                                -- ${build_param} ${no_parallel_param}
+                            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}-${OSX_ARCHITECTURE}"
+                            LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}-${OSX_ARCHITECTURE}"
+                        )
+                    endif()
+                endforeach()
             else()
-                vcpkg_execute_build_process(
-                    COMMAND
-                        "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
-                        -- ${build_param} ${parallel_param}
-                    NO_PARALLEL_COMMAND
-                        "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
-                        -- ${build_param} ${no_parallel_param}
-                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}"
-                    LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}"
-                )
+                if(arg_DISABLE_PARALLEL)
+                    vcpkg_execute_build_process(
+                        COMMAND
+                            "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                            -- ${build_param} ${no_parallel_param}
+                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}"
+                        LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}"
+                    )
+                else()
+                    vcpkg_execute_build_process(
+                        COMMAND
+                            "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                            -- ${build_param} ${parallel_param}
+                        NO_PARALLEL_COMMAND
+                            "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
+                            -- ${build_param} ${no_parallel_param}
+                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}"
+                        LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}"
+                    )
+                endif()
             endif()
 
             if(arg_ADD_BIN_TO_PATH)

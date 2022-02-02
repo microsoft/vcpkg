@@ -10,7 +10,7 @@ endmacro()
 
 function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE;OSX_SPLIT_BUILD"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
@@ -180,11 +180,27 @@ function(vcpkg_cmake_configure)
     )
 
     # Sets configuration variables for macOS builds
-    foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
+    foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT)
         if(DEFINED VCPKG_${config_var})
             vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
+
+    # if a split build was requested we must perform two separate builds
+    # if - and only if - multiple architectures were passed
+    if (arg_OSX_SPLIT_BUILD)
+        list(LENGTH VCPKG_OSX_ARCHITECTURES ARCHITECTURE_LENGTH)
+        if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND ARCHITECTURE_LENGTH GREATER_EQUAL "2")
+            set(Z_VCPKG_OSX_SPLIT_BUILD ON CACHE INTERNAL "split build per architecture")
+        endif()
+    endif()
+
+    # if we are not doing a split build we define the architectures, otherwise
+    # they will be defined individually for each separete split build
+    if (NOT Z_VCPKG_OSX_SPLIT_BUILD AND DEFINED VCPKG_OSX_ARCHITECTURES)
+        list(JOIN VCPKG_OSX_ARCHITECTURES "\;" JOINED_ARCHITECTURES)
+        list(APPEND arg_OPTIONS "-DCMAKE_OSX_ARCHITECTURES=${JOINED_ARCHITECTURES}")
+    endif()
 
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
@@ -245,6 +261,73 @@ function(vcpkg_cmake_configure)
         vcpkg_list(APPEND config_logs
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
+    elseif(Z_VCPKG_OSX_SPLIT_BUILD)
+        foreach(OSX_ARCHITECTURE ${VCPKG_OSX_ARCHITECTURES})
+            file(REMOVE_RECURSE
+                "${build_dir_release}-${OSX_ARCHITECTURE}"
+                "${build_dir_debug}-${OSX_ARCHITECTURE}")
+            file(MAKE_DIRECTORY "${build_dir_release}-${OSX_ARCHITECTURE}")
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+                file(MAKE_DIRECTORY "${build_dir_debug}-${OSX_ARCHITECTURE}")
+            endif()
+        endforeach()
+
+        # the first selected architecture is installed in the usual location
+        # (the packages dir), the others are installed into the buildtree
+        # because the package install would otherwise overwrite the generated
+        # libraries, after installation the binaries will be merged
+        set(OSX_SPLIT_BUILD_FIRST_ARCHITECTURE ON)
+
+        foreach(OSX_ARCHITECTURE ${VCPKG_OSX_ARCHITECTURES})
+            if (OSX_SPLIT_BUILD_FIRST_ARCHITECTURE)
+                set(OSX_SPLIT_BUILD_INSTALL_DIR_DEBUG "${CURRENT_PACKAGES_DIR}/debug")
+                set(OSX_SPLIT_BUILD_INSTALL_DIR_RELEASE "${CURRENT_PACKAGES_DIR}")
+            else()
+                set(OSX_SPLIT_BUILD_INSTALL_DIR_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${OSX_ARCHITECTURE}-dbg-install")
+                set(OSX_SPLIT_BUILD_INSTALL_DIR_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${OSX_ARCHITECTURE}-rel-install")
+            endif()
+
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+                message(STATUS "${configuring_message}-dbg (arch: ${OSX_ARCHITECTURE})")
+                vcpkg_execute_required_process(
+                    COMMAND
+                        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
+                        -D CMAKE_OSX_ARCHITECTURES=${OSX_ARCHITECTURE}
+                        ${arg_OPTIONS}
+                        ${arg_OPTIONS_DEBUG}
+                        -G "${generator}"
+                        "-DCMAKE_BUILD_TYPE=Debug"
+                        "-DCMAKE_INSTALL_PREFIX=${OSX_SPLIT_BUILD_INSTALL_DIR_DEBUG}"
+                    WORKING_DIRECTORY "${build_dir_debug}-${OSX_ARCHITECTURE}"
+                    LOGNAME "${arg_LOGFILE_BASE}-dbg-${OSX_ARCHITECTURE}"
+                )
+                list(APPEND config_logs
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-${OSX_ARCHITECTURE}-out.log"
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-${OSX_ARCHITECTURE}-err.log")
+            endif()
+
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+                message(STATUS "${configuring_message}-rel (arch: ${OSX_ARCHITECTURE})")
+                vcpkg_execute_required_process(
+                    COMMAND
+                        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
+                        -D CMAKE_OSX_ARCHITECTURES=${OSX_ARCHITECTURE}
+                        ${arg_OPTIONS}
+                        ${arg_OPTIONS_RELEASE}
+                        -G "${generator}"
+                        "-DCMAKE_BUILD_TYPE=Release"
+                        "-DCMAKE_INSTALL_PREFIX=${OSX_SPLIT_BUILD_INSTALL_DIR_RELEASE}"
+                    WORKING_DIRECTORY "${build_dir_release}-${OSX_ARCHITECTURE}"
+                    LOGNAME "${arg_LOGFILE_BASE}-rel-${OSX_ARCHITECTURE}"
+                )
+                list(APPEND config_logs
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-${OSX_ARCHITECTURE}-out.log"
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-${OSX_ARCHITECTURE}-err.log")
+            endif()
+
+            # first architecture now complete
+            set(OSX_SPLIT_BUILD_FIRST_ARCHITECTURE OFF)
+        endforeach()
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
             message(STATUS "${configuring_message}-dbg")
