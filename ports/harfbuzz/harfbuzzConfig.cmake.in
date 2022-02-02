@@ -61,8 +61,8 @@ target_include_directories(harfbuzz INTERFACE "${_INSTALL_DIR}/include/harfbuzz"
 
 set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz PARENT_SCOPE)
 set(HARFBUZZ_LIBRARIES harfbuzz::harfbuzz PARENT_SCOPE)
-set(HARFBUZZ_INCLUDE_DIR "${_INSTALL_DIR}/include/harfbuzz")
-set(HARFBUZZ_INCLUDE_DIRS "${_INSTALL_DIR}/include/harfbuzz")
+set(HARFBUZZ_INCLUDE_DIR "${_INSTALL_DIR}/include/harfbuzz" PARENT_SCOPE)
+set(HARFBUZZ_INCLUDE_DIRS "${_INSTALL_DIR}/include/harfbuzz" PARENT_SCOPE)
 
 if(HARFBUZZ_LIBRARY_RELEASE AND HARFBUZZ_INCLUDE_DIR)
   set(HARFBUZZ_FOUND TRUE PARENT_SCOPE)
