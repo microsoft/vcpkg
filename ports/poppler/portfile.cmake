@@ -55,7 +55,7 @@ vcpkg_cmake_configure(
         -DENABLE_QT6=OFF
         -DENABLE_CMS=none
         -DRUN_GPERF_IF_PRESENT=OFF
-        -DENABLE_RELOCATABLE=ON
+        -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
         -DWITH_NSS3=OFF
         ${FEATURE_OPTIONS}
 )
