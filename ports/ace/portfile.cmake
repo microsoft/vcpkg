@@ -165,7 +165,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # headers are public and which not. For the moment we install everything
   # that is in the source path and ends in .h, .inl
   function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
-    foreach(RELATIVE_PATH "${RELATIVE_PATHS}")
+    foreach(RELATIVE_PATH ${RELATIVE_PATHS})
       file(
         GLOB
         HEADER_FILES
@@ -196,7 +196,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes("${SOURCE_COPY_PATH}" ${ACE_INCLUDE_FOLDERS})
+  install_includes("${SOURCE_COPY_PATH}" "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
     install_includes("${SOURCE_COPY_PATH}" "ace/SSL")
@@ -205,11 +205,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes("${SOURCE_COPY_PATH}" ${ACEXML_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes("${SOURCE_COPY_PATH}/protocols" ${ACE_PROTOCOLS_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}/protocols" "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
     install_includes("${SOURCE_COPY_PATH}" "Kokyu")
 
@@ -245,11 +245,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("ssl" IN_LIST FEATURES)
       list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_includes("${SOURCE_COPY_PATH}/TAO/orbsvcs" ${TAO_ORBSVCS_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}/TAO/orbsvcs" "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
                                          "orbsvcs/Notify_Service")
-    install_includes("${SOURCE_COPY_PATH}/TAO" ${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}/TAO" "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_INCLUDE_FOLDERS
         "tao"
