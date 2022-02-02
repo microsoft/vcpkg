@@ -1,12 +1,10 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
-
 set(MSMPI_VERSION "10.1.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
 vcpkg_download_distfile(SDK_ARCHIVE
     URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisdk.msi"
     FILENAME "msmpisdk-${MSMPI_VERSION}-b0087dfd.msi"
-    SHA512 b0087dfd21423bf87b94b17d7cb03576838585371bbf8b03cca95c3ad73670108c7bc6517b0de852ef595072cc4143be2011636e7242bcb080394d94294848a7 
+    SHA512 b0087dfd21423bf87b94b17d7cb03576838585371bbf8b03cca95c3ad73670108c7bc6517b0de852ef595072cc4143be2011636e7242bcb080394d94294848a7
 )
 
 

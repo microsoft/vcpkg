@@ -19,6 +19,8 @@ and this is something we recommend doing whenever possible.
 Otherwise, you can use `TARGET` to set the target to build.
 This function defaults to not passing a target to cmake.
 
+[`vcpkg_cmake_install()`]: vcpkg_cmake_install.md
+
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `build`, and thus the logfiles end up being something like
 `build-x86-windows-dbg.log`; if you use `vcpkg_cmake_install`,
@@ -46,10 +48,10 @@ function(vcpkg_cmake_build)
         set(arg_LOGFILE_BASE "build")
     endif()
 
-    set(build_args)
-    set(target_args)
-    set(parallel_args)
-    set(no_parallel_args)
+    set(build_args "")
+    set(target_args "")
+    set(parallel_args "")
+    set(no_parallel_args "")
 
     if(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Ninja")
         set(build_args "-v") # verbose output
@@ -63,8 +65,15 @@ function(vcpkg_cmake_build)
         set(parallel_args "/m")
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
+    elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        set(build_args "VERBOSE=1")
+        set(parallel_args "-j${VCPKG_CONCURRENCY}")
+        set(no_parallel_args "")
+    elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Xcode")
+        list(APPEND parallel_args -jobs "${VCPKG_CONCURRENCY}")
+        list(APPEND no_parallel_args -jobs 1)
     else()
-        message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
+        message(WARNING "Unrecognized GENERATOR setting from vcpkg_cmake_configure().")
     endif()
 
     if(DEFINED arg_TARGET)
