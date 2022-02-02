@@ -32,6 +32,35 @@ if(VCPKG_TARGET_IS_LINUX)
     list(APPEND OPTIONS --enable-pic)
 endif()
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
+    if (VCPKG_TARGET_IS_LINUX)
+        if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            if (DEFINED ENV{CROSS_PREFIX})
+                # allow toolchain to specify the cross-prefix
+                set(cross_prefix $ENV{CROSS_PREFIX})                
+            else()
+                # attempt to determine the cross-prefix from VCPKG_DETECTED_CMAKE_C/CXX_COMPILER using the most likely naming conventions
+                if (${VCPKG_DETECTED_CMAKE_C_COMPILER} MATCHES ".*-gcc")
+                    string(REGEX REPLACE "gcc$" "" full_cross_prefix ${VCPKG_DETECTED_CMAKE_C_COMPILER})
+                    get_filename_component(cross_prefix ${full_cross_prefix} NAME)                
+                elseif (${VCPKG_DETECTED_CMAKE_CXX_COMPILER} MATCHES ".*-g\\+\\+")
+                    string(REGEX REPLACE "g\\+\\+$" "" full_cross_prefix ${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
+                    get_filename_component(cross_prefix ${full_cross_prefix} NAME)
+                else()
+                    message(AUTHOR_WARNING "Could not self-determine cross-prefix. Will attempt to use 'aarch64-linux-gnu-'. You should use ENV{CROSS_PREFIX} in your toolchain to override it.")
+                    set(cross_prefix "aarch64-linux-gnu-")
+                endif()                
+            endif()            
+            list(APPEND OPTIONS --host=aarch64-linux)
+            list(APPEND OPTIONS --cross-prefix=${cross_prefix})
+            list(APPEND OPTIONS --disable-asm)
+        endif()
+    endif()
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     NO_ADDITIONAL_PATHS
