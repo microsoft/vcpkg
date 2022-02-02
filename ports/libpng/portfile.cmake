@@ -63,6 +63,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
+    OSX_SPLIT_BUILD
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${LIBPNG_APNG_OPTION}
