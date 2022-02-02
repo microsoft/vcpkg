@@ -1,8 +1,9 @@
-vcpkg_from_github(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freedesktop/poppler
-    REF poppler-22.01.0
-    SHA512 1edb8f0f4caa0a3f73ddb5a40e770d2590712f9bf8858c08854f80c9bd4ef1e5f75c2ec348e7369594b2d511ad96bfd52a7085ed64cc2f6b8e025feeb37357d0
+    REPO poppler/poppler
+    REF poppler-22.02.0
+    SHA512 693b813ef80656e7078f8830ec38e23520c6abd307befbb1721ba883233c92099704a7f02557807b28560f9c7ea1aa27192aea620b2ce4e9062a0b8790e93225
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
