@@ -7,12 +7,12 @@
   "supports": "!(arm & windows)",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
       "name": "pthread",
       "platform": "linux & osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
