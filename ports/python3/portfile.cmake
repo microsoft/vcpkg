@@ -46,6 +46,8 @@ vcpkg_from_github(
     PATCHES ${PATCHES}
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/Makefile.pre.in" "$(INSTALL) -d -m $(DIRMODE)" "$(MKDIR_P)")
+
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
