@@ -1,16 +1,11 @@
 {
   "name": "jasper",
   "version": "2.0.33",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
   "homepage": "https://github.com/mdadams/jasper",
   "dependencies": [
-    {
-      "name": "freeglut",
-      "platform": "!osx"
-    },
     "libjpeg-turbo",
-    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,5 +14,26 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "freeglut",
+    "opengl"
+  ],
+  "features": {
+    "freeglut": {
+      "description": "Open source implementation of GLUT with source and binary backwards compatibility.",
+      "dependencies": [
+        {
+          "name": "freeglut",
+          "platform": "!osx"
+        }
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL (Open Graphics Library) is the computer industry's standard API for defining 2-D and 3-D graphic images.",
+      "dependencies": [
+        "opengl"
+      ]
+    }
+  }
 }
