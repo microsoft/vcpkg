@@ -8,7 +8,7 @@ index 1c46432..43fb8ad 100644
  if(WITH_FREETYPE)
 -  ocv_check_modules(FREETYPE freetype2)
 -  if (FREETYPE_FOUND)
-+      find_package(Freetype REQUIRED)
++      find_package(Freetype CONFIG REQUIRED)
        set(HAVE_FREETYPE TRUE)
 -  endif()
  endif()
