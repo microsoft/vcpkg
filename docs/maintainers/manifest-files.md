@@ -456,10 +456,57 @@ This means "doesn't support uwp, nor arm32 (but does support arm64)".
 ### `"license"`
 
 The license of the port. This is an [SPDX license expression],
-using [SPDX license identifiers].
+or `null` for proprietary licenses and other licenses for which
+one should "just read the `copyright` file" (e.g., Qt).
 
 [SPDX license expression]: https://spdx.dev/ids/#how
-[SPDX license identifiers]: https://spdx.org/licenses/
+
+Additionally, you can find the list of [recognized license IDs]
+and [recognized license exception IDs] in Annex A of the SPDX specification.
+
+[recognized license IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a1-licenses-with-short-identifiers
+[recognized license exception IDs]: https://spdx.github.io/spdx-spec/SPDX-license-list/#a2-exceptions-list
+
+The following is an EBNF conversion of the ABNF located at
+<https://spdx.github.io/spdx-spec/SPDX-license-expressions/>,
+and this is what we actually parse in vcpkg.
+Note that vcpkg does not support DocumentRefs.
+
+```ebnf
+idchar = ? regex /[-.a-zA-Z0-9]/ ?
+idstring = ( idchar ), { idchar } ;
+
+(* note that unrecognized license and license exception IDs will be warned against *)
+license-id = idstring ;
+license-exception-id = idstring ;
+(* note that DocumentRefs are unsupported by this implementation *)
+license-ref = "LicenseRef-", idstring ;
+
+with = [ whitespace ], "WITH", [ whitespace ] ;
+and = [ whitespace ], "AND", [ whitespace ] ;
+or = [ whitespace ], "OR", [ whitespace ] ;
+
+simple-expression = [ whitespace ], (
+  | license-id
+  | license-id, "+"
+  | license-ref
+  ), [ whitespace ] ;
+
+(* the following are split up from compound-expression to make precedence obvious *)
+parenthesized-expression =
+  | simple-expression
+  | [ whitespace ], "(", or-expression, ")", [ whitespace ] ;
+
+with-expression =
+  | parenthesized-expression
+  | simple-expression, with, license-exception-id, [ whitespace ] ;
+
+(* note: "a AND b OR c" gets parsed as "(a AND b) OR c" *)
+and-expression = with-expression, { and, with-expression } ;
+or-expression = and-expression, { or, and-exression } ;
+
+license-expression = or-expression ;
+```
 
 #### Examples
 
