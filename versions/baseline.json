@@ -3408,6 +3408,10 @@
       "baseline": "0.3",
       "port-version": 1
     },
+    "libcurl-simple-https": {
+      "baseline": "2022-02-03",
+      "port-version": 0
+    },
     "libdatachannel": {
       "baseline": "0.16.4",
       "port-version": 0
