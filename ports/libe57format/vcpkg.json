@@ -1,8 +1,8 @@
 {
-    "name": "libe57format",
-    "version-string": "2.2.0",
-    "description": "A library to provide read & write support for the E57 file format.",
-    "dependencies": [
-        "xerces-c"
-      ]
+  "name": "libe57format",
+  "version-string": "2.2.0",
+  "description": "A library to provide read & write support for the E57 file format.",
+  "dependencies": [
+    "xerces-c"
+  ]
 }
