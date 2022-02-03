@@ -21,7 +21,7 @@
 -else()
    if(NOT CMAKE_CROSSCOMPILING) # iOS build should not reuse OSX package
 -     find_package(HDF5)
-+     find_package(HDF5 CONFIG REQUIRED)
++     find_package(HDF5 REQUIRED)
    endif()
 -endif()
  
