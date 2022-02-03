@@ -1,6 +1,7 @@
 {
   "name": "openimageio",
   "version": "2.3.10.1",
+  "port-version": 1,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "dependencies": [
@@ -49,6 +50,7 @@
     },
     "field3d": {
       "description": "Enable field3D support for openimageio",
+      "supports": "!windows",
       "dependencies": [
         "field3d"
       ]
