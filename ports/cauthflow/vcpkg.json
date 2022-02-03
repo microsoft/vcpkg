@@ -1,0 +1,22 @@
+{
+  "name": "cauthflow",
+  "version": "0.0.1",
+  "description": "OAuth2 server flow handler in C89 for SunOS, Windows, macOS, BSD, and Linux.",
+  "license": "Apache-2.0 OR MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "c89stringutils",
+    "curl",
+    "libcurl-simple-https",
+    "parson",
+    "randomstr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
