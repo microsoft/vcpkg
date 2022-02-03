@@ -5,6 +5,7 @@
   "dependencies": [
     "freetype",
     "fribidi",
-    "harfbuzz"
+    "harfbuzz",
+    "vcpkg-cmake"
   ]
 }

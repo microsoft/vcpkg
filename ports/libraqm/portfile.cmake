@@ -15,9 +15,8 @@ vcpkg_from_github(
 file(COPY ${CURRENT_PORT_DIR}/FindFribidi.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}
         -DRAQM_VERSION_MAJOR=${RAQM_VERSION_MAJOR}
@@ -25,7 +24,7 @@ vcpkg_configure_cmake(
         -DRAQM_VERSION_MICRO=${RAQM_VERSION_MICRO}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
