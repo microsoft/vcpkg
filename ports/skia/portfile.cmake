@@ -1,8 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
-    REF fb0b35fed5580d49392df7ce9374551b348fffbf
-    PATCHES add-missing-tuple.patch
+    REF 1f2435f46b48a19b3818df20085af685119cb8e0
 )
 
 function(checkout_in_path PATH URL REF)
