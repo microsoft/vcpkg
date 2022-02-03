@@ -111,6 +111,9 @@ if ($Triplet -eq 'x64-linux') {
 elseif ($Triplet -eq 'x64-osx') {
     $executableExtension = [string]::Empty
 }
+elseif ($Triplet -eq 'arm64-osx') {
+    $executableExtension = [string]::Empty
+}
 else {
     $executableExtension = '.exe'
 }

@@ -51,6 +51,14 @@ jobs:
 
 - template: osx/azure-pipelines.yml
   parameters:
+    triplet: x64-osx
+    jobName: x64_osx
+    poolName: $(osx-pool)
+
+- template: osx/azure-pipelines.yml
+  parameters:
+    triplet: arm64-osx
+    jobName: arm64_osx
     poolName: $(osx-pool)
 
 - template: linux/azure-pipelines.yml
