@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            offscale/cauthflow
-    REF             029e05aa0dbb1efcff8034200a1327118927f793
-    SHA512          70109508c00db5a69c0466d209d2d6c2d6aedd2b2c3ad7abbe8f8af0b45cd9b610f0dcf0248a565d4d27f3a4b47496eff39ca2db368775fffcebd8959dfdf21f
+    REF             5d785fd8a4a47f37d13e9f65f3d3de569ed74aa4
+    SHA512          339b6b3ecdc65ba7c15899e8caae3ebae61ae031dfe2e3eb8ff8cae6c091f76cd8f9e56cf64048a85089d4a37c42ee70cb6461430af294a8447646b120a4d655
     HEAD_REF        master
 )
 
