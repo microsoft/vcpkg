@@ -108,11 +108,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:tests=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
-    OPTIONS_RELEASE
-        -Dgobject-cast-checks=disabled
-        -Dglib-asserts=disabled
-        -Dglib-checks=disabled
-        -Dextra-checks=disabled
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     # note: can't find where z.lib comes from. replace it to appropriate library name manually
