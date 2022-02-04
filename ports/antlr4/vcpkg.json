@@ -1,6 +1,6 @@
 {
   "name": "antlr4",
-  "version-string": "4.9.1",
+  "version": "4.9.3",
   "port-version": 1,
   "description": "ANother Tool for Language Recognition",
   "homepage": "https://www.antlr.org",
@@ -9,6 +9,10 @@
     {
       "name": "libuuid",
       "platform": "!uwp & !windows & !osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }

@@ -1,8 +1,6 @@
-vcpkg_fail_port_install(ON_ARCH "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  VcDevel/Vc 
+    REPO  VcDevel/Vc
     REF 1.4.2
     SHA512 9a929cd48bdf6b8e94765bd649e7ec42b10dea28e36eff288223d72cffa5f4fc8693e942aa3f780b42d8a0c1824fcabff22ec0622aa8ea5232c9123858b8bbbf
     HEAD_REF 1.4

@@ -73,6 +73,18 @@ index 30cd613..43f1daf 100644
  
  if test "$HAVE_SQLITE3" = "yes"; then
      LIBS="$SQLITE3_LDFLAGS $LIBS"
+@@ -1571,6 +1584,11 @@ HAVE_SPATIALITE=no
+ if test -z "$with_spatialite" -o "$with_spatialite" = "no"; then
+     AC_MSG_RESULT(disabled)
+ elif test "$with_spatialite" = "yes"; then
++    PKG_CHECK_MODULES([SPATIALITE],[spatialite >= 5],[HAVE_SPATIALITE=yes],AC_MSG_ERROR([vcpkg libspatialite not found]))
++    SPATIALITE_INC="$SPATIALITE_CFLAGS"
++    LIBS="$LIBS $SPATIALITE_LIBS"
++    ac_cv_lib_spatialite_spatialite_target_cpu=yes
++elif false; then
+     AC_CHECK_HEADERS(sqlite3.h)
+     if test "$ac_cv_header_sqlite3_h" = "yes"; then
+         AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
 @@ -1639,6 +1652,19 @@ dnl ---------------------------------------------------------------------------
  AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
  

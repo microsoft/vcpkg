@@ -1,6 +1,5 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "UWP")
 set(VERSION 0.30)
-set(PATCHES 
+set(PATCHES
     pkgconfig.patch
     undefined_reference.diff  # https://sources.debian.org/patches/libcanberra/0.30-7/
     gtk_dont_assume_x11.patch # likewise
