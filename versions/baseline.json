@@ -5952,6 +5952,10 @@
       "baseline": "6.10",
       "port-version": 4
     },
+    "randomstr": {
+      "baseline": "2022-02-03",
+      "port-version": 0
+    },
     "rang": {
       "baseline": "3.2",
       "port-version": 0
