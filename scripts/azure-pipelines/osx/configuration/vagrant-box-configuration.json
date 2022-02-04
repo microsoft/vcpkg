@@ -1,5 +1,5 @@
 {
-  "$schema": "./vagrant-vm-configuration.schema.json",
+  "$schema": "./vagrant-box-configuration.schema.json",
   "brew": [
     "autoconf",
     "autoconf-archive",
