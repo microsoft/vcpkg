@@ -13,4 +13,9 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/LICENSE.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
+foreach(dir "lib" "share" "tools")
+    if (IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/${dir}")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/${dir}" DESTINATION "${CURRENT_PACKAGES_DIR}/${PORT}")
+    endif (IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/${dir}")
+endforeach (dir "lib" "share" "tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
