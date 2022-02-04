@@ -6197,8 +6197,8 @@
       "port-version": 1
     },
     "s2n": {
-      "baseline": "2022-01-24",
-      "port-version": 0
+      "baseline": "1.3.0",
+      "port-version": 2
     },
     "safeint": {
       "baseline": "3.0.26",
