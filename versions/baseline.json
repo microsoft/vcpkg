@@ -18,7 +18,7 @@
     },
     "ace": {
       "baseline": "7.0.6",
-      "port-version": 1
+      "port-version": 2
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
@@ -1199,6 +1199,10 @@
     "c4core": {
       "baseline": "2021-07-18",
       "port-version": 1
+    },
+    "c89stringutils": {
+      "baseline": "0.0.1",
+      "port-version": 0
     },
     "caf": {
       "baseline": "0.18.5",
@@ -3849,8 +3853,8 @@
       "port-version": 1
     },
     "libraqm": {
-      "baseline": "0.7.0",
-      "port-version": 3
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "libraw": {
       "baseline": "201903",
@@ -5002,7 +5006,7 @@
     },
     "opendnp3": {
       "baseline": "3.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openexr": {
       "baseline": "2.5.0",
@@ -5951,6 +5955,10 @@
     "ragel": {
       "baseline": "6.10",
       "port-version": 4
+    },
+    "randomstr": {
+      "baseline": "2022-02-03",
+      "port-version": 0
     },
     "rang": {
       "baseline": "3.2",
@@ -7173,7 +7181,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-12-28",
+      "baseline": "2022-01-30",
       "port-version": 0
     },
     "vcpkg-gfortran": {
