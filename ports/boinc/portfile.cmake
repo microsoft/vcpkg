@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF client_release/7.18/7.18.1
     SHA512 200587a0896aec6a7e7247132811141909aa333cb2bb9350c5ba016ffdf056413b1c5346361b311c087634b2d29cdbb204486385d8561a299b68739244c5a532
     HEAD_REF master
+    PATCHES
+        001-add-openssl3-support.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
