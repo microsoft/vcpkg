@@ -8,23 +8,6 @@ vcpkg_from_github(
     PATCHES fix-install.patch
 )
 
-if(VCPKG_TARGET_IS_OSX)
-    # In Darwin platform, there can be an old version of `bison`,
-    # Which can't be used for `gst-build`. It requires 2.4+
-    vcpkg_find_acquire_program(BISON)
-    execute_process(
-        COMMAND ${BISON} --version
-        OUTPUT_VARIABLE BISON_OUTPUT
-    )
-    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
-    set(BISON_MAJOR ${CMAKE_MATCH_1})
-    set(BISON_MINOR ${CMAKE_MATCH_2})
-    message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
-    if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
-        message(WARNING "'bison' upgrade is required. Please check the https://stackoverflow.com/a/35161881")
-    endif()
-endif()
-
 # make tools like 'glib-mkenums' visible
 get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
 message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
@@ -43,21 +26,32 @@ else()
     set(PLUGIN_UGLY_SUPPORT disabled)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(LIBRARY_LINKAGE "shared")
-else()
-    set(LIBRARY_LINKAGE "static")
-endif()
-
 # gst-build's meson configuration needs git. Make the tool visible.
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path("${GIT_DIR}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLATFORM_OPTIONS -Dgst-full-version-script=data/misc/gstreamer-full-default.map)
-else()
-    list(APPEND PLATFORM_OPTIONS -Dgst-full-version-script=) # empty string
+    list(APPEND PLATFORM_OPTIONS
+        -Dgst-full-version-script=data/misc/gstreamer-full-default.map
+        # We can use EGL in Windows if port 'angle' is already installed.
+        # In the case, GL API should be 'gles2'.
+        -Dgst-plugins-base:gl_platform=auto # -Dgst-plugins-base:gl_platform=egl
+        -Dgst-plugins-base:gl_api=opengl    # -Dgst-plugins-base:gl_api=gles2
+        # use 'winrt' if system version is high enough?
+        -Dgst-plugins-base:gl_winsys=win32 
+    )
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND PLATFORM_OPTIONS
+        -Dgst-full-version-script= # this empty string intended
+        -Dgst-plugins-base:gl_platform=cgl
+        -Dgst-plugins-base:gl_winsys=cocoa
+    ) 
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND PLATFORM_OPTIONS
+        -Dgst-plugins-base:gl_platform=egl
+        -Dgst-plugins-base:gl_winsys=android
+    ) 
 endif()
 
 vcpkg_configure_meson(
@@ -83,6 +77,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
+        -Dgst-plugins-base:doc=disabled
         # gst-plugins-good
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:soup=disabled
@@ -101,13 +96,16 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:examples=disabled
         -Dgst-plugins-bad:tests=disabled
         -Dgst-plugins-bad:introspection=disabled
-        -Dgst-plugins-bad:nls=${LIBRARY_LINKAGE}
+        -Dgst-plugins-bad:nls=disabled
         -Dgst-plugins-bad:orc=disabled
         # gst-plugins-ugly
         -Dugly=${PLUGIN_UGLY_SUPPORT}
         -Dgst-plugins-ugly:tests=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
+    OPTIONS_RELEASE
+        -Dgst-plugins-base:glib-asserts=disabled
+        -Dgst-plugins-base:glib-checks=disabled
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     # note: can't find where z.lib comes from. replace it to appropriate library name manually
