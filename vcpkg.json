@@ -1,0 +1,36 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+    "name": "hpcc-platform",
+    "version": "8.6.0",
+    "dependencies": [
+        {
+            "name": "icu",
+            "platform": "!osx"
+        },
+        "zlib",
+        "openssl",
+        {
+            "name": "libxslt",
+            "platform": "!osx"
+        },
+        "python3",
+        {
+            "name": "winflexbison",
+            "platform": "windows"
+        },
+        {
+            "name": "cppunit",
+            "platform": "!osx"
+        },
+        "boost",
+        "apr",
+        "apr-util",
+        {
+            "name": "libmysql",
+            "platform": "!(windows & x86) & !uwp"
+        },
+        "gtest",
+        "curl",
+        "curlpp"
+    ]
+}

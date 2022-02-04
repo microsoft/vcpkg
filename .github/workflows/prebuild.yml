@@ -6,18 +6,31 @@ env:
 on:
   push:
     branches:
+      - "test-*"
       - "hpcc-platform-*"
 
 jobs:
   build:
     strategy:
       matrix:
-        triplet: ["x86-windows", "x64-windows"]
+        triplet: ["x64-linux", "x64-windows", "x86-windows", "x64-osx"]
         include:
-          - os: "windows-2019"
-            triplet: "x86-windows"
-          - os: "windows-2019"
+          - os: "ubuntu-latest"
+            triplet: "x64-linux"
+            mono: "mono"
+            sudo: "sudo"
+          - os: "windows-latest"
             triplet: "x64-windows"
+            mono: ""
+            sudo: ""
+          - os: "windows-latest"
+            triplet: "x86-windows"
+            mono: ""
+            sudo: ""
+          - os: "macos-10.15"
+            triplet: "x64-osx"
+            mono: "mono"
+            sudo: "sudo"
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -26,7 +39,7 @@ jobs:
         working-directory: .
         shell: "bash"
         run: |
-          rm -rf "$VCPKG_INSTALLATION_ROOT"
+          ${{ matrix.sudo }} rm -rf "$VCPKG_INSTALLATION_ROOT"
 
       - name: Check out source code
         uses: actions/checkout@v2
@@ -43,19 +56,19 @@ jobs:
         working-directory: .
         shell: "bash"
         run: |
-          `./vcpkg.exe fetch nuget | tail -n 1` \
+          ${{ matrix.mono }} `./vcpkg fetch nuget | tail -n 1` \
             sources add \
             -source "https://nuget.pkg.github.com/hpcc-systems/index.json" \
             -storepasswordincleartext \
             -name "GitHub" \
             -username "hpcc-systems" \
             -password "${{ secrets.GITHUB_TOKEN }}"
-          `./vcpkg.exe fetch nuget | tail -n 1` \
+          ${{ matrix.mono }} `./vcpkg fetch nuget | tail -n 1` \
             setapikey "${{ secrets.GITHUB_TOKEN }}" \
             -source "https://nuget.pkg.github.com/hpcc-systems/index.json"
 
       - name: "vcpkg package refresh"
         working-directory: .
         shell: "bash"
-        run: >
-          ./vcpkg.exe install --keep-going icu zlib openssl libxslt winflexbison libuv librdkafka lz4 hiredis tbb aws-sdk-cpp rapidjson h3 libyaml azure-storage-cpp jwt-cpp libgit2 --triplet ${{ matrix.triplet }}
+        run: |
+          ./vcpkg install --keep-going --triplet ${{ matrix.triplet }}
