@@ -6,7 +6,7 @@ server = {
   :machine_name => configuration['machine_name'],
   :box => configuration['box_name'],
   :box_version => configuration['box_version'],
-  :ram => 12000,
+  :ram => 24000,
   :cpu => 11
 }
 
