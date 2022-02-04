@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-errorC7651.patch
         add-noexcept-to-frame.patch
+        gsl-4_0_0.patch
 )
 
 vcpkg_configure_cmake(
