@@ -1200,6 +1200,10 @@
       "baseline": "2021-07-18",
       "port-version": 1
     },
+    "c89stringutils": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "caf": {
       "baseline": "0.18.5",
       "port-version": 0
