@@ -29,11 +29,22 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
 endif()
 
-# The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_ALLOW_EXTENSIONS AND (NOT VCPKG_CROSSCOMPILING OR TARGET_TRIPLET MATCHES "^${HOST_TRIPLET}-"))
+        set(PYTHON_ENSUREPIP TRUE)
+    else()
+        set(PYTHON_ENSUREPIP FALSE)
+    endif()
+
+    # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
+    endif()
+
+    if(PYTHON_ENSUREPIP)
+        list(APPEND PATCHES "0010-ensurepip.patch")
     endif()
 endif()
 
@@ -70,7 +81,6 @@ endfunction()
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
-    string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" PYTHON_ALLOW_EXTENSIONS)
     if(PYTHON_ALLOW_EXTENSIONS)
         find_library(BZ2_RELEASE NAMES bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -172,8 +182,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
     # The generated python executable must match the host arch
-    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
+    if(PYTHON_ENSUREPIP)
         message(STATUS "Bootstrapping pip")
+        set(sys_executable "'${CURRENT_INSTALLED_DIR}/tools/${PORT}/python.exe'")
+        configure_file("${SOURCE_PATH}/Lib/ensurepip/__init__.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/ensurepip/__init__.py" @ONLY)
         vcpkg_execute_required_process(COMMAND python -m ensurepip
             WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
             LOGNAME "ensurepip-${TARGET_TRIPLET}"
