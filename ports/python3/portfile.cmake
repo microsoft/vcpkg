@@ -13,7 +13,6 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
-    0008-fix-parallel-install.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -45,6 +44,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES ${PATCHES}
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/Makefile.pre.in" "$(INSTALL) -d -m $(DIRMODE)" "$(MKDIR_P)")
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
