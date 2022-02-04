@@ -39,7 +39,7 @@ set(INPUT_OPTIONS)
 foreach(_input IN LISTS input_vars)
     if(_input MATCHES "(png|jpeg)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
-    elseif(_input MATCHES "(sql-sqlite)") # Not yet used be the cmake build
+    elseif(_input MATCHES "(sql-sqlite)") # Not yet used by the cmake build
     else()
         list(APPEND INPUT_OPTIONS -DINPUT_${_input}:STRING=)
     endif()
@@ -79,7 +79,7 @@ list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 list(APPEND FEATURE_OPTIONS -DFEATURE_xml:BOOL=ON)
 
 if(VCPKG_QT_NAMESPACE)
-    list(APPEND FEATURE_OPTIONS -DQT_NAMESPACE:STRING=${VCPKG_QT_NAMESPACE})
+    list(APPEND FEATURE_OPTIONS "-DQT_NAMESPACE:STRING=${VCPKG_QT_NAMESPACE}")
 endif()
 
 # Corelib features:

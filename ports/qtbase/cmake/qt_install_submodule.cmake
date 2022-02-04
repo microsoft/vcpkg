@@ -62,13 +62,14 @@ function(qt_cmake_configure)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()
 
-    if(NOT ${PORT} MATCHES "qtbase")
+    if(NOT PORT MATCHES "^qtbase")
         list(APPEND _qarg_OPTIONS "-DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
     endif()
     set(PERL_OPTION "-DHOST_PERL:PATH=${PERL}")
 
-    if(NOT _qarg_DISABLE_NINJA)
-        set(NINJA_OPTION PREFER_NINJA)
+    set(ninja_option "")
+    if(_qarg_DISABLE_NINJA)
+        set(ninja_option WINDOWS_USE_MSBUILD)
     endif()
     
     set(disable_parallel "")
@@ -90,7 +91,7 @@ function(qt_cmake_configure)
 
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        ${NINJA_OPTION}
+        ${ninja_option}
         ${disable_parallel}
         OPTIONS 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
