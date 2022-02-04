@@ -1,3 +1,5 @@
+# DEPRECATED: in favor of the `supports` field in [`manifest file`](manifest-files.md#supports) et al.
+
 #[===[.md:
 # vcpkg_fail_port_install
 
@@ -40,6 +42,8 @@ Library linkage for which the build should fail early.
 #]===]
 
 function(vcpkg_fail_port_install)
+    message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "vcpkg_fail_port_install has been removed and all values should be moved by adding `supports` field to manifest file or directly adding `${PORT}:${FAILED_TRIPLET}=fail` to _scripts/ci.baseline.txt_.\nPlease remove `vcpkg_fail_port_install(...)`.\n")
+
     set(multi_args "ON_TARGET;ON_ARCH;ON_CRT_LINKAGE;ON_LIBRARY_LINKAGE")
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "ALWAYS" "MESSAGE" "${multi_args}")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
