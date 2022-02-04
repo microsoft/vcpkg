@@ -1,8 +1,8 @@
 diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
-index 1904a2559..e66586c88 100644
+index b9f0e2e97..eb731b125 100644
 --- a/config/compiler/BUILD.gn
 +++ b/config/compiler/BUILD.gn
-@@ -1571,6 +1571,7 @@ config("default_warnings") {
+@@ -1489,6 +1489,7 @@ config("default_warnings") {
        # Disables.
        "-Wno-missing-field-initializers",  # "struct foo f = {0};"
        "-Wno-unused-parameter",  # Unused function parameters.
@@ -10,7 +10,7 @@ index 1904a2559..e66586c88 100644
      ]
    }
  
-@@ -1987,8 +1988,17 @@ config("no_incompatible_pointer_warnings") {
+@@ -1925,8 +1926,17 @@ config("no_incompatible_pointer_warnings") {
  # Shared settings for both "optimize" and "optimize_max" configs.
  # IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
  if (is_win) {
@@ -138,7 +138,7 @@ index 5adf70cc3..dab159f98 100755
    # JSON formatter prints GN compatible lists when everything is a list of
    # strings.
 diff --git a/config/linux/pkg_config.gni b/config/linux/pkg_config.gni
-index 428e44ac0..a0d2175ee 100644
+index 635fd8dde..026102624 100644
 --- a/config/linux/pkg_config.gni
 +++ b/config/linux/pkg_config.gni
 @@ -45,6 +45,9 @@ declare_args() {
@@ -151,7 +151,7 @@ index 428e44ac0..a0d2175ee 100644
  }
  
  pkg_config_script = "//build/config/linux/pkg-config.py"
-@@ -87,6 +90,17 @@ if (host_pkg_config != "") {
+@@ -88,6 +91,17 @@ if (host_pkg_config != "") {
    host_pkg_config_args = pkg_config_args
  }
  
