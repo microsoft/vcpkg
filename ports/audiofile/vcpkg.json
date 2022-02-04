@@ -1,9 +1,9 @@
 {
   "name": "audiofile",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "A simple header-only C++ library for reading and writing audio files.",
   "homepage": "https://github.com/adamstark/AudioFile",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
