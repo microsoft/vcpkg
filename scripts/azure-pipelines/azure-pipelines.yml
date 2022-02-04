@@ -4,7 +4,7 @@
 variables:
   windows-pool: 'PrWin-2022-01-11'
   linux-pool: 'PrLin-2021-12-13'
-  osx-pool: 'PrOsx-2022-01-03'
+  osx-pool: 'PrOsx-2022-02-04'
 
 jobs:
 - template: windows/azure-pipelines.yml
