@@ -1,6 +1,6 @@
 {
   "name": "qtremoteobjects",
-  "version-semver": "6.2.3",
+  "version": "6.2.3",
   "description": "Qt distributed object system",
   "homepage": "https://www.qt.io/",
   "dependencies": [
