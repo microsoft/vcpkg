@@ -797,7 +797,6 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
-mpfr:x64-osx=fail
 mpfr:x64-linux=fail
 msix:x64-linux=fail
 msix:x64-osx=fail
