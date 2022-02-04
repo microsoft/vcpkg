@@ -5,6 +5,7 @@
   "license": "0BSD",
   "supports": "!uwp",
   "dependencies": [
+    "c89stringutils",
     "rhash",
     {
       "name": "vcpkg-cmake",
