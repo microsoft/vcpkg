@@ -4,6 +4,7 @@
   "version": "6.2.3",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "supports": "!static & !((arm | x86) & windows)",
   "dependencies": [
     {

@@ -3,6 +3,7 @@
   "version": "6.2.3",
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     "freetype",
     {
