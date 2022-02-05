@@ -4157,7 +4157,7 @@
       "port-version": 3
     },
     "lief": {
-      "baseline": "0.11.5",
+      "baseline": "2022-02-02",
       "port-version": 0
     },
     "lilv": {
@@ -4353,8 +4353,8 @@
       "port-version": 0
     },
     "mbedtls": {
-      "baseline": "2.24.0",
-      "port-version": 4
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "mcpp": {
       "baseline": "2.7.2.14",
