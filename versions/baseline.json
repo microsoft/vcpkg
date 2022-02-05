@@ -3409,7 +3409,7 @@
       "port-version": 1
     },
     "libcurl-simple-https": {
-      "baseline": "2022-02-03",
+      "baseline": "2022-02-04",
       "port-version": 0
     },
     "libdatachannel": {
