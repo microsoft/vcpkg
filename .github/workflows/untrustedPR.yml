@@ -108,10 +108,12 @@ jobs:
             }
             if (missing_license !== "") {
               output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
-              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+              output += "<details>\n\n"
 
+              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
               output += missing_license
-              output += "\n\nValid values for the license field are listed at <https://spdx.org/licenses/>\n\n"
+              output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n"
+              output += "</details>\n\n"
             }
 
             if (approve) {
