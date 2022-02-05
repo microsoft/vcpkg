@@ -126,6 +126,9 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
                     ${CURRENT_PACKAGES_DIR}/include/GL
 )
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
+            ${CURRENT_PACKAGES_DIR}/include/gst/gl/gstglconfig.h
+)
 
 file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
