@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/s2n-tls
     REF b956eab5f1676a961b16cb060d41c3844e118af2
-    SHA512 4b151f9a40505217e37ce533333d6f84e1f753d10c445b780af62c5270f6c9caf994f76ea38f4197c818e18dbc0abd2481f0cb1e198c7a315a692cfe6757651a
+    SHA512 fd979298fd52f4c2baf4005fbe0928045f5b8b912e1bc2ebe49fb85d461e51f1d9264ad52aa874a469103e74b03abf0060f2b73fa41c21c54ea8412cf13cc6e7
     PATCHES
         fix-cmake-target-path.patch
         use-openssl-crypto.patch
