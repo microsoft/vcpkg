@@ -16,22 +16,16 @@
     }
   ],
   "default-features": [
-    "freeglut",
     "opengl"
   ],
   "features": {
-    "freeglut": {
-      "description": "Open source implementation of GLUT with source and binary backwards compatibility.",
+    "opengl": {
+      "description": "Enable the use of the OpenGL/GLUT Library",
       "dependencies": [
         {
           "name": "freeglut",
-          "platform": "!osx"
-        }
-      ]
-    },
-    "opengl": {
-      "description": "OpenGL (Open Graphics Library) is the computer industry's standard API for defining 2-D and 3-D graphic images.",
-      "dependencies": [
+          "platform": "osx"
+        },
         "opengl"
       ]
     }
