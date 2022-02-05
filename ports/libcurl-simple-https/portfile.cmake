@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            SamuelMarks/curl-simple-https
-    REF             779400983379ebc254f1017bf6dae5ae07016af3
-    SHA512          c463d44ab8444eec2503762e60f7056ac936a8118fd1d3f6ad676beb52d1467e75caa86004b78daae581de84baad56f49d920b10a4b3332a5c84df9cb59e14af
+    REF             61cc5c43284d5d37296b93ecb8403bd1f05d55ca
+    SHA512          dace996b848cf4d14253f6b7a3130bcd1fbd31b6d2d2a85e83947c6c644d4ac45a8d7fbf05491658e449b25965c99f68fbbcb1b89d792e0fb2b1e7b727287f1c
     HEAD_REF        master
 )
 
@@ -16,7 +16,3 @@ file(INSTALL "${SOURCE_PATH}/cmake/License.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
