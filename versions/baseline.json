@@ -4286,7 +4286,7 @@
     },
     "mailio": {
       "baseline": "0.20.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mapbox-geojson-cpp": {
       "baseline": "0.5.1",
@@ -5006,7 +5006,7 @@
     },
     "opencv4": {
       "baseline": "4.5.4",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6095,6 +6095,10 @@
     "rhash": {
       "baseline": "1.4.0",
       "port-version": 2
+    },
+    "rhasheq": {
+      "baseline": "0.0.1",
+      "port-version": 0
     },
     "riffcpp": {
       "baseline": "2.2.4",
