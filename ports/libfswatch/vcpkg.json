@@ -2,6 +2,7 @@
   "name": "libfswatch",
   "version": "1.17.0",
   "description": "A cross-platform file change monitor with multiple backends: Apple OS X File System Events, *BSD kqueue, Solaris/Illumos File Events Notification, Linux inotify, Microsoft Windows and a stat()-based backend.",
+  "license": "GPL-3.0-only",
   "supports": "!uwp",
   "dependencies": [
     {
