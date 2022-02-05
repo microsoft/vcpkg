@@ -63,6 +63,7 @@
         "libpng",
         "libraw",
         "libvpx",
+        "mp3lame",
         "mpg123",
         "speex",
         "taglib"

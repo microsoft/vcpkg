@@ -70,6 +70,7 @@ vcpkg_configure_meson(
         -Drtsp_server=disabled
         -Ddevtools=disabled
         # gst-plugins-base
+        -Dgst-plugins-base:package-origin="vcpkg"
         -Dgst-plugins-base:examples=disabled
         -Dgst-plugins-base:tests=disabled
         -Dgst-plugins-base:tools=disabled
@@ -79,8 +80,10 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:pango=disabled
         -Dgst-plugins-base:doc=disabled
         # gst-plugins-good
+        -Dgst-plugins-good:package-origin="vcpkg"
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:soup=disabled
+        -Dgst-plugins-good:lame=enabled # mp3lame
         -Dgst-plugins-good:cairo=auto # cairo[gobject]
         -Dgst-plugins-good:speex=auto # speex
         -Dgst-plugins-good:taglib=auto # taglib
@@ -91,6 +94,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:orc=disabled
         # gst-plugins-bad
         -Dbad=${PLUGIN_BAD_SUPPORT}
+        -Dgst-plugins-bad:package-origin="vcpkg"
         -Dgst-plugins-bad:opencv=disabled
         -Dgst-plugins-bad:hls-crypto=openssl
         -Dgst-plugins-bad:examples=disabled
@@ -100,6 +104,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:orc=disabled
         # gst-plugins-ugly
         -Dugly=${PLUGIN_UGLY_SUPPORT}
+        -Dgst-plugins-ugly:package-origin="vcpkg"
         -Dgst-plugins-ugly:tests=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
