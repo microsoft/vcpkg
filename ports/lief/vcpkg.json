@@ -1,19 +1,19 @@
 {
   "name": "lief",
-  "version": "0.12.0",
+  "version": "2022-02-02",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "supports": "!uwp",
   "dependencies": [
+    "boost-leaf",
+    "frozen",
+    "mbedtls",
+    "spdlog",
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
-    "mbedtls",
-    "utfcpp",
-    "spdlog",
-    "frozen",
-    "boost-leaf"
+    }
   ],
   "default-features": [
     "art",
@@ -70,9 +70,6 @@
     "fuzzing": {
       "description": "Fuzz LIEF"
     },
-    "install-python": {
-      "description": "Install Python bindings"
-    },
     "logging": {
       "description": "Enable logging"
     },
@@ -93,9 +90,6 @@
     },
     "profiling": {
       "description": "Enable performance profiling"
-    },
-    "python-api": {
-      "description": "Enable Python API"
     },
     "tests": {
       "description": "Enable tests"

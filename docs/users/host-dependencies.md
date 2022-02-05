@@ -46,12 +46,10 @@ The default host triplets are chosen based on the host architecture and operatin
 
 Producing a tool has no special requirements; tools should be authored as a standard port, following all the normal policies and practices. Notably, they should build against `TARGET_TRIPLET`, not `HOST_TRIPLET` within the context of their portfile.
 
-Sometimes, it can be useful to determine whether the current context is a cross-compiling one or not. This should be done by comparing the strings `TARGET_TRIPLET` and `HOST_TRIPLET`. For example:
+If the current context is cross-compiling (`TARGET_TRIPLET` is not `HOST_TRIPLET`), then `VCPKG_CROSSCOMPILING` will be set to a truthy value.
 
 ```cmake
-string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" I_AM_NOT_CROSSCOMPILING)
-
-if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if(VCPKG_CROSSCOMPILING)
     # This is a native build
 else()
     # This is a cross build
@@ -60,6 +58,8 @@ endif()
 
 ## Host-only ports
 
-Some ports are host-only: script ports and tool ports are common examples.
-In this case, you can use the `"native"` supports expression to describe this.
-This supports expression is true when `TARGET_TRIPLET == HOST_TRIPLET`.
+Some ports should only be depended upon via a host dependency; script ports and
+tool ports are common examples. In this case, you can use the `"native"`
+supports expression to describe this. This supports expression is true when
+`VCPKG_CROSSCOMPILING` is false (implying that `TARGET_TRIPLET ==
+HOST_TRIPLET`).

@@ -1,0 +1,15 @@
+{
+  "name": "libslirp",
+  "version-semver": "4.6.1",
+  "description": "libslirp is a user-mode networking library used by virtual machines, containers or various tools.",
+  "homepage": "https://gitlab.freedesktop.org/slirp/libslirp",
+  "license": "BSD-3-Clause",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "glib",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

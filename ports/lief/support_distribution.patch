@@ -1,0 +1,127 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6ee2b0c5..d2ec0ae1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -327,7 +327,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
+                @ONLY)
+ 
+ target_include_directories(LIB_LIEF
+-  PUBLIC  "${LIEF_PUBLIC_INCLUDE_DIR}"
++  PUBLIC  "$<BUILD_INTERFACE:${LIEF_PUBLIC_INCLUDE_DIR}>"
+   PRIVATE "${LIEF_PRIVATE_INCLUDE_DIR}")
+ 
+ if(LIEF_ENABLE_JSON)
+@@ -370,7 +370,7 @@ if(LIEF_EXTERNAL_LEAF)
+   if(LIEF_EXTERNAL_LEAF_DIR)
+     message(STATUS "External LEAF include dir: ${LIEF_EXTERNAL_LEAF_DIR}")
+     target_include_directories(LIB_LIEF SYSTEM PUBLIC
+-                               ${LIEF_EXTERNAL_LEAF_DIR})
++                               "$<BUILD_INTERFACE:${LIEF_EXTERNAL_LEAF_DIR}>")
+   endif()
+ else()
+   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/leaf.hpp
+@@ -532,7 +532,7 @@ if(LIEF_COVERAGE)
+   target_link_libraries(LIB_LIEF gcov)
+ endif()
+ 
+-set_target_properties(LIB_LIEF PROPERTIES OUTPUT_NAME LIEF CLEAN_DIRECT_OUTPUT 1)
++set_target_properties(LIB_LIEF PROPERTIES OUTPUT_NAME LIEF EXPORT_NAME LIEF CLEAN_DIRECT_OUTPUT 1)
+ 
+ 
+ # Set a default build type if none was specified
+@@ -579,10 +579,10 @@ endif()
+ 
+ # Find Package Config
+ # ======================
+-configure_package_config_file(
++configure_file(
+   LIEFConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
+-  INSTALL_DESTINATION share/LIEF/cmake)
++  @ONLY)
+ 
+ write_basic_package_version_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
+@@ -645,10 +645,12 @@ else()
+ endif()
+ 
+ install(
+-  TARGETS LIB_LIEF
++  TARGETS LIB_LIEF lief_spdlog
++  EXPORT LIEFTargets
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
++  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+ install(
+   DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
+@@ -657,11 +659,6 @@ install(
+   FILES_MATCHING
+   REGEX "(.*).(hpp|h|def)$")
+ 
+-install(
+-  FILES       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
+-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
+-  COMPONENT   CMakeScripts)
+-
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
+@@ -673,7 +670,13 @@ install(
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+   COMPONENT   libraries)
+ 
+-export(TARGETS LIB_LIEF lief_spdlog FILE LIEFExport.cmake)
++install(
++  EXPORT LIEFTargets
++  NAMESPACE LIEF::
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
++  COMPONENT config)
++
++export(EXPORT LIEFTargets FILE LIEFTargets.cmake)
+ 
+ # Package
+ # ======================
+diff --git a/LIEFConfig.cmake.in b/LIEFConfig.cmake.in
+index 94ee5245..16454dfd 100644
+--- a/LIEFConfig.cmake.in
++++ b/LIEFConfig.cmake.in
+@@ -1,4 +1,20 @@
+-@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
+ 
+-set(LIEF_DIR "${PACKAGE_PREFIX_DIR}")
+-include("${CMAKE_CURRENT_LIST_DIR}/FindLIEF.cmake")
++# Need to find private dependencies even if they're private when compiled
++# statically
++if(NOT @BUILD_SHARED_LIBS@)
++  find_dependency(MbedTLS)
++  find_dependency(nlohmann_json)
++  find_dependency(frozen)
++  find_dependency(utf8cpp)
++  find_dependency(spdlog)
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/LIEFTargets.cmake")
++
++# Also attach location of Boost LEAF header-only library
++find_path(BOOST_LEAF_INCLUDE_PATH boost/leaf.hpp)
++if(NOT BOOST_LEAF_INCLUDE_PATH)
++  message(FATAL_ERROR "Could not find required path to 'boost/leaf.hpp'")
++endif()
++set_property(TARGET LIEF::LIEF APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BOOST_LEAF_INCLUDE_PATH}")
+diff --git a/cmake/LIEFApi.cmake b/cmake/LIEFApi.cmake
+index 772c8b75..f3bacb1f 100644
+--- a/cmake/LIEFApi.cmake
++++ b/cmake/LIEFApi.cmake
+@@ -59,7 +59,7 @@ if(LIEF_C_API)
+ 
+   target_include_directories(LIB_LIEF
+     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include"
+-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include")
++    PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/api/c/include>")
+ 
+   include("${CMAKE_CURRENT_SOURCE_DIR}/api/c/CMakeLists.txt")
+ endif()

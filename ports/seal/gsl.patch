@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0039517..4cc8a01 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,7 +149,7 @@ if(SEAL_USE_MSGSL)
+         message(STATUS "Microsoft GSL: download ...")
+         seal_fetch_thirdparty_content(ExternalMSGSL)
+     else()
+-        find_package(Microsoft.GSL 3 CONFIG)
++        find_package(Microsoft.GSL 4 CONFIG)
+         if(NOT Microsoft.GSL_FOUND)
+             message(FATAL_ERROR "Microsoft GSL: not found")
+         else()
