@@ -1,0 +1,26 @@
+diff --git a/src/PE/Builder.cpp b/src/PE/Builder.cpp
+index b793d74b..ab8dc90b 100644
+--- a/src/PE/Builder.cpp
++++ b/src/PE/Builder.cpp
+@@ -27,6 +27,8 @@
+ #include "LIEF/PE/Builder.hpp"
+ #include "LIEF/PE/ResourceData.hpp"
+ #include "LIEF/PE/utils.hpp"
++#define LIEF_PE_FORCE_UNDEF
++#include "LIEF/PE/undef.h"
+ #include "LIEF/PE/ImportEntry.hpp"
+ #include "LIEF/PE/Import.hpp"
+ #include "LIEF/PE/Section.hpp"
+diff --git a/src/PE/utils.cpp b/src/PE/utils.cpp
+index b9dd332c..445fdf18 100644
+--- a/src/PE/utils.cpp
++++ b/src/PE/utils.cpp
+@@ -29,6 +29,8 @@
+ #include "LIEF/exception.hpp"
+ 
+ #include "LIEF/PE/utils.hpp"
++#define LIEF_PE_FORCE_UNDEF
++#include "LIEF/PE/undef.h"
+ #include "LIEF/PE/Structures.hpp"
+ #include "LIEF/PE/Binary.hpp"
+ #include "LIEF/PE/Import.hpp"
