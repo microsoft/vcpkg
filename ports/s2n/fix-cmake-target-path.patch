@@ -17,7 +17,7 @@ index 09d1c3a..4e76ed6 100644
 +++ b/cmake/s2n-config.cmake
 @@ -8,9 +8,5 @@ endif()
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
- find_dependency(LibCrypto)
+ find_dependency(crypto)
  
 -if (BUILD_SHARED_LIBS)
 -    include(${CMAKE_CURRENT_LIST_DIR}/shared/@PROJECT_NAME@-targets.cmake)
