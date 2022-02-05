@@ -6,9 +6,14 @@ vcpkg_from_github(
     REF b657ef3f38b37aa1e5dea88a9332889d0fbf3a81 # 3.0
     SHA512 14bf572152ec5343a161dea9ebfd2b63cd5ce48c0db3decf5591aa94ae7766771cf521ba22978e9ae8855feef694bad85951f3c4a29cb9ddd881918fc6d3722a
     HEAD_REF master
-    PATCHES
-        0001_fix_uwp.patch
 )
+
+if (VCPKG_IS_UWP)
+    vcpkg_execute_required_process(
+        COMMAND "$ENV{VCToolsInstallDir}\\..\\..\\..\\Auxiliary\\Build\\vcvarsall.bat" ${VCPKG_TARGET_ARCHITECTURE} uwp
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME prepare-${TARGET_TRIPLET})
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
