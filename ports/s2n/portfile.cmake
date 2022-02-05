@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 fd979298fd52f4c2baf4005fbe0928045f5b8b912e1bc2ebe49fb85d461e51f1d9264ad52aa874a469103e74b03abf0060f2b73fa41c21c54ea8412cf13cc6e7
     PATCHES
         fix-cmake-target-path.patch
-        remove-trycompile.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
