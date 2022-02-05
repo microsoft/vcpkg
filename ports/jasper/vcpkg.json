@@ -22,10 +22,7 @@
     "opengl": {
       "description": "Enable the use of the OpenGL/GLUT Library",
       "dependencies": [
-        {
-          "name": "freeglut",
-          "platform": "osx"
-        },
+        "freeglut",
         "opengl"
       ]
     }
