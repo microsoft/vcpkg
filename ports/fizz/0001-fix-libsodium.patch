@@ -31,3 +31,4 @@ index 679b0e61..b28750fa 100644
 +find_dependency(unofficial-sodium CONFIG REQUIRED)
  find_dependency(folly CONFIG)
  find_dependency(ZLIB)
+
