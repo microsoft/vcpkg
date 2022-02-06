@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF 1.19.3
     SHA512 a132b7d3eeae19a1021abf7d5604c212a29039847ec851c8a24b54a60559a4b68c5b4d26c6a2aaac0a4b03c8939fcf4bb1c2716371407cb75bf2e75dab35a805
     HEAD_REF master
-    # todo: pluginscannerdir
     PATCHES fix-install.patch
 )
 
@@ -133,9 +132,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig
 file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
                     ${CURRENT_PACKAGES_DIR}/libexec
-                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0
+                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
@@ -152,14 +151,14 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll
-                           ${CURRENT_PACKAGES_DIR}/debug/lib/*.pdb
+        file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
+                           ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
         )
-        file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/*.dll
-                           ${CURRENT_PACKAGES_DIR}/lib/*.pdb
+        file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/gstreamer-1.0)
+        file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
+                           ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
         )
-        file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/gstreamer-1.0)
         file(REMOVE ${DBG_BINS} ${REL_BINS})
     endif()
     vcpkg_copy_tools(TOOL_NAMES gst-inspect-1.0 gst-launch-1.0 gst-stats-1.0 gst-typefind-1.0 AUTO_CLEAN)
