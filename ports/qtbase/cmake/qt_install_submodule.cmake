@@ -143,6 +143,7 @@ function(qt_fix_prl_files)
         string(REPLACE "${include_path}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
         string(REPLACE "${install_prefix}" "\$\$[QT_INSTALL_PREFIX]" _contents "${_contents}")
         string(REPLACE "[QT_INSTALL_PREFIX]/lib/objects-Debug" "[QT_INSTALL_LIBS]/objects-Debug" _contents "${_contents}")
+        string(REPLACE "[QT_INSTALL_PREFIX]/Qt6/qml" "[QT_INSTALL_QML]" _contents "${_contents}")
         #Note: This only works without an extra if case since QT_INSTALL_PREFIX is the same for debug and release
         file(WRITE "${prl_file}" "${_contents}")
     endforeach()
