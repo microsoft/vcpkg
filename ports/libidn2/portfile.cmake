@@ -23,7 +23,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     function(simple_copy_template_header FILE_PATH BASE_NAME)
         if(NOT EXISTS "${FILE_PATH}/${BASE_NAME}.h" AND EXISTS "${FILE_PATH}/${BASE_NAME}.in.h")
-            configure_file("${FILE_PATH}/${BASE_NAME}.in.h" "${FILE_PATH}/${BASE_NAME}.h")
+            configure_file("${FILE_PATH}/${BASE_NAME}.in.h" "${FILE_PATH}/${BASE_NAME}.h" @ONLY)
         endif()
     endfunction()
     
