@@ -126,39 +126,40 @@ vcpkg_copy_pdbs()
 file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(pkg_name "gstreamer-1.0")
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include/gst/gl/gstglconfig.h 
-            ${CURRENT_PACKAGES_DIR}/include/${pkg_name}/gst/gl/gstglconfig.h
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include/gst/gl/gstglconfig.h"
+            "${CURRENT_PACKAGES_DIR}/include/${pkg_name}/gst/gl/gstglconfig.h"
 )
 
 # Remove duplicated GL headers (we already have `opengl-registry`)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
-                    ${CURRENT_PACKAGES_DIR}/include/GL
-                    ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/include
-                    ${CURRENT_PACKAGES_DIR}/libexec
-                    ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
+                    "${CURRENT_PACKAGES_DIR}/include/GL"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/debug/libexec"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/include"
+                    "${CURRENT_PACKAGES_DIR}/libexec"
+                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include"
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/bin
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
+                        "${CURRENT_PACKAGES_DIR}/bin"
     )
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.pdb
+    file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.pdb"
     )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/${pkg_name})
-    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.dll
-                       ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.pdb
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.pdb"
     )
-    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/${pkg_name})
+    file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/${pkg_name}")
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/${pkg_name}")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
 
-file(GLOB REL_FILES "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" 
-                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig/*.pc"
+file(GLOB DBG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig/*.pc")
+file(GLOB REL_FILES "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig/*.pc")
+file(COPY ${DBG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(COPY ${REL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig"
+                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig"
 )
-file(GLOB DBG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig/*.pc"
-)
-vcpkg_fixup_pkgconfig(DEBUG_FILES ${DBG_FILES} RELEASE_FILES ${REL_FILES})
+vcpkg_fixup_pkgconfig()
