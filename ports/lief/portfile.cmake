@@ -76,8 +76,13 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Remove all-caps directory. These files moved in vcpkg_fixup_cmake_targets
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/LIEF")
+# Check if all-caps directory is empty (it won't be on case-insensitive filesystems).
+# These files could have been moved during vcpkg_fixup_cmake_targets
+file(GLOB dir_files "${CURRENT_PACKAGES_DIR}/share/LIEF/*")
+list(LENGTH dir_files dir_files_len)
+if(dir_files_len EQUAL 0)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/LIEF")
+endif()
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

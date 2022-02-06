@@ -1,8 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6ee2b0c5..d2ec0ae1 100644
+index 6ee2b0c5..b86e746e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -327,7 +327,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
+@@ -11,11 +11,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CROSSCOMPILING)
+ endif()
+ 
+ 
+-if(WIN32 OR ${IS_WIN_CROSS_COMPILE})
+-  include(ChooseMSVCCRT)
+-endif()
+-include(CheckCXXCompilerFlag)
+-include(CheckCCompilerFlag)
+ include(ExternalProject)
+ include(CMakePackageConfigHelpers)
+ 
+@@ -201,8 +196,6 @@ if(WINDOWS AND BUILD_SHARED_LIBS)
+ endif()
+ 
+ if(MSVC OR ${IS_WIN_CROSS_COMPILE})
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /bigobj")
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+ endif()
+ 
+ if(CMAKE_BUILD_TYPE MATCHES Debug AND WINDOWS)
+@@ -327,7 +320,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
                 @ONLY)
  
  target_include_directories(LIB_LIEF
@@ -11,7 +32,7 @@ index 6ee2b0c5..d2ec0ae1 100644
    PRIVATE "${LIEF_PRIVATE_INCLUDE_DIR}")
  
  if(LIEF_ENABLE_JSON)
-@@ -370,7 +370,7 @@ if(LIEF_EXTERNAL_LEAF)
+@@ -370,7 +363,7 @@ if(LIEF_EXTERNAL_LEAF)
    if(LIEF_EXTERNAL_LEAF_DIR)
      message(STATUS "External LEAF include dir: ${LIEF_EXTERNAL_LEAF_DIR}")
      target_include_directories(LIB_LIEF SYSTEM PUBLIC
@@ -20,7 +41,7 @@ index 6ee2b0c5..d2ec0ae1 100644
    endif()
  else()
    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/leaf.hpp
-@@ -532,7 +532,7 @@ if(LIEF_COVERAGE)
+@@ -532,7 +525,7 @@ if(LIEF_COVERAGE)
    target_link_libraries(LIB_LIEF gcov)
  endif()
  
@@ -29,7 +50,7 @@ index 6ee2b0c5..d2ec0ae1 100644
  
  
  # Set a default build type if none was specified
-@@ -579,10 +579,10 @@ endif()
+@@ -579,10 +572,10 @@ endif()
  
  # Find Package Config
  # ======================
@@ -42,8 +63,25 @@ index 6ee2b0c5..d2ec0ae1 100644
  
  write_basic_package_version_file(
    ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -645,10 +645,12 @@ else()
- endif()
+@@ -629,26 +622,15 @@ endif()
+ # Installation
+ # ======================
+ 
+-if(UNIX)
+-  include(GNUInstallDirs)
+-else()
+-  if(WIN32)
+-      set(CMAKE_INSTALL_LIBDIR      "lib")
+-      set(CMAKE_INSTALL_DATADIR     "share")
+-      set(CMAKE_INSTALL_INCLUDEDIR  "include")
+-      set(CMAKE_INSTALL_BINDIR      "bin")
+-      set(CMAKE_INSTALL_DATAROOTDIR "share")
+-      message(STATUS "Setting installation destination on Windows to: ${CMAKE_INSTALL_PREFIX}")
+-    else()
+-      message(FATAL_ERROR "System not UNIX nor WIN32 - not implemented yet")
+-    endif()
+-endif()
++include(GNUInstallDirs)
  
  install(
 -  TARGETS LIB_LIEF
@@ -52,12 +90,12 @@ index 6ee2b0c5..d2ec0ae1 100644
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 -  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
-+  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries
 +  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
  install(
    DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
-@@ -657,11 +659,6 @@ install(
+@@ -657,11 +639,6 @@ install(
    FILES_MATCHING
    REGEX "(.*).(hpp|h|def)$")
  
@@ -69,7 +107,7 @@ index 6ee2b0c5..d2ec0ae1 100644
  install(
    FILES ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
          ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -673,7 +670,13 @@ install(
+@@ -673,7 +650,13 @@ install(
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
    COMPONENT   libraries)
  
