@@ -3,11 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF v2021.06.14.00
-    SHA512 ff55f933d55031128b5355707fd025649ad90d261d91ec5f9d793433a77e63d3c2527a7f0111d6a3151667ab29f4117f96a505bcb80c1a4a99bd60346f05f4de
+    REF v2022.01.31.00
+    SHA512 544f843f47cb6113d0ad804079e6d767f33723d9d529c2751c5c6317d65c35bd327b43852904b2a37c2af615276176fe2de667907a9a460c0dfc7593eca46459
     HEAD_REF master
     PATCHES
-        fix-zlib.patch
+        0001-fix-libsodium.patch
 )
 
 # Prefer installed config files
@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
         -DINCLUDE_INSTALL_DIR:STRING=include
+        -Wno-deprecated
 )
 
 vcpkg_install_cmake()
