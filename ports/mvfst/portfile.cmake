@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/mvfst
-    REF 531b935a
-    SHA512  47683907e5c19aa7392bffc0f23378636e73e03bbbd598640d20042234a9385ac7ca2fb8202905e1c101713bfb3467df78b12fd1629ca83a3ccf2bae2f58a2e1
+    REF e569853
+    SHA512 0
     HEAD_REF main
 )
 
