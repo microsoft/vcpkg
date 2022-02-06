@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm")
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 

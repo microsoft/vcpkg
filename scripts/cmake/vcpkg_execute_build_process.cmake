@@ -42,6 +42,7 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1104:"
     "LINK : fatal error LNK1201:"
     "ld terminated with signal 9"
+    "Killed signal terminated program"
     # Multiple threads using the same directory at the same time cause conflicts, will try again.
     "Cannot create parent directory"
     "Cannot write file"
@@ -150,6 +151,7 @@ function(vcpkg_execute_build_process)
             if(NOT log_size EQUAL "0")
                 file(TO_NATIVE_PATH "${log}" native_log)
                 string(APPEND stringified_logs "    ${native_log}\n")
+                file(APPEND "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}" "${native_log}\n")
             endif()
         endforeach()
         z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
