@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF 1.19.3
     SHA512 a132b7d3eeae19a1021abf7d5604c212a29039847ec851c8a24b54a60559a4b68c5b4d26c6a2aaac0a4b03c8939fcf4bb1c2716371407cb75bf2e75dab35a805
     HEAD_REF master
-    PATCHES fix-install.patch
+    PATCHES fix-package-search.patch
 )
 
 # make tools like 'glib-mkenums' visible
@@ -120,47 +120,45 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
 endif()
 vcpkg_install_meson()
+vcpkg_copy_tools(TOOL_NAMES gst-inspect-1.0 gst-launch-1.0 gst-stats-1.0 gst-typefind-1.0 AUTO_CLEAN)
+vcpkg_copy_pdbs()
+
+file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+set(pkg_name "gstreamer-1.0")
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include/gst/gl/gstglconfig.h 
+            ${CURRENT_PACKAGES_DIR}/include/${pkg_name}/gst/gl/gstglconfig.h
+)
 
 # Remove duplicated GL headers (we already have `opengl-registry`)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
                     ${CURRENT_PACKAGES_DIR}/include/GL
-)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
-            ${CURRENT_PACKAGES_DIR}/include/gst/gl/gstglconfig.h
-)
-
-file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/include
                     ${CURRENT_PACKAGES_DIR}/libexec
-                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
+                    ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/bin
     )
-    set(PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
-    set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
-                ${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.dll
+                       ${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/*.pdb
     )
+    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/${pkg_name})
+    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.dll
+                       ${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/*.pdb
+    )
+    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/${pkg_name})
+    file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
 
-vcpkg_copy_pdbs()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                           ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
-        )
-        file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/gstreamer-1.0)
-        file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
-                           ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
-        )
-        file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/gstreamer-1.0)
-        file(REMOVE ${DBG_BINS} ${REL_BINS})
-    endif()
-    vcpkg_copy_tools(TOOL_NAMES gst-inspect-1.0 gst-launch-1.0 gst-stats-1.0 gst-typefind-1.0 AUTO_CLEAN)
-endif()
-vcpkg_fixup_pkgconfig()
+file(GLOB REL_FILES "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" 
+                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig/*.pc"
+)
+file(GLOB DBG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig/*.pc"
+)
+vcpkg_fixup_pkgconfig(DEBUG_FILES ${DBG_FILES} RELEASE_FILES ${REL_FILES})

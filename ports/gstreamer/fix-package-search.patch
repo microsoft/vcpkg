@@ -1,0 +1,19 @@
+diff --git a/subprojects/gst-plugins-good/ext/lame/meson.build b/subprojects/gst-plugins-good/ext/lame/meson.build
+index 2169fde..4a33f6e 100644
+--- a/subprojects/gst-plugins-good/ext/lame/meson.build
++++ b/subprojects/gst-plugins-good/ext/lame/meson.build
+@@ -1,9 +1,13 @@
+ lame_option = get_option('lame')
+ 
+ lame_extra_c_args = []
+-lame_dep = cc.find_library('mp3lame', required: false)
+ have_lame = cc.has_header_symbol('lame/lame.h', 'lame_init')
+ if have_lame
++  if host_system == 'windows' # vcpkg port 'mp3lame'
++    lame_dep = cc.find_library('libmp3lame', required: true)
++  else
++    lame_dep = cc.find_library('mp3lame', required: true)
++  endif
+   if cc.has_header_symbol('lame/lame.h', 'lame_set_VBR_quality')
+     lame_extra_c_args += ['-DHAVE_LAME_SET_VBR_QUALITY']
+   endif
