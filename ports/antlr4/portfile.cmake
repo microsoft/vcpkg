@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(VERSION 4.9.3)
 
 vcpkg_download_distfile(ARCHIVE
@@ -20,7 +18,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES 
+    PATCHES
         fixed_build.patch
         uuid_discovery_fix.patch
         export_guid.patch

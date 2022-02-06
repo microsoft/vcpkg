@@ -1,10 +1,10 @@
-set(COLMAP_REF "3.6")
+set(COLMAP_REF "3.7")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF ${COLMAP_REF}
-    SHA512 9a4b4f2a49891ce8ac32ab1f2e9b859336326bada889e6de49c017a069884bb6c8ab8a2ae430d955e58fc22377c63e8fba9ce80ff959713e2878e29814d44632
+    SHA512 a0c943383b9c8028e646e1cbcd9aab5f778c4f9e26a627da6c9d938b5816425d08f2ba651498b60f3b3ba1b8d4c5e6f82b5717b5d97778b99629170a988143ab
     HEAD_REF dev
     PATCHES
         fix-dependency-freeimage.patch

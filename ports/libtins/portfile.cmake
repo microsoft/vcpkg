@@ -34,6 +34,12 @@ get_filename_component(LIBTINS_CMAKE_DIR "${LIBTINS_CMAKE_DIR}" PATH)
 set(LIBTINS_INCLUDE_DIRS "${LIBTINS_CMAKE_DIR}/include")
 ]])
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tins/macros.h" "!defined(TINS_STATIC)" "1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tins/macros.h" "!defined(TINS_STATIC)" "0")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright

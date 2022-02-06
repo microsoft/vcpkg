@@ -4,8 +4,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   return()
 endif()
 
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 set(LIBRESSL_VERSION 3.3.4)
 set(LIBRESSL_HASH 11defdde8169d3653c24e149e698ffc5a8ead5ac0808111d1986cb11ef72e9912c463d4891d4635877021e73a8a045dbdbe5e83ec785a59150f170d2ca2031de)
 

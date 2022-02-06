@@ -9,6 +9,7 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 vcpkg_cmake_config_fixup(
     [PACKAGE_NAME <name>]
     [CONFIG_PATH <config-directory>]
+    [TOOLS_PATH <tools/${PORT}>]
     [DO_NOT_DELETE_PARENT_CONFIG_PATH]
     [NO_PREFIX_CORRECTION]
 )
@@ -34,8 +35,8 @@ and applies a rather simply correction which in some cases will yield the wrong 
 ## How it Works
 
 1. Moves `/debug/<CONFIG_PATH>/*targets-debug.cmake` to `/share/${PACKAGE_NAME}`.
-2. Transforms all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
-3. Transforms all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+2. Transforms all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+3. Transforms all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
 4. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
 5. Replaces `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs.
 6. Merges INTERFACE_LINK_LIBRARIES of release and debug configurations.
@@ -54,7 +55,7 @@ endif()
 set(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD ON CACHE INTERNAL "guard variable")
 
 function(vcpkg_cmake_config_fixup)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH;TOOLS_PATH" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_config_fixup was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -64,6 +65,9 @@ function(vcpkg_cmake_config_fixup)
     endif()
     if(NOT arg_CONFIG_PATH)
         set(arg_CONFIG_PATH "share/${arg_PACKAGE_NAME}")
+    endif()
+    if(NOT arg_TOOLS_PATH)
+        set(arg_TOOLS_PATH "tools/${PORT}")
     endif()
     set(target_path "share/${arg_PACKAGE_NAME}")
 
@@ -138,7 +142,7 @@ function(vcpkg_cmake_config_fixup)
     foreach(release_target IN LISTS release_targets)
         file(READ "${release_target}" contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
-        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" contents "${contents}")
+        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
         file(WRITE "${release_target}" "${contents}")
     endforeach()
 
@@ -151,7 +155,7 @@ function(vcpkg_cmake_config_fixup)
 
             file(READ "${debug_target}" contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
-            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" contents "${contents}")
+            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" contents "${contents}")
             file(WRITE "${release_share}/${debug_target_rel}" "${contents}")
