@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO            SamuelMarks/dmon
-    REF             f7d4067073153df16abd8705d0d7480f3f10f0d9
-    SHA512          07985fc5b4538e2094f0f50ed1263a5562916f8d25fee8d9f9e8f9afaa9631d342363af56991b16476070347360d3e4b07de1c1c8cece7cad599290dae577073
-    HEAD_REF        cmake-c89
+    REPO            septag/dmon
+    REF             a670919356a13a0a96c31fb647e57f4a9ff341b5
+    SHA512          a80b55fa05f8911ae85150ccf193bd6fa9265a025813d671ec5f3a47bb9e450052c074ee740bf07346b269d6283d3a64b74ecdb8274540ebcfa5395a2e7d4b29
+    HEAD_REF        master
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +13,6 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/LICENSE"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/dmon"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

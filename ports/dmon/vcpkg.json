@@ -1,6 +1,6 @@
 {
   "name": "dmon",
-  "version-date": "2022-01-27",
+  "version-date": "2022-02-06",
   "description": "a tiny C library that monitors changes in a directory",
   "license": "BSD-2-Clause",
   "supports": "!uwp",
