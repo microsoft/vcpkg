@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/4.4/gtkmm-4.4.0.tar.xz"
     FILENAME "gtkmm-4.4.0.tar.xz"

@@ -24,6 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-vcpkg-helpers" = 1;
 }
 
 $portData = @{
@@ -598,7 +599,7 @@ if ($updateServicePorts) {
     $files_with_boost_version = @(
         "$portsDir/boost-build/portfile.cmake",
         "$portsDir/boost-modular-build-helper/boost-modular-build.cmake",
-        "$portsDir/boost-vcpkg-helpers/boost-modular-headers.cmake"
+        "$portsDir/boost-vcpkg-helpers/portfile.cmake"
     )
     $files_with_boost_version | % {
         $content = Get-Content -LiteralPath $_ `

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
@@ -14,7 +12,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         set(PLATFORM x64)
     endif()
-    
+
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
@@ -39,7 +37,7 @@ else()
         COPY_SOURCE
         AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS 
+        OPTIONS
             --with-oracle-import=runtime
     )
 

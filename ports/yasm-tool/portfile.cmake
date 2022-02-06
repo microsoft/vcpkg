@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 if(VCPKG_TARGET_IS_WINDOWS)
     set(YASM_BUILD_BINARY ON)
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

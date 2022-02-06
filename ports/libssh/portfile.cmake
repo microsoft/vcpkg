@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libssh.org/projects/libssh.git
@@ -50,10 +48,10 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     vcpkg_replace_string(
-	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h" 
+	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
 	    "#ifdef LIBSSH_STATIC"
 	    "#if 1"
-	)	
+	)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
