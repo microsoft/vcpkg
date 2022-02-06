@@ -20,6 +20,14 @@
     "openssl",
     "wangle",
     "zlib",
-    "zstd"
+    "zstd",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

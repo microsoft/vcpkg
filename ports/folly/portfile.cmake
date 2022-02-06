@@ -48,9 +48,8 @@ feature(lz4 LZ4)
 feature(zstd Zstd)
 feature(snappy Snappy)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
@@ -63,11 +62,11 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 # Release folly-targets.cmake does not link to the right libraries in debug mode.
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
