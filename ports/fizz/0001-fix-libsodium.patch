@@ -26,10 +26,8 @@ index 679b0e61..b28750fa 100644
 +++ b/fizz/cmake/fizz-config.cmake.in
 @@ -26,7 +26,7 @@ endif()
  set(FIZZ_LIBRARIES fizz::fizz)
-
  include(CMakeFindDependencyMacro)
 -find_dependency(Sodium)
 +find_dependency(unofficial-sodium CONFIG REQUIRED)
  find_dependency(folly CONFIG)
  find_dependency(ZLIB)
-
