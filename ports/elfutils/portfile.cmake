@@ -29,7 +29,8 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc/debuginfod ${CURRENT_PACKAGES_DIR}/etc/debuginfod)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc/debuginfod" "${CURRENT_PACKAGES_DIR}/etc/debuginfod")
+
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
