@@ -10,4 +10,4 @@ index 12ac289f..c37f621a 100644
 +      const folly::SocketAddress& address, AcceptInfo info) noexcept override {
      int fd = fdNetworkSocket.toFd();
  
-     VLOG(2) << "Accepting TCP connection from " << address << " on FD " << fd; 
+     VLOG(2) << "Accepting TCP connection from " << address << " on FD " << fd;
