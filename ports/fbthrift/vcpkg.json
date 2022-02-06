@@ -18,9 +18,6 @@
     "gflags",
     "glog",
     "openssl",
-    "wangle",
-    "zlib",
-    "zstd",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -28,6 +25,9 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "wangle",
+    "zlib",
+    "zstd"
   ]
 }
