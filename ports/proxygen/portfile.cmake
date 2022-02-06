@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF v2021.06.14.00
-    SHA512 f5ab54514575f86897438f40a481796c34031101775b61a01581338c91686159995e4f822909e42eed4c006b2c6a6351887d469cc9df1df80711dba10cc15a19
+    REF v2022.01.31.00
+    SHA512 0
     HEAD_REF master
     PATCHES
         remove-register.patch
-        fix-duplicated-target.patch # fixed in master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
