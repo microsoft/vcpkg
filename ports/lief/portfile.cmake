@@ -79,7 +79,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG    
         -DLIEF_USE_CRT_DEBUG=${LIEF_CRT_DEBUG}
-
     OPTIONS_RELEASE
         -DLIEF_USE_CRT_RELEASE=${LIEF_CRT_RELEASE}
     
