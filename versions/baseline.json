@@ -6154,7 +6154,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 0
+      "port-version": 4
     },
     "rtabmap": {
       "baseline": "0.20.13",
