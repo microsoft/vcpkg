@@ -4630,7 +4630,7 @@
     },
     "muparser": {
       "baseline": "2.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "murmurhash": {
       "baseline": "2016-01-09",
