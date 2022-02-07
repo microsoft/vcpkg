@@ -1,7 +1,7 @@
 {
   "name": "muparser",
   "version": "2.3.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Fast math parser library",
   "homepage": "https://github.com/beltoforion/muparser",
   "license": "BSD-2-Clause",
@@ -15,5 +15,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "widechar": {
+      "description": "Enable wide character support"
+    }
+  }
 }
