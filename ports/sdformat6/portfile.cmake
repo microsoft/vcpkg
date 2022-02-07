@@ -17,9 +17,10 @@ vcpkg_add_to_path(${RUBY_PATH})
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DBUILD_TESTING=OFF
-            -DUSE_EXTERNAL_URDF=ON
-            -DUSE_EXTERNAL_TINYXML=ON
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DUSE_INTERNAL_URDF=OFF
+        -DUSE_EXTERNAL_TINYXML=ON
 )
 
 vcpkg_cmake_install()
