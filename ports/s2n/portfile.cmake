@@ -1,27 +1,40 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/s2n-tls
-    REF 4de98dcf20c476519c15241f92122b99fd2a9297 # v1.1.0
-    SHA512 99c973912dc1a4db5ef36c24aa69134bf901101ce2ef749f7492f965f65f62b76c0e3935075881530f0828025ce20caa392afd9ad3bbdba157173dd5bb9f8163
-    PATCHES fix-cmake-target-path.patch
+    REF ab9a3be5a8abcbc5bd7bdba662497a717737c838 # v1.3.0
+    SHA512 0150cba56f7940253ffa5af0c27fdc8db08961d4c8a80377d25f588fa8a56249eb02723304969d0fdebe570388545527ee826a3070c21e50e63c4f021d425728
+    PATCHES
+        fix-cmake-target-path.patch
+        use-openssl-crypto.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tests   BUILD_TESTING
+)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DUNSAFE_TREAT_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/s2n/cmake)
+
+if(BUILD_TESTING)
+    message(STATUS Testing)
+    vcpkg_cmake_build(TARGET test LOGFILE_BASE test)
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/lib/s2n"
-	"${CURRENT_PACKAGES_DIR}/lib/s2n"
-	)
-
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/s2n"
+    "${CURRENT_PACKAGES_DIR}/share/s2n/modules"
+)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

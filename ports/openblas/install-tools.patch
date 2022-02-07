@@ -1,0 +1,22 @@
+diff --git a/cmake/prebuild.cmake b/cmake/prebuild.cmake
+index 0c126e3..bb0124b 100644
+--- a/cmake/prebuild.cmake
++++ b/cmake/prebuild.cmake
+@@ -558,6 +558,8 @@ else(NOT CMAKE_CROSSCOMPILING)
+     if (NOT ${GETARCH_RESULT})
+       MESSAGE(FATAL_ERROR "Compiling getarch failed ${GETARCH_LOG}")
+     endif ()
++    
++    install(FILES "${PROJECT_BINARY_DIR}/${GETARCH_BIN}" DESTINATION bin)
+   endif ()
+   unset (HAVE_AVX2)
+   unset (HAVE_AVX)
+@@ -601,6 +603,8 @@ execute_process(COMMAND "${BLASHELPER_BINARY_DIR}/${GETARCH_BIN}" 1 OUTPUT_VARIA
+     if (NOT ${GETARCH2_RESULT})
+       MESSAGE(FATAL_ERROR "Compiling getarch_2nd failed ${GETARCH2_LOG}")
+     endif ()
++    
++    install(FILES "${PROJECT_BINARY_DIR}/${GETARCH2_BIN}" DESTINATION bin)
+   endif ()
+ 
+   # use the cmake binary w/ the -E param to run a shell command in a cross-platform way

@@ -9,10 +9,10 @@ index 18190f647..f4b1b359d 100644
 +include(GNUInstallDirs)
 +include(CMakePackageConfigHelpers)
 +
- if(NOT EMSCRIPTEN)
-   if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-     set(CMAKE_BUILD_TYPE
-@@ -289,6 +292,52 @@ if(BUILD_SHARED_LIBS)
+ # GENERATED source property global visibility.
+ if(POLICY CMP0118)
+   cmake_policy(SET CMP0118 NEW)
+@@ -302,6 +305,52 @@ if(BUILD_SHARED_LIBS)
    set(AOM_LIB_TARGETS ${AOM_LIB_TARGETS} aom_static)
  endif()
  
@@ -63,8 +63,8 @@ index 18190f647..f4b1b359d 100644
 +        DESTINATION lib/cmake/aom)
 +
  # Setup dependencies.
- setup_aom_dsp_targets()
- setup_aom_mem_targets()
+ if(CONFIG_THREE_PASS)
+   setup_ivf_dec_targets()
 diff --git a/cmake/aom-config.cmake.in b/cmake/aom-config.cmake.in
 new file mode 100644
 index 000000000..91cac3b5b

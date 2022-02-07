@@ -1,6 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" ON_LIBRARY_LINKAGE "static")
-
-message(WARNING ".Net framework 4.0 is required, please install it before install easyhook.")
+message(WARNING ".Net framework 4.0 is required, please install it before installing easyhook.")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,6 +25,16 @@ foreach(VCXPROJ IN ITEMS
         "${VCXPROJ}"
         "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
         "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+        "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string(
+        "${VCXPROJ}"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        ""
     )
 endforeach()
 

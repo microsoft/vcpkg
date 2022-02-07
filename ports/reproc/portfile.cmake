@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF v14.2.3
-    SHA512 acb3a0b90aca7bcfd1b0882b7094ba0f2f8dd8aa4a7c4a37d37780cebb23ef3c8842ca9a9aded337f607d832a95eed5cc7ccc120c64daef9a979a9d20aa07aad
+    REF v14.2.4
+    SHA512 c592521960f1950d626261738091d25efdf764ee1a0c72a58c28c66eaebf6073b2c978f1dc2c8dbe89b0be7ec1629a3a45cb1fafa0ebe21b5df8d4d27c992675
     HEAD_REF main
 )
 

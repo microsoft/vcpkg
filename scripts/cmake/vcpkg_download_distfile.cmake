@@ -58,7 +58,7 @@ The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downlo
 * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 #]===]
 
-function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_sha512)
+function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         # When using the internal hash skip, do not output an explicit message.
         return()
@@ -68,14 +68,15 @@ function(z_vcpkg_download_distfile_test_hash path kind error_advice sha512 skip_
         return()
     endif()
 
-    file(SHA512 "${path}" file_hash)
-    if(NOT "${file_hash}" STREQUAL "${sha512}")
+    file(SHA512 "${file_path}" file_hash)
+    string(TOLOWER "${sha512}" sha512_lower)
+    if(NOT "${file_hash}" STREQUAL "${sha512_lower}")
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
             "    Expected hash: [ ${sha512} ]\n"
             "      Actual hash: [ ${file_hash} ]\n"
-            "${CUSTOM_ERROR_ADVICE}\n")
+            "${error_advice}\n")
     endif()
 endfunction()
 
@@ -106,49 +107,63 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
         "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
 endfunction()
 
-function(z_vcpkg_download_distfile_via_aria filename urls headers sha512 skip_sha512)
-    vcpkg_find_acquire_program(ARIA2)
-    message(STATUS "Downloading ${filename}...")
+function(z_vcpkg_download_distfile_via_aria)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        "SKIP_SHA512"
+        "FILENAME;SHA512"
+        "URLS;HEADERS"
+    )
+
+    message(STATUS "Downloading ${arg_FILENAME}...")
 
     vcpkg_list(SET headers_param)
-    foreach(header IN LISTS headers)
+    foreach(header IN LISTS arg_HEADERS)
         vcpkg_list(APPEND headers_param "--header=${header}")
     endforeach()
 
-    vcpkg_execute_in_download_mode(
-        COMMAND ${ARIA2} ${urls}
-        -o temp/${filename}
-        -l download-${filename}-detailed.log
-        ${headers_param}
-        OUTPUT_FILE download-${filename}-out.log
-        ERROR_FILE download-${filename}-err.log
-        RESULT_VARIABLE error_code
-        WORKING_DIRECTORY "${DOWNLOADS}"
-    )
+    foreach(URL IN LISTS arg_URLS)
+        debug_message("Download Command: ${ARIA2} ${URL} -o temp/${filename} -l download-${filename}-detailed.log ${headers_param}")
+        vcpkg_execute_in_download_mode(
+            COMMAND ${ARIA2} ${URL}
+            -o temp/${arg_FILENAME}
+            -l download-${arg_FILENAME}-detailed.log
+            ${headers_param}
+            OUTPUT_FILE download-${arg_FILENAME}-out.log
+            ERROR_FILE download-${arg_FILENAME}-err.log
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${DOWNLOADS}"
+        )
+        
+        if ("${error_code}" STREQUAL "0")
+            break()
+        endif()
+    endforeach()
     if (NOT "${error_code}" STREQUAL "0")
         message(STATUS
-            "Downloading ${filename}... Failed.\n"
+            "Downloading ${arg_FILENAME}... Failed.\n"
             "    Exit Code: ${error_code}\n"
             "    See logs for more information:\n"
-            "        ${DOWNLOADS}/download-${filename}-out.log\n"
-            "        ${DOWNLOADS}/download-${filename}-err.log\n"
-            "        ${DOWNLOADS}/download-${filename}-detailed.log\n"
+            "        ${DOWNLOADS}/download-${arg_FILENAME}-out.log\n"
+            "        ${DOWNLOADS}/download-${arg_FILENAME}-err.log\n"
+            "        ${DOWNLOADS}/download-${arg_FILENAME}-detailed.log\n"
         )
-        z_vcpkg_download_distfile_show_proxy_and_fail()
+        z_vcpkg_download_distfile_show_proxy_and_fail("${error_code}")
     else()
         z_vcpkg_download_distfile_test_hash(
-            "${DOWNLOADS}/temp/${filename}"
+            "${DOWNLOADS}/temp/${arg_FILENAME}"
             "downloaded file"
             "The file may have been corrupted in transit."
+            "${arg_SHA512}"
+            ${arg_SKIP_SHA512}
         )
         file(REMOVE
-            ${DOWNLOADS}/download-${filename}-out.log
-            ${DOWNLOADS}/download-${filename}-err.log
-            ${DOWNLOADS}/download-${filename}-detailed.log
+            ${DOWNLOADS}/download-${arg_FILENAME}-out.log
+            ${DOWNLOADS}/download-${arg_FILENAME}-err.log
+            ${DOWNLOADS}/download-${arg_FILENAME}-detailed.log
         )
         get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
         file(MAKE_DIRECTORY "${downloaded_file_dir}")
-        file(RENAME "${DOWNLOADS}/temp/${filename}" "${downloaded_file_path}")
+        file(RENAME "${DOWNLOADS}/temp/${arg_FILENAME}" "${downloaded_file_path}")
     endif()
 endfunction()
 
@@ -204,32 +219,52 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     file(REMOVE_RECURSE "${DOWNLOADS}/temp")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
+    # check if file with same name already exists in downloads
+    if(EXISTS "${downloaded_file_path}")
+        set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
+        if(_VCPKG_NO_DOWNLOADS)
+            string(APPEND advice_message " Downloads are disabled please provide a valid file at path ${downloaded_file_path} and retry.")
+        else()
+            string(APPEND advice_message " To re-download this file please delete cached file at path ${downloaded_file_path} and retry.")
+        endif()
+
+        z_vcpkg_download_distfile_test_hash(
+            "${downloaded_file_path}"
+            "cached file"
+            "${advice_message}"
+            "${arg_SHA512}"
+            "${arg_SKIP_SHA512}"
+        )
+
+        if(NOT vcpkg_download_distfile_QUIET)
+            message(STATUS "Using cached ${arg_FILENAME}.")
+        endif()
+        
+        # Suppress the "Downloading ${arg_URLS} -> ${arg_FILENAME}..." message
+        set(vcpkg_download_distfile_QUIET TRUE)
+    endif()
+
     # vcpkg_download_distfile_ALWAYS_REDOWNLOAD only triggers when NOT _VCPKG_NO_DOWNLOADS
     # this could be de-morgan'd out but it's more clear this way
     if(_VCPKG_NO_DOWNLOADS)
         if(NOT EXISTS "${downloaded_file_path}")
             message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
         endif()
-        if(NOT arg_QUIET)
-            message(STATUS "Using ${downloaded_file_path}")
-        endif()
 
-        z_vcpkg_download_distfile_test_hash(
-            "${downloaded_file_path}"
-            "cached file"
-            "Please delete the file and retry if this file should be downloaded again."
-        )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()
     endif()
 
-    if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT EXISTS "${downloaded_file_path}")
+    if(NOT arg_DISABLE_ARIA2 AND _VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT EXISTS "${downloaded_file_path}")
+        if (arg_SKIP_SHA512)
+            set(OPTION_SKIP_SHA512 "SKIP_SHA512")
+        endif()
         z_vcpkg_download_distfile_via_aria(
-            "${arg_FILENAME}"
-            "${arg_URLS}"
-            "${arg_HEADERS}"
-            "${arg_SHA512}"
-            "${arg_skip_sha512}"
+            "${OPTION_SKIP_SHA512}"
+            FILENAME "${arg_FILENAME}"
+            SHA512 "${arg_SHA512}"
+            URLS "${arg_URLS}"
+            HEADERS "${arg_HEADERS}"
         )
         set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
         return()

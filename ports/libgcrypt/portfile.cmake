@@ -1,19 +1,14 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platform" ON_TARGET "Windows")
-
-vcpkg_from_github(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/libgcrypt
-    REF libgcrypt-1.8.7
-    SHA512 43e50a1b8a3cdbf420171c785fe558f443b414b708defa585277ac5ea59f9d8ae7f4555ed291c16fa004e7d4dd93a5ab2011c3c591e784ce3c6662a3193fd3e1
+    URL git://git.gnupg.org/libgcrypt.git
+    FETCH_REF libgcrypt-1.9.4
+    REF 05422ca24a0391dad2a0b7790a904ce348819c10 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgcrypt.git;a=commit;h=05422ca24a0391dad2a0b7790a904ce348819c10
     HEAD_REF master
-    PATCHES
-        fix-pkgconfig.patch
-        fix-flags.patch
 )
 
 vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-doc
         --disable-silent-rules
@@ -24,5 +19,13 @@ vcpkg_install_make()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgcrypt/bin/libgcrypt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

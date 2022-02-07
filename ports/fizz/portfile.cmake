@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-zlib.patch
+        0001-fix-libsodium.patch
 )
 
 # Prefer installed config files

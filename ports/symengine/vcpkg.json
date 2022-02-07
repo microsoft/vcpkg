@@ -1,11 +1,20 @@
 {
   "name": "symengine",
   "version": "0.7.0",
+  "port-version": 2,
   "description": "SymEngine is a fast symbolic manipulation library",
   "homepage": "https://github.com/symengine/symengine",
   "dependencies": [
     "boost-math",
-    "boost-random"
+    "boost-random",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "integer-class-boostmp"

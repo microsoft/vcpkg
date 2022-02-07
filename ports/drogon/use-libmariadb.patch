@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70b2a0d..7f35626 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -363,10 +363,11 @@ endif (BUILD_POSTGRESQL)
+ 
+ if (BUILD_MYSQL)
+     # Find mysql, only mariadb client liberary is supported
+-    find_package(MySQL)
++    find_package(unofficial-libmariadb CONFIG REQUIRED)
++    set(MySQL_FOUND TRUE)
+     if (MySQL_FOUND)
+         message(STATUS "Ok! We find the mariadb!")
+-        target_link_libraries(${PROJECT_NAME} PRIVATE MySQL_lib)
++        target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::libmariadb)
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
+             orm_lib/src/mysql_impl/MysqlConnection.cc
+diff --git a/cmake/templates/DrogonConfig.cmake.in b/cmake/templates/DrogonConfig.cmake.in
+index 72d9622..026f1a5 100644
+--- a/cmake/templates/DrogonConfig.cmake.in
++++ b/cmake/templates/DrogonConfig.cmake.in
+@@ -25,7 +25,7 @@ if(@SQLite3_FOUND@)
+ find_dependency(SQLite3)
+ endif()
+ if(@MySQL_FOUND@)
+-find_dependency(MySQL)
++find_dependency(unofficial-libmariadb CONFIG REQUIRED)
+ endif()
+ if(@Boost_FOUND@)
+ find_dependency(Boost)

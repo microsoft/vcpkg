@@ -1,13 +1,13 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.32.1
-    SHA512 385adb0e39ed0b3474609d90524bb3fe8c42d92d34626cde7b70b1eb4cd76dd22e9b5b9d0933d600ce7a585c63382d764a038fd8152a39bbbd8010524eb40e9b
+    REF v1.36.0
+    SHA512 a9885f9e0726de64eaee0376f3d1ed3a00c32919f2b9a911479206f2965a62eea5ff292b459f61eae97d5d2fe336c410c615296fcb0c7506faf45c57bd6f8871
     HEAD_REF main
+    PATCHES
+        support_absl_cxx17.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
@@ -74,7 +74,7 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/debug/share") 
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

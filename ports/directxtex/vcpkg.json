@@ -1,6 +1,7 @@
 {
   "name": "directxtex",
-  "version-string": "oct2021",
+  "version-date": "2021-11-08",
+  "port-version": 1,
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",

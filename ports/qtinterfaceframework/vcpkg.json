@@ -1,0 +1,30 @@
+{
+  "name": "qtinterfaceframework",
+  "version-semver": "6.2.2",
+  "description": "Qt Interface Framework",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtinterfaceframework",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false
+    },
+    {
+      "name": "qtremoteobjects",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    "taglib"
+  ]
+}

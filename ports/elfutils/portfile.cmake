@@ -37,11 +37,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/locale)
 
 # Remove files with wrong linkage
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(_lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-else()
     set(_lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+else()
+    set(_lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
 endif()
-file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}")
+file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}.*" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}.*")
 file(REMOVE ${TO_REMOVE})
  
 # # Handle copyright

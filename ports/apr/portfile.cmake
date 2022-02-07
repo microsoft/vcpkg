@@ -1,6 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
 
 set(VERSION 1.7.0)
 
@@ -12,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -21,9 +18,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
             private-headers INSTALL_PRIVATE_H
     )
 
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
@@ -32,23 +28,23 @@ if (VCPKG_TARGET_IS_WINDOWS)
             ${FEATURE_OPTIONS}
     )
 
-    vcpkg_install_cmake()
+    vcpkg_cmake_install()
 
     # There is no way to suppress installation of the headers in debug builds.
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     # Both dynamic and static are built, so keep only the one needed
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/apr-1.lib
-                    ${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/apr-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib")
     else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib
-                    ${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
     vcpkg_copy_pdbs()
@@ -78,15 +74,22 @@ else()
 
     vcpkg_install_make()
 
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc"
         "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/apr-1.pc
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/apr-1.pc"
         "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread rt dl uuid crypt)
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}\"" "`dirname $0`/../../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "\"${CURRENT_INSTALLED_DIR}/debug\"" "`dirname $0`/../../../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\"" "")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
