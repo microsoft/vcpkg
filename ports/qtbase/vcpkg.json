@@ -298,6 +298,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "concurrent",
             "xkbcommon-x11",
             "xlib"
           ]
