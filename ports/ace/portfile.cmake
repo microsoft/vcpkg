@@ -291,7 +291,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("zlib" IN_LIST FEATURES)
       list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_includes("${SOURCE_COPY_PATH}/TAO" ${TAO_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}/TAO" "${TAO_INCLUDE_FOLDERS}")
   endif()
 
   if("xml" IN_LIST FEATURES)
@@ -306,7 +306,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes("${SOURCE_COPY_PATH}" ${ACEXML_INCLUDE_FOLDERS})
+    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
