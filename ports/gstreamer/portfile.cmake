@@ -8,7 +8,7 @@ vcpkg_from_github(
 )
 
 # make tools like 'glib-mkenums' visible
-get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
+get_filename_component(GLIB_TOOL_DIR "${CURRENT_INSTALLED_DIR}/tools/glib" ABSOLUTE)
 message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
 vcpkg_add_to_path(PREPEND ${GLIB_TOOL_DIR})
 
@@ -113,17 +113,16 @@ vcpkg_configure_meson(
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     # note: can't find where z.lib comes from. replace it to appropriate library name manually
-    get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
+    get_filename_component(BUILD_NINJA_DBG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja" ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
-    get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
+    get_filename_component(BUILD_NINJA_REL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja" ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
     vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
 endif()
+
 vcpkg_install_meson()
 vcpkg_copy_tools(TOOL_NAMES gst-inspect-1.0 gst-launch-1.0 gst-stats-1.0 gst-typefind-1.0 AUTO_CLEAN)
 vcpkg_copy_pdbs()
-
-file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(pkg_name "gstreamer-1.0")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include/gst/gl/gstglconfig.h"
@@ -138,7 +137,39 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/include"
                     "${CURRENT_PACKAGES_DIR}/libexec"
                     "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include"
+vcpkg_copy_pdbs()
+
+# For pkgconfig
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            string(REPLACE [[flac >= 1.1.4]] [[flac]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        endforeach()
+    endif()
+endif()
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            string(REPLACE [[flac >= 1.1.4]] [[flac]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        endforeach()
+    endif()
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig"
+                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig"
 )
+vcpkg_fixup_pkgconfig()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
                         "${CURRENT_PACKAGES_DIR}/bin"
@@ -155,11 +186,4 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
 endif()
 
-file(GLOB DBG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig/*.pc")
-file(GLOB REL_FILES "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig/*.pc")
-file(COPY ${DBG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-file(COPY ${REL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig"
-                    "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig"
-)
-vcpkg_fixup_pkgconfig()
+file(INSTALL ${GST_SOURCE_PATH}/LICENSE DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

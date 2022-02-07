@@ -17,18 +17,45 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
-    )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
-    )
-    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE ${DBG_BINS} ${REL_BINS})
+vcpkg_copy_pdbs()
+
+# For pkgconfig
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        endforeach()
+    endif()
+endif()
+
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB_RECURSE GST_EXT_PKGS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/pkgconfig/*.pc")
+    if (GST_EXT_PKGS)
+        foreach(GST_EXT_PKG IN LISTS GST_EXT_PKGS)
+            file(READ "${GST_EXT_PKG}" GST_EXT_PKG_CONTENT)
+            string(REPLACE [[libdir=${prefix}/lib]] [[libdir=${prefix}/lib/gstreamer-1.0]] GST_EXT_PKG_CONTENT "${GST_EXT_PKG_CONTENT}")
+            file(WRITE "${GST_EXT_PKG}" "${GST_EXT_PKG_CONTENT}")
+            file(COPY "${GST_EXT_PKG}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        endforeach()
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
+    )
+    file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
+                       "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
+    )
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE ${DBG_BINS} ${REL_BINS})
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
