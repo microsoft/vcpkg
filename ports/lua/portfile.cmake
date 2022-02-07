@@ -42,7 +42,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-lua-cpp")
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua CONFIG_PATH share/unofficial-lua)
 
 if("cpp" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-lua-cpp")
