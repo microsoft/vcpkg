@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF sdf6
     PATCHES
         disable-unneeded-include-findboost.patch
+        fix-dependency-urdfdom.patch
         disable-test.patch
 )
 
