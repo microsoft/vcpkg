@@ -129,6 +129,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
     #"opengl"              INPUT_opengl=something
+    "xlib"                FEATURE_xlib
+    "xkb"                 FEATURE_xkb
+    "xcb"                 FEATURE_xcb
+    "xcb-xlib"            FEATURE_xcb_xlib
+    "xkbcommon-x11"       FEATURE_xkbcommon_x11
+    "xrender"             FEATURE_xrender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
