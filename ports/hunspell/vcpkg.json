@@ -4,7 +4,7 @@
   "port-version": 7,
   "description": "The most popular spellchecking library.",
   "homepage": "https://github.com/hunspell/hunspell",
-  "supports": "!(arm & windows) & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     "libiconv"
   ],
