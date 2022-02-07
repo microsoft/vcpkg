@@ -72,7 +72,7 @@ set(qtbase_REF                  0145fe008894c3b280649b02725e6ec5a5605006)
 set(qtshadertools_REF           a82d73829028a31640e317a2c8ce365ef74281a1)
 set(qtdeclarative_REF           809f24b274ebfeb537c44f38445a4327d43da5e0)
 set(qt5compat_REF               ca0c27fb51622058e50150ab906260fb7ed11ae3)
-set(qttools_REF                 fb3a3731946c70d573daaab232e13ed8f283fcef) # Additional refs in portfile due to submodule
+set(qttools_REF                 fb3a3731946c70d573daaab232e13ed8f283fcef) # Additional refs ibelow
 set(qtcoap_REF                  7b4a337efc71426c84abab3b1d4bdad659ae1c63)
 set(qtdoc_REF                   1d8092320fedfa368e486eeeea43efec45460672)
 set(qtimageformats_REF          1a8e25eb8a63968e09b944cebee5882c137b0c32)
@@ -101,7 +101,7 @@ set(qtsensors_REF               e53e83d9beffc6a3ef465e91033f2b62fc8102fa)
 set(qtserialbus_REF             edefe743658051c6c406d3d7645031f2ac281fc0)
 set(qtlocation_REF              0) # Currently empty port
 set(qtwebchannel_REF            adbb4c38c5af970f46000f61501ceee714364a46)
-set(qtwebengine_REF             855304132f321f285986c7f1710a45bae72aec12) # Additional refs in portfile due to submodule
+set(qtwebengine_REF             855304132f321f285986c7f1710a45bae72aec12) # Additional refs below
 set(qtwebsockets_REF            84e8557281b242d3023b2cff86366343ac440fee)
 set(qtwebview_REF               4c27976cd3817914a927f66153b123fd593a9fcf)
 set(qtpositioning_REF           2702073aec1d87bb150bf27e8b28f0351710aaa6)
@@ -109,6 +109,11 @@ set(qtpositioning_REF           2702073aec1d87bb150bf27e8b28f0351710aaa6)
 set(qtapplicationmanager_REF    bcdd87312d8f959a8b928d9e1bc5f614fea9e4b3)
 set(qtinterfaceframework_REF    e0ebb6fd68e5c585ad55da8c4ca768ade6b82617)
 
+#Submodule stuff:
+set(qttools_qlitehtml_REF       4931b7aa30f256c20573d283561aa432fecf8f38)
+set(qttools_litehtml_REF        6236113734bb0a28467e5999e86fdd2834be8e01)
+set(qttools_litehtml_HASH       38effe92aaebd7113ad3bf3b70c1b3564d6226a766aa968c80ab35fa90ae78d601486226f97d16fa5bd3abf314db19f9f0c90e31de91e87bda82cde27f0a57dc)
+set(qtwebengine_chromium_REF    30c22c6ed9833c7e6e14a345752c6f13cfbaec51)
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")
