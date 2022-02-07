@@ -137,6 +137,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/include"
                     "${CURRENT_PACKAGES_DIR}/libexec"
                     "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include"
+)
 vcpkg_copy_pdbs()
 
 # For pkgconfig
