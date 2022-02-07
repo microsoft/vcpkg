@@ -17,6 +17,10 @@
     },
     "nghttp2",
     "qtbase",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]
