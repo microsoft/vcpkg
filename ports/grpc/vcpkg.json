@@ -4,7 +4,6 @@
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [
-    "abseil",
     {
       "name": "c-ares",
       "platform": "!uwp"
@@ -36,7 +35,8 @@
   ],
   "features": {
     "absl-sync": {
-      "description": "Use abseil synchronization module"
+      "description": "Use abseil synchronization module",
+      "dependencies": [ "abseil" ],
     },
     "codegen": {
       "description": "Build code generator machinery"
