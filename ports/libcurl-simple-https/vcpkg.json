@@ -1,6 +1,6 @@
 {
   "name": "libcurl-simple-https",
-  "version-date": "2022-02-04",
+  "version-date": "2022-02-06",
   "description": "Very simple HTTPS interface built atop libcurl",
   "license": "Apache-2.0 OR MIT",
   "supports": "!uwp",

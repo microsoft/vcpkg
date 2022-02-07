@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            SamuelMarks/curl-simple-https
-    REF             61cc5c43284d5d37296b93ecb8403bd1f05d55ca
-    SHA512          dace996b848cf4d14253f6b7a3130bcd1fbd31b6d2d2a85e83947c6c644d4ac45a8d7fbf05491658e449b25965c99f68fbbcb1b89d792e0fb2b1e7b727287f1c
+    REF             a95355191cc42292e54a91b15657c5c129a73b89
+    SHA512          49f821f9fb96d7fcaceba98cb75bf97153a59463d7aa8b9fd3e6122a243c9aa632ea8d8c06bdb4dcec4aa4713c6fb80d28621e05ddab79b6883c6058b573f642
     HEAD_REF        master
 )
 
