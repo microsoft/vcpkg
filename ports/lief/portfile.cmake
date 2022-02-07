@@ -69,7 +69,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/LIEF/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/LIEF/cmake)
 
 vcpkg_copy_pdbs()
 

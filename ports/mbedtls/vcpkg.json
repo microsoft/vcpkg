@@ -3,6 +3,7 @@
   "version": "3.1.0",
   "description": "An open source, portable, easy to use, readable and flexible SSL library",
   "homepage": "https://github.com/ARMmbed/mbedtls",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     {
