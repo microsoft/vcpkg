@@ -39,8 +39,7 @@ set(INPUT_OPTIONS)
 foreach(_input IN LISTS input_vars)
     if(_input MATCHES "(png|jpeg)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
-    elseif(_input MATCHES "(sql-sqlite)")
-        list(APPEND INPUT_OPTIONS -DINPUT_sqlite:STRING=) # Not yet used be the cmake build
+    elseif(_input MATCHES "(sql-sqlite)") # Not yet used by the cmake build
     else()
         list(APPEND INPUT_OPTIONS -DINPUT_${_input}:STRING=)
     endif()
@@ -58,7 +57,7 @@ endforeach()
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    "appstore-compliant"  FEATURE_appstore-compliant
+    "appstore-compliant"  FEATURE_appstore_compliant
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
@@ -79,8 +78,8 @@ INVERTED_FEATURES
 list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 list(APPEND FEATURE_OPTIONS -DFEATURE_xml:BOOL=ON)
 
-if(QT_NAMESPACE)
-    list(APPEND FEATURE_OPTIONS -DQT_NAMESPACE:STRING=${QT_NAMESPACE})
+if(VCPKG_QT_NAMESPACE)
+    list(APPEND FEATURE_OPTIONS "-DQT_NAMESPACE:STRING=${VCPKG_QT_NAMESPACE}")
 endif()
 
 # Corelib features:
@@ -130,6 +129,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
     #"opengl"              INPUT_opengl=something
+    "xlib"                FEATURE_xlib
+    "xkb"                 FEATURE_xkb
+    "xcb"                 FEATURE_xcb
+    "xcb-xlib"            FEATURE_xcb_xlib
+    "xkbcommon-x11"       FEATURE_xkbcommon_x11
+    "xrender"             FEATURE_xrender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
@@ -238,7 +243,6 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_relocatable:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
-                        -DQT_NO_MAKE_TOOLS:BOOL=ON
                         -DFEATURE_debug:BOOL=ON
                     )
 
@@ -335,7 +339,7 @@ if(installed_to_host)
 endif()
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
 set(REL_PATH "")
-set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}")
+set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY) # For vcpkg-qmake
 set(BACKUP_CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 set(BACKUP_CURRENT_HOST_INSTALLED_DIR "${CURRENT_HOST_INSTALLED_DIR}")
@@ -350,7 +354,7 @@ configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.debug.conf")
 
 set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")
 set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
-set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}")
+set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
 if(VCPKG_TARGET_IS_WINDOWS)
