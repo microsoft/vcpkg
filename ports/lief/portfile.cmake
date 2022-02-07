@@ -74,7 +74,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-
     OPTIONS 
         # -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT_DIR}\\scripts\\buildsystems\\vcpkg.cmake"
         ${FEATURE_OPTIONS}
