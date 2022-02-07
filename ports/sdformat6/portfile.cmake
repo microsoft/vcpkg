@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF sdf6
     PATCHES
         disable-unneeded-include-findboost.patch
+        disable-test.patch
 )
 
 # Ruby is required by the sdformat build process
