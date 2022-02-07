@@ -661,6 +661,7 @@ libwandio:arm64-windows=fail
 libwandio:arm-uwp=fail
 licensepp:arm-uwp=fail
 licensepp:x64-uwp=fail
+lief:arm64-windows=fail
 linenoise-ng:arm-uwp=fail
 linenoise-ng:x64-uwp=fail
 live555:arm-uwp=fail
