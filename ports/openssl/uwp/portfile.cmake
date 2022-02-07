@@ -44,11 +44,6 @@ set(OPENSSL_MAKEFILE "makefile")
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
-vcpkg_execute_required_process(
-        COMMAND "$ENV{VCToolsInstallDir}\\..\\..\\..\\Auxiliary\\Build\\vcvarsall.bat" ${VCPKG_TARGET_ARCHITECTURE} uwp
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME prepare-${TARGET_TRIPLET})
-
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     # Copy openssl sources.
