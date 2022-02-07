@@ -74,16 +74,13 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-
     OPTIONS 
         # -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT_DIR}\\scripts\\buildsystems\\vcpkg.cmake"
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG    
         -DLIEF_USE_CRT_DEBUG=${LIEF_CRT_DEBUG}
-
     OPTIONS_RELEASE
         -DLIEF_USE_CRT_RELEASE=${LIEF_CRT_RELEASE}
-    
     MAYBE_UNUSED_VARIABLES
         LIEF_SHARED_LIB
         LIEF_USE_CRT_DEBUG
