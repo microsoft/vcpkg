@@ -283,6 +283,7 @@ add_custom_target(boost ALL
         --debug-generators
         --ignore-site-config
         --hash
+        --layout=system
         -q
         debug-symbols=on
         # Enable debugging level 2.

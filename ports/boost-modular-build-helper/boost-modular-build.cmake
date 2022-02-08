@@ -38,21 +38,13 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
-
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(BOOST_LIB_PREFIX)
-        if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
-        elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
-            set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
-            set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
-        else()
-            set(BOOST_LIB_RELEASE_SUFFIX .lib)
-            set(BOOST_LIB_DEBUG_SUFFIX d.lib)
-        endif()
-    else()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(BOOST_LIB_PREFIX lib)
+    endif()
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(BOOST_LIB_RELEASE_SUFFIX .lib)
+        set(BOOST_LIB_DEBUG_SUFFIX .lib)
+    else()
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
             set(BOOST_LIB_RELEASE_SUFFIX .a)
             set(BOOST_LIB_DEBUG_SUFFIX .a)
@@ -146,46 +138,6 @@ function(boost_modular_build)
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd"
     )
-
-    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
-    foreach(LIB IN LISTS INSTALLED_LIBS)
-        get_filename_component(OLD_FILENAME ${LIB} NAME)
-        get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
-        string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
-        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
-        string(REPLACE "-vc142-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2019 and VS2015 binaries
-        string(REPLACE "-vc143-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2022 and VS2015 binaries
-        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        string(REPLACE "-gyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs with python debugging
-        string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-${BOOST_VERSION_ABI_TAG}" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
-        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
-            # nothing to do
-        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
-            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
-        else()
-            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
-        endif()
-    endforeach()
-    # Similar for mingw
-    file(GLOB INSTALLED_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*-mgw*-*.a" "${CURRENT_PACKAGES_DIR}/lib/*-mgw*-*.a")
-    foreach(LIB IN LISTS INSTALLED_LIBS)
-        get_filename_component(OLD_FILENAME "${LIB}" NAME)
-        get_filename_component(DIRECTORY_OF_LIB_FILE "${LIB}" DIRECTORY)
-        string(REGEX REPLACE "-mgw[0-9]+-.*[0-9](\\.dll\\.a|\\.a)$" "\\1" NEW_FILENAME "${OLD_FILENAME}")
-        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
-            # nothing to do
-        elseif(EXISTS "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
-            file(REMOVE "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
-        else()
-            file(RENAME "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}" "${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}")
-        endif()
-    endforeach()
 
     # boost-regex[icu] and boost-locale[icu] generate has_icu.lib
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/has_icu.lib")
