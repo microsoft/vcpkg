@@ -2013,8 +2013,8 @@
       "port-version": 0
     },
     "elfutils": {
-      "baseline": "0.182",
-      "port-version": 2
+      "baseline": "0.186",
+      "port-version": 0
     },
     "embree2": {
       "baseline": "2.17.7",
