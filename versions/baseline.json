@@ -6433,8 +6433,8 @@
       "port-version": 1
     },
     "sleepy-discord": {
-      "baseline": "2021-07-07",
-      "port-version": 1
+      "baseline": "2022-02-05",
+      "port-version": 0
     },
     "slikenet": {
       "baseline": "2021-06-07",
