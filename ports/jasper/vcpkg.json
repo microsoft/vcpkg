@@ -1,6 +1,7 @@
 {
   "name": "jasper",
   "version": "2.0.33",
+  "port-version": 1,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
   "homepage": "https://github.com/mdadams/jasper",
   "dependencies": [

@@ -39,8 +39,15 @@ function(z_vcpkg_get_cmake_vars out_file)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(NOT DEFINED CACHE{Z_VCPKG_GET_CMAKE_VARS_FILE})
-        set(Z_VCPKG_GET_CMAKE_VARS_FILE "${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}.cmake.log"
+    if(DEFINED VCPKG_BUILD_TYPE)
+        set(cmake_vars_file "${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}.cmake.log")
+        set(cache_var "Z_VCPKG_GET_CMAKE_VARS_FILE_${VCPKG_BUILD_TYPE}")
+    else()
+        set(cmake_vars_file "${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}.cmake.log")
+        set(cache_var Z_VCPKG_GET_CMAKE_VARS_FILE)
+    endif()
+    if(NOT DEFINED CACHE{${cache_var}})
+        set(${cache_var}  "${cmake_vars_file}"
             CACHE PATH "The file to include to access the CMake variables from a generated project.")
         vcpkg_configure_cmake(
             SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
@@ -58,8 +65,8 @@ function(z_vcpkg_get_cmake_vars out_file)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             string(APPEND include_string "include(\"\${CMAKE_CURRENT_LIST_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log\")\n")
         endif()
-        file(WRITE "${Z_VCPKG_GET_CMAKE_VARS_FILE}" "${include_string}")
+        file(WRITE "${cmake_vars_file}" "${include_string}")
     endif()
 
-    set("${out_file}" "${Z_VCPKG_GET_CMAKE_VARS_FILE}" PARENT_SCOPE)
+    set("${out_file}" "${${cache_var}}" PARENT_SCOPE)
 endfunction()
