@@ -6,17 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        widechar ENABLE_WIDE_CHAR
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_SAMPLES=OFF
         -DENABLE_OPENMP=OFF
+        -DENABLE_WIDE_CHAR=OFF
 )
 
 vcpkg_cmake_install()
@@ -25,9 +21,8 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/muparser")
 vcpkg_fixup_pkgconfig()
 
-if (ENABLE_WIDE_CHAR)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserFixes.h" "#endif /* !MUPARSER_STATIC */" "#endif /* !MUPARSER_STATIC */\n\n#define _UNICODE")
-endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserDef.h" "#if defined(_UNICODE)" "#if 0")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserDLL.h" "#ifndef _UNICODE" "#if 1")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/muParserFixes.h" "#ifndef MUPARSER_STATIC" "#if 0")

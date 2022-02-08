@@ -15,10 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "widechar": {
-      "description": "Enable wide character support"
-    }
-  }
+  ]
 }
