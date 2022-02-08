@@ -261,8 +261,8 @@ function(vcpkg_acquire_msys out_msys_root)
         DEPS libiconv libintl gmp
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://repo.msys2.org/msys/x86_64/grep-3.6-1-x86_64.pkg.tar.zst"
-        SHA512 c568d0968a78284fa62470fb9cf97c6214618177e402ca3bc8a8711504437b15b6a7cdf92424f16354422a3850691dd30eaef92cf5f6a645398da2b021843115
+        URL "https://repo.msys2.org/msys/x86_64/grep-3.0-2-x86_64.pkg.tar.xz"
+        SHA512 c784d5f8a929ae251f2ffaccf7ab0b3936ae9f012041e8f074826dd6077ad0a859abba19feade1e71b3289cc640626dfe827afe91c272b38a1808f228f2fdd00
         DEPS libiconv libintl libpcre
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -409,8 +409,8 @@ function(vcpkg_acquire_msys out_msys_root)
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-python-3.9.7-4-any.pkg.tar.zst"
-        SHA512 c7184a0a97df90221e9ef2131dbac562cf874a56a5427f975eaa51440183bfa35e7dcbbf2cc21fe9a8cc4a866ca6edb669684e8fdc3b21967a7b3b38e351c1f0
+        URL "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-python-3.9.10-2-any.pkg.tar.zst"
+        SHA512 140db50d836ec3615f196a70fe4f7021f43ae97af3e7e501212a25347d471ca1b4daac4030610f1cd81a8e3915b1a68d975ffd54adcf736c80da7a0b01a8b14d
         DEPS mingw-w64-x86_64-bzip2 mingw-w64-x86_64-expat mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-libffi mingw-w64-x86_64-mpdecimal mingw-w64-x86_64-ncurses mingw-w64-x86_64-openssl mingw-w64-x86_64-sqlite3 mingw-w64-x86_64-tcl mingw-w64-x86_64-tk mingw-w64-x86_64-xz mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
