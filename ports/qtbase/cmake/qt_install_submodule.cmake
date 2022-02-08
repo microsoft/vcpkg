@@ -89,6 +89,10 @@ function(qt_cmake_configure)
     # Disable warning for CMAKE_DISABLE_FIND_PACKAGE_<packagename>
     string(REGEX MATCHALL "CMAKE_DISABLE_FIND_PACKAGE_[^:=]+" disabled_find_package "${_qarg_OPTIONS}")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_find_package})
+    # Disable unused warnings for disabled features. Qt might decide to not emit the feature variables if other features are deactivated. 
+    string(REGEX MATCHALL "(QT_)?FEATURE_[^:=]+(:BOOL)?=OFF" disabled_features "${_qarg_OPTIONS}")
+    list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
+    list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
 
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
