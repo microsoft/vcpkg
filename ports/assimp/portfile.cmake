@@ -9,29 +9,25 @@ vcpkg_from_github(
         irrlicht.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake-modules/FindIrrXML.cmake)
-#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/clipper) # https://github.com/assimp/assimp/issues/788
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/poly2tri)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zlib)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/gtest)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/irrXML)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/rapidjson)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/stb_image)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/zip)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/unzip)
-file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/utf8cpp)
-#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/Open3DGC)      #TODO
-#file(REMOVE_RECURSE ${SOURCE_PATH}/contrib/openddlparser) #TODO
+file(REMOVE "${SOURCE_PATH}/cmake-modules/FindZLIB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake-modules/FindIrrXML.cmake")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/poly2tri")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/zlib")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/gtest")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/irrXML")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/rapidjson")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/stb_image")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/zip")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/unzip")
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/utf8cpp")
 
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ASSIMP_BUILD_SHARED_LIBS)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -DASSIMP_BUILD_TESTS=OFF
             -DASSIMP_BUILD_ASSIMP_VIEW=OFF
             -DASSIMP_BUILD_ZLIB=OFF
@@ -42,7 +38,7 @@ vcpkg_configure_cmake(
             -DIGNORE_GIT_HASH=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCVER vc140 vc141 vc142 )
@@ -68,7 +64,7 @@ if(ASSIMP_DBG)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_DBG}")
 endif()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig() # Probably requires more fixing for static builds. See qt5-3d and the config changes below
 vcpkg_copy_pdbs()
 
@@ -84,7 +80,7 @@ find_dependency(poly2tri CONFIG)
 find_dependency(utf8cpp CONFIG)
 ${ASSIMP_CONFIG}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
