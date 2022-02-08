@@ -19,11 +19,11 @@ vcpkg_from_github(
 )
 
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
-    DESTINATION ${SOURCE_PATH}/CMake/
+    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
+    DESTINATION "${SOURCE_PATH}/CMake/"
 )
-file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
+file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -77,8 +77,8 @@ STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>
 STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
-FILE(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake _contents)
-FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
+FILE(READ "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake" _contents)
+FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(glog CONFIG)
@@ -86,9 +86,9 @@ find_dependency(gflags CONFIG REQUIRED)
 find_dependency(ZLIB)
 ${_contents}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()

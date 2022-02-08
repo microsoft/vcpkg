@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -34,6 +34,6 @@ vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
