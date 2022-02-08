@@ -77,7 +77,7 @@ endif()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
     URL git://code.qt.io/playground/qlitehtml.git # git://code.qt.io/playground/qlitehtml.git
-    REF 6af5648d1208ed5760d74bd060c74ffa2bcfef6b
+    REF 4931b7aa30f256c20573d283561aa432fecf8f38
     FETCH_REF master
     HEAD_REF master
 )
@@ -85,8 +85,8 @@ vcpkg_from_git(
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
     REPO litehtml/litehtml
-    REF db7f59d5886fd50f84d48720c79dc2e6152efa83
-    SHA512 6beed53f8b779359eb2d08495547f9b4e3d02b70d68e035e6c188f009a283e630b3961caa472ce045799a9ef82e1cd6b3c63d8534e6e8127441944f4837a0352
+    REF 6236113734bb0a28467e5999e86fdd2834be8e01
+    SHA512 38effe92aaebd7113ad3bf3b70c1b3564d6226a766aa968c80ab35fa90ae78d601486226f97d16fa5bd3abf314db19f9f0c90e31de91e87bda82cde27f0a57dc
     HEAD_REF master
 )
 

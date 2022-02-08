@@ -62,7 +62,7 @@ function(vcpkg_from_git)
     if(DEFINED arg_TAG)
         message(WARNING "The TAG argument to vcpkg_from_git has been deprecated and has no effect.")
     endif()
-    
+
 
     if(NOT DEFINED arg_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
@@ -164,7 +164,7 @@ function(vcpkg_from_git)
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
             COMMAND "${GIT}" archive "${rev_parse_ref}" -o "${temp_archive}"
-            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
+            WORKING_DIRECTORY "${git_working_directory}"
             LOGNAME git-archive
         )
         file(RENAME "${temp_archive}" "${archive}")

@@ -112,18 +112,17 @@ string(REPLACE ";" "," GLAD_API "${GLAD_API}")
 vcpkg_find_acquire_program(PYTHON3)
 
 file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h
-    ${CURRENT_INSTALLED_DIR}/include/EGL/eglplatform.h
-    ${CURRENT_INSTALLED_DIR}/share/egl-registry/egl.xml
-    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/gl.xml
-    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/glx.xml
-    ${CURRENT_INSTALLED_DIR}/share/opengl-registry/wgl.xml
-    DESTINATION ${SOURCE_PATH}/glad/files
+    "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h"
+    "${CURRENT_INSTALLED_DIR}/include/EGL/eglplatform.h"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/egl.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/gl.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/glx.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/wgl.xml"
+    DESTINATION "${SOURCE_PATH}/glad/files"
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGLAD_EXPORT=OFF
         -DGLAD_INSTALL=ON
@@ -143,7 +142,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glad)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/KHR)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/EGL)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/KHR")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/EGL")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

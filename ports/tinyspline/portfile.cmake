@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tinyspline DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tinysplinecxx)
+vcpkg_cmake_config_fixup(PACKAGE_NAME tinysplinecxx CONFIG_PATH lib/cmake/tinysplinecxx)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kafeg/ptyqt
-    REF 0.6.3
-    SHA512 7a490a6d0cca500d202b0524abf8596d70872c224eea778efd941ad2a995a8a53d295e3ac000ca8fb63e02467f1191ae6bddfd8469fe5df2aca8af972d06fcff
+    REF 0.6.5
+    SHA512 0deb12be6c0e7bb44775daef3d4361c5d22143bc32cbf251ef99f10784b8996c4aa8e2806f1e08c3b39749ada6e85be91d721830ceee5d6ff86eaf714ef4c928
     HEAD_REF master
 )
 

@@ -1,5 +1,12 @@
 vcpkg_buildpath_length_warning(37)
 
+# See https://github.com/ompl/ompl/blob/main/src/ompl/CMakeLists.txt#L49-L54
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+else()
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 set(OMPL_VERSION 1.5.1)
 
 vcpkg_from_github(

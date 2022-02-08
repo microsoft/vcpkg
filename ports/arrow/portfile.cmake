@@ -1,25 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-5.0.0
-    SHA512 68f4377f654423e7ea47c8c0170ddb030d0b020b936ec435854e216392e6515d870287f410d0acd48b36dcfec61be4c4a95794857f1d91c66745f3c6ed748034
+    REF apache-arrow-6.0.1
+    SHA512 211c3238f76dde06383e817aad0cd4bbb4ab710a1c6a822a639e1588864bd574efb199e101469c91e933d6f21d65e79c99d382a9d326b12313779c08ea3163c8
     HEAD_REF master
     PATCHES
         all.patch
         fix-dependencies.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindLz4.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindSnappy.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindThrift.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindGLOG.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/Findutf8proc.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindRapidJSONAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindgRPCAlt.cmake
-            ${SOURCE_PATH}/cpp/cmake_modules/FindgflagsAlt.cmake
+file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/Findzstd.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindBrotli.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/Find-c-aresAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindLz4.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindSnappy.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindThrift.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindGLOG.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/Findutf8proc.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindRapidJSONAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindgRPCAlt.cmake"
+            "${SOURCE_PATH}/cpp/cmake_modules/FindgflagsAlt.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -60,11 +60,11 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/cpp
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}/cpp"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${MALLOC_OPTIONS}
+        ${S3_OPTIONS}
         -DCMAKE_SYSTEM_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
@@ -80,24 +80,33 @@ vcpkg_cmake_configure(
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DZSTD_MSVC_LIB_PREFIX=
+    MAYBE_UNUSED_VARIABLES
+        ZSTD_MSVC_LIB_PREFIX
 )
 
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(GLOB PARQUET_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*)
+file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
+file(REMOVE_RECURSE ${PARQUET_FILES})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()

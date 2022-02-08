@@ -1,6 +1,6 @@
 {
   "name": "qtserialbus",
-  "version-semver": "6.2.1",
+  "version-semver": "6.2.2",
   "description": "Support for CAN and potentially other serial buses.",
   "homepage": "https://www.qt.io/",
   "dependencies": [

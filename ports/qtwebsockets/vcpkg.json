@@ -1,6 +1,6 @@
 {
   "name": "qtwebsockets",
-  "version-semver": "6.2.1",
+  "version-semver": "6.2.2",
   "description": "Qt WebSockets",
   "homepage": "https://www.qt.io/",
   "dependencies": [

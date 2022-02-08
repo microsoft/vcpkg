@@ -1,7 +1,3 @@
-if (NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
-endif()
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -19,19 +15,16 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-    PREFER_NINJA
     OPTIONS
         -DSOURCE_PATH=${MASTER_COPY_SOURCE_PATH}
         -DPERL=${PERL}
         -DMAKE=${MAKE}
         -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
-    OPTIONS_RELEASE
-        -DINSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(GLOB HEADERS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/include/openssl/*.h)

@@ -50,6 +50,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         MODULES --msvc-syntax ${pkg_config_modules}
         LIBS
     )
+
+    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
+    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    endif()
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
+    endif()
+
     string(JOIN " " LIBS_ALL_DEBUG
         "/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
         "${PKGCONFIG_LIBS_DEBUG}"

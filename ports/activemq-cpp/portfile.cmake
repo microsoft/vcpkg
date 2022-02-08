@@ -1,28 +1,37 @@
-vcpkg_fail_port_install( ON_TARGET "uwp" "osx")
-
 set(VERSION 3.9.5)
+
+set(PATCHES )
+if (NOT VCPKG_TARGET_IS_LINUX)
+    set(PATCHES FunctionLevelLinkingOn.diff)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        list(APPEND PATCHES fix-crt-linkage.patch)
+    else()
+        list(APPEND PATCHES fix-crt-linkage-dyn.patch)
+    endif()
+endif()
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/activemq/activemq-cpp/${VERSION}/activemq-cpp-library-${VERSION}-src.tar.bz2"
     FILENAME "activemq-cpp-library-${VERSION}-src.tar.bz2"
     SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2
 )
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    PATCHES ${PATCHES}
+)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE ${ARCHIVE}
-    )
-
+if (VCPKG_TARGET_IS_LINUX)
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
             "--with-openssl=${CURRENT_INSTALLED_DIR}"
-                "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
+            "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
     )
 
     vcpkg_install_make()
+
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/activemq" "${CURRENT_PACKAGES_DIR}/include/activemq")
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/cms" "${CURRENT_PACKAGES_DIR}/include/cms")
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/decaf" "${CURRENT_PACKAGES_DIR}/include/decaf")
@@ -30,19 +39,6 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     vcpkg_copy_pdbs()
 else()
-    set(PATCHES FunctionLevelLinkingOn.diff)
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        list(APPEND PATCHES fix-crt-linkage.patch)
-    else()
-        list(APPEND PATCHES fix-crt-linkage-dyn.patch)
-    endif()
-
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE ${ARCHIVE}
-        PATCHES ${PATCHES}
-    )
-
     set(ACTIVEMQCPP_MSVC_PROJ "${SOURCE_PATH}/vs2010-build/activemq-cpp.vcxproj")
 
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ACTIVEMQCPP_SHARED_LIB)

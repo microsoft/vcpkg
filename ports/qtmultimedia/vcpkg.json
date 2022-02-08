@@ -1,6 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version-semver": "6.2.1",
+  "version-semver": "6.2.2",
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "dependencies": [

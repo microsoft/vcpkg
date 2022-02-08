@@ -34,6 +34,7 @@ function(qt_download_submodule)
         URL "https://code.qt.io/qt/${PORT}.git"
         REF "${${PORT}_REF}"
         ${UPDATE_PORT_GIT_OPTIONS}
+        ${QT_FETCH_REF}
         PATCHES ${_qarg_PATCHES}
     )
 

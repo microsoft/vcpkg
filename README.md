@@ -19,8 +19,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
 * Docs: [Documentation](docs/README.md)
 
-[![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
-
 # Table of Contents
 
 - [Vcpkg: Overview](#vcpkg-overview)
@@ -30,7 +28,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
   - [Quick Start: Unix](#quick-start-unix)
   - [Installing Linux Developer Tools](#installing-linux-developer-tools)
   - [Installing macOS Developer Tools](#installing-macos-developer-tools)
-    - [Installing GCC for macOS before 10.15](#installing-gcc-for-macos-before-1015)
   - [Using vcpkg with CMake](#using-vcpkg-with-cmake)
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
@@ -40,6 +37,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 - [Examples](#examples)
 - [Contributing](#contributing)
 - [License](#license)
+- [Security](#security)
 - [Telemetry](#telemetry)
 
 # Getting Started
@@ -141,9 +139,6 @@ Prerequisites for Linux:
 
 Prerequisites for macOS:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
-- On macOS 10.14 or below, you will also need:
-  - [Homebrew][getting-started:macos-brew]
-  - [g++][getting-started:macos-gcc] >= 6 from Homebrew
 
 First, download and bootstrap vcpkg itself; it can be installed anywhere,
 but generally we recommend using vcpkg as a submodule for CMake projects.
@@ -205,32 +200,13 @@ If you want to add instructions for your specific distro,
 
 ## Installing macOS Developer Tools
 
-On macOS 10.15, the only thing you should need to do is run the following in your terminal:
+On macOS, the only thing you should need to do is run the following in your terminal:
 
 ```sh
 $ xcode-select --install
 ```
 
 Then follow along with the prompts in the windows that comes up.
-
-On macOS 10.14 and previous, you'll also need to install g++ from homebrew;
-follow the instructions in the following section.
-
-### Installing GCC for macOS before 10.15
-
-This will _only_ be necessary if you're using a macOS version from before 10.15.
-Installing homebrew should be very easy; check out <brew.sh> for more information,
-but at its simplest, run the following command:
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-```
-
-Then, in order to grab an up-to-date version of gcc, run the following:
-
-```sh
-$ brew install gcc
-```
 
 You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick-start-unix)
 
@@ -312,7 +288,7 @@ To enable tab-completion in the shell of your choice, run:
 or
 
 ```sh
-$ ./vcpkg integrate bash
+$ ./vcpkg integrate bash # or zsh
 ```
 
 depending on the shell you use, then restart your console.
@@ -350,7 +326,18 @@ with any additional questions or comments.
 
 # License
 
-The code in this repository is licensed under the [MIT License](LICENSE.txt).
+The code in this repository is licensed under the [MIT License](LICENSE.txt). The libraries
+provided by ports are licensed under the terms of their original authors. Where available, vcpkg
+places the associated license(s) in the location `installed/<triplet>/share/<port>/copyright`.
+
+# Security
+
+Most ports in vcpkg build the libraries in question using the original build system preferred
+by the original developers of those libraries, and download source code and build tools from their
+official distribution locations. For use behind a firewall, the specific access needed will depend
+on which ports are being installed. If you must install in in an "air gapped" environment, consider
+installing once in a non-"air gapped" environment, populating an
+[asset cache](docs/users/assetcaching.md) shared with the otherwise "air gapped" environment.
 
 # Telemetry
 

@@ -5,23 +5,14 @@
 parameters:
 - name: poolName
   type: string
-- name: mode
-  type: string
-  values:
-    - 'AllPorts'
-    - 'NonTensorflow'
-    - 'OnlyTensorflow'
-- name: jobName
-  type: string
-  default: x64_osx
 
 jobs:
-- job: "${{ parameters.jobName }}"
+- job: x64_osx
   pool:
     name: ${{ parameters.poolName }}
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: /Users/vagrant/Data
@@ -33,18 +24,6 @@ jobs:
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
     value: "x-azurl,$(root-url),$(sas),readwrite"
-  - name: PowershellExtraArguments
-    ${{ if eq(parameters.mode, 'AllPorts') }}:
-      value: ''
-    ${{ if eq(parameters.mode, 'NonTensorflow') }}:
-      value: "-AdditionalSkips @('tensorflow', 'tensorflow-cc')"
-    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
-      value: "-OnlyTest @('tensorflow', 'tensorflow-cc')"
-  - name: Postfix
-    ${{ if eq(parameters.mode, 'OnlyTensorflow') }}:
-      value: '-tensorflow'
-    ${{ if ne(parameters.mode, 'OnlyTensorflow') }}:
-      value: ''
 
   steps:
   - bash: df -h
@@ -70,7 +49,6 @@ jobs:
         -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
         -ArtifactStagingDirectory "$(Build.ArtifactStagingDirectory)"
-        ${{ variables.PowershellExtraArguments }}
       pwsh: true
   - bash: |
       df -h

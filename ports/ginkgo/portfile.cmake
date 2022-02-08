@@ -22,7 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DGINKGO_BUILD_REFERENCE=ON
         -DGINKGO_BUILD_TESTS=OFF
@@ -41,6 +40,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ginkgo)
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" [[string(REPLACE "lib/cmake/Ginkgo" "" GINKGO_INSTALL_PREFIX "${GINKGO_CONFIG_FILE_PATH}")]] "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "GINKGO_INSTALL_PREFIX" "_IMPORT_PREFIX")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "/lib/cmake/Ginkgo\"" "/share/ginkgo\"")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "/lib/cmake/Ginkgo/Modules\"" "/share/ginkgo/Modules/Modules\"")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "\"${SOURCE_PATH}/cmake/Modules/\"" "")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo")
