@@ -31,7 +31,7 @@
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/xqilla/files/XQilla-2.3.4.tar.gz/download"
-    FILENAME "xqilla"
+    FILENAME "XQilla-2.3.4.tar.gz"
     SHA512 f744ff883675887494780d24ecdc94afa394d3795d1544b1c598016b3f936c340ad7cd84529ac12962e3c5ce2f1be928a0cd4f9b9eb70e6645a38b0728cb1994
 )
 
@@ -56,20 +56,17 @@ vcpkg_extract_source_archive_ex(
 #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 # )
 
-find_file(PATH_TO_XERCESC "xercesc/util/XercesDefs.hpp")
-
-
 if(VCPKG_TARGET_IS_LINUX)
-  list(APPEND CONFIGURE_OPTIONS "--with-xerces=${PATH_TO_XERCESC}")
+  list(APPEND CONFIGURE_OPTIONS "--with-xerces=${CURRENT_INSTALLED_DIR}")
   if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 	list(APPEND CONFIGURE_OPTIONS "--enable-static")
   elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND CONFIGURE_OPTIONS "--enable-shared")	
   endif()
-  vcpkg_configure_cmake(
+  vcpkg_configure_make(
       SOURCE_PATH "${SOURCE_PATH}"
 	  AUTOCONFIG
-	  OPTIONS "${CONFIGURE_OPTIONS}"
+	  OPTIONS ${CONFIGURE_OPTIONS}
   )
   
   FIND_PROGRAM(MAKE make)
@@ -79,38 +76,35 @@ if(VCPKG_TARGET_IS_LINUX)
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
     COMMAND make  "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY "${WORKING_DIR}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
   message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
     COMMAND make install
-    WORKING_DIRECTORY "${WORKING_DIR}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     LOGNAME install-${TARGET_TRIPLET}-dbg
   )
   message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
-  vcpkg_execute_build_process(
-    COMMAND make realclean
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME realclean-${TARGET_TRIPLET}-dbg
-  )
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
     COMMAND make  "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY "${WORKING_DIR}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     LOGNAME make-${TARGET_TRIPLET}-rel
   )
   message(STATUS "Building ${TARGET_TRIPLET}-rel done")
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
     COMMAND make install
-    WORKING_DIRECTORY "${WORKING_DIR}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     LOGNAME install-${TARGET_TRIPLET}-rel
   )
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 endif()
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/xqilla RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # # Moves all .cmake files from /debug/share/xqilla/ to /share/xqilla/
 # # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details

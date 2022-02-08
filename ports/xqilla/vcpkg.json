@@ -4,13 +4,6 @@
   "homepage": "http://xqilla.sourceforge.net/HomePage",
   "description": "XQuery and XPath 2 library",
   "dependencies": [{"name": "xerces-c"}],
-  "licence": "Apache License V2",
-  "default-features": [],
-  "features": [
-    {
-      "name": "",
-      "description": "",
-      "dependencies": []
-    }
-  ]
+  "license": "Apache-2.0",
+  "default-features": []
 }
