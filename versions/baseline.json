@@ -2325,7 +2325,7 @@
       "port-version": 4
     },
     "ftxui": {
-      "baseline": "2021-10-17",
+      "baseline": "2.0.0",
       "port-version": 1
     },
     "function2": {
