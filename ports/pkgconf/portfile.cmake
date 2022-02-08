@@ -20,7 +20,7 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(architectureprefix "x86-x64")
+    set(architectureprefix "x86_x64")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(architectureprefix "x86")
 endif()
