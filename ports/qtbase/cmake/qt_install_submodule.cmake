@@ -129,9 +129,16 @@ function(qt_cmake_configure)
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
             ${_qarg_OPTIONS_DEBUG}
         MAYBE_UNUSED_VARIABLES
+            INSTALL_BINDIR
+            INSTALL_DOCDIR
+            INSTALL_LIBEXECDIR
             INSTALL_QMLDIR  # No qml files
             INSTALL_TRANSLATIONSDIR # No translations
             INSTALL_PLUGINSDIR # No plugins
+            INSTALL_DESCRIPTIONSDIR
+            INSTALL_INCLUDEDIR
+            HOST_PERL
+            QT_SYNCQT
             ${_qarg_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
