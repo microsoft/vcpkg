@@ -6,7 +6,8 @@ set(TOOL_NAMES)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
-                     OPTIONS_MAYBE_UNUSED
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                         QT_BUILD_EXAMPLES
                          QT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS
                     )
 
