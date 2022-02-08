@@ -32,7 +32,7 @@ if(VCPKG_TARGET_IS_IOS AND "tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
          ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
@@ -45,7 +45,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua CONFIG_PATH share/unofficial-lua)
 
 if("cpp" IN_LIST FEATURES)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "share/unofficial-lua-cpp")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME share/unofficial-lua-cpp CONFIG_PATH "share/unofficial-lua-cpp")
 endif()
 
 if ("tools" IN_LIST FEATURES)
@@ -54,9 +54,7 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
-        file(READ "${CURRENT_PACKAGES_DIR}/include/luaconf.h" LUA_CONF_H)
-        string(REPLACE "defined(LUA_BUILD_AS_DLL)" "1" LUA_CONF_H "${LUA_CONF_H}")
-        file(WRITE "${CURRENT_PACKAGES_DIR}/include/luaconf.h" "${LUA_CONF_H}")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/luaconf.h" "defined(LUA_BUILD_AS_DLL)" "1")
     endif()
 endif()
 
