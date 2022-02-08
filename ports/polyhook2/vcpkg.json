@@ -1,7 +1,6 @@
 {
   "name": "polyhook2",
-  "version-date": "2021-05-09",
-  "port-version": 2,
+  "version-date": "2022-02-02",
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "supports": "!(arm | uwp | linux | osx)",
