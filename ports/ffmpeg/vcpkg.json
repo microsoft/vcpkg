@@ -33,14 +33,12 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ass",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
             "avresample",
             "bzip2",
-            "fontconfig",
             "freetype",
             "iconv",
             "lzma",
@@ -75,6 +73,22 @@
             "sdl2"
           ],
           "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "ass"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -138,7 +152,7 @@
           "features": [
             "tensorflow"
           ],
-          "platform": "x64 & !static"
+          "platform": "x64 & !static & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -170,7 +184,7 @@
           "features": [
             "tesseract"
           ],
-          "platform": "!(windows & arm) & !static"
+          "platform": "!(windows & arm) & !static & !uwp"
         }
       ]
     },
