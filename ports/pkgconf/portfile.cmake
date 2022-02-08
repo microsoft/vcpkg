@@ -11,6 +11,71 @@ vcpkg_configure_meson(
     NO_PKG_CONFIG
     OPTIONS -Dtests=false
     )
+
+set(systemsuffix "")
+set(architectureprefix "")
+
+if(VCPKG_TARGET_IS_LINUX)
+    set(systemsuffix "linux-gnu")
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(architectureprefix "x86-x64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(architectureprefix "x86")
+endif()
+
+if(NOT systemsuffix STREQUAL "" AND NOT architectureprefix STREQUAL "")
+    set(archdir "${architectureprefix}-${systemsuffix}")
+endif()
+
+# These defaults are taken from the pkg-config configure.ac script
+
+set(SYSTEM_LIBDIR "/usr/lib:/lib")
+if(DEFINED VCPKG_SYSTEM_LIBDIR)
+    set(SYSTEM_LIBDIR "${VCPKG_SYSTEM_LIBDIR}")
+endif()
+
+set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/share/pkgconfig")
+set(SYSTEM_INCLUDEDIR "/usr/include")
+set(PERSONALITY_PATH "/usr/lib/pkgconfig/personality.d:/usr/share/pkgconfig/personality.d")
+
+if(NOT archdir STREQUAL "")
+    string(PREPEND PKG_DEFAULT_PATH "/usr/lib/${archdir}/pkgconfig:")
+    string(PREPEND SYSTEM_INCLUDEDIR "/usr/include/${archdir}:")
+    string(PREPEND PERSONALITY_PATH "/usr/lib/${archdir}/pkgconfig/personality.d:")
+endif()
+
+if(DEFINED VCPKG_PKG_DEFAULT_PATH)
+    set(PKG_DEFAULT_PATH "${VCPKG_PKG_DEFAULT_PATH}")
+endif()
+if(DEFINED VCPKG_SYSTEM_INCLUDEDIR)
+    set(SYSTEM_INCLUDEDIR "${VCPKG_SYSTEM_INCLUDEDIR}")
+endif()
+if(DEFINED VCPKG_PERSONALITY_PATH)
+    set(PERSONALITY_PATH "${VCPKG_PERSONALITY_PATH}")
+endif()
+
+
+set(pkgconfig_file "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libpkgconf/config.h")
+if(EXISTS "${pkgconfig_file}")
+    file(READ "${pkgconfig_file}" contents)
+    string(REGEX REPLACE "#define PKG_DEFAULT_PATH [^\n]+" "#define PKG_DEFAULT_PATH \"${PKG_DEFAULT_PATH}\"" contents "${contents}")
+    string(REGEX REPLACE "#define SYSTEM_INCLUDEDIR [^\n]+" "#define SYSTEM_INCLUDEDIR \"${SYSTEM_INCLUDEDIR}\"" contents "${contents}")
+    string(REGEX REPLACE "#define SYSTEM_LIBDIR [^\n]+" "#define SYSTEM_LIBDIR \"${SYSTEM_LIBDIR}\"" contents "${contents}")
+    string(REGEX REPLACE "#define PERSONALITY_PATH [^\n]+" "#define PERSONALITY_PATH \"${PERSONALITY_PATH}\"" contents "${contents}")
+    file(WRITE "${pkgconfig_file}" "${contents}")
+endif()
+set(pkgconfig_file "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libpkgconf/config.h")
+if(EXISTS "${pkgconfig_file}")
+    file(READ "${pkgconfig_file}" contents)
+    string(REGEX REPLACE "#define PKG_DEFAULT_PATH [^\n]+" "#define PKG_DEFAULT_PATH \"${PKG_DEFAULT_PATH}\"" contents "${contents}")
+    string(REGEX REPLACE "#define SYSTEM_INCLUDEDIR [^\n]+" "#define SYSTEM_INCLUDEDIR \"${SYSTEM_INCLUDEDIR}\"" contents "${contents}")
+    string(REGEX REPLACE "#define SYSTEM_LIBDIR [^\n]+" "#define SYSTEM_LIBDIR \"${SYSTEM_LIBDIR}\"" contents "${contents}")
+    string(REGEX REPLACE "#define PERSONALITY_PATH [^\n]+" "#define PERSONALITY_PATH \"${PERSONALITY_PATH}\"" contents "${contents}")
+    file(WRITE "${pkgconfig_file}" "${contents}")
+endif()
+
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
