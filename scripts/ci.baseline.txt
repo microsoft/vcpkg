@@ -912,16 +912,6 @@ numactl:x86-windows=fail
 nvtt:arm64-windows=fail
 nvtt:arm-uwp=fail
 nvtt:x64-uwp=fail
-# Conflict with old zxing-cpp
-nu-book-zxing-cpp:arm64-windows      = skip
-nu-book-zxing-cpp:arm-uwp            = skip
-nu-book-zxing-cpp:x64-linux          = skip
-nu-book-zxing-cpp:x64-osx            = skip
-nu-book-zxing-cpp:x64-uwp            = skip
-nu-book-zxing-cpp:x64-windows        = skip
-nu-book-zxing-cpp:x64-windows-static = skip
-nu-book-zxing-cpp:x64-windows-static-md=skip
-nu-book-zxing-cpp:x86-windows        = skip
 ocilib:arm-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:x64-uwp=fail

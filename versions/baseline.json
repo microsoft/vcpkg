@@ -7548,10 +7548,6 @@
       "baseline": "2021-04-23",
       "port-version": 0
     },
-    "zxing-cpp": {
-      "baseline": "2020-12",
-      "port-version": 3
-    },
     "zydis": {
       "baseline": "3.2.1",
       "port-version": 0
