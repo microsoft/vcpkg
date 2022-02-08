@@ -7,7 +7,13 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+	PATCHES "fix-compare.patch"
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+   list(APPEND COMPILE_OPTIONS "-DXQILLA_STATIC=static")
+endif()
+
 
 if(VCPKG_TARGET_IS_LINUX)
   list(APPEND CONFIGURE_OPTIONS "--with-xerces=${CURRENT_INSTALLED_DIR}")
@@ -24,6 +30,15 @@ if(VCPKG_TARGET_IS_LINUX)
   
   vcpkg_install_make()
   vcpkg_fixup_pkgconfig()
+else()
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+  vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+	WINDOWS_USE_MSBUILD
+	OPTIONS 
+		${COMPILE_OPTIONS}
+  )
+  vcpkg_cmake_install()
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION ${CURRENT_PACKAGES_DIR}/share/xqilla RENAME copyright)
