@@ -15,14 +15,14 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch
         clang-cl_source_location.patch
         config_install.patch
-        dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
-    list(APPEND ${PORT}_PATCHES
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache.patch
         )
 endif()
 
