@@ -142,9 +142,9 @@ function(vcpkg_build_make)
             z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
 
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
             else() # dynamic
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
+                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
             endif()            
             set(LDFLAGS_${cmake_buildtype} "")
             if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
