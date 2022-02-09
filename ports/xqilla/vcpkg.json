@@ -1,21 +1,22 @@
 {
-	"name": "xqilla",
-	"version-string": "2.3.4",
-	"homepage": "http://xqilla.sourceforge.net/HomePage",
-	"description": "XQuery and XPath 2 library",
-	"dependencies": [
-		{
-			"name": "xerces-c"
-		},
-		{
-			"name": "vcpkg-cmake",
-			"host": true
-		},
-		{
-			"name": "vcpkg-cmake-config",
-			"host": true
-		}
-	],
-	"license": "Apache-2.0",
-	"default-features": []
+    "name": "xqilla",
+    "version-string": "2.3.4",
+    "port-version": 1,
+    "homepage": "http://xqilla.sourceforge.net/HomePage",
+    "description": "XQuery and XPath 2 library",
+    "dependencies": [
+        {
+            "name": "xerces-c"
+        },
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ],
+    "license": "Apache-2.0",
+    "default-features": []
 }
