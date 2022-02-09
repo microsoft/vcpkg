@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
 		-DBUILD_BENCHMARKS=OFF
 		-DBUILD_UNIT_TESTS=OFF
 		-DBUILD_STATIC=${BUILD_STATIC_LIB}
+        -DBUILD_WITH_STATIC_RUNTIME_LIBS=${BUILD_STATIC_LIB}
 )
 
 vcpkg_install_cmake()
