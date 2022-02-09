@@ -4,7 +4,9 @@
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
 
-#set(QT_IS_LATEST ON)
+if("latest" IN_LIST FEATURES)
+    set(QT_IS_LATEST ON)
+endif()
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
