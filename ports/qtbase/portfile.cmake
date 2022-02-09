@@ -24,6 +24,10 @@ if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES 
             dont_force_cmakecache.patch
         )
+else()
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache_latest.patch
+        )
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
