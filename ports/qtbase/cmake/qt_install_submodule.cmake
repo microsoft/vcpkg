@@ -251,6 +251,7 @@ function(qt_fixup_and_cleanup)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/share"
                         "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+                        "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
