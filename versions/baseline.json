@@ -2137,8 +2137,8 @@
       "port-version": 3
     },
     "fbthrift": {
-      "baseline": "2021.06.14.00",
-      "port-version": 1
+      "baseline": "2022.01.31.00",
+      "port-version": 0
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2177,8 +2177,8 @@
       "port-version": 1
     },
     "fizz": {
-      "baseline": "2021.06.14.00",
-      "port-version": 1
+      "baseline": "2022.01.31.00",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -2233,8 +2233,8 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2021.06.14.00",
-      "port-version": 4
+      "baseline": "2022.01.31.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4637,8 +4637,8 @@
       "port-version": 5
     },
     "mvfst": {
-      "baseline": "0.1",
-      "port-version": 1
+      "baseline": "0.2",
+      "port-version": 0
     },
     "mygui": {
       "baseline": "3.4.1",
@@ -5493,8 +5493,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2021.06.14.00",
-      "port-version": 1
+      "baseline": "2022.01.31.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -6154,7 +6154,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 0
+      "port-version": 1
     },
     "rtabmap": {
       "baseline": "0.20.13",
@@ -7281,7 +7281,7 @@
       "port-version": 2
     },
     "wangle": {
-      "baseline": "2021.06.14.00",
+      "baseline": "2022.01.31.00",
       "port-version": 0
     },
     "wavelib": {

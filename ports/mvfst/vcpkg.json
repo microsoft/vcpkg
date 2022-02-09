@@ -1,7 +1,6 @@
 {
   "name": "mvfst",
-  "version": "0.1",
-  "port-version": 1,
+  "version": "0.2",
   "description": "mvfst (Pronounced move fast) is a client and server implementation of IETF QUIC protocol in C++ by Facebook.",
   "homepage": "https://github.com/facebookincubator/mvfst",
   "supports": "!windows",
