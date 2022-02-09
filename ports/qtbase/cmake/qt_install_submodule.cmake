@@ -98,6 +98,10 @@ function(qt_cmake_configure)
         list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
     endif()
 
+    if(NOT PORT MATCHES "qtbase")
+        list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
+    endif()
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${ninja_option}
