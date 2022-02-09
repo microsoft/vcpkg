@@ -1,12 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 645560d..5c151f9 100644
+index 9a0dcb1..c1f2f02 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -600,7 +600,8 @@ target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
+@@ -600,7 +600,14 @@ target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
  if(CMAKE_USE_PTHREADS_INIT)
     target_link_libraries(poppler LINK_PRIVATE Threads::Threads)
  endif()
 -install(TARGETS poppler RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++target_include_directories(poppler PUBLIC
++    $<INSTALL_INTERFACE:include/poppler>
++    $<INSTALL_INTERFACE:include/poppler/fofi>
++    $<INSTALL_INTERFACE:include/poppler/goo>
++)
++set_target_properties(poppler PROPERTIES EXPORT_NAME poppler-private)
 +install(TARGETS poppler EXPORT unofficial-poppler-targets RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +install(EXPORT unofficial-poppler-targets NAMESPACE unofficial:: DESTINATION share/unofficial-poppler)
  

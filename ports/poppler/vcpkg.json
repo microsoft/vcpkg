@@ -3,7 +3,7 @@
   "version": "22.0.2",
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "supports": "!uwp",
   "dependencies": [
     "boost-container",
@@ -65,11 +65,11 @@
         "fontconfig"
       ]
     },
+    "private-api": {
+      "description": "Install headers for private API (aka unstable API/ABI headers)"
+    },
     "splash": {
       "description": "The splash backend is always enabled. This option is kept for compatibility."
-    },
-    "unstable": {
-      "description": "Install legacy headers aka unstable API/ABI"
     },
     "zlib": {
       "description": "zlib for poppler",

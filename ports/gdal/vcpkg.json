@@ -79,7 +79,7 @@
           "name": "poppler",
           "default-features": false,
           "features": [
-            "unstable"
+            "private-api"
           ]
         }
       ]

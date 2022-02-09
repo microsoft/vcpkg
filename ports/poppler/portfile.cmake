@@ -16,7 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cairo       WITH_Cairo
         curl        ENABLE_LIBCURL
-        unstable    ENABLE_UNSTABLE_API_ABI_HEADERS
+        private-api ENABLE_UNSTABLE_API_ABI_HEADERS
         zlib        ENABLE_ZLIB
 )
 if("fontconfig" IN_LIST FEATURES)
