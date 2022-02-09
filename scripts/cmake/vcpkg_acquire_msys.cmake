@@ -221,8 +221,8 @@ function(vcpkg_acquire_msys out_msys_root)
         DEPS m4 perl
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://repo.msys2.org/msys/x86_64/diffutils-3.8-2-x86_64.pkg.tar.zst"
-        SHA512 ee74e457c417d6978b3185f2fb8e15c9c30ecfc316c2474d69c978e7eb2282a3bd050d68dbf43d694cb5ab6f159b0e7ca319d01f8192071d82a224dde87d69b5
+        URL "https://repo.msys2.org/msys/x86_64/diffutils-3.7-1-x86_64.pkg.tar.xz"
+        SHA512 0c39837a26b2111bb6310cdfe0bc14656e3d57456ad8023f59c9386634a8f1f236915c79a57348b64c508897c73ed88d8abce2b9ac512a427e9a3956939f2040
         DEPS msys2-runtime
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -309,8 +309,8 @@ function(vcpkg_acquire_msys out_msys_root)
         SHA512 8d5c04354fdc7309e73abce679a4369c0be3dc342de51cef9d2a932b7df6a961c8cb1f7e373b1b8b2be40343a95fbd57ac29ebef63d4a2074be1d865e28ca6ad
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://repo.msys2.org/msys/x86_64/libreadline-8.1.001-1-x86_64.pkg.tar.zst"
-        SHA512 4104eb0c18b8c06ab3bd4ba6420e3464df8293bec673c88da49e2f74cf1d583c922e9ead5691271fe593d424f92d1fd8668a3002174d756993d5b18337459bab
+        URL "https://repo.msys2.org/msys/x86_64/libreadline-8.0.004-1-x86_64.pkg.tar.xz"
+        SHA512 42760bddedccc8d93507c1e3a7a81595dc6392b5e4319d24a85275eb04c30eb79078e4247eb2cdd00ff3884d932639130c89bf1b559310a17fa4858062491f97
         DEPS ncurses
     )
     z_vcpkg_acquire_msys_declare_package(
