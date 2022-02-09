@@ -15,6 +15,7 @@ if(PORT MATCHES "qtdeviceutilities|qtlocation|qtinterfaceframework|qtapplication
     set(QT_GIT_TAG "${QT_VERSION}")
 endif()
 
+set(QT_IS_LATEST TRUE)
 #set(QT_UPDATE_VERSION TRUE)
 if(QT_UPDATE_VERSION)
     function(vcpkg_extract_source_archive)

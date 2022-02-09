@@ -94,6 +94,10 @@ function(qt_cmake_configure)
     list(TRANSFORM disabled_features REPLACE "(:BOOL)?=OFF" "")
     list(APPEND _qarg_OPTIONS_MAYBE_UNUSED ${disabled_features})
 
+    if(QT_IS_LATEST)
+        list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
+    endif()
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${ninja_option}
