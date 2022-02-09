@@ -3,6 +3,8 @@ cmake_policy(VERSION 3.21)
 
 if (XQILLA_STATIC)
   add_definitions("-DXQILLA_API=")
+else()
+  add_definitions("-DXQILLA_APIS=")
 endif()
 
 project(xqilla C CXX)
@@ -425,9 +427,13 @@ add_library(xqilla
 include_directories(include)
 find_package(XercesC REQUIRED)
 
-
 target_include_directories(xqilla PRIVATE "${XercesC_INCLUDE_DIRS}")
 target_include_directories(xqilla PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+if (NOT XQILLA_STATIC)
+  target_link_libraries(xqilla PUBLIC debug "${XercesC_LIBRARY_DEBUG}")
+  target_link_libraries(xqilla PUBLIC optimized "${XercesC_LIBRARY_RELEASE}")
+endif()
 
 install(
     TARGETS xqilla
