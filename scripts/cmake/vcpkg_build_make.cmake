@@ -176,9 +176,9 @@ function(vcpkg_build_make)
             endforeach()
             unset(lib_env_vars)
 
-            if(LINK_ENV_${_VAR_SUFFIX})
+            if(LINK_ENV_${cmake_buildtype})
                 set(config_link_backup "$ENV{_LINK_}")
-                set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
+                set(ENV{_LINK_} "${LINK_ENV_${cmake_buildtype}}")
             endif()
 
             if(arg_ADD_BIN_TO_PATH)
