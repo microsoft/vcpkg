@@ -2830,7 +2830,7 @@
     },
     "ignition-transport4": {
       "baseline": "4.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-transport8": {
       "baseline": "8.1.0",
@@ -2838,7 +2838,7 @@
     },
     "ignition-transport9": {
       "baseline": "9.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "igraph": {
       "baseline": "0.9.6",
