@@ -54,7 +54,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${GST_SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${PLATFORM_OPTIONS}
         # gstreamer/meson_options.txt
