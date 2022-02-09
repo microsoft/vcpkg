@@ -1,16 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 cmake_policy(VERSION 3.21)
 
-message(STATUS "XQILLA_STATIC=${XQILLA_STATIC}")
-
-add_definitions("-DXQILLA_API=")
 if (XQILLA_STATIC)
-  message(STATUS "IN IF")
+  add_definitions("-DXQILLA_API=")
 endif()
 
 project(xqilla C CXX)
 
-add_library(xqilla STATIC 
+add_library(xqilla  
 ./src/exceptions/XQException.cpp
 ./src/exceptions/XQillaException.cpp
 ./src/fastxdm/FastXDMSequenceBuilder.cpp
@@ -183,12 +180,6 @@ add_library(xqilla STATIC
 ./src/xerces/AncestorOrSelfAxis.cpp
 ./src/xerces/XercesSequenceBuilder.cpp
 ./src/xerces/FollowingSiblingAxis.cpp
-./src/samples/simple-api/simple-context-item.cpp
-./src/samples/simple-api/simple-basic.cpp
-./src/samples/xqilla/xqilla-commandline.cpp
-./src/samples/dom-api/dom-basic.cpp
-./src/samples/dom-api/dom-context-item.cpp
-./src/samples/dom-api/dom-resolver.cpp
 ./src/parser/XQParser.cpp
 ./src/parser/QName.cpp
 ./src/functions/FunctionMinutesFromTime.cpp
@@ -435,12 +426,27 @@ include_directories(include)
 find_package(XercesC REQUIRED)
 
 
-target_include_directories(xqilla PRIVATE ${XercesC_INCLUDE_DIRS})
-target_include_directories(xqilla INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(xqilla PRIVATE "${XercesC_INCLUDE_DIRS}")
+target_include_directories(xqilla PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 install(
     TARGETS xqilla
+    EXPORT  xqilla
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/xqilla
+    CONFIGURATIONS Release
+    DESTINATION include
+)
+
+install(
+    EXPORT xqilla
+    DESTINATION share/xqilla
+    FILE xqillaConfig.cmake
+    NAMESPACE xqilla::
+    CONFIGURATIONS Release
 )
