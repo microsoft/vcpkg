@@ -30,7 +30,7 @@ endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
-# Always use FEATURE_<feature> in vcpkg_configure_cmake
+# Always use FEATURE_<feature> in vcpkg_cmake_configure
 # (using QT_FEATURE_X overrides Qts condition check for the feature.)
 # Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
 
