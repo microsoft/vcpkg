@@ -13,9 +13,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 4.0.0
-    SHA512 e9ffab14ab902e3327202e68ca139209ff24100dab62eb03fef50adf363f81e2705d81e709c58cf1514e68e6061c8963555bd2d00744daacc3eb693825fc3417
+    REF 1e436be51d4f8853c3494a0753eabe7628ac6d90 #2022-02-08
+    SHA512 9282fd52475ca56dbad02a1082c4f4bcc9eea51b5b126585217ca44cca22b042d083d792fc1d1550091bf72b77243cd46303724bc340ba1deb14a04860d9a143
     HEAD_REF master
+    PATCHES
+        fix-header-miss.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
@@ -34,11 +36,9 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
@@ -61,8 +61,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

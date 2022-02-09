@@ -1,0 +1,17 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c96f4f5..938c93a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,7 +26,11 @@ set(raylib_public_headers
+     rlgl.h
+     raymath.h
+     raudio.h
+-    )
++    extras/easings.h
++    extras/physac.h
++    extras/raygui.h
++    extras/rmem.h    
++)
+ 
+ # Sources to be compiled
+ set(raylib_sources
