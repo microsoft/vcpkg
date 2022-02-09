@@ -20,13 +20,11 @@ option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 if(BUILD_SHARED_LIBS)
     if(UNIX)
         set(SQLITE_API "-DSQLITE_API=__attribute__((visibility(\"default\")))")
-    elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    elseif(WIN32)
         set(SQLITE_API "-DSQLITE_API=__declspec(dllexport)")
     else()
         message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
     endif()
-else()
-    set(SQLITE_API "-DSQLITE_API=extern")
 endif()
 
 add_library(sqlite3 sqlite3.c)
@@ -40,86 +38,91 @@ target_compile_definitions(
         $<$<CONFIG:Debug>:SQLITE_ENABLE_SELECTTRACE>
         $<$<CONFIG:Debug>:SQLITE_ENABLE_WHERETRACE>
         ${SQLITE_API}
-        -DSQLITE_ENABLE_RTREE
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
         -DSQLITE_ENABLE_COLUMN_METADATA
 )
 
+if (BUILD_SHARED_LIBS)
+    if (UNIX)
+        target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__attribute__((visibility(\"default\")))")
+    elseif (WIN32)
+        target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__declspec(dllimport)")
+    endif()
+endif()
+
 if (ENABLE_FTS3)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_FTS3)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS3)
 endif()
 
 if (ENABLE_FTS4)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_FTS4)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS4)
 endif()
 
 if (ENABLE_FTS5)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_FTS5)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS5)
 endif()
 
 if (ENABLE_MEMSYS3)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_MEMSYS3)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MEMSYS3)
 endif()
 
 if (ENABLE_MEMSYS5)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_MEMSYS5)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MEMSYS5)
 endif()
 
 if (ENABLE_MATH_FUNCTION)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_MATH_FUNCTIONS)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MATH_FUNCTIONS)
 endif()
 
 if (ENABLE_LIMIT)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_UPDATE_DELETE_LIMIT)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_UPDATE_DELETE_LIMIT)
 endif()
 
 if (ENABLE_RTREE)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_RTREE)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_RTREE)
 endif()
 
 if (ENABLE_SESSION)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_SESSION SQLITE_ENABLE_PREUPDATE_HOOK)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_SESSION SQLITE_ENABLE_PREUPDATE_HOOK)
 endif()
 
 if (ENABLE_OMIT_LOAD_EXT)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_OMIT_LOAD_EXTENSION)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_OMIT_LOAD_EXTENSION)
 endif()
 
 if(WITH_GEOPOLY)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_GEOPOLY)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_GEOPOLY)
 endif()
 
 if(WITH_JSON1)
-    target_compile_definitions(sqlite3 PRIVATE SQLITE_ENABLE_JSON1)
+    target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_JSON1)
 endif()
 
 if (WIN32)
-    target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_WIN=1)
+    target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WIN=1)
 
     if(CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-        target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_WINRT=1)
+        target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WINRT=1)
     endif()
 else()
-    target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_UNIX=1)
+    target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_UNIX=1)
 endif()
 
 if(NOT WIN32)
     find_package(Threads REQUIRED)
-    target_link_libraries(sqlite3 PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+    target_link_libraries(sqlite3 PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
 endif()
 
 if (WITH_ZLIB)
     find_package(ZLIB REQUIRED)
-    target_link_libraries(sqlite3 PRIVATE ZLIB::ZLIB)
+    target_link_libraries(sqlite3 PUBLIC ZLIB::ZLIB)
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
-    target_compile_definitions(sqlite3-bin PRIVATE "SQLITE_API=__declspec(dllimport)")
-    if (ENABLE_OMIT_LOAD_EXT)
-        target_compile_definitions(sqlite3-bin PRIVATE SQLITE_OMIT_LOAD_EXTENSION)
-    endif()
+
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
+
     install(TARGETS sqlite3-bin sqlite3
       RUNTIME DESTINATION tools
       LIBRARY DESTINATION lib
