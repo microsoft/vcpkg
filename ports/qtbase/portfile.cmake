@@ -1,7 +1,7 @@
 # Reminder for myself and everybody else:
-# Qt cross module dependency information within the Qt respository is wrong and/or incomplete. 
+# Qt cross module dependency information within the Qt respository is wrong and/or incomplete.
 # Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
-# Often enough certain (bigger) dependencies are only used to build examples and/or tests. 
+# Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
 
 #set(QT_IS_LATEST ON)
@@ -9,8 +9,8 @@
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES 
-        allow_outside_prefix.patch 
+set(${PORT}_PATCHES
+        allow_outside_prefix.patch
         clang-cl_source_location.patch
         config_install.patch
         dont_force_cmakecache.patch
@@ -28,7 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
 endif()
 
-# Features can be found via searching for qt_feature in all configure.cmake files in the source: 
+# Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_configure_cmake
 # (using QT_FEATURE_X overrides Qts condition check for the feature.)
@@ -78,6 +78,10 @@ INVERTED_FEATURES
 
 list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 list(APPEND FEATURE_OPTIONS -DFEATURE_xml:BOOL=ON)
+
+if(QT_NAMESPACE)
+    list(APPEND FEATURE_OPTIONS -DQT_NAMESPACE:STRING=${QT_NAMESPACE})
+endif()
 
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
@@ -191,23 +195,23 @@ list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=
 # widgets features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
     # "gtk3"             FEATURE_gtk3
-    # There are a lot of additional features here to deactivate parts of widgets. 
+    # There are a lot of additional features here to deactivate parts of widgets.
     # )
 list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
 
-set(TOOL_NAMES 
-        androiddeployqt 
-        androidtestrunner 
-        cmake_automoc_parser 
-        moc 
-        qdbuscpp2xml 
-        qdbusxml2cpp 
-        qlalr 
-        qmake 
-        qmake6 
-        qvkgen 
-        rcc 
-        tracegen 
+set(TOOL_NAMES
+        androiddeployqt
+        androidtestrunner
+        cmake_automoc_parser
+        moc
+        qdbuscpp2xml
+        qdbusxml2cpp
+        qlalr
+        qmake
+        qmake6
+        qvkgen
+        rcc
+        tracegen
         uic
         qtpaths
         qtpaths6
@@ -240,9 +244,9 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
 
 # Install CMake helper scripts
 if(QT_IS_LATEST)
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake") 
+    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake")
 else()
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake") 
+    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake")
 endif()
 file(INSTALL
     "${port_details}"
@@ -266,9 +270,9 @@ if(CMAKE_HOST_WIN32)
 else()
     set(script_suffix)
 endif()
-set(other_files 
+set(other_files
         target_qt.conf
-        qt-cmake-private-install.cmake 
+        qt-cmake-private-install.cmake
         syncqt.pl
         android_cmakelist_patcher.sh
         android_emulator_launcher.sh
@@ -309,7 +313,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
     endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-    if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
+    if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error.
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
     endif()
 endif()
@@ -321,7 +325,7 @@ if(NOT VCPKG_TARGET_IS_OSX)
 endif()
 if(NOT VCPKG_TARGET_IS_IOS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/ios")
-endif() 
+endif()
 
 file(RELATIVE_PATH installed_to_host "${CURRENT_INSTALLED_DIR}" "${CURRENT_HOST_INSTALLED_DIR}")
 file(RELATIVE_PATH host_to_installed "${CURRENT_HOST_INSTALLED_DIR}" "${CURRENT_INSTALLED_DIR}")
