@@ -3,6 +3,7 @@
   "version": "2021-12-23",
   "description": "Provides a set of APIs that can be used to host .NET Core (dotnet)",
   "homepage": "https://github.com/dotnet/runtime/tree/master/src/installer/corehost/cli/nethost",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
