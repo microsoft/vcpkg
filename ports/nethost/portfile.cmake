@@ -1,6 +1,4 @@
 
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(COMMIT_HASH 3a25a7f1cc446b60678ed25c9d829420d6321eba)
 
 vcpkg_from_github(
