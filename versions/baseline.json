@@ -6081,8 +6081,8 @@
       "port-version": 1
     },
     "restclient-cpp": {
-      "baseline": "0.5.2",
-      "port-version": 1
+      "baseline": "2022-02-09",
+      "port-version": 0
     },
     "restinio": {
       "baseline": "0.6.14",
