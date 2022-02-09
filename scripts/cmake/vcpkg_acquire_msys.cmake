@@ -389,8 +389,8 @@ function(vcpkg_acquire_msys out_msys_root)
         DEPS msys2-runtime
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.2.0-8-x86_64.pkg.tar.zst"
-        SHA512 fdd86f4ffa6e274d6fef1676a4987971b1f2e1ec556eee947adcb4240dc562180afc4914c2bdecba284012967d3d3cf4d1a392f798a3b32a3668d6678a86e8d3
+        URL "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.3.4-1-x86_64.pkg.tar.zst"
+        SHA512 9369af97ce2d9276e7e1b28c02fa1bd53272c44aad57ab56c612d31b1e5af5dd8e65a06c79b9eb31a97a3ac9ba6db8d7ef03ca17f211cb88da905fbe1802b27e
     )
 
     z_vcpkg_acquire_msys_declare_package(
