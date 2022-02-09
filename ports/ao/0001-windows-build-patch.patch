@@ -1,0 +1,253 @@
+From 158e06385ad5c7042cae7ce488359c629134582d Mon Sep 17 00:00:00 2001
+From: xiaoyifang <yifang.xiao@outlook.com>
+Date: Thu, 10 Feb 2022 22:09:36 +0800
+Subject: [PATCH] patch ao windows build
+
+---
+ include/ao/ao.h         | 64 ++++++++++++++++++++++++-----------------
+ include/ao/ao_private.h | 30 +++++++++----------
+ include/ao/os_types.h   |  9 ++++++
+ src/ao_wmm.c            |  1 +
+ src/audio_out.c         |  3 +-
+ src/config.c            |  4 +--
+ 6 files changed, 65 insertions(+), 46 deletions(-)
+ create mode 100644 include/ao/os_types.h
+
+diff --git a/include/ao/ao.h b/include/ao/ao.h
+index e0c347d..2de127a 100644
+--- a/include/ao/ao.h
++++ b/include/ao/ao.h
+@@ -27,6 +27,16 @@
+ #ifndef __AO_H__
+ #define __AO_H__
+ 
++#define LIBAO_DLL_EXPORT
++#ifdef _WIN32
++#undef LIBAO_DLL_EXPORT
++#ifdef _WINDLL
++#define LIBAO_DLL_EXPORT __declspec(dllexport)
++#else
++#define LIBAO_DLL_EXPORT __declspec(dllimport)
++#endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C"
+ {
+@@ -97,39 +107,39 @@ typedef struct ao_option {
+ /* --- Functions --- */
+ 
+ /* library setup/teardown */
+-void ao_initialize(void);
+-void ao_shutdown(void);
++LIBAO_DLL_EXPORT void ao_initialize(void);
++LIBAO_DLL_EXPORT void   ao_shutdown(void);
+ 
+ /* device setup/playback/teardown */
+-int   ao_append_global_option(const char *key,
+-                              const char *value);
+-int          ao_append_option(ao_option **options,
+-                              const char *key,
+-                              const char *value);
+-void          ao_free_options(ao_option *options);
+-ao_device*       ao_open_live(int driver_id,
+-                              ao_sample_format *format,
+-                              ao_option *option);
+-ao_device*       ao_open_file(int driver_id,
+-                              const char *filename,
+-                              int overwrite,
+-                              ao_sample_format *format,
+-                              ao_option *option);
+-
+-int                   ao_play(ao_device *device,
+-                              char *output_samples,
+-                              uint_32 num_bytes);
+-int                  ao_close(ao_device *device);
++LIBAO_DLL_EXPORT int ao_append_global_option(const char *key,
++                                             const char *value);
++LIBAO_DLL_EXPORT int        ao_append_option(ao_option **options,
++                                             const char *key,
++                                             const char *value);
++LIBAO_DLL_EXPORT void        ao_free_options(ao_option *options);
++LIBAO_DLL_EXPORT ao_device*     ao_open_live(int driver_id,
++                                             ao_sample_format *format,
++                                             ao_option *option);
++LIBAO_DLL_EXPORT ao_device*     ao_open_file(int driver_id,
++                                             const char *filename,
++                                             int overwrite,
++                                             ao_sample_format *format,
++                                             ao_option *option);
++
++LIBAO_DLL_EXPORT int                 ao_play(ao_device *device,
++                                             char *output_samples,
++                                             uint_32 num_bytes);
++LIBAO_DLL_EXPORT int                ao_close(ao_device *device);
+ 
+ /* driver information */
+-int              ao_driver_id(const char *short_name);
+-int      ao_default_driver_id(void);
+-ao_info       *ao_driver_info(int driver_id);
+-ao_info **ao_driver_info_list(int *driver_count);
+-const char *ao_file_extension(int driver_id);
++LIBAO_DLL_EXPORT int              ao_driver_id(const char *short_name);
++LIBAO_DLL_EXPORT int      ao_default_driver_id(void);
++LIBAO_DLL_EXPORT ao_info       *ao_driver_info(int driver_id);
++LIBAO_DLL_EXPORT ao_info **ao_driver_info_list(int *driver_count);
++LIBAO_DLL_EXPORT const char *ao_file_extension(int driver_id);
+ 
+ /* miscellaneous */
+-int          ao_is_big_endian(void);
++LIBAO_DLL_EXPORT int ao_is_big_endian(void);
+ 
+ 
+ #ifdef __cplusplus
+diff --git a/include/ao/ao_private.h b/include/ao/ao_private.h
+index 44fa03e..c3c50aa 100644
+--- a/include/ao/ao_private.h
++++ b/include/ao/ao_private.h
+@@ -138,13 +138,13 @@ struct ao_functions {
+ 
+ void ao_read_config_files (ao_config *config);
+ 
+-#define adebug(format, args...) {\
++#define adebug(format, ...) {\
+     if(!device || device->verbose==2){                                  \
+       if(strcmp(format,"\n")){                                          \
+         if(device && device->funcs->driver_info()->short_name){         \
+-          fprintf(stderr,"ao_%s debug: " format,device->funcs->driver_info()->short_name,## args); \
++          fprintf(stderr,"ao_%s debug: " format,device->funcs->driver_info()->short_name,__VA_ARGS__); \
+         }else{                                                          \
+-          fprintf(stderr,"debug: " format,## args);                     \
++          fprintf(stderr,"debug: " format,__VA_ARGS__);                 \
+         }                                                               \
+       }else{                                                            \
+         fprintf(stderr,"\n");                                           \
+@@ -152,13 +152,13 @@ void ao_read_config_files (ao_config *config);
+     }                                                                   \
+   }
+ 
+-#define averbose(format, args...) {\
++#define averbose(format, ...) {\
+     if(!device || device->verbose>0){                                   \
+       if(strcmp(format,"\n")){                                          \
+         if(device && device->funcs->driver_info()->short_name){         \
+-          fprintf(stderr,"ao_%s info: " format,device->funcs->driver_info()->short_name,## args); \
++          fprintf(stderr,"ao_%s info: " format,device->funcs->driver_info()->short_name,__VA_ARGS__); \
+         }else{                                                          \
+-          fprintf(stderr,"info: " format,## args);                      \
++          fprintf(stderr,"info: " format,__VA_ARGS__);                  \
+         }                                                               \
+       }else{                                                            \
+         fprintf(stderr,"\n");                                           \
+@@ -166,13 +166,13 @@ void ao_read_config_files (ao_config *config);
+     }                                                                   \
+   }
+ 
+-#define ainfo(format, args...) {\
++#define ainfo(format, ...) {\
+     if(!device || device->verbose>=0){                                  \
+       if(strcmp(format,"\n")){                                          \
+         if(device && device->funcs->driver_info()->short_name){         \
+-          fprintf(stderr,"ao_%s info: " format,device->funcs->driver_info()->short_name,## args); \
++          fprintf(stderr,"ao_%s info: " format,device->funcs->driver_info()->short_name,__VA_ARGS__); \
+         }else{                                                          \
+-          fprintf(stderr,"info: " format,## args);                      \
++          fprintf(stderr,"info: " format,__VA_ARGS__);                  \
+         }                                                               \
+       }else{                                                            \
+         fprintf(stderr,"\n");                                           \
+@@ -180,13 +180,13 @@ void ao_read_config_files (ao_config *config);
+     }                                                                   \
+   }
+ 
+-#define awarn(format, args...) {\
++#define awarn(format, ...) {\
+     if(!device || device->verbose>=0){                                  \
+       if(strcmp(format,"\n")){                                          \
+         if(device && device->funcs->driver_info()->short_name){         \
+-          fprintf(stderr,"ao_%s WARNING: " format,device->funcs->driver_info()->short_name,## args); \
++          fprintf(stderr,"ao_%s WARNING: " format,device->funcs->driver_info()->short_name,__VA_ARGS__); \
+         }else{                                                          \
+-          fprintf(stderr,"WARNING: " format,## args);                   \
++          fprintf(stderr,"WARNING: " format,__VA_ARGS__);               \
+         }                                                               \
+       }else{                                                            \
+         fprintf(stderr,"\n");                                           \
+@@ -194,13 +194,13 @@ void ao_read_config_files (ao_config *config);
+     }                                                                   \
+   }
+ 
+-#define aerror(format, args...) {                                       \
++#define aerror(format, ...) {                                           \
+     if(!device || device->verbose>=0){                                  \
+       if(strcmp(format,"\n")){                                          \
+         if(device && device->funcs->driver_info()->short_name){         \
+-          fprintf(stderr,"ao_%s ERROR: " format,device->funcs->driver_info()->short_name,## args); \
++          fprintf(stderr,"ao_%s ERROR: " format,device->funcs->driver_info()->short_name,__VA_ARGS__); \
+         }else{                                                          \
+-          fprintf(stderr,"ERROR: " format,## args);                     \
++          fprintf(stderr,"ERROR: " format,__VA_ARGS__);                 \
+         }                                                               \
+       }else{                                                            \
+         fprintf(stderr,"\n");                                           \
+diff --git a/include/ao/os_types.h b/include/ao/os_types.h
+new file mode 100644
+index 0000000..c0c2ea1
+--- /dev/null
++++ b/include/ao/os_types.h
+@@ -0,0 +1,9 @@
++#pragma once
++#include <stdint.h>
++
++typedef uint8_t  uint_8;
++typedef uint16_t uint_16;
++typedef uint32_t uint_32;
++typedef int8_t   sint_8;
++typedef int16_t  sint_16;
++typedef int32_t  sint_32;
+diff --git a/src/ao_wmm.c b/src/ao_wmm.c
+index eec6b83..d18d2a4 100644
+--- a/src/ao_wmm.c
++++ b/src/ao_wmm.c
+@@ -33,6 +33,7 @@
+ #include <windows.h>
+ #include <mmreg.h>
+ #include <mmsystem.h>
++#include <ks.h>
+ #include <ksmedia.h>
+ 
+ #include <stdlib.h>
+diff --git a/src/audio_out.c b/src/audio_out.c
+index bd8f6fc..a9e4a53 100644
+--- a/src/audio_out.c
++++ b/src/audio_out.c
+@@ -49,10 +49,9 @@ static int dlclose(void *handle) { return 0; }
+ #ifndef _MSC_VER
+ # include <unistd.h>
+ #endif
+-#include <dirent.h>
+ 
+ #include "ao/ao.h"
+-#include "ao_private.h"
++#include "ao/ao_private.h"
+ 
+ /* These should have been set by the Makefile */
+ #ifndef AO_PLUGIN_PATH
+diff --git a/src/config.c b/src/config.c
+index ad1a7c9..acea1a7 100644
+--- a/src/config.c
++++ b/src/config.c
+@@ -28,8 +28,8 @@
+ 
+  ********************************************************************/
+ 
+-#include "ao.h"
+-#include "ao_private.h"
++#include "ao/ao.h"
++#include "ao/ao_private.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-- 
+2.30.0.windows.2
+
