@@ -2633,8 +2633,8 @@
       "port-version": 1
     },
     "gtkmm": {
-      "baseline": "4.4.0",
-      "port-version": 1
+      "baseline": "4.6.0",
+      "port-version": 0
     },
     "gts": {
       "baseline": "0.7.6",
