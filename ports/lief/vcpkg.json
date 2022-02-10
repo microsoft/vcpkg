@@ -1,6 +1,6 @@
 {
   "name": "lief",
-  "version": "2022-02-02",
+  "version": "2022-02-08",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "license": "Apache-2.0",

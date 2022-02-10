@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6ee2b0c5..b86e746e 100644
+index 1f73fb29..5a9fd079 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -11,11 +11,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CROSSCOMPILING)
@@ -23,7 +23,7 @@ index 6ee2b0c5..b86e746e 100644
  endif()
  
  if(CMAKE_BUILD_TYPE MATCHES Debug AND WINDOWS)
-@@ -327,7 +320,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
+@@ -328,7 +321,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
                 @ONLY)
  
  target_include_directories(LIB_LIEF
@@ -32,7 +32,7 @@ index 6ee2b0c5..b86e746e 100644
    PRIVATE "${LIEF_PRIVATE_INCLUDE_DIR}")
  
  if(LIEF_ENABLE_JSON)
-@@ -370,7 +363,7 @@ if(LIEF_EXTERNAL_LEAF)
+@@ -371,7 +364,7 @@ if(LIEF_EXTERNAL_LEAF)
    if(LIEF_EXTERNAL_LEAF_DIR)
      message(STATUS "External LEAF include dir: ${LIEF_EXTERNAL_LEAF_DIR}")
      target_include_directories(LIB_LIEF SYSTEM PUBLIC
@@ -41,7 +41,7 @@ index 6ee2b0c5..b86e746e 100644
    endif()
  else()
    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/leaf.hpp
-@@ -532,7 +525,7 @@ if(LIEF_COVERAGE)
+@@ -533,7 +526,7 @@ if(LIEF_COVERAGE)
    target_link_libraries(LIB_LIEF gcov)
  endif()
  
@@ -50,7 +50,7 @@ index 6ee2b0c5..b86e746e 100644
  
  
  # Set a default build type if none was specified
-@@ -579,10 +572,10 @@ endif()
+@@ -580,10 +573,10 @@ endif()
  
  # Find Package Config
  # ======================
@@ -63,7 +63,7 @@ index 6ee2b0c5..b86e746e 100644
  
  write_basic_package_version_file(
    ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -629,26 +622,15 @@ endif()
+@@ -630,26 +623,15 @@ endif()
  # Installation
  # ======================
  
@@ -95,9 +95,9 @@ index 6ee2b0c5..b86e746e 100644
  
  install(
    DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
-@@ -657,11 +639,6 @@ install(
+@@ -658,11 +640,6 @@ install(
    FILES_MATCHING
-   REGEX "(.*).(hpp|h|def)$")
+   REGEX "(.*).(hpp|h|def|inc)$")
  
 -install(
 -  FILES       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
@@ -107,7 +107,7 @@ index 6ee2b0c5..b86e746e 100644
  install(
    FILES ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
          ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -673,7 +650,13 @@ install(
+@@ -674,7 +651,13 @@ install(
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
    COMPONENT   libraries)
  
@@ -151,15 +151,66 @@ index 94ee5245..16454dfd 100644
 +endif()
 +set_property(TARGET LIEF::LIEF APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BOOST_LEAF_INCLUDE_PATH}")
 diff --git a/cmake/LIEFApi.cmake b/cmake/LIEFApi.cmake
-index 772c8b75..f3bacb1f 100644
+index f06f846c..964b394d 100644
 --- a/cmake/LIEFApi.cmake
 +++ b/cmake/LIEFApi.cmake
-@@ -59,7 +59,7 @@ if(LIEF_C_API)
- 
+@@ -18,7 +18,7 @@ endif()
+ # -----
+ if(LIEF_C_API)
    target_include_directories(LIB_LIEF
-     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include"
--    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include")
+-    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include")
 +    PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/api/c/include>")
  
    include("${CMAKE_CURRENT_SOURCE_DIR}/api/c/CMakeLists.txt")
  endif()
+diff --git a/examples/cmake/find_package/CMakeLists.txt b/examples/cmake/find_package/CMakeLists.txt
+index 1812d4b1..0add37d9 100644
+--- a/examples/cmake/find_package/CMakeLists.txt
++++ b/examples/cmake/find_package/CMakeLists.txt
+@@ -2,43 +2,17 @@ cmake_minimum_required(VERSION 3.1)
+ 
+ project(CMakeLIEF)
+ 
+-# Use LIEF with 'find_package()'
+-# ==============================
+-
+-# Custom path to the LIEF install directory
+-set(LIEF_DIR CACHE PATH ${CMAKE_INSTALL_PREFIX})
+-
+-# Directory to 'FindLIEF.cmake'
+-list(APPEND CMAKE_MODULE_PATH ${LIEF_DIR}/share/LIEF/cmake)
+-
+-# include 'FindLIEF.cmake'
+-include(FindLIEF)
+-
+ # Find LIEF
+-find_package(LIEF REQUIRED COMPONENTS STATIC) # COMPONENTS: <SHARED | STATIC> - Default: STATIC
+-
+-message(STATUS "LIEF include directory: ${LIEF_INCLUDE_DIRS}")
+-message(STATUS "LIEF library:           ${LIEF_LIBRARIES}")
++find_package(LIEF REQUIRED)
+ 
+ # Add our executable
+ # ==================
+ add_executable(HelloLIEF main.cpp)
+ 
+-if(MSVC)
+-  set_property(TARGET HelloLIEF PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
+-endif()
+-
+-
+-# Setup the LIEF include directory
+-target_include_directories(HelloLIEF
+-  PUBLIC
+-    ${LIEF_INCLUDE_DIRS}
+-)
+-
+-# Enable C++11
++# C++11 minimum
+ set_property(TARGET HelloLIEF
+              PROPERTY CXX_STANDARD           11
+              PROPERTY CXX_STANDARD_REQUIRED  ON)
+ 
+ # Link the executable with LIEF
+-target_link_libraries(HelloLIEF PUBLIC ${LIEF_LIBRARIES})
++target_link_libraries(HelloLIEF PRIVATE LIEF::LIEF)
