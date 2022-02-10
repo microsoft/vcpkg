@@ -3950,7 +3950,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -7201,7 +7201,7 @@
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2022-01-10",
+      "baseline": "2022-02-10",
       "port-version": 0
     },
     "vcpkg-qmake": {
