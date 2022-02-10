@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         support_distribution.patch
-        # fix_windows_build.patch
+        fix_windows_build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -77,7 +77,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Check if all-caps directory is empty (it won't be on case-insensitive filesystems).
-# These files could have been moved during vcpkg_fixup_cmake_targets
+# These files could have been moved during vcpkg_cmake_config_fixup
 file(GLOB dir_files "${CURRENT_PACKAGES_DIR}/share/LIEF/*")
 list(LENGTH dir_files dir_files_len)
 if(dir_files_len EQUAL 0)
