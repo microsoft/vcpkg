@@ -3853,8 +3853,8 @@
       "port-version": 1
     },
     "librabbitmq": {
-      "baseline": "2020-06-03",
-      "port-version": 1
+      "baseline": "0.11.0",
+      "port-version": 0
     },
     "libraqm": {
       "baseline": "0.9.0",
