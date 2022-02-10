@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001_fix_unistd.patch
         0002-disable-test.patch
         0003-fix-win-build.patch
+        0004-add-win-arm64.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,6 +24,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(HUNSPELL_ARCH Win32)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(HUNSPELL_ARCH x64)
+     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(HUNSPELL_ARCH ARM64)
     else()
         message(FATAL_ERROR "unsupported architecture")
     endif()
