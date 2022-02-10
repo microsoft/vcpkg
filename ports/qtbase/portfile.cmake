@@ -227,6 +227,8 @@ set(TOOL_NAMES
         uic
         qtpaths
         qtpaths6
+        windeployqt
+        macdeployqt
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

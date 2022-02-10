@@ -147,6 +147,7 @@ function(qt_cmake_configure)
             INSTALL_INCLUDEDIR
             HOST_PERL
             QT_SYNCQT
+            QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             ${_qarg_OPTIONS_MAYBE_UNUSED}
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
@@ -264,8 +265,9 @@ function(qt_fixup_and_cleanup)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-        debug_message("Files in bin: '${_bin_files}'")
-        if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
+        if(NOT _bin_files STREQUAL "")
+            message(STATUS "Remaining files in bin: '${_bin_files}'")
+        else() # Only clean if empty otherwise let vcpkg throw and error. 
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
