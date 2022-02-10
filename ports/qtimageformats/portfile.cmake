@@ -4,6 +4,8 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     set(${PORT}_PATCHES no_target_promotion.patch)
+else()
+    set(${PORT}_PATCHES no_target_promotion_latest.patch)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
