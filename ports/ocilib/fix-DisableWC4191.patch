@@ -1,0 +1,40 @@
+diff --git a/proj/dll/ocilib_dll_vs2019.vcxproj b/proj/dll/ocilib_dll_vs2019.vcxproj
+index 2d5b3bf..36e0859 100644
+--- a/proj/dll/ocilib_dll_vs2019.vcxproj
++++ b/proj/dll/ocilib_dll_vs2019.vcxproj
+@@ -120,7 +120,7 @@
+       <DebugInformationFormat>
+       </DebugInformationFormat>
+       <CompileAs>CompileAsC</CompileAs>
+-      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045</DisableSpecificWarnings>
++      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045;4191</DisableSpecificWarnings>
+     </ClCompile>
+     <ResourceCompile>
+       <PreprocessorDefinitions>OCI_CHARSET_ANSI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -172,7 +172,7 @@
+       <DebugInformationFormat>
+       </DebugInformationFormat>
+       <CompileAs>CompileAsC</CompileAs>
+-      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045</DisableSpecificWarnings>
++      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045;4191</DisableSpecificWarnings>
+       <TreatWarningAsError>true</TreatWarningAsError>
+     </ClCompile>
+     <ResourceCompile>
+@@ -222,7 +222,7 @@
+       <DebugInformationFormat>
+       </DebugInformationFormat>
+       <CompileAs>CompileAsC</CompileAs>
+-      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045</DisableSpecificWarnings>
++      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045;4191</DisableSpecificWarnings>
+       <TreatWarningAsError>true</TreatWarningAsError>
+     </ClCompile>
+     <ResourceCompile>
+@@ -275,7 +275,7 @@
+       <DebugInformationFormat>
+       </DebugInformationFormat>
+       <CompileAs>CompileAsC</CompileAs>
+-      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045</DisableSpecificWarnings>
++      <DisableSpecificWarnings>4255;4668;4996;4710;4711;4738;4774;4820;5045;4191</DisableSpecificWarnings>
+       <TreatWarningAsError>true</TreatWarningAsError>
+     </ClCompile>
+     <ResourceCompile>
