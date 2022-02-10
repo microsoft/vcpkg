@@ -1,13 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
-    vcpkg_fail_port_install(ON_TARGET "uwp")
-    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "wasm32")
-elseif(VCPKG_TARGET_IS_LINUX)
-    vcpkg_fail_port_install(ON_ARCH "wasm32")
-else()
-    vcpkg_fail_port_install(ALWAYS)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO percipioxyz/camport3
@@ -17,7 +7,7 @@ vcpkg_from_github(
 )
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(COPY 
+file(COPY
     ${SOURCE_PATH}/include/TYApi.h
     ${SOURCE_PATH}/include/TYCoordinateMapper.h
     ${SOURCE_PATH}/include/TYImageProc.h
@@ -58,7 +48,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
     else()
         set (CAMPORT3_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     endif()
-    
+
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
         file(COPY

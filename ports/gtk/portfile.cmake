@@ -1,16 +1,15 @@
-set(GTK_VERSION 4.4.0)
+set(GTK_VERSION 4.6.0)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  f1f197e3b94a55d5cbfaae2498f991a0ae733b32 #v4.4.0
-    SHA512 80ffc2c2a2baae4a4097470a41d0b10d5df9086e60daa520aad845fe571e03486c4f87e295ae4f05aa0069df80fe40ad7655de4f9aecc21c2482bbe0b2b6e2fb
+    REF  70cb61fb7104c76a15bc6494a10e6ff1d470f6d8 #v4.6.0
+    SHA512 dba6ce5a8306f9dda290f3785d6d15aee67c66329ab0756b7b7573387c1a512e96d3b53b24ed342ce7376832dcac20fb24025f2b8986f74d91a88e4fcf3de6ae
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
         0002-windows-build.patch
-        0003-vs2022-rc.patch # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4063
         0004-macos-build.patch
 )
 

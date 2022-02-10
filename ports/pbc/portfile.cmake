@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
-
 set(PBC_VERSION 0.5.14)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

@@ -17,13 +17,6 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
 endif()
 
-if("cxx" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        MESSAGE "Feature 'cxx' is not supported on ${VCPKG_TARGET_ARCHITECTURE}."
-        ON_ARCH arm arm64
-    )
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cxx     cxx
