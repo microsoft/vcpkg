@@ -100,6 +100,10 @@
       "baseline": "2021-08-24",
       "port-version": 0
     },
+    "ao": {
+      "baseline": "1.2.2",
+      "port-version": 2
+    },
     "aom": {
       "baseline": "3.2.0",
       "port-version": 2
