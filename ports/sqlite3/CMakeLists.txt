@@ -44,67 +44,84 @@ target_compile_definitions(
 
 if (BUILD_SHARED_LIBS)
     if (UNIX)
+        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__attribute__((visibility(\"default\")))")
         target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__attribute__((visibility(\"default\")))")
     elseif (WIN32)
+        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_API=__declspec(dllimport)")
         target_compile_definitions(sqlite3 INTERFACE "SQLITE_API=__declspec(dllimport)")
     endif()
 endif()
 
 if (ENABLE_FTS3)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_FTS3")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS3)
 endif()
 
 if (ENABLE_FTS4)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_FTS4")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS4)
 endif()
 
 if (ENABLE_FTS5)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_FTS5")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_FTS5)
 endif()
 
 if (ENABLE_MEMSYS3)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_MEMSYS3")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MEMSYS3)
 endif()
 
 if (ENABLE_MEMSYS5)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_MEMSYS5")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MEMSYS5)
 endif()
 
 if (ENABLE_MATH_FUNCTION)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_MATH_FUNCTIONS")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_MATH_FUNCTIONS)
 endif()
 
 if (ENABLE_LIMIT)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_UPDATE_DELETE_LIMIT)
 endif()
 
 if (ENABLE_RTREE)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_RTREE")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_RTREE)
 endif()
 
 if (ENABLE_SESSION)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_SESSION -DSQLITE_ENABLE_PREUPDATE_HOOK")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_SESSION SQLITE_ENABLE_PREUPDATE_HOOK)
 endif()
 
 if (ENABLE_OMIT_LOAD_EXT)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OMIT_LOAD_EXTENSION")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_OMIT_LOAD_EXTENSION)
 endif()
 
 if(WITH_GEOPOLY)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_GEOPOLY")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_GEOPOLY)
 endif()
 
 if(WITH_JSON1)
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_ENABLE_JSON1")
     target_compile_definitions(sqlite3 PUBLIC SQLITE_ENABLE_JSON1)
 endif()
 
 if (WIN32)
+    string(APPEND PKGCONFIG_DEFINES " -DQLITE_OS_WIN=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WIN=1)
 
     if(CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+        string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_WINRT=1")
         target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_WINRT=1)
     endif()
 else()
+    string(APPEND PKGCONFIG_DEFINES " -DSQLITE_OS_UNIX=1")
     target_compile_definitions(sqlite3 PUBLIC -DSQLITE_OS_UNIX=1)
 endif()
 
