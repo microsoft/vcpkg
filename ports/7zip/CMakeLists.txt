@@ -103,6 +103,7 @@ set(SRC_C
     C/HuffEnc.c
     C/LzFind.c
     C/LzFindMt.c
+    C/LzFindOpt.c
     C/Lzma2Dec.c
     C/Lzma2DecMt.c
     C/Lzma2Enc.c
@@ -113,12 +114,15 @@ set(SRC_C
     C/MtDec.c
     C/Ppmd7.c
     C/Ppmd7Dec.c
+    C/Ppmd7aDec.c 
     C/Ppmd7Enc.c
     C/Ppmd8.c
     C/Ppmd8Dec.c
     C/Ppmd8Enc.c
     C/Sha1.c
+    C/Sha1Opt.c
     C/Sha256.c
+    C/Sha256Opt.c
     C/Sort.c
     C/Threads.c
     C/Xz.c
@@ -193,6 +197,7 @@ set(SRC_OTHER
     CPP/7zip/Archive/ArHandler.cpp
     CPP/7zip/Archive/ArjHandler.cpp
     CPP/7zip/Archive/Bz2Handler.cpp
+    CPP/7zip/Archive/Base64Handler.cpp
     CPP/7zip/Archive/ComHandler.cpp
     CPP/7zip/Archive/CpioHandler.cpp
     CPP/7zip/Archive/CramfsHandler.cpp
