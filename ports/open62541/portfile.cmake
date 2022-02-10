@@ -14,6 +14,7 @@ vcpkg_check_features(
         openssl UA_ENABLE_ENCRYPTION_OPENSSL
         mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
         amalgamation UA_ENABLE_AMALGAMATION
+        historizing UA_ENABLE_HISTORIZING
 )
 
 vcpkg_find_acquire_program(PYTHON3)
