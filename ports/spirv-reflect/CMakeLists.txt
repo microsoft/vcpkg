@@ -17,7 +17,7 @@ endif()
 target_include_directories(unofficial-spirv-reflect INTERFACE $<INSTALL_INTERFACE:include>)
 
 install(
-    TARGETS unofficial-spirv-reflect EXPORT spirv-reflect-config
+    TARGETS unofficial-spirv-reflect EXPORT unofficial-spirv-reflect-config
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
@@ -25,9 +25,9 @@ install(
 )
 
 install(
-    EXPORT spirv-reflect-config
-    NAMESPACE spirv-reflect::
-    DESTINATION share/spirv-reflect
+    EXPORT unofficial-spirv-reflect-config
+    NAMESPACE unofficial::spirv-reflect::
+    DESTINATION share/unofficial-spirv-reflect
 )
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/spirv_reflect.h" DESTINATION include)
