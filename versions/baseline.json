@@ -2168,10 +2168,6 @@
       "baseline": "2019-12-19",
       "port-version": 2
     },
-    "field3d": {
-      "baseline": "1.7.3",
-      "port-version": 3
-    },
     "fixed-string": {
       "baseline": "0.1.0",
       "port-version": 1
@@ -5034,7 +5030,7 @@
     },
     "openimageio": {
       "baseline": "2.3.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.4.0",
