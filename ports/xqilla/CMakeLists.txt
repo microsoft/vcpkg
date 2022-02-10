@@ -444,7 +444,7 @@ install(
 )
 
 install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/xqilla
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/xqilla"
     CONFIGURATIONS Release
     DESTINATION include
 )
