@@ -15,36 +15,19 @@ vcpkg_configure_meson(
 set(systemsuffix "")
 set(architectureprefix "")
 
-if(VCPKG_TARGET_IS_LINUX)
-    set(systemsuffix "linux-gnu")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(architectureprefix "x86_64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(architectureprefix "i386")
-    endif()
-endif()
+set(SYSTEM_LIBDIR "")
+set(PKG_DEFAULT_PATH "")
+set(SYSTEM_INCLUDEDIR "")
+set(PERSONALITY_PATH "personality.d")
 
-if(NOT systemsuffix STREQUAL "" AND NOT architectureprefix STREQUAL "")
-    set(archdir "${architectureprefix}-${systemsuffix}")
-endif()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # These defaults are taken from the pkg-config configure.ac script
-    set(SYSTEM_LIBDIR "/usr/lib:/lib")
-    set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/share/pkgconfig")
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+    # These defaults are obtained from pkgconf/pkg-config on Ubuntu 
     set(SYSTEM_INCLUDEDIR "/usr/include")
-    set(PERSONALITY_PATH "/usr/lib/pkgconfig/personality.d:/usr/share/pkgconfig/personality.d")
-
-    if(NOT archdir STREQUAL "")
-        string(PREPEND PKG_DEFAULT_PATH "/usr/lib/${archdir}/pkgconfig:")
-        string(PREPEND SYSTEM_INCLUDEDIR "/usr/include/${archdir}:")
-        string(PREPEND PERSONALITY_PATH "/usr/lib/${archdir}/pkgconfig/personality.d:")
-    endif()
-else()
-    set(SYSTEM_LIBDIR "")
-    set(PKG_DEFAULT_PATH "")
-    set(SYSTEM_INCLUDEDIR "")
-    set(PERSONALITY_PATH "personality.d")
+    # System lib dirs will be stripped from -L from the pkg-config output
+    set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib32:/usr/libx32")
+    set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+    set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
 endif()
 
 if(DEFINED VCPKG_pkgconf_SYSTEM_LIBDIR)
