@@ -1,5 +1,14 @@
+From b0615e9a48660d2a3ebc07da854d38316ff38880 Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:25:05 -0500
+Subject: [PATCH] FindExpat
+
+---
+ CMake/FindEXPAT.cmake | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
+
 diff --git a/CMake/FindEXPAT.cmake b/CMake/FindEXPAT.cmake
-index 45d923764..0ebcd3c83 100644
+index c0adc0ba0c..1a45438354 100644
 --- a/CMake/FindEXPAT.cmake
 +++ b/CMake/FindEXPAT.cmake
 @@ -73,15 +73,37 @@ if(EXPAT_FOUND)
@@ -46,3 +55,6 @@ index 45d923764..0ebcd3c83 100644
    endif()
  endif()
  
+-- 
+2.32.0.windows.1
+

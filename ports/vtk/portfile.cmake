@@ -7,29 +7,22 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 2959413ff190bc6e3ff40f5b6c1342edd2e5233f # v9.0.x used by ParaView 5.9.1
-    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
+    REF 285daeedd58eb890cb90d6e907d822eea3d2d092 # v9.1.0
+    SHA512 4eecbd1b0a0235cec62b0fdd47c2262d637ea6d298b94bb87b5915c2640c6c6d9d3f08e2136d93f1062885b2bffc282f27a326f4475df047ba5fbe5354770716
     HEAD_REF master
     PATCHES
         FindLZMA.patch
         FindLZ4.patch
         Findproj.patch
         pegtl.patch
-        pythonwrapper.patch # Required by ParaView to Wrap required classes
-        NoUndefDebug.patch # Required to link against correct Python library depending on build type.
+        pythonwrapper.patch
+        NoUndefDebug.patch
         python_debug.patch
         fix-using-hdf5.patch
-        # CHECK: module-name-mangling.patch
-        # Last patch TODO: Patch out internal loguru
-        FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        # upstream vtkm patches to make it work with vtkm 1.6
-        vtkm.patch # To include an external VTKm build
-        1f00a0c9.patch
-        156fb524.patch
-        d107698a.patch
+        FindExpat.patch
+        vtkm.patch
         fix-gdal.patch
-        missing-limits.patch # This patch can be removed in next version. Since it has been merged to upstream via https://gitlab.kitware.com/vtk/vtk/-/merge_requests/7611
-        UseProj5Api.patch # Allow Proj 8.0+ (commit b66e4a7, backported). Should be in soon after 9.0.3
+        use-provided-qmltypes.patch
 )
 
 # =============================================================================
@@ -50,6 +43,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
+        "qtquick"     VTK_MODULE_ENABLE_VTK_GUISupportQtQuick
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
@@ -165,6 +159,8 @@ vcpkg_cmake_configure(
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
+        -DVTK_MODULE_USE_EXTERNAL_VTK_ioss:BOOL=OFF # Not yet in VCPKG
+        -DVTK_MODULE_USE_EXTERNAL_VTK_cgns:BOOL=OFF # IOSS relies on this, but incompatible with the one currently in VCPKG
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
@@ -175,7 +171,7 @@ vcpkg_copy_pdbs()
 
 # =============================================================================
 # Fixup target files
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-9.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtk-9.1)
 
 # =============================================================================
 # Clean-up other directories
@@ -217,7 +213,7 @@ function(_vtk_move_release_tool TOOL_NAME)
     endif()
 endfunction()
 
-set(VTK_SHORT_VERSION 9.0)
+set(VTK_SHORT_VERSION 9.1)
 set(VTK_TOOLS
     vtkEncodeString-${VTK_SHORT_VERSION}
     vtkHashSource-${VTK_SHORT_VERSION}
@@ -296,8 +292,8 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-9.0/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-9.1/vtkChemistryConfigure.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-9.1/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing")
 endif()
 # =============================================================================
 # Usage

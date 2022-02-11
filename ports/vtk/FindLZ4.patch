@@ -1,5 +1,14 @@
+From 0655297a0500e8789d0d455e2ae01f08f1402385 Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:08:01 -0500
+Subject: [PATCH] FindLZ4
+
+---
+ CMake/FindLZ4.cmake | 43 +++++--------------------------------------
+ 1 file changed, 5 insertions(+), 38 deletions(-)
+
 diff --git a/CMake/FindLZ4.cmake b/CMake/FindLZ4.cmake
-index 8c94e3bcd..ade3f9451 100644
+index 8c94e3bcd1..4fadd98a14 100644
 --- a/CMake/FindLZ4.cmake
 +++ b/CMake/FindLZ4.cmake
 @@ -1,38 +1,5 @@
@@ -42,8 +51,10 @@ index 8c94e3bcd..ade3f9451 100644
 -  endif ()
 -endif ()
 +find_package(LZ4 CONFIG REQUIRED)
-+set_target_properties(lz4::lz4 PROPERTIES IMPORTED_GLOBAL TRUE)
++set_target_properties(lz4::lz4 PROPERTIES IMPORTED TRUE GLOBAL TRUE)
 +if(NOT TARGET LZ4::LZ4)
 +add_library(LZ4::LZ4 ALIAS lz4::lz4)
 +endif()
-\ No newline at end of file
+-- 
+2.32.0.windows.1
+

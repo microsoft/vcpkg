@@ -1,5 +1,14 @@
+From bac72f5497804683fdc4d068a6d9fa73163f7f29 Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:22:31 -0500
+Subject: [PATCH] fix-using-hdf5
+
+---
+ ThirdParty/h5part/vtkh5part/src/H5Part.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/ThirdParty/h5part/vtkh5part/src/H5Part.c b/ThirdParty/h5part/vtkh5part/src/H5Part.c
-index 228d246..41af04d 100644
+index 228d246600..41af04dcfa 100644
 --- a/ThirdParty/h5part/vtkh5part/src/H5Part.c
 +++ b/ThirdParty/h5part/vtkh5part/src/H5Part.c
 @@ -2092,7 +2092,7 @@ _H5Part_iteration_operator2 (
@@ -20,3 +29,6 @@ index 228d246..41af04d 100644
  	    return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
            }
            else {
+-- 
+2.32.0.windows.1
+

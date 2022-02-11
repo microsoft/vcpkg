@@ -1,13 +1,24 @@
+From 2a8c6d94aad6169ea0bebcf0d824b33cc37adb7b Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:19:46 -0500
+Subject: [PATCH] NoUndefDebug
+
+---
+ Utilities/Python/vtkPython.h | 1 -
+ 1 file changed, 1 deletion(-)
+
 diff --git a/Utilities/Python/vtkPython.h b/Utilities/Python/vtkPython.h
-index 166f24104..79ae1d371 100644
+index 4b59f2b129..c1eef4dca5 100644
 --- a/Utilities/Python/vtkPython.h
 +++ b/Utilities/Python/vtkPython.h
-@@ -53,7 +53,7 @@
+@@ -49,7 +49,6 @@
  #include <sys/stat.h>
  #include <time.h>
  #include <wchar.h>
 -#undef _DEBUG
-+
  #if defined(_MSC_VER)
  #define _CRT_NOFORCE_MANIFEST 1
  #endif
+-- 
+2.32.0.windows.1
+

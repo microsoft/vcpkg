@@ -1,0 +1,93 @@
+From 70c5bab612ee81132707968daeb93655f9d15edc Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Thu, 3 Feb 2022 14:52:23 -0500
+Subject: [PATCH] fix-qtquick-qml
+
+---
+ GUISupport/QtQuick/qml/CMakeLists.txt | 63 +++++----------------------
+ 1 file changed, 11 insertions(+), 52 deletions(-)
+
+diff --git a/GUISupport/QtQuick/qml/CMakeLists.txt b/GUISupport/QtQuick/qml/CMakeLists.txt
+index 8d3a30f2ea..32dd70ae20 100644
+--- a/GUISupport/QtQuick/qml/CMakeLists.txt
++++ b/GUISupport/QtQuick/qml/CMakeLists.txt
+@@ -58,24 +58,6 @@ file(GENERATE
+   INPUT  "${CMAKE_CURRENT_BINARY_DIR}/qmldir")
+ 
+ # Generate the qmltypes file for the VTK QML plugin
+-
+-# First, find the qmlplugindump executable
+-get_target_property(qt_core_location "Qt${vtk_qt_major_version}::Core" LOCATION)
+-get_filename_component(qt_bin_dir "${qt_core_location}" PATH)
+-if (APPLE)
+-  get_filename_component(qt_bin_dir "${qt_bin_dir}" PATH)
+-endif ()
+-find_program(QMLPLUGINDUMP_EXECUTABLE
+-  NAMES "qmlplugindump-qt${vtk_qt_major_version}" qmlplugindump
+-  HINTS "${qt_bin_dir}"
+-  DOC "QmlPlugindump executable location")
+-mark_as_advanced(QMLPLUGINDUMP_EXECUTABLE)
+-if (NOT QMLPLUGINDUMP_EXECUTABLE)
+-  message(FATAL_ERROR
+-    "qmlplugindump executable not found.\nIt is required to generate the "
+-    "qmltypes file for VTK Qml plugin.")
+-endif ()
+-
+ set(qmltypes_file_template
+   "${CMAKE_CURRENT_SOURCE_DIR}/plugins.qmltypes")
+ set(qmltypes_file_output
+@@ -89,40 +71,17 @@ if (config_subdir AND CMAKE_VERSION VERSION_LESS "3.20")
+ endif ()
+ 
+ get_target_property(qt_config "Qt${vtk_qt_major_version}::Core" IMPORTED_CONFIGURATIONS)
+-if (WIN32 AND ("DEBUG" IN_LIST qt_config) AND ("RELEASE" IN_LIST qt_config))
+-  message(AUTHOR_WARNING
+-    "Qt5 is configured in both Debug and Release modes. Due to Qt issue "
+-    "47774 (https://bugreports.qt.io/browse/QTBUG-47774), skipping "
+-    "generation of qmltypes file. Using the one provided with the source "
+-    "tree instead.")
+-
+-  add_custom_command(
+-    TARGET qmlvtkplugin
+-    POST_BUILD
+-    COMMAND
+-      "${CMAKE_COMMAND}" -E copy_if_different
+-      "${qmltypes_file_template}"
+-      "${qmltypes_file_output}"
+-    WORKING_DIRECTORY
+-      "${CMAKE_CURRENT_BINARY_DIR}"
+-    ${byproducts}
+-    COMMENT "Copying qmltypes file from the source tree to ${qmltypes_file_output}")
+-else ()
+-  add_custom_command(
+-    TARGET qmlvtkplugin
+-    POST_BUILD
+-    COMMAND
+-      "${QMLPLUGINDUMP_EXECUTABLE}"
+-      -output "${qmltypes_file_output}"
+-      "${_vtk_build_PACKAGE}"
+-      "${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}"
+-      "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_QMLDIR}${config_subdir}"
+-    WORKING_DIRECTORY
+-      "${CMAKE_CURRENT_BINARY_DIR}"
+-    ${byproducts}
+-    COMMENT "Generating qmltypes file using qmlplugindump"
+-    VERBATIM)
+-endif ()
++add_custom_command(
++  TARGET qmlvtkplugin
++  POST_BUILD
++  COMMAND
++    "${CMAKE_COMMAND}" -E copy_if_different
++    "${qmltypes_file_template}"
++    "${qmltypes_file_output}"
++  WORKING_DIRECTORY
++    "${CMAKE_CURRENT_BINARY_DIR}"
++  ${byproducts}
++  COMMENT "Copying qmltypes file from the source tree to ${qmltypes_file_output}")
+ 
+ # Install the QML plugin module
+ install(
+-- 
+2.32.0.windows.1
+

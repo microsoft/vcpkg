@@ -1,17 +1,15 @@
-diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
-index bcb2044..c87bb9c 100644
---- a/CMake/vtkInstallCMakePackage.cmake
-+++ b/CMake/vtkInstallCMakePackage.cmake
-@@ -113,7 +113,6 @@ set(vtk_cmake_patch_files
-   patches/3.18/FindPython/Support.cmake
-   patches/3.18/FindPython2.cmake
-   patches/3.18/FindPython3.cmake
--  patches/99/FindGDAL.cmake
-   patches/99/FindHDF5.cmake
-   patches/99/FindJPEG.cmake
-   patches/99/FindLibArchive.cmake
+From 74cddf71e1bcf8e1ccb962d264438f4057a1a709 Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 14:18:38 -0500
+Subject: [PATCH] fix-gdal
+
+---
+ Geovis/GDAL/CMakeLists.txt | 5 ++++-
+ IO/GDAL/CMakeLists.txt     | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
 diff --git a/Geovis/GDAL/CMakeLists.txt b/Geovis/GDAL/CMakeLists.txt
-index dfd58f0..f46177f 100644
+index dfd58f07bc..f46177f901 100644
 --- a/Geovis/GDAL/CMakeLists.txt
 +++ b/Geovis/GDAL/CMakeLists.txt
 @@ -9,4 +9,7 @@ vtk_module_add_module(VTK::GeovisGDAL
@@ -24,7 +22,7 @@ index dfd58f0..f46177f 100644
 +  PRIVATE
 +    ${GDAL_INCLUDE_DIRS})
 diff --git a/IO/GDAL/CMakeLists.txt b/IO/GDAL/CMakeLists.txt
-index 0a1248a..621a060 100644
+index 55baa0056b..213a3f9cdc 100644
 --- a/IO/GDAL/CMakeLists.txt
 +++ b/IO/GDAL/CMakeLists.txt
 @@ -9,4 +9,7 @@ vtk_module_add_module(VTK::IOGDAL
@@ -36,4 +34,6 @@ index 0a1248a..621a060 100644
 +vtk_module_include(VTK::IOGDAL
 +  PRIVATE
 +    ${GDAL_INCLUDE_DIRS})
-\ No newline at end of file
+-- 
+2.32.0.windows.1
+

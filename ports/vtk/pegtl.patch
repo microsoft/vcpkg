@@ -1,6 +1,15 @@
+From 3e94976ee0f0afcc75f9b2de4188623ed2100480 Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:16:37 -0500
+Subject: [PATCH] pegtl
+
+---
+ CMake/FindPEGTL.cmake | 59 +++++++++++++++++++++++++------------------
+ 1 file changed, 35 insertions(+), 24 deletions(-)
+
 diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
-index 73eee02f7..22d8bc159 100644
---- a/CMake/FindPEGTL.cmake	
+index 73eee02f73..708e24d014 100644
+--- a/CMake/FindPEGTL.cmake
 +++ b/CMake/FindPEGTL.cmake
 @@ -19,31 +19,42 @@
  # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
@@ -59,7 +68,6 @@ index 73eee02f7..22d8bc159 100644
 -    set_target_properties(PEGTL::PEGTL PROPERTIES
 -      INTERFACE_INCLUDE_DIRECTORIES "${PEGTL_INCLUDE_DIR}")
 -  endif ()
--endif ()
 +    if (PEGTL_FOUND)
 +      set(PEGTL_INCLUDE_DIRS "${PEGTL_INCLUDE_DIR}")
 +      if (NOT TARGET PEGTL::PEGTL)
@@ -69,5 +77,7 @@ index 73eee02f7..22d8bc159 100644
 +      endif ()
 +      message(STATUS "Searching for PEGTL - found")
 +    endif ()
-+endif ()
-\ No newline at end of file
+ endif ()
+-- 
+2.32.0.windows.1
+

@@ -1,8 +1,17 @@
+From c3d1011c52c506c7b85f92ca6fde7229243c5d9c Mon Sep 17 00:00:00 2001
+From: "DESKTOP-6M1EIQI\\Raahil" <raahil.sha@zimaging.io>
+Date: Wed, 2 Feb 2022 13:20:57 -0500
+Subject: [PATCH] python_debug
+
+---
+ CMake/patches/3.18/FindPython/Support.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/CMake/patches/3.18/FindPython/Support.cmake b/CMake/patches/3.18/FindPython/Support.cmake
-index 0879537ed..122e7228d 100644
---- a/CMake/patches/3.18/FindPython/Support.cmake	
+index de1e98ec95..101fea0307 100644
+--- a/CMake/patches/3.18/FindPython/Support.cmake
 +++ b/CMake/patches/3.18/FindPython/Support.cmake
-@@ -2253,7 +2257,7 @@ if (("Development.Module" IN_LIST ${_PYTHON_PREFIX}_FIND_COMPONENTS
+@@ -2232,7 +2232,7 @@ if (("Development.Module" IN_LIST ${_PYTHON_PREFIX}_FIND_COMPONENTS
                    NAMES ${_${_PYTHON_PREFIX}_LIB_NAMES_DEBUG}
                    NAMES_PER_DIR
                    HINTS "${_${_PYTHON_PREFIX}_PATH}" ${_${_PYTHON_PREFIX}_HINTS}
@@ -11,3 +20,6 @@ index 0879537ed..122e7228d 100644
    endif()
  
    # retrieve runtime libraries
+-- 
+2.32.0.windows.1
+
