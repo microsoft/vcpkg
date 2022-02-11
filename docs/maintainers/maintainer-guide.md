@@ -95,9 +95,9 @@ In the entire vcpkg system, no two ports a user is expected to use concurrently 
 
 ### Add CMake exports in an unofficial- namespace
 
-A core design ideal of vcpkg is to not create "lock-in" for customers. In the build system, there should be no difference between depending on a library from the system, and depend on a library from vcpkg. To that end, we avoid adding CMake exports or targets to existing libraries with "the obvious name", to allow upstreams to add their own official CMake exports without conflicting with vcpkg.
+A core design ideal of vcpkg is to not create "lock-in" for customers. In the build system, there should be no difference between depending on a library from the system, and depending on a library from vcpkg. To that end, we avoid adding CMake exports or targets to existing libraries with "the obvious name", to allow upstreams to add their own official CMake exports without conflicting with vcpkg.
 
-To that end, any CMake configs that the port exports, which are not in the upstream library, should have `unofficial-` as a prefix. The added exported targets should be in the `unofficial::<port>::` namespace.
+To that end, any CMake configs that the port exports, which are not in the upstream library, should have `unofficial-` as a prefix. Any additional targets should be in the `unofficial::<port>::` namespace.
 
 This means that the user should see:
  * `find_package(unofficial-<port> CONFIG)` as the way to get at the unique-to-vcpkg package
