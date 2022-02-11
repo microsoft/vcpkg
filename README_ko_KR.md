@@ -24,8 +24,8 @@ Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령�
 - [Vcpkg: 개요](#vcpkg-개요)
 - [목차](#목차)
 - [시작하기](#시작하기)
-  - [빠르게 시작하기: 윈도우](#빠르게-시작하기-윈도우)
-  - [빠르게 시작하기: 유닉스](#빠르게-시작하기-유닉스)
+  - [빠르게 시작하기: Windows](#빠르게-시작하기-windows)
+  - [빠르게 시작하기: Unix](#빠르게-시작하기-unix)
   - [리눅스 개발자 도구 설치하기](#리눅스-개발자-도구-설치하기)
   - [macOS 개발자 도구 설치하기](#macos-개발자-도구-설치하기)
   - [CMake와 함께 vcpkg 사용](#cmake와-함께-vcpkg-사용)
@@ -43,7 +43,7 @@ Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령�
 # 시작하기
 
 먼저, 사용하는 운영체제에 따라
-[윈도우](#빠르게-시작하기-윈도우) 또는 [macOS와 Linux](#빠르게-시작하기-유닉스)
+[윈도우](#빠르게-시작하기-windows) 또는 [macOS와 Linux](#빠르게-시작하기-unix)
 빠르게 시작하기 가이드를 따라가세요.
 
 더 자세한 정보는 [패키지 설치 및 사용][getting-started:using-a-package]에 있습니다.
@@ -59,7 +59,7 @@ Vcpkg의 설치가 완료되었다면,
 이것은 실험적인 기능이며 버그가 있을 가능성이 높습니다.
 시도해보고 문제가 있다면 [이슈를 열어주세요][contributing:submit-issue]!
 
-## 빠르게 시작하기: 윈도우
+## 빠르게 시작하기: Windows
 
 필요조건:
 - Windows 7 이상
@@ -131,7 +131,7 @@ CMake를 IDE와 사용하는 방법을 포함한
 Visual Studio Code를 포함한 다른 툴의 경우
 [통합 가이드][getting-started:integration]를 확인하세요.
 
-## 빠르게 시작하기: 유닉스
+## 빠르게 시작하기: Unix
 
 Linux에서의 필요조건:
 - [Git][getting-started:git]
@@ -206,7 +206,7 @@ $ xcode-select --install
 
 그런 다음 나타나는 창의 안내에 따르세요.
 
-설치가 끝나면 [빠른 시작 가이드](#빠르게-시작하기-유닉스)를 참고하여 vcpkg를 설치하세요.
+설치가 끝나면 [빠른 시작 가이드](#빠르게-시작하기-unix)를 참고하여 vcpkg를 설치하세요.
 
 ## CMake와 함께 vcpkg 사용
 
@@ -292,11 +292,10 @@ $ ./vcpkg integrate bash # or zsh
 
 [패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
 [zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
-[GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md)
-에 대한 구체적인 예시는 [문서](docs/README.md)를 참고하세요.
+[GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md)에
+대한 구체적인 예시는 [문서](docs/README.md)를 참고하세요.
 
-문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 확인 가능합니다. 모든 피드백에 진심으로 감사드립니다
-!
+문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 확인 가능합니다. 모든 피드백에 진심으로 감사드립니다!
 https://github.com/vcpkg/vcpkg.github.io/issues 에서 이슈를 제출할 수 있습니다.
 
 [4분짜리 데모 영상도 비비되어 있습니다](https://www.youtube.com/watch?v=y41WFKbQFTw).
