@@ -29,6 +29,7 @@ else()
   vcpkg_install_make()
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
 vcpkg_fixup_pkgconfig()
