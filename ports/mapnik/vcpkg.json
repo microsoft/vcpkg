@@ -4,7 +4,7 @@
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
-  "supports": "!(static & windows)",
+  "supports": "!uwp",
   "dependencies": [
     "boost-assign",
     "boost-bimap",
