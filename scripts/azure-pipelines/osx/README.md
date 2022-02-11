@@ -123,7 +123,10 @@ Once you've done that, add the software versions under [VM Software Versions](#v
 
 #### VM Software Versions
 
-* 2022-03-01:
+* 2022-02-04 (minor update to 2022-01-03)
+  * macOS: 12.1
+  * Xcode CLTs: 13.2
+* 2022-01-03:
   * macOS: 12.1
   * Xcode CLTs: 13.2
 * 2021-07-27:

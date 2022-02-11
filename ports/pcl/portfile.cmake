@@ -42,14 +42,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            BUILD_GPU
         tools           BUILD_tools
         opengl          WITH_OPENGL
-        vtk             WITH_VTK
         libusb          WITH_LIBUSB
+        visualization   WITH_VTK
         visualization   BUILD_visualization
         examples        BUILD_examples
         apps            BUILD_apps
-        apps            BUILD_apps_cloud_composer
-        apps            BUILD_apps_modeler
-        apps            BUILD_apps_point_cloud_editor
         # These 2 apps need openni1
         #apps            BUILD_apps_in_hand_scanner
         #apps            BUILD_apps_3d_rec_framework
