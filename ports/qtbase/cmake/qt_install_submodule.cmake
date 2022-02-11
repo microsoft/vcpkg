@@ -57,7 +57,7 @@ function(qt_cmake_configure)
     vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
-    if(NOT PORT STREQUAL "qtwebengine" AND NOT QT_IS_LATEST) # qtwebengine requires python2; since 6.3 python3
+    if(NOT PORT STREQUAL "qtwebengine" OR QT_IS_LATEST) # qtwebengine requires python2; since 6.3 python3
         vcpkg_find_acquire_program(PYTHON3) # Python is required by some qt ports
         get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
         vcpkg_add_to_path(${PYTHON3_PATH})
