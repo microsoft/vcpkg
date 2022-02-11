@@ -4,6 +4,8 @@
   "port-version": 2,
   "description": "libao - A Cross-platform Audio Library",
   "homepage": "https://github.com/xiph/libao",
+  "license": "GPL-3.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
