@@ -437,7 +437,7 @@ endif()
 
 install(
     TARGETS xqilla
-    EXPORT  xqilla
+    EXPORT  unofficial-xqilla
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -450,9 +450,9 @@ install(
 )
 
 install(
-    EXPORT xqilla
-    DESTINATION share/xqilla
-    FILE xqillaConfig.cmake
-    NAMESPACE xqilla::
+    EXPORT unofficial-xqilla
+    DESTINATION share/unofficial-xqilla
+    FILE unofficial-xqillaConfig.cmake
+    NAMESPACE unofficial::xqilla::
     CONFIGURATIONS Release
 )
