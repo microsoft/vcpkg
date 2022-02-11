@@ -9,7 +9,7 @@ endif()
 ### Setting up the git tag.
 set(QT_FETCH_REF "")
 set(QT_GIT_TAG "v${QT_VERSION}-beta1")
-if(PORT MATCHES "qtdeviceutilities|qtlocation|qtinterfaceframework|qtapplicationmanager")
+if(PORT MATCHES "qtdeviceutilities|qtlocation")
     # So much for consistency ....
     set(QT_FETCH_REF FETCH_REF "${QT_VERSION}")
     set(QT_GIT_TAG "${QT_VERSION}")
