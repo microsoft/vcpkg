@@ -14,7 +14,7 @@ index 9a0dcb1..c1f2f02 100644
 +)
 +set_target_properties(poppler PROPERTIES EXPORT_NAME poppler-private)
 +install(TARGETS poppler EXPORT unofficial-poppler-targets RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(EXPORT unofficial-poppler-targets NAMESPACE unofficial:: DESTINATION share/unofficial-poppler)
++install(EXPORT unofficial-poppler-targets NAMESPACE unofficial::poppler:: DESTINATION share/unofficial-poppler)
  
  if(ENABLE_UNSTABLE_API_ABI_HEADERS)
    install(FILES
@@ -28,7 +28,7 @@ index c37936b..344933c 100644
  target_link_libraries(poppler-cpp poppler ${ICONV_LIBRARIES})
 -install(TARGETS poppler-cpp RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +install(TARGETS poppler-cpp EXPORT unofficial-poppler-cpp-targets RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(EXPORT unofficial-poppler-cpp-targets NAMESPACE unofficial:: DESTINATION share/unofficial-poppler)
++install(EXPORT unofficial-poppler-cpp-targets NAMESPACE unofficial::poppler:: DESTINATION share/unofficial-poppler)
  
  install(FILES
    poppler-destination.h
