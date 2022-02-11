@@ -6,26 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_BUILD_TYPE)
-    set(BACKUP_BUILD_TYPE ${VCPKG_BUILD_TYPE})
-endif()
-set(VCPKG_BUILD_TYPE release)
-vcpkg_configure_cmake( SOURCE_PATH "${CURRENT_PORT_DIR}"
-                       OPTIONS "-DOUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/libpaths-${TARGET_TRIPLET}.cmake"
-)
-if(DEFINED BACKUP_BUILD_TYPE)
-    set(VCPKG_BUILD_TYPE ${BACKUP_BUILD_TYPE})
-else()
-    unset(VCPKG_BUILD_TYPE)
-endif()
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
     OPTIONS -Dtests=false
     )
-
-include("${CURRENT_BUILDTREES_DIR}/libpaths-${TARGET_TRIPLET}.cmake")
 
 set(systemsuffix "")
 set(architectureprefix "")
@@ -37,11 +22,12 @@ set(PERSONALITY_PATH "personality.d")
 
 
 if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-    # These defaults are obtained from pkgconf/pkg-config on Ubuntu 
+    # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
+    # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.
     set(SYSTEM_INCLUDEDIR "/usr/include")
     # System lib dirs will be stripped from -L from the pkg-config output
-    set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib32:/usr/libx32")
-    set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+    set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib64:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib64:/usr/lib32:/usr/libx32")
+    set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
     set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
 endif()
 
