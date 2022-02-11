@@ -5169,7 +5169,7 @@
       "port-version": 2
     },
     "pagmo2": {
-      "baseline": "2.16.1",
+      "baseline": "2.18.0",
       "port-version": 0
     },
     "paho-mqtt": {
@@ -6749,8 +6749,8 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2020_U3",
-      "port-version": 7
+      "baseline": "2021.5.0",
+      "port-version": 0
     },
     "tcl": {
       "baseline": "core-9-0-a1",
