@@ -6,11 +6,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_BUILD_TYPE)
+    set(BACKUP_BUILD_TYPE ${VCPKG_BUILD_TYPE})
+endif()
+set(VCPKG_BUILD_TYPE release)
+vcpkg_configure_cmake( SOURCE_PATH "${CURRENT_PORT_DIR}"
+                       OPTIONS "-DOUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/libpaths-${TARGET_TRIPLET}.cmake"
+)
+if(DEFINED BACKUP_BUILD_TYPE)
+    set(VCPKG_BUILD_TYPE ${BACKUP_BUILD_TYPE})
+else()
+    unset(VCPKG_BUILD_TYPE)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
     OPTIONS -Dtests=false
     )
+
+include("${CURRENT_BUILDTREES_DIR}/libpaths-${TARGET_TRIPLET}.cmake")
 
 set(systemsuffix "")
 set(architectureprefix "")
