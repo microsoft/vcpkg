@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_CHARSET_FLAG
     WINDOWS_USE_MSBUILD
+    GENERATOR Ninja
     OPTIONS 
         ${COMPILE_OPTIONS}
 )
