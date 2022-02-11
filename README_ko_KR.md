@@ -26,7 +26,7 @@ Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령�
 - [시작하기](#시작하기)
   - [빠르게 시작하기: Windows](#빠르게-시작하기-windows)
   - [빠르게 시작하기: Unix](#빠르게-시작하기-unix)
-  - [리눅스 개발자 도구 설치하기](#리눅스-개발자-도구-설치하기)
+  - [Linux 개발자 도구 설치하기](#linux-개발자-도구-설치하기)
   - [macOS 개발자 도구 설치하기](#macos-개발자-도구-설치하기)
   - [CMake와 함께 vcpkg 사용](#cmake와-함께-vcpkg-사용)
     - [Visual Studio Code와 CMake Tools](#visual-studio-code와-cmake-tools)
@@ -173,9 +173,9 @@ CMake와 VSCode를 위한 CMake Tools를 vcpkg와 함께 사용하는 최선의 
 
 다른 툴에 대해서는 [통합 가이드][getting-started:integration]를 확인하세요.
 
-## 리눅스 개발자 도구 설치하기
+## Linux 개발자 도구 설치하기
 
-리눅스의 배포판별로 설치해야 하는 개발자 소프트웨어가 다릅니다.
+Linux의 배포판별로 설치해야 하는 개발자 소프트웨어가 다릅니다.
 
 - Debian, Ubuntu, popOS 및 기타 Debian 기반 배포판
 
