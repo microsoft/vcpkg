@@ -43,7 +43,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        --trace-expand
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCUDA_ARCHS=${CUDA_ARCHS}
         -DTESTS_ENABLED=${TESTS_ENABLED}
