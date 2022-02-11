@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8.0)
-project (libao C)
+project (ao C)
 
 include(GNUInstallDirs)
 include(CheckLibraryExists)
