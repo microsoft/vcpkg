@@ -49,7 +49,7 @@ Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령�
 더 자세한 정보는 [패키지 설치 및 사용][getting-started:using-a-package]에 있습니다.
 만약 필요한 라이브러리가 vcpkg 카탈로그에 없는 경우,
 [GitHub 저장소에서 이슈를 열 ​​수 있습니다][contributing:submit-issue].
-Vcpkg 팀과 커뮤니티가 이슈를 확인하면, 당당하는 port를 추가할 수 있습니다.
+Vcpkg 팀과 커뮤니티가 이슈를 확인하면, 해당하는 port를 추가할 수 있습니다.
 
 Vcpkg의 설치가 완료되었다면,
 셸에 [탭 완성](#탭-완성자동-완성)을 추가할 수 있습니다.
@@ -298,7 +298,7 @@ $ ./vcpkg integrate bash # or zsh
 문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 확인 가능합니다. 모든 피드백에 진심으로 감사드립니다!
 https://github.com/vcpkg/vcpkg.github.io/issues 에서 이슈를 제출할 수 있습니다.
 
-[4분짜리 데모 영상도 비비되어 있습니다](https://www.youtube.com/watch?v=y41WFKbQFTw).
+[4분짜리 데모 영상도 준비되어 있습니다](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
 # 기여하기
 
