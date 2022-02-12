@@ -7,7 +7,6 @@
   "dependencies": [
     "c89stringutils",
     "curl",
-    "libcurl-simple-https",
     "parson",
     "randomstr",
     {
