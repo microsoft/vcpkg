@@ -13,7 +13,7 @@ index 9fd34587..2a42c862 100644
  target_link_libraries(
      TracyClient
      PUBLIC
-@@ -43,3 +45,68 @@ set_option(TRACY_NO_FRAME_IMAGE "Disable capture of frame images" OFF)
+@@ -43,3 +45,69 @@ set_option(TRACY_NO_FRAME_IMAGE "Disable capture of frame images" OFF)
  set_option(TRACE_NO_SAMPLING "Disable call stack sampling" OFF)
  set_option(TRACY_NO_VERIFY "Disable zone validation for C API" OFF)
  set_option(TRACY_NO_VSYNC_CAPTURE "Disable capture of hardware Vsync events" OFF)
