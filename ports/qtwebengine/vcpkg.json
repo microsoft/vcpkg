@@ -104,6 +104,10 @@
       "platform": "!windows"
     },
     {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-nodejs",
       "host": true
     },
