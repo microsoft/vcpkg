@@ -93,6 +93,19 @@ the files installed by `b` must be the same, regardless of influence by the prev
 
 In the entire vcpkg system, no two ports a user is expected to use concurrently may provide the same file. If a port tries to install a file already provided by another file, installation will fail. If a port wants to use an extremely common name for a header, for example, it should place those headers in a subdirectory rather than in `include`.
 
+### Add CMake exports in an unofficial- namespace
+
+A core design ideal of vcpkg is to not create "lock-in" for customers. In the build system, there should be no difference between depending on a library from the system, and depending on a library from vcpkg. To that end, we avoid adding CMake exports or targets to existing libraries with "the obvious name", to allow upstreams to add their own official CMake exports without conflicting with vcpkg.
+
+To that end, any CMake configs that the port exports, which are not in the upstream library, should have `unofficial-` as a prefix. Any additional targets should be in the `unofficial::<port>::` namespace.
+
+This means that the user should see:
+ * `find_package(unofficial-<port> CONFIG)` as the way to get at the unique-to-vcpkg package
+ * `unofficial::<port>::<target>` as an exported target from that port.
+
+Examples:
+ * [`brotli`](https://github.com/microsoft/vcpkg/blob/4f0a640e4c5b74166b759a862d7527c930eff32e/ports/brotli/install.patch) creates the `unofficial-brotli` package, producing target `unofficial::brotli::brotli`.
+
 ## Features
 
 ### Do not use features to implement alternatives

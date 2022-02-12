@@ -138,6 +138,8 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
+# https://github.com/colmap/colmap/issues/1421
+colmap:x64-osx=fail
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -797,7 +799,6 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
-mpfr:x64-osx=fail
 mpfr:x64-linux=fail
 msix:x64-linux=fail
 msix:x64-osx=fail
