@@ -156,15 +156,7 @@ to the pool!
 
 ### Running the VM
 
-Before anything else, you'll probably want to destroy any old VMs,
-and remove any old vagrant boxes:
-
-```ps1
-$ cd ~/vagrant/vcpkg-eg-mac
-$ vagrant destroy -f
-```
-
-Then, make sure that your software is up to date:
+First, make sure that your software is up to date:
 ```sh
 $ cd ~/vcpkg
 $ git fetch
@@ -176,14 +168,13 @@ as well as checking to make sure macOS is up to date.
 
 Then, follow the instructions for [accessing ~/vagrant/share][access-fileshare].
 
-And finally, [grab a PAT], add the vagrant box, set up the VM, and run it:
+And finally, [grab a PAT], update the vagrant box, set up the VM, and run it:
 ```sh
-$ vagrant box remove vcpkg/macos-ci # This won't do anything if the machine never had a box before
+$ vagrant box remove -f vcpkg/macos-ci # This won't do anything if the machine never had a box before
 $ vagrant box add ~/vagrant/share/boxes/macos-ci.json
 $ ~/vcpkg/scripts/azure-pipelines/osx/Setup-VagrantMachines.ps1 -Date <box version YYYY-MM-DD> -DevopsPat <PAT>
 $ cd ~/vagrant/vcpkg-eg-mac
-$ vagrant up # if this fails, you may need to vagrant destroy, reboot
-$            # through the kvm and/or log in interactively, then come back here
+$ vagrant up # if this fails, reboot through the kvm and/or log in interactively, then come back here
 ```
 
 [grab a PAT]: #getting-an-azure-pipelines-pat
