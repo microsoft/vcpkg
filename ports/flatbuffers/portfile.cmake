@@ -12,9 +12,9 @@ vcpkg_from_github(
         fix-uwp-build.patch
 )
 
-set(OPTIONS)
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
-    list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
+set(options "")
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND options -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -23,7 +23,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DFLATBUFFERS_BUILD_TESTS=OFF
         -DFLATBUFFERS_BUILD_GRPCTEST=OFF
-        ${OPTIONS}
+        ${options}
 )
 
 vcpkg_install_cmake()
@@ -39,6 +39,9 @@ if(flatc_path)
         ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
     )
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
+else()
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/FlatbuffersConfig.cmake"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
