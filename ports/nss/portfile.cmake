@@ -78,7 +78,7 @@ message(STATUS "Using libraries from: ${VCPKG_LIBDIR} arch: ${VCPKG_TARGET_ARCHI
 set(OPTIONS
     "-v" "-g"
     "--disable-tests"
-    "--with-nspr=${VCPKG_INCLUDEDIR}:${VCPKG_LIBDIR}"
+    "--with-nspr=${VCPKG_INCLUDEDIR}/nspr:${VCPKG_LIBDIR}"
     "--system-sqlite"
     "-Dsign_libs=0"
 )
