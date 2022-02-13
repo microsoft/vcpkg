@@ -1,16 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b72bd41ed..02d964fc6 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -388,7 +387,7 @@ endif()
- ########## Add install components ##########
- if (${use_installed_dependencies})
-     # Install azure_iot_sdks
--    set(package_location "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-+    set(package_location "cmake")
- 
-     include(CMakePackageConfigHelpers)
- 
 diff --git a/provisioning_client/CMakeLists.txt b/provisioning_client/CMakeLists.txt
 index 39f269d51..ff53ca32d 100644
 --- a/provisioning_client/CMakeLists.txt
