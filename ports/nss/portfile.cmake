@@ -1,10 +1,10 @@
-set(NSS_VERSION "3.74")
+set(NSS_VERSION "3.75")
 string(REPLACE "." "_" V_URL ${NSS_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.mozilla.org/pub/security/nss/releases/NSS_${V_URL}_RTM/src/nss-${NSS_VERSION}.tar.gz"
     FILENAME "nss-${NSS_VERSION}.tar.gz"
-    SHA512 6fb322b64a5b42e5e22e803c8985986240d2990849d576cfc4b94cdc5c4ab27f683ebc4e1cf5e0ad16c636fc32debb24ec3b2d02d5baedc8fbaedec79c908226
+    SHA512 0ad42f663b48649d7d16dc8b8956d2971a9566c0f7f655dd0609b94877f400977e5ad693f2eb44e1e277e55d1669294f07b3ba7a32573d3d72837b3944adf86d
 )
 
 vcpkg_extract_source_archive_ex(
@@ -110,7 +110,7 @@ vcpkg_execute_required_process(
 )
 
 # build release
-message(STATUS "Copying sources to release dir ...")
+message(STATUS "Copying sources to release build dir ...")
 file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
 message(STATUS "Building release ...")
 vcpkg_execute_required_process(
