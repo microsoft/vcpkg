@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
     REPO gstreamer/gst-build
@@ -65,7 +63,7 @@ file(RENAME ${GST_PLUGIN_UGLY_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/
 file(RENAME ${GST_MESON_PORTS_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers)
 
 if(VCPKG_TARGET_IS_OSX)
-    # In Darwin platform, there can be an old version of `bison`, 
+    # In Darwin platform, there can be an old version of `bison`,
     # Which can't be used for `gst-build`. It requires 2.4+
     vcpkg_find_acquire_program(BISON)
     execute_process(
@@ -228,7 +226,7 @@ vcpkg_install_meson()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
                     ${CURRENT_PACKAGES_DIR}/include/GL
 )
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h
             ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
 )
 

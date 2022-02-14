@@ -10,22 +10,6 @@ diff --git a/tensorflow/core/kernels/depthtospace_op.cc b/tensorflow/core/kernel
        if (is_int8x4) {
          // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
          auto Tinput_v = input.template reinterpret_last_dimension<int32, 4>();
-@@ -173,15 +173,6 @@
-   }
- };
- 
--#ifdef WIN32
--template <typename T>
--struct DepthToSpaceOpFunctor<CPUDevice, T, FORMAT_NCHW> {
--  void operator()(const CPUDevice& d, typename TTypes<T, 4>::ConstTensor input,
--                  int block_size, typename TTypes<T, 4>::Tensor output) {
--    LOG(FATAL) << "Trivial implementation to make debug build compile.";
--  }
--};
--#endif
- }  // namespace functor
- 
- #define REGISTER(type)                                                \
 
 diff --git a/tensorflow/core/kernels/spacetodepth_op.cc b/tensorflow/core/kernels/spacetodepth_op.cc
 --- a/tensorflow/core/kernels/spacetodepth_op.cc
@@ -39,19 +23,3 @@ diff --git a/tensorflow/core/kernels/spacetodepth_op.cc b/tensorflow/core/kernel
        using RT = typename RawType<T>::type;
        if (data_format_ == FORMAT_NCHW_VECT_C) {
          // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
-@@ -189,15 +189,6 @@
-   }
- };
- 
--#ifdef WIN32
--template <typename T>
--struct SpaceToDepthOpFunctor<CPUDevice, T, FORMAT_NCHW> {
--  void operator()(const CPUDevice& d, typename TTypes<T, 4>::ConstTensor input,
--                  int block_size, typename TTypes<T, 4>::Tensor output) {
--    LOG(FATAL) << "Trivial implementation to make debug build compile.";
--  }
--};
--#endif
- }  // namespace functor
- 
- #define REGISTER(type)                                                \

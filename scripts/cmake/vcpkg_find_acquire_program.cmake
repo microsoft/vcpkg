@@ -497,7 +497,7 @@ function(vcpkg_find_acquire_program program)
         set(tool_subdirectory c3eeb6b9fa-76d69c6db5)
     elseif(program STREQUAL "BAZEL")
         set(program_name bazel)
-        set(program_version 4.1.0)
+        set(program_version 4.2.2)
         set(rename_binary_to "bazel")
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
             set(supported_on_unix ON)
@@ -505,19 +505,19 @@ function(vcpkg_find_acquire_program program)
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64")
             set(download_filename "bazel-${tool_subdirectory}-x86_64")
             set(raw_executable ON)
-            set(download_sha512 50aa0894dbeedb9189a56f17baa8cecfa55c5f9c1f93a61b9ab5e10984754a400884fc9802b4979f536778e15f813a72807396b4b47694e4c05eadb841361c69)
+            set(download_sha512 f38619e054df78cab38278a5901b2798f2e25b5cec53358d98278002e713d225fd3df96a209b7f22a2357835a279cee8ef1768e10561b3e9fe6361f324563bb9)
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
             set(supported_on_unix ON)
             set(tool_subdirectory "${program_version}-darwin")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64")
             set(download_filename "bazel-${tool_subdirectory}-x86_64")
             set(raw_executable ON)
-            set(download_sha512 3500560c9d49d37a1ead2d2777d673c6f1874582883e141ecd5b3991005b1b6b8aab5f255c187133d771497c2a956f5c1e0dfad04dc453525634537e65b649af)
+            set(download_sha512 a3fd8f9d71b0669d742439200f27ee0a3891c1f248df62c841ebb2b416a47534562f429f8a08793b074e9b74f2ede3d97a7e13ac9921c7ee2dc6a2dca8b7f275)
         else()
             set(tool_subdirectory "${program_version}-windows")
             set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64.zip")
             set(download_filename "bazel-${tool_subdirectory}-x86_64.zip")
-            set(download_sha512 3954ab54b465d62eef397767dac7ce21d06ac8ea3e1571d0e7b1f0ea8b5c2cf44eea5d252b85a63a1e1a08dbe9a219783cc23c2888673c35e2df03edfdc9e5a7)
+            set(download_sha512 8a8196e242964114316232818cb81bfa19ebfd3a029ebf550a241e33b22a6e9ed636dade06411a8706c05c4e73def0bc8d7f45ff0ec5478bcc5de21b5638204d)
         endif()
     elseif(program STREQUAL "ARIA2")
         set(program_name aria2c)
@@ -546,16 +546,16 @@ function(vcpkg_find_acquire_program program)
             set(version_command --version)
         elseif(CMAKE_HOST_WIN32)
             if(NOT EXISTS "${PKGCONFIG}")
-                set(VERSION 0.29.2-2)
-                set(program_version git-8.0.0.5906.c9a21571-1)
+                set(VERSION 0.29.2-3)
+                set(program_version git-9.0.0.6373.5be8fcd83-1)
                 vcpkg_acquire_msys(
                     PKGCONFIG_ROOT
                     NO_DEFAULT_PACKAGES
                     DIRECT_PACKAGES
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
-                        54f8dad3b1a36a4515db47825a3214fbd2bd82f604aec72e7fb8d79068095fda3c836fb2296acd308522d6e12ce15f69e0c26dcf4eb0681fd105d057d912cdb7
+                        0c086bf306b6a18988cc982b3c3828c4d922a1b60fd24e17c3bead4e296ee6de48ce148bc6f9214af98be6a86cb39c37003d2dcb6561800fdf7d0d1028cf73a4
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${program_version}-any.pkg.tar.zst"
-                        2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
+                        c89c27b5afe4cf5fdaaa354544f070c45ace5e9d2f2ebb4b956a148f61681f050e67976894e6f52e42e708dadbf730fee176ac9add3c9864c21249034c342810
                 )
             endif()
             set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
