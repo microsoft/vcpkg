@@ -1,8 +1,6 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
-
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -81,6 +79,8 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
         file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
 endif()
+
+set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
 
 ### Download third_party modules
 vcpkg_from_git(
