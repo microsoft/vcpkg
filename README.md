@@ -74,7 +74,7 @@ We recommend somewhere like `C:\src\vcpkg` or `C:\dev\vcpkg`,
 since otherwise you may run into path issues for some port build systems.
 
 ```cmd
-> git clone https://github.com/microsoft/vcpkg
+> git clone https://github.com/Microsoft/vcpkg.git
 > .\vcpkg\bootstrap-vcpkg.bat
 ```
 
@@ -144,7 +144,7 @@ First, download and bootstrap vcpkg itself; it can be installed anywhere,
 but generally we recommend using vcpkg as a submodule for CMake projects.
 
 ```sh
-$ git clone https://github.com/microsoft/vcpkg
+$ git clone https://github.com/Microsoft/vcpkg.git
 $ ./vcpkg/bootstrap-vcpkg.sh
 ```
 
