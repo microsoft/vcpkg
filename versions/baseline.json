@@ -822,7 +822,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.78.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.78.0",
@@ -2154,7 +2154,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 8
+      "port-version": 9
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -7185,7 +7185,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-01-19",
+      "baseline": "2022-02-14",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7205,7 +7205,7 @@
       "port-version": 0
     },
     "vcpkg-qmake": {
-      "baseline": "2021-10-23",
+      "baseline": "2022-02-14",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
