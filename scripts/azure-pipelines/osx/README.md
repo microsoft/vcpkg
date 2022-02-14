@@ -156,31 +156,25 @@ to the pool!
 
 ### Running the VM
 
-Before anything else, you'll probably want to destroy any old VMs,
-and remove any old vagrant boxes:
-
-```ps1
-$ cd ~/vagrant/vcpkg-eg-mac
-$ vagrant destroy -f
-$ cd ~
-$ rm -rf ~/vagrant/vcpkg-eg-mac
-```
-
-Then, make sure that your software is up to date:
+First, make sure that your software is up to date:
 ```sh
-$ ./Install-Prerequisites.ps1
+$ cd ~/vcpkg
+$ git fetch
+$ git switch -d origin/master
+$ ./scripts/azure-pipelines/osx/Install-Prerequisites.ps1
 ```
 
 as well as checking to make sure macOS is up to date.
 
-Then, follow the instructions for [accessing the fileshare][access-fileshare].
+Then, follow the instructions for [accessing ~/vagrant/share][access-fileshare].
 
-And finally, [grab a PAT], add the vagrant box, set up the VM, and run it:
+And finally, [grab a PAT], update the vagrant box, set up the VM, and run it:
 ```sh
+$ vagrant box remove -f vcpkg/macos-ci # This won't do anything if the machine never had a box before
 $ vagrant box add ~/vagrant/share/boxes/macos-ci.json
-$ ./Setup-VagrantMachines.ps1 -Date <YYYY-MM-DD> -Pat <PAT>
+$ ~/vcpkg/scripts/azure-pipelines/osx/Setup-VagrantMachines.ps1 -Date <box version YYYY-MM-DD> -DevopsPat <PAT>
 $ cd ~/vagrant/vcpkg-eg-mac
-$ vagrant up
+$ vagrant up # if this fails, reboot through the kvm and/or log in interactively, then come back here
 ```
 
 [grab a PAT]: #getting-an-azure-pipelines-pat
@@ -229,7 +223,7 @@ $ cd vcpkg/scripts/azure-pipelines/osx
 $ ./Install-Prerequisites.ps1 -Force
 ```
 
-And finally, make sure you can [access the fileshare][access-fileshare].
+And finally, make sure you can [access ~/vagrant/share][access-fileshare].
 
 ## Troubleshooting
 
@@ -251,14 +245,14 @@ In order to get `sshfs` working on the physical machine,
 You can run `Install-Prerequisites.ps1` to grab the right software, then either:
 
 ```sh
-$ mkdir -p vagrant/share
-$ sshfs fileshare@vcpkgmm-01:share vagrant/share
+$ mkdir -p ~/vagrant/share
+$ sshfs fileshare@vcpkgmm-01:share ~/vagrant/share
 ```
 
 If you get an error, that means that gatekeeper has prevented the kernel extension from loading,
 so you'll need to access the GUI of the machine, go to System Preferences,
 Security & Privacy, General, unlock the settings,
 and allow system extensions from the osxfuse developer to run.
-Then, you'll be able to add the fileshare as an sshfs.
+Then, you'll be able to add ~/vagrant/share as an sshfs.
 
 [access-fileshare]: #internal-accessing-the-macos-fileshare

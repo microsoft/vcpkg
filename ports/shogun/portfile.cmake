@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake.patch
         cmake-config.in.patch
+        eigen-3.4.patch
         fix-dirent.patch
         fix-ASSERT-not-found.patch
         fix-cblas-path.patch
