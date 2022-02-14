@@ -16,8 +16,8 @@ vcpkg_cmake_configure(
     PREFER_NINJA
     OPTIONS ${WINRT_OPTIONS}
 )
-
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/taglib.pc")
 if(EXISTS "${pcfile}")
