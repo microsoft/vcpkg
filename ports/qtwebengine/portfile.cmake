@@ -1,6 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
+
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
