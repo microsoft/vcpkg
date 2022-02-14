@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "UWP" ON_ARCH "x86")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -17,13 +16,6 @@ vcpkg_check_features(
     FEATURES
         xmem BSA_SUPPORT_XMEM
 )
-
-if (BSA_SUPPORT_XMEM)
-    vcpkg_fail_port_install(
-        ON_TARGET "LINUX"
-        MESSAGE "XMem support is only available for windows"
-    )
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
