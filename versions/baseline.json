@@ -1893,7 +1893,7 @@
       "port-version": 1
     },
     "doctest": {
-      "baseline": "2.4.6",
+      "baseline": "2.4.8",
       "port-version": 0
     },
     "double-conversion": {
