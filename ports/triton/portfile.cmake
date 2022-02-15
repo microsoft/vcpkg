@@ -41,9 +41,6 @@ endif()
 # Z3
 set(Z3_LIBRARY ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/libz3${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
 
-message(STATUS ${ADDITIONAL_OPTIONS})
-message(STATUS ${PYTHON_BINDINGS})
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
