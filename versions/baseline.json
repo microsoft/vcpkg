@@ -6532,10 +6532,6 @@
       "baseline": "7.8.2",
       "port-version": 5
     },
-    "span": {
-      "baseline": "2021-12-15",
-      "port-version": 0
-    },
     "span-lite": {
       "baseline": "0.10.3",
       "port-version": 0
@@ -6759,6 +6755,10 @@
     "tbb": {
       "baseline": "2020_U3",
       "port-version": 7
+    },
+    "tcb-span": {
+      "baseline": "2021-12-15",
+      "port-version": 0
     },
     "tcl": {
       "baseline": "core-9-0-a1",

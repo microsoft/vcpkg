@@ -9,8 +9,8 @@
     "boost-leaf",
     "frozen",
     "mbedtls",
-    "tcb-span",
     "spdlog",
+    "tcb-span",
     "utfcpp",
     {
       "name": "vcpkg-cmake",
