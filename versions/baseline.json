@@ -4157,7 +4157,7 @@
       "port-version": 3
     },
     "lief": {
-      "baseline": "2022-02-12",
+      "baseline": "2022-02-14",
       "port-version": 0
     },
     "lilv": {
@@ -6531,6 +6531,10 @@
     "spaceland": {
       "baseline": "7.8.2",
       "port-version": 5
+    },
+    "span": {
+      "baseline": "2021-12-15",
+      "port-version": 0
     },
     "span-lite": {
       "baseline": "0.10.3",
