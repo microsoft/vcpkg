@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c7e43af..5f642fd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,11 +78,8 @@ set(MINIMUM_LEPTONICA_VERSION 1.74)
+ 
+ message("Configuring tesseract version ${PACKAGE_VERSION}...")
+ 
+-if(WIN32)
+-  option(SW_BUILD "Build with sw" ON)
+-else()
+-  option(SW_BUILD "Build with sw" OFF)
+-endif()
++
++option(SW_BUILD "Build with sw" OFF)
+ option(OPENMP_BUILD "Build with openmp support" OFF) # see issue #1662
+ option(GRAPHICS_DISABLED "Disable disable graphics (ScrollView)" OFF)
+ option(DISABLED_LEGACY_ENGINE "Disable the legacy OCR engine" OFF)

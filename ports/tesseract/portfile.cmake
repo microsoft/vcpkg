@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.1.1
-    SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
+    REF 5d5cd77e3dbb03f8e4c06289baa77bb299ab859a #v5.0.1
+    SHA512 a5dafc86ac933e64eb2098916926a5d005fec1f65c4b6093a383271d86a8ed37af472fc8c84db7de1fd28408ddfbee6bc1f09de31ead571ed7722f7110701583
     PATCHES
-        fix-tiff-linkage.patch
-        fix-timeval.patch # Remove this patch in the next update
+        fix-findpackage.patch
 )
 
 # The built-in cmake FindICU is better
@@ -39,7 +38,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tesseract)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake"
     "find_package(Leptonica REQUIRED)"
@@ -56,18 +55,8 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_fixup_pkgconfig()
 
-if("training-tools" IN_LIST FEATURES)
-    list(APPEND TRAINING_TOOLS
-        ambiguous_words classifier_tester combine_tessdata
-        cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
-        set_unicharset_properties unicharset_extractor text2image
-    )
-    vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
-endif()
-
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
