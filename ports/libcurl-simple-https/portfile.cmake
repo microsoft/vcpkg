@@ -15,3 +15,6 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/License.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
+foreach(_dir "include" "share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${dir}")
+endforeach(_dir "include" "share")
