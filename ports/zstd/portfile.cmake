@@ -53,7 +53,7 @@ else()
     set(missing_target zstd::libzstd_shared)
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/zstd/zstdTargets-interface.cmake" "
-add_library(${missing_target} INTERFACE)
+add_library(${missing_target} IMPORTED INTERFACE)
 set_target_properties(${missing_target} PROPERTIES INTERFACE_LINK_LIBRARIES ${existing_target})
 ")
 
