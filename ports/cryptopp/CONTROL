@@ -1,7 +1,0 @@
-Source: cryptopp
-Version: 8.5.0
-Homepage: https://github.com/weidai11/cryptopp
-Description: Crypto++ is a free C++ class library of cryptographic schemes.
-
-Feature: pem-pack
-Description: Crypto++ with PEM pack

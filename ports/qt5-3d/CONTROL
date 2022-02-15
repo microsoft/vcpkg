@@ -1,5 +1,0 @@
-Source: qt5-3d
-Version: 5.15.2
-Port-Version: 1
-Description: Qt5 3d Module - Functionality for near-realtime simulation systems with support for 2D and 3D rendering
-Build-Depends:  qt5-base[core], qt5-declarative, qt5-imageformats, qt5-gamepad, assimp

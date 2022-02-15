@@ -1,8 +1,6 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
-
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -17,7 +15,7 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
 
-set(TOOL_NAMES balsam meshdebug shadergen)
+set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

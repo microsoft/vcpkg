@@ -1,0 +1,7 @@
+{
+  "name": "scnlib",
+  "version-string": "0.4",
+  "port-version": 1,
+  "description": "scnlib is a modern C++ library for replacing scanf and std::istream",
+  "homepage": "https://scnlib.dev/"
+}

@@ -35,7 +35,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   Always check for `ARGN` or `arg_UNPARSED_ARGUMENTS`.
   `FATAL_ERROR` when possible, `WARNING` if necessary for backwards compatibility.
 - All `cmake_parse_arguments` must use `PARSE_ARGV`.
-- All `foreach` loops must use `IN LISTS` and `IN ITEMS`.
+- All `foreach` loops must use `IN LISTS`, `IN ITEMS`, or `RANGE`.
 - The variables `${ARGV}` and `${ARGN}` are unreferenced,
   except in helpful messages to the user.
   - (i.e., `message(FATAL_ERROR "blah was passed extra arguments: ${ARGN}")`)
@@ -45,27 +45,68 @@ We hope that they will make both forwards and backwards compatibility easier.
   - Exception: `vcpkg.cmake`'s `find_package`.
 - Scripts in the scripts tree should not be expected to need observable changes
   as part of normal operation.
-  - Example violation: `vcpkg_acquire_msys()` has hard-coded packages and versions that need updating over time due to the MSYS project dropping old packages.
-  - Example exception: `vcpkg_from_sourceforge()` has a list of mirrors which needs maintenance but does not have an observable behavior impact on the callers.
-- All variable expansions are in quotes `""`,
-  except those which are intended to be passed as multiple arguments.
-  - Example:
-  ```cmake
-  set(working_directory "")
-  if(DEFINED arg_WORKING_DIRECTORY)
-    set(working_directory "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
-  endif()
-  # calls do_the_thing() if NOT DEFINED arg_WORKING_DIRECTORY,
-  # else calls do_the_thing(WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
-  do_the_thing(${working_directory})
-  ```
+  - Example violation: `vcpkg_acquire_msys()` has hard-coded packages and versions
+    that need updating over time due to the MSYS project dropping old packages.
+  - Example exception: `vcpkg_from_sourceforge()` has a list of mirrors which
+    needs maintenance, but does not have an observable behavior impact on the callers.
+- Rules for quoting: there are three kinds of arguments in CMake -
+  unquoted (`foo(BAR)`), quoted (`foo("BAR")`), and bracketed (`foo([[BAR]])`).
+  Follow these rules to quote correctly:
+  - If an argument contains a variable expansion `${...}`,
+    it must be quoted.
+    - Exception: a "splat" variable expansion, when one variable will be
+      passed to a function as multiple arguments. In this case, the argument
+      should simply be `${foo}`:
+      ```cmake
+      vcpkg_list(SET working_directory)
+      if(DEFINED "arg_WORKING_DIRECTORY")
+        vcpkg_list(SET working_directory WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
+      endif()
+      # calls do_the_thing() if NOT DEFINED arg_WORKING_DIRECTORY,
+      # else calls do_the_thing(WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
+      do_the_thing(${working_directory})
+      ```
+  - Otherwise, if the argument contains any escape sequences that are not
+    `\\`, `\"`, or `\$`, that argument must be a quoted argument.
+    - For example: `"foo\nbar"` must be quoted.
+  - Otherwise, if the argument contains a `\`, a `"`, or a `$`,
+    that argument should be bracketed.
+    - Example:
+      ```cmake
+      set(x [[foo\bar]])
+      set(y [=[foo([[bar\baz]])]=])
+      ```
+  - Otherwise, if the argument contains characters that are
+    not alphanumeric or `_`, that argument should be quoted.
+  - Otherwise, the argument should be unquoted.
+  - Exception: arguments to `if()` of type `<variable|string>` should always be quoted:
+    - Both arguments to the comparison operators -
+      `EQUAL`, `STREQUAL`, `VERSION_LESS`, etc.
+    - The first argument to `MATCHES` and `IN_LIST`
+    - Example:
+      ```cmake
+      if("${FOO}" STREQUAL "BAR") # ...
+      if("${BAZ}" EQUAL "0") # ...
+      if("FOO" IN_LIST list_variable) # ...
+      if("${bar}" MATCHES [[a[bcd]+\.[bcd]+]]) # ...
+      ```
+    - For single expressions and for other types of predicates that do not
+    take `<variable|string>`, use the normal rules.
 - There are no "pointer" or "in-out" parameters
   (where a user passes a variable name rather than the contents),
   except for simple out-parameters.
 - Variables are not assumed to be empty.
   If the variable is intended to be used locally,
-  it must be explicitly initialized to empty with `set(foo "")`.
-- All variables expected to be inherited from the parent scope across an API boundary (i.e. not a file-local function) should be documented. Note that all variables mentioned in triplets.md are considered documented.
+  it must be explicitly initialized to empty with `set(foo "")` if it is a string variable,
+  and `vcpkg_list(SET foo)` if it is a list variable.
+- `set(var)` should not be used. Use `unset(var)` to unset a variable,
+  `set(var "")` to set it to the empty string,
+  and `vcpkg_list(SET var)` to set it to the empty list.
+  _Note: the empty string and the empty list are the same value;_
+  _this is a notational difference rather than a difference in result_
+- All variables expected to be inherited from the parent scope across an API boundary
+  (i.e. not a file-local function) should be documented.
+  Note that all variables mentioned in triplets.md are considered documented.
 - Out parameters are only set in `PARENT_SCOPE` and are never read.
   See also the helper `z_vcpkg_forward_output_variable()` to forward out parameters through a function scope.
 - `CACHE` variables are used only for global variables which are shared internally among strongly coupled
@@ -80,16 +121,14 @@ We hope that they will make both forwards and backwards compatibility easier.
   and `<start>` _must always be_ less than or equal to `<stop>`.
   - This must be checked by something like:
   ```cmake
-  if(start LESS_EQUAL end)
-    foreach(RANGE start end)
+  if("${start}" LESS_EQUAL "${end}")
+    foreach(RANGE "${start}" "${end}")
       ...
     endforeach()
   endif()
   ```
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
-- `set(var)` should not be used. Use `unset(var)` to unset a variable,
-  and `set(var "")` to set it to the empty value. _Note: this works for use as a list and as a string_
 
 ### CMake Versions to Require
 

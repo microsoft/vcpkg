@@ -1,0 +1,8 @@
+{
+  "name": "libxdiff",
+  "version": "0.23",
+  "port-version": 2,
+  "description": "The LibXDiff library implements basic and yet complete functionalities to create file differences/patches to both binary and text files. The library uses memory files as file abstraction to achieve both performance and portability.",
+  "homepage": "https://github.com/Drako/libxdiff",
+  "supports": "!uwp"
+}

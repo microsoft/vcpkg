@@ -1,0 +1,6 @@
+{
+  "name": "parallel-hashmap",
+  "version-string": "1.33",
+  "port-version": 1,
+  "description": "A header-only, very fast and memory-friendly family of C++ hash maps."
+}

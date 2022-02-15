@@ -47,3 +47,11 @@ install(EXPORT lz4Config
 
 # Export the package for use from the build-tree (this registers the build-tree with a global CMake-registry)
 export(PACKAGE lz4)
+
+# Create pkgconfig module file
+file(STRINGS "lib/lz4.h" LZ4_H REGEX "^#define LZ4_VERSION_(MAJOR|MINOR|RELEASE) ")
+string(REGEX REPLACE "^.*MAJOR +([0-9]+).*MINOR +([0-9]+).*RELEASE +([0-9]+).*$" "\\1.\\2.\\3" VERSION "${LZ4_H}")
+set(INCLUDEDIR [[${prefix}/include]])
+set(LIBDIR [[${prefix}/lib]])
+configure_file(lib/liblz4.pc.in lib/liblz4.pc)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/liblz4.pc" DESTINATION "lib/pkgconfig")

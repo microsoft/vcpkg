@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
@@ -7,8 +5,8 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF 517d907567f4283ad8b48ff9c2a3f6dce838569e # z3-4.8.10
-  SHA512 5102f8c5fb988e93c586fa288267e4803d31a9cd0e2dbc7ce836a33b297cdbc9f3428933d0304ef4cef86812c7b9a6d000094cc13b3ed23ab0712dcc3d4677a8
+  REF z3-4.8.14
+  SHA512 10170516CA472258D2F9DF28CD036E43023A76A25F1E1670290C62F3890D935BF82770970054A5FD3A0F02559409E7ED4B18FB08347C040FF2F9E0918E152AAB
   HEAD_REF master
   PATCHES fix-install-path.patch
 )
@@ -31,3 +29,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

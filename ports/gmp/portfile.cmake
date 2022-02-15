@@ -103,7 +103,8 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        OPTIONS ${OPTIONS}
+        OPTIONS
+            --enable-cxx
     )
 
     vcpkg_install_make()

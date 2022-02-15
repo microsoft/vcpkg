@@ -1,6 +1,0 @@
-Source: alembic
-Version: 1.7.16
-Build-Depends: ilmbase, hdf5
-Description: Alembic is an open framework for storing and sharing scene data that includes a C++ library, a file format, and client plugins and applications.
-Homepage: https://alembic.io/
-Supports: windows & !arm & !uwp & !static

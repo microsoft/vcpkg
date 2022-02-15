@@ -1,0 +1,9 @@
+{
+  "name": "ilmbase",
+  "version-string": "2.3.0",
+  "port-version": 1,
+  "description": "empty package, linking to newer one",
+  "dependencies": [
+    "openexr"
+  ]
+}

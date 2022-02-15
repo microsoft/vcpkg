@@ -1,6 +1,0 @@
-Source: arcus
-Version: 4.8.0
-Homepage: https://github.com/Ultimaker/libArcus
-Description: This library contains C++ bindings for creating a socket in a thread and using this socket to send and receive messages based on the Protocol Buffers library.
-Supports: !uwp
-Build-Depends: protobuf

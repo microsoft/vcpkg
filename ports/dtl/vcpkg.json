@@ -1,0 +1,6 @@
+{
+  "name": "dtl",
+  "version-string": "1.19",
+  "port-version": 1,
+  "description": "Diff template library"
+}

@@ -13,7 +13,8 @@ vcpkg_from_github(ARCHIVE
         ${STATIC_PATCH}
         002-detect_sinf.patch
         003-use-static-cast-for-ctype.patch
-        004-export-pkgconfig.patch
+        004-export-pkgconfig.patch  # https://github.com/Konstanty/libmodplug/pull/59
+        005-fix-install-paths.patch # https://github.com/Konstanty/libmodplug/pull/61
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} PREFER_NINJA)
@@ -22,20 +23,8 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_IS_MINGW)
-        set(BIN_NAME libmodplug.dll)
-    else()
-        set(BIN_NAME modplug.dll)
-    endif()
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/bin/${BIN_NAME})
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/debug/bin/${BIN_NAME})
-    vcpkg_copy_pdbs()
-endif()
+vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmodplug)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmodplug/COPYING ${CURRENT_PACKAGES_DIR}/share/libmodplug/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

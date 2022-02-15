@@ -14,35 +14,36 @@ The date-version to check against.
 #]===]
 
 function(vcpkg_minimum_required)
-    cmake_parse_arguments(PARSE_ARGV 0 _vcpkg "" "VERSION" "")
-    if (NOT DEFINED VCPKG_BASE_VERSION)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "VERSION" "")
+    if(NOT DEFINED VCPKG_BASE_VERSION)
+        message(FATAL_ERROR "Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
+    Please re-acquire vcpkg by running bootstrap-vcpkg."
+        )
+    endif()
+    if(NOT DEFINED arg_VERSION)
+        message(FATAL_ERROR "VERSION must be specified")
+    endif()
+
+    set(vcpkg_date_regex "^[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]$")
+    if(NOT "${VCPKG_BASE_VERSION}" MATCHES "${vcpkg_date_regex}")
         message(FATAL_ERROR
-            "Your vcpkg executable is outdated and is not compatible with the current CMake scripts. "
-            "Please re-acquire vcpkg by running bootstrap-vcpkg."
+            "vcpkg internal failure; VCPKG_BASE_VERSION (${VCPKG_BASE_VERSION}) was not a valid date."
         )
     endif()
 
-    set(_vcpkg_date_regex "^[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]$")
-    if (NOT VCPKG_BASE_VERSION MATCHES "${_vcpkg_date_regex}")
+    if(NOT "${arg_VERSION}" MATCHES "${vcpkg_date_regex}")
         message(FATAL_ERROR
-            "vcpkg internal failure; \${VCPKG_BASE_VERSION} (${VCPKG_BASE_VERSION}) was not a valid date."
-            )
+            "VERSION (${arg_VERSION}) was not a valid date - expected something of the form 'YYYY-MM-DD'"
+        )
     endif()
 
-    if (NOT _vcpkg_VERSION MATCHES "${_vcpkg_date_regex}")
-        message(FATAL_ERROR
-            "VERSION parameter to vcpkg_minimum_required was not a valid date. "
-            "Comparing with vcpkg tool version ${_vcpkg_matched_base_version}"
-            )
-    endif()
+    string(REPLACE "-" "." VCPKG_BASE_VERSION_as_dotted "${VCPKG_BASE_VERSION}")
+    string(REPLACE "-" "." arg_VERSION_as_dotted "${arg_VERSION}")
 
-    string(REPLACE "-" "." _VCPKG_BASE_VERSION_as_dotted "${VCPKG_BASE_VERSION}")
-    string(REPLACE "-" "." _vcpkg_VERSION_as_dotted "${_vcpkg_VERSION}")
-
-    if (_VCPKG_BASE_VERSION_as_dotted VERSION_LESS _vcpkg_VERSION_as_dotted)
+    if("${VCPKG_BASE_VERSION_as_dotted}" VERSION_LESS "${arg_VERSION_as_dotted}")
         message(FATAL_ERROR
             "Your vcpkg executable is from ${VCPKG_BASE_VERSION} which is older than required by the caller "
-            "of vcpkg_minimum_required (${_vcpkg_VERSION}). "
+            "of vcpkg_minimum_required(VERSION ${arg_VERSION}). "
             "Please re-acquire vcpkg by running bootstrap-vcpkg."
         )
     endif()

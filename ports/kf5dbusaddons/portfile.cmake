@@ -1,18 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.81.0
-    SHA512 fce5b646199ee895f2c8ed17382cb4b7f0265a87558ba3b7bb094cbfa92327b8fb910e4af95f1d3793c1908151eefd59783b31fe43c0743ea872632bb78d98f0
+    REF v5.89.0
+    SHA512 83f748690efe8024f603057cc97ab713f82ba6fbdb4462bb6052a8e89945e4117d6b1f030e0064120ae7e34a9b06860ba77d56617d5663578f0ac11a74dba2db
     HEAD_REF master
 )
 
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
 vcpkg_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_HTML_DOCS=OFF
-        -DBUILD_MAN_DOCS=OFF
-        -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
 )
 
@@ -28,9 +27,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kquitapp5${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/bin/kquitapp5${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

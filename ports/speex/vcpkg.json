@@ -1,0 +1,14 @@
+{
+  "name": "speex",
+  "version": "1.2.0",
+  "port-version": 10,
+  "description": "Speex is an Open Source/Free Software patent-free audio compression format designed for speech.",
+  "homepage": "https://github.com/xiph/speex",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

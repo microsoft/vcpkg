@@ -1,0 +1,185 @@
+diff --git a/Accelerators/Vtkm/DataModel/vtkmDataSet.cxx b/Accelerators/Vtkm/DataModel/vtkmDataSet.cxx
+index da8f2e6498c2a08165500fc458eb3c9c7dc0b7e6..147c3c6e175dbd342095805750bfc4fee81735dc 100644
+--- a/Accelerators/Vtkm/DataModel/vtkmDataSet.cxx
++++ b/Accelerators/Vtkm/DataModel/vtkmDataSet.cxx
+@@ -265,7 +265,7 @@ vtkIdType vtkmDataSet::FindPoint(double x[3])
+     std::lock_guard<std::mutex> lock(locator.lock);
+     if (locator.buildTime < this->GetMTime())
+     {
+-      locator.control.reset(new vtkm::cont::PointLocatorUniformGrid);
++      locator.control.reset(new vtkm::cont::PointLocatorSparseGrid);
+       locator.control->SetCoordinates(this->Internals->Coordinates);
+       locator.control->Update();
+       locator.buildTime = this->GetMTime();
+diff --git a/Accelerators/Vtkm/DataModel/vtkmlib/DataSetConverters.cxx b/Accelerators/Vtkm/DataModel/vtkmlib/DataSetConverters.cxx
+index f311f90e17814a05d082a0df67108f242018bb69..7ecfa50e4aa9922987fd33f7b29eb1bf4be3577a 100644
+--- a/Accelerators/Vtkm/DataModel/vtkmlib/DataSetConverters.cxx
++++ b/Accelerators/Vtkm/DataModel/vtkmlib/DataSetConverters.cxx
+@@ -240,11 +240,11 @@ bool Convert(const vtkm::cont::DataSet& vtkmOut, vtkRectilinearGrid* output, vtk
+   auto coordsArray = vtkm::cont::Cast<coordType>(vtkmOut.GetCoordinateSystem().GetData());
+ 
+   vtkSmartPointer<vtkDataArray> xArray =
+-    Convert(vtkm::cont::make_FieldPoint("xArray", coordsArray.GetStorage().GetFirstArray()));
++    Convert(vtkm::cont::make_FieldPoint("xArray", coordsArray.GetFirstArray()));
+   vtkSmartPointer<vtkDataArray> yArray =
+-    Convert(vtkm::cont::make_FieldPoint("yArray", coordsArray.GetStorage().GetSecondArray()));
++    Convert(vtkm::cont::make_FieldPoint("yArray", coordsArray.GetSecondArray()));
+   vtkSmartPointer<vtkDataArray> zArray =
+-    Convert(vtkm::cont::make_FieldPoint("zArray", coordsArray.GetStorage().GetThirdArray()));
++    Convert(vtkm::cont::make_FieldPoint("zArray", coordsArray.GetThirdArray()));
+ 
+   if (!xArray || !yArray || !zArray)
+   {
+diff --git a/Accelerators/Vtkm/Filters/vtkmAverageToCells.cxx b/Accelerators/Vtkm/Filters/vtkmAverageToCells.cxx
+index 334ec1219dd269e323ae11e61a5a68e9e6e3d2e7..ed9d58fe91713a12e7b2588471275e694f71f618 100644
+--- a/Accelerators/Vtkm/Filters/vtkmAverageToCells.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmAverageToCells.cxx
+@@ -27,7 +27,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include <vtkm/filter/CellAverage.h>
+-#include <vtkm/filter/CellAverage.hxx>
+ 
+ vtkStandardNewMacro(vtkmAverageToCells);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmAverageToPoints.cxx b/Accelerators/Vtkm/Filters/vtkmAverageToPoints.cxx
+index 1003f88c4d4e1dcf0be24b7f9f4e6d58e4e735f0..00c722f3162ebb042fb3973bb28a3c1c2fb48c45 100644
+--- a/Accelerators/Vtkm/Filters/vtkmAverageToPoints.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmAverageToPoints.cxx
+@@ -28,7 +28,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include <vtkm/filter/PointAverage.h>
+-#include <vtkm/filter/PointAverage.hxx>
+ 
+ vtkStandardNewMacro(vtkmAverageToPoints);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmCleanGrid.cxx b/Accelerators/Vtkm/Filters/vtkmCleanGrid.cxx
+index 98f0fdb70a296a8dd97df56f706f11e0aca20f32..0cfde7e99f8f07289b08310675ee16f438bc61be 100644
+--- a/Accelerators/Vtkm/Filters/vtkmCleanGrid.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmCleanGrid.cxx
+@@ -30,7 +30,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include <vtkm/filter/CleanGrid.h>
+-#include <vtkm/filter/CleanGrid.hxx>
+ 
+ vtkStandardNewMacro(vtkmCleanGrid);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmClip.cxx b/Accelerators/Vtkm/Filters/vtkmClip.cxx
+index 2649b2da024310f58159574758d278318e23f4b9..0b1dc86d3bedd425d4846f524818a68ada052ce9 100644
+--- a/Accelerators/Vtkm/Filters/vtkmClip.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmClip.cxx
+@@ -39,9 +39,7 @@
+ #include <vtkm/cont/RuntimeDeviceTracker.h>
+ 
+ #include <vtkm/filter/ClipWithField.h>
+-#include <vtkm/filter/ClipWithField.hxx>
+ #include <vtkm/filter/ClipWithImplicitFunction.h>
+-#include <vtkm/filter/ClipWithImplicitFunction.hxx>
+ 
+ #include <algorithm>
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmContour.cxx b/Accelerators/Vtkm/Filters/vtkmContour.cxx
+index c9d35a544641a629ee4fb4f54c4d8245be8e6fd5..eae3a03398ffeef8b0f8ec449f89163f8c275122 100644
+--- a/Accelerators/Vtkm/Filters/vtkmContour.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmContour.cxx
+@@ -33,7 +33,6 @@
+ 
+ #include <vtkm/cont/RuntimeDeviceTracker.h>
+ #include <vtkm/filter/Contour.h>
+-#include <vtkm/filter/Contour.hxx>
+ 
+ vtkStandardNewMacro(vtkmContour);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmExternalFaces.cxx b/Accelerators/Vtkm/Filters/vtkmExternalFaces.cxx
+index 58969b5707aab56e6fcd6300ca650c9b2d88e32f..3661060164d738eb9055316fd6c0b023b09ef72f 100644
+--- a/Accelerators/Vtkm/Filters/vtkmExternalFaces.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmExternalFaces.cxx
+@@ -33,7 +33,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include <vtkm/filter/ExternalFaces.h>
+-#include <vtkm/filter/ExternalFaces.hxx>
+ 
+ vtkStandardNewMacro(vtkmExternalFaces);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmExtractVOI.cxx b/Accelerators/Vtkm/Filters/vtkmExtractVOI.cxx
+index 3606f28de2229436afbcb8b0cf3ed61430055b8e..32bf94f630931a0d052cf5880d950df4588046cb 100644
+--- a/Accelerators/Vtkm/Filters/vtkmExtractVOI.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmExtractVOI.cxx
+@@ -27,7 +27,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include "vtkm/filter/ExtractStructured.h"
+-#include "vtkm/filter/ExtractStructured.hxx"
+ 
+ vtkStandardNewMacro(vtkmExtractVOI);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmGradient.cxx b/Accelerators/Vtkm/Filters/vtkmGradient.cxx
+index 9b79c9e5a5e434ae810df73b51bc6bf52cefa829..6aa284878c88e2fcaf243f6721477536891f002f 100644
+--- a/Accelerators/Vtkm/Filters/vtkmGradient.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmGradient.cxx
+@@ -31,7 +31,6 @@
+ 
+ #include <vtkm/filter/Gradient.h>
+ #include <vtkm/filter/PointAverage.h>
+-#include <vtkm/filter/PointAverage.hxx>
+ 
+ vtkStandardNewMacro(vtkmGradient);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmHistogram.cxx b/Accelerators/Vtkm/Filters/vtkmHistogram.cxx
+index ed09a73d938997fe0dab1ae7eb4338f4914bad15..c13fd742477686e2dd51e95c4757628630788a77 100644
+--- a/Accelerators/Vtkm/Filters/vtkmHistogram.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmHistogram.cxx
+@@ -32,7 +32,6 @@
+ #include "vtkSmartPointer.h"
+ 
+ #include "vtkmFilterPolicy.h"
+-#include <vtkm/cont/ArrayRangeCompute.hxx>
+ #include <vtkm/filter/Histogram.h>
+ 
+ vtkStandardNewMacro(vtkmHistogram);
+diff --git a/Accelerators/Vtkm/Filters/vtkmLevelOfDetail.cxx b/Accelerators/Vtkm/Filters/vtkmLevelOfDetail.cxx
+index 04ccdce35f14b708c111302c759b5d328225cdef..db8d3f64b5e9b96f9b3e491f044056b14ae1bcdd 100644
+--- a/Accelerators/Vtkm/Filters/vtkmLevelOfDetail.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmLevelOfDetail.cxx
+@@ -33,7 +33,6 @@
+ #include <vtkm/filter/VertexClustering.h>
+ // To handle computing custom coordinate sets bounds we need to include
+ // the following
+-#include <vtkm/cont/ArrayRangeCompute.hxx>
+ 
+ vtkStandardNewMacro(vtkmLevelOfDetail);
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmPointTransform.cxx b/Accelerators/Vtkm/Filters/vtkmPointTransform.cxx
+index 9906573f18312cb803e5ab2bce30218e4f95772c..685fb618764fc62969b5373cd922aaea7d1311e3 100644
+--- a/Accelerators/Vtkm/Filters/vtkmPointTransform.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmPointTransform.cxx
+@@ -33,7 +33,6 @@
+ 
+ #include "vtkm/cont/Error.h"
+ #include "vtkm/filter/PointTransform.h"
+-#include "vtkm/filter/PointTransform.hxx"
+ 
+ #include "vtkmFilterPolicy.h"
+ 
+diff --git a/Accelerators/Vtkm/Filters/vtkmThreshold.cxx b/Accelerators/Vtkm/Filters/vtkmThreshold.cxx
+index 7604acd333978a72b1e34584d14640e097b34292..647514050c42771cda57b439280d238de72911e2 100644
+--- a/Accelerators/Vtkm/Filters/vtkmThreshold.cxx
++++ b/Accelerators/Vtkm/Filters/vtkmThreshold.cxx
+@@ -31,7 +31,6 @@
+ #include "vtkmFilterPolicy.h"
+ 
+ #include <vtkm/filter/Threshold.h>
+-#include <vtkm/filter/Threshold.hxx>
+ 
+ vtkStandardNewMacro(vtkmThreshold);
+ 
+diff --git a/ThirdParty/vtkm/vtkvtkm/vtk-m b/ThirdParty/vtkm/vtkvtkm/vtk-m
+index 0457427ed7b4d21e1a8e33e96713414ca11a42fc..ff7de5a72e917eac39f9a3c3a0002da5fa26c3f7 160000
+--- a/ThirdParty/vtkm/vtkvtkm/vtk-m
++++ b/ThirdParty/vtkm/vtkvtkm/vtk-m
+@@ -1 +1 @@
+-Subproject commit 0457427ed7b4d21e1a8e33e96713414ca11a42fc
++Subproject commit ff7de5a72e917eac39f9a3c3a0002da5fa26c3f7

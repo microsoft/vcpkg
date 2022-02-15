@@ -1,0 +1,13 @@
+{
+  "name": "opencc",
+  "version-date": "2020-04-26",
+  "port-version": 10,
+  "description": "A project for conversion between Traditional and Simplified Chinese",
+  "homepage": "https://github.com/BYVoid/OpenCC",
+  "supports": "!(arm | uwp)",
+  "features": {
+    "tools": {
+      "description": "Build OpenCC command-line tools"
+    }
+  }
+}

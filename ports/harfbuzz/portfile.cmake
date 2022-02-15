@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF b37f03f16b39d397a626f097858e9ae550234ca0 # 2.8.1
-    SHA512 3eef62df397bc1fe1d08d7d91ff7d38d7af54bb85562915bba65d86cf6862384f5b4538f685d93eead595389d2f417176827fd2f72b3ce71a5562a8ff80f17f4
+    REF 3.2.0
+    SHA512 5d8c629416c0bc557b83e8d9d731d41b9e8ee3abc74590e65ed6ca67d74d3a440d038134313f17a7b1b14ef0fc1ecf8bb87113fdcf5f0c8d3dc3d2eeb9b08c18
     HEAD_REF master
     PATCHES
         # This patch is a workaround that is needed until the following issues are resolved upstream:
@@ -49,7 +49,6 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
         -Dcairo=disabled # Use Cairo graphics library
-        -Dfontconfig=disabled    # Use fontconfig
         -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled

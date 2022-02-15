@@ -1,0 +1,30 @@
+{
+  "name": "qtapplicationmanager",
+  "version-semver": "6.2.2",
+  "port-version": 1,
+  "description": "Qt component for application lifecycle management",
+  "homepage": "https://www.qt.io/",
+  "supports": "!(windows & arm)",
+  "dependencies": [
+    "libarchive",
+    "libyaml",
+    {
+      "name": "qtapplicationmanager",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtwayland",
+      "default-features": false,
+      "platform": "!windows"
+    }
+  ]
+}

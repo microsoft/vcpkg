@@ -3,6 +3,8 @@
 
 Download and extract a project from GitHub. Enables support for `install --head`.
 
+This also works with Gitea by specifying the Gitea server with the `GITHUB_HOST` option.
+
 ## Usage:
 ```cmake
 vcpkg_from_github(
@@ -153,13 +155,14 @@ function(vcpkg_from_github)
         vcpkg_download_distfile(archive_version
             URLS "${github_api_url}/repos/${org_name}/${repo_name}/git/refs/heads/${arg_HEAD_REF}"
             FILENAME "${downloaded_file_name}.version"
+            ${headers_param}
             SKIP_SHA512
             ALWAYS_REDOWNLOAD
         )
         # Parse the github refs response with regex.
         # TODO: add json-pointer support to vcpkg
         file(READ "${archive_version}" version_contents)
-        if(NOT version_contents MATCHES [["sha": "([a-f0-9]+)"]])
+        if(NOT version_contents MATCHES [["sha":(\ *)"([a-f0-9]+)"]])
             message(FATAL_ERROR "Failed to parse API response from '${version_url}':
 
 ${version_contents}

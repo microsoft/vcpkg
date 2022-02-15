@@ -1,7 +1,7 @@
 {
   "name": "libodb-mysql",
   "version": "2.4.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "MySQL support for the ODB ORM library",
   "homepage": "https://www.codesynthesis.com/products/odb/",
   "dependencies": [

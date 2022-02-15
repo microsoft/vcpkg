@@ -153,7 +153,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
         message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
     endif()
 
-    set("${OUT_VAR}")
+    set("${OUT_VAR}" "")
 
     # this allows us to get the value of the enclosing function's ARGC
     set(z_vcpkg_function_arguments_ARGC_NAME "ARGC")
@@ -164,8 +164,11 @@ macro(z_vcpkg_function_arguments OUT_VAR)
     if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
-            list(APPEND "${OUT_VAR}" "${z_vcpkg_function_arguments_ESCAPED_ARG}")
+            # adds an extra `;` on the first time through
+            set("${OUT_VAR}" "${${OUT_VAR}};${z_vcpkg_function_arguments_ESCAPED_ARG}")
         endforeach()
+        # remove leading `;`
+        string(SUBSTRING "${${OUT_VAR}}" 1 -1 "${OUT_VAR}")
     endif()
 endmacro()
 
@@ -265,6 +268,8 @@ else()
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
     elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 16 2019$")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 17 2022$")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
     else()
         find_program(Z_VCPKG_CL cl)
         if(Z_VCPKG_CL MATCHES "amd64/cl.exe$" OR Z_VCPKG_CL MATCHES "x64/cl.exe$")
@@ -308,7 +313,9 @@ else()
                 cmake_policy(POP)
                 return()
             endif()
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR
+               CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "amd64")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH s390x)
@@ -339,6 +346,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_H
     set(Z_VCPKG_TARGET_TRIPLET_PLAT osx)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT ios)
+elseif(MINGW)
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
@@ -348,18 +357,23 @@ endif()
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-if(NOT DEFINED Z_VCPKG_ROOT_DIR)
-    # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-    set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
-    while(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}" AND NOT EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+# Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
+while(NOT DEFINED Z_VCPKG_ROOT_DIR)
+    if(EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+        set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
+    elseif(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}")
         get_filename_component(Z_VCPKG_ROOT_DIR_TEMP "${Z_VCPKG_ROOT_DIR_CANDIDATE}" DIRECTORY)
-        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        else()
-            SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE)
+            break() # If unchanged, we have reached the root of the drive without finding vcpkg.
         endif()
-    endwhile()
-    set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
-endif()
+        SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        unset(Z_VCPKG_ROOT_DIR_TEMP)
+    else()
+        break()
+    endif()
+endwhile()
+unset(Z_VCPKG_ROOT_DIR_CANDIDATE)
 
 if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
@@ -382,39 +396,24 @@ set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 
-if(VCPKG_PREFER_SYSTEM_LIBS)
-    set(Z_VCPKG_PATH_LIST_OP APPEND)
-else()
-    set(Z_VCPKG_PATH_LIST_OP PREPEND)
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_PREFIX_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
+    set(vcpkg_paths
+        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}${suffix}"
+        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug${suffix}"
     )
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_LIBRARY_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link"
-    )
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_FIND_ROOT_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-    )
-else() #Release build: Put Release paths before Debug paths. Debug Paths are required so that CMake generates correct info in autogenerated target files.
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_PREFIX_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-    )
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_LIBRARY_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link"
-    )
-    list(${Z_VCPKG_PATH_LIST_OP} CMAKE_FIND_ROOT_PATH
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
-    )
-endif()
+    if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
+        list(REVERSE vcpkg_paths) # Debug build: Put Debug paths before Release paths.
+    endif()
+    if(VCPKG_PREFER_SYSTEM_LIBS)
+        list(APPEND "${list}" "${vcpkg_paths}")
+    else()
+        list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
+    endif()
+    set("${list}" "${${list}}" PARENT_SCOPE)
+endfunction()
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_PREFIX_PATH "")
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
+z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_FIND_ROOT_PATH "")
 
 # If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 # and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
@@ -689,7 +688,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                     list(APPEND parsed_targets "${arg}")
                 endif()
 
-                if(last_command STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
+                if(last_command STREQUAL "DESTINATION" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(destination "${arg}")
                 endif()
                 if(last_command STREQUAL "COMPONENT")

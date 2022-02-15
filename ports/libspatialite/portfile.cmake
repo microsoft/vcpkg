@@ -1,128 +1,235 @@
-set(LIBSPATIALITE_VERSION_STR "5.0.0")
+set(LIBSPATIALITE_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
+    URLS "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
     FILENAME "libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
-    SHA512 df72a3434d6e49f8836a9de2340f343a53f0673d0d17693cdb0f4971928b7c8bf40df44b21c0861945a9c81058e939acd1714b0b426ce9aa2ff7b0e8e6b196a7
+    SHA512 c2552994bc30d69d1e80aa274760f048cd384f71e8350a1e48a47cb8222ba71a1554a69c6534eedde9a09dc582c39c089967bcc1c57bf158cc91a3e7b1840ddf
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
         fix-linux-configure.patch
+        gaiaconfig-msvc.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-  if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
-      set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-      set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-  else()
-      set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
-      set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
-      set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
-      set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
-  endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS unused
+    FEATURES
+        freexl          ENABLE_FREEXL
+        gcp             ENABLE_GCP
+        geocallbacks    ENABLE_GEOCALLBACKS
+        rttopo          ENABLE_RTTOPO
+)
 
-  set(LIBS_ALL_DBG
-      "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
-      ${LIBXML2_LIBS_DBG} \
-      ${GEOS_LIBS_DBG} \
-      ${LIBRTTOPO_LIBS_DBG} \
-      ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
-  )
-  set(LIBS_ALL_REL
-      "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
-      ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
-      ${LIBXML2_LIBS_REL} \
-      ${GEOS_LIBS_REL} \
-      ${LIBRTTOPO_LIBS_REL} \
-      ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
-  )
-
-  string(REPLACE "/" "\\\\" INST_DIR ${CURRENT_PACKAGES_DIR})
-  list(APPEND OPTIONS_RELEASE
-      "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
-  )
-  list(APPEND OPTIONS_DEBUG
-      "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
-   )
-
-  vcpkg_install_nmake(
-      SOURCE_PATH ${SOURCE_PATH}
-      OPTIONS
-          "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
-      OPTIONS_RELEASE
-          ${OPTIONS_RELEASE}
-      OPTIONS_DEBUG
-          ${OPTIONS_DEBUG}
-  )
-
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-      file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib)
-  else()
-      file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/spatialite.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
-      file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
-  endif()
-else () # Build in UNIX
-  if(VCPKG_TARGET_IS_LINUX)
-      set(STDLIB stdc++)
-  else()
-      set(STDLIB c++)
-  endif()
-  if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    SET(EXTRALIBS "-lpthread")
-  endif()
-  list(APPEND OPTIONS_RELEASE
-      "LIBXML2_LIBS=-lxml2 -llzma"
-      "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
-  )
-  list(APPEND OPTIONS_DEBUG
-      "LIBXML2_LIBS=-lxml2 -llzmad"
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd -l${STDLIB}"
-  )
-
-  vcpkg_configure_make(
-      SOURCE_PATH ${SOURCE_PATH}
-      AUTOCONFIG
-      OPTIONS
-          "LIBS=${EXTRALIBS} -ldl -lm -l${STDLIB}"
-          "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-          "--enable-rttopo"
-          "--enable-gcp"
-          "--enable-geocallbacks"
-          "--disable-examples"
-          "--disable-minizip"
-      OPTIONS_DEBUG
-          ${OPTIONS_DEBUG}
-      OPTIONS_RELEASE
-          ${OPTIONS_RELEASE}
-  )
-
-  vcpkg_install_make()
-  vcpkg_fixup_pkgconfig()
+set(pkg_config_modules geos libxml-2.0 proj sqlite3 zlib)
+if(ENABLE_FREEXL)
+    list(APPEND pkg_config_modules freexl)
+endif()
+if(ENABLE_RTTOPO)
+    list(APPEND pkg_config_modules rttopo)
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(CL_FLAGS "")
+    if(NOT ENABLE_FREEXL)
+        string(APPEND CL_FLAGS " /DOMIT_FREEXL")
+    endif()
+    if(ENABLE_GCP)
+        string(APPEND CL_FLAGS " /DENABLE_GCP")
+    endif()
+    if(NOT ENABLE_GEOCALLBACKS)
+        string(APPEND CL_FLAGS " /DOMIT_GEOCALLBACKS")
+    endif()
+    if(ENABLE_RTTOPO)
+        string(APPEND CL_FLAGS " /DENABLE_RTTOPO")
+    endif()
+
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES --msvc-syntax ${pkg_config_modules}
+        LIBS
+    )
+
+    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
+    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    endif()
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
+    endif()
+
+    string(JOIN " " LIBS_ALL_DEBUG
+        "/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+        "${PKGCONFIG_LIBS_DEBUG}"
+        iconv.lib charset.lib
+    )
+    string(JOIN " " LIBS_ALL_RELEASE
+        "/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
+        "${PKGCONFIG_LIBS_RELEASE}"
+        iconv.lib charset.lib
+    )
+
+    string(REPLACE "/" "\\\\" INST_DIR "${CURRENT_PACKAGES_DIR}")
+
+    if(ENABLE_RTTOPO)
+        list(APPEND pkg_config_modules rttopo)
+    endif()
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            "CL_FLAGS=${CL_FLAGS}"
+        OPTIONS_RELEASE
+            "INST_DIR=${INST_DIR}"
+            "LIBS_ALL=${LIBS_ALL_RELEASE}"
+        OPTIONS_DEBUG
+            "INST_DIR=${INST_DIR}\\debug"
+            "LIBS_ALL=${LIBS_ALL_DEBUG}"
+            "LINK_FLAGS=/debug"
+    )
+
+    vcpkg_copy_pdbs()
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
+    else()
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
+    endif()
+
+    set(infile "${SOURCE_PATH}/spatialite.pc.in")
+    set(VERSION "${LIBSPATIALITE_VERSION_STR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    list(JOIN pkg_config_modules " " requires_private)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(includedir [[${prefix}/include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spatialite.pc")
+        configure_file("${infile}" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" "Libs:" "Requires.private: ${requires_private}\nLibs.private: -liconv -lcharset\nLibs:")
+        vcpkg_replace_string("${outfile}" "  -lm" " ")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(includedir [[${prefix}/../include]])
+        set(outfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spatialite.pc")
+        configure_file("${infile}" "${outfile}" @ONLY)
+        vcpkg_replace_string("${outfile}" "Libs:" "Requires.private: ${requires_private}\nLibs.private: -liconv -lcharset\nLibs:")
+        vcpkg_replace_string("${outfile}" "  -lm" " ")
+    endif()
+else()
+    if(ENABLE_FREEXL)
+        set(FREEXL_OPTION "--enable-freexl")
+    else()
+        set(FREEXL_OPTION "--disable-freexl")
+    endif()
+    if(ENABLE_GCP)
+        set(GCP_OPTION "--enable-gcp")
+    else()
+        set(GCP_OPTION "--disable-gcp")
+    endif()
+    if(ENABLE_GEOCALLBACKS)
+        set(GEOCALLBACKS_OPTION "--enable-geocallbacks")
+    else()
+        set(GEOCALLBACKS_OPTION "--disable-geocallbacks")
+    endif()
+    if(ENABLE_RTTOPO)
+        set(RTTOPO_OPTION "--enable-rttopo")
+    else()
+        set(RTTOPO_OPTION "--disable-rttopo")
+    endif()
+    list(REMOVE_ITEM pkg_config_modules libxml2) # handled properly by configure
+    x_vcpkg_pkgconfig_get_modules(
+        PREFIX PKGCONFIG
+        MODULES ${pkg_config_modules} 
+        LIBS
+    )
+    if(VCPKG_TARGET_IS_MINGW)
+        # Avoid system libs (as detected by cmake) in exported pc files
+        set(SYSTEM_LIBS "")
+    else()
+        set(SYSTEM_LIBS "\$LIBS")
+    endif()
+    # libspatialite needs some targets literally
+    if(VCPKG_TARGET_IS_ANDROID)
+        set(TARGET_ALIAS "--target=android")
+    elseif(VCPKG_TARGET_IS_MINGW)
+        set(TARGET_ALIAS "--target=mingw32")
+    elseif(VCPKG_TARGET_IS_OSX)
+        set(TARGET_ALIAS "--target=macosx")
+    else()
+        set(TARGET_ALIAS "")
+    endif()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS
+            ${TARGET_ALIAS}
+            ${FREEXL_OPTION}
+            ${GCP_OPTION}
+            ${GEOCALLBACKS_OPTION}
+            ${RTTOPO_OPTION}
+            "--disable-examples"
+            "--disable-minizip"
+        OPTIONS_DEBUG
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
+        OPTIONS_RELEASE
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} ${SYSTEM_LIBS}"
+    )
+
+    # automake adds the basedir of the generated config to `DEFAULT_INCLUDES`,
+    # but libspatialite uses `#include <spatialite/gaiaconfig.h>`.
+    file(GLOB_RECURSE makefiles
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Makefile"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Makefile"
+    )
+    foreach(makefile IN LISTS makefiles)
+        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers")
+    endforeach()
+
+    vcpkg_install_make()
+
+    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/mod_spatialite.dll" "${CURRENT_PACKAGES_DIR}/plugins/${PORT}/mod_spatialite.dll")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/mod_spatialite.dll" "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}/mod_spatialite.dll")
+        endif()
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()
+
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+set(outfile "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+if(NOT ENABLE_GCP AND NOT ENABLE_RTTOPO)
+    file(READ "${SOURCE_PATH}/COPYING" mpl)
+    file(WRITE "${outfile}"
+        "SpatiaLite[${FEATURES}] is licensed under the MPL tri-license terms;\n"
+        "you are free to choose the best-fit license between:\n"
+        "- the MPL 1.1\n"
+        "- the GPL v2.0 or any subsequent version\n"
+        "- the LGPL v2.1 or any subsequent version.\n\n"
+        "# MPL 1.1 (from COPYING)\n\n"
+        "${mpl}\n"
+    )
+else()
+    file(WRITE "${outfile}"
+        "SpatiaLite[${FEATURES}] is licensed under:\n"
+        "the GPL v2.0 or any subsequent version.\n\n"
+    )
+endif()
+file(READ "${SOURCE_PATH}/src/control_points/COPYING" gpl)
+file(APPEND "${outfile}"
+    "# GPL v2.0 (from src/control_points/COPYING)\n\n"
+    "${gpl}\n"
+)

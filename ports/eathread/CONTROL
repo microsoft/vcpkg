@@ -1,5 +1,0 @@
-Source: eathread
-Version: 1.32.09-1
-Homepage: https://github.com/electronicarts/EAThread
-Description: Electronic Arts Thread Library. EAThread implements a unified cross-platform interface for multithreaded programming on various platforms.
-Build-Depends: eabase, eastl

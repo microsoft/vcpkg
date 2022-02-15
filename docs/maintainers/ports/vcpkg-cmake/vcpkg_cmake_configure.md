@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
+    [MAYBE_UNUSED_VARIABLES
+        <option-name>...]
 )
 ```
 
@@ -56,6 +58,21 @@ By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
+This function makes certain that all options passed in are used by the
+underlying CMake build system. If there are options that might be unused,
+perhaps on certain platforms, pass those variable names to
+`MAYBE_UNUSED_VARIABLES`. For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
+
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
 `config-x86-windows-dbg.log`. You can set it to anything you like;
@@ -70,7 +87,7 @@ This command supplies many common arguments to CMake. To see the full list, exam
 * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
+* [opencv4](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv4/portfile.cmake)
 
 ## Source
 [ports/vcpkg-cmake/vcpkg\_cmake\_configure.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-cmake/vcpkg_cmake_configure.cmake)

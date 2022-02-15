@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF 655175d21e58281031c940a94042d5d1fd46efb3 # v 0.12.2
-    SHA512 e1e228bf720ef57130fbb9cc33310cebbdbd16c001455cd56e8746b6ee41bac56da5e5a90235e0a826b52711dc3c95b9d9f56d9e406999f9fd384aee2892578d
+    REF 127f157fc00abeb6fe5a57ce56a7c4e092721203 #v0.16.4
+    SHA512 ef7d1f652af031c13260a4c436c949eb566d40d15dcde5b56ab782e9e9d7b5e287f4a6a61bc4eb3fcdbb835c102637b0368f3c43af6f9fa9c87cd99d15bde454
     HEAD_REF master
     PATCHES
-        fix-for-vcpkg.patch
-        CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING.patch # submitted upstream as https://github.com/paullouisageneau/libdatachannel/pull/413
+        0001-fix-for-vcpkg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -17,9 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         srtp NO_MEDIA
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
@@ -27,19 +25,19 @@ vcpkg_configure_cmake(
         -DNO_TESTS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libdatachannel)
+vcpkg_cmake_config_fixup(PACKAGE_NAME LibDataChannel CONFIG_PATH lib/cmake/LibDataChannel)
 vcpkg_fixup_pkgconfig()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake DATACHANNEL_CONFIG)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake "
+file(READ "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" DATACHANNEL_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
-find_dependency(libjuice)
+find_dependency(LibJuice)
 ${DATACHANNEL_CONFIG}")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

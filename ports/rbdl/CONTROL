@@ -1,6 +1,0 @@
-Source: rbdl
-Version: 2.6.0
-Port-Version: 0
-Homepage: https://github.com/rbdl/rbdl
-Description: Rigid Body Dynamics Library
-Build-Depends: eigen3

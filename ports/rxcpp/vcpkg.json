@@ -1,0 +1,7 @@
+{
+  "name": "rxcpp",
+  "version-string": "4.1.0",
+  "port-version": 2,
+  "description": "Reactive Extensions for C++",
+  "homepage": "https://github.com/Reactive-Extensions/RxCpp"
+}

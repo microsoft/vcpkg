@@ -1,0 +1,18 @@
+{
+  "name": "assimp",
+  "version-string": "5.0.1",
+  "port-version": 5,
+  "description": "The Open Asset import library",
+  "homepage": "https://github.com/assimp/assimp",
+  "dependencies": [
+    "irrlicht",
+    "kubazip",
+    "minizip",
+    "poly2tri",
+    "polyclipping",
+    "rapidjson",
+    "stb",
+    "utfcpp",
+    "zlib"
+  ]
+}

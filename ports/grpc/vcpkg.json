@@ -1,7 +1,6 @@
 {
   "name": "grpc",
-  "version-semver": "1.37.0",
-  "port-version": 2,
+  "version-semver": "1.41.0",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [
@@ -25,6 +24,14 @@
     },
     "re2",
     "upb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {

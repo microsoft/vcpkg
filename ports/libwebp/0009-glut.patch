@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index efd10887b..8b41cc1ba 100644
---- a/CMakeLists.txt	
+index 0799269..45b3306 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -470,7 +470,7 @@ if(WEBP_BUILD_VWEBP)
+@@ -532,7 +532,7 @@ if(WEBP_BUILD_VWEBP)
      target_link_libraries(vwebp
                            ${OPENGL_LIBRARIES}
                            exampleutil
@@ -11,7 +11,7 @@ index efd10887b..8b41cc1ba 100644
                            imageioutil
                            webp
                            webpdemux)
-@@ -481,6 +481,9 @@ if(WEBP_BUILD_VWEBP)
+@@ -543,6 +543,9 @@ if(WEBP_BUILD_VWEBP)
      if(UNIX AND NOT(ANDROID OR BLACKBERRY OR APPLE))
        find_package(X11 REQUIRED)
        target_link_libraries(vwebp ${X11_LIBRARIES} ${X11_Xxf86vm_LIB})

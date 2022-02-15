@@ -1,26 +1,34 @@
 diff --git a/include/valijson/adapters/picojson_adapter.hpp b/include/valijson/adapters/picojson_adapter.hpp
-index b6d17c9..6d04c52 100644
+index 4f5e5b6..0da2bf2 100644
 --- a/include/valijson/adapters/picojson_adapter.hpp
 +++ b/include/valijson/adapters/picojson_adapter.hpp
-@@ -29,7 +29,7 @@
+@@ -29,10 +29,10 @@
  
- #include <string>
- 
+ #ifdef _MSC_VER
+ #pragma warning(disable: 4706)
 -#include <picojson.h>
 +#include <picojson/picojson.h>
+ #pragma warning(default: 4706)
+ #else
+-#include <picojson.h>
++#include <picojson/picojson.h>
+ #endif
  
  #include <valijson/adapters/adapter.hpp>
- #include <valijson/adapters/basic_adapter.hpp>
 diff --git a/include/valijson/utils/picojson_utils.hpp b/include/valijson/utils/picojson_utils.hpp
-index 2ca4d46..b983648 100644
+index 36420d2..8660c30 100644
 --- a/include/valijson/utils/picojson_utils.hpp
 +++ b/include/valijson/utils/picojson_utils.hpp
-@@ -4,7 +4,7 @@
+@@ -4,10 +4,10 @@
  
- #include <iostream>
- 
+ #ifdef _MSC_VER
+ #pragma warning(disable: 4706)
 -#include <picojson.h>
 +#include <picojson/picojson.h>
+ #pragma warning(default: 4706)
+ #else
+-#include <picojson.h>
++#include <picojson/picojson.h>
+ #endif
  
  #include <valijson/utils/file_utils.hpp>
- 

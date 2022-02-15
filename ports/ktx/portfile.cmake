@@ -1,12 +1,10 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
-
-set(PORT_VERSION 4.0.0-beta5)
+set(PORT_VERSION 4.0.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/KTX-Software
     REF v${PORT_VERSION}
-    SHA512 0ee0672413eaa8cbfacab13bfab9935be23fadcd63253012d9710f3f9ce9b0d62c43d50c652e47cb44d2878b20377026e65f3d37cdb1dd36b1c0241da250606a
+    SHA512 49787cf0230939ae0c737f6080ef483dd27ebd653c16525b469b078511ab72e85aecba9bffe71ed45ce1692e8448b845e60545c39f9333e6d216b20f56595faa
     HEAD_REF master
     FILE_DISAMBIGUATOR 1
     PATCHES
@@ -24,7 +22,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             ff951c2cd96d0fda87bacb505c93e4aa1f9aeb35f829c52b5a7862d05e167f69605a4927a0e7197b5ee2b2fa5cb56619ad7a6ba293ede4765fdcacedf2ed35da
         )
     vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
-    
+
     file(REMOVE
         "${SOURCE_PATH}/other_include/zstd.h"
         "${SOURCE_PATH}/other_include/zstd_errors.h")
@@ -33,8 +31,9 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools KTX_FEATURE_TOOLS
-    vulkan KTX_FEATURE_VULKAN
+    FEATURES
+        tools KTX_FEATURE_TOOLS
+        vulkan KTX_FEATURE_VULKAN
 )
 
 vcpkg_configure_cmake(
@@ -65,7 +64,7 @@ if(tools IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx TARGET_PATH share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")

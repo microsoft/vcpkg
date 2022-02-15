@@ -1,0 +1,7 @@
+{
+  "name": "magic-enum",
+  "version-string": "0.7.3",
+  "port-version": 1,
+  "description": "Header-only C++17 library provides static reflection for enums, work with any enum type without any macro or boilerplate code.",
+  "homepage": "https://github.com/Neargye/magic_enum"
+}

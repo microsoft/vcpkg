@@ -1,0 +1,7 @@
+{
+  "name": "rply",
+  "version-string": "1.1.4",
+  "port-version": 1,
+  "description": "ANSI C Library for PLY file format input and output",
+  "homepage": "http://w3.impa.br/~diego/software/rply"
+}

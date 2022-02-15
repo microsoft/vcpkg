@@ -1,4 +1,0 @@
-Source: plf-colony
-Version: 5.33
-Description: An unordered data container providing fast iteration/insertion/erasure while maintaining pointer validity to non-erased elements
-Homepage: https://www.plflib.org/

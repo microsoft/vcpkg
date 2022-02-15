@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sass/sassc
-    REF 46748216ba0b60545e814c07846ca10c9fefc5b6 # 3.6.1
-    SHA512 98c5943ec485251fd5e3f41bcfe80dbbc6e2f334d4b6947895d3821b30009c40fb7cb944403304cede70360a5dd0ac103262644ef37a56e0fa76163657fbcc32
+    REF 3.6.2
+    SHA512 fff3995ce8608bdaed5f4f1352ae4f1f882de58663b932c598d6168df421e4dbf907ec0f8caebb1e56490a71ca11105726f291b475816dd53e705bc53121969f
     HEAD_REF master
     PATCHES remove_compiler_flags.patch
 )
@@ -13,7 +13,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(ENV{LIBS} "$ENV{LIBS} -lgetopt")
 endif()
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
         --with-libsass-include='${CURRENT_INSTALLED_DIR}/include'

@@ -1,0 +1,7 @@
+{
+  "name": "minimp3",
+  "version-string": "2020-12-25",
+  "port-version": 1,
+  "description": "Minimalistic, single-header library for decoding MP3. minimp3 is designed to be small, fast (with SSE and NEON support), and accurate (ISO conformant).",
+  "homepage": "https://github.com/lieff/minimp3"
+}

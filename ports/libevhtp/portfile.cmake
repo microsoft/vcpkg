@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports Linux and Mac platform" ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO criticalstack/libevhtp
@@ -31,3 +29,4 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_fixup_pkgconfig()

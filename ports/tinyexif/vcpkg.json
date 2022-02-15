@@ -1,0 +1,10 @@
+{
+  "name": "tinyexif",
+  "version-string": "1.0.2",
+  "port-version": 7,
+  "description": "tiny ISO-compliant C++ EXIF and XMP parsing library for JPEG images",
+  "homepage": "https://github.com/cdcseacave/TinyEXIF",
+  "dependencies": [
+    "tinyxml2"
+  ]
+}

@@ -17,6 +17,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
+    [MAYBE_UNUSED_VARIABLES
+        <option-name>...]
 )
 ```
 
@@ -55,6 +57,21 @@ By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
+This function makes certain that all options passed in are used by the
+underlying CMake build system. If there are options that might be unused,
+perhaps on certain platforms, pass those variable names to
+`MAYBE_UNUSED_VARIABLES`. For example:
+```cmake
+vcpkg_cmake_configure(
+    ...
+    OPTIONS
+        -DBUILD_EXAMPLE=OFF
+    ...
+    MAYBE_UNUSED_VARIABLES
+        BUILD_EXAMPLE
+)
+```
+
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
 `config-x86-windows-dbg.log`. You can set it to anything you like;
@@ -69,7 +86,7 @@ This command supplies many common arguments to CMake. To see the full list, exam
 * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
+* [opencv4](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv4/portfile.cmake)
 #]===]
 if(Z_VCPKG_CMAKE_CONFIGURE_GUARD)
     return()
@@ -86,12 +103,12 @@ endmacro()
 
 function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
 
-    if(DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
+    if(NOT arg_Z_CMAKE_GET_VARS_USAGE AND DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
         message(WARNING "vcpkg_cmake_configure already called; this function should only be called once.")
     endif()
 
@@ -102,7 +119,24 @@ function(vcpkg_cmake_configure)
         message(FATAL_ERROR "SOURCE_PATH must be set")
     endif()
     if(NOT DEFINED arg_LOGFILE_BASE)
-        set(arg_LOGFILE_BASE "config")
+        set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
+    endif()
+
+    set(manually_specified_variables "")
+
+    if(arg_Z_CMAKE_GET_VARS_USAGE)
+        set(configuring_message "Getting CMake variables for ${TARGET_TRIPLET}")
+    else()
+        set(configuring_message "Configuring ${TARGET_TRIPLET}")
+
+        foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
+            if(option MATCHES "^-D([^:=]*)[:=]")
+                list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
+            endif()
+        endforeach()
+        list(REMOVE_DUPLICATES manually_specified_variables)
+        list(REMOVE_ITEM manually_specified_variables ${arg_MAYBE_UNUSED_VARIABLES})
+        debug_message("manually specified variables: ${manually_specified_variables}")
     endif()
 
     if(CMAKE_HOST_WIN32)
@@ -116,15 +150,11 @@ function(vcpkg_cmake_configure)
     set(ninja_can_be_used ON) # Ninja as generator
     set(ninja_host ON) # Ninja as parallel configurator
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(targetting_uwp ON)
-    endif()
-
     if(host_architecture STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(ninja_can_be_used OFF)
         set(ninja_host OFF)
-    elseif(targetting_uwp)
+    elseif(VCPKG_TARGET_IS_UWP)
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(ninja_can_be_used OFF)
     endif()
@@ -173,6 +203,19 @@ function(vcpkg_cmake_configure)
             else()
                 set(generator)
             endif()
+        elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+            set(generator "Visual Studio 17 2022")
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+                set(arch "Win32")
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+                set(arch "x64")
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+                set(arch "ARM")
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+                set(arch "ARM64")
+            else()
+                set(generator)
+            endif()
         endif()
     else()
         set(generator "Ninja")
@@ -194,15 +237,21 @@ function(vcpkg_cmake_configure)
         list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
+    set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    set(build_dir_debug "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        "${build_dir_release}"
+        "${build_dir_debug}")
+    file(MAKE_DIRECTORY "${build_dir_release}")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY "${build_dir_debug}")
+    endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
-        if(targetting_uwp AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+        if(VCPKG_TARGET_IS_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+        elseif(VCPKG_TARGET_IS_ANDROID AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
     endif()
@@ -231,22 +280,22 @@ function(vcpkg_cmake_configure)
     endif()
 
     if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR _TARGETTING_UWP)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        if(VCPKG_TARGET_IS_MINGW)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
+        elseif(VCPKG_TARGET_IS_WINDOWS)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+        elseif(VCPKG_TARGET_IS_LINUX)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
+        elseif(VCPKG_TARGET_IS_ANDROID)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
+        elseif(VCPKG_TARGET_IS_OSX)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
+        elseif(VCPKG_TARGET_IS_IOS)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
+        elseif(VCPKG_TARGET_IS_FREEBSD)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_TARGET_IS_OPENBSD)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
         endif()
     endif()
 
@@ -324,7 +373,8 @@ function(vcpkg_cmake_configure)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             set(line "build ../CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" -B .. ")
+            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_release}\" ")
+            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
 
             if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
                 list(JOIN arg_OPTIONS "\" \"" options)
@@ -341,7 +391,8 @@ function(vcpkg_cmake_configure)
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             set(line "build ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" -B \"../../${TARGET_TRIPLET}-dbg\" ")
+            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_debug}\" ")
+            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
 
             if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
                 list(JOIN arg_OPTIONS "\" \"" options)
@@ -357,19 +408,21 @@ function(vcpkg_cmake_configure)
             string(APPEND parallel_configure_contents "${line}\n\n")
         endif()
 
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure")
-        file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
+        file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
+        file(WRITE "${build_dir_release}/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}")
+        message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
-            LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}"
+            WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
+            LOGNAME "${arg_LOGFILE_BASE}"
         )
+        list(APPEND config_logs
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+            message(STATUS "${configuring_message}-dbg")
             vcpkg_execute_required_process(
                 COMMAND
                     "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
@@ -378,14 +431,16 @@ function(vcpkg_cmake_configure)
                     -G "${generator}"
                     "-DCMAKE_BUILD_TYPE=Debug"
                     "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-                LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-dbg"
+                WORKING_DIRECTORY "${build_dir_debug}"
+                LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
+            list(APPEND config_logs
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+            message(STATUS "${configuring_message}-rel")
             vcpkg_execute_required_process(
                 COMMAND
                     "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
@@ -394,11 +449,48 @@ function(vcpkg_cmake_configure)
                     -G "${generator}"
                     "-DCMAKE_BUILD_TYPE=Release"
                     "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+                WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
+            list(APPEND config_logs
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
         endif()
     endif()
+    
+    set(all_unused_variables)
+    foreach(config_log IN LISTS config_logs)
+        if(NOT EXISTS "${config_log}")
+            continue()
+        endif()
+        file(READ "${config_log}" log_contents)
+        debug_message("Reading configure log ${config_log}...")
+        if(NOT log_contents MATCHES "Manually-specified variables were not used by the project:\n\n((    [^\n]*\n)*)")
+            continue()
+        endif()
+        string(STRIP "${CMAKE_MATCH_1}" unused_variables) # remove leading `    ` and trailing `\n`
+        string(REPLACE "\n    " ";" unused_variables "${unused_variables}")
+        debug_message("unused variables: ${unused_variables}")
+        foreach(unused_variable IN LISTS unused_variables)
+            if(unused_variable IN_LIST manually_specified_variables)
+                debug_message("manually specified unused variable: ${unused_variable}")
+                list(APPEND all_unused_variables "${unused_variable}")
+            else()
+                debug_message("unused variable (not manually specified): ${unused_variable}")
+            endif()
+        endforeach()
+    endforeach()
 
-    set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
+    if(DEFINED all_unused_variables)
+        list(REMOVE_DUPLICATES all_unused_variables)
+        list(JOIN all_unused_variables "\n    " all_unused_variables)
+        message(WARNING "The following variables are not used in CMakeLists.txt:
+    ${all_unused_variables}
+Please recheck them and remove the unnecessary options from the `vcpkg_cmake_configure` call.
+If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_VARIABLES` argument.")
+    endif()
+
+    if(NOT arg_Z_CMAKE_GET_VARS_USAGE)
+        set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
+    endif()
 endfunction()

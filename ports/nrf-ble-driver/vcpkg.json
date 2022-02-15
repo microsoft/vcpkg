@@ -1,0 +1,12 @@
+{
+  "name": "nrf-ble-driver",
+  "version-string": "4.1.2",
+  "port-version": 1,
+  "description": "BLE driver is a library for Bluetooth Low Energy communication using Nordic Semiconductor development kits.",
+  "dependencies": [
+    "asio",
+    "catch2",
+    "cli11",
+    "spdlog"
+  ]
+}

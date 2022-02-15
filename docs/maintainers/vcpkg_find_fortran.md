@@ -8,7 +8,17 @@ Windows(x86/x64) Only: If not it will switch/enable MinGW gfortran
 
 ## Usage
 ```cmake
-vcpkg_find_fortran(<additional_cmake_args_out>)
+vcpkg_find_fortran(<out_var>)
+```
+
+## Example
+```cmake
+vcpkg_find_fortran(fortran_args)
+# ...
+vcpkg_configure_cmake(...
+    OPTIONS
+        ${fortran_args}
+)
 ```
 
 ## Source

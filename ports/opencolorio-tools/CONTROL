@@ -1,5 +1,0 @@
-Source: opencolorio-tools
-Version: 1.1.1
-Homepage: https://opencolorio.org/
-Description: OpenColorIO applications, same source with port OpenColorIO.
-Build-Depends: openimageio[opencolorio]

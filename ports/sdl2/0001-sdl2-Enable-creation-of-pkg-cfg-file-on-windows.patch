@@ -1,26 +1,36 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2086,7 +2086,6 @@
-   execute_process(COMMAND sh ${SDL2_SOURCE_DIR}/build-scripts/updaterev.sh
-     WORKING_DIRECTORY ${SDL2_BINARY_DIR})
- endif()
--if(NOT WINDOWS OR CYGWIN)
+@@ -2555,7 +2555,6 @@ endif()
+ configure_file("${SDL2_SOURCE_DIR}/include/SDL_revision.h.cmake"
+   "${SDL2_BINARY_DIR}/include/SDL_revision.h")
+ 
+-if(NOT WINDOWS OR CYGWIN OR MINGW)
+ 
    set(prefix ${CMAKE_INSTALL_PREFIX})
-   set(exec_prefix "\${prefix}")
-   set(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
-@@ -2129,7 +2129,6 @@
+ 
+@@ -2590,7 +2590,7 @@ Libs.private:")
+     set(SDL_STATIC_LIBS ${_SDL_STATIC_LIBS})
+     listtostrrev(SDL_LIBS _SDL_LIBS)
+     set(SDL_LIBS ${_SDL_LIBS})
+-  else()
++  elseif(NOT WINDOWS_STORE)
+     listtostr(EXTRA_LIBS _EXTRA_LIBS "-l")
+     set(SDL_STATIC_LIBS ${SDL_LIBS} ${EXTRA_LDFLAGS} ${_EXTRA_LIBS})
+     list(REMOVE_DUPLICATES SDL_STATIC_LIBS)
+@@ -2611,7 +2611,6 @@ Libs.private:")
      "${SDL2_BINARY_DIR}/sdl2-config" @ONLY)
    configure_file("${SDL2_SOURCE_DIR}/SDL2.spec.in"
      "${SDL2_BINARY_DIR}/SDL2.spec" @ONLY)
 -endif()
  
- ##### Info output #####
- message(STATUS "")
-@@ -2376,6 +2376,7 @@
+ macro(check_add_debug_flag FLAG SUFFIX)
+     check_c_compiler_flag(${FLAG} HAS_C_FLAG_${SUFFIX})
+@@ -2956,6 +2956,7 @@ if(NOT (WINDOWS OR CYGWIN) OR MINGW)
    # TODO: what about the .spec file? Is it only needed for RPM creation?
-   install(FILES "${SDL2_SOURCE_DIR}/sdl2.m4" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/aclocal")
+   install(FILES "${SDL2_SOURCE_DIR}/sdl2.m4" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/aclocal")
  endif()
 +install(FILES ${SDL2_BINARY_DIR}/sdl2.pc DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
  
  ##### Uninstall target #####
+ 
  

@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arrayfire/forge
-    REF v1.0.7
-    SHA512 d341d5c6bdccf7d2f085162d1d8209b0b28d73b8a9f3173546b26f06bf8e422b3fdf1cfbaa7d122ea75cee5cf5f6bb6dbd2bffc10d8e0c336b5b8695c39f7b54
+    REF v1.0.8
+    SHA512 08e5eb89d80f7fa3310f0eb37481492b5c1dfff00b33c308169862d8b25cf93ad1d9c0db78667c0207a7f6f8ca4046c196bd3a987af839ea1864b49c738ee8e3
     HEAD_REF master
     PATCHES cmake_config.patch
 )

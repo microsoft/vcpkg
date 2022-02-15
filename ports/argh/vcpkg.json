@@ -1,0 +1,6 @@
+{
+  "name": "argh",
+  "version-string": "2018-12-18",
+  "port-version": 3,
+  "description": "Argh! A minimalist argument handler."
+}

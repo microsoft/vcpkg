@@ -1,0 +1,7 @@
+{
+  "name": "check",
+  "version-string": "0.15.2",
+  "port-version": 2,
+  "description": "A unit testing framework for C",
+  "homepage": "https://github.com/libcheck/check"
+}

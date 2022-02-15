@@ -1,5 +1,0 @@
-Source: asmjit
-Version: 2020-09-14
-Homepage: https://github.com/asmjit/asmjit
-Description: Complete x86/x64 JIT and Remote Assembler for C++
-Supports: !arm

@@ -1,0 +1,7 @@
+{
+  "name": "asyncplusplus",
+  "version-string": "1.1",
+  "port-version": 1,
+  "description": "Async++ is a lightweight concurrency framework for C++11",
+  "supports": "!uwp"
+}

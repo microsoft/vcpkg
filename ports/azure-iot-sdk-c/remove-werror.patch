@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b72bd41ed..e916728a8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,11 +123,8 @@ if (${warnings_as_errors})
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /wd4232")
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /wd4232")
+         # Make warning as error
+-        add_definitions(/WX)
+     else()
+         # Make warning as error
+-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+     endif()
+ endif()
+ 

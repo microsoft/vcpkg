@@ -9,6 +9,7 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 vcpkg_cmake_config_fixup(
     [PACKAGE_NAME <name>]
     [CONFIG_PATH <config-directory>]
+    [TOOLS_PATH <tools/${PORT}>]
     [DO_NOT_DELETE_PARENT_CONFIG_PATH]
     [NO_PREFIX_CORRECTION]
 )
@@ -35,8 +36,8 @@ and applies a rather simply correction which in some cases will yield the wrong 
 
 1. Moves `/debug/<CONFIG_PATH>/*targets-debug.cmake` to `/share/${PACKAGE_NAME}`.
 2. Removes `/debug/<CONFIG_PATH>/*config.cmake`.
-3. Transform all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
-4. Transform all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+3. Transform all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+4. Transform all references matching `/bin/*` to `/${TOOLS_PATH}/*` on other platforms.
 5. Fixes `${_IMPORT_PREFIX}` in auto generated targets.
 6. Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
 
@@ -52,7 +53,7 @@ endif()
 set(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD ON CACHE INTERNAL "guard variable")
 
 function(vcpkg_cmake_config_fixup)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH" "PACKAGE_NAME;CONFIG_PATH;NO_PREFIX_CORRECTION" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH;TOOLS_PATH" "")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_config_fixup was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -62,6 +63,9 @@ function(vcpkg_cmake_config_fixup)
     endif()
     if(NOT arg_CONFIG_PATH)
         set(arg_CONFIG_PATH "share/${arg_PACKAGE_NAME}")
+    endif()
+    if(NOT arg_TOOLS_PATH)
+        set(arg_TOOLS_PATH "tools/${PORT}")
     endif()
     set(target_path "share/${arg_PACKAGE_NAME}")
 
@@ -146,7 +150,7 @@ function(vcpkg_cmake_config_fixup)
     foreach(release_target IN LISTS release_targets)
         file(READ "${release_target}" contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
-        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" contents "${contents}")
+        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
         file(WRITE "${release_target}" "${contents}")
     endforeach()
 
@@ -159,7 +163,7 @@ function(vcpkg_cmake_config_fixup)
 
             file(READ "${debug_target}" contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
-            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" contents "${contents}")
+            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" contents "${contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" contents "${contents}")
             file(WRITE "${release_share}/${debug_target_rel}" "${contents}")
@@ -168,7 +172,7 @@ function(vcpkg_cmake_config_fixup)
         endforeach()
     endif()
 
-    #Fix ${_IMPORT_PREFIX} in cmake generated targets and configs;
+    #Fix ${_IMPORT_PREFIX} and absolute paths in cmake generated targets and configs;
     #Since those can be renamed we have to check in every *.cmake
     file(GLOB_RECURSE main_cmakes "${release_share}/*.cmake")
 
@@ -201,22 +205,20 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
-        #Fix wrongly absolute paths to install dir with the correct dir using ${_IMPORT_PREFIX}
+        #Fix absolute paths to installed dir with ones relative to ${CMAKE_CURRENT_LIST_DIR}
         #This happens if vcpkg built libraries are directly linked to a target instead of using
-        #an imported target for it. We could add more logic here to identify defect target files.
-        #Since the replacement here in a multi config build always requires a generator expression
-        #in front of the absoulte path to ${CURRENT_INSTALLED_DIR}. So the match should always be at
-        #least >:${CURRENT_INSTALLED_DIR}.
-        #In general the following generator expressions should be there:
-        #\$<\$<CONFIG:DEBUG>:${CURRENT_INSTALLED_DIR}/debug/lib/somelib>
-        #and/or
-        #\$<\$<NOT:\$<CONFIG:DEBUG>>:${CURRENT_INSTALLED_DIR}/lib/somelib>
-        #with ${CURRENT_INSTALLED_DIR} being fully expanded
-        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
-
-        # Patch out any remaining absolute references
+        #an imported target.
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" cmake_current_packages_dir)
-        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" [[${_IMPORT_PREFIX}]] contents "${contents}")
+        string(REPLACE "${cmake_current_packages_dir}" [[${VCPKG_IMPORT_PREFIX}]] contents "${contents}")
+        # If ${VCPKG_IMPORT_PREFIX} was actually used, inject a definition of it:
+        string(FIND "${contents}" [[${VCPKG_IMPORT_PREFIX}]] index)
+        if (NOT index STREQUAL "-1")
+            get_filename_component(main_cmake_dir "${main_cmake}" DIRECTORY)
+            # Calculate relative to be a sequence of "../"
+            file(RELATIVE_PATH relative "${main_cmake_dir}" "${cmake_current_packages_dir}")
+            string(PREPEND contents "get_filename_component(VCPKG_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}\/${relative}\" ABSOLUTE)\n")
+        endif()
 
         file(WRITE "${main_cmake}" "${contents}")
     endforeach()
@@ -233,5 +235,3 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()
-
-

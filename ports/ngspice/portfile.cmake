@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 # ngspice produces self-contained DLLs
@@ -8,12 +6,15 @@ set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
-    REF 34
-    FILENAME "ngspice-34.tar.gz"
-    SHA512 5e90727f3f6b8675b83f71e1961d33cd498081a7f3bea5d081521f12ecb3979775159f083f84a5856233529505262c399f75d305758af51894a1245603476cf8
+    REF 35
+    FILENAME "ngspice-35.tar.gz"
+    SHA512 2f9b0f951e3ca8d52692beadb895b352311f67b8760f99d0e2f4718fce4b497dd68e2b933029eeacb4ed57551e959bc6e3747e64feb4722a4f841e734f5a664b
     PATCHES
         use-winbison-sharedspice.patch
         use-winbison-vngspice.patch
+        remove-post-build.patch
+        remove-64-in-codemodel-name.patch
+
 )
 
 vcpkg_find_acquire_program(BISON)
@@ -49,8 +50,6 @@ if("codemodels" IN_LIST FEATURES)
 
     vcpkg_build_msbuild(
         PROJECT_PATH ${BUILDTREE_PATH}/visualc/vngspice.sln
-        INCLUDES_SUBPATH /src/include
-        LICENSE_SUBPATH COPYING
         # build_msbuild swaps x86 for win32(bad) if we dont force our own setting
         PLATFORM ${TRIPLET_SYSTEM_ARCH}
         TARGET Build
@@ -65,19 +64,19 @@ if("codemodels" IN_LIST FEATURES)
     else()
         message(FATAL_ERROR "Unsupported target architecture")
     endif()
-        
+
     #put the code models in the intended location
     file(GLOB NGSPICE_CODEMODELS_DEBUG
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Debug/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
-    
+
     file(GLOB NGSPICE_CODEMODELS_RELEASE
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Release/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
-    
-    
+
+
     # copy over spinit (spice init)
     file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
     file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)

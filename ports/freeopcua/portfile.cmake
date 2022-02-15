@@ -32,3 +32,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 #Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeopcua RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

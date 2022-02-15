@@ -1,0 +1,8 @@
+{
+  "name": "advobfuscator",
+  "version-date": "2020-06-26",
+  "description": "Obfuscation library based on C++11/14 and metaprogramming",
+  "dependencies": [
+    "boost-msm"
+  ]
+}

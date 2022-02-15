@@ -1,0 +1,28 @@
+{
+  "name": "mygui",
+  "version": "3.4.1",
+  "port-version": 2,
+  "description": "Fast, flexible and simple GUI",
+  "homepage": "http://mygui.info",
+  "supports": "!uwp",
+  "dependencies": [
+    "freetype",
+    "sdl2-image",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opengl": {
+      "description": "Use OpenGL render system.",
+      "dependencies": [
+        "opengl"
+      ]
+    }
+  }
+}

@@ -8,5 +8,5 @@ index a653e38628..76d6067646 100644
  # Add Linker search paths to RPATH so as to fix the problem where some linkers can't find cross-compiled dependent libraries in customer paths when linking executables.
 -set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
  
- # build third-party targets
- if (BUILD_DEPS)
+ # build the sdk targets
+ project("aws-cpp-sdk-all" VERSION "${PROJECT_VERSION}" LANGUAGES CXX)

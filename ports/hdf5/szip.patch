@@ -1,16 +1,21 @@
-diff -urN a/CMakeFilters.cmake b/CMakeFilters.cmake
---- a/CMakeFilters.cmake	2021-05-15 19:07:48.160044927 +0200
-+++ b/CMakeFilters.cmake	2021-05-15 19:22:56.993970332 +0200
-@@ -104,7 +104,11 @@
-     find_package (SZIP NAMES ${SZIP_PACKAGE_NAME}${HDF_PACKAGE_EXT} COMPONENTS static shared)
-     if (NOT SZIP_FOUND)
-       find_package (SZIP) # Legacy find
--      if (SZIP_FOUND)
-+      if (DEFINED SZIP_SHARED_LIBRARY AND NOT DEFINED SZIP_STATIC_LIBRARY)
-+          set (SZIP_STATIC_LIBRARY "${SZIP_SHARED_LIBRARY}")
-+      elseif (DEFINED SZIP_STATIC_LIBRARY AND NOT DEFINED SZIP_SHARED_LIBRARY)
-+          set (SZIP_SHARED_LIBRARY "${SZIP_STATIC_LIBRARY}")
-+      elseif (SZIP_FOUND)
-         set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${SZIP_LIBRARIES})
-         set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${SZIP_LIBRARIES})
-       endif ()
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index d5f801e..141ab44 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -124,6 +124,16 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+     set (H5_HAVE_LIBSZ 1)
+     set (SZIP_INCLUDE_DIR_GEN ${SZIP_INCLUDE_DIR})
+     set (SZIP_INCLUDE_DIRS ${SZIP_INCLUDE_DIRS} ${SZIP_INCLUDE_DIR})
++  elseif(1)
++    find_package(szip CONFIG REQUIRED)
++    set(SZIP_INCLUDE_DIRS "")
++    # SZIP_STATIC_LIBRARY will be used in linking, in cmake and in pkgconfig,
++    # but the actual linkage doesn't matter.
++    if (TARGET szip-shared)
++      set(SZIP_STATIC_LIBRARY szip-shared)
++    else()
++      set(SZIP_STATIC_LIBRARY szip-static)
++    endif()
+   else ()
+     if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
+       EXTERNAL_SZIP_LIBRARY (${HDF5_ALLOW_EXTERNAL_SUPPORT} ${HDF5_ENABLE_SZIP_ENCODING})

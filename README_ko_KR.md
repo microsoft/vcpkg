@@ -1,5 +1,10 @@
 # Vcpkg: 개요
 
+[中文总览](README_zh_CN.md)
+[Español](README.md)
+[English](README_ko_KR.md)
+[Français](README_fr.md)
+
 Vcpkg는 Windows, Linux 및 MacOS에서 C 및 C++ 라이브러리를 관리하는 데 도움이 됩니다.
 이 툴과 생태계는 지속적으로 진화하고 있으며 항상 기여해 주셔서 감사합니다!
 
@@ -24,13 +29,12 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 �
   - [빠르게 시작하기: 유닉스](#빠르게-시작하기-유닉스)
   - [리눅스 개발자 도구 설치하기](#리눅스-개발자-도구-설치하기)
   - [macOS 개발자 도구 설치하기](#macos-개발자-도구-설치하기)
-    - [10.15버전 이전 macOS에 GCC 설치하기](#1015버전-이전-macos에-gcc-설치하기)
   - [CMake와 함께 vcpkg 사용](#cmake와-함께-vcpkg-사용)
     - [Visual Studio Code와 CMake Tools](#visual-studio-code와-cmake-tools)
     - [Visual Studio CMake 프로젝트와 Vcpkg](#visual-studio-cmake-프로젝트와-vcpkg)
     - [Vcpkg와 CLion](#vcpkg와-clion)
     - [서브모듈로서의 Vcpkg](#서브모듈로서의-vcpkg)
-- [탭 완성/자동 완성](#탭-완성/자동-완성)
+- [탭 완성/자동 완성](#탭-완성자동-완성)
 - [예제](#예제)
 - [기여](#기여)
 - [라이선스](#라이선스)
@@ -122,9 +126,6 @@ Linux에서의 필요조건:
 
 macOS에서의 필요조건:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
-- macOS 10.14이나 아래 버전에서는 다음 도구들도 필요합니다:
-  - [Homebrew][getting-started:macos-brew]
-  - [g++][getting-started:macos-gcc] >= 6 from Homebrew
 
 첫번째로, vcpkg 자체를 다운로드하고 부트스트랩합니다; 어디에나 설치할 수 있습니다,
 하지만 일반적으로 CMake 프로젝트의 하위 모듈로 vcpkg를 사용하는 것이 좋습니다.
@@ -159,10 +160,10 @@ CMake 및 CMake Tools for VSCode에서 vcpkg를 가장 잘 사용하는 방법�
 다른 툴에 대해서는 [통합 가이드][getting-started:integration]을 확인하세요.
 ## 리눅스 개발자 도구 설치하기
 
-리눅스의 다양한 배포판에는 다양한 패키지가 있습니다.
-설치 필요:
+리눅스의 다양한 배포판에는 설치해야되는 다양한 패키지가 있습니다:
 
--Debian, Ubuntu, popOS 및 기타 Debian 기반 배포판:
+
+- Debian, Ubuntu, popOS 및 기타 Debian 기반 배포판:
 
 ```sh
 $ sudo apt-get update
@@ -183,32 +184,13 @@ $ scl enable devtoolset-7 bash
 
 ## macOS 개발자 도구 설치하기
 
-macOS 10.15에서는 터미널에서 다음 명령어를 실행하시면 됩니다.
+macOS에서는 터미널에서 다음 명령어를 실행하기만 하면 됩니다.
 
 ```sh
 $ xcode-select --install
 ```
 
 그런 다음 나타나는 창에 나타나는 메시지를 따르세요.
-
-macOS 10.14 및 이전 버전에서는 homebrew에서 g++도 설치해야합니다.
-다음 섹션의 지침을 따르세요.
-
-### 10.15버전 이전 macOS에 GCC 설치하기
-
-이번 섹션은 10.15 이전의 macOS 버전을 사용하는 경우에만 필요합니다.
-homebrew를 설치하는 것은 매우 쉽습니다. 자세한 내용은 <brew.sh>를 확인하세요.
-가장 간단하게 다음 명령어을 실행합니다.
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-```
-
-그런 다음 최신 버전의 gcc를 설치하시려면 다음 명령어를 실행하십시오.
-
-```sh
-$ brew install gcc
-```
 
 그런다음 [빠른 시작 가이드](#빠르게-시작하기-유닉스)와 함께 vcpkg를 부트스트랩 할 수 있습니다.
 
@@ -299,7 +281,7 @@ including [패키지 설치 및 사용](docs/examples/installing-and-using-packa
 [zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
 및 [GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md).
 
-이제 ReadTheDocs에서 온라인으로 문서를 사용할 수도 있습니다: <https://vcpkg.readthedocs.io/>!
+우리의 문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 사용할 수 있습니다. 모든 피드백에 진심으로 감사드립니다. https://github.com/vcpkg/vcpkg.github.io/issues 에서 이슈를 제출할 수 있습니다.
 
 [4분짜리 데모 영상을 보세요](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
@@ -309,7 +291,7 @@ Vcpkg는 오픈소스 프로젝트입니다, 따라서 여러분의 기여로 �
 기여할 수 있는 몇 가지 방법은 다음과 같습니다:
 
 * vcpkg 또는 기존 패키지의 [문제 제출][contributing:submit-issue] 
-* [Submit Fixes and New Packages][contributing:submit-pr]
+* [수정 사항및 새 패키지 제출][contributing:submit-pr]
 
 자세한 내용은 [컨트리뷰팅 가이드](CONTRIBUTING.md)를 참고하세요.
 
@@ -329,8 +311,9 @@ Vcpkg는 오픈소스 프로젝트입니다, 따라서 여러분의 기여로 �
 
 vcpkg는 사용자 경험을 개선하는 데 도움이 되도록 사용 데이터를 수집합니다.
 Microsoft는 이 정보를 익명으로 수집합니다.
-bootstrap-vcpkg 스크립트를 -disableMetrics를 추가해 다시 실행하여 원격 분석을 옵트아웃 할 수 있습니다.
-커맨드 라인에서 --disable-metrics를 vcpkg에 전달합니다.
-또는 VCPKG_DISABLE_METRICS 환경 변수를 설정합니다.
+다음을 통해 원격 측정을 옵트아웃 할 수 있습니다.
+- -disableMetrics를 사용하여 bootstrap-vcpkg 스크립트 실행
+- 명령줄에서 vcpkg에 --disable-metrics 전달
+- VCPKG_DISABLE_METRICS 환경 변수 설정
 
-docs/about/privacy.md 에 vcpkg 데이터 수집에 대해 자세히 알아보세요.
+docs/about/privacy.md에서 vcpkg 데이터 수집에 대해 자세히 알아보세요.

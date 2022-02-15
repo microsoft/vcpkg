@@ -1,5 +1,0 @@
-Source: secp256k1
-Version: 2017-19-10
-Port-Version: 3
-Homepage: https://github.com/bitcoin-core/secp256k1
-Description: Optimized C library for EC operations on curve

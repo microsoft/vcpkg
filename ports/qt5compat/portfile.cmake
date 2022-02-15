@@ -12,6 +12,7 @@ FEATURES
     "iconv"         CMAKE_DISABLE_FIND_PACKAGE_ICU
 INVERTED_FEATURES
     "iconv"         CMAKE_DISABLE_FIND_PACKAGE_WrapIconv
+    "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     )
 
 #For iconv feature to work the following must be true:
@@ -26,3 +27,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
+
+#For my documentation:
+# find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+# find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS Network Xml Gui Quick)

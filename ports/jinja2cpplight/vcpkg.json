@@ -1,0 +1,8 @@
+{
+  "name": "jinja2cpplight",
+  "version-string": "2018-05-08",
+  "port-version": 1,
+  "description": "(very) lightweight version of Jinja2 for C++, Lightweight templating engine for C++, based on Jinja2.",
+  "homepage": "https://github.com/hughperkins/Jinja2CppLight",
+  "supports": "!uwp"
+}

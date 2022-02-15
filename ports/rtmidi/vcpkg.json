@@ -1,0 +1,8 @@
+{
+  "name": "rtmidi",
+  "version-semver": "4.0.0",
+  "port-version": 4,
+  "description": "A set of C++ classes that provide a common API for realtime MIDI input/output across Linux (ALSA & JACK), Macintosh OS X (CoreMidi & JACK) and Windows (Multimedia)",
+  "homepage": "https://github.com/thestk/rtmidi",
+  "supports": "!uwp"
+}

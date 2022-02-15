@@ -1,0 +1,20 @@
+{
+  "name": "urdfdom",
+  "version": "1.0.4",
+  "port-version": 5,
+  "description": "Provides core data structures and a simple XML parsers for populating the class data structures from an URDF file.",
+  "homepage": "https://github.com/ros/urdfdom",
+  "dependencies": [
+    "console-bridge",
+    "tinyxml",
+    "urdfdom-headers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
