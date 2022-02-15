@@ -4,7 +4,7 @@
   "description": "Library for archiving file with a high compression ratio.",
   "homepage": "https://www.7-zip.org",
   "license": "BSD-3-Clause",
-  "supports": "!(linux | osx | arm | uwp)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
