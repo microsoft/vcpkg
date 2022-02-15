@@ -1,7 +1,6 @@
 {
   "name": "simde",
-  "version-string": "0.7.0",
-  "port-version": 1,
+  "version": "0.7.2",
   "description": "Implementations of SIMD instruction sets for systems which don't natively support them",
   "homepage": "https://github.com/simd-everywhere/simde"
 }

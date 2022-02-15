@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "arm" "arm64")
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 # ngspice produces self-contained DLLs
@@ -66,19 +64,19 @@ if("codemodels" IN_LIST FEATURES)
     else()
         message(FATAL_ERROR "Unsupported target architecture")
     endif()
-        
+
     #put the code models in the intended location
     file(GLOB NGSPICE_CODEMODELS_DEBUG
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Debug/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
-    
+
     file(GLOB NGSPICE_CODEMODELS_RELEASE
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Release/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
-    
-    
+
+
     # copy over spinit (spice init)
     file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
     file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)

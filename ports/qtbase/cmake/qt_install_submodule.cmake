@@ -34,6 +34,7 @@ function(qt_download_submodule)
         URL "https://code.qt.io/qt/${PORT}.git"
         REF "${${PORT}_REF}"
         ${UPDATE_PORT_GIT_OPTIONS}
+        ${QT_FETCH_REF}
         PATCHES ${_qarg_PATCHES}
     )
 
@@ -119,11 +120,31 @@ function(qt_cmake_configure)
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()
 
+function(qt_fix_prl_files)
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}/lib" package_dir)
+    file(TO_CMAKE_PATH "${package_dir}/lib" lib_path)
+    file(TO_CMAKE_PATH "${package_dir}/include/Qt6" include_path)
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}" install_prefix)
+    file(GLOB_RECURSE prl_files "${CURRENT_PACKAGES_DIR}/*.prl")
+    foreach(prl_file IN LISTS prl_files)
+        file(READ "${prl_file}" _contents)
+        string(REPLACE "${lib_path}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+        string(REPLACE "${include_path}" "\$\$[QT_INSTALL_HEADERS]" _contents "${_contents}")
+        string(REPLACE "${install_prefix}" "\$\$[QT_INSTALL_PREFIX]" _contents "${_contents}")
+        string(REPLACE "[QT_INSTALL_PREFIX]/lib/objects-Debug" "[QT_INSTALL_LIBS]/objects-Debug" _contents "${_contents}")
+        #Note: This only works without an extra if case since QT_INSTALL_PREFIX is the same for debug and release
+        file(WRITE "${prl_file}" "${_contents}")
+    endforeach()
+endfunction()
+
 function(qt_fixup_and_cleanup)
         cmake_parse_arguments(PARSE_ARGV 0 "_qarg" ""
                       ""
                       "TOOL_NAMES")
     vcpkg_copy_pdbs()
+
+    ## Handle PRL files
+    qt_fix_prl_files()
 
     ## Handle CMake files. 
     set(COMPONENTS)

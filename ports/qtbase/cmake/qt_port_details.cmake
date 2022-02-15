@@ -1,11 +1,19 @@
-set(QT_VERSION 6.2.0)
+set(QT_VERSION 6.2.2)
 
 if(PORT MATCHES "qtquickcontrols2")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     message(STATUS "qtquickcontrols2 is integrated in qtdeclarative since Qt 6.2. Please remove your dependency on it!")
     return()
 endif()
-set(QT_GIT_TAG v${QT_VERSION})
+
+### Setting up the git tag.
+set(QT_FETCH_REF "")
+set(QT_GIT_TAG "v${QT_VERSION}")
+if(PORT MATCHES "qtdeviceutilities|qtlocation|qtinterfaceframework|qtapplicationmanager")
+    # So much for consistency ....
+    set(QT_FETCH_REF FETCH_REF "${QT_VERSION}")
+    set(QT_GIT_TAG "${QT_VERSION}")
+endif()
 
 #set(QT_UPDATE_VERSION TRUE)
 if(QT_UPDATE_VERSION)
@@ -34,13 +42,14 @@ set(QT_PORTS qt
              ## New in 6.1
              qtactiveqt
              qtdatavis3d
-             #qtdeviceutils
+             qtdeviceutilities
              qtlottie
              qtscxml
              qtvirtualkeyboard
              qtcharts
              ## New in 6.2
              qtconnectivity
+             qtpositioning
              qtlocation
              qtmultimedia
              qtremoteobjects
@@ -51,48 +60,55 @@ set(QT_PORTS qt
              qtwebengine
              qtwebsockets
              qtwebview
+             ## New in 6.2.2
+             qtinterfaceframework
+             qtapplicationmanager
     )
 
 foreach(_port IN LISTS QT_PORTS)
     set(${_port}_TAG ${QT_GIT_TAG})
 endforeach()
-set(qtbase_REF              0c2d00de3488116db9f9d657fe18bcb972a83792)
-set(qtshadertools_REF       119cd6e9c9e89f93b74db28f261382a2fcfe504e)
-set(qtdeclarative_REF       37da36c97d9d557945abca3cea5c68d9985a06e3)
-set(qt5compat_REF           291993c7813ec706e54069c7de339edfdd385c0d)
-set(qttools_REF             00efbf90f978afefdcece314d19b79459eee2211) # Additional refs in portfile due to submodule
-set(qtcoap_REF              be7822dc920a3e3eb252d5693a7153aa606d3dc1)
-set(qtdoc_REF               48a1fbab30a9f57f011fdea8ec2b47048dce4069)
-set(qtimageformats_REF      7bb9dc839c0dd0806445fd475b027a82c961f686)
-set(qtmqtt_REF              4fd647e23d95c522c45d86be584d18578f894823)
-set(qtnetworkauth_REF       aa23db40ca552d60383dea17d703b1cc0cbeace4)
-set(qtopcua_REF             cfb3767b2a6785e0437b99c015cb6aef7f40189c)
-set(qtquicktimeline_REF     e9578a6949f6192440df1cb261ed9de98a9de7d7)
-set(qtquick3d_REF           eaf9c60073b95b03c006279f08d4947699c32a4b)
-set(qtsvg_REF               cceecea040ca1247db0212217d07ec2c331004ba)
-set(qttranslations_REF      03a146236e69ee41c0405a8b5707104b4ac0c6e8)
-set(qtwayland_REF           8c4900dda393752faab14e39e60aec6b545c8a0f)
-# set(qtquickcontrols2_REF   0) # Moved into qtdeclarative since Qt 6.2
+set(qtbase_REF                  61fbf7596beda0178e213a7ba945bc0314153366)
+set(qtshadertools_REF           3ce1b25b413aef98a68c0b05305a6849bb558889)
+set(qtdeclarative_REF           f4cbbe999d912b2c66fffc8b7bf11b59fd92a178)
+set(qt5compat_REF               e38a2b4653780317feed0d0f7c0adb2964ed674c)
+set(qttools_REF                 f779b0439e3984f592320c0e5b3ba52f3627c07b) # Additional refs in portfile due to submodule
+set(qtcoap_REF                  fe7ea10937ece3b19fc7d909790e1bfec23c363f)
+set(qtdoc_REF                   aeb34a71d6f93b3ddb438e52c3f4d963e8c51ab9)
+set(qtimageformats_REF          02a3365745ceb3cdcc27b2dd6f80300f5c03f6f4)
+set(qtmqtt_REF                  deff6a3853c9a09e18fa05ae9aa6c5868ba2d1b7)
+set(qtnetworkauth_REF           470a295fcb61e37640e00c75be1870a3b1cb227e)
+set(qtopcua_REF                 b8e9b695c71d73e21ac489136fca1c2991ebea78)
+set(qtquicktimeline_REF         7c74c9025c8c5f390f5a19ec9bd1d0d4fc36cee2)
+set(qtquick3d_REF               8a06b1c9e69c2b83fff313bab4cdc463b6c55b8c)
+set(qtsvg_REF                   414fe3bc0f77704c9184ee1039ffea82de8b6c0b)
+set(qttranslations_REF          a8b48341570242a700fd61abf16ef106b4b4d8b2)
+set(qtwayland_REF               b6d7b9d5dea396b1454b4e204f37a66e3da39150)
 ### New in 6.1
-set(qtactiveqt_REF          94c924a8501dba7487bf2648bdf06aefc33e726d)
-set(qtcharts_REF            d56b9f3de193cbf561f4b1ec332d8598dbdaaaca)
-set(qtdatavis3d_REF         5c90e6642882b3b7440608f71b96ce28908f0ee8)
-#set(qtdeviceutils_REF      0) #missing tag
-set(qtlottie_REF            48df4f1067514a3ae8b895b5f78fca09029d9288)
-set(qtscxml_REF             68ac6986b9a9b3acfcab1e445edc7c198bbf7344)
-set(qtvirtualkeyboard_REF   0e49e057777cd6c3f93d123e59a9399a2cf0040f)
+set(qtactiveqt_REF              9d373846d2f0073f530b1e714afeb76cf039df94)
+set(qtcharts_REF                b74fa4205af2f6be69ec1a233aaee28f1eb6b838)
+set(qtdatavis3d_REF             e5ee7c79d3e6845267691c0074ae3aa286cbe904)
+set(qtdeviceutilities_REF       df77ef89d3b1cbeda9996702e0a26a9a58c9f467) #missing tag
+set(qtlottie_REF                6c16cfae5f39bf1047f73ae99bbe7d99c79f5179)
+set(qtscxml_REF                 6dd18cdf4d24d159f7114b8b31a81d95a24f3ca2)
+set(qtvirtualkeyboard_REF       7473762116f3c0bdfc5d8e4d55137013ea082eaf)
 ### New in 6.2
-set(qtconnectivity_REF      78e7ffbe16469a19fa34cad711e0898d91bd2f30)
-set(qtlocation_REF          47a945b0d054539eab3ba1cf3a1d7bf5977051d6)
-set(qtmultimedia_REF        d7d0e676abd4b280feb0d5105846378b64782487)
-set(qtremoteobjects_REF     58932ba10420faa1cc989ed5bf101ff06475a4fc)
-set(qtsensors_REF           192ca0fd252066101eb0456b957fdb51618fa7db)
-set(qtserialbus_REF         ce089bef29ca55d7fe46508d92d3e498eb5bb847)
-set(qtserialport_REF        14dc155f3640af94c6ecff2de1489e14cd5b0047)
-set(qtwebchannel_REF        09315a8d626e106953723ce68e68d6b4b97c2c52)
-set(qtwebengine_REF         261d72c8afc72faf23d169a64749db216db68859) # Additional refs in portfile due to submodule
-set(qtwebsockets_REF        a01c2d6638fad700db23863258b7fc4a1ecdd542)
-set(qtwebview_REF           ca0053b6a5320046508e9ba205df775a62c1a211)
+set(qtconnectivity_REF          a723287f639e81a3253f6c0923475da5294a3342)
+set(qtserialport_REF            6a92ae54a27d6fc40e5f44332a7d7d49999a8643)
+set(qtmultimedia_REF            6a55ffc411f6ea73d45a7109d54c5cca1a482930)
+set(qtremoteobjects_REF         cc1fd1722180b8a46994c7c751ea4b3b7ab30c58)
+set(qtsensors_REF               ba5da0a367fa2f11b577ba226bea488eda7dd499)
+set(qtserialbus_REF             125631af95d958d55b7b0789dfe64e0d1f7d0122)
+set(qtlocation_REF              6db775f6d9d72cf8ee9d66333b8424e74be1e352)
+set(qtwebchannel_REF            e55fa2e085466238e24d53abf4fc9ede7a7590e4)
+set(qtwebengine_REF             ad19d22d3aa5d692b4988f2ffb88868232e6fc0c) # Additional refs in portfile due to submodule
+set(qtwebsockets_REF            18c452968b3c3ad6c1e1b6512ebd96e9f895c571)
+set(qtwebview_REF               eb5a94f20e77a9639b07ae3d59c9d67529ffed66)
+set(qtpositioning_REF           1294c29be50fa5cdf2d78afffac0451f7b4bc16a)
+### New in Qt 6.2.2
+set(qtapplicationmanager_REF    1009f73d1f5c07947cdc2318150279ad43fc4b04)
+set(qtinterfaceframework_REF    118fa138186144cf2d802405255f08662ed76d43)
+
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")

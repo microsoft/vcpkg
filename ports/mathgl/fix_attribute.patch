@@ -1,0 +1,11 @@
+--- a/include/mgl2/define.h	2021-12-08 13:59:55.000000000 +0800
++++ a/include/mgl2/define.h	2021-12-15 10:39:09.701079400 +0800
+@@ -66,6 +66,8 @@
+ #else
+ #define MGL_FUNC_CONST
+ #define MGL_FUNC_PURE
++#define MGL_FUNC_INIT
++#define MGL_FUNC_FINI
+ #endif
+ #define MGL_EXPORT_CONST	MGL_EXPORT MGL_FUNC_CONST
+ #define MGL_EXPORT_PURE		MGL_EXPORT MGL_FUNC_PURE

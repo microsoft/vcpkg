@@ -6,6 +6,7 @@ include("${SCRIPTS}/cmake/execute_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
 include("${SCRIPTS}/cmake/vcpkg_apply_patches.cmake")
+include("${SCRIPTS}/cmake/vcpkg_backup_restore_env_vars.cmake")
 include("${SCRIPTS}/cmake/vcpkg_build_cmake.cmake")
 include("${SCRIPTS}/cmake/vcpkg_build_make.cmake")
 include("${SCRIPTS}/cmake/vcpkg_build_msbuild.cmake")
@@ -81,7 +82,7 @@ else()
     set(Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-vcpkg_minimum_required(VERSION 2021-08-03)
+vcpkg_minimum_required(VERSION 2021-11-02)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
@@ -137,6 +138,9 @@ if(CMD MATCHES "^BUILD$")
 
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
+
+    set(Z_VCPKG_ERROR_LOG_COLLECTION_FILE "${CURRENT_BUILDTREES_DIR}/error-logs-${TARGET_TRIPLET}.txt")
+    file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)

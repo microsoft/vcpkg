@@ -8,30 +8,40 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src)
+	file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h" DESTINATION "${SOURCE_PATH}/src")
 else()
-	file(MAKE_DIRECTORY ${SOURCE_PATH}/out)
+	file(MAKE_DIRECTORY "${SOURCE_PATH}/out")
 	vcpkg_execute_required_process(
-		COMMAND ${SOURCE_PATH}/configure 
-		WORKING_DIRECTORY ${SOURCE_PATH}/out
+		COMMAND "${SOURCE_PATH}/configure"
+		WORKING_DIRECTORY "${SOURCE_PATH}/out"
 		LOGNAME configure-${TARGET_TRIPLET}
 	)
-	file(COPY ${SOURCE_PATH}/out/config.h DESTINATION ${SOURCE_PATH}/src)
+	file(COPY "${SOURCE_PATH}/out/config.h" DESTINATION "${SOURCE_PATH}/src")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND "sse" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature 'sse' does not support Windows x86 triplet.")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "sse"   ENABLE_SSE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/cityhash)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cityhash)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/cityhash/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/cityhash/copyright" COPYONLY)

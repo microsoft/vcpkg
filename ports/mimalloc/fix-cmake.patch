@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b56953c..d7ad3e7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -279,10 +279,12 @@ if(MI_BUILD_SHARED)
+@@ -303,10 +303,13 @@ if(MI_BUILD_SHARED)
      add_custom_command(TARGET mimalloc POST_BUILD
        COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/bin/mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll" $<TARGET_FILE_DIR:mimalloc>
        COMMENT "Copy mimalloc-redirect${MIMALLOC_REDIRECT_SUFFIX}.dll to output directory")
@@ -11,14 +11,14 @@ index b56953c..d7ad3e7 100644
 +      DESTINATION ${CMAKE_INSTALL_BINDIR}
 +    )  
    endif()
--
+
 -  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_libdir} LIBRARY)  
 -  install(EXPORT mimalloc DESTINATION ${mi_install_cmakedir})
 +  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION lib RUNTIME DESTINATION bin LIBRARY DESTINATION lib NAMELINK_SKIP)
  endif()
  
  # static library
-@@ -308,6 +310,8 @@ if (MI_BUILD_STATIC)
+@@ -332,6 +335,8 @@ if (MI_BUILD_STATIC)
    install(TARGETS mimalloc-static EXPORT mimalloc DESTINATION ${mi_install_libdir} LIBRARY)
  endif()
  
@@ -27,7 +27,7 @@ index b56953c..d7ad3e7 100644
  # install include files
  install(FILES include/mimalloc.h DESTINATION ${mi_install_incdir})
  install(FILES include/mimalloc-override.h DESTINATION ${mi_install_incdir})
-@@ -342,9 +346,6 @@ if (MI_BUILD_OBJECT)
+@@ -366,9 +371,6 @@ if (MI_BUILD_OBJECT)
  
    # the FILES expression can also be: $<TARGET_OBJECTS:mimalloc-obj>
    # but that fails cmake versions less than 3.10 so we leave it as is for now
