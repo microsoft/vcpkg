@@ -9,7 +9,7 @@
     "boost-leaf",
     "frozen",
     "mbedtls",
-    "span",
+    "tcb-span",
     "spdlog",
     "utfcpp",
     {

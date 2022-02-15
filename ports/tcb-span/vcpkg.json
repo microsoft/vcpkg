@@ -1,5 +1,5 @@
 {
-  "name": "span",
+  "name": "tcb-span",
   "version-string": "2021-12-15",
   "description": "Implementation of C++20's std::span for older compilers",
   "homepage": "https://github.com/tcbrindle/span",
