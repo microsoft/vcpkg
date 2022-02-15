@@ -15,4 +15,3 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/License.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
