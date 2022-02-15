@@ -15,7 +15,7 @@ file(STRINGS "configure.ac"
     _ao_version_defines REGEX "AC_INIT.*libao\],\[(.*?)\].*$")
 foreach(ver ${_ao_version_defines})
     if(ver MATCHES "AC_INIT.*libao\],\[(.*?)\].*$")
-        set(AO_VERSION "${CMAKE_MATCH_1}" CACHE INTERNAL "")
+        set(VERSION "${CMAKE_MATCH_1}" CACHE INTERNAL "")
     endif()
 endforeach()
 # include(CheckIncludeFile)
@@ -55,10 +55,6 @@ set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(includedir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
 
-set(AOLIB "${CMAKE_PROJECT_NAME}")
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(AOLIB "${CMAKE_PROJECT_NAME}d")
-endif()
 configure_file(ao.pc.in ao.pc @ONLY)
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/ao.pc
