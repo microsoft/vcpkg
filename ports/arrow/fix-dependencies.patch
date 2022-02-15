@@ -50,11 +50,11 @@ index bc389521b..7477ffef7 100644
      BZip2
      c-ares
      gflags
-@@ -64,13 +64,14 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
+@@ -64,14 +64,14 @@ set(ARROW_THIRDPARTY_DEPENDENCIES
      LLVM
-     Lz4
-     opentelemetry-cpp
+-    Lz4
 +    lz4
+     opentelemetry-cpp
      ORC
      re2
      Protobuf
