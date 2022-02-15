@@ -1,0 +1,21 @@
+{
+  "name": "rubberband",
+  "version": "2.0.2",
+  "description": "Rubber Band Library is a high quality software library for audio time-stretching and pitch-shifting. It permits you to change the tempo and pitch of an audio stream or recording dynamically and independently of one another.",
+  "homepage": "http://breakfastquay.com/rubberband/",
+  "license": "GPL-2.0-or-later",
+  "features": {
+    "cli": {
+      "description": "Install CLI application",
+      "dependencies": [
+        "libsamplerate"
+      ]
+    },
+    "lv2": {
+      "description": "Build LV2 plugin",
+      "dependencies": [
+        "lv2"
+      ]
+    }
+  }
+}
