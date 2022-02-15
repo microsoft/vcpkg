@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+
 # Because status-code's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
