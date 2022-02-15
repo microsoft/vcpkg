@@ -1,0 +1,17 @@
+diff --git a/include/LIEF/third-party/span.hpp b/include/LIEF/third-party/span.hpp
+index db355fc4..5f521fd3 100644
+--- a/include/LIEF/third-party/span.hpp
++++ b/include/LIEF/third-party/span.hpp
+@@ -16,10 +16,10 @@
+ #define LIEF_THIRD_PARTY_SPAN_H_
+ #include "LIEF/config.h"
+ 
+-#ifndef LIEF_EXTERNAL_LEAF
++#ifndef LIEF_EXTERNAL_SPAN
+ #include <LIEF/third-party/internal/span.hpp>
+ #else
+-#include <span.hpp>
++#include <tcb/span.hpp>
+ #endif
+ 
+ #endif

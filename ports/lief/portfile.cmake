@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 05e3c6eb7cd0ca67c97208e34ac7b815ad0f318e # master commit 2022-02-12
-    SHA512 95f126ab8c8aa93c2b78da338c96cbe91a54b03a9d11fbc555959d1b54f4965a9c975c8953f5c05bab6798c0a4a710b8dab85ed630fe2a26b55810ed477e7441
+    REF 274d887e176aaa404a60cf6eea239f84f191349e # master commit 2022-02-14
+    SHA512 5a5a57f4dc36eb4d74dfd4d7a66f4c5a7eb83b6b58202944ead9be86a576c141cd3c54b5b45f7182a4a7710349da16e16b67e7074523c18fedb98ecf8ba43fba
     HEAD_REF master
     PATCHES
         support_distribution.patch
-        fix_windows_build.patch
+        fix_span_include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -65,6 +65,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_FROZEN_EXTERNAL=ON
         -DLIEF_OPT_EXTERNAL_LEAF=ON
         "-DLIEF_EXTERNAL_LEAF_DIR=${CURRENT_INSTALLED_DIR}/include"
+        -DLIEF_OPT_EXTERNAL_SPAN=ON
 )
 
 vcpkg_cmake_install()
@@ -84,5 +85,5 @@ if(dir_files_len EQUAL 0)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/LIEF")
 endif()
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
