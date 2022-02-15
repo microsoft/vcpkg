@@ -4808,6 +4808,10 @@
       "baseline": "2019-08-10",
       "port-version": 1
     },
+    "nu-book-zxing-cpp": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "nuklear": {
       "baseline": "2021-03-18",
       "port-version": 1
@@ -7559,10 +7563,6 @@
     "zug": {
       "baseline": "2021-04-23",
       "port-version": 0
-    },
-    "zxing-cpp": {
-      "baseline": "2020-12",
-      "port-version": 3
     },
     "zydis": {
       "baseline": "3.2.1",
