@@ -55,14 +55,17 @@ function(x_vcpkg_get_python_packages PYTHON_DIR )
                     SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
                     HEAD_REF master
                 )
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION}
+                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endif()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION}
+                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         else()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package}
+                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         endif()
         if(NOT VCPKG_TARGET_IS_WINDOWS)
