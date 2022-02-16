@@ -78,7 +78,6 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
-                            patches/zstdd.patch                #Fix detection of zstd in debug builds
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
@@ -216,8 +215,8 @@ find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_D
 find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 #Dependent libraries
-find_library(ZSTD_RELEASE NAMES zstd zstd_static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZSTD_DEBUG NAMES zstdd zstd_staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
