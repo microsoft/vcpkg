@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
-    REF 5e185ccfff2728fa351cea41f6d9fefebfb88078 # hwloc-2.5.0
-    SHA512 96f6421c40eede3a3c273a1ffa06accc43767421d5fb7b402a83caea1ef1a3bb8282c08ed94bc696296f37f3df80cd86403dac1012f2218b674569c8afcf3de9
-    PATCHES fix_wrong_ifdef.patch
-            fix_shared_win_build.patch
+    REF 6fa8466a9c9c28de8ca3bd9e879c426edd85decf # hwloc-2.7.0
+    SHA512 33bcc30362ba27076eacc83327a9d6235e2914a3c64536631e05e2d44c2c12b0176d55cc42ec0dc3c80682b977a83e60bd3a41f3ef486581cf8afa62ad2e9516
+    PATCHES
+        fix_shared_win_build.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -14,6 +14,8 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS "HWLOC_LDFLAGS=-no-undefined")
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "HWLOC_LDFLAGS=-framework CoreFoundation")
 endif()
 
 vcpkg_configure_make(

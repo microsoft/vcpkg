@@ -1,6 +1,7 @@
 {
   "name": "boost-iostreams",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
   "supports": "!uwp",
