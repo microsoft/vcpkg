@@ -6873,8 +6873,8 @@
       "port-version": 1
     },
     "tinyexif": {
-      "baseline": "1.0.2",
-      "port-version": 7
+      "baseline": "2022-02-15",
+      "port-version": 0
     },
     "tinyexpr": {
       "baseline": "2020-09-25",
