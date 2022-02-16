@@ -11,37 +11,36 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/share/man
-    ${CURRENT_PACKAGES_DIR}/share/doc
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share/man
-    ${CURRENT_PACKAGES_DIR}/debug/share/doc
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share/doc"
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qhull)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qhull)
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic.pc
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc"
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhull_r.pc
-        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhull_rd.pc
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhull_r.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhull_rd.pc"
     )
 else()
     file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic_r.pc
-        ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_rd.pc
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic_r.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_rd.pc"
     )
 endif()
 vcpkg_fixup_pkgconfig()
@@ -56,4 +55,4 @@ vcpkg_copy_tools(TOOL_NAMES
     AUTO_CLEAN
 )
 
-file(INSTALL ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
