@@ -34,9 +34,8 @@ set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.7.2")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
-# this policy is required for this file; thus, CMake 3.7.2 is required.
 cmake_policy(PUSH)
-cmake_policy(SET CMP0054 NEW)
+cmake_policy(VERSION 3.7.2)
 
 include(CMakeDependentOption)
 
@@ -616,7 +615,7 @@ function(x_vcpkg_install_local_dependencies)
 
     if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
         # Install CODE|SCRIPT allow the use of generator expressions
-        cmake_policy(SET CMP0087 NEW)
+        cmake_policy(SET CMP0087 NEW) # CMake 3.14
 
         z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
