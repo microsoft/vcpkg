@@ -28,20 +28,22 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qhull)
-file(REMOVE
-    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic.pc"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc"
-)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhull_r.pc"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhull_rd.pc"
-    )
+    set(active_basename "qhullstatic")
+    set(inactive_basename "qhull")
 else()
-    file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/qhullstatic_r.pc"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_rd.pc"
-    )
+    set(active_basename "qhull")
+    set(inactive_basename "qhullstatic")
+endif()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${inactive_basename}_r.pc")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${inactive_basename}.pc") # qhullstatic.pc in dynamic build
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${inactive_basename}_rd.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${active_basename}_rd.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${active_basename}_r.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic_d.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullstatic.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${inactive_basename}.pc") # qhullstatic.pc in dynamic build
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullcpp_d.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/qhullcpp.pc")
 endif()
 vcpkg_fixup_pkgconfig()
 
