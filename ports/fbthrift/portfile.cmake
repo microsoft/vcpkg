@@ -1,7 +1,3 @@
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 

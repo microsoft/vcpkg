@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
   "homepage": "https://github.com/facebook/fbthrift",
-  "supports": "x64",
+  "supports": "x64 & static",
   "dependencies": [
     "boost-context",
     "boost-filesystem",
