@@ -11,26 +11,20 @@ vcpkg_from_github(
   PATCHES ${PATCHES}
 )
 
-
 if(VCPKG_TARGET_IS_WINDOWS)
-  file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-  file(COPY "${CMAKE_CURRENT_LIST_DIR}/libao.def" DESTINATION "${SOURCE_PATH}")
-  vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-  )
-  vcpkg_cmake_install()
-else()
-  vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
-    OPTIONS --disable-binaries # no example programs (require libogg)
-  )
-  vcpkg_install_make()
-
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+  set(ENV{LIBS} "-lwinmm -lksuser")
 endif()
+
+vcpkg_configure_make(
+  SOURCE_PATH ${SOURCE_PATH}
+  AUTOCONFIG
+  OPTIONS  --disable-binaries 
+)
+vcpkg_install_make()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 
 vcpkg_fixup_pkgconfig()
 

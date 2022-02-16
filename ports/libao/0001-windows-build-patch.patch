@@ -1,15 +1,13 @@
-From e1bb2185d2f5e181e6da23ea392806d00ded58e6 Mon Sep 17 00:00:00 2001
+From 129f8e155596199191cc005bcc257397d0d981ac Mon Sep 17 00:00:00 2001
 From: xiaoyifang <yifang.xiao@outlook.com>
-Date: Wed, 16 Feb 2022 20:58:45 +0800
+Date: Wed, 16 Feb 2022 21:58:40 +0800
 Subject: [PATCH] patch windows
 
 ---
  include/ao/ao_private.h | 30 +++++++++++++++---------------
- include/ao/os_types.h   |  9 +++++++++
  src/ao_wmm.c            |  1 +
  src/audio_out.c         |  1 -
- 4 files changed, 25 insertions(+), 16 deletions(-)
- create mode 100644 include/ao/os_types.h
+ 3 files changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/include/ao/ao_private.h b/include/ao/ao_private.h
 index 44fa03e..c3c50aa 100644
@@ -100,21 +98,6 @@ index 44fa03e..c3c50aa 100644
          }                                                               \
        }else{                                                            \
          fprintf(stderr,"\n");                                           \
-diff --git a/include/ao/os_types.h b/include/ao/os_types.h
-new file mode 100644
-index 0000000..c0c2ea1
---- /dev/null
-+++ b/include/ao/os_types.h
-@@ -0,0 +1,9 @@
-+#pragma once
-+#include <stdint.h>
-+
-+typedef uint8_t  uint_8;
-+typedef uint16_t uint_16;
-+typedef uint32_t uint_32;
-+typedef int8_t   sint_8;
-+typedef int16_t  sint_16;
-+typedef int32_t  sint_32;
 diff --git a/src/ao_wmm.c b/src/ao_wmm.c
 index eec6b83..d18d2a4 100644
 --- a/src/ao_wmm.c
