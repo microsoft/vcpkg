@@ -2722,7 +2722,7 @@
     },
     "hpx": {
       "baseline": "1.7.1",
-      "port-version": 3
+      "port-version": 4
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -2737,8 +2737,8 @@
       "port-version": 8
     },
     "hwloc": {
-      "baseline": "2.5.0",
-      "port-version": 3
+      "baseline": "2.7.0",
+      "port-version": 0
     },
     "hyperscan": {
       "baseline": "5.3.0",
