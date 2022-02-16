@@ -1,8 +1,9 @@
 {
   "name": "qtwayland",
-  "version-semver": "6.2.2",
+  "version": "6.2.3",
   "description": "A toolbox for making Qt based Wayland compositors",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "supports": "!windows",
   "dependencies": [
     {
