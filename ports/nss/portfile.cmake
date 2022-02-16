@@ -198,28 +198,6 @@ if (LIB_DEBUG_SIZE GREATER 0)
     file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-# Debug tools
-
-vcpkg_copy_tools(
-    TOOL_NAMES
-        "certutil"
-        "cmsutil"
-        "crlutil"
-        "hw-support"
-        "modutil"
-        "nss"
-        "pk12util"
-        "pwdecrypt"
-        "shlibsign"
-        "signtool"
-        "signver"
-        "ssltap"
-        "symkeyutil"
-        "validation"
-    SEARCH_DIR "${VCPKG_BINARY_DIR}-dbg/dist/Debug/bin/"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
-)
-
 # Copy license
 
 file(COPY "${SOURCE_PATH}/nss/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nss")
