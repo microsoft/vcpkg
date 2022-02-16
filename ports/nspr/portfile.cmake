@@ -47,12 +47,6 @@ set(OPTIONS_RELEASE
     "--disable-debug-rtl"
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{CC}  "cl")
-    set(ENV{CXX} "cl")
-    set(ENV{LD}  "link")
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     CONFIGURE_ENVIRONMENT_VARIABLES CC CXX LD
