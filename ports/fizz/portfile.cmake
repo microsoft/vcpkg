@@ -7,13 +7,16 @@ vcpkg_from_github(
     SHA512 544f843f47cb6113d0ad804079e6d767f33723d9d529c2751c5c6317d65c35bd327b43852904b2a37c2af615276176fe2de667907a9a460c0dfc7593eca46459
     HEAD_REF master
     PATCHES
-        0001-fix-libsodium.patch
+        fix-dependencies.patch
 )
 
 # Prefer installed config files
 file(REMOVE
+    ${SOURCE_PATH}/fizz/cmake/FindDoubleConversion.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindGMock.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
 )
 
 vcpkg_cmake_configure(

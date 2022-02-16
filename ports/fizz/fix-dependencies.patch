@@ -1,0 +1,106 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index bb3e15e..2547114 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -54,23 +54,23 @@ find_package(folly CONFIG REQUIRED)
+ find_package(fmt CONFIG REQUIRED)
+ 
+ find_package(OpenSSL REQUIRED)
+-find_package(Glog REQUIRED)
+-find_package(DoubleConversion REQUIRED)
++find_package(Glog CONFIG REQUIRED)
++find_package(double-conversion CONFIG REQUIRED)
+ find_package(Threads REQUIRED)
+-find_package(Zstd REQUIRED)
++find_package(Zstd CONFIG REQUIRED)
+ if (UNIX AND NOT APPLE)
+   find_package(Librt)
+ endif()
+ 
+ include(CheckAtomic)
+ 
+-find_package(Sodium REQUIRED)
++find_package(unofficial-sodium CONFIG REQUIRED)
+ 
+ SET(FIZZ_SHINY_DEPENDENCIES "")
+ SET(FIZZ_LINK_LIBRARIES "")
+ SET(FIZZ_INCLUDE_DIRECTORIES "")
+ 
+-find_package(gflags CONFIG QUIET)
++find_package(gflags CONFIG REQUIRED)
+ if (gflags_FOUND)
+   message(STATUS "Found gflags from package config")
+   if (TARGET gflags-shared)
+@@ -92,7 +92,7 @@ endif()
+ 
+ find_package(ZLIB REQUIRED)
+ 
+-find_package(Libevent CONFIG QUIET)
++find_package(Libevent CONFIG REQUIRED)
+ if(TARGET event)
+   message(STATUS "Found libevent from package config")
+   list(APPEND FIZZ_SHINY_DEPENDENCIES event)
+@@ -240,30 +240,24 @@ target_include_directories(
+   PUBLIC
+     $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
+     $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
+-    ${FOLLY_INCLUDE_DIR}
+     ${OPENSSL_INCLUDE_DIR}
+-    ${sodium_INCLUDE_DIR}
+-    ${ZSTD_INCLUDE_DIR}
+   PRIVATE
+-    ${GLOG_INCLUDE_DIRS}
+     ${FIZZ_INCLUDE_DIRECTORIES}
+-    ${DOUBLE_CONVERSION_INCLUDE_DIRS}
+ )
+ 
+ 
+ target_link_libraries(fizz
+   PUBLIC
+-    ${FOLLY_LIBRARIES}
++    Folly::folly Folly::folly_deps Folly::follybenchmark Folly::folly_test_util
+     ${OPENSSL_LIBRARIES}
+-    sodium
++    unofficial-sodium::sodium
+     Threads::Threads
+     ZLIB::ZLIB
+-    ${ZSTD_LIBRARY}
++    $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+   PRIVATE
+-    ${GLOG_LIBRARIES}
+-    ${GFLAGS_LIBRARIES}
++    glog::glog
+     ${FIZZ_LINK_LIBRARIES}
+-    ${DOUBLE_CONVERSION_LIBRARIES}
++    double-conversion::double-conversion
+     ${CMAKE_DL_LIBS}
+     ${LIBRT_LIBRARIES})
+ 
+diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
+index 679b0e6..c129ab9 100644
+--- a/fizz/cmake/fizz-config.cmake.in
++++ b/fizz/cmake/fizz-config.cmake.in
+@@ -26,10 +26,22 @@ endif()
+ set(FIZZ_LIBRARIES fizz::fizz)
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(Sodium)
+ find_dependency(folly CONFIG)
++find_dependency(fmt CONFIG)
++find_dependency(OpenSSL)
++find_dependency(Glog CONFIG)
++find_dependency(double-conversion CONFIG)
++find_dependency(Threads)
++find_dependency(Zstd CONFIG)
++
++find_dependency(unofficial-sodium CONFIG)
++
++find_dependency(gflags CONFIG)
++
+ find_dependency(ZLIB)
+ 
++find_dependency(Libevent CONFIG)
++
+ if (NOT fizz_FIND_QUIETLY)
+   message(STATUS "Found fizz: ${PACKAGE_PREFIX_DIR}")
+ endif()
