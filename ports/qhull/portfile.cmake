@@ -28,6 +28,12 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qhull)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/qhull/QhullTargets-interface.cmake" [[
+        add_library(Qhull::qhull_r IMPORTED INTERFACE)
+        set_target_properties(Qhull::qhull_r PROPERTIES INTERFACE_LINK_LIBRARIES Qhull::qhullstatic_r)
+]])
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(active_basename "qhullstatic")
@@ -57,4 +63,5 @@ vcpkg_copy_tools(TOOL_NAMES
     AUTO_CLEAN
 )
 
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
