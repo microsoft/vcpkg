@@ -2,10 +2,8 @@ cmake_minimum_required (VERSION 3.8.0)
 project (ao C)
 
 include(GNUInstallDirs)
-include(CheckLibraryExists)
 
-
-include_directories(include)
+include_directories(include include/ao)
 
 set(CMAKE_DEBUG_POSTFIX d)
 add_definitions(-DAO_BUILDING_LIBAO)
@@ -31,12 +29,7 @@ set(SRC
 "src/ao_wmm.c"
 )
 
-# if(HAVE_WMM)
-  # list(APPEND SRC src/ao_wmm.c)
-  # target_link_libraries(libao -lwinmm )
-# endif()
-
-add_library(ao ${SRC})
+add_library(ao ${SRC} ${CMAKE_CURRENT_SOURCE_DIR}/libao.def)
 target_link_libraries(ao winmm ksuser )
 install(
   TARGETS ao
