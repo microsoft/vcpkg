@@ -502,7 +502,7 @@
     },
     "blosc": {
       "baseline": "1.18.1",
-      "port-version": 3
+      "port-version": 4
     },
     "boinc": {
       "baseline": "7.18.1",
@@ -766,7 +766,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.78.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-iterator": {
       "baseline": "1.78.0",
@@ -2014,7 +2014,7 @@
     },
     "elfutils": {
       "baseline": "0.186",
-      "port-version": 0
+      "port-version": 1
     },
     "embree2": {
       "baseline": "2.17.7",
@@ -4086,7 +4086,7 @@
     },
     "libwandio": {
       "baseline": "4.2.1",
-      "port-version": 4
+      "port-version": 5
     },
     "libwebm": {
       "baseline": "1.0.0.28",
@@ -5594,7 +5594,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 19
+      "port-version": 20
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7554,7 +7554,7 @@
     },
     "zstd": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "zstr": {
       "baseline": "1.0.4",
