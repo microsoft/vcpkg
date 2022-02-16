@@ -5,12 +5,12 @@
   "description": "a TLS 1.3 implementation by Facebook",
   "homepage": "https://github.com/facebookincubator/fizz",
   "dependencies": [
+    "double-conversion",
     "fmt",
     "folly",
     "libevent",
     "libsodium",
     "openssl",
-    "double-conversion",
     {
       "name": "vcpkg-cmake",
       "host": true
