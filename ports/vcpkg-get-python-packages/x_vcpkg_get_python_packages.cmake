@@ -70,7 +70,7 @@ function(x_vcpkg_get_python_packages PYTHON_DIR )
         endif()
     else() # outside vcpkg
         foreach(_package IN LISTS arg_PACKAGES)
-            vcpkg_execute_required_process(COMMAND ${arg_PYTHON_EXECUTABLE} -c "import ${_package}" RESULT_VARIABLE HAS_ERROR)
+            vcpkg_execute_in_download_mode(COMMAND ${arg_PYTHON_EXECUTABLE} -c "import ${_package}" RESULT_VARIABLE HAS_ERROR)
             if(HAS_ERROR)
                 message(FATAL_ERROR "Python package '${_package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${arg_PACKAGES}")
             endif()
