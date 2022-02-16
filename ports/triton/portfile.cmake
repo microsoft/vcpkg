@@ -5,6 +5,7 @@ vcpkg_from_github(
   SHA512 f34cc9787837dc826e21997a86c32087b29ed9662bc8e0ac8ddb934978a64bdfd54c3d1303689be2a9dff4a0f3c9128219e04881e6c98f5e21a27ecd57489586
   PATCHES
     fix-dependencies.patch
+    fix-usage.patch
     fix-build.patch
 )
 

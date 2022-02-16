@@ -1,0 +1,23 @@
+diff --git a/src/libtriton/Config.cmake.in b/src/libtriton/Config.cmake.in
+index 0464166..35549dd 100644
+--- a/src/libtriton/Config.cmake.in
++++ b/src/libtriton/Config.cmake.in
+@@ -1,5 +1,12 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(CAPSTONE)
++find_dependency(Boost)
++if (@Z3_INTERFACE@)
++    find_dependency(Z3 CONFIG)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/tritonTargets.cmake")
+ 
+ set(TRITON_ARCHIVE              "@CMAKE_INSTALL_PREFIX@/lib/@CMAKE_STATIC_LIBRARY_PREFIX@triton@CMAKE_STATIC_LIBRARY_SUFFIX@")
+@@ -16,5 +23,3 @@ set(TRITON_Z3_INTERFACE         @Z3_INTERFACE@)
+ 
+ message(STATUS "Found Triton: ${CMAKE_CURRENT_LIST_DIR}/tritonConfig.cmake (found version ${TRITON_VERSION})")
+ 
+-include(CMakeFindDependencyMacro)
+-find_dependency(Boost)
