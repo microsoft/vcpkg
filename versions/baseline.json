@@ -1234,7 +1234,7 @@
     },
     "capstone": {
       "baseline": "4.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "cartographer": {
       "baseline": "1.0.0",
