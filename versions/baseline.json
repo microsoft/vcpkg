@@ -4634,7 +4634,7 @@
     },
     "mvfst": {
       "baseline": "0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mygui": {
       "baseline": "3.4.1",
