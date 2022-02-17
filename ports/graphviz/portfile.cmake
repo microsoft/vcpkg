@@ -59,10 +59,11 @@ vcpkg_copy_tools(
 file(GLOB PLUGINS "${CURRENT_PACKAGES_DIR}/bin/gvplugin_*")
 file(COPY ${PLUGINS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     set(DOT_COMMAND "dot")
 else()
     set(DOT_COMMAND "./dot")
+    set(ENV{LD_LIBRARY_PATH} "$ENV{LD_LIBRARY_PATH}:${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 vcpkg_execute_required_process(
