@@ -44,7 +44,8 @@ set(PATCHES
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
-        patches/fix-configure.patch
+        patches/windows/tcl_version.patch
+        patches/fix-configure.patch        
         )
 
 if(VCPKG_TARGET_IS_MINGW)
