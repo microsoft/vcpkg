@@ -8,7 +8,7 @@ vcpkg_from_gitlab(
     PATCHES
         0001-Fix-build.patch
 )
-
+set(LTDL_OPTION)
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -21,6 +21,7 @@ else()
         SHA512 f2d20e849e35060536265f47014c40eb70e57dacd600a9db112fc465fbfa6a66217b44a8c3dc33039c260a27f09d9034b329b03cc28c32a22ec503fcd17b78cd
     )
     file(COPY ${LTDL_H_PATH} DESTINATION ${SOURCE_PATH}/lib/common)
+    set(LTDL_OPTION "-DLTDL_INCLUDE_DIR=${SOURCE_PATH}/lib/common")
 endif()
 
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
@@ -40,7 +41,7 @@ vcpkg_cmake_configure(
         -DGIT_EXECUTABLE=${GIT}
         -DPython3_EXECUTABLE=${PYTHON3}
         -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf
-        -DLTDL_INCLUDE_DIR=${SOURCE_PATH}/lib/common
+        ${LTDL_OPTION}
 )
 
 vcpkg_cmake_install()
