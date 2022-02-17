@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 d6b8e9fc195a60dfb83fe8a49040c21ca5603e3ada2036d56851e6e61a1cd2653ad45f33e39388bde859dfb4806f4a60d9dbfac5fe41b6d2a8b395c44d4525e3
     HEAD_REF master
+    PATCHES gstreamer-disable-hot-doc.patch
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_SOURCE_PATH
