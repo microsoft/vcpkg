@@ -35,6 +35,9 @@
     "sparc": {
       "description": "Capstone disassembly support for SPARC"
     },
+    "static-crt": {
+      "description": "Use Windows C Runtime Library (CRT)"
+    },
     "sysz": {
       "description": "Capstone disassembly support for SysZ"
     },
@@ -57,9 +60,6 @@
     },
     "xcore": {
       "description": "Capstone disassembly support for XCore"
-    },
-    "static-crt": {
-      "description": "Use Windows C Runtime Library (CRT)"
     }
   }
 }
