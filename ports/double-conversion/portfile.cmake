@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Rename exported target files into something vcpkg_fixup_cmake_targets expects
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/double-conversion")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 endif()
 
