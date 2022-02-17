@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-libsodium.patch
+        0002-fix-libevent.patch
 )
 
 # Prefer installed config files
