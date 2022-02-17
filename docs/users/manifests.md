@@ -344,6 +344,11 @@ If unset, vcpkg will automatically detect an appropriate native triplet (x64-win
 
 See also [Host Dependencies](host-dependencies.md).
 
+### `VCPKG_INSTALLED_DIR`
+
+This variable allows one to set the location of the `vcpkg_installed` directory.
+It defaults to `${CMAKE_BINARY_DIR}/vcpkg_installed`.
+
 #### `VCPKG_MANIFEST_MODE`
 
 This variable controls whether vcpkg operates in manifest mode or in classic mode. To disable manifest mode even with a
