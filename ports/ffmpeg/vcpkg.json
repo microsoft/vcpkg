@@ -118,14 +118,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(arm64 & windows)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "openh264"
           ],
           "platform": "!uwp"
@@ -177,6 +169,14 @@
             "nvcodec"
           ],
           "platform": "(windows | linux) & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!uwp & !(arm64 & windows)"
         },
         {
           "name": "ffmpeg",
