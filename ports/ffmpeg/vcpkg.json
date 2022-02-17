@@ -1,7 +1,7 @@
 {
   "name": "ffmpeg",
   "version": "4.4.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
@@ -33,14 +33,12 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ass",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
             "avresample",
             "bzip2",
-            "fontconfig",
             "freetype",
             "iconv",
             "lzma",
@@ -75,6 +73,22 @@
             "sdl2"
           ],
           "platform": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "ass"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
@@ -120,14 +134,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tensorflow"
-          ],
-          "platform": "!static"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "ilbc"
           ],
           "platform": "!(arm & uwp)"
@@ -139,6 +145,14 @@
             "ssh"
           ],
           "platform": "!(uwp | arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -170,7 +184,7 @@
           "features": [
             "tesseract"
           ],
-          "platform": "!(windows & arm) & !static"
+          "platform": "!(windows & arm) & !static & !uwp"
         }
       ]
     },

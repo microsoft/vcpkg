@@ -357,18 +357,23 @@ endif()
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-if(NOT DEFINED Z_VCPKG_ROOT_DIR)
-    # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-    set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
-    while(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}" AND NOT EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+# Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
+while(NOT DEFINED Z_VCPKG_ROOT_DIR)
+    if(EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+        set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
+    elseif(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}")
         get_filename_component(Z_VCPKG_ROOT_DIR_TEMP "${Z_VCPKG_ROOT_DIR_CANDIDATE}" DIRECTORY)
-        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        else()
-            SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE)
+            break() # If unchanged, we have reached the root of the drive without finding vcpkg.
         endif()
-    endwhile()
-    set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
-endif()
+        SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
+        unset(Z_VCPKG_ROOT_DIR_TEMP)
+    else()
+        break()
+    endif()
+endwhile()
+unset(Z_VCPKG_ROOT_DIR_CANDIDATE)
 
 if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
@@ -510,12 +515,8 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
 
         if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
-
-            # file(TOUCH) added in CMake 3.12
-            file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                "${VCPKG_MANIFEST_DIR}/vcpkg.json"
-                "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
+                "${VCPKG_MANIFEST_DIR}/vcpkg.json")
             if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                     "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
