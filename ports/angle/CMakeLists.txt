@@ -44,6 +44,9 @@ add_definitions(
 add_compile_options("$<$<CONFIG:DEBUG>:-DANGLE_ENABLE_DEBUG_ANNOTATIONS>")
 if(WIN32)
     add_definitions(-DANGLE_IS_WIN)
+    if(WINDOWS_STORE)
+      add_definitions(-DANGLE_IS_WINUWP)
+    endif()
 endif()
 if(LINUX)
     add_definitions(-DANGLE_IS_LINUX)
@@ -131,6 +134,7 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/Diagnostics.h"
     "src/compiler/translator/DirectiveHandler.cpp"
     "src/compiler/translator/DirectiveHandler.h"
+    "src/compiler/translator/DriverUniformMetal.h"
     "src/compiler/translator/ExtensionBehavior.cpp"
     "src/compiler/translator/ExtensionBehavior.h"
     "src/compiler/translator/FlagStd140Structs.cpp"
@@ -154,14 +158,11 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/IsASTDepthBelowLimit.cpp"
     "src/compiler/translator/IsASTDepthBelowLimit.h"
     "src/compiler/translator/Operator.cpp"
-    "src/compiler/translator/Operator.h"
+    "src/compiler/translator/Operator_autogen.h"
     "src/compiler/translator/OutputTree.cpp"
     "src/compiler/translator/OutputTree.h"
     "src/compiler/translator/ParseContext.cpp"
     "src/compiler/translator/ParseContext.h"
-    "src/compiler/translator/ParseContext_ESSL_autogen.h"
-    "src/compiler/translator/ParseContext_complete_autogen.h"
-    "src/compiler/translator/ParseContext_interm.h"
     "src/compiler/translator/PoolAlloc.cpp"
     "src/compiler/translator/PoolAlloc.h"
     "src/compiler/translator/Pragma.h"
@@ -182,6 +183,7 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/TranslatorGLSL.h"
     "src/compiler/translator/TranslatorHLSL.h"
     "src/compiler/translator/TranslatorMetal.h"
+    "src/compiler/translator/TranslatorMetalDirect.h"
     "src/compiler/translator/TranslatorVulkan.h"
     "src/compiler/translator/Types.cpp"
     "src/compiler/translator/Types.h"
@@ -201,10 +203,13 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/ValidateOutputs.h"
     "src/compiler/translator/ValidateSwitch.cpp"
     "src/compiler/translator/ValidateSwitch.h"
+    "src/compiler/translator/ValidateTypeSizeLimitations.cpp"
+    "src/compiler/translator/ValidateTypeSizeLimitations.h"
     "src/compiler/translator/ValidateVaryingLocations.cpp"
     "src/compiler/translator/ValidateVaryingLocations.h"
     "src/compiler/translator/VariablePacker.cpp"
     "src/compiler/translator/VariablePacker.h"
+    "src/compiler/translator/VersionGLSL.h"
     "src/compiler/translator/blocklayout.cpp"
     "src/compiler/translator/glslang.h"
     "src/compiler/translator/glslang_lex_autogen.cpp"
@@ -214,14 +219,15 @@ file(GLOB TRANSLATOR_SOURCES
     "src/compiler/translator/length_limits.h"
     "src/compiler/translator/tree_ops/*.cpp"
     "src/compiler/translator/tree_ops/*.h"
+    "src/compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.h"
+    "src/compiler/translator/tree_ops/apple/RewriteDoWhile.h"
+    "src/compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.h"
+    "src/compiler/translator/tree_ops/apple/RewriteUnaryMinusOperatorFloat.h"
+    "src/compiler/translator/tree_ops/apple/UnfoldShortCircuitAST.h"
     "src/compiler/translator/tree_ops/gl/ClampFragDepth.h"
     "src/compiler/translator/tree_ops/gl/RegenerateStructNames.h"
     "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h"
     "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h"
-    "src/compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.h"
-    "src/compiler/translator/tree_ops/gl/mac/AddAndTrueToLoopCondition.h"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h"
-    "src/compiler/translator/tree_ops/gl/mac/UnfoldShortCircuitAST.h"
     "src/compiler/translator/tree_ops/vulkan/EarlyFragmentTestsOptimization.h"
     "src/compiler/translator/tree_util/*.h"
     "src/compiler/translator/tree_util/*.cpp"
@@ -245,8 +251,6 @@ file(GLOB TRANSLATOR_ESSL_SOURCES
     "src/compiler/translator/OutputESSL.cpp"
     "src/compiler/translator/OutputESSL.h"
     "src/compiler/translator/TranslatorESSL.cpp"
-    "src/compiler/translator/tree_ops/gl/RecordConstantPrecision.cpp"
-    "src/compiler/translator/tree_ops/gl/RecordConstantPrecision.h"
 )
 file(GLOB TRANSLATOR_GLSL_SOURCES
     "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp"
@@ -260,16 +264,13 @@ file(GLOB TRANSLATOR_GLSL_SOURCES
     "src/compiler/translator/tree_ops/gl/RegenerateStructNames.cpp"
     "src/compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.cpp"
     "src/compiler/translator/tree_ops/gl/UseInterfaceBlockFields.cpp"
-    "src/compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.cpp"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteRowMajorMatrices.h"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteUnaryMinusOperatorFloat.h"
 )
-file(GLOB TRANSLATOR_GLSL_MAC_SOURCES
-    "src/compiler/translator/tree_ops/gl/mac/AddAndTrueToLoopCondition.cpp"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteDoWhile.cpp"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteRowMajorMatrices.cpp"
-    "src/compiler/translator/tree_ops/gl/mac/RewriteUnaryMinusOperatorFloat.cpp"
-    "src/compiler/translator/tree_ops/gl/mac/UnfoldShortCircuitAST.cpp"
+file(GLOB TRANSLATOR_GLSL_APPLE_SOURCES
+    "src/compiler/translator/tree_ops/apple/AddAndTrueToLoopCondition.cpp"
+    "src/compiler/translator/tree_ops/apple/RewriteDoWhile.cpp"
+    "src/compiler/translator/tree_ops/apple/RewriteRowMajorMatrices.cpp"
+    "src/compiler/translator/tree_ops/apple/RewriteUnaryMinusOperatorFloat.cpp"
+    "src/compiler/translator/tree_ops/apple/UnfoldShortCircuitAST.cpp"
 )
 file(GLOB TRANSLATOR_HLSL_SOURCES
     "src/compiler/translator/*HLSL.h"
@@ -299,7 +300,8 @@ if(ANGLE_ENABLE_GLSL)
     set(_needs_glsl_and_vulkan_base TRUE)
     target_sources(angle_translator PRIVATE ${TRANSLATOR_GLSL_SOURCES})
     if(APPLE)
-        target_sources(angle_translator PRIVATE ${TRANSLATOR_GLSL_MAC_SOURCES})
+        target_sources(angle_translator PRIVATE ${TRANSLATOR_GLSL_APPLE_SOURCES})
+        target_compile_definitions(angle_translator PUBLIC -DANGLE_ENABLE_APPLE_WORKAROUNDS)
     endif()
     target_compile_definitions(angle_translator PUBLIC -DANGLE_ENABLE_GLSL)
 endif()

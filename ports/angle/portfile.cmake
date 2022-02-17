@@ -15,11 +15,15 @@ else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
+# chromium/4758
+set(ANGLE_COMMIT b790affce32eda9b73883f1fdd35ab378e635a16)
+set(ANGLE_VERSION 4758)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
-    REF d15be77864e18f407c317be6f6bc06ee2b7d070a # chromium/4472
-    SHA512 aad8563ee65458a7865ec7c668d1f90ac2891583c569a22dcd2c557263b72b26386f56b74a7294398be2cf5c548df513159e4be53f3f096f19819ca06227d9ac
+    REF ${ANGLE_COMMIT}
+    SHA512 51ed88ae975c6f2e73fe8a09b1aea7ecee160bbef671db4662dc11b888a3fc9400a8959fdf2db727b5a6532915a6ea27079aa8456b0d8ed04dc0b4e2c8cf39cd
     # On update check headers against opengl-registry
     PATCHES
         001-fix-uwp.patch
@@ -27,11 +31,17 @@ vcpkg_from_github(
         003-fix-mingw.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/angle_commit.h DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/angle_commit.h DESTINATION ${SOURCE_PATH}/src/common)
+# Generate angle_commit.h
+set(ANGLE_COMMIT_HASH_SIZE 12)
+string(SUBSTRING "${ANGLE_COMMIT}" 0 ${ANGLE_COMMIT_HASH_SIZE} ANGLE_COMMIT_HASH)
+set(ANGLE_COMMIT_DATE "invalid-date")
+set(ANGLE_REVISION "${ANGLE_VERSION}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/angle_commit.h.in" "${SOURCE_PATH}/angle_commit.h" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/angle_commit.h.in" "${SOURCE_PATH}/src/common/angle_commit.h" @ONLY)
 
-function(checkout_in_path_with_patches PATH URL REF PATCHES)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
@@ -40,17 +50,15 @@ function(checkout_in_path_with_patches PATH URL REF PATCHES)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
-        PATCHES ${PATCHES}
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
-checkout_in_path_with_patches(
+checkout_in_path(
     "${SOURCE_PATH}/third_party/zlib"
     "https://chromium.googlesource.com/chromium/src/third_party/zlib"
-    "09490503d0f201b81e03f5ca0ab8ba8ee76d4a8e"
-    "third-party-zlib-far-undef.patch"
+    "efd9399ae01364926be2a38946127fdf463480db"
 )
 
 vcpkg_configure_cmake(
@@ -95,5 +103,8 @@ foreach(_file ${_double_files})
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
     endif()
 endforeach()
-
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include/GLES/"
+    "${CURRENT_PACKAGES_DIR}/include/GLES3/"
+)
 
