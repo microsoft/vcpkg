@@ -35,6 +35,11 @@ vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(GIT)
 vcpkg_find_acquire_program(PYTHON3)
 
+set(EXTRA_CMAKE_OPTIONS)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(EXTRA_CMAKE_OPTIONS "-DCMAKE_INSTALL_RPATH=${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -45,6 +50,7 @@ vcpkg_cmake_configure(
         -DPython3_EXECUTABLE=${PYTHON3}
         -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf
         ${LTDL_OPTION}
+        ${EXTRA_CMAKE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -63,7 +69,6 @@ if(VCPKG_HOST_IS_WINDOWS)
     set(DOT_COMMAND "dot")
 else()
     set(DOT_COMMAND "./dot")
-    set(ENV{LD_LIBRARY_PATH} "$ENV{LD_LIBRARY_PATH}:${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 vcpkg_execute_required_process(
