@@ -5054,7 +5054,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openmvs": {
       "baseline": "1.1.1",
