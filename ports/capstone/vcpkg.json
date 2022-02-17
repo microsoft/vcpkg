@@ -57,6 +57,9 @@
     },
     "xcore": {
       "description": "Capstone disassembly support for XCore"
+    },
+    "staticCRT": {
+      "description": "Use Windows C Runtime Library (CRT)"
     }
   }
 }

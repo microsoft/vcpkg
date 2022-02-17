@@ -26,6 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "x86-reduce"  CAPSTONE_X86_REDUCE
         "xcore"       CAPSTONE_XCORE_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
+        "staticCRT"   CAPSTONE_BUILD_STATIC_RUNTIME 
 )
 
 vcpkg_configure_cmake(
@@ -36,7 +37,6 @@ vcpkg_configure_cmake(
         -DCAPSTONE_BUILD_SHARED=${CS_BUILD_SHARED}
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
-        -DCAPSTONE_BUILD_STATIC_RUNTIME=${CS_BUILD_STATIC}
         -DCAPSTONE_X86_ONLY=OFF
         ${FEATURE_OPTIONS}
 )
