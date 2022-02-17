@@ -26,9 +26,10 @@ vcpkg_from_github(
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
-      0012-fix-opengl.patch
-      0013-fix-gstreamer.patch
-      0014-fix-freetype.patch
+      0012-fix-zlib.patch
+      0013-fix-opengl.patch
+      0014-fix-gstreamer.patch
+      0015-fix-freetype.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -222,7 +223,7 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
-      0015-fix-freetype-contrib.patch
+      0016-fix-freetype-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
