@@ -56,8 +56,15 @@ vcpkg_copy_tools(
 file(GLOB PLUGINS "${CURRENT_PACKAGES_DIR}/bin/gvplugin_*")
 file(COPY ${PLUGINS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(DOT_COMMAND "dot")
+else()
+    set(DOT_COMMAND "./dot")
+endif()
+
 vcpkg_execute_required_process(
-    COMMAND dot -c
+    COMMAND ${DOT_COMMAND} -c
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}
     LOGNAME configure-plugins
 )
