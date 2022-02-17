@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,6 +10,7 @@ vcpkg_from_gitlab(
     PATCHES
         0001-Fix-build.patch
 )
+
 set(LTDL_OPTION)
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
@@ -55,7 +58,6 @@ vcpkg_copy_tools(
 )
 file(GLOB PLUGINS "${CURRENT_PACKAGES_DIR}/bin/gvplugin_*")
 file(COPY ${PLUGINS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(DOT_COMMAND "dot")
