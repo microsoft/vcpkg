@@ -124,7 +124,7 @@ function(vcpkg_build_make)
     vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 
     foreach(buildtype IN ITEMS "debug" "release")
-        if (_VCPKG_MAKE_NO_DEBUG)
+        if (buildtype STREQUAL "debug" AND _VCPKG_MAKE_NO_DEBUG)
             continue()
         endif()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
