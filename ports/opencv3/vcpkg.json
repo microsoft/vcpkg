@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.16",
-  "port-version": 2,
+  "port-version": 3,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
