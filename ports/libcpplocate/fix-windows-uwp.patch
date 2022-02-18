@@ -1,0 +1,129 @@
+diff --git a/source/liblocate/source/liblocate.c b/source/liblocate/source/liblocate.c
+index 2e53d56..3022b0c 100644
+--- a/source/liblocate/source/liblocate.c
++++ b/source/liblocate/source/liblocate.c
+@@ -12,7 +12,7 @@
+     #define _GNU_SOURCE
+     #define __USE_GNU
+     #include <dlfcn.h>
+-#elif defined(SYSTEM_WINDOWS)
++#elif defined(_WINDOWS)
+     #include <Windows.h>
+ #elif defined(SYSTEM_SOLARIS)
+     #include <limits.h>
+@@ -61,7 +61,7 @@ void getExecutablePath(char ** path, unsigned int * pathLength)
+     // Copy contents to caller, create caller ownership
+     copyToStringOutParameter(exePath, len, path, pathLength);
+ 
+-#elif defined SYSTEM_WINDOWS
++#elif defined _WINDOWS
+ 
+     // Preallocate MAX_PATH (e.g., 4095) characters and hope the executable path isn't longer (including null byte)
+     char exePath[MAX_PATH];
+@@ -248,7 +248,7 @@ void getLibraryPath(void * symbol, char ** path, unsigned int * pathLength)
+         return;
+     }
+ 
+-#if defined SYSTEM_WINDOWS
++#if defined _WINDOWS
+ 
+     char systemPath[MAX_PATH];
+     systemPath[0] = '\0';
+@@ -446,7 +446,7 @@ void pathSeparator(char * sep)
+ {
+     if (sep != 0x0)
+     {
+-#ifdef SYSTEM_WINDOWS
++#ifdef _WINDOWS
+         *sep = '\\';
+ #else
+         *sep = '/';
+@@ -462,7 +462,7 @@ void libPrefix(char ** prefix, unsigned int * prefixLength)
+         return;
+     }
+ 
+-#if defined SYSTEM_WINDOWS || defined SYSTEM_DARWIN
++#if defined _WINDOWS || defined SYSTEM_DARWIN
+     copyToStringOutParameter("", 0, prefix, prefixLength);
+ #else
+     copyToStringOutParameter("lib", 3, prefix, prefixLength);
+@@ -477,7 +477,7 @@ void libExtension(char ** extension, unsigned int * extensionLength)
+         return;
+     }
+ 
+-#if defined SYSTEM_WINDOWS
++#if defined _WINDOWS
+     copyToStringOutParameter("dll", 3, extension, extensionLength);
+ #elif defined SYSTEM_DARWIN
+     copyToStringOutParameter("dylib", 5, extension, extensionLength);
+@@ -494,7 +494,7 @@ void libExtensions(char *** extensions, unsigned int ** extensionLengths, unsign
+         return;
+     }
+ 
+-#if defined SYSTEM_WINDOWS
++#if defined _WINDOWS
+     *extensionCount = 1;
+     *extensions = (char **)malloc(sizeof(char *) * *extensionCount);
+     *extensionLengths = (unsigned int *)malloc(sizeof(unsigned int) * *extensionCount);
+@@ -521,7 +521,7 @@ void homeDir(char ** dir, unsigned int * dirLength)
+         return;
+     }
+ 
+-    #ifdef SYSTEM_WINDOWS
++    #ifdef _WINDOWS
+ 
+         char * homeDrive, * homePath;
+         unsigned int homeDriveLen, homePathLen;
+@@ -594,7 +594,7 @@ void configDir(char ** dir, unsigned int * dirLength, const char * application,
+     char * configPath;
+     unsigned int configPathLen;
+ 
+-    #if defined SYSTEM_WINDOWS
++    #if defined _WINDOWS
+         char * appData;
+         unsigned int appDataLen;
+         getEnv("APPDATA", 7, &appData, &appDataLen);
+diff --git a/source/liblocate/source/utils.c b/source/liblocate/source/utils.c
+index d185c17..10b1d71 100644
+--- a/source/liblocate/source/utils.c
++++ b/source/liblocate/source/utils.c
+@@ -4,7 +4,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#ifdef SYSTEM_WINDOWS
++#ifdef _WINDOWS
+     #define WIN32_LEAN_AND_MEAN
+     #include <Windows.h>
+ #else
+@@ -18,7 +18,7 @@
+ #define unixPathDelim '/'
+ #define unixPathsDelim ':'
+ 
+-#ifdef SYSTEM_WINDOWS
++#ifdef _WINDOWS
+     #define pathDelim '\\'
+     #define pathsDelim ';'
+ #else
+@@ -242,7 +242,7 @@ unsigned char fileExists(const char * path, unsigned int pathLength)
+ {
+     (void)pathLength;
+ 
+-#ifdef SYSTEM_WINDOWS
++#ifdef _WINDOWS
+ 
+     WIN32_FILE_ATTRIBUTE_DATA fileInfo;
+     return (GetFileAttributesExA(path, GetFileExInfoStandard, &fileInfo) != 0);
+diff --git a/source/tests/liblocate-test/utils_test.cpp b/source/tests/liblocate-test/utils_test.cpp
+index 0395652..72b6c22 100644
+--- a/source/tests/liblocate-test/utils_test.cpp
++++ b/source/tests/liblocate-test/utils_test.cpp
+@@ -213,7 +213,7 @@ TEST_F(utils_test, getEnv_NoEnv)
+ 
+ TEST_F(utils_test, getEnv_Value)
+ {
+-#ifdef SYSTEM_WINDOWS
++#ifdef _WINDOWS
+     const char * key = "OS";
+     const unsigned int keyLength = strlen(key);
+ 
