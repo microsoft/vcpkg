@@ -1897,8 +1897,8 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.1.5",
-      "port-version": 1
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "dpdk": {
       "baseline": "19.02",
