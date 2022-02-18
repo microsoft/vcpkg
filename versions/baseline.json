@@ -169,8 +169,8 @@
       "port-version": 0
     },
     "arrow": {
-      "baseline": "6.0.1",
-      "port-version": 1
+      "baseline": "7.0.0",
+      "port-version": 0
     },
     "ashes": {
       "baseline": "2021-06-18",
@@ -1897,8 +1897,8 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.1.5",
-      "port-version": 1
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "dpdk": {
       "baseline": "19.02",
@@ -3314,7 +3314,7 @@
     },
     "leveldb": {
       "baseline": "1.22",
-      "port-version": 3
+      "port-version": 4
     },
     "levmar": {
       "baseline": "2.6",
@@ -3331,6 +3331,10 @@
     "libalkimia": {
       "baseline": "8.1.70",
       "port-version": 1
+    },
+    "libao": {
+      "baseline": "1.2.2",
+      "port-version": 3
     },
     "libarchive": {
       "baseline": "3.5.2",
@@ -3565,8 +3569,8 @@
       "port-version": 1
     },
     "libhv": {
-      "baseline": "1.2.2",
-      "port-version": 1
+      "baseline": "1.2.4",
+      "port-version": 0
     },
     "libhydrogen": {
       "baseline": "2021-12-02",
@@ -4002,7 +4006,7 @@
     },
     "libtins": {
       "baseline": "4.3",
-      "port-version": 5
+      "port-version": 6
     },
     "libtomcrypt": {
       "baseline": "1.18.2",
@@ -4953,8 +4957,8 @@
       "port-version": 0
     },
     "open62541": {
-      "baseline": "1.2.2",
-      "port-version": 1
+      "baseline": "1.2.3",
+      "port-version": 0
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -6145,8 +6149,8 @@
       "port-version": 1
     },
     "rsm-bsa": {
-      "baseline": "4.0.0",
-      "port-version": 1
+      "baseline": "4.0.2",
+      "port-version": 0
     },
     "rsm-mmio": {
       "baseline": "1.1.0",
@@ -6954,7 +6958,7 @@
     },
     "tmx": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tmxlite": {
       "baseline": "1.3.0",
@@ -7193,7 +7197,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2022-01-30",
+      "baseline": "2022-02-06",
       "port-version": 0
     },
     "vcpkg-gfortran": {
@@ -7440,6 +7444,10 @@
       "baseline": "0.8.1",
       "port-version": 1
     },
+    "xqilla": {
+      "baseline": "2.3.4",
+      "port-version": 0
+    },
     "xsimd": {
       "baseline": "8.0.3",
       "port-version": 0
@@ -7470,7 +7478,7 @@
     },
     "yajl": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "yaml-cpp": {
       "baseline": "0.7.0",
