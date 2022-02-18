@@ -46,7 +46,7 @@ vcpkg_cmake_configure(
         -DFLEX_EXECUTABLE=${FLEX}
         -DGIT_EXECUTABLE=${GIT}
         -DPython3_EXECUTABLE=${PYTHON3}
-        -DPKG_CONFIG_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf
+        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf
         ${EXTRA_CMAKE_OPTION}
 )
 
