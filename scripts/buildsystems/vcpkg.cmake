@@ -30,13 +30,12 @@ function(z_vcpkg_add_fatal_error ERROR)
     endif()
 endfunction()
 
-set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
+set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.7.2")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
-# this policy is required for this file; thus, CMake 3.1 is required.
 cmake_policy(PUSH)
-cmake_policy(SET CMP0054 NEW)
+cmake_policy(VERSION 3.7.2)
 
 include(CMakeDependentOption)
 
@@ -200,16 +199,6 @@ endfunction()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
-
-if(CMAKE_VERSION VERSION_LESS "3.6.0")
-    set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES ON)
-else()
-    set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES OFF)
-endif()
-
-if(Z_VCPKG_CMAKE_IN_TRY_COMPILE AND Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
-    include("${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL)
-endif()
 
 if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
@@ -626,7 +615,7 @@ function(x_vcpkg_install_local_dependencies)
 
     if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
         # Install CODE|SCRIPT allow the use of generator expressions
-        cmake_policy(SET CMP0087 NEW)
+        cmake_policy(SET CMP0087 NEW) # CMake 3.14
 
         z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
@@ -807,25 +796,13 @@ set(Z_VCPKG_UNUSED "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP}")
 
 # Propogate these values to try-compile configurations so the triplet and toolchain load
 if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
-    if(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES)
-        file(TO_CMAKE_PATH "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" Z_VCPKG_CHAINLOAD_FILE_CMAKE)
-        file(TO_CMAKE_PATH "${Z_VCPKG_ROOT_DIR}" Z_VCPKG_ROOT_DIR_CMAKE)
-        file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
-            "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
-            "set(VCPKG_TARGET_ARCHITECTURE \"${VCPKG_TARGET_ARCHITECTURE}\" CACHE STRING \"\")\n"
-            "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
-            "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${Z_VCPKG_CHAINLOAD_FILE_CMAKE}\" CACHE STRING \"\")\n"
-            "set(Z_VCPKG_ROOT_DIR \"${Z_VCPKG_ROOT_DIR_CMAKE}\" CACHE STRING \"\")\n"
-        )
-    else()
-        list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
-            VCPKG_TARGET_TRIPLET
-            VCPKG_TARGET_ARCHITECTURE
-            VCPKG_APPLOCAL_DEPS
-            VCPKG_CHAINLOAD_TOOLCHAIN_FILE
-            Z_VCPKG_ROOT_DIR
-        )
-    endif()
+    list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+        VCPKG_TARGET_TRIPLET
+        VCPKG_TARGET_ARCHITECTURE
+        VCPKG_APPLOCAL_DEPS
+        VCPKG_CHAINLOAD_TOOLCHAIN_FILE
+        Z_VCPKG_ROOT_DIR
+    )
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)
