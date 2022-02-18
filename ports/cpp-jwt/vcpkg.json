@@ -1,0 +1,18 @@
+{
+  "name": "cpp-jwt",
+  "version-date": "2021-10-18",
+  "description": "JSON Web Token library for C++",
+  "homepage": "https://github.com/arun11299/cpp-jwt",
+  "dependencies": [
+    "nlohmann-json",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

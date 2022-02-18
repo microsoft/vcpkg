@@ -1,0 +1,11 @@
+{
+  "name": "tensorflow",
+  "version-semver": "2.7.0",
+  "port-version": 2,
+  "description": "Library for computation using data flow graphs for scalable machine learning (C API version)",
+  "homepage": "https://github.com/tensorflow/tensorflow",
+  "supports": "!(x86 | arm | uwp)",
+  "dependencies": [
+    "tensorflow-common"
+  ]
+}

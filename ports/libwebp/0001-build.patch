@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9503daacb..2fb9ef137 100644
+index bd1bebb..4ce801d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -167,6 +167,9 @@ add_definitions(-DHAVE_CONFIG_H)
+@@ -214,6 +214,9 @@ endfunction()
  if(MSVC)
    # avoid security warnings for e.g., fopen() used in the examples.
    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -12,7 +12,7 @@ index 9503daacb..2fb9ef137 100644
  else()
    add_definitions(-Wall)
  endif()
-@@ -420,9 +423,9 @@ if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)
+@@ -482,7 +485,7 @@ if(WEBP_BUILD_LIBWEBPMUX)
                                     "${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux.h;\
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux_types.h;\
  ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h;")
@@ -21,26 +21,25 @@ index 9503daacb..2fb9ef137 100644
    list(APPEND INSTALLED_LIBRARIES libwebpmux)
    configure_pkg_config("src/mux/libwebpmux.pc")
  endif()
- 
- if(WEBP_BUILD_GIF2WEBP)
-@@ -524,7 +528,11 @@ if(WEBP_BUILD_EXTRAS)
- 
+@@ -586,8 +589,12 @@ if(WEBP_BUILD_EXTRAS)
    # webp_quality
    add_executable(webp_quality ${WEBP_QUALITY_SRCS} ${WEBP_EXTRAS_SRCS})
    target_link_libraries(webp_quality exampleutil imagedec)
 +  if(BUILD_SHARED_LIBS)
 +      target_link_libraries(webp_quality webpdspdecode)
-+  endif()
++  endif()  
    target_include_directories(webp_quality
                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
 +                                     ${CMAKE_CURRENT_SOURCE_DIR}/src
                                       ${CMAKE_CURRENT_BINARY_DIR})
-@@ -573,7 +573,7 @@ if(WEBP_BUILD_WEBP_JS)
-                "-s EXPORTED_FUNCTIONS='[\"_WebpToSDL\"]' -s INVOKE_RUN=0 \
-        -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'")
-   set_target_properties(webp_js PROPERTIES OUTPUT_NAME webp)
--  target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL)
-+  target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL WEBP_HAVE_JUST_SDL_H)
+ 
+   # vwebp_sdl
+@@ -620,7 +627,7 @@ if(WEBP_BUILD_WEBP_JS)
+          -s EXPORTED_FUNCTIONS='[\"_WebpToSDL\"]' -s INVOKE_RUN=0 \
+          -s EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'")
+     set_target_properties(webp_js PROPERTIES OUTPUT_NAME webp)
+-    target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL)
++    target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL WEBP_HAVE_JUST_SDL_H)
+   endif()
  
    # WASM version
-   add_executable(webp_wasm ${CMAKE_CURRENT_SOURCE_DIR}/extras/webp_to_sdl.c)

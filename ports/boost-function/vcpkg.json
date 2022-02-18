@@ -1,0 +1,19 @@
+{
+  "name": "boost-function",
+  "version": "1.78.0",
+  "description": "Boost function module",
+  "homepage": "https://github.com/boostorg/function",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-preprocessor",
+    "boost-throw-exception",
+    "boost-type-index",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-vcpkg-helpers"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "aricpp",
+  "version-semver": "1.1.1",
+  "port-version": 1,
+  "description": "Asterisk ARI interface bindings for modern C++",
+  "homepage": "https://github.com/daniele77/aricpp",
+  "dependencies": [
+    "boost-asio",
+    "boost-beast",
+    "boost-system",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

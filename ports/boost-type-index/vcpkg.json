@@ -1,0 +1,16 @@
+{
+  "name": "boost-type-index",
+  "version": "1.78.0",
+  "description": "Boost type_index module",
+  "homepage": "https://github.com/boostorg/type_index",
+  "dependencies": [
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

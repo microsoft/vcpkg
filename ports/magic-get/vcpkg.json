@@ -1,0 +1,10 @@
+{
+  "name": "magic-get",
+  "version-string": "2019-09-02",
+  "port-version": 2,
+  "description": "Deprecated boost-pfr port.",
+  "homepage": "https://github.com/apolukhin/magic_get",
+  "dependencies": [
+    "boost-pfr"
+  ]
+}

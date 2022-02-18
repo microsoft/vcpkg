@@ -1,0 +1,21 @@
+{
+  "name": "gdcm",
+  "version": "3.0.7",
+  "port-version": 4,
+  "description": "Grassroots DICOM library",
+  "homepage": "https://github.com/malaterre/GDCM",
+  "supports": "!uwp & !(windows & arm)",
+  "dependencies": [
+    "expat",
+    "openjpeg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

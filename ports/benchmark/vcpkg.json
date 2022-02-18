@@ -1,0 +1,19 @@
+{
+  "$comment": "https://github.com/google/benchmark/issues/661 describes the missing UWP support upstream",
+  "name": "benchmark",
+  "version-semver": "1.6.0",
+  "port-version": 1,
+  "description": "A library to support the benchmarking of functions, similar to unit-tests.",
+  "homepage": "https://github.com/google/benchmark",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

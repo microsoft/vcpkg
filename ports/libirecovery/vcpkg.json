@@ -1,0 +1,11 @@
+{
+  "name": "libirecovery",
+  "version-string": "1.0.25",
+  "port-version": 3,
+  "description": "Library and utility to talk to iBoot/iBSS via USB on Mac OS X, Windows, and Linux",
+  "dependencies": [
+    "getopt",
+    "libusbmuxd",
+    "readline"
+  ]
+}

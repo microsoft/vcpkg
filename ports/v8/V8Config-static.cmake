@@ -2,9 +2,10 @@ include(CMakeFindDependencyMacro)
 find_dependency(ICU REQUIRED COMPONENTS in uc dt)
 find_dependency(ZLIB REQUIRED)
 if(UNIX)
-  find_package(unofficial-glib CONFIG REQUIRED)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
   set(V8_IMPORTED_LINK_INTERFACE_LIBRARIES
-    "ICU::in;ICU::uc;ICU::dt;unofficial::glib::gmodule;unofficial::glib::gobject;unofficial::glib::gthread;ZLIB::ZLIB")
+    "ICU::in;ICU::uc;ICU::dt;ZLIB::ZLIB")
 elseif(WIN32)
   set(V8_IMPORTED_LINK_INTERFACE_LIBRARIES
     "Winmm;DbgHelp;ZLIB::ZLIB;ICU::in;ICU::uc;ICU::dt")

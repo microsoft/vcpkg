@@ -1,0 +1,7 @@
+{
+  "name": "fuzzylite",
+  "version-string": "6.0",
+  "port-version": 4,
+  "description": "A fuzzy logic control library in C++",
+  "homepage": "https://github.com/fuzzylite/fuzzylite"
+}

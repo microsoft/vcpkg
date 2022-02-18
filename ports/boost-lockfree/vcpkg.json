@@ -1,0 +1,24 @@
+{
+  "name": "boost-lockfree",
+  "version": "1.78.0",
+  "description": "Boost lockfree module",
+  "homepage": "https://github.com/boostorg/lockfree",
+  "dependencies": [
+    "boost-align",
+    "boost-array",
+    "boost-assert",
+    "boost-atomic",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-parameter",
+    "boost-predef",
+    "boost-static-assert",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

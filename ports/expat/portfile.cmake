@@ -1,8 +1,10 @@
+set (EX_VERSION 2.4.1)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF c092d40c300c6d219cb3b111932a824022265370 #Head from commit 2020-08-18
-    SHA512 5a5d41b500f5602a32aea8f4e15593e639206bb3f97553497e80b2975360cac88ac90386f5efc11728614f24bbb620fb908a3c8ca71c9e7b312f6157b2477afe
+    REF a28238bdeebc087071777001245df1876a11f5ee #v2.4.1
+    SHA512 2c22f2dfab50644637a7777229849c91630ae8c50683df6ad6409d473690ce01b59ce9f98e66b0aeac8c650507f04edbb5d9738130c88b87bbc1adb7831c22a9
     HEAD_REF master
     PATCHES
         pkgconfig.patch
@@ -22,11 +24,12 @@ vcpkg_configure_cmake(
         -DEXPAT_BUILD_TESTS=OFF
         -DEXPAT_BUILD_TOOLS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
+        -DEXPAT_BUILD_PKGCONFIG=ON
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat-2.2.9)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat-${EX_VERSION})
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

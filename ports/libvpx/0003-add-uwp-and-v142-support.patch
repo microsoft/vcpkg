@@ -1,0 +1,154 @@
+diff --git a/build/make/configure.sh b/build/make/configure.sh
+index d4f19cd97..fb51368b1 100644
+--- a/build/make/configure.sh
++++ b/build/make/configure.sh
+@@ -1016,7 +1016,7 @@ EOF
+           # A number of ARM-based Windows platforms are constrained by their
+           # respective SDKs' limitations. Fortunately, these are all 32-bit ABIs
+           # and so can be selected as 'win32'.
+-          if [ ${tgt_os} = "win32" ]; then
++          if [ ${tgt_os} = "win32" ] || [ ${tgt_isa} = "armv7" ]; then
+             asm_conversion_cmd="${source_path_mk}/build/make/ads2armasm_ms.pl"
+             AS_SFX=.S
+             msvs_arch_dir=arm-msvs
+@@ -1250,6 +1250,9 @@ EOF
+         android)
+           soft_enable realtime_only
+           ;;
++        uwp)
++          enabled gcc && add_cflags -fno-common
++          ;;
+         win*)
+           enabled gcc && add_cflags -fno-common
+           ;;
+@@ -1368,6 +1371,16 @@ EOF
+       fi
+       AS_SFX=.asm
+       case  ${tgt_os} in
++        uwp)
++          if [ {$tgt_isa} = "x86" ] || [ {$tgt_isa} = "armv7" ]; then
++            add_asflags -f win32
++          else
++            add_asflags -f win64
++          fi
++          enabled debug && [ "${AS}" = yasm ] && add_asflags -g cv8
++          enabled debug && [ "${AS}" = nasm ] && add_asflags -gcv8
++          EXE_SFX=.exe
++          ;;
+         win32)
+           add_asflags -f win32
+           enabled debug && [ "${AS}" = yasm ] && add_asflags -g cv8
+@@ -1488,6 +1501,8 @@ EOF
+   # Almost every platform uses pthreads.
+   if enabled multithread; then
+     case ${toolchain} in
++      *-uwp-vs*)
++        ;;
+       *-win*-vs*)
+         ;;
+       *-android-gcc)
+diff --git a/build/make/gen_msvs_vcxproj.sh b/build/make/gen_msvs_vcxproj.sh
+index 6f91ad478..916851662 100755
+--- a/build/make/gen_msvs_vcxproj.sh
++++ b/build/make/gen_msvs_vcxproj.sh
+@@ -296,7 +296,22 @@ generate_vcxproj() {
+         tag_content ProjectGuid "{${guid}}"
+         tag_content RootNamespace ${name}
+         tag_content Keyword ManagedCProj
+-        if [ $vs_ver -ge 12 ] && [ "${platforms[0]}" = "ARM" ]; then
++        if [ $vs_ver -ge 16 ]; then
++            if [[ $target =~ [^-]*-uwp-.* ]]; then
++                # Universal Windows Applications
++                tag_content AppContainerApplication true
++                tag_content ApplicationType "Windows Store"
++                tag_content ApplicationTypeRevision 10.0
++            fi
++            if [[ $target =~ [^-]*-uwp-.* ]] || [ "${platforms[0]}" = "ARM" ] || [ "${platforms[0]}" = "ARM64" ]; then
++                # Default to the latest Windows 10 SDK
++                tag_content WindowsTargetPlatformVersion 10.0
++            else
++                # Minimum supported version of Windows for the desktop
++                tag_content WindowsTargetPlatformVersion 8.1
++            fi
++            tag_content MinimumVisualStudioVersion 16.0
++        elif [ $vs_ver -ge 12 ] && [ "${platforms[0]}" = "ARM" ]; then
+             tag_content AppContainerApplication true
+             # The application type can be one of "Windows Store",
+             # "Windows Phone" or "Windows Phone Silverlight". The
+@@ -391,7 +406,7 @@ generate_vcxproj() {
+                 Condition="'\$(Configuration)|\$(Platform)'=='$config|$plat'"
+             if [ "$name" == "vpx" ]; then
+                 hostplat=$plat
+-                if [ "$hostplat" == "ARM" ]; then
++                if [ "$hostplat" == "ARM" ] && [ $vs_ver -le 15 ]; then
+                     hostplat=Win32
+                 fi
+             fi
+diff --git a/configure b/configure
+index da631a45e..da93474e5 100755
+--- a/configure
++++ b/configure
+@@ -101,16 +101,20 @@ all_platforms="${all_platforms} arm64-android-gcc"
+ all_platforms="${all_platforms} arm64-darwin-gcc"
+ all_platforms="${all_platforms} arm64-darwin20-gcc"
+ all_platforms="${all_platforms} arm64-linux-gcc"
++all_platforms="${all_platforms} arm64-uwp-vs16"
+ all_platforms="${all_platforms} arm64-win64-gcc"
+ all_platforms="${all_platforms} arm64-win64-vs15"
++all_platforms="${all_platforms} arm64-win64-vs16"
+ all_platforms="${all_platforms} armv7-android-gcc"   #neon Cortex-A8
+ all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
+ all_platforms="${all_platforms} armv7-linux-rvct"    #neon Cortex-A8
+ all_platforms="${all_platforms} armv7-linux-gcc"     #neon Cortex-A8
+ all_platforms="${all_platforms} armv7-none-rvct"     #neon Cortex-A8
++all_platforms="${all_platforms} armv7-uwp-vs16"
+ all_platforms="${all_platforms} armv7-win32-gcc"
+ all_platforms="${all_platforms} armv7-win32-vs14"
+ all_platforms="${all_platforms} armv7-win32-vs15"
++all_platforms="${all_platforms} armv7-win32-vs16"
+ all_platforms="${all_platforms} armv7s-darwin-gcc"
+ all_platforms="${all_platforms} armv8-linux-gcc"
+ all_platforms="${all_platforms} mips32-linux-gcc"
+@@ -135,6 +139,7 @@ all_platforms="${all_platforms} x86-linux-gcc"
+ all_platforms="${all_platforms} x86-linux-icc"
+ all_platforms="${all_platforms} x86-os2-gcc"
+ all_platforms="${all_platforms} x86-solaris-gcc"
++all_platforms="${all_platforms} x86-uwp-vs16"
+ all_platforms="${all_platforms} x86-win32-gcc"
+ all_platforms="${all_platforms} x86-win32-vs14"
+ all_platforms="${all_platforms} x86-win32-vs15"
+@@ -156,6 +161,7 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
+ all_platforms="${all_platforms} x86_64-linux-gcc"
+ all_platforms="${all_platforms} x86_64-linux-icc"
+ all_platforms="${all_platforms} x86_64-solaris-gcc"
++all_platforms="${all_platforms} x86_64-uwp-vs16"
+ all_platforms="${all_platforms} x86_64-win64-gcc"
+ all_platforms="${all_platforms} x86_64-win64-vs14"
+ all_platforms="${all_platforms} x86_64-win64-vs15"
+@@ -476,11 +482,10 @@ process_targets() {
+     ! enabled multithread && DIST_DIR="${DIST_DIR}-nomt"
+     ! enabled install_docs && DIST_DIR="${DIST_DIR}-nodocs"
+     DIST_DIR="${DIST_DIR}-${tgt_isa}-${tgt_os}"
+-    case "${tgt_os}" in
+-    win*) enabled static_msvcrt && DIST_DIR="${DIST_DIR}mt" || DIST_DIR="${DIST_DIR}md"
+-          DIST_DIR="${DIST_DIR}-${tgt_cc}"
+-          ;;
+-    esac
++    if [[ ${tgt_os} =~ win.* ]] || [ "${tgt_os}" = "uwp" ]; then
++        enabled static_msvcrt && DIST_DIR="${DIST_DIR}mt" || DIST_DIR="${DIST_DIR}md"
++        DIST_DIR="${DIST_DIR}-${tgt_cc}"
++    fi
+     if [ -f "${source_path}/build/make/version.sh" ]; then
+         ver=`"$source_path/build/make/version.sh" --bare "$source_path"`
+         DIST_DIR="${DIST_DIR}-${ver}"
+@@ -569,6 +574,10 @@ process_detect() {
+ 
+             # Specialize windows and POSIX environments.
+             case $toolchain in
++                *-uwp-*)
++                    # Don't check for any headers in UWP builds.
++                    false
++                ;;
+                 *-win*-*)
+                     # Don't check for any headers in Windows builds.
+                     false

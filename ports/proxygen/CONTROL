@@ -1,6 +1,0 @@
-Source: proxygen
-Version: 2020.10.19.00
-Homepage: https://github.com/facebook/proxygen
-Description: It comprises the core C++ HTTP abstractions used at Facebook.
-Build-Depends: folly, fizz, wangle, zstd, zlib, openssl, boost-iostreams, boost-context, boost-date-time, boost-filesystem, boost-program-options, boost-regex, boost-system, boost-thread
-Supports: !windows&!osx

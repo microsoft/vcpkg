@@ -1,0 +1,37 @@
+{
+  "name": "boost-contract",
+  "version": "1.78.0",
+  "description": "Boost contract module",
+  "homepage": "https://github.com/boostorg/contract",
+  "dependencies": [
+    "boost-any",
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-exception",
+    "boost-function",
+    "boost-function-types",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mpl",
+    "boost-optional",
+    "boost-preprocessor",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

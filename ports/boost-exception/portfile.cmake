@@ -3,15 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/exception
-    REF boost-1.74.0
-    SHA512 f12824beba6f93e968afd07e61957f06231f91e291ab667c7cbcd942c2320267b051ec20612ce21dd75a17979cad07c45ab85c5d1b562e9a8f00752c951372d7
+    REF boost-1.78.0
+    SHA512 b1e70fd27fb918cd3e6bd77307de96ccade192bbde8ddb2f27301d7b242e1d8acb1dc7590c361fb4036b0abe303b222d2b2d28263036de540044461850d31804
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-exception requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-
-set(VCPKG_LIBRARY_LINKAGE static)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

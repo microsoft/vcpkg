@@ -1,0 +1,29 @@
+{
+  "name": "boost-atomic",
+  "version": "1.78.0",
+  "description": "Boost atomic module",
+  "homepage": "https://github.com/boostorg/atomic",
+  "dependencies": [
+    "boost-align",
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

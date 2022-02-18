@@ -1,0 +1,23 @@
+{
+  "name": "boost-phoenix",
+  "version": "1.78.0",
+  "description": "Boost phoenix module",
+  "homepage": "https://github.com/boostorg/phoenix",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-function",
+    "boost-fusion",
+    "boost-mpl",
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-proto",
+    "boost-range",
+    "boost-smart-ptr",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

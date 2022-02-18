@@ -1,5 +1,7 @@
 # Vcpkg: export Android prefab Archives (AAR files)
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 Vcpkg can export android archives ([AAR files](https://developer.android.com/studio/projects/android-library)). Once an archive is created, it can imported in Android Studio as a native dependent.  The archive is automatically consumed using [android studio's prefab tool](https://github.com/google/prefab). 
 
 For more information on Prefab, refer to:
@@ -48,7 +50,7 @@ Note:
 ./vcpkg export --triplet x64-android jsoncpp --prefab --prefab-maven --prefab-debug
 ```
 
-You will see an ouput like this:
+You will see an output like this:
 ```
 The following packages are already built and will be exported:
     jsoncpp:arm64-android
@@ -100,7 +102,7 @@ In gradle.properties
     android.enableParallelJsonGen=false
     android.prefabVersion=${prefab.version}
 
-Successfuly exported jsoncpp. Checkout .../vcpkg/prefab 
+Successfully exported jsoncpp. Checkout .../vcpkg/prefab 
 
 ```
 

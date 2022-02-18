@@ -1,5 +1,0 @@
-Source: yasm
-Version: 1.3.0
-Homepage: https://github.com/yasm/yasm
-Description: Yasm is a complete rewrite of the NASM assembler under the “new” BSD License.
-Supports: windows & !uwp & !arm

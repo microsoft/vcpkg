@@ -1,4 +1,4 @@
-## Packaging Zipfiles Example: zlib
+## Packaging `.zip` Files Example: zlib
 
 ### Bootstrap with `create`
 First, locate a globally accessible archive of the library's sources. Zip, gzip, and bzip are all supported. Strongly prefer official sources or mirrors over unofficial mirrors.
@@ -70,7 +70,6 @@ In the `ports/` directory are many libraries that can be used as examples, inclu
     - rapidjson
     - range-v3
 - MSBuild-based
-    - cppunit
     - mpg123
 - Non-CMake, custom buildsystem
     - openssl

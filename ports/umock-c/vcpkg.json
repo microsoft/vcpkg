@@ -1,0 +1,22 @@
+{
+  "name": "umock-c",
+  "version-date": "2022-01-21",
+  "description": "A pure C mocking library",
+  "homepage": "https://github.com/Azure/umock-c",
+  "dependencies": [
+    "azure-macro-utils-c"
+  ],
+  "features": {
+    "public-preview": {
+      "description": "A pure C mocking library (public-preview)",
+      "dependencies": [
+        {
+          "name": "azure-macro-utils-c",
+          "features": [
+            "public-preview"
+          ]
+        }
+      ]
+    }
+  }
+}

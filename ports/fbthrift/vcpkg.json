@@ -1,0 +1,33 @@
+{
+  "name": "fbthrift",
+  "version-string": "2022.01.31.00",
+  "port-version": 1,
+  "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
+  "homepage": "https://github.com/facebook/fbthrift",
+  "supports": "x64 & static",
+  "dependencies": [
+    "boost-context",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "fizz",
+    "fmt",
+    "folly",
+    "gflags",
+    "glog",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "wangle",
+    "zlib",
+    "zstd"
+  ]
+}

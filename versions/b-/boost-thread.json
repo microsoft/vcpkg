@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "ef371df76c2b790aae7209d2866c467bd6d339be",
+      "version": "1.78.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1c097a032a997463e15245272e40ea9298554f8b",
+      "version": "1.77.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ef29c4cc84cd28ca6cc812794dfb264709dac11e",
+      "version": "1.76.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "281c8b8c17e414c9b0fd0b0bc6a569fba02d4fff",
+      "version-string": "1.75.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "e37b7227025ce689055e4fa560973d0d8778e6f4",
+      "version-string": "1.75.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "12e8de872c0b45b884db604ece353585ac66bf45",
+      "version-string": "1.74.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "bac44c27a61325152af7b5470f7b8f6b9920928c",
+      "version-string": "1.73.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9f8ea338d5b510309f8a64f04766f5cc3f4d32a2",
+      "version-string": "1.72.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a3cb8223a9186884ca8881c2eac17ac37415663c",
+      "version-string": "1.71.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "40bbe28aaadbb700bce86e15962e088341c34da7",
+      "version-string": "1.70.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "87d272992bc51ff47ee345f377148c5dbef22707",
+      "version-string": "1.70.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4a05d4c14b5445d58a08e8bd81987673e7d8d294",
+      "version-string": "1.69.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fac02771c6ae3a7e91f63ed40375357ae25ed005",
+      "version-string": "1.68.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "099d6b8e2429a8702d65d7edf56dc9c4f9e6d2a5",
+      "version-string": "1.67.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b35a337eed03a72499ed08770dc5bc79ca285c53",
+      "version-string": "1.66.0",
+      "port-version": 0
+    }
+  ]
+}

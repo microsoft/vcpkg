@@ -1,0 +1,7 @@
+{
+  "name": "qhull",
+  "version-string": "8.0.2",
+  "port-version": 2,
+  "description": "computes the convex hull, Delaunay triangulation, Voronoi diagram",
+  "homepage": "https://github.com/qhull/qhull"
+}

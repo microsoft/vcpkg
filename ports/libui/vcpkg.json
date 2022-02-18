@@ -1,0 +1,7 @@
+{
+  "name": "libui",
+  "version-date": "2018-11-03",
+  "port-version": 2,
+  "description": "Simple and portable (but not inflexible) native GUI library in C.",
+  "homepage": "https://github.com/andlabs/libui"
+}

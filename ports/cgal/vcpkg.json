@@ -1,0 +1,77 @@
+{
+  "name": "cgal",
+  "version": "5.4",
+  "description": "The Computational Geometry Algorithms Library (CGAL) is a C++ library that aims to provide easy access to efficient and reliable algorithms in computational geometry.",
+  "homepage": "https://github.com/CGAL/cgal",
+  "license": "GPL-3.0-or-later AND LGPL-3.0-or-later AND BSL-1.0",
+  "dependencies": [
+    "boost-accumulators",
+    "boost-algorithm",
+    "boost-bimap",
+    "boost-callable-traits",
+    "boost-concept-check",
+    "boost-container",
+    "boost-core",
+    "boost-detail",
+    "boost-filesystem",
+    "boost-functional",
+    "boost-fusion",
+    "boost-geometry",
+    "boost-graph",
+    "boost-heap",
+    "boost-intrusive",
+    "boost-iostreams",
+    "boost-iterator",
+    "boost-lambda",
+    "boost-logic",
+    "boost-math",
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-multiprecision",
+    "boost-numeric-conversion",
+    "boost-optional",
+    "boost-parameter",
+    "boost-pool",
+    "boost-preprocessor",
+    "boost-property-map",
+    "boost-property-tree",
+    "boost-ptr-container",
+    "boost-random",
+    "boost-range",
+    "boost-serialization",
+    "boost-spirit",
+    "boost-thread",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-units",
+    "boost-utility",
+    "boost-variant",
+    "gmp",
+    "mpfr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "qt": {
+      "description": "Qt GUI support for CGAL",
+      "dependencies": [
+        "eigen3",
+        "qt5-3d",
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        "qt5-script",
+        "qt5-svg",
+        "qt5-xmlpatterns"
+      ]
+    }
+  }
+}

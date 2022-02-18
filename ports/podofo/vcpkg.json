@@ -1,0 +1,23 @@
+{
+  "name": "podofo",
+  "version": "0.9.7",
+  "description": "PoDoFo is a library to work with the PDF file format",
+  "homepage": "https://sourceforge.net/projects/podofo/",
+  "supports": "!uwp",
+  "dependencies": [
+    "freetype",
+    "libjpeg-turbo",
+    "libpng",
+    "openssl",
+    "tiff",
+    "zlib"
+  ],
+  "features": {
+    "fontconfig": {
+      "description": "Enable font manager support on Unix platforms",
+      "dependencies": [
+        "fontconfig"
+      ]
+    }
+  }
+}

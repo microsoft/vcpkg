@@ -1,0 +1,13 @@
+{
+  "name": "boost-core",
+  "version": "1.78.0",
+  "description": "Boost core module",
+  "homepage": "https://github.com/boostorg/core",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-vcpkg-helpers"
+  ]
+}

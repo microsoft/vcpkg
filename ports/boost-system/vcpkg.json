@@ -1,0 +1,26 @@
+{
+  "name": "boost-system",
+  "version": "1.78.0",
+  "description": "Boost system module",
+  "homepage": "https://github.com/boostorg/system",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-throw-exception",
+    "boost-variant2",
+    "boost-vcpkg-helpers",
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

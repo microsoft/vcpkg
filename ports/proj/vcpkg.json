@@ -1,0 +1,9 @@
+{
+  "name": "proj",
+  "version-string": "0",
+  "port-version": 1,
+  "description": "a stub package that pulls in proj4. Do not depend on this package.",
+  "dependencies": [
+    "proj4"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "cppcms",
+  "version-string": "1.2.1",
+  "port-version": 4,
+  "description": "CppCMS is a Free High Performance Web Development Framework (not a CMS) aimed at Rapid Web Application Development",
+  "homepage": "https://github.com/artyom-beilis/cppcms",
+  "supports": "!(linux | osx)",
+  "dependencies": [
+    "icu",
+    "openssl",
+    "pcre",
+    "zlib"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "xalan-c",
+  "version": "1.12",
+  "port-version": 1,
+  "description": "Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML document types",
+  "homepage": "https://github.com/apache/xalan-c",
+  "dependencies": [
+    "xerces-c"
+  ]
+}

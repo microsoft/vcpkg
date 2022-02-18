@@ -1,5 +1,0 @@
-Source: opengl-registry
-Version: 2020-03-25
-Homepage: https://github.com/KhronosGroup/OpenGL-Registry
-Build-Depends: egl-registry
-Description: the API and Extension registries for the OpenGL family APIs

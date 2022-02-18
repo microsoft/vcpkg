@@ -1,0 +1,11 @@
+{
+  "name": "boost-logic",
+  "version": "1.78.0",
+  "description": "Boost logic module",
+  "homepage": "https://github.com/boostorg/logic",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-vcpkg-helpers"
+  ]
+}

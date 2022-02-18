@@ -1,0 +1,176 @@
+diff --git a/CMakeModules/FindOSG.cmake b/CMakeModules/FindOSG.cmake
+index b7dff11..d1ec2ff 100644
+--- a/CMakeModules/FindOSG.cmake
++++ b/CMakeModules/FindOSG.cmake
+@@ -121,5 +121,40 @@ IF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
+     SET( OSG_FOUND "YES" )
+     SET( OSG_INCLUDE_DIRS ${OSG_INCLUDE_DIR} ${OSG_GEN_INCLUDE_DIR} )
+     GET_FILENAME_COMPONENT( OSG_LIBRARIES_DIR ${OSG_LIBRARY} PATH )
++    
++    find_package(ZLIB REQUIRED)
++    set(ZLIB_LIBRARY ZLIB::ZLIB)
++    
++    find_package(Freetype REQUIRED)
++    set(FREETYPE_LIBRARY Freetype::Freetype)
++    
++    find_package(unofficial-brotli CONFIG REQUIRED)
++    find_package(BZip2 REQUIRED)
++    find_package(expat CONFIG REQUIRED)
++    find_package(PNG REQUIRED)
++    find_package(JPEG REQUIRED)
++    find_package(TIFF REQUIRED)
++    find_package(zstd REQUIRED)
++    find_package(GIF REQUIRED)
++     if (WIN32)
++         find_package(pthreads CONFIG REQUIRED)
++         list(APPEND OSG_DEPENDS_LIBRARY PThreads4W::PThreads4W)
++     endif()
++
++    if (UNIX)
++        list(APPEND OSG_DEPENDS_LIBRARY ${OSG_DEPENDS_LIBRARY} -pthread)
++        # Due to Linux Linker dependency issues these need to included again
++        set(DEPEND_LIB_LIST fontconfig freetype uuid gdal json-c expat zstd proj sqlite3 webp gif cfitsio openjp2 xml2)
++    else(UNIX)
++        set(DEPEND_LIB_LIST cfitsio)
++    endif()
++    foreach (libname ${DEPEND_LIB_LIST})
++        find_library(${libname}_LIBRARY_RELEASE NAMES ${libname}  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
++        find_library(${libname}_LIBRARY_DEBUG NAMES ${libname} ${libname}d ${libname}_d NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
++        select_library_configurations(${libname})
++        list(APPEND OSG_DEPENDS_LIBRARY ${${libname}_LIBRARY})
++    endforeach()
++    list(APPEND OSG_DEPENDS_LIBRARY ZLIB::ZLIB Freetype::Freetype expat::expat PNG::PNG JPEG::JPEG TIFF::TIFF ${GIF_LIBRARIES} ${CFITSIO_LIBRARY})
++
+ ENDIF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
+ 
+diff --git a/src/applications/osgearth_3pv/CMakeLists.txt b/src/applications/osgearth_3pv/CMakeLists.txt
+index e1dc876..6d688ff 100644
+--- a/src/applications/osgearth_3pv/CMakeLists.txt
++++ b/src/applications/osgearth_3pv/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_3pv.cpp )
+ 
+diff --git a/src/applications/osgearth_atlas/CMakeLists.txt b/src/applications/osgearth_atlas/CMakeLists.txt
+index aadbb5e..69698c7 100644
+--- a/src/applications/osgearth_atlas/CMakeLists.txt
++++ b/src/applications/osgearth_atlas/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+ 
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_atlas.cpp )
+ 
+diff --git a/src/applications/osgearth_boundarygen/CMakeLists.txt b/src/applications/osgearth_boundarygen/CMakeLists.txt
+index fe9ec6b..52915b0 100644
+--- a/src/applications/osgearth_boundarygen/CMakeLists.txt
++++ b/src/applications/osgearth_boundarygen/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_H
+     BoundaryUtil
+diff --git a/src/applications/osgearth_clamp/CMakeLists.txt b/src/applications/osgearth_clamp/CMakeLists.txt
+index 996ea43..728ee77 100644
+--- a/src/applications/osgearth_clamp/CMakeLists.txt
++++ b/src/applications/osgearth_clamp/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_clamp.cpp)
+ 
+diff --git a/src/applications/osgearth_conv/CMakeLists.txt b/src/applications/osgearth_conv/CMakeLists.txt
+index a77d703..2aac5f2 100644
+--- a/src/applications/osgearth_conv/CMakeLists.txt
++++ b/src/applications/osgearth_conv/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_conv.cpp )
+ 
+diff --git a/src/applications/osgearth_overlayviewer/CMakeLists.txt b/src/applications/osgearth_overlayviewer/CMakeLists.txt
+index bb2802a..5175cfc 100644
+--- a/src/applications/osgearth_overlayviewer/CMakeLists.txt
++++ b/src/applications/osgearth_overlayviewer/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_overlayviewer.cpp )
+ 
+diff --git a/src/applications/osgearth_tfs/CMakeLists.txt b/src/applications/osgearth_tfs/CMakeLists.txt
+index 90c153a..d331019 100644
+--- a/src/applications/osgearth_tfs/CMakeLists.txt
++++ b/src/applications/osgearth_tfs/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+ 
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_tfs.cpp )
+ 
+diff --git a/src/applications/osgearth_toc/CMakeLists.txt b/src/applications/osgearth_toc/CMakeLists.txt
+index b32c523..7b25b79 100644
+--- a/src/applications/osgearth_toc/CMakeLists.txt
++++ b/src/applications/osgearth_toc/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY OSGWIDGET_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGWIDGET_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_toc.cpp )
+ 
+diff --git a/src/applications/osgearth_version/CMakeLists.txt b/src/applications/osgearth_version/CMakeLists.txt
+index 1f1d48d..01e963b 100644
+--- a/src/applications/osgearth_version/CMakeLists.txt
++++ b/src/applications/osgearth_version/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_version.cpp )
+ 
+diff --git a/src/applications/osgearth_viewer/CMakeLists.txt b/src/applications/osgearth_viewer/CMakeLists.txt
+index 8c61e42..bbda7be 100644
+--- a/src/applications/osgearth_viewer/CMakeLists.txt
++++ b/src/applications/osgearth_viewer/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
+-SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
++SET(TARGET_LIBRARIES_VARS OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY OPENTHREADS_LIBRARY)
+ 
+ SET(TARGET_SRC osgearth_viewer.cpp )
+ 
+diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
+index cd55c1164..7cecdac74 100644
+--- a/src/osgEarth/CMakeLists.txt
++++ b/src/osgEarth/CMakeLists.txt
+@@ -928,9 +928,11 @@ ENDIF(TRACY_FOUND)
+
+ OPTION(NRL_STATIC_LIBRARIES "Link osgEarth against static GDAL and cURL, including static OpenSSL, Proj4, JPEG, PNG, and TIFF." OFF)
+ if(NOT NRL_STATIC_LIBRARIES)
+-  LINK_WITH_VARIABLES(${LIB_NAME} OSG_LIBRARY OSGUTIL_LIBRARY OSGSIM_LIBRARY OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGTEXT_LIBRARY OSGGA_LIBRARY OSGSHADOW_LIBRARY CURL_LIBRARY GDAL_LIBRARY OSGMANIPULATOR_LIBRARY)
++  LINK_WITH_VARIABLES(${LIB_NAME} OSGSIM_LIBRARY OSGVIEWER_LIBRARY OSGTEXT_LIBRARY OSGDB_LIBRARY OSGGA_LIBRARY OSGSHADOW_LIBRARY OPENTHREADS_LIBRARY OSGMANIPULATOR_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY)
++  TARGET_LINK_LIBRARIES(${LIB_NAME} ${OSG_DEPENDS_LIBRARY} ${CURL_LIBRARY} ${GDAL_LIBRARIES})
+ else(NOT NRL_STATIC_LIBRARIES)
+-  LINK_WITH_VARIABLES(${LIB_NAME} OSG_LIBRARY OSGUTIL_LIBRARY OSGSIM_LIBRARY OSGDB_LIBRARY OSGVIEWER_LIBRARY OSGTEXT_LIBRARY OSGGA_LIBRARY OSGSHADOW_LIBRARY CURL_LIBRARY GDAL_LIBRARY OSGMANIPULATOR_LIBRARY SSL_EAY_RELEASE LIB_EAY_RELEASE TIFF_LIBRARY PROJ4_LIBRARY PNG_LIBRARY JPEG_LIBRARY)
++  LINK_WITH_VARIABLES(${LIB_NAME} OSGSIM_LIBRARY OSGVIEWER_LIBRARY OSGTEXT_LIBRARY OSGDB_LIBRARY OSGGA_LIBRARY OSGSHADOW_LIBRARY OPENTHREADS_LIBRARY OSGMANIPULATOR_LIBRARY OSGUTIL_LIBRARY OSG_LIBRARY)
++  TARGET_LINK_LIBRARIES(${LIB_NAME} ${OSG_DEPENDS_LIBRARY} ${CURL_LIBRARY} ${GDAL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE} ${TIFF_LIBRARY} ${PROJ4_LIBRARY} ${PNG_LIBRARY} ${JPEG_LIBRARY})
+ endif(NOT NRL_STATIC_LIBRARIES)
+
+ LINK_CORELIB_DEFAULT(${LIB_NAME} ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIBRARY})
+ 

@@ -1,0 +1,48 @@
+{
+  "name": "freetype",
+  "version-semver": "2.11.1",
+  "description": "A library to render fonts.",
+  "homepage": "https://www.freetype.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "brotli",
+    "bzip2",
+    "png",
+    "zlib"
+  ],
+  "features": {
+    "brotli": {
+      "description": "Support decompression of WOFF2 streams",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "bzip2": {
+      "description": "Support bzip2 compressed fonts.",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "png": {
+      "description": "Support PNG compressed OpenType embedded bitmaps.",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "zlib": {
+      "description": "Use zlib instead of internal library for DEFLATE",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

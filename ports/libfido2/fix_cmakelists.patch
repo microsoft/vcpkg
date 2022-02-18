@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1eb8726..b308597 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,16 +161,20 @@ if(UNIX)
+ endif()
+ 
+ if(MSVC)
+-	if((NOT CBOR_INCLUDE_DIRS) OR (NOT CBOR_LIBRARY_DIRS) OR
+-	   (NOT CRYPTO_INCLUDE_DIRS) OR (NOT CRYPTO_LIBRARY_DIRS) OR
+-	   (NOT ZLIB_INCLUDE_DIRS) OR (NOT ZLIB_LIBRARY_DIRS))
+-		message(FATAL_ERROR "please provide definitions for "
+-		   "{CBOR,CRYPTO,ZLIB}_{INCLUDE,LIBRARY}_DIRS when building "
+-		    "under msvc")
+-	endif()
+-	set(CBOR_LIBRARIES cbor)
+-	set(ZLIB_LIBRARIES zlib)
+-	set(CRYPTO_LIBRARIES crypto-46)
++	include(FindPkgConfig)
++	
++	find_package(LIBCBOR REQUIRED)
++	find_package(OpenSSL REQUIRED)
++	find_package(ZLIB REQUIRED) 
++	
++	# Handling of different Packagenames in VCPKG
++	set(CBOR_INCLUDE_DIRS ${LIBCBOR_INCLUDE_DIR})
++	set(CRYPTO_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS})
++	set(CBOR_LIBRARY_DIRS ${LIBCBOR_LIBRARY_DIRS})
++	set(CRYPTO_LIBRARY_DIRS ${OPENSSL_LIBRARY_DIRS})
++	set(CBOR_LIBRARIES ${LIBCBOR_LIBRARIES})
++	set(CRYPTO_LIBRARIES ${OPENSSL_LIBRARIES})
++	add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-D_CRT_NONSTDC_NO_DEPRECATE")
+ 	set(MSVC_DISABLED_WARNINGS_LIST
+ 		"C4200" # nonstandard extension used: zero-sized array in
+ 			# struct/union;
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 11b0bb5..d820ff3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -120,7 +120,7 @@ if(BUILD_SHARED_LIBS)
+ 	install(TARGETS fido2_shared
+ 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
++		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif()
+ 
+ install(FILES fido.h DESTINATION include)

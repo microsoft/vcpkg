@@ -3,24 +3,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.74.0
-    SHA512 23a4a7fa9c993f0d88ebc4fdad765c63ba96d66a07e553e3d304725c2c38d70d2083a65eec7940522f8b61f6deddea18081cd3aca5bcf080fbc448768b44a6ee
+    REF boost-1.78.0
+    SHA512 ea2695df5301853209ed0db70cff632e27066dbd2dcfb3946022633427a45ad07f104eee7ac554038a45f4bf89fb8b39ee4d07f873aebb4571ed392d1e343879
     HEAD_REF master
-    PATCHES fix_exports_for_32bit_GNU_asm_for_windows.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
 string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-context requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
+    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
+    @ONLY
+)
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-
-# boost-context removed all.hpp, which is used by FindBoost to determine that context is installed
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp)
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/boost/context/all.hpp
-        "#error \"#include <boost/context/all.hpp> is no longer supported by boost_context.\"")
-endif()

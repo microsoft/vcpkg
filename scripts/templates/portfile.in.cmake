@@ -29,9 +29,6 @@
 #
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
-# # Specifies if the port install should fail immediately given a condition
-# vcpkg_fail_port_install(MESSAGE "@PORT@ currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "@URL@"
     FILENAME "@FILENAME@"

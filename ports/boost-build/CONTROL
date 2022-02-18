@@ -1,5 +1,0 @@
-Source: boost-build
-Version: 1.74.0
-Homepage: https://github.com/boostorg/build
-Description: Boost.Build
-Build-Depends: boost-uninstall

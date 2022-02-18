@@ -1,7 +1,0 @@
-Source: crashpad
-Version: 2020-03-18
-Homepage: https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md
-Description: Crashpad is a crash-reporting system.
-  Crashpad is a library for capturing, storing and transmitting postmortem crash reports from a client to an upstream collection server. Crashpad aims to make it possible for clients to capture process state at the time of crash with the best possible fidelity and coverage, with the minimum of fuss.
-Build-Depends: zlib
-Supports: x64 & (osx|windows)

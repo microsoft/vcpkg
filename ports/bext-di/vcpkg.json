@@ -1,0 +1,7 @@
+{
+  "name": "bext-di",
+  "version": "1.2.0",
+  "port-version": 1,
+  "description": "C++14 Dependency Injection Library.",
+  "homepage": "https://github.com/boost-ext/di"
+}

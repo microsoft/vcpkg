@@ -1,0 +1,23 @@
+{
+  "name": "boost-flyweight",
+  "version": "1.78.0",
+  "description": "Boost flyweight module",
+  "homepage": "https://github.com/boostorg/flyweight",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-detail",
+    "boost-interprocess",
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-parameter",
+    "boost-preprocessor",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

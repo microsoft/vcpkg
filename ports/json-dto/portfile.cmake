@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/json_dto
-    REF 58bdc34fe2f831bbe0195c497c49e137f0c97106 # v.0.2.11
-    SHA512 94c0948a968283dac2269c58a61acf309879b3577da4e39f9f0429c0deadefd0c78281596f0769be660e6e3b2b3650fcd09694fc98915d8a358936943a07d47f
+    REF 00e5313d56d5e5ab7cd1d8635e6740d6c01552e9 # v.0.3.0
+    SHA512 31d63b00029848d6983c948461619322525907dcc45bae4e07150400c62470f0aa72034db847d5d2e1626b6d820cc8a98cc5cbdfb33aee235cd06efb88816667
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/dev
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DJSON_DTO_INSTALL=ON
         -DJSON_DTO_TEST=OFF
@@ -15,11 +14,12 @@ vcpkg_configure_cmake(
         -DJSON_DTO_INSTALL_SAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/json-dto)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/json-dto)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

@@ -1,5 +1,0 @@
-Source: implot
-Version: 0.8
-Homepage: https://github.com/epezent/implot
-Description: Advanced 2D Plotting for Dear ImGui
-Build-Depends: imgui

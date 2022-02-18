@@ -3,35 +3,51 @@
 
   "Applications": [
     {
-      "Name": "VirtualBox",
-      "TestCommand": "VBoxManage",
-      "DmgUrl": "https://download.virtualbox.org/virtualbox/6.1.10/VirtualBox-6.1.10-138449-OSX.dmg",
-      "Sha256": "EF0CA4924922514B6AD71469998821F2CF7C596B4B8B59736C3699759E0F1DF8",
-      "InstallerPath": "VirtualBox.pkg"
+      "Name": "vagrant",
+      "VersionCommand": [ "vagrant", "-v" ],
+      "VersionRegex": "Vagrant (.*)",
+      "Version": "2.2.19",
+      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_x86_64.dmg",
+      "Sha256": "6307BE217813A11C9E106448BF232803031E434A08C8B2DF8C62FDC9E8543845",
+      "InstallerPath": "vagrant.pkg"
     },
     {
-      "Name": "vagrant",
-      "TestCommand": "vagrant",
-      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.dmg",
-      "Sha256": "529CDE2A78E6DF38EC906B65C70B36A087E2601EAB42E25856E35B20CCB027C0",
-      "InstallerPath": "vagrant.pkg"
-    }
-  ],
-  "Brew": [
+      "Name": "Parallels",
+      "VersionCommand": [ "cat", "/Applications/Parallels Desktop.app/Contents/Info.plist" ],
+      "VersionRegex": "<key>CFBundleShortVersionString</key>[\\n\\t ]*<string>([0-9.]+)</string>",
+      "Version": "17.1.1",
+      "DmgUrl": "https://download.parallels.com/desktop/v17/17.1.1-51537/ParallelsDesktop-17.1.1-51537.dmg",
+      "Sha256": "BD7BE2DF4D1B3508C127CF1D9C1EF93CDDA63384BCF3893A77FBC9F1169765A9",
+      "InstallationCommands": [
+        [ "bash", "-c", "ps x | grep 'Parallels Desktop' | grep -v 'grep' | sed -E 's/^ *([0-9]+).*(\\/Applications.*)$/\\1: \\2/'" ],
+        [ "bash", "-c", "ps x | grep 'Parallels Desktop' | grep -v 'grep' | sed -E 's/^ *([0-9]+).*$/\\1/' | xargs -p kill" ],
+        [ "sudo", "rm", "-rf", "/Applications/Parallels Desktop.app" ],
+        [ "sudo", "cp", "-r", "/Volumes/setup-installer/Parallels Desktop.app", "/Applications" ],
+        [ "sudo", "/Applications/Parallels Desktop.app/Contents/MacOS/inittool2", "init", "-b", "/Applications/Parallels Desktop.app" ]
+      ]
+    },
     {
       "Name": "osxfuse",
-      "Kind": "cask"
+      "VersionCommand": [ "cat", "/Library/Filesystems/macfuse.fs/Contents/version.plist" ],
+      "VersionRegex": "<key>CFBundleVersion</key>[\\n\\t ]*<string>([0-9.]+)</string>",
+      "Version": "4.2.4",
+      "DmgUrl": "https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.2.4/macfuse-4.2.4.dmg",
+      "Sha256": "82A2C30B3A7BF56AA2755C0C192FB50D9EECC3FE42505AB4E8679B50306188BD",
+      "InstallerPath": "Install macFUSE.pkg"
     },
     {
-      "Name": "sshfs"
+      "Name": "sshfs",
+      "VersionCommand": [ "sshfs", "--version" ],
+      "VersionRegex": "SSHFS version [0-9.]* \\(OSXFUSE SSHFS (.*)\\)",
+      "Version": "2.5.0",
+      "PkgUrl": "https://github.com/osxfuse/sshfs/releases/download/osxfuse-sshfs-2.5.0/sshfs-2.5.0.pkg",
+      "Sha256": "F8F4F71814273EA42DBE6CD92199F7CFF418571FFD1B10C0608878D3472D2162"
     }
   ],
-  "VBoxExtensions": [
+  "VagrantPlugins": [
     {
-      "Name": "Extension Pack",
-      "FullName": "Oracle VM VirtualBox Extension Pack",
-      "Url": "https://download.virtualbox.org/virtualbox/6.1.10/Oracle_VM_VirtualBox_Extension_Pack-6.1.10.vbox-extpack",
-      "Sha256": "03067F27F4DA07C5D0FDAFC56D27E3EA23A60682B333B2A1010FB74EF9A40C28"
+      "Name": "vagrant-parallels",
+      "Version": "2.2.4"
     }
   ]
 }

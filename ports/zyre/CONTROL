@@ -1,5 +1,0 @@
-Source: zyre
-Version: 2019-07-07-1
-Build-Depends: czmq
-Description: An open-source framework for proximity-based peer-to-peer applications
-Homepage: https://github.com/zeromq/zyre

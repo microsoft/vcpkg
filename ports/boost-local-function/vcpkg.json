@@ -1,0 +1,16 @@
+{
+  "name": "boost-local-function",
+  "version": "1.78.0",
+  "description": "Boost local_function module",
+  "homepage": "https://github.com/boostorg/local_function",
+  "dependencies": [
+    "boost-config",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-scope-exit",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

@@ -14,6 +14,7 @@ vcpkg_from_github(
         "fix-not-found-include.patch"
         ${win_patch}
 )
+file(REMOVE "${SOURCE_PATH}/third-party/libstudxml/version")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(STATIC OFF)
@@ -37,3 +38,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

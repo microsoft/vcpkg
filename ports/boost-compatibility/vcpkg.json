@@ -1,0 +1,9 @@
+{
+  "name": "boost-compatibility",
+  "version": "1.78.0",
+  "description": "Boost compatibility module",
+  "homepage": "https://github.com/boostorg/compatibility",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

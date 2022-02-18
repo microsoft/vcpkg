@@ -1,0 +1,7 @@
+{
+  "name": "kinectsdk1",
+  "version": "1.8",
+  "port-version": 4,
+  "description": "Kinect for Windows SDK for Kinect v1 sensor.",
+  "supports": "!arm"
+}

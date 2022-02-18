@@ -9,7 +9,7 @@ index 3c80458..e8d3bf5 100644
  	OCSPCHECK_SRC
  	http.c
 @@ -13,13 +11,27 @@ else()
-         set(OCSPCHECK_SRC ${OCSPCHECK_SRC} compat/memmem.c)
+         set(OCSPCHECK_SRC ${OCSPCHECK_SRC} compat/strtonum.c)
  endif()
  
 +check_function_exists(getopt HAVE_GETOPT)

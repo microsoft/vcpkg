@@ -1,0 +1,17 @@
+{
+  "name": "boost-multiprecision",
+  "version": "1.78.0",
+  "description": "Boost multiprecision module",
+  "homepage": "https://github.com/boostorg/multiprecision",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-predef",
+    "boost-random",
+    "boost-vcpkg-helpers"
+  ]
+}

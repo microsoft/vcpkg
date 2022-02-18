@@ -1,0 +1,7 @@
+{
+  "name": "loguru",
+  "version-string": "2.1.0",
+  "port-version": 2,
+  "description": "A lightweight and flexible C++ logging library",
+  "homepage": "https://github.com/emilk/loguru"
+}

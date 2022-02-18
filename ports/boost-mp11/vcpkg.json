@@ -1,0 +1,9 @@
+{
+  "name": "boost-mp11",
+  "version": "1.78.0",
+  "description": "Boost mp11 module",
+  "homepage": "https://github.com/boostorg/mp11",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

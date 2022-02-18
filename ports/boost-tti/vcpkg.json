@@ -1,0 +1,14 @@
+{
+  "name": "boost-tti",
+  "version": "1.78.0",
+  "description": "Boost tti module",
+  "homepage": "https://github.com/boostorg/tti",
+  "dependencies": [
+    "boost-config",
+    "boost-function-types",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

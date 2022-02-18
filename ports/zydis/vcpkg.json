@@ -1,0 +1,16 @@
+{
+  "name": "zydis",
+  "version-semver": "3.2.1",
+  "description": "Fast and lightweight x86/x86-64 disassembler library.",
+  "homepage": "https://zydis.re",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

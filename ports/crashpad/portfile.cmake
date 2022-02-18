@@ -1,7 +1,3 @@
-vcpkg_fail_port_install(
-    ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "LINUX")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_git(
@@ -14,7 +10,7 @@ function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
-    
+
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
@@ -116,8 +112,8 @@ install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
 # remove empty directories
-file(REMOVE_RECURSE 
-    "${PACKAGES_INCLUDE_DIR}/util/net/testdata" 
+file(REMOVE_RECURSE
+    "${PACKAGES_INCLUDE_DIR}/util/net/testdata"
     "${PACKAGES_INCLUDE_DIR}/build/ios")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"

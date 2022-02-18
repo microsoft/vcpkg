@@ -1,0 +1,11 @@
+{
+  "name": "aixlog",
+  "version-semver": "1.5.0",
+  "description": "Header-only C++ logging library",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

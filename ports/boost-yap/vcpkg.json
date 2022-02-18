@@ -1,0 +1,12 @@
+{
+  "name": "boost-yap",
+  "version": "1.78.0",
+  "description": "Boost yap module",
+  "homepage": "https://github.com/boostorg/yap",
+  "dependencies": [
+    "boost-hana",
+    "boost-preprocessor",
+    "boost-type-index",
+    "boost-vcpkg-helpers"
+  ]
+}

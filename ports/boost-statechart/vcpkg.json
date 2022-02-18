@@ -1,0 +1,21 @@
+{
+  "name": "boost-statechart",
+  "version": "1.78.0",
+  "description": "Boost statechart module",
+  "homepage": "https://github.com/boostorg/statechart",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-config",
+    "boost-conversion",
+    "boost-core",
+    "boost-detail",
+    "boost-function",
+    "boost-mpl",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

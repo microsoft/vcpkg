@@ -1,0 +1,26 @@
+{
+  "name": "boost-msm",
+  "version": "1.78.0",
+  "description": "Boost msm module",
+  "homepage": "https://github.com/boostorg/msm",
+  "dependencies": [
+    "boost-any",
+    "boost-assert",
+    "boost-bind",
+    "boost-circular-buffer",
+    "boost-config",
+    "boost-core",
+    "boost-function",
+    "boost-fusion",
+    "boost-mpl",
+    "boost-parameter",
+    "boost-phoenix",
+    "boost-preprocessor",
+    "boost-proto",
+    "boost-serialization",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-vcpkg-helpers"
+  ]
+}

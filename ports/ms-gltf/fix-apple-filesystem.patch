@@ -1,0 +1,66 @@
+diff --git a/GLTFSDK.Samples/CMakeLists.txt b/GLTFSDK.Samples/CMakeLists.txt
+index a66ed93..d948ee2 100644
+--- a/GLTFSDK.Samples/CMakeLists.txt
++++ b/GLTFSDK.Samples/CMakeLists.txt
+@@ -1,4 +1,6 @@
+ cmake_minimum_required(VERSION 3.5)
+-
++if(APPLE)
++    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
++endif()
+ add_subdirectory(Deserialize)
+ add_subdirectory(Serialize)
+diff --git a/GLTFSDK.Samples/Deserialize/CMakeLists.txt b/GLTFSDK.Samples/Deserialize/CMakeLists.txt
+index 791898c..6474aee 100644
+--- a/GLTFSDK.Samples/Deserialize/CMakeLists.txt
++++ b/GLTFSDK.Samples/Deserialize/CMakeLists.txt
+@@ -17,6 +17,8 @@ if (MSVC)
+ 
+     # Make sure that all PDB files on Windows are installed to the output folder.  By default, only the debug build does this.
+     set_target_properties(Deserialize PROPERTIES COMPILE_PDB_NAME "Deserialize" COMPILE_PDB_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}")
++elseif(APPLE)
++    set_target_properties(Deserialize PROPERTIES CXX_STANDARD 17)
+ endif()
+ 
+ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+diff --git a/GLTFSDK.Samples/Deserialize/Source/main.cpp b/GLTFSDK.Samples/Deserialize/Source/main.cpp
+index 80198fa..fb560e0 100644
+--- a/GLTFSDK.Samples/Deserialize/Source/main.cpp
++++ b/GLTFSDK.Samples/Deserialize/Source/main.cpp
+@@ -8,6 +8,9 @@
+ 
+ // Replace this with <filesystem> (and use std::filesystem rather than
+ // std::experimental::filesystem) if your toolchain fully supports C++17
++#if defined(__APPLE__)
++#define _LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM
++#endif
+ #include <experimental/filesystem>
+ 
+ #include <fstream>
+diff --git a/GLTFSDK.Samples/Serialize/CMakeLists.txt b/GLTFSDK.Samples/Serialize/CMakeLists.txt
+index 5269da8..1129ea0 100644
+--- a/GLTFSDK.Samples/Serialize/CMakeLists.txt
++++ b/GLTFSDK.Samples/Serialize/CMakeLists.txt
+@@ -17,6 +17,8 @@ if (MSVC)
+ 
+     # Make sure that all PDB files on Windows are installed to the output folder.  By default, only the debug build does this.
+     set_target_properties(Serialize PROPERTIES COMPILE_PDB_NAME "Serialize" COMPILE_PDB_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}")
++elseif(APPLE)
++    set_target_properties(Serialize PROPERTIES CXX_STANDARD 17)
+ endif()
+ 
+ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+diff --git a/GLTFSDK.Samples/Serialize/Source/main.cpp b/GLTFSDK.Samples/Serialize/Source/main.cpp
+index ac87c10..f5c6e0b 100644
+--- a/GLTFSDK.Samples/Serialize/Source/main.cpp
++++ b/GLTFSDK.Samples/Serialize/Source/main.cpp
+@@ -10,6 +10,9 @@
+ 
+ // Replace this with <filesystem> (and use std::filesystem rather than
+ // std::experimental::filesystem) if your toolchain fully supports C++17
++#if defined(__APPLE__)
++#define _LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM
++#endif
+ #include <experimental/filesystem>
+ 
+ #include <fstream>

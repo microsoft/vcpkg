@@ -1,0 +1,7 @@
+{
+  "name": "ccd",
+  "version-string": "2.1-4",
+  "port-version": 3,
+  "description": "Library for collision detection between two convex shapes",
+  "homepage": "https://github.com/danfis/libccd"
+}

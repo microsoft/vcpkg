@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "2eafcdc8cb04d2ec80f9beb89254ca4f74616a07",
+      "version": "5.89.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "55574a9d2677a48ae7f69740641f5fdbc5b0e068",
+      "version": "5.89.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ac6edcd19fdca524303279786a9b5672a3a05c36",
+      "version": "5.88.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c0df48850c0ede4ccb1d73dbe45f433b625120c8",
+      "version": "5.87.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1476ac82c0b38d83211053e22afbac2091dab2e3",
+      "version-semver": "5.84.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "03f6943556e1d7600443c1f30445560de3f9b2f7",
+      "version-semver": "5.84.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "bc7b88da4daf014c751e4ab246a0104d850f5785",
+      "version": "5.84.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9944c9fc2ab20f7c28998fdf7c980cd239ff9b70",
+      "version": "5.81.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4c427a520895326ea450337eb531cb8ed5c7be30",
+      "version": "5.75.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "98bfda14e12e6f5468957c379b06fc2cb931ca64",
+      "version-string": "5.74.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "1a8119b36b8a6f931e840445dee55d158c28bf78",
+      "version-string": "5.74.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ce1a9d2f4fd9dd301b6c32bb05762ece4c972621",
+      "version-string": "5.64.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "95fc17e33fea7bd1720697aef5a453b2caa752d1",
+      "version-string": "5.64.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "be8352a74c00581ba59413523bf8407cc85200b0",
+      "version-string": "5.58.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "436ba1ace19997c9167e67a95c88e7d28d5fdeb6",
+      "version-string": "5.50.0",
+      "port-version": 0
+    }
+  ]
+}

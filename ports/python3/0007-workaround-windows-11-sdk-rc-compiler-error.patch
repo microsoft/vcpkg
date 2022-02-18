@@ -1,0 +1,30 @@
+From 0a72b7061ed79c5d6d37b41a5b1610e32fb371a4 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Wed, 22 Sep 2021 21:04:21 -0400
+Subject: [PATCH] workaround windows 11 sdk rc compiler error
+
+winnt.h was changed to error if the `SYSTEM_CACHE_ALIGNMENT` cannot be
+determined. when the RC compiler is invoked, this seems to fail where
+previous SDKs silently set the ARM value.
+---
+ PC/python_ver_rc.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/PC/python_ver_rc.h b/PC/python_ver_rc.h
+index 90fc6ba1a1..e313a5138e 100644
+--- a/PC/python_ver_rc.h
++++ b/PC/python_ver_rc.h
+@@ -1,3 +1,10 @@
++// Temporarily workaround bug in Windows SDK 10.0.22000.0 winnt.h
++#ifdef RC_INVOKED
++#   ifndef SYSTEM_CACHE_ALIGNMENT_SIZE
++#       define SYSTEM_CACHE_ALIGNMENT_SIZE 64
++#   endif
++#endif
++
+ // Resource script for Python core DLL.
+ // Currently only holds version information.
+ //
+-- 
+2.33.0.windows.1
+

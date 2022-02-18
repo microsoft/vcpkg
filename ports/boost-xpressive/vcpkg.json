@@ -1,0 +1,31 @@
+{
+  "name": "boost-xpressive",
+  "version": "1.78.0",
+  "description": "Boost xpressive module",
+  "homepage": "https://github.com/boostorg/xpressive",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-conversion",
+    "boost-core",
+    "boost-exception",
+    "boost-fusion",
+    "boost-integer",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-mpl",
+    "boost-numeric-conversion",
+    "boost-optional",
+    "boost-preprocessor",
+    "boost-proto",
+    "boost-range",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

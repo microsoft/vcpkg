@@ -1,0 +1,7 @@
+{
+  "name": "ppmagic",
+  "version-string": "2020-07-03",
+  "port-version": 1,
+  "description": "C/C++ preprocessor macros that you can use to simplify your life.",
+  "homepage": "https://github.com/kobalicek/ppmagic"
+}

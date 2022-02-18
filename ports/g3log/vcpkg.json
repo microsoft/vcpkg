@@ -1,0 +1,8 @@
+{
+  "name": "g3log",
+  "version": "1.3.4",
+  "port-version": 2,
+  "description": "Asynchronous logger with Dynamic Sinks",
+  "homepage": "https://github.com/KjellKod/g3log",
+  "supports": "!(arm | uwp)"
+}

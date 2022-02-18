@@ -1,6 +1,6 @@
 # Manifest Mode: CMake Example
 
-We would like to add vcpkg manifest support to an existing cmake project!
+We would like to add [vcpkg manifest support](../users/manifests.md) to an existing cmake project!
 Let's create a simple project that prints the fibonacci sequence up to a certain number,
 using some common dependencies.
 
@@ -30,6 +30,7 @@ find_package(range-v3 REQUIRED)
 find_package(cxxopts REQUIRED)
 
 add_executable(fibo src/main.cxx)
+target_compile_features(fibo PRIVATE cxx_std_17)
 
 target_link_libraries(fibo
   PRIVATE
@@ -45,7 +46,7 @@ And then we should add `main.cxx`:
 #include <fmt/format.h>
 #include <range/v3/view.hpp>
 
-namespace view = ranges::view;
+namespace view = ranges::views;
 
 int fib(int x) {
   int a = 0, b = 1;

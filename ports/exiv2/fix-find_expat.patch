@@ -1,0 +1,64 @@
+diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
+index ec3a43f..d8637cc 100644
+--- a/cmake/findDependencies.cmake
++++ b/cmake/findDependencies.cmake
+@@ -42,7 +42,8 @@ if (EXIV2_ENABLE_XMP AND EXIV2_ENABLE_EXTERNAL_XMP)
+     message(FATAL_ERROR "EXIV2_ENABLE_XMP AND EXIV2_ENABLE_EXTERNAL_XMP are mutually exclusive.  You can only choose one of them")
+ else()
+     if (EXIV2_ENABLE_XMP)
+-        find_package(EXPAT REQUIRED)
++        find_package(expat CONFIG REQUIRED)
++        set(EXPAT_FOUND 1)
+     elseif (EXIV2_ENABLE_EXTERNAL_XMP)
+         find_package(XmpSdk REQUIRED)
+     endif ()
+diff --git a/samples/CMakeLists.txt b/samples/CMakeLists.txt
+index de8aa1d..524724c 100644
+--- a/samples/CMakeLists.txt
++++ b/samples/CMakeLists.txt
+@@ -77,11 +77,10 @@ if( EXPAT_FOUND )
+     target_link_libraries(geotag 
+         PRIVATE
+             exiv2-xmp
+-            ${EXPAT_LIBRARIES}
++            expat::expat
+     )
+     target_include_directories(geotag PRIVATE ${CMAKE_BINARY_DIR})          # exv_conf.h 
+     target_include_directories(geotag PRIVATE ${CMAKE_SOURCE_DIR}/include)  # <exiv2/exiv2.hpp>    
+-    target_include_directories(geotag PRIVATE ${EXPAT_INCLUDE_DIR})
+     target_include_directories(geotag PRIVATE ${CMAKE_SOURCE_DIR}/src) # To find unused.h
+ 
+     if (WIN32)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 26e5a95..5dc722c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -154,8 +154,7 @@ target_include_directories(exiv2lib SYSTEM PRIVATE
+ )
+ 
+ if (EXIV2_ENABLE_XMP OR EXIV2_ENABLE_EXTERNAL_XMP)
+-    target_include_directories(exiv2lib PRIVATE ${EXPAT_INCLUDE_DIR})
+-    target_link_libraries(exiv2lib PRIVATE ${EXPAT_LIBRARIES})
++    target_link_libraries(exiv2lib PRIVATE expat::expat)
+ 
+     if (WIN32)
+         target_compile_definitions(exiv2lib PRIVATE XML_STATIC)
+diff --git a/xmpsdk/CMakeLists.txt b/xmpsdk/CMakeLists.txt
+index a22698f..55102ce 100644
+--- a/xmpsdk/CMakeLists.txt
++++ b/xmpsdk/CMakeLists.txt
+@@ -28,13 +28,12 @@ add_library(exiv2-xmp STATIC
+ 
+ target_link_libraries(exiv2-xmp
+     PRIVATE 
+-        $<BUILD_INTERFACE:${EXPAT_LIBRARY}>
++        $<BUILD_INTERFACE:expat::expat>
+ )
+ 
+ target_include_directories(exiv2-xmp
+     PRIVATE 
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/xmpsdk/include>
+-        ${EXPAT_INCLUDE_DIR}
+ )
+ 
+ # Prevent a denial-service-attack related to XML entity expansion

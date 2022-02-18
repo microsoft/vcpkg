@@ -1,0 +1,205 @@
+{
+  "name": "boost",
+  "version": "1.78.0",
+  "description": "Peer-reviewed portable C++ source libraries",
+  "homepage": "https://boost.org",
+  "dependencies": [
+    "boost-accumulators",
+    "boost-algorithm",
+    "boost-align",
+    "boost-any",
+    "boost-array",
+    "boost-asio",
+    "boost-assert",
+    "boost-assign",
+    "boost-atomic",
+    {
+      "name": "boost-beast",
+      "platform": "!emscripten"
+    },
+    "boost-bimap",
+    "boost-bind",
+    "boost-callable-traits",
+    "boost-chrono",
+    "boost-circular-buffer",
+    "boost-compatibility",
+    "boost-compute",
+    "boost-concept-check",
+    "boost-config",
+    "boost-container",
+    "boost-container-hash",
+    {
+      "name": "boost-context",
+      "platform": "!uwp & !emscripten"
+    },
+    "boost-contract",
+    "boost-conversion",
+    "boost-convert",
+    "boost-core",
+    {
+      "name": "boost-coroutine",
+      "platform": "!arm & !uwp & !emscripten"
+    },
+    {
+      "name": "boost-coroutine2",
+      "platform": "!emscripten"
+    },
+    "boost-crc",
+    "boost-date-time",
+    "boost-describe",
+    "boost-detail",
+    "boost-dll",
+    "boost-dynamic-bitset",
+    "boost-endian",
+    "boost-exception",
+    {
+      "name": "boost-fiber",
+      "platform": "!osx & !uwp & !arm & !emscripten"
+    },
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-flyweight",
+    "boost-foreach",
+    "boost-format",
+    "boost-function",
+    "boost-function-types",
+    "boost-functional",
+    "boost-fusion",
+    "boost-geometry",
+    "boost-gil",
+    "boost-graph",
+    "boost-hana",
+    "boost-heap",
+    "boost-histogram",
+    "boost-hof",
+    "boost-icl",
+    "boost-integer",
+    "boost-interprocess",
+    "boost-interval",
+    "boost-intrusive",
+    "boost-io",
+    {
+      "name": "boost-iostreams",
+      "platform": "!uwp"
+    },
+    "boost-iterator",
+    "boost-json",
+    "boost-lambda",
+    "boost-lambda2",
+    "boost-leaf",
+    "boost-lexical-cast",
+    "boost-local-function",
+    {
+      "name": "boost-locale",
+      "platform": "!uwp"
+    },
+    "boost-lockfree",
+    {
+      "name": "boost-log",
+      "platform": "!uwp & !emscripten"
+    },
+    "boost-logic",
+    "boost-math",
+    "boost-metaparse",
+    "boost-move",
+    "boost-mp11",
+    "boost-mpl",
+    "boost-msm",
+    "boost-multi-array",
+    "boost-multi-index",
+    "boost-multiprecision",
+    "boost-nowide",
+    "boost-numeric-conversion",
+    "boost-odeint",
+    "boost-optional",
+    "boost-outcome",
+    "boost-parameter",
+    {
+      "name": "boost-parameter-python",
+      "platform": "!emscripten"
+    },
+    "boost-pfr",
+    "boost-phoenix",
+    "boost-poly-collection",
+    "boost-polygon",
+    "boost-pool",
+    "boost-predef",
+    "boost-preprocessor",
+    {
+      "name": "boost-process",
+      "platform": "!emscripten"
+    },
+    "boost-program-options",
+    "boost-property-map",
+    "boost-property-tree",
+    "boost-proto",
+    "boost-ptr-container",
+    {
+      "name": "boost-python",
+      "platform": "!uwp & !emscripten & !ios & !android"
+    },
+    "boost-qvm",
+    "boost-random",
+    "boost-range",
+    "boost-ratio",
+    "boost-rational",
+    "boost-regex",
+    "boost-safe-numerics",
+    "boost-scope-exit",
+    "boost-serialization",
+    "boost-signals2",
+    "boost-smart-ptr",
+    "boost-sort",
+    "boost-spirit",
+    {
+      "name": "boost-stacktrace",
+      "platform": "!uwp"
+    },
+    "boost-statechart",
+    "boost-static-assert",
+    "boost-static-string",
+    "boost-stl-interfaces",
+    "boost-system",
+    {
+      "name": "boost-test",
+      "platform": "!uwp"
+    },
+    "boost-thread",
+    "boost-throw-exception",
+    "boost-timer",
+    "boost-tokenizer",
+    "boost-tti",
+    "boost-tuple",
+    "boost-type-erasure",
+    "boost-type-index",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-ublas",
+    "boost-units",
+    "boost-unordered",
+    "boost-utility",
+    "boost-uuid",
+    "boost-variant",
+    "boost-variant2",
+    "boost-vmd",
+    {
+      "name": "boost-wave",
+      "platform": "!uwp"
+    },
+    "boost-winapi",
+    "boost-xpressive",
+    "boost-yap"
+  ],
+  "features": {
+    "mpi": {
+      "description": "Build with MPI support",
+      "dependencies": [
+        "boost-graph-parallel",
+        "boost-mpi",
+        "boost-property-map-parallel"
+      ]
+    }
+  }
+}

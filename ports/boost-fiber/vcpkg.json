@@ -1,0 +1,43 @@
+{
+  "name": "boost-fiber",
+  "version": "1.78.0",
+  "description": "Boost fiber module",
+  "homepage": "https://github.com/boostorg/fiber",
+  "supports": "!osx & !uwp & !arm & !emscripten",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    {
+      "name": "boost-context",
+      "platform": "!uwp & !emscripten"
+    },
+    "boost-core",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-format",
+    "boost-intrusive",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-predef",
+    "boost-smart-ptr",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "numa": {
+      "description": "Enable NUMA support"
+    }
+  }
+}

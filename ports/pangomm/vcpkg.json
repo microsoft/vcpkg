@@ -1,0 +1,27 @@
+{
+  "name": "pangomm",
+  "version": "2.50.0",
+  "port-version": 1,
+  "description": "pangomm is the official C++ interface for the Pango font layout library. See, for instance, the Pango::Layout class.",
+  "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pangomm",
+  "supports": "!arm",
+  "dependencies": [
+    "cairo",
+    "cairomm",
+    "fontconfig",
+    "freetype",
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "glibmm",
+    "harfbuzz",
+    "pango",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

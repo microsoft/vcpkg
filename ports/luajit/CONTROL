@@ -1,5 +1,0 @@
-Source: luajit
-Version: 2.0.5-3
-Homepage: https://github.com/LuaJIT/LuaJIT
-Description: LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.
-Supports: !uwp

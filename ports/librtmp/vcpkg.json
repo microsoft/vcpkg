@@ -1,0 +1,11 @@
+{
+  "name": "librtmp",
+  "version-date": "2019-11-11",
+  "port-version": 2,
+  "description": "RTMPDump Real-Time Messaging Protocol API",
+  "homepage": "https://rtmpdump.mplayerhq.hu",
+  "dependencies": [
+    "openssl",
+    "zlib"
+  ]
+}

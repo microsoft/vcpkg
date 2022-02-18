@@ -1,0 +1,17 @@
+{
+  "name": "atkmm",
+  "version": "2.36.0",
+  "port-version": 2,
+  "description": "atkmm is the official C++ interface for the ATK accessibility toolkit library. It may be used, for instance, by user interfaces implemented with gtkmm.",
+  "homepage": "https://www.gtkmm.org",
+  "dependencies": [
+    "atk",
+    "gettext",
+    "glib",
+    "glibmm",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "mnn",
+  "version": "1.1.0",
+  "port-version": 2,
+  "description": "MNN is a blazing fast, lightweight deep learning framework, battle-tested by business-critical use cases in Alibaba",
+  "homepage": "https://www.mnn.zone/",
+  "license": "Apache-2.0",
+  "supports": "!(arm | uwp | ios | android)",
+  "dependencies": [
+    "flatbuffers",
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    "rapidjson",
+    "stb"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Enable CUDA API backend",
+      "dependencies": [
+        "cuda",
+        "cudnn"
+      ]
+    },
+    "metal": {
+      "description": "Enable Metal API backend for Apple platforms"
+    },
+    "opencl": {
+      "description": "Enable OpenCL API backend",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "test": {
+      "description": "Build MNN test programs"
+    },
+    "tools": {
+      "description": "Build MNN tools",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan API backend",
+      "dependencies": [
+        "vulkan"
+      ]
+    }
+  }
+}

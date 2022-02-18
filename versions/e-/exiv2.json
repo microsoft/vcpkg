@@ -1,0 +1,214 @@
+{
+  "versions": [
+    {
+      "git-tree": "5e7341b739d7b05fbb40492158b01b8fa9fcdb74",
+      "version": "0.27.5",
+      "port-version": 1
+    },
+    {
+      "git-tree": "65e38e497c48c6e2fc463997ce9998e6af9f56b5",
+      "version": "0.27.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4ce7841080b34ab8f91006430e9a40e0d9bfba96",
+      "version": "0.27.4",
+      "port-version": 2
+    },
+    {
+      "git-tree": "1e93f266421999dd82b931b2dbf672d255b14b43",
+      "version": "0.27.4",
+      "port-version": 1
+    },
+    {
+      "git-tree": "f716a33e59b24c79140216d836644fe0603e322b",
+      "version": "0.27.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e38c35650c00596aafb8dda45b0d0e7f0a591563",
+      "version-string": "0.27.3",
+      "port-version": 4
+    },
+    {
+      "git-tree": "412904042cf27c7b49c02c36f4dc90ecaf0112ec",
+      "version-string": "0.27.3",
+      "port-version": 3
+    },
+    {
+      "git-tree": "8ae29b5306e974b23525e088ce8ceef718a1421e",
+      "version-string": "0.27.3",
+      "port-version": 2
+    },
+    {
+      "git-tree": "53685f0febdfa0bc634f9bfbb1380873d9fc2907",
+      "version-string": "0.27.3",
+      "port-version": 1
+    },
+    {
+      "git-tree": "3b8adff2f361ce718efc0135c904a958a280b4f8",
+      "version-string": "0.27.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "43a3fa06f5ae55a5eae0e2598955e16ed9aacdad",
+      "version-string": "0.27.2-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "17a92a002b3261ec1b79457d090b60a3fc8d8469",
+      "version-string": "0.27.1-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "722cc78a61b6c684d6d58a63a60f414e362d7c8f",
+      "version-string": "0.27.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "bfa291bdcee8c35275d518c656dc5d9f074dd265",
+      "version-string": "0.27",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1ece8ea0e01d46e6efd35c7a318d1d89953aa88b",
+      "version-string": "2018-11-08",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7e117afdb18673e47e9fd00d693a2c3bbb7f80f4",
+      "version-string": "2018-11-01",
+      "port-version": 0
+    },
+    {
+      "git-tree": "35fba01e0198ca5bdc7eb804e4688711edc04de3",
+      "version-string": "2018-10-25",
+      "port-version": 0
+    },
+    {
+      "git-tree": "37f3bdc2808081a280053f0bc1e962ad5b5b5e08",
+      "version-string": "2018-10-11",
+      "port-version": 0
+    },
+    {
+      "git-tree": "db5ac84ccc46bd3ac358e5511d5e7cb286a15ba4",
+      "version-string": "2018-09-18",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5f17a88525c79254c7857598d8655290b3c2be31",
+      "version-string": "2018-08-03",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e7cfe56c8281371b6bd73edfc355c453f4410a93",
+      "version-string": "2018-07-30",
+      "port-version": 0
+    },
+    {
+      "git-tree": "dc5b63224d6b65ba15cda5edbd9f4aa779135022",
+      "version-string": "2018-07-08",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ad6be0dd6d7050f65ab2373df4cd5ddb92d5221a",
+      "version-string": "2018-06-12",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3108e31a89840f4d82bdee2fb5bc0e1bff2ea85f",
+      "version-string": "2018-05-17",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2e4159b17b72862b98949306b8f1211b693b49ea",
+      "version-string": "2018-04-25",
+      "port-version": 0
+    },
+    {
+      "git-tree": "aa1cd53a0a18c6353422425beebea40e7df0ac15",
+      "version-string": "2018-04-12",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8822d320c13eb799412cb0846162bafa4d7c4c25",
+      "version-string": "2018-04-09",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ab3b340877d8fc8bda09d71cfe2aac79597f5209",
+      "version-string": "2018-04-06",
+      "port-version": 0
+    },
+    {
+      "git-tree": "909c753014f7af686e26569037a4a1299b20fafe",
+      "version-string": "2018-04-05",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cd71596c2e97816a0a3212b1cc6bf4590211d51e",
+      "version-string": "2018-04-02",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c060318e9bfd845ea70c61aaac5f21eea037a52f",
+      "version-string": "2018-03-29",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1fb9dae159e559028130a795af178e527f45823e",
+      "version-string": "2018-03-27",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3166610abafe5777dbd13a0924d82d2aa2be3a8f",
+      "version-string": "2018-03-23",
+      "port-version": 0
+    },
+    {
+      "git-tree": "904b94051e07cbd0e1077fbfb2aba96f9936f6e1",
+      "version-string": "2018-03-20",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a8242c226bb87a04a0c616d56faedff0452cb923",
+      "version-string": "2018-03-17",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7f0eb48767ec847b268b7f319f00d513b6a486c6",
+      "version-string": "2018-02-25",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1a0d2db81a2ddf36bbd289756b250e95304da7de",
+      "version-string": "8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99-3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c1e4ae854e0d49cabc272a2f533e3c2755a4db32",
+      "version-string": "8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7766aaf508dd77891ed4da8e93992ce2ac10c31c",
+      "version-string": "8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9854fbdbc4077ca9ab3a187f59d0b0183afe6e01",
+      "version-string": "8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cc201361949c95b03d6f6fdc3094b7a0aed27e15",
+      "version-string": "4f4add2cdcbe73af7098122a509dff0739d15908",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2aa65aa2b68f8494978ef6192ef30f6d6885ae0b",
+      "version-string": "327b3f6c4de4ffda82818367fc870640d2ae8820",
+      "port-version": 0
+    }
+  ]
+}

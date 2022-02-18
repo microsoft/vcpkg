@@ -7,14 +7,18 @@ if("public-preview" IN_LIST FEATURES)
         REF 7557db6de094b67818d3c410dc95a3cf07cd86a6
         SHA512 f2577379f711e2576fdd6dfecbc4d8a0b26c7670a77bc468238e8dd5fa43f208db85eddd06dd570fde4219ba19304338c712f671c059c6cc10abb4892d58ae40
         HEAD_REF master
+        PATCHES
+            fix-install-location.patch
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-umqtt-c
-        REF 478fd8e757dadfe2ca5fcd3953aeba24a14a98e1
-        SHA512 bece2a30abb88dd97b97e399b8e63f6833b052c01c2f779070d52bbc916af604568bf5098d5f994d278d70591b11c45a5fcca9350226eb6e59b04e53c2780bc4
+        REF 09558f380a314ea89b28f406cc810f47718cea49
+        SHA512 7fc1b3d4ed6bd7401b764e27755270dd97caeb09f3bdede90e2e8c554acd13b5c24f9c7343e642bcb62d2937b8169d900fa46a1b97a8c439733c8cdcac19d548
         HEAD_REF master
+        PATCHES
+            fix-install-location.patch
     )
 endif()
 
@@ -38,4 +42,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-

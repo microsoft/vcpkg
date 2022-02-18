@@ -1,0 +1,19 @@
+{
+  "name": "boost-optional",
+  "version": "1.78.0",
+  "description": "Boost optional module",
+  "homepage": "https://github.com/boostorg/optional",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-move",
+    "boost-predef",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

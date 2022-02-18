@@ -1,0 +1,15 @@
+{
+  "name": "boost-utility",
+  "version": "1.78.0",
+  "description": "Boost utility module",
+  "homepage": "https://github.com/boostorg/utility",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-io",
+    "boost-preprocessor",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

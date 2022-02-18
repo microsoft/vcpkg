@@ -1,0 +1,88 @@
+{
+  "name": "libzip",
+  "version-semver": "1.8.0",
+  "description": "A library for reading, creating, and modifying zip archives.",
+  "homepage": "https://github.com/nih-at/libzip",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "bzip2",
+    "default-aes"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Support bzip2-compressed zip archives",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "commoncrypto": {
+      "description": "AES (encryption) support using Apple's Common Crypto API"
+    },
+    "default-aes": {
+      "description": "Use default AES",
+      "dependencies": [
+        {
+          "name": "libzip",
+          "default-features": false,
+          "features": [
+            "commoncrypto"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "libzip",
+          "default-features": false,
+          "features": [
+            "wincrypto"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "libzip",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!(windows | osx)"
+        }
+      ]
+    },
+    "liblzma": {
+      "description": "Support XZ compressed zip archives using liblzma",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "mbedtls": {
+      "description": "AES (encryption) support using mbedtls",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "openssl": {
+      "description": "AES (encryption) support using OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "wincrypto": {
+      "description": "AES (encryption) support using Windows Crypto API"
+    },
+    "zstd": {
+      "description": "Support Zstandard-compressed zip archives",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

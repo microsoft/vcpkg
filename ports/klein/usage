@@ -1,0 +1,10 @@
+The package klein:x64-windows provides CMake targets:
+
+    find_package(klein CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE klein::klein)
+
+    # Or use the C++ 11 version
+    target_link_libraries(main PRIVATE klein::klein_cxx11)
+
+    # Or use the SSE4.1 version
+    target_link_libraries(main PRIVATE klein::klein_sse42)

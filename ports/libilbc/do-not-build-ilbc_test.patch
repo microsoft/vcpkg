@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 671ded64d1..1d01f737c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -332,7 +332,7 @@ install(FILES ilbc.h ${CMAKE_CURRENT_BINARY_DIR}/ilbc_export.h
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(FILES CONTRIBUTING.md NEWS.md README.md
+         DESTINATION ${CMAKE_INSTALL_DOCDIR})
+-install(TARGETS ilbc ilbc_test
++install(TARGETS ilbc
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

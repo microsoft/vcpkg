@@ -1,0 +1,67 @@
+{
+  "name": "boost-log",
+  "version": "1.78.0",
+  "description": "Boost log module",
+  "homepage": "https://github.com/boostorg/log",
+  "supports": "!uwp & !emscripten",
+  "dependencies": [
+    "boost-align",
+    "boost-array",
+    "boost-asio",
+    "boost-assert",
+    "boost-atomic",
+    "boost-bind",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-container",
+    "boost-core",
+    "boost-date-time",
+    "boost-exception",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-function-types",
+    "boost-fusion",
+    "boost-interprocess",
+    "boost-intrusive",
+    "boost-io",
+    "boost-iterator",
+    "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-move",
+    "boost-mpl",
+    "boost-optional",
+    "boost-parameter",
+    "boost-phoenix",
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-property-tree",
+    "boost-proto",
+    "boost-random",
+    "boost-range",
+    "boost-regex",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-system",
+    "boost-thread",
+    "boost-throw-exception",
+    "boost-type-index",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "boost-winapi",
+    "boost-xpressive",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

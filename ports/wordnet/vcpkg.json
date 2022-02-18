@@ -1,0 +1,11 @@
+{
+  "name": "wordnet",
+  "version-string": "3.0",
+  "port-version": 1,
+  "description": "WordNet is a large lexical database of English",
+  "features": {
+    "dbfiles": {
+      "description": "WordNet 3.1 database files"
+    }
+  }
+}

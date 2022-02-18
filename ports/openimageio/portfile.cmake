@@ -1,86 +1,78 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF e028a5264bd229e128b37a4362f7eb9c73ea82cc #2.1.16.0
-    SHA512 be5741e139c3c1d2fe62d6706833e9b158b6b00e1a57d141626f28cd3653f63e587b76de676b6b45d1a2330a0e71ebb2f1d00c108b68509cc418b6026424cfda
+    REF ff71703961f7758409fb7e6e689258e2997f7c18 # 2.3.10.1
+    SHA512 f56cb58329a496ca1fe3537fe87d469038ac0e74a555990a4510d2c019d2ad14b556240c0d5087a9a25ac01d9b371b5c77ce5a719e71a85fcd56e9cd099bc31e
     HEAD_REF master
     PATCHES
-        fix-dependency.patch
-        fix_static_build.patch
-        fix-tools-path.patch
+        fix-dependencies.patch
         fix-config-cmake.patch
-        fix-dependfmt.patch
-        fix-libheif.patch # Remove this patch on the next update
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindWebp.cmake")
+            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(LINKSTATIC ON)
-else()
-    set(LINKSTATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    libraw      USE_LIBRAW
-    opencolorio USE_OCIO
-    ffmpeg      USE_FFMPEG
-    field3d     USE_FIELD3D
-    freetype    USE_FREETYPE
-    gif         USE_GIF
-    opencv      USE_OPENCV
-    openjpeg    USE_OPENJPEG
-    webp        USE_WEBP
-    pybind11    USE_PYTHON
-    tools       OIIO_BUILD_TOOLS
+    FEATURES
+        libraw      USE_LIBRAW
+        opencolorio USE_OPENCOLORIO
+        ffmpeg      USE_FFMPEG
+        freetype    USE_FREETYPE
+        gif         USE_GIF
+        opencv      USE_OPENCV
+        openjpeg    USE_OPENJPEG
+        webp        USE_WEBP
+        pybind11    USE_PYTHON
+        tools       OIIO_BUILD_TOOLS
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
-        -DHIDE_SYMBOLS=ON
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_QT=OFF
         -DUSE_PTEX=OFF
         -DLINKSTATIC=${LINKSTATIC}
-        -DBUILD_MISSING_PYBIND11=OFF
+        -DBUILD_MISSING_FMT=OFF
+        -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
+        -DSTOP_ON_WARNING=OFF
         -DVERBOSE=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/OpenImageIO)
+vcpkg_cmake_config_fixup(PACKAGE_NAME OpenImageIO CONFIG_PATH lib/cmake/OpenImageIO)
 
-if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openimageio)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
+        AUTO_CLEAN
+    )
 endif()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

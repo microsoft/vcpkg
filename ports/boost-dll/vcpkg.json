@@ -1,0 +1,27 @@
+{
+  "name": "boost-dll",
+  "version": "1.78.0",
+  "description": "Boost dll module",
+  "homepage": "https://github.com/boostorg/dll",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-function",
+    "boost-move",
+    "boost-predef",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-system",
+    "boost-throw-exception",
+    "boost-type-index",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

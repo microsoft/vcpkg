@@ -1,16 +1,20 @@
 {
   "name": "libopenmpt",
-  "version-string": "2017-01-28-cf2390140",
-  "port-version": 1,
+  "version": "0.5.12",
   "description": "a library to render tracker music",
-  "homepage": "https://github.com/OpenMPT/openmpt",
-  "supports": "!uwp",
+  "homepage": "https://openmpt.org/",
   "dependencies": [
-    "libflac",
     "libogg",
     "libvorbis",
     "mpg123",
-    "portaudio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

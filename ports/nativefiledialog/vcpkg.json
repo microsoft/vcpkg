@@ -1,0 +1,22 @@
+{
+  "name": "nativefiledialog",
+  "version-date": "2022-01-20",
+  "description": "A tiny, neat C library that portably invokes native file open and save dialogs",
+  "homepage": "https://github.com/mlabbe/nativefiledialog",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "zenity": {
+      "description": "Using Zenity backend on Linux"
+    }
+  }
+}

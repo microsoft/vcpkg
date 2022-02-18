@@ -1,0 +1,40 @@
+{
+  "name": "gtk",
+  "version": "4.6.0",
+  "description": "Portable library for creating graphical user interfaces.",
+  "homepage": "https://www.gtk.org/",
+  "license": "LGPL-2.0-only",
+  "dependencies": [
+    "atk",
+    {
+      "name": "cairo",
+      "default-features": false,
+      "features": [
+        "gobject"
+      ]
+    },
+    {
+      "name": "cairo",
+      "default-features": false,
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    "gdk-pixbuf",
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "graphene",
+    "libepoxy",
+    "pango",
+    "sassc",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

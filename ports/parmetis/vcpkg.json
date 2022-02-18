@@ -1,0 +1,11 @@
+{
+  "name": "parmetis",
+  "version-string": "4.0.3",
+  "port-version": 5,
+  "description": "Parallel Graph Partitioning and Fill-reducing Matrix Ordering",
+  "homepage": "https://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview",
+  "dependencies": [
+    "metis",
+    "mpi"
+  ]
+}

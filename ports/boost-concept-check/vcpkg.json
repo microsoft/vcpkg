@@ -1,0 +1,13 @@
+{
+  "name": "boost-concept-check",
+  "version": "1.78.0",
+  "description": "Boost concept_check module",
+  "homepage": "https://github.com/boostorg/concept_check",
+  "dependencies": [
+    "boost-config",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "boost-date-time",
+  "version": "1.78.0",
+  "description": "Boost date_time module",
+  "homepage": "https://github.com/boostorg/date_time",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-io",
+    "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-numeric-conversion",
+    "boost-range",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tokenizer",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

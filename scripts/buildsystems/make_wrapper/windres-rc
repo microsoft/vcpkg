@@ -1,7 +1,7 @@
 #! /bin/sh
 # Wrapper for windres to rc which do not understand '-i -o --output-format'.
 # cvtres is invoked by the linker
-scriptversion=2020-08-17.03; # UTC
+scriptversion=2021-04-02.18; # UTC
 
 
 nl='
@@ -58,8 +58,6 @@ func_file_conv ()
 # Adjust compile command to suit rc instead of windres
 func_windres_wrapper ()
 {
-  echo "FROM WINDRESWRAPPER FUNCTION:$@"
-  echo "RCFLAGS:$(RCFLAGS)"
   # Assume a capable shell
   in=
   out=

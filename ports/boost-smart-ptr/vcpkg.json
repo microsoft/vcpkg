@@ -1,0 +1,16 @@
+{
+  "name": "boost-smart-ptr",
+  "version": "1.78.0",
+  "description": "Boost smart_ptr module",
+  "homepage": "https://github.com/boostorg/smart_ptr",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-move",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

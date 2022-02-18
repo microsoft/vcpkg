@@ -1,0 +1,15 @@
+{
+  "name": "boost-histogram",
+  "version": "1.78.0",
+  "description": "Boost histogram module",
+  "homepage": "https://github.com/boostorg/histogram",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-mp11",
+    "boost-serialization",
+    "boost-throw-exception",
+    "boost-variant2",
+    "boost-vcpkg-helpers"
+  ]
+}
