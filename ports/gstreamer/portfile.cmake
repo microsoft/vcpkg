@@ -259,14 +259,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:glib-asserts=disabled
         -Dgst-plugins-bad:glib-checks=disabled
 )
-if(VCPKG_TARGET_IS_WINDOWS)
-    # note: can't find where z.lib comes from. replace it to appropriate library name manually
-    get_filename_component(BUILD_NINJA_DBG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja" ABSOLUTE)
-    vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
-    get_filename_component(BUILD_NINJA_REL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja" ABSOLUTE)
-    vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
-    vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
-endif()
 
 vcpkg_install_meson()
 
