@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO            septag/dmon
-    REF             244105681b1421adbfd108162535ad8097d2895f
-    SHA512          6ea483300404b50e2f4d1e05fec187bde827d9bf8ae6716c41e5b75afb96d4c09f155dff08e6b8f9606a4afc78ce7397acbe48233f9d27b0ad4e0a4ffd350294
+    REPO            "septag/${PORT}"
+    REF             59fac713a168b6c9fd08db48da49f7bd50fd9d37
+    SHA512          61fa6a0e243be456d3b59d20e18183392d106983dc9f1b0a7290b54fefa964d4eeba4bacd92cd5310b6f3da2dac232fd043c529c51fe3e6cccbfb9422dd31311
     HEAD_REF        master
 )
 
