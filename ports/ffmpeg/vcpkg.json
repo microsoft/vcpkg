@@ -168,7 +168,7 @@
           "features": [
             "nvcodec"
           ],
-          "platform": "(windows | linux) & !uwp"
+          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
         },
         {
           "name": "ffmpeg",
@@ -442,6 +442,7 @@
     },
     "nvcodec": {
       "description": "Nvidia video decoding/encoding acceleration",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "ffnvcodec"
       ]
