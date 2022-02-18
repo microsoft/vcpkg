@@ -5,5 +5,4 @@
   "description": "FFmpeg version of Nvidia Codec SDK headers.",
   "homepage": "https://github.com/FFmpeg/nv-codec-headers",
   "supports": "linux | (!osx & !uwp & !(arm64 & windows))"
-"
 }
