@@ -1003,7 +1003,6 @@ pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
 popsift:x64-windows-static-md=fail
-poppler:arm64-windows=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
