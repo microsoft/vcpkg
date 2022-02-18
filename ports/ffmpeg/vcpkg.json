@@ -166,14 +166,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "nvcodec"
-          ],
-          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "opengl"
           ],
           "platform": "!uwp & !(arm64 & windows)"
@@ -185,6 +177,14 @@
             "tesseract"
           ],
           "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nvcodec"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
         }
       ]
     },
