@@ -40,6 +40,7 @@ index c032f02..d80d2a0 100644
 +	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
  endif()
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index e8ad830..83a95f4 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -28,7 +28,7 @@ set(LIBJSONNET_SOURCE
@@ -61,20 +62,27 @@ diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
  target_include_directories(libjsonnet INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
-index a481d9f..2f58d2f 100644
+index a481d9f..95bfd71 100644
 --- a/stdlib/CMakeLists.txt
 +++ b/stdlib/CMakeLists.txt
-@@ -2,6 +2,7 @@
+@@ -1,15 +1,15 @@
+ # Utility to convert file to a list of integeters.
  
  add_executable(to_c_array to_c_array.cpp)
- 
-+if(0)
+-
++
  # Custom command that will only build stdlib when it changes.
  add_custom_command(
- 	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
-@@ -13,3 +14,4 @@ add_custom_command(
+-	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
++	OUTPUT ${CMAKE_BINARY_DIR}/core/std.jsonnet.h
+ 	COMMAND ${GLOBAL_OUTPUT_PATH}/to_c_array
+ 			    ${PROJECT_SOURCE_DIR}/stdlib/std.jsonnet
+-					${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
++					${CMAKE_BINARY_DIR}/core/std.jsonnet.h
+ 	DEPENDS to_c_array std.jsonnet)
+ 
  # Standard library build target that libjsonnet can depend on.
  add_custom_target(stdlib ALL
- 	DEPENDS ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h)
-+endif()
+-	DEPENDS ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h)
++	DEPENDS ${CMAKE_BINARY_DIR}/core/std.jsonnet.h)
 \ No newline at end of file
