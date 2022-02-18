@@ -1,0 +1,107 @@
+{
+  "name": "openimageio",
+  "version": "2.3.10.1",
+  "port-version": 2,
+  "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
+  "homepage": "https://github.com/OpenImageIO/oiio",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-asio",
+    "boost-config",
+    "boost-filesystem",
+    "boost-foreach",
+    "boost-random",
+    "boost-regex",
+    "boost-smart-ptr",
+    "boost-stacktrace",
+    "boost-static-assert",
+    "boost-system",
+    "boost-thread",
+    "boost-type-traits",
+    "fmt",
+    "libheif",
+    "libjpeg-turbo",
+    "libpng",
+    "libsquish",
+    "openexr",
+    "robin-map",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "ffmpeg": {
+      "description": "Enable ffmpeg support for openimageio",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avresample"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "Enable freetype support for openimageio",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "gif": {
+      "description": "Enable giflib support for openimageio",
+      "dependencies": [
+        "giflib"
+      ]
+    },
+    "libraw": {
+      "description": "Enable RAW image files support",
+      "dependencies": [
+        "libraw"
+      ]
+    },
+    "opencolorio": {
+      "description": "Enable opencolorio support for openimageio",
+      "dependencies": [
+        "opencolorio"
+      ]
+    },
+    "opencv": {
+      "description": "Enable opencv support for openimageio",
+      "dependencies": [
+        "opencv"
+      ]
+    },
+    "openjpeg": {
+      "description": "Enable openjpeg support for openimageio",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "pybind11": {
+      "description": "Enable Python bindings support for openimageio",
+      "dependencies": [
+        "pybind11"
+      ]
+    },
+    "tools": {
+      "description": "Build openimageio tools",
+      "dependencies": [
+        "opengl",
+        "qt5-base"
+      ]
+    },
+    "webp": {
+      "description": "Enable libwebp support for openimageio",
+      "dependencies": [
+        "libwebp"
+      ]
+    }
+  }
+}

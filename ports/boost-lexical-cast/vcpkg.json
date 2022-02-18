@@ -1,0 +1,20 @@
+{
+  "name": "boost-lexical-cast",
+  "version": "1.78.0",
+  "description": "Boost lexical_cast module",
+  "homepage": "https://github.com/boostorg/lexical_cast",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    "boost-config",
+    "boost-container",
+    "boost-core",
+    "boost-integer",
+    "boost-numeric-conversion",
+    "boost-range",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

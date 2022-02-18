@@ -1,7 +1,12 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtrees_path_length)
+if(buildtrees_path_length GREATER 35 AND CMAKE_HOST_WIN32)
+    vcpkg_buildpath_length_warning(35)
+    message(FATAL_ERROR "terminating due to source length.")
+endif()
 #set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
-message(STATUS "${PORT} requires a lot of free disk space (>300GB), ram (>32 GB) and time (>4h per configuration) to be successfully build.\n\
--- As such ${PORT} is not properly tested.\n\
+message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) and time (>2h per configuration) to be successfully build.\n\
+-- As such ${PORT} is currently experimental.\n\
 -- If ${PORT} fails post build validation please open up an issue. \n\
 -- If it fails due to post validation the successfully installed files can be found in ${CURRENT_PACKAGES_DIR} \n\
 -- and just need to be copied into ${CURRENT_INSTALLED_DIR}")
@@ -37,10 +42,17 @@ vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
 set(PATCHES common.pri.patch 
-            gl.patch)
+            gl.patch
+            build_1.patch
+            build_2.patch
+            build_3.patch)
 
+set(OPTIONS)
+if("proprietary-codecs" IN_LIST FEATURES)
+    list(APPEND OPTIONS "-webengine-proprietary-codecs")
+endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND CORE_OPTIONS "BUILD_OPTIONS" "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
+    list(APPEND OPTIONS "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
 endif()
 
-qt_submodule_installation(${CORE_OPTIONS} PATCHES ${PATCHES})
+qt_submodule_installation(PATCHES ${PATCHES} BUILD_OPTIONS ${OPTIONS})

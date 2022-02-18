@@ -1,0 +1,62 @@
+{
+  "name": "boost-graph",
+  "version": "1.78.0",
+  "description": "Boost graph module",
+  "homepage": "https://github.com/boostorg/graph",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-any",
+    "boost-array",
+    "boost-assert",
+    "boost-bimap",
+    "boost-bind",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-concept-check",
+    "boost-config",
+    "boost-container-hash",
+    "boost-conversion",
+    "boost-core",
+    "boost-detail",
+    "boost-foreach",
+    "boost-function",
+    "boost-integer",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-move",
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-optional",
+    "boost-parameter",
+    "boost-preprocessor",
+    "boost-property-map",
+    "boost-property-tree",
+    "boost-random",
+    "boost-range",
+    "boost-regex",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tti",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-unordered",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "boost-xpressive",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

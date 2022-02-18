@@ -1,0 +1,43 @@
+{
+  "name": "boost-wave",
+  "version": "1.78.0",
+  "description": "Boost wave module",
+  "homepage": "https://github.com/boostorg/wave",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-iterator",
+    "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-optional",
+    "boost-pool",
+    "boost-preprocessor",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

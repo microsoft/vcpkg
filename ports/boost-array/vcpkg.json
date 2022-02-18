@@ -1,0 +1,14 @@
+{
+  "name": "boost-array",
+  "version": "1.78.0",
+  "description": "Boost array module",
+  "homepage": "https://github.com/boostorg/array",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-vcpkg-helpers"
+  ]
+}

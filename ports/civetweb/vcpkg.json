@@ -1,0 +1,16 @@
+{
+  "name": "civetweb",
+  "version": "1.15",
+  "port-version": 1,
+  "description": "Easy to use, powerful, C/C++ embeddable web server.",
+  "homepage": "https://github.com/civetweb/civetweb",
+  "supports": "!uwp",
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

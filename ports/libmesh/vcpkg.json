@@ -1,0 +1,7 @@
+{
+  "name": "libmesh",
+  "version-string": "1.5.0",
+  "port-version": 2,
+  "description": "The libMesh library provides a framework for the numerical simulation of partial differential equations using arbitrary unstructured discretizations on serial and parallel platforms. A major goal of the library is to provide support for adaptive mesh refinement (AMR) computations in parallel while allowing a research scientist to focus on the physics they are modeling.",
+  "homepage": "https://github.com/libMesh/libmesh"
+}

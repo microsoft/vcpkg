@@ -1,24 +1,33 @@
 vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
-    REF Release_1.3.7
-    SHA512 5beb0909a4ddc56f5965b5f2edcfd2c8d68d473b172778ebe21bc134e1b4931cac1e6529676866d4238b41041658041a72ccd44879b9685d85f857a4e0df23ec
+    REF Release_1.4.6
+    SHA512 f63da7e715c09c6a757fe923fd397c09e1cbd0a58a78b1d8fa52bd1a41230ecab2cbb17ecc3d4f66656f3234bfe4c8588164f1d4964dcce729da091e99daab2d
     HEAD_REF dev
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DBUILD_EXAMPLE=OFF
-)
-
-vcpkg_install_cmake()
-
-if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/ezc3d/cmake")
+if(WIN32)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -DBUILD_EXAMPLE=OFF
+            -Dezc3d_LIB_FOLDER="lib"
+            -Dezc3d_BIN_FOLDER="bin"
+    )
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -DBUILD_EXAMPLE=OFF
+    )
+endif()
+
+vcpkg_cmake_install()
+
+if(WIN32)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
 endif()
 
 # # Handle copyright

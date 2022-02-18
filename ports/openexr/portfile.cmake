@@ -9,9 +9,10 @@ vcpkg_from_github(
   SHA512 549d37ed1ef4d1ff7e732d583f7213ee15c7f92625aea9fd65345e4c5b854902c02e5940d0692b1af5ae0a02abf46aaefea2662db2389d1b2fb4264a373baac2
   HEAD_REF master
   PATCHES
-    remove_find_package_macro.patch
-    fixup_cmake_exports_path.patch
-    remove_symlinks.patch
+    0001-remove_find_package_macro.patch
+    0002-fixup_cmake_exports_path.patch
+    0003-remove_symlinks.patch
+    0004-Fix-pkg-config-lib-suffix-for-cmake-debug-builds.patch  # https://github.com/AcademySoftwareFoundation/openexr/pull/1032
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
@@ -25,6 +26,7 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/ilmbase TARGET_PATH share/ilmbase)
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrheader${VCPKG_HOST_EXECUTABLE_SUFFIX})

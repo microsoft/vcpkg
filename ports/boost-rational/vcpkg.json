@@ -1,0 +1,17 @@
+{
+  "name": "boost-rational",
+  "version": "1.78.0",
+  "description": "Boost rational module",
+  "homepage": "https://github.com/boostorg/rational",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

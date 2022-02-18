@@ -1,0 +1,20 @@
+{
+  "name": "graphene",
+  "version": "1.10.2",
+  "port-version": 2,
+  "description": "A thin layer of types for graphic libraries.",
+  "homepage": "https://www.gtk.org/",
+  "supports": "!(arm & windows)",
+  "dependencies": [
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

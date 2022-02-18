@@ -1,0 +1,7 @@
+{
+  "name": "sparsehash",
+  "version": "2.0.4",
+  "port-version": 2,
+  "description": "The sparsehash package consists of two hashtable implementations: sparse, which is designed to be very space efficient, and dense, which is designed to be very time efficient.",
+  "homepage": "https://github.com/sparsehash/sparsehash"
+}

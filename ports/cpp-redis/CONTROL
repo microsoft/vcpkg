@@ -1,5 +1,0 @@
-Source: cpp-redis
-Version: 4.3.1-2
-Build-Depends: tacopie
-Homepage: https://github.com/cpp-redis/cpp_redis
-Description: cpp-redis is a C++11 Asynchronous Multi-Platform Lightweight Redis Client, with support for synchronous operations and pipelining.

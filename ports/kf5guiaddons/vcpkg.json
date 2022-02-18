@@ -1,0 +1,49 @@
+{
+  "name": "kf5guiaddons",
+  "version": "5.89.0",
+  "description": "Addons to QtGui",
+  "homepage": "https://api.kde.org/frameworks/kguiaddons/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-tools",
+    {
+      "name": "qt5-winextras",
+      "platform": "windows"
+    },
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "defaults"
+  ],
+  "features": {
+    "defaults": {
+      "description": "Default features",
+      "dependencies": [
+        {
+          "name": "kf5guiaddons",
+          "features": [
+            "wayland"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "wayland": {
+      "description": "Linux-only. Build with support for KeySequenceEditor inhibiting shortcuts on Wayland",
+      "dependencies": [
+        "qt5-wayland"
+      ]
+    }
+  }
+}

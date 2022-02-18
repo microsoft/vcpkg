@@ -1,0 +1,11 @@
+{
+  "name": "vcpkg-pkgconfig-get-modules",
+  "version-date": "2022-02-10",
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    }
+  ]
+}

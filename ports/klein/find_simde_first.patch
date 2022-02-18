@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c5d6f3f..a3ba161 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,16 +29,7 @@ endif()
+ option(KLEIN_BUILD_SYM "Enable compilation of symbolic Klein utility" ON)
+ option(KLEIN_BUILD_C_BINDINGS "Enable compilation of the Klein C bindings" ON)
+ 
+-include(FetchContent)
+-FetchContent_Declare(
+-    simde
+-    GIT_REPOSITORY https://github.com/simd-everywhere/simde
+-    GIT_TAG v0.7.2
+-    GIT_SHALLOW ON
+-)
+-FetchContent_GetProperties(simde)
+-if(NOT simde_POPULATED)
+-    FetchContent_Populate(simde)
+-endif()
++find_path(SIMDE_INCLUDE_DIR "simde/x86/sse4.1.h" REQUIRED)
++set(simde_SOURCE_DIR ${SIMDE_INCLUDE_DIR}/simde)
+ 
+ # The default platform and instruction set is x86 SSE3

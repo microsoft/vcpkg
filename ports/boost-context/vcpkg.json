@@ -1,0 +1,29 @@
+{
+  "name": "boost-context",
+  "version": "1.78.0",
+  "description": "Boost context module",
+  "homepage": "https://github.com/boostorg/context",
+  "supports": "!uwp & !emscripten",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mp11",
+    "boost-pool",
+    "boost-predef",
+    "boost-smart-ptr",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

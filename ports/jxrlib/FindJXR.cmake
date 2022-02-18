@@ -21,7 +21,7 @@ find_library(JXRGLUE_LIBRARY_RELEASE NAMES jxrglue PATH_SUFFIXES lib)
 find_library(JXRGLUE_LIBRARY_DEBUG NAMES jxrglued PATH_SUFFIXES lib)
 select_library_configurations(JXRGLUE)
 
-set(JXR_LIBRARIES ${JPEGXR_LIBRARY} ${JXRGLUE_LIBRARY})
+set(JXR_LIBRARIES ${JXRGLUE_LIBRARY} ${JPEGXR_LIBRARY})
 mark_as_advanced(JXR_LIBRARIES)
 
 include(FindPackageHandleStandardArgs)

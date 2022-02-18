@@ -1,0 +1,39 @@
+diff --git a/tensorpipe/test/CMakeLists.txt b/tensorpipe/test/CMakeLists.txt
+index c0320aa..1414bdd 100644
+--- a/tensorpipe/test/CMakeLists.txt
++++ b/tensorpipe/test/CMakeLists.txt
+@@ -86,11 +86,8 @@ if(TP_USE_CUDA)
+ endif()
+ 
+ 
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/googletest
+-  ${PROJECT_BINARY_DIR}/third_party/googletest)
++find_package(GTest CONFIG REQUIRED)
+ 
+ target_link_libraries(tensorpipe_test PRIVATE
+   tensorpipe
+-  uv::uv
+-  gmock
+-  gtest_main)
++  unofficial::libuv::libuv GTest::gmock GTest::gtest_main)
+
+diff --git a/tensorpipe/test/CMakeLists.txt b/tensorpipe/test/CMakeLists.txt
+index fecc731..031e40d 100644
+--- a/tensorpipe/test/CMakeLists.txt
++++ b/tensorpipe/test/CMakeLists.txt
+@@ -80,10 +80,11 @@ if(TP_USE_CUDA)
+       channel/cuda_ipc/cuda_ipc_test.cc
+       )
+   endif()
+-
+-  target_sources(tensorpipe_test PRIVATE
+-    channel/cuda_gdr/cuda_gdr_test.cc
+-    )
++  if(TP_ENABLE_CUDA_GDR)
++    target_sources(tensorpipe_test PRIVATE
++      channel/cuda_gdr/cuda_gdr_test.cc
++      )
++  endif()
+ endif()
+ 
+ 

@@ -1,0 +1,31 @@
+{
+  "name": "boost-math",
+  "version": "1.78.0",
+  "description": "Boost math module",
+  "homepage": "https://github.com/boostorg/math",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-predef",
+    "boost-random",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

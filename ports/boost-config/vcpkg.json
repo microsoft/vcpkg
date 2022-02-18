@@ -1,0 +1,9 @@
+{
+  "name": "boost-config",
+  "version": "1.78.0",
+  "description": "Boost config module",
+  "homepage": "https://github.com/boostorg/config",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

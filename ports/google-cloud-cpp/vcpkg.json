@@ -1,0 +1,170 @@
+{
+  "name": "google-cloud-cpp",
+  "version": "1.36.0",
+  "port-version": 1,
+  "description": "C++ Client Libraries for Google Cloud Platform APIs.",
+  "homepage": "https://github.com/googleapis/google-cloud-cpp",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "bigquery",
+    "bigtable",
+    "iam",
+    "pubsub",
+    "spanner",
+    "storage"
+  ],
+  "features": {
+    "bigquery": {
+      "description": "The Google Cloud BigQuery C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "bigtable": {
+      "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "experimental-storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        },
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "iam": {
+      "description": "The Google Cloud IAM C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "pubsub": {
+      "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "secretmanager": {
+      "description": "The Google Cloud Secret Manager C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "spanner": {
+      "description": "The Google Cloud Spanner C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
+    "storage": {
+      "description": "The Google Cloud Storage C++ client library",
+      "dependencies": [
+        "crc32c",
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        "nlohmann-json"
+      ]
+    },
+    "tasks": {
+      "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    }
+  }
+}

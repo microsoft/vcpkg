@@ -1,11 +1,11 @@
-set(GM_VERSION 1.3.35)
+set(GM_VERSION 1.3.37)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphicsmagick/graphicsmagick
     REF ${GM_VERSION}
-    FILENAME "GraphicsMagick-${GM_VERSION}-windows-source.7z"
-    SHA512 bf3ade807de54f366e49df5b754d8321978d8e1ed4275364fb7e861ff04f0780a698fcb4e0a110a45213209ff846034f2add00a3443ed31db2c842530199bd1f
+    FILENAME "GraphicsMagick-${GM_VERSION}-windows.7z"
+    SHA512 2e465a290946d730c0da1b45602ebdebc256d9a0705d6d79784efcefb0760a923dd78c73f7a563ce6ec41e4199da66d3b31cc8c6b8f821ff993092d348aeaa2f
     PATCHES
         # GM always requires a dynamic BZIP2. This patch makes this dependent if _DLL is defined
         dynamic_bzip2.patch
@@ -43,4 +43,5 @@ file(READ ${SOURCE_PATH}/config/type-windows.mgk.in TYPE_MGK)
 string(REPLACE "@windows_font_dir@" "$ENV{SYSTEMROOT}/Fonts/" TYPE_MGK "${TYPE_MGK}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config/type.mgk "${TYPE_MGK}")
 
+configure_file(${SOURCE_PATH}/config/delegates.mgk.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/config/delegates.mgk @ONLY)
 vcpkg_copy_pdbs()

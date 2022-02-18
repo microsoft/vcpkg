@@ -33,9 +33,8 @@
 
 include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
-include(${CMAKE_ROOT}/Modules/CMakeFindDependencyMacro.cmake)
 
-find_path(CXSPARSE_INCLUDE_DIR NAMES cs.h)
+find_path(CXSPARSE_INCLUDE_DIR NAMES cs.h PATH_SUFFIXES suitesparse)
 
 find_library(CXSPARSE_LIBRARY_RELEASE NAMES cxsparse libcxsparse)
 find_library(CXSPARSE_LIBRARY_DEBUG NAMES cxsparsed libcxsparsed)
@@ -65,11 +64,10 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CXSparse
-  REQUIRED_VARS CXSPARSE_INCLUDE_DIRS CXSPARSE_LIBRARIES
+  REQUIRED_VARS CXSPARSE_INCLUDE_DIR CXSPARSE_LIBRARIES
   VERSION_VAR CXSPARSE_VERSION)
 
 set(CXSPARSE_FOUND ${CXSparse_FOUND})
 set(CXSPARSE_INCLUDE_DIRS ${CXSPARSE_INCLUDE_DIR})
-set(CXSPARSE_LIBRARIES ${CXSPARSE_LIBRARY})
 set(CXSparse_INCLUDE_DIRS ${CXSPARSE_INCLUDE_DIR})
-set(CXSparse_LIBRARIES ${CXSPARSE_LIBRARY})
+set(CXSparse_LIBRARIES ${CXSPARSE_LIBRARIES})

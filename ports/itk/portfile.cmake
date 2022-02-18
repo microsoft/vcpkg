@@ -20,16 +20,17 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "vtk"          Module_ITKVtkGlue
-    "cuda"         Module_ITKCudaCommon # Requires RTK?
-    #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
-    "cufftw"       ITK_USE_CUFFTW
-    "opencl"       ITK_USE_GPU
-    "tbb"          Module_ITKTBB
-    "rtk"          Module_RTK
-    "tools"        RTK_BUILD_APPLICATIONS
-    # There are a lot of more (remote) modules and options in ITK
-    # feel free to add those as a feature
+    FEATURES
+        "vtk"          Module_ITKVtkGlue
+        "cuda"         Module_ITKCudaCommon # Requires RTK?
+        #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
+        "cufftw"       ITK_USE_CUFFTW
+        "opencl"       ITK_USE_GPU
+        "tbb"          Module_ITKTBB
+        "rtk"          Module_RTK
+        "tools"        RTK_BUILD_APPLICATIONS
+        # There are a lot of more (remote) modules and options in ITK
+        # feel free to add those as a feature
 )
 
 if("cufftw" IN_LIST FEATURES)
@@ -108,22 +109,6 @@ if("python" IN_LIST FEATURES)
         "-DSWIG_EXECUTABLE=${SWIG}"
         "-DSWIG_DIR=${SWIG_DIR}"
         )
-    # Due to ITKs internal shenanigans with the variables ......
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python39.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python39_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.9")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python39_d.lib")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python39.lib")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython39m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython39md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.9m")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython39md.a")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libpython39m.a")
-    elseif(VCPKG_TARGET_IS_OSX)
-        #Need Python3 information on OSX within VCPKG
-    endif()
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
 endif()
 
@@ -133,9 +118,8 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL
 endif()
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/CMake/FindOpenCL.cmake")
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
@@ -198,9 +182,9 @@ if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
     vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
 endif()
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -210,5 +194,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.1/vcl_where_root_dir.h")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.1/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.1/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

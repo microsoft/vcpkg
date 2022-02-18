@@ -1,0 +1,9 @@
+{
+  "name": "ms-angle",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated alias for ms-angle",
+  "dependencies": [
+    "angle"
+  ]
+}

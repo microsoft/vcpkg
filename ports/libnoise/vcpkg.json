@@ -1,0 +1,7 @@
+{
+  "name": "libnoise",
+  "version-string": "1.0.0",
+  "port-version": 2,
+  "description": "A general-purpose library that generates three-dimensional coherent noise. Useful for terrain generation and procedural texture generation. Uses a broad number of techniques (Perlin noise, ridged multifractal, etc.) and combinations of those techniques.",
+  "homepage": "https://github.com/RobertHue/libnoise"
+}

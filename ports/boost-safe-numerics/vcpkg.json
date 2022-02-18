@@ -1,0 +1,15 @@
+{
+  "name": "boost-safe-numerics",
+  "version": "1.78.0",
+  "description": "Boost safe_numerics module",
+  "homepage": "https://github.com/boostorg/safe_numerics",
+  "dependencies": [
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-logic",
+    "boost-mp11",
+    "boost-vcpkg-helpers"
+  ]
+}

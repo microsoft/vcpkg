@@ -1,0 +1,6 @@
+{
+  "name": "kangaru",
+  "version-string": "4.2.4",
+  "port-version": 1,
+  "description": "A dependency injection container for C++11, C++14 and later"
+}

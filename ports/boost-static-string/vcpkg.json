@@ -1,0 +1,14 @@
+{
+  "name": "boost-static-string",
+  "version": "1.78.0",
+  "description": "Boost static_string module",
+  "homepage": "https://github.com/boostorg/static_string",
+  "dependencies": [
+    "boost-assert",
+    "boost-container-hash",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "boost-interprocess",
+  "version": "1.78.0",
+  "description": "Boost interprocess module",
+  "homepage": "https://github.com/boostorg/interprocess",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-container",
+    "boost-core",
+    "boost-integer",
+    "boost-intrusive",
+    "boost-move",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

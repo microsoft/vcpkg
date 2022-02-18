@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
-    REF 7e29cf95305551daad197e32423d9cff5f9b6893
-    SHA512 7d79494c904f5276c9d1e4a193a63882dc622a6db8998b9719de4aec8b223b3a8b3c92ea02be81f39afc12c1a883b310fd3662ea27ed736b0b9c7092b4843a18
+    REF v4.2.1
+    SHA512 65a21f7bd5935b119e1b24ce3b2ce8462031ab7c9a4ba587bb99fe618c9f8cb672cfa202993ddd79e0fb0f154ada06560b79a1b4f762fcce8f88f2f450ecee01
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -15,27 +15,27 @@ foreach(_cmake_module
     Findlz4.cmake
     Finduuid.cmake
 )
-    configure_file(
+    file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/${_cmake_module}
-        ${SOURCE_PATH}/${_cmake_module}
-        COPYONLY
+        DESTINATION ${SOURCE_PATH}
     )
 endforeach()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    draft   ENABLE_DRAFTS
-    curl    CZMQ_WITH_LIBCURL
-    httpd   CZMQ_WITH_LIBMICROHTTPD
-    lz4     CZMQ_WITH_LZ4
-    uuid    CZMQ_WITH_UUID
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        draft   ENABLE_DRAFTS
+        curl    CZMQ_WITH_LIBCURL
+        httpd   CZMQ_WITH_LIBMICROHTTPD
+        lz4     CZMQ_WITH_LZ4
+        uuid    CZMQ_WITH_UUID
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
@@ -44,20 +44,22 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT})
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 if ("tool" IN_LIST FEATURES)
@@ -66,7 +68,7 @@ endif()
 
 vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/czmq_library.h
@@ -76,4 +78,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

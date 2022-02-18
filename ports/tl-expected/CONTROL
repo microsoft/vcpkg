@@ -1,3 +1,0 @@
-Source: tl-expected
-Version: 1.0.0-1
-Description: C++11/14/17 std::expected implementation with functional-style extensions 

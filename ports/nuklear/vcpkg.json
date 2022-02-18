@@ -1,0 +1,25 @@
+{
+  "name": "nuklear",
+  "version-date": "2021-03-18",
+  "port-version": 1,
+  "description": "This is a minimal state immediate mode graphical user interface toolkit written in ANSI C and licensed under public domain",
+  "homepage": "https://github.com/Immediate-Mode-UI/Nuklear",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "demo": {
+      "description": "Install demo files"
+    },
+    "example": {
+      "description": "Install example files"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "spdk-isal",
+  "version-string": "20181006",
+  "port-version": 2,
+  "description": "SPDK mirror of isa-l. Intel(R) Intelligent Storage Acceleration Library",
+  "license": "BSD-3-Clause",
+  "supports": "!windows & !(osx & x64)"
+}

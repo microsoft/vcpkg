@@ -19,7 +19,7 @@ index 53ef75197..d48fb02db 100644
 -		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c.lib \
 -		C:\OSGeo4W\lib\spatialite_i.lib C:\OSGeo4W\lib\sqlite3_i.lib \
 -		/Fe$(SPATIALITE_EXE)
-+	cl shell.obj $(LIBS_ALL) /Fe$(SPATIALITE_EXE)
++	cl shell.obj /Fe$(SPATIALITE_EXE) $(LIBS_ALL)
  	if exist $(SPATIALITE_EXE).manifest mt -manifest \
  		$(SPATIALITE_EXE).manifest -outputresource:$(SPATIALITE_EXE);1
  
@@ -119,15 +119,12 @@ index 53ef75197..d48fb02db 100644
  	if exist $(SPATIALITE_OSM_FILTER_EXE).manifest mt -manifest \
  		$(SPATIALITE_OSM_FILTER_EXE).manifest \
  		-outputresource:$(SPATIALITE_OSM_FILTER_EXE);1
-
 diff --git a/nmake.opt b/nmake.opt
 index 4f4a9538e..d9efecf7b 100644
 --- a/nmake.opt
 +++ b/nmake.opt
-@@ -1,8 +1,8 @@
- # Directory tree where SpatiaLite will be installed.
--INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INST_DIR)
+@@ -2,7 +2,7 @@
+ INSTDIR=C:\OSGeo4W
  
  # Uncomment the first for an optimized build, or the second for debug.
 -OPTFLAGS=	/nologo /Ox /fp:precise /W3 /MD /D_CRT_SECURE_NO_WARNINGS \

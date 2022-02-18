@@ -1,0 +1,34 @@
+{
+  "name": "boost-program-options",
+  "version": "1.78.0",
+  "description": "Boost program_options module",
+  "homepage": "https://github.com/boostorg/program_options",
+  "dependencies": [
+    "boost-any",
+    "boost-bind",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-function",
+    "boost-iterator",
+    "boost-lexical-cast",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tokenizer",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "wxwidgets",
+  "version-semver": "3.1.5",
+  "port-version": 7,
+  "description": [
+    "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
+    "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
+    "Set WXWIDGETS_USE_STD_CONTAINERS in a custom triplet to build with the wxUSE_STD_CONTAINERS build option."
+  ],
+  "homepage": "https://github.com/wxWidgets/wxWidgets",
+  "supports": "!uwp",
+  "dependencies": [
+    "expat",
+    "libpng",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

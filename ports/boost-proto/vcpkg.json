@@ -1,0 +1,19 @@
+{
+  "name": "boost-proto",
+  "version": "1.78.0",
+  "description": "Boost proto module",
+  "homepage": "https://github.com/boostorg/proto",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-fusion",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-range",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

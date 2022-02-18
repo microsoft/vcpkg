@@ -1,0 +1,14 @@
+{
+  "name": "boost-sort",
+  "version": "1.78.0",
+  "description": "Boost sort module",
+  "homepage": "https://github.com/boostorg/sort",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-range",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

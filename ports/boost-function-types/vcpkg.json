@@ -1,0 +1,15 @@
+{
+  "name": "boost-function-types",
+  "version": "1.78.0",
+  "description": "Boost function_types module",
+  "homepage": "https://github.com/boostorg/function_types",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

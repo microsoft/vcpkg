@@ -1,0 +1,9 @@
+{
+  "name": "boost-leaf",
+  "version": "1.78.0",
+  "description": "Boost leaf module",
+  "homepage": "https://github.com/boostorg/leaf",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}

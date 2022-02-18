@@ -1,0 +1,13 @@
+diff --git a/libsrc/CMakeLists.txt b/libsrc/CMakeLists.txt
+index 4583733..20ce3bf 100644
+--- a/libsrc/CMakeLists.txt
++++ b/libsrc/CMakeLists.txt
+@@ -64,7 +64,7 @@ IF(HAVE_M4)
+ IF(NOT MSVC)
+   ADD_CUSTOM_TARGET(manpage ALL
+ 
+-    COMMAND ${NC_M4} ${ARGS_MANPAGE} '${CMAKE_CURRENT_BINARY_DIR}/netcdf.m4' > '${CMAKE_CURRENT_BINARY_DIR}/netcdf.3'
++    COMMAND ${NC_M4} ${ARGS_MANPAGE} "${CMAKE_CURRENT_BINARY_DIR}/netcdf.m4" > "${CMAKE_CURRENT_BINARY_DIR}/netcdf.3" VERBATIM
+     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+     )
+ 

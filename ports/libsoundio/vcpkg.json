@@ -1,0 +1,22 @@
+{
+  "name": "libsoundio",
+  "version": "2.0.0",
+  "port-version": 6,
+  "description": "libsoundio is C library providing cross-platform audio input and output.",
+  "homepage": "http://libsound.io/",
+  "supports": "!uwp",
+  "features": {
+    "alsa": {
+      "description": "ALSA backend for libsoundio"
+    },
+    "jack": {
+      "description": "JACK backend for libsoundio",
+      "dependencies": [
+        "jack2"
+      ]
+    },
+    "pulseaudio": {
+      "description": "PulseAudio backend for libsoundio"
+    }
+  }
+}

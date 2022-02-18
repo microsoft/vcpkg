@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/polygon
-    REF boost-1.74.0
-    SHA512 dab8726d470ec7460988962bafffcbe881fa3953d34111b13a61e1ff4351c6f9dc2ee77d1eedd6331642060c5b16a9fb6655f3675698e904287297d9a7f8cb71
+    REF boost-1.78.0
+    SHA512 9c03be93205e61b344493c5e40deeb59e42d4e47e45b27405c55b5bcdacbfc3a680400aa9c338440ef1fa6b366ffaab63e8a7a87ae2d6a9a7d3e135eb0bec7ad
     HEAD_REF master
 )
 

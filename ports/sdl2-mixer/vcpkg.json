@@ -1,0 +1,65 @@
+{
+  "name": "sdl2-mixer",
+  "version": "2.0.4",
+  "port-version": 16,
+  "description": "Multi-channel audio mixer library for SDL.",
+  "homepage": "https://www.libsdl.org/projects/SDL_mixer",
+  "dependencies": [
+    "sdl2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "nativemidi"
+  ],
+  "features": {
+    "dynamic-load": {
+      "description": "Load plugins with dynamic call."
+    },
+    "fluidsynth": {
+      "description": "Support for FluidSynth MIDI/SF2 audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
+    },
+    "libflac": {
+      "description": "Support for FLAC audio format.",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "libmodplug": {
+      "description": "Support for MOD audio format.",
+      "dependencies": [
+        "libmodplug"
+      ]
+    },
+    "libvorbis": {
+      "description": "Support for OGG Vorbis audio format.",
+      "dependencies": [
+        "libvorbis"
+      ]
+    },
+    "mpg123": {
+      "description": "Support for MP3 audio format.",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "nativemidi": {
+      "description": "Support for MIDI audio format on Windows and macOS."
+    },
+    "opusfile": {
+      "description": "Support for Opus audio format.",
+      "dependencies": [
+        "opusfile"
+      ]
+    }
+  }
+}

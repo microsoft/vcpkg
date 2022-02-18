@@ -1,0 +1,6 @@
+{
+  "name": "yajl",
+  "version-string": "2.1.0",
+  "port-version": 2,
+  "description": "Yet Another JSON Library"
+}

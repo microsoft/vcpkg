@@ -1,0 +1,23 @@
+{
+  "name": "boost-property-map",
+  "version": "1.78.0",
+  "description": "Boost property_map module",
+  "homepage": "https://github.com/boostorg/property_map",
+  "dependencies": [
+    "boost-any",
+    "boost-assert",
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-function",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-mpl",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

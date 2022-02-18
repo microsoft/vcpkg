@@ -10,12 +10,15 @@ vcpkg_clean_msbuild()
 
 ## Examples
 
-* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
+* [python3](https://github.com/Microsoft/vcpkg/blob/master/ports/python3/portfile.cmake)
 #]===]
 
 function(vcpkg_clean_msbuild)
+    if(NOT ARGC EQUAL 0)
+        message(WARNING "vcpkg_clean_msbuild was passed extra arguments: ${ARGV}")
+    endif()
     file(REMOVE_RECURSE
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     )
 endfunction()

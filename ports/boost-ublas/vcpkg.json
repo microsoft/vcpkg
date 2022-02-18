@@ -1,0 +1,22 @@
+{
+  "name": "boost-ublas",
+  "version": "1.78.0",
+  "description": "Boost ublas module",
+  "homepage": "https://github.com/boostorg/ublas",
+  "dependencies": [
+    "boost-compute",
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-interval",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-range",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-vcpkg-helpers"
+  ]
+}

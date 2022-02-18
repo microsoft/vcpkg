@@ -1,0 +1,23 @@
+{
+  "name": "hidapi",
+  "version-semver": "0.11.2",
+  "port-version": 1,
+  "description": "A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.",
+  "homepage": "https://github.com/libusb/hidapi",
+  "license": "BSD-3-Clause-Clear",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libusb",
+      "platform": "!(windows | osx)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

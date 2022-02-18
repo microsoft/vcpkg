@@ -1,7 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmlc/dmlc-core
@@ -11,7 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openmp    ENABLE_OPENMP
+    FEATURES
+        openmp    ENABLE_OPENMP
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)

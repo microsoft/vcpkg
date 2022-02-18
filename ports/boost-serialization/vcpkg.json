@@ -1,0 +1,42 @@
+{
+  "name": "boost-serialization",
+  "version": "1.78.0",
+  "description": "Boost serialization module",
+  "homepage": "https://github.com/boostorg/serialization",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-function",
+    "boost-integer",
+    "boost-io",
+    "boost-iterator",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-move",
+    "boost-mpl",
+    "boost-optional",
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility",
+    "boost-variant",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

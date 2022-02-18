@@ -1,6 +1,0 @@
-Source: fbthrift
-Version: 2020.10.19.00
-Homepage: https://github.com/facebook/fbthrift
-Description: Facebook's branch of Apache Thrift, including a new C++ server.
-Build-Depends: openssl, zlib, fmt, gflags, glog, rsocket, fizz, folly, wangle, zstd, boost-context, boost-filesystem, boost-program-options, boost-regex, boost-system, boost-thread
-Supports: x64

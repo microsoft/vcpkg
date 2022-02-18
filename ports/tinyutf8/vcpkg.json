@@ -1,0 +1,6 @@
+{
+  "name": "tinyutf8",
+  "version-string": "4.0.2",
+  "port-version": 1,
+  "description": "TINYUTF8 is a library for extremely easy integration of Unicode into an arbitrary C++11 project."
+}

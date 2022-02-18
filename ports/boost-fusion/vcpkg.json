@@ -1,0 +1,20 @@
+{
+  "name": "boost-fusion",
+  "version": "1.78.0",
+  "description": "Boost fusion module",
+  "homepage": "https://github.com/boostorg/fusion",
+  "dependencies": [
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-function-types",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

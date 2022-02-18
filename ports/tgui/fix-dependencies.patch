@@ -1,0 +1,27 @@
+diff --git a/src/Backends/SDL/CMakeLists.txt b/src/Backends/SDL/CMakeLists.txt
+index d86f11d..1e31e21 100644
+--- a/src/Backends/SDL/CMakeLists.txt
++++ b/src/Backends/SDL/CMakeLists.txt
+@@ -1,10 +1,10 @@
+ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
+ 
+-find_package(SDL2 REQUIRED)
+-find_package(SDL2_ttf REQUIRED)
++find_package(SDL2 CONFIG REQUIRED)
++find_package(sdl2-ttf CONFIG REQUIRED)
+ 
+ # Link to SDL and set include and library search directories
+-target_link_libraries(tgui PRIVATE SDL2::Core SDL2::TTF)
++target_link_libraries(tgui PRIVATE SDL2::SDL2 SDL2::SDL2_ttf)
+ 
+ # Add the backend source files to the library
+ target_sources(tgui PRIVATE
+@@ -19,7 +19,7 @@ target_sources(tgui PRIVATE
+ )
+ 
+ add_library(tgui-sdl-interface INTERFACE)
+-target_link_libraries(tgui-sdl-interface INTERFACE SDL2::Core SDL2::TTF SDL2::Main)
++target_link_libraries(tgui-sdl-interface INTERFACE SDL2::SDL2 SDL2::SDL2_ttf SDL2::SDL2main)
+ 
+ # Also link to OpenGL or OpenGL ES
+ if(NOT TGUI_USE_GLES)

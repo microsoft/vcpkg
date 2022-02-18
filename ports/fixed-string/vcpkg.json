@@ -1,0 +1,7 @@
+{
+  "name": "fixed-string",
+  "version-string": "0.1.0",
+  "port-version": 1,
+  "description": "Header-only C++17 library provides a string class with std::array fixed-size semantic.",
+  "homepage": "https://github.com/unterumarmung/fixed_string"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "freerdp",
+  "version": "2.5.0",
+  "description": "A free implementation of the Remote Desktop Protocol (RDP)",
+  "homepage": "https://github.com/FreeRDP/FreeRDP",
+  "license": "Apache-2.0",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "glib",
+      "platform": "!windows"
+    },
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "urbdrc": {
+      "description": "USB redirection channel support",
+      "dependencies": [
+        "libusb"
+      ]
+    }
+  }
+}

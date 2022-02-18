@@ -1,0 +1,29 @@
+{
+  "name": "boost-container",
+  "version": "1.78.0",
+  "description": "Boost container module",
+  "homepage": "https://github.com/boostorg/container",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-intrusive",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-move",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

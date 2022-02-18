@@ -1,0 +1,13 @@
+diff --git a/src/lib/openmj2/opj_includes.h b/src/lib/openmj2/opj_includes.h
+index 340e8a9..11bb0e4 100644
+--- a/src/lib/openmj2/opj_includes.h
++++ b/src/lib/openmj2/opj_includes.h
+@@ -93,7 +93,7 @@ Most compilers implement their own version of this keyword ...
+ 
+ /* MSVC and Borland C do not have lrintf */
+ #if defined(_MSC_VER) || defined(__BORLANDC__)
+-static INLINE long lrintf(float f)
++static INLINE long opj_lrintf(float f)
+ {
+ #ifdef _M_X64
+     return (long)((f > 0.0f) ? (f + 0.5f) : (f - 0.5f));

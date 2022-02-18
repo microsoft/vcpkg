@@ -1,0 +1,25 @@
+diff --git a/gdk-pixbuf/CMakeLists.txt b/gdk-pixbuf/CMakeLists.txt
+index 85ad59708..d6aa4a5f9 100644
+--- a/gdk-pixbuf/CMakeLists.txt
++++ b/gdk-pixbuf/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ if(UNIX)
+   find_package(PkgConfig)
+   find_package(Threads)
+-  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0)
++  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0 IMPORTED_TARGET)
+ 
+   if(GDKPIXBUF2_FOUND)
+-    execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} gdk-pixbuf-2.0 --variable gdk_pixbuf_moduledir --define-variable=prefix=${CMAKE_INSTALL_PREFIX} OUTPUT_VARIABLE GDKPIXBUF2_MODULE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
++    pkg_get_variable(GDKPIXBUF2_MODULE_DIR gdk-pixbuf-2.0 gdk_pixbuf_moduledir)
+ 
+     add_library(pixbufloader-heif MODULE pixbufloader-heif.c)
+@@ -13,7 +13,7 @@ if(UNIX)
+                                    ${GDKPIXBUF2_INCLUDE_DIRS}
+                                    ${libheif_BINARY_DIR}
+                                    ${libheif_SOURCE_DIR})
+-    target_link_libraries(pixbufloader-heif PUBLIC ${GDKPIXBUF2_LIBRARIES} heif)
++    target_link_libraries(pixbufloader-heif PUBLIC PkgConfig::GDKPIXBUF2 heif)
+ 
+     install(TARGETS pixbufloader-heif LIBRARY DESTINATION ${GDKPIXBUF2_MODULE_DIR})
+   endif()

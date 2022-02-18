@@ -1,0 +1,13 @@
+{
+  "name": "vlpp",
+  "version-string": "0.11.0.0",
+  "port-version": 2,
+  "description": "Common C++ construction, including string operation / generic container / linq / General-LR parser generator / multithreading / reflection for C++ / etc",
+  "homepage": "https://github.com/vczh-libraries/Release",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

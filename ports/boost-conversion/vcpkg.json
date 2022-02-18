@@ -1,0 +1,16 @@
+{
+  "name": "boost-conversion",
+  "version": "1.78.0",
+  "description": "Boost conversion module",
+  "homepage": "https://github.com/boostorg/conversion",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-smart-ptr",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-vcpkg-helpers"
+  ]
+}

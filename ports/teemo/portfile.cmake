@@ -1,41 +1,38 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "osx")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO winsoft666/teemo
-    REF 99b012f827ba126fe43986e6c9266f656120edd6
-    SHA512 b6fcbba897b370154965a5e884a6dbd13aa1dab1ec25f404125b62f3857752b5c8e791a90014ef058e839c21f1deae8b88df2d9a8084a9e48f7f676561aa9dc9
+    REF abfff2b724f3ae9f7968392178005f648fe666e3
+    SHA512 56b1791159179c7f84523bf3d4b21f5272fce11843da0f0993e58563414a11637ccee50fe5a520089e16df5e17acf2308c2993266156ee49d9d07b1d7211f151
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TEEMO_STATIC)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTEEMO_STATIC:BOOL=${TEEMO_STATIC}
+        -DUSE_STATIC_CRT:BOOL=${USE_STATIC_CRT}
         -DBUILD_TESTS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/teemo)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/teemo)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/teemo)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/teemo)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/teemo")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/teemo)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/teemo")
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/teemo)
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h TEEMO_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "#ifdef TEEMO_STATIC" "#if 1" TEEMO_H "${TEEMO_H}")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h" "#ifdef TEEMO_STATIC" "#if 1")
 else()
-    string(REPLACE "#ifdef TEEMO_STATIC" "#if 0" TEEMO_H "${TEEMO_H}")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h" "#ifdef TEEMO_STATIC" "#if 0")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/teemo/teemo.h "${TEEMO_H}")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()

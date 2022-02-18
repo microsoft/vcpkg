@@ -1,0 +1,9 @@
+{
+  "name": "cub",
+  "version": "1.12.0",
+  "description": "CUB is a flexible library of cooperative threadblock primitives and other utilities for CUDA kernel programming",
+  "homepage": "https://github.com/NVIDIA/cub",
+  "dependencies": [
+    "cuda"
+  ]
+}

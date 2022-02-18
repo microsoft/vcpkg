@@ -1,0 +1,20 @@
+{
+  "name": "boost-convert",
+  "version": "1.78.0",
+  "description": "Boost convert module",
+  "homepage": "https://github.com/boostorg/convert",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-function-types",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-mpl",
+    "boost-optional",
+    "boost-parameter",
+    "boost-range",
+    "boost-spirit",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

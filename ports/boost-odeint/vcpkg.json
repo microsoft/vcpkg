@@ -1,0 +1,37 @@
+{
+  "name": "boost-odeint",
+  "version": "1.78.0",
+  "description": "Boost odeint module",
+  "homepage": "https://github.com/boostorg/odeint",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    "boost-bind",
+    "boost-compute",
+    "boost-config",
+    "boost-core",
+    "boost-function",
+    "boost-fusion",
+    "boost-iterator",
+    "boost-math",
+    "boost-mpl",
+    "boost-multi-array",
+    "boost-preprocessor",
+    "boost-range",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-ublas",
+    "boost-units",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ],
+  "features": {
+    "mpi": {
+      "description": "Support parallelization with MPI",
+      "dependencies": [
+        "boost-mpi"
+      ]
+    }
+  }
+}

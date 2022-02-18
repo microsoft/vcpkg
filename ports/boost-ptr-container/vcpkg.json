@@ -1,0 +1,23 @@
+{
+  "name": "boost-ptr-container",
+  "version": "1.78.0",
+  "description": "Boost ptr_container module",
+  "homepage": "https://github.com/boostorg/ptr_container",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    "boost-circular-buffer",
+    "boost-config",
+    "boost-core",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-range",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

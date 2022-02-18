@@ -1,33 +1,31 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF 4bfa5fe500288a0bcd9134533b87dbf8183fd158 # v14.1.0
-    SHA512 258046b6b76e8513aa35e6e6a1a5245c9d91eadd0aaa6fe41869080d1b74669350eca86e7025581252327a01c2687d77991721d08554b505d2025e063ae4cc88
-    HEAD_REF master
+    REF v14.2.4
+    SHA512 c592521960f1950d626261738091d25efdf764ee1a0c72a58c28c66eaebf6073b2c978f1dc2c8dbe89b0be7ec1629a3a45cb1fafa0ebe21b5df8d4d27c992675
+    HEAD_REF main
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DREPROC++=ON
         -DREPROC_INSTALL_PKGCONFIG=OFF
         -DREPROC_INSTALL_CMAKECONFIGDIR=share
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 foreach(TARGET reproc reproc++)
-    vcpkg_fixup_cmake_targets(
-        CONFIG_PATH share/${TARGET} 
-        TARGET_PATH share/${TARGET}
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ${TARGET}
     )
 endforeach()
 
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )

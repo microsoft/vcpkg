@@ -1,0 +1,5 @@
+{
+  "name": "boost-uninstall",
+  "version": "1.78.0",
+  "description": "Internal vcpkg port used to uninstall Boost"
+}

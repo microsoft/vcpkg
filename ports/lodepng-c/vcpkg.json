@@ -1,0 +1,8 @@
+{
+  "name": "lodepng-c",
+  "version-string": "deprecated",
+  "description": "Legacy port. Use port lodepng instead.",
+  "dependencies": [
+    "lodepng"
+  ]
+}

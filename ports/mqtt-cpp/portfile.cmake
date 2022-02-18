@@ -1,21 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redboltz/mqtt_cpp
-    REF v7.0.1
-    SHA512 7128943e1136200debca344600b015b94a6e216f6136f2b432f4692fd8dabe1a7e50fa3d436d4df85950831f5ed776e03fc02c324afbf2178455770a33bff828
+    REF v12.0.0
+    SHA512 60f2497633373a316724b7c8f87c090eb2bb26202bf48a55c32a13888bf3ec5e9bdc8854056735f625af5b016bcd9bca179d980077fb8752e16710992a0ea0c5
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMQTT_BUILD_EXAMPLES=OFF
         -DMQTT_BUILD_TESTS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mqtt_cpp_iface)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

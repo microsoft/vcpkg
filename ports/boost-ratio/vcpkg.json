@@ -1,0 +1,16 @@
+{
+  "name": "boost-ratio",
+  "version": "1.78.0",
+  "description": "Boost ratio module",
+  "homepage": "https://github.com/boostorg/ratio",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-mpl",
+    "boost-rational",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

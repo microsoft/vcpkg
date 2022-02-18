@@ -1,0 +1,18 @@
+{
+  "name": "iir1",
+  "version": "1.9.0",
+  "description": "Realtime C++ filter library",
+  "homepage": "https://github.com/berndporr/iir1",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

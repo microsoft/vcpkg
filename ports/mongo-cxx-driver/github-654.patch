@@ -1,30 +1,16 @@
-From e1a92d8bf8f07abc89350a956819b78df05bc4fe Mon Sep 17 00:00:00 2001
-From: Billy Robert O'Neal III <bion@microsoft.com>
-Date: Mon, 25 May 2020 20:47:58 -0700
-Subject: [PATCH] Disable trivially_constructible test for atomic on MSVC++.
-
-MSVC++ implements P0883 unconditionally, which changes the rules for std::atomic. It removes atomic's trivial constructor, and makes the default constructor value initialize the T.
-
-Note that Mongo was not following the C++11 rules, because it used the atomic before calling atomic_init first. MSVC++ never implemented the C++11 rules and previously default initialized the T.
-
-All versions of MSVC++ will provide constant initialization of the guarded value "current_instance". In old versions, atomic didn't implement P0883 due to bugs in the constexpr evaluator; in current versions the constexpr evaluator was fixed and atomic value initializes unconditionally. Therefore, this PR disables the check whenever MSVC++'s standard library is detected.
-
-See https://github.com/microsoft/STL/issues/661 for further discussion.
----
- src/mongocxx/instance.cpp | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
 diff --git a/src/mongocxx/instance.cpp b/src/mongocxx/instance.cpp
-index e67d41ec7..6eb456c65 100644
+index f12bd84a8..acc570fa9 100644
 --- a/src/mongocxx/instance.cpp
 +++ b/src/mongocxx/instance.cpp
-@@ -75,7 +75,8 @@ typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentine
+@@ -75,9 +75,10 @@ typename std::aligned_storage<sizeof(instance), alignof(instance)>::type sentine
  std::atomic<instance*> current_instance{nullptr};
  static_assert(std::is_standard_layout<decltype(current_instance)>::value,
                "Must be standard layout");
--#if (!defined(__GNUC__) || (defined(__clang__) && !defined(__GLIBCXX__))) || (__GNUC__ >= 5)
-+#if (!defined(_MSVC_STL_VERSION)) \
-+    && ((!defined(__GNUC__) || (defined(__clang__) && !defined(__GLIBCXX__))) || (__GNUC__ >= 5))
- static_assert(std::is_trivially_constructible<decltype(current_instance)>::value,
-               "Must be trivially constructible");
- #endif
++#if (!defined(_MSVC_STL_VERSION))
+ static_assert(std::is_trivially_destructible<decltype(current_instance)>::value,
+               "Must be trivially destructible");
+-
++#endif
+ }  // namespace
+ 
+ class instance::impl {

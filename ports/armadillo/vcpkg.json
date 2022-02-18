@@ -1,0 +1,19 @@
+{
+  "name": "armadillo",
+  "version": "10.6.2",
+  "port-version": 4,
+  "description": "Armadillo is a high quality linear algebra library (matrix maths) for the C++ language, aiming towards a good balance between speed and ease of use",
+  "homepage": "http://arma.sourceforge.net",
+  "dependencies": [
+    "blas",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

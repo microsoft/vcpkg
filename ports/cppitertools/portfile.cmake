@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ryanhaining/cppitertools
-    REF d716cf6c8281ab6383d1fbecb456e0b9d808694c
-    SHA512 47bc490d798b445e965169a754dc977d5add217f133130671301dee6294744fa4b3f7a3b146cbd002c31325e5bc7c2206d57560a6db58693ca13ca972ca09d39
+    REF 539a5be8359c4330b3f88ed1821f32bb5c89f5f6
+    SHA512 cab0cb8a6b711824c13ca013b3349b9decb84f2dab6305bfb1bdd013f7426d5b199c127dadabeaaafc2e7ff6ad442222dd0fffee9aaacfa27d3aeb82c344ae4f
     HEAD_REF master
 )
 

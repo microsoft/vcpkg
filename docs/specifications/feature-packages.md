@@ -1,6 +1,8 @@
 # Proposal: Features / Feature packages (Feb 23 2017)
 
-**Note: this is the proposal as it was initially accepted and does not necessarily reflect the current behavior.**
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
+**Up-to-date documentation is available at [Selecting Library Features](../users/selecting-library-features.md).**
 
 ## 1. Motivation
 

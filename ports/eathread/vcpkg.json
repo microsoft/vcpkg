@@ -1,0 +1,12 @@
+{
+  "name": "eathread",
+  "version-string": "1.32.09",
+  "port-version": 3,
+  "description": "Electronic Arts Thread Library. EAThread implements a unified cross-platform interface for multithreaded programming on various platforms.",
+  "homepage": "https://github.com/electronicarts/EAThread",
+  "supports": "!uwp & x64",
+  "dependencies": [
+    "eabase",
+    "eastl"
+  ]
+}

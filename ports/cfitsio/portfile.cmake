@@ -1,5 +1,5 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz"
+    URLS "https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz"
     FILENAME "cfitsio-3.49.tar.gz"
     SHA512 9836a4af3bbbfed1ea1b4c70b9d500ac485d7c3d8131eb8a25ee6ef6662f46ba52b5161c45c709ed9a601ff0e9ec36daa5650eaaf4f2cc7d6f4bb5640f10da15
 )
@@ -11,14 +11,19 @@ vcpkg_extract_source_archive_ex(
         0001-fix-dependencies.patch
         0002-export-cmake-targets.patch
         0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
+        0004-pkg-config.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    curl        UseCurl
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        curl        UseCurl
 )
 
+set(PKG_CONFIG_REQUIRES_PRIVATE zlib)
 if ("curl" IN_LIST FEATURES)
     set(FIND_CURL_DEPENDENCY "find_dependency(CURL CONFIG)")
+    string(APPEND PKG_CONFIG_REQUIRES_PRIVATE " libcurl")
 endif()
 
 if ("pthreads" IN_LIST FEATURES)
@@ -34,8 +39,11 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
+        "-DPKG_CONFIG_REQUIRES_PRIVATE=${PKG_CONFIG_REQUIRES_PRIVATE}"
+        -DPKG_CONFIG_LIBS=-lcfitsio
 )
 
 vcpkg_install_cmake()

@@ -1,0 +1,26 @@
+{
+  "name": "boost-process",
+  "version": "1.78.0",
+  "description": "Boost process module",
+  "homepage": "https://github.com/boostorg/process",
+  "supports": "!emscripten",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-asio",
+    "boost-config",
+    "boost-core",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-fusion",
+    "boost-iterator",
+    "boost-move",
+    "boost-optional",
+    "boost-system",
+    "boost-tokenizer",
+    "boost-type-index",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

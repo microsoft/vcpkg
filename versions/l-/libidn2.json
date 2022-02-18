@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "639f3ae3abc9b7265de12b29bfefb49a683e0b53",
+      "version": "2.3.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b1eb568bf3bdf3fdb6e04b69f62f0347f2dff2ed",
+      "version": "2.3.0",
+      "port-version": 5
+    },
+    {
+      "git-tree": "a73dca27190e239f6ff09db7124b885a23d732e4",
+      "version": "2.3.0",
+      "port-version": 4
+    },
+    {
+      "git-tree": "cad738e7d2fff6e1ac7c8a2bec14160aa127336f",
+      "version": "2.3.0",
+      "port-version": 3
+    },
+    {
+      "git-tree": "6f5a62105488c9eb440e97c4d49a1ac6c8fa996c",
+      "version-string": "2.3.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "6d198421acf88e8196da7f2d1389100307f92133",
+      "version-string": "2.3.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "70fb6d70d7d6adf103e7270339c9ba0e0d694f79",
+      "version-string": "2.3.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1da1380be0b16e54e7ba1ac3e8730784a11c000a",
+      "version-string": "2.2.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "54d6f84814f915ac5c7def82468c484de592e98b",
+      "version-string": "2.2.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c96569e3132e70e8514a55056bcd3855bfb33281",
+      "version-string": "2.2.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c0433fb316d494bd1c0c677e57dd90c2502ceab1",
+      "version-string": "2.1.1-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c65459cf683915aaa9220e1f0db5535439ce9502",
+      "version-string": "2.1.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9a8426d139ecc461160d348054344cd5f5363266",
+      "version-string": "2.0.5-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9d7bbdb564c8353ca7780fc1edbec776d7f8a691",
+      "version-string": "2.0.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e7d7728b059c0ccf7479c91f91d7a3c5ac702d1b",
+      "version-string": "2.0.4",
+      "port-version": 0
+    }
+  ]
+}

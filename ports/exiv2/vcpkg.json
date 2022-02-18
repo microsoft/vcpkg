@@ -1,0 +1,52 @@
+{
+  "name": "exiv2",
+  "version": "0.27.5",
+  "port-version": 1,
+  "description": "Image metadata library and tools",
+  "homepage": "https://www.exiv2.org",
+  "supports": "!uwp",
+  "dependencies": [
+    "libiconv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "nls": {
+      "description": "Build native language support",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "png": {
+      "description": "Build with png support (requires libz)",
+      "dependencies": [
+        "libpng",
+        "zlib"
+      ]
+    },
+    "unicode": {
+      "description": "Compile with unicode support on windows"
+    },
+    "video": {
+      "description": "Build video support into library"
+    },
+    "xmp": {
+      "description": "Build with XMP metadata support",
+      "dependencies": [
+        "expat"
+      ]
+    }
+  }
+}

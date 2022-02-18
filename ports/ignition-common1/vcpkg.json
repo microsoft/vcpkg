@@ -1,0 +1,30 @@
+{
+  "name": "ignition-common1",
+  "version-string": "1.1.1",
+  "port-version": 2,
+  "description": "Common libraries for robotics applications",
+  "dependencies": [
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows | uwp"
+    },
+    {
+      "name": "ffmpeg",
+      "platform": "!windows & !uwp"
+    },
+    {
+      "name": "freeimage",
+      "platform": "!windows & !uwp"
+    },
+    {
+      "name": "gts",
+      "platform": "!windows & !uwp"
+    },
+    "ignition-cmake0",
+    "ignition-math4",
+    {
+      "name": "tinyxml2",
+      "platform": "!windows & !uwp"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "boost-format",
+  "version": "1.78.0",
+  "description": "Boost format module",
+  "homepage": "https://github.com/boostorg/format",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-optional",
+    "boost-smart-ptr",
+    "boost-throw-exception",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

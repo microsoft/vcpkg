@@ -1,0 +1,14 @@
+{
+  "name": "jsonnet",
+  "version": "0.17.0",
+  "description": "Jsonnet - The data templating language",
+  "homepage": "https://github.com/google/jsonnet",
+  "supports": "!(windows & !static)",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

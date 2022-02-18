@@ -1,0 +1,19 @@
+{
+  "name": "boost-lambda",
+  "version": "1.78.0",
+  "description": "Boost lambda module",
+  "homepage": "https://github.com/boostorg/lambda",
+  "dependencies": [
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

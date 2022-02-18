@@ -1,0 +1,151 @@
+diff --git a/lib/jxl.cmake b/lib/jxl.cmake
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -3,6 +3,18 @@
+ # Use of this source code is governed by a BSD-style
+ # license that can be found in the LICENSE file.
+
++if(JPEGXL_ENABLE_TOOLS) 
++find_package(lodepng CONFIG REQUIRED)
++endif()
++find_package(unofficial-brotli CONFIG REQUIRED)
++find_package(lcms2 CONFIG REQUIRED)
++
++foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
++  add_library(${brlib} ALIAS unofficial::brotli::${brlib}-static)
++  add_library(${brlib}-static ALIAS unofficial::brotli::${brlib}-static)
++endforeach()
++add_library(lcms2 ALIAS lcms2::lcms2)
++
+ # Lists all source files for the JPEG XL decoder library. These are also used
+ # by the encoder: the encoder uses both dec and enc ourse files, while the
+ # decoder uses only dec source files.
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -88,18 +88,16 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/highway/CMakeLists.txt" AND
+   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/highway/LICENSE"
+                  ${PROJECT_BINARY_DIR}/LICENSE.highway COPYONLY)
+ else()
+-  pkg_check_modules(HWY libhwy)
+-  if (NOT HWY_FOUND)
++  find_path(HWY_INCLUDE_DIRS "hwy/highway.h")
++  find_library(HWY_LINK_LIBRARIES hwy)
++  if (NOT HWY_INCLUDE_DIRS OR NOT HWY_LINK_LIBRARIES)
+     message(FATAL_ERROR
+-        "Highway library (hwy) not found. Install libhwy-dev or download it "
+-        "to third_party/highway from https://github.com/google/highway . "
+-        "Highway is required to build JPEG XL. You can run "
+-        "${PROJECT_SOURCE_DIR}/deps.sh to download this dependency.")
++        "Highway library (hwy) not found.")
+   endif()
+   add_library(hwy INTERFACE IMPORTED GLOBAL)
+   if(${CMAKE_VERSION} VERSION_LESS "3.13.5")
+-    set_property(TARGET hwy PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${HWY_INCLUDE_DIR})
+-    target_link_libraries(hwy INTERFACE ${HWY_LDFLAGS})
++    set_property(TARGET hwy PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${HWY_INCLUDE_DIRS})
++    target_link_libraries(hwy INTERFACE ${HWY_LINK_LIBRARIES})
+     set_property(TARGET hwy PROPERTY INTERFACE_COMPILE_OPTIONS ${HWY_CFLAGS_OTHER})
+   else()
+     target_include_directories(hwy INTERFACE ${HWY_INCLUDE_DIRS})
+@@ -114,82 +112,12 @@ else()
+ endif()
+ 
+ # lodepng
+-if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lodepng/lodepng.h" )
+-  message(FATAL_ERROR "Please run ${PROJECT_SOURCE_DIR}/deps.sh to fetch the "
+-          "build dependencies.")
+-endif()
+-include(lodepng.cmake)
+-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/lodepng/LICENSE"
+-               ${PROJECT_BINARY_DIR}/LICENSE.lodepng COPYONLY)
++if(JPEGXL_ENABLE_TOOLS)
++find_package(lodepng CONFIG REQUIRED)
++endif()
+ 
+ # brotli
+-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
+-    JPEGXL_FORCE_SYSTEM_BROTLI)
+-  # Create the libbrotli* and libbrotli*-static targets.
+-  foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
+-    # Use uppercase like "BROTLIENC" for the cmake variables
+-    string(TOUPPER "${brlib}" BRPREFIX)
+-    pkg_check_modules(${BRPREFIX} lib${brlib})
+-    if (${BRPREFIX}_FOUND)
+-      if(${CMAKE_VERSION} VERSION_LESS "3.13.5")
+-        add_library(${brlib} INTERFACE IMPORTED GLOBAL)
+-        set_property(TARGET ${brlib} PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${${BRPREFIX}_INCLUDE_DIR})
+-        target_link_libraries(${brlib} INTERFACE ${${BRPREFIX}_LDFLAGS})
+-        set_property(TARGET ${brlib} PROPERTY INTERFACE_COMPILE_OPTIONS ${${BRPREFIX}_CFLAGS_OTHER})
+-
+-        add_library(${brlib}-static INTERFACE IMPORTED GLOBAL)
+-        set_property(TARGET ${brlib}-static PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${${BRPREFIX}_INCLUDE_DIR})
+-        target_link_libraries(${brlib}-static INTERFACE ${${BRPREFIX}_LDFLAGS})
+-        set_property(TARGET ${brlib}-static PROPERTY INTERFACE_COMPILE_OPTIONS ${${BRPREFIX}_CFLAGS_OTHER})
+-      else()
+-        add_library(${brlib} INTERFACE IMPORTED GLOBAL)
+-        target_include_directories(${brlib}
+-            INTERFACE ${${BRPREFIX}_INCLUDE_DIRS})
+-        target_link_libraries(${brlib}
+-            INTERFACE ${${BRPREFIX}_LINK_LIBRARIES})
+-        target_link_options(${brlib}
+-            INTERFACE ${${BRPREFIX}_LDFLAGS_OTHER})
+-        target_compile_options(${brlib}
+-            INTERFACE ${${BRPREFIX}_CFLAGS_OTHER})
+-
+-        # TODO(deymo): Remove the -static library versions, this target is
+-        # currently needed by brunsli.cmake. When importing it this way, the
+-        # brotli*-static target is just an alias.
+-        add_library(${brlib}-static ALIAS ${brlib})
+-      endif()
+-    endif()
+-    unset(BRPREFIX)
+-  endforeach()
+-
+-  if (BROTLIENC_FOUND AND BROTLIDEC_FOUND AND BROTLICOMMON_FOUND)
+-    set(BROTLI_FOUND 1)
+-  else()
+-    set(BROTLI_FOUND 0)
+-  endif()
+-
+-  if (NOT BROTLI_FOUND)
+-    message(FATAL_ERROR
+-        "Brotli not found, install brotli-dev or download brotli source code to"
+-        " third_party/brotli from https://github.com/google/brotli. You can use"
+-        " ${PROJECT_SOURCE_DIR}/deps.sh to download this dependency.")
+-  endif ()
+-  if(JPEGXL_DEP_LICENSE_DIR)
+-    configure_file("${JPEGXL_DEP_LICENSE_DIR}/libbrotli-dev/copyright"
+-                   ${PROJECT_BINARY_DIR}/LICENSE.brotli COPYONLY)
+-  endif()  # JPEGXL_DEP_LICENSE_DIR
+-else()
+-  # Compile brotli from sources.
+-  set(BROTLI_DISABLE_TESTS ON CACHE STRING "Disable Brotli tests")
+-  add_subdirectory(brotli EXCLUDE_FROM_ALL)
+-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/brotli/LICENSE"
+-                 ${PROJECT_BINARY_DIR}/LICENSE.brotli COPYONLY)
+-  if(BROTLI_EMSCRIPTEN)
+-    # Brotli only defines the -static targets when using emscripten.
+-    foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
+-      add_library(${brlib} ALIAS ${brlib}-static)
+-    endforeach()
+-  endif()  # BROTLI_EMSCRIPTEN
+-endif()
++find_package(unofficial-brotli CONFIG REQUIRED)
+ 
+ # *cms
+ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+@@ -202,12 +128,7 @@ if (JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
+                  ${PROJECT_BINARY_DIR}/LICENSE.skcms COPYONLY)
+ endif ()
+ if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS)
+-  if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lcms/.git" )
+-    message(SEND_ERROR "Please run git submodule update --init")
+-  endif()
+-  include(lcms2.cmake)
+-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/lcms/COPYING"
+-                 ${PROJECT_BINARY_DIR}/LICENSE.lcms COPYONLY)
++  find_package(lcms2 CONFIG REQUIRED)
+ endif()
+ 
+ # sjpeg

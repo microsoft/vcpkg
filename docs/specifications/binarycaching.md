@@ -2,6 +2,8 @@
 
 **Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
 
+**Up-to-date documentation is available at [Binarycaching](../users/binarycaching.md).**
+
 ## Motivation
 
 The primary motivation of binary caching is to accelerate two broad scenarios in an easily accessible way

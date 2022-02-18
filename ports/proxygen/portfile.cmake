@@ -1,15 +1,15 @@
-vcpkg_fail_port_install(ON_TARGET "Windows")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF bb2b1f2b3660fa1f15bbdff14ddba2a4ff5c43fa #v2020.10.19.00
-    SHA512 8547a8c329764f8448a9f294811ef1dfcfcfa77a15fa2fdd9ab25a5f7ab8d40c9932348d3a1b16b87ba56844c13ebf918e7080f247ff7fadad7363a70e2d0fe2
+    REF v2022.01.31.00
+    SHA512 f340466fb52e01bb71289f7cf1e8aee2ef8a0d5db21998ea85aaf07b128144de05747ececcac65e99d1d452bddc0d0dc60ba17087311c8337e31fbdda6f4ce3a
     HEAD_REF master
+    PATCHES
+        remove-register.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -23,18 +23,17 @@ else()
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proxygen)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

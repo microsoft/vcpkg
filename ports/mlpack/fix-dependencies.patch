@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4dd92f0..bfa697d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -488,7 +488,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
+ # }
+ # #endif
+ if (USE_OPENMP)
+-  find_package(OpenMP)
++  find_package(OpenMP REQUIRED)
+ endif ()
+ 
+ if (OPENMP_FOUND)

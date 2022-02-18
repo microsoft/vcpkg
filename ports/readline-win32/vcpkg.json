@@ -1,0 +1,8 @@
+{
+  "name": "readline-win32",
+  "version": "5.0",
+  "port-version": 4,
+  "description": "Implementation of readline for Windows Desktop",
+  "homepage": "https://github.com/lltcggie",
+  "supports": "windows & !uwp"
+}

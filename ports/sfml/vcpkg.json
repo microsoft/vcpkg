@@ -1,0 +1,23 @@
+{
+  "name": "sfml",
+  "version": "2.5.1",
+  "port-version": 12,
+  "description": "Simple and fast multimedia library",
+  "homepage": "https://github.com/sfml/sfml",
+  "dependencies": [
+    "freetype",
+    "libflac",
+    "libogg",
+    "libvorbis",
+    "openal-soft",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

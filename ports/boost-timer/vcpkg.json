@@ -1,0 +1,28 @@
+{
+  "name": "boost-timer",
+  "version": "1.78.0",
+  "description": "Boost timer module",
+  "homepage": "https://github.com/boostorg/timer",
+  "dependencies": [
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-chrono",
+    "boost-config",
+    "boost-core",
+    "boost-io",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-predef",
+    "boost-system",
+    "boost-throw-exception",
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

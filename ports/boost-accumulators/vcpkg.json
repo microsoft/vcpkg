@@ -1,0 +1,29 @@
+{
+  "name": "boost-accumulators",
+  "version": "1.78.0",
+  "description": "Boost accumulators module",
+  "homepage": "https://github.com/boostorg/accumulators",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    "boost-circular-buffer",
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-fusion",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-numeric-conversion",
+    "boost-parameter",
+    "boost-preprocessor",
+    "boost-range",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-ublas",
+    "boost-vcpkg-helpers"
+  ]
+}

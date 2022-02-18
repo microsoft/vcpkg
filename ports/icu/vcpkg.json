@@ -1,0 +1,14 @@
+{
+  "name": "icu",
+  "version": "69.1",
+  "port-version": 18,
+  "description": "Mature and widely used Unicode and localization library.",
+  "homepage": "https://icu.unicode.org/home",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "icu",
+      "host": true
+    }
+  ]
+}

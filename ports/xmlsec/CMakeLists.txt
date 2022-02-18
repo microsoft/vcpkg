@@ -1,10 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-project (xmlsec C)
+project (xmlsec1 C)
 
 option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
-
-set(CMAKE_SHARED_LIBRARY_PREFIX)
-set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -58,20 +55,23 @@ if(MSVC)
   add_compile_options(/wd4130 /wd4127 /wd4152)
 endif()
 
-add_library(libxmlsec ${SOURCESXMLSEC})
-add_library(libxmlsec-openssl ${SOURCESXMLSECOPENSSL})
+set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
+
+add_library(xmlsec1 ${SOURCESXMLSEC})
+add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBXML2_INCLUDE_DIRS})
 
-target_link_libraries(libxmlsec PRIVATE
+target_link_libraries(xmlsec1 PRIVATE
     ${LIBXML2_LIBRARIES} OpenSSL::SSL
 )
-target_link_libraries(libxmlsec-openssl PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec
+target_link_libraries(xmlsec1-openssl PRIVATE
+    ${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1
 )
 
 add_compile_definitions(inline=__inline)
-add_compile_definitions(PACKAGE="xmlsec")
+add_compile_definitions(PACKAGE="xmlsec1")
 add_compile_definitions(XMLSEC_MSCRYPTO_NT4=1)
 add_compile_definitions(HAVE_STDIO_H)
 add_compile_definitions(HAVE_STDLIB_H)
@@ -89,22 +89,25 @@ add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
 add_compile_definitions(_REENTRANT)
 
-target_compile_definitions(libxmlsec-openssl PRIVATE
+target_compile_definitions(xmlsec1-openssl PRIVATE
     -DXMLSEC_CRYPTO_OPENSSL
 )
 
-set_target_properties(libxmlsec PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
-set_target_properties(libxmlsec-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
+set_target_properties(xmlsec1 PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
+set_target_properties(xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
 if(NOT BUILD_SHARED_LIBS)
-    target_compile_definitions(libxmlsec PRIVATE -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING)
-    target_compile_definitions(libxmlsec-openssl PRIVATE -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING)
+    set(XMLSEC_CORE_CFLAGS "-DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC -DXMLSEC_NO_CRYPTO_DYNAMIC_LOADING")
+    set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 else()
-	target_compile_definitions(libxmlsec PRIVATE -DXMLSEC_DL_WIN32)
-	target_compile_definitions(libxmlsec-openssl PRIVATE -DXMLSEC_DL_WIN32)
+    set(XMLSEC_CORE_CFLAGS "-DXMLSEC_DL_WIN32")
+    set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 endif()
 
-install(TARGETS libxmlsec libxmlsec-openssl
+target_compile_definitions(xmlsec1 PRIVATE ${XMLSEC_CORE_CFLAGS})
+target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS})
+
+install(TARGETS xmlsec1 xmlsec1-openssl
     EXPORT xmlsecExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
@@ -139,7 +142,7 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 
 	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl
+		${LIBXML2_LIBRARIES} OpenSSL::SSL xmlsec1 xmlsec1-openssl
 	)
     if(NOT Iconv_IS_BUILT_IN)
         target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
@@ -158,3 +161,22 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 	install(TARGETS xmlsec DESTINATION tools/xmlsec)
 endif()
+
+message(STATUS "Generating pkgconfig files")
+
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${prefix})
+set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
+set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(VERSION ${XMLSEC_VERSION})
+set(LIBXML_MIN_VERSION ${LIBXML2_VERSION_STRING})
+set(OPENSSL_LIBS "-lssl -lcrypto")
+set(XMLSEC_CORE_CFLAGS "${XMLSEC_CORE_CFLAGS} -DXMLSEC_DL_LIBLTDL=1 -I\${includedir}/xmlsec1 -DXMLSEC_CRYPTO_OPENSSL=1")
+set(XMLSEC_CORE_LIBS "-lxmlsec1 -lltdl")
+set(XMLSEC_OPENSSL_CFLAGS "${XMLSEC_OPENSSL_CFLAGS} -I\${includedir}/xmlsec1")
+set(XMLSEC_OPENSSL_LIBS "-L\${libdir} -lxmlsec1-openssl ${XMLSEC_CORE_LIBS} ${OPENSSL_LIBS}")
+
+configure_file(${PROJECT_SOURCE_DIR}/xmlsec.pc.in ${PROJECT_BINARY_DIR}/xmlsec1.pc @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/xmlsec-openssl.pc.in ${PROJECT_BINARY_DIR}/xmlsec1-openssl.pc @ONLY)
+install(FILES ${PROJECT_BINARY_DIR}/xmlsec1.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/)
+install(FILES ${PROJECT_BINARY_DIR}/xmlsec1-openssl.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/)

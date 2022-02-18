@@ -1,0 +1,15 @@
+{
+  "name": "boost-pool",
+  "version": "1.78.0",
+  "description": "Boost pool module",
+  "homepage": "https://github.com/boostorg/pool",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-integer",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

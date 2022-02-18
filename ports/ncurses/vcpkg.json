@@ -1,0 +1,6 @@
+{
+  "name": "ncurses",
+  "version-string": "6.3",
+  "description": "free software emulation of curses in System V Release 4.0",
+  "supports": "!windows | mingw"
+}

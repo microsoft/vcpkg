@@ -1,0 +1,15 @@
+{
+  "name": "boost-metaparse",
+  "version": "1.78.0",
+  "description": "Boost metaparse module",
+  "homepage": "https://github.com/boostorg/metaparse",
+  "dependencies": [
+    "boost-config",
+    "boost-mpl",
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}
