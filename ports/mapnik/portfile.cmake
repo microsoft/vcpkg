@@ -39,10 +39,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "utility-svg2png"           BUILD_UTILITY_SVG2PNG
 )
 
+set(msvc_static_crt OFF)
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(msvc_static_crt ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS   
         ${FEATURE_OPTIONS}
+        -DBUILD_SHARED_CRT=${msvc_static_crt}
         -DINSTALL_DEPENDENCIES=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARK=OFF
