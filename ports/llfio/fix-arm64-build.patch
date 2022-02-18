@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b51a873..6705915 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -208,7 +208,7 @@ function(check_cxx_source_linkage prog var)
+   endif()
+   if(CMAKE_CXX_STANDARD)
+     if(MSVC)
+-      set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} /std:c++${CMAKE_CXX_STANDARD}")
++      set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} /std:c++${CMAKE_CXX_STANDARD} /MTd")
+     else()
+       set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
+     endif()

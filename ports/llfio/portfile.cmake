@@ -15,6 +15,7 @@ vcpkg_from_github(
         # https://github.com/ned14/llfio/issues/83
         # To be removed on next update
         issue-83-fix-backport.patch
+        fix-arm64-build.patch
 )
 
 vcpkg_from_github(
@@ -59,7 +60,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib

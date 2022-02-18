@@ -1,6 +1,7 @@
 {
   "name": "llfio",
   "version-string": "2.0-20220112",
+  "port-version": 1,
   "description": "P1031 low level file i/o and filesystem library for the C++ standard",
   "homepage": "https://github.com/ned14/llfio",
   "supports": "!uwp",
@@ -14,6 +15,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
+  ],
+  "default-features": [
+    "cxx17"
   ],
   "features": {
     "cxx17": {
