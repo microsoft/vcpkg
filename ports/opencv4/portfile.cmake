@@ -26,6 +26,7 @@ vcpkg_from_github(
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
+      0012-fix-zlib.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")

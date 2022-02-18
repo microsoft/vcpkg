@@ -7,13 +7,15 @@ vcpkg_from_github(
     REF v2022.01.31.00
     SHA512 159457398fdc0c89c34364b8a89068127c3519ce35af349776016e0ae37ae9508689853e0e371c2065fd715451f466e37c7e3799e054eca02cbc4717809150ab
     HEAD_REF master
+    PATCHES
+        add-missing-algorithm-include.patch # https://github.com/facebook/fbthrift/commit/f2151fa730058a1baf23ed3dc082c91df6351da1
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBISON_EXECUTABLE=${BISON}
-        -DFLEX_EXECUTABLE=${FLEX}
+        "-DBISON_EXECUTABLE=${BISON}"
+        "-DFLEX_EXECUTABLE=${FLEX}"
 )
 
 vcpkg_cmake_install()
