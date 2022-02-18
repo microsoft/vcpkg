@@ -1,6 +1,7 @@
 {
   "name": "ftxui",
-  "version-date": "2021-10-17",
+  "version-semver": "2.0.0",
+  "port-version": 1,
   "description": "C++ Functional Terminal User Interface",
   "homepage": "https://github.com/ArthurSonzogni/FTXUI",
   "license": "MIT",

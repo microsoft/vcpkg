@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF d3ee790da1826529e3d025d919f5c3608d029562 # 4.5.0
-    SHA512 2fe66269bb59db81d3611f2857ac3ba0ae7448a54d216bd7aa72701f1e6e291a738421f460f4614198785bbd084ab1e19e84a3f67cbc15556015e2f259941f11
+    REF bc76cbea5bb845c4d0fb642968eb1b278ddbb047 # 4.6.1
+    SHA512 416baaaf89cdbe2e9cf234df44dc0b90493c995b52ca9840cb5a5acf2904fe7d81da178ac4e0bf06dcd44fbac74fa75fe570901dd8fd4987a1bec4aeb54baad6
     HEAD_REF master
     PATCHES
         0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
-        0007-boost_1_77_0.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
@@ -45,7 +44,7 @@ else()
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     GENERATOR Ninja
     OPTIONS
         -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
@@ -54,6 +53,9 @@ vcpkg_cmake_configure(
         -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+
+        -DWTHTTP_CONFIGURATION=
+        -DCONFIGURATION=
 
         -DCONNECTOR_HTTP=ON
         -DENABLE_HARU=ON
@@ -72,16 +74,22 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_GLEW=ON
 
         -DCMAKE_INSTALL_DIR=share
+        # see https://redmine.webtoolkit.eu/issues/9646
+        -DWTHTTP_CONFIGURATION=
+        -DCONFIGURATION=
+
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 # There is no way to suppress installation of the headers and resource files in debug build.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/var)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/var)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/var" "${CURRENT_PACKAGES_DIR}/debug/var")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+# RUNDIR is only used for wtfcgi what we don't build. See https://redmine.webtoolkit.eu/issues/9646
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "#define RUNDIR \"${CURRENT_PACKAGES_DIR}/var/run/wt\"" "")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 vcpkg_copy_pdbs()

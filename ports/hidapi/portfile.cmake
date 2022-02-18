@@ -16,6 +16,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hidapi/hidapi.cmake" "\"/hidapi\"" "\"\${_IMPORT_PREFIX}/include\"")
+
 file(INSTALL "${SOURCE_PATH}/LICENSE-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

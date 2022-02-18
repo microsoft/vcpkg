@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
+        embed-debug-info.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -80,9 +81,14 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
                             --with-pkg-config
-                            --link-method=copy)
+                            --link-method=copy
+                            --with-debug-info)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()
+
+    if(VCPKG_CXX_FLAGS)
+      list(APPEND configure_arguments --extra-cxxflags ${VCPKG_CXX_FLAGS})
     endif()
 
     if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
@@ -175,6 +181,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
