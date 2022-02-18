@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-sqlite3-fftw-linkage.patch
         force_finding_packages.patch
         find_blas.patch
+        fix-lapack-linkage.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external/libjpeg")

@@ -1,0 +1,53 @@
+diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index 2762649..1b3d56a 100644
+--- a/dlib/CMakeLists.txt
++++ b/dlib/CMakeLists.txt
+@@ -568,15 +568,6 @@ if (NOT TARGET dlib)
+          # Try to find BLAS, LAPACK and MKL
+          include(cmake_utils/find_blas.cmake)
+ 
+-         if (DLIB_USE_BLAS)
+-            if (blas_found)
+-               set (dlib_needed_libraries ${dlib_needed_libraries} ${blas_libraries})
+-            else()
+-               set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
+-               toggle_preprocessor_switch(DLIB_USE_BLAS)
+-            endif()
+-         endif()
+-
+          if (DLIB_USE_LAPACK)
+             if (lapack_found)
+                set (dlib_needed_libraries ${dlib_needed_libraries} ${lapack_libraries})
+@@ -593,6 +584,15 @@ if (NOT TARGET dlib)
+             endif()
+          endif()
+ 
++         if (DLIB_USE_BLAS)
++            if (blas_found)
++               set (dlib_needed_libraries ${dlib_needed_libraries} ${blas_libraries})
++            else()
++               set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
++               toggle_preprocessor_switch(DLIB_USE_BLAS)
++            endif()
++         endif()
++
+          if (DLIB_USE_MKL_FFT)
+             if (found_intel_mkl AND found_intel_mkl_headers)
+                set (dlib_needed_includes ${dlib_needed_includes} ${mkl_include_dir})
+diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
+index 53f7afb..931b19c 100644
+--- a/dlib/cmake_utils/dlibConfig.cmake.in
++++ b/dlib/cmake_utils/dlibConfig.cmake.in
+@@ -29,10 +29,10 @@ if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
+ endif()
+ 
+ include(CMakeFindDependencyMacro)
+-if("@DLIB_USE_FFTW@")
++if(@DLIB_USE_FFTW@)
+    find_dependency(FFTW3 CONFIG)
+ endif()
+-if("@DLIB_LINK_WITH_SQLITE3@")
++if(@DLIB_LINK_WITH_SQLITE3@)
+    find_dependency(unofficial-sqlite3 CONFIG)
+ endif()
+ 

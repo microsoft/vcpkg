@@ -1882,7 +1882,7 @@
     },
     "dlib": {
       "baseline": "19.23",
-      "port-version": 0
+      "port-version": 1
     },
     "dmlc": {
       "baseline": "2019-08-12",
