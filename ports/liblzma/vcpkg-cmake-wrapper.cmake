@@ -28,7 +28,26 @@ _find_package(${ARGS})
 if(z_vcpkg_liblzma_fixup_needed)
     include(SelectLibraryConfigurations)
     select_library_configurations(LIBLZMA)
-    if(TARGET LibLZMA::LibLZMA AND LIBLZMA_LIBRARY_DEBUG)
+    if(NOT TARGET LibLZMA::LibLZMA)
+        # Backfill LibLZMA::LibLZMA to versions of cmake before 3.14
+        add_library(LibLZMA::LibLZMA UNKNOWN IMPORTED)
+        if(DEFINED LIBLZMA_INCLUDE_DIRS)
+            set_target_properties(LibLZMA::LibLZMA PROPERTIES
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBLZMA_INCLUDE_DIRS}")
+        endif()
+        set_property(TARGET LibLZMA::LibLZMA APPEND PROPERTY
+            IMPORTED_CONFIGURATIONS RELEASE)
+        set_target_properties(LibLZMA::LibLZMA PROPERTIES
+            IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+            IMPORTED_LOCATION_RELEASE "${LIBLZMA_LIBRARY_RELEASE}")
+        if(EXISTS "${LIBLZMA_LIBRARY}")
+            set_target_properties(LibLZMA::LibLZMA PROPERTIES
+                IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+                IMPORTED_LOCATION "${LIBLZMA_LIBRARY}")
+        endif()
+    endif()
+    if(LIBLZMA_LIBRARY_DEBUG)
+        # Backfill debug variant to versions of cmake before 3.16
         set_property(TARGET LibLZMA::LibLZMA APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
         set_target_properties(LibLZMA::LibLZMA PROPERTIES IMPORTED_LOCATION_DEBUG "${LIBLZMA_LIBRARY_DEBUG}")
     endif()
