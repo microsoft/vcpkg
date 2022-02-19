@@ -38,7 +38,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 # 入门
 
-首先，请阅读以下任一方面的快速入门指南：
+首先，请阅读以下任一快速入门指南：
 [Windows](#快速开始-windows) 或 [macOS和Linux](#快速开始-unix)，
 这取决于您使用的是什么平台。
 
@@ -57,7 +57,7 @@ vcpkg团队和贡献者可以看到它的地方，
 
 ## 快速开始: Windows
 
-需求:
+前置条件:
 - Windows 7 或更新的版本
 - [Git][getting-started:git]
 - [Visual Studio 2015 Update 3][getting-started:visual-studio] 或更新的版本（**包含英文语言包**）
@@ -284,7 +284,7 @@ $ ./vcpkg integrate bash # 或 zsh
 
 观看4分钟 [demo视频](https://www.youtube.com/watch?v=y41WFKbQFTw)。
 
-## 贡献者
+## 贡献
 
 Vcpkg是一个开源项目，并通过您的贡献不断发展。
 下面是一些您可以贡献的方式:
