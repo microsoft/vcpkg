@@ -33,7 +33,7 @@ vcpkg_cmake_configure(
         -DNLOHMANN_JSON=external
         -DPROJ_LIB_SUBDIR=lib
         -DPROJ_INCLUDE_SUBDIR=include
-        -DPROJ_DATA_SUBDIR=share/${PORT}
+        -DPROJ_DATA_SUBDIR=share/${PORT}/data
         -DBUILD_TESTING=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
 )
@@ -48,8 +48,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ CONFIG_PATH lib/cmake/proj DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME PROJ4 CONFIG_PATH lib/cmake/proj4)
+vcpkg_cmake_config_fixup(PACKAGE_NAME proj4 CONFIG_PATH lib/cmake/proj4 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proj)
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
