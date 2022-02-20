@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            "offscale/${PORT}"
-    REF             2c269f257ecbd55fd16867b65fec3259277acbb9
-    SHA512          2f8715e08ac2fd573240778ac86bce308a68e02e314c86df68a1d0f0b85abc956067cd40bea6e942fdc74e33934aaed676239458b3afa5f7021dc6d3009da2f2
+    REF             78eaaf7ac1ff9dc79c9f4a9ae7b5f4eb87287943
+    SHA512          f57e8ea6f3dc3546fc989e55213fd65b9bc9d8534c8be59613bea2791153366dc805a462b941e2b57432eb18e8e5cca536a5723c00aaf82b80962c2d1a198461
     HEAD_REF        master
 )
 
@@ -13,6 +13,5 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/LICENSE.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
-foreach(_dir "include" "share")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${_dir}")
-endforeach(_dir "include" "share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
