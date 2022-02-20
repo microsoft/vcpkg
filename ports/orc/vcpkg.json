@@ -1,7 +1,6 @@
 {
   "name": "orc",
-  "version-string": "1.6.4",
-  "port-version": 2,
+  "version-string": "1.7.3",
   "description": "The smallest, fastest columnar storage for Hadoop workloads.",
   "homepage": "https://orc.apache.org/",
   "dependencies": [
@@ -10,6 +9,10 @@
     "protobuf",
     "snappy",
     "zlib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zstd"
   ]
 }
