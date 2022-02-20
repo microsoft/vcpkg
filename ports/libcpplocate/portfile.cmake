@@ -6,7 +6,6 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix-install-paths.patch
-    fix-windows-uwp.patch
 )
 
 vcpkg_cmake_configure(

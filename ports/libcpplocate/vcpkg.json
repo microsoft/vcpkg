@@ -4,6 +4,7 @@
   "description": "Cross-platform C++ library providing tools for applications to locate themselves, their data assets as well as dependent modules.",
   "homepage": "https://cpplocate.org/",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
