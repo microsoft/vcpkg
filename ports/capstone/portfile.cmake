@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CS_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CS_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -26,7 +27,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "x86-reduce"  CAPSTONE_X86_REDUCE
         "xcore"       CAPSTONE_XCORE_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
-        "static-crt"  CAPSTONE_BUILD_STATIC_RUNTIME 
 )
 
 if ("osxkernel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
@@ -41,6 +41,7 @@ vcpkg_cmake_configure(
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_X86_ONLY=OFF
+        -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}
         ${FEATURE_OPTIONS}
 )
 
