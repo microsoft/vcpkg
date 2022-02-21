@@ -2,6 +2,7 @@
   "name": "inf-recursion-test",
   "version-date": "2022-02-20",
   "description": "Test port to verify if vcpkg.cmake is robust against command recursions",
+  "license" : "MIT",
   "dependencies" :  [
   {
     "name": "vcpkg-cmake",
