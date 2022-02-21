@@ -1,12 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO JonathanSalwan/Triton
-  REF v0.9
-  SHA512 f34cc9787837dc826e21997a86c32087b29ed9662bc8e0ac8ddb934978a64bdfd54c3d1303689be2a9dff4a0f3c9128219e04881e6c98f5e21a27ecd57489586
+  REF 64a2b9b0490c82e41b37e623b1d0da14e2382e7a
+  SHA512 ff99a270813043df2bc0da765e04aae4b9d5a911d20c6e5ffca1472eae8d6e1fcfff3cd56da023d6a77a647644839430bf72902acd84ec521a0e098f185d275c
   PATCHES
     fix-dependencies.patch
     fix-usage.patch
-    fix-build.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindZ3.cmake")
