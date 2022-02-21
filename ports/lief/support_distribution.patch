@@ -1,29 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1f73fb29..5a9fd079 100644
+index 456279ae..3e8f3887 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,11 +11,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CROSSCOMPILING)
+@@ -11,9 +11,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CROSSCOMPILING)
  endif()
  
  
 -if(WIN32 OR ${IS_WIN_CROSS_COMPILE})
 -  include(ChooseMSVCCRT)
 -endif()
--include(CheckCXXCompilerFlag)
--include(CheckCCompilerFlag)
+ include(CheckCXXCompilerFlag)
+ include(CheckCCompilerFlag)
  include(ExternalProject)
- include(CMakePackageConfigHelpers)
- 
-@@ -201,8 +196,6 @@ if(WINDOWS AND BUILD_SHARED_LIBS)
+@@ -208,11 +205,6 @@ if(WINDOWS AND BUILD_SHARED_LIBS)
+   target_link_libraries(LIB_LIEF ws2_32)
  endif()
  
- if(MSVC OR ${IS_WIN_CROSS_COMPILE})
+-if(MSVC OR ${IS_WIN_CROSS_COMPILE})
 -  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /bigobj")
 -  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
- endif()
- 
+-endif()
+-
  if(CMAKE_BUILD_TYPE MATCHES Debug AND WINDOWS)
-@@ -328,7 +321,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
+   add_definitions(-D_ITERATOR_DEBUG_LEVEL=0 -D_SECURE_SCL=0
+                   -D_HAS_ITERATOR_DEBUGGING=0)
+@@ -336,7 +328,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
                 @ONLY)
  
  target_include_directories(LIB_LIEF
@@ -32,7 +33,7 @@ index 1f73fb29..5a9fd079 100644
    PRIVATE "${LIEF_PRIVATE_INCLUDE_DIR}")
  
  if(LIEF_ENABLE_JSON)
-@@ -371,7 +364,7 @@ if(LIEF_EXTERNAL_LEAF)
+@@ -379,7 +371,7 @@ if(LIEF_EXTERNAL_LEAF)
    if(LIEF_EXTERNAL_LEAF_DIR)
      message(STATUS "External LEAF include dir: ${LIEF_EXTERNAL_LEAF_DIR}")
      target_include_directories(LIB_LIEF SYSTEM PUBLIC
@@ -41,7 +42,7 @@ index 1f73fb29..5a9fd079 100644
    endif()
  else()
    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/leaf.hpp
-@@ -533,7 +526,7 @@ if(LIEF_COVERAGE)
+@@ -569,7 +561,7 @@ if(LIEF_COVERAGE)
    target_link_libraries(LIB_LIEF gcov)
  endif()
  
@@ -50,20 +51,7 @@ index 1f73fb29..5a9fd079 100644
  
  
  # Set a default build type if none was specified
-@@ -580,10 +573,10 @@ endif()
- 
- # Find Package Config
- # ======================
--configure_package_config_file(
-+configure_file(
-   LIEFConfig.cmake.in
-   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
--  INSTALL_DESTINATION share/LIEF/cmake)
-+  @ONLY)
- 
- write_basic_package_version_file(
-   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -630,26 +623,15 @@ endif()
+@@ -666,26 +658,15 @@ endif()
  # Installation
  # ======================
  
@@ -86,7 +74,7 @@ index 1f73fb29..5a9fd079 100644
  install(
 -  TARGETS LIB_LIEF
 +  TARGETS LIB_LIEF lief_spdlog
-+  EXPORT LIEFTargets
++  EXPORT LIEFExport
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 -  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
@@ -95,63 +83,46 @@ index 1f73fb29..5a9fd079 100644
  
  install(
    DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
-@@ -658,11 +640,6 @@ install(
+@@ -694,8 +675,12 @@ install(
    FILES_MATCHING
    REGEX "(.*).(hpp|h|def|inc)$")
  
--install(
--  FILES       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
--  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
--  COMPONENT   CMakeScripts)
--
++configure_file(
++  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/FindLIEF.cmake
++  @ONLY)
  install(
-   FILES ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
-         ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
-@@ -674,7 +651,13 @@ install(
+-  FILES       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
++  FILES       ${CMAKE_CURRENT_BINARY_DIR}/FindLIEF.cmake
+   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
+   COMPONENT   CMakeScripts)
+ 
+@@ -710,7 +695,13 @@ install(
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
    COMPONENT   libraries)
  
 -export(TARGETS LIB_LIEF lief_spdlog FILE LIEFExport.cmake)
 +install(
-+  EXPORT LIEFTargets
++  EXPORT LIEFExport
 +  NAMESPACE LIEF::
 +  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
 +  COMPONENT config)
 +
-+export(EXPORT LIEFTargets FILE LIEFTargets.cmake)
++export(EXPORT LIEFExport FILE LIEFExport.cmake)
  
  # Package
  # ======================
 diff --git a/LIEFConfig.cmake.in b/LIEFConfig.cmake.in
-index 94ee5245..16454dfd 100644
+index 94ee5245..c51d320d 100644
 --- a/LIEFConfig.cmake.in
 +++ b/LIEFConfig.cmake.in
-@@ -1,4 +1,20 @@
+@@ -1,4 +1 @@
 -@PACKAGE_INIT@
-+include(CMakeFindDependencyMacro)
- 
+-
 -set(LIEF_DIR "${PACKAGE_PREFIX_DIR}")
--include("${CMAKE_CURRENT_LIST_DIR}/FindLIEF.cmake")
-+# Need to find private dependencies even if they're private when compiled
-+# statically
-+if(NOT @BUILD_SHARED_LIBS@)
-+  find_dependency(MbedTLS)
-+  find_dependency(nlohmann_json)
-+  find_dependency(frozen)
-+  find_dependency(utf8cpp)
-+  find_dependency(spdlog)
-+endif()
-+
-+include("${CMAKE_CURRENT_LIST_DIR}/LIEFTargets.cmake")
-+
-+# Also attach location of Boost LEAF header-only library
-+find_path(BOOST_LEAF_INCLUDE_PATH boost/leaf.hpp)
-+if(NOT BOOST_LEAF_INCLUDE_PATH)
-+  message(FATAL_ERROR "Could not find required path to 'boost/leaf.hpp'")
-+endif()
-+set_property(TARGET LIEF::LIEF APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BOOST_LEAF_INCLUDE_PATH}")
+ include("${CMAKE_CURRENT_LIST_DIR}/FindLIEF.cmake")
 diff --git a/cmake/LIEFApi.cmake b/cmake/LIEFApi.cmake
-index f06f846c..964b394d 100644
+index f06f846c..42e0b8dc 100644
 --- a/cmake/LIEFApi.cmake
 +++ b/cmake/LIEFApi.cmake
 @@ -18,7 +18,7 @@ endif()
@@ -159,21 +130,18 @@ index f06f846c..964b394d 100644
  if(LIEF_C_API)
    target_include_directories(LIB_LIEF
 -    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include")
-+    PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/api/c/include>")
++    PUBLIC  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/api/c/include>")
  
    include("${CMAKE_CURRENT_SOURCE_DIR}/api/c/CMakeLists.txt")
  endif()
 diff --git a/examples/cmake/find_package/CMakeLists.txt b/examples/cmake/find_package/CMakeLists.txt
-index 1812d4b1..0add37d9 100644
+index 1812d4b1..2cf36289 100644
 --- a/examples/cmake/find_package/CMakeLists.txt
 +++ b/examples/cmake/find_package/CMakeLists.txt
-@@ -2,43 +2,17 @@ cmake_minimum_required(VERSION 3.1)
+@@ -5,15 +5,6 @@ project(CMakeLIEF)
+ # Use LIEF with 'find_package()'
+ # ==============================
  
- project(CMakeLIEF)
- 
--# Use LIEF with 'find_package()'
--# ==============================
--
 -# Custom path to the LIEF install directory
 -set(LIEF_DIR CACHE PATH ${CMAKE_INSTALL_PREFIX})
 -
@@ -184,33 +152,172 @@ index 1812d4b1..0add37d9 100644
 -include(FindLIEF)
 -
  # Find LIEF
--find_package(LIEF REQUIRED COMPONENTS STATIC) # COMPONENTS: <SHARED | STATIC> - Default: STATIC
+ find_package(LIEF REQUIRED COMPONENTS STATIC) # COMPONENTS: <SHARED | STATIC> - Default: STATIC
+ 
+diff --git a/scripts/FindLIEF.cmake b/scripts/FindLIEF.cmake
+index 43874a3a..d9f19fd1 100644
+--- a/scripts/FindLIEF.cmake
++++ b/scripts/FindLIEF.cmake
+@@ -43,83 +43,65 @@
+ 
+ 
+ 
+-set(_LIEF_SEARCHES)
 -
--message(STATUS "LIEF include directory: ${LIEF_INCLUDE_DIRS}")
--message(STATUS "LIEF library:           ${LIEF_LIBRARIES}")
-+find_package(LIEF REQUIRED)
+ if(LIEF_ROOT)
+   message(FATAL_ERROR "LIEF_ROOT is no longer supported. Please use LIEF_DIR")
+ endif()
  
- # Add our executable
- # ==================
- add_executable(HelloLIEF main.cpp)
- 
--if(MSVC)
--  set_property(TARGET HelloLIEF PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
+-if(LIEF_DIR)
+-  set(_LIEF_SEARCH_ROOT PATHS ${LIEF_DIR} NO_DEFAULT_PATH)
+-  list(APPEND _LIEF_SEARCHES _LIEF_SEARCH_ROOT)
 -endif()
 -
+-set(LIEF_NAMES LIEF)
 -
--# Setup the LIEF include directory
--target_include_directories(HelloLIEF
--  PUBLIC
--    ${LIEF_INCLUDE_DIRS}
--)
--
--# Enable C++11
-+# C++11 minimum
- set_property(TARGET HelloLIEF
-              PROPERTY CXX_STANDARD           11
-              PROPERTY CXX_STANDARD_REQUIRED  ON)
+ if (LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_STATIC AND LIEF_FIND_REQUIRED_SHARED)
+   message(WARNING "Two incompatible components specified : static and shared. We are going to ignore the 'shared' component.")
+   list(REMOVE_ITEM LIEF_FIND_COMPONENTS SHARED)
+   unset(LIEF_FIND_REQUIRED_SHARED)
+ endif()
  
- # Link the executable with LIEF
--target_link_libraries(HelloLIEF PUBLIC ${LIEF_LIBRARIES})
-+target_link_libraries(HelloLIEF PRIVATE LIEF::LIEF)
+-set(LIBRARY_SUFFIXES_SAVED ${CMAKE_FIND_LIBRARY_SUFFIXES})
+ 
+-if (NOT LIEF_FIND_COMPONENTS)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX} ${CMAKE_SHARED_LIBRARY_SUFFIX})
++include(CMakeFindDependencyMacro)
++
++# Need to find private dependencies even if they're private when compiled
++# statically
++if(NOT @BUILD_SHARED_LIBS@)
++  find_dependency(MbedTLS)
++  find_dependency(nlohmann_json)
++  find_dependency(frozen)
++  find_dependency(utf8cpp)
++  find_dependency(spdlog)
+ endif()
+ 
+-if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_STATIC)
+-  unset(_LIEF_LIBRARY CACHE)
+-  unset(LIEF_LIBRARY)
+-  unset(LIEF_FOUND)
+-  unset(LIEF_LIBRARIES)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
++include("${CMAKE_CURRENT_LIST_DIR}/LIEFExport.cmake")
++
++# Also attach location of header-only libraries
++find_path(BOOST_LEAF_INCLUDE_PATH boost/leaf.hpp)
++if(NOT BOOST_LEAF_INCLUDE_PATH)
++  message(WARNING "Could not find required path to 'boost/leaf.hpp'")
+ endif()
++find_path(TCB_SPAN_INCLUDE_PATH tcb/span.hpp)
++if(NOT TCB_SPAN_INCLUDE_PATH)
++  message(WARNING "Could not find required path to 'tcb/span.hpp'")
++endif()
++set_property(TARGET LIEF::LIEF APPEND PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${BOOST_LEAF_INCLUDE_PATH}" "${TCB_SPAN_INCLUDE_PATH}")
+ 
+-if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_SHARED)
+-  unset(_LIEF_LIBRARY CACHE)
+-  unset(LIEF_LIBRARY)
+-  unset(LIEF_FOUND)
+-  unset(LIEF_LIBRARIES)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX})
++
++get_target_property(_LIEF_LIB_TYPE LIEF::LIEF TYPE)
++
++if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_STATIC)
++  if(_LIEF_LIB_TYPE STREQUAL "SHARED_LIBRARY")
++    message(FATAL_ERROR "Could not find requested static LIEF library: $<TARGET_FILE:LIEF::LIEF>")
++    set(LIEF_FOUND FALSE)
++  endif()
+ endif()
+ 
+-# Try each search configuration.
+-foreach(search ${_LIEF_SEARCHES})
+-  find_path(LIEF_INCLUDE_DIR
+-    NAMES LIEF/LIEF.hpp
+-    PATH ${${search}}
+-    REQUIRED
+-    CMAKE_FIND_ROOT_PATH_BOTH
+-    PATH_SUFFIXES include)
+-endforeach()
+-
+-# Allow LIEF_LIBRARY to be set manually, as the location of the LIEF library
+-if(NOT LIEF_LIBRARY)
+-  foreach(search ${_LIEF_SEARCHES})
+-    find_library(_LIEF_LIBRARY
+-      NAMES ${LIEF_NAMES}
+-      PATHS ${${search}}
+-      REQUIRED
+-      CMAKE_FIND_ROOT_PATH_BOTH
+-      PATH_SUFFIXES lib lib64)
+-  endforeach()
+-
+-  if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake")
+-    include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
+-  else()
+-    include(SelectLibraryConfigurations)
++if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_SHARED)
++  if(_LIEF_LIB_TYPE STREQUAL "STATIC_LIBRARY")
++    message(FATAL_ERROR "Could not find requested shared LIEF library: $<TARGET_FILE:LIEF::LIEF>")
++    set(LIEF_FOUND FALSE)
+   endif()
++endif()
+ 
+-  select_library_configurations(LIEF)
+ 
+-  set(LIEF_LIBRARY ${_LIEF_LIBRARY})
+-endif()
++set(LIEF_LIBRARIES LIEF::LIEF)
+ 
+ 
+-unset(LIEF_NAMES)
++get_target_property(LIEF_INCLUDE_DIRS LIEF::LIEF INTERFACE_INCLUDE_DIRECTORIES)
+ 
+-mark_as_advanced(LIEF_INCLUDE_DIR)
+ 
+ if(LIEF_INCLUDE_DIR AND EXISTS "${LIEF_INCLUDE_DIR}/LIEF/version.h")
+   file(STRINGS "${LIEF_INCLUDE_DIR}/LIEF/version.h" LIEF_H REGEX "^#define LIEF_VERSION \"[^\"]*\"$")
+@@ -133,42 +115,3 @@ if(LIEF_INCLUDE_DIR AND EXISTS "${LIEF_INCLUDE_DIR}/LIEF/version.h")
+   set(LIEF_MINOR_VERSION "${LIEF_VERSION_MINOR}")
+   set(LIEF_PATCH_VERSION "${LIEF_VERSION_PATCH}")
+ endif()
+-
+-
+-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake")
+-  include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+-else()
+-  include(FindPackageHandleStandardArgs)
+-endif()
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIEF REQUIRED_VARS LIEF_LIBRARY LIEF_INCLUDE_DIR
+-                                       VERSION_VAR LIEF_VERSION_STRING)
+-
+-
+-if(LIEF_FOUND)
+-  set(LIEF_INCLUDE_DIRS ${LIEF_INCLUDE_DIR})
+-
+-  if(NOT LIEF_LIBRARIES)
+-    set(LIEF_LIBRARIES ${LIEF_LIBRARY})
+-  endif()
+-
+-  if(NOT TARGET LIEF::LIEF)
+-    add_library(LIEF::LIEF UNKNOWN IMPORTED)
+-    set_target_properties(LIEF::LIEF PROPERTIES
+-      INTERFACE_INCLUDE_DIRECTORIES "${LIEF_INCLUDE_DIRS}")
+-
+-    if(LIEF_LIBRARY)
+-      set_property(TARGET LIEF::LIEF APPEND PROPERTY
+-        IMPORTED_CONFIGURATIONS RELEASE)
+-      set_target_properties(LIEF::LIEF PROPERTIES
+-        IMPORTED_LOCATION_RELEASE "${LIEF_LIBRARY}")
+-    endif()
+-
+-    if(NOT LIEF_LIBRARY)
+-      set_property(TARGET LIEF::LIEF APPEND PROPERTY
+-        IMPORTED_LOCATION "${LIEF_LIBRARY}")
+-    endif()
+-  endif()
+-endif()
+-
+-# Restore
+-set(CMAKE_FIND_LIBRARY_SUFFIXES ${LIBRARY_SUFFIXES_SAVED})

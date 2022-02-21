@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 274d887e176aaa404a60cf6eea239f84f191349e # master commit 2022-02-14
-    SHA512 5a5a57f4dc36eb4d74dfd4d7a66f4c5a7eb83b6b58202944ead9be86a576c141cd3c54b5b45f7182a4a7710349da16e16b67e7074523c18fedb98ecf8ba43fba
+    REF 566d4ac8a86e458a40de1e2816115f8db48a5501 # master commit 2022-02-19
+    SHA512 8ebcd67c54903d83e43959039d0cccdbccb6132c5f84344dbd9834d98932d294c4f5ce95df8a1702c6afa8a1714179b6d413c524902f24eb0f0bceff5db3c2be
     HEAD_REF master
     PATCHES
         support_distribution.patch
-        fix_span_include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
