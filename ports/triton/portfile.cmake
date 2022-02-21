@@ -6,6 +6,7 @@ vcpkg_from_github(
   PATCHES
     fix-dependencies.patch
     fix-usage.patch
+    fix-python.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMakeModules/FindZ3.cmake")
@@ -19,10 +20,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 set(ADDITIONAL_OPTIONS )
-if("python" IN_LIST FEATURES)
+if(PYTHON_BINDINGS)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DPYTHON_BINDINGS=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
         )
 endif()
 
