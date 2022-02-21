@@ -15,7 +15,6 @@
       "features": [
         "arm",
         "arm64",
-        "static-crt",
         "x86"
       ]
     },
