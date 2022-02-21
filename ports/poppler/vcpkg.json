@@ -1,40 +1,76 @@
 {
   "name": "poppler",
-  "version": "20.12.1",
-  "port-version": 6,
-  "description": "a PDF rendering library",
+  "version": "22.2.0",
+  "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "cairo",
-      "platform": "osx"
-    },
-    {
-      "name": "devil",
-      "platform": "(windows | linux) & !arm"
-    },
-    "fontconfig",
+    "boost-container",
+    "boost-move",
     "freetype",
     "libiconv",
-    "openjpeg"
+    "libjpeg-turbo",
+    "libpng",
+    "openjpeg",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
-    "splash",
+    "font-configuration",
     "zlib"
   ],
   "features": {
+    "cairo": {
+      "description": "Enable the Cairo graphics backend",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
     "curl": {
       "description": "curl for poppler",
       "dependencies": [
-        "curl"
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
-    "splash": {
-      "description": "Build the Splash graphics backend",
+    "font-configuration": {
+      "description": "Defaut font configuration backend",
       "dependencies": [
-        "boost-container",
-        "boost-move"
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!windows & !android"
+        }
       ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "supports": "!windows, mingw",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "private-api": {
+      "description": "Install headers for private API (aka unstable API/ABI headers)"
+    },
+    "splash": {
+      "description": "The splash backend is always enabled. This option is kept for compatibility."
     },
     "zlib": {
       "description": "zlib for poppler",
