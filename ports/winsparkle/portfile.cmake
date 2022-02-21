@@ -17,7 +17,8 @@ file(INSTALL "${SOURCE_PATH}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${P
 # self-contained DLL with no external dependencies (to the point that 
 # it even links to static CRT!). This matters for e.g. in-app delta updates 
 # or re-launching the app after update. It is not statically linked even if a 
-# static linking is used for everything else. 
+# static linking is used for everything else.
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     file(INSTALL "${SOURCE_PATH}/Release/WinSparkle.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
