@@ -4,7 +4,6 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
     REF dfc5d361e6748d5f48b706e5c4ac949d133b5470 # v1.6.3
-    PATCHES
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -42,5 +41,3 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-
