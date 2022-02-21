@@ -74,7 +74,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Build ${TARGET_TRIPLET}-rel")
     # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
     # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
-    make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
+    make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl-1)
     execute_process(
         COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
@@ -111,7 +111,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl-1)
     execute_process(
         COMMAND "${JOM}" -k -j ${VCPKG_CONCURRENCY} -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
@@ -145,11 +145,11 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
 )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe")
-file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl-1/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl-1/openssl.exe")
+file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl-1/openssl.cnf")
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+vcpkg_copy_tools()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # They should be empty, only the exes deleted above were in these directories

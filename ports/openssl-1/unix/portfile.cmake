@@ -6,8 +6,8 @@ vcpkg_extract_source_archive_ex(
 
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
-    set(MAKE ${MSYS_ROOT}/usr/bin/make.exe)
-    set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
+    set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
+    set(PERL "${MSYS_ROOT}/usr/bin/perl.exe")
 else()
     find_program(MAKE make)
     if(NOT MAKE)
@@ -34,5 +34,5 @@ foreach(HEADER ${HEADERS})
     list(APPEND RESOLVED_HEADERS "${X}")
 endforeach()
 
-file(INSTALL ${RESOLVED_HEADERS} DESTINATION" ${CURRENT_PACKAGES_DIR}/include/openssl")
+file(INSTALL ${RESOLVED_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/openssl-1")
 file(INSTALL "${MASTER_COPY_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
