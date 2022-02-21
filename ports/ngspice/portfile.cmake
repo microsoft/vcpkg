@@ -26,7 +26,6 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 # We need to kill them off first before the source tree is copied to a tmp location by install_msbuild
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/contrib")
-file(REMOVE_RECURSE "${SOURCE_PATH}/contrib")
 file(REMOVE_RECURSE "${SOURCE_PATH}/examples")
 file(REMOVE_RECURSE "${SOURCE_PATH}/man")
 file(REMOVE_RECURSE "${SOURCE_PATH}/tests")
