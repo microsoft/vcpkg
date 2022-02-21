@@ -1,11 +1,14 @@
 {
   "name": "fizz",
   "version-string": "2022.01.31.00",
+  "port-version": 1,
   "description": "a TLS 1.3 implementation by Facebook",
   "homepage": "https://github.com/facebookincubator/fizz",
   "dependencies": [
+    "double-conversion",
     "fmt",
     "folly",
+    "libevent",
     "libsodium",
     "openssl",
     {

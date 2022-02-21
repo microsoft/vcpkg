@@ -179,16 +179,15 @@ Examples: [abseil](../../ports/abseil/portfile.cmake)
 
 ### Choose either static or shared binaries
 
-By default, `vcpkg_configure_cmake()` will pass in the appropriate setting for `BUILD_SHARED_LIBS`,
+By default, `vcpkg_cmake_configure()` will pass in the appropriate setting for `BUILD_SHARED_LIBS`,
 however for libraries that don't respect that variable, you can switch on `VCPKG_LIBRARY_LINKAGE`:
 
 ```cmake
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DKEYSTONE_BUILD_STATIC=${KEYSTONE_BUILD_STATIC}
         -DKEYSTONE_BUILD_SHARED=${KEYSTONE_BUILD_SHARED}
@@ -207,9 +206,8 @@ else()
   set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
     -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
 )
@@ -223,9 +221,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "zlib"    CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
       ${FEATURE_OPTIONS}
 )

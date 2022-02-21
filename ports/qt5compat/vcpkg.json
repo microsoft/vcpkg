@@ -1,8 +1,9 @@
 {
   "name": "qt5compat",
-  "version-semver": "6.2.2",
+  "version": "6.2.3",
   "description": "The module contains unsupported Qt 5 APIs",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
