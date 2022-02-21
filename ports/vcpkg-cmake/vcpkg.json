@@ -1,4 +1,12 @@
 {
   "name": "vcpkg-cmake",
-  "version-date": "2022-01-19"
+  "version-date": "2022-02-21",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-ninja",
+      "host": true
+    }
+  ]
 }
