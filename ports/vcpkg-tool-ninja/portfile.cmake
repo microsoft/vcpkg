@@ -1,6 +1,3 @@
-# This port represents a dependency on the Meson build system.
-# In the future, it is expected that this port acquires and installs Meson.
-# Currently is used in ports that call vcpkg_find_acquire_program(MESON) in order to force rebuilds.
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program NINJA)
@@ -23,6 +20,7 @@ if(NOT "${program}")
     HEAD_REF master
     PATCHES PR2056.diff # Long path support windows
 )
+    # This copied from vcpkg_configure_cmake to find a generator which is not ninja!
     set(generator_arch "")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
@@ -59,7 +57,7 @@ if(NOT "${program}")
     if(NOT "${generator_arch}" STREQUAL "")
         vcpkg_list(APPEND cmake_options "-A${generator_arch}")
     endif()
-    
+
     set(VCPKG_BUILD_TYPE release) #we only need release here!
     vcpkg_configure_cmake(
         DISABLE_PARALLEL_CONFIGURE
@@ -72,8 +70,7 @@ if(NOT "${program}")
     vcpkg_copy_tools(TOOL_NAMES ninja AUTO_CLEAN)
     set(PORT vcpkg-tool-ninja)
 endif()
-unset(NINJA)
-unset(NINJA CACHE)
+
 z_vcpkg_find_acquire_program_find_internal("${program}"
     INTERPRETER "${interpreter}"
     PATHS ${paths_to_search}
