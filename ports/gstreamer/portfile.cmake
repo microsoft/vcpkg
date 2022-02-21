@@ -12,9 +12,10 @@ vcpkg_from_github(
     REF 1.19.2
     SHA512 6070f1febf2a1bcc6e68f1e03c1b76891db210773065696e26fac20f0bd3ff47e1634222a49f93a10f6e47717ff21084c9ae0feed6a20facb9650aeb879cc380
     HEAD_REF master
+    PATCHES gstreamer-disable-no-unused.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch)
+    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch plugin-base-disable-no-unused.patch)
     list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
     list(APPEND PLUGIN_UGLY_PATCHES plugins-ugly-disable-doc.patch)
 endif()
