@@ -33,10 +33,6 @@ if ("osxkernel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "Feature 'osxkernel' only supported in OSX")
 endif()
 
-if ("static-crt" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature 'static-crt' only supported in Windows")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
