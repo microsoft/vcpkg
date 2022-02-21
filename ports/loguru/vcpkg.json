@@ -3,5 +3,13 @@
   "version-string": "2.1.0",
   "port-version": 2,
   "description": "A lightweight and flexible C++ logging library",
-  "homepage": "https://github.com/emilk/loguru"
+  "homepage": "https://github.com/emilk/loguru",
+  "features": {
+    "fmt": {
+      "description": "Build with fmt support in non-header-only mode",
+      "dependencies": [
+        "fmt"
+      ]
+    }
+  }
 }
