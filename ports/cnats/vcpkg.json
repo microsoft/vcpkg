@@ -1,10 +1,12 @@
 {
   "name": "cnats",
-  "version-semver": "3.2.0",
-  "port-version": 0,
-  "description": ".",
-  "homepage": "",
+  "version": "3.2.0",
+  "description": "A C client for the NATS messaging system",
+  "homepage": "https://github.com/nats-io/nats.c",
   "dependencies": [
+    "libsodium",
+    "openssl",
+    "protobuf-c",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,15 +14,12 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "openssl",
-    "libsodium",
-    "protobuf-c"
+    }
   ],
   "features": {
     "streaming": {
-      "description": "include NATS Streaming APIs in the NATS library",
-      "supports":  "!windows"
+      "description": "Include NATS Streaming APIs in the NATS library",
+      "supports": "!windows"
     }
   }
 }
