@@ -9,7 +9,16 @@
     "boost-math",
     "boost-multiprecision",
     "boost-numeric-conversion",
-    "capstone",
+    {
+      "name": "capstone",
+      "default-features": false,
+      "features": [
+        "arm",
+        "arm64",
+        "static-crt",
+        "x86"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
