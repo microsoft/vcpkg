@@ -3,6 +3,7 @@
   "version": "3.2.0",
   "description": "A C client for the NATS messaging system",
   "homepage": "https://github.com/nats-io/nats.c",
+  "license": "Apache-2.0",
   "dependencies": [
     "libsodium",
     "openssl",
