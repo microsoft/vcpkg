@@ -46,7 +46,7 @@ if [ "$unixName" = "MINGW_NT" ]; then
     fi
 
     vcpkgRootDir=$(cygpath -aw "$vcpkgRootDir")
-    cmd "/C $vcpkgRootDir\\bootstrap-vcpkg.bat $args" || exit 1
+    cmd "/C "$vcpkgRootDir\\bootstrap-vcpkg.bat $args"" || exit 1
     exit 0
 fi
 
