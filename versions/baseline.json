@@ -2536,6 +2536,10 @@
       "baseline": "1.70.0",
       "port-version": 1
     },
+    "google-cloud-bucket-c": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
     "google-cloud-cpp": {
       "baseline": "1.36.0",
       "port-version": 1
