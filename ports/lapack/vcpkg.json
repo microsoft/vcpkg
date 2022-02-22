@@ -10,7 +10,7 @@
     },
     {
       "name": "lapack-reference",
-      "platform": "!arm | !windows | !uwp"
+      "platform": "!((arm & windows) | uwp)"
     }
   ]
 }
