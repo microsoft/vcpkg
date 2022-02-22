@@ -1,4 +1,5 @@
 {
   "name": "vcpkg-cmake",
-  "version-date": "2022-02-22"
+  "version-date": "2022-02-22",
+  "license": "MIT"
 }

@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-fortran",
-  "version-string": "1",
+  "version-date": "2022-02-22",
   "description": "Metaport to use a fortran compiler",
+  "license": "MIT",
   "supports": "windows & !arm"
 }

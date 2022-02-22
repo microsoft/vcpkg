@@ -1,7 +1,9 @@
 {
   "name": "lapack-reference",
-  "version-string": "3.10.0",
-  "description": "LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/",
+  "version": "3.10.0",
+  "description": "LAPACK - Linear Algebra PACKage",
+  "homepage": "http://www.netlib.org/lapack/",
+  "license": "BSD-3-Clause-Open-MPI",
   "dependencies": [
     "vcpkg-cmake",
     "vcpkg-cmake-config",

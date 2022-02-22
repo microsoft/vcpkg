@@ -1,7 +1,8 @@
 {
   "name": "lapack",
-  "version-date": "2021-08-18",
+  "version-date": "2022-02-22",
   "description": "Metapackage for packages which provide LAPACK",
+  "license": null,
   "dependencies": [
     {
       "name": "clapack",
