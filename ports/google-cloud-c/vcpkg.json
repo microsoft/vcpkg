@@ -1,0 +1,18 @@
+{
+  "name": "google-cloud-c",
+  "version-date": "2022-02-22",
+  "description": "Google Cloud Client library in C",
+  "homepage": "https://github.com/offscale/google-cloud-c",
+  "license": "Apache-2.0 OR MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "c89stringutils",
+    "cauthflow",
+    "libcurl-simple-https",
+    "parson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
