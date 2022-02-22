@@ -3261,7 +3261,7 @@
       "port-version": 1
     },
     "lapack": {
-      "baseline": "2021-08-18",
+      "baseline": "2022-02-22",
       "port-version": 0
     },
     "lapack-reference": {
@@ -7201,7 +7201,7 @@
       "port-version": 0
     },
     "vcpkg-fortran": {
-      "baseline": "1",
+      "baseline": "2022-02-22",
       "port-version": 0
     },
     "vcpkg-gfortran": {
@@ -7213,7 +7213,7 @@
       "port-version": 0
     },
     "vcpkg-ifort": {
-      "baseline": "1",
+      "baseline": "2022-02-22",
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
