@@ -1,7 +1,7 @@
 {
   "name": "pixel",
-  "version-string": "0.3",
-  "port-version": 3,
+  "version": "0.3",
+  "port-version": 4,
   "description": "Simple 2D Graphics based on standard and portable OpenGL.",
   "homepage": "https://github.com/dascandy/pixel",
   "supports": "!windows",

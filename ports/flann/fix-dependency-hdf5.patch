@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7ff331a..155cabe 100644
+index 9f1dbcb74..5587c896e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -75,11 +75,17 @@ if (NOT PYTHON_EXECUTABLE)
+@@ -77,11 +77,19 @@ if (NOT PYTHON_EXECUTABLE)
  endif()
  endif()
  
+-find_hdf5()
 +if (WITH_HDF5)
- find_hdf5()
--if (NOT HDF5_FOUND)
++find_package(HDF5 CONFIG REQUIRED)
+ if (NOT HDF5_FOUND)
 -	message(WARNING "hdf5 library not found, some tests will not be run")
-+if (NOT hdf5_FOUND)
 +	message(ERROR "hdf5 library not found")
  else()
 -    include_directories(${HDF5_INCLUDE_DIR})
@@ -19,10 +19,13 @@ index 7ff331a..155cabe 100644
 +    elseif (TARGET hdf5::hdf5-static)
 +        link_libraries(hdf5::hdf5-static)
 +    endif()
++    set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} hdf5")
++    set(CMAKE_EXTERNAL_DEPS "find_dependency(HDF5)")
 +endif()
  endif()
  
  if (USE_MPI OR HDF5_IS_PARALLEL)
+
 diff --git a/cmake/flann_utils.cmake b/cmake/flann_utils.cmake
 index 8aef8e0..747414f 100644
 --- a/cmake/flann_utils.cmake

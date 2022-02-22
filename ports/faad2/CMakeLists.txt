@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.7.2)
 project (faad VERSION 2.9.1)
 
 option(FAAD_BUILD_BINARIES "Build faad2 binaries" OFF)

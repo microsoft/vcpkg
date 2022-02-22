@@ -5,6 +5,7 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
+    0009-poppler-cxx17.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -175,6 +176,11 @@ else()
         add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
+    if ("poppler" IN_LIST FEATURES)
+        add_config("--with-poppler=yes"  "Poppler support:           yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-poppler=no"   "Poppler support:           no")
+    endif()
     if ("postgresql" IN_LIST FEATURES)
         add_config("--with-pg=yes"  "PostgreSQL support:        yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
@@ -258,7 +264,6 @@ else()
             --with-pcre2=no
             --with-pdfium=no
             --with-podofo=no
-            --with-poppler=no
             --with-qhull=no
             --with-rasdaman=no
             --with-rasterlite2=no
@@ -349,9 +354,13 @@ string(COMPARE NOTEQUAL "${NMAKE_OPTIONS}" "" NMAKE_BUILD)
 set(GDAL_EXTRA_LIBS_DEBUG "")
 set(GDAL_EXTRA_LIBS_RELEASE "")
 foreach(prefix IN LISTS extra_exports)
-    string(APPEND GDAL_EXTRA_LIBS_DEBUG " ${${prefix}_LIBS_DEBUG}")
-    string(APPEND GDAL_EXTRA_LIBS_RELEASE " ${${prefix}_LIBS_RELEASE}")
+    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_DEBUG}")
+    string(APPEND GDAL_EXTRA_LIBS_DEBUG " ${libs}")
+    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_RELEASE}")
+    string(APPEND GDAL_EXTRA_LIBS_RELEASE " ${libs}")
 endforeach()
+string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_DEBUG "${GDAL_EXTRA_LIBS_DEBUG}")
+string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_RELEASE "${GDAL_EXTRA_LIBS_RELEASE}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
