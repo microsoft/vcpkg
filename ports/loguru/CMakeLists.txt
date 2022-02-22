@@ -19,7 +19,7 @@ target_include_directories(loguru PUBLIC
                                $<INSTALL_INTERFACE:include/loguru>)
 
 if(BUILD_WITH_FMT)
-    target_compile_definitions(loguru PRIVATE LOGURU_USE_FMTLIB)
+    target_compile_definitions(loguru PRIVATE LOGURU_USE_FMTLIB=1)
     find_package(fmt REQUIRED)
     target_link_libraries(loguru PUBLIC fmt::fmt)
 endif()

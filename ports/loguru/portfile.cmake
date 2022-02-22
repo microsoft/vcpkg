@@ -21,9 +21,8 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
             fmt BUILD_WITH_FMT
     )
 
-    vcpkg_configure_cmake(
+    vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
         OPTIONS_DEBUG
             -DINSTALL_HEADERS=OFF
 
@@ -31,8 +30,8 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
             ${FEATURE_OPTIONS}
      )
 
-    vcpkg_install_cmake()
-    vcpkg_fixup_cmake_targets()
+    vcpkg_cmake_install()
+    vcpkg_cmake_config_fixup()
     vcpkg_copy_pdbs()
 endif()
 
