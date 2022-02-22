@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF d3ee790da1826529e3d025d919f5c3608d029562 # 4.5.0
-    SHA512 2fe66269bb59db81d3611f2857ac3ba0ae7448a54d216bd7aa72701f1e6e291a738421f460f4614198785bbd084ab1e19e84a3f67cbc15556015e2f259941f11
+    REF bc76cbea5bb845c4d0fb642968eb1b278ddbb047 # 4.6.1
+    SHA512 416baaaf89cdbe2e9cf234df44dc0b90493c995b52ca9840cb5a5acf2904fe7d81da178ac4e0bf06dcd44fbac74fa75fe570901dd8fd4987a1bec4aeb54baad6
     HEAD_REF master
     PATCHES
         0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
-        0007-boost_1_77_0.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
@@ -54,6 +53,9 @@ vcpkg_cmake_configure(
         -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+
+        -DWTHTTP_CONFIGURATION=
+        -DCONFIGURATION=
 
         -DCONNECTOR_HTTP=ON
         -DENABLE_HARU=ON

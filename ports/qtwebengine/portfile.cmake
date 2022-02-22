@@ -5,25 +5,29 @@ set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    "proprietary-codecs"    FEATURE_webengine-proprietary-codecs
-    "spellchecker"          FEATURE_webengine-spellchecker
-    "geolocation"           FEATURE_webengine-geolocation
-    "webchannel"            FEATURE_webengine-webchannel
+    "proprietary-codecs"    FEATURE_webengine_proprietary_codecs
+    "spellchecker"          FEATURE_webengine_spellchecker
+    "geolocation"           FEATURE_webengine_geolocation
+    "webchannel"            FEATURE_webengine_webchannel
 INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
 )
 
 if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATRUES)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine-native-spellchecker=ON")
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_native_spellchecker=ON")
 endif()
 
 # webengine-extensions
 # webengine-printing-and-pdf
 # webengine-pepper-plugins
-set(deactivated_features  webengine-webrtc webengine-webrtc-pipewire webengine-v8-snapshot-support)
+set(deactivated_features   webengine_webrtc_pipewire)
 foreach(_feat IN LISTS deactivated_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=OFF")
+endforeach()
+set(enabled_features  webengine_webrtc  webengine_v8_snapshot_support)
+foreach(_feat IN LISTS enabled_features)
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -32,7 +36,7 @@ if(VCPKG_TARGET_IS_LINUX)
     # + ALSA and PULSEAUDIO
     set(system_libs re2 icu libwebp opus ffmpeg libvpx snappy glib zlib minizip libevent protobuf libxml libpng libjpeg harfbuzz freetype)
     foreach(_sys_lib IN LISTS system_libs)
-        list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine-system-${_sys_lib}=ON")
+        list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
 endif()
 
@@ -73,7 +77,7 @@ endif()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
     URL git://code.qt.io/qt/qtwebengine-chromium.git
-    REF 39aa0ea99a30c9c15fb3640fe9a2638982548c0b
+    REF "${${PORT}_chromium_REF}"
 )
 
 ##### qt_install_submodule
@@ -91,7 +95,8 @@ if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
     file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
 endif()
 
-qt_cmake_configure(OPTIONS ${FEATURE_OPTIONS}
+qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes. 
+                    OPTIONS ${FEATURE_OPTIONS}
                         -DGPerf_EXECUTABLE=${GPERF}
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
@@ -101,7 +106,7 @@ qt_cmake_configure(OPTIONS ${FEATURE_OPTIONS}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
