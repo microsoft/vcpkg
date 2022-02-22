@@ -29,17 +29,16 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if (BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm AUTO_CLEAN)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY "${CURRENT_PACKAGES_DIR}/bin/yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
-    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-vcpkg_copy_tools(vsyasm yasm ytasm DEPENDENCIES ${EXTRA_OPTION} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
