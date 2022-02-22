@@ -9,12 +9,13 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-  SOURCE_PATH ${SOURCE_PATH}
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DOPTION_BUILD_TESTS=OFF
+        -DOPTION_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(
   PACKAGE_NAME cpplocate
