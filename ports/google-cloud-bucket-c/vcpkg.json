@@ -1,0 +1,20 @@
+{
+  "name": "google-cloud-bucket-c",
+  "version-date": "2022-02-22",
+  "description": "Google Cloud Bucket Client library in C",
+  "homepage": "https://github.com/offscale/google-cloud-bucket-c",
+  "license": "Apache-2.0 OR MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "google-cloud-cpp",
+      "features": [
+        "storage"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
