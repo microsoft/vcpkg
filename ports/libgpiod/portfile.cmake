@@ -1,5 +1,3 @@
-
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
@@ -42,5 +40,3 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-
