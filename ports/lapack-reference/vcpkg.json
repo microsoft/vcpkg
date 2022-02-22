@@ -5,9 +5,18 @@
   "homepage": "http://www.netlib.org/lapack/",
   "license": "BSD-3-Clause-Open-MPI",
   "dependencies": [
-    "vcpkg-cmake",
-    "vcpkg-cmake-config",
-    "vcpkg-fortran",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-fortran",
+      "host": true
+    },
     "vcpkg-ifort"
   ],
   "default-features": [
