@@ -19,6 +19,10 @@ vcpkg_cmake_configure(
     -DBUILD_TOOLS=OFF
 )
 
+if(VCPKG_TARGET_IS_UWP)
+  set_target_properties(rabbitmq-c  PROPERTIES COMPILE_FLAGS " /WX-")
+endif()
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME rabbitmq-c CONFIG_PATH lib/cmake/rabbitmq-c)
