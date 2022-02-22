@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-6.0.0
-    SHA512 a5f89085f06a52c85ed9aadd5deee5988c28ab2abd775bb22b9c26efb99429ad3dead7e1976777c3fa159b8c07b536c04eac43fa81e655f40c08c07ba12f8b8b
+    REF apache-arrow-7.0.0
+    SHA512 4df480e03dcd85c1c04f93ca55968cf64eb96b4bdb586d9ad3bd1d5ba6d9ec7cca34fefef43d84b921ba74ceaeb48f8ac9d1d1355f2408ebffd2b2a00a3da2bd
     HEAD_REF master
     PATCHES
         all.patch
@@ -97,7 +97,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/arrow)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(GLOB PARQUET_FILES ${CURRENT_PACKAGES_DIR}/share/${PORT}/Parquet*)
+file(COPY ${PARQUET_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/parquet")
+file(REMOVE_RECURSE ${PARQUET_FILES})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PACKAGES_DIR}/share/parquet/FindParquet.cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
