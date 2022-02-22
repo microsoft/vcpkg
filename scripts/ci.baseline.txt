@@ -449,6 +449,7 @@ kinectsdk2:arm64-windows=fail
 kinectsdk2:arm-uwp=fail
 kinectsdk2:x64-linux=fail
 kinectsdk2:x64-osx=fail
+lapack-reference:x64-uwp=fail
 lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 laszip:arm-uwp=fail
