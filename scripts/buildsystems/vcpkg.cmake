@@ -397,6 +397,7 @@ function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
         list(APPEND "${list}" "${vcpkg_paths}")
     else()
         list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
+        set(CMAKE_FIND_FRAMEWORK "LAST" PARENT_SCOPE)
     endif()
     set("${list}" "${${list}}" PARENT_SCOPE)
 endfunction()
