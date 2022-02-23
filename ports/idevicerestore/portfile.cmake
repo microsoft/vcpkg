@@ -9,8 +9,6 @@ vcpkg_from_github(
         fix-libgen.h-cannot-be-found.patch
 )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
-
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH idevicerestore.vcxproj
