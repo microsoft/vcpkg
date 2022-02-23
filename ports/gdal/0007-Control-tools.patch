@@ -78,6 +78,6 @@ index 1098b39..e4d985e 100644
 +fi
 +AC_SUBST(BUILD_TOOLS,$BUILD_TOOLS)
 +
- AC_OUTPUT(GDALmake.opt)
+ AC_CONFIG_FILES([GDALmake.opt])
+ AC_OUTPUT
  
- dnl ---------------------------------------------------------------------------

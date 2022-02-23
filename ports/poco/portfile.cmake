@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
@@ -14,6 +12,7 @@ vcpkg_from_github(
         fix_dependency.patch
         fix-feature-sqlite3.patch
         fix-error-c3861.patch
+        fix-InstallDataMysql.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
@@ -84,20 +83,20 @@ vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
 
 # Copy additional include files not part of any libraries
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL")
-    file(COPY ${SOURCE_PATH}/Data/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/MySQL")
-    file(COPY ${SOURCE_PATH}/Data/MySQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/MySQL/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/ODBC")
-    file(COPY ${SOURCE_PATH}/Data/ODBC/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/ODBC/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/PostgreSQL")
-    file(COPY ${SOURCE_PATH}/Data/PostgreSQL/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libpq)
+    file(COPY "${SOURCE_PATH}/Data/PostgreSQL/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/libpq")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
-    file(COPY ${SOURCE_PATH}/Data/SQLite/include DESTINATION ${CURRENT_PACKAGES_DIR})
+    file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

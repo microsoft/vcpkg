@@ -1,7 +1,7 @@
 {
   "name": "opentracing",
-  "version-string": "1.6.0",
-  "port-version": 1,
+  "version": "1.6.0",
+  "port-version": 2,
   "description": "C++ implementation of the OpenTracing API",
   "homepage": "https://opentracing.io",
   "supports": "!uwp"

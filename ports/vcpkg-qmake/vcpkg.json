@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-qmake",
+  "version-date": "2021-10-23",
+  "supports": "native",
+  "dependencies": [
+    "pkgconf",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    "vcpkg-cmake"
+  ]
+}

@@ -67,23 +67,6 @@ index 4579fbb3d..f6be008c8 100644
  	fi
  	AC_DEFINE(HAVE_LIBLZMA, 1, "Compiled with lzma support")
  	with_lzma=yes],
-@@ -215,12 +219,13 @@ AC_ARG_WITH([zstd],
- 
- AS_IF([test "x$with_zstd" != "xno"],
- 	[
--	AC_CHECK_LIB(zstd, ZSTD_createDStream, have_zstd=yes, have_zstd=no)
-+    AC_SEARCH_LIBS(ZSTD_createDStream, [zstd zstdd], have_zstd=yes, have_zstd=no)
-+	# AC_CHECK_LIB(zstd, ZSTD_createDStream, have_zstd=yes, have_zstd=no)
- 	], [have_zstd=no])
- 
- AS_IF([test "x$have_zstd" = "xyes"], [
--	if test "$ac_cv_lib_zstd_code" != "none required"; then
--		LIBWANDIO_LIBS="$LIBWANDIO_LIBS -lzstd"
-+	if test "$ac_cv_search_ZSTD_createDStream" != "none required"; then
-+		LIBWANDIO_LIBS="$LIBWANDIO_LIBS $ac_cv_search_ZSTD_createDStream"
- 	fi
- 	AC_DEFINE(HAVE_LIBZSTD, 1, "Compiled with zstd support")
- 	with_zstd=yes],
 @@ -259,25 +264,28 @@ AC_ARG_WITH([lz4],
  
  AS_IF([test "x$with_lz4" != "xno"],

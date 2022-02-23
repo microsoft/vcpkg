@@ -1,0 +1,15 @@
+diff --git a/lib/jxl.cmake b/lib/jxl.cmake
+index 63539cc..2e1d617 100644
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -551,8 +551,10 @@ foreach(target IN ITEMS jxl jxl_dec)
+   # This hides the default visibility symbols from static libraries bundled into
+   # the shared library. In particular this prevents exposing symbols from hwy
+   # and skcms in the shared library.
++  if(NOT APPLE AND NOT MSVC)
+   set_property(TARGET ${target} APPEND_STRING PROPERTY
+       LINK_FLAGS " -Wl,--exclude-libs=ALL")
++  endif()
+ endforeach()
+ 
+ # Only install libjxl shared library. The libjxl_dec is not installed since it

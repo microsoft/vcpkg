@@ -15,10 +15,10 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
-        "-DSTATIC_CRT=${STATIC_CRT_LNK}"
+        -DSTATIC_CRT=${STATIC_CRT_LNK}
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gperftools/gperftools
@@ -9,7 +7,7 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
     if(override IN_LIST FEATURES)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -24,22 +22,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
         tools GPERFTOOLS_BUILD_TOOLS
     )
 
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         DISABLE_PARALLEL_CONFIGURE
         OPTIONS
             ${FEATURE_OPTIONS}
     )
 
-    vcpkg_install_cmake()
+    vcpkg_cmake_install()
 
     vcpkg_copy_pdbs()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(GLOB gperf_public_headers ${CURRENT_PACKAGES_DIR}/include/gperftools/*.h)
+        file(GLOB gperf_public_headers "${CURRENT_PACKAGES_DIR}/include/gperftools/*.h")
 
         foreach(gperf_header ${gperf_public_headers})
             vcpkg_replace_string(${gperf_header} "__declspec(dllimport)" "")
@@ -70,14 +67,16 @@ else()
     endif()
 
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug/include
-        ${CURRENT_PACKAGES_DIR}/debug/share
+        "${CURRENT_PACKAGES_DIR}/debug/include"
+        "${CURRENT_PACKAGES_DIR}/debug/share"
     )
 
     # https://github.com/microsoft/vcpkg/pull/8750#issuecomment-625590773
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
+
+    vcpkg_fixup_pkgconfig()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

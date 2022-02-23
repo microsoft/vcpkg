@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libssh.org/projects/libssh.git
@@ -32,7 +30,8 @@ vcpkg_cmake_configure(
         -DCLIENT_TESTING=OFF
         -DSERVER_TESTING=OFF
         -DWITH_NACL=OFF
-        -DWITH_GSSAPI=OFF)
+        -DWITH_GSSAPI=OFF
+        -DWITH_SYMBOL_VERSIONING=OFF)
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
@@ -49,10 +48,10 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     vcpkg_replace_string(
-	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h" 
+	    "${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h"
 	    "#ifdef LIBSSH_STATIC"
 	    "#if 1"
-	)	
+	)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

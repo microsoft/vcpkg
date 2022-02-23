@@ -1,0 +1,9 @@
+{
+  "name": "readline-osx",
+  "version-date": "2020-01-04",
+  "description": "empty package, linking to readline-unix",
+  "supports": "osx",
+  "dependencies": [
+    "readline-unix"
+  ]
+}

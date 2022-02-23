@@ -33,7 +33,7 @@ index 4e05272..44dd7cb 100644
 +    find_package(libmysql)
 +    if (NOT libmysql_FOUND)
 +        find_package(unofficial-libmariadb CONFIG REQUIRED)
-+        set(MYSQL_LIBRARIES libmariadb)
++        set(MYSQL_LIBRARIES unofficial::libmariadb)
 +    endif()
  endif()
  

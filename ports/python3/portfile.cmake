@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  0)
+set(PYTHON_VERSION_PATCH  1)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -13,6 +13,7 @@ set(PATCHES
     0003-devendor-external-dependencies.patch
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
+    0009-python.pc.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -39,10 +40,31 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 d83e0685c274be09da7833a3c24b7379ae0e43b43c131f11bfaccd5902f6a1c510a3ae67c42471a4281922ead3bd34856608ec47be7dd76ddd734e59906ba03b
+    SHA512 23f99b77c7978282d43a6e442811de1d6e8cc9597c6d1143ec65ae986f64805c36a0a033632a4d1a89053a55854904bcf11415d91e2a3b4a5308c4a21de80098
     HEAD_REF master
     PATCHES ${PATCHES}
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/Makefile.pre.in" "$(INSTALL) -d -m $(DIRMODE)" "$(MKDIR_P)")
+
+function(make_python_pkgconfig)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "FILE;INSTALL_ROOT;EXEC_PREFIX;INCLUDEDIR;ABIFLAGS" "")
+
+    set(prefix "${CURRENT_PACKAGES_DIR}")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix ${arg_EXEC_PREFIX})
+    set(includedir ${arg_INCLUDEDIR})
+    set(VERSION "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+    set(ABIFLAGS ${arg_ABIFLAGS})
+
+    string(REPLACE "python" "python-${VERSION}" out_file ${arg_FILE})
+    set(out_full_path "${arg_INSTALL_ROOT}/lib/pkgconfig/${out_file}")
+    configure_file("${SOURCE_PATH}/Misc/${arg_FILE}.in" ${out_full_path} @ONLY)
+
+    file(READ ${out_full_path} pkgconfig_file)
+    string(REPLACE "-lpython${VERSION}" "-lpython${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}" pkgconfig_file "${pkgconfig_file}")
+    file(WRITE ${out_full_path} "${pkgconfig_file}")
+endfunction()
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
@@ -148,13 +170,31 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    if(PYTHON_ALLOW_EXTENSIONS)
+    # The generated python executable must match the host arch
+    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
         message(STATUS "Bootstrapping pip")
         vcpkg_execute_required_process(COMMAND python -m ensurepip
             WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
             LOGNAME "ensurepip-${TARGET_TRIPLET}"
         )
     endif()
+
+    # pkg-config files
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        make_python_pkgconfig(FILE python.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
+        make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        make_python_pkgconfig(FILE python.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+        make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+    endif()
+
+    vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
 else()
@@ -194,6 +234,8 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
@@ -211,3 +253,25 @@ message(STATUS "Installing cmake wrappers")
 _generate_finder(DIRECTORY "python" PREFIX "Python")
 _generate_finder(DIRECTORY "python3" PREFIX "Python3")
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    function(replace_dirs_in_config_file python_config_file)
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+    endfunction()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        list(POP_FRONT python_config_files python_config_file)
+        vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))\n")
+        replace_dirs_in_config_file("${python_config_file}")
+    endif()
+endif()

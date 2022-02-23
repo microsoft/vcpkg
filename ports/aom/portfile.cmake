@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP")
-
 # NASM is required to build AOM
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
@@ -19,6 +17,7 @@ vcpkg_from_git(
         aom-rename-static.diff
         # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream
         aom-install.diff
+        aom-uninitialized-pointer.diff
 )
 
 vcpkg_cmake_configure(
