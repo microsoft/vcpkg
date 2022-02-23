@@ -36,6 +36,10 @@
       "baseline": "1.5.0",
       "port-version": 0
     },
+    "aja-ntv2": {
+      "baseline": "16.2-bugfix3",
+      "port-version": 0
+    },
     "akali": {
       "baseline": "1.42",
       "port-version": 3

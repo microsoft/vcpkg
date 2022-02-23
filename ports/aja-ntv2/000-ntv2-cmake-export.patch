@@ -1,0 +1,110 @@
+diff --git a/ajalibraries/ajantv2/CMakeLists.txt b/ajalibraries/ajantv2/CMakeLists.txt
+index d9f5c54..dcde3cf 100644
+--- a/ajalibraries/ajantv2/CMakeLists.txt
++++ b/ajalibraries/ajantv2/CMakeLists.txt
+@@ -508,10 +508,15 @@ endif()
+ 
+ # libajantv2
+ set(BUILD_TARGETS ajantv2)
+-add_library(ajantv2 STATIC ${AJANTV2_TARGET_SOURCES})
+-target_include_directories(ajantv2 PUBLIC ${AJANTV2_TARGET_INCLUDE_DIRS})
++add_library(ajantv2 ${AJANTV2_TARGET_SOURCES})
++target_include_directories(ajantv2 PRIVATE ${AJANTV2_TARGET_INCLUDE_DIRS})
+ target_link_libraries(ajantv2 PUBLIC ${TARGET_LINK_LIBS})
+-target_compile_definitions(ajantv2 PUBLIC ${TARGET_COMPILE_DEFS_STATIC})
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(ajantv2 PUBLIC ${TARGET_COMPILE_DEFS_DYNAMIC})
++    set_target_properties(ajantv2 PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_${AJA_NTV2_SDK_VERSION_MAJOR}")
++else()
++    target_compile_definitions(ajantv2 PUBLIC ${TARGET_COMPILE_DEFS_STATIC})
++endif()
+ if (AJA_BUILD_SHARED)
+     list(APPEND BUILD_TARGETS ajantv2-dyn)
+     add_library(ajantv2-dyn SHARED ${AJANTV2_TARGET_SOURCES})
+@@ -526,23 +531,29 @@ add_library(ajabase INTERFACE)
+ # `cmake --install` deployments
+ if (AJA_INSTALL_HEADERS)
+     list(REMOVE_ITEM AJANTV2_HEADERS src/ntv2devicefeatures.hpp)
+-    install(FILES ${AJABASE_COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/common)
+-    install(FILES ${AJABASE_NETWORK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/network)
+-    install(FILES ${AJABASE_PERSISTENCE_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/persistence)
+-    install(FILES ${AJABASE_PNP_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/pnp)
+-    install(FILES ${AJABASE_PNP_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/pnp/windows)
+-    install(FILES ${AJABASE_PNP_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/pnp/mac)
+-    install(FILES ${AJABASE_PNP_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/pnp/linux)
+-    install(FILES ${AJABASE_SYS_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/system)
+-    install(FILES ${AJABASE_SYS_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/system/windows)
+-    install(FILES ${AJABASE_SYS_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/system/mac)
+-    install(FILES ${AJABASE_SYS_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajabase/system/linux)
+-    install(FILES ${AJAANC_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajaanc/includes)
+-    install(FILES ${AJANTV2_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/includes)
+-    install(FILES ${AJANTV2_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/src/win)
+-    install(FILES ${AJANTV2_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/src/mac)
+-    install(FILES ${AJANTV2_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/src/lin)
+-    install(FILES ${AJANTV2_UTILITY_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/utilityfiles/public)
++    install(FILES ${AJABASE_COMMON_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/common)
++    install(FILES ${AJABASE_NETWORK_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/network)
++    install(FILES ${AJABASE_PERSISTENCE_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/persistence)
++    install(FILES ${AJABASE_PNP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/pnp)
++    install(FILES ${AJABASE_PNP_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/pnp/windows)
++    install(FILES ${AJABASE_PNP_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/pnp/mac)
++    install(FILES ${AJABASE_PNP_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/pnp/linux)
++    install(FILES ${AJABASE_SYS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/system)
++    install(FILES ${AJABASE_SYS_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/system/windows)
++    install(FILES ${AJABASE_SYS_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/system/mac)
++    install(FILES ${AJABASE_SYS_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajabase/system/linux)
++    install(FILES ${AJAANC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajaanc)
++    install(FILES ${AJANTV2_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajantv2)
++    if(WIN32)
++        install(FILES ${AJANTV2_WIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajantv2/src/win)
++    endif()
++    if(APPLE)
++        install(FILES ${AJANTV2_MAC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajantv2/src/mac)
++    endif()
++    if(UNIX AND NOT APPLE)
++        install(FILES ${AJANTV2_LIN_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajantv2/src/lin)
++    endif()
++    install(FILES ${AJANTV2_UTILITY_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ajalibraries/ajantv2/utilityfiles/public)
+ endif()
+ if (AJA_BUILDING_CMAKE)
+     install(FILES includes/version.h.in DESTINATION ${CMAKE_INSTALL_PREFIX}/ajalibraries/ajantv2/includes)
+@@ -577,11 +588,38 @@ if (AJA_INSTALL_SOURCES)
+     install(FILES ${AJA_CMAKE_DIR}/../build/targets.mk DESTINATION ${CMAKE_INSTALL_PREFIX}/build)
+ endif()
+ install(TARGETS ${BUILD_TARGETS}
++    EXPORT ajantv2
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++
++target_include_directories(ajantv2
++                           INTERFACE
++                             $<INSTALL_INTERFACE:include/ajalibraries/>
++                          )
++if(WIN32)
++    target_include_directories(ajantv2
++                               INTERFACE
++                               $<INSTALL_INTERFACE:include/ajalibraries/src/win>
++                              )
++elseif(APPLE)
++    target_include_directories(ajantv2
++                               INTERFACE
++                                 $<INSTALL_INTERFACE:include/ajalibraries/src/mac>
++                              )
++else(UNIX)
++    target_include_directories(ajantv2
++                               INTERFACE
++                                 $<INSTALL_INTERFACE:include/ajalibraries/src/lin>
++                              )
++endif()
++install(EXPORT ajantv2
++    FILE unofficial-aja-ntv2Config.cmake
++    NAMESPACE unofficial::aja::
++    DESTINATION share/unofficial-aja-ntv2)
++
+ if (AJA_CODE_SIGN)
+     aja_code_sign(ajantv2-dyn)
+ endif()
+\ No newline at end of file
