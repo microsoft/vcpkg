@@ -294,9 +294,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-gainput:arm-uwp=fail
-gainput:x64-linux=fail
-gainput:x64-uwp=fail
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
