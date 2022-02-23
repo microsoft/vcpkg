@@ -157,11 +157,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
-    "<winsock.h>"
-    "<winsock2.h>"
-)
-
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
     "#  include <windows.h>"
     "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>"
