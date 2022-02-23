@@ -4210,7 +4210,7 @@
     },
     "loguru": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lpeg": {
       "baseline": "1.0.2",
