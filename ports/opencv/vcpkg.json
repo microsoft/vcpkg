@@ -15,7 +15,8 @@
     "png",
     "quirc",
     "tiff",
-    "webp"
+    "webp",
+    "openexr"
   ],
   "features": {
     "ade": {
