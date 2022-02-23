@@ -50,6 +50,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${_PYTHON_PATCHES}
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/Makefile.pre.in" "$(INSTALL) -d -m $(DIRMODE)" "$(MKDIR_P)")
+
 if (VCPKG_TARGET_IS_WINDOWS)
     if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(BUILD_ARCH "Win32")

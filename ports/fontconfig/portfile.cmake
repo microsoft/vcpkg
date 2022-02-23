@@ -13,7 +13,11 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -Ddoc=disabled
+)
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
@@ -38,10 +42,7 @@ endif()
 # Make path to cache in fonts.conf relative
 set(_file "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
 if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE "${CURRENT_INSTALLED_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig" _contents "${_contents}")
-    string(REPLACE "/var" "/../var" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
+    vcpkg_replace_string("${_file}" "${CURRENT_PACKAGES_DIR}/var/cache/fontconfig" "./../../var/cache/fontconfig")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var"
@@ -66,7 +67,7 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 
 # Build the fontconfig cache
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
     vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
@@ -75,7 +76,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows. 
+    # Unnecessary make rule creating the fontconfig cache dir on windows.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 

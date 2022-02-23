@@ -1,32 +1,31 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d30a71b..3ecf5f0 100644
+index e5b44ef..e84e497 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,6 +23,9 @@ find_package(APR REQUIRED)
- # Find Apache Runtime Utilities
- find_package(APR-Util REQUIRED)
+@@ -33,7 +33,7 @@ find_package(APR-Util REQUIRED)
+ find_package( Threads REQUIRED )
  
-+# Find expat for XML parsing
+ # Find expat for XML parsing
+-find_package(EXPAT REQUIRED)
 +find_package(expat CONFIG REQUIRED)
-+
- # Building
- add_subdirectory(src)
  
+ # Request C++17, if available
+ # This *should* fallback to an older standard if it is not available
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3e0cb17..9a450b7 100644
+index b60e54f..b6138b3 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1,7 +1,7 @@
+@@ -3,7 +3,7 @@ cmake_policy(SET CMP0079 NEW)
  add_subdirectory(main)
  target_compile_definitions(log4cxx PRIVATE ${LOG4CXX_COMPILE_DEFINITIONS} ${APR_COMPILE_DEFINITIONS} ${APR_UTIL_COMPILE_DEFINITIONS} )
  target_include_directories(log4cxx INTERFACE $<INSTALL_INTERFACE:include> PRIVATE ${APR_INCLUDE_DIR} ${APR_UTIL_INCLUDE_DIR})
--target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} ${XMLLIB_LIBRARIES} ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
+-target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
 +target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} expat::expat ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
  if(WIN32)
- # The ODBC appender is always enabled in the Windows configuration
- target_link_libraries(log4cxx PRIVATE odbc32.lib)
+ 	# The ODBC appender is always enabled in the Windows configuration
+ 	target_link_libraries(log4cxx PRIVATE odbc32.lib)
 diff --git a/src/cmake/FindAPR-Util.cmake b/src/cmake/FindAPR-Util.cmake
-index bb4e951..75093d8 100644
+index d9cf4df..17a2457 100644
 --- a/src/cmake/FindAPR-Util.cmake
 +++ b/src/cmake/FindAPR-Util.cmake
 @@ -38,7 +38,6 @@ if(EXISTS ${APR_UTIL_CONFIG_EXECUTABLE})
@@ -37,23 +36,14 @@ index bb4e951..75093d8 100644
        set(APR_UTIL_COMPILE_DEFINITIONS APU_DECLARE_STATIC)
      else()
        _apu_invoke(APR_UTIL_LIBRARIES   --link-ld)
-@@ -48,8 +47,6 @@ else()
-     if (APU_STATIC OR NOT BUILD_SHARED_LIBS)
-       set(APR_UTIL_COMPILE_DEFINITIONS APU_DECLARE_STATIC)
-       find_library(APR_UTIL_LIBRARIES NAMES aprutil-1)
--      find_library(XMLLIB_LIBRARIES NAMES libexpat)
--      find_program(XMLLIB_DLL libexpat.dll)
-     else()
-       find_library(APR_UTIL_LIBRARIES NAMES libaprutil-1)
-       find_program(APR_UTIL_DLL libaprutil-1.dll)
 diff --git a/src/test/cpp/xml/CMakeLists.txt b/src/test/cpp/xml/CMakeLists.txt
-index bddfe48..138c489 100644
+index 138c489..7b62f3e 100644
 --- a/src/test/cpp/xml/CMakeLists.txt
 +++ b/src/test/cpp/xml/CMakeLists.txt
 @@ -4,5 +4,5 @@ add_executable(xmltests
      xmllayouttestcase
  )
  
--target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} ${XMLLIB_LIBRARIES})
+-target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT)
 +target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} expat::expat)
  set(ALL_LOG4CXX_TESTS ${ALL_LOG4CXX_TESTS} xmltests PARENT_SCOPE)

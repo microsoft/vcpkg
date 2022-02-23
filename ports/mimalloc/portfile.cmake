@@ -1,10 +1,8 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF 752594e76423526e108413731518a26e3322b9ca  # v1.7.2
-    SHA512 fc96f6aa6972c167a956d8f928d9becd546689356d86e800df0f54c9c46cedf74d686168f44566fb4d0aa9cddf7a9444327acd2180cc91386c53658c6a5018f1
+    REF v2.0.3
+    SHA512 275a5249d09a57c9a039714fc6eef24ae778496954972419f3ac8e33f3d12e9837ba0691a3c08a4ab807c26b868aad3a5b2c28ee10ecaa60fe21ffe1d416f08f
     HEAD_REF master
     PATCHES
         fix-cmake.patch
@@ -22,9 +20,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
-        -DMI_CHECK_FULL=ON
+        -DMI_DEBUG_FULL=ON
     OPTIONS_RELEASE
-        -DMI_CHECK_FULL=OFF
+        -DMI_DEBUG_FULL=OFF
     OPTIONS
         -DMI_INTERPOSE=ON
         -DMI_USE_CXX=OFF
@@ -33,6 +31,8 @@ vcpkg_cmake_configure(
         -DMI_BUILD_STATIC=${MI_BUILD_STATIC}
         -DMI_BUILD_SHARED=${MI_BUILD_SHARED}
         -DMI_INSTALL_TOPLEVEL=ON
+    MAYBE_UNUSED_VARIABLES
+        MI_INTERPOSE
 )
 
 vcpkg_cmake_install()
@@ -43,7 +43,7 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mimalloc)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(

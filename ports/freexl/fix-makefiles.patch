@@ -1,16 +1,7 @@
 diff --git a/makefile.vc b/makefile.vc
-index 0aacbc7..d95d859 100644
+index cb8bd36..85c0352 100644
 --- a/makefile.vc
 +++ b/makefile.vc
-@@ -7,7 +7,7 @@
- LIBOBJ	               =	freexl.obj
- FREEXL_DLL	 	       =	freexl$(VERSION).dll
- 
--CFLAGS	=	/nologo -IC:\OSGeo4W\include -I. -Iheaders $(OPTFLAGS)
-+CFLAGS	=	/nologo -I$(INSTALLED_ROOT)\include -I. -Iheaders $(OPTFLAGS)
- 
- default:	all
- 
 @@ -23,9 +23,9 @@ freexl.lib:	$(LIBOBJ)
  $(FREEXL_DLL):	freexl_i.lib
  
@@ -23,21 +14,3 @@ index 0aacbc7..d95d859 100644
  	if exist $(FREEXL_DLL).manifest mt -manifest \
  		$(FREEXL_DLL).manifest -outputresource:$(FREEXL_DLL);2 
  
-diff --git a/nmake.opt b/nmake.opt
-index 35f9242..efb6f77 100644
---- a/nmake.opt
-+++ b/nmake.opt
-@@ -1,10 +1,10 @@
- # Directory tree where FreeXL will be installed.
--INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INST_DIR)
- 
- # Uncomment the first for an optimized build, or the second for debug.
--OPTFLAGS=	/nologo /Ox /fp:precise /W3 /MD /D_CRT_SECURE_NO_WARNINGS \
-+OPTFLAGS=	/nologo /fp:precise /W3 $(CL_FLAGS) /D_CRT_SECURE_NO_WARNINGS \
- 			/DDLL_EXPORT
--#OPTFLAGS=	/nologo /Zi /MD /Fdfreexl.pdb /DDLL_EXPORT
-+#OPTFLAGS=	/nologo $(CL_FLAGS) /Fdfreexl.pdb /DDLL_EXPORT
- 
- # Set the version number for the DLL.  Normally we leave this blank since
- # we want software that is dynamically loading the DLL to have no problem

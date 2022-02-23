@@ -1,8 +1,9 @@
 {
   "name": "qttools",
-  "version-semver": "6.2.0",
+  "version": "6.2.3",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
@@ -20,10 +21,29 @@
   ],
   "features": {
     "assistant": {
-      "description": "Build Qt Assistant"
+      "description": "Build Qt Assistant",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "sql-sqlite"
+          ]
+        }
+      ]
     },
     "designer": {
-      "description": "Build Qt Designer"
+      "description": "Build Qt Designer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
     },
     "linguist": {
       "description": "Build Qt Linguist components",

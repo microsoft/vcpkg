@@ -1,12 +1,24 @@
 {
   "name": "openblas",
-  "version": "0.3.15",
+  "version": "0.3.19",
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "dependencies": [
     {
+      "name": "openblas",
+      "host": true
+    },
+    {
       "name": "pthread",
       "platform": "!windows & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {

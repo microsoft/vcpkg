@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ecfbb83..7fb7a15 100644
+index ecfbb83..420c578 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,13 +34,23 @@ endif()
@@ -61,24 +61,6 @@ index ecfbb83..7fb7a15 100644
 +target_link_libraries(woff2enc woff2common ${WOFF2_BORTLIENC_LIBRARIES})
  add_executable(woff2_compress src/woff2_compress.cc)
  target_link_libraries(woff2_compress woff2enc)
- 
-@@ -246,7 +255,7 @@ generate_pkg_config ("${CMAKE_CURRENT_BINARY_DIR}/libwoff2dec.pc"
-   DESCRIPTION "WOFF2 decoder library"
-   URL "https://github.com/google/woff2"
-   VERSION "${WOFF2_VERSION}"
--  DEPENDS libbrotlidec
-+  DEPENDS ${WOFF2_BROTLIDEC}
-   DEPENDS_PRIVATE libwoff2common
-   LIBRARIES woff2dec)
- 
-@@ -255,7 +264,7 @@ generate_pkg_config ("${CMAKE_CURRENT_BINARY_DIR}/libwoff2enc.pc"
-   DESCRIPTION "WOFF2 encoder library"
-   URL "https://github.com/google/woff2"
-   VERSION "${WOFF2_VERSION}"
--  DEPENDS libbrotlienc
-+  DEPENDS ${WOFF2_BROTLIENC}
-   DEPENDS_PRIVATE libwoff2common
-   LIBRARIES woff2enc)
  
 @@ -264,6 +273,7 @@ if (NOT BUILD_SHARED_LIBS)
    install(

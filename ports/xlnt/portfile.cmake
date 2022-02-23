@@ -38,3 +38,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

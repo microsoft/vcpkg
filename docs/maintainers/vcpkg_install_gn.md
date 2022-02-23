@@ -1,5 +1,7 @@
 # vcpkg_install_gn
 
+**This function has been deprecated in favor of [`vcpkg_gn_install`](ports/vcpkg-gn/vcpkg_gn_install.md) from the vcpkg-gn port.**
+
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_gn.md).
 
 Installs a GN project.

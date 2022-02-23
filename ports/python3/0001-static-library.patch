@@ -58,6 +58,20 @@ index 2625d0293d..2f8bdaa931 100644
        <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
      <Link>
+diff --git a/Python/sysmodule.c b/Python/sysmodule.c
+index ac49f7867a..f3583345ff 100644
+--- a/Python/sysmodule.c
++++ b/Python/sysmodule.c
+@@ -2804,6 +2804,9 @@ _PySys_InitCore(PyThreadState *tstate, PyObject *sysdict)
+ #ifdef MS_COREDLL
+     SET_SYS("dllhandle", PyLong_FromVoidPtr(PyWin_DLLhModule));
+     SET_SYS_FROM_STRING("winver", PyWin_DLLVersionString);
++#elif defined(MS_WINDOWS)
++    SET_SYS("dllhandle", PyLong_FromVoidPtr(NULL));
++    SET_SYS_FROM_STRING("winver", MS_DLL_ID);
+ #endif
+ #ifdef ABIFLAGS
+     SET_SYS_FROM_STRING("abiflags", ABIFLAGS);
 -- 
 2.28.0.windows.1
 

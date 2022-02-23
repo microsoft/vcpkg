@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 0.1
     SHA512 40e2a901241a5d751cec741e5de423c8f19b105572c7cae18adb6e69be0b408efc6c9a2ecaeb62f117745eac0d093f30d6b91d88c1a27e1f7be91f0e84fdf199
     HEAD_REF master
+    PATCHES getopt.h.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
