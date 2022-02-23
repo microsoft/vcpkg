@@ -25,7 +25,7 @@
       "description": "Build with Bonjour support (--with-bonjour)"
     },
     "client": {
-      "description": "Build all client tools and libraries."
+      "description": "Build all client tools and libraries (dynamic only?)"
     },
     "icu": {
       "description": "Build with support for the ICU library (--with-icu)",
@@ -115,8 +115,15 @@
       ]
     },
     "xslt": {
-      "description": "Build with libxslt (requires xml) (--with-libxslt)",
+      "description": "Build with libxslt (--with-libxslt)",
       "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "xml"
+          ]
+        },
         "libxslt"
       ]
     },
