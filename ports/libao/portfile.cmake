@@ -1,3 +1,4 @@
+set(NO_DLFCN )
 if(VCPKG_TARGET_IS_WINDOWS)
   list(APPEND PATCHES "0001-windows-build-patch.patch")
   set(NO_DLFCN "ac_cv_header_dlfcn_h=no")
