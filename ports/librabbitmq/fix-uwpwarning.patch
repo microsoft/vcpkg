@@ -1,12 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b353be6..1fa4c19 100644
+index b353be6..20d3e68 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -150,6 +150,8 @@ else()
+@@ -150,6 +150,10 @@ else()
    endif()
  endif()
  
-+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "/WX-")
++if(MSVC)
++  set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "/WX-")
++endif()
 +
  option(REGENERATE_AMQP_FRAMING "Regenerate amqp_framing.h/amqp_framing.c sources (for developer use)" OFF)
  mark_as_advanced(REGENERATE_AMQP_FRAMING)
