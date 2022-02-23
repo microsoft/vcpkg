@@ -23,7 +23,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(
-    INSTALL "${CMAKE_CURRENT_LIST_DIR}/License.txt"
+    INSTALL "${SOURCE_PATH}/DOC/License.txt"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )

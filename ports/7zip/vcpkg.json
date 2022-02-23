@@ -3,7 +3,7 @@
   "version-string": "21.07",
   "description": "Library for archiving file with a high compression ratio.",
   "homepage": "https://www.7-zip.org",
-  "license": "BSD-3-Clause",
+  "license": "GUN LPGL",
   "supports": "!uwp",
   "dependencies": [
     {

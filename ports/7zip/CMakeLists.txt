@@ -1,11 +1,12 @@
 
 cmake_minimum_required(VERSION 3.19)
+
 project(7zip LANGUAGES C CXX)
 
-project(7zip LANGUAGES C CXX ASM_MASM)
-
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     enable_language(ASM_MASM)
+elseif(VCPKG_TARGET_IS_LINUX)
+    enable_language(ASM)
 endif()
 
 add_library(7zip)
@@ -290,7 +291,7 @@ target_sources(7zip PRIVATE
     C/Util/LzmaLib/LzmaLib.def
 )
 # 7zCrcOpt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/7zCrcOpt.asm)
         set_source_files_properties(Asm/x86/7zCrcOpt.asm PROPERTIES LANGUAGE ASM_MASM)
@@ -305,7 +306,7 @@ else()
 endif()
 
 # AesOpt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/AesOpt.asm)
         set_source_files_properties(Asm/x86/AesOpt.asm PROPERTIES LANGUAGE ASM_MASM)
@@ -317,7 +318,7 @@ else()
 endif()
 
 # LzFindOpt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/LzFindOpt.asm)
         set_source_files_properties(Asm/x86/LzFindOpt.asm PROPERTIES LANGUAGE ASM_MASM)
@@ -330,13 +331,16 @@ endif()
 
 # LzmaDecOpt
 target_sources(7zip PRIVATE C/LzmaDec.c)
-if(WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+if((VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") OR
+    (VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    )
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/LzmaDecOpt.asm)
         set_source_files_properties(Asm/x86/LzmaDecOpt.asm PROPERTIES LANGUAGE ASM_MASM)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         target_sources(7zip PRIVATE Asm/arm64/LzmaDecOpt.S)
-    endif()
+        set_source_files_properties(Asm/x86/LzmaDecOpt.asm PROPERTIES LANGUAGE ASM)
+    endif()	
 
     get_source_file_property(defs C/LzmaDec.c COMPILE_DEFINITIONS)
     list(APPEND defs "_LZMA_DEC_OPT")
@@ -344,7 +348,7 @@ if(WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTU
 endif()
 
 # Sha1Opt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/Sha1Opt.asm)
         set_source_files_properties(Asm/x86/Sha1Opt.asm PROPERTIES LANGUAGE ASM_MASM)
@@ -356,7 +360,7 @@ else()
 endif()
 
 # Sha256Opt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/Sha256Opt.asm)
         set_source_files_properties(Asm/x86/Sha256Opt.asm PROPERTIES LANGUAGE ASM_MASM)
@@ -368,7 +372,7 @@ else()
 endif()
 
 # XzCrc64Opt
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         target_sources(7zip PRIVATE Asm/x86/XzCrc64Opt.asm)
         set_source_files_properties(Asm/x86/XzCrc64Opt.asm PROPERTIES LANGUAGE ASM_MASM)
