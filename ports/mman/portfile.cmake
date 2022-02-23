@@ -8,12 +8,11 @@ vcpkg_from_github(
         mman-static.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/mman)
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/sys ${CURRENT_PACKAGES_DIR}/include/mman/sys)
@@ -23,9 +22,7 @@ file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h _contents)
-    string(REPLACE "__declspec(dllimport)" "" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h "${_contents}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h" "__declspec(dllimport)" "")
 endif()
 
 vcpkg_copy_pdbs()

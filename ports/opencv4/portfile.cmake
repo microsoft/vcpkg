@@ -26,6 +26,7 @@ vcpkg_from_github(
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
+      0012-fix-zlib.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -373,6 +374,16 @@ if("ffmpeg" IN_LIST FEATURES)
   endif()
 endif()
 
+if("halide" IN_LIST FEATURES)
+  list(APPEND ADDITIONAL_BUILD_FLAGS
+    # Halide 13 requires C++17
+    "-DCMAKE_CXX_STANDARD=17"
+    "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
+    "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
+    "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
+  )
+endif()
+
 if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
@@ -448,8 +459,6 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
-        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
@@ -461,6 +470,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
+        -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}

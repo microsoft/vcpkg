@@ -1,7 +1,5 @@
 # highfive should be updated together with hdf5
 
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
@@ -86,6 +84,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lhdf5" " -llibhdf5")
+    endforeach()
+endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
 string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
@@ -98,25 +102,25 @@ if(FEATURES MATCHES "tools")
     set(HDF5_TOOLS h5cc h5hlcc h5c++ h5hlc++ h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
         h5format_convert h5jam h5unjam h5ls h5mkgrp h5repack h5repart h5watch ph5diff h5import
     )
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(TRANSFORM HDF5_TOOLS REPLACE  "^(.+)$" "\\1-shared")
     else()
     endif()
-    
+
     foreach(HDF5_TOOL IN LISTS HDF5_TOOLS)
         if (NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
             OR NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${HDF5_TOOL}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
             list(REMOVE_ITEM HDF5_TOOLS "${HDF5_TOOL}")
         endif()
     endforeach()
-    
+
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
 endif()
 
 if ("utils" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES mirror_server mirror_server_stop 
+        TOOL_NAMES mirror_server mirror_server_stop
         AUTO_CLEAN
     )
 endif()

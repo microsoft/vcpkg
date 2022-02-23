@@ -1,7 +1,3 @@
-# the compilation fails on arm and uwp. Please check the related issue:
-# https://github.com/microsoft/vcpkg/pull/12560#issuecomment-668412073
-vcpkg_fail_port_install(ON_TARGET "uwp" and "arm")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
