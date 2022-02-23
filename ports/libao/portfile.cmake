@@ -1,6 +1,10 @@
+set(with_dlfcn "yes")
 if(VCPKG_TARGET_IS_WINDOWS)
   list(APPEND PATCHES "0001-windows-build-patch.patch")
+  set(with_dlfcn "no")
 endif()
+
+list(APPEND PATCHES "Fix-C2065.patch")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -19,6 +23,7 @@ vcpkg_configure_make(
   SOURCE_PATH ${SOURCE_PATH}
   AUTOCONFIG
   OPTIONS  --disable-binaries 
+           --enable-dlfcn=${with_dlfcn}
 )
 vcpkg_install_make()
 
