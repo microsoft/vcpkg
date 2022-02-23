@@ -1,13 +1,34 @@
 {
   "name": "nanogui",
-  "version-date": "2019-09-23",
-  "port-version": 3,
-  "description": "NanoGUI is a minimalistic cross-platform widget library for OpenGL 3.x or higher.",
-  "homepage": "https://github.com/wjakob/nanogui",
+  "version-string": "2022-02-15",
+  "description": "NanoGUI is a minimalistic cross-platform C++/Python widget library for OpenGL, GLES2/3, Metal, and WebAssembly/WebGL",
+  "homepage": "https://github.com/mitsuba-renderer/nanogui",
   "supports": "!uwp",
   "dependencies": [
-    "eigen3",
-    "glfw3",
-    "nanovg"
-  ]
+    "nanovg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "glad": {
+      "description": "Enable glad",
+      "dependencies": [
+        "glad"
+      ]
+    },
+    "glfw": {
+      "description": "Enable glfw",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "python": {
+      "description": "Build Python bindings",
+      "dependencies": [
+        "pybind11"
+      ]
+    }
+  }
 }
