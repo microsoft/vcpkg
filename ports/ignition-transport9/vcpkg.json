@@ -1,7 +1,7 @@
 {
   "name": "ignition-transport9",
-  "version-string": "9.0.0",
-  "port-version": 2,
+  "version": "9.0.0",
+  "port-version": 3,
   "description": "Transport middleware for robotics",
   "dependencies": [
     "cppzmq",

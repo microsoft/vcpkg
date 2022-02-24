@@ -31,7 +31,7 @@ endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
-# Always use FEATURE_<feature> in vcpkg_configure_cmake
+# Always use FEATURE_<feature> in vcpkg_cmake_configure
 # (using QT_FEATURE_X overrides Qts condition check for the feature.)
 # Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
 
@@ -131,11 +131,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "png"                 FEATURE_png
     #"opengl"              INPUT_opengl=something
     "xlib"                FEATURE_xlib
-    "xkb"                 FEATURE_xkb
+    "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
     "xcb-xlib"            FEATURE_xcb_xlib
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
-    "xrender"             FEATURE_xrender
+    "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
+    "xrender"             FEATURE_xcb_native_painting # experimental
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
@@ -245,6 +246,8 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED
+                        FEATURE_appstore_compliant # only used for android/ios
                     )
 
 # Install CMake helper scripts

@@ -1,9 +1,10 @@
 {
   "name": "gdal",
   "version-semver": "3.4.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     "curl",
@@ -70,6 +71,18 @@
       "description": "Enable NetCDF support",
       "dependencies": [
         "netcdf-c"
+      ]
+    },
+    "poppler": {
+      "description": "Enable poppler support",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "private-api"
+          ]
+        }
       ]
     },
     "postgresql": {

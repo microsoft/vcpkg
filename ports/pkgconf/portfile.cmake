@@ -15,45 +15,33 @@ vcpkg_configure_meson(
 set(systemsuffix "")
 set(architectureprefix "")
 
-if(VCPKG_TARGET_IS_LINUX)
-    set(systemsuffix "linux-gnu")
+set(SYSTEM_LIBDIR "")
+set(PKG_DEFAULT_PATH "")
+set(SYSTEM_INCLUDEDIR "")
+set(PERSONALITY_PATH "personality.d")
+
+
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+    # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
+    # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.
+    set(SYSTEM_INCLUDEDIR "/usr/include")
+    # System lib dirs will be stripped from -L from the pkg-config output
+    set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib64:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib64:/usr/lib32:/usr/libx32")
+    set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+    set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(architectureprefix "x86_64")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(architectureprefix "x86")
+if(DEFINED VCPKG_pkgconf_SYSTEM_LIBDIR)
+    set(SYSTEM_LIBDIR "${VCPKG_pkgconf_SYSTEM_LIBDIR}")
 endif()
-
-if(NOT systemsuffix STREQUAL "" AND NOT architectureprefix STREQUAL "")
-    set(archdir "${architectureprefix}-${systemsuffix}")
+if(DEFINED VCPKG_pkgconf_PKG_DEFAULT_PATH)
+    set(PKG_DEFAULT_PATH "${VCPKG_pkgconf_PKG_DEFAULT_PATH}")
 endif()
-
-# These defaults are taken from the pkg-config configure.ac script
-
-set(SYSTEM_LIBDIR "/usr/lib:/lib")
-if(DEFINED VCPKG_SYSTEM_LIBDIR)
-    set(SYSTEM_LIBDIR "${VCPKG_SYSTEM_LIBDIR}")
+if(DEFINED VCPKG_pkgconf_SYSTEM_INCLUDEDIR)
+    set(SYSTEM_INCLUDEDIR "${VCPKG_pkgconf_SYSTEM_INCLUDEDIR}")
 endif()
-
-set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/share/pkgconfig")
-set(SYSTEM_INCLUDEDIR "/usr/include")
-set(PERSONALITY_PATH "/usr/lib/pkgconfig/personality.d:/usr/share/pkgconfig/personality.d")
-
-if(NOT archdir STREQUAL "")
-    string(PREPEND PKG_DEFAULT_PATH "/usr/lib/${archdir}/pkgconfig:")
-    string(PREPEND SYSTEM_INCLUDEDIR "/usr/include/${archdir}:")
-    string(PREPEND PERSONALITY_PATH "/usr/lib/${archdir}/pkgconfig/personality.d:")
-endif()
-
-if(DEFINED VCPKG_PKG_DEFAULT_PATH)
-    set(PKG_DEFAULT_PATH "${VCPKG_PKG_DEFAULT_PATH}")
-endif()
-if(DEFINED VCPKG_SYSTEM_INCLUDEDIR)
-    set(SYSTEM_INCLUDEDIR "${VCPKG_SYSTEM_INCLUDEDIR}")
-endif()
-if(DEFINED VCPKG_PERSONALITY_PATH)
-    set(PERSONALITY_PATH "${VCPKG_PERSONALITY_PATH}")
+if(DEFINED VCPKG_pkgconf_PERSONALITY_PATH)
+    set(PERSONALITY_PATH "${VCPKG_pkgconf_PERSONALITY_PATH}")
 endif()
 
 
