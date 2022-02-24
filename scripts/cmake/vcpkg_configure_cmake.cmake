@@ -98,6 +98,88 @@ function(z_vcpkg_configure_cmake_build_cmakecache out_var whereat build_type)
     set("${out_var}" "${${out_var}}${line}\"\n\n" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_get_visual_studio_generator generator_var arch_var)
+    set(arch "")
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(generator "Visual Studio 12 2013")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(generator "Visual Studio 12 2013 Win64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(generator "Visual Studio 12 2013 ARM")
+        endif()
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(generator "Visual Studio 14 2015")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(generator "Visual Studio 14 2015 Win64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(generator "Visual Studio 14 2015 ARM")
+        endif()
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(generator "Visual Studio 15 2017")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(generator "Visual Studio 15 2017 Win64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(generator "Visual Studio 15 2017 ARM")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(generator "Visual Studio 15 2017")
+            set(arch "ARM64")
+        endif()
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
+        set(generator "Visual Studio 16 2019")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(arch "Win32")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(arch "x64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(arch "ARM")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(arch "ARM64")
+        else()
+            set(generator "")
+        endif()
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
+        set(generator "Visual Studio 17 2022")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(arch "Win32")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(arch "x64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(arch "ARM")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(arch "ARM64")
+        else()
+            set(generator "")
+        endif()
+    endif()
+    set(${generator_var} "${generator}" PARENT_SCOPE)
+    set(${arch_var} "${arch}" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_select_default_vcpkg_chainload_toolchain)
+    # Try avoiding adding more defaults here. 
+    # Set VCPKG_CHAINLOAD_TOOLCHAIN_FILE explicitly in the triplet.
+    if(VCPKG_TARGET_IS_MINGW)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
+    elseif(VCPKG_TARGET_IS_WINDOWS)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
+    elseif(VCPKG_TARGET_IS_LINUX)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
+    elseif(VCPKG_TARGET_IS_OSX)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
+    elseif(VCPKG_TARGET_IS_IOS)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
+    elseif(VCPKG_TARGET_IS_FREEBSD)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+    elseif(VCPKG_TARGET_IS_OPENBSD)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
+    endif()
+    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${VCPKG_CHAINLOAD_TOOLCHAIN_FILE} PARENT_SCOPE)
+endfunction()
 
 function(vcpkg_configure_cmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
@@ -142,6 +224,10 @@ function(vcpkg_configure_cmake)
     set(ninja_can_be_used ON) # Ninja as generator
     set(ninja_host ON) # Ninja as parallel configurator
 
+    if(NOT arg_PREFER_NINJA)
+        set(ninja_can_be_used OFF)
+    endif()
+
     if(VCPKG_HOST_IS_WINDOWS)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
@@ -159,38 +245,15 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
-    set(generator "")
+    set(generator "Ninja") # the default generator is always ninja!
     set(generator_arch "")
-    if(DEFINED arg_GENERATOR)
+    if(DEFINED VCPKG_CMAKE_GENERATOR AND NOT VCPKG_CMAKE_GENERATOR STREQUAL "")
+        set(generator "${VCPKG_CMAKE_GENERATOR}") # Triplet override. 
+    elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
-    elseif(arg_PREFER_NINJA AND ninja_can_be_used)
-        set(generator "Ninja")
-    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-        set(generator "Ninja")
-
-    else()
-        if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-            set(generator "Visual Studio 12 2013")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-            set(generator "Visual Studio 14 2015")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-            set(generator "Visual Studio 15 2017")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-            set(generator "Visual Studio 16 2019")
-        elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
-            set(generator "Visual Studio 17 2022")
-        endif()
-
-        if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
-            set(generator_arch "Win32")
-        elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
-            set(generator_arch "x64")
-        elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm")
-            set(generator_arch "ARM")
-        elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-            set(generator_arch "ARM64")
-        endif()
-
+    elseif(NOT ninja_can_be_used)
+        set(generator "")
+        z_vcpkg_get_visual_studio_generator(generator generator_arch)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
@@ -202,8 +265,8 @@ function(vcpkg_configure_cmake)
     # If we use Ninja, make sure it's on PATH
     if("${generator}" STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+        vcpkg_add_to_path("${ninja_path}")
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -244,23 +307,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
-        endif()
+        z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
     vcpkg_list(APPEND arg_OPTIONS
@@ -306,23 +353,39 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+    endif()
+
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Release
+        "-DCMAKE_BUILD_TYPE=Release"
+        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
-        -DCMAKE_BUILD_TYPE=Debug
+        "-DCMAKE_BUILD_TYPE=Debug"
+        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug")
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
-        get_filename_component(NINJA_PATH "${NINJA}" DIRECTORY)
-        vcpkg_add_to_path("${NINJA_PATH}")
+        if(NOT DEFINED ninja_path)
+            # if ninja_path was defined above, we've already done this
+            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
+            vcpkg_add_to_path("${ninja_path}")
+        endif()
 
         #parallelize the configure step
         set(ninja_configure_contents
