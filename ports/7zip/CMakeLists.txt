@@ -424,7 +424,7 @@ set(PUBLIC_HEADERS
 
 install(
     TARGETS 7zip
-    EXPORT 7zip
+    EXPORT 7zip-targets
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
@@ -441,9 +441,7 @@ foreach(HEADER ${PUBLIC_HEADERS})
 endforeach()
 
 install(
-    EXPORT 7zip
+    EXPORT 7zip-targets
     DESTINATION share/7zip
-    FILE 7zipConfig.cmake
     NAMESPACE 7zip::
-    CONFIGURATIONS Release
 )

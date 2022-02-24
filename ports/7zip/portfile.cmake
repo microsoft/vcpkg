@@ -22,6 +22,7 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(
     INSTALL "${SOURCE_PATH}/DOC/License.txt"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
