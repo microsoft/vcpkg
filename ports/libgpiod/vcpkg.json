@@ -1,0 +1,14 @@
+{
+  "name": "libgpiod",
+  "version": "1.6.3",
+  "description": "C library and tools for interacting with the linux GPIO character device",
+  "homepage": "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux & (x64 | arm64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

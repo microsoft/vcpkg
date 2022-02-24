@@ -1,9 +1,19 @@
 {
   "name": "capstone",
   "version": "4.0.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/aquynh/capstone",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "arm": {
       "description": "Capstone disassembly support for ARM"
