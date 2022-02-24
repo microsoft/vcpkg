@@ -103,18 +103,22 @@ endmacro()
 
 function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG;Z_CMAKE_GET_VARS_USAGE"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
 
     if(NOT arg_Z_CMAKE_GET_VARS_USAGE AND DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
-        message(WARNING "vcpkg_cmake_configure already called; this function should only be called once.")
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} already called; this function should only be called once.")
+    endif()
+    if(arg_PREFER_NINJA)
+        message(WARNING "PREFER_NINJA has been deprecated in ${CMAKE_CURRENT_FUNCTION}. Please remove it from the portfile!")
     endif()
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "vcpkg_cmake_configure was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
+
     if(NOT DEFINED arg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be set")
     endif()
