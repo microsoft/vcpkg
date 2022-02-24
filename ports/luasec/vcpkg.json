@@ -5,6 +5,7 @@
   "maintainers": "Stephen Baker <baker.stephen.e@gmail.com>",
   "description": "LuaSec depends on OpenSSL, and integrates with LuaSocket to make it easy to add secure connections to any Lua applications or scripts.",
   "homepage": "https://github.com/brunoos/luasec",
+  "platform": "!(windows & dynamic)",
   "dependencies": [
     "lua",
     "luasocket",
