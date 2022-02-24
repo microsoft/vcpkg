@@ -137,7 +137,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(EXTRA_ARGS "-DDISABLE_WERROR=On")
+    set(EXTRA_ARGS "-DDISABLE_WERROR=ON")
 endif()
 
 vcpkg_cmake_configure(
