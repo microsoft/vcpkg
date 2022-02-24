@@ -14,6 +14,9 @@
     {
       "name": "yasm",
       "host": true,
+      "features": [
+        "tools"
+      ],
       "platform": "windows"
     }
   ]
