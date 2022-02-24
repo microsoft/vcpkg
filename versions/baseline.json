@@ -7205,7 +7205,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-01-19",
+      "baseline": "2022-02-21",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7230,7 +7230,11 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
-      "port-version": 2
+      "port-version": 3
+    },
+    "vcpkg-tool-ninja": {
+      "baseline": "2022-02-21",
+      "port-version": 0
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
@@ -7554,7 +7558,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 13
+      "port-version": 14
     },
     "zlib-ng": {
       "baseline": "2.0.5",
