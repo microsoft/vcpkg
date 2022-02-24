@@ -1,7 +1,7 @@
 {
   "name": "azure-c-shared-utility",
   "version-date": "2022-01-21",
-  "port-version": 2,
+  "port-version": 1,
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "supports": "!uwp",
@@ -12,7 +12,7 @@
       "platform": "linux"
     },
     {
-      "name": "openssl-1",
+      "name": "openssl",
       "platform": "linux"
     },
     "umock-c",
