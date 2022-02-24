@@ -17,7 +17,6 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
-        xkb-common.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
@@ -227,7 +226,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        --trace-expand
+                        #--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}

@@ -9,7 +9,7 @@
     "ignition-msgs6",
     {
       "name": "libuuid",
-      "platform": "!windows"
+      "platform": "!windows & !uwp & !osx"
     },
     "protobuf",
     "sqlite3",

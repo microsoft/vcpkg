@@ -50,7 +50,7 @@ endfunction()
 
 
 function(qt_cmake_configure)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_PARALLEL_CONFIGURE"
+    cmake_parse_arguments(PARSE_ARGV 0 "_qarg" "DISABLE_NINJA;DISABLE_PARALLEL_CONFIGURE"
                       ""
                       "TOOL_NAMES;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_MAYBE_UNUSED")
     
@@ -68,6 +68,11 @@ function(qt_cmake_configure)
     endif()
     set(PERL_OPTION "-DHOST_PERL:PATH=${PERL}")
 
+    set(ninja_option "")
+    if(_qarg_DISABLE_NINJA)
+        set(ninja_option WINDOWS_USE_MSBUILD)
+    endif()
+    
     set(disable_parallel "")
     if(_qarg_DISABLE_PARALLEL_CONFIGURE)
         set(disable_parallel DISABLE_PARALLEL_CONFIGURE)
@@ -91,6 +96,7 @@ function(qt_cmake_configure)
 
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        ${ninja_option}
         ${disable_parallel}
         OPTIONS 
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings. 
@@ -258,7 +264,7 @@ function(qt_fixup_and_cleanup)
 endfunction()
 
 function(qt_install_submodule)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qis" ""
+    cmake_parse_arguments(PARSE_ARGV 0 "_qis" "DISABLE_NINJA"
                           ""
                           "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE;CONFIGURE_OPTIONS_MAYBE_UNUSED")
 
@@ -270,7 +276,10 @@ function(qt_install_submodule)
         return()
     endif()
 
-    qt_cmake_configure(
+    if(_qis_DISABLE_NINJA)
+        set(_opt DISABLE_NINJA)
+    endif()
+    qt_cmake_configure(${_opt} 
                        OPTIONS ${_qis_CONFIGURE_OPTIONS}
                        OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                        OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE}
