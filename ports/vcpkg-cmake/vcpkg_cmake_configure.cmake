@@ -332,12 +332,12 @@ function(vcpkg_cmake_configure)
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
-            LOGNAME "${arg_LOGNAME}"
+            LOGNAME "${arg_LOGFILE_BASE}"
         )
         
         vcpkg_list(APPEND config_logs
-            "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log"
-            "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
             message(STATUS "${configuring_message}-dbg")
@@ -345,11 +345,11 @@ function(vcpkg_cmake_configure)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-                LOGNAME "${arg_LOGNAME}-dbg"
+                LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
             vcpkg_list(APPEND config_logs
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log"
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-err.log")
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
@@ -358,11 +358,11 @@ function(vcpkg_cmake_configure)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-                LOGNAME "${arg_LOGNAME}-rel"
+                LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
             vcpkg_list(APPEND config_logs
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log"
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-err.log")
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
         endif()
     endif()
     
