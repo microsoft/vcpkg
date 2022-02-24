@@ -32,7 +32,7 @@ Param (
     [Parameter(Mandatory=$True, Position=0)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$StartDate,
-    
+
     # The end date range (exclusive)
     [Parameter(Mandatory, Position=1)]
     [ValidateScript({$_ -le (Get-Date)})]
@@ -40,13 +40,12 @@ Param (
 
     [Parameter(Mandatory=$True)]
     [String]$OutFile,
-    
+
     # GitHub credentials (username and PAT)
     [Parameter()]
     [Credential()]
     [PSCredential]$Credentials
 )
-
 
 Set-StrictMode -Version 2
 
@@ -82,6 +81,15 @@ function Get-MergedPullRequests {
     [CmdletBinding()]
     [OutputType([Object[]])]
    Param(
+        [Parameter(Mandatory=$True, Position=0)]
+        [ValidateScript({$_ -le (Get-Date)})]
+        [DateTime]$StartDate,
+
+        # The end date range (exclusive)
+        [Parameter(Mandatory, Position=1)]
+        [ValidateScript({$_ -le (Get-Date)})]
+        [DateTime]$EndDate,
+
         [Parameter(Mandatory=$True)]
         [Credential()]
         [PSCredential]$Credentials
@@ -98,7 +106,7 @@ function Get-MergedPullRequests {
                 page = 1
             }
         }
-        $Epoch = Get-Date
+        $Epoch = Get-Date -AsUTC
         $DeltaEpochStart = ($Epoch - $StartDate).Ticks
 
         $ProgressSplat = @{
@@ -119,7 +127,9 @@ function Get-MergedPullRequests {
 
             foreach ($_ in $response) {
                 foreach ($x in 'created_at', 'merged_at', 'updated_at', 'closed_at') {
-                    if ($_.$x) { $_.$x = [DateTime]::Parse($_.$x) }
+                    if ($_.$x) { $_.$x = [DateTime]::Parse($_.$x,
+                        [System.Globalization.CultureInfo]::InvariantCulture,
+                        [System.Globalization.DateTimeStyles]::AdjustToUniversal -bor [System.Globalization.DateTimeStyles]::AssumeUniversal) }
                 }
 
                 if (-not $_.merged_at) { continue }
@@ -255,9 +265,11 @@ function Select-InfrastructurePullRequests {
         [PRFileMap]$PRFileMap
     )
     Process {
-        switch -Wildcard ($PRFileMap.Files | Get-Member 'filename') {
+        switch -Wildcard ($PRFileMap.Files | Foreach-Object {$_.filename}) {
             "docs/*" { continue }
             "ports/*" { continue }
+            "versions/*" { continue }
+            "scripts/ci.baseline.txt" { continue }
             Default { return $PRFileMap.Pull }
         }
     }
@@ -288,7 +300,7 @@ function Select-Version {
                 '(?<operation>^[\+|\-]|)(?<field>Version|[\+|\-]Port-Version):\s(?<version>\S+)'
             }
             'vcpkg.json' {
-                '(?<operation>^[\+|\-]|)\s*\"(?<field>version-string|port-version)\":\s\"(?<version>.+)\"'
+                '(?<operation>^[\+|\-]|)\s*(\"(?<field>version|version-date|version-string|version-semver)\":\s\"(?<version>.+)\"|\"(?<field>port-version)\":\s(?<version>.+))'
             }
             Default { return }
         }
@@ -359,23 +371,23 @@ function Select-UpdatedPorts {
             $versionFiles = $_.Value.VersionFiles
             if (-not ($versionChange = $versionFiles | Select-Version)) { return }
 
-            function Find-File($x) { $versionFiles | Where-Object { $_.filename -like "*$x" } }
+            function Find-File($x) { [bool]($versionFiles | Where-Object { $_.filename -like "*$x" }) }
             function Find-NewFile($x)
-                { $versionFiles | Where-Object { $_.filename -like "*$x" -and $_.status -eq 'added' } }
+                { [bool]($versionFiles | Where-Object { $_.filename -like "*$x" -and $_.status -eq 'added' }) }
 
             [PortUpdate]@{
                 Port = $_.Key
                 Pulls = $_.Value.Pulls
                 Version = $versionChange
-                New = Find-NewFile 'CONTROL' -or (-not (Find-File 'CONTROL') -and (Find-NewFile 'vcpkg.json'))
+                New = (Find-NewFile 'CONTROL') -or (-not (Find-File 'CONTROL') -and (Find-NewFile 'vcpkg.json'))
             }
         }
     }
 }
 
-$PRFileMaps = (Get-MergedPullRequests $Credentials) | Sort-Object -Property 'number' | Get-PullRequestFileMap -Credentials $Credentials
-
-Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
+$MergedPRs = Get-MergedPullRequests -StartDate $StartDate -EndDate $EndDate -Credentials $Credentials
+$MergedPRsSorted = $MergedPRs | Sort-Object -Property 'number'
+$PRFileMaps = $MergedPRsSorted | Get-PullRequestFileMap -Credentials $Credentials
 
 $sortSplat = @{ Property =
     @{ Expression = 'New'; Descending = $True }, @{ Expression = 'Path'; Descending = $False } }
@@ -388,24 +400,28 @@ $ChangedPorts = $UpdatedPorts | Where-Object { -not $_.New }
 Write-Progress -Activity 'Selecting updates from pull request files' -Completed
 
 Write-Progress -Activity 'Writing changelog file' -PercentComplete -1
-@"
+
+$output = @"
 vcpkg ($($StartDate.ToString('yyyy.MM.dd')) - $((($EndDate).AddSeconds(-1)).ToString('yyyy.MM.dd')))
 ---
 #### Total port count:
 #### Total port count per triplet (tested):
 |triplet|ports available|
 |---|---|
-|**x64-windows**|NUM|
 |x86-windows|NUM|
+|**x64-windows**|NUM|
 |x64-windows-static|NUM|
+|x64-windows-static-md|NUM|
+|x64-uwp|NUM|
+|arm64-windows|NUM|
+|arm-uwp|NUM|
 |**x64-osx**|NUM|
 |**x64-linux**|NUM|
-|arm64-windows|NUM|
-|x64-uwp|NUM|
-|arm-uwp|NUM|
 
-#### The following commands and options have been updated:
+"@
 
+if ($UpdatedDocumentation) {
+    $output += @"
 #### The following documentation has been updated:
 
 $(-join ($UpdatedDocumentation | ForEach-Object {
@@ -416,16 +432,11 @@ $(-join ($UpdatedDocumentation | ForEach-Object {
     }
 }))
 
-#### The following *remarkable* changes have been made to vcpkg's infrastructure:
+"@
+}
 
-<details>
-<summary>The following <i>additional</i> changes have been made to vcpkg's infrastructure:</summary>
-
-$(-join ($UpdatedInfrastructure | ForEach-Object {
-    "- [(#{0})]({1}) {2} (by @{3})`n" -f $_.number, $_.html_url, $_.title, $_.user.login
-}))
-</details>
-
+if ($NewPorts) {
+    $output += @"
 <details>
 <summary><b>The following $($NewPorts.Length) ports have been added:</b></summary>
 
@@ -433,7 +444,7 @@ $(-join ($UpdatedInfrastructure | ForEach-Object {
 |---|---|
 $(-join ($NewPorts | ForEach-Object {
     "|[{0}]({1})" -f $_.Port, $_.Pulls[0].html_url
-    
+
     if ($_.Pulls.Length -gt 1 ) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
@@ -446,6 +457,11 @@ $(-join ($NewPorts | ForEach-Object {
 }))
 </details>
 
+"@
+}
+
+if ($ChangedPorts) {
+    $output += @"
 <details>
 <summary><b>The following $($ChangedPorts.Length) ports have been updated:</b></summary>
 
@@ -460,7 +476,26 @@ $(-join ($ChangedPorts | ForEach-Object {
 }))
 </details>
 
+"@
+}
+
+if ($UpdatedInfrastructure) {
+    $output += @"
+<details>
+<summary>The following additional changes have been made to vcpkg's infrastructure:</summary>
+
+$(-join ($UpdatedInfrastructure | ForEach-Object {
+    "- [(#{0})]({1}) {2} (by @{3})`n" -f $_.number, $_.html_url, $_.title, $_.user.login
+}))
+</details>
+
+"@
+}
+
+$output += @"
 -- vcpkg team vcpkg@microsoft.com $(Get-Date -UFormat "%a, %d %B %T %Z00")
-"@ | Out-File -FilePath $OutFile
+"@
+
+Set-Content -Value $Output -Path $OutFile
 
 Write-Progress -Activity 'Writing changelog file' -Completed
