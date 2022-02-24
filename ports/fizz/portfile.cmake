@@ -8,12 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix-libsodium.patch
+        0002-fix-libevent.patch
 )
 
 # Prefer installed config files
 file(REMOVE
+    ${SOURCE_PATH}/fizz/cmake/FindGMock.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
 )
 
 vcpkg_cmake_configure(

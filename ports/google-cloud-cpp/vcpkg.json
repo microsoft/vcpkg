@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
   "version": "1.36.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -107,6 +108,21 @@
         }
       ]
     },
+    "secretmanager": {
+      "description": "The Google Cloud Secret Manager C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
+      ]
+    },
     "spanner": {
       "description": "The Google Cloud Spanner C++ client library",
       "dependencies": [
@@ -133,6 +149,21 @@
           ]
         },
         "nlohmann-json"
+      ]
+    },
+    "tasks": {
+      "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        "protobuf",
+        {
+          "name": "protobuf",
+          "host": true
+        }
       ]
     }
   }
