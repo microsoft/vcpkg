@@ -19,11 +19,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
-
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_cmake_config_fixup()
+
 file(
     INSTALL "${SOURCE_PATH}/DOC/License.txt"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
