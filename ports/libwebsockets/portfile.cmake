@@ -136,6 +136,10 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     set(EXTRA_ARGS "-DLWS_WITH_LIBUV=ON")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(EXTRA_ARGS "-DDISABLE_WERROR=On")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
