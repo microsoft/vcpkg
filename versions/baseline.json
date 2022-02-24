@@ -4230,7 +4230,7 @@
     },
     "luasec": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "luasocket": {
       "baseline": "2020-09-14",
