@@ -170,7 +170,7 @@
     },
     "arrow": {
       "baseline": "7.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ashes": {
       "baseline": "2021-06-18",
@@ -1234,7 +1234,7 @@
     },
     "capstone": {
       "baseline": "4.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "cartographer": {
       "baseline": "1.0.0",
@@ -1285,8 +1285,8 @@
       "port-version": 2
     },
     "cereal": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.3.1",
+      "port-version": 0
     },
     "ceres": {
       "baseline": "2.0.0",
@@ -1325,8 +1325,8 @@
       "port-version": 2
     },
     "charls": {
-      "baseline": "2.2.0",
-      "port-version": 2
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "chartdir": {
       "baseline": "7.0.0",
@@ -1698,7 +1698,7 @@
     },
     "cuda": {
       "baseline": "10.1",
-      "port-version": 8
+      "port-version": 9
     },
     "cudnn": {
       "baseline": "7.6.5",
@@ -1913,8 +1913,8 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.7.4",
-      "port-version": 2
+      "baseline": "1.7.5",
+      "port-version": 0
     },
     "dtl": {
       "baseline": "1.19",
@@ -2154,11 +2154,11 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 8
+      "port-version": 9
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fftw3": {
       "baseline": "3.3.10",
@@ -2350,7 +2350,7 @@
     },
     "gainput": {
       "baseline": "1.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "gamedev-framework": {
       "baseline": "0.20.0",
@@ -2586,7 +2586,7 @@
     },
     "graphviz": {
       "baseline": "2.49.1",
-      "port-version": 1
+      "port-version": 2
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -2618,7 +2618,7 @@
     },
     "gstreamer": {
       "baseline": "1.19.2",
-      "port-version": 3
+      "port-version": 5
     },
     "gtest": {
       "baseline": "1.11.0",
@@ -2670,7 +2670,7 @@
     },
     "harfbuzz": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2933,8 +2933,8 @@
       "port-version": 2
     },
     "itk": {
-      "baseline": "5.1.0",
-      "port-version": 7
+      "baseline": "5.2.1",
+      "port-version": 0
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -2989,7 +2989,7 @@
       "port-version": 2
     },
     "json-dto": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "json-schema-validator": {
@@ -3281,7 +3281,7 @@
       "port-version": 0
     },
     "lazy-importer": {
-      "baseline": "2021-10-23",
+      "baseline": "2022-02-09",
       "port-version": 0
     },
     "lcm": {
@@ -3302,7 +3302,7 @@
     },
     "leptonica": {
       "baseline": "1.81.1",
-      "port-version": 0
+      "port-version": 1
     },
     "lerc": {
       "baseline": "2.2",
@@ -3314,7 +3314,7 @@
     },
     "leveldb": {
       "baseline": "1.22",
-      "port-version": 4
+      "port-version": 5
     },
     "levmar": {
       "baseline": "2.6",
@@ -3334,7 +3334,7 @@
     },
     "libao": {
       "baseline": "1.2.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libarchive": {
       "baseline": "3.5.2",
@@ -3411,6 +3411,10 @@
     "libcuckoo": {
       "baseline": "0.3",
       "port-version": 1
+    },
+    "libcurl-simple-https": {
+      "baseline": "2022-02-14",
+      "port-version": 0
     },
     "libdatachannel": {
       "baseline": "0.16.4",
@@ -3531,6 +3535,10 @@
     "libgpg-error": {
       "baseline": "1.42",
       "port-version": 3
+    },
+    "libgpiod": {
+      "baseline": "1.6.3",
+      "port-version": 0
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -4750,7 +4758,7 @@
     },
     "ngspice": {
       "baseline": "35",
-      "port-version": 1
+      "port-version": 2
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -4914,7 +4922,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 6
+      "port-version": 7
     },
     "ogre-next": {
       "baseline": "2019-10-20",
@@ -4997,8 +5005,8 @@
       "port-version": 2
     },
     "opencv": {
-      "baseline": "4.5.4",
-      "port-version": 1
+      "baseline": "4.5.5",
+      "port-version": 0
     },
     "opencv2": {
       "baseline": "2.4.13.7",
@@ -5006,11 +5014,11 @@
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 3
+      "port-version": 4
     },
     "opencv4": {
-      "baseline": "4.5.4",
-      "port-version": 4
+      "baseline": "4.5.5",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5058,7 +5066,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openmvs": {
       "baseline": "1.1.1",
@@ -5114,7 +5122,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.22",
-      "port-version": 0
+      "port-version": 1
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -5409,7 +5417,7 @@
       "port-version": 10
     },
     "polyhook2": {
-      "baseline": "2022-02-06",
+      "baseline": "2022-02-21",
       "port-version": 0
     },
     "polymorphic-value": {
@@ -5558,7 +5566,7 @@
     },
     "qhull": {
       "baseline": "8.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "qnnpack": {
       "baseline": "2021-02-26",
@@ -6814,7 +6822,7 @@
     },
     "tgui": {
       "baseline": "2021-04-19",
-      "port-version": 2
+      "port-version": 3
     },
     "theia": {
       "baseline": "0.8",
@@ -6986,14 +6994,14 @@
     },
     "tracy": {
       "baseline": "0.7.8",
-      "port-version": 1
+      "port-version": 2
     },
     "transwarp": {
       "baseline": "2.2.2",
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.4",
+      "baseline": "1.5.5",
       "port-version": 0
     },
     "tre": {
@@ -7011,6 +7019,10 @@
     "triangle": {
       "baseline": "1.6",
       "port-version": 2
+    },
+    "triton": {
+      "baseline": "0.9",
+      "port-version": 0
     },
     "trompeloeil": {
       "baseline": "41",
@@ -7226,7 +7238,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
