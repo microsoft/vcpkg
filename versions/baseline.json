@@ -7445,7 +7445,7 @@
       "port-version": 0
     },
     "xcb-util-m4": {
-      "baseline": "1",
+      "baseline": "2022-01-24",
       "port-version": 0
     },
     "xdmcp": {
@@ -7498,6 +7498,7 @@
     },
     "xproto": {
       "baseline": "2021.5",
+      "port-version": 0
     },
     "xqilla": {
       "baseline": "2.3.4",
