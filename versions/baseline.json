@@ -3261,12 +3261,12 @@
       "port-version": 1
     },
     "lapack": {
-      "baseline": "3",
-      "port-version": 2
+      "baseline": "2022-02-22",
+      "port-version": 0
     },
     "lapack-reference": {
-      "baseline": "3.8.0",
-      "port-version": 6
+      "baseline": "3.10.0",
+      "port-version": 0
     },
     "lastools": {
       "baseline": "2020-05-09",
