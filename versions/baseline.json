@@ -5250,7 +5250,7 @@
     },
     "pcl": {
       "baseline": "1.12.0",
-      "port-version": 4
+      "port-version": 5
     },
     "pcre": {
       "baseline": "8.45",
@@ -6502,7 +6502,7 @@
     },
     "soil2": {
       "baseline": "2021-05-01",
-      "port-version": 0
+      "port-version": 1
     },
     "sokol": {
       "baseline": "2019-09-09",
