@@ -1,7 +1,7 @@
 {
   "name": "libmysql",
   "version": "8.0.20",
-  "port-version": 6,
+  "port-version": 5,
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
   "supports": "!(windows & x86) & !uwp",
@@ -14,7 +14,7 @@
     "icu",
     "libevent",
     "lz4",
-    "openssl-1",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
