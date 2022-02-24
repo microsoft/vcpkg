@@ -425,7 +425,8 @@ if ($UpdatedDocumentation) {
 #### The following documentation has been updated:
 
 $(-join ($UpdatedDocumentation | ForEach-Object {
-    "- [TITLE]({0}){1}`n" -f $_.Path, ($(if ($_.New) { ' ***[NEW]***' } else { '' }))
+    $PathWithoutDocs =  ([string]$_.Path).Remove(0, 5) # 'docs/'
+    "- [{0}]({0}){1}`n" -f $PathWithoutDocs, $_.Path, ($(if ($_.New) { ' ***[NEW]***' } else { '' }))
 
     $_.Pulls | ForEach-Object {
         "    - [(#{0})]({1}) {2} (by @{3})`n" -f $_.number, $_.html_url, $_.title, $_.user.login
