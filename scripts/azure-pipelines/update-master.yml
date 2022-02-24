@@ -1,0 +1,28 @@
+trigger:
+- main
+pr: none
+
+variables:
+- name: GitEmbeddedBotArgs
+  value: '-C $(Build.SourcesDirectory) -c user.email=embeddedbot@microsoft.com -c user.name="Embedded Bot"'
+
+pool:
+  name: 'VSEngSS-MicroBuild2022-1ES'
+
+- task: DownloadSecureFile@1
+  displayName: Download Deploy Key
+  name: githubDeployKey
+  inputs:
+    secureFile: id_vcpkg_tool
+  # GitHub has a large, regularly changing set of IP address, so ignore the
+  # hostname and allow anything with the right key.
+  # https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/about-githubs-ip-addresses
+  # This public key should have the well-known fingerprint documented below.
+  # SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
+  # https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+- script: mkdir %USERPROFILE%\.ssh && echo * ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==>>%USERPROFILE%\.ssh\known_hosts
+  displayName: Store GitHub Public Key
+- script: git $(GitEmbeddedBotArgs) push git@github.com:microsoft/vcpkg HEAD:master
+  env:
+    GIT_SSH_COMMAND: ssh -i "$(githubDeployKey.secureFilePath)"
+  displayName: Push Localization Files
