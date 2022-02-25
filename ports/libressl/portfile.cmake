@@ -9,7 +9,7 @@ set(LIBRESSL_HASH ae91a840b29330681dc2a4f55a9bd760e6fe1bdfb3399017aae3a16bd21b41
 
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
-    URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz"
+    URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz" "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz"
     FILENAME "${PORT}-${LIBRESSL_VERSION}.tar.gz"
     SHA512 "${LIBRESSL_HASH}"
 )
