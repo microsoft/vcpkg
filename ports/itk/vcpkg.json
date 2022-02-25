@@ -1,9 +1,9 @@
 {
   "name": "itk",
-  "version-semver": "5.1.0",
-  "port-version": 7,
+  "version": "5.2.1",
   "description": "Insight Segmentation and Registration Toolkit (ITK) is used for image processing and analysis.",
   "homepage": "https://github.com/InsightSoftwareConsortium/ITK",
+  "license": "Apache-2.0",
   "dependencies": [
     "double-conversion",
     "eigen3",
