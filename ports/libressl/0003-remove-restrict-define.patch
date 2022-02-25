@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4183499..d06b913 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,7 +113,6 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+ endif()
+ 
+ if(WIN32)
+-	add_definitions(-Drestrict)
+ 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ 	add_definitions(-D_CRT_DEPRECATED_NO_WARNINGS)
+ 	add_definitions(-D_REENTRANT -D_POSIX_THREAD_SAFE_FUNCTIONS)
