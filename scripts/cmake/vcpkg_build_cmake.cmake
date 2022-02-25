@@ -62,12 +62,15 @@ function(vcpkg_build_cmake)
             "/p:UseIntelMKL=No"
         )
         vcpkg_list(SET parallel_param "/m")
+    elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
+        # No options are currently added for nmake builds
     elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Unix Makefiles")
         vcpkg_list(SET build_args "VERBOSE=1")
         vcpkg_list(SET parallel_args "-j${VCPKG_CONCURRENCY}")
         vcpkg_list(SET no_parallel_args "")
-    elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
-        # No options are currently added for nmake builds
+    elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Xcode")
+        vcpkg_list(SET parallel_args -jobs "${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_args -jobs 1)
     else()
         if(NOT DEFINED VCPKG_CMAKE_GENERATOR)
             message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
