@@ -5814,7 +5814,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.13.2",
