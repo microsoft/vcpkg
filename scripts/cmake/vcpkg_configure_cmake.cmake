@@ -161,7 +161,9 @@ endfunction()
 function(z_vcpkg_select_default_vcpkg_chainload_toolchain)
     # Try avoiding adding more defaults here. 
     # Set VCPKG_CHAINLOAD_TOOLCHAIN_FILE explicitly in the triplet.
-    if(VCPKG_TARGET_IS_MINGW)
+    if(DEFINED Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    elseif(VCPKG_TARGET_IS_MINGW)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
     elseif(VCPKG_TARGET_IS_WINDOWS)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
