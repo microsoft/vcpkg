@@ -113,6 +113,8 @@ if(VCPKG_DETECTED_MSVC)
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
     string(REPLACE " -RTC1 " "" VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    string(REPLACE " -Od " "" VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    string(REPLACE " -Ob0 " "" VCPKG_COMBINED_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
 endif()
 
 string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " \"-I${CURRENT_INSTALLED_DIR}/include\"")

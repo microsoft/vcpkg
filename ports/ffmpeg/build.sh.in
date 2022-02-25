@@ -95,7 +95,7 @@ build_ffmpeg() {
 
     echo "=== BUILDING ==="
 
-    make -j${JOBS}
+    make -j${JOBS} V=1
 
     echo "=== INSTALLING ==="
 
