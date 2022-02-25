@@ -1,0 +1,15 @@
+diff --git a/src/ccmain/thresholder.cpp b/src/ccmain/thresholder.cpp
+index bbb1fd8..b0ff521 100644
+--- a/src/ccmain/thresholder.cpp
++++ b/src/ccmain/thresholder.cpp
+@@ -24,6 +24,10 @@
+ #  include "openclwrapper.h" // for OpenclDevice
+ #endif
+ 
++#ifdef _WIN32
++#   include <algorithm>
++#endif
++
+ #include <allheaders.h>
+ #include <tesseract/baseapi.h> // for api->GetIntVariable()
+ 

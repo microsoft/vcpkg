@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 a5dafc86ac933e64eb2098916926a5d005fec1f65c4b6093a383271d86a8ed37af472fc8c84db7de1fd28408ddfbee6bc1f09de31ead571ed7722f7110701583
     PATCHES
         fix-findpackage.patch
+        fix-win-build.patch
 )
 
 # The built-in cmake FindICU is better
