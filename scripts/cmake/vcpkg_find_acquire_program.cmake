@@ -371,19 +371,17 @@ function(vcpkg_find_acquire_program program)
         endif()
     elseif(program STREQUAL "FLEX" OR program STREQUAL "BISON")
         if(CMAKE_HOST_WIN32)
-            vcpkg_list(SET sourceforge_args
-                REPO winflexbison
-                FILENAME winflexbison-2.5.16.zip
-                SHA512 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123
-                NO_REMOVE_ONE_LEVEL
-                WORKING_DIRECTORY "${DOWNLOADS}/tools/winflexbison"
-            )
+            set(program_version 2.5.25)
+            set(download_urls "https://github.com/lexxmark/winflexbison/releases/download/v${program_version}/win_flex_bison-${program_version}.zip")
+            set(download_filename "win_flex_bison-${program_version}.zip")
+            set(download_sha512 2a829eb05003178c89f891dd0a67add360c112e74821ff28e38feb61dac5b66e9d3d5636ff9eef055616aaf282ee8d6be9f14c6ae4577f60bdcec96cec9f364e)
+            set(tool_subdirectory "${program_version}")
             if(program STREQUAL "FLEX")
                 set(program_name win_flex)
             else()
                 set(program_name win_bison)
             endif()
-            set(paths_to_search ${DOWNLOADS}/tools/winflexbison/0a14154bff-a8cf65db07)
+            set(paths_to_search ${DOWNLOADS}/tools/win_flex/${program_version})
             if(NOT EXISTS "${paths_to_search}/data/m4sugar/m4sugar.m4")
                 file(REMOVE_RECURSE "${paths_to_search}")
             endif()
@@ -546,16 +544,16 @@ function(vcpkg_find_acquire_program program)
             set(version_command --version)
         elseif(CMAKE_HOST_WIN32)
             if(NOT EXISTS "${PKGCONFIG}")
-                set(VERSION 0.29.2-2)
-                set(program_version git-8.0.0.5906.c9a21571-1)
+                set(VERSION 0.29.2-3)
+                set(program_version git-9.0.0.6373.5be8fcd83-1)
                 vcpkg_acquire_msys(
                     PKGCONFIG_ROOT
                     NO_DEFAULT_PACKAGES
                     DIRECT_PACKAGES
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
-                        54f8dad3b1a36a4515db47825a3214fbd2bd82f604aec72e7fb8d79068095fda3c836fb2296acd308522d6e12ce15f69e0c26dcf4eb0681fd105d057d912cdb7
+                        0c086bf306b6a18988cc982b3c3828c4d922a1b60fd24e17c3bead4e296ee6de48ce148bc6f9214af98be6a86cb39c37003d2dcb6561800fdf7d0d1028cf73a4
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${program_version}-any.pkg.tar.zst"
-                        2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
+                        c89c27b5afe4cf5fdaaa354544f070c45ace5e9d2f2ebb4b956a148f61681f050e67976894e6f52e42e708dadbf730fee176ac9add3c9864c21249034c342810
                 )
             endif()
             set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")

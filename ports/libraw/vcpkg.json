@@ -1,7 +1,7 @@
 {
   "name": "libraw",
   "version-string": "201903",
-  "port-version": 6,
+  "port-version": 7,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "dependencies": [

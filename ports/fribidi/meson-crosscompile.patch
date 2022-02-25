@@ -1,0 +1,36 @@
+diff --git a/gen.tab/meson.build b/gen.tab/meson.build
+index 8c21e98..1cd9960 100644
+--- a/gen.tab/meson.build
++++ b/gen.tab/meson.build
+@@ -1,5 +1,10 @@
+ # gen.tab
+ 
++if get_option('pregenerated_tab') != ''
++  generated_tab_include_files = []
++  fribidi_unicode_version_h = files()
++  add_project_arguments('-I' + get_option('pregenerated_tab'), language: 'c')
++else
+ native_cc = meson.get_compiler('c')
+ 
+ # Don't pick up top-level config.h, as that has defines for the cross-compiler
+@@ -75,7 +80,10 @@ foreach tab : tabs
+     input: gen_prog_inputs,
+     output: gen_prog_out,
+     command: [gen_exe, COMPRESSION, '@INPUT@', gen_prog_name],
++    install: true,
++    install_dir: 'share/fribidi/gen.tab',
+     capture: true)
+ 
+   generated_tab_include_files += [tab_inc_file]
+ endforeach
++endif
+diff --git a/meson_options.txt b/meson_options.txt
+index f54a639..8f60205 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -8,3 +8,5 @@ option('tests', type : 'boolean', value : true,
+   description: 'Build tests')
+ option('fuzzer_ldflags', type : 'string',
+   description: 'Extra LDFLAGS used during linking of fuzzing binaries')
++option('pregenerated_tab', type: 'string',
++  description: 'Path to pregenerated table sources')

@@ -1,6 +1,6 @@
 {
   "name": "drogon",
-  "version-semver": "1.7.4",
+  "version-semver": "1.7.5",
   "description": "A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows",
   "homepage": "https://github.com/an-tao/drogon",
   "documentation": "https://drogon.docsforge.com/master/overview/",
@@ -10,7 +10,7 @@
     "jsoncpp",
     {
       "name": "libuuid",
-      "platform": "!windows"
+      "platform": "!windows & !osx"
     },
     "trantor",
     {
