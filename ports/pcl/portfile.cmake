@@ -14,6 +14,8 @@ vcpkg_from_github(
         remove-broken-targets.patch
         fix-cmake_find_library_suffixes.patch
         fix-pkgconfig.patch # Remove this patch in the next update
+        fix-namespace-cub.patch # Remove this patch in the next update
+        fix-error-C3052.patch # Remove this patch in the next update
         fix-find-libusb.patch
         install-examples.patch
         no-absolute.patch
