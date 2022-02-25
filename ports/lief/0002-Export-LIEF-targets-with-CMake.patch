@@ -1,0 +1,937 @@
+From 04a95dc88aae31548a0f5f2795c4115c19c38a16 Mon Sep 17 00:00:00 2001
+From: Eric Kilmer <eric.d.kilmer@gmail.com>
+Date: Mon, 21 Feb 2022 10:54:56 -0500
+Subject: [PATCH 2/3] Export LIEF targets with CMake
+
+With these changes, we no longer need to manually find the LIEF library
+by filename. CMake takes care of generating the LIEF::LIEF target and
+library location for us in the exported target set. This is basically a
+requirement when using external dependencies because the original
+functionality did not take care of this.
+
+I have updated the example projects to make sure that they will work
+with this new setup. In doing so, I changed quite a bit to more closely
+follow CMake best practices that I hope we can agree on to both improve
+reliability and reduce maintenance and support questions for people who
+configure LIEF with external dependencies.
+
+This project still supports finding static or shared LIEF libraries in
+the same install prefix using the find_package COMPONENTS method.
+
+This project still supports development of other projects that want to
+use LIEF without installing. Just specify the following option during
+configuration of your project that depends on LIEF:
+
+```cmake
+cmake -DLIEF_DIR=<LIEF_BUILD_DIR> ...
+```
+---
+ CMakeLists.txt                                |  36 ++--
+ LIEFConfig.cmake.in                           | 181 +++++++++++++++++-
+ doc/sphinx/installation.rst                   |  73 +++++--
+ .../cmake/add_subdirectory/CMakeLists.txt     |  76 ++++++++
+ examples/cmake/add_subdirectory/README.rst    |  12 ++
+ .../main.cpp                                  |   0
+ .../cmake/external_project/CMakeLists.txt     |  71 +++----
+ .../external_project/HelloLIEF/CMakeLists.txt |  28 +++
+ .../external_project/{ => HelloLIEF}/main.cpp |   0
+ examples/cmake/external_project/README.rst    |   3 +
+ examples/cmake/find_package/CMakeLists.txt    |  28 +--
+ examples/cmake/find_package/README.rst        |   2 +-
+ scripts/FindLIEF.cmake                        | 174 -----------------
+ 13 files changed, 411 insertions(+), 273 deletions(-)
+ create mode 100644 examples/cmake/add_subdirectory/CMakeLists.txt
+ create mode 100644 examples/cmake/add_subdirectory/README.rst
+ copy examples/cmake/{external_project => add_subdirectory}/main.cpp (100%)
+ create mode 100644 examples/cmake/external_project/HelloLIEF/CMakeLists.txt
+ rename examples/cmake/external_project/{ => HelloLIEF}/main.cpp (100%)
+ delete mode 100644 scripts/FindLIEF.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 41afb8c0..6bfe863f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -176,6 +176,7 @@ source_group("Source Files" FILES ${LIBLIEF_SOURCE_FILES})
+ source_group("Header Files\\visitors" FILES ${LIEF_VISITOR_INCLUDE_FILES})
+ 
+ add_library(LIB_LIEF ${LIBLIEF_SOURCE_FILES} ${LIEF_INCLUDE_FILES})
++add_library(LIEF::LIEF ALIAS LIB_LIEF)
+ 
+ if(NOT LIEF_OPT_MBEDTLS_EXTERNAL)
+   set_source_files_properties(${mbedtls_src_crypto} PROPERTIES GENERATED TRUE)
+@@ -569,7 +570,7 @@ if(LIEF_COVERAGE)
+   target_link_libraries(LIB_LIEF gcov)
+ endif()
+ 
+-set_target_properties(LIB_LIEF PROPERTIES OUTPUT_NAME LIEF CLEAN_DIRECT_OUTPUT 1)
++set_target_properties(LIB_LIEF PROPERTIES OUTPUT_NAME LIEF EXPORT_NAME LIEF CLEAN_DIRECT_OUTPUT 1)
+ 
+ 
+ # Set a default build type if none was specified
+@@ -616,10 +617,10 @@ endif()
+ 
+ # Find Package Config
+ # ======================
+-configure_package_config_file(
++configure_file(
+   LIEFConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
+-  INSTALL_DESTINATION share/LIEF/cmake)
++  @ONLY)
+ 
+ write_basic_package_version_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
+@@ -682,10 +683,12 @@ else()
+ endif()
+ 
+ install(
+-  TARGETS LIB_LIEF
++  TARGETS LIB_LIEF lief_spdlog
++  EXPORT LIEFExport
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries
++  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+ install(
+   DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
+@@ -694,11 +697,6 @@ install(
+   FILES_MATCHING
+   REGEX "(.*).(hpp|h|def|inc)$")
+ 
+-install(
+-  FILES       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/FindLIEF.cmake
+-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
+-  COMPONENT   CMakeScripts)
+-
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfig.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/LIEFConfigVersion.cmake
+@@ -710,7 +708,23 @@ install(
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+   COMPONENT   libraries)
+ 
+-export(TARGETS LIB_LIEF lief_spdlog FILE LIEFExport.cmake)
++if(BUILD_SHARED_LIBS)
++  set(lib_type shared)
++else()
++  set(lib_type static)
++endif()
++
++install(
++  EXPORT LIEFExport
++  NAMESPACE LIEF::
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/LIEF/cmake
++  FILE LIEFExport-${lib_type}.cmake
++  COMPONENT config)
++
++export(
++  EXPORT LIEFExport
++  NAMESPACE LIEF::
++  FILE LIEFExport-${lib_type}.cmake)
+ 
+ # Package
+ # ======================
+diff --git a/LIEFConfig.cmake.in b/LIEFConfig.cmake.in
+index 94ee5245..8c35eeab 100644
+--- a/LIEFConfig.cmake.in
++++ b/LIEFConfig.cmake.in
+@@ -1,4 +1,179 @@
+-@PACKAGE_INIT@
++#.rst:
++# LIEFConfig
++# --------
++#
++# Populate the native LIEF targets.
++#
++# IMPORTED Targets
++# ^^^^^^^^^^^^^^^^
++#
++# This module defines :prop_tgt:`IMPORTED` target ``LIEF::LIEF``
++#
++# Hints
++# ^^^^^
++#
++# A user may set ``LIEF_DIR`` to the directory where ``LIEFConfig.cmake`` file
++# resides to tell CMake where to find this file.
++#
++# To choose between STATIC and SHARED version of LIEF library, one can use
++# ``COMPONENTS STATIC`` of ``COMPONENTS SHARED``. If no components are
++# specified, then a user may set ``LIEF_SHARED_LIBS`` to a true value to
++# request shared libraries. By default, if no variables or components are set,
++# the static library is preferred if present, else shared library will be used.
++#
++# .. code-block:: cmake
++#
++#   find_package(LIEF 0.11.0 REQUIRED COMPONENTS STATIC)
+ 
+-set(LIEF_DIR "${PACKAGE_PREFIX_DIR}")
+-include("${CMAKE_CURRENT_LIST_DIR}/FindLIEF.cmake")
++
++# CMake component support for static and shared libraries based on
++# https://alexreinking.com/blog/building-a-dual-shared-and-static-library-with-cmake.html
++
++# Process known components
++set(LIEF_known_comps STATIC SHARED)
++set(LIEF_comp_STATIC NO)
++set(LIEF_comp_SHARED NO)
++foreach(_comp ${LIEF_FIND_COMPONENTS})
++  if(";${LIEF_known_comps};" MATCHES ";${_comp};")
++    set(LIEF_comp_${_comp} YES)
++  else()
++    set(LIEF_NOT_FOUND_MESSAGE
++      "LIEF does not recognize component `${_comp}`.")
++    set(LIEF_FOUND FALSE)
++    return()
++  endif()
++endforeach()
++
++
++# Validate component selection makes sense
++if(LIEF_comp_STATIC AND LIEF_comp_SHARED)
++  set(LIEF_NOT_FOUND_MESSAGE
++    "LIEF `STATIC` and `SHARED` components are mutually exclusive.")
++  set(LIEF_FOUND FALSE)
++  return()
++endif()
++
++
++# These files are generated by CMake and hold the LIEF library target(s).
++set(LIEF_static_export "${CMAKE_CURRENT_LIST_DIR}/LIEFExport-static.cmake")
++set(LIEF_shared_export "${CMAKE_CURRENT_LIST_DIR}/LIEFExport-shared.cmake")
++
++
++# Helper macro to load the requested targets, where `lib_type` is `static` or
++# `shared`
++macro(LIEF_load_targets lib_type)
++  if(NOT EXISTS "${LIEF_${lib_type}_export}")
++    set(LIEF_NOT_FOUND_MESSAGE
++      "LIEF `${lib_type}` libraries were requested but not found.")
++    set(LIEF_FOUND FALSE)
++    return()
++  endif ()
++
++  if("${lib_type}" STREQUAL "static")
++    # Need to find all dependencies even if they're private when LIEF is
++    # compiled statically
++    include(CMakeFindDependencyMacro)
++
++    if(@LIEF_EXTERNAL_MBEDTLS@)
++      find_dependency(MbedTLS)
++    endif()
++
++    if(@LIEF_EXTERNAL_UTF8CPP@)
++      find_dependency(utf8cpp)
++    endif()
++
++    if(@LIEF_EXTERNAL_SPDLOG@)
++      find_dependency(spdlog)
++    endif()
++
++    if(@LIEF_ENABLE_JSON@ AND @LIEF_NLOHMANN_JSON_EXTERNAL@)
++      find_dependency(nlohmann_json)
++    endif()
++
++    if(NOT @LIEF_DISABLE_FROZEN@ AND @LIEF_OPT_FROZEN_EXTERNAL@)
++      find_dependency(frozen)
++    endif()
++  endif()
++
++  # Include the respective targets file
++  include("${LIEF_${lib_type}_export}")
++endmacro()
++
++# Run the logic to choose static or shared libraries
++# 1. Check components
++if(LIEF_comp_STATIC)
++  LIEF_load_targets("static")
++elseif(LIEF_comp_SHARED)
++  LIEF_load_targets("shared")
++# 2. Check LIEF-only library selection
++elseif(DEFINED LIEF_SHARED_LIBS AND LIEF_SHARED_LIBS)
++  LIEF_load_targets("shared")
++elseif(DEFINED LIEF_SHARED_LIBS AND NOT LIEF_SHARED_LIBS)
++  LIEF_load_targets("static")
++# 3. Check CMake build type and choose what's available
++elseif(BUILD_SHARED_LIBS)
++  if(EXISTS "${LIEF_shared_export}")
++    LIEF_load_targets("shared")
++  else()
++    LIEF_load_targets("static")
++  endif()
++else()
++  if(EXISTS "${LIEF_static_export}")
++    LIEF_load_targets("static")
++  else()
++    LIEF_load_targets("shared")
++  endif()
++endif()
++
++
++# Attach location of public interface libraries that don't have
++# their own CMake config that would otherwise be found using `find_dependency`
++
++# Header-only library can be found relatively easily
++if(@LIEF_EXTERNAL_LEAF@)
++  find_path(BOOST_LEAF_INCLUDE_DIR boost/leaf.hpp)
++  if(NOT BOOST_LEAF_INCLUDE_DIR)
++    set(LIEF_NOT_FOUND_MESSAGE "Could not find include directory with 'boost/leaf.hpp'. Consider setting `BOOST_LEAF_INCLUDE_DIR` during CMake configuration")
++    set(LIEF_FOUND FALSE)
++    return()
++  endif()
++  set_property(TARGET LIEF::LIEF APPEND PROPERTY
++    INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${BOOST_LEAF_INCLUDE_DIR}"
++  )
++endif()
++
++# Header-only library can be found relatively easily
++if(@LIEF_EXTERNAL_SPAN@)
++  find_path(TCB_SPAN_INCLUDE_DIR tcb/span.hpp)
++  if(NOT TCB_SPAN_INCLUDE_DIR)
++    set(LIEF_NOT_FOUND_MESSAGE "Could not find include directory with 'tcb/span.hpp'. Consider setting `TCB_SPAN_INCLUDE_DIR` during CMake configuration")
++    set(LIEF_FOUND FALSE)
++    return()
++  endif()
++  set_property(TARGET LIEF::LIEF APPEND PROPERTY
++    INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TCB_SPAN_INCLUDE_DIR}"
++  )
++endif()
++
++
++# Set this for backwards compatibility. This isn't quite the path to the
++# actual library file, but using the target is strictly better because it
++# includes all other information needed to correctly link and use LIEF
++set(LIEF_LIBRARIES LIEF::LIEF)
++
++# Set this for backwards compatibility
++get_target_property(LIEF_INCLUDE_DIRS LIEF::LIEF INTERFACE_INCLUDE_DIRECTORIES)
++
++# Set the following for backwards compatibility
++if(LIEF_INCLUDE_DIR AND EXISTS "${LIEF_INCLUDE_DIR}/LIEF/version.h")
++  file(STRINGS "${LIEF_INCLUDE_DIR}/LIEF/version.h" LIEF_H REGEX "^#define LIEF_VERSION \"[^\"]*\"$")
++
++  string(REGEX REPLACE "^.*LIEF_VERSION \"([0-9]+).*$" "\\1"                   LIEF_VERSION_MAJOR "${LIEF_H}")
++  string(REGEX REPLACE "^.*LIEF_VERSION \"[0-9]+\\.([0-9]+).*$" "\\1"          LIEF_VERSION_MINOR "${LIEF_H}")
++  string(REGEX REPLACE "^.*LIEF_VERSION \"[0-9]+\\.[0-9]+\\.([0-9]+).*$" "\\1" LIEF_VERSION_PATCH "${LIEF_H}")
++  set(LIEF_VERSION_STRING "${LIEF_VERSION_MAJOR}.${LIEF_VERSION_MINOR}.${LIEF_VERSION_PATCH}")
++
++  set(LIEF_MAJOR_VERSION "${LIEF_VERSION_MAJOR}")
++  set(LIEF_MINOR_VERSION "${LIEF_VERSION_MINOR}")
++  set(LIEF_PATCH_VERSION "${LIEF_VERSION_PATCH}")
++endif()
+diff --git a/doc/sphinx/installation.rst b/doc/sphinx/installation.rst
+index ab812664..2ad5fe0d 100644
+--- a/doc/sphinx/installation.rst
++++ b/doc/sphinx/installation.rst
+@@ -218,48 +218,85 @@ and run it:
+ CMake Integration
+ -----------------
+ 
++There are a few ways to integrate LIEF as a dependency in another project. The different methods are listed in order of preference and CMake best practice. These listings are only to show basic examples. Please refer to the CMake documentation for questions related to more complex project setup.
+ 
+-External Project
+-****************
+ 
+-Using `CMake External Project <https://cmake.org/cmake/help/v3.0/module/ExternalProject.html>`_:
++find_package()
++**************
+ 
+-.. literalinclude:: ../../examples/cmake/external_project/CMakeLists.txt
++Using `CMake find_package() <https://cmake.org/cmake/help/v3.0/command/find_package.html>`_:
++
++.. literalinclude:: ../../examples/cmake/find_package/CMakeLists.txt
+    :language: cmake
+-   :lines: 1-42
++   :lines: 5-12
+ 
+ And now, to be integrated within a project:
+ 
+-.. literalinclude:: ../../examples/cmake/external_project/CMakeLists.txt
++.. literalinclude:: ../../examples/cmake/find_package/CMakeLists.txt
+    :language: cmake
+-   :lines: 47-
++   :lines: 13-
+ 
+ For the compilation:
+ 
+-.. include:: ../../examples/cmake/external_project/README.rst
++.. include:: ../../examples/cmake/find_package/README.rst
+    :start-line: 3
+ 
+-A *full* example is available in the ``examples/cmake/external_project`` directory.
++A *full* example is available in the ``examples/cmake/find_package`` directory.
+ 
+ 
+-find_package()
+-**************
++add_subdirectory() or FetchContent
++**********************************
+ 
+-Using `CMake find_package() <https://cmake.org/cmake/help/v3.0/command/find_package.html>`_:
++First, set up the options you want to set as default for the LIEF project:
+ 
+-.. literalinclude:: ../../examples/cmake/find_package/CMakeLists.txt
++.. literalinclude:: ../../examples/cmake/add_subdirectory/CMakeLists.txt
++   :language: cmake
++   :lines: 7-19
++
++Using `CMake add_subdirectory() <https://cmake.org/cmake/help/v3.0/command/add_subdirectory.html>`_ to add a submodule LIEF source directory:
++
++.. literalinclude:: ../../examples/cmake/add_subdirectory/CMakeLists.txt
++   :language: cmake
++   :lines: 21-28
++
++If we are using a CMake version greater than or equal to 3.11, we can use `CMake FetchContent module <https://cmake.org/cmake/help/v3.11/module/FetchContent.html>`_ to download or specify a LIEF source directory outside of the current directory:
++
++.. literalinclude:: ../../examples/cmake/add_subdirectory/CMakeLists.txt
+    :language: cmake
+-   :lines: 5-19
++   :lines: 33-59
+ 
+ And now, to be integrated within a project:
+ 
+-.. literalinclude:: ../../examples/cmake/find_package/CMakeLists.txt
++.. literalinclude:: ../../examples/cmake/add_subdirectory/CMakeLists.txt
+    :language: cmake
+-   :lines: 20-
++   :lines: 62-
+ 
+ For the compilation:
+ 
+-.. include:: ../../examples/cmake/find_package/README.rst
++.. include:: ../../examples/cmake/add_subdirectory/README.rst
+    :start-line: 3
+ 
+-A *full* example is available in the ``examples/cmake/find_package`` directory.
++A *full* example is available in the ``examples/cmake/add_subdirectory`` directory.
++
++
++External Project
++****************
++
++If you don't want to use LIEF as a submodule or upgrade to CMake 3.11, we can use `CMake External Project <https://cmake.org/cmake/help/v3.0/module/ExternalProject.html>`_ to set up a project as a `*superbuild* <https://www.kitware.com/cmake-superbuilds-git-submodules>`:
++
++.. literalinclude:: ../../examples/cmake/external_project/CMakeLists.txt
++   :language: cmake
++   :lines: 1-41
++
++And now, to be integrated with our main ``HelloLIEF`` project that is located in a subdirectory and looks exactly like the ``find_package()`` example shown earlier:
++
++.. literalinclude:: ../../examples/cmake/external_project/CMakeLists.txt
++   :language: cmake
++   :lines: 42-
++
++For the compilation:
++
++.. include:: ../../examples/cmake/external_project/README.rst
++   :start-line: 3
++
++A *full* example is available in the ``examples/cmake/external_project`` directory.
+diff --git a/examples/cmake/add_subdirectory/CMakeLists.txt b/examples/cmake/add_subdirectory/CMakeLists.txt
+new file mode 100644
+index 00000000..fcedd1c1
+--- /dev/null
++++ b/examples/cmake/add_subdirectory/CMakeLists.txt
+@@ -0,0 +1,76 @@
++# Minimum of 3.5 for adding submodule of LIEF because LIEF min is 3.5,
++# otherwise 3.11+ for FetchContent command
++cmake_minimum_required(VERSION 3.5)
++
++project(SubdirLIEF CXX)
++
++# Use LIEF as an embedded/vendored project
++# ========================================
++
++# LIEF build config. Set the default options for LIEF's project setup
++option(LIEF_DOC "Build LIEF docs" OFF)
++option(LIEF_PYTHON_API "Build LIEF Python API" OFF)
++option(LIEF_EXAMPLES "Build LIEF examples" OFF)
++option(LIEF_TESTS "Build LIEF tests" OFF)
++
++if(MSVC)
++  set(LIEF_USE_CRT_RELEASE "MT" CACHE STRING "LIEF CRT option")
++endif()
++
++
++# If you have LIEF as a submodule in a directory, then you can add it to this
++# project with ``add_subdirectory``
++# NOTE: This submodule does not exist for this example, but it does the same
++# thing as FetchContent without the download part
++set(vendorLIEF_submodule_dir "${CMAKE_CURRENT_LIST_DIR}/LIEF")
++if(EXISTS "${vendorLIEF_submodule_dir}")
++  add_subdirectory("${vendorLIEF_submodule_dir}")
++
++# Else, we'll specify how to obtain LIEF another way (downloading)
++else()
++  # CMake 3.11 has FetchContent which provides a simple experience for what
++  # we're trying to do
++  cmake_minimum_required(VERSION 3.11)
++
++  # Common info for specifying LIEF source directory
++  # URL of the LIEF repo (Can be your fork)
++  set(LIEF_GIT_URL "https://github.com/lief-project/LIEF.git")
++  # LIEF's version to be used (can be 'master')
++  set(LIEF_VERSION 0.12.0)
++
++  include(FetchContent)
++  FetchContent_Declare(LIEF
++    #GIT_REPOSITORY  "${LIEF_GIT_URL}"
++    #GIT_TAG         ${LIEF_VERSION}
++    SOURCE_DIR      "${CMAKE_CURRENT_LIST_DIR}/../../.."
++    )
++
++  if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
++    # CMake 3.11 to 3.13 needs more verbose method to make LIEF available
++    FetchContent_GetProperties(LIEF)
++    if(NOT LIEF_POPULATED)
++      FetchContent_Populate(LIEF)
++      add_subdirectory(${LIEF_SOURCE_DIR} ${LIEF_BINARY_DIR})
++    endif()
++  else()
++    # CMake 3.14+ has single function to make LIEF available
++    FetchContent_MakeAvailable(LIEF)
++  endif()
++endif()
++
++
++# Add our executable
++# ==================
++add_executable(HelloLIEF main.cpp)
++
++if(MSVC)
++  set_property(TARGET HelloLIEF PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
++endif()
++
++# Enable C++11
++set_property(TARGET HelloLIEF
++             PROPERTY CXX_STANDARD           11
++             PROPERTY CXX_STANDARD_REQUIRED  ON)
++
++# Link the executable with LIEF
++target_link_libraries(HelloLIEF PUBLIC LIEF::LIEF)
+diff --git a/examples/cmake/add_subdirectory/README.rst b/examples/cmake/add_subdirectory/README.rst
+new file mode 100644
+index 00000000..442f34a5
+--- /dev/null
++++ b/examples/cmake/add_subdirectory/README.rst
+@@ -0,0 +1,12 @@
++LIEF CMake Integration Example - add_subdirectory
++=================================================
++
++
++.. code-block:: console
++
++  $ mkdir build
++  $ cd build
++  $ cmake ..
++  $ make
++  $ HelloLIEF /bin/ls # or explorer.exe or whatever
++
+diff --git a/examples/cmake/external_project/main.cpp b/examples/cmake/add_subdirectory/main.cpp
+similarity index 100%
+copy from examples/cmake/external_project/main.cpp
+copy to examples/cmake/add_subdirectory/main.cpp
+diff --git a/examples/cmake/external_project/CMakeLists.txt b/examples/cmake/external_project/CMakeLists.txt
+index e84f341d..d9384e13 100644
+--- a/examples/cmake/external_project/CMakeLists.txt
++++ b/examples/cmake/external_project/CMakeLists.txt
+@@ -1,34 +1,28 @@
+-cmake_minimum_required(VERSION 3.02)
++cmake_minimum_required(VERSION 3.0)
+ 
+-include(ExternalProject)
++project(CMakeLIEF LANGUAGES NONE)
+ 
+-project(CMakeLIEF)
++include(ExternalProject)
+ 
+-# LIEF as an External Project
++# LIEF integration as an External Project
+ # ===========================
+ set(LIEF_PREFIX       "${CMAKE_CURRENT_BINARY_DIR}/LIEF")
+-set(LIEF_INSTALL_DIR  "${LIEF_PREFIX}")
+-set(LIEF_INCLUDE_DIRS "${LIEF_PREFIX}/include")
+-
+-# LIEF static library
+-set(LIB_LIEF
+-  "${LIEF_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}LIEF${CMAKE_STATIC_LIBRARY_SUFFIX}")
++set(LIEF_INSTALL_DIR  "${LIEF_PREFIX}/install")
+ 
+ # URL of the LIEF repo (Can be your fork)
+ set(LIEF_GIT_URL "https://github.com/lief-project/LIEF.git")
+ 
+ # LIEF's version to be used (can be 'master')
+-set(LIEF_VERSION 0.11.0)
++set(LIEF_VERSION 0.12.0)
+ 
+ # LIEF compilation config
+ set(LIEF_CMAKE_ARGS
+   -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+-  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+-  -DLIEF_DOC=off
+-  -DLIEF_PYTHON_API=off
+-  -DLIEF_EXAMPLES=off
+-  -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+-  -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
++  -DCMAKE_BUILD_TYPE=RelWithDebInfo
++  -DLIEF_DOC=OFF
++  -DLIEF_PYTHON_API=OFF
++  -DLIEF_EXAMPLES=OFF
++  -DLIEF_TESTS=OFF
+ )
+ 
+ if(MSVC)
+@@ -37,35 +31,24 @@ endif()
+ 
+ ExternalProject_Add(LIEF
+   PREFIX           "${LIEF_PREFIX}"
+-  GIT_REPOSITORY   ${LIEF_GIT_URL}
++  GIT_REPOSITORY   "${LIEF_GIT_URL}"
+   GIT_TAG          ${LIEF_VERSION}
+-  INSTALL_DIR      ${LIEF_INSTALL_DIR}
++  # You may specify an existing LIEF source directory if you don't want to
++  # download. Just comment out the above ``GIT_*`` commands and uncoment the
++  # following ``SOURCE_DIR`` line
++  #SOURCE_DIR       "${CMAKE_CURRENT_LIST_DIR}/../../.."
++  INSTALL_DIR      "${LIEF_INSTALL_DIR}"
+   CMAKE_ARGS       ${LIEF_CMAKE_ARGS}
+-  BUILD_BYPRODUCTS ${LIEF_LIBRARIES}
+-  UPDATE_COMMAND   ""
+ )
+ 
+-
+-# Add our executable
+-# ==================
+-add_executable(HelloLIEF main.cpp)
+-
+-if(MSVC)
+-  set_property(TARGET HelloLIEF PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
+-endif()
+-
+-# Setup the LIEF include directory
+-target_include_directories(HelloLIEF
+-  PUBLIC
+-  ${LIEF_INCLUDE_DIRS}
++# User project
++# ============
++ExternalProject_Add(HelloLIEF
++  DEPENDS         LIEF
++  SOURCE_DIR      "${CMAKE_CURRENT_LIST_DIR}/HelloLIEF"
++  BINARY_DIR      "${CMAKE_CURRENT_BUILD_DIR}"
++  INSTALL_COMMAND ""
++  CMAKE_ARGS
++    "-DLIEF_DIR=${LIEF_INSTALL_DIR}/share/LIEF/cmake"
++    -DCMAKE_BUILD_TYPE=RelWithDebInfo
+ )
+-
+-# Enable C++11
+-set_property(TARGET HelloLIEF
+-             PROPERTY CXX_STANDARD  11
+-             CXX_STANDARD_REQUIRED  ON)
+-
+-# Link the executable with LIEF
+-target_link_libraries(HelloLIEF PUBLIC ${LIB_LIEF})
+-
+-add_dependencies(HelloLIEF LIEF)
+diff --git a/examples/cmake/external_project/HelloLIEF/CMakeLists.txt b/examples/cmake/external_project/HelloLIEF/CMakeLists.txt
+new file mode 100644
+index 00000000..3f587a19
+--- /dev/null
++++ b/examples/cmake/external_project/HelloLIEF/CMakeLists.txt
+@@ -0,0 +1,28 @@
++cmake_minimum_required(VERSION 3.0)
++
++project(CMakeLIEF LANGUAGES CXX)
++
++# Use LIEF with 'find_package()'
++# ==============================
++
++# Find LIEF. If LIEF was not installed into a default system directory then
++# specify the following option during CMake configuration:
++# -DLIEF_DIR=<LIEF install prefix>/share/LIEF/cmake
++find_package(LIEF REQUIRED COMPONENTS STATIC) # COMPONENTS: <SHARED | STATIC> - Default: STATIC
++
++# Add our executable
++# ==================
++add_executable(HelloLIEF main.cpp)
++
++if(MSVC)
++  set_property(TARGET HelloLIEF PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
++endif()
++
++
++# Enable C++11
++set_property(TARGET HelloLIEF
++             PROPERTY CXX_STANDARD           11
++             PROPERTY CXX_STANDARD_REQUIRED  ON)
++
++# Link the executable with LIEF
++target_link_libraries(HelloLIEF PUBLIC LIEF::LIEF)
+diff --git a/examples/cmake/external_project/main.cpp b/examples/cmake/external_project/HelloLIEF/main.cpp
+similarity index 100%
+rename from examples/cmake/external_project/main.cpp
+rename to examples/cmake/external_project/HelloLIEF/main.cpp
+diff --git a/examples/cmake/external_project/README.rst b/examples/cmake/external_project/README.rst
+index 09eb42b3..ebcc438e 100644
+--- a/examples/cmake/external_project/README.rst
++++ b/examples/cmake/external_project/README.rst
+@@ -1,6 +1,9 @@
+ LIEF CMake Integration Example - ExternalProject
+ ================================================
+ 
++This setup is known as a CMake *super build* where the top-level CMakeLists.txt drives all of the steps of the projects specified within it. The project we would be doing active development on is located in the ``HelloLIEF`` directory.
++
++For simplicity, it is recommended to use CMake's ``FetchContent`` command introduced in CMake 3.11. See the example in the ``examples/cmake/fetch_content`` directory.
+ 
+ .. code-block:: console
+ 
+diff --git a/examples/cmake/find_package/CMakeLists.txt b/examples/cmake/find_package/CMakeLists.txt
+index 1812d4b1..d0e3dd64 100644
+--- a/examples/cmake/find_package/CMakeLists.txt
++++ b/examples/cmake/find_package/CMakeLists.txt
+@@ -1,25 +1,15 @@
+-cmake_minimum_required(VERSION 3.1)
++cmake_minimum_required(VERSION 3.0)
+ 
+-project(CMakeLIEF)
++project(CMakeLIEF LANGUAGES CXX)
+ 
+ # Use LIEF with 'find_package()'
+ # ==============================
+ 
+-# Custom path to the LIEF install directory
+-set(LIEF_DIR CACHE PATH ${CMAKE_INSTALL_PREFIX})
+-
+-# Directory to 'FindLIEF.cmake'
+-list(APPEND CMAKE_MODULE_PATH ${LIEF_DIR}/share/LIEF/cmake)
+-
+-# include 'FindLIEF.cmake'
+-include(FindLIEF)
+-
+-# Find LIEF
++# Find LIEF. If LIEF was not installed into a default system directory then
++# specify the following option during CMake configuration:
++# -DLIEF_DIR=<LIEF install prefix>/share/LIEF/cmake
+ find_package(LIEF REQUIRED COMPONENTS STATIC) # COMPONENTS: <SHARED | STATIC> - Default: STATIC
+ 
+-message(STATUS "LIEF include directory: ${LIEF_INCLUDE_DIRS}")
+-message(STATUS "LIEF library:           ${LIEF_LIBRARIES}")
+-
+ # Add our executable
+ # ==================
+ add_executable(HelloLIEF main.cpp)
+@@ -29,16 +19,10 @@ if(MSVC)
+ endif()
+ 
+ 
+-# Setup the LIEF include directory
+-target_include_directories(HelloLIEF
+-  PUBLIC
+-    ${LIEF_INCLUDE_DIRS}
+-)
+-
+ # Enable C++11
+ set_property(TARGET HelloLIEF
+              PROPERTY CXX_STANDARD           11
+              PROPERTY CXX_STANDARD_REQUIRED  ON)
+ 
+ # Link the executable with LIEF
+-target_link_libraries(HelloLIEF PUBLIC ${LIEF_LIBRARIES})
++target_link_libraries(HelloLIEF PRIVATE LIEF::LIEF)
+diff --git a/examples/cmake/find_package/README.rst b/examples/cmake/find_package/README.rst
+index 6f104439..18331b7f 100644
+--- a/examples/cmake/find_package/README.rst
++++ b/examples/cmake/find_package/README.rst
+@@ -6,7 +6,7 @@ LIEF CMake Integration Example - find_package()
+ 
+   $ mkdir build
+   $ cd build
+-  $ cmake -DLIEF_DIR=<PATH_TO_LIEF_INSTALL_DIR> .. # By default, LIEF_DIR=CMAKE_INSTALL_PREFIX
++  $ cmake -DLIEF_DIR=<PATH_TO_LIEF_INSTALL_DIR>/share/LIEF/cmake ..
+   $ make
+   $ HelloLIEF /bin/ls # or explorer.exe or whatever
+ 
+diff --git a/scripts/FindLIEF.cmake b/scripts/FindLIEF.cmake
+deleted file mode 100644
+index 43874a3a..00000000
+--- a/scripts/FindLIEF.cmake
++++ /dev/null
+@@ -1,174 +0,0 @@
+-#.rst:
+-# FindLIEF
+-# --------
+-#
+-# Find the native LIEF includes and library.
+-#
+-# IMPORTED Targets
+-# ^^^^^^^^^^^^^^^^
+-#
+-# This module defines :prop_tgt:`IMPORTED` target ``LIEF::LIEF``, if
+-# LIEF has been found.
+-#
+-# Result Variables
+-# ^^^^^^^^^^^^^^^^
+-#
+-# This module defines the following variables:
+-#
+-# ::
+-#
+-#   LIEF_INCLUDE_DIRS   - Where to find LIEF/LIEF.hpp, etc.
+-#   LIEF_LIBRARIES      - List of libraries when using LIEF.
+-#   LIEF_FOUND          - True if LIEF found.
+-#
+-# ::
+-#
+-#   LIEF_VERSION_STRING - The version of LIEF found (x.y.z)
+-#   LIEF_VERSION_MAJOR  - The major version of LIEF
+-#   LIEF_VERSION_MINOR  - The minor version of LIEF
+-#   LIEF_VERSION_PATCH  - The patch version of LIEF
+-#
+-# Hints
+-# ^^^^^
+-#
+-# A user may set ``LIEF_DIR`` to a LIEF installation root to tell this
+-# module where to look.
+-#
+-# To choose between STATIC and SHARED version of LIEF library, one
+-# can use ``COMPONENTS STATIC`` of ``COMPONENTS SHARED``
+-#
+-# .. code-block:: cmake
+-#
+-#   find_package(LIEF 0.11.0 REQUIRED COMPONENTS STATIC)
+-
+-
+-
+-set(_LIEF_SEARCHES)
+-
+-if(LIEF_ROOT)
+-  message(FATAL_ERROR "LIEF_ROOT is no longer supported. Please use LIEF_DIR")
+-endif()
+-
+-if(LIEF_DIR)
+-  set(_LIEF_SEARCH_ROOT PATHS ${LIEF_DIR} NO_DEFAULT_PATH)
+-  list(APPEND _LIEF_SEARCHES _LIEF_SEARCH_ROOT)
+-endif()
+-
+-set(LIEF_NAMES LIEF)
+-
+-if (LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_STATIC AND LIEF_FIND_REQUIRED_SHARED)
+-  message(WARNING "Two incompatible components specified : static and shared. We are going to ignore the 'shared' component.")
+-  list(REMOVE_ITEM LIEF_FIND_COMPONENTS SHARED)
+-  unset(LIEF_FIND_REQUIRED_SHARED)
+-endif()
+-
+-set(LIBRARY_SUFFIXES_SAVED ${CMAKE_FIND_LIBRARY_SUFFIXES})
+-
+-if (NOT LIEF_FIND_COMPONENTS)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX} ${CMAKE_SHARED_LIBRARY_SUFFIX})
+-endif()
+-
+-if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_STATIC)
+-  unset(_LIEF_LIBRARY CACHE)
+-  unset(LIEF_LIBRARY)
+-  unset(LIEF_FOUND)
+-  unset(LIEF_LIBRARIES)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+-endif()
+-
+-if(LIEF_FIND_COMPONENTS AND LIEF_FIND_REQUIRED_SHARED)
+-  unset(_LIEF_LIBRARY CACHE)
+-  unset(LIEF_LIBRARY)
+-  unset(LIEF_FOUND)
+-  unset(LIEF_LIBRARIES)
+-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX})
+-endif()
+-
+-# Try each search configuration.
+-foreach(search ${_LIEF_SEARCHES})
+-  find_path(LIEF_INCLUDE_DIR
+-    NAMES LIEF/LIEF.hpp
+-    PATH ${${search}}
+-    REQUIRED
+-    CMAKE_FIND_ROOT_PATH_BOTH
+-    PATH_SUFFIXES include)
+-endforeach()
+-
+-# Allow LIEF_LIBRARY to be set manually, as the location of the LIEF library
+-if(NOT LIEF_LIBRARY)
+-  foreach(search ${_LIEF_SEARCHES})
+-    find_library(_LIEF_LIBRARY
+-      NAMES ${LIEF_NAMES}
+-      PATHS ${${search}}
+-      REQUIRED
+-      CMAKE_FIND_ROOT_PATH_BOTH
+-      PATH_SUFFIXES lib lib64)
+-  endforeach()
+-
+-  if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake")
+-    include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
+-  else()
+-    include(SelectLibraryConfigurations)
+-  endif()
+-
+-  select_library_configurations(LIEF)
+-
+-  set(LIEF_LIBRARY ${_LIEF_LIBRARY})
+-endif()
+-
+-
+-unset(LIEF_NAMES)
+-
+-mark_as_advanced(LIEF_INCLUDE_DIR)
+-
+-if(LIEF_INCLUDE_DIR AND EXISTS "${LIEF_INCLUDE_DIR}/LIEF/version.h")
+-  file(STRINGS "${LIEF_INCLUDE_DIR}/LIEF/version.h" LIEF_H REGEX "^#define LIEF_VERSION \"[^\"]*\"$")
+-
+-  string(REGEX REPLACE "^.*LIEF_VERSION \"([0-9]+).*$" "\\1"                   LIEF_VERSION_MAJOR "${LIEF_H}")
+-  string(REGEX REPLACE "^.*LIEF_VERSION \"[0-9]+\\.([0-9]+).*$" "\\1"          LIEF_VERSION_MINOR "${LIEF_H}")
+-  string(REGEX REPLACE "^.*LIEF_VERSION \"[0-9]+\\.[0-9]+\\.([0-9]+).*$" "\\1" LIEF_VERSION_PATCH "${LIEF_H}")
+-  set(LIEF_VERSION_STRING "${LIEF_VERSION_MAJOR}.${LIEF_VERSION_MINOR}.${LIEF_VERSION_PATCH}")
+-
+-  set(LIEF_MAJOR_VERSION "${LIEF_VERSION_MAJOR}")
+-  set(LIEF_MINOR_VERSION "${LIEF_VERSION_MINOR}")
+-  set(LIEF_PATCH_VERSION "${LIEF_VERSION_PATCH}")
+-endif()
+-
+-
+-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake")
+-  include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+-else()
+-  include(FindPackageHandleStandardArgs)
+-endif()
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIEF REQUIRED_VARS LIEF_LIBRARY LIEF_INCLUDE_DIR
+-                                       VERSION_VAR LIEF_VERSION_STRING)
+-
+-
+-if(LIEF_FOUND)
+-  set(LIEF_INCLUDE_DIRS ${LIEF_INCLUDE_DIR})
+-
+-  if(NOT LIEF_LIBRARIES)
+-    set(LIEF_LIBRARIES ${LIEF_LIBRARY})
+-  endif()
+-
+-  if(NOT TARGET LIEF::LIEF)
+-    add_library(LIEF::LIEF UNKNOWN IMPORTED)
+-    set_target_properties(LIEF::LIEF PROPERTIES
+-      INTERFACE_INCLUDE_DIRECTORIES "${LIEF_INCLUDE_DIRS}")
+-
+-    if(LIEF_LIBRARY)
+-      set_property(TARGET LIEF::LIEF APPEND PROPERTY
+-        IMPORTED_CONFIGURATIONS RELEASE)
+-      set_target_properties(LIEF::LIEF PROPERTIES
+-        IMPORTED_LOCATION_RELEASE "${LIEF_LIBRARY}")
+-    endif()
+-
+-    if(NOT LIEF_LIBRARY)
+-      set_property(TARGET LIEF::LIEF APPEND PROPERTY
+-        IMPORTED_LOCATION "${LIEF_LIBRARY}")
+-    endif()
+-  endif()
+-endif()
+-
+-# Restore
+-set(CMAKE_FIND_LIBRARY_SUFFIXES ${LIBRARY_SUFFIXES_SAVED})
+-- 
+2.35.1
+

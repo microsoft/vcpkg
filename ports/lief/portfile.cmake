@@ -5,7 +5,9 @@ vcpkg_from_github(
     SHA512 8ebcd67c54903d83e43959039d0cccdbccb6132c5f84344dbd9834d98932d294c4f5ce95df8a1702c6afa8a1714179b6d413c524902f24eb0f0bceff5db3c2be
     HEAD_REF master
     PATCHES
-        support_distribution.patch
+        0001-Use-CMake-BUILD_INTERFACE-generator-expression-for-i.patch
+        0002-Export-LIEF-targets-with-CMake.patch
+        0003-Support-vcpkg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

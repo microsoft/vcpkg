@@ -1,0 +1,74 @@
+From 3861a8269aee85136584cb3cb211b490fab09478 Mon Sep 17 00:00:00 2001
+From: Eric Kilmer <eric.d.kilmer@gmail.com>
+Date: Mon, 21 Feb 2022 10:26:55 -0500
+Subject: [PATCH 1/3] Use CMake BUILD_INTERFACE generator expression for
+ include directories
+
+This fixes the paths that are generated for the exported targets so that
+they do not have absolute paths that were found/used at build time.
+---
+ CMakeLists.txt               | 6 +++---
+ cmake/LIEFApi.cmake          | 2 +-
+ cmake/LIEFDependencies.cmake | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 456279ae..41afb8c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -336,7 +336,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/LIEF.pc.in ${CMAKE_CURRENT_BINARY_DIR
+                @ONLY)
+ 
+ target_include_directories(LIB_LIEF
+-  PUBLIC  "${LIEF_PUBLIC_INCLUDE_DIR}"
++  PUBLIC  "$<BUILD_INTERFACE:${LIEF_PUBLIC_INCLUDE_DIR}>"
+   PRIVATE "${LIEF_PRIVATE_INCLUDE_DIR}")
+ 
+ if(LIEF_ENABLE_JSON)
+@@ -379,7 +379,7 @@ if(LIEF_EXTERNAL_LEAF)
+   if(LIEF_EXTERNAL_LEAF_DIR)
+     message(STATUS "External LEAF include dir: ${LIEF_EXTERNAL_LEAF_DIR}")
+     target_include_directories(LIB_LIEF SYSTEM PUBLIC
+-                               ${LIEF_EXTERNAL_LEAF_DIR})
++                               "$<BUILD_INTERFACE:${LIEF_EXTERNAL_LEAF_DIR}>")
+   endif()
+ else()
+   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/leaf.hpp
+@@ -422,7 +422,7 @@ if(LIEF_EXTERNAL_SPAN)
+   if(LIEF_EXTERNAL_SPAN_DIR)
+     message(STATUS "External span include dir: ${LIEF_EXTERNAL_SPAN_DIR}")
+     target_include_directories(LIB_LIEF SYSTEM PUBLIC
+-                               ${LIEF_EXTERNAL_SPAN_DIR})
++                               "$<BUILD_INTERFACE:${LIEF_EXTERNAL_SPAN_DIR}>")
+   endif()
+ else()
+   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/span.hpp
+diff --git a/cmake/LIEFApi.cmake b/cmake/LIEFApi.cmake
+index f06f846c..42e0b8dc 100644
+--- a/cmake/LIEFApi.cmake
++++ b/cmake/LIEFApi.cmake
+@@ -18,7 +18,7 @@ endif()
+ # -----
+ if(LIEF_C_API)
+   target_include_directories(LIB_LIEF
+-    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/api/c/include")
++    PUBLIC  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/api/c/include>")
+ 
+   include("${CMAKE_CURRENT_SOURCE_DIR}/api/c/CMakeLists.txt")
+ endif()
+diff --git a/cmake/LIEFDependencies.cmake b/cmake/LIEFDependencies.cmake
+index 087bae8a..2f8e6b0b 100644
+--- a/cmake/LIEFDependencies.cmake
++++ b/cmake/LIEFDependencies.cmake
+@@ -179,7 +179,7 @@ else()
+   ExternalProject_get_property(lief_spdlog_project SOURCE_DIR)
+   set(SPDLOG_SOURCE_DIR "${SOURCE_DIR}")
+   add_dependencies(lief_spdlog lief_spdlog_project)
+-  target_include_directories(lief_spdlog SYSTEM INTERFACE ${SPDLOG_SOURCE_DIR}/include)
++  target_include_directories(lief_spdlog SYSTEM INTERFACE "$<BUILD_INTERFACE:${SPDLOG_SOURCE_DIR}/include>")
+ endif()
+ 
+ # Frozen
+-- 
+2.35.1
+
