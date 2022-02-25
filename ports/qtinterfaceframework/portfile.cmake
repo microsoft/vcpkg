@@ -79,6 +79,7 @@ set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS ${FEATURE_OPTIONS}
+                        "-DCMAKE_PROGRAM_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" # need to overwrite vcpkg.cmake
                         "-DPython3_EXECUTABLE=${PYTHON3}" # Otherwise a VS installation might be found. 
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
