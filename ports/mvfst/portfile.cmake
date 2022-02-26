@@ -13,6 +13,14 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
 )
 
+# Prefer installed config files
+file(REMOVE
+    ${SOURCE_PATH}/fizz/cmake/FindGMock.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
+    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
+)
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mvfst)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

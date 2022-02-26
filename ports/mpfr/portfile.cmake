@@ -1,5 +1,5 @@
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\n    texinfo\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive texinfo\n")
+    message(WARNING "${PORT} currently requires the following packages:\n    autoconf-archive\nThese can be installed on Ubuntu systems via\n    sudo apt-get update -y\n    sudo apt-get install -y autoconf-archive\n")
 endif()
 
 set(VERSION 4.1.0)
@@ -11,17 +11,18 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES 
         gmpd.patch
         dll.patch
+        src-only.patch
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/m4")
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    ADDITIONAL_MSYS_PACKAGES texinfo gettext autoconf-archive
+    ADDITIONAL_MSYS_PACKAGES autoconf-archive
 )
 
 vcpkg_install_make()
@@ -36,4 +37,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.LESSER" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

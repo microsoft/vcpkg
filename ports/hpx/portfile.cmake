@@ -1,4 +1,3 @@
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -7,6 +6,7 @@ vcpkg_from_github(
     REF 1.7.1
     SHA512 6bdb294da393a198abf81d5f63799a066334755eed0fda40bbfc4e9a774b6e19a3e5ad7ab45c989d31f3797e7b547bb552c29f51b552d9a79d166f86aee375a3
     HEAD_REF stable
+    PATCHES fix-dependency-hwloc.patch
 )
 
 set(HPX_WITH_MALLOC system)

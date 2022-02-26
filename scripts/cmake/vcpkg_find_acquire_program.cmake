@@ -371,19 +371,17 @@ function(vcpkg_find_acquire_program program)
         endif()
     elseif(program STREQUAL "FLEX" OR program STREQUAL "BISON")
         if(CMAKE_HOST_WIN32)
-            vcpkg_list(SET sourceforge_args
-                REPO winflexbison
-                FILENAME winflexbison-2.5.16.zip
-                SHA512 0a14154bff5d998feb23903c46961528f8ccb4464375d5384db8c4a7d230c0c599da9b68e7a32f3217a0a0735742242eaf3769cb4f03e00931af8640250e9123
-                NO_REMOVE_ONE_LEVEL
-                WORKING_DIRECTORY "${DOWNLOADS}/tools/winflexbison"
-            )
+            set(program_version 2.5.25)
+            set(download_urls "https://github.com/lexxmark/winflexbison/releases/download/v${program_version}/win_flex_bison-${program_version}.zip")
+            set(download_filename "win_flex_bison-${program_version}.zip")
+            set(download_sha512 2a829eb05003178c89f891dd0a67add360c112e74821ff28e38feb61dac5b66e9d3d5636ff9eef055616aaf282ee8d6be9f14c6ae4577f60bdcec96cec9f364e)
+            set(tool_subdirectory "${program_version}")
             if(program STREQUAL "FLEX")
                 set(program_name win_flex)
             else()
                 set(program_name win_bison)
             endif()
-            set(paths_to_search ${DOWNLOADS}/tools/winflexbison/0a14154bff-a8cf65db07)
+            set(paths_to_search ${DOWNLOADS}/tools/win_flex/${program_version})
             if(NOT EXISTS "${paths_to_search}/data/m4sugar/m4sugar.m4")
                 file(REMOVE_RECURSE "${paths_to_search}")
             endif()
