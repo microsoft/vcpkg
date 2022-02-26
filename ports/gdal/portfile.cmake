@@ -5,6 +5,7 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
+    0009-poppler-cxx17.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -175,6 +176,11 @@ else()
         add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
+    if ("poppler" IN_LIST FEATURES)
+        add_config("--with-poppler=yes"  "Poppler support:           yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-poppler=no"   "Poppler support:           no")
+    endif()
     if ("postgresql" IN_LIST FEATURES)
         add_config("--with-pg=yes"  "PostgreSQL support:        yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
@@ -258,7 +264,6 @@ else()
             --with-pcre2=no
             --with-pdfium=no
             --with-podofo=no
-            --with-poppler=no
             --with-qhull=no
             --with-rasdaman=no
             --with-rasterlite2=no

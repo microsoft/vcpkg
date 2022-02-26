@@ -1,0 +1,19 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,7 +14,6 @@ if (MSVC)
+     set_source_files_properties(${src} PROPERTIES LANGUAGE CXX)
+ endif()
+ 
+-string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+ 
+ add_library                     (leptonica ${src} ${hdr})
+ set_target_properties           (leptonica PROPERTIES VERSION   ${VERSION_PLAIN})
+@@ -52,7 +52,7 @@ if (TIFF_LIBRARIES)
+ endif()
+ if (WEBP_FOUND)
+     target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIRS})
+-    target_link_libraries       (leptonica ${WEBP_LIBRARIES})
++    target_link_libraries       (leptonica WebP::webp WebP::libwebpmux)
+ endif()
+ if (ZLIB_LIBRARIES)
+     target_include_directories  (leptonica PUBLIC ${ZLIB_INCLUDE_DIRS})

@@ -1,0 +1,15 @@
+{
+  "name": "outcome-run-tests",
+  "version-string": "0",
+  "port-version": 1,
+  "description": "Ensures that outcome built with vcpkg version of dependencies produces working executables.",
+  "supports": "x64",
+  "dependencies": [
+    {
+      "name": "outcome",
+      "features": [
+        "run-tests"
+      ]
+    }
+  ]
+}
