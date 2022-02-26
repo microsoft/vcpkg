@@ -1,8 +1,9 @@
 {
   "name": "qtimageformats",
-  "version-semver": "6.2.2",
+  "version": "6.2.3",
   "description": "Additional Image Format plugins for Qt",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
