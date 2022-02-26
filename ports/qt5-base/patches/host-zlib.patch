@@ -1,0 +1,35 @@
+--- a/mkspecs/features/qt_configure.prf
++++ b/mkspecs/features/qt_configure.prf
+@@ -2161,7 +2161,10 @@
+     for (type, $${currentConfig}.files._KEYS_) {
+         contains(type, ".*Pro") {
+             for (k, $${currentConfig}.output.$${type}.assign._KEYS_): \
++            {
+                 $${currentConfig}.output.$$type += "$$k = $$eval($${currentConfig}.output.$${type}.assign.$$k)"
++                equals(k, "QMAKE_LIBS_ZLIB"): $${currentConfig}.output.$$type += "host_build:qtConfig(system-zlib): $$k = -lz"
++            }
+             for (k, $${currentConfig}.output.$${type}.remove._KEYS_): \
+                 $${currentConfig}.output.$$type += "$$k -= $$eval($${currentConfig}.output.$${type}.remove.$$k)"
+             for (k, $${currentConfig}.output.$${type}.append._KEYS_): \
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -150,7 +150,7 @@
+ src_android.subdir = $$PWD/android
+ 
+ # this order is important
+-!qtConfig(system-zlib)|cross_compile {
++!qtConfig(system-zlib) {
+     SUBDIRS += src_qtzlib
+     !qtConfig(system-zlib) {
+         src_3rdparty_libpng.depends += src_corelib
+--- a/src/tools/bootstrap/bootstrap.pro
++++ b/src/tools/bootstrap/bootstrap.pro
+@@ -158,7 +158,7 @@
+         ../../corelib/io/qstandardpaths_win.cpp
+ }
+ 
+-!qtConfig(system-zlib)|cross_compile {
++!qtConfig(system-zlib) {
+     include(../../3rdparty/zlib.pri)
+ } else {
+     CONFIG += no_core_dep

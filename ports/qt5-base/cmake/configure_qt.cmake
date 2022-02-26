@@ -4,11 +4,17 @@ function(configure_qt)
     if(NOT _csc_TARGET_PLATFORM)
         message(FATAL_ERROR "configure_qt requires a TARGET_PLATFORM argument.")
     endif()
-    
+
     if(DEFINED _csc_HOST_PLATFORM)
         list(APPEND _csc_OPTIONS -platform ${_csc_HOST_PLATFORM})
     endif()
-    
+
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_CROSSCOMPILING)
+        set(PLATFORM_FLAG -xplatform)
+    else()
+        set(PLATFORM_FLAG -platform)
+    endif()
+
     if(DEFINED _csc_HOST_TOOLS_ROOT)
         ## vcpkg internal file struture assumed here!
         message(STATUS "Building Qt with prepared host tools from ${_csc_HOST_TOOLS_ROOT}!")
@@ -39,7 +45,7 @@ function(configure_qt)
     else()
         #list(APPEND _csc_OPTIONS_DEBUG -separate-debug-info)
     endif()
-   
+
     if(VCPKG_TARGET_IS_WINDOWS AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
         list(APPEND _csc_OPTIONS -static-runtime)
     endif()
@@ -69,7 +75,7 @@ function(configure_qt)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
-    
+
     foreach(_buildname ${BUILDTYPES})
         set(PKGCONFIG_INSTALLED_DIR "${_VCPKG_INSTALLED_PKGCONF}${_path_suffix_${_buildname}}/lib/pkgconfig")
         set(PKGCONFIG_INSTALLED_SHARE_DIR "${_VCPKG_INSTALLED_PKGCONF}/share/pkgconfig")
@@ -95,8 +101,8 @@ function(configure_qt)
                 -hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 #-hostprefix ${CURRENT_INSTALLED_DIR}/tools/qt5
                 -hostlibdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/lib # could probably be move to manual-link
-                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin 
-                #-hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin 
+                -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin
+                #-hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin
                 # Qt VS Plugin requires a /bin subfolder with the executables in the root dir. But to use the wizard a correctly setup lib folder is also required
                 # So with the vcpkg layout there is no way to make it work unless all dll are are copied to tools/qt5/bin and all libs to tools/qt5/lib
                 -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
@@ -109,11 +115,11 @@ function(configure_qt)
                 -libdir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
                 -I ${CURRENT_INSTALLED_DIR}/include/qt5
-                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
+                -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
-                -platform ${_csc_TARGET_PLATFORM}
+                ${PLATFORM_FLAG} ${_csc_TARGET_PLATFORM}
             )
-        
+
         if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake
             if(WIN32)
                 set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
@@ -131,9 +137,9 @@ function(configure_qt)
             )
         endif()
 
-        # Note archdatadir and datadir are required to be prefixed with the hostprefix? 
+        # Note archdatadir and datadir are required to be prefixed with the hostprefix?
         message(STATUS "Configuring ${_build_triplet} done")
-        
+
         # Copy configuration dependent qt.conf
         file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR_PATH)
         file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}" CMAKE_CURRENT_INSTALLED_DIR_PATH)
@@ -145,7 +151,7 @@ function(configure_qt)
         string(REGEX REPLACE "\\[EffectiveSourcePaths\\]\r?\nPrefix=[^\r\n]+\r?\n" "" _contents ${_contents})
         string(REPLACE "Sysroot=\n" "" _contents ${_contents})
         string(REPLACE "SysrootifyPrefix=false\n" "" _contents ${_contents})
-        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")     
-    endforeach()  
+        file(WRITE "${CURRENT_PACKAGES_DIR}/tools/qt5/qt_${_build_type_${_buildname}}.conf" "${_contents}")
+    endforeach()
 
 endfunction()
