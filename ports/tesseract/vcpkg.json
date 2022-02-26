@@ -1,10 +1,10 @@
 {
   "name": "tesseract",
   "version": "4.1.1",
-  "port-version": 9,
+  "port-version": 10,
   "description": "An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.",
   "homepage": "https://github.com/tesseract-ocr/tesseract",
-  "supports": "!(windows & (arm | arm64))",
+  "supports": "!arm",
   "dependencies": [
     "leptonica",
     "libarchive",
