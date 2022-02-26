@@ -56,18 +56,19 @@ vcpkg_extract_source_archive_ex(
 #     tbb   ROCKSDB_IGNORE_PACKAGE_TBB
 # )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 
 # # Moves all .cmake files from /debug/share/@PORT@/ to /share/@PORT@/
-# # See docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details
-# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
+# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
+# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
 
 # # Handle copyright
-# file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/@PORT@" RENAME copyright)
+# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/@PORT@ RENAME copyright)

@@ -3,16 +3,7 @@
   "version-string": "",
   "homepage": "",
   "description": "",
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ],
+  "dependencies": [],
 
   "default-features": [],
   "features": [
