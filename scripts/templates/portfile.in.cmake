@@ -66,7 +66,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # # Moves all .cmake files from /debug/share/@PORT@/ to /share/@PORT@/
-# # See docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details
+# # See /docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details
 # vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
 
 # # Handle copyright
