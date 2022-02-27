@@ -9,12 +9,6 @@ vcpkg_from_github(
   PATCHES rquickjs.patch
 )
 
-vcpkg_check_features(
-  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    bignum ENABLE_BIGNUM
-)
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/quickjs-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
@@ -22,7 +16,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/sh
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
