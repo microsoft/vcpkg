@@ -170,8 +170,6 @@ crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
 crashpad:x86-windows=fail
-ctemplate:arm64-windows=fail
-ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
 cuda:x64-osx=fail
@@ -190,8 +188,6 @@ dbghelp:x64-windows-static=skip
 dbghelp:x64-windows-static-md=skip
 dbghelp:x64-windows=skip
 dbghelp:x86-windows=skip
-dcmtk:arm-uwp=fail
-dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
 devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
@@ -298,9 +294,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-gainput:arm-uwp=fail
-gainput:x64-linux=fail
-gainput:x64-uwp=fail
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
@@ -1003,7 +996,6 @@ pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
 popsift:x64-windows-static-md=fail
-poppler:arm64-windows=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
@@ -1282,8 +1274,6 @@ tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
-tinyexif:arm-uwp=fail
-tinyexif:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxparser:arm64-windows=fail
@@ -1399,9 +1389,9 @@ clapack:x64-windows-static=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
+lapack-reference:x64-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail

@@ -525,6 +525,10 @@ foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
     endif()
 endforeach()
 
+cmake_policy(POP)
+
+# Any policies applied to the below macros and functions appear to leak into consumers
+
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
     _add_executable(${ARGS})
@@ -786,6 +790,9 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         endif()
     endforeach()
 endmacro()
+
+cmake_policy(PUSH)
+cmake_policy(VERSION 3.7.2)
 
 set(VCPKG_TOOLCHAIN ON)
 set(Z_VCPKG_UNUSED "${CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION}")
