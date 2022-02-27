@@ -1,0 +1,3 @@
+find_package(QuickJS CONFIG REQUIRED)
+
+target_link_libraries(main PRIVATE quickjs::quickjs)
