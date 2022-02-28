@@ -1674,7 +1674,7 @@
     },
     "cspice": {
       "baseline": "67",
-      "port-version": 1
+      "port-version": 2
     },
     "ctbignum": {
       "baseline": "2019-08-02",
@@ -5818,7 +5818,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.13.2",
