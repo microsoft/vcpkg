@@ -24,4 +24,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/eula.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intelrdfpmathlib" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/eula.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
