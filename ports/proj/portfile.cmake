@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 524b76f2e9f4bb8e4a8d2a4287c23e67c67fce07 # 9.0.0 between RC and release
-    SHA512 d22ab230014f2b2c241f1988ae0a3e553cff6c13aab3d1cac3f9c2a28a5dd451be1c8345ef46bf0024254054b956f390a7e9eb0133c2416f58505228f5a05569
+    REF 65c84b6e2a40ec8e6b8d1de86bcd556d01ef2aeb # app. 9.0.0 RC2
+    SHA512 9c9ed3272f2689dcd9b813632e669687cd34888dd4cd102be2b10e72d2756d5027effca19fb0682918b94a2d4f0abac1a3379ea078328c25e10bb92dc34583e6
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
