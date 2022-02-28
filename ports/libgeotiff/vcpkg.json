@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Libgeotiff is an open source library on top of libtiff for reading and writing GeoTIFF information tags.",
   "homepage": "https://github.com/OSGeo/libgeotiff",
+  "license": "MIT",
   "dependencies": [
     "proj",
     {

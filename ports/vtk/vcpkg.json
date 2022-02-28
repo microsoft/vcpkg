@@ -4,6 +4,7 @@
   "port-version": 7,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "double-conversion",
     "eigen3",
