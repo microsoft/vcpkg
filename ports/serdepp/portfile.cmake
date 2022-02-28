@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO injae/serdepp
-    REF v0.1.3.1
-    SHA512 4102f87748010b2369bbda0afbde2aa567cf33098d62e0b71130c1203b8cfa583d29e4ac486aa32dab3ce7960252095cb33fb9517c08d25703779fdebf6218f4
+    REF v0.1.4-pre.1
+    SHA512 a09f6d37a32b953aee0cff2977024f3aa501d634e283f8d9c73378306e8db32bf2529db79d3a138b164deda95f35a95b497bc979fd755b96b537a613330b889d
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DENABLE_INLINE_CPPM_TOOLS=ON
 )
-
-find_program(GIT_EXECUTABLE NAMES git git.cmd)
 
 vcpkg_cmake_install()
 
