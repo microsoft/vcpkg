@@ -1440,6 +1440,10 @@
       "baseline": "2020-08-01",
       "port-version": 1
     },
+    "cnats": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "cnl": {
       "baseline": "1.1.7",
       "port-version": 1
