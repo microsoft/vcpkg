@@ -250,7 +250,7 @@
     },
     "avro-c": {
       "baseline": "1.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "avro-cpp": {
       "baseline": "2021-06-01",
@@ -766,7 +766,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.78.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-iterator": {
       "baseline": "1.78.0",
@@ -2014,7 +2014,7 @@
     },
     "elfutils": {
       "baseline": "0.186",
-      "port-version": 1
+      "port-version": 2
     },
     "embree2": {
       "baseline": "2.17.7",
@@ -2154,7 +2154,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 9
+      "port-version": 10
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2378,7 +2378,7 @@
     },
     "gdal": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gdcm": {
       "baseline": "3.0.7",
@@ -3338,7 +3338,7 @@
     },
     "libarchive": {
       "baseline": "3.5.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libass": {
       "baseline": "0.15.2",
@@ -3666,7 +3666,7 @@
     },
     "liblzma": {
       "baseline": "5.2.5",
-      "port-version": 4
+      "port-version": 5
     },
     "libmad": {
       "baseline": "0.15.1",
@@ -4098,7 +4098,7 @@
     },
     "libwandio": {
       "baseline": "4.2.1",
-      "port-version": 5
+      "port-version": 6
     },
     "libwebm": {
       "baseline": "1.0.0.28",
@@ -4122,7 +4122,7 @@
     },
     "libxml2": {
       "baseline": "2.9.12",
-      "port-version": 4
+      "port-version": 5
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -4138,7 +4138,7 @@
     },
     "libxslt": {
       "baseline": "1.1.34",
-      "port-version": 3
+      "port-version": 4
     },
     "libyaml": {
       "baseline": "0.2.5",
@@ -5550,7 +5550,7 @@
     },
     "python3": {
       "baseline": "3.10.1",
-      "port-version": 6
+      "port-version": 7
     },
     "qca": {
       "baseline": "2.3.4",
@@ -5642,7 +5642,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-location": {
       "baseline": "5.15.2",
@@ -6850,7 +6850,7 @@
     },
     "tiff": {
       "baseline": "4.3.0",
-      "port-version": 5
+      "port-version": 6
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -7266,7 +7266,7 @@
     },
     "vtk": {
       "baseline": "9.0.3-pv5.9.1",
-      "port-version": 6
+      "port-version": 7
     },
     "vtk-dicom": {
       "baseline": "0.8.12",
