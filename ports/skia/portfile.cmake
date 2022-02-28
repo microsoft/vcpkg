@@ -1,7 +1,3 @@
-vcpkg_fail_port_install(
-    ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
@@ -13,7 +9,7 @@ function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
-    
+
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
@@ -51,7 +47,7 @@ function(cmake_to_gn_list OUTPUT_ INPUT_)
         set(${OUTPUT_} "[]" PARENT_SCOPE)
     else()
         string(REPLACE ";" "\",\"" TEMP "${INPUT_}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)    
+        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
     endif()
 endfunction()
 
@@ -102,8 +98,8 @@ replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
-replace_skia_dep(libwebp "/include" 
-    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd" 
+replace_skia_dep(libwebp "/include"
+    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd"
     "webp;webpdemux;webpdecoder;libwebpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 
@@ -111,6 +107,10 @@ set(OPTIONS "\
 skia_use_lua=false \
 skia_enable_tools=false \
 skia_enable_spirv_validation=false")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
+endif()
 
 # used for passing feature-specific definitions to the config file
 set(SKIA_PUBLIC_DEFINITIONS "")
@@ -176,11 +176,11 @@ vcpkg_install_gn(
 )
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(COPY "${SOURCE_PATH}/include" 
+file(COPY "${SOURCE_PATH}/include"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" 
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
     "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false 
+file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false
     "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
 foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")

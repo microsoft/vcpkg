@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 904f9a267dddb30e9f187e57231ed160ab2f2704 # v0.3.15
-    SHA512 ddb1eba7b0def08483d7610675335648017eff41de3cbe24357bd15c6938c7997f12c449f32d8225abbb5ef8f7a2e7501320ec05e970e8ddf8e4c25fd81e8002 
+    REF 2480e5046e3b0120da8a7fd1442eca628df55f87 # v0.3.19
+    SHA512 b85a96c8cd75bf7197732f3b923b8b0ffdc6261d7d6dc7b622d4bf24f061d02273ad99571cabe4686d92f77ff8e6f7e2de0851758cbb3c529d7c2ca96a0bc34d 
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
         fix-uwp-build.patch
-        fix-marco-conflict.patch
         install-tools.patch
 )
 

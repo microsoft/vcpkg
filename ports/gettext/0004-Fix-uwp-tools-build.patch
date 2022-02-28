@@ -1,0 +1,116 @@
+--- a/gettext-runtime/gnulib-lib/fcntl.c	2022-01-11 11:11:28.406622100 +0700
++++ b/gettext-runtime/gnulib-lib/fcntl.c	2022-01-11 11:11:03.406190800 +0700
+@@ -38,6 +38,10 @@
+ # define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define HANDLE_FLAG_INHERIT 0
++#endif
++
+ /* Get _get_osfhandle.  */
+ # if GNULIB_MSVC_NOTHROW
+ #  include "msvc-nothrow.h"
+--- a/gettext-tools/gnulib-lib/fcntl.c	2022-01-11 11:11:28.406622100 +0700
++++ b/gettext-tools/gnulib-lib/fcntl.c	2022-01-11 11:11:03.406190800 +0700
+@@ -38,6 +38,10 @@
+ # define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define HANDLE_FLAG_INHERIT 0
++#endif
++
+ /* Get _get_osfhandle.  */
+ # if GNULIB_MSVC_NOTHROW
+ #  include "msvc-nothrow.h"
+--- a/gettext-tools/src/hostname.c	2022-01-12 01:41:13.725124300 +0700
++++ b/gettext-tools/src/hostname.c	2022-01-12 01:47:39.384274300 +0700
+@@ -35,15 +35,15 @@
+ /* Get gethostname().  */
+ #include <unistd.h>
+ 
++#if !HAVE_GETHOSTNAME
+ #ifdef WIN32_NATIVE
+ /* Native Woe32 API lacks gethostname() but has GetComputerName() instead.  */
+ # include <windows.h>
+ #else
+ /* Some systems, like early Solaris versions, lack gethostname() but
+    have uname() instead.  */
+-# if !HAVE_GETHOSTNAME
+-#  include <sys/utsname.h>
+-# endif
++# include <sys/utsname.h>
++#endif
+ #endif
+ 
+ /* Get MAXHOSTNAMELEN.  */
+@@ -56,6 +56,9 @@
+ 
+ /* Support for using gethostbyname().  */
+ #if HAVE_GETHOSTBYNAME
++#if HAVE_WINSOCK2_H
++# include <winsock2.h>
++#else
+ # include <sys/types.h>
+ # include <sys/socket.h> /* defines AF_INET, AF_INET6 */
+ # include <netinet/in.h> /* declares ntohs(), defines struct sockaddr_in */
+@@ -77,6 +80,7 @@
+ # endif
+ # include <netdb.h> /* defines struct hostent, declares gethostbyname() */
+ #endif
++#endif
+ 
+ /* Include this after <sys/socket.h>, to avoid a syntax error on BeOS.  */
+ #include <stdbool.h>
+@@ -250,7 +254,7 @@
+ static char *
+ xgethostname ()
+ {
+-#ifdef WIN32_NATIVE
++#ifdef WIN32_NATIVE && !HAVE_GETHOSTNAME
+   char hostname[MAX_COMPUTERNAME_LENGTH+1];
+   DWORD size = sizeof (hostname);
+ 
+--- a/libtextstyle/lib/fcntl.c	2020-06-27 03:00:38.000000000 +0700
++++ b/libtextstyle/lib/fcntl.c	2022-01-11 11:10:29.936269800 +0700
+@@ -38,6 +38,10 @@
+ # define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ 
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define HANDLE_FLAG_INHERIT 0
++#endif
++
+ /* Get _get_osfhandle.  */
+ # if GNULIB_MSVC_NOTHROW
+ #  include "msvc-nothrow.h"
+--- a/libtextstyle/lib/isatty.c	2020-06-27 03:00:40.000000000 +0700
++++ b/libtextstyle/lib/isatty.c	2022-01-11 11:19:04.852685700 +0700
+@@ -99,6 +99,7 @@
+   BOOL result = FALSE;
+   ULONG processId;
+ 
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
+ #if !(_WIN32_WINNT >= _WIN32_WINNT_VISTA)
+   if (!initialized)
+     initialize ();
+@@ -137,6 +138,7 @@
+           CloseHandle (processHandle);
+         }
+     }
++#endif // !WINAPI_FAMILY_APP
+   return result;
+ }
+ 
+--- a/libtextstyle/lib/unistd.in.h	2020-07-08 08:33:18.000000000 +0700
++++ b/libtextstyle/lib/unistd.in.h	2022-01-11 22:11:46.402435600 +0700
+@@ -828,7 +828,7 @@
+    Null terminate it if the name is shorter than LEN.
+    If the host name is longer than LEN, set errno = EINVAL and return -1.
+    Return 0 if successful, otherwise set errno and return -1.  */
+-# if @UNISTD_H_HAVE_WINSOCK2_H@
++# if !@HAVE_GETHOSTNAME@ && @UNISTD_H_HAVE_WINSOCK2_H@
+ #  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+ #   undef gethostname
+ #   define gethostname rpl_gethostname

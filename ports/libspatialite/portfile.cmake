@@ -49,7 +49,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PREFIX PKGCONFIG
         MODULES --msvc-syntax ${pkg_config_modules}
         LIBS
+        CFLAGS
     )
+    
+    set(CL_FLAGS_RELEASE "${CL_FLAGS} ${PKGCONFIG_CFLAGS_RELEASE}")
+    set(CL_FLAGS_DEBUG "${CL_FLAGS} ${PKGCONFIG_CFLAGS_DEBUG}")
 
     # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
     if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
@@ -77,12 +81,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            "CL_FLAGS=${CL_FLAGS}"
         OPTIONS_RELEASE
+            "CL_FLAGS=${CL_FLAGS_RELEASE}"
             "INST_DIR=${INST_DIR}"
             "LIBS_ALL=${LIBS_ALL_RELEASE}"
         OPTIONS_DEBUG
+            "CL_FLAGS=${CL_FLAGS_DEBUG}"
             "INST_DIR=${INST_DIR}\\debug"
             "LIBS_ALL=${LIBS_ALL_DEBUG}"
             "LINK_FLAGS=/debug"
