@@ -1,9 +1,9 @@
-set(GSL_VERSION 2.7)
+set(GSL_VERSION 2.7.1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz"
     FILENAME "gsl-${GSL_VERSION}.tar.gz"
-    SHA512 a14ac5400acaf4884620430dbeb6f0b28eafe946923b792ab0eccc2a2abc9113d8ce342f4b1e5396f05247649f7d6f953944a8e6bdbf9ee1adb9e67b7c3df2b5
+    SHA512 3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131
 )
 
 vcpkg_extract_source_archive_ex(

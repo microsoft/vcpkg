@@ -1,10 +1,10 @@
 {
   "name": "gdcm",
   "version": "3.0.7",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Grassroots DICOM library",
   "homepage": "https://github.com/malaterre/GDCM",
-  "supports": "!uwp & !(windows & (arm | arm64))",
+  "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "expat",
     "openjpeg",

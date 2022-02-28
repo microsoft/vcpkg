@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-pkgconfig.patch
         fix-manpage-msys.patch
         fix-dependency-libzip.patch
+        fix-dependency-mpi.patch
 )
 
 #Remove outdated find modules
@@ -55,8 +56,8 @@ if(ENABLE_HDF5)
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
-    set(ENV{CFLAGS} "$ENV{CFLAGS} /wd4996 /wd4703")
-    set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} /wd4996 /wd4703")
+    string(APPEND VCPKG_C_FLAGS " /wd4996 /wd4703")
+    string(APPEND VCPKG_CXX_FLAGS " /wd4996 /wd4703")
 endif()
 
 vcpkg_cmake_configure(

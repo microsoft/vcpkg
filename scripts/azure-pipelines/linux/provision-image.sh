@@ -34,7 +34,7 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
 # Additionally required by some packages to install additional python packages
-APT_PACKAGES="$APT_PACKAGES python3-pip"
+APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
 
 # Additionally required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
