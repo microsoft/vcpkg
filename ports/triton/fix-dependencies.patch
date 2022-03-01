@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e82b5b..baf0ec3 100644
+index a8bbe47..966ded8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -98,9 +98,9 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
+@@ -99,9 +99,9 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
  # Find Z3
  if(Z3_INTERFACE)
      message(STATUS "Compiling with Z3 SMT solver")
@@ -15,13 +15,14 @@ index 7e82b5b..baf0ec3 100644
  
  # Find bitwuzla
 diff --git a/CMakeModules/FindCAPSTONE.cmake b/CMakeModules/FindCAPSTONE.cmake
-index ff2c63f..76a8ae6 100644
+index ff2c63f..4dcf9af 100644
 --- a/CMakeModules/FindCAPSTONE.cmake
 +++ b/CMakeModules/FindCAPSTONE.cmake
-@@ -26,9 +26,10 @@ if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+@@ -26,9 +26,11 @@ if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
        NAMES capstone/capstone.h
        PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
      )
++    
 +    string(APPEND CAPSTONE_INCLUDE_DIR "/capstone")
  
      find_library(CAPSTONE_LIBRARY
