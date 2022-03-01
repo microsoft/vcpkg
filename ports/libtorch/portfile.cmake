@@ -37,7 +37,7 @@ pip_install(PACKAGE typing-extensions)
 pip_install(PACKAGE pyyaml)
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake DESTINATION ${SOURCE_PATH}/cmake)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-dependencies.cmake" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
