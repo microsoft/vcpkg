@@ -17,7 +17,6 @@ vcpkg_from_github(
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
-        0012-fix-build-type.patch
 )
 
 vcpkg_check_features(
