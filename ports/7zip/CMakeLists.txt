@@ -290,43 +290,37 @@ target_sources(7zip PRIVATE
     CPP/7zip/Archive/Archive2.def
     C/Util/LzmaLib/LzmaLib.def
 )
-# 7zCrcOpt
+
+# 7zCrcOpt # AesOpt # Sha1Opt # Sha256Opt # XzCrc64Opt # LzFindOpt
+set(WINDOWS_PRIVATE_HEADERS
+    Asm/x86/7zCrcOpt.asm
+    Asm/x86/AesOpt.asm
+    Asm/x86/Sha1Opt.asm
+    Asm/x86/Sha256Opt.asm
+    Asm/x86/XzCrc64Opt.asm
+    Asm/x86/LzFindOpt.asm
+)
+set(WINDOWS_PRIVATE_SOURCE_FILES
+    C/7zCrcOpt.c
+    C/AesOpt.c
+    C/Sha1Opt.c
+    C/Sha256Opt.c
+    C/XzCrc64Opt.c
+    C/LzFindOpt.c
+)
+
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/7zCrcOpt.asm)
-        set_source_files_properties(Asm/x86/7zCrcOpt.asm PROPERTIES LANGUAGE ASM_MASM)
+        target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_HEADERS})
+        set_source_files_properties(${WINDOWS_PRIVATE_HEADERS} PROPERTIES LANGUAGE ASM_MASM)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         #target_sources(7zip PRIVATE Asm/arm/7zCrcOpt.asm)
         target_sources(7zip PRIVATE C/7zCrcOpt.c)
     else()
-        target_sources(7zip PRIVATE C/7zCrcOpt.c)
+        target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_SOURCE_FILES})
     endif()
 else()
-    target_sources(7zip PRIVATE C/7zCrcOpt.c)
-endif()
-
-# AesOpt
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/AesOpt.asm)
-        set_source_files_properties(Asm/x86/AesOpt.asm PROPERTIES LANGUAGE ASM_MASM)
-    else()
-        target_sources(7zip PRIVATE C/AesOpt.c)
-    endif()
-else()
-    target_sources(7zip PRIVATE C/AesOpt.c)
-endif()
-
-# LzFindOpt
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/LzFindOpt.asm)
-        set_source_files_properties(Asm/x86/LzFindOpt.asm PROPERTIES LANGUAGE ASM_MASM)
-    else()
-        target_sources(7zip PRIVATE C/LzFindOpt.c)
-    endif()
-else()
-    target_sources(7zip PRIVATE C/LzFindOpt.c)
+    target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_SOURCE_FILES})
 endif()
 
 # LzmaDecOpt
@@ -345,42 +339,6 @@ if((VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") OR
     get_source_file_property(defs C/LzmaDec.c COMPILE_DEFINITIONS)
     list(APPEND defs "_LZMA_DEC_OPT")
     set_source_files_properties(C/LzmaDec.c PROPERTIES COMPILE_DEFINITIONS "${defs}")
-endif()
-
-# Sha1Opt
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/Sha1Opt.asm)
-        set_source_files_properties(Asm/x86/Sha1Opt.asm PROPERTIES LANGUAGE ASM_MASM)
-    else()
-        target_sources(7zip PRIVATE C/Sha1Opt.c)
-    endif()
-else()
-    target_sources(7zip PRIVATE C/Sha1Opt.c)
-endif()
-
-# Sha256Opt
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/Sha256Opt.asm)
-        set_source_files_properties(Asm/x86/Sha256Opt.asm PROPERTIES LANGUAGE ASM_MASM)
-    else()
-        target_sources(7zip PRIVATE C/Sha256Opt.c)
-    endif()
-else()
-    target_sources(7zip PRIVATE C/Sha256Opt.c)
-endif()
-
-# XzCrc64Opt
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        target_sources(7zip PRIVATE Asm/x86/XzCrc64Opt.asm)
-        set_source_files_properties(Asm/x86/XzCrc64Opt.asm PROPERTIES LANGUAGE ASM_MASM)
-    else()
-        target_sources(7zip PRIVATE C/XzCrc64Opt.c)
-    endif()
-else()
-    target_sources(7zip PRIVATE C/XzCrc64Opt.c)
 endif()
 
 target_compile_definitions(7zip
