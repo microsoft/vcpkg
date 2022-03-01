@@ -19,6 +19,7 @@ vcpkg_from_github(
         fix-find-libusb.patch
         install-examples.patch
         no-absolute.patch
+        Workaround-ICE-in-release.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindQhull.cmake"
