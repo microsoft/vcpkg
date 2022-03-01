@@ -1,0 +1,39 @@
+diff --git a/lldb/CMakeLists.txt b/lldb/CMakeLists.txt
+index 2bb05c1e2..cefdd7648 100644
+--- a/lldb/CMakeLists.txt
++++ b/lldb/CMakeLists.txt
+@@ -72,7 +72,7 @@ if(CMAKE_CROSSCOMPILING AND LLDB_BUILT_STANDALONE)
+       "Crosscompiling standalone requires the variables NATIVE_{CLANG,LLVM}_DIR
+       for building the native lldb-tblgen used during the build process.")
+   endif()
+-  llvm_create_cross_target(lldb NATIVE "" Release
++  llvm_create_cross_target(lldb NATIVE "" ${CMAKE_BUILD_TYPE}
+     -DLLVM_DIR=${NATIVE_LLVM_DIR}
+     -DClang_DIR=${NATIVE_Clang_DIR})
+ endif()
+diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
+index af53a26d2..a48170eed 100644
+--- a/llvm/CMakeLists.txt
++++ b/llvm/CMakeLists.txt
+@@ -933,7 +933,7 @@ include_directories( ${LLVM_INCLUDE_DIR} ${LLVM_MAIN_INCLUDE_DIR})
+ # when crosscompiling import the executable targets from a file
+ if(LLVM_USE_HOST_TOOLS)
+   include(CrossCompile)
+-  llvm_create_cross_target(LLVM NATIVE "" Release)
++  llvm_create_cross_target(LLVM NATIVE "" ${CMAKE_BUILD_TYPE})
+ endif(LLVM_USE_HOST_TOOLS)
+ if(LLVM_TARGET_IS_CROSSCOMPILE_HOST)
+ # Dummy use to avoid CMake Warning: Manually-specified variables were not used
+diff --git a/llvm/cmake/modules/CrossCompile.cmake b/llvm/cmake/modules/CrossCompile.cmake
+index 01cd37124..c44a20061 100644
+--- a/llvm/cmake/modules/CrossCompile.cmake
++++ b/llvm/cmake/modules/CrossCompile.cmake
+@@ -105,7 +105,7 @@ function(build_native_tool target output_path_var)
+   endif()
+ 
+   llvm_ExternalProject_BuildCmd(build_cmd ${target} ${${PROJECT_NAME}_NATIVE_BUILD}
+-                                CONFIGURATION Release)
++                                CONFIGURATION ${CMAKE_BUILD_TYPE})
+   add_custom_command(OUTPUT "${output_path}"
+                      COMMAND ${build_cmd}
+                      DEPENDS CONFIGURE_${PROJECT_NAME}_NATIVE ${ARG_DEPENDS}
