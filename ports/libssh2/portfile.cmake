@@ -7,13 +7,17 @@ vcpkg_from_github(
     PATCHES "0001-Fix-UWP.patch"
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        zlib ENABLE_ZLIB_COMPRESSION
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DENABLE_ZLIB_COMPRESSION=ON
-        ${OPTIONS}
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_DEBUG_LOGGING=OFF
 )

@@ -14,7 +14,17 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
+    }
+  ],
+  "default-features": [
     "zlib"
-  ]
+  ],
+  "features": {
+    "zlib": {
+      "description": "Use compressing via zlib",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }
