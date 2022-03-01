@@ -1833,28 +1833,28 @@
       "port-version": 1
     },
     "directxmath": {
-      "baseline": "jan2021",
-      "port-version": 1
+      "baseline": "2022-01-18",
+      "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxsdk": {
       "baseline": "jun10",
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxtk": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "dirent": {
       "baseline": "1.23.2",
@@ -7169,8 +7169,8 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "uvw": {
       "baseline": "2.7.0",
