@@ -6,9 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
+        fix-src-cmakelists.patch
         find-dependency.patch
-        fix-find-libwebp.patch
-        Modify-include-dir.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)

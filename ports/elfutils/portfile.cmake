@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://sourceware.org/git/elfutils
-    REF 25d048684a82f9ba701c6939b7f28c3543bb7991 #elfutils-0.182
+    REF ca4a785fc3061c7d136b198e9ffe0b14cf90c2be #elfutils-0.186
 
     PATCHES configure.ac.patch
 )
@@ -29,6 +29,8 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdebuginfod.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdebuginfod.pc") #--disable-debuginfod 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc/debuginfod" "${CURRENT_PACKAGES_DIR}/etc/debuginfod")
+
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -37,11 +39,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/locale)
 
 # Remove files with wrong linkage
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(_lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-else()
     set(_lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+else()
+    set(_lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
 endif()
-file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}")
+file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}.*" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}.*")
 file(REMOVE ${TO_REMOVE})
  
 # # Handle copyright

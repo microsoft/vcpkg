@@ -1,9 +1,10 @@
 {
   "name": "boost-iostreams",
-  "version": "1.77.0",
-  "port-version": 1,
+  "version": "1.78.0",
+  "port-version": 2,
   "description": "Boost iostreams module",
   "homepage": "https://github.com/boostorg/iostreams",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
