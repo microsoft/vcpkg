@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO Microsoft/DirectXTK12
     REF feb2022
     SHA512 e61acd191b9ee5c7d76293f2feb158207f9e63d8f3d5a30144c04367c15d0c1d6a17d6905843d2ca80e9af713a83fa2ab2f52c206569993943997653ae6ad729
-    HEAD_REF master
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

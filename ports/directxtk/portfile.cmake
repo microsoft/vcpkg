@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO Microsoft/DirectXTK
     REF feb2022
     SHA512 18105ccf037b96b198fae086b17e678063efbed38c4212bc0c224090e7b6cd8c4197ae514f22c4b8da78f6a3e5cf6a6cd7437a79ff363baa740f01e3b1eed89b
-    HEAD_REF master
+    HEAD_REF main
 )
 
 vcpkg_check_features(

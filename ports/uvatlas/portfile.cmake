@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO Microsoft/UVAtlas
     REF feb2022
     SHA512 20f9c38dd68edfca8179d26ab7f772b3190e843c01442ae3d7c7c1cd9a5a21a68455c124f0e8aab7efd3aacc9f6fb5907591b35a6a901683dad2a2f91d785106
-    HEAD_REF master
+    HEAD_REF main
 )
 
 if (VCPKG_HOST_IS_LINUX)

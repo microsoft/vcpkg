@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO Microsoft/DirectXTex
     REF feb2022
     SHA512 7e30e38f97e944e49f5d2a6d3035d201016ac7ec5ca1042475485f7cbac165d66f4c5a2c84f2a47dad755c59b3f8947e1251b00b3e577fbc3e58f1957d8a224e
-    HEAD_REF master
+    HEAD_REF main
 )
 
 if("openexr" IN_LIST FEATURES)
