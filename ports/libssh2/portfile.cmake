@@ -7,11 +7,6 @@ vcpkg_from_github(
     PATCHES "0001-Fix-UWP.patch"
 )
 
-set(OPTIONS "")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(OPTIONS "-DBUILD_SHARED_LIBS=ON")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
