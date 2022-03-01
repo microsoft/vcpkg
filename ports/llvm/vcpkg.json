@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
+  "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
