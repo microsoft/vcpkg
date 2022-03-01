@@ -56,7 +56,7 @@ index 4579fbb3d..f6be008c8 100644
  	[
 -	AC_CHECK_HEADER(lzma.h, have_lzma=yes, have_lzma=no)
 +	# AC_CHECK_HEADER(lzma.h, have_lzma=yes, have_lzma=no)
-+    AC_SEARCH_LIBS(lzma_free, [lzma lzmad], have_lzma=yes, have_lzma=no)
++    AC_SEARCH_LIBS(lzma_free, [lzma], have_lzma=yes, have_lzma=no)
  	], [have_lzma=no])
  
  AS_IF([test "x$have_lzma" = "xyes"], [
