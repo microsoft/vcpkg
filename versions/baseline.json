@@ -4578,7 +4578,7 @@
     },
     "mpir": {
       "baseline": "3.0.0",
-      "port-version": 11
+      "port-version": 12
     },
     "mpmcqueue": {
       "baseline": "2019-07-26",
