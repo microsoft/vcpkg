@@ -59,8 +59,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO wbhart/mpir
-        REF mpir-${MPIR_VERSION}
-        SHA512 7d37f60645c533a6638dde5d9c48f5535022fa0ea02bafd5b714649c70814e88c5e5e3b0bef4c5a749aaf8772531de89c331716ee00ba1c2f9521c2cc8f3c61b
+        REF cdd444aedfcbb190f00328526ef278428702d56e # 3.0.0
+        SHA512 f46e45bdba27c9f89953ba23186b694486fd3010bd370ea2de71a4649a2816e716a6520c9baa96936f1884437ef03f92b21c0b1fb5b757beba5a05fed30b2bfc
         HEAD_REF master
         PATCHES enable-runtimelibrary-toggle.patch
     )
