@@ -3,7 +3,12 @@
   "version-string": "",
   "homepage": "",
   "description": "",
-  "dependencies": [],
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
 
   "default-features": [],
   "features": [

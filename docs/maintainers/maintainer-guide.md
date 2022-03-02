@@ -179,16 +179,15 @@ Examples: [abseil](../../ports/abseil/portfile.cmake)
 
 ### Choose either static or shared binaries
 
-By default, `vcpkg_configure_cmake()` will pass in the appropriate setting for `BUILD_SHARED_LIBS`,
+By default, `vcpkg_cmake_configure()` will pass in the appropriate setting for `BUILD_SHARED_LIBS`,
 however for libraries that don't respect that variable, you can switch on `VCPKG_LIBRARY_LINKAGE`:
 
 ```cmake
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DKEYSTONE_BUILD_STATIC=${KEYSTONE_BUILD_STATIC}
         -DKEYSTONE_BUILD_SHARED=${KEYSTONE_BUILD_SHARED}
@@ -201,17 +200,18 @@ When defining a feature that captures an optional dependency,
 ensure that the dependency will not be used accidentally when the feature is not explicitly enabled.
 
 ```cmake
+set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB ON)
+set(CMAKE_REQUIRE_FIND_PACKAGE_ZLIB OFF)
 if ("zlib" IN_LIST FEATURES)
   set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB OFF)
-else()
-  set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB ON)
+  set(CMAKE_REQUIRE_FIND_PACKAGE_ZLIB ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
     -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=${CMAKE_DISABLE_FIND_PACKAGE_ZLIB}
+    -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=${CMAKE_REQUIRE_FIND_PACKAGE_ZLIB}
 )
 ```
 
@@ -219,19 +219,20 @@ The snippet below using `vcpkg_check_features()` is equivalent,  [see the docume
 
 ```cmake
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    "zlib"    CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
   INVERTED_FEATURES
     "zlib"    CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
       ${FEATURE_OPTIONS}
 )
 ```
 
-Note that `ZLIB` in the above is case-sensitive. See the [cmake documentation](https://cmake.org/cmake/help/v3.15/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) for more details.
+Note that `ZLIB` in the above is case-sensitive. See the [CMAKE_DISABLE_FIND_PACKAGE_PackageName](https://cmake.org/cmake/help/v3.22/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) and [CMAKE_REQUIRE_FIND_PACKAGE_PackageName](https://cmake.org/cmake/help/v3.22/variable/CMAKE_REQUIRE_FIND_PACKAGE_PackageName.html) documnetation for more details.
 
 ### Place conflicting libs in a `manual-link` directory
 
@@ -330,6 +331,8 @@ Because of this, it is preferable to patch the buildsystem directly when setting
 ### Minimize patches
 
 When making changes to a library, strive to minimize the final diff. This means you should _not_ reformat the upstream source code when making changes that affect a region. Also, when disabling a conditional, it is better to add a `AND FALSE` or `&& 0` to the condition than to delete every line of the conditional.
+
+Don't add patches if the port is outdated and updating the port to a newer released version would solve the same issue. vcpkg prefers updating ports over patching outdated versions unless the version bump breaks a considerable amount of dependent ports.
 
 This helps to keep the size of the vcpkg repository down as well as improves the likelihood that the patch will apply to future code versions.
 
