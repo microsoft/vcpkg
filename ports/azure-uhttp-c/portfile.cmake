@@ -23,8 +23,7 @@ endif()
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/c-utility/configs/)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
@@ -36,10 +35,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/uhttp)
+vcpkg_cmake_config_fixup(PACKAGE_NAME azure_uhttp_c CONFIG_PATH "lib/cmake/azure_uhttp_c")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()
