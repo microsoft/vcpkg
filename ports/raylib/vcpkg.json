@@ -8,6 +8,10 @@
   "supports": "!(arm | uwp)",
   "dependencies": [
     {
+      "name": "glfw3",
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
