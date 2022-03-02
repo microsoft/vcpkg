@@ -24,6 +24,8 @@ jobs:
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: "x-azblob,$(root-bin-url),$(sas-bin)"
+  - name: MSIEXEC_LOG
+    value: $(Build.ArtifactStagingDirectory)\msiexec.log
 
   steps:
   - task: PowerShell@2
@@ -32,8 +34,49 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  - script: .\bootstrap-vcpkg.bat
-    displayName: 'Bootstrap vcpkg'
+  - task: Powershell@2
+    displayName: "Clone vcpkg-tool repo"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        git clone -b dev/roschuma/msiexec https://github.com/ras0219-msft/vcpkg-tool vcpkg-tool
+      # git -C vcpkg-tool checkout 
+  - task: Powershell@2
+    displayName: "Start msiserver"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        sc.exe queryex msiserver
+        sc.exe qc msiserver
+        Get-Service msiserver | Format-List -Property *
+        sc.exe stop msiserver
+        echo ** UNREGISTER
+        MSIEXEC /UNREGISTER
+        echo ** REGISTER
+        MSIEXEC /REGSERVER
+        sc.exe start msiserver
+        sc.exe queryex msiserver
+        sc.exe qc msiserver
+        Get-Service msiserver | Format-List -Property *
+  - task: CmdLine@2
+    displayName: "Build vcpkg with CMake"
+    inputs:
+      script: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x64 -host_arch=x86
+        mkdir cmake
+        cd cmake
+        curl.exe -sL https://github.com/Kitware/CMake/releases/download/v3.22.2/cmake-3.22.2-windows-i386.zip | tar -xf -
+        cd ..
+        curl.exe -sL https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip --output ninja-win.zip
+        tar -xf ninja-win.zip
+        rmdir /s /q build.x86 > nul 2> nul
+        set PATH=%CD%;%PATH%
+        cmake\cmake-3.22.2-windows-i386\bin\cmake.exe -S vcpkg-tool -G Ninja -DCMAKE_BUILD_TYPE=Release -B build.x86
+        ninja.exe -C build.x86
+        copy build.x86\vcpkg.exe .
+      failOnStderr: true
   - script: |
       if exist ${{ variables.VCPKG_DOWNLOADS }} rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }} 2>&1
     displayName: 'Clean downloads'

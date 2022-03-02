@@ -153,8 +153,10 @@ $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     # Prefetch tools for better output
-    & "./vcpkg$executableExtension" fetch 7zip
-    & "./vcpkg$executableExtension" fetch cmake
+    & "./vcpkg$executableExtension" fetch 7zip --debug
+    gc $env:MSIEXEC_LOG
+    if ($LASTEXITCODE -ne 0) { throw "failed"; }
+    & "./vcpkg$executableExtension" fetch cmake --debug
     & "./vcpkg$executableExtension" fetch ninja
     & "./vcpkg$executableExtension" fetch git
 

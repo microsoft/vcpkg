@@ -9,50 +9,30 @@ variables:
 jobs:
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x86-windows
-    jobName: x86_windows
-    poolName: $(windows-pool)
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    triplet: x64-windows
-    jobName: x64_windows
-    poolName: $(windows-pool)
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    triplet: x64-windows-static
-    jobName: x64_windows_static
-    poolName: $(windows-pool)
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    triplet: x64-windows-static-md
-    jobName: x64_windows_static_md
-    poolName: $(windows-pool)
-
-- template: windows/azure-pipelines.yml
-  parameters:
     triplet: x64-uwp
     jobName: x64_uwp
     poolName: $(windows-pool)
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: arm64-windows
-    jobName: arm64_windows
+    triplet: x64-uwp
+    jobName: x64_uwp_2
     poolName: $(windows-pool)
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: arm-uwp
-    jobName: arm_uwp
+    triplet: x64-uwp
+    jobName: x64_uwp_3
     poolName: $(windows-pool)
 
-- template: osx/azure-pipelines.yml
+- template: windows/azure-pipelines.yml
   parameters:
-    poolName: $(osx-pool)
+    triplet: x64-uwp
+    jobName: x64_uwp_4
+    poolName: $(windows-pool)
 
-- template: linux/azure-pipelines.yml
+- template: windows/azure-pipelines.yml
   parameters:
-    poolName: $(linux-pool)
+    triplet: x64-uwp
+    jobName: x64_uwp_5
+    poolName: $(windows-pool)
