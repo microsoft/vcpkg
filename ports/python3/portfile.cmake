@@ -197,6 +197,20 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
+    
+    # Remove static library belonging to executable
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/python.lib"
+                "${CURRENT_PACKAGES_DIR}/lib/manual-link/python.lib")
+        endif()
+        if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/python_d.lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/python_d.lib"
+                "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/python_d.lib")
+        endif()
+    endif()
 else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
