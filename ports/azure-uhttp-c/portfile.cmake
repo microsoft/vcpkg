@@ -7,8 +7,6 @@ if("public-preview" IN_LIST FEATURES)
         REF d84a20609a2b5a555920389451fb3c9a2ed3656c
         SHA512 4eadd7e120082cc3bcf696d6cd16bc7ee8e1082380dd7583fba7fad1bb95109f3456890495e25ae7675e656ef721fa12eff22eeb96d8a4cf359be5c96889cbd6
         HEAD_REF master
-        PATCHES
-            fix-install-location.patch
     )
 else()
     vcpkg_from_github(
@@ -32,6 +30,8 @@ vcpkg_configure_cmake(
         -Duse_installed_dependencies=ON
         -Dbuild_as_dynamic=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
 vcpkg_install_cmake()
