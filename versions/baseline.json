@@ -6594,7 +6594,7 @@
     },
     "speexdsp": {
       "baseline": "1.2.0",
-      "port-version": 6
+      "port-version": 7
     },
     "spirit-po": {
       "baseline": "1.1.2",
