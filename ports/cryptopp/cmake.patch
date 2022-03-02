@@ -22,8 +22,8 @@ index fb43b95..c39e470 100644
  else()
 -  add_compile_definitions("${CMAKE_CPP_FLAGS}" "${CRYPTOPP_COMPILE_DEFINITIONS}")
 -  add_compile_options("${CMAKE_CXX_FLAGS}" "${CRYPTOPP_COMPILE_OPTIONS}")
-+  add_compile_definitions(${CMAKE_CPP_FLAGS} ${CRYPTOPP_COMPILE_DEFINITIONS})
-+  add_compile_options(${CRYPTOPP_COMPILE_OPTIONS})
++  add_compile_definitions(${CRYPTOPP_COMPILE_DEFINITIONS})
++  add_compile_options(${CMAKE_CPP_FLAGS} ${CRYPTOPP_COMPILE_OPTIONS})
  endif()
  
  #============================================================================
