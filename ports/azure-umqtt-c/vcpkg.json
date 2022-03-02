@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "General purpose library for communication over the mqtt protocol",
   "homepage": "https://github.com/Azure/azure-umqtt-c",
+  "license": "MIT",
   "dependencies": [
     "azure-c-shared-utility",
     "azure-macro-utils-c",
