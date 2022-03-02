@@ -124,8 +124,6 @@ civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 clblas:arm64-windows=fail
 clockutils:x64-linux=fail
-# CMake 3.4 needs libidn.so.11 (Ubuntu: libidn11)
-cmake-user:x64-linux=skip
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
@@ -1274,8 +1272,6 @@ tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
-tinyexif:arm-uwp=fail
-tinyexif:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxparser:arm64-windows=fail
@@ -1391,9 +1387,9 @@ clapack:x64-windows-static=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
+lapack-reference:x64-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail

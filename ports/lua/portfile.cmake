@@ -45,7 +45,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua CONFIG_PATH share/unofficial-lua)
 
 if("cpp" IN_LIST FEATURES)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME share/unofficial-lua-cpp CONFIG_PATH "share/unofficial-lua-cpp")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua-cpp CONFIG_PATH "share/unofficial-lua-cpp")
 endif()
 
 if ("tools" IN_LIST FEATURES)

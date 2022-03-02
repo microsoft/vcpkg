@@ -1,5 +1,7 @@
+set(NO_DLFCN )
 if(VCPKG_TARGET_IS_WINDOWS)
   list(APPEND PATCHES "0001-windows-build-patch.patch")
+  set(NO_DLFCN "ac_cv_header_dlfcn_h=no")
 endif()
 
 vcpkg_from_github(
@@ -18,7 +20,8 @@ endif()
 vcpkg_configure_make(
   SOURCE_PATH ${SOURCE_PATH}
   AUTOCONFIG
-  OPTIONS  --disable-binaries 
+  OPTIONS  --disable-binaries
+           ${NO_DLFCN}
 )
 vcpkg_install_make()
 
