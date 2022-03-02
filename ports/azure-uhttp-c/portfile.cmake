@@ -15,8 +15,6 @@ else()
         REF 1cc70f4d21ad69768cafb9551b1b512118fba995
         SHA512 6604e82b347a1a4eb5072ab762fde7bd5ae9b32848a78da9103e0eb528b9ccd420a12dbc237dc0b5fe6db271d5cdcd24eedf1cde8ac058102fdd24c5a5a33f26
         HEAD_REF master
-        PATCHES
-            fix-install-location.patch
     )
 endif()
 
@@ -35,7 +33,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME azure_uhttp_c CONFIG_PATH "lib/cmake/azure_uhttp_c")
+vcpkg_cmake_config_fixup(PACKAGE_NAME uhttp CONFIG_PATH "lib/cmake/uhttp")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

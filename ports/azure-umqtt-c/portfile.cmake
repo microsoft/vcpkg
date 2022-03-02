@@ -15,8 +15,6 @@ else()
         REF 09558f380a314ea89b28f406cc810f47718cea49
         SHA512 7fc1b3d4ed6bd7401b764e27755270dd97caeb09f3bdede90e2e8c554acd13b5c24f9c7343e642bcb62d2937b8169d900fa46a1b97a8c439733c8cdcac19d548
         HEAD_REF master
-        PATCHES
-            fix-install-location.patch
     )
 endif()
 
@@ -34,7 +32,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME azure_umqtt_c CONFIG_PATH "lib/cmake/azure_umqtt_c")
+vcpkg_cmake_config_fixup(PACKAGE_NAME umqtt CONFIG_PATH "lib/cmake/umqtt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
