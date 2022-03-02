@@ -1,7 +1,7 @@
 From a912d979b97b71f189d1c702b2e322e1aa7ba325 Mon Sep 17 00:00:00 2001
 From: Eric Kilmer <eric.d.kilmer@gmail.com>
 Date: Fri, 25 Feb 2022 17:43:34 -0500
-Subject: [PATCH 3/3] Support vcpkg
+Subject: [PATCH 1/1] Support vcpkg
 
 Remove msvccrt choosing and fix install paths on Windows
 ---

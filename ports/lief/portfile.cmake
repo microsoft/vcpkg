@@ -1,13 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 566d4ac8a86e458a40de1e2816115f8db48a5501 # master commit 2022-02-19
-    SHA512 8ebcd67c54903d83e43959039d0cccdbccb6132c5f84344dbd9834d98932d294c4f5ce95df8a1702c6afa8a1714179b6d413c524902f24eb0f0bceff5db3c2be
+    REF 8f12ec939dc9da87a195e0a2b035460c97e0d1c9 # master commit 2022-03-01
+    SHA512 f5aa85283417e57bfb26e67c3db2d941766c5725cb9c00d2a7ad4f94aa067907d494801a1f6c444e8725a5205a8058b33a05240e40d2f17d6a0c91fe359c1d96
     HEAD_REF master
     PATCHES
-        0001-Use-CMake-BUILD_INTERFACE-generator-expression-for-i.patch
-        0002-Export-LIEF-targets-with-CMake.patch
-        0003-Support-vcpkg.patch
+        0001-Support-vcpkg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
