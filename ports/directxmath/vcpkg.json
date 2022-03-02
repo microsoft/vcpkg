@@ -3,7 +3,7 @@
   "version-date": "2022-01-18",
   "description": "DirectXMath SIMD C++ math library",
   "homepage": "https://github.com/Microsoft/DirectXMath",
-  "documentation": "https://docs.microsoft.com/en-us/windows/win32/dxmath/directxmath-portal",
+  "documentation": "https://docs.microsoft.com/windows/win32/dxmath/directxmath-portal",
   "license": "MIT",
   "dependencies": [
     {
