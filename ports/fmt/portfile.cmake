@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-write-batch.patch
+        fix-invalid-command.patch
 )
 
 vcpkg_cmake_configure(
