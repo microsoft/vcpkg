@@ -20,7 +20,7 @@ target_include_directories(loguru PUBLIC
 
 if(BUILD_WITH_FMT)
     target_compile_definitions(loguru PRIVATE LOGURU_USE_FMTLIB=1)
-    find_package(fmt REQUIRED)
+    find_package(fmt CONFIG REQUIRED)
     target_link_libraries(loguru PUBLIC fmt::fmt)
 endif()
 
