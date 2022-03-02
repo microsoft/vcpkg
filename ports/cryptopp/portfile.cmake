@@ -51,9 +51,8 @@ endif()
 #   https://www.cryptopp.com/wiki/Visual_Studio#Dynamic_Runtime_Linking
 #   https://www.cryptopp.com/wiki/Visual_Studio#The_DLL
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_SHARED=OFF
         -DBUILD_STATIC=ON
@@ -62,8 +61,8 @@ vcpkg_configure_cmake(
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cryptopp)
+vcpkg_cmake_install ()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cryptopp)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
