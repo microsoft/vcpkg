@@ -161,8 +161,13 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
     $parentHashes = @("--parent-hashes=$parentHashesFile")
     & git revert -n -m 1 HEAD
-    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
-        | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
+    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" --debug
+
+    echo "working root"
+    gci $WorkingRoot
+    echo "parent hashes file"
+    type $parentHashesFile
+
     & git reset --hard HEAD
 
     Write-Host "Running CI using parent hashes"
