@@ -40,7 +40,7 @@ if(LibXml2_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT ${ARGV0
         endif()
     endif()
     if(TARGET LibXml2::LibXml2)
-        set_property(TARGET LibXml2::LibXml2 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "liblzma::liblzma" "ZLIB::ZLIB")
+        set_property(TARGET LibXml2::LibXml2 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "LibLZMA::LibLZMA" "ZLIB::ZLIB")
         if(TARGET Iconv::Iconv)
             set_property(TARGET LibXml2::LibXml2 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Iconv::Iconv")
         endif()
