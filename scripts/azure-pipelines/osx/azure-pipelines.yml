@@ -39,7 +39,7 @@ jobs:
     inputs:
       filePath: bootstrap-vcpkg.sh
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports for ${{ parameters.triplet }}'
+    displayName: '*** Test Modified Ports for x64-osx'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
