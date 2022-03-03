@@ -397,13 +397,17 @@ function(z_vcpkg_add_vcpkg_to_cmake_path list suffix)
         list(APPEND "${list}" "${vcpkg_paths}")
     else()
         list(INSERT "${list}" 0 "${vcpkg_paths}") # CMake 3.15 is required for list(PREPEND ...).
-        set(CMAKE_FIND_FRAMEWORK "LAST" PARENT_SCOPE)
     endif()
     set("${list}" "${${list}}" PARENT_SCOPE)
 endfunction()
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_PREFIX_PATH "")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_FIND_ROOT_PATH "")
+
+if(NOT VCPKG_PREFER_SYSTEM_LIBS)
+    set(CMAKE_FIND_FRAMEWORK "LAST" PARENT_SCOPE) # we assume that frameworks are usually system-wide libs, not vcpkg-built
+    set(CMAKE_FIND_APPBUNDLE "LAST" PARENT_SCOPE) # we assume that appbundles are usually system-wide libs, not vcpkg-built
+endif()
 
 # If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 # and ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug are searched, it is not sufficient to just add them to CMAKE_FIND_ROOT_PATH,
