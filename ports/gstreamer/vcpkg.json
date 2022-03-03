@@ -1,7 +1,6 @@
 {
   "name": "gstreamer",
-  "version": "1.19.2",
-  "port-version": 4,
+  "version": "1.19.3",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0",
@@ -64,6 +63,7 @@
         "libpng",
         "libraw",
         "libvpx",
+        "mp3lame",
         "mpg123",
         "speex",
         "taglib"
