@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
   REPO noloader/cryptopp-cmake
-  REF CRYPTOPP_8_5_0
-  SHA512 758633786c81f5a34ade0ab99983b3262bb3a028b086e734b1f8ddb618c801453d517f67176178936f87ec36a91fca93fba9bcaec4301705138954e6eb49d136
+  REF CRYPTOPP_8_6_0
+  SHA512 655107b8a41e1e6603a6b3ed2ddc95fad22b646c071c7251c3c7e2151afe439de848679235a3790fe540263424324f06c922687719da6dfea341bc2a75337bdc
   HEAD_REF master
   PATCHES
     cmake.patch
@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_5_0
-  SHA512 e8dd210c9e9d4925edc456e4d68780deaa224d85e11394ad5da835dcb1a1e6b3e899aa473acf20449f9721116960884b6d88b29335479b305bb7e29faa87e6c0
+  REF CRYPTOPP_8_6_0
+  SHA512 ccb4baa6674cd830cddb779216ce702b3cdba6de8a3d627c218861507c36bddd2861b0d0e8cad35001a1e9f0c3d5020404684c87dd05d85264ac166fa7f70589
   HEAD_REF master
   PATCHES patch.patch
 )
@@ -51,9 +51,8 @@ endif()
 #   https://www.cryptopp.com/wiki/Visual_Studio#Dynamic_Runtime_Linking
 #   https://www.cryptopp.com/wiki/Visual_Studio#The_DLL
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_SHARED=OFF
         -DBUILD_STATIC=ON
@@ -62,8 +61,8 @@ vcpkg_configure_cmake(
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cryptopp)
+vcpkg_cmake_install ()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cryptopp)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
