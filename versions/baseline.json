@@ -110,11 +110,11 @@
     },
     "apr": {
       "baseline": "1.7.0",
-      "port-version": 6
+      "port-version": 7
     },
     "apr-util": {
       "baseline": "1.6.1",
-      "port-version": 6
+      "port-version": 7
     },
     "apsi": {
       "baseline": "0.7.0",
@@ -1221,8 +1221,8 @@
       "port-version": 1
     },
     "calceph": {
-      "baseline": "3.5.0",
-      "port-version": 2
+      "baseline": "3.5.1",
+      "port-version": 0
     },
     "camport3": {
       "baseline": "1.5.3",
@@ -1833,28 +1833,28 @@
       "port-version": 1
     },
     "directxmath": {
-      "baseline": "jan2021",
-      "port-version": 1
+      "baseline": "2022-01-18",
+      "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxsdk": {
       "baseline": "jun10",
       "port-version": 5
     },
     "directxtex": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxtk": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "dirent": {
       "baseline": "1.23.2",
@@ -2230,7 +2230,7 @@
     },
     "fmt": {
       "baseline": "8.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "folly": {
       "baseline": "2022.01.31.00",
@@ -2541,8 +2541,8 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "1.36.0",
-      "port-version": 1
+      "baseline": "1.37.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -4066,7 +4066,7 @@
     },
     "liburing": {
       "baseline": "2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libusb": {
       "baseline": "1.0.24",
@@ -4581,8 +4581,8 @@
       "port-version": 2
     },
     "mpir": {
-      "baseline": "3.0.0",
-      "port-version": 11
+      "baseline": "2022-03-02",
+      "port-version": 0
     },
     "mpmcqueue": {
       "baseline": "2019-07-26",
@@ -5074,7 +5074,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openmvs": {
       "baseline": "1.1.1",
@@ -5289,7 +5289,7 @@
       "port-version": 0
     },
     "pegtl": {
-      "baseline": "3.2.2",
+      "baseline": "3.2.5",
       "port-version": 0
     },
     "pegtl-2": {
@@ -5425,7 +5425,7 @@
       "port-version": 10
     },
     "polyhook2": {
-      "baseline": "2022-02-21",
+      "baseline": "2022-03-01",
       "port-version": 0
     },
     "polymorphic-value": {
@@ -5554,11 +5554,11 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 2
+      "port-version": 3
     },
     "python3": {
       "baseline": "3.10.1",
-      "port-version": 7
+      "port-version": 8
     },
     "qca": {
       "baseline": "2.3.4",
@@ -6594,7 +6594,7 @@
     },
     "speexdsp": {
       "baseline": "1.2.0",
-      "port-version": 6
+      "port-version": 7
     },
     "spirit-po": {
       "baseline": "1.1.2",
@@ -7030,7 +7030,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 0
+      "port-version": 1
     },
     "trompeloeil": {
       "baseline": "41",
@@ -7169,8 +7169,8 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2021-11-08",
-      "port-version": 1
+      "baseline": "2022-02-28",
+      "port-version": 0
     },
     "uvw": {
       "baseline": "2.7.0",
@@ -7198,7 +7198,7 @@
     },
     "vamp-sdk": {
       "baseline": "2.10",
-      "port-version": 1
+      "port-version": 2
     },
     "variant-lite": {
       "baseline": "2.0.0",
@@ -7363,6 +7363,10 @@
     "winsock2": {
       "baseline": "0.0",
       "port-version": 4
+    },
+    "winsparkle": {
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "wintoast": {
       "baseline": "1.2.0",
