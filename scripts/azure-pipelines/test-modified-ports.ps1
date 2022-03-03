@@ -153,10 +153,13 @@ $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     # Prefetch tools for better output
-    & "./vcpkg$executableExtension" fetch 7zip
-    & "./vcpkg$executableExtension" fetch cmake
-    & "./vcpkg$executableExtension" fetch ninja
-    & "./vcpkg$executableExtension" fetch git
+    foreach ($tool in @('7zip', 'cmake', 'ninja', 'git')) {
+        & "./vcpkg$executableExtension" fetch $tool
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "Failed to fetch $tool"
+        }
+    }
 
     Write-Host "Determining parent hashes using HEAD~1"
     $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
