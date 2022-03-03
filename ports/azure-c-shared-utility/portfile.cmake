@@ -8,10 +8,10 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 dfe6ccede4bebdb3a39fbfea1dc55ddca57cced0d2656ee4bed1a5e5c9c434e1f2d892eb4e29bbb424cb9a02f2374a95fb9a020442bea580d39c242efad1b789
         HEAD_REF master
         PATCHES
-            fix-install-location.patch
+            fix-install-location-preview.patch
             fix-utilityFunctions-conditions-preview.patch
             disable-error.patch
-            improve-dependencies.patch
+            improve-dependencies-preview.patch
     )
 else()
     vcpkg_from_github(
@@ -35,6 +35,8 @@ vcpkg_cmake_configure(
         -Duse_installed_dependencies=ON
         -Duse_default_uuid=ON
         -Dbuild_as_dynamic=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
 vcpkg_cmake_install()
