@@ -1,9 +1,9 @@
 {
   "name": "qtbase",
-  "version-semver": "6.2.2",
-  "port-version": 4,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components. You may define QT_NAMESPACE in your triplet.",
+  "version": "6.2.3",
+  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     "freetype",
     {
@@ -31,6 +31,14 @@
         "pcre2"
       ],
       "platform": "windows & static"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     "zlib"
   ],
@@ -290,6 +298,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "concurrent",
             "xkbcommon-x11",
             "xlib"
           ]

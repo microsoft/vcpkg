@@ -17,6 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
+        fix-jinja2.patch
 )
 
 vcpkg_from_github(
