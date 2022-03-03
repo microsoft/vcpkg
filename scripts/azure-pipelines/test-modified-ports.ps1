@@ -164,9 +164,9 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     & git revert -n -m 1 HEAD | Out-Null
     & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
         | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
-    & git reset --hard HEAD
 
     Write-Host "Running CI using parent hashes"
+    & git reset --hard HEAD
 }
 
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
