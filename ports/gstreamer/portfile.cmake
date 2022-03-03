@@ -1,5 +1,5 @@
 vcpkg_from_github(
-    OUT_SOURCE_PATH GST_SOURCE_PATH
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF 1.19.3
     SHA512 a132b7d3eeae19a1021abf7d5604c212a29039847ec851c8a24b54a60559a4b68c5b4d26c6a2aaac0a4b03c8939fcf4bb1c2716371407cb75bf2e75dab35a805
@@ -34,18 +34,6 @@ if("plugins-ugly" IN_LIST FEATURES)
     set(PLUGIN_UGLY_SUPPORT enabled)
 else()
     set(PLUGIN_UGLY_SUPPORT disabled)
-endif()
-
-if ("gl-graphene" IN_LIST FEATURES)
-    set(GL_GRAPHENE enabled)
-else()
-    set(GL_GRAPHENE disabled)
-endif()
-
-if ("flac" IN_LIST FEATURES)
-    set(PLUGIN_GOOD_FLAC enabled)
-else()
-    set(PLUGIN_GOOD_FLAC disabled)
 endif()
 
 # gst-build's meson configuration needs git. Make the tool visible.
@@ -92,7 +80,6 @@ vcpkg_configure_meson(
         -Drtsp_server=disabled
         -Ddevtools=disabled
         # gst-plugins-base
-        -Dbase=${PLUGIN_BASE_SUPPORT}
         -Dgst-plugins-base:package-origin="vcpkg"
         -Dgst-plugins-base:examples=disabled
         -Dgst-plugins-base:tests=disabled
@@ -102,7 +89,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
-        -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
+        -Dgst-plugins-base:doc=disabled
         # gst-plugins-good
         -Dgst-plugins-good:package-origin="vcpkg"
         -Dgst-plugins-good:qt5=disabled
@@ -136,16 +123,14 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:doc=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
-        -Dgst-plugins-ugly:x264=${PLUGIN_UGLY_X264}
     OPTIONS_RELEASE
         -Dgst-plugins-base:glib-asserts=disabled
         -Dgst-plugins-base:glib-checks=disabled
 )
 
 vcpkg_install_meson()
-vcpkg_copy_pdbs()
-
 vcpkg_copy_tools(TOOL_NAMES gst-inspect-1.0 gst-launch-1.0 gst-stats-1.0 gst-typefind-1.0 AUTO_CLEAN)
+vcpkg_copy_pdbs()
 
 set(pkg_name "gstreamer-1.0")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/include/gst/gl/gstglconfig.h"
@@ -191,7 +176,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${pkg_name}/pkgconfig"
                     "${CURRENT_PACKAGES_DIR}/lib/${pkg_name}/pkgconfig"
 )
-
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

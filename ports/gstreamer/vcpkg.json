@@ -105,6 +105,7 @@
         "libjpeg-turbo",
         "libpng",
         "libvpx",
+        "mp3lame",
         "mpg123",
         "speex",
         "taglib"
