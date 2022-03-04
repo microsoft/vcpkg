@@ -13,6 +13,7 @@ vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH idevicerestore.vcxproj
     LICENSE_SUBPATH COPYING
+    OPTIONS /wd4996
     USE_VCPKG_INTEGRATION
 )
 
