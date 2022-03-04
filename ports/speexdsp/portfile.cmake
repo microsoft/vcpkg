@@ -16,6 +16,8 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
         REF "1.2.0"
+        PATCHES
+            jitter_ctl.patch
     )
 endif()
 

@@ -34,7 +34,7 @@ diff --git a/iothub_client/tests/iothubclient_mqtt_dt_e2e_sfc/CMakeLists.txt b/i
 index d05d654..5872c8d 100644
 --- a/iothub_client/tests/iothubclient_mqtt_dt_e2e_sfc/CMakeLists.txt
 +++ b/iothub_client/tests/iothubclient_mqtt_dt_e2e_sfc/CMakeLists.txt
-@@ -31,12 +31,10 @@ set(${theseTestsName}_nuget_c_files
+@@ -22,12 +22,10 @@ set(${theseTestsName}_nuget_c_files
  
  set(${theseTestsName}_c_files
      ../../../certs/certs.c
