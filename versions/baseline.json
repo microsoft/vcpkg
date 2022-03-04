@@ -2766,7 +2766,7 @@
     },
     "idevicerestore": {
       "baseline": "1.0.12",
-      "port-version": 6
+      "port-version": 7
     },
     "if97": {
       "baseline": "2.1.2",
