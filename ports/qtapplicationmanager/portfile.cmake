@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
     endif()
 endif()
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
