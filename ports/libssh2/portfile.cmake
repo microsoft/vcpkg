@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-Fix-UWP.patch
         0002-fix-macros.patch
+        0003-fix-openssl3.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
