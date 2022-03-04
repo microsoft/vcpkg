@@ -49,7 +49,6 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     list(APPEND OPENBLAS_EXTRA_OPTIONS
-                -DNOFORTRAN=ON
                 -DBU=_  #required for all blas functions to append extra _ using NAME
     )
 endif()
