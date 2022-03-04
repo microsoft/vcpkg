@@ -32,8 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "dynamic-arch"  DYNAMIC_ARCH
 )
 
-set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
-
 if(VCPKG_TARGET_IS_OSX)
     if("dynamic-arch" IN_LIST FEATURES)
         vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
