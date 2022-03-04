@@ -80,7 +80,7 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(LZMA_DEBUG NAMES lzmad PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -197,6 +197,20 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     vcpkg_fixup_pkgconfig()
 
     vcpkg_clean_msbuild()
+    
+    # Remove static library belonging to executable
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/python.lib"
+                "${CURRENT_PACKAGES_DIR}/lib/manual-link/python.lib")
+        endif()
+        if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/python_d.lib")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/python_d.lib"
+                "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/python_d.lib")
+        endif()
+    endif()
 else()
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
