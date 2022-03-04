@@ -53,10 +53,14 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     )
 endif()
 
+include(vcpkg_find_fortran)
+vcpkg_find_fortran(FORTRAN_CMAKE)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${FORTRAN_CMAKE}
         ${COMMON_OPTIONS}
         ${OPENBLAS_EXTRA_OPTIONS}
 )
