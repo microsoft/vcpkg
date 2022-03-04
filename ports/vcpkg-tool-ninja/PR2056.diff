@@ -19,15 +19,6 @@ index 57ae548f5b..3fdde943cc 100644
  else()
  	include(CheckCXXCompilerFlag)
  	check_cxx_compiler_flag(-Wno-deprecated flag_no_deprecated)
-@@ -152,7 +158,7 @@ add_executable(ninja src/ninja.cc)
- target_link_libraries(ninja PRIVATE libninja libninja-re2c)
- 
- if(WIN32)
--  target_sources(ninja PRIVATE windows/ninja.manifest)
-+	target_sources(ninja PRIVATE windows/ninja.manifest)
- endif()
- 
- # Adds browse mode into the ninja binary if it's supported by the host platform.
 diff --git a/src/build_log.cc b/src/build_log.cc
 index 4dcd6cee53..b069bfaa5a 100644
 --- a/src/build_log.cc
