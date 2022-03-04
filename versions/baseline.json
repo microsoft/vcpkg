@@ -3898,7 +3898,7 @@
     },
     "librtmp": {
       "baseline": "2019-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "librttopo": {
       "baseline": "1.1.0",
