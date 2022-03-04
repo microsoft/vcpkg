@@ -9,11 +9,11 @@ vcpkg_from_github(
 )
 
 # Use greg7mdp/parallel-hashmap's own build process, skipping examples and tests
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Delete redundant directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/doc)
