@@ -10,8 +10,7 @@ vcpkg_from_github(
 
 # Use greg7mdp/parallel-hashmap's own build process, skipping examples and tests
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
 
