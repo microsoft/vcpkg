@@ -6356,6 +6356,10 @@
       "baseline": "0.30.4",
       "port-version": 0
     },
+    "serdepp": {
+      "baseline": "0.1.4",
+      "port-version": 0
+    },
     "sf2cute": {
       "baseline": "0.2.0",
       "port-version": 2
