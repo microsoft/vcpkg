@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 78bb935c..f5163c55 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,8 +185,8 @@ set (COMMON_WARNING_GNU "-Wall -pedantic-errors")
+ set (COMMON_WARNING_Clang "-Wall -pedantic")
+ set (COMMON_WARNING_MSVC "")
+ 
+-set (CC_WARNING_GNU "-Wno-unused-parameter -Wstrict-prototypes -Wvla -Wsign-compare -Wwrite-strings")
+-set (CC_WARNING_Clang "-Wno-unused-parameter -Wstrict-prototypes -Wvla -Wsign-compare -Wwrite-strings")
++set (CC_WARNING_GNU "-Wno-unused-parameter -Wno-deprecated-declarations -Wstrict-prototypes -Wvla -Wsign-compare -Wwrite-strings")
++set (CC_WARNING_Clang "-Wno-unused-parameter -Wno-deprecated-declarations -Wstrict-prototypes -Wvla -Wsign-compare -Wwrite-strings")
+ set (CC_WARNING_MSVC "/wd4244 /wd4267 /wd4800 /wd4996")
+ 
+ set (CXX_WARNING_GNU "")
