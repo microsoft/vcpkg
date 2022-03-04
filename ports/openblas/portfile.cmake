@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AlessioZanga/OpenBLAS
-    REF 1ef97c470ccf23d06d3bb0597c52df4a2e9093b9
-    SHA512 edf954a6de5ff765ffc424299a5fedbb852ec8c6cefffc6e08b97005e1b60eb838b4d854f7c578f9fdad7f1aae6cb0ab5f9ff7c207ab9468e2bc3e2782840869
+    REF ae46ebed1e782028e904760f127c4020acb99115
+    SHA512 09aef8d82a418c7abc2958d909a58d8fdc4279a165aaeffcd9dbc4a74e9c94fefa0d03eb1d870c36c416826bbb351fcd0798d334f48c7ed7610c2d7b9265aaec
     HEAD_REF patch-msvc
     PATCHES
         uwp.patch
