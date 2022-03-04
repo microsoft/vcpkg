@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-config.patch
         patch-relocatable-rpath.patch
         fix-aws-root.patch
+        fix-openssl3.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
