@@ -9,18 +9,17 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF 7d10c82196c8e45554f27c00681474a9fb86d137 # 8.0.20
-    SHA512 9f5e8cc254ea2a4cf76313287c7bb6fc693400810464dd2901e67d51ecb27f8916009464fd8aed8365c3038314b845b3d517db6e82ae5c7908612f0b3b72335f
+    REF 6846e6b2f72931991cc9fd589dc9946ea2ab58c9 # 8.0.28
+    SHA512 2d25f49eea19b86461d47513e1eb67e15ca95bf9da9acd86d4805d222ece61b4bfd2d9d5811564b41c7f0f1437ef1487f36b9f2904f636ed78b67f21901ae1ff
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
         system-libs.patch
         rename-version.patch
         export-cmake-targets.patch
-        004-added-limits-include.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_73_0")
 
 set(STACK_DIRECTION)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
