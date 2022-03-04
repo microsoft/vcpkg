@@ -13,7 +13,7 @@
       "platform": "linux"
     },
     {
-      "name": "openssl-1",
+      "name": "openssl",
       "platform": "linux"
     },
     "umock-c",
