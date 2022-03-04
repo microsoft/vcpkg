@@ -1,9 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO xianyi/OpenBLAS
-    REF 2480e5046e3b0120da8a7fd1442eca628df55f87 # v0.3.19
-    SHA512 b85a96c8cd75bf7197732f3b923b8b0ffdc6261d7d6dc7b622d4bf24f061d02273ad99571cabe4686d92f77ff8e6f7e2de0851758cbb3c529d7c2ca96a0bc34d 
-    HEAD_REF develop
+    REPO AlessioZanga/OpenBLAS
+    HEAD_REF patch-msvc
     PATCHES
         uwp.patch
         fix-space-path.patch
