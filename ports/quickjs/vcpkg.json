@@ -1,7 +1,16 @@
 {
   "name": "quickjs",
   "version-date": "2021-03-27",
-  "port-version": 2,
   "description": "A small and embeddable JavaScript engine supporting ES2020.",
-  "homepage": "https://github.com/bellard/quickjs"
+  "homepage": "https://github.com/bellard/quickjs",
+  "dependencies":[
+    {
+        "name": "vcpkg-cmake",
+        "host": true
+    },
+    {
+        "name": "vcpkg-cmake-config",
+        "host": true
+    }
+  ]
 }

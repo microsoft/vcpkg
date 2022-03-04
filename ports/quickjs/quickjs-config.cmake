@@ -5,10 +5,6 @@ if(NOT ret)
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "${TARGET_FILE} not found.")
     return()
-elseif(NOT TARGET quickjs::quickjs)
-    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
-    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "quickjs::quickjs target not found.")
-    return()
 endif()
 
 # Mark the CMake package as FOUND.

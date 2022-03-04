@@ -1,4 +1,4 @@
 The package quickjs provides CMake targets:
 
-    find_package(quickjs CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE quickjs::quickjs)
+    find_package(unofficial-quickjs CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::quickjs::quickjs)

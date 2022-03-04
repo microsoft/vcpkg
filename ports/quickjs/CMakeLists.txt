@@ -50,17 +50,17 @@ set_target_properties(quickjs PROPERTIES PUBLIC_HEADER
 )
 
 install(TARGETS quickjs
-    EXPORT quickjs
+    EXPORT unofficial-quickjs
     ARCHIVE DESTINATION "lib"
     LIBRARY DESTINATION "lib"
     PUBLIC_HEADER DESTINATION "include/quickjs"
 )
 
-set(CMAKE_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/quickjs)
+set(CMAKE_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-quickjs)
 
-install(EXPORT quickjs
+install(EXPORT unofficial::quickjs
     FILE quickjs-targets.cmake
-    NAMESPACE quickjs::
+    NAMESPACE unofficial::quickjs::
     DESTINATION ${CMAKE_DESTINATION}
 )
 
