@@ -4038,7 +4038,7 @@
     },
     "libu2f-server": {
       "baseline": "1.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libudis86": {
       "baseline": "2018-01-28-56ff6c87",
