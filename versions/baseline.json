@@ -5221,8 +5221,8 @@
       "port-version": 1
     },
     "parallel-hashmap": {
-      "baseline": "1.33",
-      "port-version": 1
+      "baseline": "1.34",
+      "port-version": 0
     },
     "parallelstl": {
       "baseline": "20200330",
