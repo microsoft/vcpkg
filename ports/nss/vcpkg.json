@@ -1,6 +1,6 @@
 {
   "name": "nss",
-  "version-string": "3.74",
+  "version-string": "3.75",
   "description": "Network Security Services from Mozilla",
   "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
   "license": "MPL-2.0",

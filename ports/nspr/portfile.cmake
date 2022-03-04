@@ -13,11 +13,12 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_find_acquire_program(MOZBUILD)
-get_filename_component(MOZBUILD_ROOT ${MOZBUILD} DIRECTORY)
+get_filename_component(MOZBUILD_ROOT "${MOZBUILD}" DIRECTORY)
+
 get_filename_component(MOZBUILD_ROOT "${MOZBUILD_ROOT}" PATH)
 
 set(MOZBUILD_BINDIR "${MOZBUILD_ROOT}/bin")
-vcpkg_add_to_path(${MOZBUILD_BINDIR})
+vcpkg_add_to_path("${MOZBUILD_BINDIR}")
 
 set(MOZBUILD_MSYS_ROOT "${MOZBUILD_ROOT}/msys")
 vcpkg_add_to_path(PREPEND "${MOZBUILD_MSYS_ROOT}")
@@ -45,12 +46,6 @@ set(OPTIONS_RELEASE
     "--disable-debug-rtl"
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{CC}  "cl")
-    set(ENV{CXX} "cl")
-    set(ENV{LD}  "link")
-endif()
-
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     CONFIGURE_ENVIRONMENT_VARIABLES CC CXX LD
@@ -63,10 +58,11 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_copy_pdbs()
 
-# VCPKG FHS adjustments - Linux
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+#
+# VCPKG FHS adjustments
+#
 
-# VCPKG FHS adjustments - Windows
+# Release
 file(GLOB BIN_RELEASE "${CURRENT_PACKAGES_DIR}/lib/*.dll" "${CURRENT_PACKAGES_DIR}/lib/*.pdb")
 list(LENGTH BIN_RELEASE BIN_RELEASE_SIZE)
 if (BIN_RELEASE_SIZE GREATER 0)
@@ -76,10 +72,10 @@ if (BIN_RELEASE_SIZE GREATER 0)
         get_filename_component(name "${path}" NAME)
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${name}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
     endforeach()
-
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 endif()
 
+# Debug
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(GLOB BIN_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll" "${CURRENT_PACKAGES_DIR}/debug/lib/*.pdb")
 list(LENGTH BIN_DEBUG BIN_DEBUG_SIZE)
 if (BIN_DEBUG_SIZE GREATER 0)
@@ -89,8 +85,6 @@ if (BIN_DEBUG_SIZE GREATER 0)
         get_filename_component(name "${path}" NAME)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/${name}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
     endforeach()
-
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
 # Copy license
