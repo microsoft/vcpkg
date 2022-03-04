@@ -30,10 +30,8 @@ The current list of programs includes:
 * GIT
 * GN
 * GO
-* GYP_NSS
 * JOM
 * MESON
-* MOZBUILD
 * NASM
 * NINJA
 * NUGET
