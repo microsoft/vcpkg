@@ -22,10 +22,7 @@ vcpkg_add_to_path(APPEND "${NINJA_ROOT}")
 
 # setup mozbuild for windows
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(MOZBUILD)
-    get_filename_component(MOZBUILD_ROOT "${MOZBUILD}" DIRECTORY)
-
-    get_filename_component(MOZBUILD_ROOT "${MOZBUILD_ROOT}" PATH)
+    set(MOZBUILD_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/mozbuild")
 
     set(MOZBUILD_BINDIR "${MOZBUILD_ROOT}/bin")
     vcpkg_add_to_path(PREPEND "${MOZBUILD_BINDIR}")
@@ -49,8 +46,12 @@ else()
 
 endif()
 
-vcpkg_find_acquire_program(GYP_NSS)
-get_filename_component(GYP_NSS_ROOT "${GYP_NSS}" DIRECTORY)
+set(GYP_NSS_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/gyp-nss")
+if (VCPKG_HOST_IS_WINDOWS)
+    find_file(GYP_NSS NAMES gyp.bat PATHS "${GYP_NSS_ROOT}" NO_DEFAULT_PATH REQUIRED)
+else()
+    find_program(GYP_NSS NAMES gyp PATHS "${GYP_NSS_ROOT}" NO_DEFAULT_PATH REQUIRED)
+endif()
 vcpkg_add_to_path(PREPEND "${GYP_NSS_ROOT}")
 message(STATUS "Found gyp: ${GYP_NSS}")
 

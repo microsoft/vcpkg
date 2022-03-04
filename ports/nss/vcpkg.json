@@ -7,6 +7,14 @@
   "supports": "windows & !arm",
   "dependencies": [
     "nspr",
-    "sqlite3"
+    "sqlite3",
+    {
+      "name": "vcpkg-tool-gyp-nss",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-mozbuild",
+      "host": true
+    }
   ]
 }

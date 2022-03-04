@@ -12,10 +12,7 @@ vcpkg_extract_source_archive_ex(
     REF "${NSPR_VERSION}"
 )
 
-vcpkg_find_acquire_program(MOZBUILD)
-get_filename_component(MOZBUILD_ROOT "${MOZBUILD}" DIRECTORY)
-
-get_filename_component(MOZBUILD_ROOT "${MOZBUILD_ROOT}" PATH)
+set(MOZBUILD_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/mozbuild")
 
 set(MOZBUILD_BINDIR "${MOZBUILD_ROOT}/bin")
 vcpkg_add_to_path("${MOZBUILD_BINDIR}")
@@ -23,7 +20,7 @@ vcpkg_add_to_path("${MOZBUILD_BINDIR}")
 set(MOZBUILD_MSYS_ROOT "${MOZBUILD_ROOT}/msys")
 vcpkg_add_to_path(PREPEND "${MOZBUILD_MSYS_ROOT}")
 
-set(OPTIONS )
+set(OPTIONS "")
 if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS "--disable-static-rtl")
 else()
