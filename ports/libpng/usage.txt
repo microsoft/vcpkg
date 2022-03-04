@@ -1,0 +1,5 @@
+The package libpng is compatible with built-in CMake targets:
+
+    find_package(libpng REQUIRED)
+    target_link_libraries(main PRIVATE ${PNG_LIBRARY})
+    target_include_directories(main PRIVATE ${PNG_INCLUDE_DIR})
