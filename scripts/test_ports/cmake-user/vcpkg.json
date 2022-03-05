@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-03-03",
+  "version-date": "2022-02-28",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "default-features": [
     "ci"
