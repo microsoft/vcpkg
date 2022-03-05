@@ -6,7 +6,7 @@
   "homepage": "https://github.com/trailofbits/uthenticode",
   "supports": "!uwp",
   "dependencies": [
-    "openssl-1",
+    "openssl",
     "pe-parse",
     {
       "name": "vcpkg-cmake",
