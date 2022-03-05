@@ -4250,7 +4250,7 @@
     },
     "luasec": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "luasocket": {
       "baseline": "2020-09-14",
@@ -7170,7 +7170,7 @@
     },
     "uthenticode": {
       "baseline": "1.0.6",
-      "port-version": 1
+      "port-version": 2
     },
     "uvatlas": {
       "baseline": "2022-02-28",
