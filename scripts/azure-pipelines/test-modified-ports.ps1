@@ -153,7 +153,7 @@ $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     # Prefetch tools for better output
-    foreach ($tool in @('7zip', 'cmake', 'ninja', 'git')) {
+    foreach ($tool in @('cmake', 'ninja', 'git')) {
         & "./vcpkg$executableExtension" fetch $tool
         if ($LASTEXITCODE -ne 0)
         {
