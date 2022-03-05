@@ -1,7 +1,7 @@
-set(PATCHES "0001-fix-for-vcpkg.patch")
+set(PATCHES 0001-fix-for-vcpkg.patch)
 
 if(VCPKG_TARGET_IS_UWP)
-    set(PATCHES "${PATCHES} uwp-warnings.patch")
+    list(PATCHES APPEND uwp-warnings.patch)
 endif()
 
 vcpkg_from_github(
