@@ -1,23 +1,17 @@
-# Created from 7-zip v19.00 - 7zip/CPP/7zip/Bundles/Format7zF
 
-cmake_minimum_required(VERSION 3.11)
-cmake_policy(VERSION 3.11)
+cmake_minimum_required(VERSION 3.19)
 
-project(7zip LANGUAGES C CXX ASM_MASM)
+project(7zip LANGUAGES C CXX)
 
-set(SRC_ASM
-    Asm/x86/AesOpt.asm
-    Asm/x86/7zCrcOpt.asm
-    Asm/x86/XzCrc64Opt.asm
-)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set_source_files_properties(${SRC_ASM} PROPERTIES COMPILE_FLAGS "-Dx64")
-else()
-    set_source_files_properties(${SRC_ASM} PROPERTIES COMPILE_FLAGS "-safeseh")
+if(VCPKG_TARGET_IS_WINDOWS)
+    enable_language(ASM_MASM)
+elseif(VCPKG_TARGET_IS_LINUX)
+    enable_language(ASM)
 endif()
 
-set(SRC_COMPRESS
+add_library(7zip)
+
+target_sources(7zip PRIVATE
     CPP/7zip/Compress/Bcj2Coder.cpp
     CPP/7zip/Compress/Bcj2Register.cpp
     CPP/7zip/Compress/BcjCoder.cpp
@@ -68,9 +62,6 @@ set(SRC_COMPRESS
     CPP/7zip/Compress/ZlibEncoder.cpp
     CPP/7zip/Compress/ZDecoder.cpp
     CPP/7zip/Compress/CodecExports.cpp
-)
-
-set(SRC_CRYPTO
     CPP/7zip/Crypto/7zAes.cpp
     CPP/7zip/Crypto/7zAesRegister.cpp
     CPP/7zip/Crypto/HmacSha1.cpp
@@ -85,9 +76,7 @@ set(SRC_CRYPTO
     CPP/7zip/Crypto/WzAes.cpp
     CPP/7zip/Crypto/ZipCrypto.cpp
     CPP/7zip/Crypto/ZipStrong.cpp
-)
 
-set(SRC_C
     C/7zBuf2.c
     C/7zStream.c
     C/Alloc.c
@@ -113,6 +102,7 @@ set(SRC_C
     C/MtDec.c
     C/Ppmd7.c
     C/Ppmd7Dec.c
+    C/Ppmd7aDec.c 
     C/Ppmd7Enc.c
     C/Ppmd8.c
     C/Ppmd8Dec.c
@@ -128,24 +118,16 @@ set(SRC_C
     C/Aes.c
     C/7zCrc.c
     C/XzCrc64.c
-)
 
-set_source_files_properties(
-    ${SRC_COMPRESS}
-    ${SRC_CRYPTO}
-    ${SRC_C}
-        PROPERTIES
-            COMPILE_FLAGS $<$<CONFIG:RELEASE>:"/O2">
-)
-
-set(SRC_OTHER
     CPP/Common/CRC.cpp
     CPP/Common/CrcReg.cpp
     CPP/Common/DynLimBuf.cpp
     CPP/Common/IntToString.cpp
+    CPP/Common/LzFindPrepare.cpp
     CPP/Common/MyMap.cpp
     CPP/Common/MyString.cpp
     CPP/Common/MyVector.cpp
+    CPP/Common/MyWindows.cpp
     CPP/Common/MyXml.cpp
     CPP/Common/NewHandler.cpp
     CPP/Common/Sha1Reg.cpp
@@ -193,6 +175,7 @@ set(SRC_OTHER
     CPP/7zip/Archive/ArHandler.cpp
     CPP/7zip/Archive/ArjHandler.cpp
     CPP/7zip/Archive/Bz2Handler.cpp
+    CPP/7zip/Archive/Base64Handler.cpp
     CPP/7zip/Archive/ComHandler.cpp
     CPP/7zip/Archive/CpioHandler.cpp
     CPP/7zip/Archive/CramfsHandler.cpp
@@ -303,30 +286,70 @@ set(SRC_OTHER
     CPP/7zip/Archive/Zip/ZipOut.cpp
     CPP/7zip/Archive/Zip/ZipUpdate.cpp
     CPP/7zip/Archive/Zip/ZipRegister.cpp
-)
 
-add_library(7zip
-    ${SRC_ASM}
-    ${SRC_OTHER}
-    ${SRC_COMPRESS}
-    ${SRC_CRYPTO}
-    ${SRC_C}
     CPP/7zip/Archive/Archive2.def
     C/Util/LzmaLib/LzmaLib.def
 )
 
+# 7zCrcOpt # AesOpt # Sha1Opt # Sha256Opt # XzCrc64Opt # LzFindOpt
+set(WINDOWS_PRIVATE_HEADERS
+    Asm/x86/7zCrcOpt.asm
+    Asm/x86/AesOpt.asm
+    Asm/x86/Sha1Opt.asm
+    Asm/x86/Sha256Opt.asm
+    Asm/x86/XzCrc64Opt.asm
+    Asm/x86/LzFindOpt.asm
+)
+set(WINDOWS_PRIVATE_SOURCE_FILES
+    C/7zCrcOpt.c
+    C/AesOpt.c
+    C/Sha1Opt.c
+    C/Sha256Opt.c
+    C/XzCrc64Opt.c
+    C/LzFindOpt.c
+)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_HEADERS})
+        set_source_files_properties(${WINDOWS_PRIVATE_HEADERS} PROPERTIES LANGUAGE ASM_MASM)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        #target_sources(7zip PRIVATE Asm/arm/7zCrcOpt.asm)
+        target_sources(7zip PRIVATE C/7zCrcOpt.c)
+    else()
+        target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_SOURCE_FILES})
+    endif()
+else()
+    target_sources(7zip PRIVATE ${WINDOWS_PRIVATE_SOURCE_FILES})
+endif()
+
+# LzmaDecOpt
+target_sources(7zip PRIVATE C/LzmaDec.c)
+if((VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64") OR
+    (VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    )
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        target_sources(7zip PRIVATE Asm/x86/LzmaDecOpt.asm)
+        set_source_files_properties(Asm/x86/LzmaDecOpt.asm PROPERTIES LANGUAGE ASM_MASM)
+    elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        target_sources(7zip PRIVATE Asm/arm64/LzmaDecOpt.S)
+        set_source_files_properties(Asm/x86/LzmaDecOpt.asm PROPERTIES LANGUAGE ASM)
+    endif()	
+
+    get_source_file_property(defs C/LzmaDec.c COMPILE_DEFINITIONS)
+    list(APPEND defs "_LZMA_DEC_OPT")
+    set_source_files_properties(C/LzmaDec.c PROPERTIES COMPILE_DEFINITIONS "${defs}")
+endif()
+
 target_compile_definitions(7zip
     PUBLIC
+        -D_REENTRANT
+        -D_FILE_OFFSET_BITS=64
+        -D_LARGEFILE_SOURCE
         -DEXTERNAL_CODECS
         -D_7ZIP_LARGE_PAGES
         -DUNICODE
         -D_UNICODE
-)
-
-target_compile_options(7zip
-    PRIVATE
-        /wd5043
-        $<$<CONFIG:RELEASE>:/guard:cf>
 )
 
 target_include_directories(7zip
@@ -359,7 +382,7 @@ set(PUBLIC_HEADERS
 
 install(
     TARGETS 7zip
-    EXPORT 7zip
+    EXPORT 7zip-targets
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
@@ -376,9 +399,7 @@ foreach(HEADER ${PUBLIC_HEADERS})
 endforeach()
 
 install(
-    EXPORT 7zip
+    EXPORT 7zip-targets
     DESTINATION share/7zip
-    FILE 7zipConfig.cmake
     NAMESPACE 7zip::
-    CONFIGURATIONS Release
 )
