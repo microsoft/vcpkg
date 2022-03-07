@@ -405,8 +405,8 @@ z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_LIBRARY_PATH "/lib/manual-link")
 z_vcpkg_add_vcpkg_to_cmake_path(CMAKE_FIND_ROOT_PATH "")
 
 if(NOT VCPKG_PREFER_SYSTEM_LIBS)
-    set(CMAKE_FIND_FRAMEWORK "LAST" PARENT_SCOPE) # we assume that frameworks are usually system-wide libs, not vcpkg-built
-    set(CMAKE_FIND_APPBUNDLE "LAST" PARENT_SCOPE) # we assume that appbundles are usually system-wide libs, not vcpkg-built
+    set(CMAKE_FIND_FRAMEWORK "LAST") # we assume that frameworks are usually system-wide libs, not vcpkg-built
+    set(CMAKE_FIND_APPBUNDLE "LAST") # we assume that appbundles are usually system-wide libs, not vcpkg-built
 endif()
 
 # If one CMAKE_FIND_ROOT_PATH_MODE_* variables is set to ONLY, to  make sure that ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
