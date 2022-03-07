@@ -6780,6 +6780,10 @@
       "baseline": "2020_U3",
       "port-version": 7
     },
+    "tcb-span": {
+      "baseline": "2021-12-15",
+      "port-version": 0
+    },
     "tcl": {
       "baseline": "core-9-0-a1",
       "port-version": 5
