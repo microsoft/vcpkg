@@ -19,6 +19,11 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    },
+    {
+      "name": "fontconfig",
+      "host": true,
+	  "platform": "osx"
     }
   ]
 }

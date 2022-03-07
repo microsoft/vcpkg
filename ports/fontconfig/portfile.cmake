@@ -70,8 +70,15 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
-    vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
-                                   WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin"
+	
+	# When build on x64-osx host for arm64-osx target, VCPKG_CROSSCOMPILING is not set
+    set(TOOLS_DIR "${CURRENT_PACKAGES_DIR}/bin")
+    if ("${TARGET_TRIPLET}" STREQUAL "arm64-osx" AND (NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}"))
+        set(TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/fontconfig")
+    endif()
+	
+    vcpkg_execute_required_process(COMMAND "${TOOLS_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
+                                   WORKING_DIRECTORY "${TOOLS_DIR}/bin"
                                    LOGNAME fc-cache-${TARGET_TRIPLET})
 endif()
 
