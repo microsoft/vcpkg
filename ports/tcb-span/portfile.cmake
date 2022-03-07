@@ -15,6 +15,6 @@ file(
 # Handle copyright
 file(
     INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/tcb-span"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
