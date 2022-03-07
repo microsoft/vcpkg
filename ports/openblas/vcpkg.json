@@ -22,7 +22,7 @@
     },
     {
       "name": "vcpkg-gfortran",
-      "host": true
+      "platform": "windows & !uwp"
     }
   ],
   "features": {
