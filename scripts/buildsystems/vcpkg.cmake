@@ -528,7 +528,7 @@ if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
     list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
     file(GLOB_RECURSE Z_VCPKG_TOOLS_DIRS "${tools_base_path}/*")
     file(GLOB_RECURSE Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} CMAKE_3.19_QUIRK) # CMake 3.19 needs at least one item
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "CMAKE_3.19_QUIRK") # CMake 3.19 needs at least one item
     list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/debug/")
     foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
         list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
