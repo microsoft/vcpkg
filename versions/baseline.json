@@ -7310,7 +7310,7 @@
     },
     "wampcc": {
       "baseline": "2019-09-04",
-      "port-version": 2
+      "port-version": 3
     },
     "wangle": {
       "baseline": "2022.01.31.00",
