@@ -3,6 +3,7 @@
   "version": "2.7.18",
   "description": "Python 2",
   "homepage": "https://www.python.org/download/releases/2.0/",
+  "license": "PSF-2.0",
   "supports": "native",
   "dependencies": [
     {

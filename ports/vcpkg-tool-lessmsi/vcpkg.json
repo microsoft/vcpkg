@@ -3,5 +3,6 @@
   "version": "1.10.0",
   "description": "This is a utility with a graphical user interface and a command line interface that can be used to view and extract the contents of an MSI file.",
   "homepage": "https://github.com/activescott/lessmsi",
+  "license": "MIT",
   "supports": "native & windows"
 }
