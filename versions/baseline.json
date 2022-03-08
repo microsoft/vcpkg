@@ -6338,7 +6338,7 @@
     },
     "sentencepiece": {
       "baseline": "0.1.96",
-      "port-version": 0
+      "port-version": 1
     },
     "sentry-native": {
       "baseline": "0.4.15",
