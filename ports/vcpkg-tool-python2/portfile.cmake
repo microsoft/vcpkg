@@ -28,8 +28,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_execute_in_download_mode(
                     COMMAND "${CURRENT_INSTALLED_DIR}/tools/vcpkg-tool-lessmsi/lessmsi.exe" x "${archive_path_native}" # Using output_path here does not work in bash
                     WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools" 
-                    OUTPUT_FILE "lessmsi-${arg_FILENAME}-out.log"
-                    ERROR_FILE "lessmsi-${arg_FILENAME}-err.log"
+                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-out.log"
+                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-err.log"
                     RESULT_VARIABLE error_code
                 )
     if(error_code)
