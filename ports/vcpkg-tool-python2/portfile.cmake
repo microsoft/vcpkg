@@ -38,7 +38,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Extracting Python2 ... finished!")
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/python-2.7.18.amd64/SourceDir/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/python-2.7.18.amd64")
-    z_vcpkg_find_acquire_program_find_internal("${program}"
+    z_vcpkg_find_acquire_program_find_internal("PYTHON2"
         INTERPRETER "${interpreter}"
         PATHS ${paths_to_search}
         NAMES ${search_names}
