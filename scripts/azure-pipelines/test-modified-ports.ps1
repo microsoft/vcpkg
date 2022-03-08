@@ -121,6 +121,11 @@ $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
+# The vcpkg.cmake toolchain file is not part of ABI hashing,
+# but changes must trigger at least some testing.
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/vcpkg-ci-paraview"
+
 if ($IsWindows)
 {
     mkdir empty
