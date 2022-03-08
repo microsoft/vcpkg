@@ -15,10 +15,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_EXE_PATH}")
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(GPERF)
