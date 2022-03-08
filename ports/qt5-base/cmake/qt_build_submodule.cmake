@@ -3,6 +3,12 @@ function(qt_build_submodule SOURCE_PATH)
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
     set(ENV{_CL_} "/utf-8")
 
+    if(NOT PORT STREQUAL "qt5-webengine")
+        vcpkg_find_acquire_program(PYTHON3)
+        get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+        vcpkg_add_to_path("${PYTHON3_EXE_PATH}")
+    endif()
+
     vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH} ${ARGV})
 
     vcpkg_build_qmake(SKIP_MAKEFILES)
