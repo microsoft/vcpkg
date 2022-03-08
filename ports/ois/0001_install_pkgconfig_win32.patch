@@ -1,0 +1,11 @@
+diff -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2021-05-14 03:09:42.000000000 +0800
++++ b/CMakeLists.txt	2022-03-08 10:35:36.235998300 +0800
+@@ -255,7 +255,5 @@
+   install(FILES $<TARGET_PDB_FILE:OIS> DESTINATION bin OPTIONAL)
+ endif(MSVC AND BUILD_SHARED_LIBS)
+ 
+-if(UNIX)
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/OIS.pc.in ${CMAKE_BINARY_DIR}/OIS.pc @ONLY)
+     install(FILES ${CMAKE_BINARY_DIR}/OIS.pc DESTINATION ${OIS_LIB_DIRECTORY}/pkgconfig)
+-endif()
