@@ -7265,8 +7265,8 @@
       "port-version": 1
     },
     "vlpp": {
-      "baseline": "0.11.0.0",
-      "port-version": 2
+      "baseline": "1.1.0.0",
+      "port-version": 0
     },
     "volk": {
       "baseline": "2019-09-26",

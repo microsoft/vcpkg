@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.3.0)
 
-project(Vlpp VERSION 0.10.0.0 LANGUAGES CXX)
+project(Vlpp VERSION 1.1.0.0 LANGUAGES CXX)
 
 # Sources
 set(SRCS
@@ -14,7 +14,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 20)
 endif()
 
 # Create and configure the target
