@@ -1,0 +1,27 @@
+{
+  "name": "libcitygml",
+  "version-semver": "2.4.0",
+  "description": "C++ Library for CityGML Parsing and Visualization",
+  "homepage": "https://github.com/jklimke/libcitygml",
+  "supports": "windows",
+  "dependencies": [
+    "xerces-c"
+  ],
+  "features": {
+    "gdal": {
+      "description": "Enable coordinate transformations support",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "osg": {
+      "description": "OpenSceneGraph plugin",
+      "dependencies": [
+        "osg"
+      ]
+    },
+    "tools": {
+      "description": "tools for testing"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+diff --color -Naur a/sources/include/parser/externalreferenceparser.h b/sources/include/parser/externalreferenceparser.h
+--- a/sources/include/parser/externalreferenceparser.h	2022-02-07 16:41:24.000000000 +0800
++++ b/sources/include/parser/externalreferenceparser.h	2022-02-13 19:32:59.864062700 +0800
+@@ -1,5 +1,6 @@
+ #pragma once
+ 
++#include <functional>
+ #include "parser/gmlobjectparser.h"
+ #include <citygml/externalreference.h>
+ 
+diff --color -Naur a/sources/include/parser/rectifiedgridcoverageparser.h b/sources/include/parser/rectifiedgridcoverageparser.h
+--- a/sources/include/parser/rectifiedgridcoverageparser.h	2022-02-07 16:41:24.000000000 +0800
++++ b/sources/include/parser/rectifiedgridcoverageparser.h	2022-02-13 19:28:51.777086500 +0800
+@@ -1,5 +1,7 @@
+ #pragma once
+ 
++#include <functional>
++
+ #include "parser/gmlfeaturecollectionparser.h"
+ 
+ #include <citygml/rectifiedgridcoverage.h>

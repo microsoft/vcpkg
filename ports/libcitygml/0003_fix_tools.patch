@@ -1,0 +1,40 @@
+diff -Naur a/osgplugin/CMakeLists.txt b/osgplugin/CMakeLists.txt
+--- a/osgplugin/CMakeLists.txt	2022-03-07 17:47:34.904978100 +0800
++++ b/osgplugin/CMakeLists.txt	2022-03-07 17:45:07.831913300 +0800
+@@ -20,14 +20,12 @@
+ set(OSG_PLUGINS "osgPlugins-${OPENSCENEGRAPH_VERSION}")
+ set(LIBCITYGML_OSG_PLUGIN_INSTALL_DIR "" CACHE PATH "The directory in which the plugin will be installed. (osgPlugins-<version> is appended to this path)")
+ 
+-set(PLUGIN_INSTALL_PATH lib/${OSG_PLUGINS})
++set(PLUGIN_INSTALL_PATH bin/${OSG_PLUGINS})
+ if (LIBCITYGML_OSG_PLUGIN_INSTALL_DIR)
+   set(PLUGIN_INSTALL_PATH ${LIBCITYGML_OSG_PLUGIN_INSTALL_DIR}/${OSG_PLUGINS})
+ endif()
+ 
+-add_definitions(-DPLUGIN_BIN_DIR=\"${CMAKE_BINARY_DIR}/lib\")
+-add_executable(citygmlOsgViewer CitygmlOsgViewer.cpp)
+-target_link_libraries(citygmlOsgViewer ${OPENSCENEGRAPH_LIBRARIES} citygml)
++add_definitions(-DPLUGIN_BIN_DIR=\"${CMAKE_BINARY_DIR}/bin\")
+ 
+ INSTALL(
+     TARGETS ${target}
+@@ -36,9 +34,13 @@
+     ARCHIVE DESTINATION ${PLUGIN_INSTALL_PATH}
+ )
+ 
+-INSTALL(
+-    TARGETS citygmlOsgViewer
+-    RUNTIME DESTINATION bin
+-    LIBRARY DESTINATION ${PLUGIN_INSTALL_PATH}
+-    ARCHIVE DESTINATION ${PLUGIN_INSTALL_PATH}
+-)
++if(LIBCITYGML_TESTS)
++  add_executable(citygmlOsgViewer CitygmlOsgViewer.cpp)
++  target_link_libraries(citygmlOsgViewer ${OPENSCENEGRAPH_LIBRARIES} citygml)
++  INSTALL(
++      TARGETS citygmlOsgViewer
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION ${PLUGIN_INSTALL_PATH}
++      ARCHIVE DESTINATION ${PLUGIN_INSTALL_PATH}
++  )
++endif(LIBCITYGML_TESTS)

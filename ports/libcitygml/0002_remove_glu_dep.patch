@@ -1,0 +1,12 @@
+diff --color -Naur a/sources/citygml.pc.cmake b/sources/citygml.pc.cmake
+--- a/sources/citygml.pc.cmake	2022-02-07 16:41:24.000000000 +0800
++++ b/sources/citygml.pc.cmake	2022-02-13 22:13:40.582792700 +0800
+@@ -5,7 +5,7 @@
+ 
+ Name: citygml
+ Description: Read and Write CityGML files
+-Requires: libxml-2.0 glu
++Requires: libxml-2.0
+ Version: ${META_VERSION}
+ Libs: -L${LIB_INSTALL_DIR} -lcitygml
+ Cflags: -I${INCLUDE_INSTALL_DIR}
