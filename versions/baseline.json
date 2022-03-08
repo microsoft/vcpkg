@@ -314,7 +314,7 @@
     },
     "azure-c-shared-utility": {
       "baseline": "2022-01-21",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-core-cpp": {
       "baseline": "1.4.0",
