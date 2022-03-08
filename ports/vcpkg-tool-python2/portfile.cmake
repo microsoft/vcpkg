@@ -41,7 +41,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     z_vcpkg_find_acquire_program_find_internal("PYTHON2"
         INTERPRETER "${interpreter}"
         PATHS ${paths_to_search}
-        NAMES ${search_names}
+        NAMES ${program_name}
     )
     message(STATUS "Using python2: ${PYTHON2}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/version.txt" "${program_version}") # For vcpkg_find_acquire_program
