@@ -607,10 +607,6 @@ function(vcpkg_configure_make)
         endif()
     endif()
     debug_message("ENV{LIBS}:$ENV{LIBS}")
-    vcpkg_find_acquire_program(PKGCONFIG)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
-        set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
-    endif()
 
     # Run autoconf if necessary
     if (arg_AUTOCONFIG OR requires_autoconfig)
@@ -763,13 +759,10 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup PKG_CONFIG_PATH
-        set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/lib/pkgconfig")
-        set(pkgconfig_installed_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-        if(ENV{PKG_CONFIG_PATH})
-            set(backup_env_pkg_config_path_${current_buildtype} $ENV{PKG_CONFIG_PATH})
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+        if ("${current_buildtype}" STREQUAL "DEBUG")
+            vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
         else()
-            set(ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}${VCPKG_HOST_PATH_SEPARATOR}${pkgconfig_installed_share_dir}")
+            vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
         endif()
 
         # Setup environment
@@ -790,7 +783,6 @@ function(vcpkg_configure_make)
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
         endif()
-        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
         vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
         foreach(lib_env_var IN LISTS lib_env_vars)
@@ -830,6 +822,8 @@ function(vcpkg_configure_make)
                 file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
+        
+        vcpkg_restore_pkgconfig_path()
 
         if(backup_env_pkg_config_path_${current_buildtype})
             set(ENV{PKG_CONFIG_PATH} "${backup_env_pkg_config_path_${current_buildtype}}")
