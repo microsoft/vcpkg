@@ -1,17 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index deeaae7d..d15929c5 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -105,6 +105,9 @@ if(${memory_trace})
-     add_definitions(-DGB_MEASURE_NETWORK_FOR_THIS -DGB_DEBUG_NETWORK)
- endif()
- 
-+message("Root dir: ${OPENSSL_ROOT_DIR}")
-+message("ENV: $ENV{OpenSSLDir}")
-+
- if(${use_openssl})
-     if("${OPENSSL_ROOT_DIR}" STREQUAL "" AND NOT ("$ENV{OpenSSLDir}" STREQUAL ""))
-         set(OPENSSL_ROOT_DIR $ENV{OpenSSLDir} CACHE PATH "")
 diff --git a/adapters/x509_openssl.c b/adapters/x509_openssl.c
 index 5a9e5ac2..bb946c2d 100644
 --- a/adapters/x509_openssl.c
