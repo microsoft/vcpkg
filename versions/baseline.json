@@ -66,7 +66,7 @@
     },
     "ampl-asl": {
       "baseline": "2020-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "ampl-mp": {
       "baseline": "2020-11-11",
@@ -78,7 +78,7 @@
     },
     "anax": {
       "baseline": "2.1.0",
-      "port-version": 7
+      "port-version": 8
     },
     "angelscript": {
       "baseline": "2.35.1",
@@ -3461,7 +3461,7 @@
       "port-version": 3
     },
     "libe57": {
-      "baseline": "1.1.312",
+      "baseline": "1.1.332",
       "port-version": 1
     },
     "libe57format": {
@@ -4441,8 +4441,8 @@
       "port-version": 4
     },
     "mimalloc": {
-      "baseline": "2.0.3",
-      "port-version": 2
+      "baseline": "2.0.5",
+      "port-version": 0
     },
     "minc": {
       "baseline": "2.4.03",
@@ -4962,7 +4962,7 @@
     },
     "onnx": {
       "baseline": "1.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "onnx-optimizer": {
       "baseline": "0.2.6",
@@ -5006,7 +5006,7 @@
     },
     "opencolorio": {
       "baseline": "2.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -5601,176 +5601,176 @@
       "port-version": 0
     },
     "qt5": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-3d": {
-      "baseline": "5.15.2",
-      "port-version": 3
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-activeqt": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-androidextras": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-base": {
-      "baseline": "5.15.2",
-      "port-version": 20
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-canvas3d": {
       "baseline": "0",
       "port-version": 1
     },
     "qt5-charts": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-connectivity": {
-      "baseline": "5.15.2",
-      "port-version": 2
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-datavis3d": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-declarative": {
-      "baseline": "5.15.2",
-      "port-version": 3
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-doc": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-gamepad": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-graphicaleffects": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-imageformats": {
-      "baseline": "5.15.2",
-      "port-version": 2
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-location": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-macextras": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-modularscripts": {
       "baseline": "deprecated",
       "port-version": 1
     },
     "qt5-mqtt": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-multimedia": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-networkauth": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-purchasing": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-quickcontrols": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-quickcontrols2": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-remoteobjects": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-script": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-scxml": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-sensors": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-serialbus": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-serialport": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-speech": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-svg": {
-      "baseline": "5.15.2",
-      "port-version": 2
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-tools": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-translations": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-virtualkeyboard": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-wayland": {
-      "baseline": "5.15.2",
-      "port-version": 2
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-webchannel": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-webengine": {
-      "baseline": "5.15.2",
-      "port-version": 3
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-webglplugin": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-websockets": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-webview": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-winextras": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-x11extras": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5-xmlpatterns": {
-      "baseline": "5.15.2",
-      "port-version": 1
+      "baseline": "5.15.3",
+      "port-version": 0
     },
     "qt5compat": {
       "baseline": "6.2.3",
@@ -6784,6 +6784,10 @@
       "baseline": "2020_U3",
       "port-version": 7
     },
+    "tcb-span": {
+      "baseline": "2021-12-15",
+      "port-version": 0
+    },
     "tcl": {
       "baseline": "core-9-0-a1",
       "port-version": 5
@@ -7365,8 +7369,8 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "4.1.2",
-      "port-version": 1
+      "baseline": "5.0.0",
+      "port-version": 0
     },
     "winsock2": {
       "baseline": "0.0",
