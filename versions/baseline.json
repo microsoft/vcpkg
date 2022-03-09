@@ -7592,6 +7592,10 @@
       "baseline": "1.0.3",
       "port-version": 1
     },
+    "zpp-bits": {
+      "baseline": "4.3.3",
+      "port-version": 0
+    },
     "zserge-webview": {
       "baseline": "2019-04-27",
       "port-version": 3
