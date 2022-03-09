@@ -162,7 +162,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     }
 
     Write-Host "Determining parent hashes using HEAD~1"
-    $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
+    $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
     $parentHashes = @("--parent-hashes=$parentHashesFile")
     & git revert -n -m 1 HEAD | Out-Null
     & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
