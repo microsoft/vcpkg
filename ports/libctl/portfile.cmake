@@ -1,7 +1,3 @@
-message(STATUS "${PORT} currently requires the following library from the system package manager:
-    guile-2.2-dev
-This can be installed on Ubuntu systems via sudo apt install guile-2.2-dev")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NanoComp/libctl
@@ -25,10 +21,12 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include/")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
+#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/")
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
