@@ -3,8 +3,8 @@
   "version": "1.15.0",
   "description": "free finite-difference time-domain (FDTD) software for electromagnetic simulations",
   "homepage": "https://github.com/NanoComp/meep",
-  "supports": "linux",
   "license": "GPL-2.0-or-later",
+  "supports": "linux",
   "dependencies": [
     "fftw3",
     "hdf5",
