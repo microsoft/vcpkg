@@ -18,7 +18,7 @@
     "pybind11",
     "sol2",
     "spdlog",
-        {
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -26,6 +26,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-    
   ]
 }
