@@ -72,10 +72,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
 	
 	# When build on x64-osx host for arm64-osx target, VCPKG_CROSSCOMPILING is not set
-    set(TOOLS_DIR "${CURRENT_PACKAGES_DIR}/bin")
-    if ("${TARGET_TRIPLET}" STREQUAL "arm64-osx" AND (NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}"))
-        set(TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/fontconfig")
-    endif()
+   set(TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/fontconfig")
 	
     vcpkg_execute_required_process(COMMAND "${TOOLS_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
                                    WORKING_DIRECTORY "${TOOLS_DIR}/bin"
