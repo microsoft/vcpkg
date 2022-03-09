@@ -44,8 +44,8 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
-    OPTIONS_DEBUG
         --enable-debug
+
 )
 
 vcpkg_install_make()
