@@ -16,6 +16,8 @@ vcpkg_find_fortran(FORTRAN_CMAKE)
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        --without-guile
     OPTIONS_DEBUG
         --enable-debug
 )
