@@ -167,8 +167,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
     & git revert -n -m 1 HEAD | Out-Null
     # The vcpkg.cmake toolchain file is not part of ABI hashing,
     # but changes must trigger at least some testing.
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
     Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/vcpkg-ci-paraview"
     & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
         | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
 
@@ -178,8 +178,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/vcpkg-ci-paraview"
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
