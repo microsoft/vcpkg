@@ -30,9 +30,6 @@ function(vcpkg_setup_pkgconfig_path)
     get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
-        set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
-    endif()
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
     foreach(base_dir IN LISTS arg_BASE_DIRS)
