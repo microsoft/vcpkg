@@ -1,7 +1,7 @@
 {
   "name": "atk",
   "version": "2.36.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "supports": "!arm",
@@ -10,6 +10,10 @@
     "glib",
     {
       "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ]

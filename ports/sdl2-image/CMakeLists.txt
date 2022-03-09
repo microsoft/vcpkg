@@ -115,6 +115,24 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake"
 find_dependency(SDL2 CONFIG)
 include("${CMAKE_CURRENT_LIST_DIR}/sdl2-image-targets.cmake")
 ]])
+set(prefix "")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+set(PACKAGE "SDL2_image")
+file(READ "SDL_image.h" header_contents)
+#    #define SDL_IMAGE_MAJOR_VERSION 2
+#    #define SDL_IMAGE_MINOR_VERSION 0
+#    #define SDL_IMAGE_PATCHLEVEL    5
+string(REGEX MATCH "define *SDL_IMAGE_MAJOR_VERSION *([0-9]+)" _ "${header_contents}")
+set(VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "define *SDL_IMAGE_MINOR_VERSION *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+string(REGEX MATCH "define *SDL_IMAGE_PATCHLEVEL *([0-9]+)" _ "${header_contents}")
+string(APPEND VERSION ".${CMAKE_MATCH_1}")
+set(SDL_VERSION 0.0)
+configure_file(SDL2_image.pc.in "${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc" @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc DESTINATION lib/pkgconfig)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake DESTINATION share/sdl2-image)
 

@@ -18,16 +18,15 @@ vcpkg_from_sourceforge(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        wxwidgets BUILD_with_wxwidgets
+        wxwidgets PLD_wxwidgets
+        wxwidgets ENABLE_wxwidgets
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_tcl=OFF
-        -DENABLE_d=OFF
-        -DENABLE_qt=OFF
-        -DENABLE_ocaml=OFF
+        -DDEFAULT_NO_BINDINGS=ON
+        -DENABLE_cxx=ON
         -DPL_HAVE_QHULL=OFF
         -DPLPLOT_USE_QT5=OFF
         -DPL_DOUBLE=ON
@@ -45,10 +44,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plplot)
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/plplot/examples/plplot-test-interactive.sh")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/plplot/examples/plplot-test-interactive.sh" "${CURRENT_PACKAGES_DIR}/share/plplot" "../")
-endif()
 
 # Remove unnecessary tool
 file(REMOVE
@@ -69,6 +64,7 @@ endif()
 # Remove unwanted and duplicate directories
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/plplot/examples")
 
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

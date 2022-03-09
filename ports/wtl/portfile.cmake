@@ -5,6 +5,9 @@ vcpkg_from_sourceforge(
     FILENAME "WTL10_10320_Release.zip"
     NO_REMOVE_ONE_LEVEL
 	SHA512 086a6cf6a49a4318a8c519136ba6019ded7aa7f2c1d85f78c30b21183654537b3428a400a64fcdacba3a7a10a9ef05137b6f2119f59594da300d55f9ebfb1309
+	PATCHES
+		appwizard_setup.js-vs2022.patch
+		atlmisc.h-bug329.patch
 )
 
 file(INSTALL ${SOURCE_PATH}/Include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.h")

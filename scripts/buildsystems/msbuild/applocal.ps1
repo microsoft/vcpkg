@@ -58,7 +58,7 @@ function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$tar
             Write-Verbose "  ${targetBinaryName}: Copying $sourceBinaryFilePath"
             Copy-Item $sourceBinaryFilePath $targetBinaryDir
         }
-        if ($copiedFilesLog) { Add-Content $copiedFilesLog targetBinaryFilePath -Encoding UTF8 }
+        if ($copiedFilesLog) { Add-Content $copiedFilesLog $targetBinaryFilePath -Encoding UTF8 }
         if ($tlogFile) { Add-Content $tlogFile $targetBinaryFilePath -Encoding Unicode }
     } finally {
         if ($mtx) {
@@ -119,9 +119,9 @@ function resolve([string]$targetBinary) {
             if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
             if (Test-Path function:\deployPluginsIfMagnum) {
                 if ($g_is_debug) {
-                    deployPluginsIfMagnum $targetBinaryDir (Join-Path "$g_install_root" 'bin' 'magnum-d') "$_"
+                    deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$g_install_root" 'bin') 'magnum-d') "$_"
                 } else {
-                    deployPluginsIfMagnum $targetBinaryDir (Join-Path "$g_install_root" 'bin' 'magnum') "$_"
+                    deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$g_install_root" 'bin') 'magnum') "$_"
                 }
             }
             if (Test-Path function:\deployAzureKinectSensorSDK) { deployAzureKinectSensorSDK $targetBinaryDir "$g_install_root" "$_" }

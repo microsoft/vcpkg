@@ -1,17 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/restinio
-    REF 0052518f5692f8f051031e06d933b726191be97e # v.0.6.13
-    SHA512 e7474aa1cef4145fe2f02c52cf80fdaf6724da45a4f3d0f1f56fc188ac50ff29a3ac72ea0e4402dc7ad378d0b2acfcea30cf8a57d218c3f5eb55d3f0d83dad29
+    REF 20140bcecaec6f44ad5a8f68efcd8b44e1375604 # v.0.6.14
+    SHA512 e4654342831cb5c9086b60b22a7a15dd68a6769e28936576a1ff61352ea204f8e171bd446d002cefb514fd0cc4842878f23d5d51bc0da48c6224b96e4a0f3b14
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/vcpkg
     PREFER_NINJA
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/restinio)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/restinio)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 # Handle copyright

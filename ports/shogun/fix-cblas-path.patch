@@ -1,0 +1,13 @@
+diff --git a/src/shogun/mathematics/lapack.h b/src/shogun/mathematics/lapack.h
+index 6ba466f..f5de479 100644
+--- a/src/shogun/mathematics/lapack.h
++++ b/src/shogun/mathematics/lapack.h
+@@ -38,7 +38,7 @@ extern "C" {
+ #include <vecLib/cblas.h>
+ #endif
+ #else
+-#include <cblas.h>
++#include <openblas/cblas.h>
+ #endif
+ 
+ #ifdef HAVE_ACML

@@ -1,6 +1,6 @@
 {
   "name": "boost-date-time",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost date_time module",
   "homepage": "https://github.com/boostorg/date_time",
   "dependencies": [

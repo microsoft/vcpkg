@@ -10,19 +10,14 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
-	OPTIONS
+    OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-cal/cmake)
-
-vcpkg_copy_tools(
-    TOOL_NAMES sha256_profile
-    AUTO_CLEAN
-)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE 
@@ -32,10 +27,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(REMOVE_RECURSE
-	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-cal"
-	"${CURRENT_PACKAGES_DIR}/lib/aws-c-cal"
-	)
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-cal"
+    "${CURRENT_PACKAGES_DIR}/lib/aws-c-cal"
+    )
 
 vcpkg_copy_pdbs()
 

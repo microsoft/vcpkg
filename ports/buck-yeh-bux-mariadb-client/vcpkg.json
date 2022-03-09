@@ -1,0 +1,17 @@
+{
+  "name": "buck-yeh-bux-mariadb-client",
+  "version": "1.0.1",
+  "port-version": 1,
+  "description": "Loose-coupled throw-on-error C++20 wrapper classes and utilities over mysql/mariadb Connector/C API",
+  "homepage": "https://github.com/buck-yeh/bux-mariadb-client",
+  "supports": "!(arm | uwp | osx)",
+  "dependencies": [
+    "buck-yeh-bux",
+    "fmt",
+    "libmariadb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

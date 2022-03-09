@@ -1,6 +1,6 @@
 {
   "name": "boost-property-map-parallel",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost property_map_parallel module",
   "homepage": "https://github.com/boostorg/property_map_parallel",
   "dependencies": [
