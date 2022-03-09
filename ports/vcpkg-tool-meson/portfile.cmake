@@ -49,6 +49,7 @@ if(NOT "${program}")
         PATCHES meson-intl.patch
                 fix_linker_detection.patch
     )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
 endif()
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
@@ -56,6 +57,6 @@ z_vcpkg_find_acquire_program_find_internal("${program}"
     PATHS ${paths_to_search}
     NAMES ${search_names}
 )
-#vcpkg_find_acquire_program(MESON)
+
 message(STATUS "Using meson: ${MESON}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${program_version}") # For vcpkg_find_acquire_program

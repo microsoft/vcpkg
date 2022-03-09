@@ -1,7 +1,7 @@
 {
   "name": "rtabmap",
   "version": "0.20.13",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
   "supports": "windows & !static",
