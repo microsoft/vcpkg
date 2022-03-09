@@ -56,6 +56,7 @@
 - [vcpkg\_list](vcpkg_list.md)
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
+- [vcpkg\_setup\_pkgconfig\_path](vcpkg_setup_pkgconfig_path.md)
 
 ## Internal Functions
 

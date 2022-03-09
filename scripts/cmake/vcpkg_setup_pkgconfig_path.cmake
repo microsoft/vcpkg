@@ -15,7 +15,7 @@ vcpkg_restore_pkgconfig_path()
 
 #]===]
 function(vcpkg_setup_pkgconfig_path)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "BASE_DIRS" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
 
     if(NOT DEFINED arg_BASE_DIRS OR "${arg_BASE_DIRS}" STREQUAL "")
         message(FATAL_ERROR "BASE_DIR must be passed in")
@@ -36,14 +36,12 @@ function(vcpkg_setup_pkgconfig_path)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
     foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(APPEND pkgconfig_share_dirs "${base_dir}/share/pkgconfig/")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/share/pkgconfig/")
     endforeach()
 
     foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(APPEND pkgconfig_share_dirs "${base_dir}/lib/pkgconfig/")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/lib/pkgconfig/")
     endforeach()
-
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} ${pkgconfig_installed_dirs} ${pkgconfig_share_dirs})
 endfunction()
 
 function(vcpkg_restore_pkgconfig_path)
