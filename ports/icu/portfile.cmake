@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
+        disable-escapestr-tool.patch
         remove-MD-from-configure.patch
         fix_parallel_build_on_windows.patch
         fix-extra.patch
