@@ -1,9 +1,9 @@
 {
   "name": "opencv4",
-  "version": "4.5.4",
-  "port-version": 4,
+  "version": "4.5.5",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -116,6 +116,13 @@
         }
       ]
     },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
+      ]
+    },
     "gdcm": {
       "description": "GDCM support for opencv",
       "dependencies": [
@@ -210,7 +217,10 @@
       ]
     },
     "python": {
-      "description": "Python wrapper support for opencv"
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        "python3"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",

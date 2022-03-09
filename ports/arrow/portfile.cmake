@@ -32,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         orc         ARROW_ORC
         parquet     ARROW_PARQUET
         parquet     PARQUET_REQUIRE_ENCRYPTION
+        plasma      ARROW_PLASMA
         s3          ARROW_S3
 )
 
@@ -108,5 +109,9 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/FindParquet.cmake ${CURRENT_PA
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if ("plasma" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES plasma-store-server AUTO_CLEAN)
+endif ()
 
 vcpkg_fixup_pkgconfig()
