@@ -337,7 +337,7 @@
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
-      "baseline": "4.0.0-beta.1",
+      "baseline": "4.0.0-beta.2",
       "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
@@ -345,7 +345,7 @@
       "port-version": 0
     },
     "azure-security-keyvault-secrets-cpp": {
-      "baseline": "4.0.0-beta.1",
+      "baseline": "4.0.0-beta.2",
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
