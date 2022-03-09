@@ -23,7 +23,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm-tool/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(asmflag win64)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -48,6 +48,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# # Handle copyright
+# Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
