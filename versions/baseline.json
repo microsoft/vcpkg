@@ -6390,7 +6390,7 @@
     },
     "shiva": {
       "baseline": "1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "shiva-sfml": {
       "baseline": "1.0",
@@ -7194,7 +7194,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 2
+      "port-version": 3
     },
     "valijson": {
       "baseline": "0.6",
@@ -7234,7 +7234,7 @@
     },
     "vcpkg-gn": {
       "baseline": "2021-11-16",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
@@ -7244,12 +7244,20 @@
       "baseline": "2021-10-23",
       "port-version": 0
     },
+    "vcpkg-tool-lessmsi": {
+      "baseline": "1.10.0",
+      "port-version": 0
+    },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
       "port-version": 2
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
+      "port-version": 0
+    },
+    "vcpkg-tool-python2": {
+      "baseline": "2.7.18",
       "port-version": 0
     },
     "vectorclass": {
