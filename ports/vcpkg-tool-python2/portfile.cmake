@@ -52,7 +52,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     message(STATUS "Using python2: ${PYTHON2}")
     set(details "set(program_version \"${program_version}\")\n")
-    string(APPEND details "set(search_path \"\${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}\")\n")
+    string(APPEND details "set(paths_to_search \"\${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}\")\n")
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/details.cmake" "${details}")
 endif()
 

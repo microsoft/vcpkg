@@ -4,6 +4,7 @@
   "description": "Python 2",
   "homepage": "https://www.python.org/download/releases/2.0/",
   "license": "PSF-2.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-tool-lessmsi",
