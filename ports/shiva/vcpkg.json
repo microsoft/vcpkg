@@ -1,6 +1,6 @@
 {
   "name": "shiva",
-  "version-string": "1.0",
+  "version": "1.0",
   "port-version": 5,
   "description": "Modern C++ Game Engine",
   "homepage": "https://github.com/Milerius/shiva",
