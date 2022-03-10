@@ -44,8 +44,7 @@ vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 set(PATCHES common.pri.patch 
             gl.patch
             build_1.patch
-            build_2.patch
-            build_3.patch)
+            build_2.patch)
 
 set(OPTIONS)
 if("proprietary-codecs" IN_LIST FEATURES)
