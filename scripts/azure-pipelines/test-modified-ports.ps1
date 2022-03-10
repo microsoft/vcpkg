@@ -175,3 +175,5 @@ if ($LASTEXITCODE -ne 0)
 {
     throw "vcpkg ci failed"
 }
+
+Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xmlFile"
