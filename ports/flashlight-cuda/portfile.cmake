@@ -12,6 +12,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+message("This is a test")
+
 ################################### Build ###################################
 # Default flags
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
