@@ -1,9 +1,12 @@
-vcpkg_from_github(
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/NanoComp/libctl/releases/download/v4.5.1/libctl-4.5.1.tar.gz"
+    FILENAME "libctl-4.5.1.tar.gz"
+    SHA512 384e0f22c53654c0817e73436e24bb58227ba7617fefd4c128bb124e98a40c00f755c0e637c04e6e0f6d29ce2dfdf15f7161b5226c420a7369bede1b06ac2ec0
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO NanoComp/libctl
-    REF aa56a410f33fb2fd80605faf35dfa7906785edef
-    SHA512 0351f35e433089bf8437ab17eaa0cf13d9d578776806011e1ecfe48cda769ebc21801f0e5b31bf3f80a62ceae170f0d5e9c9b817e01e39bffd8c062b3ff1731c
-    HEAD_REF master
+    ARCHIVE ${ARCHIVE}
 )
 
 include(vcpkg_find_fortran)

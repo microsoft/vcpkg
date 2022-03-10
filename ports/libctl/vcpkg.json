@@ -1,10 +1,9 @@
 {
   "name": "libctl",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "libctl is a Guile-based library for supporting flexible control files in scientific simulations.",
   "homepage": "https://github.com/NanoComp/libctl",
   "license": "GPL-2.0-or-later",
-  "supports": "linux",
   "dependencies": [
     {
       "name": "vcpkg-gfortran",
