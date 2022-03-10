@@ -4,7 +4,7 @@
   "description": "A C++ commandline for use in servers and chat software. Provides very simple asynchronous input/output.",
   "homepage": "https://github.com/lionkor/commandline/",
   "license": "MIT",
-  "supports": "static",
+  "supports": "!osx & static",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
