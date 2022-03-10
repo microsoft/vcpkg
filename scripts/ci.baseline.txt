@@ -1423,12 +1423,12 @@ dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
 
 # Conflict with openssl
-openssl-1:arm64-windows=skip
-openssl-1:arm-uwp=skip
-openssl-1:x64-linux=skip
-openssl-1:x64-osx=skip
-openssl-1:x64-uwp=skip
-openssl-1:x64-windows=skip
-openssl-1:x64-windows-static=skip
-openssl-1:x64-windows-static-md=skip
-openssl-1:x86-windows=skip
+openssl1:arm64-windows=skip
+openssl1:arm-uwp=skip
+openssl1:x64-linux=skip
+openssl1:x64-osx=skip
+openssl1:x64-uwp=skip
+openssl1:x64-windows=skip
+openssl1:x64-windows-static=skip
+openssl1:x64-windows-static-md=skip
+openssl1:x86-windows=skip
