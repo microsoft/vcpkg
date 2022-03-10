@@ -1,6 +1,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    set(arch_suffix "")
     set(program_name python)
     set(program_version 2.7.18)
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -10,6 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(download_sha512 2c112733c777ddbf189b0a54047a9d5851ebce0564cc38b9687d79ce6c7a09006109dbad8627fb1a60c3ad55e261db850d9dfa454af0533b460b2afc316fe115)
     else()
         set(tool_subdirectory "python-${program_version}-x64")
+        set(arch_suffix ".amd64")
         set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}.amd64.msi")
         set(download_filename "python-${program_version}.amd64.msi")
         set(download_sha512 6a81a413b80fd39893e7444fd47efa455d240cbb77a456c9d12f7cf64962b38c08cfa244cd9c50a65947c40f936c6c8c5782f7236d7b92445ab3dd01e82af23e)
@@ -36,7 +38,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Couldn't extract Python2 with lessmsi!")
     endif()
     message(STATUS "Extracting Python2 ... finished!")
-    file(RENAME "${output_path}/python-2.7.18.amd64/SourceDir/" "${output_path}/${PORT}/")
+    file(RENAME "${output_path}/python-2.7.18${arch_suffix}/SourceDir/" "${output_path}/${PORT}/")
     file(REMOVE_RECURSE "${output_path}/python-2.7.18.amd64"
                         # Files below are not part of a msiexec installation/extraction. 
                         "${output_path}/${PORT}/Windows"
