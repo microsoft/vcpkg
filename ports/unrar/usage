@@ -1,0 +1,5 @@
+The package unrar provides CMake integration:
+
+    find_package(unrar REQUIRED)
+    target_include_directories(main PRIVATE ${UNRAR_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${UNRAR_LIBRARIES})
