@@ -11,6 +11,9 @@
     "lapack",
     "libctl",
     "openblas",
-    "vcpkg-gfortran"
+    {
+      "name": "vcpkg-gfortran",
+      "platform": "windows"
+    }
   ]
 }
