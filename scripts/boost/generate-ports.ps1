@@ -173,6 +173,7 @@ function GeneratePortManifest() {
     $manifest = @{
         "name"        = $PortName
         "version"     = $version
+        "license"     = "BSL-1.0"
         "homepage"    = $Homepage
         "description" = $Description
     }
@@ -536,7 +537,8 @@ foreach ($library in $libraries) {
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
+        $portName = GeneratePortName $library
+        if ((((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") -or (Test-Path $portsDir/$portName/separate_compilation.patch)) {
             $deps += @(
                 @{ name = "boost-build"; host = $True },
                 @{ name = "boost-modular-build-helper"; host = $True },

@@ -1,0 +1,37 @@
+diff -Naur a/build/Jamfile.v2 b/build/Jamfile.v2
+--- a/build/Jamfile.v2	1970-01-01 01:00:00.000000000 +0100
++++ b/build/Jamfile.v2	2022-03-10 17:00:44.627568000 +0000
+@@ -0,0 +1,26 @@
++import feature : feature ;
++feature asio-with-ssl : no yes : optional propagated ;
++local ASIO_CRYPTO_LIBRARY_PATH = [ modules.peek : ASIO_CRYPTO_LIBRARY_PATH ] ;
++local ASIO_SSL_LIBRARY_PATH = [ modules.peek : ASIO_SSL_LIBRARY_PATH ] ;
++lib crypto : : <file>$(ASIO_CRYPTO_LIBRARY_PATH) ;
++lib ssl : : <file>$(ASIO_SSL_LIBRARY_PATH) ;
++
++project boost/asio
++    : source-location ../src
++    : usage-requirements
++      <define>BOOST_ASIO_SEPARATE_COMPILATION=1
++      <link>shared:<define>BOOST_ASIO_DYN_LINK=1
++    ;
++
++SOURCES = asio ;
++
++lib boost_asio
++   : $(SOURCES).cpp
++   : <define>BOOST_ASIO_SEPARATE_COMPILATION=1
++     <link>shared:<define>BOOST_ASIO_DYN_LINK=1
++     <asio-with-ssl>yes:<define>BOOST_ASIO_ENABLE_SSL=1
++     <asio-with-ssl>yes:<library>crypto
++     <asio-with-ssl>yes:<library>ssl
++   ;
++
++boost-install boost_asio ;
+--- a/src/asio.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/src/asio.cpp	2022-03-10 17:00:44.627568000 +0000
+@@ -0,0 +1,4 @@
++#include <boost/asio/impl/src.hpp>
++#if BOOST_ASIO_ENABLE_SSL
++#include <boost/asio/ssl/impl/src.hpp>
++#endif

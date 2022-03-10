@@ -6,8 +6,18 @@ vcpkg_from_github(
     REF boost-1.78.0
     SHA512 78c58a64d669eaeabb5ba003200c581065412d33912e641143186ee95c11e0fb0411ed8dbb9a9acced8c8ecd258e0de33872b2e22dfc4a572315cd9a665db8a6
     HEAD_REF master
-    PATCHES windows_alloca_header.patch
+    PATCHES
+        separate_compilation.patch
+        windows_alloca_header.patch
 )
 
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-asio requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

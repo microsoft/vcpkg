@@ -1,13 +1,19 @@
 {
   "name": "boost-asio",
   "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-array",
     "boost-assert",
     "boost-bind",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-chrono",
     "boost-config",
     "boost-core",
@@ -17,13 +23,21 @@
     },
     "boost-date-time",
     "boost-function",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-regex",
     "boost-smart-ptr",
     "boost-system",
     "boost-throw-exception",
     "boost-type-traits",
     "boost-utility",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "ssl": {

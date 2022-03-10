@@ -26,7 +26,7 @@ index 433d5c7..04a0edf 100644
 -    ENDIF()
 +FIND_PACKAGE( Boost 1.37 COMPONENTS asio )
 +IF(Boost_FOUND)
-+    SET(ASIO_FOUND "YES")
++#    SET(ASIO_FOUND "YES")  ## Reenable when RestHttpDevice has been ported to Boost.ASIO
  ENDIF()
 diff --git a/src/osgPlugins/RestHttpDevice/CMakeLists.txt b/src/osgPlugins/RestHttpDevice/CMakeLists.txt
 index 8464b9d..073e8ed 100644
