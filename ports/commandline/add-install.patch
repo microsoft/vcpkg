@@ -6,4 +6,9 @@ index b4db57c..7ace55c 100644
      target_link_libraries(test commandline)
  endif()
  
-+install(TARGETS commandline)
++install(
++  TARGETS commandline
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
