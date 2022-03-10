@@ -5,7 +5,6 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
-    0009-poppler-cxx17.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -14,8 +13,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.4.1
-    SHA512 b9b5389f15fdc6cff846003a07c934918c0e1d8e53d0f2ea3f88fff31d3f8a59a857e938fc337d0bde11dc1416297d46f52d729576281bec53d50b08868c51ba
+    REF v3.4.2
+    SHA512 4dadfaefb4924e17395b2d8b695e185e91e9ad28b4b8666b64f11f40164411974f8ade747592060b515907ee73bf335610698c5e53e56a8937a89ddfffc3d66b
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
