@@ -26,22 +26,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
     cmake_path(NATIVE_PATH archive_path archive_path_native) # lessmsi is a bit picky about path formats.
     message(STATUS "Extracting Python2 ...")
     vcpkg_execute_in_download_mode(
-                    COMMAND "${CURRENT_INSTALLED_DIR}/tools/vcpkg-tool-lessmsi/lessmsi.exe" x "${archive_path_native}" # Using output_path here does not work in bash
-                    WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools" 
-                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-out.log"
-                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-err.log"
+                    COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-lessmsi/lessmsi.exe" x "${archive_path_native}" # Using output_path here does not work in bash
+                    WORKING_DIRECTORY "${output_path}" 
+                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-out.log"
+                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-err.log"
                     RESULT_VARIABLE error_code
                 )
     if(error_code)
         message(FATAL_ERROR "Couldn't extract Python2 with lessmsi!")
     endif()
     message(STATUS "Extracting Python2 ... finished!")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/manual-tools/python-2.7.18.amd64/SourceDir/" "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/python-2.7.18.amd64"
+    file(RENAME "${output_path}/python-2.7.18.amd64/SourceDir/" "${output_path}/${PORT}/")
+    file(REMOVE_RECURSE "${output_path}/python-2.7.18.amd64"
                         # Files below are not part of a msiexec installation/extraction. 
-                        "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/Windows"
-                        "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/Microsoft.VC90.CRT.manifest"
-                        "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/msvcr90.dll")
+                        "${output_path}/${PORT}/Windows"
+                        "${output_path}/${PORT}/Microsoft.VC90.CRT.manifest"
+                        "${output_path}/${PORT}/msvcr90.dll")
     z_vcpkg_find_acquire_program_find_internal("PYTHON2"
         INTERPRETER "${interpreter}"
         PATHS ${paths_to_search}
