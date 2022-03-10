@@ -10,7 +10,8 @@ vcpkg_download_distfile(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(PATCHES yasm.patch)
+    set(PATCHES yasm.patch
+                msvc_symbol.patch)
 endif()
 
 vcpkg_extract_source_archive_ex(
