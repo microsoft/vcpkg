@@ -13,7 +13,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
 )
-vcpkg_cmake_build()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
