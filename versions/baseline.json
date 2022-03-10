@@ -7118,7 +7118,7 @@
     },
     "unrar": {
       "baseline": "5.8.1",
-      "port-version": 2
+      "port-version": 3
     },
     "upb": {
       "baseline": "2021-10-19",
