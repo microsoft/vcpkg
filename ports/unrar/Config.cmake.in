@@ -10,6 +10,7 @@ if (EXISTS "${_unrar_lib}")
     set_target_properties(unrar PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_unrar_root}/include")
     set_target_properties(unrar PROPERTIES IMPORTED_LOCATION "${_unrar_lib}")
     set_property(TARGET unrar APPEND PROPERTY IMPORTED_CONFIGURATIONS)
+    set(unrar_FOUND TRUE)
 
 else()
 
