@@ -10,6 +10,10 @@
       "name": "vcpkg-cmake",
       "host": true,
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {

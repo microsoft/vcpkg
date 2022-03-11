@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4632c3..77be8cc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -386,6 +386,7 @@ ENDIF (APR_BUILD_TESTAPR)
+ # Installation
+ 
+ INSTALL(TARGETS ${install_targets}
++        EXPORT unofficial-apr-1Targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib
+@@ -397,6 +398,17 @@ IF(INSTALL_PDB)
+           CONFIGURATIONS RelWithDebInfo Debug)
+ ENDIF()
+ 
++install(EXPORT unofficial-apr-1Targets
++    NAMESPACE unofficial::apr-1::
++    DESTINATION share/unofficial-apr-1
++)
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake.in"
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-1Targets.cmake"))
++
++configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake" @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-apr-1-config.cmake DESTINATION share/unofficial-apr-1)
++
+ INSTALL(FILES ${APR_PUBLIC_HEADERS_STATIC} ${APR_PUBLIC_HEADERS_GENERATED} DESTINATION include)
+ IF(APR_INSTALL_PRIVATE_H)
+   # Kludges for unexpected dependencies of httpd 2.x, not installed by default
