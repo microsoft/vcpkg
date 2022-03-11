@@ -28,7 +28,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endif()
 else()
   if(VCPKG_TARGET_IS_OSX)
-      message("${PORT} currently requires the following library from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with brew install autoconf automake libtool")
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with brew install autoconf automake libtool")
+  elseif(VCPKG_TARGET_IS_LINUX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with apt-get install autoconf automake libtool")
   endif()
   vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
