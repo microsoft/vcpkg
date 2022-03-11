@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "21.07",
-      "port-version": 0
+      "port-version": 1
     },
     "abseil": {
       "baseline": "20211102.1",
