@@ -1,0 +1,21 @@
+
+get_filename_component(_unrar_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_unrar_root "${_unrar_root}" PATH)
+get_filename_component(_unrar_root "${_unrar_root}" PATH)
+
+set(_unrar_lib "${_unrar_root}/lib/unrar.lib")
+if (EXISTS "${_unrar_lib}")
+
+    add_library(unrar INTERFACE IMPORTED)
+    set_target_properties(unrar PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_unrar_root}/include")
+    set_target_properties(unrar PROPERTIES IMPORTED_LOCATION "${_unrar_lib}")
+    set_property(TARGET unrar APPEND PROPERTY IMPORTED_CONFIGURATIONS)
+
+else()
+
+    set(unrar_FOUND FALSE)
+
+endif()
+unset(_unrar_lib)
+
+unset(_unrar_root)
