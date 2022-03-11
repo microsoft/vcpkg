@@ -105,4 +105,5 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
     message(WARNING "Sciter requires manual deployment of the correct DLL files.")
+	
 endif()
