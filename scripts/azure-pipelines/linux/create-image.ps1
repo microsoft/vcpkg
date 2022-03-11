@@ -23,7 +23,7 @@ $ProtoVMName = 'PROTOTYPE'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Linux Image'
-$TotalProgress = 9
+$TotalProgress = 11
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -103,6 +103,22 @@ New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
   -VM $VM
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Waiting 1 minute to let Azure VM customizations be applied' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+Start-Sleep -Seconds 60
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Restarting VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+Restart-AzVm -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
 Write-Progress `
