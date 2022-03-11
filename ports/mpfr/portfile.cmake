@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES 
-        gmpd.patch
         dll.patch
         src-only.patch
 )
