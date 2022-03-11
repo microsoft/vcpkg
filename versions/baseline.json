@@ -5501,8 +5501,8 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.18.0",
-      "port-version": 1
+      "baseline": "3.19.4",
+      "port-version": 0
     },
     "protobuf-c": {
       "baseline": "1.4.0",
@@ -5514,7 +5514,7 @@
     },
     "protozero": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "proxygen": {
       "baseline": "2022.01.31.00",
