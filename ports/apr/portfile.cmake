@@ -5,6 +5,8 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
     SHA512 3dc42d5caf17aab16f5c154080f020d5aed761e22db4c5f6506917f6bfd2bf8becfb40af919042bd4ce1077d5de74aa666f5edfba7f275efba78e8893c115148
+    PATCHES
+        fix-export-cmake.patch
 )
 
 vcpkg_extract_source_archive_ex(
@@ -88,6 +90,8 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_SOURCE_DIR=\"${SOURCE_PATH}\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/apr-1-config" "APR_BUILD_DIR=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\"" "")
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
