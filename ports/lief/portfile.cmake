@@ -1,10 +1,3 @@
-
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" )
-    if ("${VCPKG_CRT_LINKAGE}" STREQUAL "dynamic" )
-        vcpkg_fail_port_install(MESSAGE "${PORT} doesn't support static-md" ALWAYS)
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
