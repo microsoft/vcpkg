@@ -1472,7 +1472,7 @@
       "baseline": "3.7",
       "port-version": 0
     },
-    "commandline": {
+    "lionkor-commandline": {
       "baseline": "1.0.0",
       "port-version": 0
     },
