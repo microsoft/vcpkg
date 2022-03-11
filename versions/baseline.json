@@ -1472,10 +1472,6 @@
       "baseline": "3.7",
       "port-version": 0
     },
-    "lionkor-commandline": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "comms": {
       "baseline": "3.4.0",
       "port-version": 1
@@ -4191,6 +4187,10 @@
     "linenoise-ng": {
       "baseline": "4754bee2d8eb3",
       "port-version": 2
+    },
+    "lionkor-commandline": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "live555": {
       "baseline": "2021-12-18",
