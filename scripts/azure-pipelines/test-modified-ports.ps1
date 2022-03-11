@@ -176,4 +176,7 @@ if ($LASTEXITCODE -ne 0)
     throw "vcpkg ci failed"
 }
 
+$parentHashes = @( $parentHashes -replace '--parent-hashes=', '' )
+& "$PSScriptRoot/process-test-results.ps1" -xunit $xmlFile @parentHashes
+
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xmlFile"
