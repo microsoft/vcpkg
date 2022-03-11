@@ -482,8 +482,6 @@ libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-# LIEF library
-lief:x64-windows-static-md=fail
 libdatrie:x64-linux=fail
 libdatrie:x64-osx=fail
 libepoxy:arm-uwp=fail

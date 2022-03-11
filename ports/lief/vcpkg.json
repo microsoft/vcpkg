@@ -3,7 +3,7 @@
   "version": "0.11.5",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
-  "supports": "((x86 | x64) & ((windows & static) | windows)) & !uwp",
+  "supports": "( (x86 | x64) & !(windows & static & !staticcrt) ) & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
