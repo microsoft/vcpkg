@@ -31,7 +31,7 @@
     "lz4",
     "netcdf-c",
     "pegtl-2",
-    "proj4",
+    "proj",
     "pugixml",
     "sqlite3",
     "tiff",
