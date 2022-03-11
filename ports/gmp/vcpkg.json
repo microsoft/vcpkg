@@ -7,6 +7,10 @@
   "supports": "!(windows & (arm | arm64))",
   "dependencies": [
     {
+      "name": "gmp",
+      "host": true
+    },
+    {
       "name": "yasm",
       "host": true,
       "features": [
