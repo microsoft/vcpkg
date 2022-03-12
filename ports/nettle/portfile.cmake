@@ -58,8 +58,6 @@ list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 if(VCPKG_CROSSCOMPILING)
     list(TRANSFORM tool_names PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/")
-    foreach()
-    endforeach()
     file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" )
     if(NOT VCPKG_BUILD_TYPE)
         file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" )
