@@ -6,16 +6,16 @@
   "dependencies": [
     "gmp",
     {
+      "name": "nettle",
+      "host": true
+    },
+    {
       "name": "yasm",
       "host": true,
       "features": [
         "tools"
       ],
       "platform": "windows"
-    },
-      {
-      "name": "nettle",
-      "host": true
     }
   ]
 }
