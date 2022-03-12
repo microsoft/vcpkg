@@ -1167,11 +1167,6 @@ sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
 seal:x64-uwp=fail
-sentencepiece:arm64-windows=fail
-sentencepiece:arm-uwp=fail
-sentencepiece:x64-uwp=fail
-sentencepiece:x64-windows=fail
-sentencepiece:x86-windows=fail
 septag-sx:arm64-windows=fail
 septag-sx:arm-uwp=fail
 septag-sx:x64-uwp=fail
@@ -1360,9 +1355,6 @@ yajl:arm-uwp=fail
 yajl:x64-uwp=fail
 yara:arm-uwp=fail
 yara:x64-uwp=fail
-yato:arm64-windows=fail
-yato:arm-uwp=fail
-yato:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
 
