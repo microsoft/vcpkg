@@ -217,6 +217,8 @@ else()
         "--with-ensurepip"
         "--with-suffix="
         "--with-system-expat"
+        "--without-readline"
+        "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
