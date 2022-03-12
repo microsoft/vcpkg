@@ -1,0 +1,6 @@
+The package libzt provides CMake targets:
+
+    find_package(unofficial-libzt CONFIG REQUIRED)
+    target_link_directories(main PUBLIC ${unofficial_libzt_LIBRARY_DIRS})
+    target_include_directories(main PUBLIC ${unofficial_libzt_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE zt)
