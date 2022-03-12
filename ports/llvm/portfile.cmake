@@ -26,6 +26,7 @@ vcpkg_check_features(
         tools LLVM_INCLUDE_TOOLS
         utils LLVM_BUILD_UTILS
         utils LLVM_INCLUDE_UTILS
+        utils LLVM_INSTALL_UTILS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO

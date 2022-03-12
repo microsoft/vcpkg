@@ -124,8 +124,6 @@ civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 clblas:arm64-windows=fail
 clockutils:x64-linux=fail
-# CMake 3.4 needs libidn.so.11 (Ubuntu: libidn11)
-cmake-user:x64-linux=skip
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
@@ -138,6 +136,8 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
+# https://github.com/colmap/colmap/issues/1421
+colmap:x64-osx=fail
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -168,8 +168,6 @@ crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
 crashpad:x86-windows=fail
-ctemplate:arm64-windows=fail
-ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
 cuda:x64-osx=fail
@@ -188,8 +186,6 @@ dbghelp:x64-windows-static=skip
 dbghelp:x64-windows-static-md=skip
 dbghelp:x64-windows=skip
 dbghelp:x86-windows=skip
-dcmtk:arm-uwp=fail
-dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
 devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
@@ -289,9 +285,6 @@ freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
 freetype-gl:x64-uwp=fail
-fribidi:arm64-windows=fail
-fribidi:arm-uwp=fail
-fribidi:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
@@ -299,9 +292,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-gainput:arm-uwp=fail
-gainput:x64-linux=fail
-gainput:x64-uwp=fail
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
@@ -797,8 +787,6 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
-mpfr:x64-osx=fail
-mpfr:x64-linux=fail
 msix:x64-linux=fail
 msix:x64-osx=fail
 msix:x64-windows-static=fail
@@ -1006,7 +994,6 @@ pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
 popsift:x64-windows-static-md=fail
-poppler:arm64-windows=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
@@ -1180,11 +1167,6 @@ sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
 seal:x64-uwp=fail
-sentencepiece:arm64-windows=fail
-sentencepiece:arm-uwp=fail
-sentencepiece:x64-uwp=fail
-sentencepiece:x64-windows=fail
-sentencepiece:x86-windows=fail
 septag-sx:arm64-windows=fail
 septag-sx:arm-uwp=fail
 septag-sx:x64-uwp=fail
@@ -1285,8 +1267,6 @@ tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
-tinyexif:arm-uwp=fail
-tinyexif:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxparser:arm64-windows=fail
@@ -1375,9 +1355,6 @@ yajl:arm-uwp=fail
 yajl:x64-uwp=fail
 yara:arm-uwp=fail
 yara:x64-uwp=fail
-yato:arm64-windows=fail
-yato:arm-uwp=fail
-yato:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
 
@@ -1402,9 +1379,9 @@ clapack:x64-windows-static=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
+lapack-reference:x64-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
@@ -1430,12 +1407,6 @@ zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
 workflow:arm-uwp=fail
-
-# wangle triggers an internal compiler error
-# https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1269468
-wangle:x64-windows=fail
-wangle:x64-windows-static=fail
-wangle:x64-windows-static-md=fail
 
 # VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
 # upstream build script of this port.

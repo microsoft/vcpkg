@@ -1,10 +1,10 @@
-set(VERSION v1.2.2)
+set(VERSION v1.2.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "${VERSION}"
-    SHA512 E6A1EC2208EC29D8685D2A957FAE6F3FEDC0E847D6AB1BB8AC5C7980223BC377692334C87575956B53BB37A9B71C5DEDD1B5C4F19F122561543D04661FEFE1D5
+    SHA512 ffcc697901ec978fb9d1f8996f8a4c5114c98a0ec19206cac95d1a84f8d0fcbe38bf73e88f1df59d53bc6be481102aa2f2a6a0efa29797e7ce11123bd23131c2
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_check_features(
         openssl UA_ENABLE_ENCRYPTION_OPENSSL
         mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
         amalgamation UA_ENABLE_AMALGAMATION
+        historizing UA_ENABLE_HISTORIZING
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -30,7 +31,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

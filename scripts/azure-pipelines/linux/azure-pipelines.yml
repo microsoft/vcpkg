@@ -41,7 +41,7 @@ jobs:
     inputs:
       filePath: bootstrap-vcpkg.sh
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports for x64-linux'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
