@@ -1,13 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            "offscale/${PORT}"
-    REF             8394c3c99f1bfd6478e90621c5d2f82e15296a2d
-    SHA512          a5471d10b38945b169c2c573276f0699032ed9ff5818b023c3556231e82738a43773de47a3010f19dec80f676ab509bf19d5d5c2e6523ad7b416b3ede745c3a3
+    REF             902090ff117b15a9a2529cf596ec8ac81a2093e0
+    SHA512          58b3676734922cd4c1c083f342622c889b0023cd94749b3b1dc60d05e38684f0a77cde2118d3c3841cffc1cd6e518f599f4a4031b7ee439ed60c7451cc67385a
     HEAD_REF        master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/LICENSE.txt"
