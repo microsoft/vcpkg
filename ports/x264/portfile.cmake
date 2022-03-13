@@ -29,20 +29,24 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --enable-pic)
-endif()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
+    list(APPEND OPTIONS --enable-pic)    
 
-if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
-    if (VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        # attempt to determine the fully qualified prefix from VCPKG_DETECTED_CMAKE_C_COMPILER (using most common naming conventions for linux targets)
-        if (${VCPKG_DETECTED_CMAKE_C_COMPILER} MATCHES ".*-gcc")
-            string(REGEX REPLACE "gcc$" "" full_cross_prefix ${VCPKG_DETECTED_CMAKE_C_COMPILER})
-            list(APPEND OPTIONS --cross-prefix=${full_cross_prefix})
-        endif()        
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+
+        if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
+            # Attempt to determine the fully qualified prefix from VCPKG_DETECTED_CMAKE_C_COMPILER (using most common naming conventions for linux targets)
+            # and if valid, use it to initialize --cross-prefix build-option of x264 package.
+            if (${VCPKG_DETECTED_CMAKE_C_COMPILER} MATCHES ".*-gcc")
+                string(REGEX REPLACE "gcc$" "" full_cross_prefix ${VCPKG_DETECTED_CMAKE_C_COMPILER})
+                list(APPEND OPTIONS --cross-prefix=${full_cross_prefix})
+            endif()        
+        endif()
     endif()
+
 endif()
 
 vcpkg_configure_make(
