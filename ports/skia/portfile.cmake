@@ -20,6 +20,21 @@ function(checkout_in_path PATH URL REF)
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
+function(checkout_in_path_with_patch PATH URL REF PATCH)
+    if(EXISTS "${PATH}")
+        return()
+    endif()
+
+    vcpkg_from_git(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        URL "${URL}"
+        REF "${REF}"
+        PATCHES "${PATCH}"
+    )
+    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+endfunction()
+
 set(EXTERNALS "${SOURCE_PATH}/third_party/externals")
 file(MAKE_DIRECTORY "${EXTERNALS}")
 
@@ -106,9 +121,9 @@ replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
 
 set(OPTIONS "\
-skia_use_lua=false \
-skia_enable_tools=false \
-skia_enable_spirv_validation=false")
+    skia_use_lua=false \
+    skia_enable_tools=false \
+    skia_enable_spirv_validation=false")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
@@ -205,9 +220,10 @@ if("dawn" IN_LIST FEATURES)
         "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
     )
 
-    checkout_in_path("${EXTERNALS}/dawn"
+    checkout_in_path_with_patch("${EXTERNALS}/dawn"
         "https://dawn.googlesource.com/dawn.git"
         "9096fc290f8677a0d395e4a5b6bf1443553629d6"
+        "dawn_use_vcpkg_spirv.patch"
     )
 endif()
 
@@ -265,6 +281,24 @@ vcpkg_gn_install(
     TARGETS ":skia"
 )
 
+if("dawn" IN_LIST FEATURES)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        vcpkg_gn_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            TARGETS
+                "third_party/externals/dawn/src/dawn:dawn_proc_shared"
+                "third_party/externals/dawn/src/dawn_native:dawn_native_shared"
+                "third_party/externals/dawn/src/dawn_platform:dawn_platform_shared")
+    else()
+        vcpkg_gn_install(
+            SOURCE_PATH "${SOURCE_PATH}"
+            TARGETS
+                "third_party/externals/dawn/src/dawn:dawn_proc_static"
+                "third_party/externals/dawn/src/dawn_native:dawn_native_static"
+                "third_party/externals/dawn/src/dawn_platform:dawn_platform_static")
+    endif()
+endif()
+
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${SOURCE_PATH}/include"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
@@ -278,9 +312,8 @@ endforeach()
 
 # get a list of library dependencies for TARGET
 function(gn_desc_target_libs OUTPUT BUILD_DIR TARGET)
-    vcpkg_find_acquire_program(GN)
     execute_process(
-        COMMAND ${GN} desc "${BUILD_DIR}" "${TARGET}" libs
+        COMMAND ${VCPKG_GN} desc "${BUILD_DIR}" "${TARGET}" libs
         WORKING_DIRECTORY "${SOURCE_PATH}"
         OUTPUT_VARIABLE OUTPUT_
         OUTPUT_STRIP_TRAILING_WHITESPACE
