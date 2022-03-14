@@ -1,8 +1,8 @@
 {
   "name": "qt5-winextras",
-  "version-string": "5.15.2",
-  "port-version": 1,
+  "version": "5.15.3",
   "description": "Qt5 Windows Extras Module. Provides platform-specific APIs for Windows.",
+  "license": null,
   "supports": "windows",
   "dependencies": [
     {
