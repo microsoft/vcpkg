@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b910231..8a3a777 100755
+index b910231..ee571f0 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,6 +34,8 @@ else()
@@ -20,3 +20,16 @@ index b910231..8a3a777 100755
  
  # Install Section
  include(GNUInstallDirs)
+@@ -87,12 +89,6 @@ install(
+   DESTINATION  ${CMAKE_INSTALL_PREFIX}
+   )
+ 
+-install(
+-  FILES
+-  ${PROJECT_SOURCE_DIR}/LICENSE
+-  DESTINATION  ${CMAKE_INSTALL_DATADIR}/pixel/copyright
+-  )
+-
+ install(
+   FILES
+   ${PROJECT_BINARY_DIR}/pixelConfig.cmake
