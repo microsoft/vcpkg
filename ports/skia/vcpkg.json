@@ -8,7 +8,7 @@
   ],
   "homepage": "https://skia.org",
   "license": "BSD-3-Clause",
-  "supports": "!(uwp | android)",
+  "supports": "(x64 | arm64) & (windows | linux | osx)",
   "dependencies": [
     "expat",
     "fontconfig",

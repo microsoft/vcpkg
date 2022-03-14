@@ -123,11 +123,8 @@ replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
 set(OPTIONS "\
     skia_use_lua=false \
     skia_enable_tools=false \
-    skia_enable_spirv_validation=false")
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
-endif()
+    skia_enable_spirv_validation=false \
+    target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 
 # used for passing feature-specific definitions to the config file
 set(SKIA_PUBLIC_DEFINITIONS 
