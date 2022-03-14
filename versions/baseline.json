@@ -5042,7 +5042,7 @@
     },
     "opengl": {
       "baseline": "0.0",
-      "port-version": 9
+      "port-version": 10
     },
     "opengl-registry": {
       "baseline": "2021-11-17",
