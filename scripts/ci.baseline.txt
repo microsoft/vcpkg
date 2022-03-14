@@ -968,11 +968,6 @@ pfring:x64-osx=fail
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
 physx:arm64-windows=fail
-pixel:x64-uwp=fail
-pixel:x64-windows=fail
-pixel:x64-windows-static=fail
-pixel:x64-windows-static-md=fail
-pixel:x86-windows=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
