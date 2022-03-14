@@ -10,8 +10,8 @@ vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
 vcpkg_restore_pkgconfig_path()
 ```
 
-`vcpkg_setup_pkgconfig_path` prepend the default pkgconfig path passed to it to the PKG_CONFIG_PATH environment variable.
-`vcpkg_restore_pkgconfig_path` should be called after the configure or build procees end.
+`vcpkg_setup_pkgconfig_path` prepends `lib/pkgconfig` and `share/pkgconfig` directories for the given `BASE_DIRS` to the `PKG_CONFIG_PATH` environment variable. It creates or updates a backup of the previous value.
+`vcpkg_restore_pkgconfig_path` shall be called when leaving the scope which called `vcpkg_setup_pkgconfig_path` in order to restore the original value from the backup.
 
 #]===]
 function(vcpkg_setup_pkgconfig_path)
@@ -24,11 +24,11 @@ function(vcpkg_setup_pkgconfig_path)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_backup_env_variables(VARS PKGCONFIG_PATH PKG_CONFIG PKG_CONFIG_PATH)
+    vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
-    vcpkg_add_to_path("${PKGCONFIG_PATH}")
+    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
+    vcpkg_add_to_path("${pkgconfig_path}")
 
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
@@ -47,5 +47,5 @@ function(vcpkg_restore_pkgconfig_path)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_restore_env_variables(VARS PKGCONFIG_PATH PKG_CONFIG PKG_CONFIG_PATH)
+    vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
 endfunction()
