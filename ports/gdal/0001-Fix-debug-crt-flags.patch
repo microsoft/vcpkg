@@ -1,7 +1,7 @@
-diff --git a/nmake.opt b/nmake.opt
-index 468d2ba1a..e75a081f7 100644
---- a/nmake.opt
-+++ b/nmake.opt
+diff --git a/gdal/nmake.opt b/gdal/nmake.opt
+index 8253ae2..9456b79 100644
+--- a/gdal/nmake.opt
++++ b/gdal/nmake.opt
 @@ -148,16 +148,26 @@ GDAL_PDB = $(GDAL_ROOT)\gdal$(VERSION)$(POSTFIX).pdb
  !ENDIF
  

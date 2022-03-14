@@ -1,0 +1,44 @@
+{
+  "name": "kf5declarative",
+  "version": "5.89.0",
+  "description": "Integration of QML and KDE work spaces",
+  "homepage": "https://api.kde.org/frameworks/kdeclarative/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5config",
+    "kf5globalaccel",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5iconthemes",
+    "kf5kio",
+    "kf5notifications",
+    "kf5package",
+    "kf5widgetsaddons",
+    "kf5windowsystem",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opengl": {
+      "description": "Enables OpenGl support",
+      "dependencies": [
+        "libepoxy"
+      ]
+    }
+  }
+}

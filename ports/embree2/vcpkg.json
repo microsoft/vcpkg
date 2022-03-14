@@ -1,0 +1,15 @@
+{
+  "name": "embree2",
+  "version-semver": "2.17.7",
+  "port-version": 4,
+  "description": "High Performance Ray Tracing Kernels.",
+  "homepage": "https://github.com/embree/embree",
+  "supports": "!arm",
+  "dependencies": [
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

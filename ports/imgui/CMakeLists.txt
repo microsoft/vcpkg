@@ -85,6 +85,12 @@ if(IMGUI_BUILD_SDL2_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl.cpp)
 endif()
 
+if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
+    find_package(SDL2 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.cpp)
+endif()
+
 if(IMGUI_BUILD_VULKAN_BINDING)
     find_package(Vulkan REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan)
@@ -166,11 +172,6 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glut.h DESTINATION include)
     endif()
 
-    if(IMGUI_COPY_MARMALADE_BINDING)
-        file(GLOB MARMALADE_BINDING_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_marmalade.*)
-        install(FILES ${MARMALADE_BINDING_SRCS} DESTINATION include/bindings)
-    endif()
-
     if(IMGUI_BUILD_METAL_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.h DESTINATION include)
     endif()
@@ -195,6 +196,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_SDL2_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)

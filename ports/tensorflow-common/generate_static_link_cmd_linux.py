@@ -1,7 +1,10 @@
 import re
 import sys
 
-lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
+params_path = sys.argv[2]
+version = sys.argv[3]
+lib_suffix = "" if len(sys.argv) < 5 else sys.argv[4]
+
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
         p_cd = re.compile(r"^\((cd .*) && \\$")

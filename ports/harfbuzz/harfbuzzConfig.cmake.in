@@ -1,5 +1,6 @@
 # For old projects where the minimum CMake version is lower than 3.3.
 cmake_policy(SET CMP0057 NEW)
+include(CMakeFindDependencyMacro)
 
 if(TARGET harfbuzz)
   return()
@@ -14,9 +15,7 @@ if(HARFBUZZ_LIBRARY_DEBUG)
 endif()
 
 find_library(HARFBUZZ_LIBRARY_RELEASE NAMES harfbuzz PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
-if(HARFBUZZ_LIBRARY_RELEASE)
-    target_link_libraries(harfbuzz INTERFACE $<$<NOT:$<CONFIG:DEBUG>>:${HARFBUZZ_LIBRARY_RELEASE}>)
-endif()
+target_link_libraries(harfbuzz INTERFACE $<$<NOT:$<CONFIG:DEBUG>>:${HARFBUZZ_LIBRARY_RELEASE}>)
 
 set(HARFBUZZ_FEATURES @FEATURES@)
 
@@ -25,7 +24,7 @@ if(APPLE)
     target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
 endif()
 
-find_package(freetype CONFIG REQUIRED)
+find_dependency(freetype CONFIG)
 target_link_libraries(harfbuzz INTERFACE freetype)
 
 if ("graphite2" IN_LIST HARFBUZZ_FEATURES)
@@ -53,9 +52,20 @@ if ("glib" IN_LIST HARFBUZZ_FEATURES)
 endif()
 
 if ("icu" IN_LIST HARFBUZZ_FEATURES)
-    find_package(ICU 61 COMPONENTS uc REQUIRED)
+    find_dependency(ICU 61 COMPONENTS uc)
     target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
 
 get_filename_component(_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
-target_include_directories(harfbuzz INTERFACE ${_INSTALL_DIR}/include/harfbuzz)
+target_include_directories(harfbuzz INTERFACE "${_INSTALL_DIR}/include/harfbuzz")
+
+set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz PARENT_SCOPE)
+set(HARFBUZZ_LIBRARIES harfbuzz::harfbuzz PARENT_SCOPE)
+set(HARFBUZZ_INCLUDE_DIR "${_INSTALL_DIR}/include/harfbuzz" PARENT_SCOPE)
+set(HARFBUZZ_INCLUDE_DIRS "${_INSTALL_DIR}/include/harfbuzz" PARENT_SCOPE)
+
+if(HARFBUZZ_LIBRARY_RELEASE)
+  set(HARFBUZZ_FOUND TRUE PARENT_SCOPE)
+else()
+  set(HARFBUZZ_FOUND FALSE PARENT_SCOPE)
+endif()

@@ -1,0 +1,71 @@
+{
+  "name": "cmake-user",
+  "version-date": "2022-02-28",
+  "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "The CI set of features to test",
+      "dependencies": [
+        {
+          "name": "cmake-user",
+          "default-features": false,
+          "features": [
+            "find-package"
+          ]
+        },
+        {
+          "name": "cmake-user",
+          "default-features": false,
+          "features": [
+            "cmake-3-7"
+          ],
+          "platform": "x64 & (windows | linux | osx) & !uwp"
+        }
+      ]
+    },
+    "cmake-3-7": {
+      "description": "Use CMake 3.7 to build the test project"
+    },
+    "find-package": {
+      "description": "Ports to be tested via find_package($package)",
+      "dependencies": [
+        {
+          "$package": "BZip2",
+          "name": "bzip2"
+        },
+        {
+          "$package": "EXPAT",
+          "name": "expat"
+        },
+        {
+          "$package": "Freetype",
+          "name": "freetype"
+        },
+        {
+          "$package": "Intl",
+          "name": "gettext"
+        },
+        {
+          "$package": "GIF",
+          "name": "giflib"
+        },
+        {
+          "$package": "LibLZMA",
+          "name": "liblzma"
+        },
+        {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows & !uwp"
+        },
+        {
+          "$package": "ZLIB",
+          "name": "zlib"
+        }
+      ]
+    }
+  }
+}

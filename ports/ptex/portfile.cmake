@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 set(PTEX_VER 2.3.2)
 
 vcpkg_from_github(
@@ -8,7 +6,7 @@ vcpkg_from_github(
     REF 1b8bc985a71143317ae9e4969fa08e164da7c2e5
     SHA512 37f2df9ec195f3d69d9526d0dea6a93ef49d69287bfae6ccd9671477491502ea760ed14e3b206b4f488831ab728dc749847b7d176c9b8439fb58b0a0466fe6c5
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-build.patch
         fix-config.cmake.patch
 )

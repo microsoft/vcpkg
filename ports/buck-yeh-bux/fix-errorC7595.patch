@@ -1,0 +1,15 @@
+diff --git a/src/XException.cpp b/src/XException.cpp
+index 6a66347..53a0087 100644
+--- a/src/XException.cpp
++++ b/src/XException.cpp
+@@ -49,8 +49,8 @@ LONG WINAPI usrSEH(_EXCEPTION_POINTERS *pInfo)
+             RUNTIME_ERROR("code 0x{:x}, flags 0x{:x}, extra 0x{:x}, ip 0x{:x}, arg#{:x}",
+                 er->ExceptionCode,
+                 er->ExceptionFlags,
+-                static_cast<void*>(er->ExceptionRecord),
+-                static_cast<void*>(er->ExceptionAddress),
++                (size_t)static_cast<void*>(er->ExceptionRecord),
++                (size_t)static_cast<void*>(er->ExceptionAddress),
+                 er->NumberParameters);
+     }
+     return EXCEPTION_CONTINUE_SEARCH;

@@ -1,0 +1,17 @@
+diff --git a/gdal/frmts/pdf/GNUmakefile b/gdal/frmts/pdf/GNUmakefile
+index aa42769477fc..56c2cd775d05 100644
+--- a/gdal/frmts/pdf/GNUmakefile
++++ b/gdal/frmts/pdf/GNUmakefile
+@@ -11,6 +11,12 @@ LD_SHARED = $(LD) -bundle
+ endif
+ 
+ ifeq ($(HAVE_POPPLER),yes)
++# Poppler 2022.1 requires c++17
++ifeq ($(shell test $(POPPLER_MAJOR_VERSION) -gt 21; echo $$?),0)
++CXX := $(subst -std=c++11,,${CXX})
++CXX := $(subst -std=c++14,,${CXX})
++CXX := ${CXX} -std=c++17
++endif
+ CPPFLAGS +=  -DHAVE_POPPLER -DPOPPLER_MAJOR_VERSION=$(POPPLER_MAJOR_VERSION) -DPOPPLER_MINOR_VERSION=$(POPPLER_MINOR_VERSION)
+ endif
+ 

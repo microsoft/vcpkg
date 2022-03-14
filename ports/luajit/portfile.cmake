@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports being built for desktop" ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
@@ -21,17 +19,17 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    
+
     vcpkg_execute_required_process_repeat(
         COUNT 1
         COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${VCPKG_CRT_LINKAGE} debug ${LJIT_STATIC}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )
-    
+
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
+
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(COPY ${CURRENT_PACKAGES_DIR}/debug/bin/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
@@ -44,17 +42,17 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    
+
     vcpkg_execute_required_process_repeat(d8un
         COUNT 1
         COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${SOURCE_PATH}/src ${VCPKG_CRT_LINKAGE} ${LJIT_STATIC}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
-    
+
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    
+
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools)

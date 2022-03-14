@@ -1,7 +1,7 @@
 {
   "name": "wampcc",
   "version-string": "2019-09-04",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Wampcc is C++ library that implements the Web Application Messaging Protocol (WAMP) protocol.",
   "dependencies": [
     "jansson",

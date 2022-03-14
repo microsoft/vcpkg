@@ -1,7 +1,6 @@
 {
   "name": "yoga",
-  "version-string": "1.18.0",
-  "port-version": 2,
+  "version": "1.19.0",
   "description": "Yoga is a cross-platform layout engine which implements Flexbox",
   "homepage": "https://github.com/facebook/yoga",
   "supports": "!uwp"

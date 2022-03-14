@@ -1,6 +1,7 @@
 {
   "name": "glibmm",
   "version": "2.68.1",
+  "port-version": 2,
   "description": "This is glibmm, a C++ API for parts of glib that are useful for C++.",
   "homepage": "https://www.gtkmm.org.",
   "supports": "!uwp",
@@ -11,6 +12,10 @@
     "libiconv",
     "libsigcpp-3",
     "pcre",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "zlib"
   ]
 }

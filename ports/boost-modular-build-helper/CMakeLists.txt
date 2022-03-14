@@ -1,38 +1,20 @@
 cmake_minimum_required(VERSION 3.9)
 project(boost CXX)
 
+# The following variables are used in user-config.jam file
+set(USER_CONFIG_TOOLSET)
+set(USER_CONFIG_TOOLSET_VERSION)
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND)
+set(USER_CONFIG_TOOLSET_OPTIONS)
+set(USER_CONFIG_EXTRA_LINES)
+
 set(B2_OPTIONS)
-
-if(MSVC)
-    if(MSVC_VERSION LESS 1900)
-        math(EXPR BOOST_MSVC_VERSION "${MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR BOOST_MSVC_VERSION "${MSVC_VERSION} / 10 - 50")
-    endif()
-else()
-    set(VCPKG_PLATFORM_TOOLSET external)
-endif()
-
-#### Handle ICU
-if(WIN32)
-    list(APPEND B2_OPTIONS "--disable-icu")
-else()
-    find_path(ICU_PATH include/unicode/utf.h)
-    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
-endif()
-
-if(DEFINED BOOST_CMAKE_FRAGMENT)
-    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
-    include(${BOOST_CMAKE_FRAGMENT})
-endif()
 
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND B2_OPTIONS runtime-link=shared)
-    set(LIB_RUNTIME_LINK "shared")
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
-    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if(BUILD_SHARED_LIBS)
@@ -61,29 +43,43 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
     list(APPEND B2_OPTIONS "asmflags=/safeseh")
 endif()
 
-file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
-
-if(MSVC)
-    set(B2_TOOLSET msvc)
+if(WIN32)
+    if(MSVC)
+        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+            set(USER_CONFIG_TOOLSET clang-win)
+        else()
+            set(USER_CONFIG_TOOLSET msvc)
+        endif()
+        if(MSVC_VERSION LESS 1900)
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 50")
+        endif()
+    else()
+        if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+            set(USER_CONFIG_TOOLSET clang)
+        else()
+            set(USER_CONFIG_TOOLSET gcc)
+        endif()
+    endif()
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
-    set(B2_TOOLSET clang)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+      set(USER_CONFIG_TOOLSET clang)
+    else()
+        set(USER_CONFIG_TOOLSET gcc)
+    endif()
     list(APPEND B2_OPTIONS target-os=darwin)
-elseif(WIN32)
-    set(B2_TOOLSET gcc)
-    list(APPEND B2_OPTIONS target-os=windows)
 elseif(ANDROID)
-    set(B2_TOOLSET gcc)
+    set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=android)
 else()
-    set(B2_TOOLSET gcc)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(USER_CONFIG_TOOLSET clang)
+    else()
+        set(USER_CONFIG_TOOLSET gcc)
+    endif()
     list(APPEND B2_OPTIONS target-os=linux)
-endif()
-
-if(WIN32)
-    list(APPEND B2_OPTIONS threadapi=win32)
-else()
-    list(APPEND B2_OPTIONS threadapi=pthread)
 endif()
 
 # Properly handle compiler and linker flags passed by VCPKG
@@ -127,9 +123,12 @@ if(APPLE)
     endforeach()
 endif()
 
+string(REGEX REPLACE "[ \t\r\n]+" " " CXXFLAGS "${CXXFLAGS}")
 string(STRIP "${CXXFLAGS}" CXXFLAGS)
-string(STRIP "${CFLAGS}"   CFLAGS)
-string(STRIP "${LDFLAGS}"  LDFLAGS)
+string(REGEX REPLACE "[ \t\r\n]+" " " CFLAGS "${CFLAGS}")
+string(STRIP "${CFLAGS}" CFLAGS)
+string(REGEX REPLACE "[ \t\r\n]+" " " LDFLAGS "${LDFLAGS}")
+string(STRIP "${LDFLAGS}" LDFLAGS)
 
 if(NOT CXXFLAGS STREQUAL "")
     string(REPLACE " " " <cxxflags>" CXXFLAGS "<cxxflags>${CXXFLAGS}")
@@ -170,11 +169,14 @@ foreach(INCDIR IN LISTS CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES)
 endforeach()
 
 if(APPLE)
-  string(APPEND CXXFLAGS " <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11 <cxxflags>-stdlib=libc++")
-  string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        string(APPEND CXXFLAGS " <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11 <cxxflags>-stdlib=libc++")
+        string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
+    else()
+        string(APPEND CXXFLAGS " <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11")
+    endif()
 endif()
 
-set(TOOLSET_OPTIONS)
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     # cl in b2 appears to not receive `LIBPATH` for finding winmd files, so we transform them to `/AI` options.
     set(libpath_args "$ENV{LIBPATH}")
@@ -187,59 +189,43 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(TRANSFORM libpath_args REPLACE "\\\"" "\\\\\"")
     list(JOIN libpath_args " " libpath_arg)
 
-    set(TOOLSET_OPTIONS "<cflags>-Zl <compileflags>\"${libpath_arg}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
+    string(APPEND CXXFLAGS " <compileflags>\"${libpath_arg}\" <cxxflags>/ZW <compileflags>\"/D_WIN32_WINNT=0x0A00\"")
+    string(APPEND CFLAGS " <cflags>-Zl")
     list(APPEND B2_OPTIONS windows-api=store)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
 endif()
 
-find_path(ZLIB_INCLUDE zlib.h)
-list(APPEND B2_OPTIONS -sZLIB_INCLUDE="${ZLIB_INCLUDE}")
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${CMAKE_CXX_COMPILER}\"")
 
-find_path(BZIP2_INCLUDE bzlib.h)
-list(APPEND B2_OPTIONS -sBZIP2_INCLUDE="${BZIP2_INCLUDE}")
+if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+    file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <setup>\"${NOTHING_BAT}\"\n"
+        "    ${CXXFLAGS}\n"
+        "    ${CFLAGS}\n"
+        "    ${LDFLAGS}\n"
+    )
+else()
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <ranlib>\"${CMAKE_RANLIB}\"\n"
+        "    <archiver>\"${CMAKE_AR}\"\n"
+        "    ${CXXFLAGS}\n"
+        "    ${CFLAGS}\n"
+        "    ${LDFLAGS}\n"
+    )
+endif()
+
+if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+    # MINGW here causes b2 to not run cygpath
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS
+        "    <flavor>mingw\n"
+    )
+endif()
 
 if(WIN32)
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlib
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sBZIP2_BINARY=bz2
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sLZMA_BINARY=lzma
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-            -sZSTD_BINARY=zstd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
-        )
-    else()
-        list(APPEND B2_OPTIONS
-            -sZLIB_BINARY=zlibd
-            "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sBZIP2_BINARY=bz2d
-            "-sBZIP2_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sLZMA_BINARY=lzmad
-            "-sLZMA_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-            -sZSTD_BINARY=zstdd
-            "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
-        )
-    endif()
+    list(APPEND B2_OPTIONS threadapi=win32)
 else()
-    find_library(ZLIB_LIBPATH z)
-    list(APPEND B2_OPTIONS
-        -sZLIB_BINARY=z
-        -sZLIB_LIBPATH="${ZLIB_LIBPATH}"
-    )
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        find_library(BZIP2_LIBPATH bz2)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        find_library(BZIP2_LIBPATH bz2d)
-        list(APPEND B2_OPTIONS
-            -sBZIP2_BINARY=bz2d
-            -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
-        )
-    endif()
+    list(APPEND B2_OPTIONS threadapi=pthread)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -252,17 +238,77 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
-
 include(ProcessorCount)
 ProcessorCount(NUMBER_OF_PROCESSORS)
 if(NOT NUMBER_OF_PROCESSORS)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
 
+# Handle ICU
+if(WIN32)
+    list(APPEND B2_OPTIONS "--disable-icu")
+else()
+    find_path(ICU_PATH include/unicode/utf.h)
+    list(APPEND B2_OPTIONS "-sICU_PATH=\"${ICU_PATH}\"")
+endif()
+
+# Handle Python
+set(python_versions "")
+
+if("python2" IN_LIST FEATURES)
+    # Find Python2 in the current installed directory
+    file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python2_version} : : \"${python2_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
+    list(APPEND python_versions "${python2_version}")
+endif()
+
+if("python3" IN_LIST FEATURES)
+    # Find Python3 in the current installed directory
+    file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
+    string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/lib\" ;\n"
+        "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
+    )
+    list(APPEND python_versions "${python3_version}")
+endif()
+
+if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
+    string(APPEND USER_CONFIG_EXTRA_LINES
+        "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
+        "   <include>\"${CURRENT_INSTALLED_DIR}/include\"\n"
+    )
+    if(WIN32)
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>msmpi ;\n"
+        )
+    else()
+        string(APPEND USER_CONFIG_EXTRA_LINES
+            "   <find-shared-library>openmpi ;\n"
+        )
+    endif()
+endif()
+
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+endif()
+
+# Include port specific CMake fragment
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    message(STATUS "Including ${BOOST_CMAKE_FRAGMENT}")
+    include(${BOOST_CMAKE_FRAGMENT})
+endif()
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
+
 add_custom_target(boost ALL
     COMMAND "${B2_EXE}"
-        toolset=${B2_TOOLSET}
+        toolset=${USER_CONFIG_TOOLSET}
         --user-config=${CMAKE_CURRENT_BINARY_DIR}/user-config.jam
         --stagedir=${CMAKE_CURRENT_BINARY_DIR}/stage
         --build-dir=${CMAKE_CURRENT_BINARY_DIR}
@@ -284,6 +330,7 @@ add_custom_target(boost ALL
         --hash
         -q
         debug-symbols=on
+        # Enable debugging level 2.
         -d +2
 
         threading=multi
@@ -295,11 +342,11 @@ add_custom_target(boost ALL
 set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
 install(
     CODE "
-file(GLOB LIBS ${SUBDIR}/*.so.* ${SUBDIR}/*.so ${SUBDIR}/*.a ${SUBDIR}/*.dylib ${SUBDIR}/*.dylib.* ${SUBDIR}/*.lib)
+file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")
 if(LIBS)
     file(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")
 endif()
-file(GLOB DLLS ${SUBDIR}/*.dll)
+file(GLOB DLLS \"${SUBDIR}/*.dll\" \"${SUBDIR}/*.pyd\")
 if(DLLS)
     file(INSTALL \${DLLS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\")
 endif()

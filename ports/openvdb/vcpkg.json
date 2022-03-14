@@ -1,7 +1,6 @@
 {
   "name": "openvdb",
-  "version": "8.1.0",
-  "port-version": 1,
+  "version": "8.2.0",
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "dependencies": [

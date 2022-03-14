@@ -1,49 +1,7 @@
-diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
-index 43113fa..46331ad 100644
---- a/libgeotiff/CMakeLists.txt
-+++ b/libgeotiff/CMakeLists.txt
-@@ -172,6 +172,7 @@ IF(WITH_TIFF)
-     endif ()
- 
-     IF(TIFF_FOUND)
-+        IF (0)
-         # Confirm required API is available
-         INCLUDE(CheckFunctionExists)
-         SET(CMAKE_REQUIRED_LIBRARIES ${TIFF_LIBRARIES})
-@@ -187,6 +188,7 @@ IF(WITH_TIFF)
-             SET(TIFF_FOUND) # ReSET to NOT found for TIFF library
-             MESSAGE(FATAL_ERROR "Failed to link with libtiff - TIFFMergeFieldInfo function not found. libtiff 3.6.0 Beta or later required. Please upgrade or use an older version of libgeotiff")
-         ENDIF()
-+        ENDIF()
- 
-         INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
-         ADD_DEFINITIONS(-DHAVE_TIFF=1)
-@@ -298,11 +300,6 @@ INSTALL(FILES ${GEOTIFF_MAN_PAGES} DESTINATION share/man/man1)
- # INSTALL(FILES ${GEOTIFF_LIB_HEADERS} DESTINATION ${GEOTIFF_INCLUDE_DIR})
- INSTALL(FILES ${GEOTIFF_LIB_HEADERS} DESTINATION include)
- 
--###############################################################################
--# Build libxtiff library
--
--ADD_SUBDIRECTORY(libxtiff)
--
- ###############################################################################
- # Build libgeotiff library
- 
 diff --git a/libgeotiff/bin/CMakeLists.txt b/libgeotiff/bin/CMakeLists.txt
 index 7b12341..b6b1d0c 100644
 --- a/libgeotiff/bin/CMakeLists.txt
 +++ b/libgeotiff/bin/CMakeLists.txt
-@@ -6,9 +6,6 @@
- #
- ###############################################################################
- 
--INCLUDE_DIRECTORIES(
--    .
--    ${CMAKE_SOURCE_DIR})
- 
- IF(WIN32 AND MSVC)
-     SET(GETOPT_SOURCE getopt.c)
 @@ -22,12 +19,11 @@ MESSAGE(STATUS "Adding GeoTIFF utilities to build")
  
  FOREACH(utility ${GEOTIFF_UTILITIES})
@@ -75,7 +33,7 @@ index 47a2b00..3809ba3 100644
    set (PROJECT_ROOT_DIR "..")
  endif ()
 +else()
-+  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME_LOWER}")
++  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
 +  set (PROJECT_ROOT_DIR "../..")
 +endif()
  

@@ -1,25 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae07280..54dc4f3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1369,13 +1369,13 @@
- ###############################################################################
- 
- set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
- 
- if(WITH_TURBOJPEG)
-   if(ENABLE_SHARED)
--    install(TARGETS turbojpeg tjbench
-+    install(TARGETS turbojpeg #tjbench
-       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-     if(NOT CMAKE_VERSION VERSION_LESS "3.1" AND MSVC AND
-       CMAKE_C_LINKER_SUPPORTS_PDB)
-       install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
-@@ -1413,13 +1413,13 @@
-       DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME djpeg${EXE})
-     install(PROGRAMS ${DIR}/jpegtran-static${EXE}
-       DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME jpegtran${EXE})
+@@ -1487,7 +1487,7 @@ if(ENABLE_STATIC)
    endif()
  endif()
  
@@ -28,6 +11,3 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
    ${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/example.txt
-   ${CMAKE_CURRENT_SOURCE_DIR}/tjexample.c
-   ${CMAKE_CURRENT_SOURCE_DIR}/libjpeg.txt
-   ${CMAKE_CURRENT_SOURCE_DIR}/structure.txt

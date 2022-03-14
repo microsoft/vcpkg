@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.14.3
-    SHA512 21746d1a02aa8eb98a5c9716c12f14048a680f85efab8d8beca02379946bb49858c7ed02e7238f61e94d0aba6d70069136778d78484b88f8d09640c0740e24a3
+    REF 127f157fc00abeb6fe5a57ce56a7c4e092721203 #v0.16.4
+    SHA512 ef7d1f652af031c13260a4c436c949eb566d40d15dcde5b56ab782e9e9d7b5e287f4a6a61bc4eb3fcdbb835c102637b0368f3c43af6f9fa9c87cd99d15bde454
     HEAD_REF master
     PATCHES
         0001-fix-for-vcpkg.patch
-        0002-fix-export-include.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
@@ -28,15 +27,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libdatachannel)
+vcpkg_cmake_config_fixup(PACKAGE_NAME LibDataChannel CONFIG_PATH lib/cmake/LibDataChannel)
 vcpkg_fixup_pkgconfig()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" DATACHANNEL_CONFIG)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/libdatachannel-config.cmake" "
+file(READ "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" DATACHANNEL_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
-find_dependency(libjuice)
+find_dependency(LibJuice)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")

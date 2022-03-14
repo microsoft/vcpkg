@@ -1,6 +1,6 @@
 {
   "name": "libunifex",
-  "version-date": "2021-08-01",
+  "version-date": "2021-12-07",
   "port-version": 1,
   "description": "Unified Executors",
   "homepage": "https://github.com/facebookexperimental/libunifex",

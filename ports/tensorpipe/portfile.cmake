@@ -1,4 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "windows" "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(

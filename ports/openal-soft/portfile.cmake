@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
@@ -80,7 +78,10 @@ foreach(HEADER al.h alc.h)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(REPLACE "defined(AL_LIBTYPE_STATIC)" "1" AL_H "${AL_H}")
     else()
-        string(REPLACE "defined(AL_LIBTYPE_STATIC)" "0" AL_H "${AL_H}")
+        # Normally we would say:
+        # string(REPLACE "defined(AL_LIBTYPE_STATIC)" "0" AL_H "${AL_H}")
+        # but we are leaving these undefined macros alone in support of
+        # https://github.com/microsoft/vcpkg/issues/18098
     endif()
     file(WRITE "${CURRENT_PACKAGES_DIR}/include/AL/${HEADER}" "${AL_H}")
 endforeach()

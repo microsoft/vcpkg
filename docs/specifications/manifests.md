@@ -49,7 +49,7 @@ CMake).
 
 The specification uses definitions from the [Definitions](#definitions) section in order
 to specify the shape of a value. Note that any object may contain any directives, written as
-a field key that starts with a `$`; these directive shall be ignored by `vcpkg`. Common
+a field key that starts with a `$`; these directives shall be ignored by `vcpkg`. Common
 directives may include `"$schema"`, `"$comment"`, `"$reason"`.
 
 A manifest must be a top-level object, and must have at least:
