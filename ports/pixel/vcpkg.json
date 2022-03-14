@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Simple 2D Graphics based on standard and portable OpenGL.",
   "homepage": "https://github.com/dascandy/pixel",
+  "license": "Apache-2.0",
   "dependencies": [
     "glew",
     "opengl",
