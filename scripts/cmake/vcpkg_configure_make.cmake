@@ -824,13 +824,6 @@ function(vcpkg_configure_make)
         endif()
         
         vcpkg_restore_pkgconfig_path()
-
-        if(backup_env_pkg_config_path_${current_buildtype})
-            set(ENV{PKG_CONFIG_PATH} "${backup_env_pkg_config_path_${current_buildtype}}")
-        else()
-            unset(ENV{PKG_CONFIG_PATH})
-        endif()
-        unset(backup_env_pkg_config_path_${current_buildtype})
         
         if(link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
