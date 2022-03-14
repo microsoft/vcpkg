@@ -1,23 +1,9 @@
-vcpkg_download_distfile(TBB_PATCH
-  URLS https://github.com/AcademySoftwareFoundation/openvdb/pull/1027.diff
-  FILENAME openvdb-1027.patch
-  SHA512 1e260f299fc861f7d61444c12a7115276d5242ebba936d86ce3f8cfd5b2eb95499c72a77da8c9f28e2f49e38479c677497c70bed3427dcccad082afa483e29da
-)
-
-set(FIXED_TBB_PATCH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-openvdb-1027.patch")
-
-# This adjustment is needed to make the patch apply cleanly against v8.1.0
-file(READ "${TBB_PATCH}" tbb_patch_contents)
-string(REPLACE "       run: cd build && ctest -V" "       run: ./ci/test.sh" tbb_patch_contents "${tbb_patch_contents}")
-file(WRITE "${FIXED_TBB_PATCH}" "${tbb_patch_contents}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
     REF 89873d2bd29870cc9f176ed12b3f3a930ca38d1a # v8.2.0
     SHA512 d72a0eec6b7ce8e25fbe3100d4a291c35d7c2448f23131aaa9f247210f26e965198ef2991d9cf789afc754cbcddaace7a27ab62a2609a19a896034859c518699
     PATCHES
-        "{$FIXED_TBB_PATCH}"
         0003-fix-cmake.patch
 )
 
@@ -70,19 +56,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenVDB)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_BLOSC}" "ON")
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_ZLIB}" "ON")
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_LOG4CPLUS}" "OFF")
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake "\${USE_IMATH_HALF}" "OFF")
-
-if(OPENVDB_STATIC)
-  vcpkg_replace_string(
-    ${CURRENT_PACKAGES_DIR}/share/openvdb/FindOpenVDB.cmake
-    "set(_OPENVDB_VISIBLE_DEPENDENCIES\n"
-    "set(_OPENVDB_VISIBLE_DEPENDENCIES blosc ZLIB::ZLIB\n"
-  )
-endif()
 
 if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)

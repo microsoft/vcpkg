@@ -2024,13 +2024,10 @@
       "baseline": "0.186",
       "port-version": 2
     },
-<<<<<<< HEAD
-=======
     "embree2": {
-      "baseline": "2.17.7",
-      "port-version": 4
+      "baseline": "deprecated",
+      "port-version": 0
     },
->>>>>>> fad0644ade71fc4a77cc85f9c6c265aac721f7ca
     "embree3": {
       "baseline": "3.12.2",
       "port-version": 2
@@ -5136,13 +5133,8 @@
       "port-version": 2
     },
     "openvdb": {
-<<<<<<< HEAD
-      "baseline": "8.1.0",
-      "port-version": 1
-=======
       "baseline": "8.2.0",
       "port-version": 0
->>>>>>> fad0644ade71fc4a77cc85f9c6c265aac721f7ca
     },
     "openvpn3": {
       "baseline": "3.4.1",
@@ -6801,15 +6793,11 @@
       "port-version": 0
     },
     "tbb": {
-<<<<<<< HEAD
       "baseline": "2021.3.0",
-=======
-      "baseline": "2020_U3",
-      "port-version": 7
+      "port-version": 0
     },
     "tcb-span": {
       "baseline": "2021-12-15",
->>>>>>> fad0644ade71fc4a77cc85f9c6c265aac721f7ca
       "port-version": 0
     },
     "tcl": {
