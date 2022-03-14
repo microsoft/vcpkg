@@ -1,6 +1,11 @@
 {
   "versions": [
     {
+      "git-tree": "2e82418dcbd10379015587c1aa6a4d099f73fa62",
+      "version-string": "canvaskit/0.29.0",
+      "port-version": 0
+    },
+    {
       "git-tree": "104ba7c5e5e46398000e92e0f9cc3c9f0999e142",
       "version-date": "2020-05-18",
       "port-version": 8
