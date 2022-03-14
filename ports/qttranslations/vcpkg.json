@@ -1,8 +1,9 @@
 {
   "name": "qttranslations",
-  "version-semver": "6.2.2",
+  "version": "6.2.3",
   "description": "Qt Translations",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qtbase",
