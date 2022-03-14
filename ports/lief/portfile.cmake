@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 8f12ec939dc9da87a195e0a2b035460c97e0d1c9 # master commit 2022-03-01
-    SHA512 f5aa85283417e57bfb26e67c3db2d941766c5725cb9c00d2a7ad4f94aa067907d494801a1f6c444e8725a5205a8058b33a05240e40d2f17d6a0c91fe359c1d96
+    REF 0.12.0-rc.1
+    SHA512 2193ef5047795c9cf6bcd6fecfc8808cf5eaaa9f30ea03a6ef55c161950f5cccfa1618b18162721bebbbc6189d5ee2941d4d9dee858cd69dc743810f2d042ed1
     HEAD_REF master
     PATCHES
         0001-Support-vcpkg.patch
@@ -55,6 +55,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 
         -DLIEF_PYTHON_API=OFF
+        -DLIEF_USE_CCACHE=OFF
 
         # Build with external vcpkg dependencies
         -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
