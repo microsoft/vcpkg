@@ -9,5 +9,5 @@ vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
 vcpkg_restore_pkgconfig_path()
 ```
 
-`vcpkg_setup_pkgconfig_path` prepend the default pkgconfig path passed to it to the PKG_CONFIG_PATH environment variable.
-`vcpkg_restore_pkgconfig_path` should be called after the configure or build procees end.
+`vcpkg_setup_pkgconfig_path` prepends `lib/pkgconfig` and `share/pkgconfig` directories for the given `BASE_DIRS` to the `PKG_CONFIG_PATH` environment variable. It creates or updates a backup of the previous value.
+`vcpkg_restore_pkgconfig_path` shall be called when leaving the scope which called `vcpkg_setup_pkgconfig_path` in order to restore the original value from the backup.
