@@ -3,9 +3,9 @@
     <tool name="python3" os="windows">
         <version>3.10.1</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.1/python-3.10.1-embed-win32.zip</url>
-        <sha512>47bf00e4de74f33fe3d0c4f97773b221cf78c29f02257f43368f0414c88be1bdffc914e4e6516870c23cba84f4618edb8fe5a3ee43e41f492d812a90d93c1ea8</sha512>
-        <archiveName>python-3.10.1-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-win32.zip</url>
+        <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
+        <archiveName>python-3.10.2-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.22.2</version>
@@ -36,7 +36,7 @@
         <archiveName>cmake-3.20.4.txz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.35.1.2</version>
+        <version>2.7.4</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
         <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
         <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
@@ -112,13 +112,20 @@
         <sha512>1f3e593270d7c2a4e271fdb49c637a2de462351310ef66bba298d30f6ca23365ec6aecf2e57799a00c873267cd3f92060ecac03eb291d42903d0e0869cd17c73</sha512>
         <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
-    <tool name="7zip" os="windows">
-        <version>19.00</version>
+    <tool name="7zip_msi" os="windows">
+        <version>21.07</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z1900-x64.msi</url>
-        <sha512>7837a8677a01eed9c3309923f7084bc864063ba214ee169882c5b04a7a8b198ed052c15e981860d9d7952c98f459a4fab87a72fd78e7d0303004dcb86f4324c8</sha512>
-        <archiveName>7z1900-x64.msi</archiveName>
+        <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
+        <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
+        <archiveName>7z2107-x64.msi</archiveName>
     </tool>
+    <tool name="7zip" os="windows">
+        <version>21.07</version>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z2107-extra.7z</url>
+        <sha512>648d894940bcc29951752d7a8fd18c770ee8d4fd944e17f1a52588e51ca8f58375ba48514538f2e1387786fd812bb86f75fd6bdd0892685cdcafb2989942c848</sha512>
+        <archiveName>7z2107-extra.7z</archiveName>
+     </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>
         <exeRelativePath>aria2-1.35.0-win-32bit-build1\aria2c.exe</exeRelativePath>
