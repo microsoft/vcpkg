@@ -40,3 +40,6 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/nlohmann_json.natvis")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+# Handle usage
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
