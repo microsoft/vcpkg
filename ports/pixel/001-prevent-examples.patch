@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b910231..ee571f0 100755
+index b910231..71f7ddf 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,6 +34,8 @@ else()
@@ -11,16 +11,19 @@ index b910231..ee571f0 100755
  add_executable(image_swap examples/image_swap/src/image_swap.cpp)
  target_link_libraries(image_swap PRIVATE pixel)
  add_executable(randomdots examples/randomdots/src/randomdots.cpp)
-@@ -50,7 +52,7 @@ add_executable(simple examples/simple/src/simple.cpp)
+@@ -50,7 +52,11 @@ add_executable(simple examples/simple/src/simple.cpp)
  target_link_libraries(simple PRIVATE pixel)
  add_executable(starfield examples/starfield/src/starfield.cpp)
  target_link_libraries(starfield PRIVATE pixel)
--
++endif()
+ 
++if(MSVC)
++  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 +endif()
  
  # Install Section
  include(GNUInstallDirs)
-@@ -87,12 +89,6 @@ install(
+@@ -87,12 +93,6 @@ install(
    DESTINATION  ${CMAKE_INSTALL_PREFIX}
    )
  
