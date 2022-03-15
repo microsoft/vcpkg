@@ -152,8 +152,9 @@ function(vcpkg_from_github)
 
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     if(VCPKG_USE_HEAD_VERSION)
+        set(version_url "${github_api_url}/repos/${org_name}/${repo_name}/git/refs/heads/${arg_HEAD_REF}")
         vcpkg_download_distfile(archive_version
-            URLS "${github_api_url}/repos/${org_name}/${repo_name}/git/refs/heads/${arg_HEAD_REF}"
+            URLS "${version_url}"
             FILENAME "${downloaded_file_name}.version"
             ${headers_param}
             SKIP_SHA512
@@ -163,12 +164,9 @@ function(vcpkg_from_github)
         # TODO: add json-pointer support to vcpkg
         file(READ "${archive_version}" version_contents)
         if(NOT version_contents MATCHES [["sha":(\ *)"([a-f0-9]+)"]])
-            message(FATAL_ERROR "Failed to parse API response from '${version_url}':
-
-${version_contents}
-")
+            message(FATAL_ERROR "Failed to parse API response from '${version_url}':\n${version_contents}")
         endif()
-        set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_1}" PARENT_SCOPE)
+        set(VCPKG_HEAD_VERSION "${CMAKE_MATCH_2}" PARENT_SCOPE)
     endif()
 
     # Try to download the file information from github
