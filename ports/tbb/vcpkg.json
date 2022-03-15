@@ -1,8 +1,19 @@
 {
   "name": "tbb",
-  "version-string": "2020_U3",
-  "port-version": 7,
+  "version-string": "2021.05",
   "description": "Intel's Threading Building Blocks.",
-  "homepage": "https://github.com/01org/tbb",
-  "supports": "!(uwp | arm | arm64) | linux | osx"
+  "homepage": "https://github.com/oneapi-src/oneTBB",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "hwloc",
+    "pkgconf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
