@@ -228,10 +228,14 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
 
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
@@ -866,4 +870,5 @@ function(vcpkg_configure_make)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
+    set(_VCPKG_MAKE_NO_DEBUG ${arg_NO_DEBUG} PARENT_SCOPE)
 endfunction()
