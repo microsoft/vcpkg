@@ -6886,7 +6886,7 @@
     },
     "tidy-html5": {
       "baseline": "5.7.28",
-      "port-version": 4
+      "port-version": 5
     },
     "tiff": {
       "baseline": "4.3.0",
