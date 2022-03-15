@@ -6,10 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(MARL_BUILD_SHARED OFF)
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
-    set(MARL_BUILD_SHARED ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MARL_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,7 +17,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-set(MARL_BUILD_SHARED OFF)
 if(MARL_BUILD_SHARED)
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/marl/export.h"
