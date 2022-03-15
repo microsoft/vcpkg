@@ -30,20 +30,19 @@ endif()
 
 if(VCPKG_TARGET_IS_LINUX)
 
-    list(APPEND OPTIONS --enable-pic)    
+    list(APPEND OPTIONS --enable-pic)
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 
         vcpkg_cmake_get_vars(cmake_vars_file)
         include("${cmake_vars_file}")
 
-        if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING STREQUAL "TRUE")
+        if (VCPKG_DETECTED_CMAKE_CROSSCOMPILING)
             # Attempt to determine the fully qualified prefix from VCPKG_DETECTED_CMAKE_C_COMPILER (using most common naming conventions for linux targets)
             # and if valid, use it to initialize --cross-prefix build-option of x264 package.
-            if (${VCPKG_DETECTED_CMAKE_C_COMPILER} MATCHES ".*-gcc")
-                string(REGEX REPLACE "gcc$" "" full_cross_prefix ${VCPKG_DETECTED_CMAKE_C_COMPILER})
-                list(APPEND OPTIONS --cross-prefix=${full_cross_prefix})
-            endif()        
+            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "^(.*-)gcc\$")
+                list(APPEND OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
+            endif()
         endif()
     endif()
 
