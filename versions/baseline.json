@@ -5353,8 +5353,8 @@
       "port-version": 3
     },
     "pixel": {
-      "baseline": "0.3",
-      "port-version": 5
+      "baseline": "2019-04-09",
+      "port-version": 0
     },
     "pixman": {
       "baseline": "0.40.0",
