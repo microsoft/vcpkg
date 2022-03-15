@@ -9,6 +9,12 @@
   "features": {
     "amalgamation": {
       "description": "Do an amalgamation build of the library"
+    },
+    "zlib": {
+      "description": "Build with zlib. Enable compression pipes.",
+      "dependencies": [
+        "zlib"
+      ]
     }
   }
 }

@@ -52,6 +52,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation BOTAN_AMALGAMATION
+        zlib BOTAN_WITH_ZLIB
 )
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
@@ -93,6 +94,11 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
         list(APPEND configure_arguments --amalgamation)
+    endif()
+    if("-DBOTAN_WITH_ZLIB=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --with-zlib)
+        list(APPEND configure_arguments --with-external-includedir="${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include")
+        list(APPEND configure_arguments --with-external-libdir="${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib")
     endif()
 
     vcpkg_execute_required_process(
