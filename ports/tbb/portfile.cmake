@@ -31,6 +31,7 @@ file(READ "${config_file}" contents)
 string(PREPEND contents "pkg_search_module(HWLOC hwloc IMPORTED_TARGET)\n")
 string(PREPEND contents "find_dependency(PkgConfig)\n")
 string(PREPEND contents "find_dependency(Threads)\n")
+string(PREPEND contents "include(CMakeFindDependencyMacro)\n")
 file(WRITE "${config_file}" "${contents}")
 
 # Handle copyright
