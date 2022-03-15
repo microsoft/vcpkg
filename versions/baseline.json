@@ -2064,6 +2064,10 @@
       "baseline": "2021-10-16",
       "port-version": 0
     },
+    "eventpp": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "evpp": {
       "baseline": "0.7.0",
       "port-version": 5
