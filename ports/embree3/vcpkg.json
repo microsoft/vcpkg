@@ -15,9 +15,6 @@
     }
   ],
   "default-features": [
-    "avx",
-    "avx2",
-    "sse2",
     "sse42"
   ],
   "features": {
