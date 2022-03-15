@@ -4,24 +4,24 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
-    REF 71b4baace2044ea4400ba802e91667f9ebe342f0 # v20.08
+    REF 857ffda41f4f1553fe1019ac7c7b4f08c233a7bb # v22.03
     SHA512 0f23b84d314d88d3524f22ebc344e2b506cb7e8ac064726df432a968a4bae0fd2249e968bd10845de9067290eaaa3f8c9e2a483551ffc06b826f3eba816061a9
     HEAD_REF master
     PATCHES
         fix_build-location.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 IF (VCPKG_TARGET_IS_WINDOWS)
 ELSE()
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindTBB.cmake")
 ENDIF()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DPXR_BUILD_ALEMBIC_PLUGIN:BOOL=OFF
@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(
     RENAME
@@ -49,16 +49,16 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/pxr)
 vcpkg_copy_pdbs()
 
 # Remove duplicates in debug folder
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Move all dlls to bin
-file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(GLOB RELEASE_DLL "${CURRENT_PACKAGES_DIR}/lib/*.dll")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+file(GLOB DEBUG_DLL "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
     string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
     file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
@@ -76,8 +76,8 @@ file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "deb
 file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
 
 # fix plugInfo.json for runtime
-file(GLOB_RECURSE PLUGINFO_FILES ${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json)
-file(GLOB_RECURSE PLUGINFO_FILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/usd/*/resources/plugInfo.json)
+file(GLOB_RECURSE PLUGINFO_FILES "${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json")
+file(GLOB_RECURSE PLUGINFO_FILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/usd/*/resources/plugInfo.json")
 foreach(PLUGINFO ${PLUGINFO_FILES} ${PLUGINFO_FILES_DEBUG})
     file_replace_regex(${PLUGINFO} [=["LibraryPath": "../../([a-zA-Z0-9_]+).dll"]=] [=["LibraryPath": "../../../bin/\1.dll"]=])
 endforeach()

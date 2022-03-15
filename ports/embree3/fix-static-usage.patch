@@ -1,5 +1,5 @@
 diff --git a/common/cmake/embree-config.cmake b/common/cmake/embree-config.cmake
-index 5087ca0..fdf8135 100644
+index 5087ca0..fdf8135 100755
 --- a/common/cmake/embree-config.cmake
 +++ b/common/cmake/embree-config.cmake
 @@ -52,6 +52,21 @@ IF (EMBREE_STATIC_LIB)

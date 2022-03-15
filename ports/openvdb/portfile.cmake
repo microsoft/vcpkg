@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF 89873d2bd29870cc9f176ed12b3f3a930ca38d1a # v8.2.0
+    REF 0ed0f19ea4fbb0d8bf64d3dca07abab3c7429803 # v9.0.0
     SHA512 d72a0eec6b7ce8e25fbe3100d4a291c35d7c2448f23131aaa9f247210f26e965198ef2991d9cf789afc754cbcddaace7a27ab62a2609a19a896034859c518699
     PATCHES
         0003-fix-cmake.patch

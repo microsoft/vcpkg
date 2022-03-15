@@ -1,20 +1,19 @@
-set(EMBREE3_VERSION 3.12.2)
+set(EMBREE3_VERSION 3.13.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
     REF v${EMBREE3_VERSION}
-    SHA512 a63b483a92f4653e07a21ed3b545d86003295e0aacd8ec7a40ee72bad7bb70c6ea019af511e78c5c598336b162d53e296e9c87150c0adce6463b058e7a5394d4
+    SHA512 eef8d9101f0bf95d6706a495a9aa628c10749862aeb2baa6bba2f82fcc3a96467a28ca1f522d672eb5aa7b29824363674feda25832724da361b3334334a218cd
     HEAD_REF master
     PATCHES
-        fix-path.patch
-        fix-static-usage.patch
+        #fix-path.patch
+        #fix-static-usage.patch
         cmake_policy.patch
         fix-targets-file-not-found.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
-string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} static EMBREE_STATIC_RUNTIME)
 
 if (NOT VCPKG_TARGET_IS_OSX)
     if ("avx512" IN_LIST FEATURES)
@@ -47,20 +46,19 @@ Only set feature avx automaticlly.
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
-        -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree TARGET_PATH share/embree)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/embree)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
