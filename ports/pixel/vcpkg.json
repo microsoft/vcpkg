@@ -1,7 +1,6 @@
 {
   "name": "pixel",
-  "version": "0.3",
-  "port-version": 5,
+  "version-date": "2019-04-09",
   "description": "Simple 2D Graphics based on standard and portable OpenGL.",
   "homepage": "https://github.com/dascandy/pixel",
   "license": "Apache-2.0",
