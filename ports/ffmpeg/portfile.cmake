@@ -307,6 +307,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
+if("libsrt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsrt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsrt")
+endif()
+
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
 else()
