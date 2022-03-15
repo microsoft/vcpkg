@@ -6289,7 +6289,7 @@
       "port-version": 0
     },
     "scnlib": {
-      "baseline": "0.4",
+      "baseline": "1.0",
       "port-version": 1
     },
     "scottt-debugbreak": {
