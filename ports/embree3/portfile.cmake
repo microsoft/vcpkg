@@ -7,10 +7,9 @@ vcpkg_from_github(
     SHA512 eef8d9101f0bf95d6706a495a9aa628c10749862aeb2baa6bba2f82fcc3a96467a28ca1f522d672eb5aa7b29824363674feda25832724da361b3334334a218cd
     HEAD_REF master
     PATCHES
-        #fix-path.patch
-        #fix-static-usage.patch
         cmake_policy.patch
         fix-targets-file-not-found.patch
+        installTBB.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)

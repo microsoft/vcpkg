@@ -1,0 +1,19 @@
+diff --git a/common/cmake/installTBB.cmake b/common/cmake/installTBB.cmake
+index 43ea239b0..793aebec3 100644
+--- a/common/cmake/installTBB.cmake	
++++ b/common/cmake/installTBB.cmake
+@@ -1,12 +1,12 @@
+ ## Copyright 2009-2021 Intel Corporation
+ ## SPDX-License-Identifier: Apache-2.0
+ 
+-IF (EMBREE_STATIC_LIB)
++IF (EMBREE_STATIC_LIB AND NOT TBB_DIR)
+   INSTALL(TARGETS TBB EXPORT TBB-targets)
+   INSTALL(EXPORT TBB-targets DESTINATION "${EMBREE_CMAKEEXPORT_DIR}" COMPONENT devel)
+ ENDIF()
+ 
+-IF (EMBREE_INSTALL_DEPENDENCIES)
++IF (EMBREE_INSTALL_DEPENDENCIES AND NOT TBB_DIR)
+   IF (TARGET TBB::tbb)
+     GET_TARGET_PROPERTY(LIB_PATH TBB::tbb IMPORTED_LOCATION_RELEASE)
+     IF(WIN32)
