@@ -5,6 +5,7 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
+    0009-atlbase.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -46,6 +47,10 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND NMAKE_OPTIONS "WIN64=YES")
+    endif()
+
+    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND NMAKE_OPTIONS "HAVE_ATLBASE_H=NO")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
