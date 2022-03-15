@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 551ede538abeca63a158bd7c42b6b6337c92a26e # v0.11.5
     SHA512 2f98e6e63dd79300f43c39eb4c032dbe72402140cc12061c38d8df3b0f40166f22f8e41f37112255b019f2478c164e89e384b6826dd7b6cc0b9cdb6de407c564
     HEAD_REF master
+    PATCHES
+        "install_dir.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS    
@@ -81,23 +83,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/LIEF.dll")
-                file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-                file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/LIEF.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/LIEF.dll")
-            endif()
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/LIEF.dll")
-                file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-                file(RENAME "${CURRENT_PACKAGES_DIR}/lib/LIEF.dll" "${CURRENT_PACKAGES_DIR}/bin/LIEF.dll")
-            endif()
-        endif()
-    endif()
-endif()
 
 vcpkg_copy_pdbs()
 

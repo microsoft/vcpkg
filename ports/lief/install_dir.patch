@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5c6a1cc..7612cf1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -584,7 +584,7 @@ install(
+   TARGETS LIB_LIEF
+   ARCHIVE DESTINATION lib
+   LIBRARY DESTINATION lib
+-  RUNTIME DESTINATION lib COMPONENT libraries)
++  RUNTIME DESTINATION bin COMPONENT libraries)
+ 
+ install(
+   DIRECTORY ${LIEF_PUBLIC_INCLUDE_DIR}
