@@ -3,9 +3,9 @@
     <tool name="python3" os="windows">
         <version>3.10.1</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.1/python-3.10.1-embed-win32.zip</url>
-        <sha512>47bf00e4de74f33fe3d0c4f97773b221cf78c29f02257f43368f0414c88be1bdffc914e4e6516870c23cba84f4618edb8fe5a3ee43e41f492d812a90d93c1ea8</sha512>
-        <archiveName>python-3.10.1-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-win32.zip</url>
+        <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
+        <archiveName>python-3.10.2-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.22.2</version>
