@@ -1196,6 +1196,10 @@
       "baseline": "1.17.2",
       "port-version": 2
     },
+    "c-dbg-macro": {
+      "baseline": "2020-02-29",
+      "port-version": 0
+    },
     "c4core": {
       "baseline": "2021-07-18",
       "port-version": 1
