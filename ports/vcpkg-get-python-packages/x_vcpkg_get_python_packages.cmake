@@ -7,7 +7,6 @@ Retrieve needed python packages
 ## Usage
 ```cmake
 x_vcpkg_get_python_packages(
-    <PYTHON_DIR>
     PYTHON_EXECUTABLE <path to python binary>
     PACKAGES <packages to aqcuire>...
 )
@@ -23,8 +22,8 @@ List of python packages to acquire
 #]===]
 include_guard(GLOBAL)
 
-function(x_vcpkg_get_python_packages python_dir)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "PYTHON_EXECUTABLE" "PACKAGES")
+function(x_vcpkg_get_python_packages)
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "PYTHON_EXECUTABLE" "PACKAGES")
     
     if(NOT DEFINED arg_PYTHON_EXECUTABLE)
         message(FATAL_ERROR "PYTHON_EXECUTABLE must be specified.")
@@ -35,9 +34,8 @@ function(x_vcpkg_get_python_packages python_dir)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if(NOT arg_PYTHON_DIR)
-        get_filename_component(arg_PYTHON_DIR "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
-    endif()
+
+    get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
 
     if (WIN32)
         set(PYTHON_OPTION "")
@@ -45,9 +43,9 @@ function(x_vcpkg_get_python_packages python_dir)
         set(PYTHON_OPTION "--user")
     endif()
 
-    if("${arg_PYTHON_DIR}" MATCHES "${DOWNLOADS}") # inside vcpkg
-        if(NOT EXISTS "${arg_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-            if(NOT EXISTS "${arg_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})") # inside vcpkg
+        if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+            if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 vcpkg_from_github(
                     OUT_SOURCE_PATH PYFILE_PATH
                     REPO pypa/get-pip
@@ -58,12 +56,12 @@ function(x_vcpkg_get_python_packages python_dir)
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endif()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION}
+                vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION}
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         else()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package}
+                vcpkg_execute_required_process(COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package}
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         endif()
