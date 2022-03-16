@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
@@ -51,7 +51,7 @@ jobs:
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6
         with:
           script: |
             const { promises: fs } = require('fs')
@@ -126,7 +126,7 @@ jobs:
 
             console.log(output);
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pr
           path: pr/
