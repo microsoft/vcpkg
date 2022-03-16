@@ -61,7 +61,6 @@ vcpkg_configure_make(
         --disable-gpac
         --disable-lsmash
         --enable-debug
-
 )
 
 vcpkg_install_make()
