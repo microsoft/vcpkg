@@ -9,7 +9,7 @@
     "boost-serialization",
     "eigen3",
     "tbb",
-      {
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
