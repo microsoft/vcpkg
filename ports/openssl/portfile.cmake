@@ -3,12 +3,12 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
     message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
 endif()
 
-set(OPENSSL_VERSION 3.0.1)
+set(OPENSSL_VERSION 3.0.2)
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 4eb29386a6c2c47bebc668e68b61872eed1d136e5620d6f8971393ae7dd8d0f640257278735c76adc0c9569a315fdb929c175a2931d52d3fcc4c527ad6a975ce
+    SHA512 f986850d5be908b4d6b5fd7091bc4652d7378c9bccebfbc5becd7753843c04c1eb61a1749c432139d263dfac33df0b1f6c773664b485cad47542266823a4eb03
 )
 
 vcpkg_find_acquire_program(PERL)
