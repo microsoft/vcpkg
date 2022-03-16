@@ -1,7 +1,3 @@
-if(VCPKG_CROSSCOMPILING)
-    message(FATAL_ERROR "${PORT} is a host-only port; please mark it as a host port in your dependencies.")
-endif()
-
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/copyright"
