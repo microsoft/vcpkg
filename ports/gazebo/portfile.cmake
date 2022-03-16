@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF gazebo11
     PATCHES
         0001-Fix-deps.patch
-        0002-fix_tbb.patch # 3174
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
