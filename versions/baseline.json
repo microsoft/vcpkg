@@ -2029,12 +2029,12 @@
       "port-version": 2
     },
     "embree2": {
-      "baseline": "2.17.7",
-      "port-version": 4
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "embree3": {
-      "baseline": "3.12.2",
-      "port-version": 2
+      "baseline": "3.13.3",
+      "port-version": 0
     },
     "enet": {
       "baseline": "1.3.17",
@@ -2389,7 +2389,7 @@
       "port-version": 1
     },
     "gazebo": {
-      "baseline": "2022-01-20",
+      "baseline": "2022-03-10",
       "port-version": 0
     },
     "gcem": {
@@ -5141,7 +5141,7 @@
       "port-version": 2
     },
     "openvdb": {
-      "baseline": "8.2.0",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "openvpn3": {
@@ -5217,7 +5217,7 @@
       "port-version": 2
     },
     "pagmo2": {
-      "baseline": "2.16.1",
+      "baseline": "2.18.0",
       "port-version": 0
     },
     "paho-mqtt": {
@@ -7165,8 +7165,8 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "20.08",
-      "port-version": 2
+      "baseline": "22.03",
+      "port-version": 0
     },
     "usockets": {
       "baseline": "0.8.1",
