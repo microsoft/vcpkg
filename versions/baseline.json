@@ -5105,7 +5105,7 @@
       "port-version": 1
     },
     "openssl": {
-      "baseline": "3.0.1",
+      "baseline": "3.0.2",
       "port-version": 0
     },
     "openssl-unix": {
@@ -5121,7 +5121,7 @@
       "port-version": 2
     },
     "openssl1": {
-      "baseline": "1.1.1m",
+      "baseline": "1.1.1n",
       "port-version": 0
     },
     "opensubdiv": {
