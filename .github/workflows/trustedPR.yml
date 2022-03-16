@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: 'Download artifact'
-        uses: actions/github-script@v3.1.0
+        uses: actions/github-script@v6
         with:
           script: |
             var artifacts = await github.actions.listWorkflowRunArtifacts({
@@ -38,7 +38,7 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6
         with:
           script: |
             const { promises: fs } = require('fs')
