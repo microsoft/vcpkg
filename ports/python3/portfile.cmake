@@ -14,6 +14,7 @@ set(PATCHES
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
     0009-python.pc.patch
+    0010-bz2d.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -217,6 +218,8 @@ else()
         "--with-ensurepip"
         "--with-suffix="
         "--with-system-expat"
+        "--without-readline"
+        "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
