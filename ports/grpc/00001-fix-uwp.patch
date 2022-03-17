@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7a97604..14514b7 100644
+index 7a97604..4967c4f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -215,6 +215,9 @@ if(UNIX)
@@ -12,16 +12,16 @@ index 7a97604..14514b7 100644
  endif()
  
   # Use C99 standard
-@@ -261,6 +264,9 @@ if(MSVC)
+@@ -259,6 +262,9 @@ if(MSVC)
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
+   # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
-   # Silences thousands of trucation warnings
-   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
 +  if(_gRPC_PLATFORM_UWP)
 +    add_definitions(-DGRPC_ARES=0)
-+  endif() 
++  endif()
+   # Silences thousands of trucation warnings
+   set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
  endif()
- if (MINGW)
-   add_definitions(-D_WIN32_WINNT=0x600)
 @@ -336,6 +342,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
@@ -49,3 +49,25 @@ index 7a97604..14514b7 100644
  
  protobuf_generate_grpc_cpp(
    src/proto/grpc/channelz/channelz.proto
+diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
+index 5d2bdc1..e9870c2 100644
+--- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
++++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
+@@ -39,6 +39,7 @@ bool check_bios_data(const char*) { return false; }
+ bool check_windows_registry_product_name(HKEY root_key,
+                                          const char* reg_key_path,
+                                          const char* reg_key_name) {
++#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
+   const size_t kProductNameBufferSize = 256;
+   char const expected_substr[] = "Google";
+ 
+@@ -71,6 +72,9 @@ bool check_windows_registry_product_name(HKEY root_key,
+   }
+ 
+   return strstr(buffer, expected_substr) != nullptr;
++#else
++  return false;
++#endif
+ }
+ 
+ }  // namespace internal
