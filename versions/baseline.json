@@ -5626,7 +5626,7 @@
     },
     "qt5": {
       "baseline": "5.15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-3d": {
       "baseline": "5.15.3",
@@ -5786,7 +5786,7 @@
     },
     "qt5-winextras": {
       "baseline": "5.15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-x11extras": {
       "baseline": "5.15.3",
