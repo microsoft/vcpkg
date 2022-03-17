@@ -14,6 +14,8 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+# This feature does not exist, but allows us to simplify the vcpkg.json file.
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 
 vcpkg_cmake_configure(
