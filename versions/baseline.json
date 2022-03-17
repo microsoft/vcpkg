@@ -1126,7 +1126,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 8
+      "port-version": 9
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1239,6 +1239,10 @@
     "capstone": {
       "baseline": "4.0.2",
       "port-version": 3
+    },
+    "cargs": {
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "cartographer": {
       "baseline": "1.0.0",
@@ -2958,7 +2962,7 @@
     },
     "itk": {
       "baseline": "5.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -3618,7 +3622,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 11
+      "port-version": 12
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3902,7 +3906,7 @@
     },
     "librdkafka": {
       "baseline": "1.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.4.2",
@@ -5365,8 +5369,8 @@
       "port-version": 3
     },
     "pixel": {
-      "baseline": "0.3",
-      "port-version": 4
+      "baseline": "2022-03-15",
+      "port-version": 0
     },
     "pixman": {
       "baseline": "0.40.0",
@@ -5610,7 +5614,7 @@
     },
     "qpid-proton": {
       "baseline": "0.32.0",
-      "port-version": 3
+      "port-version": 4
     },
     "qscintilla": {
       "baseline": "2.12.0",
