@@ -3,7 +3,7 @@ index 0e2b703..7097f06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -28,8 +28,13 @@ project(
-     VERSION 1.36.0
+     VERSION 1.38.0
      LANGUAGES CXX C)
  
 -# Allow applications to override the CMAKE_CXX_STANDARD, but if not set use 11.

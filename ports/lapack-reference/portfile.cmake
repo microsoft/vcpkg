@@ -50,16 +50,14 @@ set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
 x_vcpkg_find_fortran(FORTRAN_CMAKE)
 
 vcpkg_cmake_configure(
-        PREFER_NINJA
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
-            "-DBLA_VENDOR=OpenBLAS"
-            "-DCBLAS=${CBLAS}"
-            ${FORTRAN_CMAKE}
-        )
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DCBLAS=${CBLAS}"
+        ${FORTRAN_CMAKE}
+)
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/lapack-${lapack_ver}") #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${lapack_ver} CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
@@ -110,4 +108,4 @@ file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/lapack)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lapack")

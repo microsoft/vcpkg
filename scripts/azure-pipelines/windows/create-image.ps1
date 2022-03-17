@@ -21,7 +21,7 @@ $VMSize = 'Standard_D32as_v4'
 $ProtoVMName = 'PROTOTYPE'
 $WindowsServerSku = '2022-datacenter-g2'
 $ErrorActionPreference = 'Stop'
-$CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-11.2-windows-x64-v8.1.1.33.zip'
+$CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.3.2.44_cuda11.5-archive.zip'
 
 $ProgressActivity = 'Creating Windows Image'
 $TotalProgress = 18
