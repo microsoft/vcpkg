@@ -8,7 +8,7 @@ jobs:
     name: ${{ parameters.poolName }}
   workspace:
     clean: resources
-  timeoutInMinutes: 1440 # 1 day
+  timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
     value: D:\
@@ -62,7 +62,7 @@ jobs:
       PathtoPublish: '$(DiffFile)'
       ArtifactName: 'format.diff'
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports for ${{ parameters.triplet }}'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
