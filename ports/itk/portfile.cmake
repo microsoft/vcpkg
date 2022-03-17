@@ -12,7 +12,6 @@ vcpkg_from_github(
         openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        python_gpu_wrapping.patch
         opencl.patch
         use-the-lrintf-intrinsic.patch
 )
