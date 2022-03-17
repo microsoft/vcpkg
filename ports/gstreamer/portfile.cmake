@@ -12,10 +12,16 @@ get_filename_component(GLIB_TOOL_DIR "${CURRENT_INSTALLED_DIR}/tools/glib" ABSOL
 message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
 vcpkg_add_to_path(PREPEND "${GLIB_TOOL_DIR}")
 
+# Some features might require GPL option. -Dgpl=enabled
 if ("x264" IN_LIST FEATURES)
     set(PLUGIN_UGLY_X264 enabled)
 else()
     set(PLUGIN_UGLY_X264 disabled)
+endif()
+if ("flac" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_FLAC enabled)
+else()
+    set(PLUGIN_GOOD_FLAC disabled)
 endif()
 
 if("plugins-base" IN_LIST FEATURES)
@@ -123,6 +129,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:doc=disabled
         -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
+        # -Dgst-plugins-ugly:x264=${PLUGIN_UGLY_X264}
     OPTIONS_RELEASE
         -Dgst-plugins-base:glib-asserts=disabled
         -Dgst-plugins-base:glib-checks=disabled
