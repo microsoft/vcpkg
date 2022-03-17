@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index f764223..e0d0b7b 100644
+index f764223..9d863af 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -1506,6 +1506,14 @@ class PyBuildExt(build_ext):
@@ -7,7 +7,7 @@ index f764223..e0d0b7b 100644
                                     libraries = ['bz2'],
                                     extra_link_args = bz2_extra_link_args) )
 +        elif (self.compiler.find_library_file(lib_dirs, 'bz2d')):
-+            if MACOS:
++            if host_platform == "darwin":
 +                bz2_extra_link_args = ('-Wl,-search_paths_first',)
 +            else:
 +                bz2_extra_link_args = ()
