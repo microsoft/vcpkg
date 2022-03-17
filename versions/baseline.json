@@ -1126,7 +1126,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 8
+      "port-version": 9
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1239,6 +1239,10 @@
     "capstone": {
       "baseline": "4.0.2",
       "port-version": 3
+    },
+    "cargs": {
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "cartographer": {
       "baseline": "1.0.0",
@@ -2558,7 +2562,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.38.0",
-      "port-version": 1
+      "port-version": 2
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2958,7 +2962,7 @@
     },
     "itk": {
       "baseline": "5.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -3281,8 +3285,8 @@
       "port-version": 1
     },
     "lager": {
-      "baseline": "2021-06-17",
-      "port-version": 1
+      "baseline": "2022-02-21",
+      "port-version": 0
     },
     "lapack": {
       "baseline": "2022-02-22",
@@ -3618,7 +3622,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 11
+      "port-version": 12
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3902,7 +3906,7 @@
     },
     "librdkafka": {
       "baseline": "1.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.4.2",
@@ -4365,8 +4369,8 @@
       "port-version": 3
     },
     "marl": {
-      "baseline": "2021-04-25",
-      "port-version": 1
+      "baseline": "2022-03-02",
+      "port-version": 0
     },
     "mathc": {
       "baseline": "2019-09-29",
@@ -5365,8 +5369,8 @@
       "port-version": 3
     },
     "pixel": {
-      "baseline": "0.3",
-      "port-version": 4
+      "baseline": "2022-03-15",
+      "port-version": 0
     },
     "pixman": {
       "baseline": "0.40.0",
@@ -5610,7 +5614,7 @@
     },
     "qpid-proton": {
       "baseline": "0.32.0",
-      "port-version": 2
+      "port-version": 3
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -6293,8 +6297,8 @@
       "port-version": 0
     },
     "scnlib": {
-      "baseline": "0.4",
-      "port-version": 1
+      "baseline": "1.0",
+      "port-version": 0
     },
     "scottt-debugbreak": {
       "baseline": "1.0",
@@ -6890,7 +6894,7 @@
     },
     "tidy-html5": {
       "baseline": "5.7.28",
-      "port-version": 4
+      "port-version": 5
     },
     "tiff": {
       "baseline": "4.3.0",
@@ -7142,7 +7146,7 @@
     },
     "unrar": {
       "baseline": "5.8.1",
-      "port-version": 2
+      "port-version": 3
     },
     "upb": {
       "baseline": "2021-10-19",
