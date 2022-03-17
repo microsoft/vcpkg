@@ -1,0 +1,113 @@
+diff --git a/build/config/BUILD.gn b/build/config/BUILD.gn
+index d6171ef..d4de8be 100644
+--- a/build/config/BUILD.gn
++++ b/build/config/BUILD.gn
+@@ -430,7 +430,17 @@ toolchain("gcc_like_toolchain") {
+      cxx = ndk_bin_dir + clang_prefix + "-clang++"
+      asm = cxx
+      ld = cxx
+-     ar = ndk_bin_dir + tool_prefix + "-ar"
++
++     if (host_os == "win") {
++       cc += ".cmd"
++       cxx += ".cmd"
++       asm += ".cmd"
++       ld += ".cmd"
++       ar = ndk_bin_dir + "llvm-ar.exe"
++       not_needed(["tool_prefix"])
++     } else {
++       ar = ndk_bin_dir + tool_prefix + "-ar"
++     }
+   } else {
+     cc = "clang"
+     cxx = "clang++"
+@@ -471,7 +481,7 @@ toolchain("gcc_like_toolchain") {
+ 
+   tool("cc") {
+     depfile = "{{output}}.d"
+-    command = "$cc -MMD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_c}}${extra_cflags}${extra_cflags_c} -c {{source}} -o {{output}}"
++    command = "$cc -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_c}}${extra_cflags}${extra_cflags_c} -c {{source}} -o {{output}}"
+     depsformat = "gcc"
+     description = "CC {{output}}"
+     outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
+@@ -479,7 +489,7 @@ toolchain("gcc_like_toolchain") {
+ 
+   tool("cxx") {
+     depfile = "{{output}}.d"
+-    command = "$cxx -MMD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_cc}}${extra_cflags}${extra_cflags_cc} -c {{source}} -o {{output}}"
++    command = "$cxx -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}}${extra_cflags}${extra_cflags_cc} -c {{source}} -o {{output}}"
+     depsformat = "gcc"
+     description = "CXX {{output}}"
+     outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
+@@ -499,7 +509,7 @@ toolchain("gcc_like_toolchain") {
+ 
+     tool("objc") {
+       depfile = "{{output}}.d"
+-      command = "$cc -MMD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_objc}}${extra_cflags}${extra_cflags_objc} -c {{source}} -o {{output}}"
++      command = "$cc -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_objc}}${extra_cflags}${extra_cflags_objc} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       description = "OBJC {{output}}"
+       outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
+@@ -507,7 +517,7 @@ toolchain("gcc_like_toolchain") {
+ 
+     tool("objcxx") {
+       depfile = "{{output}}.d"
+-      command = "$cxx -MMD -MF $depfile {{defines}} {{include_dirs}} {{framework_dirs}} {{cflags}} {{cflags_objcc}}${extra_cflags}${extra_cflags_objcc} -c {{source}} -o {{output}}"
++      command = "$cxx -MMD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_objcc}}${extra_cflags}${extra_cflags_objcc} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       description = "OBJCXX {{output}}"
+       outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
+@@ -539,7 +549,11 @@ toolchain("gcc_like_toolchain") {
+     if (mini_chromium_is_mac || mini_chromium_is_ios) {
+       command = "libtool -static -no_warning_for_no_symbols {{arflags}}${extra_arflags} -o {{output}} {{inputs}}"
+     } else {
+-      command = "rm -f {{output}}; $ar rcsD {{arflags}}${extra_arflags} {{output}} {{inputs}}"
++      command = ""
++      if (host_os != "win") {
++        command = "rm -f {{output}};"
++      }
++      command += "$ar rcsD {{arflags}}${extra_arflags} {{output}} {{inputs}}"
+     }
+     description = "AR {{output}}"
+     default_output_dir = "{{target_out_dir}}"
+@@ -563,7 +577,7 @@ toolchain("gcc_like_toolchain") {
+       start_whole_flag = "-Wl,--whole-archive"
+       end_whole_flag = "-Wl,--no-whole-archive "
+     }
+-    command = "$ld -shared {{ldflags}}${extra_ldflags} -o \"$sofile\" $soname_flag $start_whole_flag {{inputs}} {{solibs}} {{frameworks}} $end_whole_flag {{libs}}"
++    command = "$ld -shared {{ldflags}}${extra_ldflags} -o \"$sofile\" $soname_flag $start_whole_flag {{inputs}} {{solibs}} $end_whole_flag {{libs}}"
+     description = "SOLINK_MODULE $sofile"
+ 
+     default_output_dir = "{{root_out_dir}}"
+@@ -582,7 +596,7 @@ toolchain("gcc_like_toolchain") {
+       start_group_flag = "-Wl,--start-group"
+       end_group_flag = "-Wl,--end-group"
+     }
+-    command = "$ld {{ldflags}}${extra_ldflags} -o \"$outfile\" $start_group_flag {{inputs}} {{solibs}} {{frameworks}} $end_group_flag {{libs}}"
++    command = "$ld {{ldflags}}${extra_ldflags} -o \"$outfile\" $start_group_flag {{inputs}} {{solibs}} $end_group_flag {{libs}}"
+     description = "LINK $outfile"
+ 
+     default_output_dir = "{{root_out_dir}}"
+@@ -591,12 +605,20 @@ toolchain("gcc_like_toolchain") {
+   }
+ 
+   tool("stamp") {
+-    command = "touch {{output}}"
++    if (host_os == "win") {
++      command = "cmd /c type nul > {{output}}"
++    } else {
++      command = "touch {{output}}"
++    }
+     description = "STAMP {{output}}"
+   }
+ 
+   tool("copy") {
+-    command = "ln -f {{source}} {{output}} 2>/dev/null || (rm -rf {{output}} && cp -af {{source}} {{output}})"
++    if (host_os == "win") {
++      command = "cmd /c copy /y {{source}} {{output}} >nul"
++    } else {
++      command = "ln -f {{source}} {{output}} 2>/dev/null || (rm -rf {{output}} && cp -af {{source}} {{output}})"
++    }
+     description = "COPY {{source}} {{output}}"
+   }
+ }
