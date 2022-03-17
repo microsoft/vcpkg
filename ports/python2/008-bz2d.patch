@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index f764223..9d863af 100644
+index f764223..d6a58e4 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -1506,6 +1506,14 @@ class PyBuildExt(build_ext):
@@ -11,7 +11,7 @@ index f764223..9d863af 100644
 +                bz2_extra_link_args = ('-Wl,-search_paths_first',)
 +            else:
 +                bz2_extra_link_args = ()
-+            self.add(Extension('bz2', ['bz2module.c'],
++            exts.append( Extension('bz2', ['bz2module.c'],
 +                               libraries=['bz2d'],
 +                               extra_link_args = bz2_extra_link_args) )
          else:
