@@ -8,7 +8,6 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-src-cmakelists.patch
         find-dependency.patch
-        fix-depend-openjpeg.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
