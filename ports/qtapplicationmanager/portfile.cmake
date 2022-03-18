@@ -23,6 +23,7 @@ endif()
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
+                   DISABLE_PARALLEL_CONFIGURE
                    OPTIONS
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
