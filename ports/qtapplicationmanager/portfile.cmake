@@ -25,6 +25,7 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 set(VCPKG_BUILD_TYPE release)
 qt_cmake_configure(${_opt} 
                    OPTIONS
+                        --trace-expand
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
