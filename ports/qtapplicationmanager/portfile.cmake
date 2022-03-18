@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
+        remove_post_build.patch
     )
 
 set(TOOL_NAMES appman
@@ -42,17 +43,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
     endif()
 endif()
-file(TO_NATIVE_PATH "$ENV{VCToolsRedistDir}/debug_nonredist/x64/Microsoft.VC143.DebugCRT" native_bin_dir)
-file(TO_NATIVE_PATH "$ENV{VCToolsRedistDir}/debug_nonredist/x86/Microsoft.VC143.DebugCRT" native_x86bin_dir)
-if(NOT EXISTS "${native_bin_dir}/vcruntime140_1d.dll")
-    message(FATAL_ERROR "Path does not exist!")
-endif()
-vcpkg_add_to_path(PREPEND "${native_bin_dir}")
-message(STATUS "ENV{PATH}:$ENV{PATH}")
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+#file(TO_NATIVE_PATH "$ENV{VCToolsRedistDir}/debug_nonredist/x64/Microsoft.VC143.DebugCRT" native_bin_dir)
+#file(TO_NATIVE_PATH "$ENV{VCToolsRedistDir}/debug_nonredist/x86/Microsoft.VC143.DebugCRT" native_x86bin_dir)
+#if(NOT EXISTS "${native_bin_dir}/vcruntime140_1d.dll")
+#    message(FATAL_ERROR "Path does not exist!")
+#endif()
+#vcpkg_add_to_path(PREPEND "${native_bin_dir}")
+#message(STATUS "ENV{PATH}:$ENV{PATH}")
+#vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
-
+message(FATAL_ERROR "Just error")
 qt_install_copyright("${SOURCE_PATH}")
 
 # Switch to a more complicated script due to the one post-build script which needed fixing after configure. 
