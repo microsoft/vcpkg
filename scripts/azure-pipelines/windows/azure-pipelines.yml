@@ -32,6 +32,8 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
+  - script: 'dir C:\Windows\System32'
+    displayName: 'Get Windows\System32 Contents'
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
