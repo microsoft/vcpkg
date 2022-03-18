@@ -4,10 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
-        #remove_post_build.patch
     )
-
-set(VCPKG_BUILD_TYPE release)
 
 set(TOOL_NAMES appman
                appman-controller
@@ -17,16 +14,6 @@ set(TOOL_NAMES appman
                appman-launcher-qml
                package-uploader
     )
-
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/bin" native_bin_dir)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/bin" native_bin_dir2) 
-file(GET_RUNTIME_DEPENDENCIES 
-        RESOLVED_DEPENDENCIES_VAR res_deps3
-        UNRESOLVED_DEPENDENCIES_VAR unres_deps3
-        EXECUTABLES "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-        DIRECTORIES  "${native_bin_dir}" "${native_bin_dir2}"
-    )
-message(STATUS "res_deps3:${res_deps3}}\nunres_deps3:${unres_deps3}")
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
@@ -52,25 +39,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
     endif()
 endif()
-#vcpkg_cmake_install(ADD_BIN_TO_PATH)
-vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
-file(GET_RUNTIME_DEPENDENCIES 
-        RESOLVED_DEPENDENCIES_VAR res_deps
-        UNRESOLVED_DEPENDENCIES_VAR unres_deps
-        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-        DIRECTORIES  "${native_bin_dir}"
-    )
-message(STATUS "res_deps:${res_deps}}\nunres_deps:${unres_deps}")
-file(GET_RUNTIME_DEPENDENCIES 
-        RESOLVED_DEPENDENCIES_VAR res_deps2
-        UNRESOLVED_DEPENDENCIES_VAR unres_deps2
-        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-        DIRECTORIES  "${native_bin_dir}"
-    )
-message(FATAL_ERROR "res_deps2:${res_deps2}}\nunres_deps2:${unres_deps2}")
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
 qt_install_copyright("${SOURCE_PATH}")
