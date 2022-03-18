@@ -4,8 +4,10 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
-        remove_post_build.patch
+        #remove_post_build.patch
     )
+
+set(VCPKG_BUILD_TYPE release)
 
 set(TOOL_NAMES appman
                appman-controller
