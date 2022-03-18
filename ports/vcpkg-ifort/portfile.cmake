@@ -44,7 +44,7 @@ if(VCPKG_USE_INTERNAL_Fortran)
         file(COPY ${IFORT_DLLS} ${IFORT_DLLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         file(COPY ${IFORT_DLLS} ${IFORT_DLLS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
-    file(INSTALL "${IFORT_COMPILER_ROOT}/../../../licensing/latest/third-party-programs.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright) # ONEAPI_ROOT; please check if this is the correct license
+    file(INSTALL "${IFORT_COMPILER_ROOT}/../../../licensing/latest/license.htm" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright) # ONEAPI_ROOT; please check if this is the correct license
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled) # libs are at share/ifort and reflect how they are installed by the compiler instead of splitting them. 
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 else()
