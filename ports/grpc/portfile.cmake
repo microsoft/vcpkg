@@ -14,6 +14,7 @@ vcpkg_from_github(
         00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
+        00006-fix-uwp-error.patch
         00009-use-system-upb.patch
         00010-add-feature-absl-sync.patch
         00011-fix-csharp_plugin.patch
