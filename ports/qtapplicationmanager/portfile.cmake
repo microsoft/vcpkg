@@ -27,7 +27,7 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 #set(VCPKG_BUILD_TYPE release)
 qt_cmake_configure(${_opt} 
                    OPTIONS
-                        --trace-expand
+                        --trace-expand # doesn't heko
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
@@ -52,6 +52,8 @@ endif()
 #message(STATUS "ENV{PATH}:$ENV{PATH}")
 #vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
+configure_file("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_BUILDTREES_DIR}/appman-dumpqmltypes.log" COPYONLY)
+
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 message(FATAL_ERROR "Just error")
 qt_install_copyright("${SOURCE_PATH}")
