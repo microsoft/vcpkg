@@ -2,7 +2,7 @@ diff --git a/src/tools/dumpqmltypes/CMakeLists.txt b/src/tools/dumpqmltypes/CMak
 index eb937a927..f05676319 100644
 --- a/src/tools/dumpqmltypes/CMakeLists.txt	
 +++ b/src/tools/dumpqmltypes/CMakeLists.txt
-@@ -44,15 +44,16 @@ if(TARGET ${target_name} AND NOT QT_FEATURE_cross_compile)
+@@ -44,15 +44,18 @@ if(TARGET ${target_name} AND NOT QT_FEATURE_cross_compile)
  
      set(tool_path "${QT_BUILD_DIR}/${INSTALL_BINDIR}/appman-dumpqmltypes")
  
@@ -18,6 +18,8 @@ index eb937a927..f05676319 100644
 -        VERBATIM
 -    )
 +    message(STATUS "PATH=${env_path}${QT_PATH_SEPARATOR}$ENV{PATH}")
++    message(STATUS "PATH=${env_path}")
++    message(STATUS "PATH=$ENV{PATH}")
 +    #add_custom_command(
 +    #    TARGET ${target_name}
 +    #    POST_BUILD
