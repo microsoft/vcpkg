@@ -1,0 +1,31 @@
+diff --git a/src/tools/dumpqmltypes/CMakeLists.txt b/src/tools/dumpqmltypes/CMakeLists.txt
+index eb937a927..f05676319 100644
+--- a/src/tools/dumpqmltypes/CMakeLists.txt	
++++ b/src/tools/dumpqmltypes/CMakeLists.txt
+@@ -44,15 +44,15 @@ if(TARGET ${target_name} AND NOT QT_FEATURE_cross_compile)
+ 
+     set(tool_path "${QT_BUILD_DIR}/${INSTALL_BINDIR}/appman-dumpqmltypes")
+ 
+-    add_custom_command(
+-        TARGET ${target_name}
+-        POST_BUILD
+-        BYPRODUCTS "qmltypes"
+-        COMMAND "${CMAKE_COMMAND}" -E env "PATH=${env_path}${QT_PATH_SEPARATOR}$ENV{PATH}"
+-                "${tool_path}" "${CMAKE_CURRENT_BINARY_DIR}/qmltypes"
+-        ${COPY_COMMAND}
+-        DEPENDS "${tool_path}"
+-        COMMENT "Generating qmltypes using ${tool_path}"
+-        VERBATIM
+-    )
++    #add_custom_command(
++    #    TARGET ${target_name}
++    #    POST_BUILD
++    #    BYPRODUCTS "qmltypes"
++    #    COMMAND "${CMAKE_COMMAND}" -E env "PATH=${env_path}${QT_PATH_SEPARATOR}$ENV{PATH}"
++    #            "${tool_path}" "${CMAKE_CURRENT_BINARY_DIR}/qmltypes"
++    #    ${COPY_COMMAND}
++    #    DEPENDS "${tool_path}"
++    #    COMMENT "Generating qmltypes using ${tool_path}"
++    #    VERBATIM
++    #)
+ endif()

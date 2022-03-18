@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
         bump-cmake-version.patch
         wrapper-fixes.patch
+        remove_post_build.patch
     )
 
 set(TOOL_NAMES appman
@@ -44,7 +45,7 @@ vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
 file(GET_RUNTIME_DEPENDENCIES 
         RESOLVED_DEPENDENCIES_VAR res_deps
         UNRESOLVED_DEPENDENCIES_VAR unres_deps
-        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes.exe"
+        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_EXECUTABLE_SUFFIX}"
         DIRECTORIES  "${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/debug/lib"
     )
     
