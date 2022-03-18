@@ -72,7 +72,10 @@
       "dependencies": [
         {
           "name": "opencv",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "default-features"
+          ]
         }
       ]
     },
