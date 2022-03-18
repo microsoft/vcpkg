@@ -16,8 +16,6 @@ vcpkg_cmake_configure(
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DLIB_SUFFIX=
         -DBUILD_GO=no
-        -DBUILD_RUBY=no
-        -DBUILD_PYTHON=no
         -DENABLE_JSONCPP=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_CyrusSASL=ON
 )
@@ -26,8 +24,24 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+set(configFiles
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/Proton/ProtonConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCpp/ProtonCppConfig.cmake"
+)
+foreach(configFile IN LISTS configFiles)
+    vcpkg_replace_string("${configFile}"
+        "IMPORTED_LOCATION_DEBUG \"\${_IMPORT_PREFIX}/lib"
+        "IMPORTED_LOCATION_DEBUG \"\${_IMPORT_PREFIX}/debug/lib"
+    )
+    vcpkg_replace_string("${configFile}"
+        "debug \${_IMPORT_PREFIX}/lib"
+        "debug \${_IMPORT_PREFIX}/debug/lib"
+    )
+endforeach()
 vcpkg_fixup_pkgconfig()
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/qpid-protonConfig.cmake
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/qpid-protonConfig.cmake COPYONLY)
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/proton/LICENSE.txt"
             "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
