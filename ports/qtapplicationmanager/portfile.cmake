@@ -51,8 +51,14 @@ file(GET_RUNTIME_DEPENDENCIES
         EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         DIRECTORIES  "${native_bin_dir}"
     )
-    
-message(FATAL_ERROR "res_deps:${res_deps}}\nunres_deps:${unres_deps}")
+message(STATUS "res_deps:${res_deps}}\nunres_deps:${unres_deps}")
+file(GET_RUNTIME_DEPENDENCIES 
+        RESOLVED_DEPENDENCIES_VAR res_deps2
+        UNRESOLVED_DEPENDENCIES_VAR unres_deps2
+        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        DIRECTORIES  "${native_bin_dir}"
+    )
+message(FATAL_ERROR "res_deps2:${res_deps2}}\nunres_deps2:${unres_deps2}")
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
 qt_install_copyright("${SOURCE_PATH}")
