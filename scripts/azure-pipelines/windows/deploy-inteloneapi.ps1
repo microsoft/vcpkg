@@ -7,7 +7,7 @@
 
 # Seems like only the HPC kit is really needed?
 #$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17768/w_BaseKit_p_2021.2.0.2871_offline.exe'
-$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17762/w_HPCKit_p_2021.2.0.2901_offline.exe'
+$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18417/w_HPCKit_p_2022.1.0.93_offline.exe'
 
 # Possible oneAPI Base components:
 #intel.oneapi.win.vtune           2021.1.1-68           true      Intel® VTune(TM) Profiler
@@ -55,7 +55,7 @@ Function InstallInteloneAPI {
     Write-Host 'Extracting Intel oneAPI...to folder: ' $extractionPath
     $proc = Start-Process -FilePath $installerPath -ArgumentList @('-s ', '-x ', '-f ' + $extractionPath , '--log extract.log') -Wait -PassThru
     Write-Host 'Install Intel oneAPI...from folder: ' $extractionPath
-    $proc = Start-Process -FilePath $extractionPath/bootstrapper.exe -ArgumentList @('-s ', '--action install', "--components=$Components" , '--eula=accept', '--continue-with-optional-error=yes', '-p=NEED_VS2017_INTEGRATION=0', '-p=NEED_VS2019_INTEGRATION=0', '--log-dir=.') -Wait -PassThru
+    $proc = Start-Process -FilePath $extractionPath/bootstrapper.exe -ArgumentList @('-s ', '--action install', "--components=$Components" , '--eula=accept', '-p=NEED_VS2017_INTEGRATION=0', '-p=NEED_VS2019_INTEGRATION=0', '-p=NEED_VS2022_INTEGRATION=0', '--log-dir=.') -Wait -PassThru
     $exitCode = $proc.ExitCode
     if ($exitCode -eq 0) {
       Write-Host 'Installation successful!'

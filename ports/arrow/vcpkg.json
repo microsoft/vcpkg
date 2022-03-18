@@ -1,9 +1,10 @@
 {
   "name": "arrow",
-  "version": "6.0.1",
-  "port-version": 1,
+  "version": "7.0.0",
+  "port-version": 2,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
+  "license": "Apache-2.0",
   "supports": "x64 | (arm64 & !windows)",
   "dependencies": [
     "boost-filesystem",
@@ -74,7 +75,14 @@
       ]
     },
     "parquet": {
-      "description": "Parquet support"
+      "description": "Parquet support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "plasma": {
+      "description": "Plasma support",
+      "supports": "!windows"
     },
     "s3": {
       "description": "S3 support",

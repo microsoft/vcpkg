@@ -1,25 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 369914e04..f89b256f4 100644
+index 0e2b703..7097f06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,8 +28,14 @@ project(
-     VERSION 1.35.0
+@@ -28,8 +28,13 @@ project(
+     VERSION 1.38.0
      LANGUAGES CXX C)
  
+-# Allow applications to override the CMAKE_CXX_STANDARD, but if not set use 11.
+-if (NOT CMAKE_CXX_STANDARD)
 +find_package(absl CONFIG REQUIRED)
 +
 +# Use CMAKE_CXX_STANDARD=17 if ABSL_USE_CXX17 is set
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)
- # Allow applications to override the CMAKE_CXX_STANDARD, but if not set use 11.
--if (NOT CMAKE_CXX_STANDARD)
 +elseif (NOT CMAKE_CXX_STANDARD)
      set(CMAKE_CXX_STANDARD 11)
  endif ()
  if (CMAKE_CXX_STANDARD VERSION_LESS 11)
 diff --git a/google/cloud/internal/port_platform.h b/google/cloud/internal/port_platform.h
-index c9f34cf4c..e62400431 100644
+index c9f34cf..e624004 100644
 --- a/google/cloud/internal/port_platform.h
 +++ b/google/cloud/internal/port_platform.h
 @@ -49,6 +49,8 @@
