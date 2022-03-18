@@ -1218,7 +1218,7 @@
     },
     "cairo": {
       "baseline": "1.17.4",
-      "port-version": 4
+      "port-version": 5
     },
     "cairomm": {
       "baseline": "1.16.0",
