@@ -22,6 +22,7 @@ endif()
 
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
+set(VCPKG_BUILD_TYPE release)
 qt_cmake_configure(${_opt} 
                    OPTIONS
                         -DINPUT_libarchive=system
