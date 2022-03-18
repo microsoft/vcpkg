@@ -13,7 +13,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSW_BUILD=OFF
         -DCPPAN_BUILD=OFF
