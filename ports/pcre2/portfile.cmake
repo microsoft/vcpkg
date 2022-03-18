@@ -16,7 +16,7 @@ else()
     set(JIT ON)
 endif()
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
         -DPCRE2_BUILD_PCRE2GREP=OFF
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
