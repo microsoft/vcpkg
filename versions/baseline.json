@@ -3330,7 +3330,7 @@
     },
     "leptonica": {
       "baseline": "1.81.1",
-      "port-version": 1
+      "port-version": 2
     },
     "lerc": {
       "baseline": "2.2",
