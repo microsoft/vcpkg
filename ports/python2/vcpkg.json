@@ -1,7 +1,7 @@
 {
   "name": "python2",
   "version": "2.7.18",
-  "port-version": 3,
+  "port-version": 4,
   "description": "The Python programming language as an embeddable library",
   "homepage": "https://www.python.org",
   "license": "Python-2.0"
