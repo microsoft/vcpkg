@@ -57,12 +57,15 @@ set(exe "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes
 
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 execute_process(COMMAND ${exe} qmltypes
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                OUTPUT_FILE qmltypes-out.log 
+                ERROR_FILE  qmltypes-err.log 
+                RESULT_VARIABLE  is_error)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 #execute_process(COMMAND ${CMAKE_COMMAND} -E tar cvz dlls.log "${CURRENT_INSTALLED_DIR}/debug/bin"
 #                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
-message(FATAL_ERROR "Just error")
+message(FATAL_ERROR "Just error: Code: ${is_error}")
 qt_install_copyright("${SOURCE_PATH}")
 
 # Switch to a more complicated script due to the one post-build script which needed fixing after configure. 
