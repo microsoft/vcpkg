@@ -16,6 +16,16 @@ set(TOOL_NAMES appman
                package-uploader
     )
 
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/bin" native_bin_dir)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/bin" native_bin_dir2) 
+file(GET_RUNTIME_DEPENDENCIES 
+        RESOLVED_DEPENDENCIES_VAR res_deps3
+        UNRESOLVED_DEPENDENCIES_VAR unres_deps3
+        EXECUTABLES "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        DIRECTORIES  "${native_bin_dir}" "${native_bin_dir2}"
+    )
+message(STATUS "res_deps3:${res_deps3}}\nunres_deps3:${unres_deps3}")
+
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
     return()
@@ -42,7 +52,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 #vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/bin" native_bin_dir)
+
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
 file(GET_RUNTIME_DEPENDENCIES 
