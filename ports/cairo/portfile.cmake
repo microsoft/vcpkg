@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES 0001-meson-fix-macOS-build-and-add-macOS-ci.patch
             cairo_static_fix.patch
+            meson-fix-bfd.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)

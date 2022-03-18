@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF sdf9
     PATCHES
         fix-dependency-urdfdom.patch
+        fix-quote.patch
+        no-absolute.patch
+        use-external-tinyxml-windows.patch
 )
 
 # Ruby is required by the sdformat build process
@@ -19,7 +22,6 @@ vcpkg_cmake_configure(
     OPTIONS 
         -DBUILD_TESTING=OFF
         -DUSE_INTERNAL_URDF=OFF
-        -DUSE_EXTERNAL_TINYXML=ON
 )
 
 vcpkg_cmake_install()

@@ -8,35 +8,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     NO_CHARSET_FLAG
     OPTIONS
         -DBUILD_SHARED_LIB=OFF
         -DTIDY_CONSOLE_SHARED=OFF
 )
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/libxslt/bin")
+vcpkg_cmake_install()
 
-vcpkg_install_cmake()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tidyd.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tidyd)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tidy-html5)
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/tidyd.exe")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/tidyd")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tidy.exe ${CURRENT_PACKAGES_DIR}/tools/tidy-html5/tidy.exe)
-else()
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tidy ${CURRENT_PACKAGES_DIR}/tools/tidy-html5/tidy)
-endif()
+vcpkg_copy_tools(TOOL_NAMES tidy AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-file(INSTALL ${SOURCE_PATH}/README/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/tidy-html5 RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(INSTALL "${SOURCE_PATH}/README/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()

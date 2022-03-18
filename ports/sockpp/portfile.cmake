@@ -1,17 +1,16 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fpagliughi/sockpp
-    REF d8c86c01db43542a06ad05424da037f6b9892253
-    SHA512 9b7ae3fea08bfd4a0d6479d7fbcc24da9101476c4f8e4a684138c7d974827cdf374282a4641e58f03c08aeb83f2c1856fc3c5193e5847fb4b3d9182c1c396087
+    REF 4c57ef4a30a9d8e6fda89cf07410066d2cee12f8
+    SHA512 0b3031e792b2bc58d868b7dd2462c06f184547e4e094ce395ee1cd2496e1e505f767d8389ce17ecf3d8fb838abae8282c911201f1730cffbf0357a09addab776
     HEAD_REF master
 )
 
 vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt "\${SOCKPP}-static" "\${SOCKPP}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -22,7 +21,7 @@ vcpkg_configure_cmake(
         -DSOCKPP_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${CURRENT_PORT_DIR}/sockppConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -1,9 +1,9 @@
 {
   "name": "open62541",
-  "version": "1.2.2",
-  "port-version": 1,
+  "version": "1.2.3",
   "description": "open62541 is an open source C (C99) implementation of OPC UA licensed under the Mozilla Public License v2.0.",
   "homepage": "https://open62541.org",
+  "license": "MPL-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -20,6 +20,9 @@
   "features": {
     "amalgamation": {
       "description": "Concatenate the library to a single file open62541.h/.c"
+    },
+    "historizing": {
+      "description": "Enable basic support for historical access (client and server)"
     },
     "mbedtls": {
       "description": "Enable encryption support (uses MbedTLS)",
