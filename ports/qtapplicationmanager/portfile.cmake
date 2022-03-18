@@ -39,8 +39,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
     endif()
 endif()
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+#vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
+file(GET_RUNTIME_DEPENDENCIES 
+        RESOLVED_DEPENDENCIES_VAR res_deps
+        UNRESOLVED_DEPENDENCIES_VAR unres_deps
+        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes.exe"
+        DIRECTORIES  "${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/debug/lib"
+    )
+    
+message(FATAL_ERROR "res_deps:${res_deps}}\nunres_deps:${unres_deps}")
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
 qt_install_copyright("${SOURCE_PATH}")
