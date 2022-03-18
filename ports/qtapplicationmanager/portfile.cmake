@@ -45,7 +45,7 @@ vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
 file(GET_RUNTIME_DEPENDENCIES 
         RESOLVED_DEPENDENCIES_VAR res_deps
         UNRESOLVED_DEPENDENCIES_VAR unres_deps
-        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_EXECUTABLE_SUFFIX}"
+        EXECUTABLES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         DIRECTORIES  "${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/debug/lib"
     )
     
