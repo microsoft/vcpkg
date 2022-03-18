@@ -19,10 +19,11 @@ qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
     return()
 endif()
-
+set(HOST_TRIPLET ${TARGET_TRIPLET})
+set(VCPKG_CROSSCOMPILING OFF)
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
-set(VCPKG_BUILD_TYPE release)
+#set(VCPKG_BUILD_TYPE release)
 qt_cmake_configure(${_opt} 
                    OPTIONS
                         --trace-expand
