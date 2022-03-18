@@ -24,7 +24,7 @@ set(HOST_TRIPLET ${TARGET_TRIPLET})
 set(VCPKG_CROSSCOMPILING OFF)
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
-#set(VCPKG_BUILD_TYPE release)
+set(VCPKG_BUILD_TYPE debug)
 qt_cmake_configure(${_opt} 
                    OPTIONS
                         #--trace-expand # doesn't heko
@@ -52,11 +52,16 @@ endif()
 #message(STATUS "ENV{PATH}:$ENV{PATH}")
 #vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
-configure_file("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_BUILDTREES_DIR}/appman-dumpqmltypes.log" COPYONLY)
+set(exe "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+#configure_file("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/appman-dumpqmltypes${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_BUILDTREES_DIR}/appman-dumpqmltypes.log" COPYONLY)
+
+vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+execute_process(COMMAND ${exe} qmltypes
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
-execute_process(COMMAND ${CMAKE_COMMAND} -E tar cvz dlls.log "${CURRENT_INSTALLED_DIR}/debug/bin"
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+#execute_process(COMMAND ${CMAKE_COMMAND} -E tar cvz dlls.log "${CURRENT_INSTALLED_DIR}/debug/bin"
+#                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 message(FATAL_ERROR "Just error")
 qt_install_copyright("${SOURCE_PATH}")
 
