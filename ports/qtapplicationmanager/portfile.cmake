@@ -42,6 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 #vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_build(ADD_BIN_TO_PATH TARGET appman-dumpqmltypes)
+vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
 file(GET_RUNTIME_DEPENDENCIES 
         RESOLVED_DEPENDENCIES_VAR res_deps
         UNRESOLVED_DEPENDENCIES_VAR unres_deps
