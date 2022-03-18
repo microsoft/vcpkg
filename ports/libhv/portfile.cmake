@@ -24,7 +24,6 @@ vcpkg_cmake_configure(
         -DBUILD_UNITTEST=OFF
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
-        -DWITH_OPENSSL=ON
         ${FEATURE_OPTIONS}
 )
 
