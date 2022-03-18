@@ -42,6 +42,12 @@ else()
     set(PLUGIN_UGLY_SUPPORT disabled)
 endif()
 
+if ("gl-graphene" IN_LIST FEATURES)
+    set(GL_GRAPHENE enabled)
+else()
+    set(GL_GRAPHENE disabled)
+endif()
+
 # gst-build's meson configuration needs git. Make the tool visible.
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
@@ -95,6 +101,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
         -Dgst-plugins-base:pango=disabled
+        -Dgst-plugins-base:gl-graphene=${GL_GRAPHENE}
         -Dgst-plugins-base:doc=disabled
         # gst-plugins-good
         -Dgst-plugins-good:package-origin="vcpkg"
