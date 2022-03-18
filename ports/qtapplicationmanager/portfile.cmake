@@ -53,7 +53,7 @@ foreach(VCPKG_BUILD_TYPE IN LISTS types)
     endif()
     vcpkg_cmake_install()
     set(ENV{PATH} "${path_backup}")
-endif()
+endforeach()
 set(VCPKG_BUILD_TYPE ${build_type_backup})
 ### Need to fix one post-build.bat; Couldn't find the place where it gets generated!
 
