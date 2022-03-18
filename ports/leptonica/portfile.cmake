@@ -8,19 +8,20 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-src-cmakelists.patch
         find-dependency.patch
+        fix-depend-openjpeg.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSW_BUILD=OFF
         -DCPPAN_BUILD=OFF
         -DSTATIC=${STATIC}
         -DCMAKE_REQUIRED_INCLUDES=${CURRENT_INSTALLED_DIR}/include # for check_include_file()
     MAYBE_UNUSED_VARIABLES
-        STATIC
+         STATIC
 )
 
 vcpkg_cmake_install()
