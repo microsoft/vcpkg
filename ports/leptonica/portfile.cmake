@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
         -DSTATIC=${STATIC}
         -DCMAKE_REQUIRED_INCLUDES=${CURRENT_INSTALLED_DIR}/include # for check_include_file()
     MAYBE_UNUSED_VARIABLES
-         STATIC
+        STATIC
 )
 
 vcpkg_cmake_install()
