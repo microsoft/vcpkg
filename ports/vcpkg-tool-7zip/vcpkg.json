@@ -5,10 +5,10 @@
   "homepage": "https://www.7-zip.org/",
   "license": null,
   "supports": "native & windows & (x64 | x86)",
-  "dependencies" : [
-  {
-    "name": "vcpkg-tool-lessmsi",
-    "host": true
-  }
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true
+    }
   ]
 }

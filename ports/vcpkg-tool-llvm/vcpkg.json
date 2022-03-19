@@ -5,11 +5,10 @@
   "homepage": "https://github.com/llvm/llvm-project",
   "license": null,
   "supports": "windows & (x64 | x86)",
-  "dependencies" : 
-[
-{
-  "name": "vcpkg-tool-7zip",
-  "host": true
-}
-]
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-7zip",
+      "host": true
+    }
+  ]
 }
