@@ -177,7 +177,7 @@
       "port-version": 1
     },
     "asio": {
-      "baseline": "1.20.0",
+      "baseline": "1.22.1",
       "port-version": 0
     },
     "asio-grpc": {
@@ -1126,7 +1126,7 @@
     },
     "botan": {
       "baseline": "2.18.1",
-      "port-version": 9
+      "port-version": 10
     },
     "box2d": {
       "baseline": "2.4.1",
@@ -1477,7 +1477,7 @@
       "port-version": 6
     },
     "colmap": {
-      "baseline": "3.7",
+      "baseline": "2022-03-14",
       "port-version": 0
     },
     "comms": {
@@ -1721,7 +1721,7 @@
       "port-version": 7
     },
     "curl": {
-      "baseline": "7.81.0",
+      "baseline": "7.82.0",
       "port-version": 0
     },
     "curlpp": {
@@ -2022,7 +2022,7 @@
     },
     "eigen3": {
       "baseline": "3.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "elfio": {
       "baseline": "3.10",
@@ -2109,7 +2109,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.0.9",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "fann": {
@@ -2349,8 +2349,8 @@
       "port-version": 1
     },
     "functions-framework-cpp": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "fuzzylite": {
       "baseline": "6.0",
@@ -2865,7 +2865,7 @@
       "port-version": 3
     },
     "igraph": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "iir1": {
@@ -3610,7 +3610,7 @@
     },
     "libhv": {
       "baseline": "1.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libhydrogen": {
       "baseline": "2021-12-02",
@@ -5433,8 +5433,8 @@
       "port-version": 3
     },
     "poco": {
-      "baseline": "1.11.0",
-      "port-version": 2
+      "baseline": "1.11.1",
+      "port-version": 0
     },
     "podofo": {
       "baseline": "0.9.7",
@@ -5582,7 +5582,7 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 3
+      "port-version": 4
     },
     "python3": {
       "baseline": "3.10.2",
@@ -5626,7 +5626,7 @@
     },
     "qt5": {
       "baseline": "5.15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-3d": {
       "baseline": "5.15.3",
@@ -5786,7 +5786,7 @@
     },
     "qt5-winextras": {
       "baseline": "5.15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-x11extras": {
       "baseline": "5.15.3",
@@ -6806,7 +6806,7 @@
     },
     "tbb": {
       "baseline": "2020_U3",
-      "port-version": 7
+      "port-version": 8
     },
     "tcb-span": {
       "baseline": "2021-12-15",

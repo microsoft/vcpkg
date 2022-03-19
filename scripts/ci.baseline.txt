@@ -155,8 +155,6 @@ coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
 
-# https://github.com/colmap/colmap/issues/1421
-colmap:x64-osx=fail
 # there is an ICE in VS2022 with colmap in release mode
 colmap:x86-windows=fail
 colmap:x64-windows=fail
