@@ -24,15 +24,17 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe -c")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(asmflag win64)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(asmflag win32)
     endif()
-    set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
+    #set(ENV{ASMFLAGS} "--driver-mode=cl")
     set(OPTIONS ac_cv_func_memset=yes
                 "gmp_cv_asm_w32=.word"
+                # "gmp_cv_asm_text=.text"
+                # gmp_cv_asm_label_suffix gmp_cv_asm_underscore gmp_cv_asm_align_log gmp_cv_asm_data gmp_cv_asm_align_fill_0x90
                 )
     
 endif()

@@ -11,11 +11,8 @@
       "host": true
     },
     {
-      "name": "yasm",
+      "name": "vcpkg-tool-llvm",
       "host": true,
-      "features": [
-        "tools"
-      ],
       "platform": "windows"
     }
   ]
