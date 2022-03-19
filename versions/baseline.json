@@ -7272,8 +7272,16 @@
       "baseline": "2021-10-23",
       "port-version": 0
     },
+    "vcpkg-tool-7zip": {
+      "baseline": "21.07",
+      "port-version": 0
+    },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
+      "port-version": 0
+    },
+    "vcpkg-tool-llvm": {
+      "baseline": "13.0.1",
       "port-version": 0
     },
     "vcpkg-tool-meson": {
