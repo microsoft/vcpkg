@@ -2,10 +2,10 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 9a0dcb1..c1f2f02 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -600,7 +600,14 @@ target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
- if(CMAKE_USE_PTHREADS_INIT)
-    target_link_libraries(poppler LINK_PRIVATE Threads::Threads)
+@@ -585,7 +585,14 @@ if(MINGW AND BUILD_SHARED_LIBS)
+     set_target_properties(poppler PROPERTIES SUFFIX "-${POPPLER_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  endif()
+ target_link_libraries(poppler LINK_PRIVATE ${poppler_LIBS})
 -install(TARGETS poppler RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +target_include_directories(poppler PUBLIC
 +    $<INSTALL_INTERFACE:include/poppler>
