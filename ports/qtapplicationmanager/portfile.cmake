@@ -27,7 +27,7 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 set(VCPKG_BUILD_TYPE debug)
 qt_cmake_configure(${_opt} 
                    OPTIONS
-                        #--trace-expand # doesn't heko
+                        --trace-expand # doesn't heko
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
