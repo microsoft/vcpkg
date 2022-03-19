@@ -1,5 +1,6 @@
 cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
+cmake_policy(SET CMP0054 NEW)
 
 _find_package(${ARGS})
 
