@@ -14,9 +14,8 @@ else()
     set(FL_BUILD_STATIC ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/fuzzylite
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/fuzzylite"
     OPTIONS
         -DFL_BUILD_SHARED=${FL_BUILD_SHARED}
         -DFL_BUILD_STATIC=${FL_BUILD_STATIC}
@@ -24,23 +23,23 @@ vcpkg_configure_cmake(
         -DFL_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fuzzylite-static.lib ${CURRENT_PACKAGES_DIR}/lib/fuzzylite.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-static-debug.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-debug.lib)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/fuzzylite-static.${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/fuzzylite.${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-static-debug.${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-debug.${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/fl/fuzzylite.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fl/fuzzylite.h"
         "#elif defined(FL_IMPORT_LIBRARY)"
         "#elif 1"
     )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
