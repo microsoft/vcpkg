@@ -313,10 +313,15 @@ function(vcpkg_find_acquire_program program)
         set(download_sha512 5b158ead86be4eb3a6780928d9163f8562372f30bde051d8c281d81027b766119a6e9241166b91de0aa6146836cea77e5121290e62e31b7a959407840fc57b33)
     elseif(program STREQUAL "7Z")
         set(program_name 7z)
-        set(paths_to_search "${DOWNLOADS}/tools/7z/Files/7-Zip")
-        set(download_urls "https://7-zip.org/a/7z1900.msi")
-        set(download_filename "7z1900.msi")
-        set(download_sha512 f73b04e2d9f29d4393fde572dcf3c3f0f6fa27e747e5df292294ab7536ae24c239bf917689d71eb10cc49f6b9a4ace26d7c122ee887d93cc935f268c404e9067)
+        set(version 21.07)
+        if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-tool-7zip/details.cmake")
+            include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-tool-7zip/details.cmake")
+        else()
+            set(paths_to_search "${DOWNLOADS}/tools/7z/Files/7-Zip")
+            set(download_urls "https://www.7-zip.org/a/7z2107.msi")
+            set(download_filename "7z2107.msi")
+            set(download_sha512 103210153e60b4234015796bb5f12483f99b5909df8c2fe5c9d3a823d4bdc721602a5261ad794e5280ff9f0d5f79add4e2a732dfb087fe8b4844d789acb8ea42)
+        endif()
     elseif(program STREQUAL "NINJA")
         set(program_name ninja)
         set(program_version 1.10.2)
@@ -403,32 +408,36 @@ function(vcpkg_find_acquire_program program)
         endif()
     elseif(program STREQUAL "CLANG")
         set(program_name clang)
-        set(tool_subdirectory "clang-12.0.0")
-        set(program_version 12.0.0)
-        if(CMAKE_HOST_WIN32)
-            set(paths_to_search
-                # Support LLVM in Visual Studio 2019
-                "$ENV{LLVMInstallDir}/x64/bin"
-                "$ENV{LLVMInstallDir}/bin"
-                "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
-                "$ENV{VCINSTALLDIR}/Tools/Llvm/bin"
-                "${DOWNLOADS}/tools/${tool_subdirectory}-windows/bin"
-                "${DOWNLOADS}/tools/clang/${tool_subdirectory}/bin")
+        set(tool_subdirectory "clang-13.0.1")
+        set(program_version 13.0.1)
+        if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-tool-llvm/details.cmake")
+            include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-tool-llvm/details.cmake")
+        else()
+            if(CMAKE_HOST_WIN32)
+                set(paths_to_search
+                    # Support LLVM in Visual Studio 2019
+                    "$ENV{LLVMInstallDir}/x64/bin"
+                    "$ENV{LLVMInstallDir}/bin"
+                    "$ENV{VCINSTALLDIR}/Tools/Llvm/x64/bin"
+                    "$ENV{VCINSTALLDIR}/Tools/Llvm/bin"
+                    "${DOWNLOADS}/tools/${tool_subdirectory}-windows/bin"
+                    "${DOWNLOADS}/tools/clang/${tool_subdirectory}/bin")
 
-            if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-                set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
-            else()
-                set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
-            endif()
+                if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+                    set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
+                else()
+                    set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
+                endif()
 
-            if(host_arch MATCHES "64")
-                set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
-                set(download_filename "LLVM-${program_version}-win64.7z.exe")
-                set(download_sha512 67a9b54abad5143fa5f79f0cfc184be1394c9fc894fa9cee709943cb6ccbde8f0ea6003d8fcc20eccf035631abe4009cc0f694ac84e7879331cebba8125e4c7f)
-            else()
-                set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win32.exe")
-                set(download_filename "LLVM-${program_version}-win32.7z.exe")
-                set(download_sha512 92fa5252fd08c1414ee6d71e2544cd2c44872124c47225f8d98b3af711d20e699f2888bc30642dfd00e005013da1607a593674fb4878951cc434694f9a119199)
+                if(host_arch MATCHES "64")
+                    set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win64.exe")
+                    set(download_filename "LLVM-${program_version}-win64.7z.exe")
+                    set(download_sha512 56e8871898fc2d62383b76b75ce7852a0179d70a1d327e95e73a115f1e09db5ceec1ae950279ddb0779de417eca9cdf7517d9c6a5498c7c17de6550aef16073d)
+                else()
+                    set(download_urls "https://github.com/llvm/llvm-project/releases/download/llvmorg-${program_version}/LLVM-${program_version}-win32.exe")
+                    set(download_filename "LLVM-${program_version}-win32.7z.exe")
+                    set(download_sha512 6df7b992d4c382c3e1c71ff30e43b9fa0311c33adfebc9feaa4ea7e2f50fdb836b04dbad529aac1a6f7bf0135b98ecf3291d0386152afbcaf5ac7cb4592a94fa)
+                endif()
             endif()
         endif()
         set(brew_package_name "llvm")
