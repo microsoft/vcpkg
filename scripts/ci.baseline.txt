@@ -310,6 +310,7 @@ freetype-gl:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
+fuzzylite:x64-osx
 
 # Requires ATL for ARM64 to be installed in CI
 gdal:arm64-windows=fail
