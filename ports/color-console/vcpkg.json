@@ -1,0 +1,6 @@
+{
+    "name": "color-console",
+    "version-semver": "1.0.0",
+    "description": "A lightweight header-only C++ library to bring colors to your Windows console with a very-easy-to-use API.",
+    "homepage": "https://github.com/imfl/color-console"
+}
