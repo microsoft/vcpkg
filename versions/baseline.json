@@ -3454,7 +3454,7 @@
     },
     "libdatrie": {
       "baseline": "0.2.10",
-      "port-version": 4
+      "port-version": 5
     },
     "libdc1394": {
       "baseline": "2.2.6",
