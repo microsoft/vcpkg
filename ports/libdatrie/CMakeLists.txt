@@ -70,7 +70,8 @@ if (NOT SKIP_TOOL)
     find_path(ICONV_INCLUDE_DIR iconv.h)
     find_package(Iconv REQUIRED)
     target_include_directories(trietool PRIVATE ${ICONV_INCLUDE_DIR})
-    target_link_libraries(trietool Iconv::Iconv Iconv::Charset)
+    target_link_libraries(trietool Iconv::Iconv)
+    target_link_libraries(trietool Iconv::Charset)
 
     install(
         TARGETS trietool
