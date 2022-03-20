@@ -64,7 +64,6 @@ else()
     set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        NO_DEBUG
         OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
             "${CONFIGURE_PARAMETER_1}"

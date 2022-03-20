@@ -35,11 +35,11 @@ jobs:
       exit 0
     displayName: 'Create ${{ variables.VCPKG_DOWNLOADS }}'
   - task: Bash@3
-    displayName: 'Build vcpkg'
+    displayName: 'Bootstrap vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
   - task: PowerShell@2
-    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    displayName: '*** Test Modified Ports for x64-osx'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'

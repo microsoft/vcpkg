@@ -8,10 +8,7 @@ if("public-preview" IN_LIST FEATURES)
         SHA512 6798b17d6768b3ccbd0eb66719b50f364cd951736eb71110e2dc9deca054a1566ff88b9e8c5e9b52536e4308cad6cd3cbebff3282c123083e3afaee5535e724b
         HEAD_REF public-preview
         PATCHES
-            fix-install-location.patch
-            improve-external-deps.patch
-            remove-werror.patch
-            fix-iothubclient-includes.patch
+            improve-external-deps-preview.patch
     )
 else()
     vcpkg_from_github(
@@ -23,7 +20,6 @@ else()
         PATCHES
             fix-install-location.patch
             improve-external-deps.patch
-            remove-werror.patch
             fix-iothubclient-includes.patch
     )
 endif()
@@ -46,6 +42,9 @@ vcpkg_cmake_configure(
         -Dbuild_as_dynamic=OFF
         -Duse_edge_modules=ON
         -Dwarnings_as_errors=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
+        warnings_as_errors
 )
 
 vcpkg_cmake_install()

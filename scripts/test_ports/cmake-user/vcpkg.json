@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-02-18",
+  "version-date": "2022-02-28",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "default-features": [
     "ci"
@@ -15,11 +15,19 @@
           "features": [
             "find-package"
           ]
+        },
+        {
+          "name": "cmake-user",
+          "default-features": false,
+          "features": [
+            "cmake-3-7"
+          ],
+          "platform": "x64 & (windows | linux | osx) & !uwp"
         }
       ]
     },
-    "cmake-3-4": {
-      "description": "Use CMake 3.4 to build the test project"
+    "cmake-3-7": {
+      "description": "Use CMake 3.7 to build the test project"
     },
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
