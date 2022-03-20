@@ -4,6 +4,7 @@
   "description": "A spicy text library.",
   "homepage": "https://github.com/soasis/text",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
