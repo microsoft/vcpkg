@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake-fix.patch
         windows-arm64-sse-fix.patch
+        uwp-deltav-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
