@@ -68,7 +68,7 @@ if (NOT SKIP_TOOL)
     target_link_libraries(trietool libdatrie)
 
     find_path(ICONV_INCLUDE_DIR iconv.h)
-    find_package(Iconv)
+    find_package(Iconv REQUIRED)
     target_include_directories(trietool PRIVATE ${ICONV_INCLUDE_DIR})
     target_link_libraries(trietool Iconv::Iconv Iconv::Charset)
 
