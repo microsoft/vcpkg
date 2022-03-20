@@ -39,9 +39,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_UWP)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/trietool${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/trietool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
