@@ -3,15 +3,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(BUILD_ARCH "Win32")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(BUILD_ARCH "x64")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(BUILD_ARCH "ARM")
-else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,33 +12,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Utils build is broken under Windows
-if ("utils" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "'utils' build is broken under Windows")
-    endif()
-
-    set(ENABLE_UTILS ON)
-else()
-    set(ENABLE_UTILS OFF)
-endif()
-
-if ("examples" IN_LIST FEATURES)
-    set(ENABLE_EXAMPLES ON)
-else()
-    set(ENABLE_EXAMPLES OFF)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DBUILD_UTILS:BOOL=${ENABLE_UTILS}
-        -DBUILD_EXAMPLES:BOOL=${ENABLE_EXAMPLES}
-        -DBUILD_TESTS:BOOL=OFF # Tests build is broken
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        examples    BUILD_EXAMPLES
+        utils       BUILD_UTILS
 )
-vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/wampcc RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTS:BOOL=OFF # Tests build is broken
+        ${FEATURE_OPTIONS}
+)
+vcpkg_cmake_install()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
