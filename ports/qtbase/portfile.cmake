@@ -58,6 +58,8 @@ endforeach()
 # General features:
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(require_features "dbus"              CMAKE_REQUIRE_FIND_PACKAGE_WrapDBus1)
+else()
+    #set(require_features "zstd"              CMAKE_REQUIRE_FIND_PACKAGE_zstd)
 endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -74,7 +76,7 @@ FEATURES
     "widgets"             FEATURE_widgets
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
-    "zstd"              CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
+    "zstd"                CMAKE_REQUIRE_FIND_PACKAGE_zstd
     ${require_features}
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
