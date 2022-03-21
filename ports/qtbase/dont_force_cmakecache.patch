@@ -7,7 +7,7 @@ index 4f8106dfa..bec5c402e 100644
      foreach(var ${vars})
          get_property(docstring CACHE "${var}" PROPERTY HELPSTRING)
 -        string(APPEND content "set(${var} \"${${var}}\" CACHE STRING \"${docstring}\" FORCE)\n")
-+        string(APPEND content "set(${var} \"${${var}}\" CACHE STRING \"${docstring}\" )\n")^M
++        string(APPEND content "set(${var} \"${${var}}\" CACHE STRING \"${docstring}\" )\n")
      endforeach()
  
      set(${out_var} "${content}" PARENT_SCOPE)
@@ -16,7 +16,7 @@ index 4f8106dfa..bec5c402e 100644
          if(CMAKE_CONFIGURATION_TYPES)
              string(APPEND multi_config_specific
 -                "    set(CMAKE_CONFIGURATION_TYPES \"${CMAKE_CONFIGURATION_TYPES}\" CACHE STRING \"\" FORCE)\n")
-+                "    set(CMAKE_CONFIGURATION_TYPES \"${CMAKE_CONFIGURATION_TYPES}\" CACHE STRING \"\")\n")^M
++                "    set(CMAKE_CONFIGURATION_TYPES \"${CMAKE_CONFIGURATION_TYPES}\" CACHE STRING \"\")\n")
          endif()
          if(CMAKE_TRY_COMPILE_CONFIGURATION)
              string(APPEND multi_config_specific
@@ -25,7 +25,7 @@ index 4f8106dfa..bec5c402e 100644
          string(APPEND QT_EXTRA_BUILD_INTERNALS_VARS "
  if(NOT QT_SKIP_BUILD_INTERNALS_PKG_CONFIG_FEATURE)
 -    set(FEATURE_pkg_config \"${FEATURE_pkg_config}\" CACHE STRING \"Using pkg-config\" FORCE)
-+    set(FEATURE_pkg_config \"${FEATURE_pkg_config}\" CACHE STRING \"Using pkg-config\")^M
++    set(FEATURE_pkg_config \"${FEATURE_pkg_config}\" CACHE STRING \"Using pkg-config\")
  endif()\n")
  
          # The OpenSSL root dir needs to be saved so that repos other than qtbase (like qtopcua) can
