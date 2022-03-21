@@ -1,0 +1,32 @@
+diff --git a/SMP/smp.props b/SMP/smp.props
+index 49bad30..33754d5 100644
+--- a/SMP/smp.props
++++ b/SMP/smp.props
+@@ -35,6 +35,7 @@
+     </ProjectConfiguration>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
++    <PlatformToolset Condition="'$(VisualStudioVersion)' == '17.0'">v143</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+diff --git a/SMP/smp_winrt.props b/SMP/smp_winrt.props
+index da2e19c..bb3ba4a 100644
+--- a/SMP/smp_winrt.props
++++ b/SMP/smp_winrt.props
+@@ -37,6 +37,7 @@
+   <PropertyGroup Label="Globals">
+     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' != ''">$(WindowsTargetPlatformVersion)</WindowsTargetPlatformVersion>
+     <WindowsTargetPlatformVersion Condition="'$(VisualStudioVersion)'&gt;= '16.0'">10.0</WindowsTargetPlatformVersion>
++    <PlatformToolset Condition="'$(VisualStudioVersion)' == '17.0'">v143</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+@@ -47,6 +48,7 @@
+     <AppContainerApplication>true</AppContainerApplication>
+     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+     <ApplicationType>Windows Store</ApplicationType>
++    <ApplicationTypeRevision Condition="'$(VisualStudioVersion)' == '17.0'">10.0</ApplicationTypeRevision>
+     <ApplicationTypeRevision Condition="'$(VisualStudioVersion)' == '16.0'">10.0</ApplicationTypeRevision>
+     <ApplicationTypeRevision Condition="'$(VisualStudioVersion)' == '15.0'">10.0</ApplicationTypeRevision>
+     <ApplicationTypeRevision Condition="'$(VisualStudioVersion)' == '14.0'">8.1</ApplicationTypeRevision>
