@@ -4729,8 +4729,8 @@
       "port-version": 1
     },
     "nanorange": {
-      "baseline": "0.0.0",
-      "port-version": 1
+      "baseline": "2020-07-06",
+      "port-version": 0
     },
     "nanort": {
       "baseline": "2019-08-20",
