@@ -29,3 +29,30 @@ index 4f8106dfa..bec5c402e 100644
  endif()\n")
  
          # The OpenSSL root dir needs to be saved so that repos other than qtbase (like qtopcua) can
+diff --git a/cmake/QtBuildInternalsExtra.cmake.in b/cmake/QtBuildInternalsExtra.cmake.in
+index cadf3847c..6ec51fd63 100644
+--- a/cmake/QtBuildInternalsExtra.cmake.in	
++++ b/cmake/QtBuildInternalsExtra.cmake.in
+@@ -41,11 +41,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND
+             AND "${CMAKE_STAGING_PREFIX}" STREQUAL ""
+             AND NOT QT_BUILD_INTERNALS_NO_FORCE_SET_STAGING_PREFIX)
+         set(CMAKE_STAGING_PREFIX "${qtbi_new_prefix}" CACHE PATH
+-            "Staging path prefix, prepended onto install directories on the host machine." FORCE)
++            "Staging path prefix, prepended onto install directories on the host machine." )
+         set(qtbi_new_prefix "${qtbi_orig_prefix}")
+     endif()
+     set(CMAKE_INSTALL_PREFIX "${qtbi_new_prefix}" CACHE PATH
+-        "Install path prefix, prepended onto install directories." FORCE)
++        "Install path prefix, prepended onto install directories." )
+     unset(qtbi_orig_prefix)
+     unset(qtbi_real_orig_prefix)
+     unset(qtbi_new_prefix)
+@@ -138,7 +138,7 @@ function(qt_internal_force_set_cmake_build_type_conditionally value)
+         AND NOT __qt_toolchain_cmake_build_type_before_project_call
+         AND NOT QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
+         AND NOT __qt_internal_extras_is_multi_config)
+-        set(CMAKE_BUILD_TYPE "${value}" CACHE STRING "Choose the type of build." FORCE)
++        set(CMAKE_BUILD_TYPE "${value}" CACHE STRING "Choose the type of build.")
+     endif()
+ endfunction()
+ 
