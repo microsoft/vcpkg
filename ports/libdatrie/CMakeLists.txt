@@ -85,3 +85,13 @@ if (NOT SKIP_HEADERS)
         DESTINATION "include/datrie"
     )
 endif()
+
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+configure_file(datrie-0.2.pc.in datrie-0.2.pc)
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/datrie-0.2.pc"
+    DESTINATION "lib/pkgconfig"
+)

@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 if(NOT SKIP_TOOL)
     vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
