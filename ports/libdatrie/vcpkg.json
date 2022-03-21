@@ -5,10 +5,18 @@
   "homepage": "https://linux.thai.net/pub/ThaiLinux/software/libthai",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
-    "libiconv",
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tool": {
+      "description": "Build the trietool application",
+      "supports": "!uwp",
+      "dependencies": [
+        "libiconv"
+      ]
+    }
+  }
 }

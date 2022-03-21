@@ -13,19 +13,16 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h.cmake" DESTINATION "${SOURCE_PATH}")
 
-if(VCPKG_TARGET_IS_UWP)
-    set(SKIP_TOOL ON)
-else()
-    set(SKIP_TOOL OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+       tool     SKIP_TOOL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DVERSION=${LIBDATRIE_VERSION}
-    OPTIONS_RELEASE
-        -DSKIP_TOOL=${SKIP_TOOL}
-        -DSKIP_HEADERS=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_TOOL=ON
         -DSKIP_HEADERS=ON
@@ -34,7 +31,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(NOT VCPKG_TARGET_IS_UWP)
+if(NOT SKIP_TOOL)
     vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
 endif()
 
