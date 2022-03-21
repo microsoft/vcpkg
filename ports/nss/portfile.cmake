@@ -90,7 +90,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     list(APPEND OPTIONS "--target=ia32")
 else()
-    message(FATAL "Unsupported arch: %{VCPKG_TARGET_ARCHITECTURE}")
+    message(FATAL_ERROR "Unsupported arch: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -102,24 +102,28 @@ endif()
 set(VCPKG_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
 # build debug
-message(STATUS "Copying sources to debug build dir ...")
-file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
-message(STATUS "Building debug ...")
-vcpkg_execute_required_process(
-    COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS}
-    WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-dbg/nss
-    LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
-)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Copying sources to debug build dir ...")
+    file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
+    message(STATUS "Building debug ...")
+    vcpkg_execute_required_process(
+        COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS}
+        WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-dbg/nss
+        LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
+    )
+endif()
 
 # build release
-message(STATUS "Copying sources to release build dir ...")
-file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
-message(STATUS "Building release ...")
-vcpkg_execute_required_process(
-    COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS} "--opt"
-    WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
-    LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
-)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Copying sources to release build dir ...")
+    file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
+    message(STATUS "Building release ...")
+    vcpkg_execute_required_process(
+        COMMAND ${MOZBUILD_BASH} ./build.sh ${OPTIONS} "--opt"
+        WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
+        LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
+    )
+endif()
 
 #
 # VCPKG FHS adjustments
@@ -180,23 +184,24 @@ vcpkg_copy_tools(
 )
 
 # Debug libraries
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(GLOB LIB_DEBUG
+        "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.dll"
+        "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.pdb"
+    )
+    list(LENGTH LIB_DEBUG LIB_DEBUG_SIZE)
 
-file(GLOB LIB_DEBUG
-    "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.dll"
-    "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.pdb"
-)
-list(LENGTH LIB_DEBUG LIB_DEBUG_SIZE)
+    if (LIB_DEBUG_SIZE GREATER 0)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-if (LIB_DEBUG_SIZE GREATER 0)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        foreach(path ${LIB_DEBUG})
+            get_filename_component(name "${path}" NAME)
+            file(RENAME "${path}"        "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
+        endforeach()
 
-    foreach(path ${LIB_DEBUG})
-        get_filename_component(name "${path}" NAME)
-        file(RENAME "${path}"        "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
-    endforeach()
-
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
 endif()
 
 # Copy license

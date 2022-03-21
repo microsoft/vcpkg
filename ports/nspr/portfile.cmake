@@ -33,6 +33,8 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     list(APPEND OPTIONS "--enable-64bit")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     list(APPEND OPTIONS "--disable-64bit")
+else()
+    message(FATAL_ERROR "Unsupported arch: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 set(OPTIONS_DEBUG
@@ -60,28 +62,32 @@ vcpkg_copy_pdbs()
 #
 
 # Release
-file(GLOB BIN_RELEASE "${CURRENT_PACKAGES_DIR}/lib/*.dll" "${CURRENT_PACKAGES_DIR}/lib/*.pdb")
-list(LENGTH BIN_RELEASE BIN_RELEASE_SIZE)
-if (BIN_RELEASE_SIZE GREATER 0)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(GLOB BIN_RELEASE "${CURRENT_PACKAGES_DIR}/lib/*.dll" "${CURRENT_PACKAGES_DIR}/lib/*.pdb")
+    list(LENGTH BIN_RELEASE BIN_RELEASE_SIZE)
+    if (BIN_RELEASE_SIZE GREATER 0)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
 
-    foreach(path ${BIN_RELEASE})
-        get_filename_component(name "${path}" NAME)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${name}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
-    endforeach()
+        foreach(path ${BIN_RELEASE})
+            get_filename_component(name "${path}" NAME)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${name}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
+        endforeach()
+    endif()
 endif()
 
 # Debug
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(GLOB BIN_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll" "${CURRENT_PACKAGES_DIR}/debug/lib/*.pdb")
-list(LENGTH BIN_DEBUG BIN_DEBUG_SIZE)
-if (BIN_DEBUG_SIZE GREATER 0)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(GLOB BIN_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll" "${CURRENT_PACKAGES_DIR}/debug/lib/*.pdb")
+    list(LENGTH BIN_DEBUG BIN_DEBUG_SIZE)
+    if (BIN_DEBUG_SIZE GREATER 0)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-    foreach(path IN LISTS BIN_DEBUG)
-        get_filename_component(name "${path}" NAME)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/${name}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
-    endforeach()
+        foreach(path IN LISTS BIN_DEBUG)
+            get_filename_component(name "${path}" NAME)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/${name}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
+        endforeach()
+    endif()
 endif()
 
 # Copy license
