@@ -137,7 +137,6 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS "target_os=\"${TARGET_OS}\" \
         target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" \
-        android_api_level=${ANDROID_NATIVE_API_LEVEL} \
         android_ndk_root=\"$ENV{ANDROID_NDK_HOME}\""
         OPTIONS_DEBUG "${OPTIONS_DBG}"
         OPTIONS_RELEASE "${OPTIONS_REL}"
@@ -170,6 +169,35 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
         OPTIONS_DEBUG "${OPTIONS_DBG}"
         OPTIONS_RELEASE "${OPTIONS_REL}"
     )
+elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
+    message(STATUS "Matched OSX")
+    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
+    endif()
+    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+
+    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
+        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_SHARED_LINKER_FLAGS
+        CMAKE_EXE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS_DEBUG CMAKE_EXE_LINKER_FLAGS_RELEASE)
+        string(STRIP "${${_VAR}}" ${_VAR})
+    endforeach()
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -lobjc -framework IOKit -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework Security ")
+    set(OPTIONS_DBG "${OPTIONS_DBG} \
+        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
+        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\" \
+        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_DEBUG}\"")
+
+    set(OPTIONS_REL "${OPTIONS_REL} \
+        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
+        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
+        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_RELEASE}\"")
+
+    message(STATUS "Configure GN (Generate Ninja)")
+    vcpkg_configure_gn(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS_DEBUG "${OPTIONS_DBG}"
+        OPTIONS_RELEASE "${OPTIONS_REL}"
+    )
 endif()
 
 ## Compile and install targets via GN and Ninja
@@ -177,11 +205,11 @@ message(STATUS "Install GN (Generate Ninja)")
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS 
-        client 
-        client:common 
-        util 
-        third_party/mini_chromium/mini_chromium/base 
-        handler:crashpad_handler 
+        client
+        client:common
+        util
+        third_party/mini_chromium/mini_chromium/base
+        handler:crashpad_handler
         tools:generate_dump
 )
 
