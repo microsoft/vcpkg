@@ -6414,7 +6414,7 @@
     },
     "shapelib": {
       "baseline": "1.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "shiva": {
       "baseline": "1.0",
