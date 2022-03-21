@@ -56,6 +56,9 @@ foreach(_input IN LISTS input_vars)
 endforeach()
 
 # General features:
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(require_features "dbus"              CMAKE_REQUIRE_FIND_PACKAGE_WrapDBus1)
+endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "appstore-compliant"  FEATURE_appstore_compliant
@@ -72,7 +75,7 @@ FEATURES
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
     "zstd"              CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
-    "dbus"              CMAKE_REQUIRE_FIND_PACKAGE_WrapDBus1
+    ${require_features}
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
     "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
