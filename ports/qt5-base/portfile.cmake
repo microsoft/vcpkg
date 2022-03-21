@@ -127,7 +127,6 @@ list(APPEND CORE_OPTIONS
     -system-sqlite
     -system-harfbuzz
     -icu
-    -no-vulkan
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     )
