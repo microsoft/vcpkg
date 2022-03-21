@@ -38,7 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "designer" FEATURE_designer
     "linguist" FEATURE_linguist
     "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
-    "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
+    #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6QuickWidgets
     INVERTED_FEATURES

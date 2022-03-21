@@ -25,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_REQUIRE_FIND_PACKAGE_Qt6Widgets
-    "gstreamer"     CMAKE_REQUIRE_FIND_PACKAGE_GStreamer
+    #"gstreamer"     CMAKE_REQUIRE_FIND_PACKAGE_GStreamer
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
