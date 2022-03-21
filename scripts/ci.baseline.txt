@@ -155,8 +155,6 @@ coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
 
-# https://github.com/colmap/colmap/issues/1421
-colmap:x64-osx=fail
 # there is an ICE in VS2022 with colmap in release mode
 colmap:x86-windows=fail
 colmap:x64-windows=fail
@@ -316,9 +314,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-
-# Requires ATL for ARM64 to be installed in CI
-gdal:arm64-windows=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -837,15 +832,6 @@ nana:x64-uwp=fail
 nanodbc:arm-uwp=fail
 nanodbc:x64-uwp=fail
 nanodbc:x64-linux=skip
-nanorange:arm64-windows=fail
-nanorange:arm-uwp=fail
-nanorange:x64-linux=fail
-nanorange:x64-osx=fail
-nanorange:x64-uwp=fail
-nanorange:x64-windows=fail
-nanorange:x64-windows-static=fail
-nanorange:x64-windows-static-md=fail
-nanorange:x86-windows=fail
 nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 ngspice:x64-windows-static=fail
