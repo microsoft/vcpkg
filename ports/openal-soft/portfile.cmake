@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
+        fix-export-libs.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

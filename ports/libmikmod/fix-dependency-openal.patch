@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 40fa4ee..8244a8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -799,8 +799,8 @@ ELSE()
+ ENDIF(ENABLE_SDL)
+ 
+ IF (ENABLE_OPENAL)
+-  include(FindOpenAL)
+-  IF (OPENAL_FOUND)
++  find_package(OpenAL CONFIG REQUIRED)
++  IF (1)
+     SET (DRV_OPENAL 1)
+     CHECK_MULTI_INCLUDE_FILES("AL/al.h" "AL/alc.h")
+     IF (HAVE_AL_AL_H)
+@@ -811,7 +811,7 @@ IF (ENABLE_OPENAL)
+                                  #include <AL/alext.h>
+                                  int main() {return 0;}" HAVE_AL_ALEXT_H)
+     ENDIF()
+-    LIST (APPEND EXTRA_LIBS ${OPENAL_LIBRARY})
++    LIST (APPEND EXTRA_LIBS OpenAL::OpenAL stdc++)
+   ELSE()
+     SET (ENABLE_OPENAL 0)
+     SET (DRV_OPENAL)

@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     PATCHES 
         fix-missing-dll.patch
         name_conflict.patch
+        fix-dependency-openal.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -16,7 +17,7 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DENABLE_DOC=OFF
@@ -30,7 +31,7 @@ vcpkg_configure_cmake(
         -DENABLE_RAW=ON
         -DENABLE_STDOUT=ON
         -DENABLE_WAV=ON
-        -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DOPENAL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include"
         -DENABLE_STATIC=${ENABLE_STATIC}
     OPTIONS_RELEASE -DENABLE_SIMD=ON
     OPTIONS_DEBUG -DENABLE_SIMD=OFF
@@ -38,12 +39,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+file(INSTALL "${SOURCE_PATH}/COPYING.LESSER" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

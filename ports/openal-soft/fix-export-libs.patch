@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0cf0613..f1ac2ed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1211,7 +1211,7 @@ set(IMPL_TARGET OpenAL) # Either OpenAL or soft_oal.
+ if(LIBTYPE STREQUAL "STATIC")
+     add_library(${IMPL_TARGET} STATIC ${COMMON_OBJS} ${OPENAL_OBJS} ${ALC_OBJS} ${CORE_OBJS})
+     target_compile_definitions(${IMPL_TARGET} PUBLIC AL_LIBTYPE_STATIC)
+-    target_link_libraries(${IMPL_TARGET} PRIVATE ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB})
++    target_link_libraries(${IMPL_TARGET} PRIVATE ${LINKER_FLAGS} PUBLIC ${EXTRA_LIBS} ${MATH_LIB})
+     if(WIN32)
+         # This option is for static linking OpenAL Soft into another project
+         # that already defines the IDs. It is up to that project to ensure all
+@@ -1263,7 +1263,7 @@ else()
+     if(WIN32)
+         set_target_properties(${IMPL_TARGET} PROPERTIES PREFIX "")
+     endif()
+-    target_link_libraries(${IMPL_TARGET} PRIVATE common ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB})
++    target_link_libraries(${IMPL_TARGET} PRIVATE common ${LINKER_FLAGS} PUBLIC ${EXTRA_LIBS} ${MATH_LIB})
+ 
+     if(APPLE AND ALSOFT_OSX_FRAMEWORK)
+         # Sets framework name to soft_oal to avoid ambiguity with the system OpenAL.framework

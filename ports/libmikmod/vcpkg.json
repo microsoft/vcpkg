@@ -1,9 +1,10 @@
 {
   "name": "libmikmod",
   "version-string": "3.3.11.1",
-  "port-version": 10,
+  "port-version": 11,
   "description": "Mikmod is a module player and library supporting many formats, including mod, s3m, it, and xm.",
   "homepage": "https://sourceforge.net/projects/mikmod/",
+  "license": "GPL-2.0-only",
   "dependencies": [
     "openal-soft"
   ]
