@@ -123,7 +123,7 @@ if(USER_CONFIG_TOOLSET STREQUAL "msvc")
     )
     if(NOT ARFLAGS STREQUAL "")
         # Only apply these flags for MSVC
-        string(APPEND USER_CONFIG_REQUIREMENTS "<archiveflags>\"${ARFLAGS}\"")
+        string(APPEND USER_CONFIG_REQUIREMENTS "<archiveflags>\"${ARFLAGS}\"\n    ")
     endif()
 else()
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
@@ -139,6 +139,7 @@ if(NOT CFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <cflags>\"${CFLAGS}\"\n    <asmflags>\"${CFLAGS}\"\n")
 endif()
 if(NOT LDFLAGS STREQUAL "")
+    string(APPEND USER_CONFIG_REQUIREMENTS "<linkflags>\"${LDFLAGS}\"\n    ")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
