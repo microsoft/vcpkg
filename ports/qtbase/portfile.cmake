@@ -56,11 +56,7 @@ foreach(_input IN LISTS input_vars)
 endforeach()
 
 # General features:
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(require_features "dbus"              CMAKE_REQUIRE_FIND_PACKAGE_WrapDBus1)
-else()
-    #set(require_features "zstd"              CMAKE_REQUIRE_FIND_PACKAGE_zstd)
-endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "appstore-compliant"  FEATURE_appstore_compliant
