@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 40fa4ee..8244a8a 100644
+index 40fa4ee..814123b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -799,8 +799,8 @@ ELSE()
@@ -13,12 +13,15 @@ index 40fa4ee..8244a8a 100644
      SET (DRV_OPENAL 1)
      CHECK_MULTI_INCLUDE_FILES("AL/al.h" "AL/alc.h")
      IF (HAVE_AL_AL_H)
-@@ -811,7 +811,7 @@ IF (ENABLE_OPENAL)
+@@ -811,7 +811,10 @@ IF (ENABLE_OPENAL)
                                   #include <AL/alext.h>
                                   int main() {return 0;}" HAVE_AL_ALEXT_H)
      ENDIF()
 -    LIST (APPEND EXTRA_LIBS ${OPENAL_LIBRARY})
-+    LIST (APPEND EXTRA_LIBS OpenAL::OpenAL stdc++)
++    LIST (APPEND EXTRA_LIBS OpenAL::OpenAL)
++    if (APPLE)
++        LIST (APPEND EXTRA_LIBS stdc++)
++    endif()
    ELSE()
      SET (ENABLE_OPENAL 0)
      SET (DRV_OPENAL)
