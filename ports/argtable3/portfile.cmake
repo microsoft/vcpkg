@@ -9,24 +9,24 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DARGTABLE3_ENABLE_CONAN=OFF
         -DARGTABLE3_ENABLE_TESTS=OFF
+        -DARGTABLE3_ENABLE_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
