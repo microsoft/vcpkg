@@ -5,6 +5,10 @@
   "homepage": "https://gdal.org",
   "license": null,
   "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows & !uwp"
+    },
     "curl",
     "expat",
     "geos",
