@@ -21,6 +21,10 @@ vcpkg_check_features(
         zstd MZ_ZSTD
 )
 
+if(WIN32)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -29,7 +33,6 @@ vcpkg_cmake_configure(
         -DMZ_FETCH_LIBS=OFF
         -DMZ_PROJECT_SUFFIX:STRING=-ng
 )
-
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
