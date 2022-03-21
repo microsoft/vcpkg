@@ -114,8 +114,8 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON
  FEATURES
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
-    "brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
-    "openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
+    #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
+    #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
@@ -147,9 +147,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
     "vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
-    "egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
+    #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
     "fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
-    "harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
+    #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
     "png"                 CMAKE_REQUIRE_FIND_PACKAGE_PNG
     "xlib"                CMAKE_REQUIRE_FIND_PACKAGE_X11
