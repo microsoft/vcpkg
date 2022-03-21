@@ -95,7 +95,7 @@ FEATURES
     "glib"                FEATURE_glib
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
-    "icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
+    #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
     "glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
     #"doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion # Required
