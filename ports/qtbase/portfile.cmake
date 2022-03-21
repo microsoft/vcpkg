@@ -200,8 +200,8 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
     "sql-sqlite"          FEATURE_system_sqlite
-    "sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
-    "sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
+    #"sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
+    #"sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
