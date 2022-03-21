@@ -3998,7 +3998,7 @@
     },
     "libsquish": {
       "baseline": "1.15",
-      "port-version": 9
+      "port-version": 10
     },
     "libsrt": {
       "baseline": "1.4.4",
