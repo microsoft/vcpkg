@@ -1,8 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
-set(CMAKE_SYSTEM_VERSION 29)
 set(VCPKG_CRT_LINKAGE static)
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
@@ -75,9 +73,10 @@ replace_gn_dependency(
     "z;zlib;zlibd"
 )
 
+set(OPTIONS_DBG "is_debug=true")
+set(OPTIONS_REL "")
 if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
     message(STATUS "Matched Windows")
-    # Load toolchains
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
     endif()
@@ -149,6 +148,11 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+
+    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
+        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_SHARED_LINKER_FLAGS)
+        string(STRIP "${${_VAR}}" ${_VAR})
+    endforeach()
 
     set(OPTIONS_DBG "${OPTIONS_DBG} \
         extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
