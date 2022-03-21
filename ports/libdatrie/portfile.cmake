@@ -1,17 +1,13 @@
-set(LIBDATRIE_VERSION 0.2.10)
+set(LIBDATRIE_VERSION 0.2.13)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://linux.thai.net/pub/ThaiLinux/software/libthai/libdatrie-${LIBDATRIE_VERSION}.tar.xz"
-    FILENAME "libdatrie-${LIBDATRIE_VERSION}.tar.xz"
-    SHA512 ee68ded9d6e06c562da462d42e7e56098a82478d7b8547506200c3018b72536c4037a4e518924f779dc77d3ab139d93216bdb29ab4116b9dc9efd1a5d1eb9e31
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO tlwg/libdatrie
+    REF v${LIBDATRIE_VERSION}
+    SHA512 38f5a3ee1f3ca0f0601a5fcfeec3892cb34857d4b4720b8e018ca1beb6520c4c10af3bd2f0e4d64367cb256e8e2bca4d0a59b1c81fb36782613d2c258b64df59
+    HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-exports.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-trietool.patch"
+        fix-exports.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -40,10 +36,6 @@ vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_UWP)
     vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
