@@ -1,0 +1,13 @@
+diff --git a/gdal/makefile.vc b/gdal/makefile.vc
+index 9de546c..56f617d 100644
+--- a/gdal/makefile.vc
++++ b/gdal/makefile.vc
+@@ -27,7 +27,7 @@ OGR_INCLUDE = $(OGR_BASE_INCLUDE) \
+ CPPFLAGS = $(CPPFLAGS) -DGNM_ENABLED        
+ !ENDIF
+ 
+-!IF DEFINED(STDCALL) && !DEFINED(WIN64)
++!IF DEFINED(STDCALL) && !DEFINED(WIN64) && "$(SYM_PREFIX)" == "_"
+ 
+ BASE_INCLUDE =	/INCLUDE:_GDALSimpleImageWarp@36 \
+ 		/INCLUDE:_GDALReprojectImage@48 \

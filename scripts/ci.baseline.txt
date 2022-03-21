@@ -315,9 +315,6 @@ fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
 
-# Requires ATL for ARM64 to be installed in CI
-gdal:arm64-windows=fail
-
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
