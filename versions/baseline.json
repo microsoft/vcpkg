@@ -372,6 +372,10 @@
       "baseline": "12.0.0-beta.4",
       "port-version": 0
     },
+    "azure-template-cpp": {
+      "baseline": "1.0.0-beta.1448524",
+      "port-version": 0
+    },
     "azure-uamqp-c": {
       "baseline": "2022-01-21",
       "port-version": 1
