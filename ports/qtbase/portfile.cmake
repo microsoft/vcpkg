@@ -146,18 +146,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
-    "vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
+    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
     #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
-    "fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
+    #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
-    "jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
-    "png"                 CMAKE_REQUIRE_FIND_PACKAGE_PNG
-    "xlib"                CMAKE_REQUIRE_FIND_PACKAGE_X11
-    "xkb"                 CMAKE_REQUIRE_FIND_PACKAGE_XKB
-    "xcb"                 CMAKE_REQUIRE_FIND_PACKAGE_XCB
-    "xcb-xlib"            CMAKE_REQUIRE_FIND_PACKAGE_X11_XCB
-    "xkbcommon-x11"       CMAKE_REQUIRE_FIND_PACKAGE_XKB_COMMON_X11
-    "xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
+    #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+    #"png"                 CMAKE_REQUIRE_FIND_PACKAGE_PNG
+    #"xlib"                CMAKE_REQUIRE_FIND_PACKAGE_X11
+    #"xkb"                 CMAKE_REQUIRE_FIND_PACKAGE_XKB
+    #"xcb"                 CMAKE_REQUIRE_FIND_PACKAGE_XCB
+    #"xcb-xlib"            CMAKE_REQUIRE_FIND_PACKAGE_X11_XCB
+    #"xkbcommon-x11"       CMAKE_REQUIRE_FIND_PACKAGE_XKB_COMMON_X11
+    #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
