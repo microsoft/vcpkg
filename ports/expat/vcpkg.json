@@ -1,6 +1,6 @@
 {
   "name": "expat",
-  "version": "2.4.4",
+  "version": "2.4.7",
   "description": "XML parser library written in C",
   "homepage": "https://github.com/libexpat/libexpat",
   "dependencies": [

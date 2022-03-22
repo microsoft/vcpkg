@@ -1,10 +1,10 @@
-set (EX_VERSION 2.4.4)
+set (EX_VERSION 2.4.7)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF 81b89678e200820271b72cacdd45fb5868855765 #v2.4.4
-    SHA512 0448dc59c7459b25600722ed8fbf664e321d831ce48ab2fcfd0aa69013e7aee4be81c3ada1be68a7d767059986cf5fb4e0c130846242b003dafab51ead2ca2db
+    REF 27d5b8ba1771f916d9cfea2aac6bdac72071dc66 #v2.4.7
+    SHA512 499a4d0dd32837aa1223a432defbb640ee0fe61714eb9bda8d56ea915cce90185fb0eef7a70f9ab68da88d4fd43f5fead7140dd92717ee3dde2bac98f7aa6a60
     HEAD_REF master
 )
 
