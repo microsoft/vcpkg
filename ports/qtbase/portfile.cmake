@@ -17,8 +17,11 @@ set(${PORT}_PATCHES
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
-        env.patch
         )
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND ${PORT}_PATCHES env.patch)
+endif()
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES
