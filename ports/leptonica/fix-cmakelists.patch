@@ -1,18 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9514d2d..1d4a672 100644
+index 6d300da..e8627d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,7 +8,7 @@
- #
- ###############################################################################
- 
--cmake_minimum_required(VERSION 3.1.3)
-+cmake_minimum_required(VERSION 3.13)
- cmake_policy(SET CMP0054 NEW)
- 
- # In-source builds are disabled.
-@@ -58,20 +58,19 @@ if(UNIX)
- endif()
+@@ -61,20 +61,18 @@ set(leptonica_INSTALL_CMAKE_DIR "lib/cmake/leptonica"
+     CACHE STRING "Install destination for CMake package files")
  
  if(NOT SW_BUILD)
 -    find_package(GIF)
@@ -26,7 +17,6 @@ index 9514d2d..1d4a672 100644
 +    find_package(TIFF REQUIRED)
 +    find_package(ZLIB REQUIRED)
      find_package(PkgConfig)
-+    find_package(OpenJPEG CONFIG REQUIRED)
      if (PKG_CONFIG_FOUND)
          pkg_check_modules(WEBP libwebp QUIET)
          pkg_check_modules(WEBPMUX libwebpmux>=${MINIMUM_WEBPMUX_VERSION} QUIET)
@@ -39,7 +29,26 @@ index 9514d2d..1d4a672 100644
          if (WEBP_INCLUDE_DIR AND WEBP_LIBRARY)
              set(WEBP 1)
              set(WEBP_FOUND TRUE)
-@@ -213,7 +212,7 @@ include(Configure)
+@@ -100,8 +98,7 @@ if(NOT SW_BUILD)
+         endif()
+     endif()
+     if(NOT JP2K)
+-        find_path(JP2K_INCLUDE_DIR /openjpeg-2.3/openjpeg.h)
+-        find_library(JP2K_LIBRARY NAMES openjp2)
++        find_package(OpenJPEG CONFIG REQUIRED)
+         if (JP2K_INCLUDE_DIR AND JP2K_LIBRARY)
+              set(JP2K 1)
+              set(JP2K_FOUND TRUE)
+@@ -110,7 +107,7 @@ if(NOT SW_BUILD)
+              set(HAVE_LIBJP2K 1)
+         endif()
+     endif()
+-    if(NOT JP2K)
++    if(0)
+         find_path(JP2K_INCLUDE_DIR /openjpeg-2.4/openjpeg.h)
+         find_library(JP2K_LIBRARY NAMES openjp2)
+         if (JP2K_INCLUDE_DIR AND JP2K_LIBRARY)
+@@ -216,7 +213,7 @@ include(Configure)
  
  configure_file(${AUTOCONFIG_SRC} ${AUTOCONFIG} @ONLY)
  
