@@ -5,17 +5,17 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program MESON)
-set(program_version 0.60.2)
+set(program_version 0.62.0)
 set(program_name meson)
 set(search_names meson meson.py)
 set(interpreter PYTHON3)
 set(apt_package_name "meson")
 set(brew_package_name "meson")
-set(ref 5e9b709ad0b34d8ac920dff057a5361080c0889b)
+set(ref fb67adf3e6b57d44dad6c943a6081277860350c5)
 set(paths_to_search "${CURRENT_PACKAGES_DIR}/tools/meson")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 5fb89c6b81f75825b6f300039db6dae9d907c81403a8ebe30c7426729d5cb3179e30b9b84d6ed756c2aa39ca34ea681afa0c5cd78835a94c43d5ab25e625abd0)
+set(download_sha512 386f99ce39382909c9b55e5bacf2a1aacd804bb7a4e9b7890dd6403e7377d87e840c5d478a6cde8b225aa69a0415134078b661bc712bd1391a7b4044447a163d)
 set(supported_on_unix ON)
 set(version_command --version)
 set(extra_search_args EXACT_VERSION_MATCH)
@@ -44,11 +44,11 @@ if(NOT "${program}")
                         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
                     )
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/meson-${ref}" "${CURRENT_PACKAGES_DIR}/tools/meson")
-    z_vcpkg_apply_patches(
-        SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
-        PATCHES meson-intl.patch
-                fix_linker_detection.patch
-    )
+    #z_vcpkg_apply_patches(
+    #    SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
+    #    PATCHES meson-intl.patch
+    #            fix_linker_detection.patch
+    #)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
 endif()
 
