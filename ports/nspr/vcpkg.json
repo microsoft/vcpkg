@@ -1,0 +1,14 @@
+{
+  "name": "nspr",
+  "version": "4.33",
+  "description": "Netscape portable runtime",
+  "homepage": "https://releases.mozilla.org/pub/nspr/",
+  "license": "MPL-2.0",
+  "supports": "windows & !(arm | uwp | static)",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-mozbuild",
+      "host": true
+    }
+  ]
+}
