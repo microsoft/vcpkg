@@ -4848,6 +4848,14 @@
       "baseline": "4.1.2",
       "port-version": 1
     },
+    "nspr": {
+      "baseline": "4.33",
+      "port-version": 0
+    },
+    "nss": {
+      "baseline": "3.75",
+      "port-version": 0
+    },
     "nsync": {
       "baseline": "1.24.0",
       "port-version": 0
@@ -7272,6 +7280,10 @@
       "baseline": "2021-10-23",
       "port-version": 0
     },
+    "vcpkg-tool-gyp-nss": {
+      "baseline": "2022-03-04",
+      "port-version": 0
+    },
     "vcpkg-tool-lessmsi": {
       "baseline": "1.10.0",
       "port-version": 0
@@ -7279,6 +7291,10 @@
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
       "port-version": 2
+    },
+    "vcpkg-tool-mozbuild": {
+      "baseline": "3.3",
+      "port-version": 0
     },
     "vcpkg-tool-nodejs": {
       "baseline": "14.17.4",
