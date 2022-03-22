@@ -822,7 +822,6 @@ function(vcpkg_configure_make)
                 file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
-        
         vcpkg_restore_pkgconfig_path()
         
         if(link_config_backup)
