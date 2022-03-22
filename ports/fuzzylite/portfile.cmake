@@ -40,6 +40,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         "#elif defined(FL_IMPORT_LIBRARY)"
         "#elif 1"
     )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fl/fuzzylite.h"
+        "#elif defined(FL_IMPORT_LIBRARY)"
+        "#elif 0"
+    )
 endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
