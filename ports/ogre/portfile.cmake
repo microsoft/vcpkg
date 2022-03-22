@@ -30,10 +30,11 @@ endif()
 # Configure features
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
     d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
     java     OGRE_BUILD_COMPONENT_JAVA
     python   OGRE_BUILD_COMPONENT_PYTHON
-    csharp   OGRE_BUILD_COMPONENT_CSHARP        
+    csharp   OGRE_BUILD_COMPONENT_CSHARP
     overlay  OGRE_BUILD_COMPONENT_OVERLAY
     zziplib  OGRE_CONFIG_ENABLE_ZIP
     strict   OGRE_RESOURCEMANAGER_STRICT
@@ -43,10 +44,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=ON" "OGRE_RESOURCEMANAGER_STRICT=1" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 string(REPLACE "OGRE_RESOURCEMANAGER_STRICT=OFF" "OGRE_RESOURCEMANAGER_STRICT=0" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES=OFF
         -DOGRE_BUILD_TESTS=OFF
@@ -68,14 +69,11 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DFREETYPE_FOUND=ON
-# Optional stuff
-        ${FEATURE_OPTIONS}
-# vcpkg specific stuff
         -DOGRE_CMAKE_DIR=share/ogre
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -99,15 +97,13 @@ endif()
 #Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
-        else()
-            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
-        endif()
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib)
+    else()
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib)
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+    if(NOT VCPKG_BUILD_TYPE)
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib)
@@ -124,7 +120,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
+file(GLOB share_cfgs ${CURRENT_PACKAGES_DIR}/share/OGRE/*.cfg)
+foreach(file ${share_cfgs})
+    vcpkg_replace_string("${file}" "${CURRENT_PACKAGES_DIR}" "../..")
+endforeach()
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()

@@ -12,7 +12,9 @@ vcpkg_from_github(
     REF boost-${BOOST_VERSION}
     SHA512 867966e3d254c0e996786587fb64ad1bda6f96546e5302c15231b17d66537798770bbd9e89f800d445a1f0a4d3be06dff8aed42dfd3a77b563d0f5d715e79324
     HEAD_REF master
-    PATCHES 0001-don-t-skip-install-targets.patch
+    PATCHES
+        0001-don-t-skip-install-targets.patch
+        0002-fix-get-version.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

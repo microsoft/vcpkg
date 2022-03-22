@@ -22,24 +22,40 @@ endif()
 
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
-qt_cmake_configure(${_opt} 
-                   OPTIONS
-                        -DINPUT_libarchive=system
-                        -DINPUT_libyaml=system
-                        -DFEATURE_am_system_libyaml=ON
-                        -DFEATURE_am_system_libarchive=ON
-                   OPTIONS_DEBUG
-                   OPTIONS_RELEASE)
-
-### Need to fix one post-build.bat; Couldn't find the place where it gets generated!
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(scriptfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tools/dumpqmltypes/CMakeFiles/appman-dumpqmltypes.dir/post-build.bat")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" CURRENT_INSTALLED_DIR_NATIVE)
-    if(EXISTS "${scriptfile}")
-        vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
-    endif()
+set(build_type_backup ${VCPKG_BUILD_TYPE})
+set(path_backup "$ENV{PATH}")
+if(NOT VCPKG_BUILD_TYPE)
+  set(types release debug)
+else()
+  set(types ${VCPKG_BUILD_TYPE})
 endif()
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+foreach(VCPKG_BUILD_TYPE IN LISTS types)
+    if(VCPKG_BUILD_TYPE STREQUAL debug)
+        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
+    else()
+        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
+    endif()
+    qt_cmake_configure(${_opt} 
+                       DISABLE_PARALLEL_CONFIGURE
+                       OPTIONS
+                            -DINPUT_libarchive=system
+                            -DINPUT_libyaml=system
+                            -DFEATURE_am_system_libyaml=ON
+                            -DFEATURE_am_system_libarchive=ON
+                       OPTIONS_DEBUG
+                       OPTIONS_RELEASE)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(scriptfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tools/dumpqmltypes/CMakeFiles/appman-dumpqmltypes.dir/post-build.bat")
+        file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" CURRENT_INSTALLED_DIR_NATIVE)
+        if(EXISTS "${scriptfile}")
+            vcpkg_replace_string("${scriptfile}" "${CURRENT_INSTALLED_DIR_NATIVE}\\bin" "${CURRENT_INSTALLED_DIR_NATIVE}\\debug\\bin")
+        endif()
+    endif()
+    vcpkg_cmake_install()
+    set(ENV{PATH} "${path_backup}")
+endforeach()
+set(VCPKG_BUILD_TYPE ${build_type_backup})
+### Need to fix one post-build.bat; Couldn't find the place where it gets generated!
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 

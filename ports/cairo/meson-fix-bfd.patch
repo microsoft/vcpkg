@@ -1,0 +1,11 @@
+--- a/meson.build
++++ b/meson.build
+@@ -656,7 +656,7 @@ endif
+ 
+ # Untested, libiberty.h is in a libiberty subfolder for me
+ # FIXME: automagic
+-bfd_dep = cc.find_library('bfd', required: false)
++bfd_dep = cc.find_library('', required: false)
+ if bfd_dep.found() and cc.has_function('bfd_openr', dependencies: [bfd_dep])
+   if cc.has_header('libiberty.h')
+     conf.set('HAVE_BFD', 1)
