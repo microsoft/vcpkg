@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 40fa4ee..814123b 100644
+index 40fa4ee..78ad3f9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -799,8 +799,8 @@ ELSE()
@@ -20,7 +20,7 @@ index 40fa4ee..814123b 100644
 -    LIST (APPEND EXTRA_LIBS ${OPENAL_LIBRARY})
 +    LIST (APPEND EXTRA_LIBS OpenAL::OpenAL)
 +    if (APPLE)
-+        LIST (APPEND EXTRA_LIBS stdc++)
++        LIST (APPEND EXTRA_LIBS c++)
 +    endif()
    ELSE()
      SET (ENABLE_OPENAL 0)
