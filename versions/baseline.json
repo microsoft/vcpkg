@@ -1480,6 +1480,10 @@
       "baseline": "2022-03-14",
       "port-version": 0
     },
+    "color-console": {
+      "baseline": "2022-03-20",
+      "port-version": 0
+    },
     "comms": {
       "baseline": "3.4.0",
       "port-version": 1
