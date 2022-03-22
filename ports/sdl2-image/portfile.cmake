@@ -31,14 +31,20 @@ if("libwebp" IN_LIST FEATURES)
     set(USE_WEBP ON)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        libjpeg-turbo USE_JPEG
+        tiff USE_TIFF
+        libwebp USE_WEBP
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
         -DUSE_PNG=ON
-        -DUSE_JPEG=${USE_JPEG}
-        -DUSE_TIFF=${USE_TIFF}
-        -DUSE_WEBP=${USE_WEBP}
+        ${FEATURE_OPTIONS}
+        -DSHARED_LIB_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
 )
 
 vcpkg_cmake_install()
