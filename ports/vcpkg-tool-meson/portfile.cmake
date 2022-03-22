@@ -44,11 +44,11 @@ if(NOT "${program}")
                         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
                     )
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/meson-${ref}" "${CURRENT_PACKAGES_DIR}/tools/meson")
-    #z_vcpkg_apply_patches(
-    #    SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
-    #    PATCHES meson-intl.patch
+    z_vcpkg_apply_patches(
+        SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
+        PATCHES meson-intl.patch
     #            fix_linker_detection.patch
-    #)
+    )
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
 endif()
 
