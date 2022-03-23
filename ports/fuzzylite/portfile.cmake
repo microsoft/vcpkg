@@ -25,16 +25,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/fuzzylite-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/fuzzylite${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-static-debug${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/fuzzylite-debug${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libfuzzylite-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/lib/libfuzzylite${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libfuzzylite-static-debug${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${CURRENT_PACKAGES_DIR}/debug/lib/libfuzzylite-debug${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-    endif()
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fl/fuzzylite.h"
         "#elif defined(FL_IMPORT_LIBRARY)"
