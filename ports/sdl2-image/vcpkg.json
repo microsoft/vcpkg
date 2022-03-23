@@ -23,7 +23,7 @@
         "libjpeg-turbo",
         {
           "name": "sdl2",
-          "platform": "!windows,!uwp",
+          "platform": "!windows",
           "features": ["x11"]
         }
       ]
@@ -34,7 +34,7 @@
         "libwebp",
         {
           "name": "sdl2",
-          "platform": "!windows,!uwp",
+          "platform": "!windows",
           "features": ["x11"]
         }
       ]
@@ -45,7 +45,7 @@
         "tiff",
         {
           "name": "sdl2",
-          "platform": "!windows,!uwp",
+          "platform": "!windows",
           "features": ["x11"]
         }
       ]
