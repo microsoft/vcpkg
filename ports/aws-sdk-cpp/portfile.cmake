@@ -13,6 +13,11 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+        stdallocators CUSTOM_MEMORY_MANAGEMENT
+)
+
 set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
@@ -36,6 +41,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${EXTRA_ARGS}
+	${FEATURE_OPTIONS}
         "-DENABLE_UNITY_BUILD=ON"
         "-DENABLE_TESTING=OFF"
         "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
