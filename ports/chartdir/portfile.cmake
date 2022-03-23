@@ -7,7 +7,7 @@ if(TRIPLET_SYSTEM_ARCH MATCHES "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Window
 elseif(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "https://www.advsofteng.net/chartdir_cpp_win.zip"
+        URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_win_7.0.0.zip"
         FILENAME "chartdir_cpp_win-7.0.0.zip"
         SHA512 e5b5d387cff693a7f5ee98c2d2df75f421129b006e4324ae30ace0cbaac58867f048868ddfacdb3224c7165c8f27219c4273f3c778be3330d39ef95260d4186b
     )
