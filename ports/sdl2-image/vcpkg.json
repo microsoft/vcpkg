@@ -23,8 +23,10 @@
         "libjpeg-turbo",
         {
           "name": "sdl2",
-          "platform": "!windows",
-          "features": ["x11"]
+          "features": [
+            "x11"
+          ],
+          "platform": "!windows"
         }
       ]
     },
@@ -34,20 +36,24 @@
         "libwebp",
         {
           "name": "sdl2",
-          "platform": "!windows",
-          "features": ["x11"]
+          "features": [
+            "x11"
+          ],
+          "platform": "!windows"
         }
       ]
     },
     "tiff": {
       "description": "Support for TIFF image format",
       "dependencies": [
-        "tiff",
         {
           "name": "sdl2",
-          "platform": "!windows",
-          "features": ["x11"]
-        }
+          "features": [
+            "x11"
+          ],
+          "platform": "!windows"
+        },
+        "tiff"
       ]
     }
   }
