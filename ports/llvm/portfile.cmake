@@ -1,4 +1,4 @@
-set(LLVM_VERSION "13.0.0")
+set(LLVM_VERSION "14.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,17 +6,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${LLVM_VERSION}
-    SHA512 8004c05d32b9720fb3391783621690c1df9bd1e97e72cbff9192ed88a84b0acd303b61432145fa917b5b5e548c8cee29b24ef8547dcc8677adf4816e7a8a0eb2
+    SHA512 eb5acf96b5e2c59bd07579f7ebe73018b0dd6e2f2d9a5a3c7986320e88febd837d1084b9e5313a2264310342193044629d228337cc76dd2b8527dc0a8bdda999
     HEAD_REF master
     PATCHES
         0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
         0007-fix-compiler-rt-install-path.patch
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
-        0011-fix-libxml2.patch
 )
 
 vcpkg_check_features(
@@ -90,6 +88,9 @@ elseif("disable-abi-breaking-checks" IN_LIST FEATURES)
 endif()
 
 set(LLVM_ENABLE_PROJECTS)
+if("bolt" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_PROJECTS "bolt")
+endif()
 if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
     if("disable-clang-static-analyzer" IN_LIST FEATURES)
@@ -100,7 +101,7 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
-    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
+    # 1) LLVM/Clang binaries are relocated from ./bin/ to ./tools/llvm/ (CMAKE_INSTALL_BINDIR=tools/llvm)
     # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
     # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
     list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${LLVM_VERSION})
@@ -124,26 +125,14 @@ endif()
 if("libclc" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "libclc")
 endif()
-if("libcxx" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Building libcxx with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
-    list(APPEND LLVM_ENABLE_PROJECTS "libcxx")
-endif()
-if("libcxxabi" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Building libcxxabi with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
-    list(APPEND LLVM_ENABLE_PROJECTS "libcxxabi")
-endif()
-if("libunwind" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "libunwind")
-endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
 endif()
 if("lldb" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lldb")
+    list(APPEND FEATURE_OPTIONS
+        -DLLDB_ENABLE_CURSES=OFF
+    )
 endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
@@ -164,9 +153,6 @@ if("openmp" IN_LIST FEATURES)
         )
     endif()
 endif()
-if("parallel-libs" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "parallel-libs")
-endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
 endif()
@@ -175,6 +161,23 @@ if("pstl" IN_LIST FEATURES)
         message(FATAL_ERROR "Building pstl with MSVC is not supported. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "pstl")
+endif()
+
+set(LLVM_ENABLE_RUNTIMES)
+if("libcxx" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Building libcxx with MSVC is not supported, as cl doesn't support the #include_next extension.")
+    endif()
+    list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
+endif()
+if("libcxxabi" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Building libcxxabi with MSVC is not supported. Disable it until issues are fixed.")
+    endif()
+    list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
+endif()
+if("libunwind" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
 endif()
 
 set(known_llvm_targets
@@ -192,6 +195,7 @@ set(known_llvm_targets
     RISCV
     Sparc
     SystemZ
+    VE
     WebAssembly
     X86
     XCore
@@ -243,20 +247,18 @@ vcpkg_cmake_configure(
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_BUILD_TESTS=OFF
-        -DLLDB_ENABLE_CURSES=OFF
+        -DLLVM_INCLUDE_BENCHMARKS=OFF
+        -DLLVM_BUILD_BENCHMARKS=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
+        "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         -DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
-        # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
-        -DLLVM_BUILD_LLVM_C_DYLIB=OFF
         # Path for binary subdirectory (defaults to 'bin')
-        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d
+        -DCMAKE_INSTALL_BINDIR=tools/${PORT}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -321,9 +323,11 @@ endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/include"
+        "${CURRENT_PACKAGES_DIR}/debug/share"
+        "${CURRENT_PACKAGES_DIR}/debug/tools"
+    )
 endif()
 
 # LLVM still generates a few DLLs in the static build:
