@@ -3458,7 +3458,7 @@
     },
     "libdatrie": {
       "baseline": "0.2.13",
-      "port-version": 0
+      "port-version": 1
     },
     "libdc1394": {
       "baseline": "2.2.6",
@@ -3522,7 +3522,7 @@
     },
     "libfido2": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libflac": {
       "baseline": "1.3.3",
@@ -4094,7 +4094,7 @@
     },
     "liburing": {
       "baseline": "2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libusb": {
       "baseline": "1.0.24",
@@ -5478,7 +5478,7 @@
     },
     "poppler": {
       "baseline": "22.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "popsift": {
       "baseline": "0.9",
