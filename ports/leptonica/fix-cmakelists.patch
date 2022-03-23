@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6d300da..e8627d1 100644
+index 6d300da..52d5ef8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -61,20 +61,18 @@ set(leptonica_INSTALL_CMAKE_DIR "lib/cmake/leptonica"
+@@ -61,13 +61,14 @@ set(leptonica_INSTALL_CMAKE_DIR "lib/cmake/leptonica"
      CACHE STRING "Install destination for CMake package files")
  
  if(NOT SW_BUILD)
@@ -11,44 +11,20 @@ index 6d300da..e8627d1 100644
 -    find_package(PNG)
 -    find_package(TIFF)
 -    find_package(ZLIB)
+-    find_package(PkgConfig)
+-    if (PKG_CONFIG_FOUND)
 +    find_package(GIF REQUIRED)
 +    find_package(JPEG REQUIRED)
-+    find_package(PNG REQUIRED)
++    find_package(libpng CONFIG REQUIRED)
 +    find_package(TIFF REQUIRED)
 +    find_package(ZLIB REQUIRED)
-     find_package(PkgConfig)
-     if (PKG_CONFIG_FOUND)
++    find_package(OpenJPEG CONFIG REQUIRED)
++    find_package(WebP CONFIG REQUIRED)
++    if (0)
          pkg_check_modules(WEBP libwebp QUIET)
          pkg_check_modules(WEBPMUX libwebpmux>=${MINIMUM_WEBPMUX_VERSION} QUIET)
--        pkg_check_modules(JP2K libopenjp2>=2.0 QUIET)
-     endif()
-     if(NOT WEBP)
--        find_path(WEBP_INCLUDE_DIR /webp/decode.h)
--        find_library(WEBP_LIBRARY NAMES webp)
-+        find_package(WebP CONFIG REQUIRED)
-         if (WEBP_INCLUDE_DIR AND WEBP_LIBRARY)
-             set(WEBP 1)
-             set(WEBP_FOUND TRUE)
-@@ -100,8 +98,7 @@ if(NOT SW_BUILD)
-         endif()
-     endif()
-     if(NOT JP2K)
--        find_path(JP2K_INCLUDE_DIR /openjpeg-2.3/openjpeg.h)
--        find_library(JP2K_LIBRARY NAMES openjp2)
-+        find_package(OpenJPEG CONFIG REQUIRED)
-         if (JP2K_INCLUDE_DIR AND JP2K_LIBRARY)
-              set(JP2K 1)
-              set(JP2K_FOUND TRUE)
-@@ -110,7 +107,7 @@ if(NOT SW_BUILD)
-              set(HAVE_LIBJP2K 1)
-         endif()
-     endif()
--    if(NOT JP2K)
-+    if(0)
-         find_path(JP2K_INCLUDE_DIR /openjpeg-2.4/openjpeg.h)
-         find_library(JP2K_LIBRARY NAMES openjp2)
-         if (JP2K_INCLUDE_DIR AND JP2K_LIBRARY)
-@@ -216,7 +213,7 @@ include(Configure)
+         pkg_check_modules(JP2K libopenjp2>=2.0 QUIET)
+@@ -216,7 +217,7 @@ include(Configure)
  
  configure_file(${AUTOCONFIG_SRC} ${AUTOCONFIG} @ONLY)
  
@@ -57,3 +33,52 @@ index 6d300da..e8627d1 100644
  
  ###############################################################################
  #
+diff --git a/cmake/templates/LeptonicaConfig.cmake.in b/cmake/templates/LeptonicaConfig.cmake.in
+index 342c37d..f1f0f69 100644
+--- a/cmake/templates/LeptonicaConfig.cmake.in
++++ b/cmake/templates/LeptonicaConfig.cmake.in
+@@ -19,6 +19,14 @@
+ #      - Leptonica_VERSION_PATCH         : Patch version part of Leptonica_VERSION: "@VERSION_PATCH@"
+ #
+ # ===================================================================================
++include(CMakeFindDependencyMacro)
++find_dependency(JPEG)
++find_dependency(ZLIB)
++find_dependency(libpng)
++find_dependency(TIFF)
++find_dependency(GIF)
++find_dependency(WebP)
++find_dependency(OpenJPEG)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/LeptonicaTargets.cmake)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1797d78..a9d1a22 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,7 +14,6 @@ if (MSVC)
+     set_source_files_properties(${src} PROPERTIES LANGUAGE CXX)
+ endif()
+ 
+-string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+ 
+ add_library                     (leptonica ${src} ${hdr})
+ set_target_properties           (leptonica PROPERTIES VERSION   ${VERSION_PLAIN})
+@@ -41,7 +40,7 @@ if (JPEG_LIBRARIES)
+ endif()
+ if (JP2K_FOUND)
+     target_include_directories  (leptonica PUBLIC ${JP2K_INCLUDE_DIRS})
+-    target_link_libraries       (leptonica ${JP2K_LIBRARIES})
++    target_link_libraries       (leptonica openjp2)
+ endif()
+ if (PNG_LIBRARIES)
+     target_include_directories  (leptonica PUBLIC ${PNG_INCLUDE_DIRS})
+@@ -53,7 +52,7 @@ if (TIFF_LIBRARIES)
+ endif()
+ if (WEBP_FOUND)
+     target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIRS})
+-    target_link_libraries       (leptonica ${WEBP_LIBRARIES})
++    target_link_libraries       (leptonica WebP::webp WebP::webpdemux WebP::libwebpmux WebP::webpdecoder)
+ endif()
+ if (ZLIB_LIBRARIES)
+     target_include_directories  (leptonica PUBLIC ${ZLIB_INCLUDE_DIRS})

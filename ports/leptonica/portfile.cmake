@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
-        fix-src-cmakelists.patch
-        find-dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
@@ -27,7 +25,7 @@ vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/leptonica)
 
 vcpkg_copy_pdbs()
 
