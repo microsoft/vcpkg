@@ -4513,8 +4513,8 @@
       "port-version": 10
     },
     "minizip-ng": {
-      "baseline": "3.0.2",
-      "port-version": 1
+      "baseline": "3.0.5",
+      "port-version": 0
     },
     "mio": {
       "baseline": "2019-02-10",
