@@ -20,10 +20,10 @@ set(JPEG_FLAG JPG)
 set(TIFF_FLAG TIF)
 
 # names of potentially dynamically loaded libraries
-set(JPEG_DYNAMIC \"libjpeg-9${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-set(PNG_DYNAMIC \"libpng16-16${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-set(TIFF_DYNAMIC \"libtiff-5${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-set(WEBP_DYNAMIC \"libwebp-4${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+set(JPEG_DYNAMIC \"libjpeg-9.dll\")
+set(PNG_DYNAMIC \"libpng16-16.dll\")
+set(TIFF_DYNAMIC \"libtiff-5.dll\")
+set(WEBP_DYNAMIC \"libwebp-4.dll\")
 
 ### implementation ###
 

@@ -20,19 +20,34 @@
     "libjpeg-turbo": {
       "description": "Support for JPEG image format",
       "dependencies": [
-        "libjpeg-turbo"
+        "libjpeg-turbo",
+        {
+          "name": "sdl2",
+          "platform": "!windows,!uwp",
+          "features": ["x11"]
+        }
       ]
     },
     "libwebp": {
       "description": "Support for WEBP image format.",
       "dependencies": [
-        "libwebp"
+        "libwebp",
+        {
+          "name": "sdl2",
+          "platform": "!windows,!uwp",
+          "features": ["x11"]
+        }
       ]
     },
     "tiff": {
       "description": "Support for TIFF image format",
       "dependencies": [
-        "tiff"
+        "tiff",
+        {
+          "name": "sdl2",
+          "platform": "!windows,!uwp",
+          "features": ["x11"]
+        }
       ]
     }
   }
