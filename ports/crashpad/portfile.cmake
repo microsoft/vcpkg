@@ -1,6 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
-set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
@@ -75,8 +74,9 @@ replace_gn_dependency(
 
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "")
+set(GN_OPTIONS "")
 if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
-    message(STATUS "Matched Windows")
+    message(STATUS "Setting GN options for Windows")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
     endif()
@@ -102,15 +102,8 @@ if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
 
     set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-
-    message(STATUS "Configure GN (Generate Ninja)")
-    vcpkg_configure_gn(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS_DEBUG "${OPTIONS_DBG}"
-        OPTIONS_RELEASE "${OPTIONS_REL}"
-    )
 elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
-    message(STATUS "Matched Android")
+    message(STATUS "Setting GN options for Android")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
     endif()
@@ -131,46 +124,33 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
         extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
         extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
     
-    message(STATUS "Configure GN (Generate Ninja)")
     string(TOLOWER ${VCPKG_CMAKE_SYSTEM_NAME} TARGET_OS)
-    vcpkg_configure_gn(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS "target_os=\"${TARGET_OS}\" \
+    set(GN_OPTIONS 
+        "target_os=\"${TARGET_OS}\" \
         target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" \
         android_ndk_root=\"$ENV{ANDROID_NDK_HOME}\""
-        OPTIONS_DEBUG "${OPTIONS_DBG}"
-        OPTIONS_RELEASE "${OPTIONS_REL}"
     )
 elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
-    message(STATUS "Matched Linux")
+    message(STATUS "Setting GN options for Linux")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
     foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_SHARED_LINKER_FLAGS)
+        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
         string(STRIP "${${_VAR}}" ${_VAR})
     endforeach()
-
+    
     set(OPTIONS_DBG "${OPTIONS_DBG} \
         extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\"")
 
     set(OPTIONS_REL "${OPTIONS_REL} \
         extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-
-    message(STATUS "Configure GN (Generate Ninja)")
-    vcpkg_configure_gn(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS_DEBUG "${OPTIONS_DBG}"
-        OPTIONS_RELEASE "${OPTIONS_REL}"
-    )
+        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\"")
 elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
-    message(STATUS "Matched OSX")
+    message(STATUS "Setting GN options for OSX")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
     endif()
@@ -181,6 +161,7 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
         CMAKE_EXE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS_DEBUG CMAKE_EXE_LINKER_FLAGS_RELEASE)
         string(STRIP "${${_VAR}}" ${_VAR})
     endforeach()
+
     string(APPEND CMAKE_EXE_LINKER_FLAGS " -lobjc -framework IOKit -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework Security ")
     set(OPTIONS_DBG "${OPTIONS_DBG} \
         extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
@@ -191,17 +172,16 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
         extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
         extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
         extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_RELEASE}\"")
-
-    message(STATUS "Configure GN (Generate Ninja)")
-    vcpkg_configure_gn(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS_DEBUG "${OPTIONS_DBG}"
-        OPTIONS_RELEASE "${OPTIONS_REL}"
-    )
 endif()
-
+message(STATUS "Configure GN")
+vcpkg_configure_gn(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "${GN_OPTIONS}"
+    OPTIONS_DEBUG "${OPTIONS_DBG}"
+    OPTIONS_RELEASE "${OPTIONS_REL}"
+)
 ## Compile and install targets via GN and Ninja
-message(STATUS "Install GN (Generate Ninja)")
+message(STATUS "Install GN")
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS 
