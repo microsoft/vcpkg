@@ -19,13 +19,11 @@ set(DEPENDENCIES PNG JPEG TIFF WEBP)
 set(JPEG_FLAG JPG)
 set(TIFF_FLAG TIF)
 
-option(SHARED_LIB_SUFFIX "Suffix for shared libraries on current platform")
-
 # names of potentially dynamically loaded libraries
-set(JPEG_DYNAMIC \"libjpeg-9${SHARED_LIB_SUFFIX}\")
-set(PNG_DYNAMIC \"libpng16-16${SHARED_LIB_SUFFIX}\")
-set(TIFF_DYNAMIC \"libtiff-5${SHARED_LIB_SUFFIX}\")
-set(WEBP_DYNAMIC \"libwebp-4${SHARED_LIB_SUFFIX}\")
+set(JPEG_DYNAMIC \"libjpeg-9${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+set(PNG_DYNAMIC \"libpng16-16${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+set(TIFF_DYNAMIC \"libtiff-5${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+set(WEBP_DYNAMIC \"libwebp-4${CMAKE_SHARED_LIBRARY_SUFFIX}\")
 
 ### implementation ###
 

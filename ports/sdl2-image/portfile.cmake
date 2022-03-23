@@ -44,7 +44,6 @@ vcpkg_cmake_configure(
         "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
         -DUSE_PNG=ON
         ${FEATURE_OPTIONS}
-        -DSHARED_LIB_SUFFIX=${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
 )
 
 vcpkg_cmake_install()
