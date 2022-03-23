@@ -1,0 +1,64 @@
+diff --git a/configure.ac b/configure.ac
+index fba79ee36..4563fa9f7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -18,15 +18,14 @@ dnl
+ m4_pattern_forbid(^PGAC_)dnl to catch undefined macros
+ 
+ AC_INIT([PostgreSQL], [14.1], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
+-
+-m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
+-Untested combinations of 'autoconf' and PostgreSQL versions are not
+-recommended.  You can remove the check from 'configure.ac' but it is then
+-your responsibility whether the result works or not.])])
++# m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
++# Untested combinations of 'autoconf' and PostgreSQL versions are not
++# recommended.  You can remove the check from 'configure.ac' but it is then
++# your responsibility whether the result works or not.])])
+ AC_COPYRIGHT([Copyright (c) 1996-2021, PostgreSQL Global Development Group])
+ AC_CONFIG_SRCDIR([src/backend/access/common/heaptuple.c])
+ AC_CONFIG_AUX_DIR(config)
+-AC_PREFIX_DEFAULT(/usr/local/pgsql)
++#AC_PREFIX_DEFAULT(/usr/local/pgsql)
+ AC_DEFINE_UNQUOTED(CONFIGURE_ARGS, ["$ac_configure_args"], [Saved arguments from configure])
+ 
+ [PG_MAJORVERSION=`expr "$PACKAGE_VERSION" : '\([0-9][0-9]*\)'`]
+@@ -1194,7 +1195,7 @@ Use --without-readline to disable readline support.])
+ fi
+ 
+ if test "$with_zlib" = yes; then
+-  AC_CHECK_LIB(z, inflate, [],
++  AC_SEARCH_LIBS(inflate, [z zlib zlibd], [AC_DEFINE(HAVE_LIBZ,1,[Define to 1 if with zlib])],
+                [AC_MSG_ERROR([zlib library not found
+ If you have zlib already installed, see config.log for details on the
+ failure.  It is possible the compiler isn't looking in the proper directory.
+@@ -1247,8 +1248,8 @@ if test "$with_ssl" = openssl ; then
+      AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
+      AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
+   else
+-     AC_SEARCH_LIBS(CRYPTO_new_ex_data, [eay32 crypto], [], [AC_MSG_ERROR([library 'eay32' or 'crypto' is required for OpenSSL])])
+-     AC_SEARCH_LIBS(SSL_new, [ssleay32 ssl], [], [AC_MSG_ERROR([library 'ssleay32' or 'ssl' is required for OpenSSL])])
++     AC_SEARCH_LIBS(CRYPTO_new_ex_data, [libcrypto eay32 crypto], [AC_DEFINE(HAVE_LIBCRYPTO, 1, [Defined to 1 if libcrypto is found])], [AC_MSG_ERROR([library 'eay32' or 'crypto' is required for OpenSSL])])
++     AC_SEARCH_LIBS(SSL_new, [libssl ssleay32 ssl], [AC_DEFINE(HAVE_LIBSSL, 1, [Defined to 1 if libssl is found])], [AC_MSG_ERROR([library 'ssleay32' or 'ssl' is required for OpenSSL])])
+   fi
+   # Function introduced in OpenSSL 1.0.2.
+   AC_CHECK_FUNCS([X509_get_signature_nid])
+@@ -1273,15 +1274,15 @@ if test "$with_pam" = yes ; then
+ fi
+ 
+ if test "$with_libxml" = yes ; then
+-  AC_CHECK_LIB(xml2, xmlSaveToBuffer, [], [AC_MSG_ERROR([library 'xml2' (version >= 2.6.23) is required for XML support])])
++  AC_SEARCH_LIBS(xmlSaveToBuffer, [xml2 libxml2], [AC_DEFINE(HAVE_LIBXML2,1,[Define to 1 if with xml2])], [AC_MSG_ERROR([library 'xml2' (version >= 2.6.23) is required for XML support])])
+ fi
+ 
+ if test "$with_libxslt" = yes ; then
+-  AC_CHECK_LIB(xslt, xsltCleanupGlobals, [], [AC_MSG_ERROR([library 'xslt' is required for XSLT support])])
++  AC_SEARCH_LIBS(xsltCleanupGlobals, [xslt libxslt], [AC_DEFINE(HAVE_LIBXSLT,1,[Define to 1 if with xslt])], [AC_MSG_ERROR([library 'xslt' is required for XSLT support])])
+ fi
+ 
+ if test "$with_lz4" = yes ; then
+-  AC_CHECK_LIB(lz4, LZ4_compress_default, [], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
++  AC_SEARCH_LIBS(LZ4_compress_default, [lz4 lz4d], [AC_DEFINE(HAVE_LIBLZ4,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
+ fi
+ 
+ # Note: We can test for libldap_r only after we know PTHREAD_LIBS;
