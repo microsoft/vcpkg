@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            offscale/c89stringutils
-    REF             9e579b122af0e69b197ba8f0f123004897806c7b
-    SHA512          b453115ff32477a60d3556f7295079a05c142d5ed70fc36973ef9e45e1d0c57b819712425f718a35c471dd4e65108c6d3a79e51969cb3ca36863ea6d215d5243
+    REF             ceb4a109fd186ca560938bc009cb2db6dbbbfadb
+    SHA512          85655cd691d6f3bd629c57275f396776c4e21e43023de34e94cd3e782ca8580032055202e227eabc655373ba358ebc6ce8f6d724f7e5a5d2332631b4af6a44b7
     HEAD_REF        master
 )
 
