@@ -16,21 +16,6 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-set(USE_JPEG OFF)
-if("libjpeg-turbo" IN_LIST FEATURES)
-    set(USE_JPEG ON)
-endif()
-
-set(USE_TIFF OFF)
-if("tiff" IN_LIST FEATURES)
-    set(USE_TIFF ON)
-endif()
-
-set(USE_WEBP OFF)
-if("libwebp" IN_LIST FEATURES)
-    set(USE_WEBP ON)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libjpeg-turbo USE_JPEG
