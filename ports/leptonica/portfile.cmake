@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 cd8c55454fc2cb4d23c2b3f01870e154766fa5a35c07b79d25c2d85dc2675dcb224d9be8a1cdcb7e9a0bd3c17e90141aa4084f67a311a1c327d7ac2439ba196a
     HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
+        fix-CMakeDependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
