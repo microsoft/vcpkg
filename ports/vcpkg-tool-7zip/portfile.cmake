@@ -37,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Couldn't extract ${name_msg} with lessmsi!")
     endif()
     message(STATUS "Extracting ${name_msg} ... finished!")
-    file(RENAME "${output_path}/7z2107-x64/SourceDir/Files/7-Zip" "${output_path}/${PORT}/")
+    file(RENAME "${output_path}/${name_folder}/SourceDir/Files/7-Zip" "${output_path}/${PORT}/")
     
     set(details "set(program_version \"${program_version}\")\n")
     string(APPEND details "set(paths_to_search \"\${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}\")\n")
