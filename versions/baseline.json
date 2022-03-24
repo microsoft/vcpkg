@@ -7129,8 +7129,8 @@
       "port-version": 0
     },
     "unicorn": {
-      "baseline": "2020-09-14",
-      "port-version": 2
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "unicorn-lib": {
       "baseline": "2022-01-24",
