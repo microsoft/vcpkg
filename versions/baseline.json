@@ -2561,7 +2561,7 @@
       "port-version": 1
     },
     "google-cloud-c": {
-      "baseline": "2022-02-22",
+      "baseline": "2022-02-24",
       "port-version": 0
     },
     "google-cloud-cpp": {
