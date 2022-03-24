@@ -43,6 +43,9 @@ endforeach()
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_DIR ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_DIR})
 
 set(VCPKG_BUILD_TYPE release) # Only need release tools
 vcpkg_cmake_configure(
@@ -161,7 +164,7 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         #"-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         -DLLVM_ENABLE_CLASSIC_FLANG=ON 
-        -DLLVM_ENABLE_PROJECTS="clang\;clang-tools-extra\;openmp"
+        -DLLVM_ENABLE_PROJECTS="clang\;openmp"
         "-DLLVM_TARGETS_TO_BUILD=X86"
         
         #-DPACKAGE_VERSION=${LLVM_VERSION}

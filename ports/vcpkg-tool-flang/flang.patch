@@ -1,0 +1,276 @@
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/CMakeLists.txt b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/CMakeLists.txt
+index 59454c9de..caea12be3 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/CMakeLists.txt
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/CMakeLists.txt
+@@ -309,10 +309,11 @@ set(DEFINITIONS_CMPLX ${DEFINITIONS} MTH_CMPLX_C99_ABI)
+ libmath_add_object_library("${MTH_CMPLX_SRCS}" "${FLAGS}" "${DEFINITIONS_CMPLX}" "common_mth_cmplx")
+ 
+ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENERIC})
++  find_program(AWK_COMMAND NAMES awk)
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2")
+@@ -325,7 +326,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=core2")
+@@ -338,7 +339,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_256mask.c
+   set(TARGET_NAME "mth_256mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge")
+@@ -351,7 +352,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_256generic.c
+   set(TARGET_NAME "mth_256generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=256 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-march=sandybridge")
+@@ -364,7 +365,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_512mask.c
+   set(TARGET_NAME "mth_512mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+@@ -378,7 +379,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_512generic.c
+   set(TARGET_NAME "mth_512generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl")
+@@ -391,7 +392,7 @@ if(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "x86_64" AND NOT ${LIBPGMATH_WITH_GENER
+   # Generate mth_z2yy.c
+   set(TARGET_NAME "mth_z2yy")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=512 -v TARGET=X8664 -f ${LIBPGMATH_TOOLS_DIR}/mth_z2yy.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Linux")
+     set_property(SOURCE ${TARGET_NAME}.c APPEND_STRING PROPERTY COMPILE_FLAGS "-mtune=knl -march=knl")
+@@ -404,7 +405,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -412,7 +413,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "ppc64le")
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=POWER -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -421,10 +422,10 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "aarch64")
+   set(TARGET_NAME "mth_128mask")
+   if(${LIBPGMATH_SYSTEM_NAME} MATCHES "Windows")
+     add_custom_command(OUTPUT ${TARGET_NAME}.cpp DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-      COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -v TARGET_OS=WIN -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
++      COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -v TARGET_OS=WIN -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
+   else()
+     add_custom_command(OUTPUT ${TARGET_NAME}.cpp DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-      COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
++      COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.cpp)
+   endif()
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.cpp")
+   libmath_add_object_library("${TARGET_NAME}.cpp" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+@@ -433,7 +434,7 @@ elseif(${LIBPGMATH_SYSTEM_PROCESSOR} MATCHES "aarch64")
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=ARM64 -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -441,7 +442,7 @@ else()
+   # Generate mth_128mask.c
+   set(TARGET_NAME "mth_128mask")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_mask.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+@@ -449,7 +450,7 @@ else()
+   # Generate mth_128generic.c
+   set(TARGET_NAME "mth_128generic")
+   add_custom_command(OUTPUT ${TARGET_NAME}.c DEPENDS ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk PRE_BUILD
+-    COMMAND awk -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
++    COMMAND ${AWK_COMMAND} -v MAX_VREG_SIZE=128 -v TARGET=GENERIC -f ${LIBPGMATH_TOOLS_DIR}/mth_generic_frp.awk > ${TARGET_NAME}.c)
+   add_custom_target(${TARGET_NAME} ALL DEPENDS "${TARGET_NAME}.c")
+   libmath_add_object_library("${TARGET_NAME}.c" "${FLAGS}" "${DEFINITIONS}" "${TARGET_NAME}_build")
+   add_dependencies("${TARGET_NAME}_build" ${TARGET_NAME})
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/acos/fma3/vdacos4.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/acos/fma3/vdacos4.cpp
+index 4573ecf74..43b5993da 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/acos/fma3/vdacos4.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/acos/fma3/vdacos4.cpp
+@@ -22,7 +22,7 @@ __m256d __fvd_acos_fma3_256(__m256d const a)
+     __m256i const ABS_MASK  = _mm256_set1_epi64x(ABS_MASK_LL);
+     __m256d const ZERO      = _mm256_set1_pd(0.0);
+     __m256d const ONE       = _mm256_set1_pd(1.0);
+-    __m256d const SGN_MASK  = (__m256d)_mm256_set1_epi64x(SGN_MASK_LL);
++    __m256d const SGN_MASK  = _mm256_castsi256_pd(_mm256_set1_epi64x(SGN_MASK_LL));
+     __m256d const THRESHOLD = _mm256_set1_pd(THRESHOLD_D);
+     __m256d const PI_HI     = _mm256_set1_pd(PI_HI_D);
+ 
+@@ -60,7 +60,7 @@ __m256d __fvd_acos_fma3_256(__m256d const a)
+     __m256d res, cmp, sign, fix;
+     __m256d p0hi, p0lo, p1hi, p1lo;
+ 
+-    x  = _mm256_and_pd(a, (__m256d)ABS_MASK);
++    x  = _mm256_and_pd(a, _mm256_castsi256_pd(ABS_MASK));
+     x2 = _mm256_mul_pd(a, a);
+     sq = _mm256_sub_pd(ONE, x);
+     sq = _mm256_sqrt_pd(sq);
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vdasin2.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vdasin2.cpp
+index c1942cc75..559890a75 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vdasin2.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vdasin2.cpp
+@@ -28,8 +28,8 @@ __m128d __fvd_asin_fma3(__m128d const a)
+     __m128d const SGN_MASK  = (__m128d)((long double)_mm_set1_epi64x(SGN_MASK_LL));
+     __m128d const THRESHOLD = (__m128d)((long double)_mm_set1_epi64x(THRESHOLD_LL));
+ #else
+-    __m128d const SGN_MASK  = (__m128d)_mm_set1_epi64x(SGN_MASK_LL);
+-    __m128d const THRESHOLD = (__m128d)_mm_set1_epi64x(THRESHOLD_LL);
++    __m128d const SGN_MASK  = _mm_castsi128_pd(_mm_set1_epi64x(SGN_MASK_LL));
++    __m128d const THRESHOLD = _mm_castsi128_pd(_mm_set1_epi64x(THRESHOLD_LL));
+ #endif
+     __m128d const PIO2_HI   = _mm_set1_pd(PIO2_HI_D);
+     __m128d const PIO2_LO   = _mm_set1_pd(PIO2_LO_D);
+@@ -68,7 +68,7 @@ __m128d __fvd_asin_fma3(__m128d const a)
+ #if defined(__clang__) && defined(TARGET_ARM64)
+     x  = _mm_and_pd(a, (__m128d)((long double)ABS_MASK));
+ #else
+-    x  = _mm_and_pd(a, (__m128d)ABS_MASK);
++    x  = _mm_and_pd(a, _mm_castsi128_pd(ABS_MASK));
+ #endif
+     sq = _mm_sub_pd(ONE, x);
+     sq = _mm_sqrt_pd(sq);
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vdasin4.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vdasin4.cpp
+index 705531a99..b6f52c4c3 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vdasin4.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vdasin4.cpp
+@@ -22,8 +22,8 @@ __m256d __fvd_asin_fma3_256(__m256d const a)
+     __m256i const ABS_MASK  = _mm256_set1_epi64x(ABS_MASK_LL);
+     __m256d const ZERO      = _mm256_set1_pd(0.0);
+     __m256d const ONE       = _mm256_set1_pd(1.0);
+-    __m256d const SGN_MASK  = (__m256d)_mm256_set1_epi64x(SGN_MASK_LL);
+-    __m256d const THRESHOLD = (__m256d)_mm256_set1_epi64x(THRESHOLD_LL);
++    __m256d const SGN_MASK  = _mm256_castsi256_pd(_mm256_set1_epi64x(SGN_MASK_LL));
++    __m256d const THRESHOLD = _mm256_castsi256_pd(_mm256_set1_epi64x(THRESHOLD_LL));
+     __m256d const PIO2_HI   = _mm256_set1_pd(PIO2_HI_D);
+     __m256d const PIO2_LO   = _mm256_set1_pd(PIO2_LO_D);
+ 
+@@ -58,7 +58,7 @@ __m256d __fvd_asin_fma3_256(__m256d const a)
+     __m256d sq, p0hi, p0lo, p0, p1hi, p1lo, p1;
+     __m256d res, cmp, sign, fix, pio2_lo, pio2_hi;
+ 
+-    x  = _mm256_and_pd(a, (__m256d)ABS_MASK);
++    x  = _mm256_and_pd(a, _mm256_castsi256_pd(ABS_MASK));
+     sq = _mm256_sub_pd(ONE, x);
+     sq = _mm256_sqrt_pd(sq);
+ 
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vsasin4.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vsasin4.cpp
+index 5071cd2dc..2693054fa 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vsasin4.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vsasin4.cpp
+@@ -24,14 +24,14 @@ __m128 __fvs_asin_fma3(__m128 const a) {
+     __m128  const ABS_MASK  = (__m128)((long double)_mm_set1_epi32(ABS_MASK_I));
+     __m128  const SGN_MASK  = (__m128)((long double)_mm_set1_epi32(SGN_MASK_I));
+ #else
+-    __m128  const ABS_MASK  = (__m128)_mm_set1_epi32(ABS_MASK_I);
+-    __m128  const SGN_MASK  = (__m128)_mm_set1_epi32(SGN_MASK_I);
++    __m128  const ABS_MASK  = _mm_castsi128_pd(_mm_set1_epi32(ABS_MASK_I));
++    __m128  const SGN_MASK  = _mm_castsi128_pd(_mm_set1_epi32(SGN_MASK_I));
+ #endif
+     __m128  const ONE       = _mm_set1_ps(1.0f);
+ #if defined(__clang__) && defined(TARGET_ARM64)
+     __m128i const THRESHOLD = (__m128i)((long double)_mm_set1_ps(THRESHOLD_F));
+ #else
+-    __m128i const THRESHOLD = (__m128i)_mm_set1_ps(THRESHOLD_F);
++    __m128i const THRESHOLD = _mm_castps_si128 (_mm_set1_ps(THRESHOLD_F));
+ #endif
+     __m128  const PIO2      = _mm_set1_ps(PIO2_F);
+ 
+@@ -60,7 +60,7 @@ __m128 __fvs_asin_fma3(__m128 const a) {
+ #if defined(__clang__) && defined(TARGET_ARM64)
+     cmp0 = (__m128)((long double)_mm_cmpgt_epi32((__m128i)((long double)x), THRESHOLD));
+ #else
+-    cmp0 = (__m128)_mm_cmpgt_epi32((__m128i)x, THRESHOLD);
++    cmp0 = (__m128)_mm_cmpgt_epi32(_mm_castps_si128(x), THRESHOLD);
+ #endif
+ 
+     // polynomials evaluation
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vsasin8.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vsasin8.cpp
+index c436ed800..f88ebf311 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/asin/fma3/vsasin8.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/asin/fma3/vsasin8.cpp
+@@ -20,10 +20,10 @@
+ extern "C" __m256 __fvs_asin_fma3_256(__m256 const a);
+ 
+ __m256 __fvs_asin_fma3_256(__m256 const a) {
+-    __m256  const ABS_MASK  = (__m256)_mm256_set1_epi32(ABS_MASK_I);
+-    __m256  const SGN_MASK  = (__m256)_mm256_set1_epi32(SGN_MASK_I);
++    __m256  const ABS_MASK  = _mm256_castsi256_ps (_mm256_set1_epi32(ABS_MASK_I));
++    __m256  const SGN_MASK  = _mm256_castsi256_ps (_mm256_set1_epi32(SGN_MASK_I));
+     __m256  const ONE       = _mm256_set1_ps(ONE_F);
+-    __m256i const THRESHOLD = (__m256i)_mm256_set1_ps(THRESHOLD_F);
++    __m256i const THRESHOLD = _mm256_castps_si256(_mm256_set1_ps(THRESHOLD_F));
+     __m256  const PIO2      = _mm256_set1_ps(PIO2_F);
+ 
+     // p0 coefficients
+@@ -49,7 +49,7 @@ __m256 __fvs_asin_fma3_256(__m256 const a) {
+     sq = _mm256_sqrt_ps(sq); // sqrt(1 - |a|)
+ 
+     // sgn(a) * ( |a| > 0.5705 ? pi/2 - sqrt(1 - |x|) * p1(|a|) : p0(|a|) )
+-    cmp0 = (__m256)_mm256_cmpgt_epi32((__m256i)x, THRESHOLD);
++    cmp0 = (__m256)_mm256_cmpgt_epi32(_mm256_castps_si256(x), THRESHOLD);
+ 
+     // polynomials evaluation
+     x2 = _mm256_mul_ps(a, a);
+diff --git a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/exp/fma3/vdexp4.cpp b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/exp/fma3/vdexp4.cpp
+index b2abf7501..30461eeee 100644
+--- a/1666ceb2e1-1ebcf24a60.clean/runtime/libpgmath/lib/common/exp/fma3/vdexp4.cpp
++++ b/1666ceb2e1-1ebcf24a60/runtime/libpgmath/lib/common/exp/fma3/vdexp4.cpp
+@@ -19,11 +19,11 @@ extern "C" __m256d __fvd_exp_fma3_256(__m256d);
+ // handles large cases as well as special cases such as infinities and NaNs
+ __m256d __pgm_exp_d_vec256_slowpath(__m256d const a, __m256i const i, __m256d const t,  __m256d const z)
+ {
+-    __m256d const INF        = (__m256d)_mm256_set1_epi64x(INF_D);
++    __m256d const INF        = _mm256_castsi256_pd(_mm256_set1_epi64x(INF_D));
+     __m256d const ZERO       = _mm256_set1_pd(ZERO_D);
+     __m256i const HI_ABS_MASK = _mm256_set1_epi64x(HI_ABS_MASK_D);
+-    __m256d const UPPERBOUND_1 = (__m256d)_mm256_set1_epi64x(UPPERBOUND_1_D);
+-    __m256d const UPPERBOUND_2 = (__m256d)_mm256_set1_epi64x(UPPERBOUND_2_D);
++    __m256d const UPPERBOUND_1 = _mm256_castsi256_pd(_mm256_set1_epi64x(UPPERBOUND_1_D));
++    __m256d const UPPERBOUND_2 = _mm256_castsi256_pd(_mm256_set1_epi64x(UPPERBOUND_2_D));
+     __m256i const MULT_CONST = _mm256_set1_epi64x(MULT_CONST_D);
+ 
+     __m256d abs_lt = (__m256d)_mm256_and_si256((__m256i)a, HI_ABS_MASK);                    
