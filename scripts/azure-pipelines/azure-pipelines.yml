@@ -7,7 +7,7 @@ variables:
   osx-pool: 'PrOsx-2022-02-04'
 
 parameters:
-- name: vcpkg-tool-sha
+- name: vcpkgToolSha
   displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
   type: string
   default: ''
