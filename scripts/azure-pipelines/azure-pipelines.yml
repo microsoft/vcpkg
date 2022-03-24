@@ -10,7 +10,7 @@ parameters:
 - name: vcpkgToolSha
   displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
   type: string
-  default: ''
+  default: 'use default'
 
 jobs:
 - template: windows/azure-pipelines.yml
