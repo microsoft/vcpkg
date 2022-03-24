@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 34ecd967a54f71cb10fb07bf321b2a7597db9d26    # pre-v0.3.20
+    REF 34ecd967a54f71cb10fb07bf321b2a7597db9d26    # v0.3.20-alpha
     SHA512 23ca849014e82add10f21bd5e70e364732364eb2c0f898ca8ff721c1aef927764b0805687ce6bfe5dda440ec5d4f69a591a56bfaada8e82ecf13ef6e3b268236
     HEAD_REF develop
     PATCHES
