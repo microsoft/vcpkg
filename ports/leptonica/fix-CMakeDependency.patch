@@ -52,12 +52,4 @@ index 342c37d..be4355a 100644
  
  include(${CMAKE_CURRENT_LIST_DIR}/LeptonicaTargets.cmake)
  
-@@ -36,7 +44,7 @@ SET(Leptonica_VERSION_PATCH     @VERSION_PATCH@)
- # ======================================================
  
- # Provide the include directories to the caller
--set(Leptonica_INCLUDE_DIRS      "@INCLUDE_DIR@")
-+get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../include" ABSOLUTE)
- 
- # ====================================================================
- # Link libraries:
