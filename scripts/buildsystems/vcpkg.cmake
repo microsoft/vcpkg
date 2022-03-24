@@ -541,7 +541,8 @@ if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
     file(GLOB_RECURSE Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
     file(GLOB_RECURSE Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
     list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
-    list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/debug/")
+    list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/debug/") 
+    list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/tools/[^/]+/[^/]+/") # Don't go deeper then tools/<port>/bin
     foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
         list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
     endforeach()
