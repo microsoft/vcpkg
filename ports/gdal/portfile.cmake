@@ -5,7 +5,8 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
-    0009-poppler-cxx17.patch
+    0009-atlbase.patch
+    0010-symprefix.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -14,8 +15,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.4.1
-    SHA512 b9b5389f15fdc6cff846003a07c934918c0e1d8e53d0f2ea3f88fff31d3f8a59a857e938fc337d0bde11dc1416297d46f52d729576281bec53d50b08868c51ba
+    REF v3.4.2
+    SHA512 4dadfaefb4924e17395b2d8b695e185e91e9ad28b4b8666b64f11f40164411974f8ade747592060b515907ee73bf335610698c5e53e56a8937a89ddfffc3d66b
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
@@ -47,6 +48,14 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND NMAKE_OPTIONS "WIN64=YES")
+    endif()
+
+    if(VCPKG_TARGET_IS_UWP)
+        list(APPEND NMAKE_OPTIONS "SYM_PREFIX=" "EXTRA_LINKER_FLAGS=/APPCONTAINER WindowsApp.lib")
+    endif()
+
+    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND NMAKE_OPTIONS "HAVE_ATLBASE_H=NO")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
@@ -330,8 +339,8 @@ else()
     vcpkg_fixup_pkgconfig()
     set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc")
     if(EXISTS "${pc_file_debug}")
-        vcpkg_replace_string("${pc_file_debug}" "${prefix}/../../include" "${prefix}/../include")
-        vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
+        vcpkg_replace_string("${pc_file_debug}" "\${prefix}/../../include" "\${prefix}/../include")
+        vcpkg_replace_string("${pc_file_debug}" "\${exec_prefix}/include" "\${prefix}/../include")
     endif()
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")

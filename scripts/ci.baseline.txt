@@ -315,9 +315,6 @@ fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
 
-# Requires ATL for ARM64 to be installed in CI
-gdal:arm64-windows=fail
-
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
@@ -436,7 +433,6 @@ intel-mkl:x64-windows-static=fail
 intel-mkl:x64-windows-static-md=fail
 intel-mkl:x86-windows=fail
 intelrdfpmathlib:arm-uwp=fail
-intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
@@ -498,8 +494,6 @@ libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-libdatrie:x64-linux=fail
-libdatrie:x64-osx=fail
 libepoxy:arm-uwp=fail
 libepoxy:x64-uwp=fail
 libepoxy:x64-windows-static=fail
@@ -835,15 +829,6 @@ nana:x64-uwp=fail
 nanodbc:arm-uwp=fail
 nanodbc:x64-uwp=fail
 nanodbc:x64-linux=skip
-nanorange:arm64-windows=fail
-nanorange:arm-uwp=fail
-nanorange:x64-linux=fail
-nanorange:x64-osx=fail
-nanorange:x64-uwp=fail
-nanorange:x64-windows=fail
-nanorange:x64-windows-static=fail
-nanorange:x64-windows-static-md=fail
-nanorange:x86-windows=fail
 nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 ngspice:x64-windows-static=fail
@@ -865,7 +850,6 @@ nvtt:x64-uwp=fail
 ocilib:arm-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:x64-uwp=fail
-ocilib:x64-windows-static=fail
 ocilib:x64-windows-static-md=fail
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
@@ -1218,7 +1202,6 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
-skia:arm64-windows=fail
 skia:arm-uwp=fail
 skia:x64-linux=fail
 skia:x64-uwp=fail
@@ -1446,7 +1429,6 @@ v8:x64-windows=fail
 v8:x64-windows-static=fail
 v8:x64-windows-static-md=fail
 
-yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
