@@ -5,6 +5,7 @@
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "nss",
     {
       "name": "qtbase",
       "default-features": false,
@@ -20,6 +21,7 @@
     {
       "name": "qtshadertools",
       "default-features": false
-    }
+    },
+    "vcpkg-tool-mozbuild"
   ]
 }
