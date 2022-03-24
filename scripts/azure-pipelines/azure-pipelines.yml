@@ -65,9 +65,7 @@ jobs:
 - template: osx/azure-pipelines.yml
   parameters:
     poolName: $(osx-pool)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 
 - template: linux/azure-pipelines.yml
   parameters:
     poolName: $(linux-pool)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
