@@ -7430,7 +7430,7 @@
     },
     "winsparkle": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wintoast": {
       "baseline": "1.2.0",
