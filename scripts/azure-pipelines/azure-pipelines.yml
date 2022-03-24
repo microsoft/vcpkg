@@ -6,6 +6,12 @@ variables:
   linux-pool: 'PrLin-2022-03-09-1'
   osx-pool: 'PrOsx-2022-02-04'
 
+parameters:
+- name: vcpkg-tool-sha
+  displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
+  type: string
+  default: ''
+
 jobs:
 - template: windows/azure-pipelines.yml
   parameters:
