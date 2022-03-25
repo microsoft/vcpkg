@@ -1,0 +1,187 @@
+{
+  "name": "zeroc-ice",
+  "version-string": "3.7.7",
+  "homepage": "https://github.com/zeroc-ice/ice",
+  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
+  "license": null,
+  "dependencies": [
+    "bzip2",
+    "mcpp", 
+    "zlib"
+  ],
+  "default-features": [
+    "glacier2", 
+    "icestorm", 
+    "icebox",
+    "icessl"
+  ],
+  "features": {
+    "icessl": {
+      "description": "IceSSL",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "glacier2": {
+      "description": "Glacier2"
+    },
+    "glacier2router": {
+      "description": "Glacier2Router",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "icebox": {
+      "description": "IceBox"
+    },
+    "iceboxadmin": {
+      "description": "IceBoxAdmin",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icebox"
+          ]
+        }
+      ]
+    },
+    "icegrid": {
+      "description": "IceGrid",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2"
+          ]
+        }
+      ]
+    },
+    "icegridadmin": {
+      "description": "IceGridAdmin",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icegrid",
+            "glacier2",
+            "icebox"
+          ]
+        },
+        "expat"
+      ]
+    },
+    "icegridregistry": {
+      "description": "IceGridRegistry",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icebox",
+            "icegrid",
+            "icessl"
+          ]
+        },
+        "lmdb",
+        "expat"
+      ]
+    },
+    "icegridnode": {
+      "description": "IceGridNode",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icebox",
+            "icegrid",
+            "icessl"
+          ]
+        },
+        "lmdb",
+        "expat"
+      ]
+    },
+    "icestorm": {
+      "description": "IceStorm library"
+    },
+    "icestormadmin": {
+      "description": "IceStormAdmin",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icebox",
+            "icestorm"
+          ]
+        }
+      ]
+    },
+    "icestormservice": {
+      "description": "IceStormService",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icebox",
+            "icegrid",
+            "icestorm"
+          ]
+        },
+        "lmdb"
+      ]
+    },
+    "icestormdb": {
+      "description": "IceStorm database utility",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icestorm"
+          ]
+        },
+        "lmdb",
+        "bzip2"
+      ]
+    },
+    "icebridge": {
+      "description": "IceBridge",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icebox"
+          ]
+        }
+      ]
+    },
+    "icediscovery": {
+      "description": "IceDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icebox",
+            "icestorm",
+            "icessl"
+          ]
+        }
+      ]
+    },
+    "cpp11": {
+      "description": "C++11 mapping"
+    }    
+  }
+
+}
