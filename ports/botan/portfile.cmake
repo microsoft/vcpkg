@@ -97,8 +97,8 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     endif()
     if("-DBOTAN_WITH_ZLIB=ON" IN_LIST FEATURE_OPTIONS)
         list(APPEND configure_arguments --with-zlib)
-        list(APPEND configure_arguments --with-external-includedir="${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include")
-        list(APPEND configure_arguments --with-external-libdir="${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib")
+        list(APPEND configure_arguments --with-external-includedir="${CURRENT_INSTALLED_DIR}/include")
+        list(APPEND configure_arguments --with-external-libdir="${CURRENT_INSTALLED_DIR}/lib")
     endif()
 
     vcpkg_execute_required_process(

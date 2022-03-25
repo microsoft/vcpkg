@@ -20,7 +20,7 @@ index 476f7a7..308bd0b 100644
      <Link>
        <ModuleDefinitionFile>libhogweed.def</ModuleDefinitionFile>
 -      <AdditionalDependencies>nettled_winrt.lib;gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled_winrt.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled_winrt.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
      <PostBuildEvent>
@@ -29,7 +29,7 @@ index 476f7a7..308bd0b 100644
      <Link>
        <ModuleDefinitionFile>libhogweed.def</ModuleDefinitionFile>
 -      <AdditionalDependencies>nettled_winrt.lib;gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>nettled_winrt.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled_winrt.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
      </Link>
      <PostBuildEvent>
@@ -136,7 +136,7 @@ index cb650ab..188f67a 100644
      <Link>
        <ModuleDefinitionFile>libnettle.def</ModuleDefinitionFile>
 -      <AdditionalDependencies>gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
@@ -145,7 +145,7 @@ index cb650ab..188f67a 100644
      <Link>
        <ModuleDefinitionFile>libnettle.def</ModuleDefinitionFile>
 -      <AdditionalDependencies>gmpd_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
      <PostBuildEvent>
        <Command>mkdir "$(OutDir)"\include
