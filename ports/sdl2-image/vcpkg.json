@@ -16,6 +16,11 @@
       "host": true
     }
   ],
+  "default-features": [
+    "libjpeg-turbo",
+    "libwebp",
+    "tiff"
+  ],
   "features": {
     "libjpeg-turbo": {
       "description": "Support for JPEG image format",
