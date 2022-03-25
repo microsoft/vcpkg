@@ -3,6 +3,6 @@
   "version": "0.9.24",
   "port-version": 2,
   "description": "LMDB is an extraordinarily fast, memory-efficient database",
-  "license": null,
-  "homepage": "https://github.com/LMDB/lmdb"
+  "homepage": "https://github.com/LMDB/lmdb",
+  "license": null
 }
