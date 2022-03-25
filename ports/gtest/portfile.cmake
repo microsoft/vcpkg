@@ -15,18 +15,15 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_GMOCK=ON
-        -DBUILD_GTEST=ON
-        -DCMAKE_DEBUG_POSTFIX=d
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest TARGET_PATH share/GTest)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GTest)
 
 file(
     INSTALL
