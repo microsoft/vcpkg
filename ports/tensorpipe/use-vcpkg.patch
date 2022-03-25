@@ -1,19 +1,5 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 77df76d..96da145 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -23,6 +23,6 @@ include(MiscCheck)
- 
- add_subdirectory(tensorpipe)
- 
--install(EXPORT TensorpipeTargets
--        DESTINATION share/cmake/Tensorpipe
--        FILE TensorpipeTargets.cmake)
-+install(EXPORT tensorpipeTargets
-+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME} # share/tensorpipe
-+        FILE tensorpipe-config.cmake) # we need config.cmake for find_package(tensorpipe CONFIG)
 diff --git a/tensorpipe/CMakeLists.txt b/tensorpipe/CMakeLists.txt
-index efcffc2..5ef674e 100644
+index efcffc2..e167fae 100644
 --- a/tensorpipe/CMakeLists.txt
 +++ b/tensorpipe/CMakeLists.txt
 @@ -119,8 +119,8 @@ list(APPEND TP_PUBLIC_HDRS
@@ -37,36 +23,11 @@ index efcffc2..5ef674e 100644
  
  
  ## Target
-@@ -204,8 +205,14 @@ target_include_directories(tensorpipe PUBLIC ${TP_INCLUDE_DIRS})
- 
- ## Install
- 
-+install(DIRECTORY channel common core transport util
-+        DESTINATION ${TP_INSTALL_INCLUDEDIR}/tensorpipe
-+        FILES_MATCHING PATTERN "*.h")
-+install(FILES tensorpipe.h
-+        DESTINATION ${TP_INSTALL_INCLUDEDIR}/tensorpipe)
-+
- install(TARGETS tensorpipe
--        EXPORT TensorpipeTargets
-+        EXPORT tensorpipeTargets
-         LIBRARY DESTINATION ${TP_INSTALL_LIBDIR}
-         ARCHIVE DESTINATION ${TP_INSTALL_LIBDIR})
- 
-@@ -306,7 +313,7 @@ if(TP_USE_CUDA)
-   target_include_directories(tensorpipe_cuda PUBLIC ${TP_CUDA_INCLUDE_DIRS})
- 
-   install(TARGETS tensorpipe_cuda
--          EXPORT TensorpipeTargets
-+          EXPORT tensorpipeTargets
-           LIBRARY DESTINATION ${TP_INSTALL_LIBDIR}
-           ARCHIVE DESTINATION ${TP_INSTALL_LIBDIR})
- 
 diff --git a/tensorpipe/python/CMakeLists.txt b/tensorpipe/python/CMakeLists.txt
-index ce49472..f6b6ab0 100644
+index b722381..688886a 100644
 --- a/tensorpipe/python/CMakeLists.txt
 +++ b/tensorpipe/python/CMakeLists.txt
-@@ -4,13 +4,13 @@
+@@ -4,16 +4,11 @@
  # This source code is licensed under the BSD-style license found in the
  # LICENSE file in the root directory of this source tree.
  
@@ -82,8 +43,6 @@ index ce49472..f6b6ab0 100644
  pybind11_add_module(pytensorpipe tensorpipe.cc)
 -target_link_libraries(pytensorpipe PRIVATE tensorpipe)
 +target_link_libraries(pytensorpipe PRIVATE tensorpipe pybind11::module)
-+
-+install(TARGETS pytensorpipe
-+        EXPORT tensorpipeTargets
-+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(TARGETS pytensorpipe
+         EXPORT TensorpipeTargets
