@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-platform-lib-dir.patch
         fix-build.patch
+        fix-linux-configure.patch # Remove this patch in the next update
 )
 
 set(OPTIONS)
