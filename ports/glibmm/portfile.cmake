@@ -22,7 +22,7 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/glibmm-2.70/proc" "${CURRENT_PACKAGES_DIR}/lib/glibmm-2.70/proc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/glibmm-2.68/proc" "${CURRENT_PACKAGES_DIR}/lib/glibmm-2.68/proc")
 
 vcpkg_fixup_pkgconfig()
 
