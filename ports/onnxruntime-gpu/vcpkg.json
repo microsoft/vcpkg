@@ -1,8 +1,23 @@
 {
   "name": "onnxruntime-gpu",
-  "version": "1.5.1",
-  "port-version": 1,
+  "version": "1.10.0",
   "description": "onnxruntime (GPU)",
   "homepage": "https://github.com/microsoft/onnxruntime",
-  "supports": "windows & !x86 & !uwp & !static & !arm"
+  "supports": "!uwp & !arm",
+  "dependencies": [
+    "boost-mp11",
+    "cpuinfo",
+    "date",
+    "eigen3",
+    "flatbuffers",
+    "nlohmann-json",
+    "onnx",
+    "protobuf",
+    "re2",
+    "safeint",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }
