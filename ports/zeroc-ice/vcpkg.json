@@ -18,9 +18,6 @@
     "icestorm"
   ],
   "features": {
-    "cpp11": {
-      "description": "C++11 mapping"
-    },
     "glacier2": {
       "description": "Glacier2"
     },

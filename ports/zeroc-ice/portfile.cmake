@@ -66,42 +66,17 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
     LOGNAME fixProjFiles-${TARGET_TRIPLET}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
   )
-
-  set(ICE_MAPPING_NAME "cpp98")
-  if("cpp11" IN_LIST FEATURES)
-    set(ICE_CPP11_MAPPING "On")
-    set(ICE_MAPPING_NAME "cpp11")
-  endif()
-
-  # Used as TARGET in vcpkg_install_msbuild()
-  set(ICE_MAIN_TARGET "C++98\\ice")
-  if(ICE_CPP11_MAPPING)
-    set(ICE_MAIN_TARGET "C++11\\ice++11")
-  endif()
-
-  # Certain executables implicitly cause the builds C++98 based libraries they 
-  # depend on, regardless of selected C++ mapping. 
-  # Generated header files will only be installed for the selected C++ mapping.
   
   set(ICE_OPTIONAL_COMPONENTS "")
   
   # IceSSL
   if("icessl" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icessl++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icessl")
-    endif()
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icessl++11")
   endif()
 
   # Glacier2
   if("glacier2" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\glacier2++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\glacier2")
-    endif()
-    
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\glacier2++11")
   endif()
   
   # Glacier2Router
@@ -112,13 +87,8 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
 
   # IceBox
   if("icebox" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\iceboxlib++11")
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icebox++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\iceboxlib")
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icebox")
-    endif()
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\iceboxlib++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icebox++11")
   endif()
 
   # IceBoxAdmin executable
@@ -128,11 +98,7 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
 
   # IceGrid
   if("icegrid" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icegrid++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icegrid")
-    endif()
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icegrid++11")
   endif()
   
   # IceGridAdmin 
@@ -152,11 +118,7 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
 
   # IceStorm
   if("icestorm" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icestorm++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icestorm")
-    endif()
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icestorm++11")
   endif()
   
   # IceStormAdmin 
@@ -181,11 +143,7 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
 
   # IceDiscovery
   if("icediscovery" IN_LIST FEATURES)
-    if(ICE_CPP11_MAPPING)
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icediscovery++11")
-    else()
-      vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icediscovery")
-    endif()
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icediscovery++11")
   endif()
 
   # Build Ice
