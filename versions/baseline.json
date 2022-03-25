@@ -6297,8 +6297,8 @@
       "port-version": 0
     },
     "sciter": {
-      "baseline": "deprecated",
-      "port-version": 0
+      "baseline": "0",
+      "port-version": 1
     },
     "sciter-js": {
       "baseline": "4.4.8.31",
