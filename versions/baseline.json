@@ -1562,7 +1562,7 @@
     },
     "cpp-redis": {
       "baseline": "4.3.1",
-      "port-version": 4
+      "port-version": 5
     },
     "cpp-taskflow": {
       "baseline": "2.6.0",
