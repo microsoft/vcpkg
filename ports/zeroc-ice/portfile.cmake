@@ -4,6 +4,7 @@ vcpkg_from_github(
     REPO zeroc-ice/ice
     REF v3.7.7
     SHA512 73c3a2bb14c9e145383e4026206edd3e03b29c60a33af628611bfdab71d69a3aed108ce4e6cbfd67eb852560110e3495b4bd238c8cdf0de9d1f8e2f1088513ee
+    PATCHES md5i_fix.patch slice2swift.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
@@ -12,6 +13,90 @@ set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
 set(RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
 set(DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
+
+
+  set(ICE_OPTIONAL_COMPONENTS_MSBUILD "")
+  set(ICE_OPTIONAL_COMPONENTS_MAKE "")
+  
+  # IceSSL
+  if("icessl" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icessl++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "src/IceSSL")
+  endif()
+
+  # Glacier2
+  if("glacier2" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\glacier2++11")
+  endif()
+  
+  # Glacier2Router
+  if("glacier2router" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\glacier2router")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\glacier2cryptpermissionsverifier")
+  endif()
+
+  # IceBox
+  if("icebox" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\iceboxlib++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icebox++11")
+  endif()
+
+  # IceBoxAdmin executable
+  if("iceboxadmin" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\iceboxadmin")
+  endif()
+
+  # IceGrid
+  if("icegrid" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
+  endif()
+  
+  # IceGridAdmin 
+  if("icegridadmin" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridadmin")
+  endif()
+  
+  # IceGridRegistry 
+  if("icegridregistry" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridregistry")
+  endif()
+  
+  # IceGridNode 
+  if("icegridnode" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridnode")
+  endif()
+
+  # IceStorm
+  if("icestorm" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icestorm++11")
+  endif()
+  
+  # IceStormAdmin 
+  if("icestormadmin" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormadmin")
+  endif()
+  
+  # IceStormService 
+  if("icestormservice" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormservice")
+  endif()
+  
+  # IceStormDB 
+  if("icestormdb" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormdb")
+  endif()
+
+  # IceBridge executable 
+  if("icebridge" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icebridge")
+  endif()
+
+  # IceDiscovery
+  if("icediscovery" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
+  endif()
+
+
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
 
@@ -23,14 +108,14 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(ENV{CPPFLAGS} "-I${CURRENT_INSTALLED_DIR}/include")
   set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/debug/lib")
 
-  set(ICE_BUILD_CONFIG "shared cpp11-shared")
+  set(ICE_BUILD_CONFIG "cpp11-shared")
   if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-    set(ICE_BUILD_CONFIG "static cpp11-static")
+    set(ICE_BUILD_CONFIG "cpp11-static")
   endif()
 
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
-    COMMAND make install V=1 prefix=${CURRENT_PACKAGES_DIR}/debug linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes LANGUAGES=cpp OPTIMIZE=no -j${VCPKG_CONCURRENCY} srcs
+    COMMAND make install V=1 prefix=${CURRENT_PACKAGES_DIR}/debug linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=no ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY} 
     WORKING_DIRECTORY ${SOURCE_PATH}/cpp
     LOGNAME make-${TARGET_TRIPLET}-dbg
   )
@@ -70,84 +155,7 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
   )
   
 
-  set(ICE_OPTIONAL_COMPONENTS "")
-  
-  # IceSSL
-  if("icessl" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icessl++11")
-  endif()
 
-  # Glacier2
-  if("glacier2" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\glacier2++11")
-  endif()
-  
-  # Glacier2Router
-  if("glacier2router" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\glacier2router")
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\glacier2cryptpermissionsverifier")
-  endif()
-
-  # IceBox
-  if("icebox" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\iceboxlib++11")
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icebox++11")
-  endif()
-
-  # IceBoxAdmin executable
-  if("iceboxadmin" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\iceboxadmin")
-  endif()
-
-  # IceGrid
-  if("icegrid" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icegrid++11")
-  endif()
-  
-  # IceGridAdmin 
-  if("icegridadmin" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icegridadmin")
-  endif()
-  
-  # IceGridRegistry 
-  if("icegridregistry" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icegridregistry")
-  endif()
-  
-  # IceGridNode 
-  if("icegridnode" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icegridnode")
-  endif()
-
-  # IceStorm
-  if("icestorm" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icestorm++11")
-  endif()
-  
-  # IceStormAdmin 
-  if("icestormadmin" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icestormadmin")
-  endif()
-  
-  # IceStormService 
-  if("icestormservice" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icestormservice")
-  endif()
-  
-  # IceStormDB 
-  if("icestormdb" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icestormdb")
-  endif()
-
-  # IceBridge executable 
-  if("icebridge" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++98\\icebridge")
-  endif()
-
-  # IceDiscovery
-  if("icediscovery" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS "/t:C++11\\icediscovery++11")
-  endif()
 
 set(MSVC_TOOLSET_VER ${VCPKG_PLATFORM_TOOLSET})
 if(${VCPKG_PLATFORM_TOOLSET} STREQUAL "v144" OR ${VCPKG_PLATFORM_TOOLSET} STREQUAL "v145")
@@ -164,7 +172,7 @@ endif()
     OPTIONS
       /p:UseVcpkg=yes
       /p:IceBuildingSrc=yes
-	    ${ICE_OPTIONAL_COMPONENTS}
+	    ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
   )
 
   if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
