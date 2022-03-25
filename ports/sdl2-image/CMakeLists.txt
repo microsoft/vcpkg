@@ -78,12 +78,12 @@ endif()
 
 if(USE_JPEG)
     find_package(JPEG REQUIRED)
-    target_link_libraries(SDL2_image JPEG::JPEG)
+    target_link_libraries(SDL2_image PRIVATE JPEG::JPEG)
 endif()
 
 if(USE_TIFF)
     find_package(TIFF REQUIRED)
-    target_link_libraries(SDL2_image TIFF::TIFF)
+    target_link_libraries(SDL2_image PRIVATE TIFF::TIFF)
 endif()
 
 install(TARGETS SDL2_image
