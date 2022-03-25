@@ -21,3 +21,9 @@ boost_modular_build(
 )
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+
+if("ssl" IN_LIST FEATURES)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/usage.ssl ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+else()
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+endif()

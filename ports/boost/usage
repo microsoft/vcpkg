@@ -3,9 +3,3 @@ The package boost is compatible with built-in CMake targets:
     find_package(Boost REQUIRED [COMPONENTS <libs>...])
     target_link_libraries(main PRIVATE ${Boost_LIBRARIES})
     target_include_directories(main PRIVATE ${Boost_INCLUDE_DIRS})
-    if(TARGET Boost::asio)
-      # If you link to Boost::asio, you get the prebuilt library. Include directly if you
-      # want to use Boost.ASIO header-only. Don't forget to add in link targets to
-      # OpenSSL if you enabled the ssl feature in boost-asio.
-      target_compile_definitions(Boost::asio INTERFACE BOOST_ASIO_SEPARATE_COMPILATION=1)
-    endif()

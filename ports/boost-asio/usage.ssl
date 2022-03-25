@@ -4,7 +4,8 @@ The package boost-asio is compatible with built-in CMake targets:
     # If you want to use Boost.ASIO header-only, link to Boost::boost
     target_link_libraries(main PRIVATE Boost::boost)
     # If you want to use separately compiled Boost.ASIO for better compilation speed,
-    # link to Boost::asio, Threads::Threads, and define BOOST_ASIO_SEPARATE_COMPILATION
+    # link to Boost::asio, Threads::Threads, OpenSSL, and define BOOST_ASIO_SEPARATE_COMPILATION
     find_package(Threads REQUIRED)
-    target_link_libraries(main PRIVATE Boost::asio Threads::Threads)
+    find_package(OpenSSL REQUIRED)
+    target_link_libraries(main PRIVATE Boost::asio Threads::Threads OpenSSL::SSL)
     target_compile_definitions(main PRIVATE -DBOOST_ASIO_SEPARATE_COMPILATION=1)
