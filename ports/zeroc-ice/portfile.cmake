@@ -198,7 +198,6 @@ endif()
     
   install_includes("${RELEASE_BUILD_DIR}/cpp/include" "${INCLUDE_SUB_DIRECTORIES}")
   
-  # Install generated header files (they depend on the selected C++ mapping)
   set(INCLUDE_GEN_SUB_DIRECTORIES
     "Glacier2"
     "Ice"
@@ -206,7 +205,7 @@ endif()
     "IceSSL"
     "IceStorm"
   )
-  install_includes("${RELEASE_BUILD_DIR}/cpp/include/generated/${ICE_MAPPING_NAME}/${TRIPLET_SYSTEM_ARCH}/Release" "${INCLUDE_GEN_SUB_DIRECTORIES}")
+  install_includes("${RELEASE_BUILD_DIR}/cpp/include/generated/cpp11/${TRIPLET_SYSTEM_ARCH}/Release" "${INCLUDE_GEN_SUB_DIRECTORIES}")
   
   vcpkg_clean_msbuild()
   
