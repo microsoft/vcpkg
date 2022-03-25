@@ -68,7 +68,7 @@ target_link_libraries(SDL2_image SDL2::SDL2)
 # external dependencies
 if(USE_WEBP)
     find_package(WebP REQUIRED)
-    target_link_libraries(SDL2_image WebP::webp)
+    target_link_libraries(SDL2_image PRIVATE WebP::webp)
 endif()
 
 if(USE_PNG)
