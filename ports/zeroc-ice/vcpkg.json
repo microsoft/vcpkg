@@ -7,7 +7,9 @@
   "dependencies": [
     "bzip2",
     "mcpp", 
-    "zlib"
+    "zlib",
+    "expat",
+    "lmdb"
   ],
   "default-features": [
     "glacier2", 
