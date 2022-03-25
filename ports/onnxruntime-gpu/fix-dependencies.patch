@@ -1,8 +1,8 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index acbde7f..aaa8a02 100644
+index 090051e..dbafe13 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -833,20 +833,19 @@ else()
+@@ -833,20 +833,20 @@ else()
    add_subdirectory(external/date EXCLUDE_FROM_ALL)
  endif()
  
@@ -13,8 +13,9 @@ index acbde7f..aaa8a02 100644
  
  if (onnxruntime_PREFER_SYSTEM_LIB)
 -  find_package(boost_mp11)
-+  find_package(Boost REQUIRED)
-+  add_library(Boost::mp11 ALIAS Boost::boost)
++  find_path(BOOST_MP11_INCLUDES NAMES mp11.hpp PATH_SUFFIXES include/boost)
++  add_library(Boost::mp11 INTERFACE IMPORTED)
++  target_include_directories(Boost::mp11 INTERFACE ${BOOST_MP11_INCLUDES})
  endif()
  if (NOT TARGET Boost::mp11)
    add_subdirectory(external/mp11 EXCLUDE_FROM_ALL)
@@ -27,7 +28,7 @@ index acbde7f..aaa8a02 100644
  
  if (onnxruntime_PREFER_SYSTEM_LIB)
    find_package(re2)
-@@ -894,6 +893,9 @@ endif()
+@@ -894,6 +894,9 @@ endif()
  
  # TODO  do we have to add target_include_directories to each project that uses this?
  if (CPUINFO_SUPPORTED)
@@ -37,7 +38,7 @@ index acbde7f..aaa8a02 100644
    set(PYTORCH_CPUINFO_DIR external/pytorch_cpuinfo)
    set(PYTORCH_CPUINFO_INCLUDE_DIR ${PYTORCH_CPUINFO_DIR}/include)
    set(CPUINFO_BUILD_TOOLS OFF CACHE INTERNAL "")
-@@ -911,6 +913,7 @@ if (CPUINFO_SUPPORTED)
+@@ -911,6 +914,7 @@ if (CPUINFO_SUPPORTED)
    if (MSVC)
      target_compile_options(cpuinfo PRIVATE "-D_CRT_SECURE_NO_WARNINGS")
    endif()
@@ -45,7 +46,7 @@ index acbde7f..aaa8a02 100644
  endif()
  
  # bounds checking behavior.
-@@ -1388,12 +1391,14 @@ else()
+@@ -1388,12 +1392,14 @@ else()
    include(onnx_minimal)
  endif()
  
