@@ -1,5 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(VCPKG_TARGET_TRIPLET ${TARGET_TRIPLET})
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
@@ -42,23 +43,21 @@ checkout_into_path(
 )
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
-    unset(_LIBRARY_DEB CACHE)
-    find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
+    find_library(_LIBRARY_DEB 
+        NAMES ${LIBRARY_NAMES}
         PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
-        NO_DEFAULT_PATH)
+        REQUIRED
+        NO_DEFAULT_PATH
+        NO_CACHE
+    )
 
-    if(_LIBRARY_DEB MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
-    endif()
-
-    unset(_LIBRARY_REL CACHE)
-    find_library(_LIBRARY_REL NAMES ${LIBRARY_NAMES}
+    find_library(_LIBRARY_REL 
+        NAMES ${LIBRARY_NAMES}
         PATHS "${CURRENT_INSTALLED_DIR}/lib"
-        NO_DEFAULT_PATH)
-
-    if(_LIBRARY_REL MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
-    endif()
+        REQUIRED
+        NO_DEFAULT_PATH
+        NO_CACHE
+    )
 
     set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
 
@@ -72,9 +71,24 @@ replace_gn_dependency(
     "z;zlib;zlibd"
 )
 
-set(OPTIONS_DBG "is_debug=true")
-set(OPTIONS_REL "")
 set(GN_OPTIONS "")
+function(set_compiler_options OPTIONS)
+    foreach(_VAR OPTIONS)
+        string(STRIP "${${_VAR}}" ${_VAR})
+    endforeach()
+
+    set(OPTIONS_DBG "is_debug=true \
+            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
+            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\""
+        PARENT_SCOPE
+    )
+    set(OPTIONS_REL " \
+            extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
+            extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\""
+        PARENT_SCOPE
+    )
+endfunction()
+
 if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
     message(STATUS "Setting GN options for Windows")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -82,23 +96,17 @@ if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-
-    set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\"")
-
-    set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\"")
+    list(APPEND OPTIONS 
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+    )
+    set_compiler_options(OPTIONS)
 
     set(DISABLE_WHOLE_PROGRAM_OPTIMIZATION "\
         extra_cflags=\"/GL-\" \
         extra_ldflags=\"/LTCG:OFF\" \
-        extra_arflags=\"/LTCG:OFF\"")
+        extra_arflags=\"/LTCG:OFF\""
+    )
 
     set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
@@ -109,21 +117,17 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_SHARED_LINKER_FLAGS)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-
-    set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-
-    set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-    
+    list(APPEND OPTIONS 
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_SHARED_LINKER_FLAGS
+    )
+    set_compiler_options(OPTIONS)
+    if (VCPKG_CRT_LINKAGE STREQUAL "static")
+        string(APPEND CMAKE_SHARED_LINKER_FLAGS " -static-libstdc++ ")
+    endif()
+    set(OPTIONS_DBG "${OPTIONS_DBG} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
+    set(OPTIONS_REL "${OPTIONS_REL} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
     string(TOLOWER ${VCPKG_CMAKE_SYSTEM_NAME} TARGET_OS)
     set(GN_OPTIONS 
         "target_os=\"${TARGET_OS}\" \
@@ -137,18 +141,11 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-    
-    set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\"")
-
-    set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\"")
+    list(APPEND OPTIONS 
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+    )
+    set_compiler_options(OPTIONS)
 elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
     message(STATUS "Setting GN options for OSX")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -156,44 +153,44 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
     endif()
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 
-    foreach(_VAR CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS
-        CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_SHARED_LINKER_FLAGS
-        CMAKE_EXE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS_DEBUG CMAKE_EXE_LINKER_FLAGS_RELEASE)
-        string(STRIP "${${_VAR}}" ${_VAR})
-    endforeach()
-
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " -lobjc -framework IOKit -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework Security ")
-    set(OPTIONS_DBG "${OPTIONS_DBG} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_DEBUG}\"")
-
-    set(OPTIONS_REL "${OPTIONS_REL} \
-        extra_cflags_c=\"${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}\" \
-        extra_cflags_cc=\"${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}\" \
-        extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_RELEASE}\"")
+    list(APPEND OPTIONS 
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+    )
+    set_compiler_options(OPTIONS)
+    set(LINKER_FLAGS "extra_ldflags=\" \
+        -framework IOKit -framework ApplicationServices \
+        -framework Foundation -framework Security\""
+    )
+    set(OPTIONS_DBG "${OPTIONS_DBG} ${LINKER_FLAGS}")
+    set(OPTIONS_REL "${OPTIONS_REL} ${LINKER_FLAGS}")
+    list(APPEND TARGETS util:mig_output)
 endif()
-message(STATUS "Configure GN")
+
+message(STATUS "Configuring GN")
 vcpkg_configure_gn(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "${GN_OPTIONS}"
-    OPTIONS_DEBUG "${OPTIONS_DBG}"
-    OPTIONS_RELEASE "${OPTIONS_REL}"
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS "${GN_OPTIONS}"
+        OPTIONS_DEBUG "${OPTIONS_DBG}"
+        OPTIONS_RELEASE "${OPTIONS_REL}"
+    )
+
+# Compile and install targets via GN and Ninja
+message(STATUS "Installing GN")
+list(PREPEND TARGETS 
+    client
+    client:common
+    util
+    third_party/mini_chromium/mini_chromium/base
+    handler:crashpad_handler
+    tools:generate_dump
 )
-## Compile and install targets via GN and Ninja
-message(STATUS "Install GN")
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS 
-        client
-        client:common
-        util
-        third_party/mini_chromium/mini_chromium/base
-        handler:crashpad_handler
-        tools:generate_dump
+    TARGETS ${TARGETS}
 )
 
-## Install headers
+# Install headers
 message(STATUS "Installing headers to ${CURRENT_PACKAGES_DIR}/include/${PORT}")
 set(PACKAGES_INCLUDE_DIR "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(GLOB_RECURSE HEADER_PATHS
@@ -212,8 +209,8 @@ file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_bu
     DESTINATION "${PACKAGES_INCLUDE_DIR}/build"
 )
 
-if("${TARGET_OS}" STREQUAL "android")
-    ## Rename crashpad_handler executable to libcrashpad_handler.so so it can be bundled in future package
+if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+    # Rename crashpad_handler executable to libcrashpad_handler.so so it can be bundled in future package
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/crashpad_handler"
         DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         RENAME "libcrashpad_handler.so"
@@ -223,7 +220,7 @@ if("${TARGET_OS}" STREQUAL "android")
         RENAME "libcrashpad_handler.so"
     )
 
-    ## Rename generate_dump executable to libgenerate_dump.so so it can be bundled in future package
+    # Rename generate_dump executable to libgenerate_dump.so so it can be bundled in future package
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/generate_dump"
         DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         RENAME "libgenerate_dump.so"
@@ -234,13 +231,14 @@ if("${TARGET_OS}" STREQUAL "android")
     )
 endif()
 
-## Configure cmake config for find_package
+# Configure cmake config for find_package
 configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/crashpadConfig.cmake" @ONLY
 )
 
 vcpkg_copy_pdbs()
-## Install copyright file
+
+# Install copyright file
 file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright

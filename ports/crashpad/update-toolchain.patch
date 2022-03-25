@@ -1,8 +1,28 @@
 diff --git a/build/config/BUILD.gn b/build/config/BUILD.gn
-index d6171ef..6eba5a7 100644
+index d6171ef..c5ecdf9 100644
 --- a/build/config/BUILD.gn
 +++ b/build/config/BUILD.gn
-@@ -430,7 +430,20 @@ toolchain("gcc_like_toolchain") {
+@@ -411,7 +411,7 @@ toolchain("gcc_like_toolchain") {
+                                "prebuilt", ndk_host_arch, "bin", ""])
+ 
+      if (target_cpu == "arm") {
+-       tool_prefix = "arm-linux-androideabi"
++       tool_prefix = "armv7a-linux-androideabi"
+      } else if (target_cpu == "arm64") {
+        tool_prefix = "aarch64-linux-android"
+      } else if (target_cpu == "x86") {
+@@ -420,17 +420,21 @@ toolchain("gcc_like_toolchain") {
+        tool_prefix = "x86_64-linux-android"
+      }
+ 
+-     if (target_cpu == "arm") {
+-       clang_prefix = "armv7a-linux-androideabi" + android_api_level
+-     } else {
+-       clang_prefix = tool_prefix + android_api_level
+-     }
+-
++     clang_prefix = tool_prefix + android_api_level
+      cc = ndk_bin_dir + clang_prefix + "-clang"
       cxx = ndk_bin_dir + clang_prefix + "-clang++"
       asm = cxx
       ld = cxx
@@ -14,17 +34,13 @@ index d6171ef..6eba5a7 100644
 +       asm += ".cmd"
 +       ld += ".cmd"
 +       ar = ndk_bin_dir + "llvm-ar.exe"
-+       not_needed(["tool_prefix"])
-+     } else if (host_os == "mac") {
-+       ar = ndk_bin_dir + "llvm-ar"
-+       not_needed(["tool_prefix"]) 
 +     } else {
-+       ar = ndk_bin_dir + tool_prefix + "-ar"
++       ar = ndk_bin_dir + "llvm-ar"
 +     }
    } else {
      cc = "clang"
      cxx = "clang++"
-@@ -471,7 +484,7 @@ toolchain("gcc_like_toolchain") {
+@@ -471,7 +475,7 @@ toolchain("gcc_like_toolchain") {
  
    tool("cc") {
      depfile = "{{output}}.d"
@@ -33,7 +49,7 @@ index d6171ef..6eba5a7 100644
      depsformat = "gcc"
      description = "CC {{output}}"
      outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -479,7 +492,7 @@ toolchain("gcc_like_toolchain") {
+@@ -479,7 +483,7 @@ toolchain("gcc_like_toolchain") {
  
    tool("cxx") {
      depfile = "{{output}}.d"
@@ -42,7 +58,7 @@ index d6171ef..6eba5a7 100644
      depsformat = "gcc"
      description = "CXX {{output}}"
      outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -499,7 +512,7 @@ toolchain("gcc_like_toolchain") {
+@@ -499,7 +503,7 @@ toolchain("gcc_like_toolchain") {
  
      tool("objc") {
        depfile = "{{output}}.d"
@@ -51,7 +67,7 @@ index d6171ef..6eba5a7 100644
        depsformat = "gcc"
        description = "OBJC {{output}}"
        outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -507,7 +520,7 @@ toolchain("gcc_like_toolchain") {
+@@ -507,7 +511,7 @@ toolchain("gcc_like_toolchain") {
  
      tool("objcxx") {
        depfile = "{{output}}.d"
@@ -60,7 +76,7 @@ index d6171ef..6eba5a7 100644
        depsformat = "gcc"
        description = "OBJCXX {{output}}"
        outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -539,7 +552,11 @@ toolchain("gcc_like_toolchain") {
+@@ -539,7 +543,11 @@ toolchain("gcc_like_toolchain") {
      if (mini_chromium_is_mac || mini_chromium_is_ios) {
        command = "libtool -static -no_warning_for_no_symbols {{arflags}}${extra_arflags} -o {{output}} {{inputs}}"
      } else {
@@ -73,7 +89,7 @@ index d6171ef..6eba5a7 100644
      }
      description = "AR {{output}}"
      default_output_dir = "{{target_out_dir}}"
-@@ -563,7 +580,7 @@ toolchain("gcc_like_toolchain") {
+@@ -563,7 +571,7 @@ toolchain("gcc_like_toolchain") {
        start_whole_flag = "-Wl,--whole-archive"
        end_whole_flag = "-Wl,--no-whole-archive "
      }
@@ -82,7 +98,7 @@ index d6171ef..6eba5a7 100644
      description = "SOLINK_MODULE $sofile"
  
      default_output_dir = "{{root_out_dir}}"
-@@ -582,7 +599,7 @@ toolchain("gcc_like_toolchain") {
+@@ -582,7 +590,7 @@ toolchain("gcc_like_toolchain") {
        start_group_flag = "-Wl,--start-group"
        end_group_flag = "-Wl,--end-group"
      }
@@ -91,7 +107,7 @@ index d6171ef..6eba5a7 100644
      description = "LINK $outfile"
  
      default_output_dir = "{{root_out_dir}}"
-@@ -591,12 +608,20 @@ toolchain("gcc_like_toolchain") {
+@@ -591,12 +599,20 @@ toolchain("gcc_like_toolchain") {
    }
  
    tool("stamp") {
