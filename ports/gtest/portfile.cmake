@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-main-lib-path.patch
+        remove-werror.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
