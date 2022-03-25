@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF  0d9030e79888d1d5828730b254fedc53c7b640c1 # v1.10.0
     SHA512 502b68fae7d2e8441ec26253a9e0cdcf970ab2b61efecee7d964e9880e59d657971a82a666710944617c86d18fa99c2cb9640fcd15f63d05b2617b562a5bdb2f
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES
+        fix-dependencies.patch
+        fix-build-issues.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
