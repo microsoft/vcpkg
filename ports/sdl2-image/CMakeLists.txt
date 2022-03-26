@@ -16,7 +16,7 @@ option(USE_TIFF "Enable support for TIFF format" OFF)
 # patch library names for preprocessor flags
 set(JPEG_FLAG JPG)
 set(TIFF_FLAG TIF)
-set(WebP_FLAG WEBP)
+set(WEBP_FLAG WEBP)
 
 ### implementation ###
 
@@ -69,25 +69,25 @@ target_link_libraries(SDL2_image SDL2::SDL2)
 # external dependencies
 if(USE_WEBP)
     find_package(WebP CONFIG REQUIRED)
-    add_definitions(-DLOAD_WebP_FLAG})
+    add_definitions(-DLOAD_WEBP)
     target_link_libraries(SDL2_image PRIVATE WebP::webp)
 endif()
 
 if(USE_PNG)
     find_package(libpng REQUIRED)
-    add_definitions(-DLOAD_PNG_FLAG)
+    add_definitions(-DLOAD_PNG)
     target_link_libraries(SDL2_image PRIVATE png)
 endif()
 
 if(USE_JPEG)
     find_package(JPEG REQUIRED)
-    add_definitions(-DLOAD_JPEG_FLAG})
+    add_definitions(-DLOAD_JPEG)
     target_link_libraries(SDL2_image ${JPEG_LIBRARIES})
 endif()
 
 if(USE_TIFF)
     find_package(TIFF REQUIRED)
-    add_definitions(-DLOAD_TIFF_FLAG})
+    add_definitions(-DLOAD_TIFF)
     target_link_libraries(SDL2_image PRIVATE TIFF::TIFF)
 endif()
 
