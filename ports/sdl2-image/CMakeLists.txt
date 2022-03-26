@@ -81,13 +81,13 @@ endif()
 
 if(USE_JPEG)
     find_package(JPEG REQUIRED)
-    add_definitions(-DLOAD_JPEG)
-    target_link_libraries(SDL2_image ${JPEG_LIBRARIES})
+    add_definitions(-DLOAD_JPG)
+    target_link_libraries(SDL2_image PRIVATE ${JPEG_LIBRARIES})
 endif()
 
 if(USE_TIFF)
     find_package(TIFF REQUIRED)
-    add_definitions(-DLOAD_TIFF)
+    add_definitions(-DLOAD_TIF)
     target_link_libraries(SDL2_image PRIVATE TIFF::TIFF)
 endif()
 
