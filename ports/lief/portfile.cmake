@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 0.12.0-rc.1
-    SHA512 2193ef5047795c9cf6bcd6fecfc8808cf5eaaa9f30ea03a6ef55c161950f5cccfa1618b18162721bebbbc6189d5ee2941d4d9dee858cd69dc743810f2d042ed1
+    REF 0.12.0
+    SHA512 07089996282ed9b8b9e3061f5b0e1f1711a54d316e8d602205b8eb99a24da762bf7d91143f52af5d75f7a5d94ea65caf08b3263e4e18935277d2aecc8330203b
     HEAD_REF master
     PATCHES
         0001-Support-vcpkg.patch
