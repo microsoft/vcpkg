@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DENABLE_SHAREDPTR_DEBUG=ON
         -DENABLE_DEVEL=ON
-        -DENABLE_REFCNT_DEBUG=ON
+        -DENABLE_REFCNT_DEBUG=OFF
         -DENABLE_SHAREDPTR_DEBUG=ON
         -DWITHOUT_OPTIMIZATION=ON
     OPTIONS_RELEASE
@@ -50,21 +50,21 @@ vcpkg_cmake_config_fixup(
 
 if("lz4" IN_LIST FEATURES)
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake
+        "${CURRENT_PACKAGES_DIR}/share/rdkafka/RdKafkaConfig.cmake"
         "find_dependency(LZ4)"
         "include(\"\${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake\")\n  find_dependency(LZ4)"
     )
 endif()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     foreach(hdr rdkafka.h rdkafkacpp.h)
         vcpkg_replace_string(
-            ${CURRENT_PACKAGES_DIR}/include/librdkafka/${hdr}
+            "${CURRENT_PACKAGES_DIR}/include/librdkafka/${hdr}"
             "#ifdef LIBRDKAFKA_STATICLIB"
             "#if 1 // #ifdef LIBRDKAFKA_STATICLIB"
         )
@@ -72,9 +72,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSES.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSES.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 # Install usage
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 vcpkg_fixup_pkgconfig()
