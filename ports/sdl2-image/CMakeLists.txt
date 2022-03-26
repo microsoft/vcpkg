@@ -16,6 +16,7 @@ option(USE_TIFF "Enable support for TIFF format" OFF)
 # patch library names for preprocessor flags
 set(JPEG_FLAG JPG)
 set(TIFF_FLAG TIF)
+set(WebP_FLAG WEBP)
 
 ### implementation ###
 
@@ -67,22 +68,26 @@ target_link_libraries(SDL2_image SDL2::SDL2)
 
 # external dependencies
 if(USE_WEBP)
-    find_package(WebP REQUIRED)
+    find_package(WebP CONFIG REQUIRED)
+    add_definitions(-DLOAD_WebP_FLAG})
     target_link_libraries(SDL2_image PRIVATE WebP::webp)
 endif()
 
 if(USE_PNG)
-find_package(libpng REQUIRED)
-target_link_libraries(SDL2_image PRIVATE png)
+    find_package(libpng REQUIRED)
+    add_definitions(-DLOAD_PNG_FLAG)
+    target_link_libraries(SDL2_image PRIVATE png)
 endif()
 
 if(USE_JPEG)
     find_package(JPEG REQUIRED)
-    target_link_libraries(SDL2_image PRIVATE JPEG::JPEG)
+    add_definitions(-DLOAD_JPEG_FLAG})
+    target_link_libraries(SDL2_image ${JPEG_LIBRARIES})
 endif()
 
 if(USE_TIFF)
     find_package(TIFF REQUIRED)
+    add_definitions(-DLOAD_TIFF_FLAG})
     target_link_libraries(SDL2_image PRIVATE TIFF::TIFF)
 endif()
 
@@ -97,6 +102,7 @@ install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake"
 [[include(CMakeFindDependencyMacro)
 find_dependency(SDL2 CONFIG)
+find_dependency(WebP CONFIG)
 include("${CMAKE_CURRENT_LIST_DIR}/sdl2-image-targets.cmake")
 ]])
 set(prefix "")
