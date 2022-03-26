@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/syntax-highlighting
-    REF v5.87.0
-    SHA512 a5750e6dd3a055531f041a56240fba3cdfb90b2552fad8f1ec9ba6cebbe569a342737bc28a17bc1f738c21afe26208b7d1dd32a81d9d58421a2f3be52e836dce
+    REF v5.89.0
+    SHA512 c92df10d236d736f3f944f25efac796636ef857049732c0359edb900a1686839c55303917ab2286935024e7e6f19a0797fc38b417a1bd60d5dfb8c9c45ca6e66
     HEAD_REF master
 )
 
@@ -11,11 +11,11 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
 )

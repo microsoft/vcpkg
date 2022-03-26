@@ -1,3 +1,14 @@
+From f337e19d0d0564b1b000ecd5dfbefed6c37f4d5b Mon Sep 17 00:00:00 2001
+From: Matthias Kuhn <matthias@opengis.ch>
+Date: Tue, 21 Dec 2021 07:57:09 +0000
+Subject: [PATCH] Fix pkgconfig
+
+---
+ CMakeLists.txt         |  4 ++--
+ libtiff-4.pc.in        |  3 ++-
+ libtiff/CMakeLists.txt | 19 +++++++++++++++++++
+ 3 files changed, 23 insertions(+), 3 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 2188f97..93e6a34 100644
 --- a/CMakeLists.txt
@@ -35,7 +46,7 @@ index abe75a6..8899725 100644
  Cflags: -I${includedir}
 +Requires.private: @tiff_requires_private@
 diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
-index db5f140..6db71ee 100755
+index db5f140..32721ec 100755
 --- a/libtiff/CMakeLists.txt
 +++ b/libtiff/CMakeLists.txt
 @@ -106,14 +106,19 @@ target_include_directories(tiff
@@ -58,7 +69,7 @@ index db5f140..6db71ee 100755
    if(JPEG_DUAL_MODE_8_12)
      target_include_directories(tiff PRIVATE ${JPEG12_INCLUDE_DIR})
      target_link_libraries(tiff PRIVATE ${JPEG12_LIBRARIES})
-@@ -127,14 +132,23 @@ if(LERC_SUPPORT)
+@@ -127,15 +132,29 @@ if(LERC_SUPPORT)
  endif()
  if(LZMA_SUPPORT)
      target_link_libraries(tiff PRIVATE LibLZMA::LibLZMA)
@@ -73,12 +84,21 @@ index db5f140..6db71ee 100755
 +  string(APPEND tiff_requires_private " libwebp")
  endif()
  target_link_libraries(tiff PRIVATE CMath::CMath)
-+if(CMath_LIBRARY)
-+  string(APPEND tiff_libs_private " -lm")
+ 
++include(CheckLibraryExists)
++
++CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)
++
++if (HAVE_LIB_M)
++    string(APPEND tiff_libs_private " -lm")
 +endif()
 +
 +set(tiff_libs_private "${tiff_libs_private}" PARENT_SCOPE)
 +set(tiff_requires_private "${tiff_requires_private}" PARENT_SCOPE)
- 
++
  set_target_properties(tiff PROPERTIES SOVERSION ${SO_COMPATVERSION})
  if(NOT CYGWIN)
+     # This property causes shared libraries on Linux to have the full version
+-- 
+2.25.1
+

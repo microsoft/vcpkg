@@ -7,13 +7,19 @@ vcpkg_from_gitlab(
     REF ${FONTCONFIG_VERSION}
     SHA512 815f999146970c7f0e6c15a21f218d4b3f75b26d4ef14d36711bc0a1de19e59cc62d6a2c53993dd38b963ae30820c4db29f103380d5001886d55b6a7df361154
     HEAD_REF master
+    PATCHES
+        no-etc-symlinks.patch
 )
 
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -Ddoc=disabled
+)
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
@@ -63,7 +69,7 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 
 # Build the fontconfig cache
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
     vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
@@ -72,7 +78,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows. 
+    # Unnecessary make rule creating the fontconfig cache dir on windows.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 

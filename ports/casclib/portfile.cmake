@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCASC_BUILD_SHARED_LIB=${CASC_BUILD_SHARED_LIB}
         -DCASC_BUILD_STATIC_LIB=${CASC_BUILD_STATIC_LIB}
+        -DCASC_UNICODE=ON
 )
 
 vcpkg_cmake_install()

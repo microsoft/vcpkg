@@ -5,6 +5,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "assimp"  FEATURE_quick3d_assimp
+    #"assimp"  CMAKE_REQUIRE_FIND_PACKAGE_WrapQuick3DAssimp
 INVERTED_FEATURES
     "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapQuick3DAssimp
     )

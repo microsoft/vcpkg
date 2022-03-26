@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemmodels
-    REF v5.87.0
-    SHA512 bb42c4c5c8518de2114fc50a1e3f263de55594e3dfe88ce7a8111ebd9760976e282ca07d36af05911dbe70ed5cf6c6b787f667457d385a41e8dac7abb046babe
+    REF v5.89.0
+    SHA512 4d7730994f935bd0929e8ceacfaed945e784cebdc86642c6148ce21108c4ffe792774196613c8b3215354069db85d276a30c6608445961f67aeb1b420a579007
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
 )
@@ -27,4 +27,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-

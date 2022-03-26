@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.87.0
-    SHA512 d37a0e28d6a78bbde3fbf0cb4669711edebc27b295beb7a29f60751cbd21448c3ea6f82e487b889e466908f2217d1477552cd4ae3399b761700f0789edfc02d4
+    REF v5.89.0
+    SHA512 83f748690efe8024f603057cc97ab713f82ba6fbdb4462bb6052a8e89945e4117d6b1f030e0064120ae7e34a9b06860ba77d56617d5663578f0ac11a74dba2db
     HEAD_REF master
-    PATCHES
-        x11_private_dependency.diff
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

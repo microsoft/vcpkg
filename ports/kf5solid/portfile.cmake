@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/solid
-    REF v5.87.0
-    SHA512 e1add78825841c8a87b006a2c1dba31fff7fff5a26af52379769a0851927edead2296aab240c95c11d4d866dfd08e63ee92619f44ea0b8b08a8cc1a827f31e9a
+    REF v5.89.0
+    SHA512 18d3c709756476870b6495bd5a99d70ec291a71a2f79dae954ce434953fb6299033c2dc85c68adf81031b03b70bf2e4798b7428da99c2ac28ddd6070cc413592
     HEAD_REF master
     PATCHES
         fix-libmount.patch
@@ -34,7 +34,7 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
@@ -65,4 +65,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-

@@ -1,0 +1,65 @@
+{
+  "name": "vcpkg-ci-boost",
+  "version": "1",
+  "description": "Boost features testing within CI.",
+  "dependencies": [
+    {
+      "name": "boost",
+      "default-features": false,
+      "features": [
+        "mpi"
+      ]
+    },
+    {
+      "name": "boost-asio",
+      "default-features": false,
+      "features": [
+        "ssl"
+      ]
+    },
+    {
+      "name": "boost-fiber",
+      "default-features": false,
+      "features": [
+        "numa"
+      ]
+    },
+    {
+      "name": "boost-locale",
+      "default-features": false,
+      "features": [
+        "icu"
+      ]
+    },
+    {
+      "name": "boost-mpi",
+      "default-features": false,
+      "features": [
+        "python3"
+      ],
+      "platform": "!static"
+    },
+    {
+      "name": "boost-odeint",
+      "default-features": false,
+      "features": [
+        "mpi"
+      ]
+    },
+    {
+      "name": "boost-python",
+      "default-features": false,
+      "features": [
+        "python2",
+        "python3"
+      ]
+    },
+    {
+      "name": "boost-regex",
+      "default-features": false,
+      "features": [
+        "icu"
+      ]
+    }
+  ]
+}

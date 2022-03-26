@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
-    REF v5.87.0
-    SHA512 c6b09d2c67902370da3d6cba61aa0b6c13d496332e5ba9694fe43a6571229f60389164024643b9e56c0c1e5cced0d29942b4b7a0ba919dd86b47dbf4602cb74d
-    PATCHES
-        xcb_private_dependency.diff
+    REF v5.89.0
+    SHA512 8cdb177b5dff487c0039f6243a8652e8e0aaae5cd55f299f8ad4cd2c66651fc0be36328998807398b53803989881b511f0ee472359c6129ff809e9b50283b66a
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -12,11 +10,11 @@ if (VCPKG_TARGET_IS_LINUX)
 endif()
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE ${SOURCE_PATH}/.clang-format "DisableFormat: true\nSortIncludes: false\n")
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
 )
@@ -32,5 +30,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/KF5/KWindowSystem/config-kwindowsystem.h" "${CURRENT_PACKAGES_DIR}/" "")
 
+file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7541c8d..b4076fe 100644
+index 7541c8d07..cc14d2160 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -122,40 +122,54 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
@@ -48,7 +48,7 @@ index 7541c8d..b4076fe 100644
 +find_package(WebP CONFIG REQUIRED)
 +set(WEBP_LIBRARY WebP::webp)
 +set(WEBP_FOUND 1)
-+find_package(Blend2D REQUIRED)
++find_package(Blend2D CONFIG REQUIRED)
  
  if(OSGEARTH_ENABLE_PROFILING)
 -    find_package(Tracy)
@@ -93,3 +93,23 @@ index 7541c8d..b4076fe 100644
  ENDIF (WITH_EXTERNAL_TINYXML)
  
  # postfix settings for various configs
+diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
+index cd55c1164..4ecb61f0d 100644
+--- a/src/osgEarth/CMakeLists.txt
++++ b/src/osgEarth/CMakeLists.txt
+@@ -909,11 +909,11 @@ IF(FILEGDB_FOUND)
+     LINK_WITH_VARIABLES(${LIB_NAME} FILEGDB_LIBRARY)
+ ENDIF()
+ 
+-IF(BLEND2D_FOUND)
++#IF(BLEND2D_FOUND)
+     add_definitions(-DOSGEARTH_HAVE_BLEND2D)
+-    include_directories(${BLEND2D_INCLUDES})
+-    link_with_variables(${LIB_NAME} BLEND2D_LIBRARY)
+-ENDIF()
++#    include_directories(${BLEND2D_INCLUDES})
++    target_link_libraries(${LIB_NAME} blend2d::blend2d)
++#ENDIF()
+ 
+ IF (WIN32)
+   LINK_EXTERNAL(${LIB_NAME} ${TARGET_EXTERNAL_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${MATH_LIBRARY} )

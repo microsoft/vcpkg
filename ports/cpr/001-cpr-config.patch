@@ -1,32 +1,23 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index 8061a14..e8daf19 100644
+index d43fc1d..d6a3992 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -21,6 +21,7 @@ add_library(cpr
- 
- add_library(cpr::cpr ALIAS cpr)
- 
-+target_include_directories(cpr PUBLIC $<INSTALL_INTERFACE:include>)
- target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but first dependencys in ssl_options need to be removed
- 
- # Set version for shared libraries.
-@@ -29,4 +30,18 @@ set_target_properties(cpr
+@@ -29,6 +29,10 @@ set_target_properties(cpr
+      PROPERTIES
       VERSION ${${PROJECT_NAME}_VERSION}
       SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
- 
--install(TARGETS cpr)
-+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-+install(TARGETS cpr
-+  EXPORT ${TARGETS_EXPORT_NAME}
-+  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib)
-+
-+install(
-+  EXPORT ${TARGETS_EXPORT_NAME} 
-+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-+)
-+
++     
 +if (NOT DISABLE_INSTALL_HEADERS)
 +  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../include/cpr DESTINATION include)
 +endif()
+ 
+ # Import GNU common install directory variables
+ include(GNUInstallDirs)
+@@ -37,6 +41,7 @@ if(CPR_FORCE_USE_SYSTEM_CURL)
+     install(TARGETS cpr
+             EXPORT cprTargets
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+     # Include CMake helpers for package config files
