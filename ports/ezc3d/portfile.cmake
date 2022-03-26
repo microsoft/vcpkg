@@ -1,8 +1,8 @@
 vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
-    REF Release_1.4.6
-    SHA512 f63da7e715c09c6a757fe923fd397c09e1cbd0a58a78b1d8fa52bd1a41230ecab2cbb17ecc3d4f66656f3234bfe4c8588164f1d4964dcce729da091e99daab2d
+    REF Release_1.4.7
+    SHA512 ba234be76b5d95b9527952c7e1bf67d9725fc280bf991f45e7cbd68f1aeeab7e963c8c4d928e720d02ebc02ec2b0e41f1c28036cd728ccb4c5a77c6fa81a74ad
     HEAD_REF dev
 )
 
