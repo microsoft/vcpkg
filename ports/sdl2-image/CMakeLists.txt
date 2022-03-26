@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.12)
 project(SDL2_image C)
 
 ### configuration ###
@@ -12,11 +12,6 @@ option(USE_WEBP "Enable support for WebP format" OFF)
 option(USE_PNG "Enable support for PNG format" OFF)
 option(USE_JPEG "Enable support for JPEG format" OFF)
 option(USE_TIFF "Enable support for TIFF format" OFF)
-
-# patch library names for preprocessor flags
-set(JPEG_FLAG JPG)
-set(TIFF_FLAG TIF)
-set(WEBP_FLAG WEBP)
 
 ### implementation ###
 
@@ -89,6 +84,11 @@ if(USE_TIFF)
     find_package(TIFF REQUIRED)
     add_definitions(-DLOAD_TIF)
     target_link_libraries(SDL2_image PRIVATE TIFF::TIFF)
+    
+    if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
+        set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
+    endif()
 endif()
 
 install(TARGETS SDL2_image
