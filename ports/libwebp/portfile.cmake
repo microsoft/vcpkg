@@ -7,7 +7,6 @@ vcpkg_from_github(
   PATCHES
     0001-build.patch
     0002-cmake-config-add-backwards-compatibility.patch
-    0003-always-mux.patch #always build libwebpmux
     0004-add-missing-linked-library.patch
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch
@@ -31,7 +30,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      dwebp        WEBP_BUILD_DWEBP
      swap16bitcsp WEBP_ENABLE_SWAP_16BIT_CSP
      unicode      WEBP_UNICODE
-     libbwebpmux  WEBP_BUILD_LIBWEBPMUX
+     libwebpmux   WEBP_BUILD_LIBWEBPMUX
 )
 
 
@@ -65,7 +64,9 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebp.pc" "-lwebp" "-lwebpd")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdecoder.pc" "-lwebpdecoder" "-lwebpdecoderd")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdemux.pc" "-lwebpdemux" "-lwebpdemuxd")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpmux.pc" "-lwebpmux" "-lwebpmuxd")
+    if("libwebpmux" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpmux.pc" "-lwebpmux" "-lwebpmuxd")
+    endif()
 endif()
 vcpkg_fixup_pkgconfig()
 
