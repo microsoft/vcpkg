@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO webmproject/libwebp
-  REF 9ce5843dbabcfd3f7c39ec7ceba9cbeb213cbfdf # v1.2.1
-  SHA512 43224caedb0d591ad1dd3872cd882c0fe255e24425f6da82fca212783ddb231326797a82ead0a1b8b15dc98db1cb05741e3a5e5131babbcc49a529a9f3253865
+  REF v1.2.2
+  SHA512 04a036b705316ea04add50c9ec2d6d7a8316c710556b97413015d7b8548fe31a8f7f5bf0632e76262ada504dcc35ead20189ee7fcb3cebbe568eb15736ad9a94
   HEAD_REF master
   PATCHES
     0001-build.patch
