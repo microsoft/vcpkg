@@ -66,6 +66,7 @@ function(vcpkg_cmake_configure)
         find_program(NINJA NAMES ninja ninja-build)
         if(NOT NINJA)
             set(ninja_host OFF)
+            set(arg_DISABLE_PARALLEL_CONFIGURE ON)
             set(arg_WINDOWS_USE_MSBUILD ON)
         endif()
     endif()
@@ -210,7 +211,7 @@ function(vcpkg_cmake_configure)
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
         ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
-    if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
+    if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
