@@ -6,6 +6,7 @@
   "dependencies": [
     {
       "name": "libwebp",
+      "default-features": false,
       "features": [
         "unicode"
       ],
@@ -63,6 +64,7 @@
       "dependencies": [
         {
           "name": "libwebp",
+          "default-features": false,
           "features": [
             "img2webp",
             "mux"
@@ -81,6 +83,7 @@
       "dependencies": [
         {
           "name": "libwebp",
+          "default-features": false,
           "features": [
             "vwebp"
           ]
@@ -141,6 +144,7 @@
       "dependencies": [
         {
           "name": "libwebp",
+          "default-features": false,
           "features": [
             "vwebp"
           ]
