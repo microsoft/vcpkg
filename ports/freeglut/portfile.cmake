@@ -5,7 +5,7 @@ vcpkg_from_sourceforge(
     FILENAME "freeglut-3.2.2.tar.gz"
     SHA512 190231951d314f854c244bd27f7c20488403bd0eecffc342097a2e3d1621cec87f6c209a77b4c153aabcf44697b4070227930e295ab74fb88953cbbf94fc81d9
     PATCHES 
-        use_targets_to_export_x11_dependency.patch
+        x11-dependencies-export.patch
         macOS_Xquartz.patch
         fix-debug-macro.patch
         no_x64_enforcement.patch
