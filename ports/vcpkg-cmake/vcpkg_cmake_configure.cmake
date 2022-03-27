@@ -61,10 +61,13 @@ function(vcpkg_cmake_configure)
     endif()
 
     set(ninja_host ON) # Ninja availability
-    if(host_architecture STREQUAL "x86")
+    if(host_architecture STREQUAL "x86" OR DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         # Prebuilt ninja binaries are only provided for x64 hosts
-        set(ninja_host OFF)
-        set(arg_WINDOWS_USE_MSBUILD ON)
+        find_program(NINJA NAMES ninja ninja-build)
+        if(NOT NINJA)
+            set(ninja_host OFF)
+            set(arg_WINDOWS_USE_MSBUILD ON)
+        endif()
     endif()
 
     set(generator "")
