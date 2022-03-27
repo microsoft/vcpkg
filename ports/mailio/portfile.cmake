@@ -17,6 +17,11 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
+vcpkg_fixup_cmake_targets(
+     CONFIG_PATH share/mailio/cmake
+     TARGET_PATH share/mailio
+)
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
