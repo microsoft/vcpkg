@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsndfile/libsndfile
-    REF 1.0.31
-    SHA512 5767ced306f2d300aa2014d383c22f3ee9a4fe1ffb2c463405bc26209ede09a9cfb95e1c08256db36e986d2b30151c38dbe635a3cae0b7138d7de485e2084891
+    REF 1.1.0
+    SHA512 5e530c33165a2d2be1c22d3a4bd96f0f1817dded3a45d24bad0e3f2c7908ccc1f19327a91d5040c3ea4d591845876019180747a125bf2a6f8bd49a6f67eadacd
     HEAD_REF master
 )
 
@@ -11,7 +11,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES external-libs ENABLE_EXTERNAL_LIBS
+    FEATURES
+        external-libs ENABLE_EXTERNAL_LIBS
+        mpeg ENABLE_MPEG
+        regtest BUILD_REGTEST
 )
 
 vcpkg_configure_cmake(
@@ -19,10 +22,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_REGTEST=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_BOW_DOCS=OFF
         -DBUILD_PROGRAMS=OFF
+        -DBUILD_REGTEST=OFF
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DPYTHON_EXECUTABLE=${PYTHON3}
         ${FEATURE_OPTIONS}

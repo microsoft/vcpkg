@@ -3973,7 +3973,7 @@
       "port-version": 1
     },
     "libsndfile": {
-      "baseline": "1.0.31",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libsnoretoast": {
