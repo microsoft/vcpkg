@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
-    REF 1a2e886e4a31eae7362574933734a39c3a523ca7 # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
-    SHA512 b58665e836e6a1fc6b7669f7ba1208e14468b5f6b8ba3fdd06936cc47c8b32a027de49a4e252c8b6fabc13f846af30b7d209c6ba79842d165049f4baad7e4da9    
+    REF v1.16.0 # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
+    SHA512 bfd54c6cca944ed33622da74dc1417ab75b542002c02c83bb86c917fd5968936c4b56ec734bd6d757e9fa67364f9dc85fd15ed28697ed410305df4928cf6790b
     HEAD_REF master
     PATCHES
         use-find-package-asio.patch
