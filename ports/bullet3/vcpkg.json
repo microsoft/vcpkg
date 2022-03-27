@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Bullet Physics is a professional collision detection, rigid body, and soft body dynamics library",
   "homepage": "https://github.com/bulletphysics/bullet3",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
