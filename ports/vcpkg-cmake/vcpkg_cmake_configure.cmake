@@ -92,12 +92,13 @@ function(vcpkg_cmake_configure)
             "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
-    # If we use Ninja, make sure it's on PATH
-    if(generator STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
+    if(generator STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
+        # If we use Ninja, it must be on PATH for CMake's ExternalProject,
+        # cf. https://gitlab.kitware.com/cmake/cmake/-/issues/23355.
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
-        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -215,11 +216,6 @@ function(vcpkg_cmake_configure)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
-        if(NOT DEFINED ninja_path)
-            # if ninja_path was defined above, we've already done this
-            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
-            vcpkg_add_to_path("${ninja_path}")
-        endif()
 
         #parallelize the configure step
         set(ninja_configure_contents
