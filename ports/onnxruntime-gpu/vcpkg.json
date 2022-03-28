@@ -15,6 +15,7 @@
     "protobuf",
     "re2",
     "safeint",
+    "wil",
     {
       "name": "vcpkg-cmake",
       "host": true
