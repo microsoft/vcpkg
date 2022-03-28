@@ -9,12 +9,7 @@ vcpkg_from_github(
     SHA512 c412c1bfb93803568e83be3777491b1b99be9ae9338b3d4fd87b0422ad428b9e45ebc7488f668f21957930c07189ee72567c5661964e5458d0d0cf37fe1c0608
     HEAD_REF release_13x
     PATCHES
-        0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
-        0005-fix-tools-path.patch
-        0007-fix-compiler-rt-install-path.patch
-        0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
 )
@@ -48,22 +43,20 @@ get_filename_component(PERL_DIR ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_DIR})
 
 set(VCPKG_BUILD_TYPE release) # Only need release tools
+set(CURRENT_PACKAGES_DIR_BAK "${CURRENT_PACKAGES_DIR}")
+set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/tools/llvm-flang")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CROSS_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
-        -DCMAKE_INSTALL_BINDIR=tools/llvm-flang/bin
-        -DCMAKE_INSTALL_INCLUDEDIR=tools/llvm-flang/include
-        -DCMAKE_INSTALL_LIBDIR=tools/llvm-flang/lib
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_INCLUDE_BENCHMARKS=OFF
         -DLLVM_BUILD_TESTS=OFF
         -DLLVM_BUILD_UTILS=OFF
         -DLLVM_INSTALL_UTILS=ON
-        
         -DLLVM_TOOL_BUGPOINT_BUILD=OFF
         -DLLVM_TOOL_BUGPOINT_PASSES_BUILD=OFF
         -DLLVM_TOOL_DSYMÙTIL_BUILD=OFF
@@ -133,7 +126,6 @@ vcpkg_cmake_configure(
         -DLLVM_TOOL_OPT_BUILD=OFF
         -DLLVM_TOOL_OPT_VIEWER_BUILD=OFF
         -DLLVM_TOOL_VFABI_DEMANGLE_FUZZER_BUILD=OFF
-        -DLLVM_TOOL_DSYMUTIL=OFF
         -DLLVM_TOOL_LLI_BUILD=OFF
         -DLLVM_TOOL_MLIR_BUILD=ON
         -DCLANG_TOOL_AMDGPU_ARCH_BUILD=OFF
@@ -164,16 +156,19 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         #"-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         -DLLVM_ENABLE_CLASSIC_FLANG=ON 
-        -DLLVM_ENABLE_PROJECTS="clang\;openmp"
+        -DLLVM_ENABLE_PROJECTS="clang\;flang\;openmp"
         "-DLLVM_TARGETS_TO_BUILD=X86"
-        
+        -DFLANG_BUILD_NEW_DRIVER=OFF
+        -DFLANG_INCLUDE_DOCS=OFF
         #-DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
         -DLLVM_BUILD_LLVM_C_DYLIB=OFF
         # Path for binary subdirectory (defaults to 'bin')
-        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm-flang
+        #-DLLVM_TOOLS_INSTALL_DIR=tools/flang
+        -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
 )
+set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR_BAK}")
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
@@ -226,7 +221,7 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/llvm-flang")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/llvm-flang/bin")
 
 # LLVM still generates a few DLLs in the static build:
 # * libclang.dll

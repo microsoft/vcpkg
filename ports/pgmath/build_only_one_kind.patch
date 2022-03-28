@@ -1,0 +1,16 @@
+diff --git a/runtime/libpgmath/lib/CMakeLists.txt b/runtime/libpgmath/lib/CMakeLists.txt
+index c64f7fb83..149d8bfcd 100644
+--- a/runtime/libpgmath/lib/CMakeLists.txt
++++ b/runtime/libpgmath/lib/CMakeLists.txt
+@@ -259,7 +259,10 @@ endif()
+ else()
+     set_target_properties(${LIBPGMATH_LIBRARY_NAME}_static PROPERTIES OUTPUT_NAME ${LIBPGMATH_LIBRARY_NAME})
+ endif()
++if(PGMATH_SHARED)
+ install(TARGETS ${LIBPGMATH_LIBRARY_NAME}
+   LIBRARY DESTINATION lib)
++else()
+ install(TARGETS ${LIBPGMATH_LIBRARY_NAME}_static
+   ARCHIVE DESTINATION lib)
++endif()
+\ No newline at end of file

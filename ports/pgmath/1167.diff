@@ -1,0 +1,1538 @@
+diff --git a/runtime/libpgmath/lib/common/dispatch.c b/runtime/libpgmath/lib/common/dispatch.c
+index 423993e52493..717b3bab92ce 100644
+--- a/runtime/libpgmath/lib/common/dispatch.c
++++ b/runtime/libpgmath/lib/common/dispatch.c
+@@ -333,7 +333,7 @@ __mth_rt_vi_ptrs_t __mth_rt_vi_ptrs_stat;
+ uint64_t __mth_rt_stats[frp_size][func_size][sv_size];
+ static  __mth_rt_vi_ptrs_t __mth_rt_vi_ptrs_new;
+ 
+-#if !defined(WIN64) && !defined(DISPATCH_IS_STATIC)
++#if !defined(_WIN64) && !defined(DISPATCH_IS_STATIC)
+ #define CONSTRUCTOR __attribute__((constructor(101)))
+ #define DESTRUCTOR __attribute__((destructor))
+ #else
+diff --git a/runtime/libpgmath/lib/common/fltfenv.c b/runtime/libpgmath/lib/common/fltfenv.c
+index 0f96e9742b1f..8411572a6d13 100644
+--- a/runtime/libpgmath/lib/common/fltfenv.c
++++ b/runtime/libpgmath/lib/common/fltfenv.c
+@@ -164,7 +164,7 @@ __fenv_fetestexcept(int exc)
+ /* Windows doesn't seem to preserve x87 exception bits across context
+  * switches, so this info is unreliable.
+  */
+-#ifdef WINNT
++#if defined(_WIN64)
+   x87 = 0;
+ #else
+   asm("\tfnstsw %0" : "=m"(x87) :);
+diff --git a/runtime/libpgmath/lib/common/mthdecls.h b/runtime/libpgmath/lib/common/mthdecls.h
+index 8bd2de28dadc..bac177562eae 100644
+--- a/runtime/libpgmath/lib/common/mthdecls.h
++++ b/runtime/libpgmath/lib/common/mthdecls.h
+@@ -348,7 +348,7 @@ static inline __attribute__((always_inline)) double_complex_t  pgmath_cmplx(doub
+  * to the different entry points for the various architectures.
+  */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ /*
+  * Windows.
+  */
+@@ -400,7 +400,7 @@ static inline __attribute__((always_inline)) double_complex_t  pgmath_cmplx(doub
+ #define BESSEL_Y0 y0
+ #define BESSEL_Y1 y1
+ #define BESSEL_YN yn
+-#endif		/* #if defined (WIN64) */
++#endif		/* #if defined (_WIN64) */
+ 
+ /*  declarations for math functions */
+ 
+diff --git a/runtime/libpgmath/lib/generic/datan.c b/runtime/libpgmath/lib/generic/datan.c
+index 0400edcfa8b9..83f30f275fb0 100644
+--- a/runtime/libpgmath/lib/generic/datan.c
++++ b/runtime/libpgmath/lib/generic/datan.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ #include "mthdecls.h"
+ #else
+ double atan(double d);
+diff --git a/runtime/libpgmath/lib/generic/datan2.c b/runtime/libpgmath/lib/generic/datan2.c
+index 37816fec3d05..cb8868f7f1b7 100644
+--- a/runtime/libpgmath/lib/generic/datan2.c
++++ b/runtime/libpgmath/lib/generic/datan2.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ #include "mthdecls.h"
+ #else
+ double atan2(double x, double y);
+diff --git a/runtime/libpgmath/lib/generic/dlog10.c b/runtime/libpgmath/lib/generic/dlog10.c
+index f1925fdb4b6e..ba76d33e2b1e 100644
+--- a/runtime/libpgmath/lib/generic/dlog10.c
++++ b/runtime/libpgmath/lib/generic/dlog10.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ #include "mthdecls.h"
+ #else
+ double log10(double d);
+diff --git a/runtime/libpgmath/lib/x86_64/dint.S b/runtime/libpgmath/lib/x86_64/dint.S
+index 3436617cdde2..f4c60e8a0b81 100644
+--- a/runtime/libpgmath/lib/x86_64/dint.S
++++ b/runtime/libpgmath/lib/x86_64/dint.S
+@@ -7,7 +7,7 @@
+ 
+ 
+ #if 0
+-#if defined(WIN64)
++#if defined(_WIN64)
+ typedef long long I64;
+ typedef unsigned long long UI64; 
+ #else
+diff --git a/runtime/libpgmath/lib/x86_64/fast/fastmath.h b/runtime/libpgmath/lib/x86_64/fast/fastmath.h
+index d7029d8e1562..351e2ef188d2 100644
+--- a/runtime/libpgmath/lib/x86_64/fast/fastmath.h
++++ b/runtime/libpgmath/lib/x86_64/fast/fastmath.h
+@@ -1817,7 +1817,7 @@ LBL(.L__lnan):
+         jmp     LBL(.L__finish)
+ 
+ LBL(.L__finish):
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  RZ_OFF(24)(%rsp), %xmm6
+ #endif
+ 
+@@ -1841,7 +1841,7 @@ LBL(.L__finish):
+ ENT(__fvs_exp_dbl):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -1910,7 +1910,7 @@ LBL(.L__Scalar_fvsexp_dbl):
+         popq    %rbp
+ 
+ 	/* Done */
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -1987,7 +1987,7 @@ ENT(__fvd_exp_long):
+ 	sar	$5,%edx
+ 	addpd	%xmm5,%xmm2    /* xmm2 = r = r1 + r2 */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ #endif
+ 	/* Step 2. Compute the polynomial. */
+@@ -2061,7 +2061,7 @@ ENT(__fvd_exp_long):
+ 	movq	%rdx,RZ_OFF(16)(%rsp) 	/* get 2^n to memory */
+ 	mulpd	RZ_OFF(24)(%rsp),%xmm0  /* result*= 2^n */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ #endif
+ 
+@@ -2667,7 +2667,7 @@ ENT(ASM_CONCAT(__mth_i_cdexp_gh,__MTH_C99_CMPLX_SUFFIX)):
+ ENT(ASM_CONCAT(__mth_i_cdexp,__MTH_C99_CMPLX_SUFFIX)):
+ #endif
+ 
+-#ifdef	WIN64
++#ifdef	_WIN64
+ 	/*
+ 	 * Return structure in (%rcx).
+ 	 * Will be managed by macro I1.
+@@ -2760,7 +2760,7 @@ ENT_GH(__mth_i_cdexp_1v):
+ IF_GH(ENT(__fsz_exp):)
+ ENT_GH(__mth_i_cdexp):
+ 
+-#if defined(WIN64) 
++#if defined(_WIN64) 
+ 	/*
+ 	 *	WIN64 ONLY:
+ 	 *	Jump entry point into routine from __fsz_exp_c99.
+@@ -2794,7 +2794,7 @@ LBL(.L__fsz_exp_win64):
+         mulpd   %xmm1,%xmm4                             /* Mpy to scale both */
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(40)(%rsp)
+         movdqa  %xmm7, RZ_OFF(56)(%rsp)
+         movdqa  %xmm8, RZ_OFF(72)(%rsp)
+@@ -3031,7 +3031,7 @@ LBL(.L__fsz_exp_win64):
+         mulsd   %xmm0,%xmm1
+         mulsd   %xmm9,%xmm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movq	RZ_OFF(104)(%rsp),I1
+         movdqa  RZ_OFF(40)(%rsp),%xmm6
+         movdqa  RZ_OFF(56)(%rsp),%xmm7
+@@ -3194,7 +3194,7 @@ IF_GH(ENT(__fvs_exp):)
+ ENT_GH(__fvsexp):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -3327,7 +3327,7 @@ ENT_GH(__fvsexp):
+ 
+ LBL(.L_vsp_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -3338,7 +3338,7 @@ LBL(.L_vsp_final_check):
+ 	ret
+ 
+ LBL(.L__Scalar_fvsexp):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	/* Need to restore callee-saved regs can do here for this path
+ 	 * because entry was only thru fvs_exp/fvsexp_gh
+ 	 */
+@@ -3621,7 +3621,7 @@ IF_GH(ENT(__fss_log):)
+ ENT_GH(__fmth_i_alog):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(24)(%rsp)
+ #endif
+ 	/* First check for valid input:
+@@ -3717,7 +3717,7 @@ LBL(.LB1_100):
+ 
+ LBL(.LB1_900):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(24)(%rsp), %xmm6
+ #endif
+ 	RZ_POP
+@@ -3809,7 +3809,7 @@ IF_GH(ENT(__fsd_log):)
+ ENT_GH(__fmth_i_dlog):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(24)(%rsp)
+ #endif
+ 	/* Get input x into the range [0.5,1) */
+@@ -3889,7 +3889,7 @@ LBL(.L__100):
+ 	addsd	%xmm1,%xmm0
+ 
+ LBL(.L__finish):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(24)(%rsp), %xmm6
+ #endif
+ 
+@@ -4012,7 +4012,7 @@ IF_GH(ENT(__fvs_log):)
+ ENT_GH(__fvslog):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movdqa	%xmm7, RZ_OFF(72)(%rsp)
+ #endif
+@@ -4148,7 +4148,7 @@ LBL(.LB_100):
+ 
+ LBL(.LB_900):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movdqa	RZ_OFF(72)(%rsp), %xmm7
+ #endif
+@@ -4227,7 +4227,7 @@ IF_GH(ENT(__fvd_log):)
+ ENT_GH(__fvdlog):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ #endif
+ 
+@@ -4324,7 +4324,7 @@ LBL(.Lfinish):
+ 	jnz		LBL(.Lnear_one)
+ LBL(.Lfinishn1):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ #endif
+ 	RZ_POP
+@@ -4651,7 +4651,7 @@ ENT_GH(__fmth_i_dsin):
+         mulsd   %xmm0,%xmm4 
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(24)(%rsp)
+         movdqa  %xmm7, RZ_OFF(40)(%rsp)
+ #endif
+@@ -4783,7 +4783,7 @@ ENT_GH(__fmth_i_dsin):
+         addsd   %xmm4,%xmm1                   /* ((ds2...) + dc2*dp) + ds1*dq */
+         addsd   %xmm5,%xmm1
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  RZ_OFF(24)(%rsp),%xmm6
+         movdqa  RZ_OFF(40)(%rsp),%xmm7
+ #endif
+@@ -5379,7 +5379,7 @@ ENT_GH(__fvdsin):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdsin2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, (%rsp)
+         movdqa  %xmm7, 16(%rsp)
+ #endif
+@@ -5543,7 +5543,7 @@ ENT_GH(__fvdsin):
+         mulpd   %xmm6,%xmm0                   /* dc1 * dp */
+         addpd   %xmm4,%xmm1                   /* ((ds2...) + dc2*dp) + ds1*dq */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  (%rsp),%xmm6
+         movdqa  16(%rsp),%xmm7
+ #endif
+@@ -5923,7 +5923,7 @@ ENT_GH(__fmth_i_dcos):
+         mulsd   %xmm0,%xmm4 
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(24)(%rsp)
+         movdqa  %xmm7, RZ_OFF(40)(%rsp)
+ #endif
+@@ -6057,7 +6057,7 @@ ENT_GH(__fmth_i_dcos):
+         addsd   %xmm4,%xmm1
+         addsd   %xmm1,%xmm0                   /* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  RZ_OFF(24)(%rsp),%xmm6
+         movdqa  RZ_OFF(40)(%rsp),%xmm7
+ #endif
+@@ -6662,7 +6662,7 @@ ENT_GH(__fvdcos):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdcos2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, (%rsp)
+         movdqa  %xmm7, 16(%rsp)
+ #endif
+@@ -6827,7 +6827,7 @@ ENT_GH(__fvdcos):
+         mulpd   %xmm0,%xmm4                   /* dc1 * dq */
+         subpd   %xmm6,%xmm1                   /* ((dc2...) - ds2*dp) - ds1*dp */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  (%rsp),%xmm6
+         movdqa  16(%rsp),%xmm7
+ #endif
+@@ -7189,7 +7189,7 @@ LBL(.L__fss_sinh_shortcuts):
+ IF_GH(ENT(__fsd_sinh):)
+ ENT_GH(__fmth_i_dsinh):
+ 	RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(40)(%rsp)
+ #endif
+ 
+@@ -7329,7 +7329,7 @@ ENT_GH(__fmth_i_dsinh):
+ 
+ LBL(.L__fsd_sinh_done):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(40)(%rsp), %xmm6
+ #endif
+ 	RZ_POP
+@@ -7393,7 +7393,7 @@ IF_GH(ENT(__fvs_sinh):)
+ ENT_GH(__fvssinh):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -7595,7 +7595,7 @@ ENT_GH(__fvssinh):
+ 
+ LBL(.L_fvsinh_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -7610,7 +7610,7 @@ LBL(.L__Scalar_fvssinh):
+         /* Need to restore callee-saved regs can do here for this path
+          * because entry was only thru fvs_sinh/fvs_sinh
+          */
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -7711,7 +7711,7 @@ ENT_GH(__fvdsinh):
+ 	testl	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdsinh)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(72)(%rsp)
+ #endif
+ 
+@@ -7885,7 +7885,7 @@ ENT_GH(__fvdsinh):
+ 
+ 	subpd	%xmm6,%xmm0		/* done with sinh */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa  RZ_OFF(72)(%rsp),%xmm6
+  
+ #endif
+@@ -8078,7 +8078,7 @@ IF_GH(ENT(__fsd_cosh):)
+ ENT_GH(__fmth_i_dcosh):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(40)(%rsp)
+ #endif
+ 
+@@ -8209,7 +8209,7 @@ ENT_GH(__fmth_i_dcosh):
+ 	mulsd	RZ_OFF(24)(%rsp),%xmm6	/* result *= 2^n */
+ 	addsd	%xmm6, %xmm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(40)(%rsp), %xmm6
+ #endif
+ 
+@@ -8244,7 +8244,7 @@ IF_GH(ENT(__fvs_cosh):)
+ ENT_GH(__fvscosh):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -8440,7 +8440,7 @@ ENT_GH(__fvscosh):
+ 
+ LBL(.L_fvcosh_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -8455,7 +8455,7 @@ LBL(.L__Scalar_fvscosh):
+         /* Need to restore callee-saved regs can do here for this path
+          * because entry was only thru fvs_cosh_fma4/fvs_cosh_vex
+          */
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -8551,7 +8551,7 @@ ENT_GH(__fvdcosh):
+ 	testl	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdcosh)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(72)(%rsp)
+ #endif
+ 
+@@ -8718,7 +8718,7 @@ ENT_GH(__fvdcosh):
+ 
+ 	addpd	%xmm6,%xmm0		/* done with cosh */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  RZ_OFF(72)(%rsp),%xmm6
+ #endif
+ 
+@@ -9008,7 +9008,7 @@ ENT_GH(__fmth_i_dsincos):
+         mulsd   %xmm0,%xmm4 
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, RZ_OFF(24)(%rsp)
+         movdqa  %xmm7, RZ_OFF(40)(%rsp)
+         movdqa  %xmm8, RZ_OFF(56)(%rsp)
+@@ -9163,7 +9163,7 @@ ENT_GH(__fmth_i_dsincos):
+         addsd   %xmm8,%xmm0                   /* sin(x) = Cp(r) + (S+Sq(r)) */
+         addsd   %xmm7,%xmm1                   /* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  RZ_OFF(24)(%rsp),%xmm6
+         movdqa  RZ_OFF(40)(%rsp),%xmm7
+         movdqa  RZ_OFF(56)(%rsp),%xmm8
+@@ -9298,7 +9298,7 @@ ENT_GH(__fvssincos):
+         /* Set n = nearest integer to r */
+ 	movhps	%xmm1,(%rsp)                     /* Store x4, x3 */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, 16(%rsp)
+         movdqa  %xmm7, 32(%rsp)
+ #endif
+@@ -9458,7 +9458,7 @@ LBL(.L__fvsincos_done_twice):
+ 	movaps  %xmm5, %xmm0
+ 	movaps  %xmm7, %xmm1
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  16(%rsp), %xmm6
+         movdqa  32(%rsp), %xmm7
+ #endif
+@@ -9486,7 +9486,7 @@ LBL(.L__Scalar_fvsincos1):
+ 	cvtps2pd 16(%rsp),%xmm0               /* x(2), x(1) */
+ 	cvtps2pd 24(%rsp),%xmm1               /* x(4), x(3) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, 0(%rsp)
+ #endif
+         movapd  %xmm0,16(%rsp)
+@@ -9597,7 +9597,7 @@ LBL(.L__Scalar_fvsincos1):
+         cvtpd2ps %xmm4,%xmm4            /* cos(x4), cos(x3) */
+         shufps  $68, %xmm4, %xmm1       /* cos(x4),cos(x3),cos(x2),cos(x1) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  (%rsp), %xmm6
+ #endif
+ 
+@@ -9888,7 +9888,7 @@ ENT_GH(__fvdsincos):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdsincos2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, (%rsp)
+         movdqa  %xmm7, 16(%rsp)
+         movdqa  %xmm8, 32(%rsp)
+@@ -10076,7 +10076,7 @@ ENT_GH(__fvdsincos):
+         addpd   %xmm8,%xmm0                   /* sin(x) = Cp(r) + (S+Sq(r)) */
+         addpd   %xmm7,%xmm1                   /* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  (%rsp),%xmm6
+         movdqa  16(%rsp),%xmm7
+         movdqa  32(%rsp),%xmm8
+@@ -10100,7 +10100,7 @@ LBL(.L__Scalar_fvdsincos1):
+ 	test    $2, %eax
+ 	jz	LBL(.L__Scalar_fvdsincos1a)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  %xmm6, (%rsp)
+         movdqa  %xmm7, 16(%rsp)
+ #endif
+@@ -10199,7 +10199,7 @@ LBL(.L__Scalar_fvdsincos1):
+         mulpd   %xmm3,%xmm1                     /* x2 * (0.5 + ...) */
+         addpd   .L__real_one(%rip),%xmm1        /* 1.0 - 0.5x2 + (...) done */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movdqa  (%rsp),%xmm6
+         movdqa  16(%rsp),%xmm7
+ #endif
+@@ -10684,7 +10684,7 @@ ENT_GH(__fmth_i_dpowd):
+ 	movsd	%xmm1, 0(%rsp)
+ 	movsd	%xmm0, 8(%rsp)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, 16(%rsp)
+ #endif
+ 	/* r8 holds flags for x, in rax */
+@@ -10782,7 +10782,7 @@ LBL(.L__D_algo_start):
+ 	CALL(ENT(__fsd_exp_long))
+ 
+ LBL(.L__Dpop_and_return):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	16(%rsp), %xmm6
+ #endif
+ 	movq	%rbp, %rsp
+@@ -11212,7 +11212,7 @@ ENT_GH(__fvdpow):
+ 	test	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdpow)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, 48(%rsp)
+ #endif
+ 	/* Call log long version */
+@@ -11251,7 +11251,7 @@ ENT_GH(__fvdpow):
+ 
+ 	CALL(ENT(__fvd_exp_long))
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	48(%rsp), %xmm6
+ #endif
+ 
+@@ -11328,7 +11328,7 @@ IF_GH(ENT(__fss_log10):)
+ ENT_GH(__fmth_i_alog10):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(24)(%rsp)
+ #endif
+ 	/* First check for valid input:
+@@ -11427,7 +11427,7 @@ LBL(.LB1_100_log10):
+ 
+ LBL(.LB1_900_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(24)(%rsp), %xmm6
+ #endif
+ 	RZ_POP
+@@ -11503,7 +11503,7 @@ IF_GH(ENT(__fsd_log10):)
+ ENT_GH(__fmth_i_dlog10):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(24)(%rsp)
+ #endif
+ 	/* Get input x into the range [0.5,1) */
+@@ -11590,7 +11590,7 @@ LBL(.L__cvt_to_dlog10):
+ 	addsd	%xmm1,%xmm0
+ 
+ LBL(.L__finish_dlog10):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(24)(%rsp), %xmm6
+ #endif
+ 
+@@ -11715,7 +11715,7 @@ IF_GH(ENT(__fvs_log10):)
+ ENT_GH(__fvslog10):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ 	movdqa	%xmm7, RZ_OFF(72)(%rsp)
+ #endif
+@@ -11853,7 +11853,7 @@ LBL(.LB_100_log10):
+ 
+ LBL(.LB_900_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ 	movdqa	RZ_OFF(72)(%rsp), %xmm7
+ #endif
+@@ -11935,7 +11935,7 @@ IF_GH(ENT(__fvd_log10):)
+ ENT_GH(__fvdlog10):
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	%xmm6, RZ_OFF(56)(%rsp)
+ #endif
+ 
+@@ -12039,7 +12039,7 @@ ENT_GH(__fvdlog10):
+ 
+ LBL(.Lfinishn1_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	movdqa	RZ_OFF(56)(%rsp), %xmm6
+ #endif
+ 	RZ_POP
+diff --git a/runtime/libpgmath/lib/x86_64/fast/fastmath_vex.h b/runtime/libpgmath/lib/x86_64/fast/fastmath_vex.h
+index b149d069c71e..0d9a4878543d 100644
+--- a/runtime/libpgmath/lib/x86_64/fast/fastmath_vex.h
++++ b/runtime/libpgmath/lib/x86_64/fast/fastmath_vex.h
+@@ -106,7 +106,7 @@ ENT(ASM_CONCAT(__fvd_sin_,TARGET_VEX_OR_FMA)):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdsin2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 64(%rsp)
+         vmovdqu  %ymm7, 96(%rsp)
+ #endif
+@@ -300,7 +300,7 @@ ENT(ASM_CONCAT(__fvd_sin_,TARGET_VEX_OR_FMA)):
+ #endif
+         vmulpd   %xmm6,%xmm0,%xmm0                   /* dc1 * dp */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  64(%rsp),%ymm6
+         vmovdqu  96(%rsp),%ymm7
+ #endif
+@@ -554,7 +554,7 @@ ENT(ASM_CONCAT(__fvd_cos_,TARGET_VEX_OR_FMA)):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdcos2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 64(%rsp)
+         vmovdqu  %ymm7, 96(%rsp)
+ #endif
+@@ -752,7 +752,7 @@ ENT(ASM_CONCAT(__fvd_cos_,TARGET_VEX_OR_FMA)):
+         vsubpd   %xmm6,%xmm1,%xmm1                   /* ((dc2...) - ds2*dp) - ds1*dp */
+ #endif
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  64(%rsp),%ymm6
+         vmovdqu  96(%rsp),%ymm7
+ #endif
+@@ -1012,7 +1012,7 @@ ENT(ASM_CONCAT(__fvd_sincos_,TARGET_VEX_OR_FMA)):
+ 	test	$3, %ecx
+         jnz	LBL(.L__Scalar_fvdsincos2)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 32(%rsp)
+         vmovdqu  %ymm7, 64(%rsp)
+         vmovdqu  %ymm8, 96(%rsp)
+@@ -1244,7 +1244,7 @@ ENT(ASM_CONCAT(__fvd_sincos_,TARGET_VEX_OR_FMA)):
+ #endif
+         vaddpd   %xmm7,%xmm1,%xmm1                   /* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  32(%rsp),%ymm6
+         vmovdqu  64(%rsp),%ymm7
+         vmovdqu  96(%rsp),%ymm8
+@@ -1268,7 +1268,7 @@ LBL(.L__Scalar_fvdsincos1):
+ 	test    $2, %eax
+ 	jz	LBL(.L__Scalar_fvdsincos1a)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 64(%rsp)
+         vmovdqu  %ymm7, 96(%rsp)
+ #endif
+@@ -1348,7 +1348,7 @@ LBL(.L__Scalar_fvdsincos1):
+         vaddpd   .L__real_one(%rip),%xmm1,%xmm1        /* 1.0 - 0.5x2 + (...) done */
+ /* #endif */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  64(%rsp),%ymm6
+         vmovdqu  96(%rsp),%ymm7
+ #endif
+@@ -2568,7 +2568,7 @@ ENT(ASM_CONCAT(__fvs_sincos_,TARGET_VEX_OR_FMA)):
+         /* Set n = nearest integer to r */
+ 	vmovhps	%xmm1,(%rsp)                     /* Store x4, x3 */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 64(%rsp)
+         vmovdqu  %ymm7, 96(%rsp)
+ #endif
+@@ -2754,7 +2754,7 @@ LBL(.L__fvsincos_done_twice):
+ 	vmovaps  %xmm5, %xmm0
+ 	vmovaps  %xmm7, %xmm1
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  64(%rsp), %ymm6
+         vmovdqu  96(%rsp), %ymm7
+ #endif
+@@ -2782,7 +2782,7 @@ LBL(.L__Scalar_fvsincos1):
+ 	vcvtps2pd 16(%rsp),%xmm0               /* x(2), x(1) */
+ 	vcvtps2pd 24(%rsp),%xmm1               /* x(4), x(3) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 96(%rsp)
+ #endif
+         vmovapd  %xmm0,16(%rsp)
+@@ -2926,7 +2926,7 @@ LBL(.L__Scalar_fvsincos1):
+         vcvtpd2ps %xmm4,%xmm4            /* cos(x4), cos(x3) */
+         vshufps  $68, %xmm4, %xmm1,%xmm1       /* cos(x4),cos(x3),cos(x2),cos(x1) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  96(%rsp), %ymm6
+ #endif
+ 
+@@ -3801,7 +3801,7 @@ ENT(ASM_CONCAT(__fsd_sin_,TARGET_VEX_OR_FMA)):
+         vmulsd   %xmm0,%xmm4,%xmm4
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, RZ_OFF(64)(%rsp)
+         vmovdqu  %ymm7, RZ_OFF(96)(%rsp)
+ #endif
+@@ -3996,7 +3996,7 @@ ENT(ASM_CONCAT(__fsd_sin_,TARGET_VEX_OR_FMA)):
+ 	vaddsd	%xmm1,%xmm0,%xmm0			/* sin(x) = Cp(r) + (S+Sq(r)) */
+ /* #endif */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(64)(%rsp),%ymm6
+ 	vmovdqu	RZ_OFF(96)(%rsp),%ymm7
+ #endif
+@@ -4093,7 +4093,7 @@ ENT(ASM_CONCAT(__fsd_cos_,TARGET_VEX_OR_FMA)):
+         vmulsd   %xmm0,%xmm4,%xmm4
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, RZ_OFF(64)(%rsp)
+         vmovdqu  %ymm7, RZ_OFF(96)(%rsp)
+ #endif
+@@ -4284,7 +4284,7 @@ ENT(ASM_CONCAT(__fsd_cos_,TARGET_VEX_OR_FMA)):
+ 
+         vaddsd   %xmm1,%xmm0,%xmm0			/* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  RZ_OFF(64)(%rsp),%ymm6
+         vmovdqu  RZ_OFF(96)(%rsp),%ymm7
+ #endif
+@@ -4377,7 +4377,7 @@ ENT(ASM_CONCAT(__fsd_sincos_,TARGET_VEX_OR_FMA)):
+         vmulsd   %xmm0,%xmm4,%xmm4
+ 
+         RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, RZ_OFF(32)(%rsp)
+         vmovdqu  %ymm7, RZ_OFF(64)(%rsp)
+         vmovdqu  %ymm8, RZ_OFF(96)(%rsp)
+@@ -4578,7 +4578,7 @@ ENT(ASM_CONCAT(__fsd_sincos_,TARGET_VEX_OR_FMA)):
+ #endif
+         vaddsd   %xmm7,%xmm1,%xmm1                   /* cos(x) = (C + Cq(r)) + Sq(r) */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  RZ_OFF(32)(%rsp),%ymm6
+         vmovdqu  RZ_OFF(64)(%rsp),%ymm7
+         vmovdqu  RZ_OFF(96)(%rsp),%ymm8
+@@ -4873,7 +4873,7 @@ ENT(ASM_CONCAT(__fvz_exp_,TARGET_VEX_OR_FMA)):
+ ENT(ASM_CONCAT(__fsz_exp_1v_,TARGET_VEX_OR_FMA)):
+ 
+ 
+-#ifdef	WIN64
++#ifdef	_WIN64
+ 	/*
+ 	 * Return structure in (%rcx).
+ 	 * Will be managed by macro I1.
+@@ -4946,7 +4946,7 @@ ENT(ASM_CONCAT3(__fsz_exp_,TARGET_VEX_OR_FMA,_c99)):
+ ENT(ASM_CONCAT(__fsz_exp_,TARGET_VEX_OR_FMA)):
+ 
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	/*
+ 	 *	WIN64 ONLY:
+ 	 *	Jump entry point into routine from __fsz_exp_vex_v1.
+@@ -4954,7 +4954,7 @@ ENT(ASM_CONCAT(__fsz_exp_,TARGET_VEX_OR_FMA)):
+ LBL(.L__fsz_exp_vex_win64):
+ #endif
+ 
+-#if	defined(WIN64)
++#if	defined(_WIN64)
+ 	vmovapd	%xmm1,%xmm0
+ 	vmovapd	%xmm2,%xmm1
+ #endif
+@@ -4985,7 +4985,7 @@ LBL(.L__fsz_exp_vex_win64):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 128(%rsp)
+         vmovdqu  %ymm7, 160(%rsp)
+         vmovdqu  %ymm8, 192(%rsp)
+@@ -5291,7 +5291,7 @@ LBL(.L__fsz_exp_vex_win64):
+         vmulsd   %xmm0,%xmm1,%xmm1
+         vmulsd   %xmm9,%xmm0,%xmm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    24(%rsp),I1
+         vmovdqu  128(%rsp),%ymm6
+         vmovdqu  160(%rsp),%ymm7
+@@ -5894,7 +5894,7 @@ ENT(ASM_CONCAT(__fvd_pow_,TARGET_VEX_OR_FMA)):
+ 	test	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdpow)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, 96(%rsp)
+ #endif
+ 	/* Call log long version */
+@@ -5945,7 +5945,7 @@ ENT(ASM_CONCAT(__fvd_pow_,TARGET_VEX_OR_FMA)):
+ 	CALL(ENT(ASM_CONCAT(__fvd_exp_long_,TARGET_VEX_OR_FMA)))
+ 
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	96(%rsp), %ymm6
+ #endif
+ 
+@@ -5989,7 +5989,7 @@ ENT(ASM_CONCAT(__fsd_pow_,TARGET_VEX_OR_FMA)):
+ 	vmovsd	%xmm1, 0(%rsp)
+ 	vmovsd	%xmm0, 8(%rsp)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, 32(%rsp)
+ #endif
+ 	/* r8 holds flags for x, in rax */
+@@ -6100,7 +6100,7 @@ LBL(.L__D_algo_start):
+ 
+ 
+ LBL(.L__Dpop_and_return):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	32(%rsp), %ymm6
+ #endif
+ 	movq	%rbp, %rsp
+@@ -7067,7 +7067,7 @@ ENT(ASM_CONCAT(__fvs_exp_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(104)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -7223,7 +7223,7 @@ ASM_CONCAT(.L__fvs_exp_dbl_entry_,TARGET_VEX_OR_FMA):
+ 
+ LBL(.L_vsp_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(104)(%rsp), %ymm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -7234,7 +7234,7 @@ LBL(.L_vsp_final_check):
+ 	ret
+ 
+ LBL(.L__Scalar_fvsexp):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	/* Need to restore callee-saved regs can do here for this path
+ 	 * because entry was only thru fvs_exp_fma4/fvs_exp_vex
+ 	 */
+@@ -7292,7 +7292,7 @@ ENT(__fvs_exp_dbl_vex):
+ #endif
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(104)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -7357,7 +7357,7 @@ LBL(.L__Scalar_fvs_exp_dbl):
+         popq    %rbp
+ 
+ 	/* Done */
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(104)(%rsp), %ymm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -7641,7 +7641,7 @@ ENT(__fvd_exp_long_vex):
+ 	sar	$5,%edx
+ 	vaddpd	%xmm5,%xmm2,%xmm2    /* xmm2 = r = r1 + r2 */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(72)(%rsp)
+ #endif
+ 	/* Step 2. Compute the polynomial. */
+@@ -7738,7 +7738,7 @@ ENT(__fvd_exp_long_vex):
+ 	movq	%rdx,RZ_OFF(16)(%rsp) 	/* get 2^n to memory */
+ 	vmulpd	RZ_OFF(24)(%rsp),%xmm0,%xmm0  /* result*= 2^n */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(72)(%rsp), %ymm6
+ #endif
+ 
+@@ -7842,7 +7842,7 @@ ENT(ASM_CONCAT(__fsd_log_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 	/* Get input x into the range [0.5,1) */
+@@ -7946,7 +7946,7 @@ LBL(.L__100):
+ 	vaddsd	%xmm1,%xmm0,%xmm0
+ 
+ LBL(.L__finish):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 
+@@ -8061,7 +8061,7 @@ ENT(ASM_CONCAT(__fvd_log_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(72)(%rsp)
+ #endif
+ 
+@@ -8178,7 +8178,7 @@ LBL(.Lfinish):
+ 	jnz		LBL(.Lnear_one)
+ LBL(.Lfinishn1):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(72)(%rsp), %ymm6
+ #endif
+ 	RZ_POP
+@@ -8801,7 +8801,7 @@ ENT(ASM_CONCAT(__fvs_log_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(72)(%rsp)
+ 	vmovdqu	%ymm7, RZ_OFF(104)(%rsp)
+ #endif
+@@ -8961,7 +8961,7 @@ LBL(.LB_100):
+ 
+ LBL(.LB_900):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(72)(%rsp), %ymm6
+ 	vmovdqu	RZ_OFF(104)(%rsp), %ymm7
+ #endif
+@@ -9069,7 +9069,7 @@ ENT(ASM_CONCAT(__fss_log_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 	/* First check for valid input:
+@@ -9182,7 +9182,7 @@ LBL(.LB1_100):
+ 
+ LBL(.LB1_900):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 	RZ_POP
+@@ -9258,7 +9258,7 @@ ENT(ASM_CONCAT(__fvd_log10_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(72)(%rsp)
+ #endif
+ 
+@@ -9391,7 +9391,7 @@ ENT(ASM_CONCAT(__fvd_log10_,TARGET_VEX_OR_FMA)):
+ 
+ LBL(.Lfinishn1_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(72)(%rsp), %ymm6
+ #endif
+ 	RZ_POP
+@@ -9570,7 +9570,7 @@ ENT(ASM_CONCAT(__fsd_log10_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 	/* Get input x into the range [0.5,1) */
+@@ -9689,7 +9689,7 @@ LBL(.L__cvt_to_dlog10):
+ 	vaddsd	%xmm1,%xmm0,%xmm0
+ 
+ LBL(.L__finish_dlog10):
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 
+@@ -9824,7 +9824,7 @@ ENT(ASM_CONCAT(__fvs_log10_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(72)(%rsp)
+ 	vmovdqu	%ymm7, RZ_OFF(104)(%rsp)
+ #endif
+@@ -9991,7 +9991,7 @@ LBL(.LB_100_log10):
+ 
+ LBL(.LB_900_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(72)(%rsp), %ymm6
+ 	vmovdqu	RZ_OFF(104)(%rsp), %ymm7
+ #endif
+@@ -10099,7 +10099,7 @@ ENT(ASM_CONCAT(__fss_log10_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 	/* First check for valid input:
+@@ -10210,7 +10210,7 @@ LBL(.LB1_100_log10):
+ 
+ LBL(.LB1_900_log10):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 	RZ_POP
+@@ -10615,7 +10615,7 @@ ENT(ASM_CONCAT(__fsd_cosh_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 
+@@ -10801,7 +10801,7 @@ ENT(ASM_CONCAT(__fsd_cosh_,TARGET_VEX_OR_FMA)):
+ 	vaddsd	%xmm6, %xmm0,%xmm0
+ #endif
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 
+@@ -10832,7 +10832,7 @@ ENT(ASM_CONCAT(__fsd_cosh_,TARGET_VEX_OR_FMA)):
+ ENT(ASM_CONCAT(__fsd_sinh_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	%ymm6, RZ_OFF(96)(%rsp)
+ #endif
+ 
+@@ -11024,7 +11024,7 @@ ENT(ASM_CONCAT(__fsd_sinh_,TARGET_VEX_OR_FMA)):
+ 
+ LBL(.L__fsd_sinh_done):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ 	vmovdqu	RZ_OFF(96)(%rsp), %ymm6
+ #endif
+ 	RZ_POP
+@@ -11104,7 +11104,7 @@ ENT(ASM_CONCAT(__fvs_cosh_,TARGET_VEX_OR_FMA)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    %rsi, 64(%rsp)
+         movq    %rdi, 56(%rsp)
+         vmovdqu %ymm6, 192(%rsp)
+@@ -11342,7 +11342,7 @@ ENT(ASM_CONCAT(__fvs_cosh_,TARGET_VEX_OR_FMA)):
+ 
+ LBL(.L_fvcosh_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    64(%rsp), %rsi
+         movq    56(%rsp), %rdi
+         vmovdqu 192(%rsp), %ymm6
+@@ -11358,7 +11358,7 @@ LBL(.L__Scalar_fvscosh):
+         /* Need to restore callee-saved regs can do here for this path
+          * because entry was only thru fvs_cosh_fma4/fvs_cosh_vex
+          */
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    64(%rsp), %rsi
+         movq    56(%rsp), %rdi
+         vmovdqu 192(%rsp), %ymm6
+@@ -11418,7 +11418,7 @@ ENT(ASM_CONCAT(__fvs_sinh_,TARGET_VEX_OR_FMA)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    %rsi, 64(%rsp)
+         movq    %rdi, 56(%rsp)
+         vmovdqu %ymm6, 192(%rsp)
+@@ -11656,7 +11656,7 @@ ENT(ASM_CONCAT(__fvs_sinh_,TARGET_VEX_OR_FMA)):
+ 
+ LBL(.L_fvsinh_final_check):
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    64(%rsp), %rsi
+         movq    56(%rsp), %rdi
+         vmovdqu 192(%rsp), %ymm6
+@@ -11672,7 +11672,7 @@ LBL(.L__Scalar_fvssinh):
+         /* Need to restore callee-saved regs can do here for this path
+          * because entry was only thru fvs_sinh_fma4/fvs_sinh_vex
+          */
+-#if defined(WIN64)
++#if defined(_WIN64)
+         movq    64(%rsp), %rsi
+         movq    56(%rsp), %rdi
+         vmovdqu 192(%rsp), %ymm6
+@@ -11751,7 +11751,7 @@ ENT(ASM_CONCAT(__fvd_cosh_,TARGET_VEX_OR_FMA)):
+ 	testl	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdcosh)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 72(%rsp)
+ #endif
+ 
+@@ -11963,7 +11963,7 @@ ENT(ASM_CONCAT(__fvd_cosh_,TARGET_VEX_OR_FMA)):
+ 	vaddpd	%xmm6,%xmm0,%xmm0		/* done with cosh */
+ #endif
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  72(%rsp),%ymm6
+ #endif
+ 
+@@ -12044,7 +12044,7 @@ ENT(ASM_CONCAT(__fvd_sinh_,TARGET_VEX_OR_FMA)):
+ 	testl	$3, %r8d
+ 	jnz	LBL(.L__Scalar_fvdsinh)
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  %ymm6, 72(%rsp)
+ #endif
+ 
+@@ -12264,7 +12264,7 @@ ENT(ASM_CONCAT(__fvd_sinh_,TARGET_VEX_OR_FMA)):
+ 	vsubpd	%xmm6,%xmm0,%xmm0		/* done with sinh */
+ #endif
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu  72(%rsp),%ymm6
+ #endif
+ 
+@@ -12325,7 +12325,7 @@ ENT(ASM_CONCAT3(__fvs_exp_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         movq    %rsi, 192(%rsp)
+         movq    %rdi, 224(%rsp)
+@@ -12346,7 +12346,7 @@ ENT(ASM_CONCAT3(__fvs_exp_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         movq    %rsi, 192(%rsp)
+         movq    %rdi, 224(%rsp)
+@@ -12471,7 +12471,7 @@ ENT(ASM_CONCAT3(__fvd_sin_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+ #endif
+@@ -12492,7 +12492,7 @@ ENT(ASM_CONCAT3(__fvd_sin_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+ #endif
+@@ -12571,7 +12571,7 @@ ENT(ASM_CONCAT3(__fvd_cos_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+ #endif
+@@ -12592,7 +12592,7 @@ ENT(ASM_CONCAT3(__fvd_cos_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+ #endif
+@@ -12627,7 +12627,7 @@ ENT(ASM_CONCAT3(__fvs_log_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $512, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+         vmovdqu %ymm8, 192(%rsp)
+@@ -12816,7 +12816,7 @@ LBL(.LB_900_256):
+ 
+ /*******************************************/
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+         vmovdqu 192(%rsp), %ymm8
+@@ -12925,7 +12925,7 @@ ENT(ASM_CONCAT3(__fvd_log_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+ #endif
+ 
+@@ -12945,7 +12945,7 @@ ENT(ASM_CONCAT3(__fvd_log_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+ #endif
+ 
+@@ -12978,7 +12978,7 @@ ENT(ASM_CONCAT3(__fvs_log10_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+ #endif
+@@ -12999,7 +12999,7 @@ ENT(ASM_CONCAT3(__fvs_log10_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+ #endif
+@@ -13033,7 +13033,7 @@ ENT(ASM_CONCAT3(__fvd_log10_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+ #endif
+ 
+@@ -13053,7 +13053,7 @@ ENT(ASM_CONCAT3(__fvd_log10_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+ #endif
+ 
+@@ -13086,7 +13086,7 @@ ENT(ASM_CONCAT3(__fvs_sinh_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+ 	movq	%rsi, 192(%rsp)
+@@ -13109,7 +13109,7 @@ ENT(ASM_CONCAT3(__fvs_sinh_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+ 	movq	192(%rsp), %rsi
+@@ -13190,7 +13190,7 @@ ENT(ASM_CONCAT3(__fvs_cosh_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+         movq    %rsi, 192(%rsp)
+@@ -13213,7 +13213,7 @@ ENT(ASM_CONCAT3(__fvs_cosh_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 80(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+         movq    192(%rsp), %rsi
+@@ -13294,7 +13294,7 @@ ENT(ASM_CONCAT3(__fvs_sincos_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+ #endif
+@@ -13319,7 +13319,7 @@ ENT(ASM_CONCAT3(__fvs_sincos_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 96(%rsp), %ymm4
+         vinsertf128     $1, %xmm1, %ymm4, %ymm1
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+ #endif
+@@ -13353,7 +13353,7 @@ ENT(ASM_CONCAT3(__fvd_sincos_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+         vmovdqu %ymm7, 160(%rsp)
+         vmovdqu	%ymm8, 192(%rsp)
+@@ -13379,7 +13379,7 @@ ENT(ASM_CONCAT3(__fvd_sincos_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 96(%rsp), %ymm4
+         vinsertf128     $1, %xmm1, %ymm4, %ymm1
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+         vmovdqu 160(%rsp), %ymm7
+         vmovdqu	192(%rsp), %ymm8
+@@ -13463,7 +13463,7 @@ ENT(ASM_CONCAT3(__fvd_pow_,TARGET_VEX_OR_FMA,_256)):
+         movq    %rsp, %rbp
+         subq    $256, %rsp
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu %ymm6, 128(%rsp)
+ #endif
+ 
+@@ -13486,7 +13486,7 @@ ENT(ASM_CONCAT3(__fvd_pow_,TARGET_VEX_OR_FMA,_256)):
+         vmovups 64(%rsp), %ymm1
+         vinsertf128     $1, %xmm0, %ymm1, %ymm0
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+         vmovdqu 128(%rsp), %ymm6
+ #endif
+ 
+diff --git a/runtime/libpgmath/lib/x86_64/mthdecls.h b/runtime/libpgmath/lib/x86_64/mthdecls.h
+index a7f5e60e23fb..fc7aead502d4 100644
+--- a/runtime/libpgmath/lib/x86_64/mthdecls.h
++++ b/runtime/libpgmath/lib/x86_64/mthdecls.h
+@@ -339,7 +339,7 @@ static inline __attribute__((always_inline)) double_complex_t  pgmath_cmplx(doub
+  * to the different entry points for the various architectures.
+  */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ /*
+  * Windows.
+  */
+@@ -391,7 +391,7 @@ static inline __attribute__((always_inline)) double_complex_t  pgmath_cmplx(doub
+ #define BESSEL_Y0 y0
+ #define BESSEL_Y1 y1
+ #define BESSEL_YN yn
+-#endif		/* #if defined (WIN64) */
++#endif		/* #if defined (_WIN64) */
+ 
+ /*  declarations for math functions */
+ 
+diff --git a/runtime/libpgmath/lib/x86_64/relaxed/relaxedmath_vex.h b/runtime/libpgmath/lib/x86_64/relaxed/relaxedmath_vex.h
+index 9a81ea590d3f..2b097f71ecad 100644
+--- a/runtime/libpgmath/lib/x86_64/relaxed/relaxedmath_vex.h
++++ b/runtime/libpgmath/lib/x86_64/relaxed/relaxedmath_vex.h
+@@ -678,7 +678,7 @@ ENT(ASM_CONCAT(__rvs_exp_,TARGET_VEX_OR_FMA)):
+ 
+ 	RZ_PUSH
+ 
+-#if defined(WIN64) || defined(TARGET_INTERIX_X8664)
++#if defined(_WIN64) || defined(TARGET_INTERIX_X8664)
+ 	vmovdqu	%ymm6, RZ_OFF(104)(%rsp)
+ 	movq	%rsi, RZ_OFF(64)(%rsp)
+ 	movq	%rdi, RZ_OFF(72)(%rsp)
+@@ -912,7 +912,7 @@ ENT(ASM_CONCAT(__rvs_exp_,TARGET_VEX_OR_FMA)):
+ 
+ LBL(.L_vsp_final_check):
+ 
+-#if defined(WIN64) || defined(TARGET_INTERIX_X8664)
++#if defined(_WIN64) || defined(TARGET_INTERIX_X8664)
+ 	vmovdqu	RZ_OFF(104)(%rsp), %ymm6
+ 	movq	RZ_OFF(64)(%rsp), %rsi
+ 	movq	RZ_OFF(72)(%rsp), %rdi
+@@ -986,7 +986,7 @@ ENT(ASM_CONCAT3(__rvs_exp_,TARGET_VEX_OR_FMA,_256)):
+ 	movq	%r14, 232(%rsp)
+ 	movq	%r15, 240(%rsp)
+ 
+-#if defined(WIN64) || defined(TARGET_INTERIX_X8664)
++#if defined(_WIN64) || defined(TARGET_INTERIX_X8664)
+         vmovdqu %ymm6, 128(%rsp)
+         movq    %rsi, 200(%rsp)
+         movq    %rdi, 208(%rsp)
+@@ -1207,7 +1207,7 @@ ENT(ASM_CONCAT3(__rvs_exp_,TARGET_VEX_OR_FMA,_256)):
+ 
+ LBL(.L_vsp_final_check_256):
+ 
+-#if defined(WIN64) || defined(TARGET_INTERIX_X8664)
++#if defined(_WIN64) || defined(TARGET_INTERIX_X8664)
+         vmovdqu 128(%rsp), %ymm6
+         movq    200(%rsp), %rsi
+         movq    208(%rsp), %rdi

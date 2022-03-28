@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 93dd957888f..88c574b823a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,12 +46,14 @@ if (${TARGET_ARCHITECTURE} MATCHES "^(x86_64|AMD64|amd64)$")
+   set(TARGET_ARCHITECTURE x86_64)
+   set(ARCHNAME x86-64)
+   set(ARCH X86)
+-elseif (${TARGET_ARCHITECTURE} MATCHES "^(aarch64|arm64)$")
++elseif (${TARGET_ARCHITECTURE} MATCHES "^(aarch64|arm64|ARM64)$")
+   set(TARGET_ARCHITECTURE aarch64)
+   set(ARCHNAME aarch64)
+   set(ARCH ARM)
+-  add_definitions(-DTARGET_SUPPORTS_QUADFP)
+-  set(TARGET_SUPPORTS_QUADFP True)
++  if (NOT ${TARGET_OS} STREQUAL "Windows")
++    add_definitions(-DTARGET_SUPPORTS_QUADFP)
++    set(TARGET_SUPPORTS_QUADFP True)
++  endif()
+ elseif( ${TARGET_ARCHITECTURE} STREQUAL "ppc64le" )
+   set(ARCHNAME ppc64le)
+   set(ARCH POWER)
