@@ -89,7 +89,7 @@ function(set_compiler_options OPTIONS)
     )
 endfunction()
 
-if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
+if(VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Setting GN options for Windows")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
@@ -110,7 +110,7 @@ if("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-windows")
 
     set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
-elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
+elseif(VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Setting GN options for Android")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
@@ -128,13 +128,12 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-android")
     endif()
     set(OPTIONS_DBG "${OPTIONS_DBG} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
     set(OPTIONS_REL "${OPTIONS_REL} extra_ldflags=\"${CMAKE_SHARED_LINKER_FLAGS}\"")
-    string(TOLOWER ${VCPKG_CMAKE_SYSTEM_NAME} TARGET_OS)
     set(GN_OPTIONS 
-        "target_os=\"${TARGET_OS}\" \
+        "target_os=\"android\" \
         target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" \
         android_ndk_root=\"$ENV{ANDROID_NDK_HOME}\""
     )
-elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
+elseif(VCPKG_TARGET_IS_LINUX)
     message(STATUS "Setting GN options for Linux")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
@@ -146,7 +145,7 @@ elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-linux")
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
     )
     set_compiler_options(OPTIONS)
-elseif("${VCPKG_TARGET_TRIPLET}" MATCHES ".*-osx")
+elseif(VCPKG_TARGET_IS_OSX)
     message(STATUS "Setting GN options for OSX")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
@@ -209,7 +208,7 @@ file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_bu
     DESTINATION "${PACKAGES_INCLUDE_DIR}/build"
 )
 
-if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+if(VCPKG_TARGET_IS_ANDROID)
     # Rename crashpad_handler executable to libcrashpad_handler.so so it can be bundled in future package
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/crashpad_handler"
         DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
