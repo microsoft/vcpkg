@@ -11,23 +11,3 @@ index aaa8a02..41c9b97 100644
    onnxruntime_configure_target(${target_name})
  endfunction()
  
-diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
-index e7ce2cc..bad9e00 100644
---- a/cmake/onnxruntime_mlas.cmake
-+++ b/cmake/onnxruntime_mlas.cmake
-@@ -159,6 +159,7 @@ function(setup_mlas_source_for_windows)
-       ${MLAS_SRC_DIR}/i386/SgemmKernelAvx.asm
-     )
-   endif()
-+  target_compile_definitions(onnxruntime_mlas PRIVATE MLAS_TARGET_AMD64)
- endfunction()
- 
- if (onnxruntime_BUILD_WEBASSEMBLY)
-@@ -449,6 +450,7 @@ else()
- 
-     endif()
-     target_sources(onnxruntime_mlas PRIVATE ${mlas_platform_srcs})
-+    target_compile_definitions(onnxruntime_mlas PRIVATE MLAS_TARGET_AMD64_IX86)
- endif()
- 
- foreach(mlas_target ${ONNXRUNTIME_MLAS_LIBS})
