@@ -4,6 +4,7 @@
   "description": "API and commands for processing SPIR-V modules",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Tools",
   "dependencies": [
+    "spirv-headers",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -11,7 +12,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "spirv-headers"
+    }
   ]
 }
