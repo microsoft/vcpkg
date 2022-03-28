@@ -182,8 +182,10 @@ list(PREPEND TARGETS
     util
     third_party/mini_chromium/mini_chromium/base
     handler:crashpad_handler
-    tools:generate_dump
 )
+if("generate-dump" IN_LIST FEATURES)
+    list(APPEND TARGETS tools:generate_dump)
+endif()
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${TARGETS}
@@ -219,15 +221,17 @@ if(VCPKG_TARGET_IS_ANDROID)
         RENAME "libcrashpad_handler.so"
     )
 
-    # Rename generate_dump executable to libgenerate_dump.so so it can be bundled in future package
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/generate_dump"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-        RENAME "libgenerate_dump.so"
-    )
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/generate_dump"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-        RENAME "libgenerate_dump.so"
-    )
+    if("generate-dump" IN_LIST FEATURES)
+        # Rename generate_dump executable to libgenerate_dump.so so it can be bundled in future package
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/generate_dump"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
+            RENAME "libgenerate_dump.so"
+        )
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/generate_dump"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
+            RENAME "libgenerate_dump.so"
+        )
+    endif()
 endif()
 
 # Configure cmake config for find_package

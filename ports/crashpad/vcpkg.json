@@ -15,5 +15,13 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "generate-dump": {
+      "description": [
+        "Builds and installs the generate_dump tool",
+        "https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/tools/generate_dump.md"
+      ]
+    }
+  }
 }
