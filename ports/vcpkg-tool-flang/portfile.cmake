@@ -9,6 +9,7 @@ vcpkg_from_github(
             #288.diff
             1163.diff
             1165.diff
+            1166.diff
             1168.diff
             1177.diff
             1178.diff
