@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 328f9b6..4b964db 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -399,14 +399,19 @@ endif ()
+ # By default, install nsync always
+ # set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+ 
+-install (TARGETS nsync
++install (TARGETS nsync EXPORT unofficial-nsyncConfig
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development)
+ 
+-install (TARGETS nsync_cpp OPTIONAL
++install (TARGETS nsync_cpp OPTIONAL EXPORT unofficial-nsyncConfig
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Development)
+ 
++install(EXPORT unofficial-nsyncConfig
++    NAMESPACE unofficial::nsync::
++    DESTINATION share/unofficial-nsync
++)
++
+ set (NSYNC_INCLUDES
+ 	"public/nsync.h"
+ 	"public/nsync_atomic.h"
