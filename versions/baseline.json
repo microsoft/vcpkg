@@ -1153,7 +1153,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.11.1",
+      "baseline": "1.11.2",
       "port-version": 1
     },
     "bshoshany-thread-pool": {
