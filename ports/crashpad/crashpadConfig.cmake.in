@@ -48,12 +48,13 @@ endif()
 
 if(APPLE)
   foreach(LIB_NAME ApplicationServices CoreFoundation Foundation IOKit Security bsm)
-    find_library(_LIB ${LIB_NAME} NO_CACHE)
+    find_library(_LIB ${LIB_NAME} REQUIRED)
     target_link_libraries(crashpad INTERFACE ${_LIB})
+    unset(_LIB CACHE)
   endforeach()
 
   add_library(crashpad_mig_output STATIC IMPORTED)
-  set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libmig_output.a")
+  set_property(TARGET crashpad_mig_output PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libmig_output.a")
   target_link_libraries(crashpad INTERFACE crashpad_mig_output)
 endif()
 
