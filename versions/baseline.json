@@ -7534,7 +7534,7 @@
     },
     "xqilla": {
       "baseline": "2.3.4",
-      "port-version": 0
+      "port-version": 1
     },
     "xsimd": {
       "baseline": "8.0.3",
