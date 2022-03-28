@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch
+        export-targets.patch
 )
 
 vcpkg_cmake_configure(
