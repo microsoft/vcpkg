@@ -4,6 +4,8 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 # NOTE: to figure out what cmake versions are required for different things,
 # grep for `CMake 3`. All version requirement comments should follow that format.
 
+# Attention: Changes to this file do not affect ABI hashing.
+
 #[===[.md:
 # z_vcpkg_add_fatal_error
 Add a fatal error.
