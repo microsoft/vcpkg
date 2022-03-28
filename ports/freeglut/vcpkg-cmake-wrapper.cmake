@@ -1,5 +1,10 @@
 _find_package(${ARGS})
 if(GLUT_FOUND AND UNIX AND NOT ANDROID)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0012 NEW)
+    cmake_policy(SET CMP0054 NEW)
+    cmake_policy(SET CMP0057 NEW)
+
     find_package(X11)
     # Since CMake 3.22, FindGLUT.cmake loads the glut pkg-config module.
     # Before CMake 3.14, FindX11.cmake doesn't create imported targets.
@@ -18,4 +23,6 @@ if(GLUT_FOUND AND UNIX AND NOT ANDROID)
         list(APPEND GLUT_LIBRARIES "${X11_Xi_LIB}")
         set_property(TARGET GLUT::GLUT APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${X11_Xi_LIB}")
     endif()
+
+    cmake_policy(POP)
 endif()
