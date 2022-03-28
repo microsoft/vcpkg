@@ -6,7 +6,10 @@ vcpkg_from_github(
     REF 3.17
     SHA512 a5105bf5f1dd365a64a350755c7d2c97942f74897a18dcdb3651e6732fd55cc1030a096f5808cf50575281f05e3ac09aa50a48d271a47b94cd61f5167a72b7cc
     HEAD_REF master
-    PATCHES cmake-fix.patch
+    PATCHES
+        cmake-fix.patch
+        windows-arm64-sse-fix.patch
+        uwp-deltav-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

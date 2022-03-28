@@ -75,6 +75,10 @@ vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}/Scripts")
 vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES virtualenv qface)
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND FEATURE_OPTIONS "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}")
+endif()
+
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
@@ -83,7 +87,7 @@ qt_cmake_configure(${_opt}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 

@@ -1,9 +1,10 @@
 {
   "name": "azure-iot-sdk-c",
   "version-date": "2022-01-21",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A C99 SDK for connecting devices to Microsoft Azure IoT services",
   "homepage": "https://github.com/Azure/azure-iot-sdk-c",
+  "license": "MIT",
   "dependencies": [
     "azure-c-shared-utility",
     "azure-macro-utils-c",

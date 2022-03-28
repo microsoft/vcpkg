@@ -153,21 +153,32 @@ $parentHashes = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
     # Prefetch tools for better output
-    & "./vcpkg$executableExtension" fetch cmake
-    & "./vcpkg$executableExtension" fetch ninja
-    & "./vcpkg$executableExtension" fetch git
+    foreach ($tool in @('cmake', 'ninja', 'git')) {
+        & "./vcpkg$executableExtension" fetch $tool
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "Failed to fetch $tool"
+        }
+    }
 
     Write-Host "Determining parent hashes using HEAD~1"
-    $parentHashesFile = Join-Path $WorkingRoot 'parent-hashes.json'
+    $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
     $parentHashes = @("--parent-hashes=$parentHashesFile")
-    & git revert -n -m 1 HEAD
-    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile" `
-        | ForEach-Object { if ($_ -match ' dependency information| determine pass') { Write-Host $_ } }
-    & git reset --hard HEAD
+    & git revert -n -m 1 HEAD | Out-Null
+    # The vcpkg.cmake toolchain file is not part of ABI hashing,
+    # but changes must trigger at least some testing.
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+    Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
+    & "./vcpkg$executableExtension" ci $Triplet --dry-run --exclude=$skipList @hostArgs @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
 
     Write-Host "Running CI using parent hashes"
+    & git reset --hard HEAD
 }
 
+# The vcpkg.cmake toolchain file is not part of ABI hashing,
+# but changes must trigger at least some testing.
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @hostArgs @commonArgs @cachingArgs @parentHashes
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))

@@ -9,6 +9,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             gmp.patch
             name.dir.patch
             runtime.patch
+            remove_gmpd.patch
     )
 
     include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
@@ -88,7 +89,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(exec_prefix "\${prefix}")
     set(libdir "\${prefix}/lib")
     set(includedir "\${prefix}/../include")
-    set(LIBS "-lnettled -lgmpd")
+    set(LIBS "-lnettled -lgmp")
     configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nettle.pc" @ONLY)
     set(LIBS -lnettled)
     set(HOGWEED -lhogweedd)

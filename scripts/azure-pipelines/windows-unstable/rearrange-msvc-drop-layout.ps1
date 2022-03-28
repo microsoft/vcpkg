@@ -20,7 +20,7 @@ param(
 
 Set-StrictMode -Version Latest
 
-$MSVCRoot = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC"
+$MSVCRoot = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC"
 
 $ErrorActionPreference = "Stop"
 
