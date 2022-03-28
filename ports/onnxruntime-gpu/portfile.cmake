@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_BUILD_SHARED_LIB=${BUILD_SHARED}
         -Donnxruntime_BUILD_FOR_NATIVE_MACHINE=${BUILD_HOST}
         -Donnxruntime_CROSS_COMPILING=${CROSS_BUILD}
+        -DCMAKE_INSTALL_INCLUDEDIR=include
         -Donnxruntime_RUN_ONNX_TESTS=OFF
         -Donnxruntime_GENERATE_TEST_REPORTS=OFF
         -Donnxruntime_ENABLE_STATIC_ANALYSIS=OFF
