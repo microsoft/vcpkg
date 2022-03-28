@@ -4862,7 +4862,7 @@
     },
     "nsync": {
       "baseline": "1.24.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nt-wrapper": {
       "baseline": "2019-08-10",
