@@ -11,6 +11,10 @@
     "eigen3",
     "flatbuffers",
     "nlohmann-json",
+    {
+      "name": "nsync",
+      "platform": "!windows"
+    },
     "onnx",
     "protobuf",
     "re2",

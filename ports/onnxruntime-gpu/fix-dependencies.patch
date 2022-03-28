@@ -1,8 +1,23 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 090051e..dbafe13 100644
+index acbde7f..7997a56 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -833,20 +833,20 @@ else()
+@@ -718,8 +718,13 @@ if (onnxruntime_BUILD_BENCHMARKS)
+   endif()
+ endif()
+ 
+-if (NOT WIN32 AND NOT onnxruntime_PREFER_SYSTEM_LIB)
++if (NOT WIN32)
++  if (NOT onnxruntime_PREFER_SYSTEM_LIB)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/external/nsync EXCLUDE_FROM_ALL)
++  else()
++  find_package(unofficial-nsync CONFIG REQUIRED)
++  get_target_property(NSYNC_INCLUDE_DIR unofficial::nsync::nsync_cpp INTERFACE_INCLUDE_DIRECTORIES)
++  endif()
+ endif()
+ # External dependencies
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
+@@ -833,20 +838,20 @@ else()
    add_subdirectory(external/date EXCLUDE_FROM_ALL)
  endif()
  
@@ -28,7 +43,7 @@ index 090051e..dbafe13 100644
  
  if (onnxruntime_PREFER_SYSTEM_LIB)
    find_package(re2)
-@@ -894,6 +894,9 @@ endif()
+@@ -894,6 +899,9 @@ endif()
  
  # TODO  do we have to add target_include_directories to each project that uses this?
  if (CPUINFO_SUPPORTED)
@@ -38,7 +53,7 @@ index 090051e..dbafe13 100644
    set(PYTORCH_CPUINFO_DIR external/pytorch_cpuinfo)
    set(PYTORCH_CPUINFO_INCLUDE_DIR ${PYTORCH_CPUINFO_DIR}/include)
    set(CPUINFO_BUILD_TOOLS OFF CACHE INTERNAL "")
-@@ -911,6 +914,7 @@ if (CPUINFO_SUPPORTED)
+@@ -911,6 +919,7 @@ if (CPUINFO_SUPPORTED)
    if (MSVC)
      target_compile_options(cpuinfo PRIVATE "-D_CRT_SECURE_NO_WARNINGS")
    endif()
@@ -46,7 +61,16 @@ index 090051e..dbafe13 100644
  endif()
  
  # bounds checking behavior.
-@@ -1388,12 +1392,14 @@ else()
+@@ -1165,7 +1174,7 @@ function(onnxruntime_set_compile_flags target_name)
+       endif()
+ 
+       target_compile_definitions(${target_name} PUBLIC -DNSYNC_ATOMIC_CPP11)
+-      target_include_directories(${target_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/external/nsync/public")
++      target_include_directories(${target_name} PRIVATE "${NSYNC_INCLUDE_DIR}")
+     endif()
+     foreach(ORT_FLAG ${ORT_PROVIDER_FLAGS})
+       target_compile_definitions(${target_name} PRIVATE ${ORT_FLAG})
+@@ -1388,12 +1397,14 @@ else()
    include(onnx_minimal)
  endif()
  
