@@ -22,6 +22,15 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUA
     )
 endif()
 
+# wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
+# vcpkg's port pkgconf would prevent this lookup.
+if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG})
+    find_program(system_pkg_config NAMES pkg-config)
+    if(system_pkg_config)
+        set(ENV{PKG_CONFIG} "${system_pkg_config}")
+    endif()
+endif()
+
 # This may be set to ON by users in a custom triplet.
 # The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
 # which is why they must be set in a custom triplet rather than a port feature.
