@@ -7,6 +7,7 @@
     "Use the header-only target volk::volk_headers if you require platform-specific extensions."
   ],
   "homepage": "https://github.com/zeux/volk",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
