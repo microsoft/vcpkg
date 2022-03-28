@@ -64,8 +64,9 @@ function(vcpkg_build_cmake)
         vcpkg_list(SET parallel_param "/m")
     elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
+    elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "Unix Makefiles")
     else()
-        message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
+        message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: 'Ninja', 'Visual Studio', 'Unix Makefiles' and 'NMake Makefiles'")
     endif()
 
     vcpkg_list(SET target_param)
