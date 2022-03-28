@@ -1,9 +1,9 @@
-vcpkg_from_sourceforge(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freeglut/freeglut
-    REF 3.2.2
-    FILENAME "freeglut-3.2.2.tar.gz"
-    SHA512 190231951d314f854c244bd27f7c20488403bd0eecffc342097a2e3d1621cec87f6c209a77b4c153aabcf44697b4070227930e295ab74fb88953cbbf94fc81d9
+    REPO FreeGLUTProject/freeglut
+    REF v3.2.2
+    SHA512 caaed8af95c2d0ecbc785229e26433978a0f606ae2b9f0b3cd794bb5bb70a1cc54d21f941a1a03e20c7e0fa3eba9d54a21d6e23e44f243899c0fdf146066cf29
+    HEAD_REF master
     PATCHES 
         x11-dependencies-export.patch
         macOS_Xquartz.patch
