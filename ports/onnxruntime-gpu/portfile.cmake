@@ -20,6 +20,10 @@ else()
 endif()
 string(COMPARE EQUAL "${VCPKG_HOST_TRIPLET}" "${VCPKG_TARGET_TRIPLET}" BUILD_HOST)
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
+vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS
@@ -27,6 +31,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_BUILD_FOR_NATIVE_MACHINE=${BUILD_HOST}
         -Donnxruntime_CROSS_COMPILING=${CROSS_BUILD}
         -DCMAKE_INSTALL_INCLUDEDIR=include
+        "-DPython_EXECUTABLE=${PYTHON3}"
         -Donnxruntime_RUN_ONNX_TESTS=OFF
         -Donnxruntime_GENERATE_TEST_REPORTS=OFF
         -Donnxruntime_ENABLE_STATIC_ANALYSIS=OFF
