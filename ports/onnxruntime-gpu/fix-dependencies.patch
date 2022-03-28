@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index acbde7f..7997a56 100644
+index acbde7f..c712ba7 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -718,8 +718,13 @@ if (onnxruntime_BUILD_BENCHMARKS)
@@ -48,7 +48,7 @@ index acbde7f..7997a56 100644
  # TODO  do we have to add target_include_directories to each project that uses this?
  if (CPUINFO_SUPPORTED)
 +  find_package(unofficial-cpuinfo CONFIG REQUIRED)
-+  set(cpuinfo unofficial::cpuinfo::cpuinfo)
++  add_library(cpuinfo ALIAS unofficial::cpuinfo::cpuinfo)
 +  if (0)
    set(PYTORCH_CPUINFO_DIR external/pytorch_cpuinfo)
    set(PYTORCH_CPUINFO_INCLUDE_DIR ${PYTORCH_CPUINFO_DIR}/include)
