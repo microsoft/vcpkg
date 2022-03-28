@@ -1,8 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 328f9b6..4b964db 100644
+index 328f9b6..6a71b5b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -399,14 +399,19 @@ endif ()
+@@ -41,6 +41,9 @@ function (set_cpp_target tgtname files)
+ 			"${PROJECT_SOURCE_DIR}/platform/c++11.futex"
+ 		)
+ 	endif ()
++    
++    target_include_directories("${tgtname}" PUBLIC $<INSTALL_INTERFACE:include>)
++    
+ 
+ 	target_compile_definitions ("${tgtname}" PRIVATE "${NSYNC_CPP_DEFINITIONS}")
+ 
+@@ -399,14 +402,19 @@ endif ()
  # By default, install nsync always
  # set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
  
