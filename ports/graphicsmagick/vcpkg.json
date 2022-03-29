@@ -3,6 +3,7 @@
   "version": "1.3.38",
   "description": "Image processing library",
   "homepage": "https://sourceforge.net/projects/graphicsmagick/",
+  "license": null,
   "dependencies": [
     "bzip2",
     "freetype",
