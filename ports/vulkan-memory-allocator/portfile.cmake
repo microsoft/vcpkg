@@ -10,4 +10,4 @@ file(COPY "${SOURCE_PATH}/include/vk_mem_alloc.h" DESTINATION "${CURRENT_PACKAGE
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-vulkan-memory-allocator-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-vulkan-memory-allocator")
 
-configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/vulkan-memory-allocator/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
