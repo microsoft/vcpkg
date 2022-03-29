@@ -12,14 +12,11 @@
     "zlib"
   ],
   "default-features": [
-    "glacier2",
-    "icebox",
-    "icessl",
-    "icestorm"
+
   ],
   "features": {
-    "glacier2": {
-      "description": "Glacier2"
+    "glacier2lib": {
+      "description": "Glacier2 libraries"
     },
     "glacier2router": {
       "description": "Glacier2Router",
@@ -27,25 +24,14 @@
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2",
+            "glacier2lib",
             "icessl"
           ]
         }
       ]
     },
     "icebox": {
-      "description": "IceBox"
-    },
-    "iceboxadmin": {
-      "description": "IceBoxAdmin",
-      "dependencies": [
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "icebox"
-          ]
-        }
-      ]
+      "description": "IceBox libraries and runtime"
     },
     "icebridge": {
       "description": "IceBridge",
@@ -64,7 +50,7 @@
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2",
+            "glacier2lib",
             "icebox",
             "icessl",
             "icestorm"
@@ -72,58 +58,27 @@
         }
       ]
     },
-    "icegrid": {
-      "description": "IceGrid",
+    "icegridlib": {
+      "description": "IceGrid library",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2"
+            "glacier2lib"
           ]
         }
       ]
     },
-    "icegridadmin": {
-      "description": "IceGridAdmin",
+    "icegridtools": {
+      "description": "IceGrid tools",
       "dependencies": [
         "expat",
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2",
+            "glacier2lib",
             "icebox",
-            "icegrid"
-          ]
-        }
-      ]
-    },
-    "icegridnode": {
-      "description": "IceGridNode",
-      "dependencies": [
-        "expat",
-        "lmdb",
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "glacier2",
-            "icebox",
-            "icegrid",
-            "icessl"
-          ]
-        }
-      ]
-    },
-    "icegridregistry": {
-      "description": "IceGridRegistry",
-      "dependencies": [
-        "expat",
-        "lmdb",
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "glacier2",
-            "icebox",
-            "icegrid",
+            "icegridlib",
             "icessl"
           ]
         }
@@ -138,42 +93,17 @@
         }
       ]
     },
-    "icestorm": {
+    "icestormlib": {
       "description": "IceStorm library"
     },
-    "icestormadmin": {
-      "description": "IceStormAdmin",
-      "dependencies": [
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "icebox",
-            "icestorm"
-          ]
-        }
-      ]
-    },
-    "icestormdb": {
-      "description": "IceStorm database utility",
-      "dependencies": [
-        "bzip2",
-        "lmdb",
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "icestorm"
-          ]
-        }
-      ]
-    },
-    "icestormservice": {
-      "description": "IceStormService",
+    "icestormtools": {
+      "description": "IceStorm tools",
       "dependencies": [
         "lmdb",
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2",
+            "glacier2lib",
             "icebox",
             "icegrid",
             "icestorm"

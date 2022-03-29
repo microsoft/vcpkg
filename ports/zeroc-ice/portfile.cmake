@@ -10,92 +10,125 @@ vcpkg_from_github(
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-set(RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
-set(DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
+get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
+set(WIN_DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
+set(WIN_RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
+set(UNIX_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/src/${SOURCE_PATH_SUFFIX})
+
+# install_includes
+function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
+    foreach(RELATIVE_PATH ${RELATIVE_PATHS})
+        file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h)
+        if(EXISTS ${ORIGINAL_PATH}/${RELATIVE_PATH})
+            file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
+        endif()
+    endforeach()
+endfunction()
+
+# install_slices
+function(install_slices ORIGINAL_PATH RELATIVE_PATHS)
+    foreach(RELATIVE_PATH ${RELATIVE_PATHS})
+        file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.ice)
+        if(EXISTS ${ORIGINAL_PATH}/${RELATIVE_PATH})
+            file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/ice/slice/${RELATIVE_PATH})
+        endif()
+    endforeach()
+endfunction()
+
+vcpkg_list(SET ICE_INCLUDE_SUB_DIRECTORIES
+  "Glacier2"
+  "Ice"
+  "IceBT"
+  "IceBox"
+  "IceGrid"
+  "IceIAP"
+  "IcePatch2"
+  "IceSSL"
+  "IceStorm"
+  "IceUtil"
+)
 
 
 set(ICE_OPTIONAL_COMPONENTS_MSBUILD "")
-set(ICE_OPTIONAL_COMPONENTS_MAKE "")
+set(ICE_OPTIONAL_COMPONENTS_MAKE "Ice")
 
 # IceSSL
 if("icessl" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icessl++11")
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "src/IceSSL")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceSSL")
 endif()
 
 # Glacier2
-if("glacier2" IN_LIST FEATURES)
+if("glacier2lib" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\glacier2++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "Glacier2")
 endif()
 
 # Glacier2Router
 if("glacier2router" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\glacier2router")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\glacier2cryptpermissionsverifier")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "glacier2router")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "Glacier2CryptPermissionsVerifier")
 endif()
 
 # IceBox
-if("icebox" IN_LIST FEATURES)
+if("iceboxlib" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\iceboxlib++11")
-    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icebox++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceBox")
 endif()
 
-# IceBoxAdmin executable
-if("iceboxadmin" IN_LIST FEATURES)
+# IceBox
+if("iceboxtools" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icebox++11")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\iceboxadmin")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icebox")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "iceboxadmin")
 endif()
 
 # IceGrid
-if("icegrid" IN_LIST FEATURES)
+if("icegridlib" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceGrid")
 endif()
 
-# IceGridAdmin
-if("icegridadmin" IN_LIST FEATURES)
+# IceGrid tools
+if("icegridtools" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridadmin")
-endif()
-
-# IceGridRegistry
-if("icegridregistry" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridregistry")
-endif()
-
-# IceGridNode
-if("icegridnode" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icegridnode")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridregistry")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
 endif()
 
 # IceStorm
-if("icestorm" IN_LIST FEATURES)
+if("icestormlib" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icestorm++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceStorm")
 endif()
 
 # IceStormAdmin
-if("icestormadmin" IN_LIST FEATURES)
+if("icestormtools" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormadmin")
-endif()
-
-  # IceStormService
-if("icestormservice" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormservice")
-endif()
-
-# IceStormDB
-if("icestormdb" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icestormdb")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icestormadmin")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icestormservice")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icestormdb")
 endif()
 
 # IceBridge executable
 if("icebridge" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++98\\icebridge")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icebridge")
 endif()
 
 # IceDiscovery
 if("icediscovery" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icediscovery")
 endif()
-
 
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -115,10 +148,15 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
-        COMMAND make install V=1 prefix=${CURRENT_PACKAGES_DIR}/debug linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=no ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY}
+        COMMAND make V=1 prefix=${CURRENT_PACKAGES_DIR}/debug linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=no ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY} eee
         WORKING_DIRECTORY ${SOURCE_PATH}/cpp
         LOGNAME make-${TARGET_TRIPLET}-dbg
     )
+
+    # Install debug libraries to packages directory
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
+    file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
     # Clean up for the next round
     vcpkg_execute_build_process(
@@ -131,18 +169,31 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/lib")
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
-        COMMAND make install V=1 prefix=${CURRENT_PACKAGES_DIR} linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} LANGUAGES=cpp USR_DIR_INSTALL=yes OPTIMIZE=yes -j${VCPKG_CONCURRENCY} srcs
+        COMMAND make V=1 prefix=${CURRENT_PACKAGES_DIR} linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=yes ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY}
         WORKING_DIRECTORY ${SOURCE_PATH}/cpp
         LOGNAME make-${TARGET_TRIPLET}-rel
     )
 
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib64")
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib64 ${CURRENT_PACKAGES_DIR}/debug/lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib64 ${CURRENT_PACKAGES_DIR}/lib)
-    endif()
+    # Install release libraries and other files to packages directory
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ice/slice")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    install_includes("${UNIX_BUILD_DIR}/cpp/include" "${ICE_INCLUDE_SUB_DIRECTORIES}")
+    install_includes("${UNIX_BUILD_DIR}/cpp/include/generated" "${ICE_INCLUDE_SUB_DIRECTORIES}")
+    install_slices("${UNIX_BUILD_DIR}/slice" "${ICE_INCLUDE_SUB_DIRECTORIES}")
+    file(GLOB ICE_RELEASE_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
+    file(COPY ${ICE_RELEASE_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(GLOB ICE_RELEASE_EXECUTABLES "${UNIX_BUILD_DIR}/cpp/bin/*")
+    file(COPY ${ICE_RELEASE_EXECUTABLES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+    # Clean up
+    vcpkg_execute_build_process(
+        COMMAND make distclean
+        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+        LOGNAME make-clean-after-build-${TARGET_TRIPLET}
+    )
 
 else(NOT VCPKG_TARGET_IS_WINDOWS)
 
@@ -174,55 +225,21 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/zeroc.icebuilder.msbuild.dll")
     endif()
 
-    # install_includes
-    function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
-        foreach(RELATIVE_PATH ${RELATIVE_PATHS})
-            file(
-                GLOB
-                HEADER_FILES
-                ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h)
-                file(COPY ${HEADER_FILES}
-                DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH}
-            )
-        endforeach()
-    endfunction()
-
-    # Install header files
-    set(INCLUDE_SUB_DIRECTORIES
-        "Glacier2"
-        "Ice"
-        "IceBox"
-        "IceGrid"
-        "IcePatch2"
-        "IceSSL"
-        "IceStorm"
-        "IceUtil"
-    )
-
-    install_includes("${RELEASE_BUILD_DIR}/cpp/include" "${INCLUDE_SUB_DIRECTORIES}")
-
-    set(INCLUDE_GEN_SUB_DIRECTORIES
-        "Glacier2"
-        "Ice"
-        "IceBox"
-        "IceSSL"
-        "IceStorm"
-    )
-    install_includes("${RELEASE_BUILD_DIR}/cpp/include/generated/cpp11/${TRIPLET_SYSTEM_ARCH}/Release" "${INCLUDE_GEN_SUB_DIRECTORIES}")
+    install_includes("${WIN_RELEASE_BUILD_DIR}/cpp/include" "${ICE_INCLUDE_SUB_DIRECTORIES}")
+    install_includes("${WIN_RELEASE_BUILD_DIR}/cpp/include/generated/cpp11/${TRIPLET_SYSTEM_ARCH}/Release" "${ICE_INCLUDE_SUB_DIRECTORIES}")
 
     vcpkg_clean_msbuild()
 
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+
 endif(NOT VCPKG_TARGET_IS_WINDOWS)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 if(VCPKG_TARGET_IS_OSX AND EXISTS "${CURRENT_PACKAGES_DIR}/.DS_Store")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/.DS_Store")
