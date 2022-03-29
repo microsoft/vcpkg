@@ -27,6 +27,8 @@ vcpkg_configure_cmake(
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Dbuild_as_dynamic=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
 vcpkg_install_cmake()
