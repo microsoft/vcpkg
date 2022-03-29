@@ -1,0 +1,38 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 78adc56..40ab144 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -19,8 +19,10 @@ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
+ endif()
+ 
+ if (BUILD_SHARED_LIBS)
++target_include_directories(braft-shared PUBLIC $<INSTALL_INTERFACE:include/braft>)
+ target_link_libraries(braft-shared PUBLIC ${DYNAMIC_LIB})
+ else()
++target_include_directories(braft-static PUBLIC $<INSTALL_INTERFACE:include/braft>)
+ target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
+ endif()
+ 
+@@ -31,15 +33,20 @@ SET_TARGET_PROPERTIES(braft-shared PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUT
+ endif()
+ 
+ if (NOT BUILD_SHARED_LIBS)
+-install(TARGETS braft-static
++install(TARGETS braft-static EXPORT unofficial-braftConfig
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
+ else()
+-install(TARGETS braft-shared
++install(TARGETS braft-shared EXPORT unofficial-braftConfig
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
+ endif()
++
++install(EXPORT unofficial-braftConfig
++    NAMESPACE unofficial::braft::
++    DESTINATION share/unofficial-braft
++)
