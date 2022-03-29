@@ -71,7 +71,7 @@ function(vcpkg_cmake_build)
         vcpkg_list(SET parallel_args -jobs "${VCPKG_CONCURRENCY}")
         vcpkg_list(SET no_parallel_args -jobs 1)
     else()
-        message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
+        message(WARNING "Unrecognized GENERATOR setting from vcpkg_cmake_configure().")
     endif()
 
     vcpkg_list(SET target_param)
