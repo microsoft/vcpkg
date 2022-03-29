@@ -227,6 +227,10 @@ function(vcpkg_configure_cmake)
     set(ninja_can_be_used ON) # Ninja as generator
     set(ninja_host ON) # Ninja as parallel configurator
 
+    if(NOT arg_PREFER_NINJA AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        set(ninja_can_be_used OFF)
+    endif()
+
     if(VCPKG_HOST_IS_WINDOWS)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
@@ -248,7 +252,7 @@ function(vcpkg_configure_cmake)
     set(generator_arch "")
     if(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
-    else(NOT ninja_can_be_used)
+    elseif(NOT ninja_can_be_used)
         set(generator "")
         z_vcpkg_get_visual_studio_generator(generator generator_arch)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
