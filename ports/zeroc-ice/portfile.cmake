@@ -109,7 +109,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/debug/lib")
 
   set(ICE_BUILD_CONFIG "cpp11-shared")
-  if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ICE_BUILD_CONFIG "cpp11-static")
   endif()
 
