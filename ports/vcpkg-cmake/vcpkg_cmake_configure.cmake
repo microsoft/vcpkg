@@ -166,9 +166,7 @@ function(vcpkg_cmake_configure)
     endif()
 
     set(generator "Ninja")
-    if(DEFINED VCPKG_CMAKE_GENERATOR AND NOT VCPKG_CMAKE_GENERATOR STREQUAL "")
-        set(generator "${VCPKG_CMAKE_GENERATOR}") # Triplet override. 
-    elseif(DEFINED arg_GENERATOR)
+    if(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(arg_WINDOWS_USE_MSBUILD OR NOT ninja_can_be_used)
         set(generator "")
