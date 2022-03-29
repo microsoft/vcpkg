@@ -74,6 +74,18 @@ caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
 c-ares:arm-uwp=fail
 c-ares:x64-uwp=fail
+
+# file conflict with dbg-macro
+c-dbg-macro:x86-windows=skip
+c-dbg-macro:x64-windows=skip
+c-dbg-macro:x64-windows-static=skip
+c-dbg-macro:x64-windows-static-md=skip
+c-dbg-macro:x64-uwp=skip
+c-dbg-macro:arm64-windows=skip
+c-dbg-macro:arm-uwp=skip
+c-dbg-macro:x64-osx=skip
+c-dbg-macro:x64-linux=skip
+
 casclib:arm-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm64-windows      = skip
@@ -116,8 +128,14 @@ chartdir:x64-windows-static-md=fail
 chartdir:x64-osx=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
+
+# chromium-base does not yet support VS2022
+chromium-base:x64-windows=fail
+chromium-base:x64-windows-static=fail
+
 # Chromium Base requires a recent version of Clang to be installed.
 chromium-base:x64-linux=skip
+
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
@@ -136,8 +154,12 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-# https://github.com/colmap/colmap/issues/1421
-colmap:x64-osx=fail
+
+# there is an ICE in VS2022 with colmap in release mode
+colmap:x86-windows=fail
+colmap:x64-windows=fail
+colmap:x64-windows-static=fail
+
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -343,6 +365,10 @@ gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x64-windows-static-md=fail
 gmmlib:x86-windows=fail
+
+# the msbuild for gmp:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
+gmp:x64-uwp=fail
+
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
 gppanel:x64-osx=fail
@@ -495,6 +521,10 @@ libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
+
+# the msbuild for libgpg:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
+libgpg:x64-uwp=fail
+
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhydrogen:arm64-windows=fail
@@ -622,6 +652,7 @@ libui:x64-linux=fail
 libui:x64-uwp=fail
 libusb:arm-uwp=fail
 libusb:x64-uwp=fail
+libusb:arm64-windows=fail
 libusbmuxd:arm-uwp=fail
 libusbmuxd:x64-uwp=fail
 libusbmuxd:x64-linux=fail
@@ -642,6 +673,7 @@ libvmdk:x64-windows-static-md=skip
 libvmdk:arm64=skip
 libvmdk:x64-linux=skip
 libvmdk:x64-osx=skip
+libvpx:arm-uwp=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -687,8 +719,6 @@ marble:arm-uwp=fail
 marble:x64-linux=fail
 marble:x64-osx=fail
 marble:x86-windows=fail
-marl:arm-uwp=fail
-marl:x64-uwp=fail
 mathgl:x64-osx=fail
 mathgl:x64-uwp=fail
 mecab:arm64-windows      = skip
@@ -968,11 +998,6 @@ pfring:x64-osx=fail
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
 physx:arm64-windows=fail
-pixel:x64-uwp=fail
-pixel:x64-windows=fail
-pixel:x64-windows-static=fail
-pixel:x64-windows-static-md=fail
-pixel:x86-windows=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
@@ -1009,6 +1034,10 @@ qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
+
+# qtwebengine:x64-windows has an ICE in VS2022
+qtwebengine:x64-windows=fail
+
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1131,12 +1160,12 @@ rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-ryu:arm-uwp=fail
-ryu:x64-uwp=fail
+
+# ryu does not support VS2022 yet
+ryu:x64-windows=fail
 ryu:x64-windows-static=fail
 ryu:x64-windows-static-md=fail
-ryu:x86-windows=fail
-ryu::arm64-windows=fail
+
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-linux=fail
@@ -1254,8 +1283,18 @@ tcl:arm64-windows=fail
 tcl:x64-uwp=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
+
+# tensorflow does not support VS2022
+tensorflow:x64-windows=fail
+tensorflow:x64-windows-static=fail
+tensorflow:x64-windows-static-md=fail
+tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows-static=fail
+tensorflow-cc:x64-windows-static-md=fail
+
 tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
+
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
 theia:x64-uwp            = skip
@@ -1325,7 +1364,6 @@ vxl:x64-windows        = skip
 vxl:x64-windows-static = skip
 vxl:x64-windows-static-md=skip
 vxl:x86-windows        = skip
-wampcc:arm64-windows=fail
 winpcap:arm64-windows      = skip
 winpcap:arm-uwp            = skip
 winpcap:x64-uwp            = skip
@@ -1401,7 +1439,13 @@ quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
+
+# the version of v8 we have in the repo doesn't support VS2022
+v8:x86-windows=fail
+v8:x64-windows=fail
+v8:x64-windows-static=fail
 v8:x64-windows-static-md=fail
+
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
