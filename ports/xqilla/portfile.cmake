@@ -10,19 +10,14 @@ vcpkg_extract_source_archive_ex(
     PATCHES "fix-compare.patch"
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-   list(APPEND COMPILE_OPTIONS "-DXQILLA_STATIC=static")
-endif()
-
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_CHARSET_FLAG
-    OPTIONS ${COMPILE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-xqilla)
 vcpkg_copy_pdbs()
 
 

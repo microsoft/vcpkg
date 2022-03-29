@@ -1,0 +1,12 @@
+diff --git a/sources/core/client.cpp b/sources/core/client.cpp
+index 7ea20e2..c5d2c40 100644
+--- a/sources/core/client.cpp
++++ b/sources/core/client.cpp
+@@ -23,6 +23,7 @@
+ #include <cpp_redis/core/client.hpp>
+ #include <cpp_redis/misc/error.hpp>
+ #include <cpp_redis/misc/macro.hpp>
++#include <thread>
+ 
+ namespace cpp_redis {
+ 

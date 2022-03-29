@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2022.01.31.00
-    SHA512 fef065c8a879e5b80eb521eaa09d2ac4eb22563e759834e60f665f07df5c2863c76217798680381bc51fad8c44f4b5d5abfb924a94c89635a41708abf6d70133
+    REF v2022.03.21.00
+    SHA512 4e0fda55f007179883af30024fe1d389642159b1b4c915f7ef1a3c1003c8c52e2370f53ffa79d5fa75533d33becfb946d2bcbb2abdc62b9a297f977403d13dd7
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
