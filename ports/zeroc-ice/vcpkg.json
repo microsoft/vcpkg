@@ -11,9 +11,6 @@
     "mcpp",
     "zlib"
   ],
-  "default-features": [
-
-  ],
   "features": {
     "glacier2lib": {
       "description": "Glacier2 libraries"
