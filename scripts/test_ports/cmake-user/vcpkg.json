@@ -69,11 +69,6 @@
           "name": "liblzma"
         },
         {
-          "$package": "Curses",
-          "name": "ncurses",
-          "platform": "!windows & !uwp"
-        },
-        {
           "$package": "TIFF",
           "name": "tiff"
         },
