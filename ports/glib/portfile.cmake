@@ -1,15 +1,15 @@
 # Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+#if (VCPKG_TARGET_IS_WINDOWS)
+#    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
     #remove if merged: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1655
-endif()
+#endif()
 
-set(GLIB_MAJOR_MINOR 2.70)
-set(GLIB_PATCH 5)
+set(GLIB_MAJOR_MINOR 2.72)
+set(GLIB_PATCH 0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
     FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
-    SHA512 3dfb45a9b6fe67fcf185f5cbb3985b6f1da17caf9c6f01e638d8fe4a6271ea1a30b0cf4ca8f43728bd29a8ac13b05a34e1cf262ade7795f0c0d0a2c0b90b1ff8)
+    SHA512 351ff025d26348112584bed2c1052427150a8a2f8642c813dae1583fb105184528ad20e264cdf44bbca658a26c280e36acd0e642add112d29edc1b25dfc94fad)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
