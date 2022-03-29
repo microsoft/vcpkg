@@ -7,8 +7,7 @@ vcpkg_from_gitlab(
     REF b43e7c6f3cf7855e16170a06d3a9c7234c60ca94 #v1.17.6
     SHA512 2d8f0cbb11638610eda104a370bb8450e28d835852b0f861928738a60949e0aaba7a554a9f9efabbefda10a37616d4cd0d3021b3fbb4ced1d52db1edb49bc358
     HEAD_REF master
-    PATCHES 0001-meson-fix-macOS-build-and-add-macOS-ci.patch
-            cairo_static_fix.patch
+    PATCHES cairo_static_fix.patch
             meson-fix-bfd.patch
 )
 
