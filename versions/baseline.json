@@ -1132,6 +1132,10 @@
       "baseline": "2.4.1",
       "port-version": 2
     },
+    "braft": {
+      "baseline": "2021-26-04",
+      "port-version": 0
+    },
     "breakpad": {
       "baseline": "2020-09-14",
       "port-version": 5
