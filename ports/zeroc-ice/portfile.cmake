@@ -148,7 +148,15 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
-        COMMAND make V=1 prefix=${CURRENT_PACKAGES_DIR}/debug linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=no ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY}
+        COMMAND make
+            V=1
+            "prefix=${CURRENT_PACKAGES_DIR}/debug"
+            linux_id=vcpkg
+            "CONFIGS=${ICE_BUILD_CONFIG}"
+            USR_DIR_INSTALL=yes
+            OPTIMIZE=no
+            ${ICE_OPTIONAL_COMPONENTS_MAKE}
+            "-j${VCPKG_CONCURRENCY}"
         WORKING_DIRECTORY ${SOURCE_PATH}/cpp
         LOGNAME make-${TARGET_TRIPLET}-dbg
     )
@@ -169,7 +177,15 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/lib")
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
-        COMMAND make V=1 prefix=${CURRENT_PACKAGES_DIR} linux_id=vcpkg CONFIGS=${ICE_BUILD_CONFIG} USR_DIR_INSTALL=yes OPTIMIZE=yes ${ICE_OPTIONAL_COMPONENTS_MAKE} -j${VCPKG_CONCURRENCY}
+        COMMAND make
+            V=1
+            "prefix=${CURRENT_PACKAGES_DIR}"
+            linux_id=vcpkg
+            "CONFIGS=${ICE_BUILD_CONFIG}"
+            USR_DIR_INSTALL=yes
+            OPTIMIZE=yes
+            ${ICE_OPTIONAL_COMPONENTS_MAKE}
+            "-j${VCPKG_CONCURRENCY}"
         WORKING_DIRECTORY ${SOURCE_PATH}/cpp
         LOGNAME make-${TARGET_TRIPLET}-rel
     )
