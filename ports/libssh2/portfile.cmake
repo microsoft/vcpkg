@@ -44,5 +44,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
