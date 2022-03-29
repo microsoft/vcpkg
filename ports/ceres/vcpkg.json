@@ -1,9 +1,9 @@
 {
   "name": "ceres",
-  "version-semver": "2.0.0",
-  "port-version": 6,
+  "version-semver": "2.1.0",
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
+  "license": "Apache-2.0",
   "dependencies": [
     "eigen3",
     "glog",
