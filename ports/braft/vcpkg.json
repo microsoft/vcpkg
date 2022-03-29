@@ -5,6 +5,7 @@
   "homepage": "https://github.com/baidu/braft",
   "supports": "!windows",
   "dependencies": [
+    "brpc",
     "gflags",
     "glog",
     "leveldb",
