@@ -8,7 +8,6 @@ vcpkg_from_gitlab(
     SHA512 2d8f0cbb11638610eda104a370bb8450e28d835852b0f861928738a60949e0aaba7a554a9f9efabbefda10a37616d4cd0d3021b3fbb4ced1d52db1edb49bc358
     HEAD_REF master
     PATCHES cairo_static_fix.patch
-            meson-fix-bfd.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -56,6 +55,7 @@ vcpkg_configure_meson(
         -Dpng=enabled
         -Dspectre=auto
         -Dgtk2-utils=disabled
+        -Dsymbol-lookup=disabled
 )
 vcpkg_install_meson()
 
