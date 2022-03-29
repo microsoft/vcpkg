@@ -29,10 +29,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Maintainer Help
 
-- [Manifest files - vcpkg.json](maintainers/manifest-files.md)
-- [Control files](maintainers/control-files.md)
-- [Portfile functions](maintainers/portfile-functions.md)
-- [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
+- [Manifest Files - vcpkg.json](maintainers/manifest-files.md)
+- [Control Files](maintainers/control-files.md)
+- [Portfile Functions](maintainers/portfile-functions.md)
+- [Authoring Script Ports](maintainers/authoring-script-ports.md)
+- [Common CMake Definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 - [Creating Registries](maintainers/registries.md)
 - [CMake Guidelines](maintainers/cmake-guidelines.md)

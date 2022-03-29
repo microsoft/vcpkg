@@ -1,7 +1,6 @@
 {
   "name": "s2n",
-  "version": "1.3.0",
-  "port-version": 1,
+  "version": "1.3.5",
   "description": "C99 implementation of the TLS/SSL protocols.",
   "homepage": "https://github.com/aws/s2n-tls",
   "supports": "!uwp & !windows",

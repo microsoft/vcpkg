@@ -1,0 +1,10 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4db57c..7ace55c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,3 +22,5 @@ if(BUILD_EXAMPLES)
+     target_link_libraries(test commandline)
+ endif()
+ 
++set_target_properties(commandline PROPERTIES PUBLIC_HEADER "commandline.h")
++install(TARGETS commandline RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)

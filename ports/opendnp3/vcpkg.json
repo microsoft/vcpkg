@@ -1,6 +1,7 @@
 {
   "name": "opendnp3",
   "version": "3.1.1",
+  "port-version": 1,
   "description": "DNP3 (IEEE-1815) protocol stack. Modern C++ with bindings for .NET and Java.",
   "homepage": "https://github.com/dnp3/opendnp3/",
   "supports": "!uwp",

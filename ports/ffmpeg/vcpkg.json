@@ -1,12 +1,13 @@
 {
   "name": "ffmpeg",
   "version": "4.4.1",
-  "port-version": 7,
+  "port-version": 10,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
     "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
   ],
   "homepage": "https://ffmpeg.org",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -33,14 +34,12 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "ass",
             "avcodec",
             "avdevice",
             "avfilter",
             "avformat",
             "avresample",
             "bzip2",
-            "fontconfig",
             "freetype",
             "iconv",
             "lzma",
@@ -80,6 +79,22 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "ass"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "fribidi"
           ],
           "platform": "!uwp"
@@ -104,25 +119,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "opengl"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "openh264"
           ],
           "platform": "!uwp"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "tensorflow"
-          ],
-          "platform": "!static"
         },
         {
           "name": "ffmpeg",
@@ -144,6 +143,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "tensorflow"
+          ],
+          "platform": "x64 & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "aom"
           ],
           "platform": "!(windows & arm & !uwp)"
@@ -160,9 +167,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "nvcodec"
+            "opengl"
           ],
-          "platform": "(windows | linux) & !uwp"
+          "platform": "!uwp & !(arm64 & windows)"
         },
         {
           "name": "ffmpeg",
@@ -170,7 +177,15 @@
           "features": [
             "tesseract"
           ],
-          "platform": "!(windows & arm) & !static"
+          "platform": "!(windows & arm) & !static & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nvcodec"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
         }
       ]
     },
@@ -428,6 +443,7 @@
     },
     "nvcodec": {
       "description": "Nvidia video decoding/encoding acceleration",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "ffnvcodec"
       ]
