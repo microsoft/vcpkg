@@ -32,7 +32,7 @@ else()
     list(APPEND OPTIONS -Dxlib=disabled)
 endif()
 list(APPEND OPTIONS -Dxcb=disabled)
-#list(APPEND OPTIONS -Dxlib-xcb=disabled) don't forget this option with the next update!
+list(APPEND OPTIONS -Dxlib-xcb=disabled)
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
