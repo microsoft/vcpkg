@@ -2,7 +2,7 @@ diff --git a/configure b/configure
 index 54c852aca..96e2c89ba 100644
 --- a/configure
 +++ b/configure
-@@ -11923,7 +11923,7 @@ if ${ac_cv_lib_crypto_CRYPTO_new_ex_data+:} false; then :
+@@ -12452,7 +12452,7 @@ if ${ac_cv_lib_crypto_CRYPTO_new_ex_data+:} false; then :
    $as_echo_n "(cached) " >&6
  else
    ac_check_lib_save_LIBS=$LIBS
@@ -11,7 +11,7 @@ index 54c852aca..96e2c89ba 100644
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -11958,7 +11958,7 @@ if test "x$ac_cv_lib_crypto_CRYPTO_new_ex_data" = xyes; then :
+@@ -12487,7 +12487,7 @@ if test "x$ac_cv_lib_crypto_CRYPTO_new_ex_data" = xyes; then :
  #define HAVE_LIBCRYPTO 1
  _ACEOF
  

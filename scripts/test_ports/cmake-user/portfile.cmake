@@ -1,38 +1,38 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(cmake_version OFF)
-if("cmake-3-4" IN_LIST FEATURES)
-    set(cmake_version 3.4.3)
+if("cmake-3-7" IN_LIST FEATURES)
+    set(cmake_version 3.7.2)
     string(REGEX REPLACE "([^.]*[.][^.]*).*" "\\1" cmake_major_minor "${cmake_version}")
-    if(HOST_TRIPLET MATCHES "^x.*-(windows|mingw)")
+    if(VCPKG_HOST_IS_WINDOWS)
         set(name "cmake-${cmake_version}-win32-x86")
         vcpkg_download_distfile(legacy_cmake_archive
             FILENAME "${name}.zip"
             URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.zip"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.zip"
-            SHA512 c74a8f85ce04a2c0f68fd315a9a7e2fee5cc98af9e8117cca6b35a4f0942cae2d101672e5936a8bfc20289c8c82da582531495308657348a1121e3f568588bd3
+            SHA512 c359a22e2e688da1513db195280d6e8987bc8d570a0c543f1b1dfc8572fe4fd6c23d951ec5d5eae640fcca3bef3ae469083511474796ade8c6319d8bc4e4b38d
         )
         set(cmake_bin_dir "/bin")
-    elseif(HOST_TRIPLET MATCHES "^x.*-osx")
+    elseif(VCPKG_HOST_IS_OSX)
         set(name "cmake-${cmake_version}-Darwin-x86_64")
         vcpkg_download_distfile(legacy_cmake_archive
             FILENAME "${name}.tar.gz"
-            URLS "https://github.com/Kitware/CMake/releases/download/v3.4.3/${name}.tar.gz"
+            URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.tar.gz"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.tar.gz"
-            SHA512 c3da566a19e95b8f91bf601518b9c49304b9bb8500f5a086eb2c867514176278e51dd893952b8ab54a2839ed02c898036c7985fe0bb761db9ccb988343463ea2
+            SHA512 8e41608f4dd998020acf2bd1b0dab4aec37b3ea9e228f2c4a457cd1c0339d94db38a0548b4b07a9e3605f9beb11a3f6737a72813586c4ad5f730d74038a14c2b
         )
         set(cmake_bin_dir "/CMake.app/Contents/bin")
-    elseif(HOST_TRIPLET MATCHES "^x.*-linux")
+    elseif(VCPKG_HOST_IS_LINUX)
         set(name "cmake-${cmake_version}-Linux-x86_64")
         vcpkg_download_distfile(legacy_cmake_archive
             FILENAME "${name}.tar.gz"
-            URLS "https://github.com/Kitware/CMake/releases/download/v3.4.3/${name}.tar.gz"
+            URLS "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${name}.tar.gz"
                  "https://cmake.org/files/v${cmake_major_minor}/${name}.tar.gz"
-            SHA512 455b8f940ccda0ba1169d3620db67c0bf89284126386408cd28b76b66c59c4c2ea5ad8def0095166e7524f6cf5202f117a2fa49e1525f93ed711657a5d2ae988
+            SHA512 459909fcfb9c74993c3d4ab9db4e31ea940515b670db44d039de611d813099895e695467cc8da24824315486e38e2f3e246aa92d6236c51103822ec8a39e3168
         )
         set(cmake_bin_dir "/bin")
     else()
-        message(FATAL_ERROR "Unable to test feature 'cmake-3-4' for '${HOST_TRIPLET}' host.")
+        message(FATAL_ERROR "Unable to test feature 'cmake-3-7' for '${HOST_TRIPLET}' host.")
     endif()
 
     vcpkg_extract_source_archive_ex(

@@ -1,0 +1,33 @@
+diff --git a/win32/vorbis.def b/win32/vorbis.def
+index 1310b6c..de14385 100644
+--- a/win32/vorbis.def
++++ b/win32/vorbis.def
+@@ -1,6 +1,5 @@
+ ; vorbis.def
+ ; 
+-LIBRARY
+ EXPORTS
+ _floor_P
+ _mapping_P
+diff --git a/win32/vorbisenc.def b/win32/vorbisenc.def
+index 79af064..40a3e39 100644
+--- a/win32/vorbisenc.def
++++ b/win32/vorbisenc.def
+@@ -1,6 +1,5 @@
+ ; vorbisenc.def
+ ;
+-LIBRARY
+ 
+ EXPORTS
+ vorbis_encode_init
+diff --git a/win32/vorbisfile.def b/win32/vorbisfile.def
+index 4dc5549..243795d 100644
+--- a/win32/vorbisfile.def
++++ b/win32/vorbisfile.def
+@@ -1,6 +1,5 @@
+ ; vorbisfile.def
+ ;
+-LIBRARY
+ EXPORTS
+ ov_clear
+ ov_open
