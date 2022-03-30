@@ -4857,7 +4857,7 @@
       "port-version": 0
     },
     "nss": {
-      "baseline": "3.76",
+      "baseline": "3.76.1",
       "port-version": 0
     },
     "nsync": {
