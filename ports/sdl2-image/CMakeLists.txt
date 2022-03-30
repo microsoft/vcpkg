@@ -102,7 +102,7 @@ install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake"
 [[include(CMakeFindDependencyMacro)
 find_dependency(SDL2 CONFIG)
-if(@USE_WEBP@)
+if(USE_WEBP)
     find_dependency(WebP CONFIG)
 endif()
 include("${CMAKE_CURRENT_LIST_DIR}/sdl2-image-targets.cmake")
