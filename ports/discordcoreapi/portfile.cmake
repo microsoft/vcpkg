@@ -1,8 +1,8 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF 3011861d7af1c7c171988a3f0d6300572634340b
-	SHA512 c70b4073573ff69058831d5a494aed0ae6a120431a30250930897abe37e964ace5a94418f30a063c21a97a2bf52ceefd3e8925ef3998e885da6560c71184f4da
+	REF a243b23c1bdf9c6b00d1e48f208d603210516614
+	SHA512 c666714fac9ccc692dd8de14252845c373fb13d6e16f02fd7b7ad1decc5f0b93a4b58ec06e7be5b79c89622725895a6a0296e4feb5202430772efb356267f56c
 	HEAD_REF main
 )
 
@@ -10,13 +10,8 @@ vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
 )
 
-if ("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-linux")
-	set(VCPKG_CXX_FLAGS "-std=gnu++2a" "-fcoroutines" "-fconcepts" "-lpthread" "-O3")
-endif()
-
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(
