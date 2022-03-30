@@ -535,9 +535,6 @@ liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-uwp=fail
-liblsl:arm64-windows=fail
-liblsl:arm-uwp=fail
-liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
 libmagic:x64-uwp=fail
@@ -1022,6 +1019,9 @@ qt5-base:arm64-windows=fail
 
 # qtwebengine:x64-windows has an ICE in VS2022
 qtwebengine:x64-windows=fail
+
+# upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
+qtinterfaceframework:x64-windows=fail
 
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
