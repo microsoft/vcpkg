@@ -1,0 +1,25 @@
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO RealTimeChris/DiscordCoreAPI
+	REF dfde3e7af0ba31b0a37757802dfb4798b3a2e224
+	SHA512 c1210601e7954fd1f94e78d6ba20778a757fd588c4892ebe24ce050ebf09e133414a6292cfccfd90254e930a7a6434c1e2ba477f2957a4ca7c433d873787062f
+	HEAD_REF main
+)
+
+vcpkg_configure_cmake(
+	SOURCE_PATH "${SOURCE_PATH}"
+	PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(
+	INSTALL "${SOURCE_PATH}/License"
+	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+	RENAME copyright
+)
