@@ -3,5 +3,5 @@
 	"version": "1.0.1",
 	"description": "A Discord bot library written in C++ using custom asynchronous coroutines.",
 	"homepage": "https://discordcoreapi.com",
-	"dependencies":[ "discordcoreapi", "curl", "openssl", "libsodium", "glib", "opus", "ffmpeg", "nlohmann-json"]
+	"dependencies":["curl", "openssl", "libsodium", "glib", "opus", "ffmpeg", "nlohmann-json"]
 }
