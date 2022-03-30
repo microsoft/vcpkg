@@ -1,5 +1,4 @@
 # This portfile is based (shamelessly copied and adapted a bit) on 'ogre' portfile.
-set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR OFF)
 if (EXISTS "${CURRENT_INSTALLED_DIR}/Media/HLMS/Blendfunctions_piece_fs.glslt")
     message(FATAL_ERROR "FATAL ERROR: ogre-next and ogre are incompatible.")
 endif()
@@ -11,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
-    REF 0e0c47ed70091e7bdead5fb1ca01e1cae5857ef4 #v2.2.5
-    SHA512 25b9903b0c30e7c1baa01bfc126c9fc8397ab74d40c21695c88d886df5db503c3239490143b7ff64ec6c8c3da89b90b5d3846bbe49219ca8778c2a6f234dbffc 
+    REF 10b56694f33fd6ead1c501eb90379bcac671d841 #v2.3.0
+    SHA512 b2f1c55655582b2844b7c10cce965cc5268829a0702b09abcfe04fba8db00ad032f605d683c88811f77f9b7b4fb8a1095079f1a1c96bbe9fd022621f4ff4cf81 
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
@@ -29,7 +28,7 @@ endif()
 
 if (("openvr" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL static))
     set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR ON)
-    message ("OpenVR does not support building on static ")
+    message (" OpenVR only supports dynamic library linkage. Building dynamic library.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -66,6 +65,7 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DOGRE_CMAKE_DIR=share/ogre-next
+        -DCMAKE_DISABLE_FIND_PACKAGE_OPENVR=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
