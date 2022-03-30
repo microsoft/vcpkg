@@ -168,7 +168,7 @@ function(vcpkg_cmake_configure)
         z_vcpkg_get_visual_studio_generator(generator arch)
     endif()
 
-    if(NOT DEFINED generator  OR generator STREQUAL "")
+    if(NOT generator)
         if(NOT VCPKG_CMAKE_SYSTEM_NAME)
             set(VCPKG_CMAKE_SYSTEM_NAME "Windows")
         endif()
