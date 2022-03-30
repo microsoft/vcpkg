@@ -121,6 +121,24 @@ index 33df1f5..13a0b3a 100644
  endif()
 +endif()
  
+diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
+index 8425e70..00112c9 100644
+--- a/cmake/onnxruntime_common.cmake
++++ b/cmake/onnxruntime_common.cmake
+@@ -208,9 +208,12 @@ if (ARM64 OR ARM OR X86 OR X64 OR X86_64)
+     # Link cpuinfo
+     # Using it mainly in ARM with Android.
+     # Its functionality in detecting x86 cpu features are lacking, so is support for Windows.
++    if (NOT TARGET unofficial::cpuinfo::clog)
++        find_package(unofficial-cpuinfo CONFIG REQUIRED)
++    endif()
+ 
+     target_include_directories(onnxruntime_common PRIVATE ${PYTORCH_CPUINFO_INCLUDE_DIR})
+     target_link_libraries(onnxruntime_common cpuinfo)
+-    list(APPEND onnxruntime_EXTERNAL_LIBRARIES cpuinfo clog)
++    list(APPEND onnxruntime_EXTERNAL_LIBRARIES cpuinfo unofficial::cpuinfo::clog)
+   endif()
+ endif()
 diff --git a/cmake/wil.cmake b/cmake/wil.cmake
 index 36a8bc9..0126a69 100644
 --- a/cmake/wil.cmake
