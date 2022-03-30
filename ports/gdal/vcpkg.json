@@ -1,27 +1,37 @@
 {
   "name": "gdal",
-  "version-semver": "3.4.0",
-  "port-version": 6,
+  "version-semver": "3.4.2",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
-  "supports": "!uwp",
+  "license": null,
   "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows & !uwp"
+    },
     "curl",
     "expat",
     "geos",
-    "giflib",
+    {
+      "name": "giflib",
+      "platform": "!windows | mingw"
+    },
     {
       "name": "json-c",
       "platform": "!windows | mingw"
     },
     "libgeotiff",
+    {
+      "name": "libiconv",
+      "platform": "windows & !mingw"
+    },
     "libjpeg-turbo",
     "liblzma",
     "libpng",
     "libwebp",
     "libxml2",
     "openjpeg",
-    "proj4",
+    "proj",
     "sqlite3",
     "tiff",
     {
@@ -65,6 +75,18 @@
         "netcdf-c"
       ]
     },
+    "poppler": {
+      "description": "Enable poppler support",
+      "dependencies": [
+        {
+          "name": "poppler",
+          "default-features": false,
+          "features": [
+            "private-api"
+          ]
+        }
+      ]
+    },
     "postgresql": {
       "description": "Enable PostgreSQL support",
       "dependencies": [
@@ -94,7 +116,6 @@
       ]
     },
     "system-libraries": {
-      "$supports": "!windows",
       "description": "Include drivers which need additional libraries"
     },
     "tools": {

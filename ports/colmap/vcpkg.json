@@ -1,7 +1,6 @@
 {
   "name": "colmap",
-  "version-string": "3.6",
-  "port-version": 2,
+  "version-date": "2022-03-14",
   "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license.",
   "homepage": "https://colmap.github.io/",
   "license": "BSD-3-Clause",
@@ -9,7 +8,6 @@
     "boost-filesystem",
     "boost-graph",
     "boost-program-options",
-    "boost-regex",
     "boost-system",
     "boost-test",
     {
@@ -55,7 +53,7 @@
       ]
     },
     "tests": {
-      "description": "Enable TESTS."
+      "description": "Build all tests."
     }
   }
 }

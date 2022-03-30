@@ -5,6 +5,8 @@ set(GDAL_PATCHES
     0005-Fix-configure.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
+    0009-atlbase.patch
+    0010-symprefix.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
@@ -13,115 +15,61 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF d699b38a744301368070ef780f797340da4a9c3c # 3.4.0
-    SHA512 709523740a51a0a2a144debcfa5fbc5a5b3d93cc3632856cfbc37f7ca52f2e83f4942d9a27d4c723ee19d2397cc91a4b1ba4543547afdfefb3980a7ba6684bd7
+    REF v3.4.2
+    SHA512 4dadfaefb4924e17395b2d8b695e185e91e9ad28b4b8666b64f11f40164411974f8ade747592060b515907ee73bf335610698c5e53e56a8937a89ddfffc3d66b
     HEAD_REF master
     PATCHES ${GDAL_PATCHES}
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
+set(extra_exports "")
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
-    set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
-
-    set(NMAKE_OPTIONS "")
-    set(NMAKE_OPTIONS_REL "")
-    set(NMAKE_OPTIONS_DBG "")
-
-    x_vcpkg_pkgconfig_get_modules(PREFIX PROJ MODULES --msvc-syntax proj INCLUDE_DIRS LIBS)
-
-    include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
-    find_dependency_win()
-
-    if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
-        list(APPEND NMAKE_OPTIONS "MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR}")
-        list(APPEND NMAKE_OPTIONS_REL "MYSQL_LIB=${MYSQL_LIBRARY_REL}")
-        list(APPEND NMAKE_OPTIONS_DBG "MYSQL_LIB=${MYSQL_LIBRARY_DBG}")
-    endif()
-
-    list(APPEND NMAKE_OPTIONS
-        "DATADIR=${NATIVE_DATA_DIR}"
-        "HTMLDIR=${NATIVE_HTML_DIR}"
-        "GEOS_DIR=${GEOS_INCLUDE_DIR}"
-        "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-        "PROJ_INCLUDE=${PROJ_INCLUDE_DIRS}"
-        "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
-        "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
-        "CURL_INC=-I${CURL_INCLUDE_DIR}"
-        "SQLITE_INC=-I${SQLITE_INCLUDE_DIR} ${HAVE_SPATIALITE}"
-        "PG_INC_DIR=${PGSQL_INCLUDE_DIR}"
-        OPENJPEG_ENABLED=YES
-        "OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}"
-        OPENJPEG_VERSION=20100
-        WEBP_ENABLED=YES
-        "WEBP_CFLAGS=-I${WEBP_INCLUDE_DIR}"
-        "LIBXML2_INC=-I${XML2_INCLUDE_DIR}"
-        PNG_EXTERNAL_LIB=1
-        "PNGDIR=${PNG_INCLUDE_DIR}"
-        "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
-        ZLIB_EXTERNAL_LIB=1
-        MSVC_VER=1900
-        )
-
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        list(APPEND NMAKE_OPTIONS WIN64=YES)
-    endif()
-
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
-        list(APPEND NMAKE_OPTIONS SSEFLAGS=/DNO_SSSE AVXFLAGS=/DNO_AVX)
-    endif()
-
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
-        list(APPEND NMAKE_OPTIONS DLLBUILD=0)
-        list(APPEND NMAKE_OPTIONS "PROJ_FLAGS=-DPROJ_STATIC -DPROJ_VERSION=5")
-    else()
-        # Enables PDBs for release and debug builds
-        list(APPEND NMAKE_OPTIONS WITH_PDB=1)
-        list(APPEND NMAKE_OPTIONS DLLBUILD=1)
-    endif()
-
     if (VCPKG_CRT_LINKAGE STREQUAL "static")
         set(LINKAGE_FLAGS "/MT")
     else()
         set(LINKAGE_FLAGS "/MD")
     endif()
 
-    list(APPEND NMAKE_OPTIONS_REL
-        ${NMAKE_OPTIONS}
+    set(NMAKE_OPTIONS
+        "DATADIR=${CURRENT_PACKAGES_DIR}/share/gdal"
+        "HTMLDIR=${CURRENT_PACKAGES_DIR}/share/gdal/html"
+        "MSVC_VER=1900"
+    )
+    set(NMAKE_OPTIONS_REL
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
-        "PROJ_LIBRARY=${PROJ_LIBS_RELEASE}"
-        "PNG_LIB=${PNG_LIBRARY_REL}"
-        "GEOS_LIB=${GEOS_LIBRARY_REL}"
-        "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
-        "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
-        "SQLITE_LIB=${SQLITE_LIBRARY_REL} ${SPATIALITE_LIBRARY_REL}"
-        "OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}"
-        "WEBP_LIBS=${WEBP_LIBRARY_REL}"
-        "LIBXML2_LIB=${XML2_LIBRARY_REL} ${ICONV_LIBRARY_REL} ${LZMA_LIBRARY_REL}"
-        "ZLIB_LIB=${ZLIB_LIBRARY_REL}"
-        "PG_LIB=${PGSQL_LIBRARY_REL} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_REL}"
-        )
-
-    list(APPEND NMAKE_OPTIONS_DBG
-        ${NMAKE_OPTIONS}
+    )
+    set(NMAKE_OPTIONS_DBG
         "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
         "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
-        "PROJ_LIBRARY=${PROJ_LIBS_DEBUG}"
-        "PNG_LIB=${PNG_LIBRARY_DBG}"
-        "GEOS_LIB=${GEOS_LIBRARY_DBG}"
-        "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
-        "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
-        "SQLITE_LIB=${SQLITE_LIBRARY_DBG} ${SPATIALITE_LIBRARY_DBG}"
-        "OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}"
-        "WEBP_LIBS=${WEBP_LIBRARY_DBG}"
-        "LIBXML2_LIB=${XML2_LIBRARY_DBG} ${ICONV_LIBRARY_DBG} ${LZMA_LIBRARY_DBG}"
-        "ZLIB_LIB=${ZLIB_LIBRARY_DBG}"
-        "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
         DEBUG=1
-        )
+    )
+
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND NMAKE_OPTIONS "WIN64=YES")
+    endif()
+
+    if(VCPKG_TARGET_IS_UWP)
+        list(APPEND NMAKE_OPTIONS "SYM_PREFIX=" "EXTRA_LINKER_FLAGS=/APPCONTAINER WindowsApp.lib")
+    endif()
+
+    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND NMAKE_OPTIONS "HAVE_ATLBASE_H=NO")
+    endif()
+
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+        list(APPEND NMAKE_OPTIONS "SSEFLAGS=/DNO_SSSE" "AVXFLAGS=/DNO_AVX")
+    endif()
+
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND NMAKE_OPTIONS "DLLBUILD=0")
+    else()
+        list(APPEND NMAKE_OPTIONS "DLLBUILD=1" "WITH_PDB=1")
+    endif()
+
+    include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
+    find_dependency_win()
 
     if("tools" IN_LIST FEATURES)
         list(APPEND NMAKE_OPTIONS_REL "BUILD_TOOLS=1")
@@ -134,15 +82,13 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}/gdal"
         TARGET devinstall
+        OPTIONS
+            ${NMAKE_OPTIONS}
         OPTIONS_RELEASE
-        "${NMAKE_OPTIONS_REL}"
+            ${NMAKE_OPTIONS_REL}
         OPTIONS_DEBUG
-        "${NMAKE_OPTIONS_DBG}"
-        )
-
-    if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/gdal/html")
-    endif()
+            ${NMAKE_OPTIONS_DBG}
+    )
 
     if("tools" IN_LIST FEATURES)
         set(GDAL_EXES
@@ -172,8 +118,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ogrinfo
             ogrlineref
             ogrtindex
-            )
-        # vcpkg_copy_tools removed the bin directories for us so no need to remove again
+        )
+        # vcpkg_copy_tools removes the bin directories for us so no need to remove again
         vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
     elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -239,6 +185,11 @@ else()
         add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
+    if ("poppler" IN_LIST FEATURES)
+        add_config("--with-poppler=yes"  "Poppler support:           yes")
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        add_config("--with-poppler=no"   "Poppler support:           no")
+    endif()
     if ("postgresql" IN_LIST FEATURES)
         add_config("--with-pg=yes"  "PostgreSQL support:        yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
@@ -319,9 +270,9 @@ else()
             --with-pcidsk=no
             --with-pcraster=no
             --with-pcre=no
+            --with-pcre2=no
             --with-pdfium=no
             --with-podofo=no
-            --with-poppler=no
             --with-qhull=no
             --with-rasdaman=no
             --with-rasterlite2=no
@@ -388,8 +339,8 @@ else()
     vcpkg_fixup_pkgconfig()
     set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc")
     if(EXISTS "${pc_file_debug}")
-        vcpkg_replace_string("${pc_file_debug}" "${prefix}/../../include" "${prefix}/../include")
-        vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
+        vcpkg_replace_string("${pc_file_debug}" "\${prefix}/../../include" "\${prefix}/../include")
+        vcpkg_replace_string("${pc_file_debug}" "\${exec_prefix}/include" "\${prefix}/../include")
     endif()
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
@@ -397,10 +348,29 @@ else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gdal/debug/bin/gdal-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
+
+    if("libspatialite" IN_LIST FEATURES)
+        list(APPEND extra_exports SPATIALITE)
+        x_vcpkg_pkgconfig_get_modules(
+            PREFIX SPATIALITE
+            MODULES spatialite
+            LIBS
+        )
+    endif()
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+string(COMPARE NOTEQUAL "${NMAKE_OPTIONS}" "" NMAKE_BUILD)
+set(GDAL_EXTRA_LIBS_DEBUG "")
+set(GDAL_EXTRA_LIBS_RELEASE "")
+foreach(prefix IN LISTS extra_exports)
+    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_DEBUG}")
+    string(APPEND GDAL_EXTRA_LIBS_DEBUG " ${libs}")
+    string(REPLACE "${CURRENT_INSTALLED_DIR}/" "\${CMAKE_CURRENT_LIST_DIR}/../../" libs "${${prefix}_LIBS_RELEASE}")
+    string(APPEND GDAL_EXTRA_LIBS_RELEASE " ${libs}")
+endforeach()
+string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_DEBUG "${GDAL_EXTRA_LIBS_DEBUG}")
+string(REPLACE "/lib/pkgconfig/../.." "" GDAL_EXTRA_LIBS_RELEASE "${GDAL_EXTRA_LIBS_RELEASE}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-# Handle copyright
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/gdal/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
