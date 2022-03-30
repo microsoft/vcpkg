@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index acbde7f..c712ba7 100644
+index acbde7f..0db8b01 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -718,8 +718,13 @@ if (onnxruntime_BUILD_BENCHMARKS)
@@ -85,6 +85,15 @@ index acbde7f..c712ba7 100644
  
  
  # fix a warning in onnx code we can't do anything about
+@@ -1830,7 +1841,7 @@ if (WIN32)
+   list(APPEND onnxruntime_EXTERNAL_LIBRARIES ${SYS_PATH_LIB} Shlwapi)
+   list(APPEND onnxruntime_EXTERNAL_LIBRARIES debug Dbghelp)
+ else()
+-  list(APPEND onnxruntime_EXTERNAL_LIBRARIES nsync_cpp)
++  list(APPEND onnxruntime_EXTERNAL_LIBRARIES unofficial::nsync::nsync_cpp)
+   list(APPEND onnxruntime_EXTERNAL_LIBRARIES ${CMAKE_DL_LIBS} Threads::Threads)
+ endif()
+ 
 diff --git a/cmake/external/eigen.cmake b/cmake/external/eigen.cmake
 index 264247a..f5908ab 100644
 --- a/cmake/external/eigen.cmake
@@ -154,7 +163,7 @@ index 36a8bc9..0126a69 100644
 +add_library(wil ALIAS WIL::WIL)
 \ No newline at end of file
 diff --git a/onnxruntime/core/common/safeint.h b/onnxruntime/core/common/safeint.h
-index 263e936..3ee70f3 100644
+index 263e936..82bbe83 100644
 --- a/onnxruntime/core/common/safeint.h
 +++ b/onnxruntime/core/common/safeint.h
 @@ -32,7 +32,7 @@ class SafeIntExceptionHandler<onnxruntime::OnnxRuntimeException> {
@@ -162,7 +171,7 @@ index 263e936..3ee70f3 100644
  #endif
  #endif
 -#include "safeint/SafeInt.hpp"
-+#include "SafeInt.hpp"
++#include <SafeInt.hpp>
  #if defined(__GNUC__)
  #pragma GCC diagnostic pop
  #endif

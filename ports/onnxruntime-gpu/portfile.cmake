@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
@@ -9,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-build-issues.patch
+        export-target-in-static-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -72,6 +71,8 @@ vcpkg_cmake_configure(
         -Donnxruntime_ENABLE_BITCODE=OFF
         -Donnxruntime_BUILD_OPSCHEMA_LIB=ON
         -Donnxruntime_USE_EXTENSIONS=OFF
+    MAYBE_UNUSED_VARIABLES
+        Python_EXECUTABLE
         
 )
 
