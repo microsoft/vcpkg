@@ -26,9 +26,9 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
-if (("openvr" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL static))
+if (("openvr" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
     set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR ON)
-    message (" OpenVR only supports dynamic library linkage. Building dynamic library.")
+    message (" OpenVR not support static build.")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
