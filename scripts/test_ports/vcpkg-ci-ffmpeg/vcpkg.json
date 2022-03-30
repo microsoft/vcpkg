@@ -7,10 +7,6 @@
   "dependencies": [
     {
       "name": "ffmpeg",
-      "default-features": false
-    },
-    {
-      "name": "ffmpeg",
       "default-features": false,
       "features": [
         "avcodec",
