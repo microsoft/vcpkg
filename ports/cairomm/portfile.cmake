@@ -10,8 +10,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        undef.win32.patch # because WIN32 is used as an ENUM identifier. 
 )
 
 vcpkg_configure_meson(
