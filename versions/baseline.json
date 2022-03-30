@@ -7629,8 +7629,8 @@
       "port-version": 2
     },
     "zlib": {
-      "baseline": "1.2.11",
-      "port-version": 13
+      "baseline": "1.2.12",
+      "port-version": 0
     },
     "zlib-ng": {
       "baseline": "2.0.5",
