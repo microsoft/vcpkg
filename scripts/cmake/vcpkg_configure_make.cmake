@@ -482,9 +482,10 @@ function(vcpkg_configure_make)
 
     # Android - cross-compiling support
     if(VCPKG_TARGET_IS_ANDROID)
-        if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-            string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
-        endif()
+        # This is temporarily disabled since it just avoid some warnings.
+        # if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        #     string(REPLACE "-static-libstdc++" "-lc++_static" VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES})
+        # endif()
 
         if(arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
             if(VCPKG_HOST_IS_WINDOWS)
