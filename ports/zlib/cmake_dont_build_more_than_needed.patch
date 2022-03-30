@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 0fe939d..a1291d5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,6 +7,7 @@ set(VERSION "1.2.11")
+@@ -7,6 +7,7 @@ set(VERSION "1.2.12")
  
  option(ASM686 "Enable building i686 assembly implementation")
  option(AMD64 "Enable building amd64 assembly implementation")
