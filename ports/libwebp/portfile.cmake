@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-build.patch
-    0002-cmake-config-add-backwards-compatibility.patch
+    0002-cmake-config.patch
     0003-fix-tool-dependencies.patch
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch
