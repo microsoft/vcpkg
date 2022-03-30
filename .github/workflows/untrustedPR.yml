@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
@@ -51,7 +51,7 @@ jobs:
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
 
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v6
         with:
           script: |
             const { promises: fs } = require('fs')
@@ -108,10 +108,12 @@ jobs:
             }
             if (missing_license !== "") {
               output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
-              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+              output += "<details>\n\n"
 
+              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
               output += missing_license
-              output += "\n\nValid values for the license field are listed at <https://spdx.org/licenses/>\n\n"
+              output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n"
+              output += "</details>\n\n"
             }
 
             if (approve) {
@@ -124,7 +126,7 @@ jobs:
 
             console.log(output);
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pr
           path: pr/

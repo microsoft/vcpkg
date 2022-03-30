@@ -1,9 +1,9 @@
 {
   "name": "gtk",
-  "version": "4.4.0",
-  "port-version": 1,
+  "version": "4.6.0",
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
+  "license": "LGPL-2.0-only",
   "dependencies": [
     "atk",
     {

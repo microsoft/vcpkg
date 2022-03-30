@@ -1,9 +1,10 @@
 {
   "name": "qt5",
-  "version-string": "5.15.2",
+  "version": "5.15.3",
   "port-version": 1,
   "description": "Qt5 Application Framework",
   "homepage": "https://www.qt.io/",
+  "license": null,
   "dependencies": [
     {
       "name": "qt5-base",
@@ -75,7 +76,6 @@
           "name": "qt5",
           "default-features": false,
           "features": [
-            "mysqlplugin",
             "webengine"
           ],
           "platform": "!static"
@@ -87,6 +87,14 @@
             "wayland"
           ],
           "platform": "!windows"
+        },
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "mysqlplugin",
+            "postgresqlplugin"
+          ]
         }
       ]
     },
@@ -117,7 +125,10 @@
     "doc": {
       "description": [],
       "dependencies": [
-        "qt5-doc"
+        {
+          "name": "qt5-doc",
+          "platform": "!windows"
+        }
       ]
     },
     "essentials": {
@@ -152,6 +163,9 @@
         },
         {
           "name": "qt5-winextras",
+          "features": [
+            "declarative"
+          ],
           "platform": "windows"
         },
         {
