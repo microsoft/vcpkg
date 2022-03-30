@@ -26,10 +26,6 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
-if (("openvr" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-    set (CMAKE_DISABLE_FIND_PACKAGE_OPENVR ON)
-    message (" OpenVR not support static build.")
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -37,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         java    OGRE_BUILD_COMPONENT_JAVA
         python  OGRE_BUILD_COMPONENT_PYTHON
         csharp  OGRE_BUILD_COMPONENT_CSHARP
-        openvr  CMAKE_DISABLE_FIND_PACKAGE_OPENVR
 )
 
 vcpkg_cmake_configure(
@@ -65,7 +60,6 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DOGRE_CMAKE_DIR=share/ogre-next
-        -DCMAKE_DISABLE_FIND_PACKAGE_OPENVR=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
