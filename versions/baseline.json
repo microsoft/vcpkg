@@ -7361,8 +7361,8 @@
       "port-version": 0
     },
     "vulkan-memory-allocator": {
-      "baseline": "2021-07-07",
-      "port-version": 1
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "vxl": {
       "baseline": "2.0.2",
