@@ -8,7 +8,6 @@ vcpkg_from_github(
     0001-build.patch
     0002-cmake-config-add-backwards-compatibility.patch
     0003-fix-tool-dependencies.patch
-    0004-add-missing-linked-library.patch
     0006-fix-dependecies-platform.patch
     0007-fix-arm-build.patch
     0008-sdl.patch
@@ -33,11 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      unicode      WEBP_UNICODE
      libwebpmux   WEBP_BUILD_LIBWEBPMUX
 )
-
-
-if(VCPKG_TARGET_IS_LINUX)
-    message("WebP currently requires the following library from the system package manager:\n    Xxf86vm\n\nThis can be installed on Ubuntu systems via apt-get install libxxf86vm-dev")
-endif()
 
 if(VCPKG_TARGET_IS_OSX)
     if("vwebp" IN_LIST FEATURES OR "extras" IN_LIST FEATURES)
