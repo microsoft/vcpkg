@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.1</version>
+        <version>3.10.2</version>
         <exeRelativePath>python.exe</exeRelativePath>
         <url>https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-win32.zip</url>
         <sha512>d647d7141d1b13c899671b882e686a1b1cc6f759e5b7428ec858cdffd9ef019c78fb0b989174b98f30cb696297bfeff3d171f7eaabb339f5154886c030b8e4d9</sha512>
