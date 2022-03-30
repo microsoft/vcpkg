@@ -29,7 +29,7 @@ endif ()
 
 if (NOT _SKIP_HEADERS)
     file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
-    install(FILES ${SPICE_HEADERS} DESTINATION include)
+    install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
 endif()
 
 set_target_properties(

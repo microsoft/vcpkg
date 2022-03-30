@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b3b3b51..ea3f129 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,8 +73,8 @@ set(
+ 
+ # Export build information to help other projects link installed
+ # shapelib software.  Only one of these signatures is required
+-# for the export_shp name.
+-install(EXPORT export_shp DESTINATION ${CMAKE_INSTALL_SHP_DATADIR})
++# for the shpConfig name.
++install(EXPORT shpConfig DESTINATION ${CMAKE_INSTALL_SHP_DATADIR})
+ 
+ # Initial boilerplate done, now build library and executables.
+ 
+@@ -127,12 +127,17 @@ if(USE_RPATH)
+ endif(USE_RPATH)
+ 
+ install(TARGETS shp
+-  EXPORT export_shp
++  EXPORT shpConfig
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   )
+ 
++INSTALL(EXPORT shpConfig
++    DESTINATION share/shp
++)
++
++
+ # executables to be built and installed.
+ set(executables
+   shpcreate
