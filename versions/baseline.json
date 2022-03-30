@@ -6473,8 +6473,8 @@
       "port-version": 1
     },
     "simpleini": {
-      "baseline": "2018-08-31",
-      "port-version": 5
+      "baseline": "4.19",
+      "port-version": 0
     },
     "sjpeg": {
       "baseline": "2021-10-31",
