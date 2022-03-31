@@ -3,6 +3,7 @@
   "version": "2022.1",
   "description": "API and commands for processing SPIR-V modules",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Tools",
+  "license": "Apache-2.0",
   "dependencies": [
     "spirv-headers",
     {
