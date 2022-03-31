@@ -280,8 +280,8 @@ endif(NOT VCPKG_TARGET_IS_WINDOWS)
 # Remove unnecessary static libraries.
 file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
 file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
-list(FILTER PDLIBS INCLUDE REGEX ".*((IceUtil|Slice)\.([a-z]+))$")
-list(FILTER PRLIBS INCLUDE REGEX ".*((IceUtil|Slice)\.([a-z]+))$")
+list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
+list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 file(REMOVE ${PDLIBS} ${PRLIBS})
 
 if(VCPKG_TARGET_IS_OSX AND EXISTS "${CURRENT_PACKAGES_DIR}/.DS_Store")
