@@ -1,8 +1,16 @@
 diff --git a/cpp/src/Slice/MD5I.cpp b/cpp/src/Slice/MD5I.cpp
-index 66f4de545b..2430b1fd1b 100644
+index 66f4de545b..271352d1ea 100644
 --- a/cpp/src/Slice/MD5I.cpp
 +++ b/cpp/src/Slice/MD5I.cpp
-@@ -172,7 +172,7 @@ md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
+@@ -52,6 +52,7 @@
+  */
+
+ #include <Slice/MD5I.h>
++#include <stdint.h>
+ #include <string.h>
+
+ #ifdef __GNUC__
+@@ -172,7 +173,7 @@ md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
               * On little-endian machines, we can process properly aligned
               * data without copying it.
               */
