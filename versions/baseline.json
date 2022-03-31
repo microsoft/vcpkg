@@ -4986,7 +4986,7 @@
     },
     "omplapp": {
       "baseline": "1.5.1",
-      "port-version": 3
+      "port-version": 4
     },
     "onednn": {
       "baseline": "2.4.3",
