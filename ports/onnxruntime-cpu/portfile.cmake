@@ -1,10 +1,10 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/onnxruntime-cpu/share/usage")
-    message(FATAL_ERROR "${PORT} has conflict with onnxruntime-cpu, please remove onnxruntime-cpu before install ${PORT}.")
+if (EXISTS "${CURRENT_INSTALLED_DIR}/onnxruntime-gpu/share/usage")
+    message(FATAL_ERROR "${PORT} has conflict with onnxruntime-gpu, please remove onnxruntime-gpu before install ${PORT}.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO microsoft/onnxruntime # Please update this port with onnxruntime-cpu togather
+    REPO microsoft/onnxruntime # Please update this port with onnxruntime-gpu togather
     REF  0d9030e79888d1d5828730b254fedc53c7b640c1 # v1.10.0
     SHA512 502b68fae7d2e8441ec26253a9e0cdcf970ab2b61efecee7d964e9880e59d657971a82a666710944617c86d18fa99c2cb9640fcd15f63d05b2617b562a5bdb2f
     HEAD_REF master
@@ -42,9 +42,9 @@ vcpkg_cmake_configure(
         -Donnxruntime_ENABLE_STATIC_ANALYSIS=OFF
         -Donnxruntime_ENABLE_PYTHON=OFF
         -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
-        -Donnxruntime_USE_CUDA=ON
-        -Donnxruntime_ENABLE_CUDA_LINE_NUMBER_INFO=ON
-        =Donnxruntime_ENABLE_CUDA_PROFILING=ON
+        -Donnxruntime_USE_CUDA=OFF
+        -Donnxruntime_ENABLE_CUDA_LINE_NUMBER_INFO=OFF
+        -Donnxruntime_ENABLE_CUDA_PROFILING=OFF
         -Donnxruntime_USE_NNAPI_BUILTIN=OFF
         -Donnxruntime_DEV_MODE=OFF
         -Donnxruntime_BUILD_UNIT_TESTS=OFF
@@ -71,7 +71,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_USE_VALGRIND=OFF
         -Donnxruntime_RUN_MODELTEST_IN_DEBUG_MODE=OFF
         -Donnxruntime_FUZZ_TEST=OFF
-        -Donnxruntime_USE_NCCL=ON
+        -Donnxruntime_USE_NCCL=OFF
         -Donnxruntime_USE_MPI=OFF
         -Donnxruntime_ENABLE_BITCODE=OFF
         -Donnxruntime_BUILD_OPSCHEMA_LIB=ON

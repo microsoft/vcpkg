@@ -1,0 +1,28 @@
+{
+  "name": "onnxruntime-cpu",
+  "version": "1.10.0",
+  "description": "onnxruntime (CPU)",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "supports": "!uwp & !arm",
+  "dependencies": [
+    "boost-mp11",
+    "cpuinfo",
+    "date",
+    "eigen3",
+    "flatbuffers",
+    "nlohmann-json",
+    {
+      "name": "nsync",
+      "platform": "!windows"
+    },
+    "onnx",
+    "protobuf",
+    "re2",
+    "safeint",
+    "wil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
