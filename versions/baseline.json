@@ -6932,6 +6932,10 @@
       "baseline": "2019-07-31",
       "port-version": 1
     },
+    "tinycbor": {
+      "baseline": "0.4.1",
+      "port-version": 0
+    },
     "tinycthread": {
       "baseline": "2019-08-06",
       "port-version": 1
