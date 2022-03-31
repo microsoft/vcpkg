@@ -22,31 +22,19 @@
         "lld",
         "lldb",
         "polly",
-        "target-aarch64",
-        "target-amdgpu",
-        "target-arm",
-        "target-mips",
-        "target-webassembly",
-        "target-x86",
+        "target-all",
         "tools",
         "utils"
       ]
     },
     {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "target-all"
-      ],
-      "platform": "!windows"
-    },
-    {
+      "$comment": "Only for osx artifact upload in CI succeeds when flang is enabled",
       "name": "llvm",
       "default-features": false,
       "features": [
         "flang"
       ],
-      "platform": "!(x86 & windows)"
+      "platform": "osx"
     }
   ]
 }
