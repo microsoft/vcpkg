@@ -7,14 +7,6 @@
   ],
   "homepage": "https://github.com/Microsoft/cpprestsdk",
   "dependencies": [
-      {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
     {
       "name": "boost-asio",
       "platform": "!uwp & !windows"
@@ -50,6 +42,14 @@
     {
       "name": "openssl",
       "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "default-features": [
