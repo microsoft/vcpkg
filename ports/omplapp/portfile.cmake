@@ -63,11 +63,17 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin"
     "${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/lib/ompl.lib"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.so"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.so.1.5.1"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.so.16"
     "${CURRENT_PACKAGES_DIR}/share/ompl"
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/debug/bin"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so.1.5.1"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so.16"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
@@ -75,14 +81,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/omplapp/config.h" "#define
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ompl.pc" "assimp::assimp" "assimp")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ompl.pc" "assimp::assimp" "assimp")
-    endif()
-    vcpkg_fixup_pkgconfig()
 endif()
 
 # Handle copyright
