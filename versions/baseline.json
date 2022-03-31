@@ -1880,6 +1880,10 @@
       "baseline": "3.4.0",
       "port-version": 1
     },
+    "discordcoreapi": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "discount": {
       "baseline": "2.2.6",
       "port-version": 1
