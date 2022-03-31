@@ -44,7 +44,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
         -Donnxruntime_USE_CUDA=ON
         -Donnxruntime_ENABLE_CUDA_LINE_NUMBER_INFO=ON
-        =Donnxruntime_ENABLE_CUDA_PROFILING=ON
+        -Donnxruntime_ENABLE_CUDA_PROFILING=ON
         -Donnxruntime_USE_NNAPI_BUILTIN=OFF
         -Donnxruntime_DEV_MODE=OFF
         -Donnxruntime_BUILD_UNIT_TESTS=OFF
