@@ -53,9 +53,9 @@ function(z_vcpkg_get_command_underscores command underscores_out)
     endwhile()
     set("${underscores_out}" "${underscores}" PARENT_SCOPE)
 endfunction()
-set(Z_VCPKG_CHAIN_COMMANDS FALSE)
+set(Z_VCPKG_CHAIN_COMMANDS OFF)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-    set(Z_VCPKG_CHAIN_COMMANDS TRUE)
+    set(Z_VCPKG_CHAIN_COMMANDS ON)
 endif()
 
 
