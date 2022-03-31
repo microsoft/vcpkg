@@ -793,11 +793,12 @@ endif()
 set(Z_VCPKG_FIND_PACKAGE "${Z_VCPKG_FIND_PACKAGE_US}${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" CACHE INTERNAL "")
 
 # Helper to be used in vcpkg-cmake-wrapper.cmake instead of _find_package
-macro(z_vcpkg_underlying_find_package) 
+macro(z_vcpkg_underlying_find_package z_vcpkg_underlying_find_package_name)
+    set(z_vcpkg_underlying_find_package_name_ARGN "${ARGN}")
     if(Z_VCPKG_CHAIN_COMMANDS)
-        cmake_language(CALL _${Z_VCPKG_FIND_PACKAGE} "${ARGN}")
+        cmake_language(CALL _${Z_VCPKG_FIND_PACKAGE} "${z_vcpkg_underlying_find_package_name}" ${z_vcpkg_underlying_find_package_name_ARGN})
     else()
-        _find_package("${ARGN}")
+        _find_package("${z_vcpkg_underlying_find_package_name}" ${z_vcpkg_underlying_find_package_name_ARGN})
     endif()
 endmacro()
 
