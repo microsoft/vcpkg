@@ -430,17 +430,12 @@ This variable controls whether to automatically activate all default features in
 
 Defaults to `OFF`.
 
-#### `VCPKG_INSTALL_DEBUG_MESSAGES`
-
-When installing, you may want to get vcpkg to print debug messages; setting this variable to `ON` will pass
-`--debug` to vcpkg, so that it prints those messages.
-
-Defaults to `OFF`.
-
 #### `VCPKG_INSTALL_OPTIONS`
 
 This variable can be set to a list of additional command line parameters to pass to the vcpkg tool during automatic
 installation.
+When installing, you may want to get vcpkg to print debug messages;
+add `--debug` to this list will get vcpkg to print those messages.
 
 #### `VCPKG_PREFER_SYSTEM_LIBS`
 
