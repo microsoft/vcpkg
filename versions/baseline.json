@@ -7630,7 +7630,7 @@
     },
     "zlib": {
       "baseline": "1.2.12",
-      "port-version": 0
+      "port-version": 1
     },
     "zlib-ng": {
       "baseline": "2.0.5",
