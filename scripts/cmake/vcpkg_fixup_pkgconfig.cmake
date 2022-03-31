@@ -91,6 +91,9 @@ function(vcpkg_fixup_pkgconfig)
             endif()
             #Correct *.pc file
             file(READ "${file}" contents)
+            if(contents MATCHES "(^|\n)Libs[^:]*: *[^\n]*optimized" AND contents MATCHES "(^|\n)(Libs[^:]*: *[^\n]*debug[^\n]*)")
+                message(FATAL_ERROR "Error in ${file}: CMake linking keywords must be resolved in the portfile:\n${CMAKE_MATCH_2}")
+            endif()
 
             # this normalizes all files to end with a newline, and use LF instead of CRLF;
             # this allows us to use regex matches easier to modify these files.
