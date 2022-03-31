@@ -181,7 +181,7 @@
       "port-version": 0
     },
     "asio-grpc": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "asiosdk": {
@@ -417,8 +417,8 @@
       "port-version": 2
     },
     "benchmark": {
-      "baseline": "1.6.0",
-      "port-version": 1
+      "baseline": "1.6.1",
+      "port-version": 0
     },
     "bento4": {
       "baseline": "1.5.1",
@@ -822,7 +822,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.78.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.78.0",
@@ -2026,7 +2026,7 @@
     },
     "eigen3": {
       "baseline": "3.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "elfio": {
       "baseline": "3.10",
@@ -2178,7 +2178,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 10
+      "port-version": 11
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -3466,7 +3466,7 @@
     },
     "libde265": {
       "baseline": "1.0.8",
-      "port-version": 4
+      "port-version": 5
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -3870,7 +3870,7 @@
     },
     "libpq": {
       "baseline": "14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.6.0",
@@ -4857,7 +4857,7 @@
       "port-version": 0
     },
     "nss": {
-      "baseline": "3.76",
+      "baseline": "3.76.1",
       "port-version": 0
     },
     "nsync": {
@@ -4973,8 +4973,8 @@
       "port-version": 7
     },
     "ogre-next": {
-      "baseline": "2019-10-20",
-      "port-version": 2
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "ois": {
       "baseline": "1.5.1",
@@ -5270,7 +5270,7 @@
     },
     "paraview": {
       "baseline": "5.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "parmetis": {
       "baseline": "4.0.3",
@@ -7049,8 +7049,8 @@
       "port-version": 3
     },
     "tracy": {
-      "baseline": "0.7.8",
-      "port-version": 2
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.2",
@@ -7261,7 +7261,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-01-19",
+      "baseline": "2022-02-14",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7281,7 +7281,7 @@
       "port-version": 0
     },
     "vcpkg-qmake": {
-      "baseline": "2021-10-23",
+      "baseline": "2022-02-14",
       "port-version": 0
     },
     "vcpkg-tool-gyp-nss": {
@@ -7470,7 +7470,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.5",
-      "port-version": 7
+      "port-version": 8
     },
     "x-plane": {
       "baseline": "3.0.3",
@@ -7629,8 +7629,8 @@
       "port-version": 2
     },
     "zlib": {
-      "baseline": "1.2.11",
-      "port-version": 14
+      "baseline": "1.2.12",
+      "port-version": 0
     },
     "zlib-ng": {
       "baseline": "2.0.5",
