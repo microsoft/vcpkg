@@ -1,8 +1,8 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF 0abce85daccb0c9ff221e972ff95e1965e9100e5
-	SHA512 40f1267c621b18ae81fc70f7eb067aa002dbbdc5d1dfaddd316431599df1029ed508c70a8ee771c9d618790fd9eae376feabea72cd5094c31c8a9bb3e4211cc7
+	REF bf09652ddeeaa07df1d5cfa38b09ded8331c0a1e
+	SHA512 dcadf19e874b470492f0ca8397a80196d54ad4e530b6d56cc556cfc7177e40ed0b830e09a4ba0a4752c741bc3859653eb2b069dc68bb3461a0935e7ffd3cb550
 	HEAD_REF main
 )
 
@@ -12,8 +12,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(
 	INSTALL "${SOURCE_PATH}/License"
