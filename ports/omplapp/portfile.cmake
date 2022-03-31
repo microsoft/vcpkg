@@ -66,6 +66,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/libompl.so"
     "${CURRENT_PACKAGES_DIR}/lib/libompl.so.1.5.1"
     "${CURRENT_PACKAGES_DIR}/lib/libompl.so.16"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.1.5.1.dylib"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.16.dylib"
+    "${CURRENT_PACKAGES_DIR}/lib/libompl.dylib"
     "${CURRENT_PACKAGES_DIR}/share/ompl"
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -74,6 +77,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so"
     "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so.1.5.1"
     "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.so.16"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.1.5.1.dylib"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.16.dylib"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libompl.dylib"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
