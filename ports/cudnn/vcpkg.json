@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "NVIDIA's cuDNN deep neural network acceleration library.",
   "homepage": "https://developer.nvidia.com/cudnn",
-  "supports": "(windows & x64) | (linux & x64) | (linux & arm64)",
+  "supports": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     "cuda"
   ]
