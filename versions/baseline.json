@@ -1881,7 +1881,7 @@
       "port-version": 1
     },
     "discordcoreapi": {
-      "baseline": "1.0.1",
+      "baseline": "2022-03-30",
       "port-version": 0
     },
     "discount": {
