@@ -3870,7 +3870,7 @@
     },
     "libpq": {
       "baseline": "14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.6.0",
@@ -4973,8 +4973,8 @@
       "port-version": 7
     },
     "ogre-next": {
-      "baseline": "2019-10-20",
-      "port-version": 2
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "ois": {
       "baseline": "1.5.1",
@@ -5270,7 +5270,7 @@
     },
     "paraview": {
       "baseline": "5.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "parmetis": {
       "baseline": "4.0.3",
@@ -7470,7 +7470,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.5",
-      "port-version": 7
+      "port-version": 8
     },
     "x-plane": {
       "baseline": "3.0.3",
