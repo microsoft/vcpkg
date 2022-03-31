@@ -23,3 +23,4 @@ file(
 	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 	RENAME copyright
 )
+ 
