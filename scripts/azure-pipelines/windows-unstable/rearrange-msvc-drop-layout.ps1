@@ -54,7 +54,7 @@ Move-Item "$DropRoot\binaries.x86$BuildType\atlmfc\include" "$tempRoot\atlmfc\in
 Move-Item "$DropRoot\binaries.x86$BuildType\atlmfc\lib\i386" "$tempRoot\atlmfc\lib\x86"
 Move-Item "$DropRoot\binaries.amd64$BuildType\atlmfc\lib\amd64" "$tempRoot\atlmfc\lib\x64"
 
-$toolsets = Get-ChildItem -Path $MSVCRoot -Directory | Sort-Object -Descending
+[string[]]$toolsets = Get-ChildItem -Path $MSVCRoot -Directory | Sort-Object -Descending
 if ($toolsets.Length -eq 0) {
     throw "Could not find Visual Studio toolset!"
 }
