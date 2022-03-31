@@ -11,6 +11,10 @@
     "expat",
     "lmdb",
     "mcpp",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
     "zlib"
   ],
   "features": {
