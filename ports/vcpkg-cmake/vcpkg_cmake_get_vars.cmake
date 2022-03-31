@@ -12,6 +12,16 @@ vcpkg_cmake_get_vars(<out-var>)
 a path to a generated CMake file, with the detected `CMAKE_*` variables
 re-exported as `VCPKG_DETECTED_CMAKE_*`.
 
+Additionally sets, for `RELEASE` and `DEBUG`:
+- VCPKG_COMBINED_CXX_FLAGS_<config>
+- VCPKG_COMBINED_C_FLAGS_<config>
+- VCPKG_COMBINED_SHARED_LINKER_FLAGS_<config>
+- VCPKG_COMBINED_STATIC_LINKER_FLAGS_<config>
+- VCPKG_COMBINED_EXE_LINKER_FLAGS_<config>
+
+Most users should use these pre-combined flags instead of attempting
+to read the `VCPKG_DETECTED_*` flags directly.
+
 ## Notes
 Avoid usage in portfiles.
 

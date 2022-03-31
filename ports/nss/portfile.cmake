@@ -1,10 +1,10 @@
-set(NSS_VERSION "3.76")
+set(NSS_VERSION "3.76.1")
 string(REPLACE "." "_" V_URL ${NSS_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.mozilla.org/pub/security/nss/releases/NSS_${V_URL}_RTM/src/nss-${NSS_VERSION}.tar.gz"
     FILENAME "nss-${NSS_VERSION}.tar.gz"
-    SHA512 ffbdd8a27f60b796e1204912cde2fa62ac99747ce550258ccdd6fe96d60a46c6ac3f82758a7aba3c7ee58da4e7bf09f1bf817fb9f0fa4e62faaea08a6301b8bd
+    SHA512 80d32a97501cbc05312caa5cec54fe6dd8708f01e6d15693e36a40d70433be7a35565fcc5fadfc324c998ee9093b10b2f7a89643882f06a850eda4ffd3b19c54
 )
 
 vcpkg_extract_source_archive_ex(
