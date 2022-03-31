@@ -4,5 +4,5 @@
   "port-version": 1,
   "description": "A compression library",
   "homepage": "https://www.zlib.net/",
-  "license" : "Zlib"
+  "license": "Zlib"
 }
