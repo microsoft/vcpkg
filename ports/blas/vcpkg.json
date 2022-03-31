@@ -4,6 +4,10 @@
   "port-version": 1,
   "description": "Metapackage for packages which provide BLAS",
   "dependencies": [
-    "openblas"
+    "openblas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
