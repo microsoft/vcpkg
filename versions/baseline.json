@@ -485,8 +485,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "1",
-      "port-version": 1
+      "baseline": "2022-03-31",
+      "port-version": 0
     },
     "blaze": {
       "baseline": "3.8",
