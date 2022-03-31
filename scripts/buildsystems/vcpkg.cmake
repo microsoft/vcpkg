@@ -791,6 +791,16 @@ if(Z_VCPKG_CHAIN_COMMANDS)
     z_vcpkg_get_command_underscores("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" Z_VCPKG_FIND_PACKAGE_US)
 endif()
 set(Z_VCPKG_FIND_PACKAGE "${Z_VCPKG_FIND_PACKAGE_US}${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" CACHE INTERNAL "")
+
+# Helper to be used in vcpkg-cmake-wrapper.cmake instead of _find_package
+# needs to be a macro for the same reasons as below
+macro(z_vcpkg_underlying_find_package) 
+    if(Z_VCPKG_CHAIN_COMMANDS)
+        cmake_language(CALL _${Z_VCPKG_FIND_PACKAGE} ${ARGS})
+    else()
+        _find_package(${ARGS})
+    endif()
+endmacro()
 # NOTE: this is not a function, which means that arguments _are not_ perfectly forwarded
 # this is fine for `find_package`, since there are no usecases for `;` in arguments,
 # so perfect forwarding is not important
