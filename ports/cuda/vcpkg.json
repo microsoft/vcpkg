@@ -4,5 +4,5 @@
   "port-version": 9,
   "description": "A parallel computing platform and programming model",
   "homepage": "https://developer.nvidia.com/cuda-toolkit",
-  "supports": "(windows & x64) | (linux & x64) | (linux & arm64)"
+  "supports": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
 }
