@@ -1,10 +1,11 @@
 {
   "name": "zeroc-ice",
   "version": "3.7.7",
+  "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "!uwp & !(windows & ((arm | arm64) | staticcrt)) & !wasm32",
+  "supports": "!uwp & !(windows & (arm | arm64)) & !wasm32",
   "dependencies": [
     "bzip2",
     "expat",
