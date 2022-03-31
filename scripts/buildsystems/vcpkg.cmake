@@ -795,9 +795,9 @@ set(Z_VCPKG_FIND_PACKAGE "${Z_VCPKG_FIND_PACKAGE_US}${VCPKG_OVERRIDE_FIND_PACKAG
 # Helper to be used in vcpkg-cmake-wrapper.cmake instead of _find_package
 macro(z_vcpkg_underlying_find_package) 
     if(Z_VCPKG_CHAIN_COMMANDS)
-        cmake_language(CALL _${Z_VCPKG_FIND_PACKAGE} ${ARGS})
+        cmake_language(CALL _${Z_VCPKG_FIND_PACKAGE} "${ARGN}")
     else()
-        _find_package(${ARGS})
+        _find_package("${ARGN}")
     endif()
 endmacro()
 
