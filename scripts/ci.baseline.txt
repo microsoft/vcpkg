@@ -888,6 +888,17 @@ ogre-next:x86-windows        = skip
 # /usr/bin/ld: cannot find -lode
 ompl:x64-osx=fail
 ompl:x64-linux=fail
+# Conflicts with onnxruntime-gpu
+onnxruntime-cpu:arm64-windows      = skip
+onnxruntime-cpu:arm-uwp            = skip
+onnxruntime-cpu:x64-osx            = skip
+onnxruntime-cpu:x64-linux          = skip
+onnxruntime-cpu:x64-uwp            = skip
+onnxruntime-cpu:x64-windows        = skip
+onnxruntime-cpu:x64-windows-static = skip
+onnxruntime-cpu:x64-windows-static-md=skip
+onnxruntime-cpu:x86-windows        = skip
+
 openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 openblas:arm64-windows=fail
