@@ -4,9 +4,6 @@
       "baseline": "2.6.3",
       "port-version": 2
     },
-	{
-	 "discordcoreapi": { "baseline": "1.0.1", "port-version": 0 }
-  	},
     "7zip": {
       "baseline": "21.07",
       "port-version": 1
@@ -653,10 +650,6 @@
     },
     "boost-detail": {
       "baseline": "1.78.0",
-      "port-version": 0
-    },
-    "boost-di": {
-      "baseline": "1.2.0",
       "port-version": 0
     },
     "boost-dll": {
@@ -1883,6 +1876,10 @@
       "baseline": "3.4.0",
       "port-version": 1
     },
+    "discordcoreapi": {
+      "baseline": "1.0.7",
+      "port-version": 0
+    },
     "discount": {
       "baseline": "2.2.6",
       "port-version": 1
@@ -2270,10 +2267,6 @@
     "foonathan-memory": {
       "baseline": "2019-07-21",
       "port-version": 2
-    },
-    "forest": {
-      "baseline": "12.1.0",
-      "port-version": 0
     },
     "forge": {
       "baseline": "1.0.8",
@@ -5047,10 +5040,6 @@
       "baseline": "2.1.1",
       "port-version": 2
     },
-    "opencolorio-tools": {
-      "baseline": "1.1.1",
-      "port-version": 0
-    },
     "opencsg": {
       "baseline": "1.4.2",
       "port-version": 2
@@ -5813,10 +5802,6 @@
     },
     "qt5compat": {
       "baseline": "6.2.4",
-      "port-version": 0
-    },
-    "qt6betablock": {
-      "baseline": "6.2.0-beta",
       "port-version": 0
     },
     "qtactiveqt": {
