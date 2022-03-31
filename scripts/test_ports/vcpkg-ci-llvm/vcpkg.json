@@ -2,6 +2,7 @@
   "name": "vcpkg-ci-llvm",
   "version-string": "0",
   "description": "LLVM features testing within CI.",
+  "license": null,
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
@@ -9,9 +10,9 @@
       "default-features": false,
       "features": [
         "clang",
-        "enable-abi-breaking-checks",
         "disable-assertions",
         "disable-clang-static-analyzer",
+        "enable-abi-breaking-checks",
         "enable-bindings",
         "enable-eh",
         "enable-rtti",
@@ -21,10 +22,23 @@
         "lld",
         "lldb",
         "polly",
-        "target-all",
+        "target-aarch64",
+        "target-amdgpu",
+        "target-arm",
+        "target-mips",
+        "target-webassembly",
+        "target-x86",
         "tools",
         "utils"
       ]
+    },
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "target-all"
+      ],
+      "platform": "!windows"
     },
     {
       "name": "llvm",
