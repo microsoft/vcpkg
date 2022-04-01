@@ -2,10 +2,11 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,11 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
++find_dependency(libheif CONFIG)
 +find_dependency(PNG)
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
@@ -13,11 +14,10 @@ index b690864..fb45388 100644
  
  # add here all the find_dependency() whenever switching to config based dependencies
  if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-@@ -11,6 +14,8 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
+@@ -11,6 +16,7 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
                      HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
      find_dependency(OpenEXR @OpenEXR_VERSION@
                      HINTS @OpenEXR_DIR@)
-+    find_dependency(libheif CONFIG REQUIRED)
 +    find_dependency(unofficial-libsquish CONFIG REQUIRED)
      find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
      find_dependency(Threads)  # Because OpenEXR doesn't do it
@@ -35,13 +35,14 @@ diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -200,7 +200,8 @@ if (ENABLE_FIELD3D)
+@@ -200,7 +200,9 @@ if (ENABLE_FIELD3D)
  endif ()
  
  # For HEIF/HEIC/AVIF formats
 -checked_find_package (Libheif VERSION_MIN 1.3
-+checked_find_package (libheif VERSION_MIN 1.3
-+                      PREFER_CONFIG
++set(LIBHEIF_INCLUDES "")
++set(LIBHEIF_LIBRARIES heif)
++checked_find_package (Libheif CONFIG
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
