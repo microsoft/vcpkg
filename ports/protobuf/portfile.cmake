@@ -16,7 +16,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIM
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         zlib protobuf_WITH_ZLIB
-)
+)  
 
 if(VCPKG_TARGET_IS_UWP)
     set(protobuf_BUILD_LIBPROTOC OFF)
