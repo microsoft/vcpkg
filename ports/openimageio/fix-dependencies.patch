@@ -2,7 +2,7 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,18 @@
+@@ -1,6 +1,21 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
@@ -11,6 +11,9 @@ index b690864..fb45388 100644
 +find_dependency(unofficial-libsquish CONFIG)
 +if(@USE_OPENCV@)
 +    find_dependency(OpenCV CONFIG)
++endif()
++if(@USE_OPENCOLORIO@)
++    find_dependency(OpenColorIO CONFIG)
 +endif()
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
@@ -25,7 +28,17 @@ diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -165,7 +165,9 @@ checked_find_package (OpenColorIO
+@@ -158,14 +158,18 @@ endif ()
+ checked_find_package (Freetype
+                    DEFINITIONS  -DUSE_FREETYPE=1 )
+ 
+-checked_find_package (OpenColorIO
++set(OPENCOLORIO_INCLUDES "")
++set(OPENCOLORIO_LIBRARIES OpenColorIO::OpenColorIO)
++checked_find_package (OpenColorIO CONFIG
+                       DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
+                       # PREFER_CONFIG
+                       )
  if (NOT OPENCOLORIO_FOUND)
      set (OPENCOLORIO_FOUND 0)
  endif ()
