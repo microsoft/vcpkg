@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-config-cmake.patch
+        fix-openjpeg-linkage.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -24,7 +25,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libraw      USE_LIBRAW
         opencolorio USE_OPENCOLORIO
         ffmpeg      USE_FFMPEG
-        field3d     USE_FIELD3D
         freetype    USE_FREETYPE
         gif         USE_GIF
         opencv      USE_OPENCV

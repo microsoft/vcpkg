@@ -41,8 +41,11 @@ if(SHARE_LEN EQUAL 0)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Armadillo")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp" "#define ARMA_AUX_LIBS ${CURRENT_INSTALLED_DIR}/lib/openblas.lib;${CURRENT_INSTALLED_DIR}/lib/lapack.lib;${CURRENT_INSTALLED_DIR}/lib/openblas.lib" "")
+set(filename "${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp")
+if(EXISTS "${filename}")
+    file(READ "${filename}" contents)
+    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\n]*\n" "\n" contents "${contents}")
+    file(WRITE "${filename}" "${contents}")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
