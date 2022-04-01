@@ -2,13 +2,16 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,15 @@
+@@ -1,6 +1,18 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
 +find_dependency(libheif CONFIG)
 +find_dependency(PNG)
 +find_dependency(unofficial-libsquish CONFIG)
++if(@USE_OPENCV@)
++    find_dependency(OpenCV CONFIG)
++endif()
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
 +endif()
@@ -22,6 +25,17 @@ diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
+@@ -165,7 +165,9 @@ checked_find_package (OpenColorIO
+ if (NOT OPENCOLORIO_FOUND)
+     set (OPENCOLORIO_FOUND 0)
+ endif ()
+-checked_find_package (OpenCV 3.0
++set(OPENCV_INCLUDES "")
++set(OPENCV_LIBRARIES opencv_core)
++checked_find_package (OpenCV CONFIG
+                    DEFINITIONS  -DUSE_OPENCV=1)
+ 
+ # Intel TBB
 @@ -175,7 +177,9 @@ checked_find_package (TBB 2017
                        PREFER_CONFIG)
  
