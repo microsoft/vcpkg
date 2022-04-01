@@ -18,15 +18,6 @@ index b690864..fb45388 100644
  
  # add here all the find_dependency() whenever switching to config based dependencies
  if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-@@ -27,7 +32,7 @@ endif ()
- #...logic to determine installedPrefix from the own location...
- #set (@PROJECT_NAME@_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@")
- 
--include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
-+include("${CMAKE_CURRENT_LIST_DIR}/OpenImageIOTargets.cmake")
- 
- check_required_components ("@PROJECT_NAME@")
- 
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake

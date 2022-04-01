@@ -15,8 +15,6 @@ file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
-file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,10 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       USE_QT
         tools       USE_QT5
 )
-
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
