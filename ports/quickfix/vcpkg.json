@@ -4,6 +4,7 @@
   "port-version": 6,
   "description": "QuickFIX is a free and open source implementation of the FIX protocol.",
   "homepage": "https://github.com/quickfix/quickfix",
+  "supports": "!uwp",
   "dependencies": [
     "openssl",
     {
