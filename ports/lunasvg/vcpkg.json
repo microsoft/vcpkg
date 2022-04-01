@@ -4,7 +4,6 @@
   "description": "lunasvg is a standalone SVG rendering library in C++",
   "homepage": "https://github.com/sammycage/lunasvg",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
