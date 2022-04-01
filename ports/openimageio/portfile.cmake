@@ -11,9 +11,15 @@ vcpkg_from_github(
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
-file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
+file(REMOVE
+    "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibheif.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindLibsquish.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindOpenJPEG.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
