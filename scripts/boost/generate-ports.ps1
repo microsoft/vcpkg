@@ -25,6 +25,10 @@ else {
 $portVersions = @{
     #e.g. "boost-asio" = 1;
     "boost-vcpkg-helpers" = 1;
+    "boost-build" = 1;
+    "boost-atomic" = 1;
+    "boost-iostreams" = 2;
+    "boost-modular-build-helper" = 3;
 }
 
 $portData = @{
@@ -44,6 +48,7 @@ $portData = @{
             }
         }
     };
+    "boost-atomic"           = @{ "license" = "BSL-1.0" };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
         "supports" = "!osx & !uwp & !arm & !emscripten";
@@ -57,6 +62,7 @@ $portData = @{
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
+        "license"          = "BSL-1.0";
         "features"         = @{
             "bzip2" = @{
                 "description"  = "Support bzip2 filters";
@@ -93,6 +99,7 @@ $portData = @{
             }
         }
     };
+    "boost-modular-build-helper"          = @{ "license" = "MIT" };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
         "supports"     = "!uwp";
@@ -240,6 +247,14 @@ function GeneratePort() {
     if ($Library -eq "system") {
         $portfileLines += @(
             "vcpkg_buildpath_length_warning(37)"
+            ""
+        )
+    }
+    if ($Library -eq "atomic") {
+        $portfileLines += @(
+            "if (VCPKG_TARGET_IS_LINUX)"
+            "    message(WARNING `"$portName currently requires the following library from the system package manager:\n    linux-headers\n\nIt can be installed on alpine systems via apk add linux-headers.`")"
+            "endif()"
             ""
         )
     }
