@@ -70,11 +70,19 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 # Clean
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
-                    "${CURRENT_PACKAGES_DIR}/debug/doc"
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/THIRD-PARTY.md" third_party)
+string(REGEX REPLACE
+    "^.*The remainder of this file"
+    "\n-------------------------------------------------------------------------\n\nThe remainder of this file"
+    third_party
+    "${third_party}"
+)
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${third_party}")
