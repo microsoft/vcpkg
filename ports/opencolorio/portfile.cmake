@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependency.patch
-        fix-buildTools.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findexpat.cmake")
@@ -37,6 +36,16 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+set(dll_import 0)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(dll_import 1)
+endif()
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/OpenColorIO/OpenColorABI.h"
+    "ifndef OpenColorIO_SKIP_IMPORTS"
+    "if ${dll_import}"
+)
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME OpenColorIO CONFIG_PATH "lib/cmake/OpenColorIO")
 

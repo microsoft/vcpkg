@@ -65,22 +65,6 @@ index 034185d..b992bbc 100755
          yaml-cpp
  )
  
-@@ -242,13 +242,13 @@ endif()
- 
- if(NOT BUILD_SHARED_LIBS)
-     target_compile_definitions(OpenColorIO
--        PRIVATE
-+        PUBLIC
-             OpenColorIO_SKIP_IMPORTS
-     )
- else()
-     # Only exports selected symbols.
-     target_compile_definitions(OpenColorIO
--        PRIVATE
-+        PUBLIC
-             OpenColorIO_EXPORTS
-     )
- endif()
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index eebb2c1..7147dc3 100644
 --- a/src/cmake/Config.cmake.in
