@@ -105,7 +105,7 @@ index eebb2c1..7147dc3 100644
  include(CMakeFindDependencyMacro)
  
 +find_dependency(expat CONFIG REQUIRED)
-+find_dependency(imath CONFIG REQUIRED)
++find_dependency(Imath CONFIG REQUIRED)
 +find_dependency(pystring CONFIG REQUIRED)
 +find_dependency(yaml-cpp CONFIG REQUIRED)
 +
