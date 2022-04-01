@@ -1,8 +1,9 @@
 {
   "name": "vcpkg-boost-build",
   "version": "1.78.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Internal vcpkg port used to build Boost libraries",
+  "license": "MIT",
   "dependencies": [
     "vcpkg-boost-uninstall",
     "vcpkg-cmake"

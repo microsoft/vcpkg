@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
+        embed-debug-info.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -51,6 +52,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         amalgamation BOTAN_AMALGAMATION
+        zlib BOTAN_WITH_ZLIB
 )
 
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
@@ -80,13 +82,23 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
                             --with-pkg-config
-                            --link-method=copy)
+                            --link-method=copy
+                            --with-debug-info)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
     endif()
 
+    if(VCPKG_CXX_FLAGS)
+      list(APPEND configure_arguments --extra-cxxflags ${VCPKG_CXX_FLAGS})
+    endif()
+
     if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
         list(APPEND configure_arguments --amalgamation)
+    endif()
+    if("-DBOTAN_WITH_ZLIB=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --with-zlib)
+        list(APPEND configure_arguments --with-external-includedir="${CURRENT_INSTALLED_DIR}/include")
+        list(APPEND configure_arguments --with-external-libdir="${CURRENT_INSTALLED_DIR}/lib")
     endif()
 
     vcpkg_execute_required_process(
@@ -140,6 +152,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         [[${prefix}/include]]
     )
 endif()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/botan-2.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc")
@@ -176,6 +189,7 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

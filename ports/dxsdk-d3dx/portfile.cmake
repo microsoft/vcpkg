@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/directxsdk/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if directxsdk is installed. Please remove directxsdk, and try to install ${PORT} again if you need it.")
 endif()

@@ -1,13 +1,12 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
-    REF v2.1.0
-    SHA512 a0f4fb62c768b392ca1129e2046df96d670d785fc057d4103768440b7adb65d8faf5b7d39729060791794e83e6cd4e67821aed9b30f3f04b410c60809cd72267
+    REF v2.1.1
+    SHA512 86585ec860d460b158f24efb82f202deced7ce96a6bfefd42f39cad9c112add68cca6935f383f5d718c07fe1c121d8ed8b0d2069321f1dafb8ce68b49bc75194
     HEAD_REF master
     PATCHES
         fix-dependency.patch
+        fix-buildTools.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/share/cmake/modules/Findexpat.cmake")

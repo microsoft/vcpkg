@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2021-07-24",
+  "version-date": "2022-03-18",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "default-features": [
     "ci"
@@ -13,6 +13,7 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
+            "cmake-current",
             "find-package"
           ]
         },
@@ -20,14 +21,17 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
-            "cmake-3-4"
+            "cmake-3-7"
           ],
           "platform": "x64 & (windows | linux | osx) & !uwp"
         }
       ]
     },
-    "cmake-3-4": {
-      "description": "Use CMake 3.4 to build the test project"
+    "cmake-3-7": {
+      "description": "Run the tests with CMake 3.7"
+    },
+    "cmake-current": {
+      "description": "Run the tests with vcpkg's current version of CMake"
     },
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
@@ -45,6 +49,10 @@
           "name": "freetype"
         },
         {
+          "$package": "ICU",
+          "name": "icu"
+        },
+        {
           "$package": "Intl",
           "name": "gettext"
         },
@@ -53,13 +61,16 @@
           "name": "giflib"
         },
         {
+          "$package": "JPEG",
+          "name": "libjpeg-turbo"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
         {
-          "$package": "Curses",
-          "name": "ncurses",
-          "platform": "!windows & !uwp"
+          "$package": "TIFF",
+          "name": "tiff"
         },
         {
           "$package": "ZLIB",

@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "windows" "uwp" "osx" "ios" "android")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
@@ -15,14 +13,13 @@ vcpkg_from_github(
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
-    NO_DEBUG
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE 
+file(INSTALL ${SOURCE_PATH}/LICENSE
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CURRENT_PORT_DIR}/usage 
+file(INSTALL ${CURRENT_PORT_DIR}/usage
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.

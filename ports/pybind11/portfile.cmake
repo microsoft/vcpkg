@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
-    REF v2.9.0
-    SHA512 87184c9e09e1340f2d34786a66560fe77684a3629b517f78321073a1f0dfdb766365d3698dcf6f08e5141b1f4da50ec917e61b36538e5a1ec9fd1b68f29cd396
+    REF v2.9.1
+    SHA512 1f268cc6df1f572658bfc3e60f7f010bec9b9444d6a6d6c95f7b26f7b4b7dd42846e65ae5a611c01c0341335fdfa84b01272b5c1b2cc11a418f64fecabfa0588
     HEAD_REF master
 )
 
@@ -21,6 +21,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/pybind11")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pybind11/pybind11Tools.cmake" 
+                    [=[find_package(PythonLibsNew ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]
+                    [=[find_package(PythonLibs ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]) # CMake's PythonLibs works better with vcpkg 
 
 # copy license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
