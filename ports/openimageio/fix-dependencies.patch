@@ -2,27 +2,27 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,9 @@
+@@ -1,6 +1,10 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
++find_dependency(PNG)
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
 +endif()
  
  # add here all the find_dependency() whenever switching to config based dependencies
  if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-@@ -11,6 +14,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
+@@ -11,6 +14,8 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
                      HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
      find_dependency(OpenEXR @OpenEXR_VERSION@
                      HINTS @OpenEXR_DIR@)
-+    find_dependency(libpng CONFIG REQUIRED)
 +    find_dependency(libheif CONFIG REQUIRED)
 +    find_dependency(unofficial-libsquish CONFIG REQUIRED)
      find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
      find_dependency(Threads)  # Because OpenEXR doesn't do it
  endif ()
-@@ -27,7 +30,7 @@ endif ()
+@@ -27,7 +32,7 @@ endif ()
  #...logic to determine installedPrefix from the own location...
  #set (@PROJECT_NAME@_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@")
  
@@ -32,18 +32,9 @@ index b690864..fb45388 100644
  check_required_components ("@PROJECT_NAME@")
  
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 631035a..9f4d096 100644
+index 631035a..d416d78 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -148,7 +148,7 @@ find_python()
- # Dependencies for optional formats and features. If these are not found,
- # we will continue building, but the related functionality will be disabled.
- 
--checked_find_package (PNG)
-+checked_find_package (png PREFER_CONFIG)
- 
- checked_find_package (BZip2)   # Used by ffmpeg and freetype
- if (NOT BZIP2_FOUND)
 @@ -200,7 +200,8 @@ if (ENABLE_FIELD3D)
  endif ()
  
@@ -74,25 +65,3 @@ index 631035a..9f4d096 100644
  endif ()
  
  
-diff --git a/src/ico.imageio/CMakeLists.txt b/src/ico.imageio/CMakeLists.txt
-index d290625..cff954c 100644
---- a/src/ico.imageio/CMakeLists.txt
-+++ b/src/ico.imageio/CMakeLists.txt
-@@ -2,9 +2,15 @@
- # SPDX-License-Identifier: BSD-3-Clause
- # https://github.com/OpenImageIO/oiio
- 
--if (TARGET PNG::PNG)
-+if (libpng_FOUND)
-+    if (TARGET png_static)
-+        set(PNG_TARGET png_static)
-+    elseif (TARGET png)
-+        set(PNG_TARGET png)
-+    endif()
-+
-     add_oiio_plugin (icoinput.cpp icooutput.cpp
--                     LINK_LIBRARIES PNG::PNG ZLIB::ZLIB)
-+                     LINK_LIBRARIES ${PNG_TARGET} ZLIB::ZLIB)
- else ()
-     message (WARNING "libpng not found, so ICO support will not work")
-     set (format_plugin_definitions ${format_plugin_definitions} DISABLE_ICO=1 PARENT_SCOPE)
