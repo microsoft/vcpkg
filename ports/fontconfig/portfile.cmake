@@ -20,6 +20,7 @@ vcpkg_configure_meson(
     OPTIONS
         -Ddoc=disabled
         -Dcache-build=disabled
+        -Dtests=disabled
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
