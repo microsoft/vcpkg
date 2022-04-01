@@ -12,6 +12,15 @@ index b690864..fb45388 100644
      find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
      find_dependency(Threads)  # Because OpenEXR doesn't do it
  endif ()
+@@ -27,7 +30,7 @@ endif ()
+ #...logic to determine installedPrefix from the own location...
+ #set (@PROJECT_NAME@_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@")
+ 
+-include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/OpenImageIOTargets.cmake")
+ 
+ check_required_components ("@PROJECT_NAME@")
+ 
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 index 631035a..9f4d096 100644
 --- a/src/cmake/externalpackages.cmake
@@ -35,6 +44,15 @@ index 631035a..9f4d096 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
+@@ -221,7 +222,7 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+     # set (LIBRAW_FOUND 0)
+ endif ()
+ 
+-checked_find_package (OpenJPEG VERSION_MIN 2.0)
++checked_find_package (OpenJPEG PREFER_CONFIG VERSION_MIN 2.0)
+ 
+ checked_find_package (OpenVDB
+                       VERSION_MIN 5.0
 @@ -307,7 +308,8 @@ endmacro()
  option (USE_EMBEDDED_LIBSQUISH
          "Force use of embedded Libsquish, even if external is found" OFF)

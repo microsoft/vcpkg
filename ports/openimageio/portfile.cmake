@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        fix-config-cmake.patch
-        fix-openjpeg-linkage.patch
         fix-ffmpeg-tool.patch
 )
 
