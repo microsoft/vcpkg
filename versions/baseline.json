@@ -6205,7 +6205,7 @@
       "port-version": 1
     },
     "rsm-bsa": {
-      "baseline": "4.0.2",
+      "baseline": "4.0.3",
       "port-version": 0
     },
     "rsm-mmio": {
