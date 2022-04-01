@@ -2,7 +2,17 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -11,6 +11,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
+@@ -1,6 +1,9 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++if(@USE_OPENJPEG@)
++    find_dependency(OpenJPEG CONFIG)
++endif()
+ 
+ # add here all the find_dependency() whenever switching to config based dependencies
+ if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
+@@ -11,6 +14,9 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
                      HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
      find_dependency(OpenEXR @OpenEXR_VERSION@
                      HINTS @OpenEXR_DIR@)
@@ -44,12 +54,13 @@ index 631035a..9f4d096 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-@@ -221,7 +222,7 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+@@ -221,7 +222,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
      # set (LIBRAW_FOUND 0)
  endif ()
  
 -checked_find_package (OpenJPEG VERSION_MIN 2.0)
-+checked_find_package (OpenJPEG PREFER_CONFIG VERSION_MIN 2.0)
++set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG ${USE_OPENJPEG})
++checked_find_package (OpenJPEG CONFIG)
  
  checked_find_package (OpenVDB
                        VERSION_MIN 5.0
