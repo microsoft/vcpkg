@@ -9,7 +9,6 @@
     "expat",
     "freetype",
     "gettext",
-    "json-c",
     "libiconv",
     {
       "name": "libuuid",
