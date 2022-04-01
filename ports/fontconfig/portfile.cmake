@@ -19,6 +19,7 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -Ddoc=disabled
+        -Dcache-build=disabled
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
@@ -75,11 +76,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
     vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
                                    WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin"
                                    LOGNAME fc-cache-${TARGET_TRIPLET})
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 
 if(NOT VCPKG_TARGET_IS_LINUX)
