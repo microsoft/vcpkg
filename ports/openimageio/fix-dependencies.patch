@@ -2,26 +2,19 @@ diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index b690864..fb45388 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -1,6 +1,11 @@
+@@ -1,6 +1,12 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
 +find_dependency(libheif CONFIG)
 +find_dependency(PNG)
++find_dependency(unofficial-libsquish CONFIG)
 +if(@USE_OPENJPEG@)
 +    find_dependency(OpenJPEG CONFIG)
 +endif()
  
  # add here all the find_dependency() whenever switching to config based dependencies
  if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-@@ -11,6 +16,7 @@ elseif (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 2.4 AND @FOUND_OPENEXR_WITH_CONF
-                     HINTS @IlmBase_DIR@ @OpenEXR_DIR@)
-     find_dependency(OpenEXR @OpenEXR_VERSION@
-                     HINTS @OpenEXR_DIR@)
-+    find_dependency(unofficial-libsquish CONFIG REQUIRED)
-     find_dependency(ZLIB @ZLIB_VERSION@)  # Because OpenEXR doesn't do it
-     find_dependency(Threads)  # Because OpenEXR doesn't do it
- endif ()
 @@ -27,7 +32,7 @@ endif ()
  #...logic to determine installedPrefix from the own location...
  #set (@PROJECT_NAME@_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@")
@@ -56,13 +49,14 @@ index 631035a..d416d78 100644
  
  checked_find_package (OpenVDB
                        VERSION_MIN 5.0
-@@ -307,7 +308,8 @@ endmacro()
+@@ -307,7 +309,9 @@ endmacro()
  option (USE_EMBEDDED_LIBSQUISH
          "Force use of embedded Libsquish, even if external is found" OFF)
  if (NOT USE_EMBEDDED_LIBSQUISH)
 -    checked_find_package (Libsquish)
-+    checked_find_package (unofficial-libsquish PREFER_CONFIG)
-+    set(libsquish_FOUND 1)
++    set(LIBSQUISH_INCLUDES "")
++    set(LIBSQUISH_LIBRARIES unofficial::libsquish::squish)
++    checked_find_package (Libsquish NAMES unofficial-libsquish)
  endif ()
  
  
