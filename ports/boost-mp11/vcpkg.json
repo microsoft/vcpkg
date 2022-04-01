@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost mp11 module",
   "homepage": "https://github.com/boostorg/mp11",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-boost-copy",

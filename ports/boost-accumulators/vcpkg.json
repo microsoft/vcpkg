@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost accumulators module",
   "homepage": "https://github.com/boostorg/accumulators",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

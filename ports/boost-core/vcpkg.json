@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost core module",
   "homepage": "https://github.com/boostorg/core",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost flyweight module",
   "homepage": "https://github.com/boostorg/flyweight",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

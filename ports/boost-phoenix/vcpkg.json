@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost phoenix module",
   "homepage": "https://github.com/boostorg/phoenix",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",

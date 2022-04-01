@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost io module",
   "homepage": "https://github.com/boostorg/io",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     {

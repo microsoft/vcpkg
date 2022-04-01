@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost coroutine2 module",
   "homepage": "https://github.com/boostorg/coroutine2",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-assert",

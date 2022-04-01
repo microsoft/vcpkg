@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost hof module",
   "homepage": "https://github.com/boostorg/hof",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-boost-copy",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost function module",
   "homepage": "https://github.com/boostorg/function",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",

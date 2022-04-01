@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost static_string module",
   "homepage": "https://github.com/boostorg/static_string",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-container-hash",

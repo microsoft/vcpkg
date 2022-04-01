@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost pfr module",
   "homepage": "https://github.com/boostorg/pfr",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-boost-copy",

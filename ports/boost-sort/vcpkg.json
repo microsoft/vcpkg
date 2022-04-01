@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost sort module",
   "homepage": "https://github.com/boostorg/sort",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

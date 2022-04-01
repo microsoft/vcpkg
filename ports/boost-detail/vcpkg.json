@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost detail module",
   "homepage": "https://github.com/boostorg/detail",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

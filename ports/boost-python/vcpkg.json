@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost python module",
   "homepage": "https://github.com/boostorg/python",
+  "license": "BSL-1.0",
   "supports": "!uwp & !emscripten & !ios & !android",
   "dependencies": [
     "boost-align",

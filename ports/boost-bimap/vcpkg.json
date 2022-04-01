@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost bimap module",
   "homepage": "https://github.com/boostorg/bimap",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-concept-check",
     "boost-config",

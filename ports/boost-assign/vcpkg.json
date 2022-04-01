@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost assign module",
   "homepage": "https://github.com/boostorg/assign",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-config",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost parameter_python module",
   "homepage": "https://github.com/boostorg/parameter_python",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-mpl",

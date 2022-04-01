@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost json module",
   "homepage": "https://github.com/boostorg/json",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-assert",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost polygon module",
   "homepage": "https://github.com/boostorg/polygon",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     {

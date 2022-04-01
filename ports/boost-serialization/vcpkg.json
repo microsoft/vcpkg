@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost serialization module",
   "homepage": "https://github.com/boostorg/serialization",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

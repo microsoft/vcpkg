@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost throw_exception module",
   "homepage": "https://github.com/boostorg/throw_exception",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

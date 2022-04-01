@@ -2,6 +2,7 @@
   "name": "vcpkg-boost-copy",
   "version": "1.78.0",
   "description": "Internal vcpkg port used to copy Boost header-only libraries",
+  "license": "MIT",
   "dependencies": [
     "vcpkg-boost-uninstall"
   ]

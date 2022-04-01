@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost multi_array module",
   "homepage": "https://github.com/boostorg/multi_array",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

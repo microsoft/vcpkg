@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost nowide module",
   "homepage": "https://github.com/boostorg/nowide",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "boost-build",

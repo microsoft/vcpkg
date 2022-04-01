@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost lockfree module",
   "homepage": "https://github.com/boostorg/lockfree",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-array",

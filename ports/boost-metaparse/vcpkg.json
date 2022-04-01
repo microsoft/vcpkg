@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost metaparse module",
   "homepage": "https://github.com/boostorg/metaparse",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-mpl",

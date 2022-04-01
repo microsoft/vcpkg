@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

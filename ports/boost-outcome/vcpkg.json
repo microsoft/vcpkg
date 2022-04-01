@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost outcome module",
   "homepage": "https://github.com/boostorg/outcome",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-exception",

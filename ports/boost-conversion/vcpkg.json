@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost conversion module",
   "homepage": "https://github.com/boostorg/conversion",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

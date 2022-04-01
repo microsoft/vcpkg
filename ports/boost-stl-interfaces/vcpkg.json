@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost stl_interfaces module",
   "homepage": "https://github.com/boostorg/stl_interfaces",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

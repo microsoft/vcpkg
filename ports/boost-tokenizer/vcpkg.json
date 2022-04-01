@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost tokenizer module",
   "homepage": "https://github.com/boostorg/tokenizer",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

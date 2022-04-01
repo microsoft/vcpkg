@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",

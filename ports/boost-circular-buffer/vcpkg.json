@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost circular_buffer module",
   "homepage": "https://github.com/boostorg/circular_buffer",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-concept-check",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost config module",
   "homepage": "https://github.com/boostorg/config",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-boost-copy",

@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost signals2 module",
   "homepage": "https://github.com/boostorg/signals2",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-bind",

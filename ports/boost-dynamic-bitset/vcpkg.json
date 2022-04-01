@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost dynamic_bitset module",
   "homepage": "https://github.com/boostorg/dynamic_bitset",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

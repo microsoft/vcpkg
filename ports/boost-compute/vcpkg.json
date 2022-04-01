@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost compute module",
   "homepage": "https://github.com/boostorg/compute",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-array",

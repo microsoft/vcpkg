@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost property_map module",
   "homepage": "https://github.com/boostorg/property_map",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-assert",

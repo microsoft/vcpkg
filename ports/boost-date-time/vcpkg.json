@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost date_time module",
   "homepage": "https://github.com/boostorg/date_time",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-algorithm",
     "boost-assert",

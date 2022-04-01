@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost test module",
   "homepage": "https://github.com/boostorg/test",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-algorithm",

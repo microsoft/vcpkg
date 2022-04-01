@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost beast module",
   "homepage": "https://github.com/boostorg/beast",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-asio",

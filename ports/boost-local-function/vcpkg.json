@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost local_function module",
   "homepage": "https://github.com/boostorg/local_function",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-mpl",

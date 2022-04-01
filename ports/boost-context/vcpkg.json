@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost context module",
   "homepage": "https://github.com/boostorg/context",
+  "license": "BSL-1.0",
   "supports": "!uwp & !emscripten",
   "dependencies": [
     "boost-assert",

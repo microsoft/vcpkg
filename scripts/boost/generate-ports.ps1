@@ -27,6 +27,7 @@ $initPortVersion = 1
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-build" = 2;
     "boost-iostreams" = 3;
     "vcpkg-boost-build" = 0;
     "vcpkg-boost-copy" = 0;
@@ -61,7 +62,6 @@ $portData = @{
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
     "boost-iostreams"        = @{
-        "license"          = "BSL-1.0";
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
         "features"         = @{
@@ -243,6 +243,7 @@ function GeneratePort() {
         -PortName $portName `
         -Homepage "https://github.com/boostorg/$Library" `
         -Description "Boost $Library module" `
+        -License "BSL-1.0" `
         -Dependencies $Dependencies
 
     $portfileLines = @(
@@ -581,6 +582,7 @@ if ($updateServicePorts) {
         -PortName "boost" `
         -Homepage "https://boost.org" `
         -Description "Peer-reviewed portable C++ source libraries" `
+        -License "BSL-1.0" `
         -Dependencies $boostPortDependencies
 
     Set-Content -LiteralPath "$portsDir/boost/portfile.cmake" `
@@ -592,6 +594,7 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "vcpkg-boost-copy" `
         -Description "Internal vcpkg port used to copy Boost header-only libraries" `
+        -License "MIT" `
         -Dependencies @("vcpkg-boost-uninstall")
 
     # Generate manifest files for vcpkg-boost-build
@@ -604,13 +607,15 @@ if ($updateServicePorts) {
     # Generate manifest files for vcpkg-boost-uninstall
     GeneratePortManifest `
         -PortName "vcpkg-boost-uninstall" `
-        -Description "Internal vcpkg port used to uninstall Boost"
+        -Description "Internal vcpkg port used to uninstall Boost" `
+        -License "MIT"
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
         -PortName "boost-build" `
         -Homepage "https://github.com/boostorg/build" `
         -Description "Boost.Build" `
+        -License "BSL-1.0" `
         -Dependencies @("vcpkg-boost-uninstall")
 
     # Update Boost version in CMake files

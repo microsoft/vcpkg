@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Boost functional module",
   "homepage": "https://github.com/boostorg/functional",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",
