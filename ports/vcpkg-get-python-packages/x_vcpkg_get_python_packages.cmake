@@ -24,7 +24,7 @@ include_guard(GLOBAL)
 
 function(x_vcpkg_get_python_packages)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "PYTHON_EXECUTABLE" "PACKAGES")
-    
+
     if(NOT DEFINED arg_PYTHON_EXECUTABLE)
         message(FATAL_ERROR "PYTHON_EXECUTABLE must be specified.")
     endif()
@@ -37,13 +37,7 @@ function(x_vcpkg_get_python_packages)
 
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
 
-    if (WIN32)
-        set(PYTHON_OPTION "")
-    else()
-        set(PYTHON_OPTION "--user")
-    endif()
-
-    if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})") # inside vcpkg
+    if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host. 
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 vcpkg_from_github(
@@ -52,11 +46,11 @@ function(x_vcpkg_get_python_packages)
                     REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
                     SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
                 )
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION}
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py"
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endif()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION}
+                vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package}
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         else()
@@ -65,16 +59,11 @@ function(x_vcpkg_get_python_packages)
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
             endforeach()
         endif()
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            vcpkg_execute_required_process(COMMAND pip3 install ${arg_PACKAGES})
-        endif()
     else() # outside vcpkg
         foreach(package IN LISTS arg_PACKAGES)
             vcpkg_execute_in_download_mode(COMMAND ${arg_PYTHON_EXECUTABLE} -c "import ${package}" RESULT_VARIABLE HAS_ERROR)
-
             if(HAS_ERROR)
                 message(FATAL_ERROR "Python package '${package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${arg_PACKAGES}")
-
             endif()
         endforeach()
     endif()
