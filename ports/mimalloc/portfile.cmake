@@ -24,15 +24,13 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         -DMI_DEBUG_FULL=OFF
     OPTIONS
-        -DMI_INTERPOSE=ON
-        -DMI_USE_CXX=OFF
+        -DMI_USE_CXX=ON
         -DMI_BUILD_TESTS=OFF
+        -DMI_BUILD_OBJECT=OFF
         ${FEATURE_OPTIONS}
         -DMI_BUILD_STATIC=${MI_BUILD_STATIC}
         -DMI_BUILD_SHARED=${MI_BUILD_SHARED}
         -DMI_INSTALL_TOPLEVEL=ON
-    MAYBE_UNUSED_VARIABLES
-        MI_INTERPOSE
 )
 
 vcpkg_cmake_install()
