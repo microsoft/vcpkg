@@ -6,6 +6,10 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "jansson",
-    "openssl"
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
