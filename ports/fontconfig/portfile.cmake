@@ -69,16 +69,6 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-
-# Build the fontconfig cache
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING)
-    set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
-    set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
-    vcpkg_execute_required_process(COMMAND "${CURRENT_PACKAGES_DIR}/bin/fc-cache${VCPKG_TARGET_EXECUTABLE_SUFFIX}" --verbose
-                                   WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin"
-                                   LOGNAME fc-cache-${TARGET_TRIPLET})
-endif()
-
 if(NOT VCPKG_TARGET_IS_LINUX)
     set(VCPKG_TARGET_IS_LINUX 0) # To not leave empty AND statements in the wrapper
 endif()
