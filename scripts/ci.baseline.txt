@@ -1021,7 +1021,7 @@ qt5-base:arm64-windows=fail
 qtwebengine:x64-windows=fail
 
 # upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
-qtinterfaceframework:x64-windows=fail
+qtinterfaceframework:x64-windows=skip
 
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
