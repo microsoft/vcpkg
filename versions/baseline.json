@@ -1920,6 +1920,10 @@
       "baseline": "19.02",
       "port-version": 1
     },
+    "dpp": {
+      "baseline": "2022-04-01",
+      "port-version": 0
+    },
     "draco": {
       "baseline": "1.4.3",
       "port-version": 0
@@ -2314,7 +2318,7 @@
     },
     "freetype": {
       "baseline": "2.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "freetype-gl": {
       "baseline": "2020-09-14",
@@ -2786,7 +2790,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 18
+      "port-version": 19
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -3658,7 +3662,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "2.1.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libjuice": {
       "baseline": "0.9.8",
@@ -3870,7 +3874,7 @@
     },
     "libpq": {
       "baseline": "14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.6.0",
@@ -4973,8 +4977,8 @@
       "port-version": 7
     },
     "ogre-next": {
-      "baseline": "2019-10-20",
-      "port-version": 2
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "ois": {
       "baseline": "1.5.1",
@@ -5270,7 +5274,7 @@
     },
     "paraview": {
       "baseline": "5.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "parmetis": {
       "baseline": "4.0.3",
@@ -5994,7 +5998,7 @@
     },
     "quickfix": {
       "baseline": "1.15.1",
-      "port-version": 5
+      "port-version": 6
     },
     "quill": {
       "baseline": "1.6.3",
@@ -7470,7 +7474,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.5",
-      "port-version": 7
+      "port-version": 8
     },
     "x-plane": {
       "baseline": "3.0.3",
