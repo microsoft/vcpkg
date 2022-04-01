@@ -11,7 +11,7 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/quickjs-config.cmake" DESTINATION "${SOURCE_PATH}")
-file(CONFIGURE_FILE "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+file(COPY"${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
