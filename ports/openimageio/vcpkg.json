@@ -43,6 +43,7 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "avresample"
           ]
@@ -76,7 +77,10 @@
     "opencv": {
       "description": "Enable opencv support for openimageio",
       "dependencies": [
-        "opencv"
+        {
+          "name": "opencv",
+          "default-features": false
+        }
       ]
     },
     "openjpeg": {
@@ -95,7 +99,10 @@
       "description": "Build openimageio tools",
       "dependencies": [
         "opengl",
-        "qt5-base"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
       ]
     },
     "webp": {
