@@ -4,6 +4,8 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 # NOTE: to figure out what cmake versions are required for different things,
 # grep for `CMake 3`. All version requirement comments should follow that format.
 
+# Attention: Changes to this file do not affect ABI hashing.
+
 #[===[.md:
 # z_vcpkg_add_fatal_error
 Add a fatal error.
@@ -536,15 +538,24 @@ if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
         set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools")
     endif()
     list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
-    file(GLOB_RECURSE Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
-    file(GLOB_RECURSE Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+    file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
+    file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
     list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
-    list(FILTER Z_VCPKG_TOOLS_DIRS EXCLUDE REGEX "/debug/")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
+    string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
+    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
+    list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
     foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
         list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
     endforeach()
-    unset(Z_VCPKG_TOOLS_DIRS)
     unset(Z_VCPKG_TOOLS_DIR)
+    unset(Z_VCPKG_TOOLS_DIRS)
+    unset(Z_VCPKG_TOOLS_FILES)
+    unset(Z_VCPKG_TOOLS_DIRS_BIN)
+    unset(Z_VCPKG_TOOLS_FILES_BIN)
+    unset(Z_VCPKG_TOOLS_DIRS_TO_REMOVE)
     unset(tools_base_path)
 endif()
 
