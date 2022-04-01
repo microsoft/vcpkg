@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-boost-copy",
   "version": "1.78.0",
-  "port-version": 2,
   "description": "Internal vcpkg port used to copy Boost header-only libraries",
   "dependencies": [
     "vcpkg-boost-uninstall"

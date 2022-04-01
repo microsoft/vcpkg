@@ -27,7 +27,10 @@ $initPortVersion = 1
 # Clear this array when moving to a new boost version
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "vcpkg-boost-copy" = 2;
+    "boost-iostreams" = 3;
+    "vcpkg-boost-build" = 0;
+    "vcpkg-boost-copy" = 0;
+    "vcpkg-boost-uninstall" = 0;
 }
 
 $portData = @{
@@ -58,6 +61,7 @@ $portData = @{
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
     "boost-iostreams"        = @{
+        "license"          = "BSL-1.0";
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
         "features"         = @{
@@ -171,6 +175,7 @@ function GeneratePortManifest() {
         [string]$PortName,
         [string]$Homepage,
         [string]$Description,
+        [string]$License,
         $Dependencies = @()
     )
     $manifest = @{
@@ -178,6 +183,9 @@ function GeneratePortManifest() {
         "version"     = $version
         "homepage"    = $Homepage
         "description" = $Description
+    }
+    if ($License) {
+        $manifest["license"] += $License
     }
     if ($portData.Contains($PortName)) {
         $manifest += $portData[$PortName]
@@ -590,6 +598,7 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "vcpkg-boost-build" `
         -Description "Internal vcpkg port used to build Boost libraries" `
+        -License "MIT" `
         -Dependencies @("vcpkg-boost-uninstall", "vcpkg-cmake")
 
     # Generate manifest files for vcpkg-boost-uninstall
