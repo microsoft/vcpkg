@@ -1,6 +1,6 @@
 {
   "name": "libpff",
-  "version-string": "2018-07-14",
+  "version-date": "2018-07-14",
   "port-version": 3,
   "description": "Library and tools to access the Personal Folder File (PFF) and the Offline Folder File (OFF) format.",
   "homepage": "https://github.com/libyal/libpff",
