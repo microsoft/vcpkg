@@ -3,7 +3,12 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
     message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
 endif()
 
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "Openssl currently requires the following library from the system package manager:\n    linux-headers\n\nIt can be installed on alpine systems via apk add linux-headers.")
+endif()
+
 set(OPENSSL_VERSION 3.0.2)
+
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
@@ -23,10 +28,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
-endif()
-
-if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "Openssl currently requires the following library from the system package manager:\n    linux-headers\n\nIt can be installed on alpine systems via apk add linux-headers.")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
