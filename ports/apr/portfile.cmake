@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
-            private-headers INSTALL_PRIVATE_H
+            private-headers APR_INSTALL_PRIVATE_H
     )
 
     vcpkg_cmake_configure(
@@ -24,7 +24,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
-            -DAPR_INSTALL_PRIVATE_H=${INSTALL_PRIVATE_H}
             ${FEATURE_OPTIONS}
     )
 

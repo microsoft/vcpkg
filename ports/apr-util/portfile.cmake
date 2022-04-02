@@ -2,7 +2,6 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
     FILENAME "apr-util-1.6.1.tar.bz2"
     SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
-
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -15,20 +14,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      set(APU_DECLARE_EXPORT ON)
-      set(APU_DECLARE_STATIC OFF)
+        set(APU_DECLARE_EXPORT ON)
+        set(APU_DECLARE_STATIC OFF)
     else()
-      set(APU_DECLARE_EXPORT OFF)
-      set(APU_DECLARE_STATIC ON)
+        set(APU_DECLARE_EXPORT OFF)
+        set(APU_DECLARE_STATIC ON)
     endif()
 
     vcpkg_cmake_configure(
-      SOURCE_PATH "${SOURCE_PATH}"
-      OPTIONS
-        -DAPU_DECLARE_EXPORT=${APU_DECLARE_EXPORT}
-        -DAPU_DECLARE_STATIC=${APU_DECLARE_STATIC}
-      OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -DAPU_DECLARE_EXPORT=${APU_DECLARE_EXPORT}
+            -DAPU_DECLARE_STATIC=${APU_DECLARE_STATIC}
+        OPTIONS_DEBUG
+            -DDISABLE_INSTALL_HEADERS=ON
     )
 
     vcpkg_cmake_install()
@@ -36,9 +35,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     file(READ ${CURRENT_PACKAGES_DIR}/include/apu.h  APU_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      string(REPLACE "defined(APU_DECLARE_EXPORT)" "1" APU_H "${APU_H}")
+        string(REPLACE "defined(APU_DECLARE_EXPORT)" "1" APU_H "${APU_H}")
     else()
-      string(REPLACE "defined(APU_DECLARE_STATIC)" "1" APU_H "${APU_H}")
+        string(REPLACE "defined(APU_DECLARE_STATIC)" "1" APU_H "${APU_H}")
     endif()
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/apu.h "${APU_H}")
 
@@ -79,8 +78,8 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     if(NOT VCPKG_BUILD_TYPE)
-      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
-      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/debug/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endif()
 
 endif()
