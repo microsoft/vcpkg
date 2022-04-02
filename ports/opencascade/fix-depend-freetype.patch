@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fbcede5..2e96a25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -563,7 +563,7 @@ if (CAN_USE_FREETYPE)
+   if (USE_FREETYPE)
+     message (STATUS "Info: FreeType is used by OCCT")
+     add_definitions (-DHAVE_FREETYPE)
+-    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/freetype")
++    find_package(freetype CONFIG REQUIRED)
+   else()
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREETYPE")
+     OCCT_CHECK_AND_UNSET ("3RDPARTY_FREETYPE_INCLUDE_DIR_freetype2")

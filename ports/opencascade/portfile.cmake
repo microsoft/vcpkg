@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
+        fix-depend-freetype.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -49,22 +50,22 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
       "ExprIntrp.tab.h"
-	  "FlexLexer.h"
-	  "glext.h"
-	  "igesread.h"
-	  "NCollection_Haft.h"
-	  "OSD_PerfMeter.h"
-	  "Standard_values.h"
+      "FlexLexer.h"
+      "glext.h"
+      "igesread.h"
+      "NCollection_Haft.h"
+      "OSD_PerfMeter.h"
+      "Standard_values.h"
     )
 
 file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/[a-zA-Z0-9_]*\.[hgl]xx")
 foreach(file_name IN LISTS files)
-	file(READ "${file_name}" filedata)
-	string(REGEX REPLACE "# *include \<([a-zA-Z0-9_]*\.[hgl]xx)\>" "#include \"\\1\"" filedata "${filedata}")
-	foreach(extra_header IN LISTS ADDITIONAL_HEADERS)
-		string(REGEX REPLACE "# *include \<${extra_header}\>" "#include \"${extra_header}\"" filedata "${filedata}")
-	endforeach()
-	file(WRITE "${file_name}" "${filedata}")
+    file(READ "${file_name}" filedata)
+    string(REGEX REPLACE "# *include \<([a-zA-Z0-9_]*\.[hgl]xx)\>" "#include \"\\1\"" filedata "${filedata}")
+    foreach(extra_header IN LISTS ADDITIONAL_HEADERS)
+        string(REGEX REPLACE "# *include \<${extra_header}\>" "#include \"${extra_header}\"" filedata "${filedata}")
+    endforeach()
+    file(WRITE "${file_name}" "${filedata}")
 endforeach()
 
 # Remove libd to lib, libd just has cmake files we dont want too
