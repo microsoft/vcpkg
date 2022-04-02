@@ -9,13 +9,13 @@ vcpkg_from_github(
 # Install header files
 file(INSTALL 
 	DIRECTORY 
-		${SOURCE_PATH}/src/
+		"${SOURCE_PATH}/src/"
 	DESTINATION 
-		${CURRENT_PACKAGES_DIR}/include/${PORT}
+		"${CURRENT_PACKAGES_DIR}/include/${PORT}"
 	FILES_MATCHING PATTERN "*.h" )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/benchmark")
 
 # Install license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
