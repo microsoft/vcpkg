@@ -5618,7 +5618,7 @@
     },
     "qnnpack": {
       "baseline": "2021-02-26",
-      "port-version": 1
+      "port-version": 2
     },
     "qpid-proton": {
       "baseline": "0.32.0",
