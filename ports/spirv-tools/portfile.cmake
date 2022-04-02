@@ -24,7 +24,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSPIRV-Headers_SOURCE_DIR="${CURRENT_INSTALLED_DIR}"
+        -DSPIRV-Headers_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DSPIRV_WERROR=OFF
         -DSPIRV_SKIP_TESTS=ON
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
