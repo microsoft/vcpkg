@@ -34,11 +34,20 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME SPIRV-Tools) # the directory name is capitalized as opposed to the package name
-vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME SPIRV-Tools-link)
-vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME SPIRV-Tools-lint)
-vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME Tools-opt)
-vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME SPIRV-Tools-reduce)
+ # the directory name is capitalized as opposed to the package name
+if(WIN32)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME SPIRV-Tools)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME SPIRV-Tools-link)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME SPIRV-Tools-lint)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME Tools-opt)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME SPIRV-Tools-reduce)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME SPIRV-Tools)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME SPIRV-Tools-link)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME SPIRV-Tools-lint)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME Tools-opt)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME SPIRV-Tools-reduce)
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin") # only static linkage, i.e. no need to preserve .dll/.so files
