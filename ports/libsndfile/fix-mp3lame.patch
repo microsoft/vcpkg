@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b1b49e9..b26a17d 100644
+index b1b49e9..ae8ebec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -174,7 +174,7 @@ set_package_properties (FLAC PROPERTIES
@@ -11,36 +11,29 @@ index b1b49e9..b26a17d 100644
  	TYPE RECOMMENDED
  	URL "https://lame.sourceforge.io/"
  	DESCRIPTION "High quality MPEG Audio Layer III (MP3) encoder"
-@@ -237,19 +237,19 @@ if (INSTALL_PKGCONFIG_MODULE)
+@@ -237,20 +237,7 @@ if (INSTALL_PKGCONFIG_MODULE)
  	endif ()
  	if (ENABLE_MPEG)
  		set (EXTERNAL_MPEG_REQUIRE "libmpg123")
 -		get_filename_component(LAME_WE ${LAME_LIBRARY} NAME_WE)
 -		if (LAME_HIP_LIBRARY)
 -			get_filename_component(LAME_HIP_WE ${LAME_HIP_LIBRARY} NAME_WE)
-+		get_filename_component(MP3LAME_WE ${MP3LAME_LIBRARY} NAME_WE)
-+		if (MP3LAME_HIP_LIBRARY)
-+			get_filename_component(MP3LAME_HIP_WE ${MP3LAME_HIP_LIBRARY} NAME_WE)
- 		endif ()
- 		if (CMAKE_IMPORT_LIBRARY_PREFIX)
+-		endif ()
+-		if (CMAKE_IMPORT_LIBRARY_PREFIX)
 -			string (REGEX REPLACE "^${CMAKE_IMPORT_LIBRARY_PREFIX}" "" LAME_WE_NO_PREFIX ${LAME_WE})
 -			if (LAME_HIP_LIBRARY)
 -				string (REGEX REPLACE "^${CMAKE_IMPORT_LIBRARY_PREFIX}" "" LAME_HIP_WE_NO_PREFIX ${LAME_HIP_WE})
-+			string (REGEX REPLACE "^${CMAKE_IMPORT_LIBRARY_PREFIX}" "" MP3LAME_WE_NO_PREFIX ${MP3LAME_WE})
-+			if (MP3LAME_HIP_LIBRARY)
-+				string (REGEX REPLACE "^${CMAKE_IMPORT_LIBRARY_PREFIX}" "" MP3LAME_HIP_WE_NO_PREFIX ${MP3LAME_HIP_WE})
- 			endif ()
- 		endif ()
+-			endif ()
+-		endif ()
 -		set (EXTERNAL_MPEG_LIBS "-l${LAME_WE_NO_PREFIX}")
 -		if (LAME_HIP_LIBRARY)
 -			set (EXTERNAL_MPEG_LIBS "${MPEG_LIBS} -l${LAME_HIP_WE}")
-+		set (EXTERNAL_MPEG_LIBS "-l${MP3LAME_WE_NO_PREFIX}")
-+		if (MP3LAME_HIP_LIBRARY)
-+			set (EXTERNAL_MPEG_LIBS "${MPEG_LIBS} -l${MP3LAME_HIP_WE}")
- 		endif ()
+-		endif ()
++		set (EXTERNAL_MPEG_LIBS "-lmp3lame")
  	endif ()
  
-@@ -411,7 +411,7 @@ target_link_libraries (sndfile
+ 	configure_file (sndfile.pc.in sndfile.pc @ONLY)
+@@ -411,7 +398,7 @@ target_link_libraries (sndfile
  		$<$<AND:$<BOOL:${ENABLE_EXPERIMENTAL}>,$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>,$<BOOL:${HAVE_SPEEX}>>:Speex::Speex>
  		$<$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>:Opus::opus>
  		$<$<BOOL:${HAVE_MPEG}>:MPG123::libmpg123>
@@ -49,78 +42,6 @@ index b1b49e9..b26a17d 100644
  	)
  set_target_properties (sndfile PROPERTIES
  	PUBLIC_HEADER "${sndfile_HDRS}"
-diff --git a/cmake/FindLame.cmake b/cmake/FindLame.cmake
-deleted file mode 100644
-index be32475..0000000
---- a/cmake/FindLame.cmake
-+++ /dev/null
-@@ -1,66 +0,0 @@
--# - Find lame
--# Find the native lame includes and libraries
--#
--#  LAME_INCLUDE_DIRS - where to find lame.h, etc.
--#  LAME_LIBRARIES    - List of libraries when using lame.
--#  LAME_FOUND        - True if Lame found.
--
--if (LAME_INCLUDE_DIR)
--    # Already in cache, be silent
--    set(LAME_FIND_QUIETLY TRUE)
--endif ()
--
--find_path (LAME_INCLUDE_DIR lame/lame.h
--	HINTS
--		${LAME_ROOT}
--	)
--
--# MSVC built lame may be named mp3lame_static.
--# The provided project files name the library with the lib prefix.
--
--find_library (LAME_LIBRARY
--	NAMES
--		mp3lame
--		mp3lame_static
--		libmp3lame
--		libmp3lame_static
--		libmp3lame-static
--	HINTS
--		${LAME_ROOT}
--	)
--
--find_library (LAME_HIP_LIBRARY
--	NAMES
--		mpghip-static
--		libmpghip-static
--	HINTS
--		${LAME_ROOT}
--	)
--
--# Handle the QUIETLY and REQUIRED arguments and set LAME_FOUND
--# to TRUE if all listed variables are TRUE.
--include(FindPackageHandleStandardArgs)
--find_package_handle_standard_args (Lame
--	REQUIRED_VARS
--		LAME_LIBRARY
--		LAME_INCLUDE_DIR
--	)
--
--if (LAME_FOUND)
--	set (LAME_LIBRARIES ${LAME_LIBRARY} ${LAME_HIP_LIBRARY})
--	set (LAME_INCLUDE_DIRS ${LAME_INCLUDE_DIR})
--
--	if (NOT TARGET Lame::Lame)
--		add_library (Lame::Lame UNKNOWN IMPORTED)
--		set_target_properties (Lame::Lame PROPERTIES
--			INTERFACE_INCLUDE_DIRECTORIES "${LAME_INCLUDE_DIRS}"
--			IMPORTED_LOCATION "${LAME_LIBRARY}"
--		)
--		if (LAME_HIP_LIBRARY)
--			set_property (TARGET Lame::Lame APPEND PROPERTY
--				INTERFACE_LINK_LIBRARIES "${LAME_HIP_LIBRARY}")
--		endif ()
--	endif ()
--endif ()
--
--mark_as_advanced(LAME_INCLUDE_DIR LAME_LIBRARY LAME_HIP_LIBRARY)
 diff --git a/cmake/SndFileChecks.cmake b/cmake/SndFileChecks.cmake
 index f5d5994..2e09ba6 100644
 --- a/cmake/SndFileChecks.cmake
