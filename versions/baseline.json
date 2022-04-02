@@ -2158,7 +2158,7 @@
     },
     "fbgemm": {
       "baseline": "2021-03-18",
-      "port-version": 3
+      "port-version": 4
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
