@@ -21,7 +21,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/clblast.dll")
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/clblast)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBLast)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
