@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-dependency.patch
         export-target.patch
 )
 

@@ -1,15 +1,15 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 78adc56..40ab144 100644
+index 78adc56..639b0d1 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
  endif()
  
  if (BUILD_SHARED_LIBS)
-+target_include_directories(braft-shared PUBLIC $<INSTALL_INTERFACE:include/braft>)
++target_include_directories(braft-shared PUBLIC $<INSTALL_INTERFACE:include>)
  target_link_libraries(braft-shared PUBLIC ${DYNAMIC_LIB})
  else()
-+target_include_directories(braft-static PUBLIC $<INSTALL_INTERFACE:include/braft>)
++target_include_directories(braft-static PUBLIC $<INSTALL_INTERFACE:include>)
  target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
  endif()
  
