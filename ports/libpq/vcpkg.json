@@ -1,9 +1,10 @@
 {
   "name": "libpq",
-  "version": "12.9",
+  "version": "14.1",
   "port-version": 1,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
+  "license": "PostgreSQL",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -16,6 +17,7 @@
     }
   ],
   "default-features": [
+    "lz4",
     "openssl",
     "zlib"
   ],
@@ -24,7 +26,7 @@
       "description": "Build with Bonjour support (--with-bonjour)"
     },
     "client": {
-      "description": "Build all client tools and libraries."
+      "description": "Build all client tools and libraries (dynamic only?)"
     },
     "icu": {
       "description": "Build with support for the ICU library (--with-icu)",
@@ -44,10 +46,23 @@
         "llvm"
       ]
     },
+    "lz4": {
+      "description": "Use lz4 (else --without-lz4)",
+      "dependencies": [
+        "lz4"
+      ]
+    },
     "nls": {
       "description": "Native Language Support (--enable-nls[=LANGUAGES])",
       "dependencies": [
-        "gettext"
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
       ]
     },
     "openssl": {
@@ -103,6 +118,13 @@
     "xslt": {
       "description": "Build with libxslt (--with-libxslt)",
       "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "xml"
+          ]
+        },
         "libxslt"
       ]
     },

@@ -1,5 +1,5 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index a7a3796..2e21403 100644
+index f3a62f2..b53df6f 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
 @@ -13,10 +13,12 @@
@@ -18,41 +18,7 @@ index a7a3796..2e21403 100644
 +  endif()
  endif()
  
- set(INST_FILES Utils/FindPkgMacros.cmake) 
-diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
-index 783755e..79f7514 100644
---- a/CMake/InstallResources.cmake
-+++ b/CMake/InstallResources.cmake
-@@ -208,10 +208,12 @@ endif ()
- # Create the CMake package files
- include(CMakePackageConfigHelpers)
- 
--if(WIN32 OR APPLE)
--  set(OGRE_CMAKE_DIR "CMake")
--else()
--  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+if(NOT DEFINED OGRE_CMAKE_DIR)
-+  if(WIN32 OR APPLE)
-+    set(OGRE_CMAKE_DIR "CMake")
-+  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
-+  endif()
- endif()
- configure_package_config_file(${OGRE_TEMPLATES_DIR}/OGREConfig.cmake.in ${PROJECT_BINARY_DIR}/cmake/OGREConfig.cmake
-     INSTALL_DESTINATION ${OGRE_CMAKE_DIR}
-diff --git a/CMake/Packages/FindCg.cmake b/CMake/Packages/FindCg.cmake
-index 4501cf9..7eb57c3 100644
---- a/CMake/Packages/FindCg.cmake
-+++ b/CMake/Packages/FindCg.cmake
-@@ -56,7 +56,7 @@ endif()
- 
- find_library(Cg_LIBRARY_REL NAMES ${Cg_LIBRARY_NAMES} HINTS ${Cg_LIB_SEARCH_PATH} ${Cg_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
- find_library(Cg_LIBRARY_DBG NAMES ${Cg_LIBRARY_NAMES_DBG} HINTS ${Cg_LIB_SEARCH_PATH} ${Cg_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
--make_library_set(Cg_LIBRARY)
-+make_library_set(Cg)
- 
- if (WIN32)
- 	if (CMAKE_CL_64)
+ set(INST_FILES
 diff --git a/CMake/Packages/FindFreeImage.cmake b/CMake/Packages/FindFreeImage.cmake
 index 7c89ec5..d8314f0 100644
 --- a/CMake/Packages/FindFreeImage.cmake
@@ -93,7 +59,7 @@ index 7125895..13a306f 100644
  findpkg_finish(HLSL2GLSL)
  add_parent_dir(HLSL2GLSL_INCLUDE_DIRS HLSL2GLSL_INCLUDE_DIR)
 diff --git a/CMake/Packages/FindNVAPI.cmake b/CMake/Packages/FindNVAPI.cmake
-index 2b9deba..f33a298 100644
+index 95c70cd..893ce01 100644
 --- a/CMake/Packages/FindNVAPI.cmake
 +++ b/CMake/Packages/FindNVAPI.cmake
 @@ -44,7 +44,7 @@ findpkg_framework(NVAPI)
@@ -155,7 +121,7 @@ index 6b6d7fa..3667b8b 100644
  findpkg_finish(POCO_XML)
  
 diff --git a/CMake/Packages/FindTBB.cmake b/CMake/Packages/FindTBB.cmake
-index 0c48510..c121966 100644
+index 4200aa0..35e4ea3 100644
 --- a/CMake/Packages/FindTBB.cmake
 +++ b/CMake/Packages/FindTBB.cmake
 @@ -104,7 +104,7 @@ findpkg_framework(TBB)
@@ -184,7 +150,7 @@ index 0c48510..c121966 100644
 +make_library_set(TBB_MALLOC_PROXY)
  findpkg_finish(TBB_MALLOC_PROXY)
 diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip.cmake
-index e97951e..54c2567 100644
+index c112071..214d9e5 100644
 --- a/CMake/Packages/FindZZip.cmake
 +++ b/CMake/Packages/FindZZip.cmake
 @@ -39,12 +39,12 @@ use_pkgconfig(ZZip_PKGC zziplib)
@@ -203,7 +169,7 @@ index e97951e..54c2567 100644
  findpkg_finish(ZZip)
  
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
-index 374f84b..dc7066d 100644
+index 53111e0..8dffbbc 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
 +++ b/CMake/Utils/FindPkgMacros.cmake
 @@ -79,15 +79,21 @@ endmacro (use_pkgconfig)
@@ -238,54 +204,28 @@ index 374f84b..dc7066d 100644
  
  # Generate debug names from given release names
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3e09d2d..58968f0 100644
+index 48af55b..b18ac57 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -274,7 +274,7 @@ elseif(EMSCRIPTEN)
- elseif (APPLE AND NOT APPLE_IOS)
+@@ -282,7 +282,7 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
  
-   set(XCODE_ATTRIBUTE_SDKROOT macosx)
+   # Set build variables
+   set(XCODE_ATTRIBUTE_SDKROOT iphoneos)
 -  if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
 +  if(1)
      execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
-diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
-index bdb303d..d9cc221 100644
---- a/Components/Overlay/CMakeLists.txt
-+++ b/Components/Overlay/CMakeLists.txt
-@@ -21,7 +21,7 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
- # setup target
- add_library(OgreOverlay ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES} ${PLATFORM_HEADER_FILES} ${PLATFORM_SOURCE_FILES})
- set_target_properties(OgreOverlay PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
--target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" ZLIB::ZLIB)
-+target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ${FREETYPE_LIBRARIES} ZLIB::ZLIB)
- target_include_directories(OgreOverlay PUBLIC 
-   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-   $<INSTALL_INTERFACE:include/OGRE/Overlay>
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
-index 6ec4e34..cc9cb9d 100644
+index 0424ebb..b019269 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
-@@ -225,8 +225,6 @@ if (APPLE)
+@@ -434,8 +434,6 @@ if (APPLE)
      set_target_properties(OgreMain PROPERTIES
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
 -
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
    
-     if(OGRE_BUILD_LIBS_AS_FRAMEWORKS)
-       add_custom_command(TARGET OgreMain POST_BUILD
-diff --git a/PlugIns/EXRCodec/CMakeLists.txt b/PlugIns/EXRCodec/CMakeLists.txt
-index e9c936a..bb8747e 100644
---- a/PlugIns/EXRCodec/CMakeLists.txt
-+++ b/PlugIns/EXRCodec/CMakeLists.txt
-@@ -16,7 +16,7 @@ target_link_libraries(Codec_EXR OgreMain ${OPENEXR_LIBRARIES})
- target_include_directories(Codec_EXR PUBLIC 
-     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-     $<INSTALL_INTERFACE:include/OGRE/Plugins/EXRCodec>)
--target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}/OpenEXR")
-+target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}")
- 
- ogre_config_framework(Codec_EXR)
- ogre_config_plugin(Codec_EXR)
+   	add_custom_command(TARGET OgreMain POST_BUILD
+ 		COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
