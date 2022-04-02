@@ -40,7 +40,7 @@ else()
     set(CONFIG_PATH lib/cmake/SndFile)
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH ${CONFIG_PATH} TARGET_PATH share/SndFile)
+vcpkg_cmake_config_fixup(PACKAGE_NAME SndFile CONFIG_PATH ${CONFIG_PATH})
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 vcpkg_copy_pdbs()
