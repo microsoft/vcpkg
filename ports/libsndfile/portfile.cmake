@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.1.0
     SHA512 5e530c33165a2d2be1c22d3a4bd96f0f1817dded3a45d24bad0e3f2c7908ccc1f19327a91d5040c3ea4d591845876019180747a125bf2a6f8bd49a6f67eadacd
     HEAD_REF master
+    PATCHES fix-mp3lame.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
