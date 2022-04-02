@@ -8,6 +8,7 @@
       "name": "llvm",
       "default-features": false,
       "features": [
+        "bolt",
         "clang",
         "enable-abi-breaking-checks",
         "disable-assertions",

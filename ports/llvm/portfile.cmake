@@ -15,6 +15,7 @@ vcpkg_from_github(
         0007-fix-compiler-rt-install-path.patch
         0009-fix-tools-install-path.patch
         0010-fix-libffi.patch
+        0011-fix-install-bolt.patch
 )
 
 vcpkg_check_features(
@@ -101,7 +102,7 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
-    # 1) LLVM/Clang binaries are relocated from ./bin/ to ./tools/llvm/ (CMAKE_INSTALL_BINDIR=tools/llvm)
+    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
     # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
     # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
     list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${LLVM_VERSION})
@@ -257,8 +258,7 @@ vcpkg_cmake_configure(
         -DPACKAGE_VERSION=${LLVM_VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
-        # Path for binary subdirectory (defaults to 'bin')
-        -DCMAKE_INSTALL_BINDIR=tools/${PORT}
+        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -331,6 +331,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 # LLVM still generates a few DLLs in the static build:
+# * LLVM-C.dll
 # * libclang.dll
 # * LTO.dll
 # * Remarks.dll
