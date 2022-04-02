@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "Quantized Neural Network PACKage - mobile-optimized implementation of quantized neural network operators",
   "homepage": "https://github.com/pytorch/QNNPACK",
+  "license": "BSD-3-Clause",
   "supports": "linux | osx",
   "dependencies": [
     "cpuinfo",
