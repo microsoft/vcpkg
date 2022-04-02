@@ -1,0 +1,50 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 45f3a33..319a9f3 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -1220,7 +1220,7 @@ function(onnxruntime_add_shared_library target_name)
+ endfunction()
+ 
+ function(onnxruntime_add_static_library target_name)
+-  add_library(${target_name} ${ARGN})
++  add_library(${target_name} STATIC ${ARGN})
+   onnxruntime_configure_target(${target_name})
+ endfunction()
+ 
+diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
+index a82629b..c9e8bb1 100644
+--- a/cmake/onnxruntime_providers.cmake
++++ b/cmake/onnxruntime_providers.cmake
+@@ -260,6 +260,12 @@ if (onnxruntime_USE_CUDA)
+     "${ONNXRUNTIME_ROOT}/core/providers/cuda/*.h"
+     "${ONNXRUNTIME_ROOT}/core/providers/cuda/*.cc"
+   )
++  # Remove pch files
++  list(REMOVE_ITEM onnxruntime_providers_cuda_cc_srcs
++    "${ONNXRUNTIME_ROOT}/core/providers/cuda/cuda_pch.h"
++    "${ONNXRUNTIME_ROOT}/core/providers/cuda/cuda_pch.cc"
++  )
++  
+   # The shared_library files are in a separate list since they use precompiled headers, and the above files have them disabled.
+   file(GLOB_RECURSE onnxruntime_providers_cuda_shared_srcs CONFIGURE_DEPENDS
+     "${ONNXRUNTIME_ROOT}/core/providers/shared_library/*.h"
+@@ -387,6 +393,11 @@ if (onnxruntime_USE_CUDA)
+ 
+   if (WIN32)
+     # *.cu cannot use PCH
++    target_precompile_headers(onnxruntime_providers_cuda PUBLIC
++      "${ONNXRUNTIME_ROOT}/core/providers/cuda/cuda_pch.h"
++      "${ONNXRUNTIME_ROOT}/core/providers/cuda/cuda_pch.cc"
++    )
++    if (0)
+     foreach(src_file ${onnxruntime_providers_cuda_cc_srcs})
+       set_source_files_properties(${src_file}
+         PROPERTIES
+@@ -403,6 +414,7 @@ if (onnxruntime_USE_CUDA)
+       PROPERTIES
+       COMPILE_FLAGS "/Yccuda_pch.h"
+     )
++    endif()
+     # disable a warning from the CUDA headers about unreferenced local functions
+     #target_compile_options(onnxruntime_providers_cuda PRIVATE /wd4505)
+     if (onnxruntime_USE_TVM)

@@ -1,8 +1,9 @@
 {
-  "name": "onnxruntime-cpu",
+  "name": "onnxruntime",
   "version": "1.10.0",
-  "description": "onnxruntime (CPU)",
+  "description": "onnxruntime",
   "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT",
   "supports": "!uwp & !arm",
   "dependencies": [
     "boost-mp11",
@@ -24,5 +25,14 @@
       "host": true
     },
     "wil"
-  ]
+  ],
+  "features": {
+    "gpu": {
+      "description": "with gpu",
+      "dependencies": [
+        "cuda",
+        "cudnn"
+      ]
+    }
+  }
 }

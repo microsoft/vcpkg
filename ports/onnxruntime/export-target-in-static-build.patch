@@ -1,0 +1,300 @@
+diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
+index 00112c9..157d851 100644
+--- a/cmake/onnxruntime_common.cmake
++++ b/cmake/onnxruntime_common.cmake
+@@ -217,3 +217,11 @@ if (ARM64 OR ARM OR X86 OR X64 OR X86_64)
+     list(APPEND onnxruntime_EXTERNAL_LIBRARIES cpuinfo unofficial::cpuinfo::clog)
+   endif()
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_common
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
+diff --git a/cmake/onnxruntime_flatbuffers.cmake b/cmake/onnxruntime_flatbuffers.cmake
+index bcb196b..95e44b9 100644
+--- a/cmake/onnxruntime_flatbuffers.cmake
++++ b/cmake/onnxruntime_flatbuffers.cmake
+@@ -34,3 +34,12 @@ if (WINDOWS_STORE)
+   target_force_include(flatbuffers PRIVATE uwp_stubs.h)
+   target_force_include(flatc PRIVATE uwp_stubs.h)
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_flatbuffers
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_framework.cmake b/cmake/onnxruntime_framework.cmake
+index dee3ff2..c25b02c 100644
+--- a/cmake/onnxruntime_framework.cmake
++++ b/cmake/onnxruntime_framework.cmake
+@@ -87,3 +87,11 @@ if (onnxruntime_DEBUG_NODE_INPUTS_OUTPUTS_ENABLE_DUMP_TO_SQLDB)
+ endif()
+ 
+ install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/framework  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core)
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_framework
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
+diff --git a/cmake/onnxruntime_graph.cmake b/cmake/onnxruntime_graph.cmake
+index dde1fbd..7e5950a 100644
+--- a/cmake/onnxruntime_graph.cmake
++++ b/cmake/onnxruntime_graph.cmake
+@@ -125,3 +125,12 @@ if (WIN32)
+   # Add Code Analysis properties to enable C++ Core checks. Have to do it via a props file include.
+   set_target_properties(onnxruntime_graph PROPERTIES VS_USER_PROPS ${PROJECT_SOURCE_DIR}/EnableVisualStudioCodeAnalysis.props)
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_graph
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
+index e7ce2cc..18ea5ea 100644
+--- a/cmake/onnxruntime_mlas.cmake
++++ b/cmake/onnxruntime_mlas.cmake
+@@ -458,3 +458,12 @@ set_target_properties(onnxruntime_mlas PROPERTIES FOLDER "ONNXRuntime")
+ if (WIN32)
+   target_compile_options(onnxruntime_mlas PRIVATE "/wd6385" "/wd4127")
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_mlas
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_optimizer.cmake b/cmake/onnxruntime_optimizer.cmake
+index 9afa2c2..2f899b2 100644
+--- a/cmake/onnxruntime_optimizer.cmake
++++ b/cmake/onnxruntime_optimizer.cmake
+@@ -77,3 +77,12 @@ if (onnxruntime_ENABLE_TRAINING)
+ endif()
+ add_dependencies(onnxruntime_optimizer ${onnxruntime_EXTERNAL_DEPENDENCIES})
+ set_target_properties(onnxruntime_optimizer PROPERTIES FOLDER "ONNXRuntime")
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_optimizer
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
+index c9e8bb1..d24712b 100644
+--- a/cmake/onnxruntime_providers.cmake
++++ b/cmake/onnxruntime_providers.cmake
+@@ -619,6 +619,14 @@ if (onnxruntime_USE_NUPHAR)
+   target_compile_options(onnxruntime_providers_nuphar PRIVATE ${DISABLED_WARNINGS_FOR_TVM})
+   add_dependencies(onnxruntime_providers_nuphar ${onnxruntime_EXTERNAL_DEPENDENCIES})
+   install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/providers/nuphar  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core/providers)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_nuphar
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_VITISAI)
+@@ -635,6 +643,14 @@ if (onnxruntime_USE_VITISAI)
+   target_include_directories(onnxruntime_providers_vitisai PRIVATE ${ONNXRUNTIME_ROOT} ${eigen_INCLUDE_DIRS} ${VITISAI_INCLUDE_DIR})
+   install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/providers/vitisai  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core/providers)
+   set_target_properties(onnxruntime_providers_vitisai PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_vitisai
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_OPENVINO)
+@@ -730,6 +746,14 @@ if (onnxruntime_USE_COREML)
+       GEN_SRC_SUB_DIR ${_src_sub_dir}
+       IMPORT_DIRS ${COREML_PROTO_ROOT}
+       TARGET onnxruntime_coreml_proto)
++    if (NOT onnxruntime_BUILD_SHARED_LIB)
++      install(TARGETS onnxruntime_coreml_proto
++              ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++              LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++              RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++              FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR}
++      )
++    endif()
+   endif()
+ 
+   # These are shared utils,
+@@ -788,6 +812,14 @@ if (onnxruntime_USE_COREML)
+   set_target_properties(onnxruntime_providers_coreml PROPERTIES FOLDER "ONNXRuntime")
+   target_include_directories(onnxruntime_providers_coreml PRIVATE ${ONNXRUNTIME_ROOT} ${coreml_INCLUDE_DIRS})
+   set_target_properties(onnxruntime_providers_coreml PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_coreml
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_NNAPI_BUILTIN)
+@@ -863,6 +895,14 @@ if (onnxruntime_USE_NNAPI_BUILTIN)
+   if(NOT MSVC)
+     target_compile_options(onnxruntime_providers_nnapi PRIVATE "-Wno-unknown-pragmas")
+   endif()
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_nnapi
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_RKNPU)
+@@ -895,6 +935,14 @@ if (onnxruntime_USE_RKNPU)
+   target_include_directories(onnxruntime_providers_rknpu PRIVATE ${ONNXRUNTIME_ROOT} ${rknpu_INCLUDE_DIRS} ${RKNPU_DDK_INCLUDE_DIR})
+   link_directories(onnxruntime_providers_rknpu ${RKNPU_DDK_LIB_DIR})
+   set_target_properties(onnxruntime_providers_rknpu PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_rknpu
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_DML)
+@@ -952,6 +1000,14 @@ if (onnxruntime_USE_DML)
+ 
+   set_target_properties(onnxruntime_providers_dml PROPERTIES LINKER_LANGUAGE CXX)
+   set_target_properties(onnxruntime_providers_dml PROPERTIES FOLDER "ONNXRuntime")
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_dml
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_MIGRAPHX)
+@@ -978,6 +1034,14 @@ if (onnxruntime_USE_MIGRAPHX)
+   add_dependencies(onnxruntime_providers_migraphx ${onnxruntime_EXTERNAL_DEPENDENCIES})
+   install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/providers/migraphx  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core/providers)
+   set_target_properties(onnxruntime_providers_migraphx PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_migraphx
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_ACL)
+@@ -996,6 +1060,14 @@ if (onnxruntime_USE_ACL)
+   target_include_directories(onnxruntime_providers_acl PRIVATE ${ONNXRUNTIME_ROOT} ${eigen_INCLUDE_DIRS} ${onnxruntime_ACL_HOME} ${onnxruntime_ACL_HOME}/include)
+   install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/providers/acl  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core/providers)
+   set_target_properties(onnxruntime_providers_acl PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_acl
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_ARMNN)
+@@ -1013,6 +1085,14 @@ if (onnxruntime_USE_ARMNN)
+   target_include_directories(onnxruntime_providers_armnn PRIVATE ${ONNXRUNTIME_ROOT} ${eigen_INCLUDE_DIRS} ${onnxruntime_ARMNN_HOME} ${onnxruntime_ARMNN_HOME}/include ${onnxruntime_ACL_HOME} ${onnxruntime_ACL_HOME}/include)
+   install(DIRECTORY ${PROJECT_SOURCE_DIR}/../include/onnxruntime/core/providers/armnn  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime/core/providers)
+   set_target_properties(onnxruntime_providers_armnn PROPERTIES LINKER_LANGUAGE CXX)
++
++  if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_providers_armnn
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++  endif()
+ endif()
+ 
+ if (onnxruntime_USE_ROCM)
+@@ -1172,3 +1252,12 @@ if (onnxruntime_USE_ROCM)
+           RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++  install(TARGETS onnxruntime_providers
++          ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++          FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_session.cmake b/cmake/onnxruntime_session.cmake
+index 87bca0e..44d2d55 100644
+--- a/cmake/onnxruntime_session.cmake
++++ b/cmake/onnxruntime_session.cmake
+@@ -50,3 +50,12 @@ endif()
+ if (onnxruntime_ENABLE_TRAINING_TORCH_INTEROP)
+   onnxruntime_add_include_to_target(onnxruntime_session Python::Module) 
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_session
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+diff --git a/cmake/onnxruntime_util.cmake b/cmake/onnxruntime_util.cmake
+index 8449cf2..924b970 100644
+--- a/cmake/onnxruntime_util.cmake
++++ b/cmake/onnxruntime_util.cmake
+@@ -26,3 +26,11 @@ if (WIN32)
+     target_compile_definitions(onnxruntime_util PRIVATE _SCL_SECURE_NO_WARNINGS)
+     target_compile_definitions(onnxruntime_framework PRIVATE _SCL_SECURE_NO_WARNINGS)
+ endif()
++
++if (NOT onnxruntime_BUILD_SHARED_LIB)
++    install(TARGETS onnxruntime_util
++            ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()

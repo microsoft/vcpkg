@@ -5004,10 +5004,6 @@
       "baseline": "0.2.6",
       "port-version": 0
     },
-    "onnxruntime-cpu": {
-      "baseline": "1.10.0",
-      "port-version": 0
-    },
     "onnxruntime-gpu": {
       "baseline": "1.10.0",
       "port-version": 0

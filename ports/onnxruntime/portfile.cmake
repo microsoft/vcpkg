@@ -1,17 +1,17 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/onnxruntime-gpu/share/usage")
-    message(FATAL_ERROR "${PORT} has conflict with onnxruntime-gpu, please remove onnxruntime-gpu before install ${PORT}.")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # onnxruntime_providers_shared is always built and is a dynamic library
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO microsoft/onnxruntime # Please update this port with onnxruntime-gpu togather
+    REPO microsoft/onnxruntime # Please update this port with onnxruntime-cpu togather
     REF  0d9030e79888d1d5828730b254fedc53c7b640c1 # v1.10.0
     SHA512 502b68fae7d2e8441ec26253a9e0cdcf970ab2b61efecee7d964e9880e59d657971a82a666710944617c86d18fa99c2cb9640fcd15f63d05b2617b562a5bdb2f
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        fix-build-issues.patch
-        export-target-in-static-build.patch
+        fix-build-issues.patch # Remove this patch in the next update
+        export-target-in-static-build.patch  # Remove this patch in the next update
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -25,6 +25,20 @@ else()
 endif()
 string(COMPARE EQUAL "${VCPKG_HOST_TRIPLET}" "${VCPKG_TARGET_TRIPLET}" BUILD_HOST)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        gpu onnxruntime_USE_CUDA
+)
+
+set(EXTRA_OPTIONS )
+if ("gpu" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPTIONS
+        "-Donnxruntime_CUDA_HOME=$ENV{CUDA_PATH}"
+        "-Donnxruntime_CUDNN_HOME=$ENV{CUDA_PATH}"
+        "-DCMAKE_CUDA_COMPILER=$ENV{CUDA_PATH}/bin/nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
 vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
@@ -32,19 +46,20 @@ vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
         -Donnxruntime_BUILD_SHARED_LIB=${BUILD_SHARED}
         -Donnxruntime_BUILD_FOR_NATIVE_MACHINE=${BUILD_HOST}
         -Donnxruntime_CROSS_COMPILING=${CROSS_BUILD}
         -DCMAKE_INSTALL_INCLUDEDIR=include
         "-DPython_EXECUTABLE=${PYTHON3}"
         -Donnxruntime_RUN_ONNX_TESTS=OFF
+        -Donnxruntime_ENABLE_CUDA_PROFILING=OFF
+        -Donnxruntime_ENABLE_CUDA_LINE_NUMBER_INFO=OFF
         -Donnxruntime_GENERATE_TEST_REPORTS=OFF
         -Donnxruntime_ENABLE_STATIC_ANALYSIS=OFF
         -Donnxruntime_ENABLE_PYTHON=OFF
         -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
-        -Donnxruntime_USE_CUDA=OFF
-        -Donnxruntime_ENABLE_CUDA_LINE_NUMBER_INFO=OFF
-        -Donnxruntime_ENABLE_CUDA_PROFILING=OFF
         -Donnxruntime_USE_NNAPI_BUILTIN=OFF
         -Donnxruntime_DEV_MODE=OFF
         -Donnxruntime_BUILD_UNIT_TESTS=OFF
@@ -64,7 +79,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_DEBUG_NODE_INPUTS_OUTPUTS=OFF
         -Donnxruntime_USE_ROCM=OFF # AMD GPU SUPPORT
         -Donnxruntime_PREFER_SYSTEM_LIB=ON
-        -Donnxruntime_MINIMAL_BUILD=ON
+        -Donnxruntime_MINIMAL_BUILD=OFF
         -Donnxruntime_EXTENDED_MINIMAL_BUILD=OFF
         -Donnxruntime_MINIMAL_BUILD_CUSTOM_OPS=OFF
         -Donnxruntime_DISABLE_EXTERNAL_INITIALIZERS=OFF
@@ -74,11 +89,10 @@ vcpkg_cmake_configure(
         -Donnxruntime_USE_NCCL=OFF
         -Donnxruntime_USE_MPI=OFF
         -Donnxruntime_ENABLE_BITCODE=OFF
-        -Donnxruntime_BUILD_OPSCHEMA_LIB=ON
+        -Donnxruntime_BUILD_OPSCHEMA_LIB=OFF
         -Donnxruntime_USE_EXTENSIONS=OFF
     MAYBE_UNUSED_VARIABLES
         Python_EXECUTABLE
-        
 )
 
 vcpkg_cmake_install()

@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index acbde7f..0db8b01 100644
+index acbde7f..45f3a33 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -718,8 +718,13 @@ if (onnxruntime_BUILD_BENCHMARKS)
@@ -17,7 +17,16 @@ index acbde7f..0db8b01 100644
  endif()
  # External dependencies
  list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
-@@ -833,20 +838,20 @@ else()
+@@ -825,7 +830,7 @@ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ 
+ if (onnxruntime_PREFER_SYSTEM_LIB)
+-  find_package(date)
++  find_package(date CONFIG REQUIRED)
+ endif()
+ if (date_FOUND)
+   add_library(date_interface ALIAS date::date)
+@@ -833,23 +838,23 @@ else()
    add_subdirectory(external/date EXCLUDE_FROM_ALL)
  endif()
  
@@ -42,7 +51,11 @@ index acbde7f..0db8b01 100644
 +find_package(nlohmann_json CONFIG REQUIRED)
  
  if (onnxruntime_PREFER_SYSTEM_LIB)
-   find_package(re2)
+-  find_package(re2)
++  find_package(re2 CONFIG REQUIRED)
+ endif()
+ if (NOT TARGET re2::re2)
+   add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
 @@ -894,6 +899,9 @@ endif()
  
  # TODO  do we have to add target_include_directories to each project that uses this?
@@ -70,7 +83,13 @@ index acbde7f..0db8b01 100644
      endif()
      foreach(ORT_FLAG ${ORT_PROVIDER_FLAGS})
        target_compile_definitions(${target_name} PRIVATE ${ORT_FLAG})
-@@ -1388,12 +1397,14 @@ else()
+@@ -1383,17 +1392,19 @@ else()
+ endif()
+ 
+ if (NOT onnxruntime_MINIMAL_BUILD)
+-  add_subdirectory(external/onnx EXCLUDE_FROM_ALL)
++  find_package(ONNX CONFIG REQUIRED)
+ else()
    include(onnx_minimal)
  endif()
  

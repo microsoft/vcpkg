@@ -5,24 +5,11 @@
   "homepage": "https://github.com/microsoft/onnxruntime",
   "supports": "!uwp & !arm",
   "dependencies": [
-    "boost-mp11",
-    "cpuinfo",
-    "date",
-    "eigen3",
-    "flatbuffers",
-    "nlohmann-json",
     {
-      "name": "nsync",
-      "platform": "!windows"
-    },
-    "onnx",
-    "protobuf",
-    "re2",
-    "safeint",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    "wil"
+      "name": "onnxruntime",
+      "features": [
+        "gpu"
+      ]
+    }
   ]
 }
