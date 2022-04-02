@@ -25,5 +25,9 @@ else()
     include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
 endif()
 
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "Openssl currently requires the following library from the system package manager:\n    linux-headers\n\nIt can be installed on alpine systems via apk add linux-headers.")
+endif()
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
