@@ -18,7 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         regtest BUILD_REGTEST
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(WIN32 AND (NOT MINGW) AND (NOT CYGWIN))
     set(CONFIG_PATH cmake)
@@ -40,7 +40,7 @@ else()
     set(CONFIG_PATH lib/cmake/SndFile)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH ${CONFIG_PATH} TARGET_PATH share/SndFile)
+vcpkg_cmake_config_fixup(CONFIG_PATH ${CONFIG_PATH} TARGET_PATH share/SndFile)
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 vcpkg_copy_pdbs()
