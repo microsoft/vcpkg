@@ -7,6 +7,7 @@
   "dependencies": [
     "gtest",
     "lz4",
+    "protobuf",
     {
       "name": "protobuf",
       "host": true

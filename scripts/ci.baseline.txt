@@ -216,6 +216,8 @@ discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
+dlib:arm-uwp=fail
+dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 dpdk:arm-uwp=fail
@@ -735,6 +737,8 @@ mmx:x64-uwp=skip
 mmx:arm64-windows=skip
 # Flaky strange linker error
 mongo-c-driver:x64-osx=skip
+mongo-c-driver:arm-uwp=fail
+mongo-c-driver:x64-uwp=fail
 mongoose:arm-uwp=fail
 mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
