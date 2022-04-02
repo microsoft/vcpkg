@@ -5,7 +5,7 @@
   "description": "Library and tools to access the Personal Folder File (PFF) and the Offline Folder File (OFF) format.",
   "homepage": "https://github.com/libyal/libpff",
   "license": "LGPL-3.0",
-  "supports": "!static | !uwp",
+  "supports": "!static & !uwp & linux & macos",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
