@@ -22,10 +22,9 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     )
 
     vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS_DEBUG
             -DINSTALL_HEADERS=OFF
-
         OPTIONS
             ${FEATURE_OPTIONS}
      )
