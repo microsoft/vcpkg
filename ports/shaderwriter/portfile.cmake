@@ -1,15 +1,15 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF bcebc67feb99d98066dfb51a3857155ddcfa9d57
+    REF v2.2.0
     HEAD_REF master
-    SHA512 675a9db22c3593426c9a364a8a2934e41f65447d450347dd5683a89e4f38dfbc914dca7f6fbfa77b0afd1fb0fd12c2316c11eded1453ae4498b448ae2267fdac
+    SHA512 f4f30f1eca9347c4cd2669ef27e4dc621ef831b6fdc0e8eeb629be98689060f88e6e3a376f9e0fd7fbf25d3c586e600997e62d6e458d6d11398a3cbccc1957fe
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
     REPO DragonJoker/CMakeUtils
-    REF 27747f5c91acf76107220986f114efdab0a09a68
+    REF acbce0a4966d0689148975aaa3c581af2b4e33a7
     HEAD_REF master
-    SHA512 acd5dafc74e197886a9b1ac52b59bdbf2d136cc8b49683eda48b8ccc45eced5f68aa334c8f9c01c7d8bf5c8908b64cbf19a97c6e3666370111bb3d2551c3b469
+    SHA512 f2f45520554b576b3896ef9068549878e05a57a8bd0a3a4ab8c218bba9dee49febfe8cb7edb85b8ff51bdd86dee576cace6b8506a6226484d2b640408a3246ba
 )
 
 get_filename_component(SRC_PATH ${CMAKE_SOURCE_PATH} DIRECTORY)
@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DSDW_BUILD_TESTS=OFF
         -DSDW_BUILD_STATIC_SDW=${BUILD_STATIC}
         -DSDW_BUILD_STATIC_SDAST=${BUILD_STATIC}
+        -DSDW_UNITY_BUILD=ON
 )
 
 vcpkg_cmake_install()
