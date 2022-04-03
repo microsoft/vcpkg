@@ -42,7 +42,7 @@ else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME SPIRV-Tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME SPIRV-Tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME SPIRV-Tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME SPIRV-Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME SPIRV-Tools-reduce) # now delete
 endif()
 vcpkg_fixup_pkgconfig()
