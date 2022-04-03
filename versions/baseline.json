@@ -1418,7 +1418,7 @@
     },
     "clockutils": {
       "baseline": "1.1.1-3651f232c27074c4ceead169e223edf5f00247c5",
-      "port-version": 4
+      "port-version": 5
     },
     "clp": {
       "baseline": "1.17.6",
