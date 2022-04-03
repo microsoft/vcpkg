@@ -1,8 +1,8 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/ShaderWriter
-    REF v2.2.0
-    HEAD_REF master
-    SHA512 f4f30f1eca9347c4cd2669ef27e4dc621ef831b6fdc0e8eeb629be98689060f88e6e3a376f9e0fd7fbf25d3c586e600997e62d6e458d6d11398a3cbccc1957fe
+    REF 8b1b0614f49c27ab08ff16ce632fcac44f24d6d5
+    HEAD_REF development
+    SHA512 697ecfee5dc9cbfe3cc724b7acd90107ea40bba58448536b1726eb3755f8c96e77b9a31317b567d77ed9e9b5c6decede73c4c7f1a760f11eff0cba2711b3c548
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
