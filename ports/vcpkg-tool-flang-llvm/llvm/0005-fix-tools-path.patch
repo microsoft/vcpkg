@@ -1,0 +1,14 @@
+diff --git a/llvm/tools/llvm-config/llvm-config.cpp b/llvm/tools/llvm-config/llvm-config.cpp
+index 53ba24efc00..0badcafe000 100644
+--- a/llvm/tools/llvm-config/llvm-config.cpp
++++ b/llvm/tools/llvm-config/llvm-config.cpp
+@@ -304,8 +304,8 @@ int main(int argc, char **argv) {
+   // Create an absolute path, and pop up one directory (we expect to be inside a
+   // bin dir).
+   sys::fs::make_absolute(CurrentPath);
+   CurrentExecPrefix =
+-      sys::path::parent_path(sys::path::parent_path(CurrentPath)).str();
++      sys::path::parent_path(sys::path::parent_path(sys::path::parent_path(CurrentPath))).str();
+
+   // Check to see if we are inside a development tree by comparing to possible
+   // locations (prefix style or CMake style).

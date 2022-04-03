@@ -1,0 +1,23 @@
+diff --git a/runtime/flang/CMakeLists.txt b/runtime/flang/CMakeLists.txt
+index 850942b32..3ec95760e 100644
+--- a/runtime/flang/CMakeLists.txt
++++ b/runtime/flang/CMakeLists.txt
+@@ -662,18 +662,6 @@ target_include_directories(flang_shared
+   ${CMAKE_CURRENT_BINARY_DIR}
+   )
+ 
+-# Make sure the compiler is built before we bootstrap
+-add_dependencies(flang_static
+-  flang1
+-  flang2
+-  )
+-
+-# Make sure the compiler is built before we bootstrap
+-add_dependencies(flang_shared
+-  flang1
+-  flang2
+-  )
+-
+ if (NOT MSVC)
+   target_compile_options(flang_static PRIVATE -fPIC)
+   target_compile_options(flang_shared PRIVATE -fPIC)

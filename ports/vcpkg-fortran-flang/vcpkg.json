@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-fortran-flang",
+  "version-date": "2022-02-22",
+  "description": "Metaport to use the flang fortran compiler",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+  "vcpkg-tool-flang",
+  {
+    "name": "vcpkg-tool-flang",
+    "host": true
+  }
+]
+}

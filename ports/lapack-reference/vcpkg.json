@@ -1,6 +1,7 @@
 {
   "name": "lapack-reference",
   "version": "3.10.0",
+  "port-version": 1,
   "description": "LAPACK - Linear Algebra PACKage",
   "homepage": "http://www.netlib.org/lapack/",
   "license": "BSD-3-Clause-Open-MPI",
@@ -14,8 +15,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-gfortran",
-      "platform": "windows"
+      "name": "vcpkg-fortran-flang"
     }
   ],
   "default-features": [
@@ -30,8 +30,7 @@
           "default-features": false,
           "features": [
             "noblas"
-          ],
-          "platform": "!windows | !static"
+          ]
         }
       ]
     },

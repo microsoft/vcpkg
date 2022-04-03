@@ -22,6 +22,14 @@
       "name": "vcpkg-tool-ninja",
       "host": true
     },
+    {
+      "name": "vcpkg-tool-flang-llvm",
+      "host": true
+    },
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     "libxml2",
     "zlib",
     "pgmath"

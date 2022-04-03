@@ -1,26 +1,29 @@
-set(LLVM_VERSION "13.0.0")
+set(LLVM_VERSION "13.0.1")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/classic-flang-llvm-project
-    REF 0254365051067b50372914150a004048c5cbce54
-    SHA512 c412c1bfb93803568e83be3777491b1b99be9ae9338b3d4fd87b0422ad428b9e45ebc7488f668f21957930c07189ee72567c5661964e5458d0d0cf37fe1c0608
-    HEAD_REF release_13x
+    REF 0254365051067b50372914150a004048c5cbce54 # df7f1a79bf4fc2d4c14708b3a0fb3b534c6fa875 # 
+    SHA512 c412c1bfb93803568e83be3777491b1b99be9ae9338b3d4fd87b0422ad428b9e45ebc7488f668f21957930c07189ee72567c5661964e5458d0d0cf37fe1c0608 #äd7bfca82531dcb0e9311d2580f30cb3293f3ba9996026ab8600157f9efd6771e4a0e6a2fc47fea82a48a44e9fe4a9e913402b46e216ee70ade055a33043edd43 #    
+    HEAD_REF release_13x # release_12x
     PATCHES
         0004-fix-dr-1734.patch
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
+        65.diff
+        97.diff
+        103.diff
 )
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
 # and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
-list(APPEND FEATURE_OPTIONS
-    -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
-)
+#list(APPEND FEATURE_OPTIONS
+#    -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
+#)
 
 # Force enable or disable external libraries
 set(llvm_external_libraries
@@ -44,7 +47,7 @@ vcpkg_add_to_path(${PERL_DIR})
 
 set(VCPKG_BUILD_TYPE release) # Only need release tools
 set(CURRENT_PACKAGES_DIR_BAK "${CURRENT_PACKAGES_DIR}")
-set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/tools/llvm-flang")
+set(CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -221,11 +224,19 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/llvm-flang/bin")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin")
 
 # LLVM still generates a few DLLs in the static build:
 # * libclang.dll
 # * LTO.dll
 # * Remarks.dll
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Config" 
+                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\CodeGen\CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\Dialect\CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\Transforms\CMakeFiles")
