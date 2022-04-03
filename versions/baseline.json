@@ -2502,7 +2502,7 @@
     },
     "glew": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glfw3": {
       "baseline": "3.3.6",
