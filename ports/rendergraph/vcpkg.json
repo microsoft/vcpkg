@@ -13,9 +13,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "vulkan-headers",
-      "host": true
-    }
+    "vulkan-headers"
   ]
 }
