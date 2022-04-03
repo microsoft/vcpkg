@@ -1,4 +1,4 @@
-set(TARGET_FILE "${CMAKE_CURRENT_LIST_DIR}/quickjs-targets.cmake")
+set(TARGET_FILE "${CMAKE_CURRENT_LIST_DIR}/unofficial-quickjs-targets.cmake")
 
 include(${TARGET_FILE} OPTIONAL RESULT_VARIABLE ret)
 if(NOT ret)

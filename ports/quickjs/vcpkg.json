@@ -1,8 +1,10 @@
 {
   "name": "quickjs",
   "version-date": "2021-03-27",
+  "port-version": 1,
   "description": "A small and embeddable JavaScript engine supporting ES2020.",
   "homepage": "https://github.com/bellard/quickjs",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "bignum"
+  ],
+  "features": {
+    "bignum": {
+      "description": "Enable the Bignum extension"
+    }
+  }
 }
