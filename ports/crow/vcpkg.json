@@ -1,6 +1,39 @@
 {
   "name": "crow",
-  "version": "0.3.4",
+  "version": "1.0.1",
   "description": "Very fast and easy to use C++ micro web framework",
-  "homepage": "https://github.com/CrowCpp/crow"
+  "homepage": "https://github.com/CrowCpp/crow",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "boost-algorithm",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-array",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-asio",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-date-time",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-functional",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-lexical-cast",
+      "version>=": "1.70.0"
+    },
+    {
+      "name": "boost-optional",
+      "version>=": "1.70.0"
+    },
+    "openssl",
+    "zlib"
+  ]
 }
