@@ -1,0 +1,12 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index f81fab4..31aced9 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -161,6 +161,7 @@ endif()
+ set(targets_to_install "")
+ if(NOT DEFINED BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
+   list(APPEND targets_to_install glew)
++  list(APPEND targets_to_install glew_s)
+ endif()
+ 
+ if(NOT DEFINED BUILD_SHARED_LIBS OR NOT BUILD_SHARED_LIBS)

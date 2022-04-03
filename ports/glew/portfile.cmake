@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
     REF glew
     PATCHES
         fix-LNK2019.patch
+        install-static.patch
 )
 
 vcpkg_cmake_configure(
