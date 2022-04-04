@@ -128,27 +128,25 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/setup.h.in" "${CURRENT_PACKAGES_DIR}/include/wx/setup.h" @ONLY)
 endif()
 
-set(CM_WRAPPER "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-# append a fixed set of properly categorized libs to the cmake config
+# insert a fixed set of properly categorized libs into the cmake config
 file(GLOB WX_DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/wx*31*")
 file(GLOB WX_OPT_LIBS "${CURRENT_PACKAGES_DIR}/lib/wx*31*")
 set(wxWidgets_LIBRARIES)
+set(system_LIBRARIES)
 foreach(WX_DEBUG_LIB ${WX_DEBUG_LIBS})
     get_filename_component(LIBNAME ${WX_DEBUG_LIB} NAME_WLE)
-    list(APPEND wxWidgets_LIBRARIES "debug")
-    list(APPEND wxWidgets_LIBRARIES ${LIBNAME})
+    list(APPEND wxWidgets_LIBRARIES "debug;${LIBNAME}")
 endforeach()
 foreach(WX_OPT_LIB ${WX_OPT_LIBS})
     get_filename_component(LIBNAME ${WX_OPT_LIB} NAME_WLE)
-    list(APPEND wxWidgets_LIBRARIES "optimized")
-    list(APPEND wxWidgets_LIBRARIES ${LIBNAME})
+    list(APPEND wxWidgets_LIBRARIES "optimized;${LIBNAME}")
 endforeach()
-file(APPEND "${CM_WRAPPER}" "\n    set(wxWidgets_LIBRARIES \"${wxWidgets_LIBRARIES};\${wxWidgets_LIBRARIES}\")\n")
+# append system libs
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(APPEND "${CM_WRAPPER}" "    set(wxWidgets_LIBRARIES \"\${wxWidgets_LIBRARIES};comctl32;rpcrt4\")\n")
+    set(system_LIBRARIES "comctl32;rpcrt4")
 endif()
-file(APPEND "${CM_WRAPPER}" "endif()\n")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 

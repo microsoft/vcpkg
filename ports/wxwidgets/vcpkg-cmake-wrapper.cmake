@@ -16,7 +16,7 @@ find_package(TIFF QUIET)
 find_package(expat CONFIG QUIET)
 
 if(wxWidgets_LIBRARIES AND NOT wxWidgets_LIBRARIES MATCHES "^debug;")
-    set(wxWidgets_LIBRARIES)
+    set(wxWidgets_LIBRARIES "@wxWidgets_LIBRARIES@")
     list(APPEND wxWidgets_LIBRARIES "TIFF::TIFF;expat::expat;ZLIB::ZLIB")
 
     if (TARGET png)
@@ -24,3 +24,6 @@ if(wxWidgets_LIBRARIES AND NOT wxWidgets_LIBRARIES MATCHES "^debug;")
     elseif(TARGET png_static)
         list(APPEND wxWidgets_LIBRARIES "png_static")
     endif()
+
+    list(APPEND wxWidgets_LIBRARIES "@system_LIBRARIES@")
+endif()
