@@ -83,6 +83,8 @@ vcpkg_cmake_configure(
         -DSKIP_INSTALL_FILES=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
+    MAYBE_UNUSED_VARIABLES
+        PNG_ARM_NEON
 )
 vcpkg_cmake_install()
 
