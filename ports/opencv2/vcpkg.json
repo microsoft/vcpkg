@@ -71,7 +71,7 @@
       ]
     },
     "gtk": {
-      "description": "GDCM support for opencv",
+      "description": "GTK support for opencv",
       "dependencies": [
         "gtk"
       ]
