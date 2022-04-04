@@ -4,6 +4,7 @@
   "port-version": 10,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     {
