@@ -69,6 +69,7 @@ if(NOT "${program}")
     set(PORT ninja) # to trick vcpkg_copy_tools
     vcpkg_copy_tools(TOOL_NAMES ninja AUTO_CLEAN)
     set(PORT vcpkg-tool-ninja)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 endif()
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
@@ -77,4 +78,4 @@ z_vcpkg_find_acquire_program_find_internal("${program}"
     NAMES ${search_names}
 )
 message(STATUS "Using ninja: ${NINJA}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/ninja/version.txt" "${program_version}") # For vcpkg_find_acquire_program
+
