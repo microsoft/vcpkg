@@ -165,7 +165,7 @@ function(vcpkg_cmake_configure)
     elseif(arg_WINDOWS_USE_MSBUILD OR NOT ninja_can_be_used)
         set(generator "")
         set(arch "")
-        z_vcpkg_get_visual_studio_generator(generator arch)
+        z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH arch)
     endif()
 
     if(NOT generator)
