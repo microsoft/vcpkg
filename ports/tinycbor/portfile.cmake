@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/tinycbor
@@ -16,7 +18,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 
 # Remove duplicated include headers
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-# Remove empty folders
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib ${CURRENT_PACKAGES_DIR}/lib)
-SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-SET(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
