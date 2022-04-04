@@ -17,8 +17,11 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/bin/clblast.dll")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/clblast.dll")
+    
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/clblast.dll")
+    endif()
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBLast)
