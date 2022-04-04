@@ -159,7 +159,7 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         #"-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         -DLLVM_ENABLE_CLASSIC_FLANG=ON 
-        -DLLVM_ENABLE_PROJECTS="clang\;flang\;openmp"
+        "-DLLVM_ENABLE_PROJECTS=clang;flang;openmp"
         "-DLLVM_TARGETS_TO_BUILD=X86"
         -DFLANG_BUILD_NEW_DRIVER=OFF
         -DFLANG_INCLUDE_DOCS=OFF
@@ -234,9 +234,13 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Config" 
-                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\CodeGen\CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\Dialect\CMakeFiles" 
-                    "${CURRENT_PACKAGES_DIR}\manual-tools\llvm-flang\include\flang\Optimizer\Transforms\CMakeFiles")
+configure_file("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin/clang.exe" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin/flang.exe" COPYONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Config" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/CodeGen/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/Dialect/CMakeFiles" 
+                    "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include/flang/Optimizer/Transforms/CMakeFiles")
+
+file(INSTALL "${SOURCE_PATH}/llvm/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

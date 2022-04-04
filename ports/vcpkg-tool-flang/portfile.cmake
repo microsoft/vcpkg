@@ -2,6 +2,9 @@ if(VCPKG_CROSSCOMPILING)
     set(PATCHES cross.patch)
 endif()
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # unresolved symbol interr
+set(VCPKLG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/flang

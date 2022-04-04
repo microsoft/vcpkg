@@ -63,24 +63,21 @@ function(x_vcpkg_find_fortran out_var)
             vcpkg_list(APPEND additional_cmake_args
                 "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
                 "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/clang-cl.exe"
-                #"-DCMAKE_Fortran_COMPILER_ID=Flang"
-                #-DCMAKE_Fortran_COMPILER_WORKS=1
-                #-DCMAKE_Fortran_ABI_COMPILED=0
-                #-DCMAKE_Fortran_COMPILER_SUPPORTS_F90=1
-                #"-DMSVC_VERSION=1930"
-                #"-DCMAKE_C_COMPILER_VERSION=19.30"
-                #"-DCMAKE_CXX_COMPILER_VERSION=19.30"
-                "-DCMAKE_EXE_LINKER_FLAGS:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname}"
+                "-DCMAKE_EXE_LINKER_FLAGS:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname} ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
                 "-DCMAKE_EXE_LINKER_FLAGS_DEBUG:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
                 "-DCMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
-                "-DCMAKE_Fortran_FLAGS:STRING=-Xflang -noFlangLibs -static-flang-libs ${extra_uwp_flags}"
+                "-DCMAKE_SHARED_LINKER_FLAGS:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
+                "-DCMAKE_SHARED_LINKER_FLAGS_DEBUG:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+                "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
+                "-DCMAKE_Fortran_FLAGS:STRING=-Xflang -noFlangLibs -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib -Wl,${flanglibname} -Wl,${flangrtilibname} -Wl,${pgmathlibname} -Wl,${omplibname} ${extra_uwp_flags}"
                 "-DTIME_FUNC=EXT_ETIME"
-                "-DCMAKE_Fortran_FLAGS_RELEASE:STRING=-Xflang -noFlangLibs -static-flang-libs -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
-                "-DCMAKE_Fortran_FLAGS_DEBUG:STRING=-Xflang -noFlangLibs -static-flang-libs -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+                "-DCMAKE_Fortran_FLAGS_RELEASE:STRING=-Xflang-noFlangLibs -O3 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib -Wl,${flanglibname} -Wl,${flangrtilibname} -Wl,${pgmathlibname} -Wl,${omplibname}"
+                "-DCMAKE_Fortran_FLAGS_DEBUG:STRING=-Xflang -noFlangLibs -O0 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib -Wl,${flanglibname} -Wl,${flangrtilibname} -Wl,${pgmathlibname} -Wl,${omplibname}"
+                "-DCMAKE_REQUIRED_LINK_OPTIONS:STRING=-LIBPATH:${CURRENT_INSTALLED_DIR}/\$$<\$$<CONFIG:DEBUG>:debug/>lib/"
                 "-DCMAKE_Fortran_STANDARD_LIBRARIES_INIT=${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
                 "-DCMAKE_Fortran_LINKER_FLAGS=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
-                "-DCMAKE_Fortran_LINKER_FLAGS_RELEASE=-Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
-                "-DCMAKE_Fortran_LINKER_FLAGS_DEBUG=-Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
+                "-DCMAKE_Fortran_LINKER_FLAGS_RELEASE=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
+                "-DCMAKE_Fortran_LINKER_FLAGS_DEBUG=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}"
                 #"-DCMAKE_Fortran_LINK_EXECUTABLE=\\\\\"\\\\\${_CMAKE_VS_LINK_EXE}<CMAKE_LINKER> \\\\\${CMAKE_CL_NOLOGO} <OBJECTS> \\\\\${CMAKE_START_TEMP_FILE} /out:<TARGET> /implib:<TARGET_IMPLIB> /pdb:<TARGET_PDB> /version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR>${_PLATFORM_LINK_FLAGS} <CMAKE_Fortran_LINK_FLAGS> <LINK_FLAGS> <LINK_LIBRARIES>\\\\\${CMAKE_END_TEMP_FILE}\\\\\""
                 "${exta_uwp_link_flags}")
             set(VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")
