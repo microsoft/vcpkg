@@ -1,0 +1,12 @@
+diff --git a/src/win32/cairo-dwrite-font.cpp b/src/win32/cairo-dwrite-font.cpp
+index afa859fbd..6cf96bc48 100644
+--- a/src/win32/cairo-dwrite-font.cpp
++++ b/src/win32/cairo-dwrite-font.cpp
+@@ -46,6 +46,7 @@
+ #include "cairo-truetype-subset-private.h"
+ #include <float.h>
+ 
++#include <Dwrite_3.h>
+ #include <wincodec.h>
+ 
+ typedef HRESULT (WINAPI*D2D1CreateFactoryFunc)(
