@@ -47,7 +47,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DLLVM_TARGETS_TO_BUILD=X86
         -DFLANG_LLVM_EXTENSIONS=ON
-        "-DLLVM_CONFIG=${CURRENT_INSTALLED_DIR}/manual-tools/llvm-flang/bin/llvm-config.exe"
+        "-DLLVM_CONFIG=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/llvm-config.exe"
         "-DLLVM_CMAKE_PATH=${CURRENT_INSTALLED_DIR}/manual-tools/llvm-flang/lib/cmake/llvm"
         "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
         "-DCMAKE_Fortran_COMPILER_ID=Flang"
