@@ -45,6 +45,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+          --trace-expand
         -DLLVM_TARGETS_TO_BUILD=X86
         -DFLANG_LLVM_EXTENSIONS=ON
         "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}"
