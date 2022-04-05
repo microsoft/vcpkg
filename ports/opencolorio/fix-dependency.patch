@@ -73,9 +73,9 @@ index eebb2c1..7147dc3 100644
  
  include(CMakeFindDependencyMacro)
  
-+find_dependency(expat CONFIG REQUIRED)
-+find_dependency(Imath CONFIG REQUIRED)
-+find_dependency(pystring CONFIG REQUIRED)
-+find_dependency(yaml-cpp CONFIG REQUIRED)
++find_dependency(expat CONFIG)
++find_dependency(Imath CONFIG)
++find_dependency(pystring CONFIG)
++find_dependency(yaml-cpp CONFIG)
 +
  include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)
