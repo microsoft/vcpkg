@@ -52,7 +52,9 @@ if("lz4" IN_LIST FEATURES)
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/share/RdKafka/RdKafkaConfig.cmake"
         "find_dependency(LZ4)"
-        "list(INSERT CMAKE_MODULE_PATH 0 \"\${CMAKE_CURRENT_LIST_DIR}\")\n  find_dependency(LZ4)\n  list(REMOVE_AT CMAKE_MODULE_PATH 0)"
+        [[list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}")
+  find_dependency(LZ4)
+  list(REMOVE_AT CMAKE_MODULE_PATH 0)]]
     )
 endif()
 
