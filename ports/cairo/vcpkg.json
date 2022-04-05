@@ -37,14 +37,14 @@
     },
     "gobject": {
       "description": "build gobject module",
-      "platform": "!(windows & static)",
+      "supports": "!(windows & static)",
       "dependencies": [
         "glib"
       ]
     },
     "x11": {
       "description": "build with x11 support",
-      "platform": "!windows"
+      "supports": "!windows"
     }
   }
 }
