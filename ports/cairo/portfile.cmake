@@ -1,3 +1,8 @@
+set(PATCHES "")
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    set(PATCHES dwrite-header.patch)
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,7 +12,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         cairo_static_fix.patch
-        dwrite-header.patch
+        ${PATCHES}
 )
 
 if("fontconfig" IN_LIST FEATURES)

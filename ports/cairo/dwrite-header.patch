@@ -1,12 +1,13 @@
-diff --git a/src/win32/cairo-dwrite-font.cpp b/src/win32/cairo-dwrite-font.cpp
-index afa859fbd..6cf96bc48 100644
---- a/src/win32/cairo-dwrite-font.cpp
-+++ b/src/win32/cairo-dwrite-font.cpp
-@@ -46,6 +46,7 @@
- #include "cairo-truetype-subset-private.h"
- #include <float.h>
+diff --git a/src/win32/cairo-dwrite-private.hpp b/src/win32/cairo-dwrite-private.hpp
+index 07fb0e765..9522f2a67 100644
+--- a/src/win32/cairo-dwrite-private.hpp
++++ b/src/win32/cairo-dwrite-private.hpp
+@@ -42,7 +42,7 @@
+  * is not available, include our own version containing just the functions we need.
+  */
  
-+#include <Dwrite_3.h>
- #include <wincodec.h>
- 
- typedef HRESULT (WINAPI*D2D1CreateFactoryFunc)(
+-#if HAVE_DWRITE_3_H
++#if 1
+ #include <dwrite_3.h>
+ #else
+ #include "dw-extra.h"
