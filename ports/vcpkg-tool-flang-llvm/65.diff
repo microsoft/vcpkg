@@ -107,35 +107,35 @@ index 13943b6c404a..f2348a13f7be 100644
 +  }
 +
 +  if (staticFlangLibs) {
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:libflang.lib");
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:libflangrti.lib");
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:libpgmath.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:libflang.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:libflangrti.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:libpgmath.lib");
 +  } else {
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:flang.lib");
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:flangrti.lib");
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:pgmath.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:flang.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:flangrti.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:pgmath.lib");
 +  }
 +  if (useOpenMP) {
 +    CmdArgs.push_back("-linker");
 +    CmdArgs.push_back("/nodefaultlib:vcomp.lib");
 +    CmdArgs.push_back("-linker");
 +    CmdArgs.push_back("/nodefaultlib:vcompd.lib");
-+    CmdArgs.push_back("-linker");
-+    CmdArgs.push_back("/defaultlib:libomp.lib");
++    //CmdArgs.push_back("-linker");
++    //CmdArgs.push_back("/defaultlib:libomp.lib");
 +  }
 +  else {
 +    if (staticFlangLibs) {
-+      CmdArgs.push_back("-linker");
-+      CmdArgs.push_back("/defaultlib:libompstub.lib");
++      //CmdArgs.push_back("-linker");
++      //CmdArgs.push_back("/defaultlib:libompstub.lib");
 +    } else {
-+      CmdArgs.push_back("-linker");
-+      CmdArgs.push_back("/defaultlib:ompstub.lib");
++      //CmdArgs.push_back("-linker");
++      //CmdArgs.push_back("/defaultlib:ompstub.lib");
 +    }
 +  }
 +
