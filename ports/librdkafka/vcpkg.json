@@ -7,6 +7,7 @@
   "license": null,
   "supports": "!uwp",
   "dependencies": [
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,12 +18,6 @@
     }
   ],
   "features": {
-    "lz4": {
-      "description": "Enable external LZ4 library support",
-      "dependencies": [
-        "lz4"
-      ]
-    },
     "snappy": {
       "description": "Build with snappy"
     },
