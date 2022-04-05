@@ -47,17 +47,14 @@ vcpkg_replace_string(
     "if ${dll_import}"
 )
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME OpenColorIO CONFIG_PATH "lib/cmake/OpenColorIO")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenColorIO")
 
 vcpkg_copy_pdbs()
 
-# Clean redundant files
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/debug/OpenColorIOConfig.cmake"
     "${CURRENT_PACKAGES_DIR}/share/ocio"
-    "${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake"
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
