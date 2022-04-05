@@ -4,7 +4,11 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
 endif()
 
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "Openssl currently requires the following library from the system package manager:\n    linux-headers\n\nIt can be installed on alpine systems via apk add linux-headers.")
+    message(WARNING
+[[openssl currently requires the following library from the system package manager:
+    linux-headers
+It can be installed on alpine systems via apk add linux-headers.]]
+    )
 endif()
 
 set(OPENSSL_VERSION 3.0.2)
