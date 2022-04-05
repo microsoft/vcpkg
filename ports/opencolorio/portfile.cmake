@@ -56,6 +56,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/OpenColorIOConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/ocio"
     "${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake"
 )
 if(OCIO_BUILD_APPS)
@@ -66,8 +67,5 @@ if(OCIO_BUILD_APPS)
 endif()
 
 vcpkg_fixup_pkgconfig()
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ocio/setup_ocio.sh" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../")
-endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
