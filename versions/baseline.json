@@ -306,7 +306,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.220",
-      "port-version": 0
+      "port-version": 1
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -314,7 +314,7 @@
     },
     "azure-c-shared-utility": {
       "baseline": "2022-01-21",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-core-cpp": {
       "baseline": "1.5.0",
@@ -2798,7 +2798,7 @@
     },
     "idevicerestore": {
       "baseline": "1.0.12",
-      "port-version": 6
+      "port-version": 7
     },
     "if97": {
       "baseline": "2.1.2",
@@ -3458,7 +3458,7 @@
     },
     "libdatachannel": {
       "baseline": "0.16.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -3778,7 +3778,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 5
+      "port-version": 6
     },
     "libnice": {
       "baseline": "0.1.18",
@@ -3902,7 +3902,7 @@
     },
     "librabbitmq": {
       "baseline": "0.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libraqm": {
       "baseline": "0.9.0",
@@ -3930,7 +3930,7 @@
     },
     "librtmp": {
       "baseline": "2019-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "librttopo": {
       "baseline": "1.1.0",
@@ -4022,7 +4022,7 @@
     },
     "libssh2": {
       "baseline": "1.10.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libstemmer": {
       "baseline": "2017-9",
@@ -4070,7 +4070,7 @@
     },
     "libu2f-server": {
       "baseline": "1.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libudis86": {
       "baseline": "2018-01-28-56ff6c87",
@@ -4150,7 +4150,7 @@
     },
     "libwebsockets": {
       "baseline": "4.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4286,7 +4286,7 @@
     },
     "luasec": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "luasocket": {
       "baseline": "2020-09-14",
@@ -5022,7 +5022,7 @@
     },
     "open62541": {
       "baseline": "1.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -5137,8 +5137,8 @@
       "port-version": 1
     },
     "openssl": {
-      "baseline": "1.1.1n",
-      "port-version": 1
+      "baseline": "3.0.2",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5630,7 +5630,7 @@
     },
     "qpid-proton": {
       "baseline": "0.32.0",
-      "port-version": 3
+      "port-version": 4
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -7222,7 +7222,7 @@
     },
     "uthenticode": {
       "baseline": "1.0.6",
-      "port-version": 1
+      "port-version": 2
     },
     "uvatlas": {
       "baseline": "2022-03-24",
