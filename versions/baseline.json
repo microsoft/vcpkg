@@ -336,6 +336,10 @@
       "baseline": "2022-01-21",
       "port-version": 0
     },
+    "azure-security-attestation-cpp": {
+      "baseline": "1.0.0-beta.1",
+      "port-version": 0
+    },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.0.0-beta.2",
       "port-version": 0
@@ -493,8 +497,8 @@
       "port-version": 2
     },
     "blend2d": {
-      "baseline": "2021-03-17",
-      "port-version": 1
+      "baseline": "2022-02-19",
+      "port-version": 0
     },
     "blitz": {
       "baseline": "2020-03-25",
@@ -1221,8 +1225,8 @@
       "port-version": 0
     },
     "cairomm": {
-      "baseline": "1.16.0",
-      "port-version": 1
+      "baseline": "1.16.1",
+      "port-version": 0
     },
     "calceph": {
       "baseline": "3.5.1",
@@ -1714,11 +1718,11 @@
     },
     "cuda": {
       "baseline": "10.1",
-      "port-version": 9
+      "port-version": 10
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 4
+      "port-version": 5
     },
     "cunit": {
       "baseline": "2.1.3",
@@ -1778,7 +1782,7 @@
     },
     "date": {
       "baseline": "3.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "dav1d": {
       "baseline": "0.8.2",
@@ -2261,8 +2265,8 @@
       "port-version": 0
     },
     "fontconfig": {
-      "baseline": "2.13.94",
-      "port-version": 6
+      "baseline": "2.14.0",
+      "port-version": 0
     },
     "foonathan-memory": {
       "baseline": "2019-07-21",
@@ -2293,8 +2297,8 @@
       "port-version": 1
     },
     "freeglut": {
-      "baseline": "3.2.1",
-      "port-version": 7
+      "baseline": "3.2.2",
+      "port-version": 0
     },
     "freeimage": {
       "baseline": "3.18.0",
@@ -2650,7 +2654,7 @@
     },
     "gtest": {
       "baseline": "1.11.0",
-      "port-version": 4
+      "port-version": 5
     },
     "gtk": {
       "baseline": "4.6.0",
@@ -3910,7 +3914,7 @@
     },
     "librdkafka": {
       "baseline": "1.8.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libressl": {
       "baseline": "3.4.2",
@@ -4288,6 +4292,10 @@
       "baseline": "2020-09-14",
       "port-version": 2
     },
+    "lunasvg": {
+      "baseline": "2.3.1",
+      "port-version": 0
+    },
     "lv2": {
       "baseline": "1.18.2",
       "port-version": 1
@@ -4334,7 +4342,7 @@
     },
     "mailio": {
       "baseline": "0.21.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mapbox-geojson-cpp": {
       "baseline": "0.5.1",
@@ -4426,7 +4434,7 @@
     },
     "mesa": {
       "baseline": "21.2.5",
-      "port-version": 2
+      "port-version": 3
     },
     "meschach": {
       "baseline": "1.2b",
@@ -4857,7 +4865,7 @@
       "port-version": 0
     },
     "nss": {
-      "baseline": "3.76.1",
+      "baseline": "3.77",
       "port-version": 0
     },
     "nsync": {
@@ -5058,15 +5066,15 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 9
+      "port-version": 10
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -7266,6 +7274,10 @@
     },
     "vcpkg-cmake-config": {
       "baseline": "2022-02-06",
+      "port-version": 0
+    },
+    "vcpkg-get-python-packages": {
+      "baseline": "2022-02-12",
       "port-version": 0
     },
     "vcpkg-gfortran": {
