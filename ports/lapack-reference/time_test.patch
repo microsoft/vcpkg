@@ -1,0 +1,21 @@
+diff --git a/INSTALL/CMakeLists.txt b/INSTALL/CMakeLists.txt
+index b6f6e838a..bb336fb72 100644
+--- a/INSTALL/CMakeLists.txt	
++++ b/INSTALL/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ cmake_minimum_required(VERSION 3.2)
+ project(TIMING Fortran)
+-add_executable(secondtst_NONE second_NONE.f secondtst.f)
+-add_executable(secondtst_EXT_ETIME second_EXT_ETIME.f secondtst.f)
+-add_executable(secondtst_EXT_ETIME_ second_EXT_ETIME_.f secondtst.f)
+-add_executable(secondtst_INT_ETIME second_INT_ETIME.f secondtst.f)
+-add_executable(secondtst_INT_CPU_TIME second_INT_CPU_TIME.f secondtst.f)
+-add_executable(testieee tstiee.f)
+-add_executable(testversion ilaver.f LAPACK_version.f)
++add_library(secondtst_NONE STATIC second_NONE.f secondtst.f)
++add_library(secondtst_EXT_ETIME STATIC second_EXT_ETIME.f secondtst.f)
++add_library(secondtst_EXT_ETIME_ STATIC second_EXT_ETIME_.f secondtst.f)
++add_library(secondtst_INT_ETIME STATIC second_INT_ETIME.f secondtst.f)
++add_library(secondtst_INT_CPU_TIME STATIC second_INT_CPU_TIME.f secondtst.f)
++add_library(testieee STATIC tstiee.f)
++add_library(testversion STATIC ilaver.f LAPACK_version.f)

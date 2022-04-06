@@ -19,6 +19,7 @@ vcpkg_from_github(
     SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
     HEAD_REF master
     PATCHES #intel.patch
+            time_test.patch # The test doesnot correctly forward required compiler flags -> So only build static libs for testing
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
