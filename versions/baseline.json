@@ -353,11 +353,11 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.3.0",
+      "baseline": "12.4.0",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.2.2",
+      "baseline": "12.2.3",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -373,7 +373,7 @@
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.0.0-beta.4",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "azure-uamqp-c": {
