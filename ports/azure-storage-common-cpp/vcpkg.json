@@ -19,8 +19,7 @@
     },
     {
       "name": "openssl",
-      "platform": "!windows",
-      "version>=": "1.1.1n"
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-cmake",
