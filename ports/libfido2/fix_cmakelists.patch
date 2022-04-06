@@ -18,7 +18,7 @@ index 11a51ac..33b9313 100644
 -	set(CBOR_LIBRARIES cbor)
 -	set(ZLIB_LIBRARIES zlib)
 -	set(CRYPTO_LIBRARIES crypto-47)
-+	include(FindPkgConfig)
++	find_package(PkgConfig)
 +
 +	find_package(LIBCBOR REQUIRED)
 +	find_package(OpenSSL REQUIRED)
