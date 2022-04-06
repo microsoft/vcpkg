@@ -150,7 +150,7 @@
     },
     "argtable3": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "argumentum": {
       "baseline": "0.3.1",
