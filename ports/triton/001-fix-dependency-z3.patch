@@ -14,28 +14,21 @@ index a8bbe47..966ded8 100644
  endif()
  
  # Find bitwuzla
-diff --git a/CMakeModules/FindCAPSTONE.cmake b/CMakeModules/FindCAPSTONE.cmake
-index ff2c63f..4dcf9af 100644
---- a/CMakeModules/FindCAPSTONE.cmake
-+++ b/CMakeModules/FindCAPSTONE.cmake
-@@ -26,9 +26,11 @@ if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
-       NAMES capstone/capstone.h
-       PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
-     )
-+    
-+    string(APPEND CAPSTONE_INCLUDE_DIR "/capstone")
- 
-     find_library(CAPSTONE_LIBRARY
--      NAMES capstone
-+      NAMES capstone capstone_dll
-       PATHS ${CAPSTONE_PKGCONF_LIBRARY_DIRS}
-     )
- 
 diff --git a/src/libtriton/Config.cmake.in b/src/libtriton/Config.cmake.in
-index 94c58bc..115d697 100644
+index 683b5f2..5df941e 100644
 --- a/src/libtriton/Config.cmake.in
 +++ b/src/libtriton/Config.cmake.in
-@@ -40,10 +40,6 @@ if (TRITON_LLVM_INTERFACE)
+@@ -19,6 +19,9 @@ message(STATUS "Found Triton: ${CMAKE_CURRENT_LIST_DIR}/tritonConfig.cmake (foun
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Boost)
++if (@Z3_INTERFACE@)
++    find_dependency(Z3 CONFIG)
++endif()
+ 
+ # Triton include
+ include_directories("@CMAKE_INSTALL_PREFIX@/include")
+@@ -37,11 +40,6 @@ if (TRITON_LLVM_INTERFACE)
      include_directories("@LLVM_INCLUDE_DIRS@")
  endif()
  
@@ -43,6 +36,7 @@ index 94c58bc..115d697 100644
 -if (TRITON_Z3_INTERFACE)
 -    include_directories("@Z3_INCLUDE_DIRS@")
 -endif()
- 
+-
  # Bitwuzla include directories
  if (TRITON_BITWUZLA_INTERFACE)
+     include_directories("@BITWUZLA_INCLUDE_DIRS@")
