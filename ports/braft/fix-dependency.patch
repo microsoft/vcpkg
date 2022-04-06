@@ -1,22 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 53ddaed..6e7dd17 100644
+index 53ddaed..a851c00 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -47,10 +47,13 @@ if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
+@@ -47,8 +47,9 @@ if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
      message(FATAL_ERROR "Fail to find leveldb")
  endif()
  
 -find_path(GFLAGS_INCLUDE_PATH NAMES gflags/gflags.h)
 -find_library(GFLAGS_LIB NAMES gflags)
--if ((NOT GFLAGS_INCLUDE_PATH) OR (NOT GFLAGS_LIB))
--    message(FATAL_ERROR "Fail to find gflags")
 +find_package(gflags CONFIG REQUIRED)
-+if (TARGET gflags)
-+    get_target_property(GFLAGS_INCLUDE_PATH gflags INTERFACE_INCLUDE_DIRECTORIES)
-+    set(GFLAGS_LIB gflags)
-+else()
-+    get_target_property(GFLAGS_INCLUDE_PATH gflags-static INTERFACE_INCLUDE_DIRECTORIES)
-+    set(GFLAGS_LIB gflags-static)
++get_target_property(GFLAGS_INCLUDE_PATH gflags::gflags INTERFACE_INCLUDE_DIRECTORIES)
++set(GFLAGS_LIB gflags::gflags)
+ if ((NOT GFLAGS_INCLUDE_PATH) OR (NOT GFLAGS_LIB))
+     message(FATAL_ERROR "Fail to find gflags")
  endif()
- 
- if(BRPC_WITH_GLOG)
