@@ -1,25 +1,24 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0e2b703..7097f06 100644
+diff --git a//CMakeLists.txt b/CMakeLists.txt
+index 4d03fee..42bb13c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,8 +28,13 @@ project(
-     VERSION 1.38.0
-     LANGUAGES CXX C)
+@@ -43,6 +43,14 @@ if (APPLE AND NOT DEFINED CMAKE_CXX_STANDARD)
+     set(CMAKE_CXX_STANDARD 11)
+ endif ()
  
--# Allow applications to override the CMAKE_CXX_STANDARD, but if not set use 11.
--if (NOT CMAKE_CXX_STANDARD)
 +find_package(absl CONFIG REQUIRED)
 +
 +# Use CMAKE_CXX_STANDARD=17 if ABSL_USE_CXX17 is set
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)
-+elseif (NOT CMAKE_CXX_STANDARD)
-     set(CMAKE_CXX_STANDARD 11)
- endif ()
- if (CMAKE_CXX_STANDARD VERSION_LESS 11)
++endif ()
++
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
+         message(
 diff --git a/google/cloud/internal/port_platform.h b/google/cloud/internal/port_platform.h
-index c9f34cf..e624004 100644
+index f02cb7a..0ea8c9c 100644
 --- a/google/cloud/internal/port_platform.h
 +++ b/google/cloud/internal/port_platform.h
 @@ -49,6 +49,8 @@
