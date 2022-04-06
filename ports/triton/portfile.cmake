@@ -10,7 +10,7 @@ vcpkg_from_github(
     004-fix-python.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIB)
+string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DZ3_INTERFACE=ON
-        -DBUILD_SHARED_LIBS=${STATICLIB}
+        -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF
         -DENABLE_TEST=OFF
