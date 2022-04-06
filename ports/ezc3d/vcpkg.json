@@ -1,8 +1,9 @@
 {
   "name": "ezc3d",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "C3D reader/writer",
   "homepage": "https://github.com/pyomeca/ezc3d",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
