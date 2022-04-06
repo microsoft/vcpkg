@@ -1,8 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b969465..31e23cd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,7 +142,7 @@ if(SPDLOG_BUILD_SHARED OR BUILD_SHARED_LIBS)
+@@ -150,7 +150,7 @@ list(APPEND SPDLOG_SRCS ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
      endif()
      add_library(spdlog SHARED ${SPDLOG_SRCS} ${SPDLOG_ALL_HEADERS})
      target_compile_definitions(spdlog PUBLIC SPDLOG_SHARED_LIB)
