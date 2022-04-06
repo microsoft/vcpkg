@@ -30,12 +30,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gpu onnxruntime_USE_CUDA
 )
 
+file(TO_CMAKE_PATH "$ENV{CUDA_PATH}/bin/nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}" NVCC_PATH)
+
 set(EXTRA_OPTIONS )
 if ("gpu" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS
         "-Donnxruntime_CUDA_HOME=$ENV{CUDA_PATH}"
         "-Donnxruntime_CUDNN_HOME=$ENV{CUDA_PATH}"
-        "-DCMAKE_CUDA_COMPILER=$ENV{CUDA_PATH}/bin/nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DCMAKE_CUDA_COMPILER=${NVCC_PATH}"
     )
 endif()
 
