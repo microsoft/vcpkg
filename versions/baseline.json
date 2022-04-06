@@ -6222,7 +6222,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 1
+      "port-version": 2
     },
     "rtabmap": {
       "baseline": "0.20.13",
