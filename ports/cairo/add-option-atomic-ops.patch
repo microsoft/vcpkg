@@ -1,0 +1,41 @@
+diff --git a/meson.build b/meson.build
+index e3ec5d9..234aa42 100644
+--- a/meson.build
++++ b/meson.build
+@@ -866,14 +866,16 @@ endforeach
+ 
+ extra_link_args += pthread_link_args
+ 
+-if cc.links(files('meson-cc-tests/atomic-ops-cxx11.c'), name: 'Atomic ops: cxx11')
+-  conf.set('HAVE_CXX11_ATOMIC_PRIMITIVES', 1)
+-elif cc.links(files('meson-cc-tests/atomic-ops-gcc-legacy.c'), name: 'Atomic ops: gcc legacy')
+-  conf.set('HAVE_GCC_LEGACY_ATOMICS', 1)
+-elif cc.has_header('atomic_ops.h')
+-  conf.set('HAVE_LIB_ATOMIC_OPS', 1)
+-elif cc.has_header('libkern/OSAtomic.h')
+-  conf.set('HAVE_OS_ATOMIC_OPS', 1)
++if get_option('atomic-ops').enabled()
++  if cc.links(files('meson-cc-tests/atomic-ops-cxx11.c'), name: 'Atomic ops: cxx11')
++    conf.set('HAVE_CXX11_ATOMIC_PRIMITIVES', 1)
++  elif cc.links(files('meson-cc-tests/atomic-ops-gcc-legacy.c'), name: 'Atomic ops: gcc legacy')
++    conf.set('HAVE_GCC_LEGACY_ATOMICS', 1)
++  elif cc.has_header('atomic_ops.h')
++    conf.set('HAVE_LIB_ATOMIC_OPS', 1)
++  elif cc.has_header('libkern/OSAtomic.h')
++    conf.set('HAVE_OS_ATOMIC_OPS', 1)
++  endif
+ endif
+ 
+ test_mkdir_c_args = []
+diff --git a/meson_options.txt b/meson_options.txt
+index ebc65c7..9007a18 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -16,6 +16,7 @@ option('xlib', type : 'feature', value : 'auto')
+ option('xlib-xcb', type : 'feature', value : 'disabled')
+ option('xml', type : 'feature', value : 'disabled')
+ option('zlib', type : 'feature', value : 'auto') # script, ps, pdf, xml surfaces
++option('atomic-ops', type : 'feature', value : 'disabled')
+ 
+ # Tests
+ option('tests', type : 'feature', value : 'auto')
