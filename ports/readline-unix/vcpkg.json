@@ -1,0 +1,10 @@
+{
+  "name": "readline-unix",
+  "version": "8.1",
+  "port-version": 1,
+  "description": "Implementation of readline for unix",
+  "supports": "!windows",
+  "dependencies": [
+    "ncurses"
+  ]
+}

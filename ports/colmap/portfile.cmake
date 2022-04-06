@@ -1,12 +1,13 @@
-set(COLMAP_REF "3.6")
+set(COLMAP_REF "29a1e3642a3b00734a52b21e597ea4d576485fe6") # 3.7 fix
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF ${COLMAP_REF}
-    SHA512 9a4b4f2a49891ce8ac32ab1f2e9b859336326bada889e6de49c017a069884bb6c8ab8a2ae430d955e58fc22377c63e8fba9ce80ff959713e2878e29814d44632
+    SHA512 c22511592dadd1fce51baeaa5ab3ca48b0df5f1c02f9e2a97593ea1b01c5aea0e1054063a5665e2653f2c7b1b7525ce4c62ae35fb4197df614112861045b76fd
     HEAD_REF dev
-    PATCHES fix-dependency-freeimage.patch
+    PATCHES
+        fix-dependencies.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -38,9 +39,9 @@ if("tests" IN_LIST FEATURES)
     set(TESTS_ENABLED ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCUDA_ARCHS=${CUDA_ARCHS}
@@ -49,9 +50,9 @@ vcpkg_configure_cmake(
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 file(GLOB TOOL_FILENAMES "${CURRENT_PACKAGES_DIR}/bin/*")
 foreach(TOOL_FILENAME ${TOOL_FILENAMES})
@@ -63,28 +64,20 @@ vcpkg_copy_tools(TOOL_NAMES ${COLMAP_TOOL_NAMES} AUTO_CLEAN)
 
 # remove empty folders and unused files
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/exe
-    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/lib/Graclus/multilevelLib
-    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/tools
-    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/media
-    ${CURRENT_PACKAGES_DIR}/debug/include/colmap/ui/shaders
-    ${CURRENT_PACKAGES_DIR}/include/colmap/exe
-    ${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib
-    ${CURRENT_PACKAGES_DIR}/include/colmap/tools
-    ${CURRENT_PACKAGES_DIR}/include/colmap/ui/media
-    ${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders
-    ${CURRENT_PACKAGES_DIR}/COLMAP.bat
-    ${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat
-    ${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat
-    ${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat
-    ${CURRENT_PACKAGES_DIR}/debug/bin
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/exe"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
+    "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
+    "${CURRENT_PACKAGES_DIR}/COLMAP.bat"
+    "${CURRENT_PACKAGES_DIR}/RUN_TESTS.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat"
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
 
 vcpkg_copy_pdbs()
 
-file(INSTALL     ${SOURCE_PATH}/COPYING.txt
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-     RENAME copyright
-)
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

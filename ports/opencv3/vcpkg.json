@@ -1,9 +1,10 @@
 {
   "name": "opencv3",
   "version": "3.4.16",
-  "port-version": 1,
+  "port-version": 5,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,6 +1,6 @@
 {
   "name": "boost-random",
-  "version": "1.77.0",
+  "version": "1.78.0",
   "description": "Boost random module",
   "homepage": "https://github.com/boostorg/random",
   "dependencies": [

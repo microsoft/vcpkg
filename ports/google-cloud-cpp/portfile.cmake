@@ -1,19 +1,21 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.34.1
-    SHA512 2a11fb5f4ee620312575281e7ee0b1caa1c110c411b623d7ae4e9bb87c5f34dcf4c63fcb238e5e943deb02e7fcbb8b0e294ec966b98aecd164dc40cf6b6ecc1b
+    REF v1.38.0
+    SHA512 8d13450d5d669c8f736a6b8cb57291e7de997ab8dcd3dbce8dabd6d71ff81096ef92f02cf64711d40a1465b47f8fd5ce21a355c9526c5900adc076e25b062fa7
     HEAD_REF main
+    PATCHES
+        support_absl_cxx17.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+# This feature does not exist, but allows us to simplify the vcpkg.json file.
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 
 vcpkg_cmake_configure(
@@ -74,7 +76,7 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/debug/share") 
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
