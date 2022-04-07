@@ -36,4 +36,17 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/docs/COPYING.LIB" lgpl)
+file(READ "${SOURCE_PATH}/docs/COPYING.MPL" mpl)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+"${PORT} is shipping under a dual MPL / LGPL license where each of them
+is separate and restrictions apply alternatively.
+
+---
+
+${lgpl}
+
+---
+
+${mpl}
+")
