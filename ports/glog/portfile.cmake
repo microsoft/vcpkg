@@ -8,6 +8,8 @@ vcpkg_from_github(
        glog_disable_debug_postfix.patch
        fix_glog_CMAKE_MODULE_PATH.patch
        fix_log_every_n.patch
+       nogdi-nominmax.patch
+
 )
 
 vcpkg_cmake_configure(
