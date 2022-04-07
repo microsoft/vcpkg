@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF e3b7f0f718c7e67c8a2c7b3a6d223503215d81b3
-	SHA512 c3bdcb692a9f1f7de602624e1fe1ac35c004a50510d48154b3a5822889f1aa5bdc4893b8433ad1a6a6d85154ba2d11462e0b5c711214063c6b2b4f915892e1cf
+	REF 3668803a4c1fc780ecfef6f374f1bc18c9dbb008
+	SHA512 657adcdc08c0bbff825425c32ec838b8275683ea8112ae72dd46b0068939c6c296d6ca35faf01f1af3942770fa1d62986a725eb2e574d60929129107d7791a9c
 	HEAD_REF main
 )
 
@@ -16,11 +16,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 
 vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
