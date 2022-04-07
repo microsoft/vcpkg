@@ -1222,7 +1222,7 @@
     },
     "cairo": {
       "baseline": "1.17.6",
-      "port-version": 0
+      "port-version": 1
     },
     "cairomm": {
       "baseline": "1.16.1",
@@ -1713,7 +1713,7 @@
       "port-version": 0
     },
     "cub": {
-      "baseline": "1.12.0",
+      "baseline": "1.16.0",
       "port-version": 0
     },
     "cuda": {
@@ -1883,6 +1883,10 @@
     "discord-rpc": {
       "baseline": "3.4.0",
       "port-version": 1
+    },
+    "discordcoreapi": {
+      "baseline": "2022-03-30",
+      "port-version": 0
     },
     "discount": {
       "baseline": "2.2.6",
@@ -2570,7 +2574,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "1.39.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2882,7 +2886,7 @@
     },
     "iir1": {
       "baseline": "1.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ijg-libjpeg": {
       "baseline": "9d",
@@ -3981,7 +3985,7 @@
       "port-version": 1
     },
     "libsndfile": {
-      "baseline": "1.0.31",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libsnoretoast": {
@@ -5142,7 +5146,7 @@
     },
     "openssl": {
       "baseline": "3.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5182,7 +5186,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.22",
-      "port-version": 1
+      "port-version": 2
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -6285,7 +6289,7 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.0-pre20",
+      "baseline": "0.9.0-pre21",
       "port-version": 0
     },
     "sais": {
@@ -6641,7 +6645,7 @@
       "port-version": 2
     },
     "spdlog": {
-      "baseline": "1.9.2",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "spectra": {
@@ -6665,15 +6669,15 @@
       "port-version": 2
     },
     "spirv-headers": {
-      "baseline": "2021-03-25",
+      "baseline": "1.3.204.1",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "2021-12-31",
+      "baseline": "1.3.204.1",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2021.1",
+      "baseline": "2022.1",
       "port-version": 0
     },
     "spix": {
@@ -6947,6 +6951,10 @@
     "tiny-regex-c": {
       "baseline": "2019-07-31",
       "port-version": 1
+    },
+    "tinycbor": {
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "tinycthread": {
       "baseline": "2019-08-06",
