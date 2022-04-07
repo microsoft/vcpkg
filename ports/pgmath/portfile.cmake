@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # requires same linkage as vcpkg-tool-flang
+#vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # requires same linkage as vcpkg-tool-flang
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -25,7 +25,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk bash sed)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" PGMATH_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PGMATH_SHARED)
 vcpkg_list(APPEND OPTIONS "-DPGMATH_SHARED=${PGMATH_SHARED}")
 
 vcpkg_cmake_configure(

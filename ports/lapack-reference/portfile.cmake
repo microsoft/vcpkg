@@ -19,7 +19,7 @@ vcpkg_from_github(
     SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
     HEAD_REF master
     PATCHES #intel.patch
-            time_test.patch # The test doesnot correctly forward required compiler flags -> So only build static libs for testing
+            "time_test.patch" # The test doesnot correctly forward required compiler flags -> So only build static libs for testing
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -48,18 +48,25 @@ if("noblas" IN_LIST FEATURES)
 endif()
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-x_vcpkg_find_fortran(FORTRAN_CMAKE)
+x_vcpkg_find_fortran(OUT_OPTIONS fortran_cmake 
+                     OUT_OPTIONS_RELEASE fortran_cmake_rel
+                     OUT_OPTIONS_DEBUG   fortran_cmake_dbg)
+
+message(STATUS "fortran_cmake_dbg:${fortran_cmake_dbg}" )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        #--trace-expand
         "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
         "-DCBLAS=${CBLAS}"
-        ${FORTRAN_CMAKE}
+        ${fortran_cmake}
+    OPTIONS_RELEASE
+        ${fortran_cmake_rel}
+    OPTIONS_DEBUG
+        ${fortran_cmake_dbg}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME lapack-${lapack_ver} CONFIG_PATH lib/cmake/lapack-${lapack_ver}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME "lapack-${lapack_ver}" CONFIG_PATH "lib/cmake/lapack-${lapack_ver}") #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
