@@ -1,13 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gdraheim/zziplib
-    REF 24a6c6de1956189bffcd8dffd2ef3197c6f3df29 # v0.13.71
-    SHA512 246ee1d93f3f8a6889e9ab362e04e6814813844f2cdea0a782910bf07ca55ecd6d8b1c456b4180935464cebf291e7849af27ac0ed5cc080de5fb158f9f3aeffb
+    REF v0.13.72
+    SHA512 4bb089e74813c6fac9657cd96e44e4a6469bf86aba3980d885c4573e8db45e74fd07bbdfcec9f36297c72227c8c0b2c37dab1bc4326cef8529960e482fe501c8
     PATCHES
-        install-dll-to-proper-folder.patch
         no-release-postfix.patch
-        fix-export-define.patch
-        always-find-unixcommands-on-unix.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
