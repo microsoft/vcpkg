@@ -9,7 +9,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         cairo_static_fix.patch
-        add-option-atomic-ops.patch
+        disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -58,7 +58,6 @@ vcpkg_configure_meson(
         -Dspectre=auto
         -Dgtk2-utils=disabled
         -Dsymbol-lookup=disabled
-        -Datomic-ops=disabled # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
 )
 vcpkg_install_meson()
 
