@@ -1,10 +1,10 @@
 {
   "name": "aws-c-cal",
   "version": "0.5.12",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C99 wrapper for cryptography primitives.",
   "homepage": "https://github.com/awslabs/aws-c-cal",
-  "supports": "!arm & !uwp",
+  "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-common",
     {

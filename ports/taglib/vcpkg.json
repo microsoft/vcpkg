@@ -1,11 +1,15 @@
 {
   "name": "taglib",
   "version-semver": "1.12.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "TagLib Audio Meta-Data Library",
   "homepage": "https://taglib.org/",
   "license": "LGPL-2.1 OR MPL-1.1",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

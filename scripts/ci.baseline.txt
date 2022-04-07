@@ -74,6 +74,18 @@ caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
 c-ares:arm-uwp=fail
 c-ares:x64-uwp=fail
+
+# file conflict with dbg-macro
+c-dbg-macro:x86-windows=skip
+c-dbg-macro:x64-windows=skip
+c-dbg-macro:x64-windows-static=skip
+c-dbg-macro:x64-windows-static-md=skip
+c-dbg-macro:x64-uwp=skip
+c-dbg-macro:arm64-windows=skip
+c-dbg-macro:arm-uwp=skip
+c-dbg-macro:x64-osx=skip
+c-dbg-macro:x64-linux=skip
+
 casclib:arm-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm64-windows      = skip
@@ -106,26 +118,34 @@ charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
 # chartdir does not offer stable download URLs
-chartdir:arm64-windows=fail
-chartdir:arm-uwp=fail
-chartdir:x64-uwp=fail
-chartdir:x64-windows-static=fail
-chartdir:x86-windows=fail
-chartdir:x64-windows=fail
-chartdir:x64-windows-static-md=fail
-chartdir:x64-osx=fail
+chartdir:arm64-windows=skip
+chartdir:arm-uwp=skip
+chartdir:x64-uwp=skip
+chartdir:x64-windows-static=skip
+chartdir:x86-windows=skip
+chartdir:x64-windows=skip
+chartdir:x64-windows-static-md=skip
+chartdir:x64-osx=skip
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
-# Chromium Base requires a recent version of Clang to be installed.
+
+# chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
+#  broken on Windows because it does not yet support VS2022
+chromium-base:x64-windows=skip
+chromium-base:x64-windows-static=skip
+chromium-base:x64-windows-static-md=skip
+#  broken on Linux because
 chromium-base:x64-linux=skip
+#  broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache
+#  because the first attempt to build it fails, but subsequent attempts succeed
+chromium-base:x64-osx=skip
+
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 clblas:arm64-windows=fail
 clockutils:x64-linux=fail
-# CMake 3.4 needs libidn.so.11 (Ubuntu: libidn11)
-cmake-user:x64-linux=skip
 cmcstl2:arm64-windows      = skip
 cmcstl2:arm-uwp            = skip
 cmcstl2:x64-linux          = skip
@@ -138,6 +158,13 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
+
+# there is an ICE in VS2022 with colmap in release mode
+colmap:x86-windows=fail
+colmap:x64-windows=fail
+colmap:x64-windows-static=fail
+colmap:x64-windows-static-md=fail
+
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -168,8 +195,6 @@ crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
 crashpad:x86-windows=fail
-ctemplate:arm64-windows=fail
-ctemplate:arm-uwp=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
 cuda:x64-osx=fail
@@ -188,8 +213,6 @@ dbghelp:x64-windows-static=skip
 dbghelp:x64-windows-static-md=skip
 dbghelp:x64-windows=skip
 dbghelp:x86-windows=skip
-dcmtk:arm-uwp=fail
-dcmtk:arm64-windows=fail
 dcmtk:x64-uwp=fail
 devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
@@ -289,22 +312,10 @@ freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
 freetype-gl:x64-uwp=fail
-fribidi:arm64-windows=fail
-fribidi:arm-uwp=fail
-fribidi:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
-fuzzylite:arm-uwp=fail
-fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
-fuzzylite:x64-uwp=fail
-gainput:arm-uwp=fail
-gainput:x64-linux=fail
-gainput:x64-uwp=fail
-
-# Requires ATL for ARM64 to be installed in CI
-gdal:arm64-windows=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -353,6 +364,7 @@ gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x64-windows-static-md=fail
 gmmlib:x86-windows=fail
+
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
 gppanel:x64-osx=fail
@@ -420,7 +432,6 @@ intel-mkl:x64-windows-static=fail
 intel-mkl:x64-windows-static-md=fail
 intel-mkl:x86-windows=fail
 intelrdfpmathlib:arm-uwp=fail
-intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
@@ -482,8 +493,6 @@ libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-libdatrie:x64-linux=fail
-libdatrie:x64-osx=fail
 libepoxy:arm-uwp=fail
 libepoxy:x64-uwp=fail
 libepoxy:x64-windows-static=fail
@@ -505,6 +514,11 @@ libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
+
+# the msbuild for libgpg:x64-uwp and libgpg-error:x64-uwp are broken on VS2022 due to TargetPlatformMinVersion not existing
+libgpg:x64-uwp=fail
+libgpg-error:x64-uwp=fail
+
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhydrogen:arm64-windows=fail
@@ -521,9 +535,6 @@ liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-uwp=fail
-liblsl:arm64-windows=fail
-liblsl:arm-uwp=fail
-liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
 libmagic:x64-uwp=fail
@@ -547,6 +558,7 @@ libmesh:x64-windows-static-md=skip
 libmesh:x86-windows=skip
 libmesh:x64-osx=skip
 libmesh:x64-linux=skip
+libmikmod:x64-osx=fail
 libmodman:arm-uwp=fail
 libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
@@ -562,12 +574,6 @@ libmysql:arm64-windows=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libpff:arm-uwp=fail
-libpff:x64-linux=fail
-libpff:x64-osx=fail
-libpff:x64-uwp=fail
-libpff:x64-windows-static=fail
-libpff:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm-uwp            = skip
@@ -632,6 +638,7 @@ libui:x64-linux=fail
 libui:x64-uwp=fail
 libusb:arm-uwp=fail
 libusb:x64-uwp=fail
+libusb:arm64-windows=fail
 libusbmuxd:arm-uwp=fail
 libusbmuxd:x64-uwp=fail
 libusbmuxd:x64-linux=fail
@@ -652,6 +659,7 @@ libvmdk:x64-windows-static-md=skip
 libvmdk:arm64=skip
 libvmdk:x64-linux=skip
 libvmdk:x64-osx=skip
+libvpx:arm-uwp=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -697,8 +705,6 @@ marble:arm-uwp=fail
 marble:x64-linux=fail
 marble:x64-osx=fail
 marble:x86-windows=fail
-marl:arm-uwp=fail
-marl:x64-uwp=fail
 mathgl:x64-osx=fail
 mathgl:x64-uwp=fail
 mecab:arm64-windows      = skip
@@ -797,8 +803,6 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
-mpfr:x64-osx=fail
-mpfr:x64-linux=fail
 msix:x64-linux=fail
 msix:x64-osx=fail
 msix:x64-windows-static=fail
@@ -817,15 +821,6 @@ nana:x64-uwp=fail
 nanodbc:arm-uwp=fail
 nanodbc:x64-uwp=fail
 nanodbc:x64-linux=skip
-nanorange:arm64-windows=fail
-nanorange:arm-uwp=fail
-nanorange:x64-linux=fail
-nanorange:x64-osx=fail
-nanorange:x64-uwp=fail
-nanorange:x64-windows=fail
-nanorange:x64-windows-static=fail
-nanorange:x64-windows-static-md=fail
-nanorange:x86-windows=fail
 nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 ngspice:x64-windows-static=fail
@@ -847,7 +842,6 @@ nvtt:x64-uwp=fail
 ocilib:arm-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:x64-uwp=fail
-ocilib:x64-windows-static=fail
 ocilib:x64-windows-static-md=fail
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
@@ -980,11 +974,6 @@ pfring:x64-osx=fail
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
 physx:arm64-windows=fail
-pixel:x64-uwp=fail
-pixel:x64-windows=fail
-pixel:x64-windows-static=fail
-pixel:x64-windows-static-md=fail
-pixel:x86-windows=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
@@ -1006,7 +995,6 @@ pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
 popsift:x64-windows-static-md=fail
-poppler:arm64-windows=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
@@ -1022,6 +1010,13 @@ qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
+
+# qtwebengine:x64-windows has an ICE in VS2022
+qtwebengine:x64-windows=fail
+
+# upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
+qtinterfaceframework:x64-windows=skip
+
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1052,13 +1047,6 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
-quickfix:arm-uwp=fail
-quickfix:arm64-windows=fail
-quickfix:x64-uwp=fail
-quickfix:x64-windows-static=fail
-quickfix:x64-windows-static-md=fail
-quickfix:x64-windows=fail
-quickfix:x86-windows=fail
 qwt:x64-osx=fail
 qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
@@ -1144,12 +1132,12 @@ rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-ryu:arm-uwp=fail
-ryu:x64-uwp=fail
+
+# ryu does not support VS2022 yet
+ryu:x64-windows=fail
 ryu:x64-windows-static=fail
 ryu:x64-windows-static-md=fail
-ryu:x86-windows=fail
-ryu::arm64-windows=fail
+
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-linux=fail
@@ -1180,11 +1168,6 @@ sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
 seal:x64-uwp=fail
-sentencepiece:arm64-windows=fail
-sentencepiece:arm-uwp=fail
-sentencepiece:x64-uwp=fail
-sentencepiece:x64-windows=fail
-sentencepiece:x86-windows=fail
 septag-sx:arm64-windows=fail
 septag-sx:arm-uwp=fail
 septag-sx:x64-uwp=fail
@@ -1207,7 +1190,6 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
-skia:arm64-windows=fail
 skia:arm-uwp=fail
 skia:x64-linux=fail
 skia:x64-uwp=fail
@@ -1272,8 +1254,18 @@ tcl:arm64-windows=fail
 tcl:x64-uwp=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
+
+# tensorflow does not support VS2022
+tensorflow:x64-windows=fail
+tensorflow:x64-windows-static=fail
+tensorflow:x64-windows-static-md=fail
+tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows-static=fail
+tensorflow-cc:x64-windows-static-md=fail
+
 tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
+
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
 theia:x64-uwp            = skip
@@ -1285,8 +1277,6 @@ tidy-html5:arm-uwp=fail
 tidy-html5:x64-uwp=fail
 tinkerforge:arm-uwp=fail
 tinkerforge:x64-uwp=fail
-tinyexif:arm-uwp=fail
-tinyexif:x64-uwp=fail
 tiny-process-library:arm-uwp=fail
 tiny-process-library:x64-uwp=fail
 tmxparser:arm64-windows=fail
@@ -1345,7 +1335,6 @@ vxl:x64-windows        = skip
 vxl:x64-windows-static = skip
 vxl:x64-windows-static-md=skip
 vxl:x86-windows        = skip
-wampcc:arm64-windows=fail
 winpcap:arm64-windows      = skip
 winpcap:arm-uwp            = skip
 winpcap:x64-uwp            = skip
@@ -1375,9 +1364,6 @@ yajl:arm-uwp=fail
 yajl:x64-uwp=fail
 yara:arm-uwp=fail
 yara:x64-uwp=fail
-yato:arm64-windows=fail
-yato:arm-uwp=fail
-yato:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
 
@@ -1402,17 +1388,15 @@ clapack:x64-windows-static=skip
 clapack:x64-windows-static-md=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
-clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
+lapack-reference:x64-uwp=skip
 
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-chromium-base:x64-windows-static-md=fail
 clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
-gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail
@@ -1424,18 +1408,17 @@ quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
+
+# the version of v8 we have in the repo doesn't support VS2022
+v8:x86-windows=fail
+v8:x64-windows=fail
+v8:x64-windows-static=fail
 v8:x64-windows-static-md=fail
-yato:x64-windows-static-md=fail
+
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
 workflow:arm-uwp=fail
-
-# wangle triggers an internal compiler error
-# https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1269468
-wangle:x64-windows=fail
-wangle:x64-windows-static=fail
-wangle:x64-windows-static-md=fail
 
 # VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
 # upstream build script of this port.
