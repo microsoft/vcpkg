@@ -7,29 +7,13 @@ vcpkg_from_github(
         no-release-postfix.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(MSVC_STATIC_RUNTIME ON)
-else()
-    set(MSVC_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)
+string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE "static" BUILD_STATIC_LIBS)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BUILD_STATIC_LIBS ON)
-else()
-    set(BUILD_STATIC_LIBS OFF)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(ZZIPLIBTOOL OFF)
-endif()
-
-set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DMSVC_STATIC_RUNTIME=${MSVC_STATIC_RUNTIME}
         -DZZIPMMAPPED=OFF
@@ -39,15 +23,17 @@ vcpkg_configure_cmake(
         -DZZIPBINS=OFF
         -DZZIPTEST=OFF
         -DZZIPDOCS=OFF
-        -DZZIPCOMPAT=OFF
-        -DZZIPLIBTOOL=${ZZIPLIBTOOL}
+)
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipfseeko.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipmmapped.pc"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipfseeko.pc"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipmmapped.pc"
 )
 
-vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
