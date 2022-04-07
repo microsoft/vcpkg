@@ -1713,7 +1713,7 @@
       "port-version": 0
     },
     "cub": {
-      "baseline": "1.12.0",
+      "baseline": "1.16.0",
       "port-version": 0
     },
     "cuda": {
