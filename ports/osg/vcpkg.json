@@ -41,6 +41,15 @@
         "sdl2"
       ]
     },
+    "gl3": {
+      "description": "Build with OPENGL_PROFILE=GL3"
+    },
+    "glcore": {
+      "description": "Build with OPENGL_PROFILE=GLCORE",
+      "dependencies": [
+        "opengl-registry"
+      ]
+    },
     "packages": {
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
