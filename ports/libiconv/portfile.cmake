@@ -26,15 +26,16 @@ if (NOT VCPKG_TARGET_IS_ANDROID)
     list(APPEND OPTIONS --enable-relocatable)
 endif()
 
-vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
-                     DETERMINE_BUILD_TRIPLET
-                     USE_WRAPPERS
-                     OPTIONS
-                        --enable-extra-encodings
-                        --without-libiconv-prefix 
-                        --without-libintl-prefix
-                        ${OPTIONS}
-                    )
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
+    USE_WRAPPERS
+    OPTIONS
+        --enable-extra-encodings
+        --without-libiconv-prefix
+        --without-libintl-prefix
+        ${OPTIONS}
+)
 vcpkg_install_make()
 
 vcpkg_copy_pdbs()
@@ -47,4 +48,6 @@ set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}") # share contains unneeded doc files
 
+# Please keep, the default usage is broken
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
