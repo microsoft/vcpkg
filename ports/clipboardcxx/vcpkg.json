@@ -1,0 +1,5 @@
+{
+  "name": "clipboardcxx",
+  "version-date": "2022-02-04",
+  "description": "Header only, lightweight and cross platform C++ library for copy and paste text from clipboard."
+}
