@@ -67,7 +67,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     docs BUILD_DOCUMENTATION
     docs BUILD_REF_DOCS_SEARCHENGINE
     docs BUILD_REF_DOCS_TAGFILE
+    gl3  PROFILE_GL3
+    glcore PROFILE_GLCORE
 )
+
+if (PROFILE_GL3)
+    message("Building OSG with gl3")
+    list(APPEND OPTIONS -DOPENGL_PROFILE=GL3)
+endif()
+
+if (PROFILE_GLCORE)
+    message("Building OSG with glcore")
+    list(APPEND OPTIONS -DOPENGL_PROFILE=GLCORE)
+endif()
 
 set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE ON)
 if(VCPKG_TARGET_IS_WINDOWS)
