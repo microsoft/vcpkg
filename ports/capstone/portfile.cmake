@@ -4,6 +4,8 @@ vcpkg_from_github(
     REPO "capstone-engine/capstone"
     SHA512 9a089faea1771825a7e05a325e6d32998edd2f3b64c3e4435460ea10ee30e7f8ac0432ae6e1bec82bd23f90d5ac57298de7ead57aa59b518dc9765d6a3cd03c9
     HEAD_REF next
+    PATCHES
+        001-silence-windows-crt-secure-warnings.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
