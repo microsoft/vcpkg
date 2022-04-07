@@ -31,6 +31,7 @@ vcpkg_list(APPEND OPTIONS "-DPGMATH_SHARED=${PGMATH_SHARED}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/runtime/libpgmath"
     OPTIONS ${OPTIONS}
+            "-DWITH_WERROR=OFF"
 
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
