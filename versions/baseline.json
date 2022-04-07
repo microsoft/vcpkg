@@ -1416,6 +1416,10 @@
       "baseline": "1.5.0",
       "port-version": 0
     },
+    "clipboardcxx": {
+      "baseline": "2022-02-04",
+      "port-version": 0
+    },
     "clipp": {
       "baseline": "2019-04-30",
       "port-version": 1
