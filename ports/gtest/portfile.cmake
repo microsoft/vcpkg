@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 6fcc7827e4c4d95e3ae643dd65e6c4fc0e3d04e1778b84f6e06e390410fe3d18026c131d828d949d2f20dde6327d30ecee24dcd3ef919e21c91e010d149f3a28
     HEAD_REF main
     PATCHES
+        clang-tidy-no-lint.patch
         fix-main-lib-path.patch
         remove-werror.patch
 )
