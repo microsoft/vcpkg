@@ -43,8 +43,6 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     ${FEATURE_OPTIONS}
-  OPTIONS_DEBUG
-    -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_cmake_install()
@@ -55,14 +53,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME WebP CONFIG_PATH share/WebP/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebp.pc" "-lwebp" "-lwebpd")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdecoder.pc" "-lwebpdecoder" "-lwebpdecoderd")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdemux.pc" "-lwebpdemux" "-lwebpdemuxd")
-    if("libwebpmux" IN_LIST FEATURES)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpmux.pc" "-lwebpmux" "-lwebpmuxd")
-    endif()
-endif()
 vcpkg_fixup_pkgconfig()
 
 set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
