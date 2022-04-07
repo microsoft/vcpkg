@@ -45,7 +45,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DLLVM_TARGETS_TO_BUILD=X86
+        "-DLLVM_TARGETS_TO_BUILD=X86;AArch64"
         -DFLANG_LLVM_EXTENSIONS=ON
         "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}"
         "-DLLVM_CONFIG=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/llvm-config.exe"
