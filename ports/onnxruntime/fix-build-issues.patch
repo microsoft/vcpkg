@@ -1,8 +1,8 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 45f3a33..319a9f3 100644
+index 8aadcee..771f657 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -1220,7 +1220,7 @@ function(onnxruntime_add_shared_library target_name)
+@@ -1222,7 +1222,7 @@ function(onnxruntime_add_shared_library target_name)
  endfunction()
  
  function(onnxruntime_add_static_library target_name)
@@ -12,7 +12,7 @@ index 45f3a33..319a9f3 100644
  endfunction()
  
 diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
-index a82629b..c9e8bb1 100644
+index a82629b..0cc6d31 100644
 --- a/cmake/onnxruntime_providers.cmake
 +++ b/cmake/onnxruntime_providers.cmake
 @@ -260,6 +260,12 @@ if (onnxruntime_USE_CUDA)
@@ -48,3 +48,12 @@ index a82629b..c9e8bb1 100644
      # disable a warning from the CUDA headers about unreferenced local functions
      #target_compile_options(onnxruntime_providers_cuda PRIVATE /wd4505)
      if (onnxruntime_USE_TVM)
+@@ -429,7 +441,7 @@ if (onnxruntime_USE_CUDA)
+ 
+   install(TARGETS onnxruntime_providers_cuda
+           ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-          LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          LIBRARY  DESTINATION ${CMAKE_INSTALL_BINDIR}
+           RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ endif()

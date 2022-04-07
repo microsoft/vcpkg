@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index acbde7f..45f3a33 100644
+index acbde7f..8aadcee 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -718,8 +718,13 @@ if (onnxruntime_BUILD_BENCHMARKS)
@@ -74,7 +74,16 @@ index acbde7f..45f3a33 100644
  endif()
  
  # bounds checking behavior.
-@@ -1165,7 +1174,7 @@ function(onnxruntime_set_compile_flags target_name)
+@@ -938,6 +947,8 @@ set(onnxruntime_EXTERNAL_LIBRARIES onnx onnx_proto ${PROTOBUF_LIB} re2::re2)
+ 
+ set(onnxruntime_LINK_DIRS )
+ if (onnxruntime_USE_CUDA)
++      find_package(CUDNN REQUIRED)
++      add_library(cudnn ALIAS CuDNN::CuDNN)
+       #TODO: combine onnxruntime_CUDNN_HOME and onnxruntime_CUDA_HOME, assume they are the same
+       if (WIN32)
+         list(APPEND onnxruntime_LINK_DIRS ${onnxruntime_CUDNN_HOME}/lib/x64 ${onnxruntime_CUDA_HOME}/x64/lib64)
+@@ -1165,7 +1176,7 @@ function(onnxruntime_set_compile_flags target_name)
        endif()
  
        target_compile_definitions(${target_name} PUBLIC -DNSYNC_ATOMIC_CPP11)
@@ -83,7 +92,7 @@ index acbde7f..45f3a33 100644
      endif()
      foreach(ORT_FLAG ${ORT_PROVIDER_FLAGS})
        target_compile_definitions(${target_name} PRIVATE ${ORT_FLAG})
-@@ -1383,17 +1392,19 @@ else()
+@@ -1383,17 +1394,19 @@ else()
  endif()
  
  if (NOT onnxruntime_MINIMAL_BUILD)
@@ -104,7 +113,7 @@ index acbde7f..45f3a33 100644
  
  
  # fix a warning in onnx code we can't do anything about
-@@ -1830,7 +1841,7 @@ if (WIN32)
+@@ -1830,7 +1843,7 @@ if (WIN32)
    list(APPEND onnxruntime_EXTERNAL_LIBRARIES ${SYS_PATH_LIB} Shlwapi)
    list(APPEND onnxruntime_EXTERNAL_LIBRARIES debug Dbghelp)
  else()
