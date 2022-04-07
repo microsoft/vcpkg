@@ -4149,7 +4149,7 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "libwebsockets": {
@@ -5074,11 +5074,11 @@
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 5
+      "port-version": 6
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5222,7 +5222,7 @@
     },
     "osgearth": {
       "baseline": "3.2",
-      "port-version": 4
+      "port-version": 5
     },
     "osi": {
       "baseline": "0.108.6",
@@ -5702,7 +5702,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.3",
@@ -5870,7 +5870,7 @@
     },
     "qtimageformats": {
       "baseline": "6.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "qtinterfaceframework": {
       "baseline": "6.2.4",
@@ -6502,7 +6502,7 @@
     },
     "skia": {
       "baseline": "2020-05-18",
-      "port-version": 8
+      "port-version": 9
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -6922,7 +6922,7 @@
     },
     "tiff": {
       "baseline": "4.3.0",
-      "port-version": 6
+      "port-version": 7
     },
     "tinkerforge": {
       "baseline": "2.1.25",
