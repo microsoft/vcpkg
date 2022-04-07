@@ -150,7 +150,7 @@
     },
     "argtable3": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "argumentum": {
       "baseline": "0.3.1",
@@ -173,8 +173,8 @@
       "port-version": 2
     },
     "ashes": {
-      "baseline": "2021-06-18",
-      "port-version": 1
+      "baseline": "2022-04-03",
+      "port-version": 0
     },
     "asio": {
       "baseline": "1.22.1",
@@ -306,7 +306,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.9.220",
-      "port-version": 0
+      "port-version": 1
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -314,7 +314,7 @@
     },
     "azure-c-shared-utility": {
       "baseline": "2022-01-21",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-core-cpp": {
       "baseline": "1.5.0",
@@ -353,11 +353,11 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.3.0",
+      "baseline": "12.4.0",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.2.2",
+      "baseline": "12.2.3",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -373,7 +373,7 @@
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.0.0-beta.4",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -1398,7 +1398,7 @@
     },
     "clblast": {
       "baseline": "1.5.2",
-      "port-version": 1
+      "port-version": 2
     },
     "clfft": {
       "baseline": "2.12.2",
@@ -1641,7 +1641,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.7.2",
+      "baseline": "1.8.1",
       "port-version": 0
     },
     "cpu-features": {
@@ -1685,7 +1685,7 @@
       "port-version": 2
     },
     "crow": {
-      "baseline": "0.3.4",
+      "baseline": "1.0-1",
       "port-version": 0
     },
     "cryptopp": {
@@ -1765,8 +1765,8 @@
       "port-version": 0
     },
     "darknet": {
-      "baseline": "2021-04-16",
-      "port-version": 1
+      "baseline": "2022-03-06",
+      "port-version": 0
     },
     "darts-clone": {
       "baseline": "1767ab87cffe",
@@ -1929,7 +1929,7 @@
       "port-version": 0
     },
     "drlibs": {
-      "baseline": "2021-11-02",
+      "baseline": "2022-04-03",
       "port-version": 0
     },
     "drogon": {
@@ -2541,7 +2541,7 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.6.0",
+      "baseline": "11.8.0",
       "port-version": 0
     },
     "glui": {
@@ -2569,8 +2569,8 @@
       "port-version": 1
     },
     "google-cloud-cpp": {
-      "baseline": "1.38.0",
-      "port-version": 2
+      "baseline": "1.39.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2756,6 +2756,10 @@
       "baseline": "1.0.2",
       "port-version": 3
     },
+    "hps": {
+      "baseline": "2022-01-18",
+      "port-version": 0
+    },
     "hpx": {
       "baseline": "1.7.1",
       "port-version": 5
@@ -2798,7 +2802,7 @@
     },
     "idevicerestore": {
       "baseline": "1.0.12",
-      "port-version": 6
+      "port-version": 7
     },
     "if97": {
       "baseline": "2.1.2",
@@ -2897,15 +2901,15 @@
       "port-version": 0
     },
     "imgui-sfml": {
-      "baseline": "2.4",
-      "port-version": 1
+      "baseline": "2.5",
+      "port-version": 0
     },
     "imguizmo": {
       "baseline": "1.83",
       "port-version": 0
     },
     "immer": {
-      "baseline": "2021-05-03",
+      "baseline": "2022-02-12",
       "port-version": 0
     },
     "implot": {
@@ -3270,7 +3274,7 @@
     },
     "ktx": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kubazip": {
       "baseline": "0.1.19",
@@ -3458,7 +3462,7 @@
     },
     "libdatachannel": {
       "baseline": "0.16.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -3630,7 +3634,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 12
+      "port-version": 13
     },
     "libics": {
       "baseline": "1.6.5",
@@ -3778,7 +3782,7 @@
     },
     "libmysql": {
       "baseline": "8.0.20",
-      "port-version": 5
+      "port-version": 6
     },
     "libnice": {
       "baseline": "0.1.18",
@@ -3854,7 +3858,7 @@
     },
     "libpff": {
       "baseline": "2018-07-14",
-      "port-version": 2
+      "port-version": 3
     },
     "libplist": {
       "baseline": "1.3.6",
@@ -3902,7 +3906,7 @@
     },
     "librabbitmq": {
       "baseline": "0.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libraqm": {
       "baseline": "0.9.0",
@@ -3930,7 +3934,7 @@
     },
     "librtmp": {
       "baseline": "2019-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "librttopo": {
       "baseline": "1.1.0",
@@ -4022,7 +4026,7 @@
     },
     "libssh2": {
       "baseline": "1.10.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libstemmer": {
       "baseline": "2017-9",
@@ -4070,7 +4074,7 @@
     },
     "libu2f-server": {
       "baseline": "1.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libudis86": {
       "baseline": "2018-01-28-56ff6c87",
@@ -4150,7 +4154,7 @@
     },
     "libwebsockets": {
       "baseline": "4.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -4286,7 +4290,7 @@
     },
     "luasec": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "luasocket": {
       "baseline": "2020-09-14",
@@ -4614,7 +4618,7 @@
     },
     "mpg123": {
       "baseline": "1.29.2",
-      "port-version": 1
+      "port-version": 2
     },
     "mpi": {
       "baseline": "1",
@@ -5022,7 +5026,7 @@
     },
     "open62541": {
       "baseline": "1.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -5137,8 +5141,8 @@
       "port-version": 1
     },
     "openssl": {
-      "baseline": "1.1.1n",
-      "port-version": 1
+      "baseline": "3.0.2",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5562,7 +5566,7 @@
     },
     "proxygen": {
       "baseline": "2022.03.21.00",
-      "port-version": 0
+      "port-version": 1
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -5630,7 +5634,7 @@
     },
     "qpid-proton": {
       "baseline": "0.32.0",
-      "port-version": 3
+      "port-version": 4
     },
     "qscintilla": {
       "baseline": "2.12.0",
@@ -6002,7 +6006,7 @@
     },
     "quickfix": {
       "baseline": "1.15.1",
-      "port-version": 6
+      "port-version": 7
     },
     "quill": {
       "baseline": "1.6.3",
@@ -6117,8 +6121,8 @@
       "port-version": 4
     },
     "redis-plus-plus": {
-      "baseline": "1.3.1",
-      "port-version": 1
+      "baseline": "1.3.2",
+      "port-version": 0
     },
     "refl-cpp": {
       "baseline": "0.12.2",
@@ -6127,6 +6131,10 @@
     "refprop-headers": {
       "baseline": "2019-04-14",
       "port-version": 1
+    },
+    "rendergraph": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "replxx": {
       "baseline": "0.0.4",
@@ -6429,7 +6437,7 @@
       "port-version": 2
     },
     "shaderwriter": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "shapelib": {
@@ -6502,7 +6510,7 @@
     },
     "sleef": {
       "baseline": "3.5.1",
-      "port-version": 1
+      "port-version": 2
     },
     "sleepy-discord": {
       "baseline": "2022-02-05",
@@ -6877,8 +6885,8 @@
       "port-version": 3
     },
     "tgbot-cpp": {
-      "baseline": "1.2.1",
-      "port-version": 1
+      "baseline": "1.3",
+      "port-version": 0
     },
     "tgc": {
       "baseline": "2019-08-11",
@@ -7222,7 +7230,7 @@
     },
     "uthenticode": {
       "baseline": "1.0.6",
-      "port-version": 1
+      "port-version": 2
     },
     "uvatlas": {
       "baseline": "2022-03-24",
@@ -7269,7 +7277,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-02-14",
+      "baseline": "2022-04-05",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
