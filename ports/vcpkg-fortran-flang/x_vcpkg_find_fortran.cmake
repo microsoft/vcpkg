@@ -39,11 +39,13 @@ function(x_vcpkg_find_fortran out_var)
         if(WIN32)
             message(STATUS "No Fortran compiler found on the PATH. Trying to use classic flang!")
             if(VCPKG_TARGET_IS_UWP)
-                set(extra_uwp_flags "-Wl,/NODEFAULTLIB")
+                set(extra_uwp_flags "-Wl,/NODEFAULTLIB:libcmt -Wl,/NODEFAULTLIB:libcmtd -Wl,/NODEFAULTLIB:msvcrt -Wl,/NODEFAULTLIB:msvcrtd")
                 set(exta_uwp_link_flags "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=-Wl,/APPCONTAINER")
             endif()
-            if(VCPKG_CRT_LINKAGE STREQUAL "static")
-            endif()
+
+            z_vcpkg_get_cmake_vars(cmake_vars_file)
+            include("${cmake_vars_file}")
+
             find_library(PGMATH NAMES libpgmath pgmath PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATHS)
             cmake_path(GET PGMATH FILENAME pgmathlibname)
             find_library(flanglib NAMES libflang flang PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATHS)
@@ -60,29 +62,34 @@ function(x_vcpkg_find_fortran out_var)
             find_library(flangmainlib NAMES libflangmain flangmain PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATHS)
             cmake_path(GET flangmainlib FILENAME flangmainlibname)
             #-noFlangLibs -fno-fortran-main
-            vcpkg_list(SET flang_compile_libs "-Wl,${flanglibname} -Wl,${flangrtilibname} -Wl,${pgmathlibname} -Wl,${omplibname}")
+            vcpkg_list(SET flang_compile_libs "-Xclang --dependent-lib=${flanglibname} -Xclang --dependent-lib=${flangrtilibname} -Xclang --dependent-lib=${pgmathlibname} -Xclang --dependent-lib=${omplibname}")
             vcpkg_list(SET flang_link_lib "${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}")
             vcpkg_list(SET flang_link_default_lib "/DEFAULTLIB:${flanglibname} /DEFAULTLIB:${flangrtilibname} /DEFAULTLIB:${pgmathlibname} /DEFAULTLIB:${omplibname}")
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 set(static_flang "-Xflang -static-flang-libs ")
             endif()
+            
+            #-Wno-unused-command-line-argument
             vcpkg_list(APPEND additional_cmake_args 
-                "-DTIME_FUNC=EXT_ETIME"
-                "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
+                #"-DCMAKE_AR=${VCPKG_DETECTED_CMAKE_LINKER}" # Needs entry point
                 "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/clang-cl.exe"
-                "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname} ${flang_link_lib}"
-                "-DCMAKE_EXE_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
-                "-DCMAKE_EXE_LINKER_FLAGS_RELEASE_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
-                "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/\$$<\$$<CONFIG:DEBUG>:debug/>lib ${flang_link_default_lib}"
+                "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
+                "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname} ${flang_link_default_lib}"
+                "-DCMAKE_EXE_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+                "-DCMAKE_EXE_LINKER_FLAGS_RELEASE_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
+                "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=${flang_link_default_lib}"
                 "-DCMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
                 "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING=-Xflang -noFlangLibs ${static_flang}-Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_compile_libs} ${extra_uwp_flags}"
-                "-DCMAKE_Fortran_FLAGS_RELEASE_INIT:STRING=-Xflang -noFlangLibs ${static_flang}-O3 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_compile_libs}"
-                "-DCMAKE_Fortran_FLAGS_DEBUG_INIT:STRING=-Xflang -noFlangLibs ${static_flang}-O0 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_compile_libs}"
+                "-DCMAKE_STATIC_LINKER_FLAGS_INIT:STRING=${flang_link_default_lib}"
+                "-DCMAKE_STATIC_LINKER_FLAGS_DEBUG_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+                "-DCMAKE_STATIC_LINKER_FLAGS_RELEASE_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=-Xflang -noFlangLibs ${static_flang} ${flang_compile_libs} ${extra_uwp_flags}"
+                "-DCMAKE_Fortran_FLAGS_DEBUG_INIT:STRING=-O0 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
+                "-DCMAKE_Fortran_FLAGS_RELEASE_INIT:STRING=-O3 -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
                 "-DCMAKE_Fortran_STANDARD_LIBRARIES_INIT=${flang_link_lib}"
-                "-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/\$$<\$$<CONFIG:DEBUG>:debug/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_LINKER_FLAGS_RELEASE_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_LINKER_FLAGS_DEBUG_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
+                #"-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/\$$<\$$<CONFIG:DEBUG>:debug/lib ${flang_link_default_lib}"
+                #"-DCMAKE_Fortran_LINKER_FLAGS_RELEASE_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
+                #"-DCMAKE_Fortran_LINKER_FLAGS_DEBUG_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
                 "-DCMAKE_REQUIRED_LINK_OPTIONS:STRING=-LIBPATH:${CURRENT_INSTALLED_DIR}/\$$<\$$<CONFIG:DEBUG>:debug/>lib/"
                 #"-DCMAKE_Fortran_LINK_EXECUTABLE=\\\\\"\\\\\${_CMAKE_VS_LINK_EXE}<CMAKE_LINKER> \\\\\${CMAKE_CL_NOLOGO} <OBJECTS> \\\\\${CMAKE_START_TEMP_FILE} /out:<TARGET> /implib:<TARGET_IMPLIB> /pdb:<TARGET_PDB> /version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR>${_PLATFORM_LINK_FLAGS} <CMAKE_Fortran_LINK_FLAGS> <LINK_FLAGS> <LINK_LIBRARIES>\\\\\${CMAKE_END_TEMP_FILE}\\\\\""
                 "${exta_uwp_link_flags}")
