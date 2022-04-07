@@ -14,12 +14,12 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 vcpkg_download_distfile(archive_path
     URLS "${url}"
-    FILENAME "${name}"
+    FILENAME "${name}" 
     SHA512 "${hash}"
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-vcpkg_find_acquire_program(7Z)
+set(7Z "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-7zip/7z.exe")
 vcpkg_execute_in_download_mode(
                         COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}" "-y" "-bso0" "-bsp0"
                         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"

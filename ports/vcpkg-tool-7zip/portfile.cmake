@@ -38,7 +38,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     message(STATUS "Extracting ${name_msg} ... finished!")
     file(RENAME "${output_path}/${name_folder}/SourceDir/Files/7-Zip" "${output_path}/${PORT}/")
-    
+    file(REMOVE_RECURSE "${output_path}/${name_folder}")
     set(details "set(program_version \"${program_version}\")\n")
     string(APPEND details "set(paths_to_search \"\${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}\")\n")
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/details.cmake" "${details}")
