@@ -65,9 +65,9 @@ function(x_vcpkg_find_fortran out_var)
             vcpkg_list(SET flang_compile_libs "-Xclang --dependent-lib=${flanglibname} -Xclang --dependent-lib=${flangrtilibname} -Xclang --dependent-lib=${pgmathlibname} -Xclang --dependent-lib=${omplibname}")
             vcpkg_list(SET flang_link_lib "${flanglibname} ${flangrtilibname} ${pgmathlibname} ${omplibname}")
             vcpkg_list(SET flang_link_default_lib "/DEFAULTLIB:${flanglibname} /DEFAULTLIB:${flangrtilibname} /DEFAULTLIB:${pgmathlibname} /DEFAULTLIB:${omplibname}")
-            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(static_flang "-Xflang -static-flang-libs ")
-            endif()
+            #if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                set(static_flang "-static-flang-libs ")
+            #endif()
             
             #-Wno-unused-command-line-argument
             vcpkg_list(APPEND additional_cmake_args 
