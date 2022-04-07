@@ -30,6 +30,18 @@ export ANDROID_NDK_HOME=/home/your-account/Android/android-ndk-r21b
 export VCPKG_ROOT=/path/to/vcpkg
 ````
 
+## vcpkg triplets and their corresponding android ABI
+
+There are four different Android ABI, each of which maps to 
+a vcpkg triplet. The following table outlines the mapping from vcpkg architectures to android architectures
+
+|VCPKG_TARGET_TRIPLET       | ANDROID_ABI          |
+|---------------------------|----------------------|
+|arm64-android              | arm64-v8a            |
+|arm-android                | armeabi-v7a          |
+|x64-android                | x86_64               |
+|x86-android                | x86                  |
+
 ## Install libraries for Android using vcpkg
 
 Example for jsoncpp:
