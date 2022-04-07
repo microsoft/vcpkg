@@ -1,8 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b353be6..419e983 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -150,6 +150,10 @@ else()
+   endif()
+ endif()
+ 
++if(MSVC)
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
++endif()
++
+ option(REGENERATE_AMQP_FRAMING "Regenerate amqp_framing.h/amqp_framing.c sources (for developer use)" OFF)
+ mark_as_advanced(REGENERATE_AMQP_FRAMING)
+ 
 diff --git a/librabbitmq/CMakeLists.txt b/librabbitmq/CMakeLists.txt
-index bd5369a..f6d703f 100644
+index d8dcd26..671840b 100644
 --- a/librabbitmq/CMakeLists.txt
 +++ b/librabbitmq/CMakeLists.txt
-@@ -113,7 +113,7 @@ set(RABBITMQ_SOURCES
+@@ -108,7 +108,7 @@ set(RABBITMQ_SOURCES
      ${AMQP_SSL_SRCS}
  )
  

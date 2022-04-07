@@ -9,6 +9,7 @@ FEATURES
     "uacpp"          FEATURE_uacpp
     "ns0idnames"     FEATURE_ns0idnames
     "ns0idgenerator" FEATURE_ns0idgenerator
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     )
