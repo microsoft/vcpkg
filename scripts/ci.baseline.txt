@@ -216,6 +216,8 @@ discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
+# requires g++11
+discordcoreapi:x64-linux=fail
 dlib:arm-uwp=fail
 dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
