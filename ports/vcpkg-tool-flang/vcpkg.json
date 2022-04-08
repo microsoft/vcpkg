@@ -21,6 +21,10 @@
       "host": true
     },
     {
+      "name": "vcpkg-tool-flang",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-flang-llvm",
       "host": true
     },
