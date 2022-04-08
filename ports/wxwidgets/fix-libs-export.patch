@@ -1,0 +1,36 @@
+diff --git a/build/cmake/config.cmake b/build/cmake/config.cmake
+index 91d11ac..2791466 100644
+--- a/build/cmake/config.cmake
++++ b/build/cmake/config.cmake
+@@ -41,7 +41,30 @@ macro(wx_get_dependencies var lib)
+                 endif()
+                 set(dep_name "-l${dep_name}")
+             else()
+-                get_filename_component(dep_name ${dep} NAME)
++                # For the value like $<$<CONFIG:DEBUG>:LIB_PATH>
++                # Or $<$<NOT:$<CONFIG:DEBUG>>:LIB_PATH>
++                if(dep MATCHES "^(.+>):(.+)>$")
++                    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_MATCH_1 STREQUAL [[$<$<NOT:$<CONFIG:DEBUG>>]])
++                        continue()
++                    elseif(CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MATCH_1 STREQUAL [[$<$<CONFIG:DEBUG>]])
++                        continue()
++                    endif()
++                    set(dep_name "${CMAKE_MATCH_2}")
++                else()
++                    set(dep_name ${dep})
++                endif()
++            endif()
++            if(dep_name STREQUAL "libc.so")
++                continue() # don't include this library
++            elseif(dep_name MATCHES "^-")   # -l, -framework, -weak_framework
++                # ok
++            elseif(dep_name MATCHES "^lib(.*)(.so|.dylib|.tbd|.a)$")
++                set(dep_name "-l${CMAKE_MATCH_1} ")
++            elseif(dep_name)
++                get_filename_component(abs_path ${dep_name} PATH)
++                if (NOT abs_path)
++                    set(dep_name "-l${dep_name} ")
++                endif()
+             endif()
+             wx_string_append(${var} "${dep_name} ")
+         endforeach()
