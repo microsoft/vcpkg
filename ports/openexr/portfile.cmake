@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openexr/openexr
-    REF v3.1.3
-    SHA512 12a8f3660104e68ccea0856caf334d1fafbf0ee79115aae23cdce5b835299294ab8a23bafed282acfacd159ce9bc7f6ffc620b1e0df0d40f9ca0eb15a288964d
+    REF v3.1.4
+    SHA512 612ab3467f9ccf2779e1592361cb07459571122e10c0a0b3020430cfa34fa3b91ca1d63cc12a5f85d5b53b277b3f7a88862e6477f0f3566a4196b8245f6bfe12
     HEAD_REF master
     PATCHES
         remove_symlinks.patch
