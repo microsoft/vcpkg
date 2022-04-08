@@ -1,5 +1,5 @@
-set(CAIROMM_VERSION 1.16.0)
-set(CAIROMM_HASH 51929620feeac45377da5d486ea7a091bbd10ad8376fb16525328947b9e6ee740cdc8e8bd190a247b457cc9fec685a829c81de29b26cabaf95383ef04cce80d3)
+set(CAIROMM_VERSION 1.16.1)
+set(CAIROMM_HASH 2dbdd41f712d43573ad3118f37d443d2b9ae98737c240d5db8d830ef38f2b4a95182b2fc857577c7564eb94649e629f70380f16ee84f4978759f40e19d802757)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/cairomm-${CAIROMM_VERSION}.tar.xz"
@@ -11,7 +11,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        undef.win32.patch # because WIN32 is used as an ENUM identifier. 
+        build-support-msvc2022.diff
 )
 
 vcpkg_configure_meson(

@@ -9,6 +9,8 @@ FEATURES
     "spellchecker"          FEATURE_webengine_spellchecker
     "geolocation"           FEATURE_webengine_geolocation
     "webchannel"            FEATURE_webengine_webchannel
+    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
+    "webchannel"            CMAKE_REQUIRE_FIND_PACKAGE_Qt6WebChannel
 INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel

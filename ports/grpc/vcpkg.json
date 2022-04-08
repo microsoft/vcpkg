@@ -1,6 +1,6 @@
 {
   "name": "grpc",
-  "version-semver": "1.41.0",
+  "version-semver": "1.44.0",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [
