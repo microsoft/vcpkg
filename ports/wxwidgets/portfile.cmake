@@ -128,6 +128,16 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/setup.h.in" "${CURRENT_PACKAGES_DIR}/include/wx/setup.h" @ONLY)
 endif()
 
+if("example" IN_LIST FEATURES)
+    file(INSTALL
+        "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+        "${SOURCE_PATH}/samples/popup/popup.cpp"
+        "${SOURCE_PATH}/samples/sample.xpm"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/example/popup.cpp" "../sample.xpm" "sample.xpm")
+endif()
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 
