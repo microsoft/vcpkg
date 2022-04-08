@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Concise Binary Object Representation (CBOR) Library",
   "homepage": "https://github.com/intel/tinycbor",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
