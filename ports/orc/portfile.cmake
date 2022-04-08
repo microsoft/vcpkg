@@ -42,7 +42,7 @@ vcpkg_cmake_configure(
     -DENABLE_TEST=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
