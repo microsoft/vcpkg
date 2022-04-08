@@ -30,8 +30,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(EXTRA_CMAKE_OPTION "-DCMAKE_INSTALL_RPATH=${CURRENT_INSTALLED_DIR}/lib")
 endif()
 
-vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
-vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
