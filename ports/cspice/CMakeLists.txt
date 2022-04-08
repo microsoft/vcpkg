@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(cspice LANGUAGES C)
 
-set(SOVERSION 66)
+set(SOVERSION 67)
 
 # Include all *.c files from the library
 file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
@@ -29,7 +29,7 @@ endif ()
 
 if (NOT _SKIP_HEADERS)
     file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
-    install(FILES ${SPICE_HEADERS} DESTINATION include)
+    install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
 endif()
 
 set_target_properties(

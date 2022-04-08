@@ -1,0 +1,14 @@
+diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
+index 6dbeca9..08e2f4a 100644
+--- a/cmake/OpenCVFindLibsGrfmt.cmake
++++ b/cmake/OpenCVFindLibsGrfmt.cmake
+@@ -5,6 +5,9 @@
+ # --- zlib (required) ---
+ if(BUILD_ZLIB)
+   ocv_clear_vars(ZLIB_FOUND)
++elseif(1)
++  ocv_clear_internal_cache_vars(ZLIB_LIBRARY ZLIB_INCLUDE_DIR)
++  find_package(ZLIB "${MIN_VER_ZLIB}" REQUIRED)
+ else()
+   ocv_clear_internal_cache_vars(ZLIB_LIBRARY ZLIB_INCLUDE_DIR)
+   if(ANDROID)

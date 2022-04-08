@@ -1,11 +1,11 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO trailofbits/uthenticode
     REF v1.0.6
     SHA512 6C9C4DD9E1FE7C329E10BC39E41927C8B82DD004275A88385C691AD85EF4079EBE2922083D5252019B8B25CC540F48E544B42B8178F256AE987D6B677713B063
     HEAD_REF master
+    PATCHES
+        openssl.patch
 )
 
 # compatibility fix for newer versions of pe-parse

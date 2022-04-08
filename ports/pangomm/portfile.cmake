@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.50/pangomm-2.50.0.tar.xz"
     FILENAME "pangomm-2.50.0.tar.xz"
