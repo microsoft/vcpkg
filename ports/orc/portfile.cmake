@@ -28,7 +28,7 @@ if(NOT VCPKG_TARGET_IS_UWP)
     set(configure_opts PREFER_NINJA)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   ${configure_opts}
   OPTIONS
