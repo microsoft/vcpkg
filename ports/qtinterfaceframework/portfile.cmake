@@ -53,7 +53,8 @@ function(vcpkg_get_python_package PYTHON_DIR ) # From mesa
     endif()
 endfunction()
 
-set(${PORT}_PATCHES fix-taglib-search.patch) # Strictly this is only required if qt does not use pkg-config since it forces it to off. 
+set(${PORT}_PATCHES fix-taglib-search.patch # Strictly this is only required if qt does not use pkg-config since it forces it to off. 
+                    49b44d4.diff)
 set(TOOL_NAMES 
         ifmedia-simulation-server
         ifvehiclefunctions-simulation-server
@@ -84,6 +85,7 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS ${FEATURE_OPTIONS}
                         "-DPython3_EXECUTABLE=${PYTHON3}" # Otherwise a VS installation might be found. 
+                        "-DQT_USE_MINIMAL_QFACE_PACKAGES=TRUE"
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
