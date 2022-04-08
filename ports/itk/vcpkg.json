@@ -67,6 +67,18 @@
         "opencl"
       ]
     },
+    "opencv": {
+      "description": "Build ITKVideoBridgeOpenCV module.",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "default-features"
+          ]
+        }
+      ]
+    },
     "python": {
       "description": "Python functionality for ITK",
       "dependencies": [
