@@ -13,6 +13,10 @@
       "host": true
     },
     "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]
