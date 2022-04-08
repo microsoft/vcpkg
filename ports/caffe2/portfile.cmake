@@ -14,6 +14,7 @@ vcpkg_from_github(
         msvc-fixes.patch
         fix-space.patch
         fix-protobuf-deprecated.patch
+        no-inout-macros.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
