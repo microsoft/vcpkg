@@ -180,8 +180,57 @@ index 48e9d95..dc2137a 100644
  #define LIMB_LOG2_BITS 6
  #else
  #define LIMB_LOG2_BITS 5
+diff --git a/qjs.c b/qjs.c
+old mode 100644
+new mode 100755
+index d56b843..a1d8738
+--- a/qjs.c
++++ b/qjs.c
+@@ -28,7 +28,9 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <assert.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <time.h>
+diff --git a/quickjs-libc.c b/quickjs-libc.c
+old mode 100644
+new mode 100755
+index e180dd0..7ad180b
+--- a/quickjs-libc.c
++++ b/quickjs-libc.c
+@@ -28,19 +28,23 @@
+ #include <inttypes.h>
+ #include <string.h>
+ #include <assert.h>
+-#include <unistd.h>
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <sys/time.h>
+ #include <time.h>
+ #include <signal.h>
+ #include <limits.h>
+ #include <sys/stat.h>
++#if defined(_MSC_VER)
++#include <sys/utime.h>
++#include "windirent.h"
++#else
++#include <unistd.h>
++#include <sys/time.h>
+ #include <dirent.h>
++#endif
+ #if defined(_WIN32)
+ #include <windows.h>
+ #include <conio.h>
+-#include <utime.h>
+ #else
+ #include <dlfcn.h>
+ #include <termios.h>
 diff --git a/quickjs.c b/quickjs.c
-index 48aeffc..202504e 100644
+index 7916013..cbdc951 100644
 --- a/quickjs.c
 +++ b/quickjs.c
 @@ -28,7 +28,6 @@
@@ -271,7 +320,16 @@ index 48aeffc..202504e 100644
      if (!prs) {
          JS_ThrowTypeError(ctx, "invalid brand on object");
          return -1;
-@@ -9042,7 +9047,7 @@ int JS_DefineProperty(JSContext *ctx, JSValueConst this_obj,
+@@ -7855,6 +7860,8 @@ static JSValue JS_GetPropertyValue(JSContext *ctx, JSValueConst this_obj,
+         uint32_t idx, len;
+         /* fast path for array access */
+         p = JS_VALUE_GET_OBJ(this_obj);
++        if (unlikely(!p->fast_array))
++            goto slow_path;
+         idx = JS_VALUE_GET_INT(prop);
+         len = (uint32_t)p->u.array.count;
+         if (unlikely(idx >= len))
+@@ -9042,7 +9049,7 @@ int JS_DefineProperty(JSContext *ctx, JSValueConst this_obj,
                  return -1;
              }
              /* this code relies on the fact that Uint32 are never allocated */
@@ -280,7 +338,7 @@ index 48aeffc..202504e 100644
              /* prs may have been modified */
              prs = find_own_property(&pr, p, prop);
              assert(prs != NULL);
-@@ -10237,7 +10242,7 @@ static JSValue js_atof(JSContext *ctx, const char *str, const char **pp,
+@@ -10237,7 +10244,7 @@ static JSValue js_atof(JSContext *ctx, const char *str, const char **pp,
              } else
  #endif
              {
@@ -289,7 +347,7 @@ index 48aeffc..202504e 100644
                  if (is_neg)
                      d = -d;
                  val = JS_NewFloat64(ctx, d);
-@@ -16043,7 +16048,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
+@@ -16043,7 +16050,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
  #else
      sf->js_mode = 0;
  #endif
@@ -298,7 +356,7 @@ index 48aeffc..202504e 100644
      sf->arg_count = argc;
      arg_buf = argv;
  
-@@ -16056,7 +16061,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
+@@ -16056,7 +16063,7 @@ static JSValue js_call_c_function(JSContext *ctx, JSValueConst func_obj,
              arg_buf[i] = JS_UNDEFINED;
          sf->arg_count = arg_count;
      }
@@ -307,7 +365,7 @@ index 48aeffc..202504e 100644
  
      func = p->u.cfunc.c_function;
      switch(cproto) {
-@@ -16287,7 +16292,7 @@ static JSValue JS_CallInternal(JSContext *caller_ctx, JSValueConst func_obj,
+@@ -16287,7 +16294,7 @@ static JSValue JS_CallInternal(JSContext *caller_ctx, JSValueConst func_obj,
      sf->js_mode = b->js_mode;
      arg_buf = argv;
      sf->arg_count = argc;
@@ -316,7 +374,7 @@ index 48aeffc..202504e 100644
      init_list_head(&sf->var_ref_list);
      var_refs = p->u.func.var_refs;
  
-@@ -27250,6 +27255,37 @@ void JS_SetModuleLoaderFunc(JSRuntime *rt,
+@@ -27250,6 +27257,37 @@ void JS_SetModuleLoaderFunc(JSRuntime *rt,
      rt->module_loader_opaque = opaque;
  }
  
@@ -354,7 +412,7 @@ index 48aeffc..202504e 100644
  /* default module filename normalizer */
  static char *js_default_module_normalize_name(JSContext *ctx,
                                                const char *base_name,
-@@ -39258,8 +39294,8 @@ static int64_t JS_FlattenIntoArray(JSContext *ctx, JSValueConst target,
+@@ -39283,8 +39321,8 @@ static int64_t JS_FlattenIntoArray(JSContext *ctx, JSValueConst target,
          if (!JS_IsUndefined(mapperFunction)) {
              JSValueConst args[3] = { element, JS_NewInt64(ctx, sourceIndex), source };
              element = JS_Call(ctx, mapperFunction, thisArg, 3, args);
@@ -365,7 +423,7 @@ index 48aeffc..202504e 100644
              if (JS_IsException(element))
                  return -1;
          }
-@@ -40676,7 +40712,7 @@ static JSValue js_string_match(JSContext *ctx, JSValueConst this_val,
+@@ -40701,7 +40739,7 @@ static JSValue js_string_match(JSContext *ctx, JSValueConst this_val,
          str = JS_NewString(ctx, "g");
          if (JS_IsException(str))
              goto fail;
@@ -374,7 +432,7 @@ index 48aeffc..202504e 100644
      }
      rx = JS_CallConstructor(ctx, ctx->regexp_ctor, args_len, args);
      JS_FreeValue(ctx, str);
-@@ -41734,7 +41770,7 @@ static JSValue js_math_min_max(JSContext *ctx, JSValueConst this_val,
+@@ -41759,7 +41797,7 @@ static JSValue js_math_min_max(JSContext *ctx, JSValueConst this_val,
      uint32_t tag;
  
      if (unlikely(argc == 0)) {
@@ -383,7 +441,7 @@ index 48aeffc..202504e 100644
      }
  
      tag = JS_VALUE_GET_TAG(argv[0]);
-@@ -41906,6 +41942,9 @@ static JSValue js_math_random(JSContext *ctx, JSValueConst this_val,
+@@ -41931,6 +41969,9 @@ static JSValue js_math_random(JSContext *ctx, JSValueConst this_val,
      return __JS_NewFloat64(ctx, u.d - 1.0);
  }
  
@@ -393,7 +451,7 @@ index 48aeffc..202504e 100644
  static const JSCFunctionListEntry js_math_funcs[] = {
      JS_CFUNC_MAGIC_DEF("min", 2, js_math_min_max, 0 ),
      JS_CFUNC_MAGIC_DEF("max", 2, js_math_min_max, 1 ),
-@@ -41989,7 +42028,9 @@ static JSValue js___date_clock(JSContext *ctx, JSValueConst this_val,
+@@ -42014,7 +42055,9 @@ static JSValue js___date_clock(JSContext *ctx, JSValueConst this_val,
     between UTC time and local time 'd' in minutes */
  static int getTimezoneOffset(int64_t time) {
  #if defined(_WIN32)
@@ -404,7 +462,7 @@ index 48aeffc..202504e 100644
      return 0;
  #else
      time_t ti;
-@@ -45704,7 +45745,7 @@ static JSMapRecord *map_add_record(JSContext *ctx, JSMapState *s,
+@@ -45729,7 +45772,7 @@ static JSMapRecord *map_add_record(JSContext *ctx, JSMapState *s,
      } else {
          JS_DupValue(ctx, key);
      }
@@ -413,7 +471,7 @@ index 48aeffc..202504e 100644
      h = map_hash_key(ctx, key) & (s->hash_size - 1);
      list_add_tail(&mr->hash_link, &s->hash_table[h]);
      list_add_tail(&mr->link, &s->records);
-@@ -45926,7 +45967,7 @@ static JSValue js_map_forEach(JSContext *ctx, JSValueConst this_val,
+@@ -45951,7 +45994,7 @@ static JSValue js_map_forEach(JSContext *ctx, JSValueConst this_val,
                  args[0] = args[1];
              else
                  args[0] = JS_DupValue(ctx, mr->value);
@@ -422,7 +480,7 @@ index 48aeffc..202504e 100644
              ret = JS_Call(ctx, func, this_arg, 3, (JSValueConst *)args);
              JS_FreeValue(ctx, args[0]);
              if (!magic)
-@@ -46904,7 +46945,7 @@ static JSValue js_promise_all(JSContext *ctx, JSValueConst this_val,
+@@ -46929,7 +46972,7 @@ static JSValue js_promise_all(JSContext *ctx, JSValueConst this_val,
                  goto fail_reject;
              }
              resolve_element_data[0] = JS_NewBool(ctx, FALSE);
@@ -431,7 +489,7 @@ index 48aeffc..202504e 100644
              resolve_element_data[2] = values;
              resolve_element_data[3] = resolving_funcs[is_promise_any];
              resolve_element_data[4] = resolve_element_env;
-@@ -47263,7 +47304,7 @@ static JSValue js_async_from_sync_iterator_unwrap_func_create(JSContext *ctx,
+@@ -47288,7 +47331,7 @@ static JSValue js_async_from_sync_iterator_unwrap_func_create(JSContext *ctx,
  {
      JSValueConst func_data[1];
  
@@ -440,7 +498,7 @@ index 48aeffc..202504e 100644
      return JS_NewCFunctionData(ctx, js_async_from_sync_iterator_unwrap,
                                 1, 0, 1, func_data);
  }
-@@ -47841,7 +47882,7 @@ static const JSCFunctionListEntry js_global_funcs[] = {
+@@ -47866,7 +47909,7 @@ static const JSCFunctionListEntry js_global_funcs[] = {
      JS_CFUNC_MAGIC_DEF("encodeURIComponent", 1, js_global_encodeURI, 1 ),
      JS_CFUNC_DEF("escape", 1, js_global_escape ),
      JS_CFUNC_DEF("unescape", 1, js_global_unescape ),
@@ -449,7 +507,7 @@ index 48aeffc..202504e 100644
      JS_PROP_DOUBLE_DEF("NaN", NAN, 0 ),
      JS_PROP_UNDEFINED_DEF("undefined", 0 ),
  
-@@ -52692,8 +52733,8 @@ static int js_TA_cmp_generic(const void *a, const void *b, void *opaque) {
+@@ -52717,8 +52760,8 @@ static int js_TA_cmp_generic(const void *a, const void *b, void *opaque) {
              psc->exception = 1;
          }
      done:
