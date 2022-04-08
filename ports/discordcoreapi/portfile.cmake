@@ -8,6 +8,7 @@ vcpkg_from_github(
 	REF 6d7c899f0690513855119aa225259dccf17b10f0
 	SHA512 ff42ed8ae799b8f875158842c47fcb5612a5b8861dbfb442c97ab131d952ed59140b2d2431a0d389aefbecb122263f340ff9c8fb863466d0aa91875f8080616e
 	HEAD_REF main
+    PATCHES fix-cert-installation.patch
 )
 
 vcpkg_cmake_configure(
