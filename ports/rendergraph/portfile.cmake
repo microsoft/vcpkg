@@ -1,0 +1,37 @@
+vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
+    REPO DragonJoker/RenderGraph
+    REF 602d8b6f1f027cea2173be16de6ff30d5d8f79e5
+    HEAD_REF master
+    SHA512 4c57983febad7188a69c8fd214e185e62fbab04b926f3efee97bbf3e70387ab6f742b6f62b0a8bf3dde63c174415ab5a793abf775cd4eee37864efd6f1e06d2b
+)
+
+vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
+    REPO DragonJoker/CMakeUtils
+    REF e2a9d422a02dab0e04f54b3e1bc515eba652a9d1
+    HEAD_REF master
+    SHA512 4ebd6141b9e5aa5283f31892da7108aa09fbd59292f0e98f2c9fe67577856f0af253184d41fdc16bb11094c4635401f181ea2e3abfa560adcf5c029f0d663b24
+)
+
+get_filename_component(SRC_PATH ${CMAKE_SOURCE_PATH} DIRECTORY)
+if (EXISTS ${SRC_PATH}/CMake)
+    file(REMOVE_RECURSE ${SRC_PATH}/CMake)
+endif()
+file(RENAME ${CMAKE_SOURCE_PATH} ${SRC_PATH}/CMake)
+set(CMAKE_SOURCE_PATH ${SRC_PATH}/CMake)
+file(COPY ${CMAKE_SOURCE_PATH} DESTINATION ${SOURCE_PATH})
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DPROJECTS_USE_PRECOMPILED_HEADERS=ON
+        -DCRG_UNITY_BUILD=ON 
+        -DCRG_BUILD_STATIC=${BUILD_STATIC}
+        -DVULKAN_HEADERS_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/RenderGraph)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
