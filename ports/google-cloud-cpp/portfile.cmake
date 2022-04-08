@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.36.0
-    SHA512 a9885f9e0726de64eaee0376f3d1ed3a00c32919f2b9a911479206f2965a62eea5ff292b459f61eae97d5d2fe336c410c615296fcb0c7506faf45c57bd6f8871
+    REF v1.39.0
+    SHA512 d61ebcdb6680797f20147ee1d37b9d29c82e8c7267b944a346685bfa607cf0b7f1772854874b967f19b4f54ddcefc94a771a4686cafcd6a5fed426d64e553205
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -14,6 +14,8 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
+# This feature does not exist, but allows us to simplify the vcpkg.json file.
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 
 vcpkg_cmake_configure(

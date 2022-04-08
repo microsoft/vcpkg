@@ -10,7 +10,7 @@ server = {
   :cpu => 11
 }
 
-azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.195.2/vsts-agent-osx-x64-2.195.2.tar.gz'
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.198.3/vsts-agent-osx-x64-2.198.3.tar.gz'
 devops_url = configuration['devops_url']
 agent_pool = configuration['agent_pool']
 pat = configuration['pat']
