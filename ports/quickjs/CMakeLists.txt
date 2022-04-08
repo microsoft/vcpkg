@@ -18,7 +18,7 @@ target_include_directories(quickjs PUBLIC
 )
 
 if(WIN32)
-    target_compile_definitions(quickjs PRIVATE __USE_MINGW_ANSI_STDIO)
+    target_compile_definitions(quickjs PRIVATE __USE_MINGW_ANSI_STDIO _CRT_SECURE_NO_WARNINGS)
 else()
     target_compile_definitions(quickjs PRIVATE _GNU_SOURCE)
 endif()
