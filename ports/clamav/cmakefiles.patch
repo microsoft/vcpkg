@@ -1,136 +1,188 @@
 diff --git a/freshclam/CMakeLists.txt b/freshclam/CMakeLists.txt
-index 545d5d4ba..59cbbc4ce 100644
+index 0505e3902..256a71f7f 100644
 --- a/freshclam/CMakeLists.txt
 +++ b/freshclam/CMakeLists.txt
-@@ -28,18 +28,8 @@ target_link_libraries(freshclam-bin
+@@ -39,14 +39,7 @@ target_link_libraries(freshclam-bin
          ClamAV::libfreshclam
          ClamAV::libclamav
-         ClamAV::shared )
+         ClamAV::common )
 -if(WIN32)
--    install(TARGETS freshclam-bin DESTINATION ${CMAKE_INSTALL_PREFIX})
+-    install(TARGETS freshclam-bin DESTINATION . COMPONENT programs)
 -else()
--    install(TARGETS freshclam-bin DESTINATION ${CMAKE_INSTALL_BINDIR})
+-    install(TARGETS freshclam-bin DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT programs)
 -endif()
- 
+-
 -# Install an empty database directory
--if(WIN32)
--    INSTALL(CODE "FILE(MAKE_DIRECTORY \${ENV}\${CMAKE_INSTALL_PREFIX}/database)")
--else()
--    INSTALL(CODE "FILE(MAKE_DIRECTORY \${ENV}\${CMAKE_INSTALL_PREFIX}/share/clamav)")
--endif()
-+install(TARGETS freshclam-bin)
+-INSTALL(CODE "FILE(MAKE_DIRECTORY \${ENV}\${CMAKE_INSTALL_PREFIX}/\${DATABASE_DIRECTORY})" COMPONENT programs)
++install(TARGETS freshclam-bin programs)
  
- # now we rename resman-bin executable to resman using target properties
+ # Now we rename freshclam-bin executable to freshclam using target properties
  set_target_properties( freshclam-bin
 diff --git a/libclamav/CMakeLists.txt b/libclamav/CMakeLists.txt
-index bb14510db..136ea308a 100644
+index 3a20801cf..1264625d6 100644
 --- a/libclamav/CMakeLists.txt
 +++ b/libclamav/CMakeLists.txt
-@@ -564,11 +564,7 @@ if(ENABLE_SHARED_LIB)
+@@ -570,42 +570,7 @@ if(ENABLE_SHARED_LIB)
      else()
          target_link_libraries( clamav PUBLIC Iconv::Iconv )
      endif()
 -    if(WIN32)
--        install(TARGETS clamav DESTINATION ${CMAKE_INSTALL_PREFIX})
+-        install( TARGETS clamav DESTINATION . COMPONENT libraries )
+-
+-        # Also install shared library (DLL) dependencies
+-        install( CODE [[
+-            file(GET_RUNTIME_DEPENDENCIES
+-                LIBRARIES
+-                    $<TARGET_FILE:ClamAV::libclamav>
+-                RESOLVED_DEPENDENCIES_VAR _r_deps
+-                UNRESOLVED_DEPENDENCIES_VAR _u_deps
+-                DIRECTORIES
+-                    $<TARGET_FILE_DIR:OpenSSL::SSL>
+-                    $<TARGET_FILE_DIR:OpenSSL::Crypto>
+-                    $<TARGET_FILE_DIR:ZLIB::ZLIB>
+-                    $<TARGET_FILE_DIR:BZip2::BZip2>
+-                    $<TARGET_FILE_DIR:PCRE2::pcre2>
+-                    $<TARGET_FILE_DIR:LibXml2::LibXml2>
+-                    $<TARGET_FILE_DIR:JSONC::jsonc>
+-            )
+-            foreach(_file ${_r_deps})
+-                string(TOLOWER ${_file} _file_lower)
+-                if(NOT ${_file_lower} MATCHES "c:[\\/]windows[\\/]system32.*")
+-                    file(INSTALL
+-                        DESTINATION "${CMAKE_INSTALL_PREFIX}"
+-                        TYPE SHARED_LIBRARY
+-                        FOLLOW_SYMLINK_CHAIN
+-                        FILES "${_file}"
+-                    )
+-                endif()
+-            endforeach()
+-            #message("UNRESOLVED_DEPENDENCIES_VAR: ${_u_deps}")
+-            ]]
+-            COMPONENT libraries )
 -    else()
--        install(TARGETS clamav DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-        install( TARGETS clamav DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries )
 -    endif()
-+    install(TARGETS clamav)
++    install( TARGETS clamav COMPONENT libraries )
  
      if(LLVM_FOUND)
-         target_link_directories( clamav PRIVATE ${LLVM_LIBRARY_DIRS} )
-@@ -609,11 +605,7 @@ if(ENABLE_STATIC_LIB)
+         target_link_directories( clamav PUBLIC ${LLVM_LIBRARY_DIRS} )
+@@ -670,11 +635,7 @@ if(ENABLE_STATIC_LIB)
          COMPILE_FLAGS       "${WARNCFLAGS}"
-         VERSION ${LIBCLAMAV_VERSION} SOVERSION ${LIBCLAMAV_SOVERSION})
-     target_compile_definitions(clamav_static PUBLIC clamav_staticLIB)
+         VERSION ${LIBCLAMAV_VERSION} SOVERSION ${LIBCLAMAV_SOVERSION} )
+     target_compile_definitions( clamav_static PUBLIC clamav_staticLIB )
 -    if(WIN32)
--        install(TARGETS clamav_static DESTINATION ${CMAKE_INSTALL_PREFIX})
+-        install( TARGETS clamav_static DESTINATION . COMPONENT libraries )
 -    else()
--        install(TARGETS clamav_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-        install( TARGETS clamav_static DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries )
 -    endif()
-+    install(TARGETS clamav_static)
++    install( TARGETS clamav_static COMPONENT libraries )
  
      add_library( ClamAV::libclamav_static ALIAS clamav_static )
- endif()
+     if(NOT ENABLE_SHARED_LIB)
 diff --git a/libclammspack/CMakeLists.txt b/libclammspack/CMakeLists.txt
-index 1b5edbd4d..bba781d76 100644
+index 4d2c6f418..42376e70f 100644
 --- a/libclammspack/CMakeLists.txt
 +++ b/libclammspack/CMakeLists.txt
-@@ -73,11 +73,7 @@ endif()
- target_sources( mspack
-     PUBLIC
-         "${CMAKE_CURRENT_SOURCE_DIR}/mspack/mspack.h" )
--if(WIN32)
--    install(TARGETS mspack DESTINATION ${CMAKE_INSTALL_PREFIX})
--else()
--    install(TARGETS mspack DESTINATION ${CMAKE_INSTALL_LIBDIR})
--endif()
-+install(TARGETS mspack)
- 
- # Public (forwarded) dependencies.
- target_link_libraries( mspack
-diff --git a/libclamunrar/CMakeLists.txt b/libclamunrar/CMakeLists.txt
-index 03dbc3387..267690b1c 100644
---- a/libclamunrar/CMakeLists.txt
-+++ b/libclamunrar/CMakeLists.txt
-@@ -90,10 +90,6 @@ target_link_libraries( clamunrar
-     PUBLIC
-         unrar_obj )
- 
--if(WIN32)
--    install(TARGETS clamunrar DESTINATION ${CMAKE_INSTALL_PREFIX})
--else()
--    install(TARGETS clamunrar DESTINATION ${CMAKE_INSTALL_LIBDIR})
--endif()
-+install(TARGETS clamunrar)
- 
- add_library( ClamAV::libclamunrar ALIAS clamunrar )
-diff --git a/libclamunrar_iface/CMakeLists.txt b/libclamunrar_iface/CMakeLists.txt
-index 42f81544d..61f21da33 100644
---- a/libclamunrar_iface/CMakeLists.txt
-+++ b/libclamunrar_iface/CMakeLists.txt
-@@ -55,11 +55,7 @@ if(ENABLE_UNRAR)
-         PUBLIC
-             ClamAV::libclamunrar_iface_iface)
+@@ -79,11 +79,7 @@ if(ENABLE_SHARED_LIB)
+         )
+     endif()
  
 -    if(WIN32)
--        install(TARGETS clamunrar_iface DESTINATION ${CMAKE_INSTALL_PREFIX})
+-        install(TARGETS clammspack DESTINATION . COMPONENT libraries)
 -    else()
--        install(TARGETS clamunrar_iface DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-        install(TARGETS clammspack DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
 -    endif()
-+    install(TARGETS clamunrar_iface)
++    install(TARGETS clammspack COMPONENT libraries)
  
-     add_library( ClamAV::libclamunrar_iface ALIAS clamunrar_iface )
--endif()
-\ No newline at end of file
-+endif()
+     add_library( ClamAV::libmspack ALIAS clammspack )
+ endif()
+diff --git a/libclamunrar/CMakeLists.txt b/libclamunrar/CMakeLists.txt
+index d6e91aca9..8160cf45b 100644
+--- a/libclamunrar/CMakeLists.txt
++++ b/libclamunrar/CMakeLists.txt
+@@ -95,11 +95,7 @@ if(ENABLE_SHARED_LIB)
+         set_target_properties(clamunrar PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+     endif()
+ 
+-    if(WIN32)
+-        install(TARGETS clamunrar DESTINATION . COMPONENT libraries)
+-    else()
+-        install(TARGETS clamunrar DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
+-    endif()
++    install(TARGETS clamunrar COMPONENT libraries)
+ 
+     add_library( ClamAV::libunrar ALIAS clamunrar )
+ endif()
+diff --git a/libclamunrar_iface/CMakeLists.txt b/libclamunrar_iface/CMakeLists.txt
+index fb984d978..770d6ff14 100644
+--- a/libclamunrar_iface/CMakeLists.txt
++++ b/libclamunrar_iface/CMakeLists.txt
+@@ -71,11 +71,7 @@ if(ENABLE_UNRAR)
+             PUBLIC
+                 ClamAV::libunrar_iface_iface)
+ 
+-        if(WIN32)
+-            install(TARGETS clamunrar_iface DESTINATION . COMPONENT libraries)
+-        else()
+-            install(TARGETS clamunrar_iface DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
+-        endif()
++        install(TARGETS clamunrar_iface COMPONENT libraries)
+ 
+         add_library( ClamAV::libunrar_iface ALIAS clamunrar_iface )
+     endif()
 diff --git a/libfreshclam/CMakeLists.txt b/libfreshclam/CMakeLists.txt
-index 6fb711818..27321ceb4 100644
+index 5adc169cc..cbbd2459b 100644
 --- a/libfreshclam/CMakeLists.txt
 +++ b/libfreshclam/CMakeLists.txt
-@@ -65,11 +65,7 @@ if(ENABLE_SHARED_LIB)
+@@ -62,37 +62,7 @@ if(ENABLE_SHARED_LIB)
      set_target_properties(freshclam PROPERTIES
          COMPILE_FLAGS "${WARNCFLAGS}"
          VERSION ${LIBFRESHCLAM_VERSION} SOVERSION ${LIBFRESHCLAM_SOVERSION})
 -    if(WIN32)
--        install(TARGETS freshclam DESTINATION ${CMAKE_INSTALL_PREFIX})
+-        install(TARGETS freshclam DESTINATION . COMPONENT libraries)
+-        # Also install shared library (DLL) dependencies
+-        install(CODE [[
+-            file(GET_RUNTIME_DEPENDENCIES
+-                LIBRARIES
+-                    $<TARGET_FILE:ClamAV::libfreshclam>
+-                RESOLVED_DEPENDENCIES_VAR _r_deps
+-                UNRESOLVED_DEPENDENCIES_VAR _u_deps
+-                DIRECTORIES
+-                    $<TARGET_FILE_DIR:CURL::libcurl>
+-                    $<TARGET_FILE_DIR:OpenSSL::SSL>
+-                    $<TARGET_FILE_DIR:OpenSSL::Crypto>
+-            )
+-            foreach(_file ${_r_deps})
+-                string(TOLOWER ${_file} _file_lower)
+-                if(NOT ${_file_lower} MATCHES "c:[\\/]windows[\\/]system32.*")
+-                    file(INSTALL
+-                        DESTINATION "${CMAKE_INSTALL_PREFIX}"
+-                        TYPE SHARED_LIBRARY
+-                        FOLLOW_SYMLINK_CHAIN
+-                        FILES "${_file}"
+-                    )
+-                endif()
+-            endforeach()
+-            #message("UNRESOLVED_DEPENDENCIES_VAR: ${_u_deps}")
+-            ]]
+-            COMPONENT libraries)
 -    else()
--        install(TARGETS freshclam DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-        install(TARGETS freshclam DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
 -    endif()
-+    install(TARGETS freshclam)
++    install(TARGETS freshclam COMPONENT libraries)
  
      add_library( ClamAV::libfreshclam ALIAS freshclam )
  endif()
-@@ -88,11 +84,7 @@ if(ENABLE_STATIC_LIB)
+@@ -138,11 +108,7 @@ if(ENABLE_STATIC_LIB)
          COMPILE_FLAGS       "${WARNCFLAGS}"
          VERSION ${LIBFRESHCLAM_VERSION} SOVERSION ${LIBFRESHCLAM_SOVERSION})
      target_compile_definitions(freshclam_static PUBLIC freshclam_staticLIB)
 -    if(WIN32)
--        install(TARGETS freshclam_static DESTINATION ${CMAKE_INSTALL_PREFIX})
+-        install(TARGETS freshclam_static DESTINATION . COMPONENT libraries)
 -    else()
--        install(TARGETS freshclam_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-        install(TARGETS freshclam_static DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
 -    endif()
-+    install(TARGETS freshclam_static)
++    install(TARGETS freshclam_static COMPONENT libraries)
  
      add_library( ClamAV::libfreshclam_static ALIAS freshclam_static )
- endif()
+     if(NOT ENABLE_SHARED_LIB)
