@@ -1245,8 +1245,8 @@
       "port-version": 2
     },
     "capstone": {
-      "baseline": "4.0.2",
-      "port-version": 3
+      "baseline": "5.0.0-rc2",
+      "port-version": 0
     },
     "cargs": {
       "baseline": "1.0.3",
@@ -7106,7 +7106,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 1
+      "port-version": 2
     },
     "trompeloeil": {
       "baseline": "41",
