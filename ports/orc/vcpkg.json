@@ -9,6 +9,10 @@
     "lz4",
     "protobuf",
     "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]
