@@ -24,8 +24,8 @@ else()
   set(BUILD_TOOLS ON)
 endif()
 
-if(NOT VCPKG_TARGET_IS_UWP)
-    set(configure_opts PREFER_NINJA)
+if(VCPKG_TARGET_IS_UWP)
+    set(configure_opts WINDOWS_USE_MSBUILD)
 endif()
 
 vcpkg_cmake_configure(
