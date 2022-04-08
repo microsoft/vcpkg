@@ -4,7 +4,6 @@
   "port-version": 1,
   "description": "C++ implementation of RSocket http://rsocket.io",
   "homepage": "https://github.com/rsocket/rsocket-cpp",
-  "license": "Apache-2.0",
   "dependencies": [
     "boost-context",
     "boost-filesystem",
