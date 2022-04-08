@@ -45,7 +45,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         "-DLLVM_TARGETS_TO_BUILD=X86;AArch64"
         -DFLANG_LLVM_EXTENSIONS=ON
         "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}"
@@ -55,10 +54,6 @@ vcpkg_cmake_configure(
         "-DCMAKE_Fortran_COMPILER_ID=Flang"
         ${OPTIONS}
 )
-
-if(VCPKG_CROSSCOMPILING)
-    message(FATAL_ERROR "Error to get build logs. Something wrong with release MS CRT setting") # Somebody messes around with CMAKE_C_FLAGS_RELEASE
-endif()
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
