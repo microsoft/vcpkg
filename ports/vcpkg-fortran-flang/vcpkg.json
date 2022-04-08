@@ -5,10 +5,10 @@
   "license": "MIT",
   "supports": "windows",
   "dependencies": [
-  "vcpkg-tool-flang",
-  {
-    "name": "vcpkg-tool-flang",
-    "host": true
-  }
-]
+    "vcpkg-tool-flang",
+    {
+      "name": "vcpkg-tool-flang",
+      "host": true
+    }
+  ]
 }

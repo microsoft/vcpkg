@@ -6,7 +6,7 @@
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "(arm & windows)"
+      "platform": "arm & windows"
     },
     {
       "name": "lapack-reference",
