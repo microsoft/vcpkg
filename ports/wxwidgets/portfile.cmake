@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-linux-configure.patch # Remove this patch in the next update
         fix-libs-export.patch
+        relocatable-wx-config.patch
 )
 
 set(OPTIONS)
@@ -128,6 +129,16 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/setup.h.in" "${CURRENT_PACKAGES_DIR}/include/wx/setup.h" @ONLY)
 endif()
+
+file(GLOB configs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/wx/config/*")
+foreach(config IN LISTS configs)
+    vcpkg_replace_string("${config}" "${CURRENT_INSTALLED_DIR}" [[${prefix}]])
+endforeach()
+file(GLOB configs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/wx/config/*")
+foreach(config IN LISTS configs)
+    vcpkg_replace_string("${config}" "${CURRENT_INSTALLED_DIR}/debug" [[${prefix}]])
+endforeach()
+
 
 if("example" IN_LIST FEATURES)
     file(INSTALL
