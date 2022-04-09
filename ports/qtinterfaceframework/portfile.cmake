@@ -22,7 +22,22 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}/Scripts")
-x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES virtualenv qface==2.0.7 Jinja2==2.10.3)
+x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES virtualenv 
+                                                                    Jinja2==2.10.3
+                                                                    antlr4-python3-runtime==4.7.1
+                                                                    argh==0.26.2
+                                                                    click==6.7
+                                                                    coloredlogs==10.0
+                                                                    humanfriendly==4.15.1
+                                                                    MarkupSafe==1.1
+                                                                    path.py==11.0.1
+                                                                    pathtools==0.1.2
+                                                                    PyYAML==5.1
+                                                                    six==1.11.0
+                                                                    watchdog==0.8.3
+                                                                    pytest==6.2.5
+                                                                    pytest-cov==2.8.1
+                                                                    qface==2.0.7)
 file(COPY "${CURRENT_PORT_DIR}/requirements_minimal.txt" DESTINATION "${SOURCE_PATH}/src/3rdparty/qface")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}")
