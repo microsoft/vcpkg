@@ -1,12 +1,10 @@
 {
-  "name": "vcpkg-tool-flang",
+  "name": "flang-fortran-runtime",
   "version-date": "2022-03-20",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
-  "supports": "windows",
   "dependencies": [
-    "libxml2",
     "pgmath",
     {
       "name": "pkgconf",
@@ -21,6 +19,10 @@
       "host": true
     },
     {
+      "name": "vcpkg-tool-flang",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-flang-llvm",
       "host": true
     },
@@ -31,7 +33,6 @@
     {
       "name": "vcpkg-tool-ninja",
       "host": true
-    },
-    "zlib"
+    }
   ]
 }

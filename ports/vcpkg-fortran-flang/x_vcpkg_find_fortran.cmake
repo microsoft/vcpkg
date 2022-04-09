@@ -42,6 +42,13 @@ function(x_vcpkg_find_fortran)
                 set(exta_uwp_link_flags "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=-Wl,/APPCONTAINER")
             endif()
 
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+                set(ARCH X86)
+            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+                set(ARCH ARM)
+            endif()
+            vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/${ARCH}")
+
             z_vcpkg_get_cmake_vars(cmake_vars_file)
             include("${cmake_vars_file}")
 
@@ -92,14 +99,14 @@ function(x_vcpkg_find_fortran)
                 "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flangmainlibname} ${flang_link_default_lib}"
                 "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
                 "-DCMAKE_STATIC_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${extra_uwp_flags}"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=-Mreentrant -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${extra_uwp_flags}"
                 "-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/lib ${flang_link_default_lib}"
                 )
             vcpkg_list(APPEND additional_cmake_args_dbg
                 "-DCMAKE_EXE_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flangmainlibname} ${flang_link_default_lib}"
                 "-DCMAKE_SHARED_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
                 "-DCMAKE_STATIC_LINKER_FLAGS_INIT:STRING=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING=${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${extra_uwp_flags}"
+                "-DCMAKE_Fortran_FLAGS_INIT:STRING=-Mreentrant -I ${CURRENT_INSTALLED_DIR}/include ${static_flang}${flang_compile_libs} -Wl,/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${extra_uwp_flags}"
                 "-DCMAKE_Fortran_LINKER_FLAGS_INIT=/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib ${flang_link_default_lib}"
                 )
             set(VCPKG_USE_INTERNAL_Fortran TRUE CACHE INTERNAL "")

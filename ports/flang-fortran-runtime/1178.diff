@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8308d5461d6..e9ec6c67e6a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -287,13 +287,16 @@ endif()
+ if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing -pedantic -Wno-long-long -Wall -W -Wno-unused-parameter -Wwrite-strings")
+   option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" ON)
+-  if (WITH_WERROR)
+-     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Werror -Wno-error=sign-compare -Wno-error=pointer-sign -Wno-error=incompatible-pointer-types -Wno-error=string-conversion -Wno-error=c99-extensions -Wno-error=deprecated-register -Wno-error=format -Wno-error=format-pedantic -Wno-error=tautological-constant-out-of-range-compare -Wno-error=switch -Wno-error=covered-switch-default -Wno-error=enum-compare -Wno-error=char-subscripts -Wno-error=parentheses -Wno-error=array-bounds -Wno-error=fortify-source -Wno-error=comment")
+-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=sign-compare -Wno-error=pointer-sign -Wno-error=incompatible-pointer-types -Wno-error=string-conversion -Wno-error=c99-extensions -Wno-error=deprecated-register -Wno-error=format -Wno-error=format-pedantic -Wno-error=tautological-constant-out-of-range-compare -Wno-error=switch -Wno-error=covered-switch-default -Wno-error=enum-compare -Wno-error=char-subscripts -Wno-error=parentheses -Wno-error=array-bounds -Wno-error=fortify-source -Wno-error=comment")
+-     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13)
+-       set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-error=unused-but-set-variable")
+-       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-but-set-variable")
+-     endif()
++elseif (MSVC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14 -Woverloaded-virtual -Wno-long-long -Wno-unused-parameter -Wwrite-strings")
++  option(WITH_WERROR "Compile with '-Werror' C/C++ compiler flag" OFF)
++endif ()
++if (WITH_WERROR)
++  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Werror -Wno-error=sign-compare -Wno-error=pointer-sign -Wno-error=incompatible-pointer-types -Wno-error=string-conversion -Wno-error=c99-extensions -Wno-error=deprecated-register -Wno-error=format -Wno-error=format-pedantic -Wno-error=tautological-constant-out-of-range-compare -Wno-error=switch -Wno-error=covered-switch-default -Wno-error=enum-compare -Wno-error=char-subscripts -Wno-error=parentheses -Wno-error=array-bounds -Wno-error=fortify-source -Wno-error=comment")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=sign-compare -Wno-error=pointer-sign -Wno-error=incompatible-pointer-types -Wno-error=string-conversion -Wno-error=c99-extensions -Wno-error=deprecated-register -Wno-error=format -Wno-error=format-pedantic -Wno-error=tautological-constant-out-of-range-compare -Wno-error=switch -Wno-error=covered-switch-default -Wno-error=enum-compare -Wno-error=char-subscripts -Wno-error=parentheses -Wno-error=array-bounds -Wno-error=fortify-source -Wno-error=comment")
++  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13)
++    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-error=unused-but-set-variable")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=unused-but-set-variable")
+   endif ()
+ endif ()
+ 
+diff --git a/tools/flang1/flang1exe/CMakeLists.txt b/tools/flang1/flang1exe/CMakeLists.txt
+index 7298861d3cc..a3367870013 100644
+--- a/tools/flang1/flang1exe/CMakeLists.txt
++++ b/tools/flang1/flang1exe/CMakeLists.txt
+@@ -111,9 +111,11 @@ set(INCLUDE_DIRS
+   ${TOOLS_SHARED_DIR}
+   )
+ 
+-set(COMPILE_OPTS
+-  -std=c11
+-  )
++if(NOT MSVC)
++  set(COMPILE_OPTS
++    -std=c11
++    )
++endif()
+ 
+ add_flang_executable(flang1
+   ${SOURCES} ${SHARED_SOURCES}

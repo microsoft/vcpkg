@@ -1,0 +1,50 @@
+diff --git a/runtime/flang/CMakeLists.txt b/runtime/flang/CMakeLists.txt
+index 850942b32..3ec95760e 100644
+--- a/runtime/flang/CMakeLists.txt
++++ b/runtime/flang/CMakeLists.txt
+@@ -430,7 +430,7 @@ add_custom_command(
+   > "${I8_FILES_DIR}/ieee_arithmetic.F95"
+   COMMENT "Preprocessing ieee_arithmetic.F95"
+   VERBATIM
+-  DEPENDS flang1 flang2
++  #DEPENDS flang1 flang2
+ )
+ 
+ add_custom_command(
+@@ -440,7 +440,7 @@ add_custom_command(
+   > "${I8_FILES_DIR}/ieee_exceptions.F95"
+   COMMENT "Preprocessing ieee_exceptions.F95"
+   VERBATIM
+-  DEPENDS flang1 flang2
++  #DEPENDS flang1 flang2
+ )
+ 
+ add_custom_command(
+@@ -450,7 +450,7 @@ add_custom_command(
+   COMMAND "${CMAKE_Fortran_COMPILER}" -E -DPGFLANG -cpp ${SEPARATED_CMAKE_Fortran_FLAGS}
+   ${CMAKE_CURRENT_SOURCE_DIR}/norm2.F95 > "norm2_1.F95"
+   VERBATIM
+-  DEPENDS flang1 flang2
++  #DEPENDS flang1 flang2
+ )
+ 
+ # The files lists FTN_INTRINSICS_DESC_DEP and FTN_SUPPORT_DESC_DEP need to be compiled twice (with and without 'DESC_I8' compile definition). So an actual copy is made in a temp file on which this is done.
+@@ -662,18 +662,6 @@ target_include_directories(flang_shared
+   ${CMAKE_CURRENT_BINARY_DIR}
+   )
+ 
+-# Make sure the compiler is built before we bootstrap
+-add_dependencies(flang_static
+-  flang1
+-  flang2
+-  )
+-
+-# Make sure the compiler is built before we bootstrap
+-add_dependencies(flang_shared
+-  flang1
+-  flang2
+-  )
+-
+ if (NOT MSVC)
+   target_compile_options(flang_static PRIVATE -fPIC)
+   target_compile_options(flang_shared PRIVATE -fPIC)

@@ -1,0 +1,1928 @@
+diff --git a/runtime/flang/access3f.c b/runtime/flang/access3f.c
+index f330b57b18e..62a78edd0b5 100644
+--- a/runtime/flang/access3f.c
++++ b/runtime/flang/access3f.c
+@@ -10,7 +10,7 @@
+ /*	access3f.c - Implements LIB3F access subroutine.  */
+ 
+ /* must include ent3f.h AFTER io3f.h */
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #endif
+ 
+diff --git a/runtime/flang/alarm3f.c b/runtime/flang/alarm3f.c
+index bf65ac96c01..e81f8f49cee 100644
+--- a/runtime/flang/alarm3f.c
++++ b/runtime/flang/alarm3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	alarm3f.c - Implements LIB3F alarm subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ #include <signal.h>
+ #include "ent3f.h"
+ 
+diff --git a/runtime/flang/alias.c b/runtime/flang/alias.c
+index 58c582abe03..6f5e06223fb 100644
+--- a/runtime/flang/alias.c
++++ b/runtime/flang/alias.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #include "omp.h"
+ 
+ extern void omp_set_num_threads_(int num_threads)
+diff --git a/runtime/flang/allo.c b/runtime/flang/allo.c
+index f9c1db5289f..b383bf44339 100644
+--- a/runtime/flang/allo.c
++++ b/runtime/flang/allo.c
+@@ -239,7 +239,7 @@ I8(__fort_alloc)(__INT_T nelem, dtype kind, size_t len, __STAT_T *stat,
+   char msg[80];
+   char *p_env;
+ 
+-#if (defined(WIN64) || defined(WIN32))
++#if (defined(_WIN64))
+ #define ALN_LARGE
+ #else
+ #undef ALN_LARGE
+@@ -398,7 +398,7 @@ I8(__alloc04)(__NELEM_T nelem, dtype kind, size_t len,
+     MP_V_STDIO;
+   }
+ 
+-#if (defined(WIN64) || defined(WIN32))
++#if (defined(_WIN64))
+ #define ALN_LARGE
+ #else
+ #undef ALN_LARGE
+diff --git a/runtime/flang/backspace.c b/runtime/flang/backspace.c
+index ef27003d94a..0ee3b837636 100644
+--- a/runtime/flang/backspace.c
++++ b/runtime/flang/backspace.c
+@@ -64,7 +64,7 @@ _f90io_backspace(__INT_T *unit, __INT_T *bitv, __INT_T *iostat, int swap_bytes)
+ 
+   if (f->nonadvance) {
+     f->nonadvance = FALSE;
+-#if defined(WINNT)
++#if defined(_WIN64)
+     if (__io_binary_mode(f->fp))
+       __io_fputc('\r', f->fp);
+ #endif
+diff --git a/runtime/flang/besj03f.c b/runtime/flang/besj03f.c
+index de01cd8ce1e..9c6ea374d95 100644
+--- a/runtime/flang/besj03f.c
++++ b/runtime/flang/besj03f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define j0 _j0
+ #endif
+ 
+diff --git a/runtime/flang/besj13f.c b/runtime/flang/besj13f.c
+index edf45a4dbc7..1ec34afc157 100644
+--- a/runtime/flang/besj13f.c
++++ b/runtime/flang/besj13f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define j1 _j1
+ #endif
+ 
+diff --git a/runtime/flang/besjn3f.c b/runtime/flang/besjn3f.c
+index 77dc92b923c..6f39867b9b7 100644
+--- a/runtime/flang/besjn3f.c
++++ b/runtime/flang/besjn3f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define jn _jn
+ #endif
+ 
+diff --git a/runtime/flang/besy03f.c b/runtime/flang/besy03f.c
+index 7fa4aea96c8..634661382f7 100644
+--- a/runtime/flang/besy03f.c
++++ b/runtime/flang/besy03f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define y0 _y0
+ #endif
+ 
+diff --git a/runtime/flang/besy13f.c b/runtime/flang/besy13f.c
+index 98167989af7..ba661fe6efe 100644
+--- a/runtime/flang/besy13f.c
++++ b/runtime/flang/besy13f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define y1 _y1
+ #endif
+ 
+diff --git a/runtime/flang/besyn3f.c b/runtime/flang/besyn3f.c
+index 3c271de14ae..cb4a8ef950f 100644
+--- a/runtime/flang/besyn3f.c
++++ b/runtime/flang/besyn3f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define yn _yn
+ #endif
+ 
+diff --git a/runtime/flang/buffer.c b/runtime/flang/buffer.c
+index d6061056918..c55817f0822 100644
+--- a/runtime/flang/buffer.c
++++ b/runtime/flang/buffer.c
+@@ -12,7 +12,7 @@
+ #include "stdioInterf.h"
+ #include "fioMacros.h"
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define write _write
+ #define creat _creat
+ #define close _close
+diff --git a/runtime/flang/chdir3f.c b/runtime/flang/chdir3f.c
+index c64d313840e..9947c6a19c9 100644
+--- a/runtime/flang/chdir3f.c
++++ b/runtime/flang/chdir3f.c
+@@ -10,7 +10,7 @@
+ /*	chdir3f.c - Implements LIB3F chdir subprogram.  */
+ 
+ /* must include ent3f.h AFTER io3f.h */
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #else
+ #include <direct.h>
+@@ -18,7 +18,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define chdir _chdir
+ #endif
+ 
+diff --git a/runtime/flang/chmod3f.c b/runtime/flang/chmod3f.c
+index 58dbd8c250f..8a7a88e2e69 100644
+--- a/runtime/flang/chmod3f.c
++++ b/runtime/flang/chmod3f.c
+@@ -17,7 +17,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define chmod _chmod
+ #endif
+ 
+diff --git a/runtime/flang/close.c b/runtime/flang/close.c
+index 628b8e83dcc..a66ce2428e4 100644
+--- a/runtime/flang/close.c
++++ b/runtime/flang/close.c
+@@ -13,12 +13,12 @@
+ 
+ #include <errno.h>
+ #include "global.h"
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #endif
+ #include "stdioInterf.h"
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define unlink _unlink
+ #define access _access
+ #endif
+@@ -38,7 +38,7 @@ __fortio_close(FIO_FCB *f, int flag)
+ 
+   if (f->nonadvance) {
+     f->nonadvance = FALSE;
+-#if defined(WINNT)
++#if defined(_WIN64)
+     if (__io_binary_mode(f->fp))
+       __io_fputc('\r', f->fp);
+ #endif
+@@ -61,7 +61,7 @@ __fortio_close(FIO_FCB *f, int flag)
+       else
+         __fort_unlink(f->name);
+     }
+-#ifdef WINNT
++#if defined(_WIN64)
+     else if (f->status == FIO_SCRATCH)
+       unlink(f->name);
+ #endif
+diff --git a/runtime/flang/cnfg.c b/runtime/flang/cnfg.c
+index 020fa06c0ec..800d2549078 100644
+--- a/runtime/flang/cnfg.c
++++ b/runtime/flang/cnfg.c
+@@ -77,7 +77,7 @@ __fortio_scratch_name(char *filename, int unit)
+   extern char *__io_tempnam();
+   char *nm;
+ 
+-#if defined(WINNT)
++#if defined(_WIN64)
+   if (getenv("TMP") == 0)
+     nm = __io_tempnam("C:\\", "FTN");
+   else
+@@ -85,13 +85,13 @@ __fortio_scratch_name(char *filename, int unit)
+   strcpy(filename, nm);
+   if (nm)
+     free(nm);
+-#else /*WINNT*/
++#else /*_WIN64*/
+ 
+   nm = __io_tempnam((char *)0, "FTN");
+   strcpy(filename, nm);
+   if (nm)
+     free(nm);
+ 
+-#endif /*WINNT*/
++#endif /*_WIN64*/
+ 
+ }
+diff --git a/runtime/flang/cnfg.h b/runtime/flang/cnfg.h
+index 37571b94877..4f30164d440 100644
+--- a/runtime/flang/cnfg.h
++++ b/runtime/flang/cnfg.h
+@@ -17,7 +17,7 @@ typedef struct {
+   int ftn_true;             /* -1 ==> VAX; 1 => unix */
+ } FIO_CNFG;
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ 
+ extern const char *__get_fio_cnfg_default_name(void);
+ extern int __get_fio_cnfg_true_mask(void);
+diff --git a/runtime/flang/const.c b/runtime/flang/const.c
+index e0fb057b976..fff4c3d999d 100644
+--- a/runtime/flang/const.c
++++ b/runtime/flang/const.c
+@@ -125,14 +125,6 @@ __INT_T ENTCOMN(TYPE, type)[] = {
+     17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
+     32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43};
+ 
+-#if defined(WINNT) && !defined(WIN64) && !defined(WIN32)
+-char *
+-__get_fort_type_addr(void)
+-{
+-  return (char *)ENTCOMN(TYPE, type);
+-}
+-#endif
+-
+ /* universal constants */
+ 
+ long long int __fort_one[4] = {~0, ~0, ~0, ~0};
+@@ -422,7 +414,7 @@ __get_size_of(int* idx)
+   return __fort_size_of[*idx];
+ }
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ 
+ /* pg access routines for data shared between windows dlls */
+ 
+@@ -657,7 +649,7 @@ __get_fort_zed(void)
+   return __fort_zed;
+ }
+ 
+-#endif /* WINNT */
++#endif /* _WIN64 */
+ 
+ void
+ __fort_init_consts()
+@@ -765,7 +757,7 @@ __fort_init_consts()
+ /*
+  * Always emit the comms for non-windows systems.
+  */
+-#ifdef WINNT
++#if defined(_WIN64)
+ /*
+  * Emit the comms for win if pg.dll is not used -- PGDLL is defined
+  * if we need to revert to pg.dll.
+diff --git a/runtime/flang/cplxf.c b/runtime/flang/cplxf.c
+index 3b5103b9c4e..721ba755ba5 100644
+--- a/runtime/flang/cplxf.c
++++ b/runtime/flang/cplxf.c
+@@ -10,7 +10,7 @@
+ #include "stdioInterf.h"
+ #include "fioMacros.h"
+ #include <time.h>
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/time.h>
+ #include <unistd.h>
+ #endif
+diff --git a/runtime/flang/curdir.c b/runtime/flang/curdir.c
+index 4f6bebf8ac5..2c8dc429138 100644
+--- a/runtime/flang/curdir.c
++++ b/runtime/flang/curdir.c
+@@ -6,7 +6,7 @@
+  */
+ 
+ #include <sys/types.h>
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/param.h>
+ #include <sys/utsname.h>
+ #endif
+@@ -18,7 +18,7 @@
+ #define MAXPATHLEN 1024
+ #endif
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define getcwd _getcwd
+ #endif
+ 
+@@ -89,7 +89,7 @@ void __fort_getdir(curdir) char *curdir;
+ 
+ void __fort_gethostname(host) char *host;
+ {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   struct utsname un;
+ #endif
+   const char *p;
+@@ -97,7 +97,7 @@ void __fort_gethostname(host) char *host;
+ 
+   p = __fort_getopt("-curhost");
+   if (p == NULL) {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+     s = uname(&un); /* get hostname */
+     if (s == -1) {
+       __fort_abortp("uname");
+diff --git a/runtime/flang/dbesj03f.c b/runtime/flang/dbesj03f.c
+index a2575abfe35..1c6daf31e13 100644
+--- a/runtime/flang/dbesj03f.c
++++ b/runtime/flang/dbesj03f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define j0 _j0
+ #endif
+ 
+diff --git a/runtime/flang/dbesj13f.c b/runtime/flang/dbesj13f.c
+index b4546ca9741..a2754cad4a3 100644
+--- a/runtime/flang/dbesj13f.c
++++ b/runtime/flang/dbesj13f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define j1 _j1
+ #endif
+ 
+diff --git a/runtime/flang/dbesjn3f.c b/runtime/flang/dbesjn3f.c
+index 0161cbb2115..b629455a72e 100644
+--- a/runtime/flang/dbesjn3f.c
++++ b/runtime/flang/dbesjn3f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define jn _jn
+ #endif
+ 
+diff --git a/runtime/flang/dbesy03f.c b/runtime/flang/dbesy03f.c
+index 92bf37e4d72..5d83efd4c4a 100644
+--- a/runtime/flang/dbesy03f.c
++++ b/runtime/flang/dbesy03f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define y0 _y0
+ #endif
+ 
+diff --git a/runtime/flang/dbesy13f.c b/runtime/flang/dbesy13f.c
+index 778724c5bf5..19e6fcfc723 100644
+--- a/runtime/flang/dbesy13f.c
++++ b/runtime/flang/dbesy13f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define y1 _y1
+ #endif
+ 
+diff --git a/runtime/flang/dbesyn3f.c b/runtime/flang/dbesyn3f.c
+index 0e5f7495779..7ac77bb636b 100644
+--- a/runtime/flang/dbesyn3f.c
++++ b/runtime/flang/dbesyn3f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define yn _yn
+ #endif
+ 
+diff --git a/runtime/flang/delfilesqq3f.c b/runtime/flang/delfilesqq3f.c
+index 9263df52976..2411d6c6d5b 100644
+--- a/runtime/flang/delfilesqq3f.c
++++ b/runtime/flang/delfilesqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	delfilesqq3f.c - Implements DFLIB delfilesqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -17,7 +17,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ int ENT3F(DELFILESQQ, delfilesqq)(DCHAR(ffiles) DCLEN(ffiles))
+ {
+diff --git a/runtime/flang/descIntrins.c b/runtime/flang/descIntrins.c
+index 61f6fdecb88..77edd3d3b6b 100644
+--- a/runtime/flang/descIntrins.c
++++ b/runtime/flang/descIntrins.c
+@@ -279,7 +279,7 @@ ENTFTN(KINDEXX, kindexx_cr_nm)
+ 
+ #endif
+ 
+-#if defined(WINNT)
++#if defined(_WIN64)
+ 
+ /* functions here follow the msfortran/mscall conventions */
+ 
+diff --git a/runtime/flang/drandm3f.c b/runtime/flang/drandm3f.c
+index 411904e4c58..f217da1c924 100644
+--- a/runtime/flang/drandm3f.c
++++ b/runtime/flang/drandm3f.c
+@@ -12,7 +12,7 @@
+ #include "ent3f.h"
+ 
+ /* drand48, srand48 are not currently available on win64 */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <stdlib.h>
+ 
+diff --git a/runtime/flang/dtime3f.c b/runtime/flang/dtime3f.c
+index 956a186ff32..a36b332847a 100644
+--- a/runtime/flang/dtime3f.c
++++ b/runtime/flang/dtime3f.c
+@@ -14,14 +14,14 @@
+ #include "ent3f.h"
+ 
+ #define _LIBC_LIMITS_H_
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #include <sys/times.h>
+ #endif
+ #include <sys/types.h>
+ #include <limits.h>
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+   #include "wintimes.h"
+   #define CLK_TCK 10000000.0
+ #else
+diff --git a/runtime/flang/ent3f.h b/runtime/flang/ent3f.h
+index 60822c3a643..e3b0589219b 100644
+--- a/runtime/flang/ent3f.h
++++ b/runtime/flang/ent3f.h
+@@ -17,27 +17,13 @@
+ #undef CADR
+ #undef CLEN
+ 
+-/* macros for entries */
+-#if defined(WINNT) && !defined(WIN64) && !defined(UXOBJS)
+-
+-#pragma global - x 121 0x20000
+-#define ENT3F(UC, LC) __attribute__((stdcall)) UC
+-#define ENT3FSU(UC, LC) __attribute__((stdcall)) UC##_
+-/* macros to declare character arguments */
+-#define DCHAR(ARG) char *ARG##_adr, int ARG##_len
+-#define DCLEN(ARG)
+-
+-#else
+-
+ #define ENT3F(UC, LC) LC##_
+ #define ENT3FSU(UC, LC) LC##__
+ /* macros to declare character arguments */
+ #define DCHAR(ARG) char *ARG##_adr
+ #define DCLEN(ARG) , int ARG##_len
+ 
+-#endif
+-
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define j0 _j0
+ #define j1 _j1
+ #define jn _jn
+diff --git a/runtime/flang/entry.c b/runtime/flang/entry.c
+index 0ce5120251e..ec6eb096e2c 100644
+--- a/runtime/flang/entry.c
++++ b/runtime/flang/entry.c
+@@ -16,7 +16,7 @@
+ 
+ WIN_API __INT_T LINENO[];
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define write _write
+ #endif
+ 
+@@ -44,7 +44,7 @@ static int __fort_trac_mflag;
+ static int __fort_prof_mflag;
+ int __fort_entry_mflag;
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ /* pg access for dlls */
+ char *
+ __get_fort_lineno_addr(void)
+diff --git a/runtime/flang/etime3f.c b/runtime/flang/etime3f.c
+index 90f2b937335..ad3378da5df 100644
+--- a/runtime/flang/etime3f.c
++++ b/runtime/flang/etime3f.c
+@@ -15,7 +15,7 @@
+ 
+ /* Not implemented for WINNT */
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #include <sys/times.h>
+ #endif
+@@ -24,7 +24,7 @@
+ #include <limits.h>
+ 
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+    #include "wintimes.h"
+    #define CLK_TCK 10000000.0
+ #else
+diff --git a/runtime/flang/fdate3f.c b/runtime/flang/fdate3f.c
+index fe82d98d4df..cf76749b002 100644
+--- a/runtime/flang/fdate3f.c
++++ b/runtime/flang/fdate3f.c
+@@ -14,7 +14,7 @@
+ #include <time.h>
+ #include "utils3f.h"
+ 
+-#if !defined(WIN32) && !defined(WIN64)
++#if !defined(_WIN64)
+ WIN_MSVCRT_IMP char *WIN_CDECL ctime(const time_t *);
+ #endif
+ 
+diff --git a/runtime/flang/findfileqq3f.c b/runtime/flang/findfileqq3f.c
+index 2b0a236576a..a4e81a1d6dd 100644
+--- a/runtime/flang/findfileqq3f.c
++++ b/runtime/flang/findfileqq3f.c
+@@ -16,7 +16,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ extern char *__fstr2cstr();
+ int ENT3F(FINDFILEQQ, findfileqq)(DCHAR(fname), DCHAR(fvarname),
+diff --git a/runtime/flang/fioMacros.h b/runtime/flang/fioMacros.h
+index d57a2cff71b..aaacc9742ae 100644
+--- a/runtime/flang/fioMacros.h
++++ b/runtime/flang/fioMacros.h
+@@ -208,7 +208,7 @@ void __fort_set_second(double d);
+ #define __DIST_ENTRY_AWAIT(reqn)
+ #define __DIST_ENTRY_AWAIT_DONE(reqn)
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ /* prototypes for HPF */
+ 
+ /* The PG compilers cannot yet create dlls that share data. For
+@@ -1716,4 +1716,4 @@ void ENTF90(TEMPLATE1, template1)(F90_Desc *dd, __INT_T *p_flags, __INT_T *p_kin
+ void ENTF90(TEMPLATE2, template2)(F90_Desc *dd, __INT_T *p_flags, __INT_T *p_kind, __INT_T *p_len, __INT_T *p_l1, __INT_T *p_u1, __INT_T *p_l2, __INT_T *p_u2);
+ void ENTF90(TEMPLATE3, template3)(F90_Desc *dd, __INT_T *p_flags, __INT_T *p_kind, __INT_T *p_len, __INT_T *p_l1, __INT_T *p_u1, __INT_T *p_l2, __INT_T *p_u2, __INT_T *p_l3, __INT_T *p_u3);
+ 
+-#endif /*_PGHPF_H_*/
++#endif /*_PGHPF_H_*/
+\ No newline at end of file
+diff --git a/runtime/flang/fiodf.c b/runtime/flang/fiodf.c
+index 07fbae8548d..1d6602dbcd2 100644
+--- a/runtime/flang/fiodf.c
++++ b/runtime/flang/fiodf.c
+@@ -13,7 +13,7 @@
+ 
+ FIO_TBL fioFcbTbls = {0};
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ FIO_FCB *
+ __get_hpfio_fcbs(void)
+ {
+diff --git a/runtime/flang/fmtwrite.c b/runtime/flang/fmtwrite.c
+index e15ed57c2da..92e1eb68cfc 100644
+--- a/runtime/flang/fmtwrite.c
++++ b/runtime/flang/fmtwrite.c
+@@ -2687,7 +2687,7 @@ fw_write_record(void)
+         f->nonadvance = FALSE; /* do it now */
+         if (!(g->suppress_crlf)) {
+ /* append carriage return */
+-#if defined(WINNT)
++#if defined(_WIN64)
+           if (__io_binary_mode(f->fp))
+             __io_fputc('\r', f->fp);
+ #endif
+diff --git a/runtime/flang/fork3f.c b/runtime/flang/fork3f.c
+index bddb99108ac..4081cf4b589 100644
+--- a/runtime/flang/fork3f.c
++++ b/runtime/flang/fork3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	fork3f.c - Implements LIB3F fork subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include "io3f.h"
+@@ -33,4 +33,4 @@ int ENT3F(FORK, fork)()
+     return pid;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/fortDt.h b/runtime/flang/fortDt.h
+index 28e1eb0c675..75daa3dac09 100644
+--- a/runtime/flang/fortDt.h
++++ b/runtime/flang/fortDt.h
+@@ -265,7 +265,7 @@ typedef __CPLX16_T __BIGCPLX_T;
+ 
+ /* pointer-sized integer */
+ 
+-#if   defined(WIN64)
++#if   defined(_WIN64)
+ 
+ typedef long long __POINT_T;
+ 
+diff --git a/runtime/flang/fpcvt.c b/runtime/flang/fpcvt.c
+index b72fba9ebca..59cedaeaa02 100644
+--- a/runtime/flang/fpcvt.c
++++ b/runtime/flang/fpcvt.c
+@@ -7,7 +7,7 @@
+ 
+ #include <string.h>
+ #include <ctype.h>
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ #include <fenv.h>
+ #endif
+ #include "fioMacros.h"
+@@ -731,7 +731,7 @@ __fortio_strtod(char *s, char **p)
+  * (0 is before first digit).  *sign is sign.
+  */
+ 
+-#if defined(WIN64)
++#if defined(_WIN64)
+ #define FE_TONEAREST 0
+ #define FE_DOWNWARD 1024
+ #define FE_UPWARD 2048
+diff --git a/runtime/flang/fstat3f.c b/runtime/flang/fstat3f.c
+index ff3279753b1..b27c2e1e74b 100644
+--- a/runtime/flang/fstat3f.c
++++ b/runtime/flang/fstat3f.c
+@@ -17,7 +17,7 @@
+ 
+ int ENT3F(FSTAT, fstat)(int *lu, int *statb)
+ {
+-#ifdef _WIN64
++#if defined(_WIN64)
+   struct _stat32 b;
+   char *p;
+   int i;
+@@ -99,7 +99,7 @@ int ENT3F(FSTAT, fstat)(int *lu, int *statb)
+   statb[8] = b.st_atime;
+   statb[9] = b.st_mtime;
+   statb[10] = b.st_ctime;
+-#if !defined(WINNT)
++#if !defined(_WIN64)
+   statb[11] = b.st_blksize;
+   statb[12] = b.st_blocks;
+ #else
+diff --git a/runtime/flang/fstat643f.c b/runtime/flang/fstat643f.c
+index 01e87acf74a..4cd52e55edd 100644
+--- a/runtime/flang/fstat643f.c
++++ b/runtime/flang/fstat643f.c
+@@ -17,7 +17,7 @@
+ 
+ int ENT3F(FSTAT64, fstat64)(int *lu, long long *statb)
+ {
+-#if defined(TARGET_WIN) || defined(WIN32) || defined(WIN64)
++#if defined(TARGET_WIN) || defined(_WIN64)
+   /*
+    * The __int64_t members in the _stat64 are 8-byte aligned, thus the
+    * st_size member is at offset 24. On WIN32, 64-bit ints are 4-byte
+diff --git a/runtime/flang/fsync3f.c b/runtime/flang/fsync3f.c
+index dad1748a88f..6eb3f739251 100644
+--- a/runtime/flang/fsync3f.c
++++ b/runtime/flang/fsync3f.c
+@@ -20,7 +20,7 @@ void ENT3F(FSYNC, fsync)(lu) int *lu;
+ 
+   f = __getfile3f(*lu);
+   if (f)
+-    #ifndef _WIN64
++    #if !defined(_WIN64)
+         fsync(__io_getfd(f));
+     #else
+         fflush(f);
+diff --git a/runtime/flang/ftni64.h b/runtime/flang/ftni64.h
+index ff57e3f8d30..d6660b55d0d 100644
+--- a/runtime/flang/ftni64.h
++++ b/runtime/flang/ftni64.h
+@@ -46,7 +46,7 @@ typedef union {
+     I64_LSH(int64d.i) = l;                                                     \
+     return int64d.lv;                                                          \
+   }
+-#elif defined(WIN64)
++#elif defined(_WIN64)
+ /* Someday, should only care if TM_I8 is defined */
+ #define __I8RET_T long long
+ #define UTL_I_I64RET(m, l)                                                     \
+diff --git a/runtime/flang/fullpathqq3f.c b/runtime/flang/fullpathqq3f.c
+index 29044e5f653..1cf6c2344a4 100644
+--- a/runtime/flang/fullpathqq3f.c
++++ b/runtime/flang/fullpathqq3f.c
+@@ -15,7 +15,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ extern char *__fstr2cstr();
+ int ENT3F(FULLPATHQQ, fullpathqq)(DCHAR(fname),
+diff --git a/runtime/flang/gerror3f.c b/runtime/flang/gerror3f.c
+index 9d5ee44aa60..b4c11446337 100644
+--- a/runtime/flang/gerror3f.c
++++ b/runtime/flang/gerror3f.c
+@@ -17,7 +17,7 @@
+ 
+ #define Ftn_errmsg __fortio_errmsg
+ 
+-#if !defined(WIN64) && !defined(WIN32)
++#if !defined(_WIN64)
+ extern char *strerror(); /* SVR4 only ? */
+ #endif
+ 
+diff --git a/runtime/flang/getcwd3f.c b/runtime/flang/getcwd3f.c
+index f8462c801c5..ce5943313b7 100644
+--- a/runtime/flang/getcwd3f.c
++++ b/runtime/flang/getcwd3f.c
+@@ -15,7 +15,7 @@
+ #include "utils3f.h"
+ #include "mpalloc.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #define GETCWDM _getcwd /* getcwd deprecated in Windows in VC 2005 */
+ #else
+ #define GETCWDM getcwd
+diff --git a/runtime/flang/getdat3f.c b/runtime/flang/getdat3f.c
+index 8f79a7a5473..6a90c9e3b93 100644
+--- a/runtime/flang/getdat3f.c
++++ b/runtime/flang/getdat3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	getdat3f.c - Implements getdat subroutine.  */
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <windows.h>
+ #include "ent3f.h"
+diff --git a/runtime/flang/getdrivedirqq3f.c b/runtime/flang/getdrivedirqq3f.c
+index 20069833821..c1e2214b413 100644
+--- a/runtime/flang/getdrivedirqq3f.c
++++ b/runtime/flang/getdrivedirqq3f.c
+@@ -16,7 +16,7 @@
+ #include "utils3f.h"
+ #include "mpalloc.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #define GETCWDM _getcwd /* getcwd deprecated in Windows in VC 2005 */
+ #else
+ #define GETCWDM getcwd
+diff --git a/runtime/flang/getfileinfoqq3f.c b/runtime/flang/getfileinfoqq3f.c
+index 953adc8d859..bbed385430c 100644
+--- a/runtime/flang/getfileinfoqq3f.c
++++ b/runtime/flang/getfileinfoqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	getfileinfoqq3f.c - Implements DFLIB getfileinfoqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -17,7 +17,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ extern void __GetTimeToSecondsSince1970(ULARGE_INTEGER *fileTime,
+                                         unsigned int *out);
+diff --git a/runtime/flang/getfileinfoqqi83f.c b/runtime/flang/getfileinfoqqi83f.c
+index 51dedfaed36..a4b9336c4d1 100644
+--- a/runtime/flang/getfileinfoqqi83f.c
++++ b/runtime/flang/getfileinfoqqi83f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	getfileinfoqq3f.c - Implements DFLIB getfileinfoqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -21,7 +21,7 @@
+ #define FILE$LAST -2
+ #define FILE$ERROR -3
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ extern void __GetTimeToSecondsSince1970(ULARGE_INTEGER *fileTime,
+                                         unsigned int *out);
+diff --git a/runtime/flang/getgid3f.c b/runtime/flang/getgid3f.c
+index d5cd4373d2c..cf4ebe9559b 100644
+--- a/runtime/flang/getgid3f.c
++++ b/runtime/flang/getgid3f.c
+@@ -9,11 +9,11 @@
+ 
+ /*	getgid3f.c - Implements LIB3F getgid subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include  <unistd.h>
+ #include "ent3f.h"
+ 
+ int ENT3F(GETGID, getgid)() { return getgid(); }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/getlog3f.c b/runtime/flang/getlog3f.c
+index f52b2a58417..b3693adcdba 100644
+--- a/runtime/flang/getlog3f.c
++++ b/runtime/flang/getlog3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	getlog3f.c - Implements LIB3F getlog subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include "ent3f.h"
+ #include "utils3f.h"
+@@ -24,4 +24,4 @@ void ENT3F(GETLOG, getlog)(DCHAR(nm) DCLEN(nm))
+   __fcp_cstr(CADR(nm), CLEN(nm), p);
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/getpid3f.c b/runtime/flang/getpid3f.c
+index f46d2061fae..c178db6038d 100644
+--- a/runtime/flang/getpid3f.c
++++ b/runtime/flang/getpid3f.c
+@@ -10,7 +10,7 @@
+ /*	getpid3f.c - Implements LIB3F getpid subprogram.  */
+ 
+ #include "ent3f.h"
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #else
+ #include <process.h>
+diff --git a/runtime/flang/gettim3f.c b/runtime/flang/gettim3f.c
+index 122ea8ebb23..8ff554a9956 100644
+--- a/runtime/flang/gettim3f.c
++++ b/runtime/flang/gettim3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	gettim3f.c - Implements gettim subroutine.  */
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <windows.h>
+ #include "ent3f.h"
+diff --git a/runtime/flang/getuid3f.c b/runtime/flang/getuid3f.c
+index 105fd181b74..cb3ed4899ab 100644
+--- a/runtime/flang/getuid3f.c
++++ b/runtime/flang/getuid3f.c
+@@ -9,11 +9,11 @@
+ 
+ /*	getuid3f.c - Implements LIB3F getuid subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include "ent3f.h"
+ #include <unistd.h>
+ 
+ int ENT3F(GETUID, getuid)() { return getuid(); }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/getvolinfo3f.c b/runtime/flang/getvolinfo3f.c
+index 7ddf734aadf..7e4ef2ef1eb 100644
+--- a/runtime/flang/getvolinfo3f.c
++++ b/runtime/flang/getvolinfo3f.c
+@@ -18,18 +18,11 @@
+ typedef char *LPSTR;
+ typedef int DWORD;
+ 
+-#if defined(WIN64) || defined(WIN32)
+-#if defined(WIN64)
++#if defined(_WIN64)
+ typedef long long LDWORD;
+ extern int GetVolumeInformationA();
+ #define ENTNAM(ss) _##ss
+ 
+-#else
+-typedef long LDWORD;
+-extern int __stdcall GetVolumeInformationA();
+-#define ENTNAM(ss) ss
+-#endif
+-
+ typedef LDWORD *LPDWORD;
+ 
+ static void fill(LPSTR, int, int);
+diff --git a/runtime/flang/global.h b/runtime/flang/global.h
+index 8c93a23a52c..9fa68104ac4 100644
+--- a/runtime/flang/global.h
++++ b/runtime/flang/global.h
+@@ -363,11 +363,7 @@ extern int __fortio_check_format(void);
+ extern int __fortio_eor_crlf(void);
+ extern VOID __fortio_fmtinit(void);
+ extern VOID __fortio_fmtend(void);
+-#if defined(WINNT)
+-#define EOR_CRLF 1
+-#else
+ #define EOR_CRLF __fortio_eor_crlf()
+-#endif
+ extern int __fortio_no_minus_zero(void);
+ int __fortio_new_fp_formatter(void);
+ 
+diff --git a/runtime/flang/hand.c b/runtime/flang/hand.c
+index 60b1a12f99a..91e639a7d0d 100644
+--- a/runtime/flang/hand.c
++++ b/runtime/flang/hand.c
+@@ -5,12 +5,12 @@
+  *
+  */
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/signal.h>
+ #include "stdioInterf.h"
+ #include "fioMacros.h"
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define write _write
+ #endif
+ 
+@@ -85,7 +85,7 @@ static void sighand(s) int s;
+ 
+   lcpu = __fort_myprocnum();
+   __fort_psignal(lcpu, s); /* print message */
+-#if !defined(WIN64) && !defined(WIN32)
++#if !defined(_WIN64)
+   sleep(1); /* wait for message to clear */
+ #endif
+   __fort_abort(NULL); /* abort */
+diff --git a/runtime/flang/heapinit.c b/runtime/flang/heapinit.c
+index fdbbcb5249d..9ae1866f9e7 100644
+--- a/runtime/flang/heapinit.c
++++ b/runtime/flang/heapinit.c
+@@ -30,14 +30,14 @@ int val;
+   void (*save)();
+   int *pi;
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   save = signal(SIGBUS, sighand);
+ #endif
+   pi = (int *)beg;
+   while (pi < (int *)end) {
+     *pi++ = val;
+   }
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   signal(SIGBUS, save);
+ #endif
+ }
+diff --git a/runtime/flang/hostnm3f.c b/runtime/flang/hostnm3f.c
+index a4a4c3e93f8..ff4af930971 100644
+--- a/runtime/flang/hostnm3f.c
++++ b/runtime/flang/hostnm3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	hostnm3f.c - Implements LIB3F hostnm subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include "io3f.h"
+@@ -43,4 +43,4 @@ int ENT3F(HOSTNM, hostnm)(DCHAR(nm) DCLEN(nm))
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/init.c b/runtime/flang/init.c
+index 63f59da979d..e8f0b6f1f9d 100644
+--- a/runtime/flang/init.c
++++ b/runtime/flang/init.c
+@@ -18,7 +18,7 @@ static int tid = 0;
+ 
+ const char *__fort_transnam = "rpm1";
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ 
+ /* pg access routines for data shared between windows dlls */
+ 
+diff --git a/runtime/flang/initpar.c b/runtime/flang/initpar.c
+index b02b502e96d..2b4f212c144 100644
+--- a/runtime/flang/initpar.c
++++ b/runtime/flang/initpar.c
+@@ -15,7 +15,7 @@
+ #include <string.h>
+ #include <ctype.h>
+ #include <memory.h>
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/time.h>
+ #endif
+ 
+@@ -89,8 +89,7 @@ __fort_ncpus()
+   return __fort_tcpus;
+ }
+ 
+-#if defined(WINNT)
+-#if !defined(WIN64) && !defined(WIN32)
++#if defined(_WIN64)
+ __INT_T *CORMEM;
+ 
+ /* special argument pointer access routines */
+@@ -152,7 +151,6 @@ __get_fort_np_addr(void)
+ {
+   return (char *)ENTCOMN(NP, np);
+ }
+-#endif /* !WIN64 || !WIN32 */
+ 
+ /* access routines for data shared between windows dlls */
+ 
+@@ -300,7 +298,7 @@ __set_fort_tids_elem(int idx, int val)
+   __fort_tids[idx] = val;
+ }
+ 
+-#endif /* WINNT */
++#endif /* _WIN64 */
+ 
+ int
+ __fort_getioproc()
+@@ -848,4 +846,3 @@ f90_compiled()
+     inited.atexit = 1;
+   }
+ }
+-
+diff --git a/runtime/flang/inquire.c b/runtime/flang/inquire.c
+index 396c876992d..7a3f6251941 100644
+--- a/runtime/flang/inquire.c
++++ b/runtime/flang/inquire.c
+@@ -16,7 +16,7 @@
+ #include "global.h"
+ #include "async.h"
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define access _access
+ #endif
+ 
+diff --git a/runtime/flang/io3f.h b/runtime/flang/io3f.h
+index 9071dcac9e3..1fcd08ba880 100644
+--- a/runtime/flang/io3f.h
++++ b/runtime/flang/io3f.h
+@@ -16,11 +16,11 @@
+ #define __fio_close(f, s) __fortio_close(f, s)
+ #define __fio_find_unit(u) __fortio_find_unit(u)
+ #define fio_fileno(f) __fort_getfd(f)
+-#ifndef WINNT
++#if !defined(_WIN64)
+ #define pgi_fio fioFcbTbl
+ #endif
+ 
+-#if defined(WINNT)
++#if defined(_WIN64)
+ #define __PC_DOS 1
+ #else
+ #define __PC_DOS 0
+diff --git a/runtime/flang/irand3f.c b/runtime/flang/irand3f.c
+index 619f5c8720a..28c9daebc66 100644
+--- a/runtime/flang/irand3f.c
++++ b/runtime/flang/irand3f.c
+@@ -12,7 +12,7 @@
+ #include "ent3f.h"
+ 
+ extern int rand();
+-#ifdef WIN64
++#if defined(_WIN64)
+ int ENT3F(IRAND1, irand1)() { return rand(); }
+ int ENT3F(IRAND2, irand2)(int *flag)
+ {
+diff --git a/runtime/flang/irandm3f.c b/runtime/flang/irandm3f.c
+index 51c64786552..5376fac050a 100644
+--- a/runtime/flang/irandm3f.c
++++ b/runtime/flang/irandm3f.c
+@@ -11,7 +11,7 @@
+ 
+ #include "ent3f.h"
+ 
+-#ifdef WINNT
++#if defined(_WIN64)
+ 
+ int ENT3F(IRANDM, irandm)(int *flag)
+ {
+diff --git a/runtime/flang/kill3f.c b/runtime/flang/kill3f.c
+index 860a5d634e7..d6153345079 100644
+--- a/runtime/flang/kill3f.c
++++ b/runtime/flang/kill3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	kill3f.c - Implements LIB3F kill subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #define POSIX 1
+ #include <sys/types.h>
+@@ -29,4 +29,4 @@ int *sig;
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/ldread.c b/runtime/flang/ldread.c
+index dbaf1e55930..cf1bfa5eea4 100644
+--- a/runtime/flang/ldread.c
++++ b/runtime/flang/ldread.c
+@@ -1707,7 +1707,7 @@ skip_record(void)
+         }
+         return __io_errno();
+       }
+-#if defined(WINNT)
++#if defined(_WIN64)
+       if (ch == '\r') {
+         ch = __io_fgetc(fcb->fp);
+         if (ch == '\n')
+diff --git a/runtime/flang/ldwrite.c b/runtime/flang/ldwrite.c
+index 1dbfc37d259..565a798af4d 100644
+--- a/runtime/flang/ldwrite.c
++++ b/runtime/flang/ldwrite.c
+@@ -869,7 +869,7 @@ write_record(void)
+           return __io_errno();
+     }
+   } else { /* sequential write: append carriage return */
+-#if defined(WINNT)
++#if defined(_WIN64)
+     if (__io_binary_mode(fcb->fp))
+       if (FWRITE("\r", 1, 1, fcb->fp) != 1)
+         return __io_errno();
+diff --git a/runtime/flang/link3f.c b/runtime/flang/link3f.c
+index 7ac8b360010..2f0f7f83ca9 100644
+--- a/runtime/flang/link3f.c
++++ b/runtime/flang/link3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	link3f.c - Implements LIB3F link subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include "io3f.h"
+@@ -35,4 +35,4 @@ int ENT3F(LINK, link)(DCHAR(n1), DCHAR(n2) DCLEN(n1) DCLEN(n2))
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/lstat3f.c b/runtime/flang/lstat3f.c
+index 3fe47e94822..ce3becada72 100644
+--- a/runtime/flang/lstat3f.c
++++ b/runtime/flang/lstat3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	lstat3f.c - Implements LIB3F lstat subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include <sys/stat.h>
+@@ -45,4 +45,4 @@ int ENT3F(LSTAT, lstat)(DCHAR(nm), int *statb DCLEN(nm))
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/lstat643f.c b/runtime/flang/lstat643f.c
+index d912bdbb3dc..ee821eb2679 100644
+--- a/runtime/flang/lstat643f.c
++++ b/runtime/flang/lstat643f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	lstat3f.c - Implements 64-bit LIB3F lstat subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include <sys/stat.h>
+@@ -45,4 +45,4 @@ int ENT3F(LSTAT64, lstat64)(DCHAR(nm), long long *statb DCLEN(nm))
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/map.c b/runtime/flang/map.c
+index 0decde62461..940029237f4 100644
+--- a/runtime/flang/map.c
++++ b/runtime/flang/map.c
+@@ -9,7 +9,7 @@
+ #include "fioMacros.h"
+ #include <string.h>
+ #include <memory.h>
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/time.h>
+ #endif
+ 
+diff --git a/runtime/flang/mclock3f.c b/runtime/flang/mclock3f.c
+index 49ce09606c6..ecabbf8bdca 100644
+--- a/runtime/flang/mclock3f.c
++++ b/runtime/flang/mclock3f.c
+@@ -12,7 +12,7 @@
+ 
+ /* assumes the Unix times system call */
+ 
+-#if   defined(WINNT)
++#if   defined(_WIN64)
+ 
+ #include <time.h>
+ 
+diff --git a/runtime/flang/misc.c b/runtime/flang/misc.c
+index d3d88873c5a..ae0ecbffef3 100644
+--- a/runtime/flang/misc.c
++++ b/runtime/flang/misc.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-#if !defined(PARAMID) && !defined(WINNT)
++#if !defined(PARAMID) && !defined(_WIN64)
+ #include <sys/types.h>
+ #include <fcntl.h>
+ #include <time.h>
+diff --git a/runtime/flang/miscsup_com.c b/runtime/flang/miscsup_com.c
+index 09d018e32c6..9b300463dcd 100644
+--- a/runtime/flang/miscsup_com.c
++++ b/runtime/flang/miscsup_com.c
+@@ -15,7 +15,7 @@
+ 
+ #include <time.h>
+ #include <string.h>
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/time.h>
+ #include <unistd.h>
+ #else
+diff --git a/runtime/flang/nmlwrite.c b/runtime/flang/nmlwrite.c
+index 34dde490592..e12f1e6e60b 100644
+--- a/runtime/flang/nmlwrite.c
++++ b/runtime/flang/nmlwrite.c
+@@ -306,12 +306,12 @@ ENTCRF90IO(NMLW_INTERN_INIT, nmlw_intern_init)(
+ static int
+ emit_eol(void)
+ {
+-#if defined(WINNT)
++#if defined(_WIN64)
+   int ret_err;
+ #endif
+ 
+   if (!internal_file) {
+-#if defined(WINNT)
++#if defined(_WIN64)
+     if (__io_binary_mode(f->fp)) {
+       ret_err = write_char('\r');
+       if (ret_err)
+diff --git a/runtime/flang/open.c b/runtime/flang/open.c
+index 3ad20dea42c..b0efac293f2 100644
+--- a/runtime/flang/open.c
++++ b/runtime/flang/open.c
+@@ -20,7 +20,7 @@
+ #include "async.h"
+ #include <fcntl.h>
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define access _access
+ #define unlink _unlink
+ #endif
+@@ -94,7 +94,7 @@ __fortio_open(int unit, int action_flag, int status_flag, int dispose_flag,
+     for (i = 0; i < namelen; i++)
+       filename[i] = name[i];
+     filename[namelen] = '\0';
+-#if defined(WINNT)
++#if defined(_WIN64)
+     if (filename[0] == '/' && filename[1] == '/' && filename[3] == '/') {
+       /* convert posix format to win32 format */
+       filename[0] = filename[2]; /* drive letter */
+diff --git a/runtime/flang/packtimeqq3f.c b/runtime/flang/packtimeqq3f.c
+index 3e665802487..c89a5ee7b15 100644
+--- a/runtime/flang/packtimeqq3f.c
++++ b/runtime/flang/packtimeqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	packtimeqq3f.c - Implements DFLIB packtimeqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -17,7 +17,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ extern void __GetTimeToSecondsSince1970(ULARGE_INTEGER *fileTime,
+                                         unsigned int *out);
+diff --git a/runtime/flang/perror3f.c b/runtime/flang/perror3f.c
+index 2450a115161..f8fca431c49 100644
+--- a/runtime/flang/perror3f.c
++++ b/runtime/flang/perror3f.c
+@@ -13,7 +13,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if !defined(WIN64) && !defined(WIN32)
++#if !defined(_WIN64)
+ extern char *strerror(); /* SVR4 only ? */
+ #endif
+ extern FILE *__getfile3f();
+diff --git a/runtime/flang/rand3f.c b/runtime/flang/rand3f.c
+index a0940fe1818..c7edd5ddea8 100644
+--- a/runtime/flang/rand3f.c
++++ b/runtime/flang/rand3f.c
+@@ -12,7 +12,7 @@
+ #include "ent3f.h"
+ 
+ /* drand48 is not currently available on win64 */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <stdlib.h>
+ 
+diff --git a/runtime/flang/random3f.c b/runtime/flang/random3f.c
+index f8d23fe10f5..ba2820f3999 100644
+--- a/runtime/flang/random3f.c
++++ b/runtime/flang/random3f.c
+@@ -12,7 +12,7 @@
+ #include "ent3f.h"
+ 
+ /* drand48, srand48 are not currently available on win64 */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <stdlib.h>
+ 
+diff --git a/runtime/flang/rewind.c b/runtime/flang/rewind.c
+index 66cc87df2e2..1030d77bcef 100644
+--- a/runtime/flang/rewind.c
++++ b/runtime/flang/rewind.c
+@@ -44,7 +44,7 @@ _f90io_rewind(__INT_T *unit, __INT_T *bitv, __INT_T *iostat)
+ 
+     if (f->nonadvance) {
+       f->nonadvance = FALSE;
+-#if defined(WINNT)
++#if defined(_WIN64)
+       if (__io_binary_mode(f->fp))
+         __io_fputc('\r', f->fp);
+ #endif
+diff --git a/runtime/flang/setfileaccessqq3f.c b/runtime/flang/setfileaccessqq3f.c
+index 92441b67846..2f7b2e92c9c 100644
+--- a/runtime/flang/setfileaccessqq3f.c
++++ b/runtime/flang/setfileaccessqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	setfileaccessqq3f.c - Implements DFLIB setfileaccessqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -22,7 +22,7 @@
+ #define FILE$ERROR -3
+ #define FILE$CURTIME -1
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ 
+ int ENT3F(SETFILEACCESSQQ, setfileaccessqq)(DCHAR(ffile),
+diff --git a/runtime/flang/setfiletimeqq3f.c b/runtime/flang/setfiletimeqq3f.c
+index efcbe5a7d91..d19be2069ff 100644
+--- a/runtime/flang/setfiletimeqq3f.c
++++ b/runtime/flang/setfiletimeqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	setfiletimeqq3f.c - Implements DFLIB setfiletimeqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -22,7 +22,7 @@
+ #define FILE$ERROR -3
+ #define FILE$CURTIME -1
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ extern void __UnpackTime(unsigned int secsSince1970, ULARGE_INTEGER *fileTime);
+ extern int __GETFILEINFOQQ(DCHAR(ffiles), char *buffer,
+diff --git a/runtime/flang/signalqq3f.c b/runtime/flang/signalqq3f.c
+index 29d04b539c6..038dfbce8b0 100644
+--- a/runtime/flang/signalqq3f.c
++++ b/runtime/flang/signalqq3f.c
+@@ -14,7 +14,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || !defined(WINNT)
++#if defined(_WIN64)
+ 
+ #define LONGINTSIZE unsigned long long
+ 
+@@ -30,4 +30,4 @@ ENT3F(SIGNALQQ, signalqq)(short *signum, void (*proc)(int))
+     return (LONGINTSIZE)p;
+ }
+ 
+-#endif /* WIN64 or !WINNT */
++#endif /* _WIN64 */
+diff --git a/runtime/flang/sleep3f.c b/runtime/flang/sleep3f.c
+index 9f501998a3a..2ffbc14d5d7 100644
+--- a/runtime/flang/sleep3f.c
++++ b/runtime/flang/sleep3f.c
+@@ -9,12 +9,12 @@
+ 
+ /*	sleep3f.c - Implements LIB3F sleep subprogram.  */
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #endif
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <windows.h>
+ 
+diff --git a/runtime/flang/sleepqq3f.c b/runtime/flang/sleepqq3f.c
+index c74b71f1214..836971faa29 100644
+--- a/runtime/flang/sleepqq3f.c
++++ b/runtime/flang/sleepqq3f.c
+@@ -9,12 +9,12 @@
+ 
+ /*	sleep3f.c - Implements DFPORT SLEEPQQ subprogram.  */
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <unistd.h>
+ #endif
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ #include <windows.h>
+ 
+diff --git a/runtime/flang/splitpathqq3f.c b/runtime/flang/splitpathqq3f.c
+index 1a479034d90..dd43a6549a1 100644
+--- a/runtime/flang/splitpathqq3f.c
++++ b/runtime/flang/splitpathqq3f.c
+@@ -15,7 +15,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ extern char *__fstr2cstr();
+ int ENT3F(SPLITPATHQQ, splitpathqq)(DCHAR(fpath), DCHAR(fdrive), DCHAR(fdir),
+diff --git a/runtime/flang/srand3f.c b/runtime/flang/srand3f.c
+index 1e93c4d188d..e112831c3fa 100644
+--- a/runtime/flang/srand3f.c
++++ b/runtime/flang/srand3f.c
+@@ -13,7 +13,7 @@
+ #include "ent3f.h"
+ 
+ /* srand48 is not currently available on win64 */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ 
+ void ENT3F(SRAND1, srand1)(int *iseed) { srand(*iseed); }
+ 
+diff --git a/runtime/flang/stat.c b/runtime/flang/stat.c
+index 34ea477590a..23a03282db3 100644
+--- a/runtime/flang/stat.c
++++ b/runtime/flang/stat.c
+@@ -13,7 +13,7 @@
+ #include <string.h>
+ #include <memory.h>
+ 
+-#if defined(WIN32) || defined(WIN64)
++#if defined(_WIN64)
+ #define write _write
+ #endif
+ 
+diff --git a/runtime/flang/stat3f.c b/runtime/flang/stat3f.c
+index 2fe309e510c..655baad06d5 100644
+--- a/runtime/flang/stat3f.c
++++ b/runtime/flang/stat3f.c
+@@ -19,7 +19,7 @@ extern void __cstr_free();
+ 
+ int ENT3F(STAT, stat)(DCHAR(nm), int *statb DCLEN(nm))
+ {
+-#ifdef _WIN64
++#if defined(_WIN64)
+   struct _stat32 b;
+   char *p;
+   int i;
+@@ -62,7 +62,7 @@ int ENT3F(STAT, stat)(DCHAR(nm), int *statb DCLEN(nm))
+   statb[8] = b.st_atime;
+   statb[9] = b.st_mtime;
+   statb[10] = b.st_ctime;
+-#if !defined(WINNT)
++#if !defined(_WIN64)
+   statb[11] = b.st_blksize;
+   statb[12] = b.st_blocks;
+ #else
+diff --git a/runtime/flang/stat643f.c b/runtime/flang/stat643f.c
+index 360743b71e1..a47fcbcf595 100644
+--- a/runtime/flang/stat643f.c
++++ b/runtime/flang/stat643f.c
+@@ -19,7 +19,7 @@ extern void __cstr_free();
+ 
+ int ENT3F(STAT64, stat64)(DCHAR(nm), long long *statb DCLEN(nm))
+ {
+-#if defined(TARGET_WIN) || defined(WIN32) || defined(WIN64)
++#if defined(TARGET_WIN) || defined(_WIN64)
+   /*
+    * The __int64_t members in the _stat64 are 8-byte aligned, thus the
+    * st_size member is at offset 24. On WIN32, 64-bit ints are 4-byte
+diff --git a/runtime/flang/stat_linux.c b/runtime/flang/stat_linux.c
+index 2b696791621..a4f3d34c0b8 100644
+--- a/runtime/flang/stat_linux.c
++++ b/runtime/flang/stat_linux.c
+@@ -9,7 +9,7 @@
+  * \brief Fill in statistics structure (Linux version)
+  */
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ #include <sys/utsname.h>
+@@ -36,7 +36,7 @@ __fort_setarg(void)
+ // TODO: Implement functions for WIN32
+ static void nodename(s) char *s;
+ {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   struct utsname u0;
+ 
+   uname(&u0);
+@@ -46,7 +46,7 @@ static void nodename(s) char *s;
+ 
+ void __fort_gettb(t) struct tb *t;
+ {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   struct timeval tv0;
+   struct timezone tz0;
+   struct rusage rs0, rc0;
+@@ -102,7 +102,7 @@ static double first = 0.0;
+ double
+ __fort_second()
+ {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   struct timeval v;
+   struct timezone t;
+   double d;
+diff --git a/runtime/flang/symlnk3f.c b/runtime/flang/symlnk3f.c
+index af8e2c534e8..e79713e1d5e 100644
+--- a/runtime/flang/symlnk3f.c
++++ b/runtime/flang/symlnk3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	symlnk3f.c - Implements LIB3F symlnk subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include "io3f.h"
+ #include "ent3f.h"
+@@ -34,4 +34,4 @@ int ENT3F(SYMLNK, symlnk)(DCHAR(n1), DCHAR(n2) DCLEN(n1) DCLEN(n2))
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/time3f.c b/runtime/flang/time3f.c
+index becd13a6866..e3f46d21373 100644
+--- a/runtime/flang/time3f.c
++++ b/runtime/flang/time3f.c
+@@ -12,7 +12,7 @@
+ #include <time.h>
+ #include "ent3f.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #include "wintimes.h"
+ #endif
+ 
+diff --git a/runtime/flang/timef3f.c b/runtime/flang/timef3f.c
+index d6e928b54c2..ec5e9601779 100644
+--- a/runtime/flang/timef3f.c
++++ b/runtime/flang/timef3f.c
+@@ -13,7 +13,7 @@
+ /* how do we do this for WINNT */
+ #include "ent3f.h"
+ 
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #define _LIBC_LIMITS_H_
+ #include <unistd.h>
+ #include <sys/times.h>
+@@ -21,7 +21,7 @@
+ #include <sys/types.h>
+ #include <limits.h>
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #include "wintimes.h"
+ #endif
+ 
+diff --git a/runtime/flang/times3f.c b/runtime/flang/times3f.c
+index 352f3334f42..aebe2bc8a51 100644
+--- a/runtime/flang/times3f.c
++++ b/runtime/flang/times3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	times3f.c - Implements LIB3F times subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include <sys/times.h>
+ #include "io3f.h"
+@@ -27,4 +27,4 @@ int ENT3F(TIMES, times)(int *buff)
+   return i;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/ttynam3f.c b/runtime/flang/ttynam3f.c
+index 79e75b7612f..8369d2f73f1 100644
+--- a/runtime/flang/ttynam3f.c
++++ b/runtime/flang/ttynam3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	ttynam3f.c - Implements LIB3F ttynam subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ /* must include ent3f.h AFTER io3f.h */
+ #include "io3f.h"
+@@ -48,4 +48,4 @@ void ENT3F(TTYNAM, ttynam)(DCHAR(nm) DCLEN(nm), int *lu)
+   return;
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/type.c b/runtime/flang/type.c
+index a0b55a0f096..1560a524e16 100644
+--- a/runtime/flang/type.c
++++ b/runtime/flang/type.c
+@@ -1076,7 +1076,7 @@ get_source_and_dest_sizes(F90_Desc *ad, F90_Desc *bd, int *dest_sz, int *src_sz,
+     }
+   } else if (bd && !flag && ISSCALAR(bd) && bd->tag != __POLY &&
+              bd->tag != __STR && bd->tag < __NTYPES) {
+-#if defined(WINNT)
++#if defined(_WIN64)
+     *src_sz = __get_fort_size_of(bd->tag);
+ #else
+     *src_sz = __fort_size_of[bd->tag];
+diff --git a/runtime/flang/unpacktimeqq3f.c b/runtime/flang/unpacktimeqq3f.c
+index f9a7f080ec0..92daf4b17e6 100644
+--- a/runtime/flang/unpacktimeqq3f.c
++++ b/runtime/flang/unpacktimeqq3f.c
+@@ -8,7 +8,7 @@
+ /* clang-format off */
+ 
+ /*	unpacktimeqq3f.c - Implements DFLIB packtimeqq subprogram.  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include <string.h>
+@@ -18,7 +18,7 @@
+ #include "io3f.h"
+ #include "ent3f.h"
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ extern char *__fstr2cstr();
+ extern void __UnpackTime(unsigned int secsSince1970, ULARGE_INTEGER *fileTime);
+ 
+diff --git a/runtime/flang/usrio_smp.c b/runtime/flang/usrio_smp.c
+index fd21e37a7d9..bd7eef48ab2 100644
+--- a/runtime/flang/usrio_smp.c
++++ b/runtime/flang/usrio_smp.c
+@@ -10,7 +10,7 @@
+  * a common system buffer pool and that the buffers are kept consistent.
+  * It also works for some other systems such as the Paragon.
+  */
+-#ifndef _WIN64
++#if !defined(_WIN64)
+ #include <fcntl.h>
+ 
+ #include <sys/types.h>
+diff --git a/runtime/flang/utils.c b/runtime/flang/utils.c
+index 63ce88ccae0..04e12165a87 100644
+--- a/runtime/flang/utils.c
++++ b/runtime/flang/utils.c
+@@ -9,7 +9,7 @@
+  * \brief Utility functions for fortran i.o.
+  */
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #include <io.h>
+ #include <fcntl.h>
+ #include <math.h>
+@@ -594,7 +594,7 @@ __fortio_trunc(FIO_FCB *p, seekoffx_t length)
+   return 0;
+ }
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ void
+ sincos(double x, double *sine, double *cosine) {
+     *sine = sin(x);
+diff --git a/runtime/flang/utils3f.c b/runtime/flang/utils3f.c
+index 1cc588b8858..f19f38edf1b 100644
+--- a/runtime/flang/utils3f.c
++++ b/runtime/flang/utils3f.c
+@@ -6,7 +6,7 @@
+  */
+ 
+ /*	  */
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ #include <windows.h>
+ #endif
+ #include "io3f.h"
+@@ -109,7 +109,7 @@ extern FILE *__getfile3f(unit) int unit;
+   }
+ }
+ 
+-#if defined(WIN64) || defined(WIN32)
++#if defined(_WIN64)
+ void
+ __GetTimeToSecondsSince1970(ULARGE_INTEGER *fileTime, unsigned int *out)
+ {
+diff --git a/runtime/flang/utilsi64.c b/runtime/flang/utilsi64.c
+index 0205a78803f..fd9b0cee9ef 100644
+--- a/runtime/flang/utilsi64.c
++++ b/runtime/flang/utilsi64.c
+@@ -26,7 +26,7 @@ extern int __fort_atoxi64();
+ extern void __fort_i64toax();
+ 
+ /* has native support for 8-byte integers*/
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ typedef long I8_T;
+ typedef unsigned long UI8_T;
+ #else
+diff --git a/runtime/flang/wait.c b/runtime/flang/wait.c
+index 8b3676a9ea4..4488b170650 100644
+--- a/runtime/flang/wait.c
++++ b/runtime/flang/wait.c
+@@ -14,7 +14,7 @@
+ #include "global.h"
+ #include "async.h"
+ 
+-#ifdef _WIN64
++#if defined(_WIN64)
+ #define access _access
+ #endif
+ 
+diff --git a/runtime/flang/wait3f.c b/runtime/flang/wait3f.c
+index c09badd9ae3..21284fef35f 100644
+--- a/runtime/flang/wait3f.c
++++ b/runtime/flang/wait3f.c
+@@ -9,7 +9,7 @@
+ 
+ /*	wait3f.c - Implements LIB3F wait subprogram.  */
+ 
+-#ifndef WINNT
++#if !defined(_WIN64)
+ 
+ #include <sys/types.h>
+ #include <sys/wait.h>
+@@ -26,4 +26,4 @@ int ENT3F(WAIT, wait)(int *st)
+   return wait(wst);
+ }
+ 
+-#endif /* !WINNT */
++#endif /* !_WIN64 */
+diff --git a/runtime/flang/xfer_heap_dum.c b/runtime/flang/xfer_heap_dum.c
+index 562f6d6ec23..06389b18e63 100644
+--- a/runtime/flang/xfer_heap_dum.c
++++ b/runtime/flang/xfer_heap_dum.c
+@@ -16,7 +16,7 @@ extern char *sbrk(int);
+ char *
+ __fort_sbrk(int len)
+ {
+-#ifndef _WIN64
++#if !defined(_WIN64)
+   return (sbrk(len));
+ #endif
+ }

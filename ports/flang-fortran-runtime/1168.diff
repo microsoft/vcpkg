@@ -1,0 +1,13 @@
+diff --git a/runtime/ompstub/init_nomp.c b/runtime/ompstub/init_nomp.c
+index 8c99f5da741..310b4df0d3d 100644
+--- a/runtime/ompstub/init_nomp.c
++++ b/runtime/ompstub/init_nomp.c
+@@ -15,7 +15,7 @@
+  * is available in pgc lib.
+  */
+ 
+-#if !defined(WIN64)
++#if !defined(_WIN64)
+ /* get max avail cpus */
+ 
+ int

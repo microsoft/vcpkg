@@ -35,7 +35,7 @@ if("cblas" IN_LIST FEATURES)
 endif()
 
 set(USE_OPTIMIZED_BLAS OFF) 
-if("noblas" IN_LIST FEATURES)
+if(1)
     set(USE_OPTIMIZED_BLAS ON)
     set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openblas.pc")
     if(EXISTS "${pcfile}")
@@ -57,7 +57,7 @@ message(STATUS "fortran_cmake_dbg:${fortran_cmake_dbg}" )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+        "-DUSE_OPTIMIZED_BLAS=ON"
         "-DCBLAS=${CBLAS}"
         ${fortran_cmake}
     OPTIONS_RELEASE
