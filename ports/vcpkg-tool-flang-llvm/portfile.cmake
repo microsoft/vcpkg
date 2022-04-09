@@ -202,6 +202,10 @@ llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("llvm")
 
+
+# Don't let LLVM take control over vcpkg here!
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/lib/cmake/llvm/ChooseMSVCCRT.cmake" "choose_msvc_crt(MSVC_CRT)" "#choose_msvc_crt(MSVC_CRT)") 
+
 set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)

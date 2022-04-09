@@ -65,6 +65,14 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         ${fortran_cmake_dbg}
 )
+
+file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/CMakeError.log" "${CURRENT_BUILDTREES_DIR}/CMakeError-rel.log")
+file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/CMakeOutput.log" "${CURRENT_BUILDTREES_DIR}/CMakeOutput-rel.log")
+
+file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeError.log" "${CURRENT_BUILDTREES_DIR}/CMakeError-dbg.log")
+file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeOutput.log" "${CURRENT_BUILDTREES_DIR}/CMakeOutput-dbg.log")
+
+#message(FATAL_ERROR "LOGS")
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "lapack-${lapack_ver}" CONFIG_PATH "lib/cmake/lapack-${lapack_ver}") #Should the target path be lapack and not lapack-reference?
 

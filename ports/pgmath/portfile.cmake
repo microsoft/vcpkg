@@ -22,9 +22,23 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 "-DCMAKE_LINKER=link.exe"
                 "-DCMAKE_MT=mt.exe"
                 )
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
+        string(APPEND VCPKG_CXX_FLAGS " --target=aarch64-win32-msvc")
+    endif()
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk bash sed)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        vcpkg_list(APPEND OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        vcpkg_list(APPEND OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
+        message(STATUS "OPTIONS:${OPTIONS}" )
+    else()
+        vcpkg_list(APPEND OPTIONS -DCMAKE_SYSTEM_PROCESSOR=generic 
+                                  -DLIBPGMATH_WITH_GENERIC=ON)
+    endif()
 endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PGMATH_SHARED)
 vcpkg_list(APPEND OPTIONS "-DPGMATH_SHARED=${PGMATH_SHARED}")
 
@@ -32,6 +46,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/runtime/libpgmath"
     OPTIONS ${OPTIONS}
             "-DWITH_WERROR=OFF"
+    MAYBE_UNUSED_VARIABLES
+            WITH_WERROR
 
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
