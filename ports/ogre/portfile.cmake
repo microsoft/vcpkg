@@ -16,6 +16,7 @@ vcpkg_from_github(
         toolchain_fixes.patch
         fix-dependency.patch
         fix-findimgui.patch
+        fix-openexr-includes.patch
         disable-dependency-qt.patch
 )
 
