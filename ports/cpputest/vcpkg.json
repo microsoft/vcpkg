@@ -1,7 +1,8 @@
 {
   "name": "cpputest",
   "version-string": "2019-9-16",
-  "port-version": 2,
+  "port-version": 3,
   "description": "CppUTest unit testing and mocking framework for C/C++.",
-  "homepage": "https://github.com/cpputest/cpputest"
+  "homepage": "https://github.com/cpputest/cpputest",
+  "license": "BSD-3-Clause"
 }

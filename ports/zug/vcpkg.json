@@ -1,8 +1,10 @@
 {
   "name": "zug",
   "version-date": "2021-04-23",
+  "port-version": 1,
   "description": "Transducers for C++",
   "homepage": "https://sinusoid.es/zug/",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

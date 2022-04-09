@@ -1,8 +1,9 @@
 {
   "name": "directx-headers",
   "version": "1.4.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Official DirectX 12 Headers",
   "homepage": "https://devblogs.microsoft.com/directx/",
+  "license": "MIT",
   "supports": "windows | linux"
 }

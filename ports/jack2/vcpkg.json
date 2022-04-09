@@ -1,9 +1,10 @@
 {
   "name": "jack2",
   "version-semver": "1.9.19",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross-platform API that enables device sharing and inter-application audio routing",
   "homepage": "https://jackaudio.org/",
+  "license": "GPL-2.0",
   "supports": "!uwp",
   "dependencies": [
     {

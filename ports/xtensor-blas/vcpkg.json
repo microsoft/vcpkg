@@ -1,9 +1,10 @@
 {
   "name": "xtensor-blas",
   "version-string": "0.17.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "BLAS extension to xtensor",
   "homepage": "https://github.com/xtensor-stack/xtensor-blas",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

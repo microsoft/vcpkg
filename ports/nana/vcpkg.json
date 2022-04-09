@@ -1,9 +1,10 @@
 {
   "name": "nana",
   "version-string": "1.7.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Cross-platform library for GUI programming in modern C++ style.",
   "homepage": "https://github.com/cnjinhao/nana",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "fontconfig",

@@ -1,9 +1,10 @@
 {
   "name": "uthenticode",
   "version": "1.0.6",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A cross-platform library for verifying Authenticode signatures",
   "homepage": "https://github.com/trailofbits/uthenticode",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "openssl",

@@ -1,8 +1,10 @@
 {
   "name": "kcp",
   "version": "1.7",
+  "port-version": 1,
   "description": "A fast and reliable ARQ protocol",
   "homepage": "https://github.com/skywind3000/kcp",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

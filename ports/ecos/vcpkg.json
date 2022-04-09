@@ -1,6 +1,7 @@
 {
   "name": "ecos",
   "version-string": "2.0.8",
-  "port-version": 1,
-  "description": "A lightweight conic solver for second-order cone programming."
+  "port-version": 2,
+  "description": "A lightweight conic solver for second-order cone programming.",
+  "license": "GPL-3.0"
 }

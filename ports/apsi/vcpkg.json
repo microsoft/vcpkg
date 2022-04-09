@@ -1,9 +1,10 @@
 {
   "name": "apsi",
   "version-semver": "0.7.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "APSI is a research library for asymmetric private set intersection.",
   "homepage": "https://github.com/microsoft/APSI",
+  "license": "MIT",
   "supports": "static & !(arm & osx)",
   "dependencies": [
     "flatbuffers",

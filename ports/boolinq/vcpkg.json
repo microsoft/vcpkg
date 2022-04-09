@@ -1,6 +1,8 @@
 {
   "name": "boolinq",
   "version": "3.0.4",
+  "port-version": 1,
   "description": "Super tiny C++11 single-file header-only LINQ library",
-  "homepage": "https://github.com/k06a/boolinq"
+  "homepage": "https://github.com/k06a/boolinq",
+  "license": "MIT"
 }

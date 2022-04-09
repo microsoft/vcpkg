@@ -1,8 +1,10 @@
 {
   "name": "nativefiledialog",
   "version-date": "2022-01-20",
+  "port-version": 1,
   "description": "A tiny, neat C library that portably invokes native file open and save dialogs",
   "homepage": "https://github.com/mlabbe/nativefiledialog",
+  "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
     {

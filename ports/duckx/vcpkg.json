@@ -1,7 +1,8 @@
 {
   "name": "duckx",
   "version-string": "1.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "DuckX is a library for creation of Office docx files.",
-  "homepage": "https://github.com/amiremohamadi/DuckX"
+  "homepage": "https://github.com/amiremohamadi/DuckX",
+  "license": "MIT"
 }

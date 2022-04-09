@@ -1,8 +1,10 @@
 {
   "name": "sundials",
   "version-semver": "5.8.0",
+  "port-version": 1,
   "description": "SUNDIALS (SUite of Nonlinear and DIfferential/ALgebraic equation Solvers)",
   "homepage": "https://computation.llnl.gov/projects/sundials",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

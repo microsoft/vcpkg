@@ -1,9 +1,10 @@
 {
   "name": "mongo-c-driver",
   "version": "1.17.6",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Client library written in C for MongoDB.",
   "homepage": "https://github.com/mongodb/mongo-c-driver",
+  "license": "Apache-2.0",
   "dependencies": [
     "libbson",
     {

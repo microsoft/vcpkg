@@ -1,9 +1,10 @@
 {
   "name": "shiva",
   "version": "1.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Modern C++ Game Engine",
   "homepage": "https://github.com/Milerius/shiva",
+  "license": "MIT",
   "dependencies": [
     "boost-dll",
     "boost-filesystem",

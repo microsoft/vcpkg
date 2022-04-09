@@ -1,8 +1,10 @@
 {
   "name": "rang",
   "version": "3.2",
+  "port-version": 1,
   "description": "Colors for your Terminal.",
   "homepage": "https://github.com/agauniyal/rang",
+  "license": "Unlicense",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,8 +1,9 @@
 {
   "name": "plibsys",
   "version": "0.0.4",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Highly portable C system library: threads and synchronization, sockets, IPC, data structures and more.",
   "homepage": "https://github.com/saprykin/plibsys",
+  "license": "MIT",
   "supports": "!uwp"
 }

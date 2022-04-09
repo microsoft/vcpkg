@@ -1,6 +1,8 @@
 {
   "name": "hedley",
   "version": "15",
+  "port-version": 1,
   "description": "A C/C++ header to help move #ifdefs out of your code",
-  "homepage": "https://nemequ.github.io/hedley/"
+  "homepage": "https://nemequ.github.io/hedley/",
+  "license": "CC0-1.0"
 }

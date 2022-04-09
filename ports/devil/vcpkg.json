@@ -1,9 +1,10 @@
 {
   "name": "devil",
   "version": "1.8.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "A full featured cross-platform image library",
   "homepage": "https://github.com/DentonW/DevIL",
+  "license": "LGPL-2.1",
   "default-features": [
     "jasper",
     "lcms",

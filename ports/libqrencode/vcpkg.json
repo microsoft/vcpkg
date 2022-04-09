@@ -1,9 +1,10 @@
 {
   "name": "libqrencode",
   "version-semver": "4.1.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "libqrencode - a fast and compact QR Code encoding library",
   "homepage": "https://github.com/fukuchi/libqrencode",
+  "license": "LGPL-2.1",
   "dependencies": [
     "libiconv",
     "libpng",

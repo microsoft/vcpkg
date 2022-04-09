@@ -1,9 +1,10 @@
 {
   "name": "opencc",
   "version-date": "2020-04-26",
-  "port-version": 10,
+  "port-version": 11,
   "description": "A project for conversion between Traditional and Simplified Chinese",
   "homepage": "https://github.com/BYVoid/OpenCC",
+  "license": "Apache-2.0",
   "supports": "!(arm | uwp)",
   "features": {
     "tools": {

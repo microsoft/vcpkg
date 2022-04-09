@@ -1,5 +1,7 @@
 {
   "name": "valijson",
   "version": "0.6",
-  "description": "Header-only C++ library for JSON Schema validation"
+  "port-version": 1,
+  "description": "Header-only C++ library for JSON Schema validation",
+  "license": "BSD-2-Clause"
 }

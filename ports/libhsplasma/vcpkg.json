@@ -1,9 +1,10 @@
 {
   "name": "libhsplasma",
   "version-string": "2021.06.08",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross-platform Plasma data and network library",
   "homepage": "https://github.com/H-uru/libhsplasma",
+  "license": "GPL-3.0",
   "supports": "!(arm | uwp)",
   "dependencies": [
     "libjpeg-turbo",

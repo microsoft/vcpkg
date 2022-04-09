@@ -1,8 +1,9 @@
 {
   "name": "minitrace",
   "version-string": "2019.02.06",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Simple C/C++ library for producing JSON traces suitable for Chrome's built-in trace viewer.",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

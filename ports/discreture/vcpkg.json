@@ -1,9 +1,10 @@
 {
   "name": "discreture",
   "version-string": "2020-01-29",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A modern C++ library for efficiently and easily iterating through common combinatorial objects, such as combinations, permutations, partitions and more.",
   "homepage": "https://github.com/mraggi/discreture",
+  "license": "MIT",
   "dependencies": [
     "boost-container",
     "boost-iterator"

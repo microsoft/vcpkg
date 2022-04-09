@@ -1,9 +1,10 @@
 {
   "name": "rxqt",
   "version-string": "bb2138c",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Reactive Extensions for Qt.",
   "homepage": "https://github.com/tetsurom/rxqt",
+  "license": "MIT",
   "dependencies": [
     "rxcpp"
   ]

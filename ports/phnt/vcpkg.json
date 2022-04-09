@@ -1,6 +1,8 @@
 {
   "name": "phnt",
   "version-date": "2020-12-21",
+  "port-version": 1,
   "description": "Windows Native API header files",
-  "homepage": "https://github.com/processhacker/phnt"
+  "homepage": "https://github.com/processhacker/phnt",
+  "license": "CC-BY-4.0"
 }

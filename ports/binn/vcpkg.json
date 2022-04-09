@@ -1,6 +1,7 @@
 {
   "name": "binn",
   "version-string": "3.0",
-  "port-version": 1,
-  "description": "Binn is a binary data serialization format designed to be compact, fast and easy to use."
+  "port-version": 2,
+  "description": "Binn is a binary data serialization format designed to be compact, fast and easy to use.",
+  "license": "Apache-2.0"
 }

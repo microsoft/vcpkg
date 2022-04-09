@@ -1,7 +1,8 @@
 {
   "name": "dx",
   "version-string": "1.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A modern C++ library for DirectX programming",
-  "homepage": "https://github.com/sdcb/dx"
+  "homepage": "https://github.com/sdcb/dx",
+  "license": "MS-PL"
 }

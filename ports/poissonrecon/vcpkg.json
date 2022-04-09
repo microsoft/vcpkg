@@ -1,8 +1,10 @@
 {
   "name": "poissonrecon",
   "version-date": "2021-09-26",
+  "port-version": 1,
   "description": "Adaptive Multigrid Solvers",
   "homepage": "https://github.com/mkazhdan/PoissonRecon",
+  "license": "MIT",
   "dependencies": [
     "libjpeg-turbo",
     "libpng",

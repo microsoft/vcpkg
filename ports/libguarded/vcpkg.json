@@ -1,7 +1,8 @@
 {
   "name": "libguarded",
   "version-string": "2019-08-27",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The libGuarded library is a standalone header-only library for multithreaded programming.",
-  "homepage": "https://github.com/copperspice/libguarded"
+  "homepage": "https://github.com/copperspice/libguarded",
+  "license": "BSD-2-Clause"
 }

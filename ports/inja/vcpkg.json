@@ -1,8 +1,10 @@
 {
   "name": "inja",
   "version": "3.3.0",
+  "port-version": 1,
   "description": "Inja - A Template Engine for Modern C++",
   "homepage": "https://github.com/pantor/inja",
+  "license": "MIT",
   "dependencies": [
     "nlohmann-json"
   ]

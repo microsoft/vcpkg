@@ -1,6 +1,8 @@
 {
   "name": "doctest",
   "version": "2.4.8",
+  "port-version": 1,
   "description": "The fastest feature-rich C++11/14/17/20 single-header testing framework",
-  "homepage": "https://github.com/onqtam/doctest"
+  "homepage": "https://github.com/onqtam/doctest",
+  "license": "MIT"
 }

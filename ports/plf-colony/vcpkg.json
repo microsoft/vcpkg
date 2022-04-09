@@ -1,6 +1,8 @@
 {
   "name": "plf-colony",
   "version": "6.33",
+  "port-version": 1,
   "description": "An unordered C++ data container providing fast iteration/insertion/erasure while maintaining pointer/iterator validity to non-erased elements regardless of insertions/erasures.",
-  "homepage": "https://plflib.org/colony.htm"
+  "homepage": "https://plflib.org/colony.htm",
+  "license": "Zlib"
 }

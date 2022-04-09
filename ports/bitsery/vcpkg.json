@@ -1,8 +1,10 @@
 {
   "name": "bitsery",
   "version": "5.2.2",
+  "port-version": 1,
   "description": "Header only C++ binary serialization library",
   "homepage": "https://github.com/fraillt/bitsery",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

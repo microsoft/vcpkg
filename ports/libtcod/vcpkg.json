@@ -1,10 +1,12 @@
 {
   "name": "libtcod",
   "version": "1.20.1",
+  "port-version": 1,
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
   "documentation": "https://libtcod.readthedocs.io/en/latest/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "glad",
     "lodepng-c",

@@ -1,8 +1,10 @@
 {
   "name": "soci",
   "version": "4.0.2",
+  "port-version": 1,
   "description": "SOCI database access library",
   "homepage": "https://github.com/SOCI/soci",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

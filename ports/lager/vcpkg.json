@@ -1,8 +1,10 @@
 {
   "name": "lager",
   "version-date": "2022-02-21",
+  "port-version": 1,
   "description": "C++ library for value-oriented design using the unidirectional data-flow architecture",
   "homepage": "https://sinusoid.es/lager/",
+  "license": "MIT",
   "dependencies": [
     "boost-hana",
     {

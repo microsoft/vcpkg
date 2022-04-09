@@ -1,9 +1,10 @@
 {
   "name": "memorymodule",
   "version-string": "2019-12-31",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Library to load a DLL from memory",
   "homepage": "https://github.com/fancycode/MemoryModule",
+  "license": "MPL-2.0",
   "supports": "!linux & !osx & !uwp",
   "dependencies": [
     {

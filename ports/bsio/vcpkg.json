@@ -1,8 +1,10 @@
 {
   "name": "bsio",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "networking library, ans support HTTP/WebSocket, based on asio.",
   "homepage": "https://github.com/ArkNX/bsio",
+  "license": "Apache-2.0",
   "dependencies": [
     "asio",
     {

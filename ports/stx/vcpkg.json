@@ -1,9 +1,10 @@
 {
   "name": "stx",
   "version-string": "1.0.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++17 & C++ 20 error-handling and utility extensions",
   "homepage": "https://github.com/lamarrr/STX",
+  "license": "MIT",
   "features": {
     "backtrace": {
       "description": "stacktrace support for STX",

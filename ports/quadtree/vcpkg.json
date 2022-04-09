@@ -1,7 +1,8 @@
 {
   "name": "quadtree",
   "version-string": "2020-04-13",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A simple and modern C++ quadtree implementation",
-  "homepage": "https://github.com/pvigier/Quadtree"
+  "homepage": "https://github.com/pvigier/Quadtree",
+  "license": "MIT"
 }

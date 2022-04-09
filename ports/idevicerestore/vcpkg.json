@@ -1,8 +1,9 @@
 {
   "name": "idevicerestore",
   "version": "1.0.12",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Restore/upgrade firmware of iOS devices",
+  "license": "LGPL-3.0",
   "supports": "windows",
   "dependencies": [
     "curl",

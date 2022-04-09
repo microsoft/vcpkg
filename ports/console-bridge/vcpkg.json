@@ -1,7 +1,8 @@
 {
   "name": "console-bridge",
   "version-string": "1.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "a ROS-independent package for logging that seamlessly pipes into rosconsole/rosout for ROS-dependent packages.",
-  "homepage": "https://github.com/ros/console_bridge"
+  "homepage": "https://github.com/ros/console_bridge",
+  "license": "BSD-3-Clause"
 }

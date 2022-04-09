@@ -1,6 +1,7 @@
 {
   "name": "jsmn",
   "version-string": "2019-04-27",
-  "port-version": 1,
-  "description": "A minimalistic JSON parser in C."
+  "port-version": 2,
+  "description": "A minimalistic JSON parser in C.",
+  "license": "MIT"
 }

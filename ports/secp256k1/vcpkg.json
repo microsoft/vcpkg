@@ -1,7 +1,8 @@
 {
   "name": "secp256k1",
   "version-string": "2017-19-10",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Optimized C library for EC operations on curve",
-  "homepage": "https://github.com/bitcoin-core/secp256k1"
+  "homepage": "https://github.com/bitcoin-core/secp256k1",
+  "license": "MIT"
 }

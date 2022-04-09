@@ -1,9 +1,10 @@
 {
   "name": "librsync",
   "version-semver": "2.3.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "librsync is a library for calculating and applying network deltas, with an interface designed to ease integration into diverse network applications.",
   "homepage": "http://librsync.sourcefrog.net/",
+  "license": "LGPL-2.1",
   "supports": "!uwp",
   "dependencies": [
     {

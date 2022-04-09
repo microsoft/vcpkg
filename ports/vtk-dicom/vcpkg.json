@@ -1,9 +1,10 @@
 {
   "name": "vtk-dicom",
   "version-string": "0.8.12",
-  "port-version": 2,
+  "port-version": 3,
   "description": "DICOM for VTK",
   "homepage": "https://github.com/dgobbi/vtk-dicom",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vtk",

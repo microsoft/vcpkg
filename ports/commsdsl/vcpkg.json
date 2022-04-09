@@ -1,10 +1,11 @@
 {
   "name": "commsdsl",
   "version-semver": "3.6.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "DSL schemas parser and code generator for CommsChampion Ecosystem",
   "homepage": "https://commschamp.github.io/",
   "documentation": "https://github.com/commschamp/commsdsl",
+  "license": "Apache-2.0",
   "supports": "!uwp & !static",
   "dependencies": [
     "boost-algorithm",

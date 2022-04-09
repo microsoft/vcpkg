@@ -1,8 +1,10 @@
 {
   "name": "rexo",
   "version-semver": "0.2.2",
+  "port-version": 1,
   "description": "Rexo is a neat single-file cross-platform unit testing framework for C/C++",
   "homepage": "https://github.com/christophercrouzet/rexo",
+  "license": "Unlicense",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

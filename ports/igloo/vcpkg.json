@@ -1,6 +1,7 @@
 {
   "name": "igloo",
   "version-string": "1.1.1",
-  "port-version": 1,
-  "description": "A framework for unit testing in C++"
+  "port-version": 2,
+  "description": "A framework for unit testing in C++",
+  "license": "BSL-1.0"
 }

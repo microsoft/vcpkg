@@ -1,8 +1,10 @@
 {
   "name": "libsvm",
   "version": "3.25",
+  "port-version": 1,
   "description": "A library for Support Vector Machines.",
   "homepage": "https://www.csie.ntu.edu.tw/~cjlin/libsvm/",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

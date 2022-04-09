@@ -1,7 +1,9 @@
 {
   "name": "libmorton",
   "version": "0.2.8",
+  "port-version": 1,
   "description": "Header-only library for encoding/decoding Morton codes in/from 2D/3D coordinates",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

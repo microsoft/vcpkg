@@ -1,8 +1,9 @@
 {
   "name": "json-spirit",
   "version-string": "4.1.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "json parser using boost library",
+  "license": "MIT",
   "dependencies": [
     "boost-config",
     "boost-integer",

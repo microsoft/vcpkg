@@ -1,6 +1,7 @@
 {
   "name": "snowhouse",
   "version-string": "5.0.0",
-  "port-version": 1,
-  "description": "An assertion library for C++"
+  "port-version": 2,
+  "description": "An assertion library for C++",
+  "license": "BSL-1.0"
 }

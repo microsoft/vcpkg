@@ -1,6 +1,8 @@
 {
   "name": "safeint",
   "version": "3.0.26",
+  "port-version": 1,
   "description": "SafeInt is a class library for C++ that manages integer overflows",
-  "homepage": "https://github.com/dcleblanc/SafeInt"
+  "homepage": "https://github.com/dcleblanc/SafeInt",
+  "license": "MIT"
 }

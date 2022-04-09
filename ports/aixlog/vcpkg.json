@@ -1,7 +1,9 @@
 {
   "name": "aixlog",
   "version-semver": "1.5.0",
+  "port-version": 1,
   "description": "Header-only C++ logging library",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,7 +1,9 @@
 {
   "name": "libe57format",
   "version-string": "2.2.0",
+  "port-version": 1,
   "description": "A library to provide read & write support for the E57 file format.",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

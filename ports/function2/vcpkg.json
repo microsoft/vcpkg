@@ -1,7 +1,8 @@
 {
   "name": "function2",
   "version-string": "4.2.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Improved drop-in replacement to std::function",
-  "homepage": "https://github.com/Naios/function2"
+  "homepage": "https://github.com/Naios/function2",
+  "license": "BSL-1.0"
 }

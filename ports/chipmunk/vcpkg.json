@@ -1,7 +1,8 @@
 {
   "name": "chipmunk",
   "version-string": "7.0.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A fast and lightweight 2D game physics library.",
-  "homepage": "https://github.com/slembcke/Chipmunk2D"
+  "homepage": "https://github.com/slembcke/Chipmunk2D",
+  "license": "MIT"
 }

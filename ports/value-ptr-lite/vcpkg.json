@@ -1,9 +1,10 @@
 {
   "name": "value-ptr-lite",
   "version-semver": "0.2.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A C++ smart-pointer with value semantics for C++98, C++11 and later in a single-file header-only library.",
   "homepage": "https://github.com/martinmoene/value-ptr-lite",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

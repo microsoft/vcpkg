@@ -1,7 +1,9 @@
 {
   "name": "byte-lite",
   "version": "0.3.0",
+  "port-version": 1,
   "description": "A C++17-like byte type for C++98, C++11 and later in a single-file header-only library",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

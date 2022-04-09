@@ -1,6 +1,7 @@
 {
   "name": "argagg",
   "version-string": "0.4.6",
-  "port-version": 1,
-  "description": "A simple C++11 command line argument parser"
+  "port-version": 2,
+  "description": "A simple C++11 command line argument parser",
+  "license": "MIT"
 }

@@ -1,8 +1,9 @@
 {
   "name": "freeopcua",
   "version-string": "20190125",
-  "port-version": 5,
+  "port-version": 6,
   "description": "OPC-UA server and client library written in C++ and with a lot of code auto-generated from xml specification using python.",
+  "license": "LGPL-3.0",
   "dependencies": [
     "boost-asio",
     "boost-date-time",
