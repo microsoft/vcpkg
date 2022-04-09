@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove_symlinks.patch
+        fix_msvc_2022_build.patch
 )
 
 vcpkg_cmake_configure(
