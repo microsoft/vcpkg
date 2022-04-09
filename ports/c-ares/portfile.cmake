@@ -4,7 +4,8 @@ vcpkg_from_github(
     REF cares-1_18_1
     SHA512 9f5f9d5a22a4643aef8701c4abfd4b28e0bded2479bab462d2dfc63a8f84348f02d3cfbd7c85cc1e06a154a3e4206721cb6669c7c61538ecdcd44268e4ce073e
     HEAD_REF main
-    PATCHES avoid-docs.patch
+    PATCHES
+        avoid-docs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
