@@ -323,8 +323,7 @@ endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/include"
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
     )
