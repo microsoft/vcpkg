@@ -2705,7 +2705,7 @@
       "port-version": 1
     },
     "halide": {
-      "baseline": "13.0.2",
+      "baseline": "14.0.0",
       "port-version": 0
     },
     "happly": {
@@ -4245,8 +4245,8 @@
       "port-version": 2
     },
     "llvm": {
-      "baseline": "13.0.0",
-      "port-version": 3
+      "baseline": "14.0.0",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.24",
