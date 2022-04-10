@@ -1838,7 +1838,7 @@
     },
     "devil": {
       "baseline": "1.8.0",
-      "port-version": 8
+      "port-version": 9
     },
     "dimcli": {
       "baseline": "5.0.2",
