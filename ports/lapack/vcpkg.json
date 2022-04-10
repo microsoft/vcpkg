@@ -6,11 +6,11 @@
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "(arm & ! arm64) & windows"
+      "platform": "(arm & !arm64) & windows"
     },
     {
       "name": "lapack-reference",
-      "platform": "!((arm & ! arm64) & windows)"
+      "platform": "!((arm & !arm64) & windows)"
     }
   ]
 }
