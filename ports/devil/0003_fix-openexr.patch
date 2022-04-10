@@ -57,12 +57,11 @@ diff --git a/DevIL/src-IL/include/il_exr.h b/DevIL/src-IL/include/il_exr.h
 index 3d880c4..04d721a 100644
 --- a/DevIL/src-IL/include/il_exr.h
 +++ b/DevIL/src-IL/include/il_exr.h
-@@ -15,7 +15,8 @@
+@@ -15,7 +15,7 @@
  #define EXR_H
  
  #include "il_internal.h"
 -#include <ImfIO.h>
-+#include <OpenEXR/ImfInt64.h>
 +#include <OpenEXR/ImfIO.h>
  
  

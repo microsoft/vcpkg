@@ -27,6 +27,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lcms    IL_NO_LCMS
 )
 
+if(NOT IL_NO_EXR)
+    vcpkg_replace_string("${SOURCE_PATH}/DevIL/src-IL/include/il_exr.h"
+        "Imf::Int64" "uint64_t"
+    )
+    vcpkg_replace_string("${SOURCE_PATH}/DevIL/src-IL/src/il_exr.cpp"
+        "Imf::Int64" "uint64_t"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/DevIL"
     DISABLE_PARALLEL_CONFIGURE
