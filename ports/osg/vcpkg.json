@@ -84,7 +84,6 @@
           "name": "giflib",
           "platform": "windows"
         },
-        "ilmbase",
         "jasper",
         "libgta",
         {

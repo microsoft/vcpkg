@@ -16,6 +16,7 @@ vcpkg_from_github(
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
         fix-nvtt.patch
+        fix-openexr.patch
         use-boost-asio.patch
         fix-dependencies.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
@@ -57,13 +58,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools       BUILD_OSG_APPLICATIONS
-    examples    BUILD_OSG_EXAMPLES
-    plugins     BUILD_OSG_PLUGINS
-    packages    BUILD_OSG_PACKAGES
-    docs        BUILD_DOCUMENTATION
-    docs        BUILD_REF_DOCS_SEARCHENGINE
-    docs        BUILD_REF_DOCS_TAGFILE
+    FEATURES
+        tools       BUILD_OSG_APPLICATIONS
+        examples    BUILD_OSG_EXAMPLES
+        plugins     BUILD_OSG_PLUGINS
+        packages    BUILD_OSG_PACKAGES
+        docs        BUILD_DOCUMENTATION
+        docs        BUILD_REF_DOCS_SEARCHENGINE
+        docs        BUILD_REF_DOCS_TAGFILE
 )
 
 set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE ON)

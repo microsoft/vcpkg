@@ -1,0 +1,13 @@
+diff --git a/src/osgPlugins/exr/ReaderWriterEXR.cpp b/src/osgPlugins/exr/ReaderWriterEXR.cpp
+--- a/src/osgPlugins/exr/ReaderWriterEXR.cpp
++++ b/src/osgPlugins/exr/ReaderWriterEXR.cpp
+@@ -16,6 +16,9 @@
+ #include <ImfRgbaFile.h>
+ #include <ImfIO.h>
+ #include <ImfArray.h>
++#include <ImfHeader.h>
++#include <Imath/ImathBox.h>
++#include <Imath/ImathInt64.h>
+ 
+ using namespace std;
+ using namespace Imf;
