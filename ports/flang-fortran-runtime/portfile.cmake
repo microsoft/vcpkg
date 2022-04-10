@@ -36,6 +36,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 "-DCMAKE_Fortran_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/flang.exe"
                 "-DCMAKE_Fortran_COMPILER_ID=Flang"
                 )
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
+        string(APPEND VCPKG_CXX_FLAGS " --target=aarch64-win32-msvc")
+        vcpkg_list(APPEND OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows -DCMAKE_Fortran_FLAGS=--target=aarch64-win32-msvc)
+    endif()
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk bash sed)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

@@ -82,19 +82,9 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-#file(GLOB_RECURSE allbinfiles "${CURRENT_PACKAGES_DIR}/bin/*")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin" )
-#file(GLOB_RECURSE alllibfiles "${CURRENT_PACKAGES_DIR}/lib/*")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/lib" )
-
-#file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include" )
-
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/flang1${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-#                    "${CURRENT_PACKAGES_DIR}/bin/flang2${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-#                    "${CURRENT_PACKAGES_DIR}/debug/bin/flang1${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-#                    "${CURRENT_PACKAGES_DIR}/debug/bin/flang2${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-#                    "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
