@@ -12,6 +12,7 @@
   "supports": "!uwp",
   "dependencies": [
     "expat",
+    "libjpeg-turbo",
     "libpng",
     "tiff",
     {
