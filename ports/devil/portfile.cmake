@@ -14,22 +14,21 @@ vcpkg_from_github(
         0006-fix-ilut-header.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/DevIL/src-IL/cmake/FindOpenEXR.cmake)
+file(REMOVE "${SOURCE_PATH}/DevIL/src-IL/cmake/FindOpenEXR.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     INVERTED_FEATURES
-    libpng  IL_NO_PNG
-    tiff    IL_NO_TIF
-    libjpeg IL_NO_JPG
-    openexr IL_NO_EXR
-    jasper  IL_NO_JP2
-    lcms    IL_NO_LCMS
+        libpng  IL_NO_PNG
+        tiff    IL_NO_TIF
+        libjpeg IL_NO_JPG
+        openexr IL_NO_EXR
+        jasper  IL_NO_JP2
+        lcms    IL_NO_LCMS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/DevIL
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/DevIL"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
          ${FEATURE_OPTIONS}
@@ -38,12 +37,12 @@ vcpkg_configure_cmake(
         -DIL_USE_DXTC_SQUISH=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

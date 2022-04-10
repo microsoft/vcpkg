@@ -2,7 +2,19 @@ diff --git a/DevIL/src-IL/CMakeLists.txt b/DevIL/src-IL/CMakeLists.txt
 index 02e4f03..4accaa1 100644
 --- a/DevIL/src-IL/CMakeLists.txt
 +++ b/DevIL/src-IL/CMakeLists.txt
-@@ -235,8 +235,12 @@ target_link_libraries(IL ${libs})
+@@ -77,7 +77,10 @@
+ #find_package(Squish)
+ find_package(libSquish)
+ find_package(NVTT)      # NVidia texture tools
+-find_package(OpenEXR)
++find_package(Imath CONFIG)
++find_package(OpenEXR CONFIG)
++set(OPENEXR_FOUND $OpenEXR_FOUND)
++set(OPENEXR_LIBRARIES "OpenEXR::OpenEXR;Imath::Imath")
+ #find_package(LCMS)
+ find_package(LCMS2)
+ find_package(MNG)
+@@ -235,8 +235,13 @@ target_link_libraries(IL ${libs})
  
  # generate config.h
  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/include/config.h)
@@ -10,6 +22,7 @@ index 02e4f03..4accaa1 100644
 -
 +add_definitions(-DHAVE_CONFIG_H)
 +if(WIN32)
++   add_definitions(-DNOMINMAX)
 +	if(BUILD_SHARED_LIBS)
 +		add_definitions(-DOPENEXR_DLL)
 +	endif()
@@ -44,11 +57,12 @@ diff --git a/DevIL/src-IL/include/il_exr.h b/DevIL/src-IL/include/il_exr.h
 index 3d880c4..04d721a 100644
 --- a/DevIL/src-IL/include/il_exr.h
 +++ b/DevIL/src-IL/include/il_exr.h
-@@ -15,7 +15,7 @@
+@@ -15,7 +15,8 @@
  #define EXR_H
  
  #include "il_internal.h"
 -#include <ImfIO.h>
++#include <OpenEXR/ImfInt64.h>
 +#include <OpenEXR/ImfIO.h>
  
  
