@@ -1,8 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
-    REF fb0b35fed5580d49392df7ce9374551b348fffbf
-    PATCHES add-missing-tuple.patch
+    REF 1a668363fdf0d663c6df3f124e7c10796bc842f0
+    #PATCHES add-missing-tuple.patch
 )
 
 function(checkout_in_path PATH URL REF)
@@ -106,6 +106,7 @@ skia_use_lua=false \
 skia_enable_tools=false \
 skia_enable_spirv_validation=false")
 
+
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
 endif()
@@ -122,6 +123,11 @@ endif()
 if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
+endif()
+
+if("opengl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} skia_use_gl=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
 endif()
 
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
