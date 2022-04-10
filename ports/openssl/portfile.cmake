@@ -11,7 +11,7 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-set(OPENSSL_VERSION 3.0.2) # Change unix/CMakeLists.txt#111 after next major release
+set(OPENSSL_VERSION 3.0.2)
 
 vcpkg_download_distfile(
     ARCHIVE
