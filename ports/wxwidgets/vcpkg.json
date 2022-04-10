@@ -8,7 +8,7 @@
     "Set WXWIDGETS_USE_STD_CONTAINERS in a custom triplet to build with the wxUSE_STD_CONTAINERS build option."
   ],
   "homepage": "https://github.com/wxWidgets/wxWidgets",
-  "license": "wxWindows",
+  "license": "LGPL-2.0-or-later WITH WxWindows-exception-3.1",
   "supports": "!uwp",
   "dependencies": [
     "expat",
