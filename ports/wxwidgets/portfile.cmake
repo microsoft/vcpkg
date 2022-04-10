@@ -84,6 +84,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
 else()
     vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
+    # FindwxWidgets.cmake/find_program doesn't accept a symlink for wxrc.
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wxrc-3.1"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        RENAME wxrc
+        USE_SOURCE_PERMISSIONS
+    )
 endif()
 
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
