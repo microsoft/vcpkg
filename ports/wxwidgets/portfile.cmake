@@ -139,6 +139,12 @@ endif()
 file(GLOB configs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/wx/config/*")
 foreach(config IN LISTS configs)
     vcpkg_replace_string("${config}" "${CURRENT_INSTALLED_DIR}" [[${prefix}]])
+    # tools/<port>/wx-config is a symlink with absolute path. Replace it with an actual config.
+    file(INSTALL "${config}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        RENAME wx-config
+        USE_SOURCE_PERMISSIONS
+    )
 endforeach()
 file(GLOB configs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/wx/config/*")
 foreach(config IN LISTS configs)
