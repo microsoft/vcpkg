@@ -4,7 +4,7 @@
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
-  "supports": "windows",
+  "supports": "native",
   "dependencies": [
     "libxml2",
     "pgmath",

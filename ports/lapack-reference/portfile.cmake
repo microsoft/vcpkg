@@ -52,8 +52,6 @@ x_vcpkg_find_fortran(OUT_OPTIONS fortran_cmake
                      OUT_OPTIONS_RELEASE fortran_cmake_rel
                      OUT_OPTIONS_DEBUG   fortran_cmake_dbg)
 
-message(STATUS "fortran_cmake_dbg:${fortran_cmake_dbg}" )
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -72,7 +70,6 @@ file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/CMakeOut
 file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeError.log" "${CURRENT_BUILDTREES_DIR}/CMakeError-dbg.log")
 file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeOutput.log" "${CURRENT_BUILDTREES_DIR}/CMakeOutput-dbg.log")
 
-#message(FATAL_ERROR "LOGS")
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "lapack-${lapack_ver}" CONFIG_PATH "lib/cmake/lapack-${lapack_ver}") #Should the target path be lapack and not lapack-reference?
 

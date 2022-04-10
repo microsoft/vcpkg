@@ -28,7 +28,8 @@
           "default-features": false,
           "features": [
             "noblas"
-          ]
+          ],
+          "platform": "!(windows & arm)"
         }
       ]
     },
