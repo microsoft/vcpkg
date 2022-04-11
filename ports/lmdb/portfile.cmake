@@ -6,18 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH}/libraries/liblmdb)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake/" DESTINATION "${SOURCE_PATH}/libraries/liblmdb")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/libraries/liblmdb
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/libraries/liblmdb"
     OPTIONS_DEBUG
         -DLMDB_INSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/libraries/liblmdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lmdb RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/libraries/liblmdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lmdb" RENAME copyright)
 
 vcpkg_copy_pdbs()
