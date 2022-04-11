@@ -88,4 +88,6 @@ function(x_vcpkg_get_python_packages)
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -U ${arg_PACKAGES} 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pip-${TARGET_TRIPLET}")
+    set(PYTHON3 "${PYTHON3}" PARENT_SCOPE)
+    set(PYTHON3 "${PYTHON3}" CACHE PATH "" FORCE)
 endfunction()
