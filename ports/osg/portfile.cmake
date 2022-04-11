@@ -27,7 +27,7 @@ else()
     set(OSG_DYNAMIC ON)
 endif()
 
-file(REMOVE "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake")
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
 
 set(OSG_USE_UTF8_FILENAME ON)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -80,8 +80,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE OFF)
 endif()
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
         -DOSG_USE_UTF8_FILENAME=${OSG_USE_UTF8_FILENAME}
         -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
@@ -102,12 +102,12 @@ vcpkg_cmake_configure(
          ${OPTIONS}
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
 # handle osg tools and plugins
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 set(OSG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
