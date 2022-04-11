@@ -11,22 +11,22 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     wchar-mode	PUGIXML_WCHAR_MODE
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DPUGIXML_USE_POSTFIX=ON
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+      -DPUGIXML_USE_POSTFIX=ON
       ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/pugixml)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/pugixml)
 vcpkg_fixup_pkgconfig()
 
 if ("wchar-mode" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pugiconfig.hpp" "// #define PUGIXML_WCHAR_MODE" "#define PUGIXML_WCHAR_MODE")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/readme.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
