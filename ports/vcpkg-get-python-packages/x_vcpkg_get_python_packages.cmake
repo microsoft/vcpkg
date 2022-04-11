@@ -38,6 +38,7 @@ function(x_vcpkg_get_python_packages)
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
 
     if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host. 
+        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/${PORT}/python310._pth" DESTINATION "${python_dir}")
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 vcpkg_from_github(
@@ -51,13 +52,14 @@ function(x_vcpkg_get_python_packages)
                                                LOGNAME "get-pip-${TARGET_TRIPLET}")
             endif()
             vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install virtualenv
-                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-                               LOGNAME "pip-install-${TARGET_TRIPLET}")
+                                           WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                                           LOGNAME "pip-install-virtualenv-${TARGET_TRIPLET}")
         else()
             vcpkg_execute_required_process(COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" virtualenv #${_package}
-                                   WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-                                   LOGNAME "easy-install-${TARGET_TRIPLET}")
+                                           WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                                           LOGNAME "easy-install-virtualenv-${TARGET_TRIPLET}")
         endif()
+        
     #else() # outside vcpkg
     #    foreach(package IN LISTS arg_PACKAGES)
     #        string(REGEX REPLACE "[>=<]+.+" "" package_no_version "${package}") # Remove version constrins for testing
