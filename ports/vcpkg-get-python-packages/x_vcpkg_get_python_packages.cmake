@@ -38,7 +38,9 @@ function(x_vcpkg_get_python_packages)
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
 
     if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host. 
-        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/python310._pth" DESTINATION "${python_dir}")
+        if(NOT EXISTS "${python_dir}/python310._pth" AND PYTHON_EXECUTABLE MATCHES "python3")
+            file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/python310._pth" DESTINATION "${python_dir}")
+        endif()
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 vcpkg_from_github(
@@ -51,37 +53,36 @@ function(x_vcpkg_get_python_packages)
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                                LOGNAME "get-pip-${TARGET_TRIPLET}")
             endif()
-            vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install virtualenv
+            vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install virtualenv --no-warn-script-location
                                            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                            LOGNAME "pip-install-virtualenv-${TARGET_TRIPLET}")
         else()
-            vcpkg_execute_required_process(COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" virtualenv #${_package}
+            vcpkg_execute_required_process(COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" virtualenv --no-warn-script-location #${_package}
                                            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                            LOGNAME "easy-install-virtualenv-${TARGET_TRIPLET}")
         endif()
-        
-    #else() # outside vcpkg
-    #    foreach(package IN LISTS arg_PACKAGES)
-    #        string(REGEX REPLACE "[>=<]+.+" "" package_no_version "${package}") # Remove version constrins for testing
-    #        vcpkg_execute_in_download_mode(COMMAND ${arg_PYTHON_EXECUTABLE} -c "import ${package_no_version}" RESULT_VARIABLE HAS_ERROR)
-    #        if(HAS_ERROR)
-    #            message(FATAL_ERROR "Python package '${package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${arg_PACKAGES}")
-    #        endif()
-    #    endforeach()
     endif()
-        
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m venv --symlinks "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"
+    if(CMAKE_HOST_WIN32)
+        file(MAKE_DIRECTORY "${python_dir}/DLLs") 
+        set(python_sub_path /Scripts)
+        set(python_venv virtualenv)
+    else()
+        set(python_sub_path /bin)
+        set(python_venv venv)
+    endif()
+    set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
+    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-venv-${TARGET_TRIPLET}")
-    vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin")
-    set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/python3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
+    set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getusersitepackages())" 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pypath-${TARGET_TRIPLET}" 
                                    OUTPUT_VARIABLE PYTHON_LIB_PATH)
-    set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/bin/")
     set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
+    set(ENV{PYTHONHOME} "")
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -U ${arg_PACKAGES} 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pip-${TARGET_TRIPLET}")
