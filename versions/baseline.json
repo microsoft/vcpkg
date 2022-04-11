@@ -2517,7 +2517,7 @@
       "port-version": 0
     },
     "glfw3": {
-      "baseline": "3.3.6",
+      "baseline": "3.3.7",
       "port-version": 0
     },
     "gli": {
