@@ -27,7 +27,7 @@ else()
     set(OSG_DYNAMIC ON)
 endif()
 
-file(REMOVE ${SOURCE_PATH}/CMakeModules/FindSDL2.cmake)
+file(REMOVE "${SOURCE_PATH}/CMakeModules/FindSDL2.cmake")
 
 set(OSG_USE_UTF8_FILENAME ON)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -80,8 +80,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DOSG_USE_UTF8_FILENAME=${OSG_USE_UTF8_FILENAME}
         -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
@@ -102,14 +102,14 @@ vcpkg_configure_cmake(
          ${OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
 # handle osg tools and plugins
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-set(OSG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+set(OSG_TOOL_PATH "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 if (OSG_TOOLS)
@@ -122,7 +122,7 @@ endif()
 file(GLOB OSG_TOOLS ${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 if (OSG_TOOLS)
     file(COPY ${OSG_TOOLS} DESTINATION ${OSG_TOOL_PATH})
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/OpenSceneGraph")
 endif()
 
 
@@ -138,7 +138,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         endif()
         file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
     endif()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/" "${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/")
 endif()
 
 file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/*)
@@ -151,19 +151,19 @@ if (OSG_PLUGINS_REL)
     if (NOT EXISTS ${OSG_TOOL_PATH})
         file(MAKE_DIRECTORY ${OSG_TOOL_PATH})
     endif()
-    file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-${OSG_VER})
+    file(COPY "${OSG_PLUGINS_REL}" DESTINATION "${OSG_TOOL_PATH}/osgPlugins-${OSG_VER}")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/ ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/" "${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-${OSG_VER}/")
 
 #Cleanup
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
