@@ -68,6 +68,7 @@ function(x_vcpkg_get_python_packages)
         set(python_sub_path /Scripts)
         set(python_venv virtualenv)
         file(COPY "${python_dir}/python310.zip" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/Scripts")
+        set(python_venv_options "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/data")
     else()
         set(python_sub_path /bin)
         set(python_venv venv)
@@ -75,7 +76,7 @@ function(x_vcpkg_get_python_packages)
     endif()
     #set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")+
     set(ENV{PYTHONNOUSERSITE} "1")
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" ${python_venv_options} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/data"
+    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" ${python_venv_options}
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
