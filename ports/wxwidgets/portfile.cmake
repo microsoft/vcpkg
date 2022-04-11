@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         install-layout.patch
+        mingw-output-name.patch
         fix-build.patch
         fix-linux-configure.patch # Remove this patch in the next update
         fix-libs-export.patch
@@ -61,11 +62,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
-else()
-    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
+set(tools wxrc)
+if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND tools wxrc-3.1)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/wx-config")
+    endif()
 endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
 vcpkg_copy_pdbs()
