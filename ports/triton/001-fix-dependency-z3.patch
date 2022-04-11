@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a8bbe47..966ded8 100644
+index c8da1610..106fdb8b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -99,9 +99,9 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
+@@ -103,9 +103,9 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
  # Find Z3
  if(Z3_INTERFACE)
      message(STATUS "Compiling with Z3 SMT solver")
@@ -15,28 +15,16 @@ index a8bbe47..966ded8 100644
  
  # Find bitwuzla
 diff --git a/src/libtriton/Config.cmake.in b/src/libtriton/Config.cmake.in
-index 683b5f2..5df941e 100644
+index 90cf6bfe..33f27d23 100644
 --- a/src/libtriton/Config.cmake.in
 +++ b/src/libtriton/Config.cmake.in
-@@ -19,6 +19,9 @@ message(STATUS "Found Triton: ${CMAKE_CURRENT_LIST_DIR}/tritonConfig.cmake (foun
+@@ -47,8 +47,7 @@ endif()
  
- include(CMakeFindDependencyMacro)
- find_dependency(Boost)
-+if (@Z3_INTERFACE@)
+ # Z3 include directories
+ if (TRITON_Z3_INTERFACE)
+-    include_directories("@Z3_INCLUDE_DIRS@")
+-    link_directories(BEFORE "@Z3_LIB_DIR@")
 +    find_dependency(Z3 CONFIG)
-+endif()
- 
- # Triton include
- include_directories("@CMAKE_INSTALL_PREFIX@/include")
-@@ -37,11 +40,6 @@ if (TRITON_LLVM_INTERFACE)
-     include_directories("@LLVM_INCLUDE_DIRS@")
  endif()
  
--# Z3 include directories
--if (TRITON_Z3_INTERFACE)
--    include_directories("@Z3_INCLUDE_DIRS@")
--endif()
--
  # Bitwuzla include directories
- if (TRITON_BITWUZLA_INTERFACE)
-     include_directories("@BITWUZLA_INCLUDE_DIRS@")
