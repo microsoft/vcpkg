@@ -36,7 +36,7 @@ function(x_vcpkg_get_python_packages)
     endif()
 
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
-
+    set(ENV{PYTHONNOUSERSITE} "1")
     if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host. 
         if(NOT EXISTS "${python_dir}/python310._pth" AND PYTHON_EXECUTABLE MATCHES "python3")
             file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/python310._pth" DESTINATION "${python_dir}")
@@ -72,21 +72,22 @@ function(x_vcpkg_get_python_packages)
     endif()
     #set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")+
     set(ENV{PYTHONNOUSERSITE} "1")
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
+    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" -v "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-venv-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
     set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     unset(ENV{PYTHONHOME})
-    set(ENV{PYTHONPATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/Lib/site-packages")
+    unse(ENV{PYTHONPATH})# "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/Lib/site-packages")
     #vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages())" 
     #                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
     #                               LOGNAME "prerequisites-pypath-${TARGET_TRIPLET}" 
     #                               OUTPUT_VARIABLE PYTHON_LIB_PATH)
     #set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
  
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -U ${arg_PACKAGES} 
+    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -v ${arg_PACKAGES} 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pip-${TARGET_TRIPLET}")
     set(PYTHON3 "${PYTHON3}" PARENT_SCOPE)
