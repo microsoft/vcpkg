@@ -4249,8 +4249,8 @@
       "port-version": 3
     },
     "lmdb": {
-      "baseline": "0.9.24",
-      "port-version": 2
+      "baseline": "0.9.29",
+      "port-version": 0
     },
     "lodepng": {
       "baseline": "2021-12-04",
