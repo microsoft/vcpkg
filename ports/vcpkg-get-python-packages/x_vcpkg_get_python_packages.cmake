@@ -38,7 +38,7 @@ function(x_vcpkg_get_python_packages)
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
 
     if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host. 
-        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/${PORT}/python310._pth" DESTINATION "${python_dir}")
+        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/python310._pth" DESTINATION "${python_dir}")
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 vcpkg_from_github(
