@@ -12,8 +12,8 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
 )
 
-file(GLOB HEADER_FILES "${PACKAGE_PATH}/include/DirectStorage/*.h")
-file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${PACKAGE_PATH}/Include/DirectStorage/dstorage.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${PACKAGE_PATH}/Include/DirectStorage/dstorageerr.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${PACKAGE_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/dstorage.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
@@ -25,4 +25,4 @@ file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATIO
 
 file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/dstorage-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)
