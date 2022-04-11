@@ -2,6 +2,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${OPENSSL_VERSION}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/../fix-openssl-dir-path.patch"
 )
 
 if(CMAKE_HOST_WIN32)

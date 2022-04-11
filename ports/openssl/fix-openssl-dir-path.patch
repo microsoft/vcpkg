@@ -1,0 +1,16 @@
+diff --git a/include/internal/cryptlib.h b/include/internal/cryptlib.h
+index 1291299..779a546 100644
+--- a/include/internal/cryptlib.h
++++ b/include/internal/cryptlib.h
+@@ -63,6 +63,11 @@ DEFINE_LHASH_OF(MEM);
+ 
+ # define OPENSSL_CONF             "openssl.cnf"
+ 
++#ifdef OPENSSLDIR
++#undef OPENSSLDIR
++#define OPENSSLDIR "."
++#endif
++
+ # ifndef OPENSSL_SYS_VMS
+ #  define X509_CERT_AREA          OPENSSLDIR
+ #  define X509_CERT_DIR           OPENSSLDIR "/certs"
