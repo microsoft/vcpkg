@@ -2458,7 +2458,7 @@
     },
     "getdns": {
       "baseline": "1.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "getopt": {
       "baseline": "0",
