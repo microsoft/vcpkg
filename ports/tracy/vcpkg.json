@@ -1,6 +1,7 @@
 {
   "name": "tracy",
-  "version": "0.8.0",
+  "version-semver": "0.8.0",
+  "port-version": 1,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "supports": "!(windows & (arm | uwp))",
@@ -17,5 +18,78 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "capture": {
+      "description": "Build Tracy tool `capture`",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        }
+      ]
+    },
+    "csvexport": {
+      "description": "Build Tracy tool `csvexport`",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        }
+      ]
+    },
+    "display-wayland": {
+      "description": "Use Wayland instead of X11 for display server",
+      "supports": "linux"
+    },
+    "import-chrome": {
+      "description": "Build Tracy tool `import-chrome`",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        }
+      ]
+    },
+    "profiler": {
+      "description": "Build Tracy tool `profiler` (aka `Tracy` executable)",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        },
+        "freetype",
+        "glfw3"
+      ]
+    },
+    "update": {
+      "description": "Build Tracy tool `update`",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        }
+      ]
+    }
+  }
 }
