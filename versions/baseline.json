@@ -4446,7 +4446,7 @@
     },
     "mesa": {
       "baseline": "21.2.5",
-      "port-version": 3
+      "port-version": 4
     },
     "meschach": {
       "baseline": "1.2b",
@@ -5882,7 +5882,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.13.2",
@@ -7297,7 +7297,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2022-02-12",
+      "baseline": "2022-04-11",
       "port-version": 0
     },
     "vcpkg-gfortran": {
