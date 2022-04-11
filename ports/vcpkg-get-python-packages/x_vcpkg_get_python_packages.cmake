@@ -71,10 +71,11 @@ function(x_vcpkg_get_python_packages)
     else()
         set(python_sub_path /bin)
         set(python_venv venv)
+        set(python_venv_options --symlinks)
     endif()
     #set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")+
     set(ENV{PYTHONNOUSERSITE} "1")
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" -v "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/data"
+    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" ${python_venv_options} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/data"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
