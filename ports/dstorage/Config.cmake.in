@@ -10,7 +10,7 @@ if (EXISTS "${_dstorage_root_lib}")
    set_target_properties(Microsoft::DirectStorage PROPERTIES
       IMPORTED_LOCATION                    "${_dstorage_root}/bin/dstorage.dll"
       IMPORTED_IMPLIB                      "${_dstorage_root_lib}"
-      INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include/dstorage"
+      INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include"
       IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
     set(dstorage_FOUND TRUE)

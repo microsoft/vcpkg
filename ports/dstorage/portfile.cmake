@@ -13,7 +13,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(GLOB HEADER_FILES "${PACKAGE_PATH}/include/DirectStorage/*.h")
-file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${PACKAGE_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/dstorage.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
