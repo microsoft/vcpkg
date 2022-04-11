@@ -46,10 +46,10 @@ function(x_vcpkg_get_python_packages)
                 vcpkg_from_github(
                     OUT_SOURCE_PATH PYFILE_PATH
                     REPO pypa/get-pip
-                    REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-                    SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+                    REF 38e54e5de07c66e875c11a1ebbdb938854625dd8 #2022-03-07
+                    SHA512 431a9f66618a2f251db3a8c3311e7fc3af3ff7364ec1d14a99f1b9c237646b6146cef8b9471d83e1086dba2ed448bccc48d99b2bb375e4235d78e76d9970d3e5
                 )
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" --no-warn-script-location
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/public/get-pip.py" --no-warn-script-location
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                                LOGNAME "get-pip-${TARGET_TRIPLET}")
             endif()
