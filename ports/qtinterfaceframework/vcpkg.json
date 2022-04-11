@@ -20,11 +20,6 @@
       "default-features": false
     },
     {
-      "name": "vcpkg-get-python-packages",
-      "host": true,
-      "default-features": false
-    },
-    {
       "name": "qtmultimedia",
       "default-features": false
     },
@@ -36,6 +31,11 @@
       "name": "qttools",
       "default-features": false
     },
-    "taglib"
+    "taglib",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true,
+      "default-features": false
+    }
   ]
 }
