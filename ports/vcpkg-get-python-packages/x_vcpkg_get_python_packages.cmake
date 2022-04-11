@@ -77,12 +77,13 @@ function(x_vcpkg_get_python_packages)
     vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
     set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
+    unset(ENV{PYTHONHOME})
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getusersitepackages())" 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pypath-${TARGET_TRIPLET}" 
                                    OUTPUT_VARIABLE PYTHON_LIB_PATH)
     set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
-    set(ENV{PYTHONHOME} "")
+ 
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -U ${arg_PACKAGES} 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-pip-${TARGET_TRIPLET}")
