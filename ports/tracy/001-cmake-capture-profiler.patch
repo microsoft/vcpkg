@@ -1,0 +1,570 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 42cc094..ff23db1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,27 @@ project(Tracy LANGUAGES CXX)
+ find_package(Threads REQUIRED)
+ 
+ add_library(TracyClient TracyClient.cpp)
++target_sources(TracyClient
++    PRIVATE
++        TracyClient.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/tracy_concurrentqueue.h
++        ${CMAKE_CURRENT_LIST_DIR}/client/tracy_rpmalloc.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/tracy_SPSCQueue.h
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyArmCpuTable.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyCallstack.h
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyCallstack.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyDebug.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyDxt1.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyFastVector.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyLock.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyProfiler.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyRingBuffer.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyScoped.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyStringHelpers.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracySysTime.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracySysTrace.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/client/TracyThread.hpp
++)
+ target_compile_features(TracyClient PUBLIC cxx_std_11)
+ target_include_directories(TracyClient SYSTEM PUBLIC 
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> 
+@@ -52,6 +73,27 @@ set_option(TRACY_NO_FRAME_IMAGE  "Disable the frame image support and its thread
+ set_option(TRACY_DELAYED_INIT "Enable delayed initialization of the library (init on first call)" OFF)
+ set_option(TRACY_MANUAL_LIFETIME "Enable the manual lifetime management of the profile" OFF)
+ set_option(TRACY_FIBERS "Enable fibers support" OFF)
++set_option(TRACY_BUILD_CAPTURE "Build capture tool" OFF)
++set_option(TRACY_BUILD_PROFILER "Build profiler tool" OFF)
++set_option(TRACY_USE_WAYLAND "Use Wayland backend for GLFW windows" OFF)
++
++if(TRACY_BUILD_CAPTURE OR TRACY_BUILD_PROFILER)
++    find_package(capstone CONFIG REQUIRED)
++    find_package(freetype CONFIG REQUIRED)
++    find_package(zstd CONFIG REQUIRED)
++    if(TRACY_BUILD_PROFILER)
++        find_package(glfw3 CONFIG REQUIRED)
++    endif()
++endif()
++
++if(UNIX AND NOT APPLE)
++    include(FindPkgConfig)
++    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
++    pkg_check_modules(TBB REQUIRED IMPORTED_TARGET tbb)
++    if(TRACY_USE_WAYLAND)
++        pkg_check_modules(WAYLAND REQUIRED IMPORTED_TARGET wayland-client)
++    endif()
++endif()
+ 
+ if(BUILD_SHARED_LIBS)
+     target_compile_definitions(TracyClient PRIVATE TRACY_EXPORTS)
+@@ -61,6 +103,447 @@ endif()
+ include(CMakePackageConfigHelpers)
+ include(GNUInstallDirs)
+ 
++add_library(TracyCommon STATIC)
++add_library(Tracy::TracyCommon ALIAS TracyCommon)
++
++target_sources(TracyCommon
++    PRIVATE
++        ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4hc.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4hc.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyAlign.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyAlloc.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyApi.h
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyColor.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyForceInline.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyMutex.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyProtocol.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyQueue.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracySocket.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracySocket.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyStackFrames.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyStackFrames.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracySystem.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracySystem.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyUwp.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/common/TracyYield.hpp
++)
++target_include_directories(TracyCommon
++    PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/common>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/common>
++)
++target_compile_definitions(TracyCommon
++    PRIVATE
++        $<$<PLATFORM_ID:Windows>:
++            _CRT_SECURE_NO_DEPRECATE
++            _CRT_NONSTDC_NO_DEPRECATE
++            WIN32_LEAN_AND_MEAN
++            NOMINMAX
++            _USE_MATH_DEFINES
++        >
++        $<$<CXX_COMPILER_ID:MSVC>:
++            /permissive-
++            /W3
++        >
++)
++target_link_libraries(TracyCommon
++    PUBLIC
++        $<$<PLATFORM_ID:Windows>:
++            ws2_32.lib
++        >
++        $<$<PLATFORM_ID:Linux>:
++            PkgConfig::TBB
++        >
++)
++target_compile_features(TracyCommon
++    PUBLIC
++        cxx_std_17
++)
++set_target_properties(TracyCommon
++    PROPERTIES
++        CXX_STANDARD          17
++        CXX_STANDARD_REQUIRED ON
++        CXX_EXTENSIONS        OFF
++)
++
++target_link_libraries(TracyClient PUBLIC TracyCommon)
++
++if(TRACY_BUILD_CAPTURE OR TRACY_BUILD_PROFILER)
++    if(WIN32)
++        enable_language(C)
++
++        add_library(TracyGetOpt STATIC)
++        add_library(Tracy::TracyGetOpt ALIAS TracyGetOpt)
++
++        target_sources(TracyGetOpt
++            PRIVATE
++                ${CMAKE_CURRENT_LIST_DIR}/getopt/getopt.c
++                ${CMAKE_CURRENT_LIST_DIR}/getopt/getopt.h
++        )
++        target_include_directories(TracyGetOpt
++            PUBLIC
++                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/getopt>
++                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/getopt>
++        )
++        target_compile_definitions(TracyGetOpt
++            PRIVATE
++                $<$<CXX_COMPILER_ID:MSVC>:
++                    /permissive-
++                    /W3
++                >
++        )
++    endif()
++    
++    add_library(TracyImGui STATIC)
++    add_library(Tracy::TracyImGui ALIAS TracyImGui)
++
++    target_sources(TracyImGui
++        PRIVATE
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imconfig.h              
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui.cpp               
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui.h                 
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_demo.cpp          
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_draw.cpp          
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_internal.h        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_tables.cpp        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_widgets.cpp       
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imstb_rectpack.h        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imstb_textedit.h        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/imstb_truetype.h        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/misc/freetype/imgui_freetype.cpp        
++            ${CMAKE_CURRENT_LIST_DIR}/imgui/misc/freetype/imgui_freetype.h        
++    )
++    target_include_directories(TracyImGui
++        PUBLIC
++            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/imgui>
++            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/imgui>
++    )
++    target_compile_definitions(TracyImGui
++        PUBLIC
++            IMGUI_ENABLE_FREETYPE
++        PRIVATE
++            $<$<PLATFORM_ID:Windows>:
++                _CRT_SECURE_NO_DEPRECATE
++                _CRT_NONSTDC_NO_DEPRECATE
++                WIN32_LEAN_AND_MEAN
++                NOMINMAX
++                _USE_MATH_DEFINES
++            >
++            $<$<CXX_COMPILER_ID:MSVC>:
++                /permissive-
++                /W3
++            >
++    )
++    target_link_libraries(TracyImGui
++        PRIVATE
++            freetype
++    )
++    target_compile_features(TracyImGui
++        PUBLIC
++            cxx_std_17
++    )
++    set_target_properties(TracyImGui
++        PROPERTIES
++            CXX_STANDARD          17
++            CXX_STANDARD_REQUIRED ON
++            CXX_EXTENSIONS        OFF
++    )
++
++    add_library(TracyServer STATIC)
++    add_library(Tracy::TracyServer ALIAS TracyServer)
++
++    target_sources(TracyServer
++        PRIVATE
++            ${CMAKE_CURRENT_LIST_DIR}/server/IconsFontAwesome5.h                
++            ${CMAKE_CURRENT_LIST_DIR}/server/tracy_pdqsort.h                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/tracy_robin_hood.h                 
++            ${CMAKE_CURRENT_LIST_DIR}/server/tracy_xxhash.h                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyBadVersion.cpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyBadVersion.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyBuzzAnim.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyCharUtil.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyColor.cpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyColor.hpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyDecayValue.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyEvent.hpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyEventDebug.cpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyEventDebug.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyFileHeader.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyFileRead.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyFilesystem.cpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyFilesystem.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyFileWrite.hpp                 
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyImGui.hpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMemory.cpp                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMemory.hpp                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMicroArchitecture.cpp         
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMicroArchitecture.hpp         
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMmap.cpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMmap.hpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMouse.cpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyMouse.hpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyPopcnt.hpp                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyPrint.cpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyPrint.hpp                     
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyShortPtr.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySlab.hpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySort.hpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySortedVector.hpp              
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceContents.cpp            
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceContents.hpp            
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceTokenizer.cpp           
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceTokenizer.hpp           
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceView.cpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracySourceView.hpp                
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyStorage.cpp                   
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyStorage.hpp                   
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyStringDiscovery.hpp           
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTaskDispatch.cpp              
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTaskDispatch.hpp              
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTexture.cpp                   
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTexture.hpp                   
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTextureCompression.cpp        
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyTextureCompression.hpp        
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyThreadCompress.cpp            
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyThreadCompress.hpp            
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyUserData.cpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyUserData.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyVarArray.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyVector.hpp                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyVersion.hpp                   
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyView.cpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyView.hpp                      
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyViewData.hpp                  
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyWeb.cpp                       
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyWeb.hpp                       
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyWorker.cpp                    
++            ${CMAKE_CURRENT_LIST_DIR}/server/TracyWorker.hpp                    
++    )
++    target_include_directories(TracyServer
++        PUBLIC
++            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/server>
++            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/server>
++    )
++    target_compile_definitions(TracyServer
++        PRIVATE
++            $<$<PLATFORM_ID:Windows>:
++                _CRT_SECURE_NO_DEPRECATE
++                _CRT_NONSTDC_NO_DEPRECATE
++                WIN32_LEAN_AND_MEAN
++                NOMINMAX
++                _USE_MATH_DEFINES
++            >
++            $<$<CXX_COMPILER_ID:MSVC>:
++                /permissive-
++                /W3
++            >
++    )
++    target_link_libraries(TracyServer
++        PUBLIC
++            TracyCommon
++            TracyImGui
++            $<IF:$<TARGET_EXISTS:zstd::libzstd_static>,zstd::libzstd_static,zstd::libzstd_shared>
++        PRIVATE
++            capstone::capstone
++    )
++    target_compile_features(TracyServer
++        PUBLIC
++            cxx_std_17
++    )
++    set_target_properties(TracyServer
++        PROPERTIES
++            CXX_STANDARD          17
++            CXX_STANDARD_REQUIRED ON
++            CXX_EXTENSIONS        OFF
++    )
++    if(TRACY_BUILD_CAPTURE)
++        add_executable(TracyCapture)
++        add_executable(Tracy::TracyCapture ALIAS TracyCapture)
++
++        target_sources(TracyCapture
++            PRIVATE
++                ${CMAKE_CURRENT_LIST_DIR}/capture/src/capture.cpp
++        )
++        target_compile_definitions(TracyCapture
++            PRIVATE
++                TRACY_NO_STATISTICS
++                $<$<PLATFORM_ID:Windows>:
++                    _CRT_SECURE_NO_DEPRECATE
++                    _CRT_NONSTDC_NO_DEPRECATE
++                    WIN32_LEAN_AND_MEAN
++                    NOMINMAX
++                    _USE_MATH_DEFINES
++                >
++                $<$<CXX_COMPILER_ID:MSVC>:
++                    /permissive-
++                    /W3
++                >
++        )
++        target_link_libraries(TracyCapture
++            PRIVATE
++                TracyCommon
++                TracyServer
++                $<$<PLATFORM_ID:Windows>:TracyGetOpt>
++        )
++        target_compile_features(TracyCapture
++            PRIVATE
++                cxx_std_17
++        )
++        set_target_properties(TracyCapture
++            PROPERTIES
++                CXX_STANDARD          17
++                CXX_STANDARD_REQUIRED ON
++                CXX_EXTENSIONS        OFF
++                OUTPUT_NAME           "capture"
++        )
++    endif()
++    if(TRACY_BUILD_PROFILER)
++
++        add_library(TracyNFD STATIC)
++        add_library(Tracy::TracyNFD ALIAS TracyNFD)
++
++        target_sources(TracyNFD
++            PRIVATE
++                ${CMAKE_CURRENT_LIST_DIR}/nfd/common.h                 
++                ${CMAKE_CURRENT_LIST_DIR}/nfd/LICENSE                  
++                ${CMAKE_CURRENT_LIST_DIR}/nfd/nfd.h                    
++                ${CMAKE_CURRENT_LIST_DIR}/nfd/nfd_common.c             
++                ${CMAKE_CURRENT_LIST_DIR}/nfd/nfd_common.h             
++                $<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_LIST_DIR}/nfd/nfd_gtk.c>                
++                $<$<PLATFORM_ID:Darwin>:${CMAKE_CURRENT_LIST_DIR}/nfd/nfd_cocoa.m>              
++                $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_LIST_DIR}/nfd/nfd_win.cpp>       
++        )
++        target_include_directories(TracyNFD
++            PUBLIC
++                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nfd>
++                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/nfd>
++        )
++        target_compile_definitions(TracyNFD
++            PRIVATE
++                $<$<PLATFORM_ID:Windows>:
++                    _CRT_SECURE_NO_DEPRECATE
++                    _CRT_NONSTDC_NO_DEPRECATE
++                    WIN32_LEAN_AND_MEAN
++                    NOMINMAX
++                    _USE_MATH_DEFINES
++                >
++                $<$<CXX_COMPILER_ID:MSVC>:
++                    /permissive-
++                    /W3
++                >
++        )
++        target_link_libraries(TracyNFD
++            PRIVATE
++                $<$<PLATFORM_ID:Linux>:
++                    PkgConfig::GTK3
++                >
++                $<$<PLATFORM_ID:Darwin>:
++                    "-framework CoreFoundation"
++                    "-framework AppKit"
++                >
++        )
++
++        add_executable(TracyProfiler)
++        add_executable(Tracy::TracyProfiler ALIAS TracyProfiler)
++
++        target_sources(TracyProfiler
++            PRIVATE
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/DroidSans.hpp               
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/FiraCodeRetina.hpp          
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/FontAwesomeSolid.hpp        
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/HttpRequest.cpp             
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/HttpRequest.hpp             
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/icon.hpp   
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/imgui_impl_glfw.cpp         
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/imgui_impl_glfw.h           
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/imgui_impl_opengl3.cpp      
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/imgui_impl_opengl3.h        
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/imgui_impl_opengl3_loader.h                  
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/main.cpp                    
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/NativeWindow.cpp            
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/NativeWindow.hpp            
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/ResolvService.cpp           
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/ResolvService.hpp           
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/stb_image.h                 
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/winmain.cpp                 
++                ${CMAKE_CURRENT_LIST_DIR}/profiler/src/winmainArchDiscovery.cpp    
++                $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_LIST_DIR}/profiler/build/win32/Tracy.manifest>
++                $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_LIST_DIR}/profiler/build/win32/Tracy.rc>
++        )
++        target_compile_definitions(TracyProfiler
++            PRIVATE
++                TRACY_NO_STATISTICS
++                $<$<PLATFORM_ID:Windows>:
++                    _CRT_SECURE_NO_DEPRECATE
++                    _CRT_NONSTDC_NO_DEPRECATE
++                    WIN32_LEAN_AND_MEAN
++                    NOMINMAX
++                    _USE_MATH_DEFINES
++                >
++                $<$<CXX_COMPILER_ID:MSVC>:
++                    /permissive-
++                    /W3
++                >
++        )
++        target_compile_features(TracyProfiler
++            PRIVATE
++                cxx_std_17
++        )
++        target_link_libraries(TracyProfiler
++            PRIVATE
++                TracyCommon
++                TracyImGui
++                TracyNFD
++                TracyServer
++                glfw
++        )
++        set_target_properties(TracyProfiler
++            PROPERTIES
++                CXX_STANDARD          17
++                CXX_STANDARD_REQUIRED ON
++                CXX_EXTENSIONS        OFF
++                OUTPUT_NAME           "Tracy"
++        )
++
++        if(UNIX AND NOT APPLE)
++            if(TRACY_USE_WAYLAND)
++                target_compile_definitions(TracyProfiler
++                    PRIVATE
++                        DISPLAY_SERVER_WAYLAND
++                )
++                target_link_libraries(TracyProfiler
++                    PRIVATE
++                        PkgConfig::WAYLAND
++                )
++            else()
++                target_compile_definitions(TracyProfiler
++                    PRIVATE
++                        DISPLAY_SERVER_X11
++                )
++            endif()
++        endif()
++    endif()
++endif()
++
++set(installed_targets
++    TracyClient
++    TracyCommon
++)
++if(TRACY_BUILD_CAPTURE)
++    list(APPEND installed_targets TracyCapture)
++endif()
++if(TRACY_BUILD_PROFILER)
++    list(APPEND installed_targets TracyProfiler)
++endif()
++
++install(TARGETS ${installed_targets}
++        EXPORT TracyConfig
++        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
++        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
++
+ set(includes
+     ${CMAKE_CURRENT_LIST_DIR}/TracyC.h
+     ${CMAKE_CURRENT_LIST_DIR}/Tracy.hpp
+@@ -71,55 +554,18 @@ set(includes
+     ${CMAKE_CURRENT_LIST_DIR}/TracyOpenGL.hpp
+     ${CMAKE_CURRENT_LIST_DIR}/TracyVulkan.hpp)
+ 
+-set(client_includes
+-    ${CMAKE_CURRENT_LIST_DIR}/client/tracy_concurrentqueue.h
+-    ${CMAKE_CURRENT_LIST_DIR}/client/tracy_rpmalloc.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/tracy_SPSCQueue.h
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyArmCpuTable.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyCallstack.h
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyCallstack.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyDebug.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyDxt1.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyFastVector.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyLock.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyProfiler.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyRingBuffer.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyScoped.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyStringHelpers.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracySysTime.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracySysTrace.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/client/TracyThread.hpp)
+-
+-set(common_includes
+-    ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/tracy_lz4hc.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyAlign.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyAlign.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyAlloc.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyApi.h
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyColor.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyForceInline.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyMutex.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyProtocol.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyQueue.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracySocket.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyStackFrames.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracySystem.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyUwp.hpp
+-    ${CMAKE_CURRENT_LIST_DIR}/common/TracyYield.hpp)
+-
+-install(TARGETS TracyClient
+-        EXPORT TracyConfig
+-        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
+-        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ install(FILES ${includes}
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++
++get_target_property(client_includes TracyClient SOURCES)
++list(FILTER client_includes INCLUDE REGEX [[.*\.(h|hpp)]])
+ install(FILES ${client_includes}
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/client)
++get_target_property(common_includes TracyCommon SOURCES)
++list(FILTER common_includes INCLUDE REGEX [[.*\.(h|hpp)]])
+ install(FILES ${common_includes}
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/common)
+ install(EXPORT TracyConfig
+ 		NAMESPACE Tracy::
+         FILE TracyConfig.cmake
+-        DESTINATION share/Tracy)
++        DESTINATION ${CMAKE_INSTALL_DATADIR}/Tracy)

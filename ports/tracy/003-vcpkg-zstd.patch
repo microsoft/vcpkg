@@ -1,0 +1,75 @@
+diff --git a/import-chrome/src/import-chrome.cpp b/import-chrome/src/import-chrome.cpp
+index d6a3ea7..39cc404 100644
+--- a/import-chrome/src/import-chrome.cpp
++++ b/import-chrome/src/import-chrome.cpp
+@@ -23,7 +23,7 @@
+ #include "../../server/TracyFileWrite.hpp"
+ #include "../../server/TracyMmap.hpp"
+ #include "../../server/TracyWorker.hpp"
+-#include "../../zstd/zstd.h"
++#include <zstd.h>
+ 
+ using json = nlohmann::json;
+ 
+diff --git a/server/TracyFileRead.hpp b/server/TracyFileRead.hpp
+index 382553c..cea723b 100644
+--- a/server/TracyFileRead.hpp
++++ b/server/TracyFileRead.hpp
+@@ -25,7 +25,7 @@
+ #include "../common/TracyYield.hpp"
+ #include "../common/tracy_lz4.hpp"
+ #include "../common/TracyForceInline.hpp"
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ 
+ namespace tracy
+ {
+diff --git a/server/TracyFileWrite.hpp b/server/TracyFileWrite.hpp
+index 099ab88..e849a5c 100644
+--- a/server/TracyFileWrite.hpp
++++ b/server/TracyFileWrite.hpp
+@@ -15,7 +15,7 @@
+ #include "../common/tracy_lz4.hpp"
+ #include "../common/tracy_lz4hc.hpp"
+ #include "../common/TracyForceInline.hpp"
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ 
+ namespace tracy
+ {
+diff --git a/server/TracyTextureCompression.cpp b/server/TracyTextureCompression.cpp
+index b39dce1..94b9675 100644
+--- a/server/TracyTextureCompression.cpp
++++ b/server/TracyTextureCompression.cpp
+@@ -1,4 +1,4 @@
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ 
+ #include "TracyEvent.hpp"
+ #include "TracyTextureCompression.hpp"
+diff --git a/server/TracyWorker.cpp b/server/TracyWorker.cpp
+index 2433e59..28d3628 100644
+--- a/server/TracyWorker.cpp
++++ b/server/TracyWorker.cpp
+@@ -22,7 +22,7 @@
+ #include <capstone/capstone.h>
+ 
+ #define ZDICT_STATIC_LINKING_ONLY
+-#include "../zstd/zdict.h"
++#include <zdict.h>
+ 
+ #include "../common/TracyProtocol.hpp"
+ #include "../common/TracySystem.hpp"
+diff --git a/update/src/update.cpp b/update/src/update.cpp
+index 0823fea..80bcbfe 100644
+--- a/update/src/update.cpp
++++ b/update/src/update.cpp
+@@ -12,7 +12,7 @@
+ #include "../../server/TracyPrint.hpp"
+ #include "../../server/TracyVersion.hpp"
+ #include "../../server/TracyWorker.hpp"
+-#include "../../zstd/zstd.h"
++#include <zstd.h>
+ #include "../../getopt/getopt.h"
+ 
+ #ifdef __APPLE__
