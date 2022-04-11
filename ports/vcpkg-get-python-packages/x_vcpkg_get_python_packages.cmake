@@ -94,6 +94,7 @@ function(x_vcpkg_get_python_packages)
     endif()
     set(venv_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     file(REMOVE_RECURSE "${venv_path}") # Remove old venv
+    file(MAKE_DIRECTORY "${venv_path}") 
     if(CMAKE_HOST_WIN32)
         file(MAKE_DIRECTORY "${python_dir}/DLLs") 
         set(python_sub_path /Scripts)
