@@ -82,16 +82,17 @@ function(x_vcpkg_get_python_packages)
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     unset(ENV{PYTHONHOME})
     unset(ENV{PYTHONPATH})
-    if(DEFINED arg_PACKAGES)
-        vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install ${arg_PACKAGES} 
-                                       WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
-                                       LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
-    endif()
     if(DEFINED arg_REQUIREMENTS_FILE)
         vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -r ${arg_REQUIREMENTS_FILE} 
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                        LOGNAME "pip-install-requirements-file-${TARGET_TRIPLET}")
     endif()
+    if(DEFINED arg_PACKAGES)
+        vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install ${arg_PACKAGES} 
+                                       WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
+                                       LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
+    endif()
+
     set(PYTHON3 "${PYTHON3}" PARENT_SCOPE)
     set(PYTHON3 "${PYTHON3}" CACHE PATH "" FORCE)
 endfunction()
