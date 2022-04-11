@@ -113,12 +113,8 @@ endif()
 
 set(WITH_PYTHON OFF)
 if("python" IN_LIST FEATURES)
-  vcpkg_find_acquire_program(PYTHON3)
-  get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-  vcpkg_add_to_path("${PYTHON3_DIR}")
-  vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+  x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
   set(ENV{PYTHON} "${PYTHON3}")
-  x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES numpy)
   set(WITH_PYTHON ON)
 endif()
 

@@ -64,12 +64,8 @@ endif()
 
 set(WITH_PYTHON OFF)
 if("python" IN_LIST FEATURES)
-  vcpkg_find_acquire_program(PYTHON2)
-  get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-  vcpkg_add_to_path("${PYTHON2_DIR}")
-  vcpkg_add_to_path("${PYTHON2_DIR}/Scripts")
+  x_vcpkg_get_python_packages(PYTHON_VERSION "2" PACKAGES numpy OUT_PYTHON_VAR "PYTHON2")
   set(ENV{PYTHON} "${PYTHON2}")
-  x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON2}" PACKAGES numpy)
   set(WITH_PYTHON ON)
 endif()
 

@@ -19,10 +19,10 @@ endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
-vcpkg_find_acquire_program(PYTHON3)
-x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" 
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" 
                             REQUIREMENTS_FILE "${CURRENT_PORT_DIR}/requirements_minimal.txt" 
-                            PACKAGES qface==2.0.5)
+                            PACKAGES qface==2.0.5
+                            OUT_PYTHON_VAR "PYTHON3")
 
 if(VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}")
