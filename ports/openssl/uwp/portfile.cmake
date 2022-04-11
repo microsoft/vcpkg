@@ -10,7 +10,7 @@ endif()
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  patches "${CMAKE_CURRENT_LIST_DIR}/../fix-openssl-dir-path.patch"
+  PATCHES "${CMAKE_CURRENT_LIST_DIR}/../fix-openssl-dir-path.patch"
 )
 
 vcpkg_find_acquire_program(NASM)
