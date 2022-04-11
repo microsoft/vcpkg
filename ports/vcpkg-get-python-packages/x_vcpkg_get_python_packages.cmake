@@ -23,13 +23,13 @@ List of python packages to acquire
 include_guard(GLOBAL)
 
 function(x_vcpkg_get_python_packages)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "PYTHON_EXECUTABLE" "PACKAGES")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "PYTHON_EXECUTABLE;REQUIREMENTS_FILE" "PACKAGES")
 
     if(NOT DEFINED arg_PYTHON_EXECUTABLE)
         message(FATAL_ERROR "PYTHON_EXECUTABLE must be specified.")
     endif()
-    if(NOT DEFINED arg_PACKAGES)
-        message(FATAL_ERROR "PACKAGES must be specified.")
+    if(NOT DEFINED arg_PACKAGES AND NOT DEFINED arg_REQUIREMENTS_FILE)
+        message(FATAL_ERROR "PACKAGES or REQUIREMENTS_FILE must be specified.")
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -76,16 +76,22 @@ function(x_vcpkg_get_python_packages)
     set(ENV{PYTHONNOUSERSITE} "1")
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" -v "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv" "--app-data" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/data"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
-                                   LOGNAME "prerequisites-venv-${TARGET_TRIPLET}")
+                                   LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
     set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     unset(ENV{PYTHONHOME})
     unset(ENV{PYTHONPATH})
- 
-    vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -v ${arg_PACKAGES} 
-                                   WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
-                                   LOGNAME "prerequisites-pip-${TARGET_TRIPLET}")
+    if(DEFINED arg_PACKAGES)
+        vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install ${arg_PACKAGES} 
+                                       WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
+                                       LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
+    endif()
+    if(DEFINED arg_REQUIREMENTS_FILE)
+        vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m pip install -r ${arg_REQUIREMENTS_FILE} 
+                                       WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
+                                       LOGNAME "pip-install-requirements-file-${TARGET_TRIPLET}")
+    endif()
     set(PYTHON3 "${PYTHON3}" PARENT_SCOPE)
     set(PYTHON3 "${PYTHON3}" CACHE PATH "" FORCE)
 endfunction()
