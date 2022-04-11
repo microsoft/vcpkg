@@ -410,7 +410,7 @@
     },
     "bdwgc": {
       "baseline": "8.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "beast": {
       "baseline": "0",
@@ -1136,6 +1136,10 @@
       "baseline": "2.4.1",
       "port-version": 2
     },
+    "braft": {
+      "baseline": "2021-26-04",
+      "port-version": 0
+    },
     "breakpad": {
       "baseline": "2020-09-14",
       "port-version": 5
@@ -1218,7 +1222,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 5
+      "port-version": 6
     },
     "cairo": {
       "baseline": "1.17.6",
@@ -1241,8 +1245,8 @@
       "port-version": 2
     },
     "capstone": {
-      "baseline": "4.0.2",
-      "port-version": 3
+      "baseline": "5.0.0-rc2",
+      "port-version": 0
     },
     "cargs": {
       "baseline": "1.0.3",
@@ -1421,8 +1425,8 @@
       "port-version": 1
     },
     "clockutils": {
-      "baseline": "1.1.1-3651f232c27074c4ceead169e223edf5f00247c5",
-      "port-version": 4
+      "baseline": "1.1.1",
+      "port-version": 1
     },
     "clp": {
       "baseline": "1.17.6",
@@ -2537,8 +2541,8 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.4.0",
-      "port-version": 4
+      "baseline": "0.5.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
@@ -2622,7 +2626,7 @@
     },
     "graphviz": {
       "baseline": "2.49.1",
-      "port-version": 2
+      "port-version": 3
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -3978,7 +3982,7 @@
     },
     "libslirp": {
       "baseline": "4.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libsmb2": {
       "baseline": "2021-04-29",
@@ -4270,7 +4274,7 @@
     },
     "loguru": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lpeg": {
       "baseline": "1.0.2",
@@ -7102,7 +7106,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 1
+      "port-version": 2
     },
     "trompeloeil": {
       "baseline": "41",
@@ -7705,8 +7709,8 @@
       "port-version": 3
     },
     "zziplib": {
-      "baseline": "0.13.71",
-      "port-version": 3
+      "baseline": "0.13.72",
+      "port-version": 0
     }
   }
 }
