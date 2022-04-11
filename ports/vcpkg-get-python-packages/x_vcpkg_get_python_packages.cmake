@@ -40,12 +40,11 @@ function(x_vcpkg_get_python_packages)
 
     if(DEFINED arg_PYTHON_VERSION AND NOT DEFINED arg_PYTHON_EXECUTABLE)
         vcpkg_find_acquire_program(PYTHON${arg_PYTHON_VERSION})
+        set(arg_PYTHON_EXECUTABLE "${PYTHON${arg_PYTHON_VERSION}}")
     endif()
 
     if(NOT DEFINED arg_PYTHON_EXECUTABLE AND NOT DEFINED arg_PYTHON_VERSION)
         message(FATAL_ERROR "PYTHON_EXECUTABLE or PYTHON_VERSION must be specified.")
-    elseif(NOT DEFINED arg_PYTHON_EXECUTABLE)
-        set(arg_PYTHON_EXECUTABLE "${PYTHON${arg_PYTHON_VERSION}}")
     elseif(NOT DEFINED arg_PYTHON_VERSION)
         if(arg_PYTHON_EXECUTABLE MATCHES "(python3|python-3)")
             set(arg_PYTHON_VERSION 3)
@@ -109,7 +108,7 @@ function(x_vcpkg_get_python_packages)
 
     set(ENV{PYTHONNOUSERSITE} "1")
     message(STATUS "Setting up python virtual environmnent...")
-    vcpkg_execute_required_process(COMMAND "${PYTHON_EXECUTABLE}" -m "${python_venv}" "${venv_path}" ${python_venv_options}
+    vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -m "${python_venv}" ${python_venv_options} "${venv_path}" 
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${venv_path}${python_sub_path}")
