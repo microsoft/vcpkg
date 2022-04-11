@@ -49,7 +49,7 @@ function(x_vcpkg_get_python_packages)
                     REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
                     SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
                 )
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py"
+                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" --no-warn-script-location
                                                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                                LOGNAME "get-pip-${TARGET_TRIPLET}")
             endif()
@@ -70,7 +70,8 @@ function(x_vcpkg_get_python_packages)
         set(python_sub_path /bin)
         set(python_venv venv)
     endif()
-    set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")
+    #set(ENV{PYTHON_BIN_PATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}")+
+    set(ENV{PYTHONNOUSERSITE} "1")
     vcpkg_execute_required_process(COMMAND "${PYTHON3}" -m "${python_venv}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
                                    LOGNAME "prerequisites-venv-${TARGET_TRIPLET}")
@@ -78,7 +79,7 @@ function(x_vcpkg_get_python_packages)
     set(PYTHON3 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(ENV{VIRTUAL_ENV} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
     unset(ENV{PYTHONHOME})
-    unset(ENV{PYTHONPATH})
+    set(ENV{PYTHONPATH} "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv/Lib")
     #vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages())" 
     #                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}" 
     #                               LOGNAME "prerequisites-pypath-${TARGET_TRIPLET}" 
