@@ -1970,7 +1970,7 @@
     },
     "dxsdk-d3dx": {
       "baseline": "9.29.952.8",
-      "port-version": 2
+      "port-version": 3
     },
     "dxut": {
       "baseline": "11.26",
@@ -2102,7 +2102,7 @@
     },
     "expat": {
       "baseline": "2.4.8",
-      "port-version": 0
+      "port-version": 1
     },
     "expected-lite": {
       "baseline": "0.5.0",
@@ -2194,7 +2194,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 11
+      "port-version": 12
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2462,7 +2462,7 @@
     },
     "getdns": {
       "baseline": "1.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "getopt": {
       "baseline": "0",
@@ -2521,7 +2521,7 @@
       "port-version": 0
     },
     "glfw3": {
-      "baseline": "3.3.6",
+      "baseline": "3.3.7",
       "port-version": 0
     },
     "gli": {
@@ -7526,7 +7526,7 @@
     },
     "xaudio2redist": {
       "baseline": "1.2.8",
-      "port-version": 1
+      "port-version": 2
     },
     "xbyak": {
       "baseline": "6.00",
