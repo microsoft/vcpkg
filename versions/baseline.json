@@ -1201,8 +1201,8 @@
       "port-version": 2
     },
     "c-ares": {
-      "baseline": "1.17.2",
-      "port-version": 2
+      "baseline": "1.18.1",
+      "port-version": 0
     },
     "c-dbg-macro": {
       "baseline": "2020-02-29",
@@ -1270,7 +1270,7 @@
     },
     "catch2": {
       "baseline": "2.13.8",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1942,6 +1942,10 @@
     },
     "drogon": {
       "baseline": "1.7.5",
+      "port-version": 0
+    },
+    "dstorage": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "dtl": {
@@ -2714,7 +2718,7 @@
     },
     "harfbuzz": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2801,8 +2805,8 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "69.1",
-      "port-version": 19
+      "baseline": "70.1",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -2885,7 +2889,7 @@
       "port-version": 3
     },
     "igraph": {
-      "baseline": "0.9.7",
+      "baseline": "0.9.8",
       "port-version": 0
     },
     "iir1": {
@@ -2901,8 +2905,8 @@
       "port-version": 1
     },
     "imath": {
-      "baseline": "3.1.3",
-      "port-version": 1
+      "baseline": "3.1.5",
+      "port-version": 0
     },
     "imgui": {
       "baseline": "1.87",
@@ -4249,8 +4253,8 @@
       "port-version": 3
     },
     "lmdb": {
-      "baseline": "0.9.24",
-      "port-version": 2
+      "baseline": "0.9.29",
+      "port-version": 0
     },
     "lodepng": {
       "baseline": "2021-12-04",
@@ -5190,7 +5194,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.22",
-      "port-version": 2
+      "port-version": 3
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -7289,7 +7293,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-04-05",
+      "baseline": "2022-04-07",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
