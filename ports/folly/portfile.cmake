@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2022.01.31.00
-    SHA512 fef065c8a879e5b80eb521eaa09d2ac4eb22563e759834e60f665f07df5c2863c76217798680381bc51fad8c44f4b5d5abfb924a94c89635a41708abf6d70133
+    REF v2022.03.21.00
+    SHA512 4e0fda55f007179883af30024fe1d389642159b1b4c915f7ef1a3c1003c8c52e2370f53ffa79d5fa75533d33becfb946d2bcbb2abdc62b9a297f977403d13dd7
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -72,9 +72,9 @@ vcpkg_cmake_config_fixup()
 # We substitute with generator expressions so that the right libraries are linked for debug and release.
 set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
 FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
-string(REPLACE "\${_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
-STRING(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
-STRING(REPLACE "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+string(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
+STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
+STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 FILE(READ "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake" _contents)

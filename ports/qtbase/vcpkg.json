@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.2.3",
-  "port-version": 1,
+  "version": "6.2.4",
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -54,7 +53,6 @@
     "harfbuzz",
     "icu",
     "jpeg",
-    "latest",
     "network",
     "openssl",
     "pcre2",
@@ -201,9 +199,6 @@
           ]
         }
       ]
-    },
-    "latest": {
-      "description": "Build latest qt version (6.3.0) instead of LTS"
     },
     "network": {
       "description": "Qt Network"

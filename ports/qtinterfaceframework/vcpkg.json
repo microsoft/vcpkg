@@ -1,10 +1,14 @@
 {
   "name": "qtinterfaceframework",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "Qt Interface Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true
+    },
     {
       "name": "qtdeclarative",
       "default-features": false

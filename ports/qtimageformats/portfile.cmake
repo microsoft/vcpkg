@@ -9,6 +9,10 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    #"jasper"              CMAKE_REQUIRE_FIND_PACKAGE_WrapJasper
+    #"webp"                CMAKE_REQUIRE_FIND_PACKAGE_WrapWebP
+    #"tiff"                CMAKE_REQUIRE_FIND_PACKAGE_TIFF
     INVERTED_FEATURES
     "jasper"              CMAKE_DISABLE_FIND_PACKAGE_WrapJasper
     "webp"                CMAKE_DISABLE_FIND_PACKAGE_WrapWebP
