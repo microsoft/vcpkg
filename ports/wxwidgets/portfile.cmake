@@ -22,6 +22,11 @@ Port wxwidgets currently requires the following libraries from the system packag
 These can be installed on Ubuntu systems via
     apt-get install libgtk-3-dev libsecret-1-dev
 ]])
+    foreach(conflicting_port IN ITEMS freetype glib)
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/share/${conflicting_port}/copyright")
+            message(FATAL_ERROR "Port ${conflicting_port} must not be installed when building ${PORT}:${TARGET_TRIPLET}.")
+        endif()
+    endforeach()
 endif()
 
 set(OPTIONS "")
@@ -48,6 +53,9 @@ if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CO
     find_program(system_pkg_config NAMES pkg-config)
     if(system_pkg_config)
         set(ENV{PKG_CONFIG} "${system_pkg_config}")
+    endif()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND OPTIONS -DPKG_CONFIG_ARGN=--static)
     endif()
 endif()
 
