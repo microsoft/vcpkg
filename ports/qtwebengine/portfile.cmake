@@ -70,7 +70,7 @@ if(NOT QT_IS_LATEST)
     list(APPEND FEATURE_OPTIONS "-DPython2_EXECUTABLE=${PYTHON2}")
 else()
     vcpkg_find_acquire_program(PYTHON3)
-    x_vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
+    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
 endif()
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
