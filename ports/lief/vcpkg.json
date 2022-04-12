@@ -7,7 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     "boost-leaf",
-    "frozen",
     "mbedtls",
     "spdlog",
     "tcb-span",
@@ -26,6 +25,7 @@
     "c-api",
     "dex",
     "elf",
+    "enable-frozen",
     "enable-json",
     "logging",
     "macho",
@@ -49,11 +49,14 @@
     "dex": {
       "description": "Build LIEF with DEX module"
     },
-    "disable-frozen": {
-      "description": "Disable Frozen even if it is supported"
-    },
     "elf": {
       "description": "Build LIEF with ELF module"
+    },
+    "enable-frozen": {
+      "description": "Enable Frozen",
+      "dependencies": [
+        "frozen"
+      ]
     },
     "enable-json": {
       "description": "Enable JSON-related APIs",

@@ -42,9 +42,8 @@ FEATURES
     # Profiling
     "profiling"     LIEF_PROFILING          # Enable performance profiling
 
-    # INVERTED_FEATURES
-    # TODO: Not sure how to remove a dependency from list of defaults
-    # "disable-frozen" LIEF_DISABLE_FROZEN    # Disable Frozen even if it is supported
+INVERTED_FEATURES
+    "enable-frozen" LIEF_DISABLE_FROZEN    # Disable Frozen even if it is supported
 )
 
 vcpkg_cmake_configure(
