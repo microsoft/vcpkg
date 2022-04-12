@@ -17,7 +17,6 @@ vcpkg_from_github(
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
         find-package-required.patch
-        fix_libraries_name.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCXSparse.cmake")
@@ -25,6 +24,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
