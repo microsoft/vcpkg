@@ -1,6 +1,6 @@
-From 754328b44c63a5cb3f9c98fe357bad7d127c6ebc Mon Sep 17 00:00:00 2001
+From 426d8167648fff0ad79832a701223b8171dad096 Mon Sep 17 00:00:00 2001
 From: Eric Kilmer <eric.d.kilmer@gmail.com>
-Date: Fri, 25 Feb 2022 17:43:34 -0500
+Date: Tue, 12 Apr 2022 10:42:27 -0400
 Subject: [PATCH] Support vcpkg
 
 Remove msvccrt choosing and fix install paths on Windows
@@ -9,7 +9,7 @@ Remove msvccrt choosing and fix install paths on Windows
  1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 80877756..53e20fa3 100644
+index b89d0522..9ca50c35 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -11,9 +11,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CROSSCOMPILING)
@@ -29,9 +29,9 @@ index 80877756..53e20fa3 100644
 -if(UNIX)
 +if(1)
    include(GNUInstallDirs)
+   set(CMAKE_INSTALL_LIBDIR "lib")
  else()
-   if(WIN32)
-@@ -687,7 +684,7 @@ install(
+@@ -688,7 +685,7 @@ install(
    EXPORT LIEFExport
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

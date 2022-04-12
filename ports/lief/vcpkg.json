@@ -1,6 +1,6 @@
 {
   "name": "lief",
-  "version-semver": "0.12.0",
+  "version-semver": "0.12.1",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "license": "Apache-2.0",
@@ -51,9 +51,6 @@
     },
     "disable-frozen": {
       "description": "Disable Frozen even if it is supported"
-    },
-    "doc": {
-      "description": "Enable documentation"
     },
     "elf": {
       "description": "Build LIEF with ELF module"

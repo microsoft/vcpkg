@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF 0.12.0
-    SHA512 07089996282ed9b8b9e3061f5b0e1f1711a54d316e8d602205b8eb99a24da762bf7d91143f52af5d75f7a5d94ea65caf08b3263e4e18935277d2aecc8330203b
+    REF 0.12.1
+    SHA512 833a04ece5ff7365717aee3408a2d522756319e43cf4ff795047021c46b48d5d525c2a56cdafd04259ddfcf6888972d19655924f999460ce05f52a32ac7e8bca
     HEAD_REF master
     PATCHES
         0001-Support-vcpkg.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "tests"          LIEF_TESTS             # Enable tests
-    "doc"            LIEF_DOC               # Enable documentation
     "c-api"          LIEF_C_API             # C API
     "examples"       LIEF_EXAMPLES          # Build LIEF C++ examples
     "force32"        LIEF_FORCE32           # Force build LIEF 32 bits version
