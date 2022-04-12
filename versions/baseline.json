@@ -4570,7 +4570,7 @@
     },
     "mongo-cxx-driver": {
       "baseline": "3.6.5",
-      "port-version": 2
+      "port-version": 3
     },
     "mongoose": {
       "baseline": "7.5",
