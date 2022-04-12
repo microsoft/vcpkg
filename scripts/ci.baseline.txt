@@ -72,8 +72,6 @@ caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-c-ares:arm-uwp=fail
-c-ares:x64-uwp=fail
 
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -952,7 +950,6 @@ openvr:arm-uwp=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openvr:x64-windows-static=fail
-openxr-loader:x64-osx=fail
 optional-bare:arm64-windows      = skip
 optional-bare:arm-uwp            = skip
 optional-bare:x64-linux          = skip
