@@ -13,6 +13,17 @@ vcpkg_from_github(
         relocatable-wx-config.patch
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    message([[
+Port wxwidgets currently requires the following libraries from the system package manager:
+    GTK 3
+    libsecret
+
+These can be installed on Ubuntu systems via
+    apt-get install libgtk-3-dev libsecret-1-dev
+]])
+endif()
+
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
