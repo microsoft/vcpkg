@@ -36,7 +36,7 @@ function(prepare_for_build ICE_SOURCE_DIR)
 
     set(ICE_CPP_MSBUILD_PACKAGES_DIR "${ICE_SOURCE_DIR}/cpp/msbuild/packages")
     set(ICE_BUILDER_DEST_DIRECTORY "${ICE_CPP_MSBUILD_PACKAGES_DIR}/zeroc.icebuilder.msbuild.5.0.7")
-    if(NOT EXISTS ${ICE_BUILDER_DEST_DIRECTORY})
+    if(NOT EXISTS "${ICE_BUILDER_DEST_DIRECTORY}")
         message("-- Making Ice Builder for MSBuild available")
         vcpkg_download_distfile(
             ICE_BUILDER_MSBUILD_ARCHIVE
@@ -54,7 +54,7 @@ function(prepare_for_build ICE_SOURCE_DIR)
         )
 
         file(MAKE_DIRECTORY "${ICE_SOURCE_DIR}/cpp/msbuild/packages")
-        file(RENAME ${ICE_BUILDER_MSBUILD_DIRECTORY} ${ICE_BUILDER_DEST_DIRECTORY})
+        file(RENAME "${ICE_BUILDER_MSBUILD_DIRECTORY}" "${ICE_BUILDER_DEST_DIRECTORY}")
     endif()
 
 endfunction()

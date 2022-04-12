@@ -236,7 +236,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     endif()
     file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
 
-else(NOT VCPKG_TARGET_IS_WINDOWS)
+else() # VCPKG_TARGET_IS_WINDOWS
 
     # Fix project files to prevent nuget restore of dependencies and
     # remove hard coded runtime linkage
@@ -275,7 +275,7 @@ else(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_clean_msbuild()
 
-endif(NOT VCPKG_TARGET_IS_WINDOWS)
+endif()
 
 # Remove unnecessary static libraries.
 file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
@@ -283,10 +283,6 @@ file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
 list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 file(REMOVE ${PDLIBS} ${PRLIBS})
-
-if(VCPKG_TARGET_IS_OSX AND EXISTS "${CURRENT_PACKAGES_DIR}/.DS_Store")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/.DS_Store")
-endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zeroc-ice RENAME copyright)
