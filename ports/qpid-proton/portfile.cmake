@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF dc244b1f7e886883a2bb416407f42ba55d0f5f42 # 0.32.0
     SHA512 19f191dd206fd43a8f5b8db95f6ada57bd60b93eb907cf32f463c23cfe8c5f4914c6f4750ebde50c970387fb62baf4451279803eeb000bc8bb5c200692e5d1d7 
     HEAD_REF next
+    PATCHES
+        fix-openssl3.patch
 )
 
 vcpkg_cmake_configure(

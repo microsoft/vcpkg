@@ -6,14 +6,8 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-if (VCPKG_TARGET_IS_UWP)
-  # - opengl feature is broken on UWP
-  # - jasper and openexr are not available on UWP due to missing dependencies
-  # - opencv2 code itself fails even if previous conditions are avoided
-  message(FATAL_ERROR "${PORT} doesn't support UWP")
-endif()
-
-set(OPENCV_VERSION "2.4.13.7")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
+string(JSON OPENCV_VERSION GET "${_contents}" version)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
