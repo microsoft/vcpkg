@@ -6430,7 +6430,7 @@
     },
     "sfgui": {
       "baseline": "0.4.0",
-      "port-version": 4
+      "port-version": 5
     },
     "sfml": {
       "baseline": "2.5.1",
