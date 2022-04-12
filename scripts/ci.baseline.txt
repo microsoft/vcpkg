@@ -1010,7 +1010,7 @@ qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
 
 # qtwebengine:x64-windows has an ICE in VS2022
-qtwebengine:x64-windows=fail
+# qtwebengine:x64-windows=fail
 
 # upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
 qtinterfaceframework:x64-windows=skip

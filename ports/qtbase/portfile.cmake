@@ -3,7 +3,7 @@
 # Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
-
+set(QT_IS_LATEST ON)
 if("latest" IN_LIST FEATURES)
     set(QT_IS_LATEST ON)
 endif()
