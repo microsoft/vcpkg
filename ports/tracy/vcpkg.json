@@ -19,6 +19,10 @@
       "host": true
     }
   ],
+  "default-features": [
+    "capture",
+    "profiler"
+  ],
   "features": {
     "capture": {
       "description": "Build Tracy tool `capture`",
@@ -45,10 +49,6 @@
           ]
         }
       ]
-    },
-    "display-wayland": {
-      "description": "Use Wayland instead of X11 for display server",
-      "supports": "linux"
     },
     "import-chrome": {
       "description": "Build Tracy tool `import-chrome`",

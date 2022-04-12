@@ -14,28 +14,83 @@ vcpkg_from_github(
         001-fix-vcxproj-vcpkg.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        capture TRACY_BUILD_CAPTURE 
-        profiler TRACY_BUILD_PROFILER  
-        display-wayland TRACY_USE_WAYLAND  
-)
-
-if(VCPKG_TARGET_IS_LINUX)
-    if(TRACY_BUILD_CAPTURE OR TRACY_BUILD_PROFILER)
-        message(
-    "Tracy currently requires the following libraries from the system package manager to build its tools:
-        gtk+-3.0
-        tbb
-
-    These can be installed on Ubuntu systems via sudo apt install libgtk-3-dev libtbb-dev")
-    endif()
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
 vcpkg_cmake_install()
+
+if(VCPKG_TARGET_IS_LINUX)
+    set(any_tracy_tool_requested OFF)
+    if(profiler IN_LIST FEATURES)
+        message(
+"Tracy currently requires the following libraries from the system package manager to build its tools:
+    gtk+-3.0
+    tbb
+
+These can be installed on Ubuntu systems via sudo apt install libgtk-3-dev libtbb-dev")
+        set(any_tracy_tool_requested ON)
+    else()
+        foreach(CLI_TOOL capture csvexport import-chrome update)
+            if(${CLI_TOOL} IN_LIST FEATURES)
+                message(
+"Tracy currently requires the following libraries from the system package manager to build its tools:
+    tbb
+
+These can be installed on Ubuntu systems via sudo apt install libtbb-dev")
+                set(any_tracy_tool_requested ON)
+                break()
+            endif()
+        endforeach()
+    endif()
+
+    if(any_tracy_tool_requested)
+        if(VCPKG_HOST_IS_OPENBSD)
+            find_program(tracy_MAKE_COMMAND gmake REQUIRED)
+        else()
+            find_program(tracy_MAKE_COMMAND make REQUIRED)
+        endif()
+    endif()
+endif()
+
+
+function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
+    # TODO: Extract cflags from CMake Config or rely on capstone pkg-config
+    vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix/build.mk" "$(shell pkg-config --cflags capstone)" "-isystem ${CURRENT_INSTALLED_DIR}/include/capstone -isystem ${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix/build.mk" "$(shell pkg-config --cflags glfw3 freetype2 capstone)" "$(shell pkg-config --cflags glfw3 freetype2) -isystem ${CURRENT_INSTALLED_DIR}/include/capstone -isystem ${CURRENT_INSTALLED_DIR}/include")
+
+    foreach(buildtype IN ITEMS "debug" "release")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
+            if("${buildtype}" STREQUAL "debug")
+                set(short_buildtype "-dbg")
+                set(path_suffix "/debug")
+            else()
+                set(short_buildtype "-rel")
+                set(path_suffix "")
+            endif()
+
+            file(COPY "${SOURCE_PATH}/${tracy_TOOL}/build/unix" DESTINATION "${SOURCE_PATH}/${tracy_TOOL}/_build")
+            file(RENAME "${SOURCE_PATH}/${tracy_TOOL}/_build/unix" "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
+            file(REMOVE_RECURSE "${SOURCE_PATH}/${tracy_TOOL}/_build")
+
+            vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/build.mk" "$(shell pkg-config --libs capstone)" "-L ${CURRENT_INSTALLED_DIR}${path_suffix}/lib -lcapstone")
+            vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/build.mk" "$(shell pkg-config --libs glfw3 freetype2 capstone)" "$(shell pkg-config --cflags glfw3 freetype2) -L ${CURRENT_INSTALLED_DIR}${path_suffix}/lib -lcapstone")
+
+            vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
+
+            message(STATUS "Building ${tracy_TOOL_NAME} ${TARGET_TRIPLET}${short_buildtype}")
+            vcpkg_execute_build_process(
+                COMMAND ${tracy_MAKE_COMMAND} V=1 -j ${VCPKG_CONCURRENCY} -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
+                NO_PARALLEL_COMMAND ${tracy_MAKE_COMMAND} V=1 -j 1 -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
+                LOGNAME "build-${tracy_TOOL}-${TARGET_TRIPLET}${short_buildtype}"
+            )
+            vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
+
+            file(INSTALL "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/${tracy_TOOL_NAME}-${buildtype}" DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/tools/${PORT}" RENAME "${tracy_TOOL_NAME}")
+        endif()
+    endforeach()
+endfunction()
 
 if("capture" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -45,6 +100,7 @@ if("capture" IN_LIST FEATURES)
             USE_VCPKG_INTEGRATION
         )
     else()
+        tracy_tool_install_make(capture capture)
     endif()
 endif()
 
@@ -56,6 +112,7 @@ if("csvexport" IN_LIST FEATURES)
             USE_VCPKG_INTEGRATION
         )
     else()
+        tracy_tool_install_make(csvexport csvexport)
     endif()
 endif()
 
@@ -67,6 +124,7 @@ if("import-chrome" IN_LIST FEATURES)
             USE_VCPKG_INTEGRATION
         )
     else()
+        tracy_tool_install_make(import-chrome import-chrome)
     endif()
 endif()
 
@@ -78,6 +136,7 @@ if("profiler" IN_LIST FEATURES)
             USE_VCPKG_INTEGRATION
         )
     else()
+        tracy_tool_install_make(profiler Tracy)
     endif()
 endif()
 
@@ -89,12 +148,25 @@ if("update" IN_LIST FEATURES)
             USE_VCPKG_INTEGRATION
         )
     else()
+        tracy_tool_install_make(update update)
     endif()
 endif()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
+
+foreach(TOOL capture csvexport import-chrome profiler update)
+    if(${TOOL} IN_LIST FEATURES)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        endif()
+        break()
+    endif()
+endforeach()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
