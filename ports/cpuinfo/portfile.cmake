@@ -29,32 +29,20 @@ else()
 endif()
 
 # hack to get around that toolchains/windows.cmake doesn't set CMAKE_SYSTEM_ARCHITECTURE
+set(CPUINFO_TARGET_PROCESSOR_param "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=x86_64")
+    # NOTE: arm64-windows is unsupported for now;
+    # see https://github.com/pytorch/cpuinfo/pull/82 for updates
+    # NOTE: arm-windows is unsupported
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=AMD64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=armv7")
-    else()
-        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=ARM64")
     endif()
-
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/src/arm/api.h"
-        "[restrict static "
-        "["
-    )
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/src/arm/cache.c"
-        "[restrict static "
-        "["
-    )
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/src/arm/uarch.c"
-        "[restrict static "
-        "["
-    )
-else()
-    set(CPUINFO_TARGET_PROCESSOR_param "")
 endif()
 
 vcpkg_cmake_configure(
