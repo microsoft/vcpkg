@@ -410,7 +410,7 @@
     },
     "bdwgc": {
       "baseline": "8.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "beast": {
       "baseline": "0",
@@ -489,8 +489,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "2022-03-31",
-      "port-version": 0
+      "baseline": "1",
+      "port-version": 1
     },
     "blaze": {
       "baseline": "3.8",
@@ -826,7 +826,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.78.0",
-      "port-version": 4
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.78.0",
@@ -1136,6 +1136,10 @@
       "baseline": "2.4.1",
       "port-version": 2
     },
+    "braft": {
+      "baseline": "2021-26-04",
+      "port-version": 0
+    },
     "breakpad": {
       "baseline": "2020-09-14",
       "port-version": 5
@@ -1197,8 +1201,8 @@
       "port-version": 2
     },
     "c-ares": {
-      "baseline": "1.17.2",
-      "port-version": 2
+      "baseline": "1.18.1",
+      "port-version": 0
     },
     "c-dbg-macro": {
       "baseline": "2020-02-29",
@@ -1218,7 +1222,7 @@
     },
     "caffe2": {
       "baseline": "0.8.1",
-      "port-version": 5
+      "port-version": 6
     },
     "cairo": {
       "baseline": "1.17.6",
@@ -1241,8 +1245,8 @@
       "port-version": 2
     },
     "capstone": {
-      "baseline": "4.0.2",
-      "port-version": 3
+      "baseline": "5.0.0-rc2",
+      "port-version": 0
     },
     "cargs": {
       "baseline": "1.0.3",
@@ -1266,7 +1270,7 @@
     },
     "catch2": {
       "baseline": "2.13.8",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
@@ -1421,8 +1425,8 @@
       "port-version": 1
     },
     "clockutils": {
-      "baseline": "1.1.1-3651f232c27074c4ceead169e223edf5f00247c5",
-      "port-version": 4
+      "baseline": "1.1.1",
+      "port-version": 1
     },
     "clp": {
       "baseline": "1.17.6",
@@ -1614,7 +1618,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 1
+      "port-version": 0
     },
     "cpptoml": {
       "baseline": "v0.1.1",
@@ -1940,6 +1944,10 @@
       "baseline": "1.7.5",
       "port-version": 0
     },
+    "dstorage": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "dtl": {
       "baseline": "1.19",
       "port-version": 1
@@ -2186,7 +2194,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4.1",
-      "port-version": 12
+      "port-version": 11
     },
     "ffnvcodec": {
       "baseline": "11.1.5.0",
@@ -2537,8 +2545,8 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.4.0",
-      "port-version": 4
+      "baseline": "0.5.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
@@ -2622,7 +2630,7 @@
     },
     "graphviz": {
       "baseline": "2.49.1",
-      "port-version": 2
+      "port-version": 3
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -2710,7 +2718,7 @@
     },
     "harfbuzz": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2797,8 +2805,8 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "69.1",
-      "port-version": 19
+      "baseline": "70.1",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
@@ -2881,8 +2889,8 @@
       "port-version": 3
     },
     "igraph": {
-      "baseline": "0.9.7",
-      "port-version": 1
+      "baseline": "0.9.8",
+      "port-version": 0
     },
     "iir1": {
       "baseline": "1.9.0",
@@ -2897,8 +2905,8 @@
       "port-version": 1
     },
     "imath": {
-      "baseline": "3.1.3",
-      "port-version": 1
+      "baseline": "3.1.5",
+      "port-version": 0
     },
     "imgui": {
       "baseline": "1.87",
@@ -3430,7 +3438,7 @@
     },
     "libcerf": {
       "baseline": "1.13",
-      "port-version": 3
+      "port-version": 2
     },
     "libconfig": {
       "baseline": "1.7.3",
@@ -3694,7 +3702,7 @@
     },
     "liblbfgs": {
       "baseline": "1.10",
-      "port-version": 2
+      "port-version": 1
     },
     "liblemon": {
       "baseline": "2019-06-13",
@@ -3978,7 +3986,7 @@
     },
     "libslirp": {
       "baseline": "4.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libsmb2": {
       "baseline": "2021-04-29",
@@ -4245,8 +4253,8 @@
       "port-version": 3
     },
     "lmdb": {
-      "baseline": "0.9.24",
-      "port-version": 2
+      "baseline": "0.9.29",
+      "port-version": 0
     },
     "lodepng": {
       "baseline": "2021-12-04",
@@ -4270,7 +4278,7 @@
     },
     "loguru": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lpeg": {
       "baseline": "1.0.2",
@@ -5146,7 +5154,7 @@
     },
     "openssl": {
       "baseline": "3.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5186,7 +5194,7 @@
     },
     "openxr-loader": {
       "baseline": "1.0.22",
-      "port-version": 2
+      "port-version": 3
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -5210,7 +5218,7 @@
     },
     "orc": {
       "baseline": "1.6.4",
-      "port-version": 3
+      "port-version": 2
     },
     "orocos-kdl": {
       "baseline": "1.4",
@@ -5370,11 +5378,11 @@
     },
     "physfs": {
       "baseline": "3.0.2",
-      "port-version": 7
+      "port-version": 6
     },
     "physx": {
       "baseline": "4.1.2",
-      "port-version": 2
+      "port-version": 1
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -6358,7 +6366,7 @@
     },
     "sdl2": {
       "baseline": "2.0.20",
-      "port-version": 2
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -6954,7 +6962,7 @@
     },
     "tinycbor": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinycthread": {
       "baseline": "2019-08-06",
@@ -7102,7 +7110,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 1
+      "port-version": 2
     },
     "trompeloeil": {
       "baseline": "41",
@@ -7285,7 +7293,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-04-08",
+      "baseline": "2022-04-07",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
@@ -7705,8 +7713,8 @@
       "port-version": 3
     },
     "zziplib": {
-      "baseline": "0.13.71",
-      "port-version": 3
+      "baseline": "0.13.72",
+      "port-version": 0
     }
   }
 }

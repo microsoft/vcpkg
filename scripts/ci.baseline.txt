@@ -70,8 +70,6 @@ caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-c-ares:arm-uwp=fail
-c-ares:x64-uwp=fail
 
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -914,10 +912,6 @@ openvr:arm-uwp=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openvr:x64-windows-static=fail
-openxr-loader:arm64-windows=fail
-openxr-loader:arm-uwp=fail
-openxr-loader:x64-osx=fail
-openxr-loader:x64-uwp=fail
 optional-bare:arm64-windows      = skip
 optional-bare:arm-uwp            = skip
 optional-bare:x64-linux          = skip
@@ -1347,7 +1341,6 @@ lapack-reference:x64-uwp=skip
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
