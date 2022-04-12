@@ -72,8 +72,6 @@ caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-c-ares:arm-uwp=fail
-c-ares:x64-uwp=fail
 
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -118,23 +116,27 @@ charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
 # chartdir does not offer stable download URLs
-chartdir:arm64-windows=fail
-chartdir:arm-uwp=fail
-chartdir:x64-uwp=fail
-chartdir:x64-windows-static=fail
-chartdir:x86-windows=fail
-chartdir:x64-windows=fail
-chartdir:x64-windows-static-md=fail
-chartdir:x64-osx=fail
+chartdir:arm64-windows=skip
+chartdir:arm-uwp=skip
+chartdir:x64-uwp=skip
+chartdir:x64-windows-static=skip
+chartdir:x86-windows=skip
+chartdir:x64-windows=skip
+chartdir:x64-windows-static-md=skip
+chartdir:x64-osx=skip
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
 
-# chromium-base does not yet support VS2022
-chromium-base:x64-windows=fail
-chromium-base:x64-windows-static=fail
-
-# Chromium Base requires a recent version of Clang to be installed.
+# chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
+#  broken on Windows because it does not yet support VS2022
+chromium-base:x64-windows=skip
+chromium-base:x64-windows-static=skip
+chromium-base:x64-windows-static-md=skip
+#  broken on Linux because
 chromium-base:x64-linux=skip
+#  broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache
+#  because the first attempt to build it fails, but subsequent attempts succeed
+chromium-base:x64-osx=skip
 
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
@@ -159,6 +161,7 @@ coin:x64-uwp=fail
 colmap:x86-windows=fail
 colmap:x64-windows=fail
 colmap:x64-windows-static=fail
+colmap:x64-windows-static-md=fail
 
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
@@ -217,6 +220,10 @@ discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
+
+# requires g++11
+discordcoreapi:x64-linux=fail
+
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 dpdk:arm-uwp=fail
@@ -359,9 +366,6 @@ gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x64-windows-static-md=fail
 gmmlib:x86-windows=fail
-
-# the msbuild for gmp:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
-gmp:x64-uwp=fail
 
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
@@ -513,8 +517,9 @@ libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
 
-# the msbuild for libgpg:x64-uwp is broken on VS2022 due to TargetPlatformMinVersion not existing
+# the msbuild for libgpg:x64-uwp and libgpg-error:x64-uwp are broken on VS2022 due to TargetPlatformMinVersion not existing
 libgpg:x64-uwp=fail
+libgpg-error:x64-uwp=fail
 
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
@@ -532,9 +537,6 @@ liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-uwp=fail
-liblsl:arm64-windows=fail
-liblsl:arm-uwp=fail
-liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
 libmagic:x64-uwp=fail
@@ -558,6 +560,7 @@ libmesh:x64-windows-static-md=skip
 libmesh:x86-windows=skip
 libmesh:x64-osx=skip
 libmesh:x64-linux=skip
+libmikmod:x64-osx=fail
 libmodman:arm-uwp=fail
 libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
@@ -573,12 +576,6 @@ libmysql:arm64-windows=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libpff:arm-uwp=fail
-libpff:x64-linux=fail
-libpff:x64-osx=fail
-libpff:x64-uwp=fail
-libpff:x64-windows-static=fail
-libpff:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm-uwp            = skip
@@ -954,10 +951,6 @@ openvr:arm-uwp=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openvr:x64-windows-static=fail
-openxr-loader:arm64-windows=fail
-openxr-loader:arm-uwp=fail
-openxr-loader:x64-osx=fail
-openxr-loader:x64-uwp=fail
 optional-bare:arm64-windows      = skip
 optional-bare:arm-uwp            = skip
 optional-bare:x64-linux          = skip
@@ -1020,6 +1013,9 @@ qt5-base:arm64-windows=fail
 # qtwebengine:x64-windows has an ICE in VS2022
 qtwebengine:x64-windows=fail
 
+# upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
+qtinterfaceframework:x64-windows=skip
+
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1050,13 +1046,6 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
-quickfix:arm-uwp=fail
-quickfix:arm64-windows=fail
-quickfix:x64-uwp=fail
-quickfix:x64-windows-static=fail
-quickfix:x64-windows-static-md=fail
-quickfix:x64-windows=fail
-quickfix:x86-windows=fail
 qwt:x64-osx=fail
 qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
@@ -1405,10 +1394,7 @@ lapack-reference:x64-uwp=skip
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-chromium-base:x64-windows-static-md=fail
-clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
-gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail

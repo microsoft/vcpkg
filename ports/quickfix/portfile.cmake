@@ -11,7 +11,7 @@ vcpkg_from_github(
         fix_wsl_symlink_error.patch
 )
 
-file(GLOB_RECURSE SRC_FILES RELATIVE ${SOURCE_PATH} 
+file(GLOB_RECURSE SRC_FILES RELATIVE "${SOURCE_PATH}"
 	"${SOURCE_PATH}/src/*.cpp" 
 	"${SOURCE_PATH}/src/*.h"
 )
@@ -26,8 +26,8 @@ foreach(SRC_FILE IN LISTS SRC_FILES)
     file(WRITE "${SOURCE_PATH}/${SRC_FILE}" "${_contents}")
 endforeach()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DHAVE_EMX=OFF
         -DHAVE_MYSQL=OFF
@@ -36,15 +36,14 @@ vcpkg_configure_cmake(
         -DHAVE_PYTHON2=OFF
         -DHAVE_PYTHON3=OFF
         -DHAVE_SSL=ON
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/quickfix)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/quickfix)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
