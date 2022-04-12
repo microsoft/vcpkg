@@ -4,6 +4,7 @@
   "port-version": 3,
   "description": "MongoDB C++ Driver.",
   "homepage": "https://github.com/mongodb/mongo-cxx-driver",
+  "license": "Apache-2.0",
   "dependencies": [
     "boost-optional",
     "boost-smart-ptr",
