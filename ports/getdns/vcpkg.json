@@ -1,9 +1,10 @@
 {
   "name": "getdns",
   "version": "1.7.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "GetDNS is a modern asynchronous DNS API",
   "homepage": "https://getdnsapi.net/",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     "libidn2",
