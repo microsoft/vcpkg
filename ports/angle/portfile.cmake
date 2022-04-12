@@ -53,17 +53,16 @@ checkout_in_path_with_patches(
     "third-party-zlib-far-undef.patch"
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
     OPTIONS
         -D${ANGLE_CPU_BITNESS}=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle TARGET_PATH share/unofficial-angle)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-angle CONFIG_PATH share/unofficial-angle)
 
 vcpkg_copy_pdbs()
 
