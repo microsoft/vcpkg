@@ -28,11 +28,41 @@ else()
     list(APPEND LINK_OPTIONS -DCPUINFO_RUNTIME_TYPE=static)
 endif()
 
+# hack to get around that toolchains/windows.cmake doesn't set CMAKE_SYSTEM_ARCHITECTURE
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=x86_64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=armv7")
+    else()
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}")
+    endif()
+
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/src/arm/api.h"
+        "[restrict static "
+        "["
+    )
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/src/arm/cache.c"
+        "[restrict static "
+        "["
+    )
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/src/arm/uarch.c"
+        "[restrict static "
+        "["
+    )
+else()
+    set(CPUINFO_TARGET_PROCESSOR_param "")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${LINK_OPTIONS}
+        ${CPUINFO_TARGET_PROCESSOR_param}
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
         -DCPUINFO_BUILD_BENCHMARKS=OFF
