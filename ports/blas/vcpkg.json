@@ -2,6 +2,7 @@
   "name": "blas",
   "version-date": "2022-03-31",
   "description": "Metapackage for packages which provide BLAS",
+  "license": null,
   "dependencies": [
     "openblas",
     {

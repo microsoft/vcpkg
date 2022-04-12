@@ -205,11 +205,7 @@ function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbu
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            if(VCPKG_TARGET_IS_UWP)
-                set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/uwp.cmake")
-            else()
-                set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-            endif()
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_TARGET_IS_LINUX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
         elseif(VCPKG_TARGET_IS_ANDROID)
