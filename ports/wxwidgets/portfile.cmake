@@ -25,6 +25,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCP
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=OFF)
+else()
+    list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
+endif()
+
 # wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
 # vcpkg's port pkgconf would prevent this lookup.
 if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG})
