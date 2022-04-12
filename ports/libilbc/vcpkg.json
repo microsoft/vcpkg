@@ -1,6 +1,6 @@
 {
   "name": "libilbc",
-  "version-string": "3.0.4",
+  "version": "3.0.4",
   "description": "Open source implementation of the Internet Low Bit Rate Codec (iLBC) / RFC 3951 codec from the WebRTC project.",
   "homepage": "https://github.com/TimothyGu/libilbc",
   "supports": "!(arm & uwp)",
