@@ -1944,6 +1944,10 @@
       "baseline": "1.7.5",
       "port-version": 0
     },
+    "dstorage": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "dtl": {
       "baseline": "1.19",
       "port-version": 1
