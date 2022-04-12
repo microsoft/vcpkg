@@ -18,6 +18,7 @@ vcpkg_from_github(
         rename-version.patch
         export-cmake-targets.patch
         004-added-limits-include.patch
+        openssl.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")

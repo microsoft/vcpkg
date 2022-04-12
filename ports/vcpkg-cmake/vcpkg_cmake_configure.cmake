@@ -171,10 +171,10 @@ function(vcpkg_cmake_configure)
     elseif(arg_WINDOWS_USE_MSBUILD OR NOT ninja_can_be_used)
         set(generator "")
         set(arch "")
-        z_vcpkg_get_visual_studio_generator(generator arch)
+        z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH arch)
     endif()
 
-    if(NOT DEFINED generator OR generator STREQUAL "")
+    if(NOT generator)
         if(NOT VCPKG_CMAKE_SYSTEM_NAME)
             set(VCPKG_CMAKE_SYSTEM_NAME "Windows")
         endif()
@@ -294,14 +294,14 @@ function(vcpkg_cmake_configure)
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Release"
-        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE}
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}")
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
         "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Debug"
-        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG}
-        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug")
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")

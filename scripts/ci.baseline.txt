@@ -72,8 +72,6 @@ caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-c-ares:arm-uwp=fail
-c-ares:x64-uwp=fail
 
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -222,6 +220,10 @@ discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
+
+# requires g++11
+discordcoreapi:x64-linux=fail
+
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 dpdk:arm-uwp=fail
@@ -535,9 +537,6 @@ liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-uwp=fail
-liblsl:arm64-windows=fail
-liblsl:arm-uwp=fail
-liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
 libmagic:x64-uwp=fail
@@ -577,12 +576,6 @@ libmysql:arm64-windows=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libpff:arm-uwp=fail
-libpff:x64-linux=fail
-libpff:x64-osx=fail
-libpff:x64-uwp=fail
-libpff:x64-windows-static=fail
-libpff:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm-uwp            = skip
@@ -957,10 +950,6 @@ openvr:arm-uwp=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openvr:x64-windows-static=fail
-openxr-loader:arm64-windows=fail
-openxr-loader:arm-uwp=fail
-openxr-loader:x64-osx=fail
-openxr-loader:x64-uwp=fail
 optional-bare:arm64-windows      = skip
 optional-bare:arm-uwp            = skip
 optional-bare:x64-linux          = skip
@@ -1023,6 +1012,9 @@ qt5-base:arm64-windows=fail
 # qtwebengine:x64-windows has an ICE in VS2022
 qtwebengine:x64-windows=fail
 
+# upstream bug, see https://github.com/microsoft/vcpkg/issues/23766
+qtinterfaceframework:x64-windows=skip
+
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1053,13 +1045,6 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
-quickfix:arm-uwp=fail
-quickfix:arm64-windows=fail
-quickfix:x64-uwp=fail
-quickfix:x64-windows-static=fail
-quickfix:x64-windows-static-md=fail
-quickfix:x64-windows=fail
-quickfix:x86-windows=fail
 qwt:x64-osx=fail
 qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
@@ -1408,7 +1393,6 @@ lapack-reference:x64-uwp=skip
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
