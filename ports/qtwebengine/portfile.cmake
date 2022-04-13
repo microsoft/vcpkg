@@ -82,9 +82,9 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
-cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
-file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+#set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
+#cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
+#file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 
 ### Download third_party modules
 vcpkg_from_git(
