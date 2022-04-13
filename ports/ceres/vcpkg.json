@@ -17,6 +17,13 @@
     }
   ],
   "features": {
+    "cuda": {
+      "description": "Build darknet with support for CUDA",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
+      "dependencies": [
+        "cuda"
+      ]
+    },
     "cxsparse": {
       "description": "CXSparse support for Ceres",
       "dependencies": [
@@ -54,13 +61,6 @@
       "description": "Ceres tools",
       "dependencies": [
         "gflags"
-      ]
-    },
-    "cuda": {
-      "description": "Build darknet with support for CUDA",
-      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
-      "dependencies": [
-        "cuda"
       ]
     }
   }
