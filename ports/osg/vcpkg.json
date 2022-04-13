@@ -13,12 +13,12 @@
       "name": "fontconfig",
       "platform": "!windows"
     },
+    "opengl-registry",
     {
       "name": "openimageio",
       "platform": "osx"
     },
-    "zlib",
-    "opengl-registry"
+    "zlib"
   ],
   "features": {
     "collada": {
