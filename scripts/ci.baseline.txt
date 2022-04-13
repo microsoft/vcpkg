@@ -382,6 +382,7 @@ graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
+gstreamer:x64-osx=fail
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 gts:x64-osx=fail
@@ -1043,6 +1044,8 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+# Don't trigger gstreamer[plugins-bad] because it requires other dependencies not included in vcpkg
+qtmultimedia:x64-osx=skip
 qwt:x64-osx=fail
 qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
