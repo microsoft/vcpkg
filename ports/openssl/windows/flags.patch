@@ -1,0 +1,22 @@
+diff --git a/Configure b/Configure
+index faf57b1..690a9b8 100644
+--- a/Configure
++++ b/Configure
+@@ -556,7 +556,7 @@ my $list_separator_re =
+ # (we supported those before the change to "make variable" support.
+ my %user = (
+     AR          => env('AR'),
+-    ARFLAGS     => [],
++    ARFLAGS     => [ env('ARFLAGS') || () ],
+     AS          => undef,
+     ASFLAGS     => [],
+     CC          => env('CC'),
+@@ -569,7 +569,7 @@ my %user = (
+     CPPINCLUDES => [],  # Alternative for -I
+     CROSS_COMPILE => env('CROSS_COMPILE'),
+     HASHBANGPERL=> env('HASHBANGPERL') || env('PERL'),
+-    LD          => undef,
++    LD          => env('LD'),
+     LDFLAGS     => [ env('LDFLAGS') || () ],  # -L, -Wl,
+     LDLIBS      => [ env('LDLIBS') || () ],  # -l
+     MT          => undef,
