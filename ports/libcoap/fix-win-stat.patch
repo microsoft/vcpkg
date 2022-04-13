@@ -1,0 +1,58 @@
+diff --git a/examples/coap-client.c b/examples/coap-client.c
+index 92f522a..82b811e 100644
+--- a/examples/coap-client.c
++++ b/examples/coap-client.c
+@@ -16,8 +16,15 @@
+ #include <ctype.h>
+ #include <signal.h>
+ #include <sys/types.h>
++#ifdef _WIN32
++#pragma push_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#define _CRT_INTERNAL_NONSTDC_NAMES 1
++#endif
+ #include <sys/stat.h>
+ #ifdef _WIN32
++#pragma pop_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#endif
++#ifdef _WIN32
+ #define strcasecmp _stricmp
+ #define strncasecmp _strnicmp
+ #define fileno _fileno
+diff --git a/examples/coap-rd.c b/examples/coap-rd.c
+index ad93f41..1520558 100644
+--- a/examples/coap-rd.c
++++ b/examples/coap-rd.c
+@@ -24,7 +24,14 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ #include <sys/types.h>
++#ifdef _WIN32
++#pragma push_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#define _CRT_INTERNAL_NONSTDC_NAMES 1
++#endif
+ #include <sys/stat.h>
++#ifdef _WIN32
++#pragma pop_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#endif
+ #include <errno.h>
+ #include <signal.h>
+ #ifdef _WIN32
+diff --git a/examples/coap-server.c b/examples/coap-server.c
+index 0c6a19f..64140b9 100644
+--- a/examples/coap-server.c
++++ b/examples/coap-server.c
+@@ -16,7 +16,14 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ #include <sys/types.h>
++#ifdef _WIN32
++#pragma push_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#define _CRT_INTERNAL_NONSTDC_NAMES 1
++#endif
+ #include <sys/stat.h>
++#ifdef _WIN32
++#pragma pop_macro("_CRT_INTERNAL_NONSTDC_NAMES")
++#endif
+ #include <errno.h>
+ #include <signal.h>
+ #ifdef _WIN32
