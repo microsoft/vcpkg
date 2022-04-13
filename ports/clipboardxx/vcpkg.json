@@ -3,5 +3,15 @@
   "version-date": "2022-02-04",
   "description": "Header only, lightweight and cross platform C++ library for copy and paste text from clipboard.",
   "homepage": "https://github.com/Arian8j2/ClipboardXX",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
