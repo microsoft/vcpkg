@@ -12,8 +12,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         epoll    WITH_EPOLL
         tcp      ENABLE_TCP
         examples ENABLE_EXAMPLES
+        dtls     ENABLE_DTLS
 )
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DENABLE_TESTS=OFF
         -DENABLE_DOCS=OFF
-        -DENABLE_DTLS=OFF
+        -DDTLS_BACKEND=openssl
 )
 
 vcpkg_cmake_install()
