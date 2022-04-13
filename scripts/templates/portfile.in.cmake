@@ -68,7 +68,7 @@ vcpkg_cmake_install()
 # # Moves all .cmake files from /debug/share/@PORT@/ to /share/@PORT@/
 # # See /docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details
 # When you uncomment "vcpkg_cmake_config_fixup()", you need to add the following to "dependencies" vcpkg.json:
-#{  
+#{
 #    "name": "vcpkg-cmake-config",
 #    "host": true
 #}
