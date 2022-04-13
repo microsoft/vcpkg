@@ -1,27 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ef92706..c8b115e 100644
+index ef92706..fee22e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -130,6 +130,9 @@ if(SIMAGE_USE_GDIPLUS)
+@@ -129,6 +129,9 @@ if(SIMAGE_USE_GDIPLUS)
+     }
    " GDIPLUS_FOUND)
    unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT GDIPLUS_FOUND)
++    message(FATAL_ERROR "GDI+ is required on Windows.")
++  endif()
  endif()
-+if(NOT GDIPLUS_FOUND)
-+	message(FATAL_ERROR "GDI+ is required on Windows.")
-+endif()
  if(SIMAGE_USE_AVIENC)
    set(CMAKE_REQUIRED_LIBRARIES vfw32)
-   check_cxx_source_compiles("
-@@ -143,6 +146,9 @@ if(SIMAGE_USE_AVIENC)
+@@ -142,6 +145,9 @@ if(SIMAGE_USE_AVIENC)
+     }
    " VFW_FOUND)
    unset(CMAKE_REQUIRED_LIBRARIES)
++  if(NOT VFW_FOUND)
++  	message(FATAL_ERROR "Video for Windows is required on Windows.")
++  endif()
  endif()
-+if(NOT VFW_FOUND)
-+	message(FATAL_ERROR "Video for Windows is required on Windows.")
-+endif()
  
  # On macOS QuickTime supports BMP, GIF, JPEG, JPEG 2000, PNG, TIFF, and TGA.
- # see https://en.wikipedia.org/wiki/QuickTime
 @@ -286,7 +292,7 @@ if(SIMAGE_OGGVORBIS_SUPPORT)
    find_package(Ogg REQUIRED)
    find_package(Vorbis REQUIRED)
