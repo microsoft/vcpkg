@@ -12,7 +12,7 @@ index 356c160..ee534e6 100644
 -        )        
 +        if (BUILD_SHARED_LIBS)       
 +            target_link_libraries(${lib} PRIVATE zstd::libzstd_shared)
-+        elseif(BUILD_STATIC_LIBS)
++        else()
 +            target_link_libraries(${lib} PRIVATE zstd::libzstd_static)
 +        endif() 
 +       
