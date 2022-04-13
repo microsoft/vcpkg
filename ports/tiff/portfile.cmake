@@ -1,5 +1,11 @@
 set(LIBTIFF_VERSION 4.3.0)
 
+vcpkg_download_distfile(CVE_2022_0561_diff
+    URLS https://gitlab.com/libtiff/libtiff/-/commit/eecb0712f4c3a5b449f70c57988260a667ddbdef.diff
+    FILENAME libtiff-CVE-2022-0561.diff
+    SHA512 48df4e93202723778fdb6b87bcb7e2e4118546c6deb47e9999b8818e69420ad52a4a7823c68ab74d30657adb2278641971e43db771a1796fda95d2433ad991a0
+)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,6 +16,7 @@ vcpkg_from_gitlab(
     PATCHES cmakelists.patch
     fix-pkgconfig.patch
     FindCMath.patch
+    ${CVE_2022_0561_diff}
 )
 
 set(EXTRA_OPTIONS "")
