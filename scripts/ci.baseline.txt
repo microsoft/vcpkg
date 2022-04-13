@@ -1421,3 +1421,8 @@ workflow:arm-uwp=fail
 # See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
+
+# ZeroC doesn't provide ARM tagets in project files.
+zeroc-ice:arm64-windows=fail
+zeroc-ice:arm-uwp=fail
+zeroc-ice:x64-uwp=fail
