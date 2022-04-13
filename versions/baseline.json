@@ -4445,8 +4445,8 @@
       "port-version": 2
     },
     "mesa": {
-      "baseline": "21.2.5",
-      "port-version": 3
+      "baseline": "22.0.1",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
@@ -7297,7 +7297,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2022-02-12",
+      "baseline": "2022-04-14",
       "port-version": 0
     },
     "vcpkg-gfortran": {
