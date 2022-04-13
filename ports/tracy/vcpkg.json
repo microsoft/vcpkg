@@ -27,6 +27,7 @@
   "features": {
     "capture": {
       "description": "Build Tracy tool `capture`",
+      "supports": "!(windows & x86)",
       "dependencies": [
         {
           "name": "capstone",
@@ -40,6 +41,7 @@
     },
     "csvexport": {
       "description": "Build Tracy tool `csvexport`",
+      "supports": "!(windows & x86)",
       "dependencies": [
         {
           "name": "capstone",
@@ -53,6 +55,7 @@
     },
     "import-chrome": {
       "description": "Build Tracy tool `import-chrome`",
+      "supports": "!(windows & x86)",
       "dependencies": [
         {
           "name": "capstone",
@@ -66,6 +69,7 @@
     },
     "profiler": {
       "description": "Build Tracy tool `profiler` (aka `Tracy` executable)",
+      "supports": "!(windows & x86)",
       "dependencies": [
         {
           "name": "capstone",
@@ -81,6 +85,7 @@
     },
     "update": {
       "description": "Build Tracy tool `update`",
+      "supports": "!(windows & x86)",
       "dependencies": [
         {
           "name": "capstone",
