@@ -148,7 +148,7 @@ if("update" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
 
 foreach(TOOL capture csvexport import-chrome profiler update)
@@ -164,7 +164,7 @@ foreach(TOOL capture csvexport import-chrome profiler update)
 endforeach()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/Tracy" RENAME copyright)
 
 # Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
