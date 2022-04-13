@@ -1,0 +1,52 @@
+diff --git a/meson.build b/meson.build
+index 53ec2c2ef95e65447dd0f0eb65c0f92a5906590d..c124b5fb0d2b28424f33aac54cd4f87c4249dc40 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1087,7 +1087,18 @@ elif host_machine.system() == 'windows'
+       '-DNOMINMAX',
+     ]
+   else
+-    pre_args += ['-D__MSVCRT_VERSION__=0x0700']
++    # When the target is not mingw/ucrt
++    # NOTE: clang's stddef.h are conflict with mingw/ucrt's stddef.h
++    # So do not include headers that defined in clang for detecting
++    # _UCRT
++    if cc.compiles('''
++      #include <string.h>
++      #if defined(__MINGW32__) && defined(_UCRT)
++      #error
++      #endif
++      int main(void) { return 0; }''')
++      pre_args += ['-D__MSVCRT_VERSION__=0x0700']
++    endif
+   endif
+ elif host_machine.system() == 'openbsd'
+   pre_args += '-D_ISOC11_SOURCE'
+diff --git a/src/compiler/nir/nir_lower_atomics_to_ssbo.c b/src/compiler/nir/nir_lower_atomics_to_ssbo.c
+index c1799d0b9d0af70148928a4b224172c188c64194..448f63bdc7cc3b9cae123e3c0abe79b4b5af380b 100644
+--- a/src/compiler/nir/nir_lower_atomics_to_ssbo.c
++++ b/src/compiler/nir/nir_lower_atomics_to_ssbo.c
+@@ -27,10 +27,6 @@
+ #include "nir.h"
+ #include "nir_builder.h"
+ 
+-#if defined(_WIN32) && !defined(snprintf)
+-#define snprintf _snprintf
+-#endif
+-
+ /*
+  * Remap atomic counters to SSBOs, starting from the shader's next SSBO slot
+  * (info.num_ssbos).
+diff --git a/src/compiler/spirv/vtn_private.h b/src/compiler/spirv/vtn_private.h
+index b1b40c8ee992eaeea985c58f4e8923724c1d385b..6053c2544a2628300cc8dc3311c8e4f0f69d36d5 100644
+--- a/src/compiler/spirv/vtn_private.h
++++ b/src/compiler/spirv/vtn_private.h
+@@ -41,7 +41,7 @@ struct vtn_builder;
+ struct vtn_decoration;
+ 
+ /* setjmp/longjmp is broken on MinGW: https://sourceforge.net/p/mingw-w64/bugs/406/ */
+-#ifdef __MINGW32__
++#if defined(__MINGW32__) && !defined(_UCRT)
+   #define vtn_setjmp __builtin_setjmp
+   #define vtn_longjmp __builtin_longjmp
+ #else
