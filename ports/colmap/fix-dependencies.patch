@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4759a94..3d25164 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,9 +98,11 @@ find_package(Boost REQUIRED COMPONENTS
+ 
+ find_package(Eigen3 REQUIRED)
+ 
+-find_package(FreeImage REQUIRED)
++find_package(freeimage CONFIG REQUIRED)
++set(FREEIMAGE_LIBRARIES freeimage::FreeImage)
+ 
+-find_package(Metis REQUIRED)
++find_package(metis CONFIG REQUIRED)
++set(METIS_LIBRARIES metis)
+ 
+ find_package(Glog REQUIRED)
+ 

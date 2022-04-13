@@ -5,7 +5,7 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-$VisualStudioBootstrapperUrl = 'https://aka.ms/vs/16/release/vs_enterprise.exe'
+$VisualStudioBootstrapperUrl = 'https://aka.ms/vs/17/release/vs_enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
@@ -14,7 +14,6 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
   'Microsoft.VisualStudio.Component.VC.ATL',
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
-  'Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre',
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
   'Microsoft.VisualStudio.Component.Windows10SDK.19041',
   'Microsoft.Net.Component.4.8.SDK',
@@ -22,8 +21,6 @@ $Workloads = @(
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
-  'Microsoft.VisualStudio.Component.VC.v141.x86.x64',
-  'Microsoft.VisualStudio.Component.VC.140',
   'Microsoft.VisualStudio.ComponentGroup.UWP.VC.BuildTools'
 )
 

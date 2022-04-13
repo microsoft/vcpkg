@@ -22,7 +22,8 @@ vcpkg_find_acquire_program(BISON)
 
 set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
 set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
-if(NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET)
+if(NOT HOST_TRIPLET STREQUAL TARGET_TRIPLET AND
+   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
     list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
 endif()
 
