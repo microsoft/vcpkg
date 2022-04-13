@@ -164,7 +164,7 @@ foreach(TOOL capture csvexport import-chrome profiler update)
 endforeach()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/Tracy" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
