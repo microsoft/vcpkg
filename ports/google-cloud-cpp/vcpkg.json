@@ -1,7 +1,7 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.38.0",
-  "port-version": 2,
+  "version": "1.39.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -52,6 +52,18 @@
     },
     "apigateway": {
       "description": "API Gateway API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "apigeeconnect": {
+      "description": "Apigee Connect API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -206,6 +218,18 @@
         }
       ]
     },
+    "contactcenterinsights": {
+      "description": "Contact Center AI Insights API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "container": {
       "description": "Kubernetes Engine API C++ Client Library",
       "dependencies": [
@@ -230,8 +254,32 @@
         }
       ]
     },
+    "datacatalog": {
+      "description": "Google Cloud Data Catalog API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datamigration": {
       "description": "Database Migration API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "dataproc": {
+      "description": "Cloud Dataproc API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -256,6 +304,18 @@
     },
     "dlp": {
       "description": "Cloud Data Loss Prevention (DLP) API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "documentai": {
+      "description": "Cloud Document AI API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -414,6 +474,30 @@
         }
       ]
     },
+    "language": {
+      "description": "Cloud Natural Language API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "managedidentities": {
+      "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "memcache": {
       "description": "Cloud Memorystore for Memcached API C++ Client Library",
       "dependencies": [
@@ -510,6 +594,18 @@
         }
       ]
     },
+    "profiler": {
+      "description": "Cloud Profiler API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "pubsub": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
@@ -548,6 +644,18 @@
     },
     "resourcemanager": {
       "description": "Cloud Resource Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "resourcesettings": {
+      "description": "Resource Settings API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
