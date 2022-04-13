@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "The atomic_ops project (Atomic memory update operations portable implementation)",
   "homepage": "https://github.com/ivmai/libatomic_ops",
-  "license": "MIT OR GPL-2.0",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
