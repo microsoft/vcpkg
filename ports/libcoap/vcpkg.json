@@ -17,22 +17,22 @@
     }
   ],
   "default-features": [
+    "dtls",
     "epoll",
-    "tcp",
-    "dtls"
+    "tcp"
   ],
   "features": {
-    "epoll": {
-      "description": "compile with epoll support"
-    },
-    "examples": {
-      "description": "Build examples (e.g. coap-client, coap-server)"
-    },
     "dtls": {
       "description": "compile with dtls support",
       "dependencies": [
         "openssl"
       ]
+    },
+    "epoll": {
+      "description": "compile with epoll support"
+    },
+    "examples": {
+      "description": "Build examples (e.g. coap-client, coap-server)"
     },
     "tcp": {
       "description": "Enable building with TCP support"
