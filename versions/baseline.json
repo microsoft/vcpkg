@@ -5910,7 +5910,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.2.4",
