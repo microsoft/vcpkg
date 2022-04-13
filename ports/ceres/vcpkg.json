@@ -55,6 +55,13 @@
       "dependencies": [
         "gflags"
       ]
+    },
+    "cuda": {
+      "description": "Build darknet with support for CUDA",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
+      "dependencies": [
+        "cuda"
+      ]
     }
   }
 }
