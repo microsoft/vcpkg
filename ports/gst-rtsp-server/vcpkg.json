@@ -14,7 +14,18 @@
         "plugins-base",
         "plugins-good",
         "plugins-ugly"
-      ]
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "gstreamer",
+      "default-features": false,
+      "features": [
+        "plugins-base",
+        "plugins-good",
+        "plugins-ugly"
+      ],
+      "platform": "!osx"
     },
     {
       "name": "vcpkg-tool-meson",
