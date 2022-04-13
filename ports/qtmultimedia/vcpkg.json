@@ -1,11 +1,9 @@
 {
   "name": "qtmultimedia",
   "version": "6.2.4",
-  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "alsa",
