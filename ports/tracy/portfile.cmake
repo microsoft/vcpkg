@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
+        002-fix-capstone-5.patch
 )
 
 vcpkg_cmake_configure(
@@ -52,12 +53,7 @@ These can be installed on Ubuntu systems via sudo apt install libtbb-dev")
     endif()
 endif()
 
-
 function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
-    # TODO: Extract cflags from CMake Config or rely on capstone pkg-config
-    vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix/build.mk" "$(shell pkg-config --cflags capstone)" "-isystem ${CURRENT_INSTALLED_DIR}/include/capstone -isystem ${CURRENT_INSTALLED_DIR}/include")
-    vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix/build.mk" "$(shell pkg-config --cflags glfw3 freetype2 capstone)" "$(shell pkg-config --cflags glfw3 freetype2) -isystem ${CURRENT_INSTALLED_DIR}/include/capstone -isystem ${CURRENT_INSTALLED_DIR}/include")
-
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
             if("${buildtype}" STREQUAL "debug")
@@ -71,9 +67,6 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
             file(COPY "${SOURCE_PATH}/${tracy_TOOL}/build/unix" DESTINATION "${SOURCE_PATH}/${tracy_TOOL}/_build")
             file(RENAME "${SOURCE_PATH}/${tracy_TOOL}/_build/unix" "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
             file(REMOVE_RECURSE "${SOURCE_PATH}/${tracy_TOOL}/_build")
-
-            vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/build.mk" "$(shell pkg-config --libs capstone)" "-L ${CURRENT_INSTALLED_DIR}${path_suffix}/lib -lcapstone")
-            vcpkg_replace_string("${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/build.mk" "$(shell pkg-config --libs glfw3 freetype2 capstone)" "$(shell pkg-config --cflags glfw3 freetype2) -L ${CURRENT_INSTALLED_DIR}${path_suffix}/lib -lcapstone")
 
             vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
