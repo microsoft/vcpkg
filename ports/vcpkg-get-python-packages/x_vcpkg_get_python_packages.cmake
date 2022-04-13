@@ -46,17 +46,26 @@ function(x_vcpkg_get_python_packages)
                     REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
                     SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
                 )
-                vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py"
-                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+                vcpkg_execute_required_process(
+                    COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py"
+                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                    LOGNAME execute-python-get-pip
+                )
             endif()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package}
-                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+                vcpkg_execute_required_process(
+                    COMMAND "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package}
+                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                    LOGNAME execute-python-install-${_package}
+                )
             endforeach()
         else()
             foreach(_package IN LISTS arg_PACKAGES)
-                vcpkg_execute_required_process(COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package}
-                                               WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+                vcpkg_execute_required_process(
+                    COMMAND "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package}
+                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+                    LOGNAME execute-easy_install-${_package}
+                )
             endforeach()
         endif()
     else() # outside vcpkg
