@@ -5,5 +5,5 @@
   "description": "Redistributable version of XAudio 2.9 for Windows 7 SP1 or later",
   "homepage": "https://aka.ms/XAudio2Redist",
   "license": null,
-  "supports": "windows & !arm & !uwp & !(static & staticcrt)"
+  "supports": "windows & !arm & !uwp & !staticcrt"
 }

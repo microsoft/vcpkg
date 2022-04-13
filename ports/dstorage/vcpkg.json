@@ -5,5 +5,5 @@
   "description": "DirectStorage for Windows",
   "homepage": "https://aka.ms/directstorage/",
   "license": null,
-  "supports": "windows & !uwp & !(static & staticcrt)"
+  "supports": "windows & !uwp & !staticcrt"
 }
