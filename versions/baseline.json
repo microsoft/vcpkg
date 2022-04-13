@@ -5086,11 +5086,11 @@
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 6
+      "port-version": 7
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.1",
