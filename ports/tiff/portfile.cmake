@@ -42,6 +42,12 @@ vcpkg_download_distfile(CVE_2022_0909_diff
     SHA512 d675ac09a40136bdc808ae75030f199ebcbaf38b2e904b3b26b21d18e39fe89a1c703d5ee6156b337ec9dde29ad311cb6551de984aa87d796c9af0a26d758af3
 )
 
+vcpkg_download_distfile(CVE_2022_0924_diff
+    URLS https://gitlab.com/libtiff/libtiff/-/merge_requests/311.diff
+    FILENAME libtiff-CVE-2022-0924.diff
+    SHA512 dcd22b4ef121128aabc8b2aadf4eac16597ee8b211bb06467c93bbccafe47a45917f07a6f4264d43f4c1596eb54d7d0a073987e6899a9f8d057632244cf75c67
+)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -59,6 +65,7 @@ vcpkg_from_gitlab(
     ${CVE_2022_0907_diff}
     ${CVE_2022_0908_diff}
     ${CVE_2022_0909_diff}
+    ${CVE_2022_0924_diff}
 )
 
 set(EXTRA_OPTIONS "")
