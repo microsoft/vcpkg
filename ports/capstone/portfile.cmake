@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch
+        002-fix-install-pkgconfig.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
