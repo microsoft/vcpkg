@@ -2,6 +2,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
     REF 1a668363fdf0d663c6df3f124e7c10796bc842f0
+    PATCHES remove_unused_var.patch
     #PATCHES add-missing-tuple.patch
 )
 
