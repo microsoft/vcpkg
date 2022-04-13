@@ -4,6 +4,7 @@
   "port-version": 2,
   "description": "gst-rtsp-server is a library on top of GStreamer for building an RTSP server",
   "homepage": "https://gstreamer.freedesktop.org",
+  "license": "GPL-2.0-or-later",
   "supports": "!osx",
   "dependencies": [
     {
