@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2d241fe..e1eadfb 100644
+index 2d241fe..b79454d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -244,7 +244,7 @@ else (CUDA)
@@ -21,7 +21,7 @@ index 2d241fe..e1eadfb 100644
    if (SuiteSparse_FOUND)
      set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
      # By default, if all of SuiteSparse's dependencies are found, Ceres is
-@@ -274,7 +275,7 @@ if (SUITESPARSE)
+@@ -274,11 +275,11 @@ if (SUITESPARSE)
      message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
              "building with SuiteSparse.")
  
@@ -30,6 +30,11 @@ index 2d241fe..e1eadfb 100644
        install(FILES ${Ceres_SOURCE_DIR}/cmake/FindSuiteSparse.cmake
                      ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
                DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
+-    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
++    endif ()
+   else (SuiteSparse_FOUND)
+     # Disable use of SuiteSparse if it cannot be found and continue.
+     message("-- Did not find all SuiteSparse dependencies, disabling "
 @@ -294,7 +295,7 @@ endif (SUITESPARSE)
  # CXSparse.
  if (CXSPARSE)
@@ -39,7 +44,7 @@ index 2d241fe..e1eadfb 100644
    if (CXSparse_FOUND)
      set(CXSparse_DEPENDENCY "find_dependency(CXSparse ${CXSparse_VERSION})")
      # By default, if CXSparse and all dependencies are found, Ceres is
-@@ -302,7 +303,7 @@ if (CXSPARSE)
+@@ -302,10 +303,10 @@ if (CXSPARSE)
      message("-- Found CXSparse version: ${CXSparse_VERSION}, "
        "building with CXSparse.")
  
@@ -47,7 +52,11 @@ index 2d241fe..e1eadfb 100644
 +    if (0)
        install(FILES ${Ceres_SOURCE_DIR}/cmake/FindCXSparse.cmake
                DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
-     endif (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
+-    endif (CXSparse_NO_CMAKE OR NOT CXSparse_DIR)
++    endif ()
+   else (CXSparse_FOUND)
+     # Disable use of CXSparse if it cannot be found and continue.
+     message("-- Did not find CXSparse, Building without CXSparse.")
 @@ -367,9 +368,10 @@ endif()
  # GFlags.
  if (GFLAGS)
