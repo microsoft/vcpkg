@@ -1,7 +1,6 @@
 {
   "name": "glib",
-  "version": "2.70.1",
-  "port-version": 1,
+  "version": "2.70.5",
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
   "supports": "!uwp & !(windows & static)",

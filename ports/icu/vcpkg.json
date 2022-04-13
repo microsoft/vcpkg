@@ -1,7 +1,6 @@
 {
   "name": "icu",
-  "version": "69.1",
-  "port-version": 16,
+  "version": "70.1",
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "https://icu.unicode.org/home",
   "supports": "!uwp",

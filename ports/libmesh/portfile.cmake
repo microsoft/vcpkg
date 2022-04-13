@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libMesh/libmesh
-    REF  d3bda6c7009c6b3241ef2e6c999eff577116dc68 #1.7.0-rc3
-    SHA512 6ef135b8c9f7653d3af713f03030b0bd5b833e43224543d8b1e443d76c481a5edcad31297b47e9d4d0b8451e7709948adfcca36deba0255daaf3c2f024ce978a
+    REF  e98f7419bd062d4c6b3cc3727899e892915af730 #1.6.2
+    SHA512 f70722e92c0928ece2bb8750922d129b775790365a3911b97cc1e89930321d93d491e5992ad5453fc5de87d4c2f8799eb082d08e1ad1b844d81bc60c6435f0dd
     HEAD_REF master
 )
 
@@ -28,27 +28,23 @@ endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${OPTIONS}
+    OPTIONS_DEBUG --with-methods=dbg
+    OPTIONS_RELEASE --with-methods=opt
 )
 
 vcpkg_install_make()
 
 if (EXISTS ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool)
-    file(COPY ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(COPY ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(REMOVE ${CURRENT_PACKAGES_DIR}/contrib/bin/libtool)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/contrib ${CURRENT_PACKAGES_DIR}/debug/contrib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/contrib)
 
-file(GLOB ${CURRENT_PACKAGES_DIR}/bin LIBMESH_TOOLS)
-foreach (LIBMESH_TOOL ${LIBMESH_TOOLS})
-    file(COPY ${LIBMESH_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(REMOVE ${LIBMESH_TOOL})
+file(GLOB LIBMESH_EXAMPLES ${CURRENT_PACKAGES_DIR}/examples/*)
+foreach (LIBMESH_EXAMPLE ${LIBMESH_EXAMPLES})
+    file(COPY ${LIBMESH_EXAMPLE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endforeach()
-
-file(GLOB LIBMESH_TOOLS ${CURRENT_PACKAGES_DIR}/examples/*)
-foreach (LIBMESH_TOOL ${LIBMESH_TOOLS})
-    file(COPY ${LIBMESH_TOOL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(REMOVE ${LIBMESH_TOOL})
-endforeach()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/examples)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -57,9 +53,10 @@ endif()
 # Remove tools and debug include directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/contrib ${CURRENT_PACKAGES_DIR}/debug/etc
                     ${CURRENT_PACKAGES_DIR}/debug/examples ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/tools/libmesh/debug
                     ${CURRENT_PACKAGES_DIR}/Make.common ${CURRENT_PACKAGES_DIR}/debug/Make.common)
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

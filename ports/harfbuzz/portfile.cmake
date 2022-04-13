@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 3.0.0
-    SHA512 69999ad86bde56ef689392a521143b6ad14b6719860772c3d4c343358997049a48c79e8f302fe0a7f3b0d930b476ddf440def874a1269b50ae79d020bcd073b5
+    REF 3.2.0
+    SHA512 5d8c629416c0bc557b83e8d9d731d41b9e8ee3abc74590e65ed6ca67d74d3a440d038134313f17a7b1b14ef0fc1ecf8bb87113fdcf5f0c8d3dc3d2eeb9b08c18
     HEAD_REF master
     PATCHES
         # This patch is a workaround that is needed until the following issues are resolved upstream:
@@ -11,6 +11,7 @@ vcpkg_from_github(
         # Details: https://github.com/microsoft/vcpkg/issues/16262
         0001-circumvent-samefile-error.patch
         0002-fix-uwp-build.patch
+        fix-macos-build.diff # fixes https://github.com/harfbuzz/harfbuzz/issues/3484
 )
 
 if("icu" IN_LIST FEATURES)

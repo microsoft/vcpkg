@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF e9f05c55f88f6876633bd59fd1cb3848da64b699 #v2.49.0
-    SHA512 dfd7012eb96f7d4a8054c8cc1141cd2c743255b7783d16565e02b2c688ea9d81cd61f3824f999c2c9d4ed1f44b3866b5bd399fab376ba8f16369989bda4bda85
+    REF v2.50.0
+    SHA512 ede964a5d5d7c70ff69b9d19e72ed2572f6d28c922cccae6d805ce72115b9d09d3b57d83163192aacc45856fe145d745472df4ca0053a41c65c175434709e3f0
     HEAD_REF master
     PATCHES
         fix_openni2.patch
-        fix-dependency-glfw3.patch
         fix_config_osx.patch
 )
 
@@ -50,6 +49,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/realsense2)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${_IMPORT_PREFIX}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "\${_IMPORT_PREFIX}")
 endif()
 vcpkg_copy_pdbs()
 
@@ -57,8 +57,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(BUILD_TOOLS)
-    set(TOOL_NAMES)
-    list(APPEND TOOL_NAMES rs-convert rs-enumerate-devices rs-fw-logger rs-fw-update rs-record rs-terminal)
+    set(TOOL_NAMES rs-convert rs-embed rs-enumerate-devices rs-fw-logger rs-fw-update rs-record rs-terminal)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif()
 

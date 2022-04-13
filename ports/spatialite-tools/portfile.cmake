@@ -25,6 +25,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
         LIBS
     )
 
+    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
+    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    endif()
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
+    endif()
+
     set(ICONV_LIBS "iconv.lib")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(APPEND ICONV_LIBS " charset.lib")

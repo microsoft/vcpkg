@@ -3,7 +3,7 @@ project(lodepng)
 
 add_library(lodepng lodepng.cpp)
 target_include_directories(lodepng PUBLIC
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:include>
 )
 
 file(WRITE "${CMAKE_BINARY_DIR}/lodepng-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/lodepng-targets.cmake\")")
@@ -15,7 +15,7 @@ install(EXPORT lodepng-targets DESTINATION share/lodepng/)
 
 add_library(lodepng-c lodepng.c)
 target_include_directories(lodepng-c PUBLIC
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:include>
 )
 
 file(WRITE "${CMAKE_BINARY_DIR}/lodepng-c-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/lodepng-c-targets.cmake\")")

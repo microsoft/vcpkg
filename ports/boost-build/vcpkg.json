@@ -1,6 +1,7 @@
 {
   "name": "boost-build",
-  "version-string": "1.77.0",
+  "version": "1.78.0",
+  "port-version": 1,
   "description": "Boost.Build",
   "homepage": "https://github.com/boostorg/build",
   "dependencies": [

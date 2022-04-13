@@ -1,11 +1,11 @@
-set(GM_VERSION 1.3.36)
+set(GM_VERSION 1.3.37)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphicsmagick/graphicsmagick
     REF ${GM_VERSION}
-    FILENAME "GraphicsMagick-${GM_VERSION}-windows-source.7z"
-    SHA512 4976816acb9d348b83cc33c1ad2b0a3f9c4174c8983b3a3f867bcd6369984bea34b203a4e168f52f556c94288b9340db1357f614e8ff3a8802bef859378bdd31
+    FILENAME "GraphicsMagick-${GM_VERSION}-windows.7z"
+    SHA512 2e465a290946d730c0da1b45602ebdebc256d9a0705d6d79784efcefb0760a923dd78c73f7a563ce6ec41e4199da66d3b31cc8c6b8f821ff993092d348aeaa2f
     PATCHES
         # GM always requires a dynamic BZIP2. This patch makes this dependent if _DLL is defined
         dynamic_bzip2.patch

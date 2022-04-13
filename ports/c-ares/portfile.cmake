@@ -1,18 +1,18 @@
-vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_17_2
-    SHA512 1111f1e7eeb0e5d9e70d1a7c8566145d0a5e6e71b020f3fcaa02ecdf1931553ddeff83fdc152a1f9c5a780078e8afe3670164b631df56eecd2b638210cc59bb3
-    HEAD_REF master
+    REF cares-1_18_1
+    SHA512 9f5f9d5a22a4643aef8701c4abfd4b28e0bded2479bab462d2dfc63a8f84348f02d3cfbd7c85cc1e06a154a3e4206721cb6669c7c61538ecdcd44268e4ce073e
+    HEAD_REF main
+    PATCHES
+        avoid-docs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCARES_STATIC=${BUILD_STATIC}
         -DCARES_SHARED=${BUILD_SHARED}

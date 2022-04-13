@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
-
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/directxsdk/copyright")
     message(FATAL_ERROR "Can't build ${PORT} if directxsdk is installed. Please remove directxsdk, and try to install ${PORT} again if you need it.")
 endif()
@@ -38,3 +36,5 @@ file(GLOB DEBUG_DLL_FILES "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET
 file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
 
 file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/dxsdk-d3dx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

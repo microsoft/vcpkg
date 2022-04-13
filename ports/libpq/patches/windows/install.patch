@@ -2,35 +2,7 @@ diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
 index d109b2c90..75c7446e6 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
-@@ -63,8 +63,16 @@ sub Install
- 		do "./config.pl" if (-f "config.pl");
- 	}
- 
--	chdir("../../..")    if (-f "../../../configure");
--	chdir("../../../..") if (-f "../../../../configure");
-+	# Move to the root path depending on the current location.
-+	if (-f "../../../configure")
-+	{
-+		chdir("../../..");
-+	}
-+	elsif (-f "../../../../configure")
-+	{
-+		chdir("../../../..");
-+	}
-+
- 	my $conf = "";
- 	if (-d "debug")
- 	{
-@@ -106,7 +106,7 @@ sub Install
- 			}
- 		},
- 		@top_dir);
--	CopySetOfFiles('config files', $sample_files, $target . '/share/');
-+	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
- 	CopyFiles(
- 		'Import libraries',
- 		$target . '/lib/',
-@@ -78,10 +78,10 @@ sub Install
+@@ -89,10 +89,10 @@ sub Install
  	my $majorver = DetermineMajorVersion();
  	print "Installing version $majorver for $conf in $target\n";
  
@@ -44,7 +16,16 @@ index d109b2c90..75c7446e6 100644
  	if ($insttype eq "client")
  	{
  		EnsureDirectories($target, @client_dirs);
-@@ -120,35 +120,35 @@ sub Install
+@@ -117,7 +117,7 @@ sub Install
+ 			}
+ 		},
+ 		@top_dir);
+-	CopySetOfFiles('config files', $sample_files, $target . '/share/');
++	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
+ 	CopyFiles(
+ 		'Import libraries',
+ 		$target . '/lib/',
+@@ -131,35 +131,35 @@ sub Install
  		CopySetOfFiles(
  			'timezone names',
  			[ glob('src\timezone\tznames\*.txt') ],
@@ -88,7 +69,7 @@ index d109b2c90..75c7446e6 100644
  
  		my $pl_extension_files = [];
  		my @pldirs             = ('src/pl/plpgsql/src');
-@@ -167,7 +167,7 @@ sub Install
+@@ -178,7 +178,7 @@ sub Install
  			},
  			@pldirs);
  		CopySetOfFiles('PL Extension files',
@@ -97,7 +78,7 @@ index d109b2c90..75c7446e6 100644
  	}
  
  	GenerateNLSFiles($target, $config->{nls}, $majorver) if ($config->{nls});
-@@ -282,23 +282,26 @@ sub CopySolutionOutput
+@@ -293,23 +293,26 @@ sub CopySolutionOutput
  		{
  			if ($1 == 1)
  			{
@@ -128,7 +109,7 @@ index d109b2c90..75c7446e6 100644
  			}
  		}
  		elsif ($vcproj eq 'vcxproj'
-@@ -306,11 +309,11 @@ sub CopySolutionOutput
+@@ -320,11 +320,11 @@ sub CopySolutionOutput
  		{
  			if ($1 eq 'Application')
  			{
@@ -142,7 +123,7 @@ index d109b2c90..75c7446e6 100644
  				if ($is_sharedlib)
  				{
  					push(@{ $install_list{'bin'} }, "dll");
-@@ -319,10 +322,9 @@ sub CopySolutionOutput
+@@ -333,10 +333,9 @@ sub CopySolutionOutput
  			}
  			else    # 'StaticLibrary'
  			{
@@ -154,7 +135,7 @@ index d109b2c90..75c7446e6 100644
  			}
  		}
  		else
-@@ -339,7 +339,7 @@ sub CopySolutionOutput
+@@ -352,7 +352,7 @@ sub CopySolutionOutput
  				  || croak "Could not copy $pf.$ext\n";
  			}
  		}
@@ -163,16 +144,14 @@ index d109b2c90..75c7446e6 100644
  		  || croak "Could not copy $pf.pdb\n";
  		print ".";
  	}
-@@ -366,7 +366,7 @@ sub GenerateTimezoneFiles
+@@ -374,5 +374,5 @@ sub GenerateTimezoneFiles
  	print "Generating timezone files...";
  
- 	my @args =
--	  ("$conf/zic/zic", '-d', "$target/share/timezone", '-p', "$posixrules");
-+	  ("$conf/zic/zic", '-d', "$target/share/libpq/timezone", '-p', "$posixrules");
+-	my @args = ("$conf/zic/zic", '-d', "$target/share/timezone");
++	my @args = ("$conf/zic/zic", '-d', "$target/share/libpq/timezone");
  	foreach (@tzfiles)
  	{
- 		my $tzfile = $_;
-@@ -391,7 +391,7 @@ sub GenerateTsearchFiles
+@@ -398,7 +398,7 @@ sub GenerateTsearchFiles
  	$mf =~ /^LANGUAGES\s*=\s*(.*)$/m
  	  || die "Could not find LANGUAGES line in snowball Makefile\n";
  	my @pieces = split /\s+/, $1;
@@ -181,7 +160,7 @@ index d109b2c90..75c7446e6 100644
  	  || die "Could not write snowball_create.sql";
  	print $F read_file('src/backend/snowball/snowball_func.sql.in');
  
-@@ -476,7 +476,7 @@ sub CopySubdirFiles
+@@ -483,7 +483,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f.control",
@@ -190,7 +169,7 @@ index d109b2c90..75c7446e6 100644
  			  || croak("Could not copy file $f.control in contrib $module");
  			print '.';
  		}
-@@ -494,7 +494,7 @@ sub CopySubdirFiles
+@@ -501,7 +501,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f",
@@ -199,7 +178,7 @@ index d109b2c90..75c7446e6 100644
  			  || croak("Could not copy file $f in contrib $module");
  			print '.';
  		}
-@@ -509,7 +509,7 @@ sub CopySubdirFiles
+@@ -516,7 +516,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f",
@@ -208,7 +187,7 @@ index d109b2c90..75c7446e6 100644
  			  || croak("Could not copy file $f in $subdir $module");
  			print '.';
  		}
-@@ -572,7 +572,7 @@ sub CopySubdirFiles
+@@ -579,7 +579,7 @@ sub CopySubdirFiles
  		  if ($module eq 'spi');
  		foreach my $f (split /\s+/, $flist)
  		{
@@ -217,7 +196,7 @@ index d109b2c90..75c7446e6 100644
  			  || croak("Could not copy file $f in contrib $module");
  			print '.';
  		}
-@@ -701,7 +701,7 @@ sub GenerateNLSFiles
+@@ -708,7 +708,7 @@ sub GenerateNLSFiles
  	my $majorver = shift;
  
  	print "Installing NLS files...";
@@ -226,7 +205,7 @@ index d109b2c90..75c7446e6 100644
  	my @flist;
  	File::Find::find(
  		{
-@@ -723,12 +723,12 @@ sub GenerateNLSFiles
+@@ -730,12 +730,12 @@ sub GenerateNLSFiles
  			next unless /([^\/]+)\.po/;
  			$lang = $1;
  
