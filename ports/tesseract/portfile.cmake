@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.1.1
-    SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
+    REF c2a3efe2824e1c8a0810e82a43406ba8e01527c4 #5.1.0
+    SHA512 a9a6a2d49d5e4aa10b48d45e8334c70e370d4e22418ae1fed55a29f6523790c2e1ec96c54f0ba110bf0358cd111bda5291d165aa7f66c51f229c9c70876c72ee
     PATCHES
-        fix-tiff-linkage.patch
-        fix-timeval.patch # Remove this patch in the next update
+        #fix-tiff-linkage.patch
+        #fix-timeval.patch # Remove this patch in the next update
 )
 
 # The built-in cmake FindICU is better
@@ -34,12 +34,13 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DTARGET_ARCHITECTURE=${TARGET_ARCHITECTURE}
+        -DSW_BUILD=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tesseract)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake"
     "find_package(Leptonica REQUIRED)"
@@ -56,18 +57,8 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_fixup_pkgconfig()
 
-if("training-tools" IN_LIST FEATURES)
-    list(APPEND TRAINING_TOOLS
-        ambiguous_words classifier_tester combine_tessdata
-        cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
-        set_unicharset_properties unicharset_extractor text2image
-    )
-    vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
-endif()
-
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
