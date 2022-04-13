@@ -51,7 +51,7 @@
   <Choose>
     <When Condition="'$(VcpkgEnableManifest)' == 'true'">
       <PropertyGroup>
-        <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' == ''">$(_ZVcpkgManifestRoot)vcpkg_installed\$(VcpkgTriplet)\</_ZVcpkgInstalledDir>
+        <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' == ''">$(_ZVcpkgManifestRoot)vcpkg_installed\</_ZVcpkgInstalledDir>
       </PropertyGroup>
     </When>
     <Otherwise>
