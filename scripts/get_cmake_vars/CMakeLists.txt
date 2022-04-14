@@ -93,7 +93,7 @@ macro(_vcpkg_adjust_flags flag_var)
     if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
         string(REGEX REPLACE "(^| )/" "\\1-" ${flag_var} "${${flag_var}}")
         if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-            if("${flag_var}" MATCHES "(CMAKE_C_FLAGS|CMAKE_CXX_FLAGS)")
+            if("${flag_var}" MATCHES "^(CMAKE_C_FLAGS|CMAKE_CXX_FLAGS)$")
                 string(APPEND ${flag_var} " -ZW:nostdlib")
             endif()
         endif()
