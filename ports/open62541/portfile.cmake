@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 ffcc697901ec978fb9d1f8996f8a4c5114c98a0ec19206cac95d1a84f8d0fcbe38bf73e88f1df59d53bc6be481102aa2f2a6a0efa29797e7ce11123bd23131c2
     HEAD_REF master
+    PATCHES
+        openssl.patch
 )
 
 vcpkg_check_features(

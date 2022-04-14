@@ -12,6 +12,7 @@ vcpkg_from_github(
         0004-Define-crt-macros.patch
         0005-Fix-uwp-joystick.patch
         0006-Update-SDL_sysurl.cpp.patch
+        0007-timer-Fix-Emscripten-declaration-after-statement-err.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
