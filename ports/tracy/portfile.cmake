@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF b7a27d02afe1941eed8f64f2164447ff1a06daa6
-    SHA512 027adffc1e362610016a86c7e37c97dc836d14ca0c8579281f0d53c443c58c206ad80d33936a18668c2695b9009cbbb7acbc16ec516b83f796870dc527e469e1
+    REF 9ba7171c3dd6f728268a820ee268a62c75f2dfb6
+    SHA512 a2898cd04a532a5cc71fd6c5fd3893ebff68df25fc38e8d988ba4a8a6cbe33e3d0049661029d002160b94b57421e5c5b7400658b404e51bfab721d204dd0cc5d
     HEAD_REF master
-    PATCHES
-        add-install.patch
 )
 
 vcpkg_cmake_configure(

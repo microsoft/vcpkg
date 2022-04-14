@@ -1,22 +1,11 @@
-# header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcbrindle/NanoRange
+    REF bf32251d65673fe170d602777c087786c529ead8
+    SHA512 74dc8497fd20f56de39e54a104007840450466648f7b216f83265294e24582b486392ad6bf0cc85ca9877655640f08f833bc5d82ebee991b8a57d4fa44f0934f
     HEAD_REF master
 )
 
-#<tests>
-#vcpkg_configure_cmake(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PREFER_NINJA
-#)
-#vcpkg_build_cmake()
-#</tests>
+file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}" FILES_MATCHING PATTERN "*.hpp")
 
-# Copy header files
-file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/nanorange)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/nanorange/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/nanorange/copyright)
-
+file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
