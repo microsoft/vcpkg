@@ -214,7 +214,6 @@ function(vcpkg_find_acquire_program program)
             set(apt_package_name "git")
         endif()
     elseif(program STREQUAL "GN")
-
         set(program_name gn)
         set(rename_binary_to "gn")
         set(cipd_download_gn "https://chrome-infra-packages.appspot.com/dl/gn/gn")
