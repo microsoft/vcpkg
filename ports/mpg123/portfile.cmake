@@ -12,8 +12,10 @@ vcpkg_from_sourceforge(
         fix-modulejack.patch
 )
 
-include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
-yasm_tool_helper(APPEND_TO_PATH)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    include("${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake")
+    yasm_tool_helper(APPEND_TO_PATH)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/ports/cmake"

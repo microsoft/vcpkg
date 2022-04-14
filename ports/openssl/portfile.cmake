@@ -1,13 +1,23 @@
-if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
+    OR EXISTS "${CURRENT_INSTALLED_DIR}/share/boringssl/copyright")
     message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
 endif()
 
-set(OPENSSL_VERSION 1.1.1n)
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING
+[[openssl currently requires the following library from the system package manager:
+    linux-headers
+It can be installed on alpine systems via apk add linux-headers.]]
+    )
+endif()
+
+set(OPENSSL_VERSION 3.0.2)
+
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 1937796736613dcf4105a54e42ecb61f95a1cea74677156f9459aea0f2c95159359e766089632bf364ee6b0d28d661eb9957bce8fecc9d2436378d8d79e8d0a4
+    SHA512 f986850d5be908b4d6b5fd7091bc4652d7378c9bccebfbc5becd7753843c04c1eb61a1749c432139d263dfac33df0b1f6c773664b485cad47542266823a4eb03
 )
 
 vcpkg_find_acquire_program(PERL)
