@@ -148,7 +148,7 @@ foreach(flag CXX C SHARED_LINKER EXE_LINKER STATIC_LINKER RC)
         # This is imperfect because it fails on directories with trailing spaces, but those are exceedingly rare
         string(REGEX REPLACE "(^| )/" "\\1-" ${flag}_FLAGS "${${flag}_FLAGS}")
         if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-            if("${flag}_FLAGS" IN_LIST C_FLAGS CXX_FLAGS)
+            if("${flag}" MATCHES "^(C|CXX)$")
                 string(APPEND ${flag}_FLAGS " -ZW:nostdlib")
             endif()
         endif()
