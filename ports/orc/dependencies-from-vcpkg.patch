@@ -36,7 +36,7 @@ index d4cd0350..0701a7d2 100644
  
  install(TARGETS orc DESTINATION lib)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index bf601968..f2b677aa 100644
+index bf601968..d1550a4b 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
 @@ -66,8 +66,8 @@ endif ()
@@ -96,7 +96,7 @@ index bf601968..f2b677aa 100644
 -if (NOT "${ZSTD_HOME}" STREQUAL "")
 -  find_package (ZSTD REQUIRED)
 +if (1)
-+  find_package (ZSTD CONFIG REQUIRED)
++  find_package (zstd CONFIG REQUIRED)
    set(ZSTD_VENDORED FALSE)
  else ()
    set(ZSTD_HOME "${THIRDPARTY_DIR}/zstd_ep-install")
