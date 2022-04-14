@@ -70,15 +70,19 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
             file(RENAME "${SOURCE_PATH}/${tracy_TOOL}/_build/unix" "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
             file(REMOVE_RECURSE "${SOURCE_PATH}/${tracy_TOOL}/_build")
 
+            set(path_makefile_dir "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
+            cmake_path(RELATIVE_PATH path_makefile_dir 
+                BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
+                OUTPUT_VARIABLE relative_path_makefile_dir)
+
             vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
 
             message(STATUS "Building ${tracy_TOOL_NAME} ${TARGET_TRIPLET}${short_buildtype}")
-            vcpkg_execute_build_process(
-                COMMAND ${MAKE} V=1 -j ${VCPKG_CONCURRENCY} -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
-                NO_PARALLEL_COMMAND ${MAKE} V=1 -j 1 -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
-                LOGNAME "build-${tracy_TOOL}-${TARGET_TRIPLET}${short_buildtype}"
+            vcpkg_build_make(
+                BUILD_TARGET ${buildtype}
+                SUBPATH ${relative_path_makefile_dir}
+                LOGFILE_ROOT "build-${tracy_TOOL}"
             )
             vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
