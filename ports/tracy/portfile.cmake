@@ -23,7 +23,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_LINUX)
     set(any_tracy_tool_requested OFF)
     if(profiler IN_LIST FEATURES)
-        message( WARNING
+        message(WARNING
 "Tracy currently requires the following libraries from the system package manager to build its tools:
     gtk+-3.0
     tbb
@@ -33,7 +33,7 @@ These can be installed on Ubuntu systems via sudo apt install libgtk-3-dev libtb
     else()
         foreach(CLI_TOOL capture csvexport import-chrome update)
             if(${CLI_TOOL} IN_LIST FEATURES)
-                message( WARNING
+                message(WARNING
 "Tracy currently requires the following libraries from the system package manager to build its tools:
     tbb
 
@@ -75,8 +75,8 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
 
             message(STATUS "Building ${tracy_TOOL_NAME} ${TARGET_TRIPLET}${short_buildtype}")
             vcpkg_execute_build_process(
-                COMMAND ${tracy_MAKE_COMMAND} V=1 -j ${VCPKG_CONCURRENCY} -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
-                NO_PARALLEL_COMMAND ${tracy_MAKE_COMMAND} V=1 -j 1 -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
+                COMMAND ${MAKE} V=1 -j ${VCPKG_CONCURRENCY} -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
+                NO_PARALLEL_COMMAND ${MAKE} V=1 -j 1 -C "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}" ${buildtype}
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
                 LOGNAME "build-${tracy_TOOL}-${TARGET_TRIPLET}${short_buildtype}"
             )
