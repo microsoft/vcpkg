@@ -16,5 +16,9 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
+configure_file(
+  "${CMAKE_CURRENT_LIST_DIR}/unofficial-clipboardxx-config.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/unofficial-clipboardxx/unofficial-clipboardxx-config.cmake"
+  @ONLY
+)
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
