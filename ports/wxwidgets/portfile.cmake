@@ -14,13 +14,12 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_LINUX)
-    message([[
+    message(WARNING [[
 Port wxwidgets currently requires the following libraries from the system package manager:
     GTK 3
     libsecret
-
 These can be installed on Ubuntu systems via
-    apt-get install libgtk-3-dev libsecret-1-dev
+    sudo apt-get install libgtk-3-dev libsecret-1-dev
 ]])
     foreach(conflicting_port IN ITEMS freetype glib)
         if(EXISTS "${CURRENT_INSTALLED_DIR}/share/${conflicting_port}/copyright")
@@ -34,7 +33,7 @@ if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND OPTIONS
         -DwxUSE_OPENGL=OFF
         -DwxUSE_STACKWALKER=OFF

@@ -11,7 +11,7 @@ index 441f88c..b326867 100755
  
  
  # For the people who know what they want, or think they do:
-@@ -402,8 +402,20 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+@@ -402,8 +402,23 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
  
  
  # Determine the base directories we require.
@@ -21,6 +21,9 @@ index 441f88c..b326867 100755
 +case "$vcpkg_prefix" in
 +    */lib/wx/config)
 +        vcpkg_prefix=${vcpkg_prefix%/*/*/*}
++        ;;
++    */tools/wxwidgets/debug)
++        vcpkg_prefix=${vcpkg_prefix%/*/*/*}/debug
 +        ;;
 +    */tools/wxwidgets)
 +        vcpkg_prefix=${vcpkg_prefix%/*/*}

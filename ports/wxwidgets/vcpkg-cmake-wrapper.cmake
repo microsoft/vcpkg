@@ -25,7 +25,7 @@ if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
 else()
     # FindwxWidgets.cmake unix mode, single-config
     set(_vcpkg_wxconfig "")
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR "Debug" IN_LIST "MAP_IMPORTED_CONFIG_${CMAKE_BUILD_TYPE}")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR "Debug" IN_LIST MAP_IMPORTED_CONFIG_${CMAKE_BUILD_TYPE})
         # Debug
         set(wxWidgets_LIB_DIR "${wxWidgets_ROOT_DIR}/debug/lib" CACHE INTERNAL "")
         file(GLOB _vcpkg_wxconfig LIST_DIRECTORIES false "${wxWidgets_LIB_DIR}/wx/config/*")
