@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_dependency.patch
+        fix_cxx17.patch
 )
 
 vcpkg_cmake_configure(

@@ -24,11 +24,19 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
+set(corrade_rc_param "")
+if(VCPKG_CROSSCOMPILING)
+    set(corrade_rc_param
+        "-DCORRADE_RC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/corrade/corrade-rc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${corrade_rc_param}
         -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
 )
@@ -40,7 +48,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Install tools
-if("utility" IN_LIST FEATURES)
+if("utility" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     # Drop a copy of tools
     vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 endif()

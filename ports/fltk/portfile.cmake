@@ -19,6 +19,11 @@ else()
     set(OPTION_USE_GL "-DOPTION_USE_GL=ON")
 endif()
 
+set(fluid_path_param "")
+if(VCPKG_CROSSCOMPILING)
+    set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -30,6 +35,7 @@ vcpkg_cmake_configure(
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
         -DFLTK_CONFIG_PATH=share/fltk
+        ${fluid_path_param}
         ${OPTION_USE_GL}
 )
 
@@ -39,7 +45,12 @@ vcpkg_cmake_config_fixup()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_OSX)
+# don't install fluid
+if(VCPKG_CROSSCOMPILING)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES fltk-config AUTO_CLEAN)
+    endif()
+elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_copy_tools(TOOL_NAMES fluid.app fltk-config AUTO_CLEAN)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config")
