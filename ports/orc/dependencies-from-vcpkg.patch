@@ -188,10 +188,10 @@ index bf601968..f2b677aa 100644
    add_dependencies (orc_protoc protobuf_ep)
    add_dependencies (orc_protobuf protobuf_ep)
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index d55581ba..15b69f24 100644
+index d55581ba..701fd7c3 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
-@@ -95,11 +95,8 @@ target_link_libraries (csv-import
+@@ -95,11 +95,7 @@ target_link_libraries (csv-import
    )
  
  install(TARGETS
@@ -200,7 +200,7 @@ index d55581ba..15b69f24 100644
 -   orc-statistics
     orc-scan
     orc-memory
-    timezone-dump
+-   timezone-dump
     csv-import
 -   DESTINATION bin)
 +   DESTINATION tools/orc)
