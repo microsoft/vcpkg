@@ -360,6 +360,7 @@ function(vcpkg_configure_cmake)
 
         if(NOT DEFINED ninja_path)
             # if ninja_path was defined above, we've already done this
+            vcpkg_find_acquire_program(NINJA)
             get_filename_component(ninja_path "${NINJA}" DIRECTORY)
             vcpkg_add_to_path("${ninja_path}")
         endif()
