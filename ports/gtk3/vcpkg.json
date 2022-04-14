@@ -1,0 +1,42 @@
+{
+  "name": "gtk3",
+  "version": "3.22.19",
+  "description": "Portable library for creating graphical user interfaces.",
+  "homepage": "https://www.gtk.org/",
+  "license": "LGPL-2.0-only",
+  "dependencies": [
+    "atk",
+    {
+      "name": "cairo",
+      "default-features": false,
+      "features": [
+        "gobject"
+      ]
+    },
+    {
+      "name": "cairo",
+      "default-features": false,
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    "gdk-pixbuf",
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "libepoxy",
+    "pango",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
