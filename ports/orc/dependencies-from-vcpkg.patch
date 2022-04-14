@@ -36,7 +36,7 @@ index d4cd0350..0701a7d2 100644
  
  install(TARGETS orc DESTINATION lib)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index bf601968..d1550a4b 100644
+index bf601968..2a0bcfbd 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
 @@ -66,8 +66,8 @@ endif ()
@@ -161,15 +161,10 @@ index bf601968..d1550a4b 100644
    set(PROTOBUF_VENDORED FALSE)
  else ()
    set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
-@@ -416,25 +384,6 @@ else ()
-   set(PROTOBUF_VENDORED TRUE)
- endif ()
+@@ -421,19 +389,7 @@ add_library (orc::protobuf ALIAS orc_protobuf)
+ add_library (orc_protoc INTERFACE)
+ add_library (orc::protoc ALIAS orc_protoc)
  
--add_library (orc_protobuf INTERFACE)
--add_library (orc::protobuf ALIAS orc_protobuf)
--add_library (orc_protoc INTERFACE)
--add_library (orc::protoc ALIAS orc_protoc)
--
 -if (ORC_PREFER_STATIC_PROTOBUF AND ${PROTOBUF_STATIC_LIB})
 -  target_link_libraries (orc_protobuf INTERFACE ${PROTOBUF_STATIC_LIB})
 -else ()
@@ -183,10 +178,10 @@ index bf601968..d1550a4b 100644
 -  target_link_libraries (orc_protoc INTERFACE ${PROTOC_LIBRARY})
 -endif()
 -target_include_directories (orc_protoc SYSTEM INTERFACE ${PROTOBUF_INCLUDE_DIR})
--
++include_directories (SYSTEM ${PROTOBUF_INCLUDE_DIR})
+ 
  if (PROTOBUF_VENDORED)
    add_dependencies (orc_protoc protobuf_ep)
-   add_dependencies (orc_protobuf protobuf_ep)
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
 index d55581ba..701fd7c3 100644
 --- a/tools/src/CMakeLists.txt
