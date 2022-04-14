@@ -332,7 +332,7 @@ function(vcpkg_cmake_configure)
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND ninja -v
+            COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
         )
