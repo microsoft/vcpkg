@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindLZ4.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZSTD.cmake")
+#file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZSTD.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindProtobuf.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindSnappy.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZLIB.cmake")
