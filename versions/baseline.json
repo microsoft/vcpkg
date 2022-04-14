@@ -5226,7 +5226,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 11
+      "port-version": 12
     },
     "osg-qt": {
       "baseline": "Qt5",
