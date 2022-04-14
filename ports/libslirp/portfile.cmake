@@ -7,8 +7,10 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-vcpkg_acquire_msys(MSYS_ROOT)
-vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"

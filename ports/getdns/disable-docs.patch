@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 413709da..d3dd03f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1039,9 +1039,9 @@ configure_file(src/version.c.in version.c)
+ 
+ set(version ${PACKAGE_VERSION})
+ set(date ${API_VERSION})
+-file(GLOB mans doc/*.3.in)
+-file(MAKE_DIRECTORY man3)
+-foreach (man ${mans})
++#file(GLOB mans doc/*.3.in)
++#file(MAKE_DIRECTORY man3)
++if (FALSE)
+   get_filename_component(out ${man} NAME_WE)
+   configure_file(${man} man3/${out}.3 @ONLY)
+ 
+@@ -1061,7 +1061,7 @@ foreach (man ${mans})
+       configure_file(${man} man3/${alt}.3 @ONLY)
+     endif ()
+   endforeach()
+-endforeach()
++endif()
+ 
+ set(prefix ${CMAKE_INSTALL_PREFIX})
+ configure_file(getdns.pc.in getdns.pc @ONLY)
+@@ -1099,11 +1099,11 @@ if (BUILD_GETDNS_SERVER_MON)
+ endif ()
+ 
+ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/getdns DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/man3 DESTINATION share/man)
++#install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/man3 DESTINATION share/man)
+ 
+-set(docdir share/doc/getdns)
+-install(FILES AUTHORS ChangeLog COPYING LICENSE NEWS README.md DESTINATION ${docdir})
+-install(FILES spec/index.html DESTINATION ${docdir}/spec)
++#set(docdir share/doc/getdns)
++#install(FILES AUTHORS ChangeLog COPYING LICENSE NEWS README.md DESTINATION ${docdir})
++#install(FILES spec/index.html DESTINATION ${docdir}/spec)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/getdns.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ install(CODE "message(\"\

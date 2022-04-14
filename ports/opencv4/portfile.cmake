@@ -6,7 +6,9 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.5.5")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
+string(JSON OPENCV_VERSION GET "${_contents}" version)
+
 set(USE_QT_VERSION "5")
 
 vcpkg_from_github(
@@ -136,52 +138,8 @@ if("python" IN_LIST FEATURES)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static AND VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "The python module is currently unsupported on Windows when building static OpenCV libraries")
   else()
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-    vcpkg_add_to_path("${PYTHON3_DIR}")
-    vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
+    x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
     set(ENV{PYTHON} "${PYTHON3}")
-
-    function(vcpkg_get_python_package PYTHON_DIR )
-      cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
-
-      if(NOT _vgpp_PYTHON_EXECUTABLE)
-          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
-      endif()
-      if(NOT _vgpp_PACKAGES)
-          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
-      endif()
-      if(NOT _vgpp_PYTHON_DIR)
-          get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
-      endif()
-
-      if (WIN32)
-          set(PYTHON_OPTION "")
-      else()
-          set(PYTHON_OPTION "--user")
-      endif()
-
-      if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-        if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-          vcpkg_from_github(
-            OUT_SOURCE_PATH PYFILE_PATH
-            REPO pypa/get-pip
-            REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-            SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
-            HEAD_REF master
-          )
-          execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
-        endif()
-        foreach(_package IN LISTS _vgpp_PACKAGES)
-          execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
-        endforeach()
-      else()
-        foreach(_package IN LISTS _vgpp_PACKAGES)
-          execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
-        endforeach()
-      endif()
-    endfunction()
-    vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES numpy)
     set(BUILD_opencv_python3 ON)
     set(WITH_PYTHON ON)
   endif()

@@ -1,0 +1,30 @@
+diff --git a/Library/CMakeLists.txt b/Library/CMakeLists.txt
+index 10cd8d1..1439aa0 100644
+--- a/Library/CMakeLists.txt
++++ b/Library/CMakeLists.txt
+@@ -27,19 +27,19 @@ file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/Include/discordcoreapi/*.hpp")
+ if (UNIX)
+ 	add_library(DiscordCoreAPI STATIC "${SOURCES}" "${VersionFilesOutputVariable}")
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/SoundCloudCert.pem" "/home/$ENV{USER}/SSL/Certs/SoundCloudCert.pem" COPYONLY)
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/SoundCloudCert.pem" DESTINATION share/discordcoreapi/data)
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/GoogleCert.pem" "/home/$ENV{USER}/SSL/Certs/GoogleCert.pem" COPYONLY)
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/GoogleCert.pem" DESTINATION share/discordcoreapi/data)
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/DiscordCert.pem" "/home/$ENV{USER}/SSL/Certs/DiscordCert.pem" COPYONLY)
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/DiscordCert.pem" DESTINATION share/discordcoreapi/data)
+ elseif (WIN32)
+ 	add_library(DiscordCoreAPI SHARED "${SOURCES}" "${VersionFilesOutputVariable}")
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/SoundCloudCert.pem" "C:/SSL/Certs/SoundCloudCert.pem" COPYONLY)
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/SoundCloudCert.pem" DESTINATION share/discordcoreapi/data)
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/GoogleCert.pem" "C:/SSL/Certs/GoogleCert.pem" COPYONLY)
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/GoogleCert.pem" DESTINATION share/discordcoreapi/data)
+ 	message(STATUS "Copying a file...")
+-	configure_file("${CMAKE_SOURCE_DIR}/Certs/DiscordCert.pem" "C:/SSL/Certs/DiscordCert.pem" COPYONLY)	
++	install(FILES "${CMAKE_SOURCE_DIR}/Certs/DiscordCert.pem" DESTINATION share/discordcoreapi/data)	
+ endif()
+ 
+ if (EXISTS ${VCPKG_INSTALLED_DIR})

@@ -8,7 +8,10 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
-                                        CMAKE_HOST_SYSTEM_PROCESSOR)
+                                        CMAKE_HOST_SYSTEM_PROCESSOR
+                                        CMAKE_SIZEOF_VOID_P
+                                        MSVC
+                                        MSVC_VERSION)
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
@@ -21,6 +24,7 @@ endforeach()
 set(COMPILERS ${VCPKG_LANGUAGES} RC)
 foreach(prog IN LISTS COMPILERS)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER_ID)
 endforeach()
 # Variables to check
 foreach(_lang IN LISTS VCPKG_LANGUAGES)
@@ -74,7 +78,7 @@ endif()
 
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
-foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
+foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
 endforeach()
 
@@ -87,38 +91,68 @@ foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
     endif()
 endforeach()
 
-macro(_vcpkg_adjust_flags flag_var)
-    if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
-        string(REGEX REPLACE "(^| )/" "\\1-" ${flag_var} "${${flag_var}}")
-    endif()
-    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
-            # macOS - append arch and isysroot if cross-compiling
-            if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+set(EXTRA_FLAGS "")
 
-                foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
-                    string(APPEND ${flag_var} " -arch ${arch}")
-                endforeach()
-                string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
-            endif()
+if(APPLE)
+    if(CMAKE_OSX_SYSROOT)
+        string(APPEND EXTRA_FLAGS " -isysroot \"${CMAKE_OSX_SYSROOT}\"")
+    endif()
+    foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
+        string(APPEND EXTRA_FLAGS " -arch ${arch}")
+    endforeach()
+    if(CMAKE_OSX_DEPLOYMENT_TARGET)
+        if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+            string(APPEND EXTRA_FLAGS " -mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+            string(APPEND EXTRA_FLAGS " -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         endif()
     endif()
-endmacro()
+endif()
+if(CMAKE_CXX_COMPILER_TARGET)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        string(APPEND EXTRA_FLAGS " \"${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${CMAKE_CXX_COMPILER_TARGET}\"")
+    else()
+        string(APPEND EXTRA_FLAGS " ${CMAKE_CXX_COMPILE_OPTIONS_TARGET} \"${CMAKE_CXX_COMPILER_TARGET}\"")
+    endif()
+endif()
+if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        string(APPEND EXTRA_FLAGS " \"${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
+    else()
+        string(APPEND EXTRA_FLAGS " ${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} \"${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
+    endif()
+endif()
+if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
+    string(APPEND EXTRA_FLAGS " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}\"")
+endif()
 
-foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
-    string(STRIP "${${flag}}" ${flag}) # Strip leading and trailing whitespaces
-    _vcpkg_adjust_flags(${flag})
-    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag} \" ${${flag}}\")\n")
-    foreach(config IN LISTS VCPKG_CONFIGS)
-        string(STRIP "${${flag}_${config}}" ${flag}_${config})
-        _vcpkg_adjust_flags(${flag}_${config})
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag}_${config} \"${CMAKE_${flag}_FLAGS_${config}}\")\n")
-        set(COMBINED_${flag}_${config} "${${flag}} ${${flag}_${config}}")
-        string(STRIP "${COMBINED_${flag}_${config}}" COMBINED_${flag}_${config})
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
-    endforeach()
+foreach(flags CXX C SHARED_LINKER EXE_LINKER)
+    set(${flags}_FLAGS "${CMAKE_${flags}_FLAGS} ${CMAKE_${flags}_FLAGS_${VCPKG_CONFIGS}} ${EXTRA_FLAGS}")
 endforeach()
 
+foreach(flags STATIC_LINKER RC)
+    set(${flags}_FLAGS "${CMAKE_${flags}_FLAGS} ${CMAKE_${flags}_FLAGS_${VCPKG_CONFIGS}}")
+endforeach()
+
+foreach(incdir IN LISTS CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES)
+    string(APPEND CXX_FLAGS " \"${CMAKE_INCLUDE_FLAG_CXX}${incdir}\"")
+endforeach()
+
+foreach(incdir IN LISTS CMAKE_C_STANDARD_INCLUDE_DIRECTORIES)
+    string(APPEND C_FLAGS " \"${CMAKE_INCLUDE_FLAG_C}${incdir}\"")
+endforeach()
+
+foreach(flag CXX C SHARED_LINKER EXE_LINKER STATIC_LINKER RC)
+    if(MSVC)
+        # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
+        # This is imperfect because it fails on directories with trailing spaces, but those are exceedingly rare
+        string(REGEX REPLACE "(^| )/" "\\1-" ${flag}_FLAGS "${${flag}_FLAGS}")
+    endif()
+    string(REPLACE "\\" "\\\\" ${flag}_FLAGS "${${flag}_FLAGS}")
+    string(REPLACE "\"" "\\\"" ${flag}_FLAGS "${${flag}_FLAGS}")
+    string(REPLACE "\$" "\\\$" ${flag}_FLAGS "${${flag}_FLAGS}")
+    string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${${flag}_FLAGS}\")\n")
+endforeach()
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 
@@ -137,12 +171,26 @@ file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 # CMAKE_CXX_COMPILER
 # CMAKE_RC_COMPILER
 
+# Program details:
+# CMAKE_<LANG>_COMPILER_ID
+# MSVC
+# MSVC_VERSION
+
 # Flags:
 # CMAKE_<LANG>_FLAGS
 # CMAKE_<LANG>_FLAGS_<CONFIG>
 # CMAKE_RC_FLAGS
 # CMAKE_SHARED_LINKER_FLAGS
+# CMAKE_SHARED_LINKER_FLAGS_<CONFIG>
 # CMAKE_STATIC_LINKER_FLAGS
 # CMAKE_STATIC_LINKER_FLAGS_<CONFIG>
 # CMAKE_EXE_LINKER_FLAGS
 # CMAKE_EXE_LINKER_FLAGS_<CONFIG>
+
+# Additional information:
+# CMAKE_SIZEOF_VOID_P
+# CMAKE_CROSSCOMPILING
+# CMAKE_SYSTEM_NAME
+# CMAKE_HOST_SYSTEM_NAME
+# CMAKE_SYSTEM_PROCESSOR
+# CMAKE_HOST_SYSTEM_PROCESSOR
