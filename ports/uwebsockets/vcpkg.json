@@ -1,10 +1,28 @@
 {
   "name": "uwebsockets",
   "version-semver": "20.11.0",
+  "port-version": 1,
   "description": "Simple, secure & standards compliant web I/O for the most demanding of applications",
   "homepage": "https://github.com/uWebSockets/uWebSockets",
+  "license": "Apache-2.0",
   "dependencies": [
     "usockets",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "ssl": {
+      "description": "Build usockets with openssl support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
 }
