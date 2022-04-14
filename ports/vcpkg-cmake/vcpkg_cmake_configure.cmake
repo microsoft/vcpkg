@@ -325,15 +325,15 @@ function(vcpkg_cmake_configure)
             z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents "../../${TARGET_TRIPLET}-dbg" "dbg")
         endif()
 
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure")
+        file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
         file(WRITE
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja"
+            "${build_dir_release}/vcpkg-parallel-configure/build.ninja"
             "${ninja_configure_contents}")
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND ninja -v
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
+            COMMAND "${NINJA}" -v
+            WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
         )
         
@@ -343,10 +343,9 @@ function(vcpkg_cmake_configure)
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
             message(STATUS "${configuring_message}-dbg")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+                WORKING_DIRECTORY "${build_dir_debug}"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
             vcpkg_list(APPEND config_logs
@@ -356,10 +355,9 @@ function(vcpkg_cmake_configure)
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
             message(STATUS "${configuring_message}-rel")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
-                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+                WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
             vcpkg_list(APPEND config_logs
