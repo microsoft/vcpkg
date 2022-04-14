@@ -3,10 +3,9 @@ vcpkg_from_github(
     REPO apache/orc
     REF acfce62b56047e851e75b4f3212594026766da97  # rel/release-1.7.3
     SHA512 7874751bdd0a84abc6a232e469cdf126937207ea8f974e02e5a57765ac1d9d6c180b80d708c29eb99f84073ae0032a46ea0a09a7ba36cdb900fdbe89d199eba7
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
-        0003-dependencies-from-vcpkg.patch
-        0005-disable-tzdata.patch
+        dependencies-from-vcpkg.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -38,7 +37,6 @@ vcpkg_cmake_configure(
     -DBUILD_LIBHDFSPP=OFF
     -DPROTOBUF_EXECUTABLE:FILEPATH=${PROTOBUF_EXECUTABLE}
     -DSTOP_BUILD_ON_WARNING=OFF
-    -DENABLE_TEST=OFF
 )
 
 vcpkg_cmake_install()
@@ -57,6 +55,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
