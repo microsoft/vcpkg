@@ -23,7 +23,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_LINUX)
     set(any_tracy_tool_requested OFF)
     if(profiler IN_LIST FEATURES)
-        message(
+        message( WARNING
 "Tracy currently requires the following libraries from the system package manager to build its tools:
     gtk+-3.0
     tbb
@@ -33,7 +33,7 @@ These can be installed on Ubuntu systems via sudo apt install libgtk-3-dev libtb
     else()
         foreach(CLI_TOOL capture csvexport import-chrome update)
             if(${CLI_TOOL} IN_LIST FEATURES)
-                message(
+                message( WARNING
 "Tracy currently requires the following libraries from the system package manager to build its tools:
     tbb
 
@@ -49,7 +49,7 @@ endif()
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     foreach(TOOL capture csvexport import-chrome profiler update)
         if(${TOOL} IN_LIST FEATURES)
-            find_program(tracy_MAKE_COMMAND make REQUIRED)
+            find_program(MAKE make REQUIRED)
             break()
         endif()
     endforeach()
