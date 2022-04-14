@@ -3669,8 +3669,8 @@
       "port-version": 1
     },
     "libilbc": {
-      "baseline": "3.0.3",
-      "port-version": 1
+      "baseline": "3.0.4",
+      "port-version": 0
     },
     "libimobiledevice": {
       "baseline": "1.3.17",
@@ -4454,7 +4454,7 @@
     },
     "mesa": {
       "baseline": "21.2.5",
-      "port-version": 3
+      "port-version": 4
     },
     "meschach": {
       "baseline": "1.2b",
@@ -5086,15 +5086,15 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 11
+      "port-version": 12
     },
     "opencv3": {
       "baseline": "3.4.16",
-      "port-version": 6
+      "port-version": 7
     },
     "opencv4": {
       "baseline": "4.5.5",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -5890,7 +5890,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.13.2",
@@ -7305,7 +7305,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2022-02-12",
+      "baseline": "2022-04-11",
       "port-version": 0
     },
     "vcpkg-gfortran": {
