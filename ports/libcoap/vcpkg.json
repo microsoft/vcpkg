@@ -5,6 +5,7 @@
   "homepage": "https://github.com/obgm/libcoap",
   "documentation": "https://libcoap.net",
   "license": "BSD-2-Clause",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
