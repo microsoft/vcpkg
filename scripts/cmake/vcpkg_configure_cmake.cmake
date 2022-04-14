@@ -358,9 +358,9 @@ function(vcpkg_configure_cmake)
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
+        vcpkg_find_acquire_program(NINJA)
         if(NOT DEFINED ninja_path)
             # if ninja_path was defined above, we've already done this
-            vcpkg_find_acquire_program(NINJA)
             get_filename_component(ninja_path "${NINJA}" DIRECTORY)
             vcpkg_add_to_path("${ninja_path}")
         endif()
