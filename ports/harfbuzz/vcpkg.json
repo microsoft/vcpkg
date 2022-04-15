@@ -1,7 +1,6 @@
 {
   "name": "harfbuzz",
   "version-semver": "4.2.0",
-  "port-version": 3,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "dependencies": [
