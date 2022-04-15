@@ -6,6 +6,11 @@ vcpkg_from_git(
     REF 68aba08c48bb428b7b159b3371163f86e8d5a126
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+file(READ "${SOURCE_PATH}/.gn" GN_FILE_CONTENT)
+string(REPLACE "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"" GN_FILE_CONTENT ${GN_FILE_CONTENT})
+file(WRITE "${SOURCE_PATH}/.gn" ${GN_FILE_CONTENT})
+
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
