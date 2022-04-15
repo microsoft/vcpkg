@@ -9,6 +9,7 @@ vcpkg_from_github(
        fix_glog_CMAKE_MODULE_PATH.patch
        fix_log_every_n.patch
        nogdi-nominmax.patch
+       fix_crosscompile_symbolize.patch
 
 )
 
