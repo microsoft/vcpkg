@@ -7,10 +7,6 @@
   "license": null,
   "dependencies": [
     "double-conversion",
-    {
-      "name": "icu",
-      "platform": "!uwp"
-    },
     "openssl",
     "pcre2",
     {
@@ -46,6 +42,15 @@
         "harfbuzz",
         "libjpeg-turbo",
         "libpng"
+      ]
+    },
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        {
+          "name": "icu",
+          "platform": "!uwp"
+        }
       ]
     },
     "latest": {

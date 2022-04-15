@@ -101,7 +101,6 @@ list(APPEND CORE_OPTIONS
     -system-pcre
     -system-doubleconversion
     -system-sqlite
-    -icu
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
@@ -204,19 +203,29 @@ x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
 set(RELEASE_OPTIONS
             "ZLIB_LIBS=${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
-            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "ZLIB_LIBS=${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
-            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+if("icu" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -icu)
+    list(APPEND RELEASE_OPTIONS
+        "ICU_LIBS=${ICU_RELEASE}"
+        "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+    )
+    list(APPEND DEBUG_OPTIONS
+        "ICU_LIBS=${ICU_DEBUG}"
+        "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+    )
+else()
+    list(APPEND CORE_OPTIONS -no-icu)
+endif()
 
 if("gui" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS
