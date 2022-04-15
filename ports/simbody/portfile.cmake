@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_STATIC=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_SHARED=OFF
 )
 
 vcpkg_cmake_install()
