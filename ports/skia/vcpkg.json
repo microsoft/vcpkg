@@ -8,7 +8,7 @@
     "Skia is sponsored and managed by Google, but is available for use by anyone under the BSD Free Software License. While engineering of the core components is done by the Skia development team, we consider contributions from any source."
   ],
   "homepage": "https://skia.org",
-  "supports": "osx | windows",
+  "supports": "osx | windows | linux",
   "dependencies": [
     "expat",
     {
