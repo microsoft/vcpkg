@@ -1,19 +1,22 @@
+vcpkg_fail_port_install(
+    ON_ARCH "x86" "arm" "arm64"
+    ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://skia.googlesource.com/skia.git
-    REF 1a668363fdf0d663c6df3f124e7c10796bc842f0
+    URL https://github.com/google/skia
+    REF 890498e3d73014e81ae15a250e5ed658f1cf11a6
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-file(READ "${SOURCE_PATH}/.gn" GN_FILE_CONTENT)
-string(REPLACE "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"" GN_FILE_CONTENT ${GN_FILE_CONTENT})
-file(WRITE "${SOURCE_PATH}/.gn" ${GN_FILE_CONTENT})
-
-function(checkout_in_path PATH URL REF)
+function(checkout_in_path PATH URL MIRROR_URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
 
+    if(SKIA_USE_MIRROR)
+        set(URL "${MIRROR_URL}")
+    endif()
+    
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
@@ -27,20 +30,26 @@ set(EXTERNALS "${SOURCE_PATH}/third_party/externals")
 file(MAKE_DIRECTORY "${EXTERNALS}")
 
 # these following aren't available in vcpkg
+# to update, visit the DEPS file in Skia's root directory
+# define SKIA_USE_MIRROR in a triplet to use the mirrors
 checkout_in_path("${EXTERNALS}/sfntly"
+    "https://github.com/googlefonts/sfntly"
     "https://github.com/googlefonts/sfntly"
     "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
 )
 checkout_in_path("${EXTERNALS}/dng_sdk"
     "https://android.googlesource.com/platform/external/dng_sdk"
+    "https://gitee.com/mirrors_android_source/dng_sdk"
     "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
 )
 checkout_in_path("${EXTERNALS}/libgifcodec"
     "https://skia.googlesource.com/libgifcodec"
-    "d06d2a6d42baf6c0c91cacc28df2542a911d05fe"
+    "https://gitee.com/mirrors_skia_googlesource/libgifcodec"
+    "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
 )
 checkout_in_path("${EXTERNALS}/piex"
     "https://android.googlesource.com/platform/external/piex"
+    "https://gitee.com/mirrors_android_source/piex"
     "bb217acdca1cc0c16b704669dd6f91a1b509c406"
 )
 
@@ -51,7 +60,7 @@ function(cmake_to_gn_list OUTPUT_ INPUT_)
         set(${OUTPUT_} "[]" PARENT_SCOPE)
     else()
         string(REPLACE ";" "\",\"" TEMP "${INPUT_}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
+        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)    
     endif()
 endfunction()
 
@@ -102,20 +111,15 @@ replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
-replace_skia_dep(libwebp "/include" "webp;webpdemux;webpdecoder;webpmux" "webp;webpdemux;webpdecoder;webpmux" "")
+replace_skia_dep(libwebp "/include" 
+    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd" 
+    "webp;webpdemux;webpdecoder;libwebpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 
 set(OPTIONS "\
 skia_use_lua=false \
 skia_enable_tools=false \
 skia_enable_spirv_validation=false")
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
-endif()
-
-# used for passing feature-specific definitions to the config file
-set(SKIA_PUBLIC_DEFINITIONS "")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPTIONS "${OPTIONS} is_component_build=true")
@@ -125,12 +129,6 @@ endif()
 
 if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
-    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
-endif()
-
-if("opengl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} skia_use_gl=true")
-    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
 endif()
 
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
@@ -171,6 +169,10 @@ if(CMAKE_HOST_WIN32)
 
 endif()
 
+z_vcpkg_install_gn_create_extract_public_config_targets(
+    SOURCE_PATH "${SOURCE_PATH}"
+    TARGETS "extract_skia//:skia")
+
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
@@ -183,11 +185,11 @@ vcpkg_install_gn(
 )
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(COPY "${SOURCE_PATH}/include"
+file(COPY "${SOURCE_PATH}/include" 
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" 
     "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false
+file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false 
     "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
 foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
@@ -195,31 +197,45 @@ endforeach()
 
 # get a list of library dependencies for TARGET
 function(gn_desc_target_libs OUTPUT BUILD_DIR TARGET)
-    vcpkg_find_acquire_program(GN)
-    execute_process(
-        COMMAND ${GN} desc "${BUILD_DIR}" "${TARGET}" libs
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        OUTPUT_VARIABLE OUTPUT_
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    string(REGEX REPLACE "\n|(\r\n)" ";" OUTPUT_ "${OUTPUT_}")
+    z_vcpkg_install_gn_get_desc("${OUTPUT}"
+        SOURCE_PATH "${SOURCE_PATH}"
+        BUILD_DIR "${BUILD_DIR}"
+        TARGET "${TARGET}"
+        WHAT_TO_DISPLAY libs)
+endfunction()
+
+function(gn_desc_target_defines OUTPUT BUILD_DIR TARGET)
+    z_vcpkg_install_gn_get_desc(OUTPUT_
+        SOURCE_PATH "${SOURCE_PATH}"
+        BUILD_DIR "${BUILD_DIR}"
+        TARGET "${TARGET}"
+        WHAT_TO_DISPLAY defines)
+    # exclude system defines such as _HAS_EXCEPTIONS=0
+    list(FILTER OUTPUT_ EXCLUDE REGEX "^_")
     set(${OUTPUT} ${OUTPUT_} PARENT_SCOPE)
 endfunction()
 
 # skiaConfig.cmake.in input variables
-gn_desc_target_libs(SKIA_DEP_DBG
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-    //:skia)
-gn_desc_target_libs(SKIA_DEP_REL
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-    //:skia)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    gn_desc_target_libs(SKIA_DEP_DBG
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        //:skia)
+    gn_desc_target_defines(SKIA_DEFINITIONS_DBG
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        //extract_public_config:extract_skia)
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    gn_desc_target_libs(SKIA_DEP_REL
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        //:skia)
+    gn_desc_target_defines(SKIA_DEFINITIONS_REL
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        //extract_public_config:extract_skia)
+endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/skia/skiaConfig.cmake" @ONLY)
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/skia")
-vcpkg_cmake_config_fixup()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/LICENSE"
