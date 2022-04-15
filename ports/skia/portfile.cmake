@@ -1,12 +1,13 @@
-vcpkg_fail_port_install(
-    ON_ARCH "x86" "arm" "arm64"
-    ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD")
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/google/skia
-    REF 890498e3d73014e81ae15a250e5ed658f1cf11a6
+    REF 3aa7f602018816ab3f009f1b8d359ccde752e1de
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+file(READ "${SOURCE_PATH}/.gn" GN_FILE_CONTENT)
+string(REPLACE "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"" GN_FILE_CONTENT ${GN_FILE_CONTENT})
+file(WRITE "${SOURCE_PATH}/.gn" ${GN_FILE_CONTENT})
 
 function(checkout_in_path PATH URL MIRROR_URL REF)
     if(EXISTS "${PATH}")
@@ -107,7 +108,7 @@ set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
 
 replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD" "libexpat,libexpatMD" "")
 replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
-replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
+replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz;harfbuzz-subset" "harfbuzz;harfbuzz-subset" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
@@ -169,9 +170,9 @@ if(CMAKE_HOST_WIN32)
 
 endif()
 
-z_vcpkg_install_gn_create_extract_public_config_targets(
-    SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS "extract_skia//:skia")
+#z_vcpkg_install_gn_create_extract_public_config_targets(
+#    SOURCE_PATH "${SOURCE_PATH}"
+#    TARGETS "extract_skia//:skia")
 
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -237,7 +238,7 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/skia/skiaConfig.cmake" @ONLY)
 
-vcpkg_copy_pdbs()
+#vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)
