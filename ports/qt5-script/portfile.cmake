@@ -1,2 +1,10 @@
+vcpkg_list(SET OPTIONS)
+if(NOT "gui" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS "QT.widgets.name=")
+endif()
+if(NOT "svg" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS "QT.svg.name=")
+endif()
+
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
-qt_submodule_installation()
+qt_submodule_installation(OPTIONS ${OPTIONS})

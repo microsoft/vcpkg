@@ -1,6 +1,7 @@
 {
   "name": "qt5-tools",
   "version": "5.15.5",
+  "port-version": 1,
   "description": "Qt5 Tools Module; Includes deployment tools and helpers, Qt Designer, Assistant, and other applications",
   "license": null,
   "dependencies": [
@@ -11,7 +12,27 @@
     {
       "name": "qt5-base",
       "default-features": false
-    },
-    "qt5-declarative"
-  ]
+    }
+  ],
+  "default-features": [
+    "gui"
+  ],
+  "features": {
+    "gui": {
+      "description": "Build GUI libs and tools",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qt5-declarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

@@ -1,6 +1,7 @@
 {
   "name": "qt5-translations",
   "version": "5.15.5",
+  "port-version": 1,
   "description": "Qt5 translations module",
   "license": null,
   "dependencies": [
@@ -8,6 +9,10 @@
       "name": "qt5-base",
       "default-features": false
     },
-    "qt5-tools"
+    {
+      "name": "qt5-tools",
+      "host": true,
+      "default-features": false
+    }
   ]
 }
