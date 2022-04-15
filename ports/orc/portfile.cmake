@@ -24,14 +24,20 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(BUILD_TOOLS OFF)
+  # when cross compiling, we can't run their test. however:
+  #  - Windows doesn't support time_t < 0 => HAS_PRE_1970 test returns false
+  #  - Windows doesn't support setenv => HAS_POST_2038 test fails to compile
+  set(time_t_checks "-DHAS_PRE_1970=OFF" "-DHAS_POST_2038=OFF")
 else()
   set(BUILD_TOOLS ON)
+  set(time_t_checks "")
 endif()
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
+    ${time_t_checks}
     -DBUILD_TOOLS=${BUILD_TOOLS}
     -DBUILD_CPP_TESTS=OFF
     -DBUILD_JAVA=OFF
@@ -40,6 +46,8 @@ vcpkg_configure_cmake(
     -DPROTOBUF_EXECUTABLE:FILEPATH=${PROTOBUF_EXECUTABLE}
     -DSTOP_BUILD_ON_WARNING=OFF
     -DENABLE_TEST=OFF
+  MAYBE_UNUSED_VARIABLES
+    ENABLE_TEST
 )
 
 vcpkg_install_cmake()
