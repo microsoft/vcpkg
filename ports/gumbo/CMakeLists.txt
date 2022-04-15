@@ -41,7 +41,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/unofficial-gumboTargets.cmake")
 ]])
 
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake" @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake DESTINATION share/unofficial-gumbo)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake DESTINATION unofficial-gumbo)
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES  src/gumbo.h src/tag_enum.h DESTINATION include)
