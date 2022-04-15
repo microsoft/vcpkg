@@ -1669,7 +1669,7 @@
       "port-version": 1
     },
     "crashpad": {
-      "baseline": "2020-03-18",
+      "baseline": "2022-04-16",
       "port-version": 2
     },
     "crashrpt": {
