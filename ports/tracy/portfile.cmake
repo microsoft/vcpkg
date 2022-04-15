@@ -46,6 +46,14 @@ These can be installed on Ubuntu systems via sudo apt install libtbb-dev")
 
 endif()
 
+vcpkg_list(SET tracy_tools)
+if("cli-tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND tracy_tools capture csvexport import-chrome update)
+endif()
+if("gui-tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND tracy_tools profiler)
+endif()
+
 function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
@@ -82,7 +90,7 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
     endforeach()
 endfunction()
 
-if("capture" IN_LIST FEATURES)
+if("capture" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_PATH}"
@@ -94,7 +102,7 @@ if("capture" IN_LIST FEATURES)
     endif()
 endif()
 
-if("csvexport" IN_LIST FEATURES)
+if("csvexport" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_PATH}"
@@ -106,7 +114,7 @@ if("csvexport" IN_LIST FEATURES)
     endif()
 endif()
 
-if("import-chrome" IN_LIST FEATURES)
+if("import-chrome" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_PATH}"
@@ -118,7 +126,7 @@ if("import-chrome" IN_LIST FEATURES)
     endif()
 endif()
 
-if("profiler" IN_LIST FEATURES)
+if("profiler" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_PATH}"
@@ -130,7 +138,7 @@ if("profiler" IN_LIST FEATURES)
     endif()
 endif()
 
-if("update" IN_LIST FEATURES)
+if("update" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_install_msbuild(
             SOURCE_PATH "${SOURCE_PATH}"
@@ -147,7 +155,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
 
 foreach(TOOL capture csvexport import-chrome profiler update)
-    if(${TOOL} IN_LIST FEATURES)
+    if(${TOOL} IN_LIST tracy_tools)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
         endif()

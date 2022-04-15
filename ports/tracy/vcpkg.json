@@ -21,8 +21,8 @@
     }
   ],
   "features": {
-    "capture": {
-      "description": "Build Tracy tool `capture`",
+    "cli-tools": {
+      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome` and `update`",
       "supports": "!(windows & x86)",
       "dependencies": [
         {
@@ -35,36 +35,8 @@
         }
       ]
     },
-    "csvexport": {
-      "description": "Build Tracy tool `csvexport`",
-      "supports": "!(windows & x86)",
-      "dependencies": [
-        {
-          "name": "capstone",
-          "features": [
-            "arm",
-            "arm64",
-            "x86"
-          ]
-        }
-      ]
-    },
-    "import-chrome": {
-      "description": "Build Tracy tool `import-chrome`",
-      "supports": "!(windows & x86)",
-      "dependencies": [
-        {
-          "name": "capstone",
-          "features": [
-            "arm",
-            "arm64",
-            "x86"
-          ]
-        }
-      ]
-    },
-    "profiler": {
-      "description": "Build Tracy tool `profiler` (aka `Tracy` executable)",
+    "gui-tools": {
+      "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
       "supports": "!(windows & x86)",
       "dependencies": [
         {
@@ -77,20 +49,6 @@
         },
         "freetype",
         "glfw3"
-      ]
-    },
-    "update": {
-      "description": "Build Tracy tool `update`",
-      "supports": "!(windows & x86)",
-      "dependencies": [
-        {
-          "name": "capstone",
-          "features": [
-            "arm",
-            "arm64",
-            "x86"
-          ]
-        }
       ]
     }
   }
