@@ -253,7 +253,7 @@ else() # VCPKG_TARGET_IS_WINDOWS
         OPTIONS
             /p:UseVcpkg=yes
             /p:IceBuildingSrc=yes
-	          ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+	        ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

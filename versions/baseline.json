@@ -7658,7 +7658,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.7",
-      "port-version": 0
+      "port-version": 1
     },
     "zeromq": {
       "baseline": "4.3.4",
