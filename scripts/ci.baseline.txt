@@ -215,6 +215,7 @@ devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip
+directxsdk:x64-windows-static-md=skip
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
