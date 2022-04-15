@@ -6370,7 +6370,7 @@
     },
     "sdl2": {
       "baseline": "2.0.20",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -6378,7 +6378,7 @@
     },
     "sdl2-image": {
       "baseline": "2.0.5",
-      "port-version": 4
+      "port-version": 5
     },
     "sdl2-mixer": {
       "baseline": "2.0.4",
