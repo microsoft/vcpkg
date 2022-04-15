@@ -1,6 +1,7 @@
 {
   "name": "qtinterfaceframework",
   "version": "6.2.4",
+  "port-version": 2,
   "description": "Qt Interface Framework",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -30,6 +31,11 @@
       "name": "qttools",
       "default-features": false
     },
-    "taglib"
+    "taglib",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true,
+      "default-features": false
+    }
   ]
 }
