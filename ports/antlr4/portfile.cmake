@@ -22,7 +22,6 @@ vcpkg_extract_source_archive_ex(
         fixed_build.patch
         uuid_discovery_fix.patch
         export_guid.patch
-        fix_utfcpp_dependency.patch
 )
 
 vcpkg_cmake_configure(
@@ -38,45 +37,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME antlr4-generator CONFIG_PATH lib/cmake/ant
 vcpkg_cmake_config_fixup(PACKAGE_NAME antlr4-runtime CONFIG_PATH lib/cmake/antlr4-runtime)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime-static.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime-static.lib"
-        )
-
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.dll" "${CURRENT_PACKAGES_DIR}/bin/antlr4-runtime.dll")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/antlr4-runtime.dll")
-    else()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.lib"
-                    "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.dll"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.lib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.dll"
-        )
-
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime-static.lib" "${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.lib")
-    endif()
-else()
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.a"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.a"
-        )
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.so"
-                    "${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.so.${VERSION}"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.so"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.so.${VERSION}"
-        )
-    else()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.dylib"
-                    "${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.${VERSION}.dylib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.dylib"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.${VERSION}.dylib"
-        )
-    endif()
-endif()
 
 vcpkg_copy_pdbs()
 
