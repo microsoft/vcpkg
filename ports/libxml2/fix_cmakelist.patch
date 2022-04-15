@@ -102,7 +102,7 @@ index 2653a7c5..2eb2f362 100644
  Requires:
 -Libs: -L${libdir} -lxml2
 -Libs.private: @ICU_LIBS@ @THREAD_LIBS@ @Z_LIBS@ @LZMA_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
-++Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
-++Libs: -L${libdir} -l@XML_LIB_NAME@
-++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
++Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
++Libs: -L${libdir} -l@XML_LIB_NAME@
++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
  Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@
