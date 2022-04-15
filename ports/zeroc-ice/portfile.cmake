@@ -248,12 +248,12 @@ else() # VCPKG_TARGET_IS_WINDOWS
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
         SKIP_CLEAN
-	      TARGET "C++11\\ice++11"
+        TARGET "C++11\\ice++11"
         USE_VCPKG_INTEGRATION
         OPTIONS
             /p:UseVcpkg=yes
             /p:IceBuildingSrc=yes
-	        ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
+            ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
