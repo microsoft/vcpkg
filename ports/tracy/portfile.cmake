@@ -46,15 +46,6 @@ These can be installed on Ubuntu systems via sudo apt install libtbb-dev")
 
 endif()
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    foreach(TOOL capture csvexport import-chrome profiler update)
-        if(${TOOL} IN_LIST FEATURES)
-            find_program(MAKE make REQUIRED)
-            break()
-        endif()
-    endforeach()
-endif()
-
 function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
