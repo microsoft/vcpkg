@@ -19,7 +19,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 endif()
 
 if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-    set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
+    set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}" CACHE STRING "" FORCE)
 endif()
 
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
@@ -29,12 +29,12 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         # any of the four platforms can run x86 binaries
         set(CMAKE_CROSSCOMPILING OFF CACHE STRING "")
     elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "ARM64")
-        # arm64 can run binaries of any of the four platforms
+        # arm64 can run binaries of any of the four platforms after Windows 11
         set(CMAKE_CROSSCOMPILING OFF CACHE STRING "")
     endif()
 
     if(NOT DEFINED CMAKE_SYSTEM_VERSION)
-        set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}")
+        set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
     endif()
 endif()
 

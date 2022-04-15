@@ -9,7 +9,9 @@
       "name": "corrade",
       "host": true,
       "default-features": false,
-      "features": [ "utility" ]
+      "features": [
+        "utility"
+      ]
     }
   ],
   "default-features": [

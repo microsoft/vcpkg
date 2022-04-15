@@ -70,7 +70,7 @@
     },
     "ampl-mp": {
       "baseline": "2020-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "amqpcpp": {
       "baseline": "4.3.15",
@@ -1218,7 +1218,7 @@
     },
     "caf": {
       "baseline": "0.18.5",
-      "port-version": 0
+      "port-version": 1
     },
     "caffe2": {
       "baseline": "0.8.1",
@@ -1546,7 +1546,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 3
+      "port-version": 4
     },
     "cpp-base64": {
       "baseline": "V2.rc.08",
@@ -2246,7 +2246,7 @@
     },
     "fltk": {
       "baseline": "1.3.8",
-      "port-version": 1
+      "port-version": 2
     },
     "fluidlite": {
       "baseline": "2020-08-27",
@@ -2394,7 +2394,7 @@
     },
     "gainput": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "gamedev-framework": {
       "baseline": "0.20.0",
@@ -4390,7 +4390,7 @@
     },
     "mapnik": {
       "baseline": "2022-01-28",
-      "port-version": 1
+      "port-version": 2
     },
     "marble": {
       "baseline": "19.08.2",
@@ -5222,7 +5222,7 @@
     },
     "orc": {
       "baseline": "1.6.4",
-      "port-version": 2
+      "port-version": 3
     },
     "orocos-kdl": {
       "baseline": "1.4",
