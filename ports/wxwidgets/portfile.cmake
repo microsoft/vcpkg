@@ -15,11 +15,14 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING [[
-Port wxwidgets currently requires the following libraries from the system package manager:
+Port wxwidgets currently requires the following packages from the system package manager:
+    pkg-config
     GTK 3
     libsecret
-These can be installed on Ubuntu systems via
-    sudo apt-get install libgtk-3-dev libsecret-1-dev
+    libgcrypt
+    libsystemd
+These development packages can be installed on Ubuntu systems via
+    sudo apt-get install pkg-config libgtk-3-dev libsecret-1-dev libgcrypt20-dev libsystemd-dev
 ]])
     foreach(conflicting_port IN ITEMS freetype glib)
         if(EXISTS "${CURRENT_INSTALLED_DIR}/share/${conflicting_port}/copyright")
