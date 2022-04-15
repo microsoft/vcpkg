@@ -549,18 +549,35 @@ function(vcpkg_find_acquire_program program)
         elseif(CMAKE_HOST_WIN32)
             if(NOT EXISTS "${PKGCONFIG}")
                 set(VERSION 0.29.2-3)
-                set(program_version git-9.0.0.6373.5be8fcd83-1)
-                vcpkg_acquire_msys(
-                    PKGCONFIG_ROOT
-                    NO_DEFAULT_PACKAGES
-                    DIRECT_PACKAGES
-                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
-                        0c086bf306b6a18988cc982b3c3828c4d922a1b60fd24e17c3bead4e296ee6de48ce148bc6f9214af98be6a86cb39c37003d2dcb6561800fdf7d0d1028cf73a4
-                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${program_version}-any.pkg.tar.zst"
-                        c89c27b5afe4cf5fdaaa354544f070c45ace5e9d2f2ebb4b956a148f61681f050e67976894e6f52e42e708dadbf730fee176ac9add3c9864c21249034c342810
-                )
+                set(program_version git-10.0.0.r0.gaa08f56da-1)
+                if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
+                    vcpkg_acquire_msys(
+                        PKGCONFIG_ROOT
+                        NO_DEFAULT_PACKAGES
+                        DIRECT_PACKAGES
+                            "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-pkg-config-${VERSION}-any.pkg.tar.zst"
+                            a143a095426642988e9a81728ab76754bb86a7fa8cd45bb923c5b1e7767ebb25617010034bd1c4ef9f929fc377104d022ee4cd01a53715bdd469a74c1f580727
+                            "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libwinpthread-${program_version}-any.pkg.tar.zst"
+                            2bcae999e344f7d868a552375a8763cdd1b0e0f6db6600e8d83da06abb6402ca1b80fef0978d6f33d934f31e0ea5975f022a94dc7a9837ea6fba173dc51b8775
+                    )
+                else()
+                    vcpkg_acquire_msys(
+                        PKGCONFIG_ROOT
+                        NO_DEFAULT_PACKAGES
+                        DIRECT_PACKAGES
+                            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
+                            0c086bf306b6a18988cc982b3c3828c4d922a1b60fd24e17c3bead4e296ee6de48ce148bc6f9214af98be6a86cb39c37003d2dcb6561800fdf7d0d1028cf73a4
+                            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${program_version}-any.pkg.tar.zst"
+                            a4dc282f8da68c9064b186ffc33e07d6c9b079130eb6cbd69039ddf3f6adc05e7f7a7a396584df257693c9db83178eae209b143a3e211cb9b904d829b698805d
+                    )
+                endif()
             endif()
-            set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
+            if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
+              set(mingw_path mingw64)
+            else()
+              set(mingw_path mingw32)
+            endif()
+            set("${program}" "${PKGCONFIG_ROOT}/${mingw_path}/bin/pkg-config.exe" CACHE INTERNAL "")
             set("${program}" "${${program}}" PARENT_SCOPE)
             return()
         else()
