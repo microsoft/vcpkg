@@ -1,6 +1,6 @@
 {
   "name": "gumbo",
-  "version-string": "0.10.1",
+  "version": "0.10.1",
   "port-version": 5,
   "description": "An HTML5 parsing library in pure C99",
   "homepage": "https://github.com/google/gumbo-parser",
