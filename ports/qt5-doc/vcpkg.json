@@ -1,16 +1,7 @@
 {
   "name": "qt5-doc",
   "version": "5.15.5",
-  "description": "Qt5 doc Module;",
-  "license": null,
-  "supports": "linux",
-  "dependencies": [
-    {
-      "name": "qt5-base",
-      "default-features": false
-    },
-    "qt5-declarative",
-    "qt5-quickcontrols2",
-    "qt5-tools"
-  ]
+  "port-version": 1,
+  "description": "This port doesn't create any artifacts",
+  "license": null
 }
