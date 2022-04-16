@@ -7009,8 +7009,8 @@
       "port-version": 2
     },
     "tinyspline": {
-      "baseline": "0.3.0",
-      "port-version": 1
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "tinythread": {
       "baseline": "1.1",
