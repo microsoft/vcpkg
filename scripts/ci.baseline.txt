@@ -994,9 +994,6 @@ popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
-python2:arm64-windows=fail
-python2:arm-uwp=fail
-python2:x64-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
