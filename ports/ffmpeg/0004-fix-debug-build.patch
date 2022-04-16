@@ -17,12 +17,14 @@ index bd2de34..fba948a 100755
  enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
                     check_lib zlib   zlib.h      zlibVersion    -lz; }
 -enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2
+-enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
 +if enabled debug_configure; then
 +    enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2d
++    enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzmad
 +else
 +    enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2
++    enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
 +fi
- enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
  
  enabled zlib && test_exec $zlib_extralibs <<EOF && enable zlib_gzip
  #include <zlib.h>
