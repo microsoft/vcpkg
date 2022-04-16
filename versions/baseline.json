@@ -1957,8 +1957,8 @@
       "port-version": 1
     },
     "duckx": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.2.2",
+      "port-version": 0
     },
     "duilib": {
       "baseline": "2019-04-28",
