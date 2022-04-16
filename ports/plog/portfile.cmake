@@ -7,12 +7,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/plog")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/plog/LICENSE" "${CURRENT_PACKAGES_DIR}/share/plog/copyright")
-
 # Copy header files
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}" FILES_MATCHING PATTERN "*.h")
 
 # Copy usage file
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# Put the licence file where vcpkg expects it
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
