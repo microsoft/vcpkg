@@ -8,6 +8,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -27,11 +29,6 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(READ "${SOURCE_PATH}/src/console.cpp" _contents)
-string(SUBSTRING "${_contents}" 0 2000 license)
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/console-bridge")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/console-bridge/copyright" "${license}")
-
 file(READ "${CURRENT_PACKAGES_DIR}/include/console_bridge/console_bridge_export.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     string(REPLACE "ifdef CONSOLE_BRIDGE_STATIC_DEFINE" "if 1" _contents "${_contents}")
@@ -39,3 +36,5 @@ else()
     string(REPLACE "ifdef CONSOLE_BRIDGE_STATIC_DEFINE" "if 0" _contents "${_contents}")
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/console_bridge/console_bridge_export.h" "${_contents}")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
