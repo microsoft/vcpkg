@@ -1,8 +1,8 @@
 {
   "name": "libspnav",
-  "version": "0.2.3",
-  "port-version": 2,
+  "version": "1.0",
   "description": "Library for communicating with spacenavd or 3dxsrv to get input from 6-dof devices.",
   "homepage": "https://github.com/FreeSpacenav/libspnav",
+  "license": "BSD-3-Clause",
   "supports": "linux"
 }
