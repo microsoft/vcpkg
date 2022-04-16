@@ -5449,8 +5449,8 @@
       "port-version": 6
     },
     "plog": {
-      "baseline": "1.1.5",
-      "port-version": 1
+      "baseline": "1.1.6",
+      "port-version": 0
     },
     "plplot": {
       "baseline": "5.13.0",
