@@ -4,5 +4,5 @@
   "port-version": 2,
   "description": "public domain header-only libraries",
   "homepage": "https://github.com/nothings/stb",
-  "license": "MIT OR public-domain"
+  "license": "MIT OR CC-PDDC"
 }
