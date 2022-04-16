@@ -20,6 +20,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/volk)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Put the file containing the license where vcpkg expects it
-file(COPY "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/volk/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/volk/README.md" "${CURRENT_PACKAGES_DIR}/share/volk/copyright")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
