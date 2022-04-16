@@ -4021,8 +4021,8 @@
       "port-version": 4
     },
     "libspnav": {
-      "baseline": "0.2.3",
-      "port-version": 2
+      "baseline": "1.0",
+      "port-version": 0
     },
     "libsquish": {
       "baseline": "1.15",
