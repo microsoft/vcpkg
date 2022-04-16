@@ -3,7 +3,7 @@
   "version-semver": "9.0.0",
   "description": "A simple, small, efficient, C++ XML parser",
   "homepage": "https://github.com/leethomason/tinyxml2",
-  "license": "zlib",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
