@@ -7,4 +7,3 @@ vcpkg_from_github(
 )
 file(INSTALL "${SOURCE_PATH}/tinydir.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/tinydir" RENAME copyright)
-vcpkg_copy_pdbs()
