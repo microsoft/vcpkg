@@ -132,6 +132,10 @@ if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
+endif()
+
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
 
@@ -169,10 +173,6 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} win_vc=\"${WIN_VC}\"")
 
 endif()
-
-#z_vcpkg_install_gn_create_extract_public_config_targets(
-#    SOURCE_PATH "${SOURCE_PATH}"
-#    TARGETS "extract_skia//:skia")
 
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -238,7 +238,6 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/skia/skiaConfig.cmake" @ONLY)
 
-#vcpkg_copy_pdbs()
 file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)
