@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stachenov/quazip
-    REF v1.2
-    SHA512 3f4b1a4194ca286163b1c17880ea471a341dcc05d758ee8f3d1e540d0f6aed7ac18200450187034c46b4fab1da39111dca534d75859701259406a6dd50205386
+    REF v1.3
+    SHA512 3861a9084059576ff2690e8b911394b0286a60542ab021a4cc588537a60ea3a186ed7903c76544698001fa383dfd0de96bdfed433abaefc44158d3b30ab16fe2
 )
 
 vcpkg_cmake_configure(
@@ -10,7 +10,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt5-1.2)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt5-1.3)
 vcpkg_copy_pdbs()
 if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
