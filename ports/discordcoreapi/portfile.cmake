@@ -5,10 +5,9 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF 6d7c899f0690513855119aa225259dccf17b10f0
-	SHA512 ff42ed8ae799b8f875158842c47fcb5612a5b8861dbfb442c97ab131d952ed59140b2d2431a0d389aefbecb122263f340ff9c8fb863466d0aa91875f8080616e
+	REF 70af08ec8e7d6c2fe58719a1d158a84eb5668cc4
+	SHA512 40fee1f889b38ecf3fd29ad6f80e37199871adc6dbc423e4fa7555b5f41887535911e5eabf130de04a001c2c7e2ce0b3e9ce59f01b2db138be91f0f2c794db4d
 	HEAD_REF main
-    PATCHES fix-cert-installation.patch
 )
 
 vcpkg_cmake_configure(
@@ -30,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(
-	INSTALL "${SOURCE_PATH}/License"
+	INSTALL "${SOURCE_PATH}/License.md"
 	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 	RENAME copyright
 )
