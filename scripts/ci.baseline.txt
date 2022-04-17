@@ -52,6 +52,15 @@ aubio:arm-uwp=fail
 aubio:x64-uwp=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
+bext-ut:arm64-windows=fail
+bext-ut:arm-uwp=fail
+bext-ut:x64-linux=fail
+bext-ut:x64-osx=fail
+bext-ut:x64-uwp=fail
+bext-ut:x64-windows=fail
+bext-ut:x64-windows-static=fail
+bext-ut:x64-windows-static-md=fail
+bext-ut:x86-windows=fail
 bitserializer:x64-osx=fail
 blitz:x64-uwp=fail
 blitz:arm64-windows=fail
