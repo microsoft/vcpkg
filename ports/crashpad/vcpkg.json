@@ -9,6 +9,10 @@
   "homepage": "https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md",
   "supports": "osx | windows",
   "dependencies": [
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    },
     "zlib"
   ]
 }

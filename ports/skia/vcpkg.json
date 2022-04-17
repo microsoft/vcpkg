@@ -29,6 +29,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
