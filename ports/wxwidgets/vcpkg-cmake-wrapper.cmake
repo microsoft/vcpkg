@@ -7,11 +7,16 @@ set(wxWidgets_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 set(WX_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 unset(_vcpkg_wx_root)
 
-if(MINGW AND NOT CMAKE_CROSSCOMPILING)
+if(MINGW)
     # Force FindwxWidgets.cmake unix mode, matching mingw install layout
-    set(_vcpkg_wxwidgets_fake_crosscompiling 1)
+    set(_vcpkg_wxwidgets_backup_crosscompiling "${CMAKE_CROSSCOMPILING}")
     set(CMAKE_CROSSCOMPILING 1)
+elseif(WIN32)
+    # Force FindwxWidgets.cmake win32 mode, matching win32 install layout
+    set(_vcpkg_wxwidgets_backup_crosscompiling "${CMAKE_CROSSCOMPILING}")
+    set(CMAKE_CROSSCOMPILING 0)
 endif()
+
 if(WIN32 AND NOT CMAKE_CROSSCOMPILING)
     # FindwxWidgets.cmake win32 mode, multi-config
     # Get cache variables for debug libs
@@ -42,12 +47,12 @@ set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 
 _find_package(${ARGS})
 
-if(MINGW)
-    if(_vcpkg_wxwidgets_fake_crosscompiling)
-        unset(CMAKE_CROSSCOMPILING)
-        unset(_vcpkg_wxwidgets_fake_crosscompiling)
-    endif()
-elseif(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
+    set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")
+    unset(_vcpkg_wxwidgets_backup_crosscompiling)
+endif()
+
+if(WIN32 AND NOT MINGW AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     find_package(EXPAT QUIET)
     find_package(JPEG QUIET)
     find_package(PNG QUIET)
