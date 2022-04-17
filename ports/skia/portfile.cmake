@@ -116,6 +116,9 @@ replace_skia_dep(libwebp "/include"
     "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;webpmux,webpmuxd" 
     "webp;webpdemux;webpdecoder;webpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
+if(CMAKE_HOST_UNIX)
+     replace_skia_dep(fontconfig "/include" "fontconfig" "fontconfig" "")
+ endif()
 
 set(OPTIONS "\
 skia_use_lua=false \

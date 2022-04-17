@@ -9,9 +9,10 @@
   ],
   "homepage": "https://skia.org",
   "license": "BSD-3-Clause",
-  "supports": "(osx | windows) & !(windows & x86)",
+  "supports": "(osx | windows | linux) & !(windows & x86)",
   "dependencies": [
     "expat",
+    "fontconfig",
     {
       "name": "freetype",
       "default-features": false
