@@ -41,7 +41,6 @@ vcpkg_from_github(
         cmake.patch
         fix-export-targets.patch
         pkgconfig.patch
-        pkgconfig.2.patch
         "${LIBPNG_APNG_PATCH_PATH}"
         macos-arch-fix.patch
 )
@@ -71,7 +70,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DPNG_MAN_DIR=share/${PORT}/man
         ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
         ${LD_VERSION_SCRIPT_OPTION}
@@ -87,61 +85,21 @@ vcpkg_cmake_configure(
         PNG_ARM_NEON
 )
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/libpng)
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc")
-if(EXISTS ${_file})
-    file(READ "${_file}" _contents)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        string(REGEX REPLACE "-lpng16(d)?" "-llibpng16d" _contents "${_contents}")
-    else()
-        string(REGEX REPLACE "-lpng16(d)?" "-lpng16d" _contents "${_contents}")
+
+vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc" "-lpng16" "-llibpng16d")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" RENAME "libpng.pc")
     endif()
-    if(VCPKG_TARGET_IS_MINGW)
-        string(REPLACE "-lz" "-lzlibd" _contents "${_contents}")
-    else()
-        string(REPLACE "-lzlib" "-lzlibd" _contents "${_contents}")
-    endif()
-    file(WRITE "${_file}" "${_contents}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc" "-lpng16" "-llibpng16")
+elseif(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc" "-lpng16" "-lpng16d")
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng16.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" RENAME "libpng.pc")
 endif()
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpng.pc")
-if(EXISTS ${_file})
-    file(READ "${_file}" _contents)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        string(REGEX REPLACE "-lpng16(d)?" "-llibpng16d" _contents "${_contents}")
-    else()
-        string(REGEX REPLACE "-lpng16(d)?" "-lpng16d" _contents "${_contents}")
-    endif()
-    if(VCPKG_TARGET_IS_MINGW)
-        string(REPLACE "-lz" "-lzlibd" _contents "${_contents}")
-    else()
-        string(REPLACE "-lzlib" "-lzlibd" _contents "${_contents}")
-    endif()
-    file(WRITE "${_file}" "${_contents}")
-endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc")
-    if(EXISTS ${_file})
-        file(READ "${_file}" _contents)
-        string(REPLACE "-lpng16" "-llibpng16" _contents "${_contents}")
-        if(VCPKG_TARGET_IS_MINGW)
-            string(REPLACE "-lz" "-lzlib" _contents "${_contents}")
-        endif()
-        file(WRITE "${_file}" "${_contents}")
-    endif()
-    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng.pc")
-    if(EXISTS ${_file})
-        file(READ "${_file}" _contents)
-        string(REPLACE "-lpng16" "-llibpng16" _contents "${_contents}")
-        if(VCPKG_TARGET_IS_MINGW)
-            string(REPLACE "-lz" "-lzlib" _contents "${_contents}")
-        endif()
-        file(WRITE "${_file}" "${_contents}")
-    endif()
-endif()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" RENAME "libpng.pc")
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools" "${CURRENT_PACKAGES_DIR}/debug/tools")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
