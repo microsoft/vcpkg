@@ -1,7 +1,8 @@
 set(LIBPNG_VER 1.6.37)
 
 # Download the apng patch
-set(LIBPNG_APNG_OPTION )
+set(LIBPNG_APNG_PATCH_PATH "")
+set(LIBPNG_APNG_OPTION "")
 if ("apng" IN_LIST FEATURES)
     if(VCPKG_HOST_IS_WINDOWS)
         # Get (g)awk installed
@@ -10,25 +11,24 @@ if ("apng" IN_LIST FEATURES)
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
     
-    set(LIBPNG_APG_PATCH_NAME libpng-${LIBPNG_VER}-apng.patch)
-    set(LIBPNG_APG_PATCH_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APG_PATCH_NAME})
-    if (NOT EXISTS ${LIBPNG_APG_PATCH_PATH})
-        if (NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src)
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src)
+    set(LIBPNG_APNG_PATCH_NAME "libpng-${LIBPNG_VER}-apng.patch")
+    set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
+    if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
+        if (NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src")
+            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src")
         endif()
         vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
-            URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APG_PATCH_NAME}.gz"
-            FILENAME "${LIBPNG_APG_PATCH_NAME}.gz"
+            URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APNG_PATCH_NAME}.gz"
+            FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
             SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
         )
         vcpkg_find_acquire_program(7Z)
         vcpkg_execute_required_process(
-            COMMAND ${7Z} x ${LIBPNG_APNG_PATCH_ARCHIVE} -aoa
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
+            COMMAND "${7Z}" x "${LIBPNG_APNG_PATCH_ARCHIVE}" -aoa
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src"
             LOGNAME extract-patch.log
         )
     endif()
-    set(APNG_EXTRA_PATCH ${LIBPNG_APG_PATCH_PATH})
     set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
 endif()
 
@@ -43,7 +43,7 @@ vcpkg_from_github(
         cmake.patch
         pkgconfig.patch
         pkgconfig.2.patch
-        ${APNG_EXTRA_PATCH}
+        "${LIBPNG_APNG_PATCH_PATH}"
         fix-export-targets.patch
         macos-arch-fix.patch
 )
