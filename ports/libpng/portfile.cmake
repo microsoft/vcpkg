@@ -39,10 +39,10 @@ vcpkg_from_github(
     PATCHES
         use_abort.patch
         cmake.patch
+        fix-export-targets.patch
         pkgconfig.patch
         pkgconfig.2.patch
         "${LIBPNG_APNG_PATCH_PATH}"
-        fix-export-targets.patch
         macos-arch-fix.patch
 )
 
