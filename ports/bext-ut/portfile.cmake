@@ -17,8 +17,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ut CONFIG_PATH lib/cmake/ut-1.1.8)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/{PORT}" RENAME copyright)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug"
                     "${CURRENT_PACKAGES_DIR}/lib"
 )
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/{PORT}" RENAME copyright)
