@@ -61,7 +61,7 @@ function(cmake_to_gn_list OUTPUT_ INPUT_)
         set(${OUTPUT_} "[]" PARENT_SCOPE)
     else()
         string(REPLACE ";" "\",\"" TEMP "${INPUT_}")
-        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)    
+        set(${OUTPUT_} "[\"${TEMP}\"]" PARENT_SCOPE)
     endif()
 endfunction()
 
@@ -113,8 +113,8 @@ replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0"
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
 replace_skia_dep(libwebp "/include" 
-    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd,webpmux,webpmuxd" 
-    "webp;webpdemux;webpdecoder;libwebpmux,webpmux" "")
+    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;webpmux,webpmuxd" 
+    "webp;webpdemux;webpdecoder;webpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 
 set(OPTIONS "\
