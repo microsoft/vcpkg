@@ -9,7 +9,6 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DUSE_POSTFIX=ON
         -DPUGIXML_BUILD_TESTS=OFF
 )
 
