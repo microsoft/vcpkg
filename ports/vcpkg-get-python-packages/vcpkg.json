@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-get-python-packages",
+  "version-date": "2022-04-11",
+  "license": "MIT",
+  "supports": "native"
+}

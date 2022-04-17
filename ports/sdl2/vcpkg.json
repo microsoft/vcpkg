@@ -1,6 +1,7 @@
 {
   "name": "sdl2",
   "version": "2.0.20",
+  "port-version": 2,
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
   "homepage": "https://www.libsdl.org/download-2.0.php",
   "dependencies": [
@@ -18,7 +19,8 @@
       "description": "Vulkan functionality for SDL"
     },
     "x11": {
-      "description": "Dynamically load X11 support"
+      "description": "Dynamically load X11 support",
+      "supports": "!windows"
     }
   }
 }

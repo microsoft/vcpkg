@@ -12,15 +12,6 @@ index bd1bebb..4ce801d 100644
  else()
    add_definitions(-Wall)
  endif()
-@@ -482,7 +485,7 @@ if(WEBP_BUILD_LIBWEBPMUX)
-                                    "${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux.h;\
- ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/mux_types.h;\
- ${CMAKE_CURRENT_SOURCE_DIR}/src/webp/types.h;")
--  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME webpmux)
-+  set_target_properties(libwebpmux PROPERTIES OUTPUT_NAME $<$<PLATFORM_ID:Windows>:lib>webpmux)
-   list(APPEND INSTALLED_LIBRARIES libwebpmux)
-   configure_pkg_config("src/mux/libwebpmux.pc")
- endif()
 @@ -586,8 +589,12 @@ if(WEBP_BUILD_EXTRAS)
    # webp_quality
    add_executable(webp_quality ${WEBP_QUALITY_SRCS} ${WEBP_EXTRAS_SRCS})

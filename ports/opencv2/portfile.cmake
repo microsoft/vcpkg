@@ -6,14 +6,8 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-if (VCPKG_TARGET_IS_UWP)
-  # - opengl feature is broken on UWP
-  # - jasper and openexr are not available on UWP due to missing dependencies
-  # - opencv2 code itself fails even if previous conditions are avoided
-  message(FATAL_ERROR "${PORT} doesn't support UWP")
-endif()
-
-set(OPENCV_VERSION "2.4.13.7")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
+string(JSON OPENCV_VERSION GET "${_contents}" version)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -70,53 +64,9 @@ endif()
 
 set(WITH_PYTHON OFF)
 if("python" IN_LIST FEATURES)
-  set(WITH_PYTHON ON)
-  vcpkg_find_acquire_program(PYTHON2)
-  get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-  vcpkg_add_to_path("${PYTHON2_DIR}")
-  vcpkg_add_to_path("${PYTHON2_DIR}/Scripts")
+  x_vcpkg_get_python_packages(PYTHON_VERSION "2" PACKAGES numpy OUT_PYTHON_VAR "PYTHON2")
   set(ENV{PYTHON} "${PYTHON2}")
-
-  function(vcpkg_get_python_package PYTHON_DIR )
-      cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
-
-      if(NOT _vgpp_PYTHON_EXECUTABLE)
-          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
-      endif()
-      if(NOT _vgpp_PACKAGES)
-          message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
-      endif()
-      if(NOT _vgpp_PYTHON_DIR)
-          get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
-      endif()
-
-      if (WIN32)
-          set(PYTHON_OPTION "")
-      else()
-          set(PYTHON_OPTION "--user")
-      endif()
-
-      if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-          if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-              vcpkg_from_github(
-                  OUT_SOURCE_PATH PYFILE_PATH
-                  REPO pypa/get-pip
-                  REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-                  SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
-                  HEAD_REF master
-              )
-              execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
-          endif()
-          foreach(_package IN LISTS _vgpp_PACKAGES)
-              execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
-          endforeach()
-      else()
-          foreach(_package IN LISTS _vgpp_PACKAGES)
-              execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
-          endforeach()
-      endif()
-  endfunction()
-  vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON2}" PACKAGES numpy)
+  set(WITH_PYTHON ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -203,5 +153,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

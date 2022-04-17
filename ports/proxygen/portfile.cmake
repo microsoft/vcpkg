@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF v2022.01.31.00
-    SHA512 f340466fb52e01bb71289f7cf1e8aee2ef8a0d5db21998ea85aaf07b128144de05747ececcac65e99d1d452bddc0d0dc60ba17087311c8337e31fbdda6f4ce3a
+    REF v2022.03.21.00
+    SHA512 66dfd40e45b884d64be9c06b110caaa9333116c402312ee8eb0c21f0ab569ea31b9e4fb676c68b96730abbff0b74d139f5e39e702cd958c24ce0fe76f353fbe9
     HEAD_REF master
     PATCHES
         remove-register.patch
+        fix-zstd-zlib-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

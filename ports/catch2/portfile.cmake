@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DCATCH_BUILD_EXAMPLES=OFF
+        -DCATCH_INSTALL_DOCS=OFF
         -DCATCH_BUILD_STATIC_LIBRARY=${BUILD_STATIC}
 )
 
