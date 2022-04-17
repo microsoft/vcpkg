@@ -19,7 +19,8 @@
       "description": "Vulkan functionality for SDL"
     },
     "x11": {
-      "description": "Dynamically load X11 support"
+      "description": "Dynamically load X11 support",
+      "supports": "!windows"
     }
   }
 }
