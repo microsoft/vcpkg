@@ -12,20 +12,21 @@ if ("apng" IN_LIST FEATURES)
     endif()
     
     set(LIBPNG_APNG_PATCH_NAME "libpng-${LIBPNG_VER}-apng.patch")
+    vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
+        URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APNG_PATCH_NAME}.gz"
+        FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
+        SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
+    )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
         if (NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src")
             file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src")
         endif()
-        vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
-            URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${LIBPNG_VER}/${LIBPNG_APNG_PATCH_NAME}.gz"
-            FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-            SHA512 226adcb3a8c60f2267fe2976ab531329ae43c2603dab4d0cf8f16217d64069936b879f3d6516b75d259c47d6f5c5b1f24f887602206c8e46abde0fb7f5c7946b
-        )
         vcpkg_find_acquire_program(7Z)
         vcpkg_execute_required_process(
             COMMAND "${7Z}" x "${LIBPNG_APNG_PATCH_ARCHIVE}" -aoa
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src"
+            ALLOW_IN_DOWNLOAD_MODE
             LOGNAME extract-patch.log
         )
     endif()
