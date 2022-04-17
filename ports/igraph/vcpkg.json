@@ -23,8 +23,8 @@
     "extern-linalg": {
       "description": "Use external BLAS and LAPACK",
       "dependencies": [
-        "lapack",
-        "openblas"
+        "blas",
+        "lapack"
       ]
     },
     "graphml": {
