@@ -1,8 +1,9 @@
 {
   "name": "boost-property-map",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost property_map module",
   "homepage": "https://github.com/boostorg/property_map",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-assert",

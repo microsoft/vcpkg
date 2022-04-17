@@ -1,8 +1,9 @@
 {
   "name": "boost-locale",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",

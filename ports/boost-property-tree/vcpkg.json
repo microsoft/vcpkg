@@ -1,8 +1,9 @@
 {
   "name": "boost-property-tree",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost property_tree module",
   "homepage": "https://github.com/boostorg/property_tree",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-any",
     "boost-assert",

@@ -1,8 +1,9 @@
 {
   "name": "boost-nowide",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost nowide module",
   "homepage": "https://github.com/boostorg/nowide",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "boost-build",

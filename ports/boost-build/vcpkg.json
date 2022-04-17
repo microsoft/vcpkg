@@ -1,9 +1,9 @@
 {
   "name": "boost-build",
-  "version": "1.78.0",
-  "port-version": 1,
+  "version": "1.79.0",
   "description": "Boost.Build",
   "homepage": "https://github.com/boostorg/build",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-uninstall"
   ]

@@ -1,8 +1,9 @@
 {
   "name": "boost-safe-numerics",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost safe_numerics module",
   "homepage": "https://github.com/boostorg/safe_numerics",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-concept-check",
     "boost-config",

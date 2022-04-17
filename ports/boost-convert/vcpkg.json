@@ -1,8 +1,9 @@
 {
   "name": "boost-convert",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost convert module",
   "homepage": "https://github.com/boostorg/convert",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

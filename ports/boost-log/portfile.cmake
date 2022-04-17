@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/log
-    REF boost-1.78.0
-    SHA512 86f2c99647236f49a8a18a10a3c4a7409f15e5d5cdf8f925a7bd87a7eb196d3c53595b7ddc7fd56354181d5b7c433645f3ee349db59d5b971583166366550613
+    REF boost-1.79.0
+    SHA512 da3fff9756f991a6b3a1529499c4f58fa4ac6167c2dfaf1b7debd45e5a2c1f0687dee1e0edb21d28859971f9e0afab3e1aae3a48b6a39a98dc6d52a697b0f2c4
     HEAD_REF master
 )
 
@@ -20,9 +20,6 @@ string(REPLACE
     "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
     _contents "${_contents}")
 file(WRITE ${SOURCE_PATH}/build/log-arch-config.jam "${_contents}")
-if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
-    message(FATAL_ERROR "boost-log requires a newer version of vcpkg in order to build.")
-endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

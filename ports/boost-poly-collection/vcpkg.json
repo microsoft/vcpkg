@@ -1,8 +1,9 @@
 {
   "name": "boost-poly-collection",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost poly_collection module",
   "homepage": "https://github.com/boostorg/poly_collection",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

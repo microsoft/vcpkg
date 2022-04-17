@@ -1,8 +1,9 @@
 {
   "name": "boost-rational",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost rational module",
   "homepage": "https://github.com/boostorg/rational",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",

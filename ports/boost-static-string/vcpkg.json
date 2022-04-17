@@ -1,8 +1,9 @@
 {
   "name": "boost-static-string",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost static_string module",
   "homepage": "https://github.com/boostorg/static_string",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-container-hash",

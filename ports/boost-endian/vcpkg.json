@@ -1,8 +1,9 @@
 {
   "name": "boost-endian",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost endian module",
   "homepage": "https://github.com/boostorg/endian",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-core",

@@ -1,8 +1,9 @@
 {
   "name": "boost-atomic",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost atomic module",
   "homepage": "https://github.com/boostorg/atomic",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-align",
     "boost-assert",
