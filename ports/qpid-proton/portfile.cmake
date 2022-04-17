@@ -15,11 +15,12 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPYTHON_EXECUTABLE=${PYTHON3}
-        -DLIB_SUFFIX=
         -DBUILD_GO=no
-        -DENABLE_JSONCPP=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_CyrusSASL=ON
+        -DENABLE_JSONCPP=ON
+        -DENABLE_LINKTIME_OPTIMIZATION=OFF
+        -DLIB_SUFFIX=
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
