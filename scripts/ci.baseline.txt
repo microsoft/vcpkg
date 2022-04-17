@@ -1157,6 +1157,7 @@ signalrclient:arm-uwp=fail
 skia:arm-uwp=fail
 skia:x64-linux=fail
 skia:x64-uwp=fail
+skia:x86-windows=fail # skia doesn't support x86 builds with local MSVC installations
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail

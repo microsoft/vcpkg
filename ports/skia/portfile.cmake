@@ -132,9 +132,7 @@ if("metal" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} skia_use_metal=true")
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} target_cpu=\"arm64\"")
-endif()
+set(OPTIONS "${OPTIONS} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
