@@ -5,8 +5,8 @@ set(LIBPNG_APNG_PATCH_PATH "")
 set(LIBPNG_APNG_OPTION "")
 if ("apng" IN_LIST FEATURES)
     if(VCPKG_HOST_IS_WINDOWS)
-        # Get (g)awk installed
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
+        # Get (g)awk and gzip installed
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk gzip)
         set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
@@ -19,12 +19,9 @@ if ("apng" IN_LIST FEATURES)
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
-        if (NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src")
-            file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src")
-        endif()
-        vcpkg_find_acquire_program(7Z)
+        file(INSTALL "${LIBPNG_APNG_PATCH_ARCHIVE}" DESTINATION "${CURRENT_BUILDTREES_DIR}/src")
         vcpkg_execute_required_process(
-            COMMAND "${7Z}" x "${LIBPNG_APNG_PATCH_ARCHIVE}" -aoa
+            COMMAND gzip -d "${LIBPNG_APNG_PATCH_NAME}.gz"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src"
             ALLOW_IN_DOWNLOAD_MODE
             LOGNAME extract-patch.log
