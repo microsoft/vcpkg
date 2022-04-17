@@ -123,19 +123,19 @@ skia_enable_tools=false \
 skia_enable_spirv_validation=false")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OPTIONS "${OPTIONS} is_component_build=true")
+    string(APPEND OPTIONS " is_component_build=true")
 else()
-    set(OPTIONS "${OPTIONS} is_component_build=false")
+    string(APPEND OPTIONS " is_component_build=false")
 endif()
 
 if("metal" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} skia_use_metal=true")
+    string(APPEND OPTIONS " skia_use_metal=true")
 endif()
 
-set(OPTIONS "${OPTIONS} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+string(APPEND OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 
-set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
+set(OPTIONS_REL "${OPTIONS} is_official_build=true")
 
 if(CMAKE_HOST_WIN32)
     # Load toolchains
@@ -159,16 +159,16 @@ if(CMAKE_HOST_WIN32)
     to_gn_list(SKIA_CXX_FLAGS_DBG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
     to_gn_list(SKIA_CXX_FLAGS_REL "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 
-    set(OPTIONS_DBG "${OPTIONS_DBG} extra_cflags_c=${SKIA_C_FLAGS_DBG} \
+    string(APPEND OPTIONS_DBG " extra_cflags_c=${SKIA_C_FLAGS_DBG} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
-
-    set(OPTIONS_REL "${OPTIONS_REL} extra_cflags_c=${SKIA_C_FLAGS_REL} \
+    string(APPEND OPTIONS_REL " extra_cflags_c=${SKIA_C_FLAGS_REL} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
-
+        
     set(WIN_VC "$ENV{VCINSTALLDIR}")
     string(REPLACE "\\VC\\" "\\VC" WIN_VC "${WIN_VC}")
-    set(OPTIONS_DBG "${OPTIONS_DBG} win_vc=\"${WIN_VC}\"")
-    set(OPTIONS_REL "${OPTIONS_REL} win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS_DBG " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS_REL " win_vc=\"${WIN_VC}\"")
+    
 
 endif()
 
@@ -186,9 +186,9 @@ vcpkg_install_gn(
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${SOURCE_PATH}/include" 
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" 
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
     "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false 
+file(GLOB_RECURSE SKIA_INCLUDE_FILES LIST_DIRECTORIES false
     "${CURRENT_PACKAGES_DIR}/include/${PORT}/*")
 foreach(file_ ${SKIA_INCLUDE_FILES})
     vcpkg_replace_string("${file_}" "#include \"include/" "#include \"${PORT}/")
