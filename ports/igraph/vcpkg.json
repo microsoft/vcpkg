@@ -16,9 +16,17 @@
     }
   ],
   "default-features": [
+    "extern-linalg",
     "graphml"
   ],
   "features": {
+    "extern-linalg": {
+      "description": "Use external BLAS and LAPACK",
+      "dependencies": [
+        "lapack",
+        "openblas"
+      ]
+    },
     "graphml": {
       "description": "Support for reading GraphML files",
       "dependencies": [

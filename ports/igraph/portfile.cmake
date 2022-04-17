@@ -16,8 +16,11 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    graphml   IGRAPH_GRAPHML_SUPPORT
-    openmp    IGRAPH_OPENMP_SUPPORT
+        graphml         IGRAPH_GRAPHML_SUPPORT
+        openmp          IGRAPH_OPENMP_SUPPORT
+    INVERTED_FEATURES
+        extern-linalg   IGRAPH_USE_INTERNAL_BLAS
+        extern-linalg   IGRAPH_USE_INTERNAL_LAPACK
 )
 
 # Allow cross-compilation. See https://igraph.org/c/html/latest/igraph-Installation.html#igraph-Installation-cross-compiling
@@ -38,10 +41,6 @@ vcpkg_cmake_configure(
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        # OpenBLAS provides BLAS/LAPACK but some tests fail with OpenBLAS on Windows.
-        # See https://github.com/igraph/igraph/issues/1491
-        -DIGRAPH_USE_INTERNAL_BLAS=ON
-        -DIGRAPH_USE_INTERNAL_LAPACK=ON
         -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
