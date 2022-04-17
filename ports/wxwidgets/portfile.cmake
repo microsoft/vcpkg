@@ -163,7 +163,7 @@ endif()
 
 if("example" IN_LIST FEATURES)
     file(INSTALL
-        "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/example/CMakeLists.txt"
         "${SOURCE_PATH}/samples/popup/popup.cpp"
         "${SOURCE_PATH}/samples/sample.xpm"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example"
