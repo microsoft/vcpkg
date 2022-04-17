@@ -2,26 +2,44 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/google/skia
     REF 3aa7f602018816ab3f009f1b8d359ccde752e1de
+    PATCHES
+        "use_vcpkg_fontconfig.patch"
 )
 
+# Replace hardcoded python paths
 vcpkg_find_acquire_program(PYTHON3)
 file(READ "${SOURCE_PATH}/.gn" GN_FILE_CONTENT)
 string(REPLACE "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"" GN_FILE_CONTENT ${GN_FILE_CONTENT})
 file(WRITE "${SOURCE_PATH}/.gn" ${GN_FILE_CONTENT})
 
-function(checkout_in_path PATH URL MIRROR_URL REF)
+file(READ "${SOURCE_PATH}/gn/toolchain/BUILD.gn" GN_FILE_CONTENT)
+string(REPLACE "command = \"$shell python" "command = \"$shell '${PYTHON3}'" GN_FILE_CONTENT ${GN_FILE_CONTENT})
+file(WRITE "${SOURCE_PATH}/gn/toolchain/BUILD.gn" ${GN_FILE_CONTENT})
+
+function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
     endif()
 
-    if(SKIA_USE_MIRROR)
-        set(URL "${MIRROR_URL}")
-    endif()
-    
     vcpkg_from_git(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+    )
+    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+endfunction()
+
+function(checkout_in_path_with_patch PATH URL REF PATCH)
+    if(EXISTS "${PATH}")
+        return()
+    endif()
+
+    vcpkg_from_git(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        URL "${URL}"
+        REF "${REF}"
+        PATCHES "${PATCH}"
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -35,22 +53,18 @@ file(MAKE_DIRECTORY "${EXTERNALS}")
 # define SKIA_USE_MIRROR in a triplet to use the mirrors
 checkout_in_path("${EXTERNALS}/sfntly"
     "https://github.com/googlefonts/sfntly"
-    "https://github.com/googlefonts/sfntly"
     "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
 )
 checkout_in_path("${EXTERNALS}/dng_sdk"
     "https://android.googlesource.com/platform/external/dng_sdk"
-    "https://gitee.com/mirrors_android_source/dng_sdk"
     "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
 )
 checkout_in_path("${EXTERNALS}/libgifcodec"
     "https://skia.googlesource.com/libgifcodec"
-    "https://gitee.com/mirrors_skia_googlesource/libgifcodec"
     "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
 )
 checkout_in_path("${EXTERNALS}/piex"
     "https://android.googlesource.com/platform/external/piex"
-    "https://gitee.com/mirrors_android_source/piex"
     "bb217acdca1cc0c16b704669dd6f91a1b509c406"
 )
 
@@ -112,8 +126,8 @@ replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz;harfbuzz-subset" "harfbu
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
 replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
-replace_skia_dep(libwebp "/include" 
-    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;webpmux,webpmuxd" 
+replace_skia_dep(libwebp "/include"
+    "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;webpmux,webpmuxd"
     "webp;webpdemux;webpdecoder;webpmux" "")
 replace_skia_dep(zlib "/include" "z,zlib,zlibd" "z,zlib" "")
 if(CMAKE_HOST_UNIX)
@@ -123,19 +137,132 @@ if(CMAKE_HOST_UNIX)
 set(OPTIONS "\
 skia_use_lua=false \
 skia_enable_tools=false \
-skia_enable_spirv_validation=false")
+skia_enable_spirv_validation=false \
+target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+
+# used for passing feature-specific definitions to the config file
+set(SKIA_PUBLIC_DEFINITIONS
+    SK_SUPPORT_PDF
+    SK_HAS_JPEG_LIBRARY
+    SK_USE_LIBGIFCODEC
+    SK_HAS_PNG_LIBRARY
+    SK_HAS_WEBP_LIBRARY
+    SK_XML)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     string(APPEND OPTIONS " is_component_build=true")
+    if(CMAKE_HOST_WIN32)
+        set(SKIA_PUBLIC_DEFINITIONS SKIA_DLL)
+    endif()
 else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
-if("metal" IN_LIST FEATURES)
-    string(APPEND OPTIONS " skia_use_metal=true")
+if(CMAKE_HOST_APPLE)
+    if("metal" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} skia_use_metal=true")
+        list(APPEND SKIA_PUBLIC_DEFINITIONS SK_METAL)
+    endif()
 endif()
 
-string(APPEND OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+if("vulkan" IN_LIST FEATURES)
+     set(OPTIONS "${OPTIONS} skia_use_vulkan=true")
+     list(APPEND SKIA_PUBLIC_DEFINITIONS SK_VULKAN)
+ endif()
+
+if(CMAKE_HOST_WIN32)
+   if("direct3d" IN_LIST FEATURES)
+       set(OPTIONS "${OPTIONS} skia_use_direct3d=true")
+       list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DIRECT3D)
+
+       checkout_in_path("${EXTERNALS}/spirv-cross"
+           "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+           "6a67891418a3f08be63f92726e049dc788e46f5b"
+       )
+
+       checkout_in_path("${EXTERNALS}/spirv-headers"
+           "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+           "82becc8a8a92e509d3d8d635889da0a3c17d0606"
+       )
+
+       checkout_in_path("${EXTERNALS}/spirv-tools"
+           "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+           "cb96abbf7affd986016f17dd09f9f971138a922b"
+       )
+
+       checkout_in_path("${EXTERNALS}/d3d12allocator"
+           "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+           "169895d529dfce00390a20e69c2f516066fe7a3b"
+       )
+   endif()
+endif()
+
+if("dawn" IN_LIST FEATURES)
+   set(OPTIONS "${OPTIONS} skia_use_dawn=true")
+   list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
+
+   checkout_in_path("${EXTERNALS}/spirv-cross"
+       "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+       "6a67891418a3f08be63f92726e049dc788e46f5b"
+   )
+
+   checkout_in_path("${EXTERNALS}/spirv-headers"
+       "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+       "82becc8a8a92e509d3d8d635889da0a3c17d0606"
+   )
+
+   checkout_in_path("${EXTERNALS}/spirv-tools"
+       "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+       "cb96abbf7affd986016f17dd09f9f971138a922b"
+   )
+
+   checkout_in_path("${EXTERNALS}/tint"
+         "https://dawn.googlesource.com/tint"
+         "b612c505939bf86c80a55c193b93c41ed0f252a1"
+   )
+
+   checkout_in_path("${EXTERNALS}/jinja2"
+       "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
+       "ee69aa00ee8536f61db6a451f3858745cf587de6"
+   )
+
+   checkout_in_path("${EXTERNALS}/markupsafe"
+       "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
+       "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
+   )
+
+## Remove
+   checkout_in_path("${EXTERNALS}/vulkan-headers"
+       "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
+       "76f00ef6cbb1886eb1162d1fa39bee8b51e22ee8"
+   )
+
+   checkout_in_path("${EXTERNALS}/vulkan-tools"
+       "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
+       "ef20059aea7ec24d0842edca2f75255eaa33a7b0"
+   )
+
+   checkout_in_path("${EXTERNALS}/abseil-cpp"
+       "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
+       "c5a424a2a21005660b182516eb7a079cd8021699"
+   )
+
+## REMOVE ^
+   checkout_in_path("${EXTERNALS}/dawn"
+       "https://dawn.googlesource.com/dawn.git"
+       "e6d4598d36157639606a780164c425c6bffb93f6"
+   )
+
+   vcpkg_find_acquire_program(GIT)
+   file(READ "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py" DVG_CONTENT)
+   string(REPLACE "return 'git.bat' if sys.platform == 'win32' else 'git'" "return '${GIT}'" DVG_CONTENT ${DVG_CONTENT})
+   file(WRITE "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py" ${DVG_CONTENT})
+endif()
+
+if("gl" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_use_gl=true")
+    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_GL)
+endif()
 
 set(OPTIONS_DBG "${OPTIONS} is_debug=true")
 set(OPTIONS_REL "${OPTIONS} is_official_build=true")
@@ -166,13 +293,11 @@ if(CMAKE_HOST_WIN32)
         extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
     string(APPEND OPTIONS_REL " extra_cflags_c=${SKIA_C_FLAGS_REL} \
         extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
-        
+
     set(WIN_VC "$ENV{VCINSTALLDIR}")
     string(REPLACE "\\VC\\" "\\VC" WIN_VC "${WIN_VC}")
     string(APPEND OPTIONS_DBG " win_vc=\"${WIN_VC}\"")
     string(APPEND OPTIONS_REL " win_vc=\"${WIN_VC}\"")
-    
-
 endif()
 
 vcpkg_configure_gn(
@@ -181,13 +306,24 @@ vcpkg_configure_gn(
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
+set(DAWN_LINKAGE "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(DAWN_LINKAGE "shared")
+else()
+    set(DAWN_LINKAGE "static")
+endif()
+
 vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS ":skia"
+    TARGETS
+        ":skia"
+        "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
+        "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
+        "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
 )
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(COPY "${SOURCE_PATH}/include" 
+file(COPY "${SOURCE_PATH}/include"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/include"
     "${CURRENT_PACKAGES_DIR}/include/${PORT}")
