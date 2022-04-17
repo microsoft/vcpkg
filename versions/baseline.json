@@ -7328,6 +7328,10 @@
       "baseline": "2022-02-14",
       "port-version": 0
     },
+    "vcpkg-tool-gn": {
+      "baseline": "2022-04-16",
+      "port-version": 0
+    },
     "vcpkg-tool-gyp-nss": {
       "baseline": "2022-03-04",
       "port-version": 0
