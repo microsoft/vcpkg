@@ -19,7 +19,7 @@
   ],
   "features": {
     "cuda": {
-      "description": "Build darknet with support for CUDA",
+      "description": "Support for CUDA based dense solvers",
       "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "cuda"
