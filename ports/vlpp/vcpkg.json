@@ -4,7 +4,6 @@
   "port-version": 3,
   "description": "Common C++ construction, including string operation / generic container / linq / General-LR parser generator / multithreading / reflection for C++ / etc",
   "homepage": "https://github.com/vczh-libraries/Release",
-  "supports": "!(osx & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
