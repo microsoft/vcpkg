@@ -58,7 +58,7 @@ function(vcpkg_configure_qmake)
     vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -89,12 +89,12 @@ function(vcpkg_configure_qmake)
             file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-rel.log")
         endif()
 
-        vcpkg_restore_pkgconfig_path()
+        z_vcpkg_restore_pkgconfig_path()
         vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug" "${CURRENT_PACKAGES_DIR}/debug")
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug" "${CURRENT_PACKAGES_DIR}/debug")
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
@@ -124,7 +124,7 @@ function(vcpkg_configure_qmake)
             file(RENAME "${current_binary_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/internal-config-${TARGET_TRIPLET}-dbg.log")
         endif()
         
-        vcpkg_restore_pkgconfig_path()
+        z_vcpkg_restore_pkgconfig_path()
     endif()
 
 endfunction()

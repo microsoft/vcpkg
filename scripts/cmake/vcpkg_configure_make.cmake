@@ -760,9 +760,9 @@ function(vcpkg_configure_make)
 
         # Setup PKG_CONFIG_PATH
         if ("${current_buildtype}" STREQUAL "DEBUG")
-            vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
         else()
-            vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
+            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
         endif()
 
         # Setup environment
@@ -822,7 +822,7 @@ function(vcpkg_configure_make)
                 file(RENAME "${target_dir}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${short_name_${current_buildtype}}.log")
             endif()
         endif()
-        vcpkg_restore_pkgconfig_path()
+        z_vcpkg_restore_pkgconfig_path()
         
         if(link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")

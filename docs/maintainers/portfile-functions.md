@@ -56,7 +56,6 @@
 - [vcpkg\_list](vcpkg_list.md)
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
-- [vcpkg\_setup\_pkgconfig\_path](vcpkg_setup_pkgconfig_path.md)
 
 ## Internal Functions
 
@@ -65,6 +64,7 @@
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
 - [z\_vcpkg\_get\_cmake\_vars](internal/z_vcpkg_get_cmake_vars.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
+- [z\_vcpkg\_setup\_pkgconfig\_path](internal/z_vcpkg_setup_pkgconfig_path.md)
 
 ## Scripts from Ports
 
