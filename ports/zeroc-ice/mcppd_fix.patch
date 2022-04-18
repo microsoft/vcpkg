@@ -9,9 +9,10 @@
  # Check for 3rd party libraries either in home/lib<platform specific subdir> or home/lib
 -$1_installdir   = $$($1_home)/lib$$(call platform-var,installdir,$1,$$($$2_platform),$$($$2_config),$$2)
 -$1_libdir       ?= $$(strip $$(if $$(wildcard $$($1_installdir)),$$($1_installdir),$$($1_home)/lib))
-+$1_installdir   = $$($1_home)$$(if $$(filter no,$$(OPTIMIZE)),/debug)/lib$$(call platform-var,installdir,$1,$$($$2_platform),$$($$2_config),$$2)
-+$1_libdir       ?= $$(strip $$(if $$(wildcard $$($1_installdir)),$$($1_installdir),$$($1_home)$$(if $$(filter no,$$(OPTIMIZE)),/debug)/lib))
- $1_includedir   ?= $$($1_home)/include
+-$1_includedir   ?= $$($1_home)/include
++$1_installdir   =
++$1_libdir       ?=
++$1_includedir   ?=
  endif
 -$1_ldflags      ?= -l$1
 +$1_ldflags      ?= -l$$(if $$(and $$(filter mcpp,$1),$$(filter no,$$(OPTIMIZE))),$1d,$1)
