@@ -1,4 +1,4 @@
-set (EX_VERSION 2.4.8)
+set(EX_VERSION 2.4.8)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,11 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXPAT_LINKAGE ON)
-else()
-    set(EXPAT_LINKAGE OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/expat"
@@ -20,6 +16,7 @@ vcpkg_cmake_configure(
         -DEXPAT_BUILD_EXAMPLES=OFF
         -DEXPAT_BUILD_TESTS=OFF
         -DEXPAT_BUILD_TOOLS=OFF
+        -DEXPAT_BUILD_DOCS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
         -DEXPAT_BUILD_PKGCONFIG=ON
 )
@@ -31,9 +28,10 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/expat_external.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h"
         "! defined(XML_STATIC)"
         "/* vcpkg static build ! defined(XML_STATIC) */ 0"
     )
@@ -41,7 +39,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-#Handle copyright
-file(INSTALL "${SOURCE_PATH}/expat/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/expat/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
