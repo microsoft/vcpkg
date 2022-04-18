@@ -4,7 +4,6 @@
   "description": "DuckX is a library for creation of Office docx files.",
   "homepage": "https://github.com/amiremohamadi/DuckX",
   "license": "MIT",
-  "supports": "!(windows & !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
