@@ -3085,8 +3085,8 @@
       "port-version": 3
     },
     "kangaru": {
-      "baseline": "4.2.4",
-      "port-version": 1
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "kcp": {
       "baseline": "1.7",
