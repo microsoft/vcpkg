@@ -3,7 +3,8 @@
 @@ -50,13 +50,12 @@
  #define abstract
  #endif
- 
+-
++#include <stdlib.h>
  #if defined VCZH_MSVC
  #include <intrin.h>
  #elif defined VCZH_GCC
