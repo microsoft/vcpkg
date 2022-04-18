@@ -2213,8 +2213,8 @@
       "port-version": 2
     },
     "fixed-string": {
-      "baseline": "0.1.0",
-      "port-version": 1
+      "baseline": "0.1.1",
+      "port-version": 0
     },
     "fizz": {
       "baseline": "2022.03.21.00",
