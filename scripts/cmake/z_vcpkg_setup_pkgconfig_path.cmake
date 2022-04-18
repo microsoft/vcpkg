@@ -5,8 +5,6 @@ Setup the generated pkgconfig file path to PKG_CONFIG_PATH environment variable 
 
 ```cmake
 z_vcpkg_setup_pkgconfig_path(BASE_DIRS <"${CURRENT_INSTALLED_DIR}" ...>)
-```
-```cmake
 z_vcpkg_restore_pkgconfig_path()
 ```
 
