@@ -4,6 +4,7 @@
   "description": "Simple, fast, accurate single-header microbenchmarking functionality for C++11/14/17/20",
   "homepage": "https://nanobench.ankerl.com",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "fmt",
     {

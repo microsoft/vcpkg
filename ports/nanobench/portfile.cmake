@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 2f5b9573e220b507586c8586903489bd7dc2a8a09da07bd2454842a4c33c0323b0911ebeb902d5098c7dd9c96925d9bc3d4ca62fc5798f630b4b4d3e75d117a7
     HEAD_REF master
     PATCHES
-        fix-libdir.patch
+        fix-cmakefile.patch
 )
 
 vcpkg_cmake_configure(
@@ -14,10 +14,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/nanobench/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/nanobench" "${CURRENT_PACKAGES_DIR}/lib/nanobench")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
