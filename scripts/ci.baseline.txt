@@ -47,8 +47,6 @@
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-# Requires ATL for ARM64 to be installed in CI
-azure-storage-cpp:arm64-windows=fail
 
 aubio:arm-uwp=fail
 aubio:x64-uwp=fail
@@ -215,6 +213,7 @@ devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip
+directxsdk:x64-windows-static-md=skip
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
