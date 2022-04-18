@@ -24,7 +24,6 @@
     },
     "glacier2router": {
       "description": "Glacier2Router",
-      "supports": "!static",
       "dependencies": [
         {
           "name": "zeroc-ice",
@@ -39,8 +38,7 @@
       "description": "IceBox libraries and runtime"
     },
     "iceboxtools": {
-      "description": "IceBox tools",
-      "supports": "!static"
+      "description": "IceBox tools"
     },
     "icebridge": {
       "description": "IceBridge",
@@ -80,7 +78,6 @@
     },
     "icegridtools": {
       "description": "IceGrid tools",
-      "supports": "!static",
       "dependencies": [
         "expat",
         {
@@ -108,7 +105,6 @@
     },
     "icestormtools": {
       "description": "IceStorm tools",
-      "supports": "!static",
       "dependencies": [
         "lmdb",
         {
