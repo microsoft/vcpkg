@@ -22,6 +22,10 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-gumbo CONFIG_PATH unofficial-gumbo)
 
+configure_file("${SOURCE_PATH}/gumbo.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
+
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gumbo" RENAME copyright)
