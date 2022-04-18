@@ -2237,8 +2237,8 @@
       "port-version": 2
     },
     "flatbuffers": {
-      "baseline": "2.0.0",
-      "port-version": 3
+      "baseline": "2.0.6",
+      "port-version": 0
     },
     "flint": {
       "baseline": "2.8.0",
@@ -3569,8 +3569,8 @@
       "port-version": 3
     },
     "libgcrypt": {
-      "baseline": "1.9.4",
-      "port-version": 2
+      "baseline": "1.10.1",
+      "port-version": 0
     },
     "libgd": {
       "baseline": "2.3.2",
@@ -3886,7 +3886,7 @@
     },
     "libpng": {
       "baseline": "1.6.37",
-      "port-version": 16
+      "port-version": 17
     },
     "libpopt": {
       "baseline": "1.16",
@@ -5177,7 +5177,7 @@
       "port-version": 4
     },
     "opentelemetry-cpp": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "opentracing": {
@@ -7510,7 +7510,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.5",
-      "port-version": 8
+      "port-version": 9
     },
     "x-plane": {
       "baseline": "3.0.3",
@@ -7658,7 +7658,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.7",
-      "port-version": 0
+      "port-version": 1
     },
     "zeromq": {
       "baseline": "4.3.4",
