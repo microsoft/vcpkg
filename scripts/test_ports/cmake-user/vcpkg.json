@@ -73,6 +73,10 @@
           "name": "tiff"
         },
         {
+          "$package": "wxWidgets",
+          "name": "wxwidgets"
+        },
+        {
           "$package": "ZLIB",
           "name": "zlib"
         }
