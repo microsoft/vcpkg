@@ -1237,8 +1237,8 @@
       "port-version": 0
     },
     "camport3": {
-      "baseline": "1.5.3",
-      "port-version": 2
+      "baseline": "1.6.2",
+      "port-version": 0
     },
     "capnproto": {
       "baseline": "0.9.1",
