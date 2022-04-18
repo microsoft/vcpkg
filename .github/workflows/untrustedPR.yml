@@ -47,7 +47,9 @@ jobs:
           # HEAD^^ refers to the "main" commit that was merged into
           git checkout HEAD^^ -- versions
           git restore --staged versions
-          ./vcpkg x-add-version --all --skip-formatting-check > .github-pr.x-add-version.out
+          ./vcpkg x-add-version --all --skip-formatting-check | grep 'instead of "version-string"' | tee .github-pr.version-string.out || true
+          git checkout -- versions
+          ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
 
@@ -57,6 +59,7 @@ jobs:
             const { promises: fs } = require('fs')
             const add_version = (await fs.readFile('.github-pr.x-add-version.diff', 'utf8')).trim()
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
+            const version_string_out = (await fs.readFile('.github-pr.version-string.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
             const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).trim()
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
@@ -76,6 +79,9 @@ jobs:
               output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
               output += "```\n" + add_version_out + "\n```\n</details>\n\n"
               approve = false;
+            }
+            if (version_string_out !== "") {
+              output += version_string_out + "\n\n"
             }
             if (add_version !== "") {
               output += "<details><summary><b>After committing all other changes, the version database must be updated</b></summary>\n\n"
