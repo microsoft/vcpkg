@@ -2182,7 +2182,7 @@
     },
     "fbthrift": {
       "baseline": "2022.03.21.00",
-      "port-version": 0
+      "port-version": 1
     },
     "fcl": {
       "baseline": "0.7.0",
