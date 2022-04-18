@@ -11,8 +11,8 @@ qt5-base for qt5-x11extras requires several libraries from the system package ma
     )
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
@@ -104,7 +104,7 @@ list(APPEND CORE_OPTIONS
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
-    )
+)
 
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
@@ -201,17 +201,17 @@ set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DE
 x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
 
 set(RELEASE_OPTIONS
-            "ZLIB_LIBS=${ZLIB_RELEASE}"
-            "PCRE2_LIBS=${PCRE2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
-            )
+    "ZLIB_LIBS=${ZLIB_RELEASE}"
+    "PCRE2_LIBS=${PCRE2_RELEASE}"
+    "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
+    "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
+)
 set(DEBUG_OPTIONS
-            "ZLIB_LIBS=${ZLIB_DEBUG}"
-            "PCRE2_LIBS=${PCRE2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
-            )
+    "ZLIB_LIBS=${ZLIB_DEBUG}"
+    "PCRE2_LIBS=${PCRE2_DEBUG}"
+    "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
+    "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
+)
 
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)

@@ -25,19 +25,19 @@ function(install_qt)
     vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
     if (CMAKE_HOST_WIN32)
-    # flex and bison for ANGLE library
-    vcpkg_find_acquire_program(FLEX)
-    get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
-    get_filename_component(FLEX_DIR ${FLEX_EXE_PATH} NAME)
+        # flex and bison for ANGLE library
+        vcpkg_find_acquire_program(FLEX)
+        get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
+        get_filename_component(FLEX_DIR ${FLEX_EXE_PATH} NAME)
 
-    file(COPY ${FLEX_EXE_PATH} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools" )
-    set(FLEX_TEMP "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools/${FLEX_DIR}")
-    file(RENAME "${FLEX_TEMP}/win_bison.exe" "${FLEX_TEMP}/bison.exe")
-    file(RENAME "${FLEX_TEMP}/win_flex.exe" "${FLEX_TEMP}/flex.exe")
-    vcpkg_add_to_path("${FLEX_TEMP}")
-   endif()
+        file(COPY ${FLEX_EXE_PATH} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools" )
+        set(FLEX_TEMP "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tools/${FLEX_DIR}")
+        file(RENAME "${FLEX_TEMP}/win_bison.exe" "${FLEX_TEMP}/bison.exe")
+        file(RENAME "${FLEX_TEMP}/win_flex.exe" "${FLEX_TEMP}/flex.exe")
+        vcpkg_add_to_path("${FLEX_TEMP}")
+    endif()
 
-   set(_path "$ENV{PATH}")
+    set(_path "$ENV{PATH}")
 
     #Replace with VCPKG variables if PR #7733 is merged
     unset(BUILDTYPES)
