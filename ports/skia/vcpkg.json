@@ -10,9 +10,6 @@
   "homepage": "https://skia.org",
   "license": "BSD-3-Clause",
   "supports": "(osx | windows | linux) & !(windows & x86)",
-  "default-features": [
-     "gl"
-   ],
   "dependencies": [
     "expat",
     "fontconfig",
@@ -20,9 +17,7 @@
       "name": "freetype",
       "default-features": false
     },
-    {
-      "name": "harfbuzz"
-    },
+    "harfbuzz",
     "icu",
     "libjpeg-turbo",
     "libpng",
@@ -37,21 +32,24 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "gl"
+  ],
   "features": {
+    "dawn": {
+      "description": "dawn support for skia"
+    },
+    "direct3d": {
+      "description": "Direct3D support for skia"
+    },
+    "gl": {
+      "description": "OpenGL support for skia"
+    },
     "metal": {
       "description": "Metal support for skia"
-     },
-     "vulkan": {
-       "description": "Vulkan support for skia"
-     },
-     "direct3d": {
-       "description": "Direct3D support for skia"
-     },
-     "dawn": {
-       "description": "dawn support for skia"
-     },
-     "gl": {
-       "description": "OpenGL support for skia"
+    },
+    "vulkan": {
+      "description": "Vulkan support for skia"
     }
   }
 }

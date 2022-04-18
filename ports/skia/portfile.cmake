@@ -198,6 +198,21 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 if("dawn" IN_LIST FEATURES)
+
+    if (VCPKG_TARGET_IS_LINUX)
+        message(WARNING
+[[
+dawn support requires the following libraries from the system package manager:
+
+    libx11-xcb-dev mesa-common-dev
+
+They can be installed on Debian based systems via 
+
+    apt-get install libx11-xcb-dev mesa-common-dev
+]]
+        )
+    endif()
+
    set(OPTIONS "${OPTIONS} skia_use_dawn=true")
    list(APPEND SKIA_PUBLIC_DEFINITIONS SK_DAWN)
 
