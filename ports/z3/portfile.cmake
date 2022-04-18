@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
     ${BUILD_STATIC}
+    -DZ3_BUILD_TEST_EXECUTABLES=OFF
 )
 
 vcpkg_cmake_install()
