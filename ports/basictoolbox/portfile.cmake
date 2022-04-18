@@ -32,7 +32,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL pi@RPI3:repo/lib/basic_toolbox.git
-    REF 1ca78c9fe83e1d5a8e09cbde48b0462b4e93906a
+    REF 4c2bba0c06af6be00349ac2520b972b47791bf90
 #    HEAD_REF master
 #    [PATCHES <patch1.patch> <patch2.patch>...]
 )
@@ -64,8 +64,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 #    "name": "vcpkg-cmake-config",
 #    "host": true
 #}
-# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/basic-toolbox)
+
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/BasicToolBox")
 
 # # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/basic-toolbox" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
