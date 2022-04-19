@@ -13,8 +13,9 @@ vcpkg_from_gitlab(
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -Dbuild-documentation=false
+        -Dmaintainer-mode=true
         -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
         -Dmsvc14x-parallel-installable=false # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 )
