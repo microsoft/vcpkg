@@ -36,7 +36,6 @@ install(EXPORT unofficial-gumbo-config
     )
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gumbo.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake" DESTINATION unofficial-gumbo)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" DESTINATION "lib/pkgconfig")
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES  src/gumbo.h src/tag_enum.h DESTINATION include)
