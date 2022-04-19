@@ -52,7 +52,6 @@ set(GTK_REQUIRED_LIBRARIES
 
 if (WIN32)
     list(APPEND GTK_REQUIRED_LIBRARIES
-        ${GTK_REQUIRED_LIBRARIES}
         PkgConfig::PANGO_WIN32
     )
 endif()
