@@ -17,9 +17,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 
 # pango
-pkg_check_modules(PANGO Pango pango pangocairo IMPORTED_TARGET)
-pkg_check_modules(PANGO_WIN32 pangowin32 IMPORTED_TARGET)
-
+pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
+if (WIN32)
+    pkg_check_modules(PANGO_WIN32 pangowin32 IMPORTED_TARGET)
+endif()
 # cairo
 pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
 pkg_check_modules(CAIRO_GOBJECT cairo-gobject IMPORTED_TARGET)
@@ -45,10 +46,16 @@ set(GTK_REQUIRED_LIBRARIES
     PkgConfig::CAIRO
     PkgConfig::CAIRO_GOBJECT
     PkgConfig::PANGO
-    PkgConfig::PANGO_WIN32
     PkgConfig::GDK_PIXBUF
     PkgConfig::ATK
 )
+
+if (WIN32)
+    set(GTK_REQUIRED_LIBRARIES
+        ${GTK_REQUIRED_LIBRARIES}
+        PkgConfig::PANGO_WIN32
+    )
+endif()
 
 list(APPEND GTK_REQUIRED_INCLUDE_DIR
     ${Intl_INCLUDE_DIRS}
