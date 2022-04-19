@@ -3,6 +3,7 @@
   "version": "1.45",
   "description": "A common dependency of all GnuPG components",
   "homepage": "https://gnupg.org/software/libgpg-error/index.html",
+  "license": "LGPL-2.1-or-later",
   "dependencies": [
     {
       "name": "gettext",
