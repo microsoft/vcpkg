@@ -19,7 +19,6 @@
     },
     "glibmm",
     "harfbuzz",
-    "mmcommon",
     "pango",
     {
       "name": "vcpkg-tool-meson",

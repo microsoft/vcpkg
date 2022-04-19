@@ -1,10 +1,13 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org
+# Keep distfile, don't use GitLab!
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.50/pangomm-2.50.0.tar.xz"
+    FILENAME "pangomm-2.50.0.tar.xz"
+    SHA512 844850db93b8c4dab19dd364e674ee3d61b2fcb8e020ab3d314f240065ee17aeceea21e9ddc438a7d09d56410e3f82147a57425f76bb01e26d82872934269477
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/pangomm
-    REF 2.50.0
-    SHA512 97e1149d4b6bd6cb0cc0179ac05900a2f7c69b856b60a01ae655bee63e84f50cfa5a1da8b35266d0bffb8ccd69b088b446b257591bd1839b99c4d40e3b2a08c8
-    HEAD_REF master
+    ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_configure_meson(
@@ -12,7 +15,6 @@ vcpkg_configure_meson(
     OPTIONS
         -Dmsvc14x-parallel-installable=false
         -Dbuild-documentation=false
-        -Dmaintainer-mode=true
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'

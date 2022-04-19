@@ -9,7 +9,6 @@
     "gettext",
     "glib",
     "glibmm",
-    "mmcommon",
     {
       "name": "vcpkg-tool-meson",
       "host": true
