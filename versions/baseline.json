@@ -3593,7 +3593,7 @@
       "port-version": 4
     },
     "libgpg-error": {
-      "baseline": "1.43",
+      "baseline": "1.45",
       "port-version": 0
     },
     "libgpiod": {
