@@ -30,17 +30,10 @@ install(
   ARCHIVE DESTINATION lib
 )
 
-install(EXPORT unofficial-gumboTargets
+install(EXPORT unofficial-gumbo-config
     NAMESPACE unofficial::gumbo::
     DESTINATION share/unofficial-gumbo
     )
-
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake.in"
-[[
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-gumboTargets.cmake")
-]])
-
-configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gumbo.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake" DESTINATION unofficial-gumbo)
