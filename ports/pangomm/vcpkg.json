@@ -13,13 +13,13 @@
     "freetype",
     "gettext",
     "glib",
-    "mmcommon",
     {
       "name": "glib",
       "host": true
     },
     "glibmm",
     "harfbuzz",
+    "mmcommon",
     "pango",
     {
       "name": "vcpkg-tool-meson",
