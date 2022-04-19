@@ -1,5 +1,0 @@
-Source: ignition-plugin1
-Version: 1.1.0
-Homepage: https://ignitionrobotics.org/libs/plugin
-Build-Depends: dlfcn-win32 (windows|uwp), ignition-cmake2, ignition-modularscripts
-Description: Library for registering plugin libraries and dynamically loading them at runtime

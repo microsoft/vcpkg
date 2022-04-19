@@ -1,5 +1,0 @@
-Source: osg-qt
-Version: Qt5
-Port-Version: 1
-Description: osgQt - Qt project for making use of OpenSceneGraph(OSG)
-Build-Depends: osg, qt5-base[core]

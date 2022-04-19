@@ -1,0 +1,13 @@
+{
+  "name": "qt5-translations",
+  "version": "5.15.3",
+  "description": "Qt5 translations module",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-tools"
+  ]
+}

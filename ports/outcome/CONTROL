@@ -1,9 +1,0 @@
-Source: outcome
-Version: 2.2.0-release
-Homepage: https://github.com/ned14/outcome
-Description: Provides very lightweight outcome<T> and result<T> (non-Boost edition)
-Build-Depends: ned14-internal-quickcpplib, status-code
-Supports: !uwp
-
-Feature: run-tests
-Description: Build and run the dependency validation tests

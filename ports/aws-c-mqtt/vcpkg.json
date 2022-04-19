@@ -1,0 +1,25 @@
+{
+  "name": "aws-c-mqtt",
+  "version": "0.7.6",
+  "port-version": 3,
+  "description": "C99 implementation of the MQTT 3.1.1 specification.",
+  "homepage": "https://github.com/awslabs/aws-c-mqtt",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-c-common",
+    "aws-c-http",
+    "aws-c-io",
+    {
+      "name": "s2n",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

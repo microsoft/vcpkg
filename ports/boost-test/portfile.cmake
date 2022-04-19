@@ -3,16 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/test
-    REF boost-1.76.0
-    SHA512 87b4e949adefd840ca1ac61ad97b5798508742ef10ca12d05be0181150b5cd23fa25e473ff5cb077a55afb04d61846b96f7dae298c2dbb2deb71589e6dbcc968
+    REF boost-1.78.0
+    SHA512 0a2611fee4d8f361f172375b21c9bc3825c105fdbd8a1b17364bb92654c631df508fb6a5d086c0aa3f8d5004b672ecf496f846b79eecba8e007dd581ebd47956
     HEAD_REF master
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../predef/check/predef" "import predef/check/predef" _contents "${_contents}")
+string(REPLACE "import ../../predef/check/predef" "import ../predef/check/predef" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${SOURCE_PATH}/build/predef")
-
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${SOURCE_PATH}/predef")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-test requires a newer version of vcpkg in order to build.")
 endif()

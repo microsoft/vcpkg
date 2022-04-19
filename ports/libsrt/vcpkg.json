@@ -1,0 +1,20 @@
+{
+  "name": "libsrt",
+  "version": "1.4.4",
+  "port-version": 2,
+  "description": "Secure Reliable Transport (SRT) is an open source transport technology that optimizes streaming performance across unpredictable networks, such as the Internet.",
+  "homepage": "https://github.com/Haivision/srt",
+  "supports": "!uwp",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Builds libsrt executable"
+    }
+  }
+}

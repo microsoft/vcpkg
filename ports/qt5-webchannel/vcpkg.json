@@ -1,0 +1,13 @@
+{
+  "name": "qt5-webchannel",
+  "version": "5.15.3",
+  "description": "Qt5 Web Channel module - Provides access to QObject or QML objects from HTML clients for seamless integration of Qt applications with HTML/JavaScript clients.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "qtsensors",
+  "version": "6.2.4",
+  "description": "Qt Sensors",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ]
+    },
+    {
+      "name": "qtconnectivity",
+      "default-features": false
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

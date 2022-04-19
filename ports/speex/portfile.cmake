@@ -14,12 +14,11 @@ vcpkg_from_github(
 if(VCPKG_TARGET_IS_WINDOWS)
   file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
   
-  vcpkg_configure_cmake(
+  vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
   )
-  vcpkg_install_cmake()
+  vcpkg_cmake_install()
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/speex/speex.h"
@@ -28,9 +27,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
   endif()
 else()
+  if(VCPKG_TARGET_IS_OSX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with brew install autoconf automake libtool")
+  elseif(VCPKG_TARGET_IS_LINUX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with apt-get install autoconf automake libtool")
+  endif()
   vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
+    OPTIONS --disable-binaries # no example programs (require libogg)
   )
   vcpkg_install_make()
 

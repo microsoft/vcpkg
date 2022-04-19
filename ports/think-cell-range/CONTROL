@@ -1,5 +1,0 @@
-Source: think-cell-range
-Version: 498839d-1
-Description: think-cell's range library
-Homepage: https://github.com/think-cell/range
-Build-Depends: boost

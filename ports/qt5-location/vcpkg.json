@@ -1,0 +1,16 @@
+{
+  "name": "qt5-location",
+  "version": "5.15.3",
+  "description": "Qt5 Location Module - Displays map, navigation, and place content in a QML application.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-quickcontrols",
+    "qt5-quickcontrols2",
+    "qt5-serialport"
+  ]
+}

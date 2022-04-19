@@ -1,0 +1,7 @@
+{
+  "name": "polymorphic-value",
+  "version-string": "1.3.0",
+  "port-version": 2,
+  "description": "A polymorphic value-type for C++",
+  "homepage": "https://github.com/jbcoe/polymorphic_value"
+}

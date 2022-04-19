@@ -1,7 +1,7 @@
 {
   "name": "netcdf-c",
-  "version-string": "4.7.4",
-  "port-version": 3,
+  "version": "4.8.1",
+  "port-version": 2,
   "description": "A set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
   "homepage": "https://github.com/Unidata/netcdf-c",
   "dependencies": [
@@ -16,23 +16,85 @@
   ],
   "default-features": [
     "dap",
-    "netcdf-4"
+    "nczarr",
+    "netcdf-4",
+    "platform-default-features"
   ],
   "features": {
     "dap": {
       "description": "Build with DAP remote access client support",
       "dependencies": [
-        "curl"
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
-    "netcdf-4": {
-      "description": "Build with netCDF-4/HDF5 support",
+    "hdf5": {
+      "description": "Build with HDF5 support",
       "dependencies": [
         {
           "name": "hdf5",
+          "default-features": false,
           "features": [
             "zlib"
           ]
+        },
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "netcdf-4"
+          ]
+        },
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true
+        }
+      ]
+    },
+    "nczarr": {
+      "description": "Build with NCZarr cloud storage access support",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "netcdf-4"
+          ]
+        }
+      ]
+    },
+    "nczarr-zip": {
+      "description": "Build with NCZarr ZIP support",
+      "dependencies": [
+        {
+          "name": "libzip",
+          "default-features": false
+        },
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "nczarr"
+          ]
+        }
+      ]
+    },
+    "netcdf-4": {
+      "description": "Build with netCDF-4 support"
+    },
+    "platform-default-features": {
+      "$comment": "Break vcpkg CI cascade.",
+      "description": "Enable platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "hdf5"
+          ],
+          "platform": "!uwp & !(arm64 & windows)"
         }
       ]
     },

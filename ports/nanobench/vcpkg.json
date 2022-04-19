@@ -1,0 +1,7 @@
+{
+  "name": "nanobench",
+  "version": "4.3.6",
+  "description": "Simple, fast, accurate single-header microbenchmarking functionality for C++11/14/17/20",
+  "homepage": "https://nanobench.ankerl.com",
+  "license": "MIT"
+}

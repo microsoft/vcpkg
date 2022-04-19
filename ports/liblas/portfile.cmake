@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-boost-headers.patch
-        fix-geotiff.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)

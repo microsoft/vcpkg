@@ -1,0 +1,18 @@
+{
+  "name": "qt5-speech",
+  "version": "5.15.3",
+  "description": "Qt5 Speech Module",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-multimedia"
+  ]
+}

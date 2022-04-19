@@ -3,19 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.76.0
-    SHA512 86807c1efafc582d41d6d46b0d83f95dcb4eebe071e8b6f25cb6c2706ee4c1f5be6dc70c5a28d76877390654889b3c02a77f655a132f715690f794be0336a00e
+    REF boost-1.78.0
+    SHA512 245eb006392cea71fc4da0100a804cff0f4f0a63baf5e4d95ea3b8234a8b2a72344090ccf827a6334fe1819dc207d84a2c1709c62f71361a8e8824d84a51edab
     HEAD_REF master
 )
 
-# see https://github.com/boostorg/json/issues/556 fore more details
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "import ../../config/checks/config" "import config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" "\n      <library>/boost//container/<warnings-as-errors>off" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "import ../config/checks/config" "import build/config/checks/config")
-vcpkg_replace_string("${SOURCE_PATH}/Jamfile" "..//check_basic_alignas" "..//..//..//check_basic_alignas")
-
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
+file(READ "${SOURCE_PATH}/build/Jamfile" _contents)
+string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/build/Jamfile" "${_contents}")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
 endif()

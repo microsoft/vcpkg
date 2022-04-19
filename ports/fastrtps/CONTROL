@@ -1,5 +1,0 @@
-Source: fastrtps
-Version: 2.0.1
-Homepage: https://www.eprosima.com/
-Description: Eprosima Fast RTPS is a C++ implementation of the RTPS (Real Time Publish Subscribe) protocol, which provides publisher-subscriber communications over unreliable transports such as UDP, as defined and maintained by the Object Management Group (OMG) consortium.
-Build-Depends: openssl, asio, tinyxml2, fastcdr, foonathan-memory

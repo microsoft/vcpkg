@@ -1,6 +1,0 @@
-Source: akali
-Version: 1.42
-Port-Version: 1
-Description: C++ Common Library.
-Homepage: https://github.com/winsoft666/akali
-Supports: !(arm|arm64|uwp)

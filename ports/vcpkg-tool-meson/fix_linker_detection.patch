@@ -1,0 +1,25 @@
+diff --git a/tools/meson/mesonbuild/compilers/detect.py b/tools/meson/mesonbuild/compilers/detect.py
+index 1eacecfa8..74668da1a 100644
+--- a/tools/meson/mesonbuild/compilers/detect.py
++++ b/tools/meson/mesonbuild/compilers/detect.py
+@@ -292,7 +292,7 @@ def detect_static_linker(env: 'Environment', compiler: Compiler) -> StaticLinker
+             linkers = default_linkers
+     popen_exceptions = {}
+     for linker in linkers:
+-        if not {'lib', 'lib.exe', 'llvm-lib', 'llvm-lib.exe', 'xilib', 'xilib.exe'}.isdisjoint(linker):
++        if any(os.path.basename(x) in {'lib', 'lib.exe', 'llvm-lib', 'llvm-lib.exe', 'xilib', 'xilib.exe'} for x in linker):
+             arg = '/?'
+         elif not {'ar2000', 'ar2000.exe'}.isdisjoint(linker):
+             arg = '?'
+diff --git a/tools/meson/mesonbuild/linkers/detect.py b/tools/meson/mesonbuild/linkers/detect.py
+index 0bfd7083b..323801d9a 100644
+--- a/tools/meson/mesonbuild/linkers/detect.py
++++ b/tools/meson/mesonbuild/linkers/detect.py
+@@ -72,6 +72,7 @@ def guess_win_linker(env: 'Environment', compiler: T.List[str], comp_class: T.Ty
+     override = []  # type: T.List[str]
+     value = env.lookup_binary_entry(for_machine, comp_class.language + '_ld')
+     if value is not None:
++        compiler = value
+         override = comp_class.use_linker_args(value[0])
+         check_args += override
+ 

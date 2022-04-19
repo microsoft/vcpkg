@@ -1,0 +1,19 @@
+{
+  "name": "trantor",
+  "version-semver": "1.5.5",
+  "description": "A non-blocking I/O cross-platform TCP network library, using C++14",
+  "homepage": "https://github.com/an-tao/trantor",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "c-ares",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

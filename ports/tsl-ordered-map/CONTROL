@@ -1,3 +1,0 @@
-Source: tsl-ordered-map
-Version: 1.0.0
-Description: C++ hash map and hash set which preserve the order of insertion

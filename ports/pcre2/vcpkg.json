@@ -1,6 +1,17 @@
 {
   "name": "pcre2",
-  "version-string": "10.37",
-  "description": "PCRE2 is a re-working of the original Perl Compatible Regular Expressions library",
-  "homepage": "https://pcre.org/"
+  "version": "10.39",
+  "port-version": 2,
+  "description": "Regular Expression pattern matching using the same syntax and semantics as Perl 5.",
+  "homepage": "https://github.com/PhilipHazel/pcre2",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

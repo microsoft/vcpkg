@@ -1,0 +1,22 @@
+{
+  "name": "qtlocation",
+  "version": "6.2.4",
+  "description": "Qt Location",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
+    },
+    "qtpositioning"
+  ]
+}

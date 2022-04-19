@@ -2,7 +2,7 @@ diff --git a/CMake/FindLZ4.cmake b/CMake/FindLZ4.cmake
 index 8c94e3bcd..ade3f9451 100644
 --- a/CMake/FindLZ4.cmake
 +++ b/CMake/FindLZ4.cmake
-@@ -1,38 +1,3 @@
+@@ -1,38 +1,5 @@
 -find_path(LZ4_INCLUDE_DIR
 -  NAMES lz4.h
 -  DOC "lz4 include directory")
@@ -42,6 +42,8 @@ index 8c94e3bcd..ade3f9451 100644
 -  endif ()
 -endif ()
 +find_package(LZ4 CONFIG REQUIRED)
-+set_target_properties(lz4::lz4 PROPERTIES IMPORTED_GLOBAL TRUE)
-+add_library(LZ4::LZ4 ALIAS lz4::lz4)
++if(NOT TARGET LZ4::LZ4)
++    add_library(LZ4::LZ4 INTERFACE IMPORTED)
++    target_link_libraries(LZ4::LZ4 INTERFACE lz4::lz4)
++endif()
 \ No newline at end of file

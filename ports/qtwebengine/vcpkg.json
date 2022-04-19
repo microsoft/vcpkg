@@ -1,0 +1,151 @@
+{
+  "$comment": "x86-windows is not within the upstream support matrix of Qt6",
+  "name": "qtwebengine",
+  "version": "6.2.4",
+  "description": "Qt WebEngine",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "supports": "!static & !((arm | x86) & windows)",
+  "dependencies": [
+    {
+      "name": "ffmpeg",
+      "platform": "!windows"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    {
+      "name": "freetype",
+      "platform": "!windows"
+    },
+    {
+      "name": "glib",
+      "platform": "!windows"
+    },
+    {
+      "name": "harfbuzz",
+      "platform": "!windows"
+    },
+    {
+      "name": "icu",
+      "platform": "!windows"
+    },
+    {
+      "name": "libevent",
+      "platform": "!windows"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "platform": "!windows"
+    },
+    {
+      "name": "libpng",
+      "platform": "!windows"
+    },
+    {
+      "name": "libvpx",
+      "platform": "!windows"
+    },
+    {
+      "name": "libwebp",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxml2",
+      "platform": "!windows"
+    },
+    {
+      "name": "minizip",
+      "platform": "!windows"
+    },
+    "opengl-registry",
+    {
+      "name": "opus",
+      "platform": "!windows"
+    },
+    {
+      "name": "protobuf",
+      "platform": "!windows"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "network",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    {
+      "$comment": "Requires GN host tool build by the port itself! (special version check)",
+      "name": "qtwebengine",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "re2",
+      "platform": "!windows"
+    },
+    {
+      "name": "snappy",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-tool-nodejs",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-python2",
+      "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "!windows"
+    }
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    },
+    "geolocation": {
+      "description": "Build with Geolocation",
+      "dependencies": [
+        {
+          "name": "qtlocation",
+          "default-features": false
+        }
+      ]
+    },
+    "proprietary-codecs": {
+      "description": "Enables the use of proprietary codecs such as h.264/h.265 and MP3."
+    },
+    "spellchecker": {
+      "description": "Provides a spellchecker"
+    },
+    "webchannel": {
+      "description": "Provides QtWebChannel integration",
+      "dependencies": [
+        {
+          "name": "qtwebchannel",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

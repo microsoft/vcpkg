@@ -6,6 +6,11 @@ install: install-gettext-runtime-intl install-gettext-runtime-po install-gettext
 install: install-gettext-tools install-gettext-tools-gnulib install-gettext-tools-its install-gettext-tools-m4 install-gettext-tools-misc install-gettext-tools-po install-gettext-tools-projects install-gettext-tools-styles
 install: install-libtextstyle
 
+build-intl:
+	$(MAKE) -C intl all
+install-intl:
+	$(MAKE) -C intl install
+
 build-gettext-runtime-gnulib: build-gettext-runtime-intl
 	$(MAKE) -C gettext-runtime/gnulib-lib all
 build-gettext-runtime-intl:

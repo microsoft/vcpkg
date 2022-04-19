@@ -1,25 +1,18 @@
-if("field3d" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        ON_TARGET WINDOWS UWP
-        MESSAGE "The field3d feature is not supported on Windows"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 099c8585e3add6f58fab9aa438a491fa55d3f67e # 2.2.17.0
-    SHA512 36e3aef52e082fcff64a16d10ad372a6335b3562c3d6e62aac88173476ae6c3694ac565084d50551724f47be83a7a8182e608c81c7a787392e576d9c401f65f5
+    REF ff71703961f7758409fb7e6e689258e2997f7c18 # 2.3.10.1
+    SHA512 f56cb58329a496ca1fe3537fe87d469038ac0e74a555990a4510d2c019d2ad14b556240c0d5087a9a25ac01d9b371b5c77ce5a719e71a85fcd56e9cd099bc31e
     HEAD_REF master
     PATCHES
+        fix-dependencies.patch
         fix-config-cmake.patch
-        fix_static_build.patch
+        fix-openjpeg-linkage.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
@@ -32,7 +25,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libraw      USE_LIBRAW
         opencolorio USE_OPENCOLORIO
         ffmpeg      USE_FFMPEG
-        field3d     USE_FIELD3D
         freetype    USE_FREETYPE
         gif         USE_GIF
         opencv      USE_OPENCV
@@ -47,7 +39,7 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
@@ -82,8 +74,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY "${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/OpenImageIO")
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

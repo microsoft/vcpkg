@@ -1,92 +1,83 @@
 diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
-index 11cbf01..620490d 100644
+index aa923e1..9ee7937 100644
 --- a/lang/c/CMakeLists.txt
 +++ b/lang/c/CMakeLists.txt
-@@ -149,7 +149,10 @@ else (ZLIB_FOUND)
+@@ -22,6 +22,9 @@ enable_testing()
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
+ 
++option(BUILD_EXAMPLES "Build examples." OFF)
++option(BUILD_TESTS "Build tests." OFF)
++option(BUILD_DOCS "Build docs." OFF)
+ # Eliminates warning about linker paths when linking both zlib and
+ # liblzma.
+ cmake_policy(SET CMP0003 NEW)
+@@ -149,20 +152,25 @@ else (ZLIB_FOUND)
      message("Disabled deflate codec. zlib not found.")
  endif (ZLIB_FOUND)
  
 -find_package(Snappy)
-+find_library(SNAPPY_LIBRARY_RELEASE NAMES snappy PATH_SUFFIXES lib)
-+find_library(SNAPPY_LIBRARY_DEBUG NAMES snappyd PATH_SUFFIXES debug/lib)
-+find_path(SNAPPY_INCLUDE_DIR snappy-c.h)
-+select_library_configurations(SNAPPY)
- if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
+-if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
++find_package(Snappy CONFIG REQUIRED)
++if (Snappy_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
      set(SNAPPY_PKG libsnappy)
      add_definitions(-DSNAPPY_CODEC)
-@@ -161,32 +164,36 @@ else (SNAPPY_FOUND AND ZLIB_FOUND)
++    set(SNAPPY_LIBRARIES Snappy::snappy)
++    if (UNIX)
++        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
++    endif ()
+     include_directories(${SNAPPY_INCLUDE_DIRS})
+     message("Enabled snappy codec")
+-else (SNAPPY_FOUND AND ZLIB_FOUND)
++else (Snappy_FOUND AND ZLIB_FOUND)
+     set(SNAPPY_PKG "")
+     set(SNAPPY_LIBRARIES "")
      message("Disabled snappy codec. libsnappy not found or zlib not found.")
- endif (SNAPPY_FOUND AND ZLIB_FOUND)
+-endif (SNAPPY_FOUND AND ZLIB_FOUND)
++endif (Snappy_FOUND AND ZLIB_FOUND)
  
 -find_package(PkgConfig)
 -pkg_check_modules(LZMA liblzma)
--if (LZMA_FOUND)
-+find_package(LibLZMA)
-+if (LibLZMA_FOUND)
-+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-+        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
-+    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++find_package(LibLZMA REQUIRED)
++set(LZMA_FOUND 1)
++set(LZMA_LIBRARIES LibLZMA::LibLZMA)
+ if (LZMA_FOUND)
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)
--    include_directories(${LZMA_INCLUDE_DIRS})
--    link_directories(${LZMA_LIBRARY_DIRS})
-+    include_directories(${LibLZMA_INCLUDE_DIRS})
-+    link_directories(${LibLZMA_LIBRARY_DIRS})
-     message("Enabled lzma codec")
--else (LZMA_FOUND)
-+else (LibLZMA_FOUND)
-     set(LZMA_PKG "")
--    set(LZMA_LIBRARIES "")
-+    set(LibLZMA_LIBRARIES "")
-     message("Disabled lzma codec. liblzma not found.")
--endif (LZMA_FOUND)
-+endif (LIBLZMA_FOUND)
- 
--set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
-+set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LibLZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+@@ -179,20 +187,26 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
  set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
  
  # Jansson JSON library
 -pkg_check_modules(JANSSON jansson>=2.3)
 -if (JANSSON_FOUND)
-+find_path(JANSSON_INCLUDE_DIR NAMES jansson.h)
-+find_library(JANSSON_LIBRARY NAMES jansson)
-+if (JANSSON_LIBRARY)
++find_package(jansson CONFIG REQUIRED)
++if (jansson_FOUND)
      set(JANSSON_PKG libjansson)
-+    set(JANSSON_LIBRARIES ${JANSSON_LIBRARY})
++    set(JANSSON_LIBRARIES jansson::jansson)
      include_directories(${JANSSON_INCLUDE_DIRS})
      link_directories(${JANSSON_LIBRARY_DIRS})
 -else (JANSSON_FOUND)
-+else (JANSSON_LIBRARY)
++else (jansson_FOUND)
      message(FATAL_ERROR "libjansson >=2.3 not found")
 -endif (JANSSON_FOUND)
-+endif (JANSSON_LIBRARY)
++endif (jansson_FOUND)
  
  
  add_subdirectory(src)
-diff --git a/lang/c/examples/quickstop.c b/lang/c/examples/quickstop.c
-index f18225b..78e2b1b 100644
---- a/lang/c/examples/quickstop.c
-+++ b/lang/c/examples/quickstop.c
-@@ -16,6 +16,7 @@
-  */
- 
- #include <avro.h>
-+#include <avro/platform.h>
- #include <stdio.h>
- #include <stdlib.h>
- 
-@@ -102,7 +103,7 @@ int print_person(avro_file_reader_t db, avro_schema_t reader_schema)
- 
- 		if (avro_record_get(person, "ID", &id_datum) == 0) {
- 			avro_int64_get(id_datum, &i64);
--			fprintf(stdout, "%"PRId64" | ", i64);
-+			fprintf(stdout, "%" PRId64 " | ", i64);
- 		}
- 		if (avro_record_get(person, "First", &first_datum) == 0) {
- 			avro_string_get(first_datum, &p);
++if(BUILD_EXAMPLES)
+ add_subdirectory(examples)
++endif()
++if(BUILD_TESTS)
+ add_subdirectory(tests)
++endif()
++if(BUILD_DOCS)
+ add_subdirectory(docs)
+-
++endif()
+ add_custom_target(pretty
+     "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake_pretty.cmake")
 diff --git a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
-index 29be14b..7efc702 100644
+index 29be14b..020346d 100644
 --- a/lang/c/src/avro/msinttypes.h
 +++ b/lang/c/src/avro/msinttypes.h
 @@ -54,6 +54,10 @@
@@ -96,7 +87,7 @@ index 29be14b..7efc702 100644
 +#if (_MSC_VER >= 1900)
 +#   include <inttypes.h>
 +#else
-+
++    
  typedef struct {
     intmax_t quot;
     intmax_t rem;
@@ -145,7 +136,7 @@ index 9293055..edfe1e0 100644
    #define PRIsz "zu"
  #endif
 diff --git a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
-index f97ef6b..6b29104 100644
+index f97ef6b..9c47d26 100644
 --- a/lang/c/src/avro_private.h
 +++ b/lang/c/src/avro_private.h
 @@ -34,7 +34,7 @@ extern "C" {
@@ -153,7 +144,7 @@ index f97ef6b..6b29104 100644
  
  #ifdef _WIN32
 -#define snprintf _snprintf
-+ // #define snprintf _snprintf
++// #define snprintf _snprintf
  #endif
  
  /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
@@ -171,10 +162,10 @@ index 7243c60..39656ff 100644
  
  #include "avro.h"
 diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
-index 5b55b35..49789f2 100644
+index 613a914..8092326 100644
 --- a/lang/c/src/codec.c
 +++ b/lang/c/src/codec.c
-@@ -269,7 +269,7 @@ static int encode_deflate(avro_codec_t c, void * data, int64_t len)
+@@ -272,7 +272,7 @@ static int encode_deflate(avro_codec_t c, void * data, int64_t len)
  	s->next_in = (Bytef*)data;
  	s->avail_in = (uInt)len;
  
@@ -183,7 +174,7 @@ index 5b55b35..49789f2 100644
  	s->avail_out = (uInt)c->block_size;
  
  	s->total_out = 0;
-@@ -313,10 +313,10 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
+@@ -316,10 +316,10 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
  
  	c->used_size = 0;
  
@@ -196,7 +187,7 @@ index 5b55b35..49789f2 100644
  	s->avail_out = c->block_size;
  
  	s->total_out = 0;
-@@ -337,7 +337,7 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
+@@ -340,7 +340,7 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
  		if (err == Z_BUF_ERROR)
  		{
  			c->block_data = avro_realloc(c->block_data, c->block_size, c->block_size * 2);
@@ -205,7 +196,7 @@ index 5b55b35..49789f2 100644
  			s->avail_out += c->block_size;
  			c->block_size = c->block_size * 2;
  		}
-@@ -440,7 +440,7 @@ static int encode_lzma(avro_codec_t codec, void * data, int64_t len)
+@@ -443,7 +443,7 @@ static int encode_lzma(avro_codec_t codec, void * data, int64_t len)
  		return 1;
  	}
  
@@ -214,7 +205,7 @@ index 5b55b35..49789f2 100644
  
  	codec->used_size = written;
  
-@@ -471,8 +471,8 @@ static int decode_lzma(avro_codec_t codec, void * data, int64_t len)
+@@ -474,8 +474,8 @@ static int decode_lzma(avro_codec_t codec, void * data, int64_t len)
  
  	do
  	{
@@ -226,7 +217,7 @@ index 5b55b35..49789f2 100644
  
  		codec->used_size = write_pos;
 diff --git a/lang/c/src/schema.c b/lang/c/src/schema.c
-index 7b38900..50fa0db 100644
+index 7b38900..e3794d5 100644
 --- a/lang/c/src/schema.c
 +++ b/lang/c/src/schema.c
 @@ -74,7 +74,7 @@ static int is_avro_id(const char *name)
@@ -384,27 +375,3 @@ index 7b38900..50fa0db 100644
  		check(rval, avro_write_str(out, "."));
  	}
  	check(rval, avro_write_str(out, avro_schema_name(link->to)));
-diff --git a/lang/c/tests/test_avro_data.c b/lang/c/tests/test_avro_data.c
-index 1da09e6..714d5d8 100644
---- a/lang/c/tests/test_avro_data.c
-+++ b/lang/c/tests/test_avro_data.c
-@@ -28,6 +28,10 @@ avro_writer_t writer;
- 
- typedef int (*avro_test) (void);
- 
-+#ifdef _WIN32
-+# define strcasecmp stricmp
-+#endif
-+
- /*
-  * Use a custom allocator that verifies that the size that we use to
-  * free an object matches the size that we use to allocate it.
-@@ -112,7 +116,7 @@ write_read_check(avro_schema_t writers_schema, avro_datum_t datum,
- 		if (size != avro_writer_tell(writer)) {
- 			fprintf(stderr,
- 				"Unable to calculate size %s validate=%d "
--				"(%"PRId64" != %"PRId64")\n  %s\n",
-+				"(%" PRId64 " != %" PRId64 ")\n  %s\n",
- 				type, validate, size, avro_writer_tell(writer),
- 				avro_strerror());
- 			exit(EXIT_FAILURE);

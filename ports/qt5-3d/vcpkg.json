@@ -1,0 +1,16 @@
+{
+  "name": "qt5-3d",
+  "version": "5.15.3",
+  "description": "Qt5 3d Module - Functionality for near-realtime simulation systems with support for 2D and 3D rendering",
+  "license": null,
+  "dependencies": [
+    "assimp",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative",
+    "qt5-gamepad",
+    "qt5-imageformats"
+  ]
+}

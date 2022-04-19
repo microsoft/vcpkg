@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
-    REF  386639c3b118cc973f714eb485877f480391f31f #v1.48.4
-    SHA512 d7de3bc3108826de9f0b34ca888e0c1eb97c1d0723b2dd68cfb1030fb78d1367e3ac4df88e4a5dea66b08854ef85ecf562d149a58f070351768d6ac144da8520
+    REF  37a427018c92a2bc679ef104097e07a619609c9c #v1.50.6
+    SHA512 4990022cae2130b4842d0d9d3161545c7214ac3dd445d85a7ec49b0a89e39319b404fecc66d4025965cd2407823c7476b937e6ee53e2e6763b35048db8ff387f
     HEAD_REF master # branch name
 ) 
 
@@ -13,7 +13,7 @@ vcpkg_configure_meson(
         -Dintrospection=disabled # Build the GObject introspection data for Pango
         -Dfontconfig=enabled # Build with FontConfig support.
         -Dsysprof=disabled # include tracing support for sysprof
-        -Dlibtahi=disabled # Build with libthai support
+        -Dlibthai=disabled # Build with libthai support
         -Dcairo=enabled # Build with cairo support
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
@@ -28,7 +28,7 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tools(TOOL_NAMES pango-view pango-list AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

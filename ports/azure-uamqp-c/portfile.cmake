@@ -12,8 +12,8 @@ else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-uamqp-c
-        REF c88abeab27ece7f13911d73202f44212c3e08953
-        SHA512 befb7ad72ea61713b043a4a4bdf70f454aac5f4590ca84aa7f4d9b7c8447b643fb37028173774451cfbe00119937f857680cd827d90e676ee558a18a1b6442bb
+        REF 85aae56beb717dddaf5512845de537d2926afb02
+        SHA512 3d9e7788c784169e6d1d9abd233e00a4c1e6525d67cbc25f8ba42292b6d66d0179a742833a0c00a3a0df6498bf88dc8b12a40c183e7141f7290cbb4eceb67dbe
         HEAD_REF master
     )
 endif()
@@ -27,6 +27,8 @@ vcpkg_configure_cmake(
         -Dskip_samples=ON
         -Duse_installed_dependencies=ON
         -Dbuild_as_dynamic=OFF
+    MAYBE_UNUSED_VARIABLES
+        build_as_dynamic
 )
 
 vcpkg_install_cmake()
@@ -38,4 +40,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-

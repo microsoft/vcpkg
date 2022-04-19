@@ -9,33 +9,17 @@ set(PATCHES
         pcre-8.45_fix_postfix_for_debug_Windows_builds.patch
         export-cmake-targets.patch)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO pcre/pcre
+    REF ${PCRE_VERSION}
     FILENAME "pcre-${PCRE_VERSION}.zip"
     SHA512 ${EXPECTED_SHA}
-    SILENT_EXIT
+    PATCHES ${PATCHES}
 )
 
-if (EXISTS "${ARCHIVE}")
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE ${ARCHIVE}
-        PATCHES ${PATCHES}
-    )
-else()
-    vcpkg_from_sourceforge(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO pcre/pcre
-        REF ${PCRE_VERSION}
-        FILENAME "pcre-${PCRE_VERSION}.zip"
-        SHA512 ${EXPECTED_SHA}
-        PATCHES ${PATCHES}
-    )
-endif()
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DPCRE_BUILD_TESTS=NO
         -DPCRE_BUILD_PCREGREP=NO
@@ -55,11 +39,11 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}" CONFIG_PATH "share/unofficial-${PORT}")
 
-foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/include/pcreposix.h)
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/pcre.h" "${CURRENT_PACKAGES_DIR}/include/pcreposix.h")
     file(READ ${FILE} PCRE_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(REPLACE "defined(PCRE_STATIC)" "1" PCRE_H "${PCRE_H}")
@@ -71,18 +55,19 @@ endforeach()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+else()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcre-config" "${CURRENT_PACKAGES_DIR}/debug/bin/pcre-config")
 endif()
 
 vcpkg_copy_pdbs()
-configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake" @ONLY)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

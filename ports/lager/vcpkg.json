@@ -1,0 +1,23 @@
+{
+  "name": "lager",
+  "version-date": "2022-02-21",
+  "description": "C++ library for value-oriented design using the unidirectional data-flow architecture",
+  "homepage": "https://sinusoid.es/lager/",
+  "dependencies": [
+    "boost-hana",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zug"
+  ],
+  "features": {
+    "docs": {
+      "description": "Build documentation"
+    }
+  }
+}

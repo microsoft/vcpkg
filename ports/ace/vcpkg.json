@@ -1,0 +1,43 @@
+{
+  "name": "ace",
+  "version": "7.0.6",
+  "port-version": 3,
+  "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
+  "description": "The ADAPTIVE Communication Environment",
+  "homepage": "https://www.dre.vanderbilt.edu/~schmidt/ACE.html",
+  "license": "DOC",
+  "features": {
+    "ssl": {
+      "description": "Enable SSL/TLS features in ACE",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tao": {
+      "description": "The ACE ORB"
+    },
+    "wchar": {
+      "description": "Enable extra wide char functions in ACE"
+    },
+    "xml": {
+      "description": "Enable XML features in ACE"
+    },
+    "xml-utils": {
+      "description": "Include the ACE_XML_Utils library",
+      "dependencies": [
+        {
+          "name": "xerces-c",
+          "features": [
+            "xmlch-wchar"
+          ]
+        }
+      ]
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "libosmium",
+  "version-semver": "2.17.1",
+  "port-version": 1,
+  "description": "A fast and flexible C++ library for working with OpenStreetMap data",
+  "homepage": "https://osmcode.org/libosmium/",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "boost",
+    "bzip2",
+    "expat",
+    "proj",
+    "protozero",
+    "utfcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

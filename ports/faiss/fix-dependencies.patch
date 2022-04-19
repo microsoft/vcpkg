@@ -1,5 +1,5 @@
 diff --git a/cmake/faiss-config.cmake.in b/cmake/faiss-config.cmake.in
-index 43ea9d4c..437a7f81 100644
+index 43ea9d4..437a7f8 100644
 --- a/cmake/faiss-config.cmake.in
 +++ b/cmake/faiss-config.cmake.in
 @@ -4,4 +4,7 @@
@@ -11,24 +11,29 @@ index 43ea9d4c..437a7f81 100644
 +find_dependency(LAPACK REQUIRED)
  include("${CMAKE_CURRENT_LIST_DIR}/faiss-targets.cmake")
 diff --git a/faiss/CMakeLists.txt b/faiss/CMakeLists.txt
-index 51680fd1..691f52c2 100644
+index 30d573f..9af8baf 100644
 --- a/faiss/CMakeLists.txt
 +++ b/faiss/CMakeLists.txt
-@@ -148,14 +148,14 @@ find_package(OpenMP REQUIRED)
- target_link_libraries(faiss PRIVATE OpenMP::OpenMP_CXX)
+@@ -212,17 +212,17 @@ target_link_libraries(faiss PRIVATE OpenMP::OpenMP_CXX)
+ target_link_libraries(faiss_avx2 PRIVATE OpenMP::OpenMP_CXX)
  
  find_package(MKL)
 -if(MKL_FOUND)
 +if(0)
    target_link_libraries(faiss PRIVATE ${MKL_LIBRARIES})
+   target_link_libraries(faiss_avx2 PRIVATE ${MKL_LIBRARIES})
  else()
    find_package(BLAS REQUIRED)
 -  target_link_libraries(faiss PRIVATE ${BLAS_LIBRARIES})
+-  target_link_libraries(faiss_avx2 PRIVATE ${BLAS_LIBRARIES})
 +  target_link_libraries(faiss PRIVATE BLAS::BLAS)
++  target_link_libraries(faiss_avx2 PRIVATE BLAS::BLAS)
  
    find_package(LAPACK REQUIRED)
 -  target_link_libraries(faiss PRIVATE ${LAPACK_LIBRARIES})
+-  target_link_libraries(faiss_avx2 PRIVATE ${LAPACK_LIBRARIES})
 +  target_link_libraries(faiss PRIVATE LAPACK::LAPACK)
++  target_link_libraries(faiss_avx2 PRIVATE LAPACK::LAPACK)
  endif()
  
  install(TARGETS faiss

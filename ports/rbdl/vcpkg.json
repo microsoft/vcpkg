@@ -1,7 +1,7 @@
 {
   "name": "rbdl",
   "version": "2.6.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Rigid Body Dynamics Library",
   "homepage": "https://github.com/rbdl/rbdl",
   "dependencies": [

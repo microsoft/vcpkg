@@ -1,5 +1,0 @@
-Source: pfring
-Version: 2019-10-17-2
-Homepage: https://github.com/ntop/PF_RING
-Description: PF_RING™ is a Linux kernel module and user-space framework that allows you to process packets at high-rates while providing you a consistent API for packet processing applications.
-Build-Depends: libpcap

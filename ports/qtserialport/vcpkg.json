@@ -1,0 +1,13 @@
+{
+  "name": "qtserialport",
+  "version": "6.2.4",
+  "description": "Qt Serial Port support",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
+  ]
+}

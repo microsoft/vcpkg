@@ -1,4 +1,0 @@
-Source: qt5-multimedia
-Version: 5.15.2
-Description: Qt5 Multimedia Module - Classes and widgets for audio, video, radio and camera functionality
-Build-Depends: qt5-base[core], qt5-declarative

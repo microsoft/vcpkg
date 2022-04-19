@@ -1,0 +1,14 @@
+{
+  "name": "ignition-msgs5",
+  "version": "5.3.0",
+  "port-version": 4,
+  "description": "Middleware protobuf messages for robotics",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    "ignition-cmake2",
+    "ignition-math6",
+    "ignition-modularscripts",
+    "protobuf",
+    "tinyxml2"
+  ]
+}

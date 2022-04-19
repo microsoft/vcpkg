@@ -1,0 +1,18 @@
+{
+  "name": "tidy-html5",
+  "version": "5.7.28",
+  "port-version": 5,
+  "description": "Tidy tidies HTML and XML. It can tidy your documents by itself, and developers can easily integrate its features into even more powerful tools.",
+  "homepage": "https://github.com/htacg/tidy-html5",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "libxslt",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

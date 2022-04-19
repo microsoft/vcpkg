@@ -1,0 +1,33 @@
+{
+  "name": "qtserialbus",
+  "version": "6.2.4",
+  "description": "Support for CAN and potentially other serial buses.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    {
+      "name": "qtserialbus",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtserialport",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}

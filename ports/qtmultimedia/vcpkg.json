@@ -1,0 +1,59 @@
+{
+  "name": "qtmultimedia",
+  "version": "6.2.4",
+  "description": "Qt Multimedia",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "network"
+      ]
+    },
+    {
+      "name": "qtshadertools",
+      "host": true,
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "widgets"
+  ],
+  "features": {
+    "gstreamer": {
+      "description": "Build with gstreamer",
+      "dependencies": [
+        "angle",
+        "gstreamer"
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "widgets": {
+      "description": "Build Multimedia Widgets",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    }
+  }
+}

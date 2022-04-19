@@ -1,5 +1,0 @@
-Source: muparser
-Version: 2.3.2
-Homepage: https://github.com/beltoforion/muparser
-Description:  Fast math parser library
-Supports: !uwp

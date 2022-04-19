@@ -1,0 +1,125 @@
+{
+  "name": "osg",
+  "version": "3.6.5",
+  "port-version": 12,
+  "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
+  "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "dependencies": [
+    {
+      "name": "expat",
+      "platform": "windows"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    "opengl-registry",
+    {
+      "name": "openimageio",
+      "platform": "osx"
+    },
+    "zlib"
+  ],
+  "features": {
+    "collada": {
+      "description": "Support for Collada (.dae) files",
+      "dependencies": [
+        "collada-dom"
+      ]
+    },
+    "docs": {
+      "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
+    },
+    "examples": {
+      "description": "Enable to build OSG Examples",
+      "dependencies": [
+        "freetype",
+        {
+          "name": "libiconv",
+          "platform": "windows"
+        },
+        "sdl1",
+        "sdl2"
+      ]
+    },
+    "packages": {
+      "description": "Set to ON to generate CPack configuration files and packaging targets"
+    },
+    "plugins": {
+      "description": "Build OSG Plugins - Disable for compile testing examples on a time limit",
+      "dependencies": [
+        {
+          "name": "boost-asio",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-bind",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-core",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-lexical-cast",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-logic",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-smart-ptr",
+          "platform": "!windows"
+        },
+        {
+          "name": "boost-tuple",
+          "platform": "!windows"
+        },
+        "coin",
+        "curl",
+        "freetype",
+        "gdal",
+        {
+          "name": "giflib",
+          "platform": "windows"
+        },
+        "ilmbase",
+        "jasper",
+        "libgta",
+        {
+          "name": "libiconv",
+          "platform": "windows"
+        },
+        "libjpeg-turbo",
+        "liblas",
+        "libpng",
+        {
+          "name": "libxml2",
+          "platform": "windows"
+        },
+        {
+          "name": "nvtt",
+          "platform": "!x86"
+        },
+        "openexr",
+        "sdl1",
+        "tiff"
+      ]
+    },
+    "tools": {
+      "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "dependencies": [
+        "curl",
+        "freetype",
+        {
+          "name": "libiconv",
+          "platform": "windows"
+        },
+        "libjpeg-turbo",
+        "libpng",
+        "sdl1"
+      ]
+    }
+  }
+}
