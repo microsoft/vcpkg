@@ -13,16 +13,27 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     REF ${LIBUNISTRING_VERSION}
-    PATCHES fix-for-automake-1.16.4.patch # automake 1.16.4 uses m4_ifset instead of m4_ifdef
+    PATCHES libunistring-msys-msvc-build.patch
 )
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    COPY_SOURCE
-    OPTIONS
-        "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
-)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        COPY_SOURCE
+        OPTIONS
+            "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
+            RC="${SOURCE_PATH}/build-aux/msys-msvc-windres"
+            AR="${SOURCE_PATH}/build-aux/msys-msvc-ar"
+    )
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        COPY_SOURCE
+        OPTIONS
+            "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
+    )
+endif()
+
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

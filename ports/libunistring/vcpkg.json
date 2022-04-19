@@ -4,7 +4,6 @@
   "port-version": 2,
   "description": "GNU libunistring provides functions for manipulating Unicode strings and for manipulating C strings according to the Unicode standard.",
   "homepage": "https://www.gnu.org/software/libunistring/",
-  "supports": "!windows",
   "dependencies": [
     "libiconv"
   ]
