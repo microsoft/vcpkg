@@ -3438,7 +3438,7 @@
     },
     "libcds": {
       "baseline": "2.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libcerf": {
       "baseline": "1.13",

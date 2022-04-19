@@ -476,9 +476,6 @@ libbf:x64-windows-static-md=fail
 libbf:x86-windows=fail
 libbson:arm-uwp=fail
 libbson:x64-uwp=fail
-libcds:arm64-windows=fail
-libcds:arm-uwp=fail
-libcds:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
