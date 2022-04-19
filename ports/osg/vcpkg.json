@@ -4,6 +4,7 @@
   "port-version": 12,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "license": null,
   "dependencies": [
     {
       "name": "expat",
@@ -28,7 +29,7 @@
       ]
     },
     "docs": {
-      "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
+      "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads)"
     },
     "examples": {
       "description": "Enable to build OSG Examples",
@@ -84,7 +85,6 @@
           "name": "giflib",
           "platform": "windows"
         },
-        "ilmbase",
         "jasper",
         "libgta",
         {

@@ -11,6 +11,17 @@ index 2ae0b66..e6c55cd 100644
  macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
  
  # Find X11
+@@ -296,8 +296,8 @@
+ endif ()
+ 
+ # OpenEXR
+-find_package(OpenEXR)
+-macro_log_feature(OPENEXR_FOUND "OpenEXR" "Load High dynamic range images" "http://www.openexr.com/" FALSE "" "")
++find_package(OpenEXR CONFIG)
++macro_log_feature(OpenEXR_FOUND "OpenEXR" "Load High dynamic range images" "http://www.openexr.com/" FALSE "" "")
+ 
+ # Python
+ set(Python_ADDITIONAL_VERSIONS 3.4) # allows using python3 on Ubuntu 14.04
 @@ -310,11 +310,11 @@ find_package(SWIG 3.0.8 QUIET)
  macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OGRE" "http://www.swig.org/" FALSE "" "")
  

@@ -23,6 +23,7 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES exr2aces exrenvmap exrheader exrinfo exrmakepreview
   exrmaketiled exrmultipart exrmultiview exrstdattr AUTO_CLEAN
+
 )
 
 vcpkg_copy_pdbs()
@@ -34,4 +35,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

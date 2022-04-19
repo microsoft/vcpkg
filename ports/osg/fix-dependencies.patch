@@ -2,14 +2,18 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 798b8b9..c975d78 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -740,7 +740,7 @@ ELSE()
+@@ -740,7 +740,10 @@ ELSE()
  # Common to all platforms except android:
      FIND_PACKAGE(Freetype)
      FIND_PACKAGE(ilmbase)
 -    FIND_PACKAGE(Inventor)
 +    FIND_PACKAGE(coin CONFIG)
      FIND_PACKAGE(Jasper)
-     FIND_PACKAGE(OpenEXR)
+-    FIND_PACKAGE(OpenEXR)
++    FIND_PACKAGE(OpenEXR CONFIG)
++    set(OPENEXR_FOUND ${OpenEXR_FOUND})
++    set(OPENEXR_LIBRARIES OpenEXR::OpenEXR)
++    set(OPENEXR_LIBRARIES_VARS OPENEXR_LIBRARIES)
      FIND_PACKAGE(OpenCascade)
 diff --git a/src/osgPlugins/Inventor/CMakeLists.txt b/src/osgPlugins/Inventor/CMakeLists.txt
 index 963a494..e34b6b8 100644

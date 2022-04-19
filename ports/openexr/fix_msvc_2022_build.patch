@@ -1,0 +1,56 @@
+From 71837bce5380696d8dc65fc72449f81029a52d12 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Achard?= <remiachard@gmail.com>
+Date: Sun, 13 Mar 2022 19:18:52 +0000
+Subject: [PATCH] Fix MSVC 2022 build
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Rémi Achard <remiachard@gmail.com>
+---
+
+diff --git a/src/lib/OpenEXRCore/chunk.c b/src/lib/OpenEXRCore/chunk.c
+index 9b9b53fd..7fd4d6f3 100644
+--- a/src/lib/OpenEXRCore/chunk.c
++++ b/src/lib/OpenEXRCore/chunk.c
+@@ -15,9 +15,12 @@
+ /**************************************/
+ 
+ /* for testing, we include a bunch of internal stuff into the unit tests which are in c++ */
+-#if defined __has_include
+-#    if __has_include(<stdatomic.h>)
+-#        define EXR_HAS_STD_ATOMICS 1
++/* see internal_structs.h for details on the msvc guard. */
++#if !defined(_MSC_VER)
++#    if defined __has_include
++#        if __has_include(<stdatomic.h>)
++#            define EXR_HAS_STD_ATOMICS 1
++#        endif
+ #    endif
+ #endif
+ 
+diff --git a/src/lib/OpenEXRCore/internal_structs.h b/src/lib/OpenEXRCore/internal_structs.h
+index f4ab743a..577520cd 100644
+--- a/src/lib/OpenEXRCore/internal_structs.h
++++ b/src/lib/OpenEXRCore/internal_structs.h
+@@ -35,9 +35,14 @@
+ #    include <atomic>
+ using atomic_uintptr_t = std::atomic_uintptr_t;
+ #else
+-#    if defined __has_include
+-#        if __has_include(<stdatomic.h>)
+-#            define EXR_HAS_STD_ATOMICS 1
++/* msvc, from version 19.31, evaluate __has_include(<stdatomic.h>) to true but
++ * doesn't actually support it yet. Ignoring msvc for now, once we know minimal
++ * version supporting it, we can compare against _MSC_VER. */
++#    if !defined(_MSC_VER)
++#        if defined __has_include
++#            if __has_include(<stdatomic.h>)
++#                define EXR_HAS_STD_ATOMICS 1
++#            endif
+ #        endif
+ #    endif
+ 
+-- 
+2.33.0
+

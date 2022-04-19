@@ -1,0 +1,13 @@
+diff --git a/PlugIns/EXRCodec/src/OgreEXRCodec.cpp b/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
+--- a/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
++++ b/PlugIns/EXRCodec/src/OgreEXRCodec.cpp
+@@ -42,6 +42,9 @@
+ #include <ImfStringAttribute.h>
+ #include <ImfMatrixAttribute.h>
+ #include <ImfArray.h>
++#include <ImfHeader.h>
++#include <ImfFrameBuffer.h>
++#include <Imath/ImathBox.h>
+ 
+ using namespace Imath;
+ using namespace Imf;

@@ -250,16 +250,25 @@ index 1602572..9fddbe7 100644
      execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
+@@ -360,7 +360,7 @@ set(OGRE_CONFIG_THREAD_PROVIDER "std" CACHE STRING
+ )
+ set_property(CACHE OGRE_CONFIG_THREAD_PROVIDER PROPERTY STRINGS boost poco tbb std)
+ cmake_dependent_option(OGRE_BUILD_PLUGIN_FREEIMAGE "Build FreeImage codec." TRUE "FreeImage_FOUND" FALSE)
+-cmake_dependent_option(OGRE_BUILD_PLUGIN_EXRCODEC "Build EXR Codec plugin" TRUE "OPENEXR_FOUND;" FALSE)
++cmake_dependent_option(OGRE_BUILD_PLUGIN_EXRCODEC "Build EXR Codec plugin" TRUE "OpenEXR_FOUND;" FALSE)
+ option(OGRE_BUILD_PLUGIN_STBI "Enable STBI image codec." TRUE)
+ option(OGRE_CONFIG_ENABLE_MESHLOD "Enable Mesh Lod." TRUE)
+ option(OGRE_CONFIG_ENABLE_DDS "Build DDS codec." TRUE)
 diff --git a/PlugIns/EXRCodec/CMakeLists.txt b/PlugIns/EXRCodec/CMakeLists.txt
 index e9c936a..bb8747e 100644
 --- a/PlugIns/EXRCodec/CMakeLists.txt
 +++ b/PlugIns/EXRCodec/CMakeLists.txt
-@@ -16,7 +16,7 @@ target_link_libraries(Codec_EXR OgreMain ${OPENEXR_LIBRARIES})
+@@ -12,7 +12,7 @@
+ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+ 
+ add_library(Codec_EXR ${OGRE_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+-target_link_libraries(Codec_EXR OgreMain ${OPENEXR_LIBRARIES})
++target_link_libraries(Codec_EXR OgreMain OpenEXR::OpenEXR)
  target_include_directories(Codec_EXR PUBLIC 
      "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
      $<INSTALL_INTERFACE:include/OGRE/Plugins/EXRCodec>)
--target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}/OpenEXR")
-+target_include_directories(Codec_EXR SYSTEM PRIVATE  "${OPENEXR_INCLUDE_DIR}")
- 
- ogre_config_framework(Codec_EXR)
- ogre_config_plugin(Codec_EXR)
