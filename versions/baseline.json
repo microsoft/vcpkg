@@ -3438,7 +3438,7 @@
     },
     "libcds": {
       "baseline": "2.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libcerf": {
       "baseline": "1.13",
@@ -5514,7 +5514,7 @@
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
-      "port-version": 1
+      "port-version": 2
     },
     "portaudio": {
       "baseline": "19.7",
@@ -5577,8 +5577,8 @@
       "port-version": 1
     },
     "protozero": {
-      "baseline": "1.7.0",
-      "port-version": 1
+      "baseline": "1.7.1",
+      "port-version": 0
     },
     "proxygen": {
       "baseline": "2022.03.21.00",
@@ -6362,7 +6362,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 15
+      "port-version": 16
     },
     "sdl1-net": {
       "baseline": "1.2.8",
