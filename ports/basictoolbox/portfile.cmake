@@ -32,7 +32,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL pi@RPI3:repo/lib/basic_toolbox.git
-    REF 4c2bba0c06af6be00349ac2520b972b47791bf90
+    REF b0c2c45f7163ff1606aa3d2e7f02a252e06ad60e
 #    HEAD_REF master
 #    [PATCHES <patch1.patch> <patch2.patch>...]
 )
