@@ -1,16 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 project(gtk+ C)
 
-configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
-configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
-
-set(GLIB_LIB_SUFFIX 2.0)
-set(PANGO_LIB_SUFFIX 1.0)
-set(ATK_LIB_SUFFIX 1.0)
-set(GDK_PIXBUF_LIB_SUFFIX 2.0)
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(CAIRO_LIB_SUFFIX d)
-endif()
+configure_file(config.h.win32 ${CMAKE_BINARY_DIR}/config.h COPYONLY)
+list(APPEND GTK_REQUIRED_INCLUDE_DIR ${CMAKE_BINARY_DIR})
+configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_BINARY_DIR}/gdk/gdkconfig.h COPYONLY)
+list(APPEND GTK_REQUIRED_INCLUDE_DIR ${CMAKE_BINARY_DIR}/gdk)
 
 if (WIN32)
   # Set utf-8 charset to avoid compile error C2001
@@ -18,65 +12,49 @@ if (WIN32)
 endif()
 
 # find dependencies
+find_package(PkgConfig REQUIRED)
 # glib
-find_path(GLIB_INCLUDE_DIR NAMES glib.h PATH_SUFFIXES glib-${GLIB_LIB_SUFFIX})
-find_path(GLIBCONFIG_INCLUDE_DIR NAMES glibconfig.h HINTS ${CMAKE_PREFIX_PATH}/lib ${CMAKE_PREFIX_PATH}/debug/lib PATH_SUFFIXES glib-${GLIB_LIB_SUFFIX} glib-${GLIB_LIB_SUFFIX}/include)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GIO_LIBRARY gio-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_SUFFIX})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRARY} ${GLIB_GOBJECT_LIBRARY})
-
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 
 # pango
-find_path(PANGO_INCLUDE_DIR NAMES pango/pango.h PATH_SUFFIXES pango-${PANGO_LIB_SUFFIX})
-find_path(HB_INCLUDE_DIR NAMES hb.h PATH_SUFFIXES harfbuzz)
-find_library(PANGO_LIBRARY pango-${PANGO_LIB_SUFFIX})
-find_library(PANGO_CAIRO_LIBRARY NAMES pangocairo-${PANGO_LIB_SUFFIX} pangowin32-${PANGO_LIB_SUFFIX})
-set(PANGO_LIBRARIES ${PANGO_LIBRARY} ${PANGO_CAIRO_LIBRARY})
+pkg_check_modules(PANGO Pango pango pangocairo IMPORTED_TARGET)
+pkg_check_modules(PANGO_WIN32 pangowin32 IMPORTED_TARGET)
+
 # cairo
-find_library(CAIRO_LIBRARY cairo)
-find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject)
-set(CAIRO_LIBRARIES ${CAIRO_LIBRARY} ${CAIRO_GOBJECT_LIBRARY})
-find_path(CAIRO_INCLUDE_DIR NAMES cairo.h PATH_SUFFIXES cairo)
+pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
+pkg_check_modules(CAIRO_GOBJECT cairo-gobject IMPORTED_TARGET)
 
 # atk
-find_path(ATK_INCLUDE_DIR NAMES atk/atk.h PATH_SUFFIXES atk-${ATK_LIB_SUFFIX})
-find_library(ATK_LIBRARY atk-${ATK_LIB_SUFFIX})
+pkg_check_modules(ATK atk IMPORTED_TARGET)
 
 # gdk-pixbuf
-find_path(GDK_PIXBUF_INCLUDE_DIR NAMES gdk-pixbuf/gdk-pixbuf.h PATH_SUFFIXES gdk-pixbuf-${GDK_PIXBUF_LIB_SUFFIX})
-find_library(GDK_PIXBUF_LIBRARY gdk_pixbuf-${GDK_PIXBUF_LIB_SUFFIX})
+pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0 IMPORTED_TARGET)
 
 # epoxy
+pkg_check_modules(EPOXY epoxy IMPORTED_TARGET)
 find_path(EPOXY_INCLUDE_DIR epoxy/common.h)
 find_library(EPOXY_LIBRARY epoxy)
 
 # gettext
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
-message(STATUS "Found libintl.h in ${LIBINTL_INCLUDE_DIR}")
-# find_library(LIBINTL_LIBRARY NAMES intl libintl preloadable_libintl HINTS /user/lib)
+find_package(Intl REQUIRED)
 
 set(GTK_REQUIRED_LIBRARIES
-    ${LIBINTL_LIBRARY}
-    ${EPOXY_LIBRARY}
-    ${GLIB_LIBRARIES}
-    ${CAIRO_LIBRARIES}
-    ${PANGO_LIBRARIES}
-    ${GDK_PIXBUF_LIBRARY}
-    ${ATK_LIBRARY}
+    ${Intl_LIBRARIES}
+    PkgConfig::EPOXY
+    PkgConfig::GLIB2
+    PkgConfig::CAIRO
+    PkgConfig::CAIRO_GOBJECT
+    PkgConfig::PANGO
+    PkgConfig::PANGO_WIN32
+    PkgConfig::GDK_PIXBUF
+    PkgConfig::ATK
 )
 
-set(GTK_REQUIRED_INCLUDE_DIR
-    ${LIBINTL_INCLUDE_DIR}
-    ${EPOXY_INCLUDE_DIR}
-    ${GLIB_INCLUDE_DIR}
-    ${GLIBCONFIG_INCLUDE_DIR}
-    ${GDK_PIXBUF_INCLUDE_DIR}
-    ${CAIRO_INCLUDE_DIR}
-    ${PANGO_INCLUDE_DIR}
-    ${HB_INCLUDE_DIR}
-    ${ATK_INCLUDE_DIR}
+list(APPEND GTK_REQUIRED_INCLUDE_DIR
+    ${Intl_INCLUDE_DIRS}
+    ${GLIB2_INCLUDE_DIRS}/glib-2.0
+    ${PANGO_INCLUDE_DIRS}/pango-1.0
+    ${GDK_PIXBUF_INCLUDE_DIRS}/gdk-pixbuf-2.0
 )
 
 # defines expected by all modules
