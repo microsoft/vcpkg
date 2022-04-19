@@ -1,0 +1,13 @@
+{
+  "name": "mmcommon",
+  "version": "1.0.4",
+  "description": "",
+  "homepage": "https://gitlab.gnome.org/GNOME/mm-common",
+  "license": "LGPL-2.1",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
