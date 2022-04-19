@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/mm-common
     REF 1.0.4
-    SHA512 0
+    SHA512 58a6202115a7c888306d169a0850c5cdbe44c9bbf1e29a4569051a9feeea47bce830615640d2b83ba4396a9d930d65834964e91c534ffe9922eecfcfbf1259c9
     HEAD_REF master
 )
 
