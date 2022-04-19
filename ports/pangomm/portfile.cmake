@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pangomm
     REF 2.50.0
-    SHA512 0
+    SHA512 97e1149d4b6bd6cb0cc0179ac05900a2f7c69b856b60a01ae655bee63e84f50cfa5a1da8b35266d0bffb8ccd69b088b446b257591bd1839b99c4d40e3b2a08c8
     HEAD_REF master
 )
 
