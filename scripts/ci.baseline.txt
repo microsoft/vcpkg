@@ -233,15 +233,6 @@ dpdk:x64-windows-static=fail
 dpdk:x64-windows-static-md=fail
 dpdk:x64-windows=fail
 dpdk:x86-windows=fail
-duckx:arm64-windows      = skip
-duckx:arm-uwp            = skip
-duckx:x64-linux          = skip
-duckx:x64-osx            = skip
-duckx:x64-uwp            = skip
-duckx:x64-windows        = skip
-duckx:x64-windows-static = skip
-duckx:x64-windows-static-md=skip
-duckx:x86-windows        = skip
 
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
