@@ -39,6 +39,8 @@ vcpkg_configure_cmake(
         ${corrade_rc_param}
         -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
+    MAYBE_UNUSED_VARIABLES
+        CORRADE_RC_EXECUTABLE
 )
 
 vcpkg_install_cmake()
@@ -47,9 +49,8 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Install tools
-if("utility" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
-    # Drop a copy of tools
+# corrade-rc is not built when CMAKE_CROSSCOMPILING
+if("utility" IN_LIST FEATURES AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/corrade-rc${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 endif()
 
