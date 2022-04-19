@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
         -DENABLE_BENCHMARKS=OFF
         -DENABLE_FUZZ_TESTING=OFF
         -DBUILD_TESTING=OFF
-        -DENABLE_FUZZ_TESTING=OFF
         -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
