@@ -328,13 +328,19 @@ else()
     set(DAWN_LINKAGE "static")
 endif()
 
-vcpkg_install_gn(
-    SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS
-        ":skia"
+vcpkg_list(SET SKIA_TARGETS ":skia")
+if("dawn" IN_LIST FEATURES)
+    vcpkg_list(APPEND SKIA_TARGETS
         "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
         "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
         "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
+    )
+endif()
+
+vcpkg_install_gn(
+    SOURCE_PATH "${SOURCE_PATH}"
+    TARGETS
+        ${SKIA_TARGETS}
 )
 
 message(STATUS "Installing: ${CURRENT_PACKAGES_DIR}/include/${PORT}")
