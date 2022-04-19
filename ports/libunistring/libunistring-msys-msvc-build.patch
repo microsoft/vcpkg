@@ -31,10 +31,10 @@
 +ar_output="$1"
 +shift
 +
-+export MSYS2_ARG_CONV_EXCL="/out;$MSYS2_ARG_CONV_EXCL"
++export MSYS2_ARG_CONV_EXCL="/machine;/out;$MSYS2_ARG_CONV_EXCL"
 +
-+echo "lib /out:$ar_output $@"
-+lib /out:"$ar_output" "$@"
++echo "lib /machine:$VSCMD_ARG_TGT_ARCH /out:$ar_output $@"
++lib /machine:$VSCMD_ARG_TGT_ARCH /out:"$ar_output" "$@"
 --- /dev/null
 +++ b/build-aux/msys-msvc-windres
 @@ -0,0 +1,61 @@
@@ -73,7 +73,7 @@
 +	shift
 +done
 +
-+export MSYS2_ARG_CONV_EXCL="/fo;/OUT;$MSYS2_ARG_CONV_EXCL"
++export MSYS2_ARG_CONV_EXCL="/fo;/MACHINE;/OUT;$MSYS2_ARG_CONV_EXCL"
 +
 +if [ "$output_format" = "res" ]
 +then
@@ -91,7 +91,7 @@
 +	echo "$rc_cmd"
 +	$rc_cmd
 +	
-+	cvtres_cmd="cvtres /OUT:$cvtres_output $rc_output"
++	cvtres_cmd="cvtres /MACHINE:$VSCMD_ARG_TGT_ARCH /OUT:$cvtres_output $rc_output"
 +	
 +	echo "$cvtres_cmd"
 +	$cvtres_cmd
