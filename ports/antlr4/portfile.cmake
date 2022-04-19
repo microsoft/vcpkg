@@ -22,61 +22,22 @@ vcpkg_extract_source_archive_ex(
         fixed_build.patch
         uuid_discovery_fix.patch
         export_guid.patch
-        fix_utfcpp_dependency.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DANTLR4_INSTALL=ON
     OPTIONS_DEBUG -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/dist
     OPTIONS_RELEASE -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dist
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME antlr4-generator CONFIG_PATH lib/cmake/antlr4-generator DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME antlr4-runtime CONFIG_PATH lib/cmake/antlr4-runtime)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/share
-                    ${CURRENT_PACKAGES_DIR}/debug/include
-)
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime-static.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime-static.lib
-        )
-
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.dll ${CURRENT_PACKAGES_DIR}/bin/antlr4-runtime.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.dll ${CURRENT_PACKAGES_DIR}/debug/bin/antlr4-runtime.dll)
-    else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.lib
-                    ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.dll
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.lib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.dll
-        )
-
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime-static.lib ${CURRENT_PACKAGES_DIR}/lib/antlr4-runtime.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime-static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/antlr4-runtime.lib)
-    endif()
-else()
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.a
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.a
-        )
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.so
-                    ${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.so.${VERSION}
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.so
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.so.${VERSION}
-        )
-    else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.dylib
-                    ${CURRENT_PACKAGES_DIR}/lib/libantlr4-runtime.${VERSION}.dylib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.dylib
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/libantlr4-runtime.${VERSION}.dylib
-        )
-    endif()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${LICENSE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

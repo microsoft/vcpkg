@@ -1,7 +1,9 @@
 {
   "name": "tmxlite",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "A lightweight C++14 parsing library for tmx map files created with the Tiled map editor.",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
