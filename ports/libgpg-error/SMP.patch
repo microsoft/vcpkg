@@ -14,7 +14,7 @@ index 9b36158..ac8c522 100755
  $AUTOCONF${FORCE}
  
 diff --git a/src/argparse.c b/src/argparse.c
-index cb5c58c..855b6ba 100644
+index cedb2f5..888c30a 100644
 --- a/src/argparse.c
 +++ b/src/argparse.c
 @@ -33,14 +33,19 @@
@@ -54,10 +54,10 @@ index fe25657..35f08cd 100644
  #include <errno.h>
  #include <stddef.h>
 diff --git a/src/estream.c b/src/estream.c
-index f75e052..a2da261 100644
+index 0542f59..572024d 100644
 --- a/src/estream.c
 +++ b/src/estream.c
-@@ -74,12 +74,15 @@
+@@ -71,12 +71,15 @@
  # include <sys/time.h>
  #endif
  #include <sys/types.h>
@@ -76,7 +76,7 @@ index f75e052..a2da261 100644
  #include <stdarg.h>
  #include <fcntl.h>
  #include <errno.h>
-@@ -89,6 +92,7 @@
+@@ -86,6 +89,7 @@
  #  include <winsock2.h>
  # endif
  # include <windows.h>
@@ -84,7 +84,7 @@ index f75e052..a2da261 100644
  #else
  # ifdef HAVE_POLL_H
  #  include <poll.h>
-@@ -115,6 +119,15 @@
+@@ -116,6 +120,15 @@
  
  
  #ifdef HAVE_W32_SYSTEM
@@ -100,7 +100,7 @@ index f75e052..a2da261 100644
  # ifndef  S_IRGRP
  #  define S_IRGRP S_IRUSR
  # endif
-@@ -164,7 +177,6 @@ int _setmode (int handle, int mode);
+@@ -165,7 +178,6 @@ int _setmode (int handle, int mode);
  /* A helper macro used to convert to a hex string.  */
  #define tohex(n) ((n) < 10 ? ((n) + '0') : (((n) - 10) + 'A'))
  
@@ -108,7 +108,7 @@ index f75e052..a2da261 100644
  /* Generally used types.  */
  
  typedef void *(*func_realloc_t) (void *mem, size_t size);
-@@ -4642,37 +4654,27 @@ tmpfd (void)
+@@ -4770,37 +4782,27 @@ tmpfd (void)
  {
  #ifdef HAVE_W32_SYSTEM
    int attempts, n;
@@ -148,7 +148,7 @@ index f75e052..a2da261 100644
    *p++ = '\\';
    name = p;
    for (attempts=0; attempts < 10; attempts++)
-@@ -4684,18 +4686,25 @@ tmpfd (void)
+@@ -4812,18 +4814,25 @@ tmpfd (void)
            *p++ = tohex (((value >> 28) & 0x0f));
            value <<= 4;
          }
@@ -193,7 +193,7 @@ index 4e8bd8b..2c64a40 100644
  static char *get_locale_dir (void);
  static void drop_locale_dir (char *locale_dir);
 diff --git a/src/gpg-error.h.in b/src/gpg-error.h.in
-index d2c3b8d..0792507 100644
+index b97f38a..f112e59 100644
 --- a/src/gpg-error.h.in
 +++ b/src/gpg-error.h.in
 @@ -249,7 +249,7 @@ typedef unsigned int gpg_error_t;
@@ -206,7 +206,7 @@ index d2c3b8d..0792507 100644
  #endif
  
 diff --git a/src/init.c b/src/init.c
-index 6239682..0565a26 100644
+index 2d9f7ab..9d1c338 100644
 --- a/src/init.c
 +++ b/src/init.c
 @@ -53,6 +53,10 @@ static int tls_index = TLS_OUT_OF_INDEXES;  /* Index for the TLS functions.  */
@@ -265,7 +265,7 @@ index e4b7e40..e0c28b6 100644
  
  
 diff --git a/src/mkheader.c b/src/mkheader.c
-index 77826da..7267473 100644
+index 1d2ea20..88444b1 100644
 --- a/src/mkheader.c
 +++ b/src/mkheader.c
 @@ -16,7 +16,12 @@
@@ -281,7 +281,7 @@ index 77826da..7267473 100644
  
  #define PGM "mkheader"
  
-@@ -572,18 +577,9 @@ write_special (const char *fname, int lnr, const char *tag)
+@@ -573,18 +578,9 @@ write_special (const char *fname, int lnr, const char *tag)
                sys_types_h_included = 1;
              }
          }
@@ -510,7 +510,7 @@ index 3ede1f2..44a71a2 100644
        CloseHandle (process);
      }
 diff --git a/src/strerror.c b/src/strerror.c
-index 4cce17f..c224625 100644
+index fb1bebf..0554309 100644
 --- a/src/strerror.c
 +++ b/src/strerror.c
 @@ -32,6 +32,13 @@
@@ -528,10 +528,10 @@ index 4cce17f..c224625 100644
  #include <langinfo.h>
  #endif
 diff --git a/src/sysutils.c b/src/sysutils.c
-index 8f70a66..024802c 100644
+index bc3a68d..a1974a7 100644
 --- a/src/sysutils.c
 +++ b/src/sysutils.c
-@@ -22,10 +22,14 @@
+@@ -22,10 +22,17 @@
  #include <stdlib.h>
  #include <stdint.h>
  #include <string.h>
@@ -544,10 +544,13 @@ index 8f70a66..024802c 100644
  # include <windows.h>
 +# include <direct.h>
 +# include <io.h>
++# ifndef W_OK
++#  define W_OK 2
++# endif
  #endif
  #ifdef HAVE_STAT
  # include <sys/stat.h>
-@@ -82,7 +86,7 @@ _gpgrt_getenv (const char *name)
+@@ -68,7 +72,7 @@ _gpgrt_getenv (const char *name)
      int len, size;
      char *result;
  
@@ -556,7 +559,7 @@ index 8f70a66..024802c 100644
      if (!len && GetLastError () == ERROR_ENVVAR_NOT_FOUND)
        {
          _gpg_err_set_errno (0);
-@@ -93,7 +97,7 @@ _gpgrt_getenv (const char *name)
+@@ -79,7 +83,7 @@ _gpgrt_getenv (const char *name)
      result = _gpgrt_malloc (size);
      if (!result)
        return NULL;
@@ -565,7 +568,7 @@ index 8f70a66..024802c 100644
      if (len >= size)
        {
          /* Changed in the meantime - retry.  */
-@@ -155,7 +159,7 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+@@ -141,7 +145,7 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
  
      if (!value && overwrite)
        {
@@ -574,7 +577,7 @@ index 8f70a66..024802c 100644
            return GPG_ERR_EINVAL;
          if (getenv (name))
            {
-@@ -169,8 +173,8 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
+@@ -155,8 +159,8 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
          return 0;
        }
  
@@ -585,7 +588,7 @@ index 8f70a66..024802c 100644
        return GPG_ERR_EINVAL; /* (Might also be ENOMEM.) */
      if (overwrite || !getenv (name))
        {
-@@ -483,6 +487,7 @@ _gpgrt_getusername (void)
+@@ -570,6 +574,7 @@ _gpgrt_getusername (void)
    char *result = NULL;
  
  #ifdef HAVE_W32_SYSTEM
@@ -593,7 +596,7 @@ index 8f70a66..024802c 100644
    wchar_t wtmp[1];
    wchar_t *wbuf;
    DWORD wsize = 1;
-@@ -505,6 +510,7 @@ _gpgrt_getusername (void)
+@@ -592,6 +597,7 @@ _gpgrt_getusername (void)
    xfree (wbuf);
    return buf;
  
@@ -626,7 +629,7 @@ index 5bb1bcf..d1f1b71 100644
  /* Enable tracing.  The value is the module name to be printed.  */
  /*#define ENABLE_TRACING "estream" */
 diff --git a/src/w32-gettext.c b/src/w32-gettext.c
-index 7c4c9b0..1f4e82e 100644
+index 817c1ca..2f45f18 100644
 --- a/src/w32-gettext.c
 +++ b/src/w32-gettext.c
 @@ -649,7 +649,11 @@ my_nl_locale_name (const char *categoryname)
@@ -704,7 +707,7 @@ index 888b722..faad56b 100644
          return 1200;
      else if (_strnicmp(name, "cp", 2) == 0)
 diff --git a/src/w32-reg.c b/src/w32-reg.c
-index 8b1bf8a..e3addbc 100644
+index d1d2ca6..588cffa 100644
 --- a/src/w32-reg.c
 +++ b/src/w32-reg.c
 @@ -46,6 +46,9 @@ char *
@@ -735,9 +738,11 @@ index 8b1bf8a..e3addbc 100644
            if (nbytes && nbytes > n1) {
              xfree (tmp); /* Oops - truncated, better don't expand at all. */
              goto leave;
-@@ -151,4 +154,5 @@ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
+@@ -151,6 +154,7 @@ _gpgrt_w32_reg_query_string (const char *root, const char *dir,
   leave:
    RegCloseKey (key_handle);
    return result;
 +#endif
  }
+ 
+ 

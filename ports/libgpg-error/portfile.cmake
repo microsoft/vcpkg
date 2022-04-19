@@ -5,8 +5,8 @@ endif()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL git://git.gnupg.org/libgpg-error.git
-    FETCH_REF libgpg-error-1.43
-    REF d7fb04832a71a2c1509d45027798f184ca274f8d # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgpg-error.git;a=tag;h=refs/tags/libgpg-error-1.43
+    FETCH_REF libgpg-error-1.45
+    REF dbac537e5e865fb6f3aa8596d213aa8c47a9dea1 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgpg-error.git;a=commit;h=dbac537e5e865fb6f3aa8596d213aa8c47a9dea1
     HEAD_REF master
     PATCHES ${PATCHES}
 )
