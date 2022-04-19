@@ -24,7 +24,7 @@ endif (MSVC)
 add_library(gumbo ${gumbo_srcs})
 
 install(
-  TARGETS gumbo  EXPORT unofficial-gumboTargets
+  TARGETS gumbo  EXPORT unofficial-gumbo-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
