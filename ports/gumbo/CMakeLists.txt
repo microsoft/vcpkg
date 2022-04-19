@@ -41,6 +41,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/unofficial-gumboTargets.cmake")
 ]])
 
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake" @ONLY)
+configure_file("${SOURCE_PATH}/gumbo.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
+
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-gumbo-config.cmake DESTINATION unofficial-gumbo)
 
 if(NOT DISABLE_INSTALL_HEADERS)
