@@ -94,18 +94,22 @@ macro(extract_vcproj_sources VC_PROJECT OUT_VAR)
 endmacro()
 
 # build 'win32' gdk backend
-extract_vcproj_sources(build/win32/vs14/gdk3-win32.vcxproj GDK_WIN32_SOURCES)
-add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
-target_compile_definitions(gdk-3-win32 PRIVATE 
-    GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
-target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
+if (WIN32)
+    extract_vcproj_sources(build/win32/vs14/gdk3-win32.vcxproj GDK_WIN32_SOURCES)
+    add_library(gdk-3-win32 STATIC ${GDK_WIN32_SOURCES})
+    target_compile_definitions(gdk-3-win32 PRIVATE 
+        GDK_COMPILATION G_LOG_DOMAIN="Gdk" INSIDE_GDK_WIN32)
+    target_include_directories(gdk-3-win32 PRIVATE . ./gdk ./gdk/win32 ${GTK_REQUIRED_INCLUDE_DIR})
+endif()
 
 # build 'broadway' gdk backend
-extract_vcproj_sources(build/win32/vs14/gdk3-broadway.vcxproj GDK_BROADWAY_SOURCES)
-add_library(gdk-3-broadway STATIC ${GDK_BROADWAY_SOURCES})
-target_compile_definitions(gdk-3-broadway PRIVATE 
-    GDK_COMPILATION G_LOG_DOMAIN="Gdk")
-target_include_directories(gdk-3-broadway PRIVATE . ./gdk ./gdk/broadway ${GTK_REQUIRED_INCLUDE_DIR})
+if (WIN32)
+    extract_vcproj_sources(build/win32/vs14/gdk3-broadway.vcxproj GDK_BROADWAY_SOURCES)
+    add_library(gdk-3-broadway STATIC ${GDK_BROADWAY_SOURCES})
+    target_compile_definitions(gdk-3-broadway PRIVATE 
+        GDK_COMPILATION G_LOG_DOMAIN="Gdk")
+    target_include_directories(gdk-3-broadway PRIVATE . ./gdk ./gdk/broadway ${GTK_REQUIRED_INCLUDE_DIR})
+endif()
 
 macro(gtk_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
@@ -116,51 +120,60 @@ macro(gtk_add_module MODULE_NAME)
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
 endmacro()
 
-extract_vcproj_sources(build/win32/vs14/gdk-3.vcxproj GDK_SOURCES)
-gtk_add_module(gdk-3 ${GDK_SOURCES})
-target_compile_definitions(gdk-3 PRIVATE GDK_COMPILATION)
-target_include_directories(gdk-3 PRIVATE ./gdk/win32 ./gdk/broadway)
-target_link_libraries(gdk-3 gdk-3-win32 gdk-3-broadway winmm dwmapi setupapi imm32 ws2_32)
+if (WIN32)
+    extract_vcproj_sources(build/win32/vs14/gdk-3.vcxproj GDK_SOURCES)
+    gtk_add_module(gdk-3 ${GDK_SOURCES})
+    target_compile_definitions(gdk-3 PRIVATE GDK_COMPILATION)
+    target_include_directories(gdk-3 PRIVATE ./gdk/win32 ./gdk/broadway)
+    target_link_libraries(gdk-3 gdk-3-win32 gdk-3-broadway winmm dwmapi setupapi imm32 ws2_32)
+endif()
 
-extract_vcproj_sources(build/win32/vs14/gtk-3.vcxproj GTK_SOURCES)
-set_source_files_properties(gtk/inspector/visual.c PROPERTIES COMPILE_FLAGS "/FImath.h")
-gtk_add_module(gtk-3 ${GTK_SOURCES})
-target_compile_definitions(gtk-3 PRIVATE
-    GTK_COMPILATION
-    G_LOG_DOMAIN="Gtk"
-    GTK_HOST="i686-pc"
-    GTK_PRINT_BACKENDS="file"
-    GTK_PRINT_BACKEND_ENABLE_UNSUPPORTED
-    INCLUDE_IM_am_et
-    INCLUDE_IM_cedilla
-    INCLUDE_IM_cyrillic_translit
-    INCLUDE_IM_ime
-    INCLUDE_IM_inuktitut
-    INCLUDE_IM_ipa
-    INCLUDE_IM_multipress
-    INCLUDE_IM_thai
-    INCLUDE_IM_ti_er
-    INCLUDE_IM_ti_et
-    INCLUDE_IM_viqr
-    GTK_LIBDIR="/dummy/lib"
-    GTK_DATADIR="/dummy/share"
-    GTK_DATA_PREFIX="/dummy"
-    GTK_SYSCONFDIR="/dummy/etc"
-    MULTIPRESS_CONFDIR="/dummy/etc/gtk-3.0"
-    MULTIPRESS_LOCALEDIR="/dummy/share/locale"
-    GTK_VERSION="${GTK_VERSION}/etc"
-    GTK_BINARY_VERSION="3.0.0/etc"
-    GDK_DISABLE_DEPRECATED
-    ISOLATION_AWARE_ENABLED)
-target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
-target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
+if (WIN32)
+    extract_vcproj_sources(build/win32/vs14/gtk-3.vcxproj GTK_SOURCES)
+    set_source_files_properties(gtk/inspector/visual.c PROPERTIES COMPILE_FLAGS "/FImath.h")
+    gtk_add_module(gtk-3 ${GTK_SOURCES})
+    target_compile_definitions(gtk-3 PRIVATE
+        GTK_COMPILATION
+        G_LOG_DOMAIN="Gtk"
+        GTK_HOST="i686-pc"
+        GTK_PRINT_BACKENDS="file"
+        GTK_PRINT_BACKEND_ENABLE_UNSUPPORTED
+        INCLUDE_IM_am_et
+        INCLUDE_IM_cedilla
+        INCLUDE_IM_cyrillic_translit
+        INCLUDE_IM_ime
+        INCLUDE_IM_inuktitut
+        INCLUDE_IM_ipa
+        INCLUDE_IM_multipress
+        INCLUDE_IM_thai
+        INCLUDE_IM_ti_er
+        INCLUDE_IM_ti_et
+        INCLUDE_IM_viqr
+        GTK_LIBDIR="/dummy/lib"
+        GTK_DATADIR="/dummy/share"
+        GTK_DATA_PREFIX="/dummy"
+        GTK_SYSCONFDIR="/dummy/etc"
+        MULTIPRESS_CONFDIR="/dummy/etc/gtk-3.0"
+        MULTIPRESS_LOCALEDIR="/dummy/share/locale"
+        GTK_VERSION="${GTK_VERSION}/etc"
+        GTK_BINARY_VERSION="3.0.0/etc"
+        GDK_DISABLE_DEPRECATED
+        ISOLATION_AWARE_ENABLED)
+    target_link_libraries(gtk-3 gdk-3 winspool comctl32 imm32)
+    if (MSVC)
+        target_compile_options(gtk-3 PRIVATE "/wd4828" PRIVATE "/wd4244" PRIVATE "/wd4305" PRIVATE "/wd4018")
+    endif()
+endif()
 
-extract_vcproj_sources(build/win32/vs14/gailutil-3.vcxproj GAILUTIL_SOURCES)
-gtk_add_module(gailutil-3 ${GAILUTIL_SOURCES})
-target_compile_definitions(gailutil-3 PRIVATE GTK_DISABLE_DEPRECATED GDK_DISABLE_DEPRECATED)
-target_link_libraries(gailutil-3 gtk-3 gdk-3)
-set_target_properties(gailutil-3 PROPERTIES
-    LINK_FLAGS \"/DEF:${CMAKE_CURRENT_SOURCE_DIR}/libgail-util/gailutil.def\")
+if (WIN32)
+    extract_vcproj_sources(build/win32/vs14/gailutil-3.vcxproj GAILUTIL_SOURCES)
+    gtk_add_module(gailutil-3 ${GAILUTIL_SOURCES})
+    target_compile_definitions(gailutil-3 PRIVATE GTK_DISABLE_DEPRECATED GDK_DISABLE_DEPRECATED)
+    target_link_libraries(gailutil-3 gtk-3 gdk-3)
+    set_target_properties(gailutil-3 PROPERTIES
+        LINK_FLAGS \"/DEF:${CMAKE_CURRENT_SOURCE_DIR}/libgail-util/gailutil.def\"
+    )
+endif()
 
 if(NOT GTK_SKIP_HEADERS)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
