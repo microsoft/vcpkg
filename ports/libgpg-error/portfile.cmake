@@ -8,12 +8,14 @@ vcpkg_from_git(
     FETCH_REF libgpg-error-1.45
     REF dbac537e5e865fb6f3aa8596d213aa8c47a9dea1 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgpg-error.git;a=commit;h=dbac537e5e865fb6f3aa8596d213aa8c47a9dea1
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES ${PATCHES} 
+            gettext.patch
 )
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-tests
