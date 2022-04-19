@@ -709,10 +709,6 @@ mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-meschach:arm-uwp=fail
-meschach:x64-linux=fail
-meschach:x64-osx=fail
-meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
 mfl:x64-linux=skip
