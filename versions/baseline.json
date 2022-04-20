@@ -1670,7 +1670,7 @@
     },
     "crashpad": {
       "baseline": "2022-04-16",
-      "port-version": 3
+      "port-version": 0
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -6522,7 +6522,7 @@
     },
     "skia": {
       "baseline": "2022-04-15",
-      "port-version": 9
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
