@@ -1,0 +1,81 @@
+diff --git a/configure.ac b/configure.ac
+index f43846ba..7fbbcb2d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -314,7 +314,7 @@ AC_CHECK_HEADERS([windows.h sql.h odbcss.h],[],[],[[#ifdef HAVE_WINDOWS_H
+ # include <windows.h>
+ #endif
+ #ifdef HAVE_SQL_H
+-# include <sql.h>
++# include <mysql.h>
+ #endif
+ ]])
+ AM_CONDITIONAL(HAVE_ODBCSS_H, test "$ac_cv_header_odbcss_h" = "yes")
+@@ -722,13 +722,13 @@ then
+ 	AC_TRY_COMPILE([#if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__)
+ #include <windows.h>
+ #endif
+-#include <sql.h>], [SQLLEN len = 123;],
++#include <mysql.h>], [SQLLEN len = 123;],
+ 		AC_DEFINE(HAVE_SQLLEN, 1, [Define if sqltypes.h define SQLLEN])
+ 		# check SQLColAttribute definition
+ 		AC_TRY_COMPILE([#if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__)
+ #include <windows.h>
+ #endif
+-#include <sql.h>
++#include <mysql.h>
+ #include <sqlext.h>
+ 
+ SQLRETURN  SQL_API SQLColAttribute (SQLHSTMT StatementHandle,
+@@ -742,7 +742,7 @@ SQLRETURN  SQL_API SQLColAttribute (SQLHSTMT StatementHandle,
+ 		AC_TRY_COMPILE([#if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__)
+ #include <windows.h>
+ #endif
+-#include <sql.h>
++#include <mysql.h>
+ #include <sqlext.h>
+ 
+ SQLRETURN SQL_API SQLParamOptions(SQLHSTMT       hstmt,
+@@ -755,14 +755,14 @@ SQLRETURN SQL_API SQLParamOptions(SQLHSTMT       hstmt,
+ 	AC_CHECK_TYPES([SQLSETPOSIROW, SQLROWSETSIZE, SQLROWOFFSET],,, [#if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__)
+ #include <windows.h>
+ #endif
+-#include <sql.h>
++#include <mysql.h>
+ #include <sqlext.h>])
+ 
+ 	# test for sizeof(SQLWCHAR)
+ 	AC_CHECK_SIZEOF(SQLWCHAR,,[#if defined(_WIN32) || defined(WIN32) || defined(__MINGW32__)
+ #include <windows.h>
+ #endif
+-#include <sql.h>])
++#include <mysql.h>])
+ 
+ 	CPPFLAGS="$save_cppflags"
+ else 
+diff --git a/include/freetds/odbc.h b/include/freetds/odbc.h
+index 6af107c6..febc4a2f 100644
+--- a/include/freetds/odbc.h
++++ b/include/freetds/odbc.h
+@@ -27,7 +27,7 @@
+ #include <freetds/data.h>
+ 
+ #if defined(UNIXODBC) || defined(_WIN32) || defined(TDS_NO_DM)
+-#include <sql.h>
++#include <mysql.h>
+ #include <sqlext.h>
+ #if defined(UNIXODBC) || defined(_WIN32)
+ #include <odbcinst.h>
+diff --git a/include/odbcss.h b/include/odbcss.h
+index f6435107..a0f82482 100644
+--- a/include/odbcss.h
++++ b/include/odbcss.h
+@@ -21,7 +21,7 @@
+ #define _odbcss_h_
+ 
+ #ifdef TDSODBC_BCP
+-#include <sql.h>
++#include <mysql.h>
+ #endif
+ 
+ #ifdef __cplusplus
