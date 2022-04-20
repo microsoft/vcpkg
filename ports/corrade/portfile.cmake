@@ -50,7 +50,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # corrade-rc is not built when CMAKE_CROSSCOMPILING
-if("utility" IN_LIST FEATURES AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/corrade-rc${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+if("utility" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 endif()
 
