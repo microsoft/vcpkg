@@ -36,6 +36,10 @@ foreach(cmakeFile IN LISTS cmakeFiles)
     get_filename_component(filename "${cmakeFile}" NAME)
     file(RENAME "${cmakeFile}" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${filename}")
 endforeach()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/Proton"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCpp"
+)
 set(configFiles
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonConfig.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCppConfig.cmake"
