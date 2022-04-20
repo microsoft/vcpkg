@@ -1,0 +1,134 @@
+Makes the following changes:
+
+* pugixml and miniz are taken from vcpkg, as opposed to using the vendored copy
+* zip.h & zip.c[pp] - I couldn't find where they come from
+  (or if they come from something!), so they've been left the same;
+  since they're an internal library, though, I've stopped installing them,
+  and I've hidden the symbols in the `duckx` namespace
+  (this involved converting to C++).
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,15 +6,16 @@
+ 	include(CTest)
+ endif()
+ 
+ option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
+ option(BUILD_SAMPLE "Build provided sample" OFF)
+ 
+-set(HEADERS src/duckx.hpp src/zip.h src/miniz.h
+-	src/pugixml.hpp src/pugiconfig.hpp)
+-set(SOURCES src/duckx.cpp src/zip.c src/pugixml.cpp)
++set(HEADERS src/duckx.hpp)
++set(SOURCES src/duckx.cpp src/zip.cpp)
++find_package(miniz CONFIG REQUIRED)
++find_package(pugixml CONFIG REQUIRED)
+ 
+ if(BUILD_SHARED_LIBS)
+     add_library(duckx SHARED ${HEADERS} ${SOURCES})
+ else()
+     add_library(duckx STATIC ${HEADERS} ${SOURCES})
+ endif()
+@@ -22,12 +23,13 @@
+ add_library(duckx::duckx ALIAS duckx)
+ 
+ target_include_directories(duckx PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+     $<INSTALL_INTERFACE:include>
+ )
++target_link_libraries(duckx PRIVATE miniz::miniz pugixml::pugixml)
+ 
+ mark_as_advanced(CLEAR CMAKE_INSTALL_LIBDIR CMAKE_INSTALL_INCLUDEDIR)
+ 
+ if (BUILD_SAMPLE)
+ 	# Sample executable
+ 	set(SAMPLE_SOURCES samples/sample1.cpp)
+
+--- a/src/duckx.hpp
++++ b/src/duckx.hpp
+@@ -8,14 +8,13 @@
+ #define DUCKX_H
+ 
+ #include <stdlib.h>
+ #include <cstdio>
+ #include <string>
+ 
+-#include "pugixml.hpp"
+-#include "zip.h"
++#include <pugixml.hpp>
+ 
+ 
+ // TODO: Use container-iterator design pattern!
+ 
+ namespace duckx {
+     // Run contains runs in a paragraph
+
+--- a/src/duckx.cpp
++++ b/src/duckx.cpp
+@@ -1,7 +1,8 @@
+ #include "duckx.hpp"
++#include "zip.h"
+ 
+ // Hack on pugixml
+ // We need to write xml to std string (or char *)
+ // So overload the write function
+ struct xml_string_writer: pugi::xml_writer {
+     std::string result;
+
+diff --git a/src/zip.c b/src/zip.cpp
+rename from src/zip.c
+rename to src/zip.cpp
+--- a/src/zip.c
++++ b/src/zip.cpp
+@@ -36,11 +36,12 @@
+ 
+ #endif
+ 
+ #include "miniz.h"
+ #include "zip.h"
+ 
++namespace duckx {
+ #ifndef HAS_DEVICE
+ #define HAS_DEVICE(P) 0
+ #endif
+ 
+ #ifndef FILESYSTEM_PREFIX_LEN
+@@ -917,5 +918,6 @@
+     status = -1;
+   }
+ 
+   return status;
+ }
++} // namespace duckx
+
+--- a/src/zip.h
++++ b/src/zip.h
+@@ -12,15 +12,13 @@
+ #ifndef ZIP_H
+ #define ZIP_H
+ 
+ #include <string.h>
+ #include <sys/types.h>
+ 
+-#ifdef __cplusplus
+-extern "C" {
+-#endif
++namespace duckx {
+ 
+ #if !defined(_SSIZE_T_DEFINED) && !defined(_SSIZE_T_DEFINED_) &&               \
+     !defined(_SSIZE_T) && !defined(_SSIZE_T_) && !defined(__ssize_t_defined)
+ #define _SSIZE_T
+ // 64-bit Windows is the only mainstream platform
+ // where sizeof(long) != sizeof(void*)
+@@ -306,11 +304,9 @@
+     The return code - 0 on success, negative number (< 0) on error.
+ */
+ extern int zip_extract(const char *zipname, const char *dir,
+                        int (*on_extract_entry)(const char *filename, void *arg),
+                        void *arg);
+ 
+-#ifdef __cplusplus
+ }
+-#endif
+ 
+ #endif
