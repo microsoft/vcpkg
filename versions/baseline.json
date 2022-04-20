@@ -1246,7 +1246,7 @@
     },
     "capstone": {
       "baseline": "5.0.0-rc2",
-      "port-version": 0
+      "port-version": 1
     },
     "cargs": {
       "baseline": "1.0.3",
@@ -7090,7 +7090,7 @@
     },
     "tracy": {
       "baseline": "0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "transwarp": {
       "baseline": "2.2.2",
