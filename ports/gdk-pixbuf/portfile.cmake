@@ -23,9 +23,9 @@ vcpkg_configure_meson(
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Dpng=true                  # Enable PNG loader (requires libpng)
-        -Dtiff=true                 # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
-        -Djpeg=true                 # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
+        -Dpng=enabled               # Enable PNG loader (requires libpng)
+        -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
+        -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Dintrospection=disabled    # Whether to generate the API introspection data (requires GObject-Introspection)
         -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dinstalled_tests=false
