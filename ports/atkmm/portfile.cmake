@@ -8,7 +8,7 @@ set(ATKMM_VERSION 2.36.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/atkmm/2.36/atkmm-${ATKMM_VERSION}.tar.xz"
     FILENAME "atkmm-${ATKMM_VERSION}.tar.xz"
-    SHA512 0
+    SHA512 23c831afac6bb9a0f9f2e622f8f9ffea29445a33b1cd650e0c07ee77e60b28ae5ee978c029e8e0f9b94e9ff4679d69ebde833f15e0a5403d97914cc7ccf98a6a
 )
 
 vcpkg_extract_source_archive_ex(
