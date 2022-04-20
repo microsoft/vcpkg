@@ -1366,7 +1366,7 @@
     },
     "chromium-base": {
       "baseline": "86.0.4199.1",
-      "port-version": 3
+      "port-version": 4
     },
     "cimg": {
       "baseline": "2.9.9",
@@ -1670,7 +1670,7 @@
     },
     "crashpad": {
       "baseline": "2022-04-16",
-      "port-version": 2
+      "port-version": 3
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -7274,7 +7274,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 3
+      "port-version": 4
     },
     "valijson": {
       "baseline": "0.6",
