@@ -5,6 +5,8 @@
   "homepage": "https://github.com/amiremohamadi/DuckX",
   "license": "MIT",
   "dependencies": [
+    "pugixml",
+    "libzip",
     {
       "name": "vcpkg-cmake",
       "host": true
