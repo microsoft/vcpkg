@@ -3558,7 +3558,7 @@
     },
     "libfreenect2": {
       "baseline": "0.2.0",
-      "port-version": 7
+      "port-version": 8
     },
     "libftdi": {
       "baseline": "0.20",
