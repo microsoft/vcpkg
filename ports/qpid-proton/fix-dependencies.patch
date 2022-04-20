@@ -32,7 +32,7 @@ index 03fe80a..fd6a31d 100644
 -  set(CONNECT_CONFIG_LIBS ${JsonCpp_LIBRARY})
 +  if (TARGET jsoncpp_lib)
 +    set(CONNECT_CONFIG_LIBS jsoncpp_lib)
-+  else if (TARGET jsoncpp_static)
++  elseif (TARGET jsoncpp_static)
 +    set(CONNECT_CONFIG_LIBS jsoncpp_static)
 +  endif()
  else()
