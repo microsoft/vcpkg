@@ -209,8 +209,8 @@
       "port-version": 2
     },
     "atkmm": {
-      "baseline": "2.36.0",
-      "port-version": 2
+      "baseline": "2.36.1",
+      "port-version": 0
     },
     "atlmfc": {
       "baseline": "0",
@@ -5286,7 +5286,7 @@
     },
     "pangomm": {
       "baseline": "2.50.0",
-      "port-version": 1
+      "port-version": 2
     },
     "parallel-hashmap": {
       "baseline": "1.34",
