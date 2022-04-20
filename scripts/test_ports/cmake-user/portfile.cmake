@@ -63,6 +63,8 @@ if("find-package" IN_LIST FEATURES)
         list(REMOVE_ITEM packages "Curses")
     endif()
     if(VCPKG_TARGET_IS_LINUX)
+        # Port wxwidgets requires linux system libraries which conflict with vcpkg ports.
+        # This line complements the "platform" restriction from vcpkg.json.
         list(REMOVE_ITEM packages "wxWidgets")
     endif()
 endif()
