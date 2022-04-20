@@ -6,7 +6,6 @@ vcpkg_from_github(
     SHA512 78b494c04e3436bfdc4997e6f0196baef27246bb7ad825c487a16f247d13c99324a39d52bfe8f5306164ae3f5c7eb43ca83944b24a3ce6b4bcd733849b4064ad
     PATCHES
         no-tests-and-exes.patch
-        mysql.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,6 +25,10 @@ else()
     if (NOT EXISTS /usr/bin/gperf)
         message(FATAL_ERROR "freetds requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
     endif()
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "freetds requires unixodbc. It can be installed on Ubuntu systems via apt-get install unixodbc unixodbc-dev.")
 endif()
 
 vcpkg_cmake_configure(

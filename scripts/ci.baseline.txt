@@ -302,6 +302,9 @@ freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
+# Missing sql headers in CI
+freetds:x64-linux=fail
+freetds:x64-osx=fail
 freetype-gl:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
