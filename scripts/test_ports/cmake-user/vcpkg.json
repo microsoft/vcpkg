@@ -79,7 +79,8 @@
         },
         {
           "$package": "wxWidgets",
-          "name": "wxwidgets"
+          "name": "wxwidgets",
+          "platform": "!linux"
         },
         {
           "$package": "ZLIB",
