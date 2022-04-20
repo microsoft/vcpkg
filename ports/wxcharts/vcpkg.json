@@ -1,0 +1,17 @@
+{
+  "name": "wxcharts",
+  "version-string": "0.1.0",
+  "homepage": "https://www.wxishiko.com/wxCharts",
+  "description": "Chart controls for the wxWidgets cross-platform GUI library",
+  "dependencies": [
+    "wxwidgets",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+        "name": "vcpkg-cmake-config",
+        "host": true
+    }
+  ]
+}
