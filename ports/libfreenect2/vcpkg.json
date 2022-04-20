@@ -1,6 +1,6 @@
 {
   "name": "libfreenect2",
-  "version-string": "0.2.0",
+  "version": "0.2.0",
   "port-version": 8,
   "description": "Open source drivers for the Kinect for Windows v2 device",
   "homepage": "https://github.com/OpenKinect/libfreenect2",
