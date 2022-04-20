@@ -5650,7 +5650,7 @@
     },
     "qpid-proton": {
       "baseline": "0.37.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qscintilla": {
       "baseline": "2.12.0",
