@@ -1,17 +1,23 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_find_acquire_program(PYTHON3)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/qpid-proton
     REF fee5e94afb83b92ffa60a6f815d5102a67915166 # 0.37.0
     SHA512 e9fbd02444dd073908186e6873b4e230e0a5971929e9b1a49758240d166f6da4e6c88d701c66d5e5539bea0beca380c763bffcef5b0e1ed5f9fc2691f5f86559 
     HEAD_REF next
+    PATCHES fix-dependencies.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindPython.cmake")
+file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindOpenSSL.cmake")
+file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindJsonCpp.cmake")
+
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # It may cause call CHECK_LIBRARY_EXISTS before call project to set the language
     OPTIONS
         -DBUILD_GO=no
         -DCMAKE_DISABLE_FIND_PACKAGE_CyrusSASL=ON
@@ -22,7 +28,7 @@ vcpkg_cmake_configure(
         -DENABLE_BENCHMARKS=OFF
         -DENABLE_FUZZ_TESTING=OFF
         -DBUILD_TESTING=OFF
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DPython_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
@@ -45,8 +51,8 @@ foreach(configFile IN LISTS configFiles)
 endforeach()
 vcpkg_fixup_pkgconfig()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/qpid-protonConfig.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/qpid-protonConfig.cmake COPYONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/qpid-protonConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/qpid-protonConfig.cmake" @ONLY)
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/proton/LICENSE.txt"
             "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
