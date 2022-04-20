@@ -22,16 +22,23 @@ vcpkg_cmake_configure(
         -DENABLE_BENCHMARKS=OFF
         -DENABLE_FUZZ_TESTING=OFF
         -DBUILD_TESTING=OFF
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DPython_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+file(GLOB protonCmakeFiles LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/share/${PORT}/Proton/*.cmake")
+file(GLOB protonCppCmakeFiles LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCpp/*.cmake")
+set(cmakeFiles ${protonCmakeFiles} ${protonCppCmakeFiles})
+foreach(cmakeFile IN LISTS cmakeFiles)
+    get_filename_component(filename "${cmakeFile}" NAME)
+    file(RENAME "${cmakeFile}" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${filename}")
+endforeach()
 set(configFiles
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/Proton/ProtonConfig.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCpp/ProtonCppConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ProtonCppConfig.cmake"
 )
 foreach(configFile IN LISTS configFiles)
     vcpkg_replace_string("${configFile}"
