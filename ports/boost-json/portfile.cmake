@@ -9,9 +9,10 @@ vcpkg_from_github(
     PATCHES 0001-json-array-erase-relocate.patch
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile" "${_contents}")
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(

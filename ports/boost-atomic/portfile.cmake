@@ -8,12 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
     "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
     "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
-    _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+)
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
