@@ -4,7 +4,7 @@
   "description": "Implementation of the Tabular Data Stream protocol",
   "homepage": "https://www.freetds.org",
   "license": "GPL-2.0",
-  "supports": "windows & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
