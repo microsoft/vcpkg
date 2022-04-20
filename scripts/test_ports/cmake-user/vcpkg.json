@@ -42,6 +42,10 @@
           "name": "bzip2"
         },
         {
+          "$package": "CURL",
+          "name": "curl"
+        },
+        {
           "$package": "EXPAT",
           "name": "expat"
         },
@@ -79,7 +83,8 @@
         },
         {
           "$package": "wxWidgets",
-          "name": "wxwidgets"
+          "name": "wxwidgets",
+          "platform": "!linux"
         },
         {
           "$package": "ZLIB",
