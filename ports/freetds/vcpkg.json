@@ -6,7 +6,6 @@
   "license": "GPL-2.0",
   "supports": "windows & !uwp",
   "dependencies": [
-    "libmysql",
     {
       "name": "vcpkg-cmake",
       "host": true
