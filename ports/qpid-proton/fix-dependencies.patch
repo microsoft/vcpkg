@@ -38,3 +38,80 @@ index 03fe80a..fd6a31d 100644
  else()
    set(CONNECT_CONFIG_SRC src/connect_config_dummy.cpp)
  endif()
+
+--- a/c/src/ProtonConfig.cmake.in
++++ b/c/src/ProtonConfig.cmake.in
+@@ -20,39 +20,40 @@
+ # Name: Proton
+ # Description: Qpid Proton C library
+ # Version: @PN_VERSION@
+ # URL: http://qpid.apache.org/proton/
+ 
+ @PACKAGE_INIT@
+-if (NOT Proton_USE_STATIC_LIBS)
++include(CMakeFindDependencyMacro)
++if (1)
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonTargets.cmake")
+ else()
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonTargetsStatic.cmake")
+ endif()
+ 
+ set(Proton_VERSION @PN_VERSION@)
+ 
+ # find dependencies, because static libs don't transitively pull them
+-if (Proton_USE_STATIC_LIBS)
+-    set(CMAKE_MODULE_PATH_OLD ${CMAKE_MODULE_PATH})
+-    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
++if (1)
++    #set(CMAKE_MODULE_PATH_OLD ${CMAKE_MODULE_PATH})
++    #set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 
+     set(CyrusSASL_FOUND @CyrusSASL_FOUND@)
+     if (CyrusSASL_FOUND)
+-        find_package (CyrusSASL REQUIRED)
++        find_dependency (CyrusSASL)
+     endif()
+ 
+     set(OPENSSL_FOUND @OPENSSL_FOUND@)
+     set(OpenSSL_FOUND @OpenSSL_FOUND@)
+     if (OPENSSL_FOUND OR OpenSSL_FOUND)
+-        find_package (OpenSSL REQUIRED)
++        find_dependency (OpenSSL)
+     endif()
+ 
+-    find_package (Threads REQUIRED)
++    find_dependency (Threads)
+ 
+-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH_OLD})
++    #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH_OLD})
+ endif()
+ 
+ set (Proton_INCLUDE_DIRS @PACKAGE_INCLUDE_INSTALL_DIR@)
+ set (Proton_LIBRARIES Proton::qpid-proton)
+ set (Proton_FOUND True)
+ 
+--- a/cpp/ProtonCppConfig.cmake.in
++++ b/cpp/ProtonCppConfig.cmake.in
+@@ -20,19 +20,21 @@
+ # Name: Proton
+ # Description: Qpid Proton C library
+ # Version: @PN_VERSION@
+ # URL: http://qpid.apache.org/proton/
+ 
+ @PACKAGE_INIT@
+-if (NOT ProtonCpp_USE_STATIC_LIBS)
++include(CMakeFindDependencyMacro)
++find_dependency(Proton CONFIG)
++if (1)
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonCppTargets.cmake")
+ else()
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonCppTargetsStatic.cmake")
+ endif()
+ 
+ set (ProtonCpp_VERSION @PN_VERSION@)
+ 
+ set (ProtonCpp_INCLUDE_DIRS @PACKAGE_INCLUDE_INSTALL_DIR@)
+ set (ProtonCpp_LIBRARIES Proton::cpp)
+ set (ProtonCpp_FOUND True)
+ 
+ check_required_components(ProtonCpp)
