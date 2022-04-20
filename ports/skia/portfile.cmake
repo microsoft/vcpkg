@@ -10,9 +10,7 @@ vcpkg_from_git(
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
-file(READ "${SOURCE_PATH}/gn/toolchain/BUILD.gn" GN_FILE_CONTENT)
-string(REPLACE "command = \"$shell python" "command = \"$shell '${PYTHON3}'" GN_FILE_CONTENT ${GN_FILE_CONTENT})
-file(WRITE "${SOURCE_PATH}/gn/toolchain/BUILD.gn" ${GN_FILE_CONTENT})
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "command = \"$shell python" "command = \"$shell '${PYTHON3}'")
 
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
