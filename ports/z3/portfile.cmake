@@ -5,25 +5,29 @@ vcpkg_add_to_path("${PYTHON2_DIR}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF z3-4.8.14
-  SHA512 10170516CA472258D2F9DF28CD036E43023A76A25F1E1670290C62F3890D935BF82770970054A5FD3A0F02559409E7ED4B18FB08347C040FF2F9E0918E152AAB
+  REF z3-4.8.15
+  SHA512 7b08dec5b035a38edc90c4c491f508fd9ed227357de94400169db53d4c59382bd6a81ae6615771023a06534a3aa92668844f0ebfcc2a3b5ef4bba957426a0c6c
   HEAD_REF master
-  PATCHES fix-install-path.patch
+  PATCHES
+      fix-install-path.patch
+      remove-flag-overrides.patch
+      fix-32-bit-build.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(BUILD_STATIC "-DZ3_BUILD_LIBZ3_SHARED=OFF")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
     ${BUILD_STATIC}
+    -DZ3_BUILD_TEST_EXECUTABLES=OFF
+    -DZ3_ENABLE_EXAMPLE_TARGETS=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/z3 TARGET_PATH share/Z3)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/z3)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

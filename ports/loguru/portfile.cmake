@@ -15,15 +15,22 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/loguruConfig.cmake.in  ${SOURCE_PATH}/loguruConfig.cmake.in COPYONLY)
 
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
+            fmt BUILD_WITH_FMT
+    )
+
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS_DEBUG
             -DINSTALL_HEADERS=OFF
+        OPTIONS
+            ${FEATURE_OPTIONS}
      )
 
-    vcpkg_install_cmake()
-    vcpkg_fixup_cmake_targets()
+    vcpkg_cmake_install()
+    vcpkg_cmake_config_fixup()
     vcpkg_copy_pdbs()
 endif()
 
