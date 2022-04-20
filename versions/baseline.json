@@ -2737,8 +2737,8 @@
       "port-version": 4
     },
     "healpix": {
-      "baseline": "1.12.10",
-      "port-version": 8
+      "baseline": "3.81.0",
+      "port-version": 0
     },
     "hedley": {
       "baseline": "15",
