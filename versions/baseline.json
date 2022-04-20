@@ -102,7 +102,7 @@
     },
     "aom": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "approval-tests-cpp": {
       "baseline": "10.12.2",
@@ -3642,7 +3642,7 @@
     },
     "libhydrogen": {
       "baseline": "2021-12-02",
-      "port-version": 0
+      "port-version": 1
     },
     "libical": {
       "baseline": "3.0.11",
@@ -5050,7 +5050,7 @@
     },
     "openblas": {
       "baseline": "0.3.19",
-      "port-version": 0
+      "port-version": 1
     },
     "opencascade": {
       "baseline": "7.6.0",
@@ -5598,7 +5598,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 1
+      "port-version": 2
     },
     "pthreads": {
       "baseline": "3.0.0",
@@ -7294,7 +7294,7 @@
     },
     "vc": {
       "baseline": "1.4.2",
-      "port-version": 2
+      "port-version": 3
     },
     "vcglib": {
       "baseline": "1.0.1",
