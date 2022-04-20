@@ -1,0 +1,132 @@
+From 3828130791bf8e60038b46b0d6602cb7e43fb344 Mon Sep 17 00:00:00 2001
+From: Nikolaj Bjorner <nbjorner@microsoft.com>
+Date: Thu, 24 Mar 2022 14:05:05 -1000
+Subject: [PATCH] fix #5922 use 0u to help type inference
+
+Signed-off-by: Nikolaj Bjorner <nbjorner@microsoft.com>
+---
+ src/api/c++/z3++.h | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/src/api/c++/z3++.h b/src/api/c++/z3++.h
+index b00a33ad71..4d60de4338 100644
+--- a/src/api/c++/z3++.h
++++ b/src/api/c++/z3++.h
+@@ -2333,7 +2333,7 @@ namespace z3 {
+ 
+     inline expr pble(expr_vector const& es, int const* coeffs, int bound) {
+         assert(es.size() > 0);
+-        context& ctx = es[0].ctx();
++        context& ctx = es[0u].ctx();
+         array<Z3_ast> _es(es);
+         Z3_ast r = Z3_mk_pble(ctx, _es.size(), _es.ptr(), coeffs, bound);
+         ctx.check_error();
+@@ -2341,7 +2341,7 @@ namespace z3 {
+     }
+     inline expr pbge(expr_vector const& es, int const* coeffs, int bound) {
+         assert(es.size() > 0);
+-        context& ctx = es[0].ctx();
++        context& ctx = es[0u].ctx();
+         array<Z3_ast> _es(es);
+         Z3_ast r = Z3_mk_pbge(ctx, _es.size(), _es.ptr(), coeffs, bound);
+         ctx.check_error();
+@@ -2349,7 +2349,7 @@ namespace z3 {
+     }
+     inline expr pbeq(expr_vector const& es, int const* coeffs, int bound) {
+         assert(es.size() > 0);
+-        context& ctx = es[0].ctx();
++        context& ctx = es[0u].ctx();
+         array<Z3_ast> _es(es);
+         Z3_ast r = Z3_mk_pbeq(ctx, _es.size(), _es.ptr(), coeffs, bound);
+         ctx.check_error();
+@@ -2357,7 +2357,7 @@ namespace z3 {
+     }
+     inline expr atmost(expr_vector const& es, unsigned bound) {
+         assert(es.size() > 0);
+-        context& ctx = es[0].ctx();
++        context& ctx = es[0u].ctx();
+         array<Z3_ast> _es(es);
+         Z3_ast r = Z3_mk_atmost(ctx, _es.size(), _es.ptr(), bound);
+         ctx.check_error();
+@@ -2365,7 +2365,7 @@ namespace z3 {
+     }
+     inline expr atleast(expr_vector const& es, unsigned bound) {
+         assert(es.size() > 0);
+-        context& ctx = es[0].ctx();
++        context& ctx = es[0u].ctx();
+         array<Z3_ast> _es(es);
+         Z3_ast r = Z3_mk_atleast(ctx, _es.size(), _es.ptr(), bound);
+         ctx.check_error();
+@@ -2373,7 +2373,7 @@ namespace z3 {
+     }
+     inline expr sum(expr_vector const& args) {
+         assert(args.size() > 0);
+-        context& ctx = args[0].ctx();
++        context& ctx = args[0u].ctx();
+         array<Z3_ast> _args(args);
+         Z3_ast r = Z3_mk_add(ctx, _args.size(), _args.ptr());
+         ctx.check_error();
+@@ -2382,7 +2382,7 @@ namespace z3 {
+ 
+     inline expr distinct(expr_vector const& args) {
+         assert(args.size() > 0);
+-        context& ctx = args[0].ctx();
++        context& ctx = args[0u].ctx();
+         array<Z3_ast> _args(args);
+         Z3_ast r = Z3_mk_distinct(ctx, _args.size(), _args.ptr());
+         ctx.check_error();
+@@ -2411,14 +2411,14 @@ namespace z3 {
+         Z3_ast r;
+         assert(args.size() > 0);
+         if (args.size() == 1) {
+-            return args[0];
++            return args[0u];
+         }
+-        context& ctx = args[0].ctx();
++        context& ctx = args[0u].ctx();
+         array<Z3_ast> _args(args);
+-        if (Z3_is_seq_sort(ctx, args[0].get_sort())) {
++        if (Z3_is_seq_sort(ctx, args[0u].get_sort())) {
+             r = Z3_mk_seq_concat(ctx, _args.size(), _args.ptr());
+         }
+-        else if (Z3_is_re_sort(ctx, args[0].get_sort())) {
++        else if (Z3_is_re_sort(ctx, args[0u].get_sort())) {
+             r = Z3_mk_re_concat(ctx, _args.size(), _args.ptr());
+         }
+         else {
+@@ -2448,7 +2448,7 @@ namespace z3 {
+     inline expr mk_xor(expr_vector const& args) {
+         if (args.empty())
+             return args.ctx().bool_val(false);
+-        expr r = args[0];
++        expr r = args[0u];
+         for (unsigned i = 1; i < args.size(); ++i)
+             r = r ^ args[i];
+         return r;
+@@ -2771,7 +2771,7 @@ namespace z3 {
+                 assert(!m_end && !m_empty);
+                 m_cube = m_solver.cube(m_vars, m_cutoff);
+                 m_cutoff = 0xFFFFFFFF;
+-                if (m_cube.size() == 1 && m_cube[0].is_false()) {
++                if (m_cube.size() == 1 && m_cube[0u].is_false()) {
+                     m_cube = z3::expr_vector(m_solver.ctx());
+                     m_end = true;
+                 }
+@@ -3005,7 +3005,7 @@ namespace z3 {
+         }
+         array<Z3_tactic> buffer(n);
+         for (unsigned i = 0; i < n; ++i) buffer[i] = tactics[i];
+-        return tactic(tactics[0].ctx(), Z3_tactic_par_or(tactics[0].ctx(), n, buffer.ptr()));
++        return tactic(tactics[0u].ctx(), Z3_tactic_par_or(tactics[0u].ctx(), n, buffer.ptr()));
+     }
+ 
+     inline tactic par_and_then(tactic const & t1, tactic const & t2) {
+@@ -3804,7 +3804,7 @@ namespace z3 {
+     }
+     inline expr re_intersect(expr_vector const& args) {
+         assert(args.size() > 0);
+-        context& ctx = args[0].ctx();
++        context& ctx = args[0u].ctx();
+         array<Z3_ast> _args(args);
+         Z3_ast r = Z3_mk_re_intersect(ctx, _args.size(), _args.ptr());
+         ctx.check_error();
