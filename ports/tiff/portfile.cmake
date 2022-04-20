@@ -36,13 +36,14 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DBUILD_CONTRIB=OFF
         -DBUILD_TESTS=OFF
-        -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
         -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
 )
 
 vcpkg_cmake_install()

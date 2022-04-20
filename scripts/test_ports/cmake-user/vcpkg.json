@@ -1,7 +1,8 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-02-28",
+  "version-date": "2022-04-18",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "license": "MIT",
   "default-features": [
     "ci"
   ],
@@ -13,6 +14,7 @@
           "name": "cmake-user",
           "default-features": false,
           "features": [
+            "cmake-current",
             "find-package"
           ]
         },
@@ -27,7 +29,10 @@
       ]
     },
     "cmake-3-7": {
-      "description": "Use CMake 3.7 to build the test project"
+      "description": "Run the tests with CMake 3.7"
+    },
+    "cmake-current": {
+      "description": "Run the tests with vcpkg's current version of CMake"
     },
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
@@ -53,13 +58,28 @@
           "name": "giflib"
         },
         {
+          "$package": "ICU",
+          "name": "icu"
+        },
+        {
+          "$package": "JPEG",
+          "name": "libjpeg-turbo"
+        },
+        {
           "$package": "LibLZMA",
           "name": "liblzma"
         },
         {
-          "$package": "Curses",
-          "name": "ncurses",
-          "platform": "!windows & !uwp"
+          "$package": "PNG",
+          "name": "libpng"
+        },
+        {
+          "$package": "TIFF",
+          "name": "tiff"
+        },
+        {
+          "$package": "wxWidgets",
+          "name": "wxwidgets"
         },
         {
           "$package": "ZLIB",

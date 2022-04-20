@@ -1,9 +1,10 @@
 {
   "name": "openssl",
-  "version-string": "1.1.1n",
+  "version": "3.0.2",
+  "port-version": 3,
   "description": "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.",
   "homepage": "https://www.openssl.org",
-  "license": "OpenSSL",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

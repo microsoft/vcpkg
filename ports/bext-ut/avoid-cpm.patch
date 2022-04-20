@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,7 +36,7 @@
+ # ---- Add dependencies via CPM ----
+ # see https://github.com/cpm-cmake/CPM.cmake for more info
+ 
+-if(CMAKE_VERSION VERSION_LESS 3.20.0)
++if(1)
+   # see https://github.com/TheLartians/PackageProject.cmake/pull/19
+   include(cmake/PackageProject.cmake)
+ else()

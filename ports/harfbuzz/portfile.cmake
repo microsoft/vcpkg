@@ -11,6 +11,8 @@ vcpkg_from_github(
         # Details: https://github.com/microsoft/vcpkg/issues/16262
         0001-circumvent-samefile-error.patch
         0002-fix-uwp-build.patch
+        fix-macos-build.diff # fixes https://github.com/harfbuzz/harfbuzz/issues/3484
+        fix-mingw-build.patch # https://github.com/harfbuzz/harfbuzz/pull/3385
 )
 
 if("icu" IN_LIST FEATURES)

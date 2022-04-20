@@ -44,7 +44,7 @@ endif()
 set(filename "${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp")
 if(EXISTS "${filename}")
     file(READ "${filename}" contents)
-    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\\n]*\n" "\n" contents "${contents}")
+    string(REGEX REPLACE "\n#define ARMA_AUX_LIBS [^\n]*\n" "\n" contents "${contents}")
     file(WRITE "${filename}" "${contents}")
 endif()
 

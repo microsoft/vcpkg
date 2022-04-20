@@ -1,8 +1,8 @@
 {
   "name": "opencv3",
   "version": "3.4.16",
-  "port-version": 4,
-  "description": "computer vision library",
+  "port-version": 7,
+  "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
   "dependencies": [
@@ -12,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     },
     "zlib"
