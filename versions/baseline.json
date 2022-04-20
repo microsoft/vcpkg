@@ -489,8 +489,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "1",
-      "port-version": 1
+      "baseline": "2022-03-31",
+      "port-version": 0
     },
     "blaze": {
       "baseline": "3.8",
@@ -826,7 +826,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.78.0",
-      "port-version": 3
+      "port-version": 4
     },
     "boost-move": {
       "baseline": "1.78.0",
@@ -1622,7 +1622,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 0
+      "port-version": 1
     },
     "cpptoml": {
       "baseline": "v0.1.1",
@@ -2894,7 +2894,7 @@
     },
     "igraph": {
       "baseline": "0.9.8",
-      "port-version": 0
+      "port-version": 1
     },
     "iir1": {
       "baseline": "1.9.0",
@@ -3442,7 +3442,7 @@
     },
     "libcerf": {
       "baseline": "1.13",
-      "port-version": 2
+      "port-version": 3
     },
     "libconfig": {
       "baseline": "1.7.3",
@@ -3706,7 +3706,7 @@
     },
     "liblbfgs": {
       "baseline": "1.10",
-      "port-version": 1
+      "port-version": 2
     },
     "liblemon": {
       "baseline": "2019-06-13",
@@ -5222,7 +5222,7 @@
     },
     "orc": {
       "baseline": "1.6.4",
-      "port-version": 2
+      "port-version": 3
     },
     "orocos-kdl": {
       "baseline": "1.4",
@@ -5382,11 +5382,11 @@
     },
     "physfs": {
       "baseline": "3.0.2",
-      "port-version": 6
+      "port-version": 7
     },
     "physx": {
       "baseline": "4.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "picojson": {
       "baseline": "1.3.0",
@@ -6370,7 +6370,7 @@
     },
     "sdl2": {
       "baseline": "2.0.20",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -7297,7 +7297,7 @@
       "port-version": 1
     },
     "vcpkg-cmake": {
-      "baseline": "2022-04-12",
+      "baseline": "2022-04-21",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
