@@ -11,7 +11,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        fix_build.patch
         fix_build_error_windows.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
