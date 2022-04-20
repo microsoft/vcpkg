@@ -16,7 +16,7 @@ index aedc576..4f16abc 100644
        ${COREMEDIA_LIBRARY}
        ${COREVIDEO_LIBRARY}
 +      ${CF_LIBRARY}
-+      ${IOK_LIBRARY}     
++      ${IOK_LIBRARY}
      )
    ENDIF(VIDEOTOOLBOX_LIBRARY)
  ENDIF(APPLE)

@@ -14,11 +14,6 @@ string(REPLACE "(WIN32)"
                "(WIN32_DISABLE)" FINDLIBUSB "${FINDLIBUSB}")
 file(WRITE "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "${FINDLIBUSB}")
 
-file(READ "${SOURCE_PATH}/examples/CMakeLists.txt" EXAMPLECMAKE)
-string(REPLACE "(WIN32)"
-               "(WIN32_DISABLE)" EXAMPLECMAKE "${EXAMPLECMAKE}")
-file(WRITE "${SOURCE_PATH}/examples/CMakeLists.txt" "${EXAMPLECMAKE}")
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opengl     ENABLE_OPENGL
     opencl     ENABLE_OPENCL
@@ -28,6 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_CUDA=OFF
+        -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
 )
 
