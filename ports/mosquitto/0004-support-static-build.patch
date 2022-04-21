@@ -7,11 +7,11 @@ index 13a7d826..5e96f49c 100644
  
  
 -	target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
-+		if(WIN32)
-+			target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES} ws2_32 crypt32)
-+		else()
-+			target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
-+		endif()
++	if(WIN32)
++		target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES} ws2_32 crypt32)
++	else()
++		target_link_libraries(mosquitto_passwd ${OPENSSL_LIBRARIES})
++	endif()
  	install(TARGETS mosquitto_passwd RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
  endif (WITH_TLS)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
