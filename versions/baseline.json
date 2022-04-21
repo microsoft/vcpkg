@@ -6942,7 +6942,7 @@
     },
     "tiff": {
       "baseline": "4.3.0",
-      "port-version": 7
+      "port-version": 8
     },
     "tinkerforge": {
       "baseline": "2.1.25",
