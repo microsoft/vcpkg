@@ -2646,7 +2646,7 @@
     },
     "gsl": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gsl-lite": {
       "baseline": "0.40.0",
