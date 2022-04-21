@@ -4114,7 +4114,7 @@
     },
     "libunistring": {
       "baseline": "0.9.10",
-      "port-version": 2
+      "port-version": 3
     },
     "liburing": {
       "baseline": "2.0",
