@@ -62,6 +62,11 @@ if("find-package" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         list(REMOVE_ITEM packages "Curses")
     endif()
+    if(VCPKG_TARGET_IS_LINUX)
+        # Port wxwidgets requires linux system libraries which conflict with vcpkg ports.
+        # This line complements the "platform" restriction from vcpkg.json.
+        list(REMOVE_ITEM packages "wxWidgets")
+    endif()
 endif()
 
 if(DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
@@ -93,6 +98,7 @@ function(test_cmake_project)
     set(base_options
         -G "Ninja"
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
+        "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
@@ -137,7 +143,7 @@ function(test_cmake_project)
     # To produce better error messages for failing wrappers,
     # we run execute_process directly here, for each wrapper.
     string(REPLACE " OFF:" ":" message
-    "  CMake ${cmake_version}: `find_package(@package@)` failed.\n"
+    "  CMake ${cmake_version}: @step@ with `find_package(@package@)` failed.\n"
     "  See logs for more information:\n"
     "    @log_out@\n"
     "    @log_err@\n"
@@ -166,8 +172,25 @@ function(test_cmake_project)
             WORKING_DIRECTORY "${find_package_build_dir}"
         )
         if(package_result)
+            set(step "configuration")
             string(CONFIGURE "${message}" package_message @ONLY)
             message(SEND_ERROR "${package_message}")
+        else()
+            set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-build-out.log")
+            set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-build-err.log")
+            execute_process(
+                COMMAND
+                    "${arg_CMAKE_COMMAND}" --build .
+                OUTPUT_FILE "${log_out}"
+                ERROR_FILE "${log_err}"
+                RESULT_VARIABLE package_result
+                WORKING_DIRECTORY "${find_package_build_dir}"
+            )
+            if(package_result)
+                set(step "build")
+                string(CONFIGURE "${message}" package_message @ONLY)
+                message(SEND_ERROR "${package_message}")
+            endif()
         endif()
     endforeach()
 endfunction()
