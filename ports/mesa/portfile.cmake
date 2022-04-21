@@ -30,13 +30,9 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
-vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
-set(ENV{PYTHON} "${PYTHON3}")
 
-x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES setuptools mako)
+
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )

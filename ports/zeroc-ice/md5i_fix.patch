@@ -1,0 +1,21 @@
+diff --git a/cpp/src/Slice/MD5I.cpp b/cpp/src/Slice/MD5I.cpp
+index 66f4de545b..271352d1ea 100644
+--- a/cpp/src/Slice/MD5I.cpp
++++ b/cpp/src/Slice/MD5I.cpp
+@@ -52,6 +52,7 @@
+  */
+
+ #include <Slice/MD5I.h>
++#include <stdint.h>
+ #include <string.h>
+
+ #ifdef __GNUC__
+@@ -172,7 +173,7 @@ md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
+              * On little-endian machines, we can process properly aligned
+              * data without copying it.
+              */
+-            if (!((data - (const md5_byte_t *)0) & 3)) {
++            if (!((reinterpret_cast<uintptr_t>(data)) & 3)) {
+                 /* data are properly aligned */
+                 X = (const md5_word_t *)data;
+             } else {
