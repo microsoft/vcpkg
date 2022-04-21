@@ -5,7 +5,7 @@
   "description": "Quantized Neural Network PACKage - mobile-optimized implementation of quantized neural network operators",
   "homepage": "https://github.com/pytorch/QNNPACK",
   "license": "BSD-3-Clause",
-  "supports": "!windows & !(arm & osx)",
+  "supports": "!windows",
   "dependencies": [
     "cpuinfo",
     "fp16",

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-packages.patch
+        fix-arm64-osx.patch
 )
 
 vcpkg_cmake_configure(
