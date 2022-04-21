@@ -29,18 +29,18 @@
 #
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
-# vcpkg_from_github(
+# vcpkg_from_git(
 #     OUT_SOURCE_PATH SOURCE_PATH
-#     REPO wxIshiko/wxCharts.git
+#     URL https://github.com/wxIshiko/wxCharts.git
 #     REF 979c3ab781b276c96c860db9fb8ecd72f25287f6
-#     SHA512 0
 #     PATCHES support-cmake-and-dll.patch
 # )
 
-vcpkg_from_github
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/wxIshiko/wxCharts.git
+    REPO wxIshiko/wxCharts
     REF 979c3ab781b276c96c860db9fb8ecd72f25287f6
+    SHA512 0
     PATCHES support-cmake-and-dll.patch
 )
 
