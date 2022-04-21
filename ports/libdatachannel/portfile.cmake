@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_SRTP=ON
         -DNO_EXAMPLES=ON
-        -DNO_TESTS=OFF
+        -DNO_TESTS=ON
 )
 
 vcpkg_cmake_install()
