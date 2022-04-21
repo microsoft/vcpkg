@@ -3685,7 +3685,7 @@
       "port-version": 2
     },
     "libjuice": {
-      "baseline": "0.9.8",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "libjxl": {
