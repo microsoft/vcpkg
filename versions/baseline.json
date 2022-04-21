@@ -5182,7 +5182,7 @@
     },
     "opentracing": {
       "baseline": "1.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openvdb": {
       "baseline": "9.0.0",
