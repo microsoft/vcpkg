@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3eebde..b47c850 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,10 @@ SET(${PROJECT_NAME}_MICRO 0)
+ SET(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${${PROJECT_NAME}_MICRO})
+ SET(LIB_NAME cfitsio)
+ 
++if (NOT MSVC)
++  add_compile_options(-Wno-error=implicit-function-declaration)
++endif()
++
+ # Allow @rpath token in target install name on Macs.
+ # See "cmake --help-policy CMP0042" for more information.
+ IF(POLICY CMP0042)

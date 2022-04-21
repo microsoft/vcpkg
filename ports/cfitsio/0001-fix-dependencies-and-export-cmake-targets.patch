@@ -1,0 +1,89 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4dc5839..a3eebde 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,7 +74,7 @@ ENDIF(BUILD_SHARED_LIBS)
+ IF(NOT WIN32)
+    # Find curl library, for HTTPS support:
+    IF(USE_CURL)
+-      FIND_PACKAGE(CURL)
++      FIND_PACKAGE(CURL CONFIG REQUIRED)
+       IF(CURL_FOUND)
+          ADD_DEFINITIONS(-DCFITSIO_HAVE_CURL)
+       ENDIF()
+@@ -82,7 +82,7 @@ IF(NOT WIN32)
+ ENDIF(NOT WIN32)
+ 
+ IF(USE_PTHREADS)
+-   FIND_PACKAGE(Threads REQUIRED)
++   FIND_PACKAGE(pthreads REQUIRED)
+    ADD_DEFINITIONS(-D_REENTRANT)
+ ENDIF(USE_PTHREADS)
+ 
+@@ -219,7 +219,7 @@ ENDIF()
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
+ set (LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+-set (INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/")
++set (INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/cfitsio")
+ set (BIN_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+ 
+ SET(H_FILES fitsio.h fitsio2.h longnam.h)
+@@ -253,25 +253,26 @@ SET(SRC_FILES
+ #==============================================================================
+ ADD_LIBRARY(${LIB_NAME} ${LIB_TYPE} ${H_FILES} ${SRC_FILES})
+ # Math:
+-TARGET_LINK_LIBRARIES(${LIB_NAME} ${M_LIB})
++TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC $<INSTALL_INTERFACE:include/cfitsio>)
++TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC ${M_LIB})
+ # zlib:
+ IF (ZLIB_FOUND)
+     TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${ZLIB_INCLUDE_DIR})
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${ZLIB_LIBRARIES})
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC ZLIB::ZLIB)
+     # For cfitsio.pc.cmake:
+     SET (PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lz")
+ ENDIF(ZLIB_FOUND)
+ # cURL:
+ IF (CURL_FOUND)
+     TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${CURL_LIBRARIES})
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC CURL::libcurl)
+     # For cfitsio.pc.cmake:
+     SET (PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lcurl")
+ ENDIF(CURL_FOUND)
+ # PThreads:
+-IF (THREADS_FOUND)
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} Threads::Threads)
+-ENDIF(THREADS_FOUND)
++IF (PThreads4W_FOUND)
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC PThreads4W::PThreads4W)
++ENDIF(PThreads4W_FOUND)
+ # BZip2:
+ IF (BZIP2_FOUND)
+     TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${BZIP2_INCLUDE_DIRS})
+@@ -282,12 +283,24 @@ ENDIF(BZIP2_FOUND)
+ SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} SOVERSION ${${PROJECT_NAME}_MAJOR})
+ include(GNUInstallDirs)
+ install(TARGETS ${LIB_NAME}
++        EXPORT unofficial-${LIB_NAME}-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
+ install(FILES ${H_FILES} DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+ 
++set(CFITSIO_VERSION 4.1.0)
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(unofficial-${LIB_NAME}-version.cmake VERSION ${CFITSIO_VERSION} COMPATIBILITY ExactVersion)
++
++install(FILES ${CMAKE_BINARY_DIR}/unofficial-${LIB_NAME}-version.cmake DESTINATION share/unofficial-${LIB_NAME})
++
++install(
++    EXPORT unofficial-${LIB_NAME}-config
++    DESTINATION share/unofficial-${LIB_NAME}
++)
++
+ #==============================================================================
+ # Optional test programs:
+ #==============================================================================
