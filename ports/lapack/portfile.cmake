@@ -7,7 +7,9 @@ else()
 endif()
 set(BLA_VENDOR Generic)
 if(VCPKG_TARGET_IS_WINDOWS) # The other wrapper is in lapack-reference
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" @ONLY)
+    if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" @ONLY)
+    endif()
 endif()
 # Make sure LAPACK can be found
 vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_PORT_DIR}
