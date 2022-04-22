@@ -5,7 +5,14 @@
   "description": "Metapackage for packages which provide LAPACK",
   "license": null,
   "dependencies": [
-    "lapack-impl",
+    {
+      "name": "clapack",
+      "platform": "(arm & windows) | uwp"
+    },
+    {
+      "name": "lapack-reference",
+      "platform": "!((arm & windows) | uwp | osx)"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
