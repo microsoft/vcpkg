@@ -20,7 +20,7 @@ if($projFilePath)
         $rtl = $xmldoc.CreateElement("RuntimeLibrary", $conf.ClCompile.NamespaceURI)
         $conf.ClCompile.AppendChild($rtl)
       }
-        
+
       if($conf.Condition.Contains("Debug"))
       {
         if($crtLinkage -eq "static")

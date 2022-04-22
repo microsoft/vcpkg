@@ -257,7 +257,7 @@ else() # VCPKG_TARGET_IS_WINDOWS
     include("${CURRENT_PORT_DIR}/prepare_for_build.cmake")
     prepare_for_build("${SOURCE_PATH}")
 
-    vcpkg_list(SET MSBUILD_OPTIONS 
+    vcpkg_list(SET MSBUILD_OPTIONS
         "/p:UseVcpkg=yes"
         "/p:IceBuildingSrc=yes"
         ${ICE_OPTIONAL_COMPONENTS_MSBUILD}
@@ -272,7 +272,6 @@ else() # VCPKG_TARGET_IS_WINDOWS
         USE_VCPKG_INTEGRATION
         OPTIONS
             ${MSBUILD_OPTIONS}
-	          
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")

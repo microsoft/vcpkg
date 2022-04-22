@@ -202,7 +202,7 @@ dawn support requires the following libraries from the system package manager:
 
     libx11-xcb-dev mesa-common-dev
 
-They can be installed on Debian based systems via 
+They can be installed on Debian based systems via
 
     apt-get install libx11-xcb-dev mesa-common-dev
 ]]
