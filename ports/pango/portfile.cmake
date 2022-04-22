@@ -5,7 +5,9 @@ vcpkg_from_gitlab(
     REF  37a427018c92a2bc679ef104097e07a619609c9c #v1.50.6
     SHA512 4990022cae2130b4842d0d9d3161545c7214ac3dd445d85a7ec49b0a89e39319b404fecc66d4025965cd2407823c7476b937e6ee53e2e6763b35048db8ff387f
     HEAD_REF master # branch name
-) 
+    PATCHES
+        set_but_not_used_var.patch
+)
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}

@@ -1,0 +1,21 @@
+diff --git a/pango/pangocoretext-fontmap.c b/pango/pangocoretext-fontmap.c
+index 40e62eed..36d1a358 100644
+--- a/pango/pangocoretext-fontmap.c
++++ b/pango/pangocoretext-fontmap.c
+@@ -860,7 +860,7 @@ get_scaled_size (PangoCoreTextFontMap       *fontmap,
+   double size = pango_font_description_get_size (desc);
+   const PangoMatrix *matrix = pango_context_get_matrix (context);
+   double scale_factor = pango_matrix_get_font_scale_factor (matrix);
+-  
++
+   if (!pango_font_description_get_size_is_absolute(desc))
+   {
+     double dpi = pango_core_text_font_map_get_resolution (fontmap, context);
+@@ -1700,6 +1700,7 @@ pango_core_text_fontset_load_font (PangoCoreTextFontset *ctfontset,
+   PangoCoreTextFont *font;
+ 
+   key = pango_core_text_fontset_get_key (ctfontset);
++  key;
+ 
+   /* For now, we will default the fallbacks to not have synthetic italic,
+    * in the future this may be improved.
