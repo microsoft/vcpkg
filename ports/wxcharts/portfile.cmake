@@ -1,9 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxIshiko/wxCharts
-    REF 979c3ab781b276c96c860db9fb8ecd72f25287f6
-    SHA512 3bba60432f3b7f9e866731bef01ede9f19dbd4e0ff6aaecce761ff7d82de6cc55bcbfc51da770aeccd857e41453c075d15fd7ea906092fe370dca643f5c313cb
-    PATCHES support-cmake-and-dll.patch
+    REF c7c7eb4c4132eeb83f25546b1b981dc61e5c188f
+    SHA512 f46cf467b356e2ffa46db020de42f8aca9beab801e2ade50f7e75650bba9bc83c641702dcd5ee45e82425b96d4371b82e7f16dce3077050a86ba696ed5c326de
 )
 
 vcpkg_cmake_configure(
