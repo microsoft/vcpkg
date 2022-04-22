@@ -1,8 +1,17 @@
 {
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "blas",
   "version-date": "2022-04-22",
   "description": "Metapackage for packages which provide BLAS",
+  "license": null,
   "dependencies": [
-    "openblas"
+    {
+      "name": "openblas",
+      "platform": "!osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

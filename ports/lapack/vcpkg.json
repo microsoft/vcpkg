@@ -1,4 +1,5 @@
 {
+  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "lapack",
   "version-date": "2022-02-22",
   "description": "Metapackage for packages which provide LAPACK",
@@ -11,6 +12,10 @@
     {
       "name": "lapack-reference",
       "platform": "!((arm & windows) | uwp)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
