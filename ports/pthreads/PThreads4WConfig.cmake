@@ -88,30 +88,6 @@ find_file(PThreads4W_CXXEXC_LIBRARY_DEBUG_DLL NAMES pthreadVCE${PThreads4W_MAJOR
 find_file(PThreads4W_STRUCTEXC_LIBRARY_RELEASE_DLL NAMES pthreadVSE${PThreads4W_MAJOR_VERSION}.dll PATHS ${PThreads4W_DLL_DIR})
 find_file(PThreads4W_STRUCTEXC_LIBRARY_DEBUG_DLL NAMES pthreadVSE${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DEBUG_DLL_DIR})
 
-#Compatibility definitions, deprecated
-set(PThreads_windows_INCLUDE_DIR "${PThreads4W_INCLUDE_DIR}")
-set(PThreads_windows_LIBRARY "${PThreads4W_LIBRARY}")
-set(PThreads_windows_LIBRARIES "${PThreads4W_LIBRARY}")
-set(PThreads_windows_VERSION "${PThreads4W_VERSION}")
-set(pthreads_INCLUDE_DIR "${PThreads4W_INCLUDE_DIR}")
-set(pthreads_LIBRARY "${PThreads4W_LIBRARY}")
-set(pthreads_LIBRARIES "${PThreads4W_LIBRARY}")
-set(pthreads_VERSION "${PThreads4W_VERSION}")
-set(PTHREAD_INCLUDE_DIR "${PThreads4W_INCLUDE_DIR}")
-set(PTHREAD_LIBRARY "${PThreads4W_LIBRARY}")
-set(PTHREAD_LIBRARIES "${PThreads4W_LIBRARY}")
-set(PTHREAD_VERSION "${PThreads4W_VERSION}")
-set(LIBPTHREAD "${PThreads4W_LIBRARY}")
-set(LIBPTHREADS "${PThreads4W_LIBRARY}")
-if(PThreads4W_FOUND)
-  set(PThreads_windows_FOUND TRUE)
-  set(pthreads_FOUND TRUE)
-  set(PTHREAD_FOUND TRUE)
-  set(LIBPTHREAD_FOUND TRUE)
-  set(LIBPTHREADS_FOUND TRUE)
-endif()
-
-#TARGETS
 if( PThreads4W_FOUND AND NOT TARGET PThreads4W::PThreads4W_CXXEXC )
   if( EXISTS "${PThreads4W_CXXEXC_LIBRARY_RELEASE_DLL}" )
     add_library( PThreads4W::PThreads4W_CXXEXC      SHARED IMPORTED )
@@ -197,37 +173,6 @@ if( PThreads4W_FOUND AND NOT TARGET PThreads4W::PThreads4W )
     if( EXISTS "${PThreads4W_LIBRARY_DEBUG}" )
       set_property( TARGET PThreads4W::PThreads4W APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
       set_target_properties( PThreads4W::PThreads4W PROPERTIES
-        IMPORTED_LOCATION_DEBUG           "${PThreads4W_LIBRARY_DEBUG}" )
-    endif()
-  endif()
-endif()
-
-#Compatibility targets, deprecated
-if( PThreads4W_FOUND AND NOT TARGET PThreads_windows::PThreads_windows )
-  if( EXISTS "${PThreads4W_LIBRARY_RELEASE_DLL}" )
-    add_library( PThreads_windows::PThreads_windows      SHARED IMPORTED )
-    set_target_properties( PThreads_windows::PThreads_windows PROPERTIES
-      IMPORTED_LOCATION_RELEASE         "${PThreads4W_LIBRARY_RELEASE_DLL}"
-      IMPORTED_IMPLIB                   "${PThreads4W_LIBRARY_RELEASE}"
-      INTERFACE_INCLUDE_DIRECTORIES     "${PThreads4W_INCLUDE_DIR}"
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${PThreads4W_LIBRARY_DEBUG_DLL}" )
-      set_property( TARGET PThreads_windows::PThreads_windows APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( PThreads_windows::PThreads_windows PROPERTIES
-        IMPORTED_LOCATION_DEBUG           "${PThreads4W_LIBRARY_DEBUG_DLL}"
-        IMPORTED_IMPLIB_DEBUG             "${PThreads4W_LIBRARY_DEBUG}" )
-    endif()
-  else()
-    add_library( PThreads_windows::PThreads_windows      UNKNOWN IMPORTED )
-    set_target_properties( PThreads_windows::PThreads_windows PROPERTIES
-      IMPORTED_LOCATION_RELEASE         "${PThreads4W_LIBRARY_RELEASE}"
-      INTERFACE_INCLUDE_DIRECTORIES     "${PThreads4W_INCLUDE_DIR}"
-      IMPORTED_CONFIGURATIONS           Release
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
-    if( EXISTS "${PThreads4W_LIBRARY_DEBUG}" )
-      set_property( TARGET PThreads_windows::PThreads_windows APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-      set_target_properties( PThreads_windows::PThreads_windows PROPERTIES
         IMPORTED_LOCATION_DEBUG           "${PThreads4W_LIBRARY_DEBUG}" )
     endif()
   endif()
