@@ -29,16 +29,12 @@ add_library(crashpad_base STATIC IMPORTED)
 
 if(WIN32)
   target_compile_definitions(crashpad INTERFACE NOMINMAX)
-  set_property(TARGET crashpad_common PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/common.lib")
-  set_property(TARGET crashpad_client PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/client.lib")
-  set_property(TARGET crashpad_util PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/util.lib")
-  set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/base.lib")
-else()
-  set_property(TARGET crashpad_common PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libcommon.a")
-  set_property(TARGET crashpad_client PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libclient.a")
-  set_property(TARGET crashpad_util PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libutil.a")
-  set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libbase.a")
 endif()
+
+set_property(TARGET crashpad_common PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}common${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set_property(TARGET crashpad_client PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}client${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set_property(TARGET crashpad_util PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}util${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set_property(TARGET crashpad_base PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}base${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 target_link_libraries(crashpad INTERFACE crashpad_common crashpad_client crashpad_util crashpad_base)
 
