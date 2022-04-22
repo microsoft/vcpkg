@@ -4686,7 +4686,7 @@
     },
     "msix": {
       "baseline": "1.7",
-      "port-version": 3
+      "port-version": 4
     },
     "msmpi": {
       "baseline": "10.1.12498",
