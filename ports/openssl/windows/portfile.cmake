@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -16,7 +14,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENSSL_SHARED shared)
 endif()
 
-set(CONFIGURE_OPTIONS 
+set(CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
     no-ssl2
@@ -27,6 +25,10 @@ set(CONFIGURE_OPTIONS
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)
     set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
+endif()
+
+if(OPENSSL_NO_AUTOLOAD_CONFIG)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-autoload-config)
 endif()
 
 set(CONFIGURE_COMMAND "${PERL}" Configure ${CONFIGURE_OPTIONS})
@@ -65,7 +67,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-rel
+        LOGNAME configure-perl-${TARGET_TRIPLET}-rel
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
 
@@ -74,13 +76,13 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
     make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
     execute_process(
-        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+        COMMAND "${JOM}" -k -j "${VCPKG_CONCURRENCY}" -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
+        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log"
+        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log"
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
+        COMMAND "${JOM}" -j 1 -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
         LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
@@ -104,33 +106,46 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_execute_required_process(
         COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}-dbg
+        LOGNAME configure-perl-${TARGET_TRIPLET}-dbg
     )
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+    make_directory("${SOURCE_PATH_DEBUG}/inc32/openssl")
     execute_process(
-        COMMAND "${JOM}" -k -j ${VCPKG_CONCURRENCY} -f "${OPENSSL_MAKEFILE}"
+        COMMAND "${JOM}" -k -j "${VCPKG_CONCURRENCY}" -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
+        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log"
+        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log"
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
+        COMMAND "${JOM}" -j 1 -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+        message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
 
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"
@@ -167,7 +182,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/openssl")
-endif()
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

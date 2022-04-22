@@ -1,0 +1,16 @@
+prefix=${pcfiledir}/../..
+
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+sharedlibdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: szip
+Description: Szip compression software
+Version: @SZIP_VERSION@
+
+Requires:
+Cflags: -I"${includedir}" @SZIP_LINKAGE_FLAGS@
+Libs: -L"${libdir}" @SZIP_LIB@
+Libs.private: @SZIP_LIBS_PRIVATE@
+

@@ -1,0 +1,14 @@
+{
+  "name": "openvpn3",
+  "version-string": "3.4.1",
+  "port-version": 2,
+  "description": "a C++ class library that implements the functionality of an OpenVPN client, and is protocol-compatible with the OpenVPN 2.x branch.",
+  "dependencies": [
+    "asio",
+    "mbedtls",
+    {
+      "name": "tap-windows6",
+      "platform": "windows"
+    }
+  ]
+}

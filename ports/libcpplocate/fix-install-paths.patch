@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 854214c..9c4d98a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,7 +124,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr" OR "${CMAKE_INSTALL_PREFIX}" STREQU
+ endif()
+ 
+ # Installation paths
+-if(UNIX AND SYSTEM_DIR_INSTALL)
++if(1)
+     # Install into the system (/usr/bin or /usr/local/bin)
+     set(INSTALL_ROOT      "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_CMAKE     "share/${project}/cmake") # /usr/[local]/share/<project>/cmake
+diff --git a/cpplocate-config.cmake b/cpplocate-config.cmake
+index 8693fa4..cdb2828 100644
+--- a/cpplocate-config.cmake
++++ b/cpplocate-config.cmake
+@@ -26,7 +26,7 @@ macro(find_modules PREFIX)
+         if(TARGET ${module_name})
+             set(MODULE_FOUND TRUE)
+         else()
+-            find_module("${CMAKE_CURRENT_LIST_DIR}/${PREFIX}/${module_name}/${module_name}-export.cmake")
++            find_module("${CMAKE_CURRENT_LIST_DIR}/${module_name}-export.cmake")
+         endif()
+     endforeach(module_name)
+ endmacro()
+diff --git a/liblocate-config.cmake b/liblocate-config.cmake
+index 3bf4823..7245353 100644
+--- a/liblocate-config.cmake
++++ b/liblocate-config.cmake
+@@ -25,7 +25,7 @@ macro(find_modules PREFIX)
+         if(TARGET ${module_name})
+             set(MODULE_FOUND TRUE)
+         else()
+-            find_module("${CMAKE_CURRENT_LIST_DIR}/${PREFIX}/${module_name}/${module_name}-export.cmake")
++            find_module("${CMAKE_CURRENT_LIST_DIR}/${module_name}-export.cmake")
+         endif()
+     endforeach(module_name)
+ endmacro()

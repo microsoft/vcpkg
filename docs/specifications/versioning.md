@@ -1,5 +1,9 @@
 # Versioning Specification 
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
+**Up-to-date documentation is available at [Versioning](../users/versioning.md).**
+
 ## Glossary
 Some of the terms used in this document have similar meaning when discussed by the community, and because of that, they can cause confusion and ambiguity. To solve this issue, we will assign specific meaning to these terms and try to keep a consistent usage through the document.
 
@@ -28,7 +32,7 @@ This feature requires the use of manifests to declare project dependencies. To a
 * Ability for a top-level manifest to override all other version constraints.
 * Ability to declare a baseline for all versions.
 
-Example: A manifeset (`vcpkg.json`) using versioning features.
+Example: A manifest (`vcpkg.json`) using versioning features.
 ```json
 {
   "name": "versions-test",

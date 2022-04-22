@@ -1,0 +1,12 @@
+{
+  "name": "intelrdfpmathlib",
+  "version-string": "20U2",
+  "port-version": 3,
+  "description": "Intel(R) Decimal Floating-Point Math Library",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

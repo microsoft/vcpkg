@@ -1,8 +1,0 @@
-Source: memorymodule
-Version: 2019-12-31
-Description: Library to load a DLL from memory
-Homepage: https://github.com/fancycode/MemoryModule
-Default-Features: unicode
-
-Feature: unicode
-Description: Compile with UNICODE support

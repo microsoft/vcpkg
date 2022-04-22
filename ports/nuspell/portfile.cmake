@@ -1,15 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nuspell/nuspell
-    REF v4.2.0
-    SHA512 ae9157e9753868c002ed69a765fb705d29d993f3940e11efbc2699778a8b1abee2eb7daa0ff51187b899d6935a215a24662e5b52ec1ef5c644e90a0245f7583d
+    REF v5.0.0
+    SHA512 92605c5f0d413b86711fea3b993d656552d5e72440303d3e71907a503d060ead032dfeb0dd8dbb790f35599b8cca8854bdd8650f0560793d9c62a11aebccc2e5
     HEAD_REF master
-    PATCHES cmake-disable-cli-and-docs.patch
-    # This patch disables building the CLI tool and leaves only the library.
-    # That is because Vcpkg complains when it finds .exe files in the folder
-    # "bin". Instead it expects them under "tools", which is different
-    # convention than on Unixes. This patch is quick fix, the CLI is not
-    # that important.
 )
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,6 +18,7 @@ vcpkg_fixup_pkgconfig(
     # because it can't find this. -lm is part of glibc on Linux.
     SYSTEM_LIBRARIES m
 )
+vcpkg_copy_tools(TOOL_NAMES nuspell AUTO_CLEAN)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share

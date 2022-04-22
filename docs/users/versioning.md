@@ -1,85 +1,189 @@
 # Versioning
 
-**This feature is experimental and requires `--feature-flags=versions`**
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md).**
 
 Versioning allows you to deterministically control the precise revisions of dependencies used by
 your project from within your manifest file.
 
+See our guide to [getting started with versioning](../examples/versioning.getting-started.md).
+
+## Contents
+
+* [Version schemes](#version-schemes)
+  * [`version`](#version)
+  * [`version-semver`](#version-semver)
+  * [`version-date`](#version-date)
+  * [`version-string`](#version-string)
+* [Version constraints](#version-constraints)
+* [Version files](#version-files)
+
 ## Version schemes
+Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
 
-### Schemes
-Versions in vcpkg come in four primary flavors:
+Each versioning scheme defines its own rules on what is a valid version string and more importantly the rules for how to sort versions using the same scheme.
 
-#### version
-A dot-separated sequence of numbers (1.2.3.4)
+The versioning schemes understood by vcpkg are:
 
-#### version-date
-A date (2021-01-01.5)
+Manifest property | Versioning scheme
+------------------|------------------------------------
+`version`         | For dot-separated numeric versions
+`version-semver`  | For SemVer compliant versions
+`version-date`    | For dates in the format YYYY-MM-DD
+`version-string`  | For arbitrary strings
 
-#### version-semver
-A Semantic Version 2.0 (2.1.0-rc2)
+A manifest must contain only one version declaration. 
 
-See https://semver.org/ for a full specification.
+_NOTE: By design, vcpkg does not compare versions that use different schemes. For example, a package
+that has a `version-string: 7.1.3` cannot be compared with the same package using `version: 7.1.4`, even if the
+conversion seems obvious._
 
-#### version-string
-An exact, incomparable version (Vista)
+#### `version`
+Accepts version strings that follow a relaxed, dot-separated-, semver-like scheme.
 
-### Port Versions
-Each version additionally has a "port-version" which is a nonnegative integer. When rendered as text, the
-port version (if nonzero) is added as a suffix to the primary version text separated by a hash (#).
-Port-versions are sorted lexographically after the primary version text, for example:
+The version is logically composed of dot-separated (`.`) numeric sections. Each section must contain an integer positive number with no leading zeroes.
 
-    1.0.0 < 1.0.0#1 < 1.0.1 < 1.0.1#5 < 2.0.0
+The regex pattern for this versioning scheme is: `(0|[1-9]\d*)(\.(0|[1-9]\d*))*`
 
-## Constraints
+_Sorting behavior_: When comparing two versions, each section is compared from left to right by their numeric value, until the first difference is found. A version with the smallest set of sections takes precedence over another with a larger set of sections, given that all their preceding sections compare equally.
 
-Manifests can place three kinds of constraints upon the versions used:
+Example:
+`0` < `0.1` < `0.1.0` < `1` < `1.0.0` < `1.0.1` < `1.1`< `2.0.0`
 
-### builtin-baseline
-The baseline references a commit within the vcpkg repository that
-establishes a minimum version on every dependency in the graph. If
-no other constraints are specified (directly or transitively),
-then the version from the baseline of the top level manifest will
-be used.
+#### `version-semver`
+Accepts version strings that follow semantic versioning conventions as described in the [semantic versioning specification](https://semver.org/#semantic-versioning-specification-semver).
 
-You can get the current commit of your vcpkg instance either by adding an empty `"builtin-baseline"` field, installing, and examining the error message or by running `git rev-parse HEAD` in the root of the vcpkg instance.
+_Sorting behavior_: Strings are sorted following the rules described in the semantic versioning specification.
 
-Baselines provide stability and ease of development for top-level manifest files. They are not considered from ports consumed as a dependency. If a minimum version constraint is required during transitive version resolution, the port should use `version>=`.
+Example:
+`1.0.0-1` < `1.0.0-alpha` < `1.0.0-beta` < `1.0.0` < `1.0.1` < `1.1.0`
 
-### version>=
-Within the "dependencies" field, each dependency can have a
-minimum constraint listed. These minimum constraints will be used
-when transitively depending upon this library. A minimum
-port-version can additionally be specified with a '#' suffix.
+#### `version-date`
 
-This constraint must refer to an existing, valid version (including port-version).
+Accepts version strings that can be parsed to a date following the ISO-8601 format `YYYY-MM-DD`. Disambiguation identifiers are allowed in the form of dot-separated-, positive-, integer-numbers with no leading zeroes.
 
-### overrides
-When used as the top-level manifest (such as when running `vcpkg
-install` in the directory), overrides allow a manifest to
-short-circuit dependency resolution and specify exactly the
-version to use. These can be used to handle version conflicts,
-such as with `version-string` dependencies.
+This is the recommended versioning scheme for "Live at HEAD" libraries that don't have established release versions.
 
-Overrides are not considered from ports consumed as a dependency.
+The regex pattern for this versioning scheme is: `\d{4}-\d{2}-\d{2}(\.(0|[1-9]\d*))*`
 
-## Example top-level manifest:
+_Sorting behavior_: Strings are sorted first by their date part, then by numeric comparison of their disambiguation identifiers. Disambiguation identifiers follow the rules of the relaxed (`version`) scheme.
+
+Examples:
+`2021-01-01` < `2021-01-01.1` < `2021-02-01.1.2` < `2021-02-01.1.3` < `2021-02-01`
+
+#### `version-string`
+For packages using version strings that do not fit any of the other schemes, it accepts most arbitrary strings.  The `#` which is used to denote port versions is disallowed.
+
+_Sorting behavior_: No sorting is attempted on the version string itself. However, if the strings match exactly, their port versions can be compared and sorted.
+
+Examples:
+* `apple` <> `orange` <> `orange.2` <> `orange2`
+* `watermelon#0`< `watermelon#1`
+
+#### `port-version`
+A positive integer value that increases each time a vcpkg-specific change is made to the port.
+
+The rules for port versions are:
+* Start at 0 for the original version of the port,
+* increase by 1 each time a vcpkg-specific change is made to the port that does not increase the version of the package,
+* and reset to 0 each time the version of the package is updated.
+
+_NOTE: Whenever vcpkg output a version it follows the format `<version>#<port version>`. For example `1.2.0#2` means version `1.2.0` port version `2`. When the port version is `0` the `#0` suffix is omitted (`1.2.0` implies version `1.2.0` port version `0`)._
+
+_Sorting behavior_: If two versions compare equally, their port versions are compared by their numeric value, lower port versions take precedence.
+
+Examples:
+* `1.2.0` < `1.2.0#1` < `1.2.0#2` < `1.2.0#10`
+* `2021-01-01#20` < `2021-01-01.1`
+* `windows#7` < `windows#8`
+
+## Version constraints
+
+### `builtin-baseline`
+Accepts a Git commit ID. vcpkg will try to find a baseline file in the given
+commit ID and use that to set the baseline versions (lower bounds) of all
+dependencies.
+
+Baselines provide stability and ease of development for top-level manifest
+files. They are not considered from ports consumed as a dependency. If a minimum
+version constraint is required during transitive version resolution, the port
+should use `version>=`.
+
+Example:
 ```json
 {
-    "name": "example",
-    "version": "1.0",
-    "builtin-baseline": "a14a6bcb27287e3ec138dba1b948a0cdbc337a3a",
-    "dependencies": [
-        { "name": "zlib", "version>=": "1.2.11#8" },
-        "rapidjson"
-    ],
-    "overrides": [
-        { "name": "rapidjson", "version": "2020-09-14" }
-    ]
+  "name": "project",
+  "version": "1.0.0",
+  "dependencies": ["zlib", "fmt"],
+  "builtin-baseline":"9fd3bd594f41afb8747e20f6ac9619f26f333cbe"
 }
 ```
-See also the [manifest documentation](manifests.md) for more syntax information.
 
-## Original Specification
+You can get the current commit of your vcpkg instance either by adding an empty
+`"builtin-baseline"` field, installing, and examining the error message or by
+running `git rev-parse HEAD` in the root of the vcpkg instance.
 
-See also the [original specification](https://github.com/vicroms/vcpkg/blob/versioning-spec/docs/specifications/versioning.md)
+When resolving version constraints for a package, vcpkg will look for a baseline
+version by looking at the baseline file in the given commit ID. If the given
+commit ID doesn't have a `versions/baseline.json` file or if the baseline file
+exists but it does not declare a baseline version for the package the invocation
+will fail.
+
+This field is a convenience field that has the same semantic as replacing your
+default registry in
+[`vcpkg-configuration.json`](registries.md#configuration-default-registry).
+```json
+{
+  "default-registry": {
+    "kind": "builtin",
+    "baseline": "<baseline>"
+  }
+}
+```
+
+### `version>=`
+Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.
+
+**Note: Vcpkg selects the lowest version that matches all constraints, so a less-than constraint is not required.**
+
+Example:
+```json
+{
+  "name": "project",
+  "version-semver": "1.0.0",
+  "dependencies": [
+    { "name": "zlib", "version>=": "1.2.11#9" },
+    { "name": "fmt", "version>=": "7.1.3#1" }
+  ],
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc"
+}
+```
+
+As part of a version constraint declaration, a port version can be specified by adding the suffix `#<port-version>`, in the previous example `1.2.11#9` refers to version `1.2.11` port version `9`.
+
+### `overrides`
+Declaring an override forces vcpkg to ignore all other version constraints and use the version specified in the override. This is useful for pinning exact versions and for resolving version conflicts.
+
+Overrides are declared as an array of package version declarations.
+
+For an override to take effect, the overridden package must form part of the dependency graph. That means that a dependency must be declared either by the top-level manifest or be part of a transitive dependency.
+
+```json
+{
+  "name": "project",
+  "version-semver": "1.0.0",
+  "dependencies": [
+    { "name": "zlib", "version>=": "1.2.11#9" },
+    "fmt"
+  ],
+  "builtin-baseline":"3426db05b996481ca31e95fff3734cf23e0f51bc",
+  "overrides": [
+    { "name": "fmt", "version": "6.0.0" }
+  ]
+}
+```
+
+## See Also
+
+* The [implementation details](versioning.implementation-details.md)
+* The [original specification](../specifications/versioning.md)
+

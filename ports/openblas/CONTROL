@@ -1,5 +1,0 @@
-Source: openblas
-Version: 0.3.10
-Homepage: https://github.com/xianyi/OpenBLAS
-Build-Depends: pthread (!windows&!uwp)
-Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.

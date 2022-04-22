@@ -1,6 +1,0 @@
-Source: qca
-Version: 2.3.1
-Port-Version: 2
-Description: Qt Cryptographic Architecture (QCA).
-Homepage: https://cgit.kde.org/qca.git/
-Build-Depends: qt5-base[core]

@@ -1,0 +1,70 @@
+From 68ece3bba0d79ab721a0c50ee1e6014a37f759dc Mon Sep 17 00:00:00 2001
+From: Wei Dai <wei.dai@microsoft.com>
+Date: Mon, 24 May 2021 10:02:07 -0700
+Subject: [PATCH] Added an option to disable the executable target
+ list_cpu_feature.
+
+---
+ CMakeLists.txt | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9daeac..48eea0e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,8 @@ if(NOT CMAKE_BUILD_TYPE)
+       FORCE)
+ endif(NOT CMAKE_BUILD_TYPE)
+ 
++# An option to disable the executable target list_cpu_features.
++option(BUILD_EXECUTABLE "Build list_cpu_features executable." ON)
+ # BUILD_TESTING is a standard CMake variable, but we declare it here to make it
+ # prominent in the GUI.
+ option(BUILD_TESTING "Enable test (depends on googletest)." OFF)
+@@ -157,9 +159,11 @@ add_library(CpuFeature::cpu_features ALIAS cpu_features)
+ # program : list_cpu_features
+ #
+ 
+-add_executable(list_cpu_features ${PROJECT_SOURCE_DIR}/src/utils/list_cpu_features.c)
+-target_link_libraries(list_cpu_features PRIVATE cpu_features)
+-add_executable(CpuFeature::list_cpu_features ALIAS list_cpu_features)
++if(BUILD_EXECUTABLE)
++  add_executable(list_cpu_features ${PROJECT_SOURCE_DIR}/src/utils/list_cpu_features.c)
++  target_link_libraries(list_cpu_features PRIVATE cpu_features)
++  add_executable(CpuFeature::list_cpu_features ALIAS list_cpu_features)
++endif()
+ 
+ #
+ # ndk_compat
+@@ -223,17 +227,26 @@ if(BUILD_TESTING)
+ endif()
+ 
+ #
+-# Install cpu_features and list_cpu_features
++# Install cpu_features and optionally list_cpu_features
+ #
+ 
+ include(GNUInstallDirs)
+-install(TARGETS cpu_features list_cpu_features
++install(TARGETS cpu_features
+   EXPORT CpuFeaturesTargets
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cpu_features
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
++if(BUILD_EXECUTABLE)
++  install(TARGETS list_cpu_features
++    EXPORT CpuFeaturesTargets
++    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cpu_features
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  )
++endif()
+ install(EXPORT CpuFeaturesTargets
+   NAMESPACE CpuFeatures::
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CpuFeatures
+-- 
+2.25.1
+

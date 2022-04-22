@@ -1,0 +1,6 @@
+{
+  "name": "rapidxml-ns",
+  "version-string": "1.13.2",
+  "port-version": 1,
+  "description": "RapidXML with added XML namespaces support."
+}

@@ -1,0 +1,17 @@
+diff --git a/implement.h b/implement.h
+index 1579376..3a7d29b 100644
+--- a/implement.h
++++ b/implement.h
+@@ -36,6 +36,12 @@
+ #if !defined(_IMPLEMENT_H)
+ #define _IMPLEMENT_H
+ 
++#if 1 // The condition should be `defined(__cplusplus_winrt)` when compile option is provided correctly.
++// porvide 2 static libs to resolve link error. 'kernel32' and 'windowsapp'
++#pragma comment(lib, "kernel32")
++#pragma comment(lib, "WindowsApp")
++#endif
++
+ #if !defined (__PTW32_CONFIG_H)
+ # error "config.h was not #included"
+ #endif

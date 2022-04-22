@@ -1,5 +1,7 @@
 # vcpkg_acquire_msys
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_acquire_msys.md).
+
 Download and prepare an MSYS2 instance.
 
 ## Usage
@@ -23,7 +25,7 @@ To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make au
 ### NO_DEFAULT_PACKAGES
 Exclude the normal base packages.
 
-The list of base packages includes: bash, coreutils, sed, grep, gawk, diffutils, make, and pkg-config
+The list of base packages includes: bash, coreutils, sed, grep, gawk, gzip, diffutils, make, and pkg-config
 
 ### DIRECT_PACKAGES
 A list of URL/SHA512 pairs to acquire in msys.
@@ -55,4 +57,4 @@ vcpkg_execute_required_process(
 * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_acquire_msys.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_acquire_msys.cmake)
+[scripts/cmake/vcpkg\_acquire\_msys.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_acquire_msys.cmake)

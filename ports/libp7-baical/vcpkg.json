@@ -1,0 +1,9 @@
+{
+  "name": "libp7-baical",
+  "version-string": "replaced",
+  "port-version": 1,
+  "description": "An old name for the port libp7client; please install libp7client instead.",
+  "dependencies": [
+    "libp7client"
+  ]
+}

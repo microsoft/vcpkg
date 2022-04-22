@@ -1,0 +1,87 @@
+{
+  "name": "minizip-ng",
+  "version": "3.0.5",
+  "description": "minizip-ng is a zip manipulation library written in C that is supported on Windows, macOS, and Linux.",
+  "homepage": "https://github.com/zlib-ng/minizip-ng",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "bzip2",
+    "lzma",
+    "pkcrypt",
+    "signing",
+    "wzaes",
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Enables BZIP2 compression",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "lzma": {
+      "description": "Enables LZMA compression",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "openssl": {
+      "description": "Enables OpenSSL for encryption",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "pkcrypt": {
+      "description": "Enables PKWARE traditional encryption"
+    },
+    "signing": {
+      "description": "Enables zip signing support",
+      "dependencies": [
+        {
+          "name": "minizip-ng",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "wzaes": {
+      "description": "Enables WinZIP AES encryption",
+      "dependencies": [
+        {
+          "name": "minizip-ng",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows & !osx"
+        }
+      ]
+    },
+    "zlib": {
+      "description": "Enables ZLIB compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Enables ZSTD compression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

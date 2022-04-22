@@ -1,0 +1,17 @@
+{
+  "name": "laszip",
+  "version": "3.4.3",
+  "port-version": 1,
+  "description": "LASzip - free and lossless LiDAR compression",
+  "homepage": "https://laszip.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

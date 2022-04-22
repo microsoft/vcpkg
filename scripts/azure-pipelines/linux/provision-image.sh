@@ -3,12 +3,14 @@
 # SPDX-License-Identifier: MIT
 #
 
-sudo apt -y update
-sudo apt -y dist-upgrade
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get -y update
+apt-get -y dist-upgrade
 # Install common build dependencies
 APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
-  libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev \
+  libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
   libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
@@ -34,15 +36,27 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
 # Additionally required by some packages to install additional python packages
-APT_PACKAGES="$APT_PACKAGES python3-pip"
+APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
 
-# Additionally required by rtaudio
-APT_PACKAGES="$APT_PACKAGES libasound2-dev"
+# Additionally required by qtwebengine
+APT_PACKAGES="$APT_PACKAGES nodejs"
+
+# Additionally required by qtwayland
+APT_PACKAGES="$APT_PACKAGES libwayland-dev"
+
+# Additionally required by all GN projects
+APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
+
+# Additionally required by libctl
+APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
+
+# Additionally required by gtk
+APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
-APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
+APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
-sudo apt -y install $APT_PACKAGES
+apt-get -y install $APT_PACKAGES
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
@@ -51,27 +65,24 @@ curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
 tar -xf nasm-2.15.05.tar.gz
 cd nasm-2.15.05/
 ./configure --prefix=/usr && make -j
-sudo make install
+make install
 cd ~
 
 # Install the latest Haskell stack
-curl -sSL https://get.haskellstack.org/ | sudo sh
+curl -sSL https://get.haskellstack.org/ | sh
 
 # Install CUDA
-wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
-sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-sudo dpkg -i cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
-wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
-sudo dpkg -i nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
-sudo apt -y update
-sudo apt install -y --no-install-recommends cuda-compiler-10-2 cuda-libraries-dev-10-2 cuda-driver-dev-10-2 cuda-cudart-dev-10-2 libcublas10 cuda-curand-dev-10-2
-sudo apt install -y --no-install-recommends libcudnn7-dev
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+apt-get -y update
+apt-get install -y --no-install-recommends cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
+  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt update
-sudo add-apt-repository universe
-sudo apt install -y powershell
-
-# provision-image.ps1 will append installation of the SAS token here
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+dpkg -i packages-microsoft-prod.deb
+apt-get update
+add-apt-repository universe
+apt-get install -y powershell

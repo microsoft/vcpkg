@@ -1,0 +1,16 @@
+{
+  "name": "qtsvg",
+  "version": "6.3.0",
+  "description": "Qt SVG",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "qt5-mqtt",
+  "version": "5.15.3",
+  "description": "Qt5 MQTT module.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

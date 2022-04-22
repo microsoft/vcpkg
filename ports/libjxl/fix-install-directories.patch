@@ -1,0 +1,36 @@
+diff --git a/lib/jxl.cmake b/lib/jxl.cmake
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -487,8 +487,8 @@ if (NOT WIN32)
+   set_target_properties(jxl-static PROPERTIES OUTPUT_NAME "jxl")
+   set_target_properties(jxl_dec-static PROPERTIES OUTPUT_NAME "jxl_dec")
+ endif()
+-install(TARGETS jxl-static DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-install(TARGETS jxl_dec-static DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS jxl-static)
++install(TARGETS jxl_dec-static)
+ 
+ if (((NOT DEFINED "${TARGET_SUPPORTS_SHARED_LIBS}") OR
+      TARGET_SUPPORTS_SHARED_LIBS) AND NOT JPEGXL_STATIC)
+@@ -548,8 +548,7 @@ endforeach()
+ # Only install libjxl shared library. The libjxl_dec is not installed since it
+ # contains symbols also in libjxl which would conflict if programs try to use
+ # both.
+-install(TARGETS jxl
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS jxl)
+ else()
+ add_library(jxl ALIAS jxl-static)
+ add_library(jxl_dec ALIAS jxl_dec-static)
+diff --git a/lib/jxl_threads.cmake b/lib/jxl_threads.cmake
+--- a/lib/jxl_threads.cmake
++++ b/lib/jxl_threads.cmake
+@@ -43,7 +43,7 @@ set_target_properties(${_target} PROPERTIES
+ if (NOT WIN32)
+   set_target_properties(${_target} PROPERTIES OUTPUT_NAME "jxl_threads")
+ endif()
+-install(TARGETS ${_target} DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS ${_target})
+ 
+ endfunction()
+ 

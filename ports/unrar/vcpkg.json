@@ -1,0 +1,9 @@
+{
+  "name": "unrar",
+  "version": "5.8.1",
+  "port-version": 3,
+  "description": "rarlab's unrar library",
+  "homepage": "https://www.rarlab.com",
+  "license": null,
+  "supports": "windows & !uwp & !arm & !static"
+}

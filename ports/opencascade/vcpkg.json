@@ -1,0 +1,38 @@
+{
+  "name": "opencascade",
+  "version": "7.6.0",
+  "description": "Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD, CAM, CAE.",
+  "homepage": "https://github.com/Open-Cascade-SAS/OCCT",
+  "supports": "!(uwp | osx | linux | arm)",
+  "dependencies": [
+    "freetype",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "freeimage": {
+      "description": "Enable optional usage of freeimage",
+      "dependencies": [
+        "freeimage"
+      ]
+    },
+    "rapidjson": {
+      "description": "Enable optional usage of rapidjson",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "tbb": {
+      "description": "Enable optional usage of tbb",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}

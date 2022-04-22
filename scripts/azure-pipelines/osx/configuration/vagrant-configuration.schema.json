@@ -5,9 +5,11 @@
 
   "required": [
     "pat",
-    "base_name",
-    "disk_size",
-    "machine_identifiers"
+    "agent_pool",
+    "devops_url",
+    "machine_name",
+    "box_name",
+    "box_version"
   ],
 
   "properties": {
@@ -28,9 +30,6 @@
     },
     "box_version": {
       "type": "string"
-    },
-    "disk_size": {
-      "type": "integer"
     }
   }
 }

@@ -1,63 +1,90 @@
-set(CAIRO_VERSION 1.16.0)
+set(CAIRO_VERSION 1.17.4)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
-    FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 9eb27c4cf01c0b8b56f2e15e651f6d4e52c99d0005875546405b64f1132aed12fbf84727273f493d84056a13105e065009d89e94a8bfaf2be2649e232b82377f
-)
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${CAIRO_VERSION}
+    REPO cairo/cairo
+    REF b43e7c6f3cf7855e16170a06d3a9c7234c60ca94 #v1.17.6
+    SHA512 2d8f0cbb11638610eda104a370bb8450e28d835852b0f861928738a60949e0aaba7a554a9f9efabbefda10a37616d4cd0d3021b3fbb4ced1d52db1edb49bc358
+    HEAD_REF master
     PATCHES
-        export-only-in-shared-build.patch
-        0001_fix_osx_defined.patch
+        cairo_static_fix.patch
+        disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
-file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
+if("fontconfig" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dfontconfig=enabled)
+else()
+    list(APPEND OPTIONS -Dfontconfig=disabled)
+endif()
+
+if("freetype" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dfreetype=enabled)
+else()
+    list(APPEND OPTIONS -Dfreetype=disabled)
+endif()
 
 if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+    list(APPEND OPTIONS -Dxlib=enabled)
+else()
+    list(APPEND OPTIONS -Dxlib=disabled)
 endif()
+list(APPEND OPTIONS -Dxcb=disabled)
+list(APPEND OPTIONS -Dxlib-xcb=disabled)
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
     endif()
+    list(APPEND OPTIONS -Dglib=enabled)
+else()
+    list(APPEND OPTIONS -Dglib=disabled)
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    x11 WITH_X11
-    gobject WITH_GOBJECT
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(ENV{CPP} "cl_cpp_wrapper")
+endif()
+
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${OPTIONS}
+        -Dtests=disabled
+        -Dzlib=enabled
+        -Dpng=enabled
+        -Dspectre=auto
+        -Dgtk2-utils=disabled
+        -Dsymbol-lookup=disabled
 )
-
-vcpkg_configure_cmake(
-    PREFER_NINJA
-    SOURCE_PATH ${SOURCE_PATH}/src
-    OPTIONS ${FEATURE_OPTIONS}
-)
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/unofficial-cairo)
+vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
-    file(READ ${FILE} CAIRO_H)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
-    else()
-        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
-    endif()
-    file(WRITE ${FILE} "${CAIRO_H}")
-endforeach()
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+set(_file "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
+file(READ ${_file} CAIRO_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
+else()
+    string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
+endif()
+file(WRITE ${_file} "${CAIRO_H}")
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+#TODO: Fix script
+#set(TOOLS)
+#if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cairo-trace${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it.
+#endif()
+#vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

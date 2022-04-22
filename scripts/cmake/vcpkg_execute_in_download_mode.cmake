@@ -6,62 +6,60 @@ Execute a process even in download mode.
 ## Usage
 ```cmake
 vcpkg_execute_in_download_mode(
-    COMMAND <cmd> [<arguments>]
-    [WORKING_DIRECTORY <dir>]
-    [TIMEOUT <seconds>]
-    [RESULT_VARIABLE <variable>]
-    [OUTPUT_VARIABLE <variable>]
-    [ERROR_VARIABLE <variable>]
-    [INPUT_FILE <file>]
-    [OUTPUT_FILE <file>]
-    [ERROR_FILE <file>]
-    [OUTPUT_QUIET]
-    [ERROR_QUIET]
-    [OUTPUT_STRIP_TRAILING_WHITESPACE]
-    [ERROR_STRIP_TRAILING_WHITESPACE]
-    [ENCODING <name>]
+    ...
 )
 ```
 
-The signature of this function is identical to `execute_process()` except that
-it only accepts one COMMAND argument, i.e., does not support chaining multiple
-commands with pipes.
+The signature of this function is identical to `execute_process()`.
 
-See [`execute_process()`] for a detailed description of the parameters.
+See [`execute_process()`] for more details.
 
 [`execute_process()`]: https://cmake.org/cmake/help/latest/command/execute_process.html
 #]===]
 
 function(vcpkg_execute_in_download_mode)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_in_download_mode
-        "OUTPUT_QUIET;ERROR_QUIET;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
-        "WORKING_DIRECTORY;TIMEOUT;RESULT_VARIABLE;RESULTS_VARIABLE;OUTPUT_VARIABLE;ERROR_VARIABLE;INPUT_FILE;OUTPUT_FILE;ERROR_FILE;ENCODING"
-        "COMMAND")
+    # this allows us to grab the value of the output variables, but pass through the rest of the arguments
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "RESULT_VARIABLE;RESULTS_VARIABLE;OUTPUT_VARIABLE;ERROR_VARIABLE" "")
 
-    # collect all other present parameters
-    set(other_args "")
-    foreach(arg OUTPUT_QUIET ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
-        if(vcpkg_execute_in_download_mode_${arg})
-            list(APPEND other_args ${arg})
-        endif()
-    endforeach()
-    foreach(arg WORKING_DIRECTORY TIMEOUT RESULT_VARIABLE RESULTS_VARIABLE OUTPUT_VARIABLE ERROR_VARIABLE INPUT_FILE OUTPUT_FILE ERROR_FILE ENCODING)
-        if(vcpkg_execute_in_download_mode_${arg})
-            list(APPEND other_args ${arg} ${vcpkg_execute_in_download_mode_${arg}})
-        endif()
-    endforeach()
-
-    if (DEFINED VCPKG_DOWNLOAD_MODE)
-        _execute_process(COMMAND ${vcpkg_execute_in_download_mode_COMMAND} ${other_args})
+    set(output_and_error_same OFF)
+    set(output_variable_param "")
+    set(error_variable_param "")
+    set(result_variable_param "")
+    set(results_variable_param "")
+    if(DEFINED arg_OUTPUT_VARIABLE AND DEFINED arg_ERROR_VARIABLE AND arg_OUTPUT_VARIABLE STREQUAL arg_ERROR_VARIABLE)
+        set(output_variable_param OUTPUT_VARIABLE out_err_var)
+        set(error_variable_param ERROR_VARIABLE out_err_var)
+        set(output_and_error_same ON)
     else()
-        execute_process(COMMAND ${vcpkg_execute_in_download_mode_COMMAND} ${other_args})
+        if(DEFINED arg_OUTPUT_VARIABLE)
+            set(output_variable_param OUTPUT_VARIABLE out_var)
+        endif()
+        if(DEFINED arg_ERROR_VARIABLE)
+            set(error_variable_param ERROR_VARIABLE err_var)
+        endif()
+    endif()
+    if(DEFINED arg_RESULT_VARIABLE)
+        set(result_variable_param RESULT_VARIABLE result_var)
+    endif()
+    if(DEFINED arg_RESULTS_VARIABLE)
+        set(results_variable_param RESULTS_VARIABLE results_var)
     endif()
 
-    # pass output parameters back to caller's scope
-    foreach(arg RESULT_VARIABLE RESULTS_VARIABLE OUTPUT_VARIABLE ERROR_VARIABLE)
-        if(vcpkg_execute_in_download_mode_${arg})
-            set(${vcpkg_execute_in_download_mode_${arg}} ${${vcpkg_execute_in_download_mode_${arg}}} PARENT_SCOPE)
-         endif()
-    endforeach()
+    cmake_language(CALL "${Z_VCPKG_EXECUTE_PROCESS_NAME}"
+        ${arg_UNPARSED_ARGUMENTS}
+        ${output_variable_param}
+        ${error_variable_param}
+        ${result_variable_param}
+        ${results_variable_param}
+    )
+
+    if(output_and_error_same)
+        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_err_var)
+    else()
+        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_var)
+        z_vcpkg_forward_output_variable(arg_ERROR_VARIABLE err_var)
+    endif()
+
+    z_vcpkg_forward_output_variable(arg_RESULT_VARIABLE result_var)
+    z_vcpkg_forward_output_variable(arg_RESULTS_VARIABLE results_var)
 endfunction()

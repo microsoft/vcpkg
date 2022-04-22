@@ -1,8 +1,8 @@
 diff --git a/Foundation/include/Poco/Platform.h b/Foundation/include/Poco/Platform.h
-index 3f26008..d0bbd31 100644
+index 9a945f3..f5a9a7f 100644
 --- a/Foundation/include/Poco/Platform.h
 +++ b/Foundation/include/Poco/Platform.h
-@@ -193,7 +193,7 @@
+@@ -191,7 +191,7 @@
  	#else
  		#define POCO_ARCH_LITTLE_ENDIAN 1
  	#endif
@@ -12,7 +12,7 @@ index 3f26008..d0bbd31 100644
  	#if defined(__ARMEB__)
  		#define POCO_ARCH_BIG_ENDIAN 1
 diff --git a/Foundation/src/EventLogChannel.cpp b/Foundation/src/EventLogChannel.cpp
-index 4d655da..26567c8 100644
+index 1f51296..c67b71b 100644
 --- a/Foundation/src/EventLogChannel.cpp
 +++ b/Foundation/src/EventLogChannel.cpp
 @@ -11,6 +11,7 @@
@@ -24,20 +24,20 @@ index 4d655da..26567c8 100644
  #include "Poco/EventLogChannel.h"
  #include "Poco/Message.h"
 diff --git a/Foundation/src/utils.h b/Foundation/src/utils.h
-index e2b6a06..1b045c1 100644
+index 4328344..5eeafcd 100644
 --- a/Foundation/src/utils.h
 +++ b/Foundation/src/utils.h
-@@ -54,7 +54,7 @@
- // disabled.)
- // On Linux,x86 89255e-22 != Div_double(89255.0/1e22)
+@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
+ //
+ // If it prints "correct" then the architecture should be here, in the "correct" section.
  #if defined(_M_X64) || defined(__x86_64__) || \
--    defined(__ARMEL__) || defined(_M_ARM) || defined(__arm__) || defined(__arm64__) || \
+-    defined(__ARMEL__) || defined(__avr32__) || defined(_M_ARM) || defined(_M_ARM64) || \
 +    defined(__ARMEL__) || defined(_M_ARM) || defined(__arm__) || defined(__arm64__) || defined(_M_ARM64) || \
-     defined(__avr32__) || \
      defined(__hppa__) || defined(__ia64__) || \
      defined(__mips__) || \
+     defined(__powerpc__) || defined(__ppc__) || defined(__ppc64__) || \
 diff --git a/Net/src/Net.cpp b/Net/src/Net.cpp
-index e81b4b5..36ae436 100644
+index 1a75379..b4081fd 100644
 --- a/Net/src/Net.cpp
 +++ b/Net/src/Net.cpp
 @@ -11,6 +11,7 @@
@@ -49,7 +49,7 @@ index e81b4b5..36ae436 100644
  #include "Poco/Net/Net.h"
  
 diff --git a/Util/src/WinRegistryKey.cpp b/Util/src/WinRegistryKey.cpp
-index 4c2ad7d..cf1de17 100644
+index 7fd1a28..a07c5d2 100644
 --- a/Util/src/WinRegistryKey.cpp
 +++ b/Util/src/WinRegistryKey.cpp
 @@ -11,6 +11,7 @@

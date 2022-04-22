@@ -1,8 +1,0 @@
-Source: libmpeg2
-Version: 0.5.1
-Homepage: http://libmpeg2.sourceforge.net/
-Description: a free MPEG-2 video stream decoder
-Supports: !(linux|osx|uwp)
-
-Feature: tools
-Description: Build tools provided with libmpeg2

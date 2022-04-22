@@ -1,5 +1,0 @@
-Source: jasper
-Version: 2.0.20
-Homepage: https://github.com/mdadams/jasper
-Description: Open source implementation of the JPEG-2000 Part-1 standard
-Build-Depends: libjpeg-turbo, opengl, freeglut (!osx)

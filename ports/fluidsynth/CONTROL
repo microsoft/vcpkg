@@ -1,5 +1,0 @@
-Source: fluidsynth
-Version: 2.1.4
-Homepage: https://github.com/FluidSynth/fluidsynth
-Description: FluidSynth reads and handles MIDI events from the MIDI input device. It is the software analogue of a MIDI synthesizer. FluidSynth can also play midifiles using a Soundfont.
-Build-Depends: glib

@@ -1,18 +1,22 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF jan2021b
-    SHA512 6ed43dbe4ea33857ed96a2c05a4618ae935eb9bc0778118af6c791f794c2ad843fe1b52a2aa484914f8aaf3534a282ab80af95350eab2c340bb6b401dc9743b0
-    HEAD_REF master
+    REF mar2022
+    SHA512 8e532a754d1b07108c98e099221a1c6eb39e1386e2e61d8694e041fcdf0556d1aeaed703018b18aa0cc2972c1b874fedd4d7b5e5694c504e70d623a78e6eb421
+    HEAD_REF main
 )
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        eigen ENABLE_USE_EIGEN
+)
 
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
@@ -20,27 +24,20 @@ else()
   set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
-  vcpkg_copy_tools(
-        TOOL_NAMES uvatlastool
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
-    )
-
-elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jan2021/uvatlastool.exe"
-    FILENAME "uvatlastool-jan2021.exe"
-    SHA512 8727510f3ec41c2fa7ed75100b8c0f4daa41e93a1b812e5ec3c265dc87c3f48651da37a18af5d8b57a0aa096c42232b58a50a00c036ec7c04dcae4767a2691f9
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/mar2022/uvatlastool.exe"
+    FILENAME "uvatlastool-mar2022.exe"
+    SHA512 d4179b755a9f8d81c180c86ae7e2d177dd0842f78fc81d96b87fa6551407a038edb8250529e45a9b783514e27cbe2a806bac4af47c3db5c34a6e4adc602f5ff4
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
@@ -49,7 +46,15 @@ elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-mar2022.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES uvatlastool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

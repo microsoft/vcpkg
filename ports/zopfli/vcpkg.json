@@ -1,0 +1,7 @@
+{
+  "name": "zopfli",
+  "version-string": "1.0.3",
+  "port-version": 1,
+  "description": "Zopfli Compression Algorithm compression library programmed in C",
+  "homepage": "https://github.com/google/zopfli"
+}

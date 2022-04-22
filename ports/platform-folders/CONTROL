@@ -1,4 +1,0 @@
-Source: platform-folders
-Version: 4.0.0
-Port-Version: 6
-Description: A C++ library to look for special directories like "My Documents" and "%APPDATA%"

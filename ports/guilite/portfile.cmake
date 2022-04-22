@@ -1,0 +1,9 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "idea4good/GuiLite"
+    SHA512 "9132f854f2e0d517797a3b30458ac692b509cb5a2fea2bff606b6b84b60a5760311f488c77f2dc21e954a14378e8d803d555750f90d00d5655e216a2a0c83ce8"
+    REF "master"
+)
+
+file(INSTALL "${SOURCE_PATH}/GuiLite.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

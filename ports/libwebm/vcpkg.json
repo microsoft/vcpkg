@@ -1,0 +1,17 @@
+{
+  "name": "libwebm",
+  "version": "1.0.0.28",
+  "port-version": 1,
+  "description": "WebM File Parser",
+  "homepage": "https://github.com/webmproject/libwebm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

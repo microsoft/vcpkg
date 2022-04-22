@@ -1,0 +1,13 @@
+{
+  "name": "qt5-sensors",
+  "version": "5.15.3",
+  "description": "Qt5 Sensors module - Provides access to sensor hardware and motion gesture recognition.",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-declarative"
+  ]
+}

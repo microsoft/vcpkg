@@ -1,0 +1,41 @@
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc35b6f..628c649 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,7 @@ project(squirrel VERSION 3.1 LANGUAGES C CXX)
+ 
+ option(DISABLE_STATIC "Avoid building/installing static libraries.")
+ option(LONG_OUTPUT_NAMES "Use longer names for binaries and libraries: squirrel3 (not sq).")
++option(BUILD_SQ "Build sq interpreter.")
+ 
+ if (NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release")
+@@ -35,15 +36,24 @@ endif()
+ 
+ add_subdirectory(squirrel)
+ add_subdirectory(sqstdlib)
+-add_subdirectory(sq)
++
++if(BUILD_SQ)
++  add_subdirectory(sq)
++endif()
+ 
+ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+   set(tgts)
+   if(NOT DISABLE_DYNAMIC)
+-    list(APPEND tgts squirrel sqstdlib sq)
++    list(APPEND tgts squirrel sqstdlib)
++    if(BUILD_SQ)
++      list(APPEND tgts sq)
++    endif()
+   endif()
+   if(NOT DISABLE_STATIC)
+-    list(APPEND tgts squirrel_static sqstdlib_static sq_static)
++    list(APPEND tgts squirrel_static sqstdlib_static)
++    if(BUILD_SQ)
++      list(APPEND tgts sq_static)
++    endif()
+   endif()
+   foreach(t ${tgts})
+     target_compile_definitions(${t} PUBLIC -D_SQ64)

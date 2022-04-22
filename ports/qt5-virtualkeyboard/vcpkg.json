@@ -1,0 +1,12 @@
+{
+  "name": "qt5-virtualkeyboard",
+  "version": "5.15.3",
+  "description": "Qt5 Virtual Keyboard Module - A framework for implementing different input methods. Supports localized keyboard layouts and custom visual themes",
+  "license": null,
+  "dependencies": [
+    "qt5-multimedia",
+    "qt5-quickcontrols",
+    "qt5-quickcontrols",
+    "qt5-svg"
+  ]
+}

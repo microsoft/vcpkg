@@ -1,0 +1,49 @@
+diff --git a/contrib/minizip/ioapi.c b/contrib/minizip/ioapi.c
+index 7f5c191..d42e050 100644
+--- a/contrib/minizip/ioapi.c
++++ b/contrib/minizip/ioapi.c
+@@ -17,8 +17,8 @@
+ #if defined(__APPLE__) || defined(IOAPI_NO_64)
+ // In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions
+ #define FOPEN_FUNC(filename, mode) fopen(filename, mode)
+-#define FTELLO_FUNC(stream) ftello(stream)
+-#define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
++#define FTELLO_FUNC(stream) ftell(stream)
++#define FSEEKO_FUNC(stream, offset, origin) fseek(stream, offset, origin)
+ #else
+ #define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
+ #define FTELLO_FUNC(stream) ftello64(stream)
+diff --git a/contrib/minizip/miniunz.c b/contrib/minizip/miniunz.c
+index 3d65401..a1269ea 100644
+--- a/contrib/minizip/miniunz.c
++++ b/contrib/minizip/miniunz.c
+@@ -33,9 +33,9 @@
+ #define FTELLO_FUNC(stream) ftello(stream)
+ #define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
+ #else
+-#define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
+-#define FTELLO_FUNC(stream) ftello64(stream)
+-#define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
++#define FOPEN_FUNC(filename, mode) fopen(filename, mode)
++#define FTELLO_FUNC(stream) ftell(stream)
++#define FSEEKO_FUNC(stream, offset, origin) fseek(stream, offset, origin)
+ #endif
+ 
+ 
+diff --git a/contrib/minizip/minizip.c b/contrib/minizip/minizip.c
+index 4288962..02267fb 100644
+--- a/contrib/minizip/minizip.c
++++ b/contrib/minizip/minizip.c
+@@ -34,9 +34,9 @@
+ #define FTELLO_FUNC(stream) ftello(stream)
+ #define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
+ #else
+-#define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
+-#define FTELLO_FUNC(stream) ftello64(stream)
+-#define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
++#define FOPEN_FUNC(filename, mode) fopen(filename, mode)
++#define FTELLO_FUNC(stream) ftell(stream)
++#define FSEEKO_FUNC(stream, offset, origin) fseek(stream, offset, origin)
+ #endif
+ 
+ 

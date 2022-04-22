@@ -1,0 +1,8 @@
+{
+  "name": "wavpack",
+  "version": "5.4.0",
+  "port-version": 1,
+  "description": "WavPack encode/decode library, command-line programs, and several plugins",
+  "homepage": "https://github.com/dbry/WavPack",
+  "supports": "!(arm | arm64)"
+}

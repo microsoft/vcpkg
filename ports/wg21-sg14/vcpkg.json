@@ -1,0 +1,7 @@
+{
+  "name": "wg21-sg14",
+  "version-string": "2019-08-13",
+  "port-version": 1,
+  "description": "A library for Study Group 14 of Working Group 21 (C++)",
+  "homepage": "https://github.com/WG21-SG14/SG14"
+}

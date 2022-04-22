@@ -1,0 +1,12 @@
+diff --git a/libcanberra.pc.in b/libcanberra.pc.in
+index 0a5c7a1..91a9e39 100644
+--- a/libcanberra.pc.in
++++ b/libcanberra.pc.in
+@@ -7,5 +7,7 @@ Name: libcanberra
+ Description: Event Sound API
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lcanberra @PTHREAD_LIBS@
++Libs.private: @LIBS_PRIVATE@
+ Cflags: -D_REENTRANT -I${includedir}
++Cflags.private: @CFLAGS_PRIVATE@
+ Requires:

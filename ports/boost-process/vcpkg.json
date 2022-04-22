@@ -1,15 +1,13 @@
 {
   "name": "boost-process",
-  "version-string": "1.75.0",
+  "version": "1.79.0",
   "description": "Boost process module",
   "homepage": "https://github.com/boostorg/process",
+  "license": "BSL-1.0",
   "supports": "!emscripten",
   "dependencies": [
     "boost-algorithm",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-config",
     "boost-core",
     {

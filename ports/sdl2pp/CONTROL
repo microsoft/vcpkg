@@ -1,5 +1,0 @@
-Source: sdl2pp
-Version: 0.16.1
-Description: C++11 bindings/wrapper for SDL2
-Homepage: https://sdl2pp.amdmi3.ru
-Build-Depends: sdl2, sdl2-mixer, sdl2-image, sdl2-ttf

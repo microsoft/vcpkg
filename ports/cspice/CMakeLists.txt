@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(cspice LANGUAGES C)
 
-set(SOVERSION 66)
+set(SOVERSION 67)
 
 # Include all *.c files from the library
 file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
@@ -15,7 +15,7 @@ endif()
 target_include_directories(cspice PUBLIC "${INCLUDE_PATH}")
 
 if (WIN32)
-    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO")
+    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
     set_target_properties(cspice PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 elseif (UNIX)
     target_compile_definitions(cspice PUBLIC "NON_UNIX_STDIO")

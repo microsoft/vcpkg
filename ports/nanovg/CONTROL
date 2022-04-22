@@ -1,5 +1,0 @@
-Source: nanovg
-Version: 2019-8-30-3
-Homepage: https://github.com/memononen/nanovg
-Description: NanoVG is small antialiased vector graphics rendering library for OpenGL.
-Build-Depends: stb

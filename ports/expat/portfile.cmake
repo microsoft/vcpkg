@@ -1,39 +1,37 @@
+set(EX_VERSION 2.4.8)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF c092d40c300c6d219cb3b111932a824022265370 #Head from commit 2020-08-18
-    SHA512 5a5d41b500f5602a32aea8f4e15593e639206bb3f97553497e80b2975360cac88ac90386f5efc11728614f24bbb620fb908a3c8ca71c9e7b312f6157b2477afe
+    REF 3bab6c09bbe8bf42d84b81563ddbcf4cca4be838 #v2.4.8
+    SHA512 6bddf6514183b3bfa6bf869e63cf838cfe2912941ef04543bce00bee84a305f494368fb7cbd80404d06877a1d8da82de5ac2b44074b25e34aeaee7949d37e451
     HEAD_REF master
-    PATCHES
-        pkgconfig.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXPAT_LINKAGE ON)
-else()
-    set(EXPAT_LINKAGE OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/expat
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/expat"
     OPTIONS
         -DEXPAT_BUILD_EXAMPLES=OFF
         -DEXPAT_BUILD_TESTS=OFF
         -DEXPAT_BUILD_TOOLS=OFF
+        -DEXPAT_BUILD_DOCS=OFF
         -DEXPAT_SHARED_LIBS=${EXPAT_LINKAGE}
+        -DEXPAT_BUILD_PKGCONFIG=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat-2.2.9)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${EX_VERSION}")
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/expat_external.h
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h"
         "! defined(XML_STATIC)"
         "/* vcpkg static build ! defined(XML_STATIC) */ 0"
     )
@@ -41,7 +39,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-#Handle copyright
-file(INSTALL ${SOURCE_PATH}/expat/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/expat/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

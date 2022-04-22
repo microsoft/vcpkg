@@ -200,10 +200,11 @@ if(CLAPACK_FOUND AND NOT TARGET clapack::clapack)
   endif()
 endif()
 
-if(CLAPACK_FOUND AND NOT TARGET lapack)
+# Ensure consistency with both CMake's vanilla as well as lapack-reference's FindLAPACK.cmake module and register the LAPACK::LAPACK target
+if(CLAPACK_FOUND AND NOT TARGET LAPACK::LAPACK)
   if(EXISTS "${LAPACK_LIBRARY_RELEASE_DLL}")
-    add_library(lapack SHARED IMPORTED)
-    set_target_properties(lapack PROPERTIES
+    add_library(LAPACK::LAPACK SHARED IMPORTED)
+    set_target_properties(LAPACK::LAPACK PROPERTIES
       IMPORTED_LOCATION_RELEASE                 "${LAPACK_LIBRARY_RELEASE_DLL}"
       IMPORTED_IMPLIB_RELEASE                   "${oLAPACK_LIBRARY_RELEASE}"
       INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
@@ -211,23 +212,28 @@ if(CLAPACK_FOUND AND NOT TARGET lapack)
       IMPORTED_CONFIGURATIONS                   Release
       IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
     if(EXISTS "${LAPACK_LIBRARY_DEBUG_DLL}")
-      set_property(TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
-      set_target_properties(lapack PROPERTIES
+      set_property(TARGET LAPACK::LAPACK APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(LAPACK::LAPACK PROPERTIES
         IMPORTED_LOCATION_DEBUG                 "${LAPACK_LIBRARY_DEBUG_DLL}"
         IMPORTED_IMPLIB_DEBUG                   "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   else()
-    add_library(lapack UNKNOWN IMPORTED)
-    set_target_properties(lapack PROPERTIES
+    add_library(LAPACK::LAPACK UNKNOWN IMPORTED)
+    set_target_properties(LAPACK::LAPACK PROPERTIES
       IMPORTED_LOCATION_RELEASE                 "${oLAPACK_LIBRARY_RELEASE}"
       INTERFACE_INCLUDE_DIRECTORIES             "${LAPACK_INCLUDE_DIR}"
       IMPORTED_CONFIGURATIONS                   Release
       INTERFACE_LINK_LIBRARIES                  "$<$<NOT:$<CONFIG:DEBUG>>:${oF2C_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${oF2C_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${LAPACK_BLAS_LIBRARY_RELEASE}>;$<$<CONFIG:DEBUG>:${LAPACK_BLAS_LIBRARY_DEBUG}>;$<LINK_ONLY:${ADDITIONAL_LAPACK_LIBRARY}>;$<LINK_ONLY:${PTHREAD_LINK_NAME}>"
       IMPORTED_LINK_INTERFACE_LANGUAGES         "C")
     if(EXISTS "${LAPACK_LIBRARY_DEBUG}")
-      set_property(TARGET lapack APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
-      set_target_properties(lapack PROPERTIES
+      set_property(TARGET LAPACK::LAPACK APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+      set_target_properties(LAPACK::LAPACK PROPERTIES
         IMPORTED_LOCATION_DEBUG                 "${oLAPACK_LIBRARY_DEBUG}")
     endif()
   endif()
+endif()
+
+# Preserve backwards compatibility and also register the 'lapack' target
+if(CLAPACK_FOUND AND NOT TARGET lapack)
+    add_library(lapack ALIAS LAPACK::LAPACK)
 endif()

@@ -1,5 +1,0 @@
-Source: proxywrapper
-Version: 1.0.0
-Description: Provides a standalone wrapper around the libproxy library.
-Homepage: https://github.com/microsoft/proxy-wrapper
-Build-Depends: libproxy

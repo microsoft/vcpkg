@@ -3,20 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/atomic
-    REF boost-1.75.0
-    SHA512 4045b4b9cd920854bd8a98298ba8662000bd045fe1322748c7ef0b96fdcb17ce8b55a16e3f10bc7344f37993d1c6df0720ddcc1b5b4255b54a5ca1fc29e253f1
+    REF boost-1.79.0
+    SHA512 0ac0c72b3455440ad93b3659ce3796916cf718ce4161d9391a397c8f687d2f73efe2a68bb134b178f4d004de769fc75ff75717802ca6c56968c28f46c50ce1eb
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
     "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
-    "project.load [ path.join [ path.make $(here:D) ] config/checks/architecture ]"
-    _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
-
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+    "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

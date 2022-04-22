@@ -1,62 +1,48 @@
-if("field3d" IN_LIST FEATURES)
-    vcpkg_fail_port_install(
-        ON_TARGET WINDOWS UWP
-        MESSAGE "The field3d feature is not supported on Windows"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF 5167b11277fffcd9fe18fe4dc35b3eb2669d8c44 # 2.2.10
-    SHA512 d5812cf93bbaf8a384e8ee9f443db95a92320b4c35959a528dff40eac405355d1dec924a975bef7f367d3a2179ded0a15b4be9737d37521719739958bb7f3123
+    REF ff71703961f7758409fb7e6e689258e2997f7c18 # 2.3.10.1
+    SHA512 f56cb58329a496ca1fe3537fe87d469038ac0e74a555990a4510d2c019d2ad14b556240c0d5087a9a25ac01d9b371b5c77ce5a719e71a85fcd56e9cd099bc31e
     HEAD_REF master
     PATCHES
+        fix-dependencies.patch
         fix-config-cmake.patch
-        fix-dependency.patch
-        fix_static_build.patch
+        fix-openjpeg-linkage.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
 file(REMOVE "${SOURCE_PATH}/src/cmake/modules/FindLibRaw.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindOpenEXR.cmake"
             "${SOURCE_PATH}/src/cmake/modules/FindOpenCV.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake"
-            "${SOURCE_PATH}/src/cmake/modules/FindWebp.cmake")
+            "${SOURCE_PATH}/src/cmake/modules/FindFFmpeg.cmake")
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/ext/robin-map/tsl")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(LINKSTATIC ON)
-else()
-    set(LINKSTATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LINKSTATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    libraw      USE_LIBRAW
-    opencolorio USE_OCIO
-    ffmpeg      USE_FFMPEG
-    field3d     USE_FIELD3D
-    freetype    USE_FREETYPE
-    gif         USE_GIF
-    opencv      USE_OPENCV
-    openjpeg    USE_OPENJPEG
-    webp        USE_WEBP
-    pybind11    USE_PYTHON
-    tools       OIIO_BUILD_TOOLS
+    FEATURES
+        libraw      USE_LIBRAW
+        opencolorio USE_OPENCOLORIO
+        ffmpeg      USE_FFMPEG
+        freetype    USE_FREETYPE
+        gif         USE_GIF
+        opencv      USE_OPENCV
+        openjpeg    USE_OPENJPEG
+        webp        USE_WEBP
+        pybind11    USE_PYTHON
+        tools       OIIO_BUILD_TOOLS
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOIIO_BUILD_TESTS=OFF
-        -DHIDE_SYMBOLS=ON
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_QT=OFF
@@ -69,27 +55,25 @@ vcpkg_configure_cmake(
         -DVERBOSE=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/OpenImageIO)
+vcpkg_cmake_config_fixup(PACKAGE_NAME OpenImageIO CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
         AUTO_CLEAN
     )
 endif()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/doc
-                    ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/doc"
+                    "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY ${SOURCE_PATH}/src/cmake/modules/FindOpenImageIO.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/OpenImageIO)
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

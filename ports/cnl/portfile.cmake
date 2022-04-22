@@ -1,11 +1,12 @@
 # header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO johnmcfarlane/cnl
-    REF 48428242e72b8239cb14c963e40f724929d54df7
-    SHA512 c7e012d99409977137a44915dd7a4df5014b6e8540ceee3e82492052541ce77a254d79e624d766b510e7d3a6b17a9d9b02391c6993ae55d3904334116e747983
-    HEAD_REF develop
+    REF 2dde6e62e608a4adc3c5504f067575efa4910568 #v1.1.7
+    SHA512 33a81ea726802c71a684bcd002b5119cde4db471ebc9ba02cd15c7487ab468eeca09fb8dcaed953e3f3cded2cd813a903f808d97527b0ec7f393647b64a22572
+    HEAD_REF main
+    PATCHES
+        disable-test.patch
 )
 
 vcpkg_configure_cmake(

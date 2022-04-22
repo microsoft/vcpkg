@@ -1,0 +1,24 @@
+{
+  "name": "hypodermic",
+  "version": "2.5.3",
+  "description": "Hypodermic is a non-intrusive header only IoC container for C++",
+  "homepage": "https://github.com/ybainier/Hypodermic",
+  "license": "MIT",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-config",
+    "boost-format",
+    "boost-range",
+    "boost-signals2",
+    "boost-system",
+    "boost-test",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

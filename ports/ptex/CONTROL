@@ -1,7 +1,0 @@
-Source: ptex
-Version: 2.3.2
-Port-Version: 2
-Homepage: https://github.com/wdas/ptex
-Description: Per-Face Texture Mapping for Production Rendering.
-Build-Depends: zlib
-Supports: !uwp

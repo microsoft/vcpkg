@@ -1,0 +1,13 @@
+diff --git a/cmake/FindUSB1.cmake b/cmake/FindUSB1.cmake
+index b90e297..6cc97a0 100755
+--- a/cmake/FindUSB1.cmake
++++ b/cmake/FindUSB1.cmake	
+@@ -26,7 +26,7 @@ else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
+     PATH_SUFFIXES libusb-1.0
+     PATHS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})
+ 
+-  FIND_LIBRARY(LIBUSB_LIBRARIES NAMES usb-1.0
++  FIND_LIBRARY(LIBUSB_LIBRARIES NAMES usb-1.0 libusb-1.0
+     PATHS ${PC_LIBUSB_LIBDIR} ${PC_LIBUSB_LIBRARY_DIRS})
+ 
+   include(FindPackageHandleStandardArgs)

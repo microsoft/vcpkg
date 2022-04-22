@@ -1,0 +1,17 @@
+{
+  "name": "robin-map",
+  "version-semver": "1.0.1",
+  "description": "A C++ implementation of a fast hash map and hash set using robin hood hashing",
+  "homepage": "https://github.com/Tessil/robin-map",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

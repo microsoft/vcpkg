@@ -1,0 +1,27 @@
+From 116e665df611242ea0575a62478c31ec03e78fcc Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 15:53:49 -0400
+Subject: [PATCH] add gcc version check
+
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 63b38df68..29f79d31b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -311,6 +311,10 @@ if(NOT (${FLANN_LIBRARY_TYPE} MATCHES ${PCL_FLANN_REQUIRED_TYPE}) AND NOT (${PCL
+   message(FATAL_ERROR "Flann was selected with ${PCL_FLANN_REQUIRED_TYPE} but found as ${FLANN_LIBRARY_TYPE}")
+ endif()
+ 
++if(UNIX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
++    set (CMAKE_CXX_STANDARD 17)
++endif()
++
+ # libusb
+ option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
+ if(WITH_LIBUSB)
+-- 
+2.32.0.windows.1
+

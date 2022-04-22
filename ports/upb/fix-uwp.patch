@@ -1,23 +1,23 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eda6a72..386966f 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -58,6 +58,10 @@ elseif(UNIX)
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index a6b432f..003615e 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -59,6 +59,10 @@ elseif(UNIX)
    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
  endif()
  
 +if (MSVC)
-+  add_compile_options(/wd4146 -D_CRT_SECURE_NO_WARNINGS)
++  add_compile_options(/wd4146 /wd4703 -D_CRT_SECURE_NO_WARNINGS)
 +endif()
 +
  enable_testing()
  
- add_library(port
+ add_library(port INTERFACE)
 diff --git a/upb/json_decode.c b/upb/json_decode.c
-index 953d238..5185ffd 100644
+index bb33744..1fadd26 100644
 --- a/upb/json_decode.c
 +++ b/upb/json_decode.c
-@@ -1138,7 +1138,7 @@ static void jsondec_struct(jsondec *d, upb_msg *msg, const upb_msgdef *m) {
+@@ -1160,7 +1160,7 @@ static void jsondec_struct(jsondec *d, upb_msg *msg, const upb_msgdef *m) {
  static void jsondec_wellknownvalue(jsondec *d, upb_msg *msg,
                                     const upb_msgdef *m) {
    upb_msgval val;

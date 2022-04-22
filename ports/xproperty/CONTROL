@@ -1,4 +1,0 @@
-Source: xproperty
-Version: 0.8.1
-Build-Depends: xtl
-Description: Traitlets-like C++ properties and implementation of the observer pattern

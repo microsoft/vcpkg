@@ -1,0 +1,46 @@
+{
+  "name": "azure-umqtt-c",
+  "version-date": "2022-01-21",
+  "port-version": 1,
+  "description": "General purpose library for communication over the mqtt protocol",
+  "homepage": "https://github.com/Azure/azure-umqtt-c",
+  "license": "MIT",
+  "dependencies": [
+    "azure-c-shared-utility",
+    "azure-macro-utils-c",
+    "umock-c",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "public-preview": {
+      "description": "General purpose library for communication over the mqtt protocol (public preview)",
+      "dependencies": [
+        {
+          "name": "azure-c-shared-utility",
+          "features": [
+            "public-preview"
+          ]
+        },
+        {
+          "name": "azure-macro-utils-c",
+          "features": [
+            "public-preview"
+          ]
+        },
+        {
+          "name": "umock-c",
+          "features": [
+            "public-preview"
+          ]
+        }
+      ]
+    }
+  }
+}

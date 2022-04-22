@@ -1,0 +1,6 @@
+{
+  "name": "isal",
+  "version-string": "2.25.0",
+  "port-version": 1,
+  "description": "Intel(R) Intelligent Storage Acceleration Library"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "pcre",
+  "version": "8.45",
+  "port-version": 2,
+  "description": "Perl Compatible Regular Expressions",
+  "homepage": "https://www.pcre.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,4 +1,0 @@
-Source: pngwriter
-Version: 0.7.0-2
-Build-Depends: zlib, libpng, freetype
-Description: PNGwriter is a very easy to use open source graphics library that uses PNG as its output format

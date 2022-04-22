@@ -1,0 +1,42 @@
+diff --git a/src/gen-harfbuzzcc.py b/src/gen-harfbuzzcc.py
+index b25bcc7..f3bc87a 100644
+--- a/src/gen-harfbuzzcc.py
++++ b/src/gen-harfbuzzcc.py
+@@ -15,4 +15,8 @@ with open (OUTPUT, "wb") as f:
+ 	f.write ("".join ('#include "{}"\n'.format (os.path.basename (x)) for x in sources if x.endswith (".cc")).encode ())
+ 
+ # copy it also to src/
+-shutil.copyfile (OUTPUT, os.path.join (CURRENT_SOURCE_DIR, os.path.basename (OUTPUT)))
++src = OUTPUT
++dst = os.path.join (CURRENT_SOURCE_DIR, os.path.basename (OUTPUT))
++# Avoid SameFileError
++if not os.path.samefile(src, dst):
++    shutil.copyfile (src, dst)
+diff --git a/src/gen-hb-version.py b/src/gen-hb-version.py
+index 879811f..c376721 100644
+--- a/src/gen-hb-version.py
++++ b/src/gen-hb-version.py
+@@ -33,4 +33,8 @@ with open (INPUT, "r", encoding='utf-8') as template:
+ 			.encode ())
+ 
+ # copy it also to src/
+-shutil.copyfile (OUTPUT, os.path.join (CURRENT_SOURCE_DIR, os.path.basename (OUTPUT)))
++src = OUTPUT
++dst = os.path.join(CURRENT_SOURCE_DIR, os.path.basename (OUTPUT))
++# Avoid SameFileError if src and dst is the same
++if not os.path.samefile(src, dst):
++    shutil.copyfile (src, dst)
+diff --git a/src/gen-ragel-artifacts.py b/src/gen-ragel-artifacts.py
+index d22e03a..2b1e819 100644
+--- a/src/gen-ragel-artifacts.py
++++ b/src/gen-ragel-artifacts.py
+@@ -22,4 +22,8 @@ hh = rl.replace ('.rl', '.hh')
+ subprocess.Popen (ragel.split() + ['-e', '-F1', '-o', hh, rl], cwd=outdir).wait ()
+ 
+ # copy it also to src/
+-shutil.copyfile (os.path.join (outdir, hh), os.path.join (CURRENT_SOURCE_DIR, hh))
++src = os.path.join (outdir, hh)
++dst = os.path.join (CURRENT_SOURCE_DIR, hh)
++# Avoid SameFileError
++if not os.path.samefile(src, dst):
++    shutil.copyfile (src, dst)

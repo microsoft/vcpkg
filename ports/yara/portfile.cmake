@@ -3,22 +3,21 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO VirusTotal/yara
-  REF v4.0.2
-  SHA512 22575cb7b48eead3b5051ce13beb3deef88a1b605de20ec8e5fc2651c0dd0009eb6c0ecddb8600a43a757ceb6ea298e94f71a26d2f9acb31a73830e18c81d10c
-  HEAD_REF dev
+  REF 136794355c51242b595af42309a234846d534e8b #v4.2.0
+  SHA512 b0aabbf4d0ba585e3adab7dbdb708264c4d4140179e69c8bc57a2ea85cdd6d97f61e67e2ce06c8436450b4e0add7f475ff76d7ca549a9b1168ac057a6cbae776
+  HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS_DEBUG 
       -DDISABLE_INSTALL_HEADERS=ON 
       -DDISABLE_INSTALL_TOOLS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

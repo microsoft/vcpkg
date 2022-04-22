@@ -1,0 +1,15 @@
+{
+  "name": "libxmlpp",
+  "version": "5.0.0",
+  "port-version": 2,
+  "description": "a C++ wrapper for the libxml XML parser library.",
+  "supports": "!(windows & static)",
+  "dependencies": [
+    "glibmm",
+    "libxml2",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

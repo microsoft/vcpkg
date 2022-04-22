@@ -1,0 +1,105 @@
+{
+  "name": "arrow",
+  "version": "7.0.0",
+  "port-version": 2,
+  "description": "Cross-language development platform for in-memory analytics",
+  "homepage": "https://arrow.apache.org",
+  "license": "Apache-2.0",
+  "supports": "x64 | (arm64 & !windows)",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-multiprecision",
+    "boost-system",
+    "brotli",
+    "bzip2",
+    "gflags",
+    "glog",
+    "lz4",
+    "openssl",
+    "re2",
+    "snappy",
+    "thrift",
+    "utf8proc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ],
+  "default-features": [
+    "csv",
+    "filesystem",
+    "json",
+    "parquet"
+  ],
+  "features": {
+    "csv": {
+      "description": "CSV support"
+    },
+    "dataset": {
+      "description": "Dataset support"
+    },
+    "filesystem": {
+      "description": "Filesystem support"
+    },
+    "flight": {
+      "description": "Arrow Flight RPC support",
+      "dependencies": [
+        "abseil",
+        "c-ares",
+        "grpc",
+        "protobuf"
+      ]
+    },
+    "jemalloc": {
+      "description": "jemalloc allocator"
+    },
+    "json": {
+      "description": "JSON support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "mimalloc": {
+      "description": "mimalloc allocator"
+    },
+    "orc": {
+      "description": "ORC support",
+      "dependencies": [
+        "orc"
+      ]
+    },
+    "parquet": {
+      "description": "Parquet support",
+      "dependencies": [
+        "rapidjson"
+      ]
+    },
+    "plasma": {
+      "description": "Plasma support",
+      "supports": "!windows"
+    },
+    "s3": {
+      "description": "S3 support",
+      "dependencies": [
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false,
+          "features": [
+            "cognito-identity",
+            "config",
+            "identity-management",
+            "s3",
+            "sts",
+            "transfer"
+          ]
+        }
+      ]
+    }
+  }
+}

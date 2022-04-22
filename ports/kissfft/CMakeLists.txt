@@ -16,7 +16,7 @@ endif ()
 # TODO: FIXED_POINT
 # TODO: -msse
 
-set(kissfft_sources kiss_fft.c)
+set(kissfft_sources kiss_fft.c kiss_fftr.c kiss_fftnd.c kiss_fftndr.c)
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     list(APPEND kissfft_sources exports.def)
@@ -49,6 +49,9 @@ if (KF_INSTALL_HEADERS)
         FILES
             _kiss_fft_guts.h
             kiss_fft.h
+            kiss_fftr.h
+            kiss_fftnd.h
+            kiss_fftndr.h
             kissfft.hh
             kissfft_i32.hh
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

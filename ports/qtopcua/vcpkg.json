@@ -1,0 +1,69 @@
+{
+  "name": "qtopcua",
+  "version": "6.3.0",
+  "description": "Qt wrapper for existing OPC UA stacks",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    }
+  ],
+  "default-features": [
+    "default-features",
+    "gds",
+    "ns0idnames",
+    "open62541"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    },
+    "gds": {
+      "description": "Support for global discovery server"
+    },
+    "ns0idgenerator": {
+      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file."
+    },
+    "ns0idnames": {
+      "description": "Support for namespace 0 NodeId names"
+    },
+    "open62541": {
+      "description": "Open62541 with plugin to connect to servers with signing and encryption",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "default-features": false,
+          "features": [
+            "amalgamation",
+            "historizing",
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "uacpp": {
+      "description": "Unified Automation C++ SDK"
+    }
+  }
+}

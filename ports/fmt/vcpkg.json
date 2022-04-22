@@ -1,0 +1,17 @@
+{
+  "name": "fmt",
+  "version": "8.1.1",
+  "port-version": 1,
+  "description": "Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams.",
+  "homepage": "https://github.com/fmtlib/fmt",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

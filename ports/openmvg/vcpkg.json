@@ -1,0 +1,59 @@
+{
+  "name": "openmvg",
+  "version": "2.0",
+  "port-version": 3,
+  "description": "open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.",
+  "license": "MPL-2.0-no-copyleft-exception",
+  "dependencies": [
+    "cereal",
+    {
+      "name": "ceres",
+      "features": [
+        "cxsparse",
+        "suitesparse"
+      ]
+    },
+    "clp",
+    "coinutils",
+    "eigen3",
+    "flann",
+    "libjpeg-turbo",
+    "liblemon",
+    "libpng",
+    "osi",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vlfeat",
+    "zlib"
+  ],
+  "features": {
+    "opencv": {
+      "description": "opencv support for openmvg",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "openmp support for openmvg"
+    },
+    "software": {
+      "description": "build openMVG tools",
+      "dependencies": [
+        "qt5-base",
+        "qt5-svg"
+      ]
+    }
+  }
+}

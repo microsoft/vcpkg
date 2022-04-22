@@ -77,13 +77,16 @@ mark_as_advanced(PThreads4W_INCLUDE_DIR PThreads4W_LIBRARY PThreads4W_CXXEXC_LIB
 set(PThreads4W_DLL_DIR ${PThreads4W_INCLUDE_DIR})
 list(TRANSFORM PThreads4W_DLL_DIR APPEND "/../bin")
 message(STATUS "PThreads4W_DLL_DIR: ${PThreads4W_DLL_DIR}")
+set(PThreads4W_DEBUG_DLL_DIR ${PThreads4W_INCLUDE_DIR})
+list(TRANSFORM PThreads4W_DEBUG_DLL_DIR APPEND "/../debug/bin")
+message(STATUS "PThreads4W_DEBUG_DLL_DIR: ${PThreads4W_DEBUG_DLL_DIR}")
 
 find_file(PThreads4W_LIBRARY_RELEASE_DLL NAMES pthreadVC${PThreads4W_MAJOR_VERSION}.dll PATHS ${PThreads4W_DLL_DIR})
-find_file(PThreads4W_LIBRARY_DEBUG_DLL NAMES pthreadVC${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DLL_DIR})
+find_file(PThreads4W_LIBRARY_DEBUG_DLL NAMES pthreadVC${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DEBUG_DLL_DIR})
 find_file(PThreads4W_CXXEXC_LIBRARY_RELEASE_DLL NAMES pthreadVCE${PThreads4W_MAJOR_VERSION}.dll PATHS ${PThreads4W_DLL_DIR})
-find_file(PThreads4W_CXXEXC_LIBRARY_DEBUG_DLL NAMES pthreadVCE${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DLL_DIR})
+find_file(PThreads4W_CXXEXC_LIBRARY_DEBUG_DLL NAMES pthreadVCE${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DEBUG_DLL_DIR})
 find_file(PThreads4W_STRUCTEXC_LIBRARY_RELEASE_DLL NAMES pthreadVSE${PThreads4W_MAJOR_VERSION}.dll PATHS ${PThreads4W_DLL_DIR})
-find_file(PThreads4W_STRUCTEXC_LIBRARY_DEBUG_DLL NAMES pthreadVSE${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DLL_DIR})
+find_file(PThreads4W_STRUCTEXC_LIBRARY_DEBUG_DLL NAMES pthreadVSE${PThreads4W_MAJOR_VERSION}d.dll PATHS ${PThreads4W_DEBUG_DLL_DIR})
 
 #Compatibility definitions, deprecated
 set(PTHREAD_INCLUDE_DIR ${PThreads4W_INCLUDE_DIR} CACHE PATH "")

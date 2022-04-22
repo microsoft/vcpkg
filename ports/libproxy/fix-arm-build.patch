@@ -1,15 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 51b0e5e..aa94b87 100644
+index 1c68939..9ef6895 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -51,6 +51,10 @@ else()
-     endif()
+@@ -42,6 +42,9 @@ else()
+     include_directories(${CMAKE_CURRENT_SOURCE_DIR})
  endif()
  
 +if (WIN32)
 +    link_libraries(Advapi32)
 +endif()
-+
  # Conditionally build bindings
  if(NOT WIN32)
      add_subdirectory(bindings)

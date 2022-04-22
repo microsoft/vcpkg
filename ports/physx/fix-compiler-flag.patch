@@ -1,0 +1,58 @@
+diff --git a/physx/compiler/public/CMakeLists.txt b/physx/compiler/public/CMakeLists.txt
+index 77776ca7..bd7b496d 100644
+--- a/physx/compiler/public/CMakeLists.txt
++++ b/physx/compiler/public/CMakeLists.txt
+@@ -33,6 +33,8 @@ ENDIF()
+ 
+ project(PhysXSDK C CXX)
+ 
++SET(PHYSX_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CACHE INTERNAL "PhysX Debug CXX Flags")
++
+ OPTION(PX_BUILDSNIPPETS "Generate the snippets" OFF)
+ OPTION(PX_BUILDPUBLICSAMPLES "Generate the samples" OFF)
+ OPTION(PX_CMAKE_SUPPRESS_REGENERATION "Disable zero_check projects" OFF)
+diff --git a/physx/source/compiler/cmake/uwp/CMakeLists.txt b/physx/source/compiler/cmake/uwp/CMakeLists.txt
+index 20dcb6ae..c7e03c3e 100644
+--- a/physx/source/compiler/cmake/uwp/CMakeLists.txt
++++ b/physx/source/compiler/cmake/uwp/CMakeLists.txt
+@@ -39,11 +39,13 @@ ELSE()
+ ENDIF()
+ 
+ # Cache the CXX flags so the other CMakeLists.txt can use them if needed
+-SET(PHYSX_CXX_FLAGS "/Wall /d2Zi+ /MP /WX /W4 /GF /GS- /GR- /Gd ${PHYSX_FP_MODE} ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
++SET(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS} ${PHYSX_FP_MODE} ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
++if(FALSE)
+ SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /Zi" CACHE INTERNAL "PhysX Debug CXX Flags")
+ SET(PHYSX_CXX_FLAGS_CHECKED "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Checked CXX Flags")
+ SET(PHYSX_CXX_FLAGS_PROFILE "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Profile CXX Flags")
+ SET(PHYSX_CXX_FLAGS_RELEASE "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Release CXX Flags")
++endif()
+ 
+ # These flags are local to the directory the CMakeLists.txt is in, so don't get carried over to OTHER CMakeLists.txt (thus the CACHE variables above)
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+diff --git a/physx/source/compiler/cmake/windows/CMakeLists.txt b/physx/source/compiler/cmake/windows/CMakeLists.txt
+index a1ab3596..dbd20fb0 100644
+--- a/physx/source/compiler/cmake/windows/CMakeLists.txt
++++ b/physx/source/compiler/cmake/windows/CMakeLists.txt
+@@ -41,17 +41,19 @@ ELSE()
+ 	SET(PHYSX_FP_MODE "/fp:fast")	
+ ENDIF()
+ IF(CMAKE_CL_64)
+-	SET(PHYSX_CXX_FLAGS "/d2Zi+ /MP /WX /W4 /GF /GS- /GR- /Gd ${PHYSX_FP_MODE} /Oy ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
++	SET(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS} ${PHYSX_FP_MODE} ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
+ ELSE()
+-	SET(PHYSX_CXX_FLAGS "/arch:SSE2 /d2Zi+ /MP /WX /W4 /GF /GS- /GR- /Gd ${PHYSX_FP_MODE} /Oy ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")	
++	SET(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS} /arch:SSE2 ${PHYSX_FP_MODE} ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
+ ENDIF()
+ 
++if(FALSE)
+ SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /RTCu /Zi" CACHE INTERNAL "PhysX Debug CXX Flags")
+ # PT: changed /Ox to /O2 because "the /Ox compiler option enables only a subset of the speed optimization options enabled by /O2."
+ # See https://docs.microsoft.com/en-us/cpp/build/reference/ox-full-optimization?view=vs-2019
+ SET(PHYSX_CXX_FLAGS_CHECKED "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Checked CXX Flags")
+ SET(PHYSX_CXX_FLAGS_PROFILE "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Profile CXX Flags")
+ SET(PHYSX_CXX_FLAGS_RELEASE "/O2 ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Release CXX Flags")
++endif()
+ 
+ # cache lib type defs
+ IF(PX_GENERATE_STATIC_LIBRARIES)	

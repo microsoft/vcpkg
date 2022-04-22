@@ -1,0 +1,8 @@
+{
+  "name": "otl",
+  "version": "4.0.463",
+  "port-version": 1,
+  "description": "Oracle, Odbc and DB2-CLI Template Library",
+  "homepage": "http://otl.sourceforge.net/",
+  "license": "ISC"
+}

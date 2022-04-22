@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0fb228f..19cfdf8 100644
+index ea5516e..ecd14bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -611,7 +611,7 @@ install(EXPORT ArmadilloLibraryDepends DESTINATION
+@@ -615,7 +615,7 @@ install(EXPORT ArmadilloLibraryDepends DESTINATION
  # and install it
  set(ARMADILLO_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
  set(ARMADILLO_LIB_DIR      "${CMAKE_INSTALL_FULL_LIBDIR}")

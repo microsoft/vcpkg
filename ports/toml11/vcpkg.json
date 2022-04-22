@@ -1,0 +1,16 @@
+{
+  "name": "toml11",
+  "version": "3.7.0",
+  "description": "A C++11 header-only toml parser/encoder depending only on C++ standard library.",
+  "homepage": "https://github.com/ToruNiina/toml11",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

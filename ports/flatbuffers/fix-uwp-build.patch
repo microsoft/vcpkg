@@ -1,8 +1,8 @@
 diff --git a/src/util.cpp b/src/util.cpp
-index c1bb197..658e116 100644
+index 3670a019..fb5d884f 100644
 --- a/src/util.cpp
 +++ b/src/util.cpp
-@@ -245,9 +245,15 @@ bool ReadEnvironmentVariable(const char *var_name, std::string *_value) {
+@@ -255,9 +255,15 @@ bool ReadEnvironmentVariable(const char *var_name, std::string *_value) {
  #ifdef _MSC_VER
    __pragma(warning(disable : 4996));  // _CRT_SECURE_NO_WARNINGS
  #endif

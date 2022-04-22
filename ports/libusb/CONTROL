@@ -1,6 +1,0 @@
-Source: libusb
-Version: 1.0.24
-Port-Version: 3
-Homepage: https://github.com/libusb/libusb
-Description: a cross-platform library to access USB devices
-Supports: !uwp

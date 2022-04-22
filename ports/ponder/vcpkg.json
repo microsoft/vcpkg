@@ -1,0 +1,17 @@
+{
+  "name": "ponder",
+  "version-string": "3.0.0",
+  "port-version": 4,
+  "description": "A C++ multi-purpose reflection library.",
+  "homepage": "https://github.com/billyquith/ponder",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

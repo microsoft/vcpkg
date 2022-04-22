@@ -3,15 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.75.0
-    SHA512 13bc48ef4ae0805abd5eecde90406486a00c350187343ae2cc7da9b7e94d15be952312c1c07c4faf4d62e13401c6e450c3c3d06649af01a690fc7200a20744ed
+    REF boost-1.79.0
+    SHA512 2f036406e8343895b3749bd7769b1dadb48d7552862898842b43eccf51c62153f4683c46cef91fd97228d6022e60a9bdb0726a00bcc74f519e0539b3a69dc0bf
     HEAD_REF master
     PATCHES
         0001-Fix-boost-ICU-support.patch
         allow-force-finding-iconv.patch
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
     "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"

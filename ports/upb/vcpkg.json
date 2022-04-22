@@ -1,0 +1,16 @@
+{
+  "name": "upb",
+  "version-date": "2021-10-19",
+  "description": "μpb (often written 'upb') is a small protobuf implementation written in C.",
+  "homepage": "https://github.com/protocolbuffers/upb/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

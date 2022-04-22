@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad4b711..b2061ae 100644
+index 241f706b7..5c0a417c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -981,7 +981,7 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+@@ -1075,7 +1075,7 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
  
    install(DIRECTORY include/rocksdb COMPONENT devel DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  

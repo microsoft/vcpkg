@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,7 +73,7 @@ option(DOCS_PATH
+ 
+ # Set static/dynamic build options
+ SET(LIB_TYPE STATIC)
+-SET(RUNTIME_INSTALL_DIR lib)
++SET(RUNTIME_INSTALL_DIR bin)
+ SET(LIBRARY_INSTALL_DIR lib)
+ SET(ARCHIVE_INSTALL_DIR lib)
+ IF (ALEMBIC_SHARED_LIBS)
+diff --git a/lib/Alembic/CMakeLists.txt b/lib/Alembic/CMakeLists.txt
+--- a/lib/Alembic/CMakeLists.txt
++++ b/lib/Alembic/CMakeLists.txt
+@@ -78,12 +78,11 @@ option(DOCS_PATH
+     ${ZLIB_LIBRARY}
+   )
+ 
+-SET( ALEMBIC_LIB_INSTALL_DIR lib CACHE PATH "Where to install the Alembic libs")
+ INSTALL(TARGETS Alembic
+         EXPORT AlembicTargets
+-        LIBRARY DESTINATION ${ALEMBIC_LIB_INSTALL_DIR}
+-        ARCHIVE DESTINATION ${ALEMBIC_LIB_INSTALL_DIR}
+-        RUNTIME DESTINATION ${ALEMBIC_LIB_INSTALL_DIR})
++        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
++        ARCHIVE DESTINATION ${ARCHIVE_INSTALL_DIR}
++        RUNTIME DESTINATION ${RUNTIME_INSTALL_DIR})
+ 
+ #-******************************************************************************
+ # PACKAGE EXPORTS

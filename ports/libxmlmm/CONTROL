@@ -1,5 +1,0 @@
-Source: libxmlmm
-Version: 0.6.0
-Homepage: https://github.com/rioki/libxmlmm
-Description: Libxmlmm is a C++ wrapper for libxml 2.0 that only relies on standard C++ and libxml2.
-Build-Depends: libxml2

@@ -1,0 +1,10 @@
+{
+  "name": "gppanel",
+  "version-date": "2020-05-20",
+  "port-version": 1,
+  "description": "gpPanel is chart library for wxWidget. It inheritance from wxPanel and use modified wxMathPlot library at chart engine.",
+  "homepage": "https://github.com/woollybah/gppanel",
+  "dependencies": [
+    "wxwidgets"
+  ]
+}

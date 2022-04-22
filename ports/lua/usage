@@ -1,9 +1,5 @@
 Use this package via the module FindLua that comes with CMake. To use in your CMakeLists.txt:
 
-    include(FindLua)
     find_package(Lua REQUIRED)
-    target_link_libraries(main PRIVATE ${LUA_LIBRARIES})
     target_include_directories(main PRIVATE ${LUA_INCLUDE_DIR})
-
-For more information about the variables set by this module, please see:
-    https://cmake.org/cmake/help/latest/module/FindLua.html
+    target_link_libraries(main PRIVATE ${LUA_LIBRARIES})

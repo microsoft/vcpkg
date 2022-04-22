@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3df385a..1ee7be0 100644
+index aa4ad05..669adde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -60,8 +60,8 @@ IF (NOT PAHO_BUILD_SHARED AND NOT PAHO_BUILD_STATIC)
@@ -10,11 +10,11 @@ index 3df385a..1ee7be0 100644
 -    set(CMAKE_INSTALL_DOCDIR share/doc/libpaho-mqtt)
 +IF(1)
 +    set(CMAKE_INSTALL_DOCDIR share/paho-mqtt)
+     set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
+     set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
  ENDIF()
- 
- ADD_SUBDIRECTORY(src)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 20b578a..75dc833 100644
+index 0bc7194..db4a0ac 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -183,7 +183,7 @@ IF (PAHO_BUILD_STATIC)

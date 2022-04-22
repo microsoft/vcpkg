@@ -1,6 +1,0 @@
-Source: msgpack11
-Version: 0.0.10-1
-Homepage: https://msgpack.org
-Build-Depends: gtest
-Description: msgpack11 is a tiny MsgPack library for C++11, providing MsgPack parsing and serialization.This library is inspired by json11.The API of msgpack11 is designed to be similar with json11.
-

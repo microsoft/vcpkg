@@ -1,0 +1,23 @@
+{
+  "name": "io2d",
+  "version-date": "2020-09-14",
+  "port-version": 3,
+  "description": "a lightweight, cross platform drawing library",
+  "dependencies": [
+    {
+      "name": "cairo",
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "cairo",
+      "platform": "!osx"
+    },
+    {
+      "name": "graphicsmagick",
+      "platform": "!osx"
+    }
+  ]
+}

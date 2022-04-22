@@ -1,0 +1,17 @@
+{
+  "name": "yyjson",
+  "version": "0.3.0",
+  "description": "A high performance JSON library written in ANSI C",
+  "homepage": "https://github.com/ibireme/yyjson",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

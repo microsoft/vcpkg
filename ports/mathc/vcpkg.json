@@ -1,0 +1,7 @@
+{
+  "name": "mathc",
+  "version-string": "2019-09-29",
+  "port-version": 1,
+  "description": "Pure C math library for 2D and 3D programming",
+  "homepage": "https://github.com/felselva/mathc"
+}

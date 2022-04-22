@@ -1,0 +1,20 @@
+{
+  "name": "paho-mqttpp3",
+  "version": "1.2.0",
+  "description": "Paho project provides open-source C++ wrapper for Paho C library",
+  "homepage": "https://github.com/eclipse/paho.mqtt.cpp",
+  "dependencies": [
+    "paho-mqtt"
+  ],
+  "default-features": [
+    "ssl"
+  ],
+  "features": {
+    "ssl": {
+      "description": "Build with SSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

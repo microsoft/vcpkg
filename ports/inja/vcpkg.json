@@ -1,0 +1,9 @@
+{
+  "name": "inja",
+  "version": "3.3.0",
+  "description": "Inja - A Template Engine for Modern C++",
+  "homepage": "https://github.com/pantor/inja",
+  "dependencies": [
+    "nlohmann-json"
+  ]
+}

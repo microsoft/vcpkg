@@ -20,8 +20,7 @@ set(LMDB_LIBRARY_INSTALL_DIR lib CACHE PATH "Install directory for library")
 set(LMDB_RUNTIME_INSTALL_DIR bin CACHE PATH "Install directory for binaries/dlls")
 set(LMDB_CONFIG_INSTALL_DIR share/lmdb CACHE PATH "Install directory for cmake config files")
 
-
-if(BUILD_SHARED_LIBS)
+if(MSVC AND BUILD_SHARED_LIBS)
 set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/lmdbd.def\"")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DEF:\"${CMAKE_CURRENT_SOURCE_DIR}/lmdb.def\"")
 endif()

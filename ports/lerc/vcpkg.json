@@ -1,0 +1,7 @@
+{
+  "name": "lerc",
+  "version-string": "2.2",
+  "port-version": 2,
+  "description": "An open-source image or raster format which supports rapid encoding and decoding for any pixel type",
+  "homepage": "https://github.com/Esri/lerc"
+}

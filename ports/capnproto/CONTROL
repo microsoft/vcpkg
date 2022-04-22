@@ -1,7 +1,0 @@
-Source: capnproto
-Version: 0.8.0
-Port-Version: 1
-Description: Data interchange format and capability-based RPC system
-Homepage: https://capnproto.org/
-Build-Depends: zlib
-Supports: !uwp&!((arm|arm64)&windows)

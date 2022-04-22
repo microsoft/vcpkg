@@ -1,8 +1,8 @@
 diff --git a/channels/urbdrc/client/libusb/libusb_udevice.c b/channels/urbdrc/client/libusb/libusb_udevice.c
-index 214cb7a..56c986c 100644
+index 814540756..56809fe45 100644
 --- a/channels/urbdrc/client/libusb/libusb_udevice.c
 +++ b/channels/urbdrc/client/libusb/libusb_udevice.c
-@@ -184,7 +184,7 @@ static void async_transfer_user_data_free(ASYNC_TRANSFER_USER_DATA* user_data)
+@@ -232,7 +232,7 @@ static void async_transfer_user_data_free(ASYNC_TRANSFER_USER_DATA* user_data)
  	}
  }
  
@@ -10,8 +10,8 @@ index 214cb7a..56c986c 100644
 +static void LIBUSB_CALL func_iso_callback(struct libusb_transfer* transfer)
  {
  	ASYNC_TRANSFER_USER_DATA* user_data = (ASYNC_TRANSFER_USER_DATA*)transfer->user_data;
- #if defined(HAVE_STREAM_ID_API)
-@@ -285,7 +285,7 @@ static const LIBUSB_ENDPOINT_DESCEIPTOR* func_get_ep_desc(LIBUSB_CONFIG_DESCRIPT
+ 	const UINT32 streamID = stream_id_from_buffer(transfer);
+@@ -331,7 +331,7 @@ static const LIBUSB_ENDPOINT_DESCEIPTOR* func_get_ep_desc(LIBUSB_CONFIG_DESCRIPT
  	return NULL;
  }
  
@@ -21,10 +21,10 @@ index 214cb7a..56c986c 100644
  	ASYNC_TRANSFER_USER_DATA* user_data;
  	uint32_t streamID;
 diff --git a/channels/urbdrc/client/libusb/libusb_udevman.c b/channels/urbdrc/client/libusb/libusb_udevman.c
-index 2eebc1a..399ecbb 100644
+index 1638b8c13..b1440f300 100644
 --- a/channels/urbdrc/client/libusb/libusb_udevman.c
 +++ b/channels/urbdrc/client/libusb/libusb_udevman.c
-@@ -550,7 +550,7 @@ static BOOL device_is_filtered(struct libusb_device* dev,
+@@ -580,7 +580,7 @@ static BOOL device_is_filtered(struct libusb_device* dev,
  	return filtered;
  }
  
@@ -33,7 +33,7 @@ index 2eebc1a..399ecbb 100644
                              libusb_hotplug_event event, void* user_data)
  {
  	VID_PID_PAIR pair;
-@@ -828,7 +828,7 @@ static BOOL poll_libusb_events(UDEVMAN* udevman)
+@@ -859,7 +859,7 @@ static BOOL poll_libusb_events(UDEVMAN* udevman)
  	return rc > 0;
  }
  
@@ -42,3 +42,4 @@ index 2eebc1a..399ecbb 100644
  {
  	libusb_hotplug_callback_handle handle;
  	UDEVMAN* udevman = (UDEVMAN*)lpThreadParameter;
+	 

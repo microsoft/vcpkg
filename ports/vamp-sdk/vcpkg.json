@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "vamp-sdk",
+  "version": "2.10",
+  "port-version": 2,
+  "description": "Library for Vamp plugins",
+  "homepage": "https://www.vamp-plugins.org/develop.html",
+  "supports": "!uwp",
+  "dependencies": [
+    "libsndfile",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

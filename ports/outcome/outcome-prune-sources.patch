@@ -1,0 +1,12 @@
+diff --git "a/cmake/headers.cmake" "b/cmake/headers.cmake"
+index 108038d16..bf4807e16 100644
+--- "a/cmake/headers.cmake"
++++ "b/cmake/headers.cmake"
+@@ -47,7 +47,6 @@ set(outcome_HEADERS
+   "include/outcome/experimental/status-code/include/system_code_from_exception.hpp"
+   "include/outcome/experimental/status-code/include/system_error2.hpp"
+   "include/outcome/experimental/status-code/include/win32_code.hpp"
+-  "include/outcome/experimental/status-code/single-header/system_error2.hpp"
+   "include/outcome/experimental/status_outcome.hpp"
+   "include/outcome/experimental/status_result.hpp"
+   "include/outcome/iostream_support.hpp"

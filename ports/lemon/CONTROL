@@ -1,4 +1,0 @@
-Source: lemon
-Version: 0
-Description: Deprecated port, use liblemon instead
-Build-Depends: liblemon

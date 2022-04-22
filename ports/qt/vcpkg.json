@@ -1,0 +1,194 @@
+{
+  "name": "qt",
+  "version": "6.3.0",
+  "description": "Qt",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qt5compat",
+      "default-features": false,
+      "features": [
+        "big-codecs",
+        "codecs",
+        "qml",
+        "textcodec"
+      ]
+    },
+    "qtapplicationmanager",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtcharts",
+      "default-features": false,
+      "features": [
+        "designer",
+        "qml"
+      ]
+    },
+    "qtcoap",
+    "qtconnectivity",
+    "qtdatavis3d",
+    "qtdeclarative",
+    {
+      "name": "qtdeviceutilities",
+      "default-features": false,
+      "platform": "linux"
+    },
+    "qtdoc",
+    {
+      "name": "qtimageformats",
+      "default-features": false,
+      "features": [
+        "jasper",
+        "tiff",
+        "webp"
+      ]
+    },
+    "qtinterfaceframework",
+    {
+      "name": "qtlottie",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    "qtmqtt",
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "qml",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
+        "gstreamer"
+      ],
+      "platform": "!(static & windows)"
+    },
+    "qtnetworkauth",
+    {
+      "name": "qtopcua",
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtpositioning",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtquick3d",
+      "default-features": false
+    },
+    "qtquicktimeline",
+    {
+      "name": "qtremoteobjects",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtscxml",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtsensors",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    "qtserialbus",
+    "qtserialport",
+    "qtshadertools",
+    "qtsvg",
+    {
+      "name": "qttools",
+      "default-features": false,
+      "features": [
+        "assistant",
+        "designer",
+        "qml"
+      ]
+    },
+    "qttranslations",
+    "qtvirtualkeyboard",
+    {
+      "name": "qtwebchannel",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtwebengine",
+      "default-features": false,
+      "features": [
+        "geolocation",
+        "spellchecker",
+        "webchannel"
+      ],
+      "platform": "!static"
+    },
+    {
+      "name": "qtwebsockets",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtwebview",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtwebview",
+      "default-features": false,
+      "features": [
+        "webengine"
+      ],
+      "platform": "!static"
+    }
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "qtactiveqt",
+          "features": [
+            "qml"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "qtwayland",
+          "features": [
+            "qml"
+          ],
+          "platform": "linux"
+        }
+      ]
+    }
+  }
+}

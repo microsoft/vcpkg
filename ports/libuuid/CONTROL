@@ -1,5 +1,0 @@
-Source: libuuid
-Version: 1.0.3-7
-Homepage: https://sourceforge.net/projects/libuuid
-Description: Universally unique id library
-Supports: linux|osx

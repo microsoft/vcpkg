@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9d9eacb..b530743 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -183,7 +183,7 @@ if (FL_BUILD_CORE)
+ 
+   # If cereal is found in a user-defined location, use it rather than
+   # downloading from source
+-  find_package(cereal)
++  find_package(cereal CONFIG REQUIRED)
+   if (NOT TARGET cereal AND NOT cereal_FOUND AND FL_BUILD_STANDALONE)
+     message(STATUS "cereal NOT found. Will download from source")
+     set(CEREAL_INSTALL_PATH ${FL_INSTALL_INC_DIR}/cereal)
+@@ -206,7 +206,6 @@ if (FL_BUILD_CORE)
+     message(STATUS "Found cereal")
+     target_link_libraries(flashlight PRIVATE cereal)
+   endif()
+-  setup_install_find_module(${CMAKE_MODULE_PATH}/Findcereal.cmake)
+ 
+   # -------------------- Locate Backend-specific Dependencies --------------------
+   # TODO: rather than conditionally searching for backend-specific dependencies,
+diff --git a/cmake/flashlightConfig.cmake.in b/cmake/flashlightConfig.cmake.in
+index 00f9442..f265b8f 100644
+--- a/cmake/flashlightConfig.cmake.in
++++ b/cmake/flashlightConfig.cmake.in
+@@ -36,6 +36,7 @@ if (@FL_BUILD_LIBRARIES@)
+ endif()
+ # Core dependencies
+ if (@FL_BUILD_CORE@)
++  find_dependency(cereal CONFIG)
+   find_dependency(ArrayFire 3.7.1)
+ endif()
+ if (@FL_BUILD_DISTRIBUTED@)

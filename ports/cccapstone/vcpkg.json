@@ -1,0 +1,10 @@
+{
+  "name": "cccapstone",
+  "version-string": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
+  "port-version": 2,
+  "description": "c++ bindings for capstone disasembly framework",
+  "homepage": "https://github.com/zer0mem/cccapstone",
+  "dependencies": [
+    "capstone"
+  ]
+}

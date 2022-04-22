@@ -1,0 +1,64 @@
+{
+  "name": "libtorrent",
+  "version": "2.0.6",
+  "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
+  "description": "An efficient feature complete C++ BitTorrent implementation",
+  "homepage": "https://libtorrent.org",
+  "documentation": "https://libtorrent.org/reference.html",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp & !(windows & arm)",
+  "dependencies": [
+    "boost-asio",
+    "boost-chrono",
+    "boost-config",
+    "boost-crc",
+    "boost-date-time",
+    "boost-iterator",
+    "boost-logic",
+    "boost-multi-index",
+    "boost-multiprecision",
+    "boost-pool",
+    "boost-random",
+    "boost-scope-exit",
+    "boost-system",
+    "boost-variant",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "iconv"
+  ],
+  "features": {
+    "deprfun": {
+      "description": "build with deprecated functions enabled"
+    },
+    "examples": {
+      "description": "build the examples in the examples directory"
+    },
+    "iconv": {
+      "description": "build with libiconv",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
+    "python": {
+      "description": "build the python bindings in bindings/python directory",
+      "dependencies": [
+        "boost-python"
+      ]
+    },
+    "test": {
+      "description": "build the libtorrent tests"
+    },
+    "tools": {
+      "description": "build the tools in the tools directory"
+    }
+  }
+}

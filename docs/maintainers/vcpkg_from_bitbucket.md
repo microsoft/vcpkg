@@ -1,7 +1,8 @@
 # vcpkg_from_bitbucket
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_bitbucket.md).
+
 Download and extract a project from Bitbucket.
-Enables support for installing HEAD `vcpkg.exe install --head <port>`.
 
 ## Usage:
 ```cmake
@@ -34,7 +35,7 @@ If `REF` is specified, `SHA512` must also be specified.
 ### SHA512
 The SHA512 hash that should match the archive (https://bitbucket.com/${REPO}/get/${REF}.tar.gz).
 
-This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+This is most easily determined by first setting it to `0`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
 ### HEAD_REF
 The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
@@ -56,4 +57,4 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 * [blaze](https://github.com/Microsoft/vcpkg/blob/master/ports/blaze/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_bitbucket.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_bitbucket.cmake)
+[scripts/cmake/vcpkg\_from\_bitbucket.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_bitbucket.cmake)

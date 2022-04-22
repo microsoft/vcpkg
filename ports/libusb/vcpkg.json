@@ -1,0 +1,8 @@
+{
+  "name": "libusb",
+  "version": "1.0.24",
+  "port-version": 7,
+  "description": "a cross-platform library to access USB devices",
+  "homepage": "https://github.com/libusb/libusb",
+  "supports": "!uwp"
+}

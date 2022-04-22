@@ -3,11 +3,12 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
-    REF release-1.9.2
-    SHA512 6a6980901eea964c050eb3d61fadf28712e2f02c36985bf8e5176b668bba48985f6a666554a1964435448de29b18d790ab86b787d0288a22fd9cba00746a7846
+    REF 2ab8fa85d05f04387bd5d63b10ad1c8fd2243616
+    SHA512 fd21f0919b0e5e884bdf4d66c4d5ba056f04c426b309ec0b5ab26642a5f6b00d46f4dd965431b10130bc5f0d81699e2195780e90e127f63049ee5763403ef7c8
     HEAD_REF master
     PATCHES
         install.patch
+        fix-windows-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

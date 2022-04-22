@@ -1,0 +1,34 @@
+{
+  "name": "unit-test-cmake",
+  "version-string": "0",
+  "description": "Ensures that the CMake scripts are unit tested.",
+  "supports": "x64",
+  "default-features": [
+    "function-arguments",
+    "list",
+    "minimum-required"
+  ],
+  "features": {
+    "host-path-list": {
+      "description": "Test the vcpkg_host_path_list function"
+    },
+    "function-arguments": {
+      "description": "Test the z_vcpkg_function_arguments function"
+    },
+    "list": {
+      "description": "Test the vcpkg_list function"
+    },
+    "merge-libs": {
+      "description": "Test the z_vcpkg_cmake_config_fixup_merge_lists function",
+      "dependencies": [
+        {
+          "name": "vcpkg-cmake-config",
+          "host": true
+        }
+      ]
+    },
+    "minimum-required": {
+      "description": "Test the vcpkg_minimum_required function"
+    }
+  }
+}

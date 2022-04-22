@@ -1,20 +1,29 @@
 {
   "name": "boost-timer",
-  "version-string": "1.75.0",
+  "version": "1.79.0",
   "description": "Boost timer module",
   "homepage": "https://github.com/boostorg/timer",
+  "license": "BSL-1.0",
   "dependencies": [
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-chrono",
-    "boost-compatibility",
     "boost-config",
     "boost-core",
-    "boost-integer",
     "boost-io",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-predef",
     "boost-system",
     "boost-throw-exception",
-    "boost-vcpkg-helpers"
+    "boost-vcpkg-helpers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

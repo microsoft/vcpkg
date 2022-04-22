@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/leaf
-    REF boost-1.75.0
-    SHA512 9570e3c7964e7e3999fe469a1ca71edec7bd5435865ca0230b232b94ba84bcc1d218773262855868b379483a902bf9bdda50ddcceec7c5d282be208a39c5f6d6
+    REF boost-1.79.0
+    SHA512 1f567029d8b737f6e7cb4fcd8df03f0aaf89bedf5c127b5cbd02ce27910934361254e2d03ba95614a7e41f2e2c4a09a346b41ea53aacc68dcf64e77e58b7fa23
     HEAD_REF master
 )
 

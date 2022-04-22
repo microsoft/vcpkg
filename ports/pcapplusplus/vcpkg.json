@@ -1,0 +1,26 @@
+{
+  "name": "pcapplusplus",
+  "version": "21.11",
+  "port-version": 1,
+  "description": "PcapPlusPlus is a multi-platform C++ library for capturing, parsing and crafting of network packets",
+  "homepage": "https://github.com/seladb/PcapPlusPlus",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "libpcap",
+      "platform": "!windows"
+    },
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "winpcap",
+      "platform": "windows"
+    }
+  ]
+}

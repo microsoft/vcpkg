@@ -1,0 +1,92 @@
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index 2820ace22..7fddbf0fb 100644
+--- a/src/tools/msvc/Solution.pm
++++ b/src/tools/msvc/Solution.pm
+@@ -948,7 +948,7 @@ sub AddProject
+ 	if ($self->{options}->{zlib})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zlib} . '\include');
+-		$proj->AddLibrary($self->{options}->{zlib} . '\lib\zdll.lib');
++		$proj->AddLibrary($self->{options}->{zlib} . '\debug\lib\zlibd.lib');
+ 	}
+ 	if ($self->{options}->{openssl})
+ 	{
+@@ -989,8 +989,11 @@ sub AddProject
+ 				# On both Win32 and Win64 the same library
+ 				# names are used without a debugging context.
+ 				$dbgsuffix     = 0;
+-				$libsslpath    = '\lib\libssl.lib';
+-				$libcryptopath = '\lib\libcrypto.lib';
++				$libsslpath    = '\debug\lib\libssl.lib'; #
++				$libcryptopath = '\debug\lib\libcrypto.lib'; #
++				$proj->AddLibrary('crypt32.lib');
++				$proj->AddLibrary('ws2_32.lib');
++				$proj->AddLibrary('secur32.lib');
+ 			}
+ 
+ 			$proj->AddLibrary($self->{options}->{openssl} . $libsslpath,
+@@ -1024,7 +1024,7 @@ sub AddProject
+ 	if ($self->{options}->{nls})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{nls} . '\include');
+-		$proj->AddLibrary($self->{options}->{nls} . '\lib\libintl.lib');
++		$proj->AddLibrary($self->{options}->{nls} . '\debug\lib\intl.lib'); #
+ 	}
+ 	if ($self->{options}->{gss})
+ 	{
+@@ -1051,21 +1051,21 @@ sub AddProject
+ 	}
+ 	if ($self->{options}->{iconv})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{iconv} . '\include');
+-		$proj->AddLibrary($self->{options}->{iconv} . '\lib\iconv.lib');
++		$proj->AddLibrary($self->{options}->{iconv} . '\debug\lib\iconv.lib'); #
+ 	}
+ 	if ($self->{options}->{icu})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{icu} . '\include');
+ 		if ($self->{platform} eq 'Win32')
+ 		{
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuin.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuuc.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib\icudt.lib');
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuind.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuucd.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icudtd.lib'); # 
+ 		}
+ 		else
+ 		{
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icuin.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icuuc.lib');
+-			$proj->AddLibrary($self->{options}->{icu} . '\lib64\icudt.lib');
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuind.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icuucd.lib'); #
++			$proj->AddLibrary($self->{options}->{icu} . '\debug\lib\icudtd.lib'); #
+ 		}
+@@ -1074,22 +1074,22 @@ sub AddProject
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include');
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include\libxml2');
+-		$proj->AddLibrary($self->{options}->{xml} . '\lib\libxml2.lib');
++		$proj->AddLibrary($self->{options}->{xml} . '\debug\lib\libxml2.lib'); #
+ 	}
+ 	if ($self->{options}->{xslt})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xslt} . '\include');
+-		$proj->AddLibrary($self->{options}->{xslt} . '\lib\libxslt.lib');
++		$proj->AddLibrary($self->{options}->{xslt} . '\debug\lib\libxslt.lib'); #
+ 	}
+ 	if ($self->{options}->{lz4})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{lz4} . '\include');
+-		$proj->AddLibrary($self->{options}->{lz4} . '\lib\liblz4.lib');
++		$proj->AddLibrary($self->{options}->{lz4} . '\debug\lib\lz4d.lib'); #
+ 	}
+ 	if ($self->{options}->{uuid})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{uuid} . '\include');
+-		$proj->AddLibrary($self->{options}->{uuid} . '\lib\uuid.lib');
++		$proj->AddLibrary($self->{options}->{uuid} . '\debug\lib\uuid.lib'); #
+ 	}
+ 	return $proj;
+ }

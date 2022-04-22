@@ -1,18 +1,16 @@
 {
   "name": "boost",
-  "version-string": "1.75.0",
+  "version": "1.79.0",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-accumulators",
     "boost-algorithm",
     "boost-align",
     "boost-any",
     "boost-array",
-    {
-      "name": "boost-asio",
-      "platform": "!emscripten"
-    },
+    "boost-asio",
     "boost-assert",
     "boost-assign",
     "boost-atomic",
@@ -49,6 +47,7 @@
     },
     "boost-crc",
     "boost-date-time",
+    "boost-describe",
     "boost-detail",
     "boost-dll",
     "boost-dynamic-bitset",
@@ -72,7 +71,6 @@
     "boost-geometry",
     "boost-gil",
     "boost-graph",
-    "boost-graph-parallel",
     "boost-hana",
     "boost-heap",
     "boost-histogram",
@@ -80,7 +78,6 @@
     "boost-icl",
     "boost-integer",
     "boost-interprocess",
-    "boost-interval",
     "boost-interval",
     "boost-intrusive",
     "boost-io",
@@ -91,6 +88,7 @@
     "boost-iterator",
     "boost-json",
     "boost-lambda",
+    "boost-lambda2",
     "boost-leaf",
     "boost-lexical-cast",
     "boost-local-function",
@@ -115,8 +113,6 @@
     "boost-multiprecision",
     "boost-nowide",
     "boost-numeric-conversion",
-    "boost-numeric-conversion",
-    "boost-odeint",
     "boost-odeint",
     "boost-optional",
     "boost-outcome",
@@ -143,7 +139,7 @@
     "boost-ptr-container",
     {
       "name": "boost-python",
-      "platform": "!uwp & !(arm & windows) & !emscripten"
+      "platform": "!uwp & !emscripten & !ios & !android"
     },
     "boost-qvm",
     "boost-random",
@@ -151,7 +147,6 @@
     "boost-ratio",
     "boost-rational",
     "boost-regex",
-    "boost-safe-numerics",
     "boost-safe-numerics",
     "boost-scope-exit",
     "boost-serialization",
@@ -183,7 +178,6 @@
     "boost-type-traits",
     "boost-typeof",
     "boost-ublas",
-    "boost-ublas",
     "boost-units",
     "boost-unordered",
     "boost-utility",
@@ -203,7 +197,9 @@
     "mpi": {
       "description": "Build with MPI support",
       "dependencies": [
-        "boost-mpi"
+        "boost-graph-parallel",
+        "boost-mpi",
+        "boost-property-map-parallel"
       ]
     }
   }

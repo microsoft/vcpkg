@@ -1,17 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
-    REF 34bb0644ea613cfcbc09c148db9de8aa6c5612b5 # v0.4.0
-    SHA512 773007fc7a73a831e292451d7a38feb9434f7c11c653d43b9f3679c564f64805a1cbd1baab6b13107c42cc06549ad7cd08aebd6658d8ee0022f5b8d601fa94cc
+    REF 60122bbd8e6b9009c4633c1a33ea94c5b682034a # v0.5.1
+    SHA512 ae905e217824d21ec9f098f562d993fbae71b2223e65f3bbcc29d352af61f2aa09b5c6b12c7d94742901a1374f9683335d3b4934c25b11500b710398331f6cb4
     HEAD_REF master
-    PATCHES
-        fix-warning.patch
 )
 
 # Copy the header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/include/jwt-cpp/*)
-file(COPY ${HEADER_FILES}
-     DESTINATION ${CURRENT_PACKAGES_DIR}/include/jwt-cpp
-     REGEX "\.(gitattributes|gitignore|picojson.h)$" EXCLUDE)
-
+file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/jwt-cpp)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

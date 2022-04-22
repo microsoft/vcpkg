@@ -1,0 +1,8 @@
+{
+  "name": "blas",
+  "version-date": "2022-04-22",
+  "description": "Metapackage for packages which provide BLAS",
+  "dependencies": [
+    "openblas"
+  ]
+}

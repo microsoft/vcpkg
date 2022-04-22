@@ -1,0 +1,67 @@
+{
+  "name": "matplotplusplus",
+  "version-date": "2021-04-11",
+  "port-version": 5,
+  "description": "A C++ graphics library for data visualization",
+  "homepage": "https://alandefreitas.github.io/matplotplusplus/",
+  "license": "MIT",
+  "supports": "!uwp & !(windows & arm)",
+  "dependencies": [
+    "cimg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "blas": {
+      "description": "BLAS support for Matplot++",
+      "dependencies": [
+        "blas"
+      ]
+    },
+    "fftw": {
+      "description": "fftw3 support for Matplot++",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG support for Matplot++",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lapack": {
+      "description": "LAPACK support for Matplot++",
+      "dependencies": [
+        "lapack"
+      ]
+    },
+    "opencv": {
+      "description": "opencv support for Matplot++",
+      "dependencies": [
+        "opencv"
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL backend for Matplot++",
+      "dependencies": [
+        "glad",
+        "glfw3",
+        "opengl"
+      ]
+    },
+    "zlib": {
+      "description": "ZLIB and libpng support for Matplot++",
+      "dependencies": [
+        "libpng",
+        "zlib"
+      ]
+    }
+  }
+}

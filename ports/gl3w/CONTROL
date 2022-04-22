@@ -1,5 +1,0 @@
-Source: gl3w
-Version: 2018-05-31-2
-Homepage: https://github.com/skaslev/gl3w
-Description: Simple OpenGL core profile loading
-Build-Depends: opengl-registry

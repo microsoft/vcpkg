@@ -1,11 +1,9 @@
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux" "UWP")
-
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(ARCH_DIR "")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(ARCH_DIR "x64/")
 else()
-    vcpkg_fail_port_install(MESSAGE "${PORT} only supports x86 and x64 architectures" ALWAYS)
+    message(FATAL_ERROR "${PORT} only supports x86 and x64 architectures")
 endif()
 
 vcpkg_from_git(
@@ -28,9 +26,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHRPT_BUILD_SHARED_
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" CRASHRPT_LINK_CRT_AS_DLL)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    probe CRASHRPT_BUILD_PROBE
-    tests CRASHRPT_BUILD_TESTS
-    demos CRASHRPT_BUILD_DEMOS
+    FEATURES
+        probe CRASHRPT_BUILD_PROBE
+        tests CRASHRPT_BUILD_TESTS
+        demos CRASHRPT_BUILD_DEMOS
 )
 
 # PREFER_NINJA is not used below since CrashSender fails to build with errors like this one:

@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,13 +23,6 @@ cmake_minimum_required(VERSION 3.11)
+ 
+ project(continuable VERSION 4.0.0 LANGUAGES C CXX)
+ 
+-if (CTI_CONTINUABLE_IS_FIND_INCLUDED)
+-  set(CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT OFF)
+-else()
+-  string(COMPARE EQUAL ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}
+-                      CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT)
+-endif()
+-
+ option(CTI_CONTINUABLE_WITH_INSTALL
+       "Add the continuable install targets"
+       ${CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT})
+@@ -80,7 +73,7 @@ if(NOT TARGET Threads::Threads)
+   find_package(Threads REQUIRED)
+ endif()
+ 
+-if (CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT)
++if (FALSE)
+   include(cmake/CMakeLists.txt)
+   add_subdirectory(dep)
+ else()
+@@ -90,7 +83,7 @@ else()
+ endif()
+ 
+ # continuable-base
+-if (CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT)
++if (TRUE)
+   add_library(continuable-base INTERFACE)
+ else()
+   add_library(continuable-base INTERFACE IMPORTED GLOBAL)
+@@ -146,7 +139,7 @@ if (CTI_CONTINUABLE_WITH_UNHANDLED_EXCEPTIONS)
+       CONTINUABLE_WITH_UNHANDLED_EXCEPTIONS)
+ endif()
+ 
+-if (CTI_CONTINUABLE_IS_TOP_LEVEL_PROJECT)
++if (TRUE)
+   add_library(continuable INTERFACE)
+ else()
+   add_library(continuable INTERFACE IMPORTED GLOBAL)
+@@ -168,8 +161,8 @@ if (CTI_CONTINUABLE_WITH_INSTALL)
+   # Headers and license files
+   install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/continuable"
+           DESTINATION "include")
+-  install(FILES "LICENSE.txt" DESTINATION .)
+-  install(FILES "Readme.md" DESTINATION .)
++  install(FILES "LICENSE.txt" DESTINATION share/${PROJECT_NAME} RENAME copyright)
++  install(FILES "Readme.md" DESTINATION share/${PROJECT_NAME})
+ 
+   # Config.cmake
+   write_basic_package_version_file(

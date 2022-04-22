@@ -1,0 +1,12 @@
+{
+  "name": "gamenetworkingsockets",
+  "version": "1.4.0",
+  "description": "GameNetworkingSockets is a basic transport layer for games.",
+  "homepage": "https://github.com/ValveSoftware/GameNetworkingSockets",
+  "license": "BSD-3-Clause",
+  "supports": "!(static & windows) & !uwp & !(arm64 & windows)",
+  "dependencies": [
+    "openssl",
+    "protobuf"
+  ]
+}

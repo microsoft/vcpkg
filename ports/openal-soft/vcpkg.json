@@ -1,0 +1,8 @@
+{
+  "name": "openal-soft",
+  "version-semver": "1.21.1",
+  "port-version": 4,
+  "description": "OpenAL Soft is an LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.",
+  "homepage": "https://github.com/kcat/openal-soft",
+  "supports": "!uwp"
+}

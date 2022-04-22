@@ -1,0 +1,25 @@
+{
+  "name": "hunspell",
+  "version": "1.7.0",
+  "port-version": 8,
+  "description": "The most popular spellchecking library.",
+  "homepage": "https://github.com/hunspell/hunspell",
+  "supports": "!uwp",
+  "dependencies": [
+    "libiconv"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build hunspell tools",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

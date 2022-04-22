@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-gn",
+  "version-date": "2021-11-16",
+  "port-version": 1,
+  "description": "https://gn.googlesource.com/gn/+/4aa9bdfa05b688c58d3d7d3e496f3f18cbb3d89e",
+  "supports": "native & !x86",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-python2",
+      "host": true
+    }
+  ]
+}

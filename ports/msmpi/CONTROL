@@ -1,5 +1,0 @@
-Source: msmpi
-Version: 10.1
-Homepage: https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
-Description: Microsoft MPI
-Supports: windows

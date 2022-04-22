@@ -1,0 +1,37 @@
+{
+  "name": "kf5configwidgets",
+  "version": "5.89.0",
+  "description": "Widgets for configuration dialogs",
+  "homepage": "https://api.kde.org/frameworks/kconfigwidgets/html/index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5auth",
+    "kf5codecs",
+    "kf5config",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5widgetsaddons",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Enables a Qt Designer plugin"
+    }
+  }
+}

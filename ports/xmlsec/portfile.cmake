@@ -1,26 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
-    REF xmlsec-1_2_31
-    SHA512 00c67bdfed208c23cbdbcdecd0648c19b66e6036a8dd27145d3c3f2150cba92cbdf5bf976f8561273e752ed3b5c188fa56ab84677e894194c6f1269a07caf04d
+    REF e628e70040cb0d81a561462472806aeaac1d1bc7 #xmlsec-1_2_33
+    SHA512 2d4485941d354160f7fabd84394c61eef9dcea8be572d78bf7da7370880747f86ff76127fa000f8b0de06f462abef17d653270dee680fa35d96cc8200fb4d1a6
     HEAD_REF master
     PATCHES 
-        0001-uwp-fix.patch
+        pkgconfig_fixes.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-	OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DINSTALL_HEADERS_TOOLS=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -1,9 +1,0 @@
-Source: boringssl
-Version: 2020-04-07
-Port-Version: 2
-Homepage: https://boringssl.googlesource.com/boringssl
-Description: BoringSSl is a fork of OpenSSL developed by Google
-Supports: !uwp
-
-Feature: tools
-Description: Build bssl executable

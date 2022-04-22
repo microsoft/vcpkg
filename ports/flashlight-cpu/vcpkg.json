@@ -1,6 +1,7 @@
 {
   "name": "flashlight-cpu",
-  "version-string": "20210111",
+  "version": "0.3",
+  "port-version": 2,
   "description": "A C++ standalone library for machine learning. CPU backend.",
   "homepage": "https://github.com/facebookresearch/flashlight",
   "supports": "!(windows | osx)",
@@ -71,6 +72,20 @@
           "name": "flashlight-cpu",
           "features": [
             "fl",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "objdet": {
+      "description": "flashlight object detection app",
+      "dependencies": [
+        {
+          "name": "flashlight-cpu",
+          "features": [
+            "fl",
+            "imgclass",
             "lib"
           ]
         },

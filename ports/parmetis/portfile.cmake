@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
         fix-root-cmakelist.patch
         fix-libparmetis-cmakelist.patch
         use_stdint.patch
+        fix-root-cmakelist-2.patch
 )
 
 vcpkg_configure_cmake(

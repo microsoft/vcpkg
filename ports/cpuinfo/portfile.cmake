@@ -1,55 +1,76 @@
 # On Windows, we can get a cpuinfo.dll, but it exports no symbols.
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-vcpkg_download_distfile(
-    pull_22_patch_file
-    URLS "https://github.com/pytorch/cpuinfo/compare/d5e37adf1406cf899d7d9ec1d317c47506ccb970...868bd113ed496a01cd030ab4d5b8853561f919a3.diff"
-    FILENAME "cpuinfo-pull-22-868bd11.patch"
-    SHA512 6971707e71613ca07fe0d18cb9c36cd5161177fc9ad3eb9e66f17a694559f3a95ccdad8f50e9342507a7978bd454f66e47c8a94db9077267ca302535b7cc3b59
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF d5e37adf1406cf899d7d9ec1d317c47506ccb970
-    SHA512 ecd2115340fa82a67db7889ce286c3070d5ab9c30b02372b08aac893e90ccebc65c6b3e66aa02a9ae9c57892d2d8c3b77cb836e5fc3b88df2c75d33e574d90d2
+    REF b40bae27785787b6dd70788986fd96434cf90ae2
+    SHA512 dbbe4f3e1d5ae74ffc8ba2cba0ab745a23f4993788f4947825ef5125dd1cbed3e13e0c98e020e6fcfa9879f54f06d7cba4de73ec29f77649b6a27b4ab82c8f1c
     HEAD_REF master
-    PATCHES
-        ${pull_22_patch_file}
 )
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools CPUINFO_BUILD_TOOLS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools CPUINFO_BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DCPUINFO_BUILD_TOOLS=OFF
-    OPTIONS_RELEASE
-        ${FEATURE_OPTIONS}
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND LINK_OPTIONS -DCPUINFO_LIBRARY_TYPE=shared)
+else()
+    list(APPEND LINK_OPTIONS -DCPUINFO_LIBRARY_TYPE=static)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    list(APPEND LINK_OPTIONS -DCPUINFO_RUNTIME_TYPE=shared)
+else()
+    list(APPEND LINK_OPTIONS -DCPUINFO_RUNTIME_TYPE=static)
+endif()
+
+# hack to get around that toolchains/windows.cmake doesn't set CMAKE_SYSTEM_ARCHITECTURE
+set(CPUINFO_TARGET_PROCESSOR_param "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    # NOTE: arm64-windows is unsupported for now;
+    # see https://github.com/pytorch/cpuinfo/pull/82 for updates
+    # NOTE: arm-windows is unsupported
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=AMD64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=ARM")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(CPUINFO_TARGET_PROCESSOR_param "-DCPUINFO_TARGET_PROCESSOR=ARM64")
+    endif()
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        ${LINK_OPTIONS}
+        ${CPUINFO_TARGET_PROCESSOR_param}
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
         -DCPUINFO_BUILD_BENCHMARKS=OFF
+    OPTIONS_DEBUG
+        -DCPUINFO_LOG_LEVEL=debug
+    OPTIONS_RELEASE
+        -DCPUINFO_LOG_LEVEL=default
 )
-
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(tools IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
         AUTO_CLEAN
     )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

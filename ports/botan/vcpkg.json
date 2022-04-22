@@ -1,0 +1,20 @@
+{
+  "name": "botan",
+  "version": "2.18.1",
+  "port-version": 10,
+  "description": "A cryptography library written in C++11",
+  "homepage": "https://botan.randombit.net",
+  "license": "BSD-2-Clause",
+  "supports": "!(windows & arm)",
+  "features": {
+    "amalgamation": {
+      "description": "Do an amalgamation build of the library"
+    },
+    "zlib": {
+      "description": "Build with zlib. Enable compression pipes.",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

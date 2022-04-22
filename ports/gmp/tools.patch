@@ -1,0 +1,58 @@
+diff --git a/Makefile.am b/Makefile.am
+index 1c24694..656aa3a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -349,7 +349,7 @@ fac_table.h: gen-fac$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += fac_table.h
+ 
+ gen-fac$(EXEEXT_FOR_BUILD): gen-fac$(U_FOR_BUILD).c bootstrap.c
+-	$(CC_FOR_BUILD) `test -f 'gen-fac$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-fac$(U_FOR_BUILD).c -o gen-fac$(EXEEXT_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-fac$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-fac$(U_FOR_BUILD).c $(CFLAGS) -o gen-fac$(EXEEXT_FOR_BUILD)
+ DISTCLEANFILES += gen-fac$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-fac.c
+ 
+@@ -363,7 +363,7 @@ mpn/fib_table.c: gen-fib$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += mpn/fib_table.c
+ 
+ gen-fib$(EXEEXT_FOR_BUILD): gen-fib$(U_FOR_BUILD).c bootstrap.c
+-	$(CC_FOR_BUILD) `test -f 'gen-fib$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-fib$(U_FOR_BUILD).c -o gen-fib$(EXEEXT_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-fib$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-fib$(U_FOR_BUILD).c $(CFLAGS) -o gen-fib$(EXEEXT_FOR_BUILD)
+ DISTCLEANFILES += gen-fib$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-fib.c
+ 
+@@ -377,7 +377,7 @@ mpn/mp_bases.c: gen-bases$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += mpn/mp_bases.c
+ 
+ gen-bases$(EXEEXT_FOR_BUILD): gen-bases$(U_FOR_BUILD).c bootstrap.c
+-	$(CC_FOR_BUILD) `test -f 'gen-bases$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-bases$(U_FOR_BUILD).c -o gen-bases$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-bases$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-bases$(U_FOR_BUILD).c $(CFLAGS) -o gen-bases$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
+ DISTCLEANFILES += gen-bases$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-bases.c
+ 
+@@ -387,7 +387,7 @@ trialdivtab.h: gen-trialdivtab$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += trialdivtab.h
+ 
+ gen-trialdivtab$(EXEEXT_FOR_BUILD): gen-trialdivtab$(U_FOR_BUILD).c bootstrap.c
+-	$(CC_FOR_BUILD) `test -f 'gen-trialdivtab$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-trialdivtab$(U_FOR_BUILD).c -o gen-trialdivtab$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-trialdivtab$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-trialdivtab$(U_FOR_BUILD).c $(CFLAGS) -o gen-trialdivtab$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
+ DISTCLEANFILES += gen-trialdivtab$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-trialdivtab.c
+ 
+@@ -397,7 +397,7 @@ mpn/jacobitab.h: gen-jacobitab$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += mpn/jacobitab.h
+ 
+ gen-jacobitab$(EXEEXT_FOR_BUILD): gen-jacobitab$(U_FOR_BUILD).c
+-	$(CC_FOR_BUILD) `test -f 'gen-jacobitab$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-jacobitab$(U_FOR_BUILD).c -o gen-jacobitab$(EXEEXT_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-jacobitab$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-jacobitab$(U_FOR_BUILD).c $(CFLAGS) -o gen-jacobitab$(EXEEXT_FOR_BUILD)
+ DISTCLEANFILES += gen-jacobitab$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-jacobitab.c
+ 
+@@ -407,7 +407,7 @@ mpn/perfsqr.h: gen-psqr$(EXEEXT_FOR_BUILD)
+ BUILT_SOURCES += mpn/perfsqr.h
+ 
+ gen-psqr$(EXEEXT_FOR_BUILD): gen-psqr$(U_FOR_BUILD).c bootstrap.c
+-	$(CC_FOR_BUILD) `test -f 'gen-psqr$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-psqr$(U_FOR_BUILD).c -o gen-psqr$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
++	$(CC_FOR_BUILD) `test -f 'gen-psqr$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-psqr$(U_FOR_BUILD).c $(CFLAGS) -o gen-psqr$(EXEEXT_FOR_BUILD) $(LIBM_FOR_BUILD)
+ DISTCLEANFILES += gen-psqr$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-psqr.c
+ 

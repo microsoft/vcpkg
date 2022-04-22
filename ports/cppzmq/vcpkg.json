@@ -1,0 +1,22 @@
+{
+  "name": "cppzmq",
+  "version": "4.8.1",
+  "description": "lightweight messaging kernel, C++ bindings",
+  "homepage": "https://github.com/zeromq/cppzmq",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zeromq"
+  ],
+  "features": {
+    "draft": {
+      "description": "Build and install draft"
+    }
+  }
+}
