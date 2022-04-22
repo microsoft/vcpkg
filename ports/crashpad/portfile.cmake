@@ -110,6 +110,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     set(OPTIONS_DBG "${OPTIONS_DBG} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
+    set(GN_OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Setting GN options for Android")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
@@ -167,12 +168,12 @@ elseif(VCPKG_TARGET_IS_OSX)
 endif()
 
 message(STATUS "Configuring GN")
-vcpkg_configure_gn(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS "${GN_OPTIONS}"
-        OPTIONS_DEBUG "${OPTIONS_DBG}"
-        OPTIONS_RELEASE "${OPTIONS_REL}"
-    )
+vcpkg_gn_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "${GN_OPTIONS}"
+    OPTIONS_DEBUG "${OPTIONS_DBG}"
+    OPTIONS_RELEASE "${OPTIONS_REL}"
+)
 
 # Compile and install targets via GN and Ninja
 message(STATUS "Installing GN")
@@ -186,7 +187,7 @@ list(PREPEND TARGETS
 if("generate-dump" IN_LIST FEATURES)
     list(APPEND TARGETS tools:generate_dump)
 endif()
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${TARGETS}
 )
