@@ -7497,8 +7497,8 @@
       "port-version": 2
     },
     "wren": {
-      "baseline": "2019-07-01",
-      "port-version": 1
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "wt": {
       "baseline": "4.6.1",
