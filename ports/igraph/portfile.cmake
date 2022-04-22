@@ -18,9 +18,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         graphml         IGRAPH_GRAPHML_SUPPORT
         openmp          IGRAPH_OPENMP_SUPPORT
-    INVERTED_FEATURES
-        extern-linalg   IGRAPH_USE_INTERNAL_BLAS
-        extern-linalg   IGRAPH_USE_INTERNAL_LAPACK
 )
 
 # Allow cross-compilation. See https://igraph.org/c/html/latest/igraph-Installation.html#igraph-Installation-cross-compiling
@@ -48,6 +45,9 @@ vcpkg_cmake_configure(
         -DIGRAPH_USE_INTERNAL_GMP=ON
         # PLFIT is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_PLFIT=ON
+        # Use BLAS and LAPACK from vcpkg
+        -DIGRAPH_USE_INTERNAL_BLAS=OFF
+        -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )

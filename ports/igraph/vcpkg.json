@@ -6,6 +6,8 @@
   "homepage": "https://igraph.org/",
   "license": "GPL-2.0-or-later",
   "dependencies": [
+    "blas",
+    "lapack",
     "suitesparse",
     {
       "name": "vcpkg-cmake",
@@ -17,17 +19,9 @@
     }
   ],
   "default-features": [
-    "extern-linalg",
     "graphml"
   ],
   "features": {
-    "extern-linalg": {
-      "description": "Use external BLAS and LAPACK",
-      "dependencies": [
-        "blas",
-        "lapack"
-      ]
-    },
     "graphml": {
       "description": "Support for reading GraphML files",
       "dependencies": [
