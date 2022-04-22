@@ -4,6 +4,14 @@ vcpkg_from_github(
     REF 4.2.0
     SHA512 2aff1e6a41d6186b71f2915296c46c0b2ffc67371e1f05c13a62c237ff7a84d7d78d414d7a395e1616a2861c83c4792ef5936a492713780564b994d18e2d3e38
     HEAD_REF master
+    PATCHES
+        # This patch is a workaround that is needed until the following issues are resolved upstream:
+        # - https://github.com/mesonbuild/meson/issues/8375
+        # - https://github.com/harfbuzz/harfbuzz/issues/2870
+        # Details: https://github.com/microsoft/vcpkg/issues/16262
+        0001-circumvent-samefile-error.patch
+        0002-fix-uwp-build.patch
+        fix-macos-build.diff # fixes https://github.com/harfbuzz/harfbuzz/issues/3484
 )
 
 if("icu" IN_LIST FEATURES)

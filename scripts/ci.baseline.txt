@@ -476,9 +476,6 @@ libbf:x64-windows-static-md=fail
 libbf:x86-windows=fail
 libbson:arm-uwp=fail
 libbson:x64-uwp=fail
-libcds:arm64-windows=fail
-libcds:arm-uwp=fail
-libcds:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
@@ -499,7 +496,6 @@ libevhtp:arm-uwp=fail
 libexif:arm-uwp=fail
 libexif:x64-uwp=fail
 libfreenect2:arm64-windows=fail
-libfreenect2:x64-osx=fail
 libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
@@ -712,10 +708,6 @@ mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-meschach:arm-uwp=fail
-meschach:x64-linux=fail
-meschach:x64-osx=fail
-meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
 mfl:x64-linux=skip
@@ -931,8 +923,6 @@ openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
 openscap:x64-osx=fail
-opentracing:arm-uwp=fail
-opentracing:x64-uwp=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
 openvr:arm-uwp=fail
@@ -960,7 +950,6 @@ pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
-physx:arm64-windows=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
@@ -985,9 +974,6 @@ popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
-python2:arm64-windows=fail
-python2:arm-uwp=fail
-python2:x64-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
@@ -1142,9 +1128,6 @@ sdformat9:arm-uwp=fail
 sdformat9:x64-linux=fail
 sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
-sdl1:arm-uwp=fail
-sdl1:x64-uwp=fail
-sdl1:x64-osx=fail
 sdl2-mixer:arm-uwp=fail
 sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
@@ -1362,8 +1345,6 @@ ctp:x64-windows=skip
 ctp:x64-windows-static=skip
 ctp:x64-windows-static-md=skip
 ctp:x86-windows=skip
-protozero:arm-uwp=fail
-protozero:x64-uwp=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
 clapack:x64-linux=skip
