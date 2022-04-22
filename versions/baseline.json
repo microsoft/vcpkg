@@ -1793,8 +1793,8 @@
       "port-version": 2
     },
     "dav1d": {
-      "baseline": "0.8.2",
-      "port-version": 3
+      "baseline": "0.9.2",
+      "port-version": 0
     },
     "daw-header-libraries": {
       "baseline": "1.29.7",
