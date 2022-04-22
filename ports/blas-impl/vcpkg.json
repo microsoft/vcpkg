@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "openblas",
-      "platform": "!osx | (staticcrt & windows)"
+      "platform": "!osx | (static & windows)"
     },
     {
       "name": "vcpkg-cmake",
