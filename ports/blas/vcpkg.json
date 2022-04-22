@@ -5,10 +5,7 @@
   "description": "Metapackage for packages which provide BLAS",
   "license": null,
   "dependencies": [
-    {
-      "name": "openblas",
-      "platform": "!osx"
-    },
+    "blas-impl",
     {
       "name": "vcpkg-cmake",
       "host": true
