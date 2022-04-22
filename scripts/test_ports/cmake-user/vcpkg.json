@@ -1,7 +1,8 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-03-18",
+  "version-date": "2022-04-18",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
+  "license": "MIT",
   "default-features": [
     "ci"
   ],
@@ -41,16 +42,16 @@
           "name": "bzip2"
         },
         {
+          "$package": "CURL",
+          "name": "curl"
+        },
+        {
           "$package": "EXPAT",
           "name": "expat"
         },
         {
           "$package": "Freetype",
           "name": "freetype"
-        },
-        {
-          "$package": "ICU",
-          "name": "icu"
         },
         {
           "$package": "Intl",
@@ -61,6 +62,10 @@
           "name": "giflib"
         },
         {
+          "$package": "ICU",
+          "name": "icu"
+        },
+        {
           "$package": "JPEG",
           "name": "libjpeg-turbo"
         },
@@ -69,8 +74,17 @@
           "name": "liblzma"
         },
         {
+          "$package": "PNG",
+          "name": "libpng"
+        },
+        {
           "$package": "TIFF",
           "name": "tiff"
+        },
+        {
+          "$package": "wxWidgets",
+          "name": "wxwidgets",
+          "platform": "!linux"
         },
         {
           "$package": "ZLIB",

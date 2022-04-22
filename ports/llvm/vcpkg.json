@@ -110,7 +110,7 @@
       ]
     },
     "disable-abi-breaking-checks": {
-      "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF."
+      "description": "Deprecated; this is the default"
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."
