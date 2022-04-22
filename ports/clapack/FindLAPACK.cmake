@@ -12,7 +12,7 @@ include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 set(CLAPACK_VERSION "3.2.1")
 set(LAPACK_VERSION "${CLAPACK_VERSION}")
 #set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-find_dependency(Threads)
+find_package(Threads)
 
 find_package(clapack CONFIG REQUIRED) # This will be found !
 
