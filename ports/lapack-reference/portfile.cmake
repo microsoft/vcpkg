@@ -12,6 +12,12 @@ SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 set(lapack_ver 3.10.0)
 
+set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
+x_vcpkg_find_fortran(FORTRAN_CMAKE)
+
+if(VCPKG_USE_INTERNAL_Fortran)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
@@ -45,9 +51,6 @@ if("noblas" IN_LIST FEATURES)
         file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
     endif()
 endif()
-
-set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-x_vcpkg_find_fortran(FORTRAN_CMAKE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

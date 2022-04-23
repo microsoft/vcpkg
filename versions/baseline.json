@@ -3322,7 +3322,7 @@
     },
     "lapack-reference": {
       "baseline": "3.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -7304,6 +7304,10 @@
       "baseline": "2022-02-06",
       "port-version": 0
     },
+    "vcpkg-fortran": {
+      "baseline": "2022-02-22",
+      "port-version": 0
+    },
     "vcpkg-get-python-packages": {
       "baseline": "2022-04-11",
       "port-version": 0
@@ -7315,6 +7319,10 @@
     "vcpkg-gn": {
       "baseline": "2021-11-16",
       "port-version": 1
+    },
+    "vcpkg-ifort": {
+      "baseline": "2022-02-22",
+      "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2022-02-10",
