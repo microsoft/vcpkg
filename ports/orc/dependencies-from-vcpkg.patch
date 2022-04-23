@@ -157,7 +157,7 @@ index bf601968..2a0bcfbd 100644
 -if (NOT "${PROTOBUF_HOME}" STREQUAL "")
 -  find_package (Protobuf REQUIRED)
 +if (1)
-+  find_package (Protobuf CONFIG REQUIRED)
++  find_package (protobuf CONFIG REQUIRED)
    set(PROTOBUF_VENDORED FALSE)
  else ()
    set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
