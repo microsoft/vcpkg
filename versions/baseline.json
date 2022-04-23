@@ -189,8 +189,8 @@
       "port-version": 4
     },
     "asmjit": {
-      "baseline": "2021-10-26",
-      "port-version": 1
+      "baseline": "2022-04-10",
+      "port-version": 0
     },
     "assimp": {
       "baseline": "5.0.1",
