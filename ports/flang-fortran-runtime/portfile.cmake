@@ -27,13 +27,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
     get_filename_component(COMPILER_FILENAME "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
-    if(COMPILER_FILENAME STREQUAL "cl.exe")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         vcpkg_list(SET OPTIONS 
                     "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
                     "-DCMAKE_CXX_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
                     "-DCMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
                     "-DCMAKE_LINKER=${VCPKG_DETECTED_CMAKE_LINKER}"
                     "-DCMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
+                    "-DCMAKE_RC=${VCPKG_DETECTED_CMAKE_RC}"
                     )
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
@@ -68,18 +69,9 @@ vcpkg_cmake_configure(
         "-DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}"
         "-DLLVM_CONFIG=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/bin/llvm-config.exe"
         "-DLLVM_CMAKE_PATH=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/llvm-flang/lib/cmake/llvm" # Flang does not link against anything in llvm
-
         ${OPTIONS}
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
-#file(GLOB_RECURSE allbinfiles "${CURRENT_PACKAGES_DIR}/bin/*")
-#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/")
-#file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/bin" )
-#file(GLOB_RECURSE alllibfiles "${CURRENT_PACKAGES_DIR}/lib/*")
-#file(RENAME "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/lib" )
-
-#file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/manual-tools/llvm-flang/include" )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

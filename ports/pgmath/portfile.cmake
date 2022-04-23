@@ -15,17 +15,20 @@ get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    find_program(LIB NAMES lib)
-    vcpkg_list(SET OPTIONS 
-                "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
-                "-DCMAKE_CXX_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
-                "-DCMAKE_AR=${LIB}"
-                "-DCMAKE_LINKER=link.exe"
-                "-DCMAKE_MT=mt.exe"
-                )
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
-        string(APPEND VCPKG_CXX_FLAGS " --target=aarch64-win32-msvc")
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        vcpkg_list(SET OPTIONS 
+                    "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
+                    "-DCMAKE_CXX_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
+                    "-DCMAKE_AR=${VCPKG_DETECTED_CMAKE_AR}"
+                    "-DCMAKE_LINKER=${VCPKG_DETECTED_CMAKE_LINKER}"
+                    "-DCMAKE_MT=${VCPKG_DETECTED_CMAKE_MT}"
+                    )
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND VCPKG_C_FLAGS " --target=aarch64-win32-msvc")
+            string(APPEND VCPKG_CXX_FLAGS " --target=aarch64-win32-msvc")
+        endif()
     endif()
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk bash sed)
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
