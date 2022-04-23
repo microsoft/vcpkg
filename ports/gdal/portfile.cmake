@@ -1,22 +1,19 @@
-set(GDAL_PATCHES
-    0001-Fix-debug-crt-flags.patch
-    0002-Fix-build.patch
-    0004-Fix-cfitsio.patch
-    0005-Fix-configure.patch
-    0006-Fix-mingw-dllexport.patch
-    0007-Control-tools.patch
-    0008-Fix-absl-string_view.patch
-    0009-atlbase.patch
-    0010-symprefix.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF v3.4.3RC2
     SHA512 ca6aa9e21970bfe51579c27f161c8f2805ab3981a08d1deed44af425ea495732233fc7693bc48aae44c50f98bd0785ab2c944eb1e8c7928ace9cabbee73e13d5
     HEAD_REF master
-    PATCHES ${GDAL_PATCHES}
+    PATCHES
+        0001-Fix-debug-crt-flags.patch
+        0002-Fix-build.patch
+        0004-Fix-cfitsio.patch
+        0005-Fix-configure.patch
+        0006-Fix-mingw-dllexport.patch
+        0007-Control-tools.patch
+        0008-Fix-absl-string_view.patch
+        0009-atlbase.patch
+        0010-symprefix.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
