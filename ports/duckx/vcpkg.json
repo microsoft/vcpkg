@@ -1,7 +1,20 @@
 {
   "name": "duckx",
-  "version-string": "1.0.0",
+  "version": "1.2.2",
   "port-version": 1,
   "description": "DuckX is a library for creation of Office docx files.",
-  "homepage": "https://github.com/amiremohamadi/DuckX"
+  "homepage": "https://github.com/amiremohamadi/DuckX",
+  "license": "MIT",
+  "dependencies": [
+    "libzip",
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

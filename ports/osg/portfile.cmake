@@ -74,6 +74,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(BUILD_OSG_PLUGIN_RESTHTTPDEVICE OFF)
 endif()
 
+# The package osg can be configured to use different OpenGL profiles via a custom triplet file:
+# Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3, and GLES2+GLES3
+if(NOT DEFINED osg_OPENGL_PROFILE)
+    set(osg_OPENGL_PROFILE "GL3")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
@@ -89,6 +95,7 @@ vcpkg_configure_cmake(
         -DBUILD_OSG_PLUGIN_SVG=OFF
         -DBUILD_OSG_PLUGIN_VNC=OFF
         -DBUILD_OSG_PLUGIN_LUA=OFF
+        -DOPENGL_PROFILE=${osg_OPENGL_PROFILE}
         -DBUILD_OSG_PLUGIN_RESTHTTPDEVICE=${BUILD_OSG_PLUGIN_RESTHTTPDEVICE}
         -DBUILD_OSG_PLUGIN_ZEROCONFDEVICE=OFF
         -DBUILD_DASHBOARD_REPORTS=OFF
@@ -161,3 +168,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-${OSG_VER}/)
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_fixup_pkgconfig()
+
+# Handle usage
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

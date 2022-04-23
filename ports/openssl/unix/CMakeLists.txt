@@ -108,10 +108,11 @@ get_filename_component(MSYS_BIN_DIR "${MAKE}" DIRECTORY)
 
 if(BUILD_SHARED_LIBS)
     set(SHARED shared)
-    file(STRINGS "${BUILDDIR}/include/openssl/opensslv.h" SHLIB_VERSION
-        REGEX "^#[\t ]*define[\t ]+SHLIB_VERSION_NUMBER[\t ]+\".*\".*")
-    string(REGEX REPLACE "^.*SHLIB_VERSION_NUMBER[\t ]+\"([^\"]*)\".*$" "\\1"
+    file(STRINGS "${BUILDDIR}/VERSION.dat" SHLIB_VERSION
+        REGEX "^SHLIB_VERSION=.*")
+    string(REGEX REPLACE "^(SHLIB_VERSION=)(.*)$" "\\2"
         SHLIB_VERSION "${SHLIB_VERSION}")
+
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
         set(LIB_EXT dylib)
         set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
@@ -262,7 +263,7 @@ if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libssl.${SHLIB_VERSION}.dylib"
                                                "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
-                                               "${BUILDDIR}/libcrypto.1.1.dylib"
+                                               "${BUILDDIR}/libcrypto.${SHLIB_VERSION}.dylib"
         COMMAND /usr/bin/install_name_tool -change "${CMAKE_INSTALL_PREFIX}/lib/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
                                                    "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"

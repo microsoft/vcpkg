@@ -1,7 +1,6 @@
 {
   "name": "fontconfig",
-  "version": "2.13.94",
-  "port-version": 6,
+  "version": "2.14.0",
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",
@@ -10,7 +9,6 @@
     "expat",
     "freetype",
     "gettext",
-    "json-c",
     "libiconv",
     {
       "name": "libuuid",
