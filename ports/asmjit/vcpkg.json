@@ -3,6 +3,7 @@
   "version-date": "2022-04-10",
   "description": "Complete x86/x64 JIT and Remote Assembler for C++",
   "homepage": "https://github.com/asmjit/asmjit",
+  "license": "Zlib",
   "supports": "!arm",
   "dependencies": [
     {
