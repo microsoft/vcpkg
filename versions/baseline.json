@@ -2550,7 +2550,7 @@
     },
     "glog": {
       "baseline": "0.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gloo": {
       "baseline": "20201203",
@@ -2650,7 +2650,7 @@
     },
     "gsl": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gsl-lite": {
       "baseline": "0.40.0",
@@ -2673,7 +2673,7 @@
       "port-version": 5
     },
     "gtk": {
-      "baseline": "4.6.0",
+      "baseline": "4.6.2",
       "port-version": 0
     },
     "gtkmm": {
@@ -3981,7 +3981,7 @@
       "port-version": 0
     },
     "libsigcpp": {
-      "baseline": "3.0.7",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "libsigcpp-3": {
@@ -4198,7 +4198,7 @@
     },
     "libxslt": {
       "baseline": "1.1.34",
-      "port-version": 4
+      "port-version": 5
     },
     "libyaml": {
       "baseline": "0.2.5",
@@ -4686,7 +4686,7 @@
     },
     "msix": {
       "baseline": "1.7",
-      "port-version": 3
+      "port-version": 4
     },
     "msmpi": {
       "baseline": "10.1.12498",
@@ -6265,8 +6265,8 @@
       "port-version": 3
     },
     "rtmidi": {
-      "baseline": "4.0.0",
-      "port-version": 5
+      "baseline": "5.0.0",
+      "port-version": 0
     },
     "rttr": {
       "baseline": "0.9.6",
@@ -7497,8 +7497,8 @@
       "port-version": 2
     },
     "wren": {
-      "baseline": "2019-07-01",
-      "port-version": 1
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "wt": {
       "baseline": "4.6.1",
