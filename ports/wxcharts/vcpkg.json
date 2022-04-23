@@ -1,6 +1,6 @@
 {
   "name": "wxcharts",
-  "version": "0.1.0",
+  "version-date": "2022-04-22",
   "description": "Chart controls for the wxWidgets cross-platform GUI library",
   "homepage": "https://www.wxishiko.com/wxCharts",
   "license": "MIT",
