@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-tool-flang",
-  "version-date": "2022-03-20",
+  "version-date": "2022-04-23",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",

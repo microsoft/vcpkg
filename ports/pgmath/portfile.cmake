@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  flang-compiler/flang
-    REF 59c43c4d99ade23d103aaf5299016a1666ceb2e1
-    SHA512 467c3a977d5a207a0115ece5db070c9b49c1b57595155d477d25fe0b49453facbc90566b6e5ae7a48038b59bda7481b4ed6cd969628f3019076864be74a3d6a3
+    REF 5a60d344443e38715b7c837de53d9ce2ed78b0d6
+    SHA512 aff012c3cf9756d84b8bb5d0c369a1fd78d51af4cb2734183640e7fdcc16f6e6ab2ab78a56cc4b750f1571f7842b2b76b255e442df98e0aacd5e07db6a9d6a82
     PATCHES 1167.diff
             build_only_one_kind.patch
             werror.patch
