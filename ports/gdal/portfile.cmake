@@ -3,14 +3,12 @@ set(GDAL_PATCHES
     0002-Fix-build.patch
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
+    0006-Fix-mingw-dllexport.patch
     0007-Control-tools.patch
     0008-Fix-absl-string_view.patch
     0009-atlbase.patch
     0010-symprefix.patch
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
