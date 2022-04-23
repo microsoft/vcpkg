@@ -1,12 +1,10 @@
 {
   "name": "pdal",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "homepage": "https://pdal.io/",
   "supports": "!(windows & staticcrt)",
   "dependencies": [
-    "boost-filesystem",
-    "boost-system",
     {
       "name": "curl",
       "default-features": false
@@ -27,7 +25,6 @@
     }
   ],
   "default-features": [
-    "laszip",
     "supported-plugins"
   ],
   "features": {
@@ -59,10 +56,7 @@
       ]
     },
     "laszip": {
-      "description": "LASzip support",
-      "dependencies": [
-        "laszip"
-      ]
+      "description": "Obsolete. PDAL includes LAZperf."
     },
     "liblzma": {
       "description": "Support for compression/decompression with LZMA",

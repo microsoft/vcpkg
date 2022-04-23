@@ -3,29 +3,28 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
-    REF 2.3.0
-    SHA512 898ea54c8c8e0a9bb8aed8d7f542da5a44b02c8656273783366d711b5b3f50b547438aa1cb4d41b490d187dae7bef20fe3b6c64dcb87c06e6f4cb91a8f79ac59
+    REF 2.4.0
+    SHA512 fd1314058404a1d15e308cee5682dcf3f1c6277884f200069b293b929ddfcd1d0d29bc74353bb08b1d163d3e776c8b036ba62d7c8599470b755128dacfe2f032
     HEAD_REF master
     PATCHES
-        0002-no-source-dir-writes.patch
-        0003-fix-copy-vendor.patch
         fix-dependency.patch
-        use-vcpkg-boost.patch
         fix-unix-compiler-options.patch
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
+        use-experimental-filesystem.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
-file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/pdalboost/boost" "${SOURCE_PATH}/vendor/pdalboost/libs")
-
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
-foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL ZSTD)
+foreach(package IN ITEMS Curl GeoTIFF ICONV ZSTD)
     file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
 
 unset(ENV{OSGEO4W_HOME})
+
+if("laszip" IN_LIST FEATURES)
+    message(WARNING "The 'laszip' feature is obsolete and will be removed in the future.")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -33,7 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         e57         BUILD_PLUGIN_E57
         hdf5        BUILD_PLUGIN_HDF
         i3s         BUILD_PLUGIN_I3S
-        laszip      WITH_LASZIP
         lzma        WITH_LZMA
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
         zstd        WITH_ZSTD
@@ -47,15 +45,11 @@ vcpkg_cmake_configure(
     OPTIONS
         -DPDAL_PLUGIN_INSTALL_PATH=.
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        -DPOSTGRESQL_LIBRARIES=PostgreSQL::PostgreSQL
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
-        -DWITH_LAZPERF:BOOL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES
-        POSTGRESQL_LIBRARIES
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,35 @@
+diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
+index 5b48ba8..67c068a 100644
+--- a/pdal/util/CMakeLists.txt
++++ b/pdal/util/CMakeLists.txt
+@@ -46,3 +46,12 @@ set_target_properties(${PDAL_UTIL_LIB_NAME} PROPERTIES
+     CLEAN_DIRECT_OUTPUT 1)
+ 
+ set_property(GLOBAL PROPERTY _UTIL_INCLUDED TRUE)
++
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    include(CheckIncludeFileCXX)
++    check_include_file_cxx(filesystem HAVE_CXX17_FILESYSTEM)
++    if(NOT HAVE_CXX17_FILESYSTEM)
++        target_compile_definitions(${PDAL_UTIL_LIB_NAME} PRIVATE USE_EXPERIMENTAL_FILESYSTEM)
++        target_link_libraries(${PDAL_UTIL_LIB_NAME} PRIVATE $<LINK_ONLY:stdc++fs>)
++    endif()
++endif()
+diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
+index 5687cb0..6309516 100644
+--- a/pdal/util/FileUtils.cpp
++++ b/pdal/util/FileUtils.cpp
+@@ -46,8 +46,13 @@
+ #include <codecvt>
+ #endif
+ 
++#ifdef USE_EXPERIMENTAL_FILESYSTEM
++#include <experimental/filesystem>
++namespace fs = std::experimental::filesystem;
++#else
+ #include <filesystem>
+ namespace fs = std::filesystem;
++#endif
+ 
+ 
+ 
