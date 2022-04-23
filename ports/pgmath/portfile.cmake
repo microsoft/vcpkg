@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 467c3a977d5a207a0115ece5db070c9b49c1b57595155d477d25fe0b49453facbc90566b6e5ae7a48038b59bda7481b4ed6cd969628f3019076864be74a3d6a3
     PATCHES 1167.diff
             build_only_one_kind.patch
+            werror.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
