@@ -6141,7 +6141,7 @@
       "port-version": 0
     },
     "refl-cpp": {
-      "baseline": "0.12.2",
+      "baseline": "0.12.3",
       "port-version": 0
     },
     "refprop-headers": {
