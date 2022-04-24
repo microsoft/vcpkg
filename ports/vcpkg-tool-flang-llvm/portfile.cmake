@@ -14,8 +14,6 @@ vcpkg_from_github(
         0010-fix-libffi.patch
         0011-fix-libxml2.patch
         65.diff
-        97.diff
-        103.diff
 )
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
