@@ -8,16 +8,15 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${GEOS_VERSION}
+    REF "${GEOS_VERSION}"
     PATCHES
         disable-warning-4996.patch
         fix-exported-config.patch
 )
 
+set(EXTRA_OPTIONS)
 if(VCPKG_TARGET_IS_MINGW)
-    set(_CMAKE_EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
-else()
-    set(_CMAKE_EXTRA_OPTIONS "")
+    set(EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
 endif()
 
 vcpkg_cmake_configure(
@@ -28,7 +27,7 @@ vcpkg_cmake_configure(
         -DBUILD_GEOSOP=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
-        ${_CMAKE_EXTRA_OPTIONS}
+        ${EXTRA_OPTIONS}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # Legacy decision, hard coded in depending ports
 )
@@ -71,8 +70,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/geos/copyright" COPYONLY)
-
 vcpkg_copy_pdbs()
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
