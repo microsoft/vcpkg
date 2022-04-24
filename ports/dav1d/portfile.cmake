@@ -18,7 +18,7 @@ if (LIBRARY_TYPE STREQUAL "dynamic")
 endif(LIBRARY_TYPE STREQUAL "dynamic")
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --default-library=${LIBRARY_TYPE}
         -Denable_tests=false
