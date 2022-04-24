@@ -1717,7 +1717,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.4.1",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "cub": {
