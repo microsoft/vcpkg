@@ -28,8 +28,7 @@ endif()
 set(SRCS lmdb mdb.c lmdb.h midl.c midl.h )
 add_library(lmdb ${SRCS})
 
-if (VCPKG_TARGET_IS_WINDOWS)
-  set_target_properties(lmdb PROPERTIES DEBUG_POSTFIX d)
+if (WIN32)
   target_link_libraries(lmdb PRIVATE ntdll.lib)
 endif()
 
