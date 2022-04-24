@@ -4,6 +4,7 @@
   "description": "Components of microsoft/vcpkg's binary",
   "homepage": "https://github.com/microsoft/vcpkg-tool",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "fmt",
     {
