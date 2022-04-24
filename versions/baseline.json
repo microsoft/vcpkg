@@ -6185,8 +6185,8 @@
       "port-version": 0
     },
     "rhash": {
-      "baseline": "1.4.0",
-      "port-version": 2
+      "baseline": "1.4.2",
+      "port-version": 0
     },
     "rhasheq": {
       "baseline": "0.0.1",
