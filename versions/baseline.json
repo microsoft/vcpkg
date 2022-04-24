@@ -7352,6 +7352,10 @@
       "baseline": "2.7.18",
       "port-version": 0
     },
+    "vcpkglib": {
+      "baseline": "2022-03-30",
+      "port-version": 0
+    },
     "vectorclass": {
       "baseline": "2.00.01",
       "port-version": 2
