@@ -3,6 +3,7 @@
   "version": "7.6",
   "description": "Embedded web server / embedded networking library",
   "homepage": "https://cesanta.com/",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
