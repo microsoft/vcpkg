@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
-        use-experimental-filesystem.patch
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
@@ -43,6 +42,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DPDAL_PLUGIN_INSTALL_PATH=.
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DWITH_TESTS:BOOL=OFF
