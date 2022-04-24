@@ -10,6 +10,8 @@ vcpkg_from_github(
     all-in-one.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Findfmt.cmake")
+
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
