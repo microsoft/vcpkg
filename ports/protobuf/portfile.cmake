@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.19.4
-    SHA512 2653b9852e5ac69f1de9b6ac02887c366aa0a9efd2b29e53135f61a9a10f5a1b5853a8c4cbb3658f519dfdbde9f32c547c39751ab417f123162b08be9e76c9e1
+    REF 21027a27c4c2ec1000859ccbcfff46d83b16e1ed #v3.20.1
+    SHA512 a8333697109beb7fec49f8c9998231937e1798cb7f7e026a79363d9ac432007ed56c76931cd2034fc0b119e09cfe2076ce0ca2c163114dc8938174c0010592b7
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -31,7 +31,7 @@ if (VCPKG_DOWNLOAD_MODE)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/cmake
+    SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
