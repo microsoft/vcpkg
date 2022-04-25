@@ -7516,6 +7516,10 @@
       "baseline": "1.0.0",
       "port-version": 1
     },
+    "wxcharts": {
+      "baseline": "2022-04-22",
+      "port-version": 0
+    },
     "wxwidgets": {
       "baseline": "3.1.5",
       "port-version": 10
