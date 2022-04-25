@@ -16,6 +16,7 @@
     },
     "libgeotiff",
     "libxml2",
+    "nanoflann",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -19,6 +19,15 @@ foreach(package IN ITEMS Curl GeoTIFF ICONV ZSTD)
     file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
 
+# De-vendoring
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/vendor/nanoflann"
+    "${SOURCE_PATH}/vendor/nlohmann"
+)
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nanoflann.hpp" DESTINATION "${SOURCE_PATH}/vendor/nanoflann")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann")
+file(APPEND "${SOURCE_PATH}/vendor/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
+
 unset(ENV{OSGEO4W_HOME})
 
 if("laszip" IN_LIST FEATURES)
@@ -86,10 +95,6 @@ file(READ "${SOURCE_PATH}/vendor/lazperf/lazperf.hpp" lazperf_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_license "${lazperf_license}")
 file(READ "${SOURCE_PATH}/vendor/lazperf/detail/field_xyz.hpp" lazperf_detail_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_detail_license "${lazperf_detail_license}")
-file(READ "${SOURCE_PATH}/vendor/nanoflann/nanoflann.hpp" nanoflann_license)
-string(REGEX REPLACE "\\*/.*\$" "*/" nanoflann_license "${nanoflann_license}")
-file(READ "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" nlohmann_license)
-string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" nlohmann_license "${nlohmann_license}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
 "${pdal_license}
 ---
@@ -112,16 +117,6 @@ ${lazperf_license}
 Files in vendor/lazperf/detail/:
 
 ${lazperf_detail_license}
----
-
-Files in vendor/nanoflann:
-
-${nanoflann_license}
----
-
-Files in vendor/nlohmann:
-
-${nlohmann_license}
 ---
 
 Files in vendor/eigen:
