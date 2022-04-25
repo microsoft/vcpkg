@@ -1,0 +1,44 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -240,12 +240,13 @@
+     else
+ 	if test -x "$with_python"
+ 	then
+ 	    echo Found python in $with_python
+ 	    PYTHON="$with_python"
+ 	else
++            AC_MSG_ERROR([Python not found; --with-python should be set to the python path])
+             if test -x "$PYTHON"
+             then
+                 echo Found python in environment PYTHON=$PYTHON
+                 with_python=`$PYTHON -c "import sys; print sys.exec_prefix"`
+ 	    else
+ 	        AC_PATH_PROG(PYTHON, python python2.4 python2.3 python2.2 python2.1 python2.0 python1.6 python1.5)
+@@ -333,25 +334,25 @@
+     if test "$LIBGCRYPT_CONFIG" != "no" ; then
+       LIBGCRYPT_VERSION=`$LIBGCRYPT_CONFIG --version`
+       if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42")
+       then
+         LIBGCRYPT_CFLAGS=""
+         LIBGCRYPT_LIBS=""
+-        echo 'gcrypt library version < 1.1.42 - Crypto extensions will not be available.'
++        AC_MSG_ERROR([gcrypt library version < 1.1.42 - this is an error])
+       else
+         LIBGCRYPT_CFLAGS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --cflags`
+         LIBGCRYPT_LIBS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --libs`
+         AC_DEFINE(HAVE_GCRYPT, 1, [Define if gcrypt library is available.])
+         echo 'Crypto extensions will be available.'
+         WITH_CRYPTO=1
+         CRYPTO_TESTDIR=crypto
+       fi
+     else
+       LIBGCRYPT_CFLAGS=""
+       LIBGCRYPT_LIBS=""
+-      echo 'Crypto extensions will not be available. Install libgcrypt and reconfigure to make available.'
++      AC_MSG_ERROR([libgcrypt not found - this is a bug in the vcpkg port])
+     fi
+ esac
+ fi
+ AC_SUBST(WITH_CRYPTO)
+ AC_SUBST(CRYPTO_TESTDIR)
+ AC_SUBST(LIBGCRYPT_CFLAGS)
