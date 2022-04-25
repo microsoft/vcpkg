@@ -1293,8 +1293,8 @@
       "port-version": 3
     },
     "celero": {
-      "baseline": "2.8.2",
-      "port-version": 1
+      "baseline": "2.8.3",
+      "port-version": 0
     },
     "cello": {
       "baseline": "2019-07-23",
