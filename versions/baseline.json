@@ -6478,7 +6478,7 @@
     },
     "simage": {
       "baseline": "1.8.2",
-      "port-version": 5
+      "port-version": 6
     },
     "simbody": {
       "baseline": "2022-01-04",
