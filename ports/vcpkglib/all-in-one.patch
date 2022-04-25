@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 5d27c57c4..7f37e5b5d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,7 +142,7 @@ find_package(fmt REQUIRED)
+@@ -148,13 +148,13 @@ find_package(fmt REQUIRED)
  
  # === Target: vcpkglib ===
  
@@ -11,6 +11,13 @@ index 5d27c57c4..7f37e5b5d 100644
      ${VCPKGLIB_BASE_SOURCES}
      ${VCPKGLIB_SOURCES}
      ${VCPKGLIB_BASE_INCLUDES}
+     ${VCPKGLIB_INCLUDES}
+ )
+-target_include_directories(vcpkglib PUBLIC include)
++target_include_directories(vcpkglib PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+
+ vcpkg_target_add_warning_options(vcpkglib)
+ target_compile_definitions(vcpkglib PUBLIC
 @@ -241,6 +241,7 @@ endif()
  
  # === Target: vcpkg ===
@@ -27,7 +34,7 @@ index 5d27c57c4..7f37e5b5d 100644
  
  # === Target: generate-message-map ===
  
-@@ -338,7 +340,14 @@ endif()
+@@ -338,7 +349,23 @@ endif()
  # === Installation ===
  # ====================
  
@@ -44,4 +51,13 @@ index 5d27c57c4..7f37e5b5d 100644
 +    PATTERN "base/fwd/*.h"
  )
 +
-+install(TARGETS vcpkglib RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++install(TARGETS vcpkglib EXPORT vcpkglib_targets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++export(EXPORT vcpkglib_targets NAMESPACE unofficial::vcpkglib:: FILE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-vcpkglib-targets.cmake")
++set(INSTALL_CONFIG_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-vcpkglib")
++install(EXPORT vcpkglib_targets NAMESPACE unofficial::vcpkglib:: FILE unofficial-vcpkglib-targets.cmake DESTINATION "${INSTALL_CONFIG_DIR}")
++file(WRITE "${CMAKE_INSTALL_PREFIX}/share/vcpkglib/vcpkglib-config.cmake"
++[[
++find_package(Threads REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-vcpkglib-targets.cmake")
++]])
