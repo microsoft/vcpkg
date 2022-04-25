@@ -1,16 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF v1.9.2
-    SHA512 87b12a792cf2d740ef29db4b6055788a487b6d474662b878711b8a5534efea5f0d97b6ac357834500b66cc65e1ba8934446a695e9691fd5d4b95397b6871555c
+    REF v1.10.0
+    SHA512 e82ec0a0c813ed2f1c8a31a0f21dbb733d0a7bd8d05284feae3bd66040bc53ad47a93b26c3e389c7e5623cfdeba1854d690992c842748e072aab3e6e6ecc5666
     HEAD_REF v1.x
-    PATCHES fix-mingw-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        benchmark       SPDLOG_BUILD_BENCH
-        wchar           SPDLOG_WCHAR_SUPPORT
+        benchmark SPDLOG_BUILD_BENCH
+        wchar     SPDLOG_WCHAR_SUPPORT
 )
 
 # configured in triplet file
@@ -46,19 +45,9 @@ vcpkg_copy_pdbs()
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/fmt.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/ostr.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/chrono.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+    "// #define SPDLOG_FMT_EXTERNAL"
+    "#define SPDLOG_FMT_EXTERNAL"
 )
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include

@@ -1,0 +1,14 @@
+antlr4-python3-runtime==4.7.1
+argh==0.26.2
+click==6.7
+coloredlogs==10.0
+humanfriendly==4.15.1
+Jinja2==2.11.3
+MarkupSafe==1.1
+path.py==11.0.1
+pathtools==0.1.2
+PyYAML==5.4
+six==1.11.0
+watchdog==2.1.7
+pytest==5.3.5
+pytest-cov==2.8.1

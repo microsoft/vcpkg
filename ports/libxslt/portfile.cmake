@@ -20,6 +20,7 @@ vcpkg_from_github(
         0002-Fix-lzma.patch
         0003-Fix-configure.patch
         only_build_one_lib_type.patch
+        require-dependencies.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -125,13 +126,31 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(COPY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
     endif()
 else()
+    if("python" IN_LIST FEATURES)
+        vcpkg_find_acquire_program(PYTHON3)
+        set(OPTION_PYTHON "--with-python=${PYTHON3}")
+    else()
+        set(OPTION_PYTHON "--without-python")
+    endif()
+    if ("plugins" IN_LIST FEATURES)
+        set(OPTION_PLUGINS "--with-plugins")
+    else()
+        set(OPTION_PLUGINS "--without-plugins")
+    endif()
+    if("crypto" IN_LIST FEATURES)
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/tools/libgcrypt/bin")
+        set(OPTION_CRYPTO "--with-crypto")
+    else()
+        set(OPTION_CRYPTO "--without-crypto")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         OPTIONS
-            --without-python
-            --without-plugins
-            --with-crypto
+            ${OPTION_PYTHON}
+            ${OPTION_PLUGINS}
+            ${OPTION_CRYPTO}
         OPTIONS_DEBUG
             --with-mem-debug
             --with-debug

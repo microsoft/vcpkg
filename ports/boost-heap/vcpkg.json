@@ -1,8 +1,9 @@
 {
   "name": "boost-heap",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost heap module",
   "homepage": "https://github.com/boostorg/heap",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-assert",

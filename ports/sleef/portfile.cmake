@@ -7,12 +7,12 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_LIBM=ON
         -DBUILD_DFT=ON
         -DBUILD_QUAD=ON
-        -DBUILD_GNUABILIBS=${VCPKG_TARGET_IS_LINUX}
+        -DBUILD_GNUABI_LIBS=${VCPKG_TARGET_IS_LINUX}
         -DBUILD_TESTS=OFF
         -DBUILD_INLINE_HEADERS=OFF
 )
@@ -20,5 +20,5 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
