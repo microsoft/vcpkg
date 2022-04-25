@@ -4,6 +4,7 @@
   "port-version": 5,
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
