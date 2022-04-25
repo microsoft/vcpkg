@@ -1208,6 +1208,10 @@
       "baseline": "2020-02-29",
       "port-version": 0
     },
+    "c-str-span": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "c4core": {
       "baseline": "2021-07-18",
       "port-version": 1
@@ -3473,7 +3477,7 @@
       "port-version": 1
     },
     "libcurl-simple-https": {
-      "baseline": "2022-02-14",
+      "baseline": "2022-03-28",
       "port-version": 0
     },
     "libdatachannel": {
