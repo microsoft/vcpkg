@@ -115,22 +115,19 @@ jobs:
               output += `The following files are affected:\n${cmake}\n`
               output += "</details>\n\n"
             }
-            if (missing_license !== "") {
-              output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
+            if (missing_license !== "" || deprecated_license !== "") {
+              output += 'You have modified or added at least one vcpkg.json where you should check the `license` field.\n'
               output += "<details>\n\n"
-
-              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
-              output += missing_license
-              output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n"
-              output += "</details>\n\n"
-            }
-            if (deprecated_license !== "") {
-              output += 'You have modified or added at least one vcpkg.json where a deprecated license identifier is used.\n'
-              output += "<details>\n\n"
-
-              output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
-              output += deprecated_license
-              output += "\n\nDeprecated and non deprecated license identifiers can be found [here](https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses)\n"
+              if (missing_license !== "") {
+                output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+                output += missing_license
+                output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n\n"
+              }
+              if (deprecated_license !== "") {
+                output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
+                output += deprecated_license
+                output += "\n\nDeprecated and non deprecated license identifiers can be found [here](https://spdx.github.io/spdx-spec/SPDX-license-list/#a3-deprecated-licenses)\n"
+              }
               output += "</details>\n\n"
             }
 
