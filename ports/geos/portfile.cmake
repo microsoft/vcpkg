@@ -14,9 +14,9 @@ vcpkg_extract_source_archive_ex(
         fix-exported-config.patch
 )
 
-set(EXTRA_OPTIONS)
+vcpkg_list(SET EXTRA_OPTIONS)
 if(VCPKG_TARGET_IS_MINGW)
-    set(EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
+    vcpkg_list(APPEND EXTRA_OPTIONS "-DDISABLE_GEOS_INLINE=ON")
 endif()
 
 vcpkg_cmake_configure(
