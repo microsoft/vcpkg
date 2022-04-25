@@ -77,4 +77,59 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(READ "${SOURCE_PATH}/LICENSE.txt" pdal_license)
+file(READ "${SOURCE_PATH}/vendor/arbiter/LICENSE" arbiter_license)
+file(READ "${SOURCE_PATH}/vendor/kazhdan/PoissonRecon.h" kazhdan_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" kazhdan_license "${kazhdan_license}")
+file(READ "${SOURCE_PATH}/vendor/lazperf/lazperf.hpp" lazperf_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_license "${lazperf_license}")
+file(READ "${SOURCE_PATH}/vendor/lazperf/detail/field_xyz.hpp" lazperf_detail_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_detail_license "${lazperf_detail_license}")
+file(READ "${SOURCE_PATH}/vendor/nanoflann/nanoflann.hpp" nanoflann_license)
+string(REGEX REPLACE "\\*/.*\$" "*/" nanoflann_license "${nanoflann_license}")
+file(READ "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" nlohmann_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" nlohmann_license "${nlohmann_license}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+"${pdal_license}
+---
+
+Files in vendor/arbiter/:
+
+${arbiter_license}
+---
+
+Files in vendor/kazhdan/:
+
+${kazhdan_license}
+---
+
+Files in vendor/lazperf/:
+
+${lazperf_license}
+---
+
+Files in vendor/lazperf/detail/:
+
+${lazperf_detail_license}
+---
+
+Files in vendor/nanoflann:
+
+${nanoflann_license}
+---
+
+Files in vendor/nlohmann:
+
+${nlohmann_license}
+---
+
+Files in vendor/eigen:
+
+Most Eigen source code is subject to the terms of the Mozilla Public License
+v. 2.0. You can obtain a copy the MPL 2.0 at http://mozilla.org/MPL/2.0/.
+
+Some files included in Eigen are under of the following licenses:
+ - Apache License, Version 2.0 
+ - BSD 3-Clause \"New\" or \"Revised\" License
+")
