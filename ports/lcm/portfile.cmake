@@ -37,20 +37,32 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/aclocal")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/java")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-if(EXES)
-    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/lcm)
-    file(REMOVE ${EXES})
-endif()
-file(GLOB DEBUG_EXES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(DEBUG_EXES)
-    file(REMOVE ${DEBUG_EXES})
-endif()
+# file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+# if(EXES)
+#     file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/lcm)
+#     file(REMOVE ${EXES})
+# endif()
+# file(GLOB DEBUG_EXES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+# if(DEBUG_EXES)
+#     file(REMOVE ${DEBUG_EXES})
+# endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+set(LCM_TOOLS
+        lcm-example
+        lcm-gen
+        lcm-logfilter
+        lcm-logger
+        lcm-logplayer
+        lcm-sink
+        lcm-source
+        lcm-tester
+)
+
+vcpkg_copy_tools(TOOL_NAMES ${LCM_TOOLS} AUTO_CLEAN)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lcm)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
