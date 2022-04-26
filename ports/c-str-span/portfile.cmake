@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/LICENSE-MIT"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/c-str-span"
      RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
