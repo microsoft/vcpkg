@@ -12,10 +12,15 @@ vcpkg_from_github(
 
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    unwind     WITH_UNWIND
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

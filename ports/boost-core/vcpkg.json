@@ -1,8 +1,9 @@
 {
   "name": "boost-core",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost core module",
   "homepage": "https://github.com/boostorg/core",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-assert",
     "boost-config",
