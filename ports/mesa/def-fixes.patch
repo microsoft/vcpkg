@@ -5,7 +5,7 @@ index 0000000000000000000000000000000000000000..dff8ab36f92ffbc18dbb2779563c25df
 +++ b/bin/gen_vs_module_defs.py
 @@ -0,0 +1,98 @@
 +#!/usr/bin/env python3
-+# Copyright Â© 2021-2021 Yonggang Luo
++# Copyright © 2021-2021 Yonggang Luo
 +
 +# Permission is hereby granted, free of charge, to any person obtaining a copy
 +# of this software and associated documentation files (the "Software"), to deal
@@ -114,10 +114,10 @@ index 000abef770966c4baecd0b47922f42c532a8c2cf..1b7301585f9e4b0f0556ce2ae11b03b1
  symbols_check = find_program('symbols-check.py')
  install_megadrivers_py = find_program('install_megadrivers.py')
 diff --git a/src/amd/vulkan/meson.build b/src/amd/vulkan/meson.build
-index a1a29a31154fdb23f0fde2d31500f31834654171..2607b5bcd4ad140a4cc8f08b6a72ae63e47c2862 100644
+index 523782f281f650d0558af64a0c0a2bf77c217e1e..b6ecd999e71ab3ecb780af4fa2146c617e3c8e41 100644
 --- a/src/amd/vulkan/meson.build
 +++ b/src/amd/vulkan/meson.build
-@@ -150,12 +150,10 @@ if with_ld_version_script
+@@ -149,12 +149,10 @@ if with_ld_version_script
    libvulkan_radeon_link_depends += files('vulkan.sym')
  endif
  
@@ -278,6 +278,65 @@ index 315a95013f39b76a47067073f106eda518dc6b71..53044297322ad6ea3137bd1fe48b778a
  )
  
  if not with_glvnd
+diff --git a/src/gallium/frontends/d3d10umd/d3d10_sw.def b/src/gallium/frontends/d3d10umd/d3d10_sw.def
+deleted file mode 100644
+index 5b76bfccefaabc9c09e000ffab579d1487a3a31c..0000000000000000000000000000000000000000
+--- a/src/gallium/frontends/d3d10umd/d3d10_sw.def
++++ /dev/null
+@@ -1,53 +0,0 @@
+-EXPORTS
+-	OpenAdapter10
+-	OpenAdapter10_2
+-	D3DKMTAcquireKeyedMutex
+-	D3DKMTCloseAdapter
+-	D3DKMTConfigureSharedResource
+-	D3DKMTCreateAllocation
+-	D3DKMTCreateAllocation2
+-	D3DKMTCreateContext
+-	D3DKMTCreateDevice
+-	D3DKMTCreateKeyedMutex
+-	D3DKMTCreateSynchronizationObject
+-	D3DKMTCreateSynchronizationObject2
+-	D3DKMTDestroyAllocation
+-	D3DKMTDestroyContext
+-	D3DKMTDestroyDevice
+-	D3DKMTDestroyKeyedMutex
+-	D3DKMTDestroySynchronizationObject
+-	D3DKMTEscape
+-	D3DKMTGetContextSchedulingPriority
+-	;D3DKMTGetDeviceSchedulingPriority
+-	D3DKMTGetDeviceState
+-	D3DKMTGetDisplayModeList
+-	D3DKMTGetMultisampleMethodList
+-	D3DKMTGetRuntimeData
+-	D3DKMTGetSharedPrimaryHandle
+-	D3DKMTLock
+-	D3DKMTOpenAdapterFromDeviceName
+-	D3DKMTOpenAdapterFromGdiDisplayName
+-	D3DKMTOpenKeyedMutex
+-	D3DKMTOpenResource
+-	D3DKMTOpenResource2
+-	D3DKMTOpenSynchronizationObject
+-	D3DKMTPresent
+-	D3DKMTQueryAdapterInfo
+-	D3DKMTQueryAllocationResidency
+-	D3DKMTQueryResourceInfo
+-	D3DKMTReleaseKeyedMutex
+-	D3DKMTRender
+-	D3DKMTSetAllocationPriority
+-	D3DKMTSetContextSchedulingPriority
+-	;D3DKMTSetDeviceSchedulingPriority
+-	D3DKMTSetDisplayMode
+-	D3DKMTSetDisplayPrivateDriverFormat
+-	D3DKMTSetGammaRamp
+-	D3DKMTSetVidPnSourceOwner
+-	D3DKMTSetVidPnSourceOwner1
+-	D3DKMTSignalSynchronizationObject
+-	D3DKMTSignalSynchronizationObject2
+-	D3DKMTUnlock
+-	D3DKMTWaitForSynchronizationObject
+-	D3DKMTWaitForSynchronizationObject2
+-	D3DKMTWaitForVerticalBlankEvent
 diff --git a/src/gallium/frontends/osmesa/meson.build b/src/gallium/frontends/osmesa/meson.build
 index e5848fd9934afc22119a14122e6c2d095ab8f350..fe78a4daa31bb01bf8535ff4498172241e554610 100644
 --- a/src/gallium/frontends/osmesa/meson.build
@@ -291,22 +350,115 @@ index e5848fd9934afc22119a14122e6c2d095ab8f350..fe78a4daa31bb01bf8535ff449817224
    if not with_shared_glapi
      osmesa_st_c_args += ['-D_GLAPI_NO_EXPORTS']
    endif
+diff --git a/src/gallium/targets/d3d10sw/d3d10_sw.def.in b/src/gallium/targets/d3d10sw/d3d10_sw.def.in
+new file mode 100644
+index 0000000000000000000000000000000000000000..a81de54c4d285c67b1dd9a6da855a65446239831
+--- /dev/null
++++ b/src/gallium/targets/d3d10sw/d3d10_sw.def.in
+@@ -0,0 +1,76 @@
++; stdcall calling convention have @number suffix on 32 bits architecture for gcc
++OpenAdapter10@4
++OpenAdapter10_2@4
++D3DKMTAcquireKeyedMutex@4
++;D3DKMTCheckExclusiveOwnership@0
++;D3DKMTCheckMonitorPowerState@4
++;D3DKMTCheckOcclusion@4
++;D3DKMTCheckSharedResourceAccess@4
++;D3DKMTCheckVidPnExclusiveOwnership@4
++D3DKMTCloseAdapter@4
++D3DKMTConfigureSharedResource@4
++D3DKMTCreateAllocation2@4
++D3DKMTCreateAllocation@4
++D3DKMTCreateContext@4
++;D3DKMTCreateDCFromMemory@4
++D3DKMTCreateDevice@4
++D3DKMTCreateKeyedMutex@4
++;D3DKMTCreateOverlay@4
++D3DKMTCreateSynchronizationObject2@4
++D3DKMTCreateSynchronizationObject@4
++D3DKMTDestroyAllocation@4
++D3DKMTDestroyContext@4
++;D3DKMTDestroyDCFromMemory@4
++D3DKMTDestroyDevice@4
++D3DKMTDestroyKeyedMutex@4
++;D3DKMTDestroyOverlay@4
++D3DKMTDestroySynchronizationObject@4
++D3DKMTEscape@4
++;D3DKMTFlipOverlay@4
++D3DKMTGetContextSchedulingPriority@4
++D3DKMTGetDeviceState@4
++D3DKMTGetDisplayModeList@4
++D3DKMTGetMultisampleMethodList@4
++;D3DKMTGetOverlayState@4
++;D3DKMTGetPresentHistory@4
++;D3DKMTGetPresentQueueEvent@8
++;D3DKMTGetProcessSchedulingPriorityClass@8
++D3DKMTGetRuntimeData@4
++;D3DKMTGetScanLine@4
++D3DKMTGetSharedPrimaryHandle@4
++;D3DKMTInvalidateActiveVidPn@4
++D3DKMTLock@4
++D3DKMTOpenAdapterFromDeviceName@4
++D3DKMTOpenAdapterFromGdiDisplayName@4
++;D3DKMTOpenAdapterFromHdc@4
++D3DKMTOpenKeyedMutex@4
++D3DKMTOpenResource2@4
++D3DKMTOpenResource@4
++D3DKMTOpenSynchronizationObject@4
++;D3DKMTPollDisplayChildren@4
++D3DKMTPresent@4
++D3DKMTQueryAdapterInfo@4
++D3DKMTQueryAllocationResidency@4
++D3DKMTQueryResourceInfo@4
++;D3DKMTQueryStatistics@4
++D3DKMTReleaseKeyedMutex@4
++;D3DKMTReleaseProcessVidPnSourceOwners@4
++D3DKMTRender@4
++D3DKMTSetAllocationPriority@4
++D3DKMTSetContextSchedulingPriority@4
++D3DKMTSetDisplayMode@4
++D3DKMTSetDisplayPrivateDriverFormat@4
++D3DKMTSetGammaRamp@4
++;D3DKMTSetProcessSchedulingPriorityClass@8
++;D3DKMTSetQueuedLimit@4
++D3DKMTSetVidPnSourceOwner@4
++;D3DKMTSharedPrimaryLockNotification@4
++;D3DKMTSharedPrimaryUnLockNotification@4
++D3DKMTSignalSynchronizationObject2@4
++D3DKMTSignalSynchronizationObject@4
++D3DKMTUnlock@4
++;D3DKMTUpdateOverlay@4
++;D3DKMTWaitForIdle@4
++D3DKMTWaitForSynchronizationObject2@4
++D3DKMTWaitForSynchronizationObject@4
++D3DKMTWaitForVerticalBlankEvent@4
 diff --git a/src/gallium/targets/d3d10sw/meson.build b/src/gallium/targets/d3d10sw/meson.build
-index fe8632d3c7ff3f1a61a20f6bd88f25e697316e10..a5acb95c80eaeba0a92aa2d7e6cedd91658b56d2 100644
+index fe8632d3c7ff3f1a61a20f6bd88f25e697316e10..8b90c561152f96be787f838467d0e3407a1bd134 100644
 --- a/src/gallium/targets/d3d10sw/meson.build
 +++ b/src/gallium/targets/d3d10sw/meson.build
-@@ -20,10 +20,6 @@
+@@ -19,20 +19,22 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  # SOFTWARE.
  
- d3d10sw_def = files('../../frontends/d3d10umd/d3d10_sw.def')[0]
+-d3d10sw_def = files('../../frontends/d3d10umd/d3d10_sw.def')[0]
 -_link_args_d3d10sw = []
 -if cc.get_id() == 'gcc'
 -  _link_args_d3d10sw += '-Wl,--enable-stdcall-fixup'
 -endif
++d3d10_sw_def = custom_target(
++  'd3d10_sw.def',
++  input: 'd3d10_sw.def.in',
++  output : 'd3d10_sw.def',
++  command : [prog_python, gen_vs_module_defs_py,
++             '--in_file', '@INPUT@', '--out_file', '@OUTPUT@',
++             '--compiler_id', cc.get_id(), '--cpu_family', host_machine.cpu_family()]
++)
  
  libd3d10sw = shared_library(
    'd3d10sw',
-@@ -32,7 +28,6 @@ libd3d10sw = shared_library(
+   ['d3d10_gdi.c'],
+-  vs_module_defs : d3d10sw_def,
++  vs_module_defs : d3d10_sw_def,
    include_directories : [
      inc_include, inc_src, inc_gallium, inc_gallium_aux, inc_d3d10umd, inc_gallium_winsys, inc_gallium_winsys_sw, inc_gallium_drivers,
    ],
@@ -2791,156 +2943,156 @@ index 92571a7c8f7bcf6847360bcd725732bd144f35c9..ace7c33eb9499a8058598570890d3e40
    'gallium_wgl',
 diff --git a/src/mapi/es1api/gles1.def.in b/src/mapi/es1api/gles1.def.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..35954aed7ad7ffc6709c5287a3f55c7e6cb0246e
+index 0000000000000000000000000000000000000000..b09aff6a8739e1ce197f8abe481f4b79a94d3adb
 --- /dev/null
 +++ b/src/mapi/es1api/gles1.def.in
 @@ -0,0 +1,146 @@
 +; stdcall calling convention have @number suffix on 32 bits architecture for gcc
-+glActiveTexture
-+glAlphaFunc
-+glAlphaFuncx
-+glBindBuffer
-+glBindTexture
-+glBlendFunc
-+glBufferData
-+glBufferSubData
-+glClear
-+glClearColor
-+glClearColorx
-+glClearDepthf
-+glClearDepthx
-+glClearStencil
-+glClientActiveTexture
-+glClipPlanef
-+glClipPlanex
-+glColor4f
-+glColor4ub
-+glColor4x
-+glColorMask
-+glColorPointer
-+glCompressedTexImage2D
-+glCompressedTexSubImage2D
-+glCopyTexImage2D
-+glCopyTexSubImage2D
-+glCullFace
-+glDeleteBuffers
-+glDeleteTextures
-+glDepthFunc
-+glDepthMask
-+glDepthRangef
-+glDepthRangex
-+glDisable
-+glDisableClientState
-+glDrawArrays
-+glDrawElements
-+glEnable
-+glEnableClientState
-+glFinish
-+glFlush
-+glFogf
-+glFogfv
-+glFogx
-+glFogxv
-+glFrontFace
-+glFrustumf
-+glFrustumx
-+glGenBuffers
-+glGenTextures
-+glGetBooleanv
-+glGetBufferParameteriv
-+glGetClipPlanef
-+glGetClipPlanex
-+glGetError
-+glGetFixedv
-+glGetFloatv
-+glGetIntegerv
-+glGetLightfv
-+glGetLightxv
-+glGetMaterialfv
-+glGetMaterialxv
-+glGetPointerv
-+glGetString
-+glGetTexEnvfv
-+glGetTexEnviv
-+glGetTexEnvxv
-+glGetTexParameterfv
-+glGetTexParameteriv
-+glGetTexParameterxv
-+glHint
-+glIsBuffer
-+glIsEnabled
-+glIsTexture
-+glLightf
-+glLightfv
-+glLightModelf
-+glLightModelfv
-+glLightModelx
-+glLightModelxv
-+glLightx
-+glLightxv
-+glLineWidth
-+glLineWidthx
-+glLoadIdentity
-+glLoadMatrixf
-+glLoadMatrixx
-+glLogicOp
-+glMaterialf
-+glMaterialfv
-+glMaterialx
-+glMaterialxv
-+glMatrixMode
-+glMultiTexCoord4f
-+glMultiTexCoord4x
-+glMultMatrixf
-+glMultMatrixx
-+glNormal3f
-+glNormal3x
-+glNormalPointer
-+glOrthof
-+glOrthox
-+glPixelStorei
-+glPointParameterf
-+glPointParameterfv
-+glPointParameterx
-+glPointParameterxv
-+glPointSize
-+glPointSizePointerOES
-+glPointSizex
-+glPolygonOffset
-+glPolygonOffsetx
-+glPopMatrix
-+glPushMatrix
-+glReadPixels
-+glRotatef
-+glRotatex
-+glSampleCoverage
-+glSampleCoveragex
-+glScalef
-+glScalex
-+glScissor
-+glShadeModel
-+glStencilFunc
-+glStencilMask
-+glStencilOp
-+glTexCoordPointer
-+glTexEnvf
-+glTexEnvfv
-+glTexEnvi
-+glTexEnviv
-+glTexEnvx
-+glTexEnvxv
-+glTexImage2D
-+glTexParameterf
-+glTexParameterfv
-+glTexParameteri
-+glTexParameteriv
-+glTexParameterx
-+glTexParameterxv
-+glTexSubImage2D
-+glTranslatef
-+glTranslatex
-+glVertexPointer
-+glViewport
++glActiveTexture@4
++glAlphaFunc@8
++glAlphaFuncx@8
++glBindBuffer@8
++glBindTexture@8
++glBlendFunc@8
++glBufferData@16
++glBufferSubData@16
++glClear@4
++glClearColor@16
++glClearColorx@16
++glClearDepthf@4
++glClearDepthx@4
++glClearStencil@4
++glClientActiveTexture@4
++glClipPlanef@8
++glClipPlanex@8
++glColor4f@16
++glColor4ub@16
++glColor4x@16
++glColorMask@16
++glColorPointer@16
++glCompressedTexImage2D@32
++glCompressedTexSubImage2D@36
++glCopyTexImage2D@32
++glCopyTexSubImage2D@32
++glCullFace@4
++glDeleteBuffers@8
++glDeleteTextures@8
++glDepthFunc@4
++glDepthMask@4
++glDepthRangef@8
++glDepthRangex@8
++glDisable@4
++glDisableClientState@4
++glDrawArrays@12
++glDrawElements@16
++glEnable@4
++glEnableClientState@4
++glFinish@0
++glFlush@0
++glFogf@8
++glFogfv@8
++glFogx@8
++glFogxv@8
++glFrontFace@4
++glFrustumf@24
++glFrustumx@24
++glGenBuffers@8
++glGenTextures@8
++glGetBooleanv@8
++glGetBufferParameteriv@12
++glGetClipPlanef@8
++glGetClipPlanex@8
++glGetError@0
++glGetFixedv@8
++glGetFloatv@8
++glGetIntegerv@8
++glGetLightfv@12
++glGetLightxv@12
++glGetMaterialfv@12
++glGetMaterialxv@12
++glGetPointerv@8
++glGetString@4
++glGetTexEnvfv@12
++glGetTexEnviv@12
++glGetTexEnvxv@12
++glGetTexParameterfv@12
++glGetTexParameteriv@12
++glGetTexParameterxv@12
++glHint@8
++glIsBuffer@4
++glIsEnabled@4
++glIsTexture@4
++glLightModelf@8
++glLightModelfv@8
++glLightModelx@8
++glLightModelxv@8
++glLightf@12
++glLightfv@12
++glLightx@12
++glLightxv@12
++glLineWidth@4
++glLineWidthx@4
++glLoadIdentity@0
++glLoadMatrixf@4
++glLoadMatrixx@4
++glLogicOp@4
++glMaterialf@12
++glMaterialfv@12
++glMaterialx@12
++glMaterialxv@12
++glMatrixMode@4
++glMultMatrixf@4
++glMultMatrixx@4
++glMultiTexCoord4f@20
++glMultiTexCoord4x@20
++glNormal3f@12
++glNormal3x@12
++glNormalPointer@12
++glOrthof@24
++glOrthox@24
++glPixelStorei@8
++glPointParameterf@8
++glPointParameterfv@8
++glPointParameterx@8
++glPointParameterxv@8
++glPointSize@4
++glPointSizePointerOES@12
++glPointSizex@4
++glPolygonOffset@8
++glPolygonOffsetx@8
++glPopMatrix@0
++glPushMatrix@0
++glReadPixels@28
++glRotatef@16
++glRotatex@16
++glSampleCoverage@8
++glSampleCoveragex@8
++glScalef@12
++glScalex@12
++glScissor@16
++glShadeModel@4
++glStencilFunc@12
++glStencilMask@4
++glStencilOp@12
++glTexCoordPointer@16
++glTexEnvf@12
++glTexEnvfv@12
++glTexEnvi@12
++glTexEnviv@12
++glTexEnvx@12
++glTexEnvxv@12
++glTexImage2D@36
++glTexParameterf@12
++glTexParameterfv@12
++glTexParameteri@12
++glTexParameteriv@12
++glTexParameterx@12
++glTexParameterxv@12
++glTexSubImage2D@36
++glTranslatef@12
++glTranslatex@12
++glVertexPointer@16
++glViewport@16
 diff --git a/src/mapi/es1api/meson.build b/src/mapi/es1api/meson.build
 index 8b749b1a3324be96f0d69816e638f1131ec8c307..4bca37b5e32f77d55655c49ca0580b75707edc6b 100644
 --- a/src/mapi/es1api/meson.build
@@ -2971,369 +3123,369 @@ index 8b749b1a3324be96f0d69816e638f1131ec8c307..4bca37b5e32f77d55655c49ca0580b75
      _es1_c_args,
 diff --git a/src/mapi/es2api/gles2.def.in b/src/mapi/es2api/gles2.def.in
 new file mode 100644
-index 0000000000000000000000000000000000000000..a6b2abc06350550397e66a6ce032b546f6b39569
+index 0000000000000000000000000000000000000000..4517ea8b739e72d950930ee94b51dc71829dea8e
 --- /dev/null
 +++ b/src/mapi/es2api/gles2.def.in
 @@ -0,0 +1,359 @@
 +; stdcall calling convention have @number suffix on 32 bits architecture for gcc
-+glActiveShaderProgram
-+glActiveTexture
-+glAttachShader
-+glBeginQuery
-+glBeginTransformFeedback
-+glBindAttribLocation
-+glBindBuffer
-+glBindBufferBase
-+glBindBufferRange
-+glBindFramebuffer
-+glBindImageTexture
-+glBindProgramPipeline
-+glBindRenderbuffer
-+glBindSampler
-+glBindTexture
-+glBindTransformFeedback
-+glBindVertexArray
-+glBindVertexBuffer
-+glBlendBarrier
-+glBlendColor
-+glBlendEquation
-+glBlendEquationSeparate
-+glBlendEquationSeparatei
-+glBlendEquationi
-+glBlendFunc
-+glBlendFuncSeparate
-+glBlendFuncSeparatei
-+glBlendFunci
-+glBlitFramebuffer
-+glBufferData
-+glBufferSubData
-+glCheckFramebufferStatus
-+glClear
-+glClearBufferfi
-+glClearBufferfv
-+glClearBufferiv
-+glClearBufferuiv
-+glClearColor
-+glClearDepthf
-+glClearStencil
-+glClientWaitSync
-+glColorMask
-+glColorMaski
-+glCompileShader
-+glCompressedTexImage2D
-+glCompressedTexImage3D
-+glCompressedTexSubImage2D
-+glCompressedTexSubImage3D
-+glCopyBufferSubData
-+glCopyImageSubData
-+glCopyTexImage2D
-+glCopyTexSubImage2D
-+glCopyTexSubImage3D
-+glCreateProgram
-+glCreateShader
-+glCreateShaderProgramv
-+glCullFace
-+glDebugMessageCallback
-+glDebugMessageControl
-+glDebugMessageInsert
-+glDeleteBuffers
-+glDeleteFramebuffers
-+glDeleteProgram
-+glDeleteProgramPipelines
-+glDeleteQueries
-+glDeleteRenderbuffers
-+glDeleteSamplers
-+glDeleteShader
-+glDeleteSync
-+glDeleteTextures
-+glDeleteTransformFeedbacks
-+glDeleteVertexArrays
-+glDepthFunc
-+glDepthMask
-+glDepthRangef
-+glDetachShader
-+glDisable
-+glDisableVertexAttribArray
-+glDisablei
-+glDispatchCompute
-+glDispatchComputeIndirect
-+glDrawArrays
-+glDrawArraysIndirect
-+glDrawArraysInstanced
-+glDrawBuffers
-+glDrawElements
-+glDrawElementsBaseVertex
-+glDrawElementsIndirect
-+glDrawElementsInstanced
-+glDrawElementsInstancedBaseVertex
-+glDrawRangeElements
-+glDrawRangeElementsBaseVertex
-+glEnable
-+glEnableVertexAttribArray
-+glEnablei
-+glEndQuery
-+glEndTransformFeedback
-+glFenceSync
-+glFinish
-+glFlush
-+glFlushMappedBufferRange
-+glFramebufferParameteri
-+glFramebufferRenderbuffer
-+glFramebufferTexture
-+glFramebufferTexture2D
-+glFramebufferTextureLayer
-+glFrontFace
-+glGenBuffers
-+glGenFramebuffers
-+glGenProgramPipelines
-+glGenQueries
-+glGenRenderbuffers
-+glGenSamplers
-+glGenTextures
-+glGenTransformFeedbacks
-+glGenVertexArrays
-+glGenerateMipmap
-+glGetActiveAttrib
-+glGetActiveUniform
-+glGetActiveUniformBlockName
-+glGetActiveUniformBlockiv
-+glGetActiveUniformsiv
-+glGetAttachedShaders
-+glGetAttribLocation
-+glGetBooleani_v
-+glGetBooleanv
-+glGetBufferParameteri64v
-+glGetBufferParameteriv
-+glGetBufferPointerv
-+glGetDebugMessageLog
-+glGetError
-+glGetFloatv
-+glGetFragDataLocation
-+glGetFramebufferAttachmentParameteriv
-+glGetFramebufferParameteriv
-+glGetGraphicsResetStatus
-+glGetInteger64i_v
-+glGetInteger64v
-+glGetIntegeri_v
-+glGetIntegerv
-+glGetInternalformativ
-+glGetMultisamplefv
-+glGetObjectLabel
-+glGetObjectPtrLabel
-+glGetPointerv
-+glGetProgramBinary
-+glGetProgramInfoLog
-+glGetProgramInterfaceiv
-+glGetProgramPipelineInfoLog
-+glGetProgramPipelineiv
-+glGetProgramResourceIndex
-+glGetProgramResourceLocation
-+glGetProgramResourceName
-+glGetProgramResourceiv
-+glGetProgramiv
-+glGetQueryObjectuiv
-+glGetQueryiv
-+glGetRenderbufferParameteriv
-+glGetSamplerParameterIiv
-+glGetSamplerParameterIuiv
-+glGetSamplerParameterfv
-+glGetSamplerParameteriv
-+glGetShaderInfoLog
-+glGetShaderPrecisionFormat
-+glGetShaderSource
-+glGetShaderiv
-+glGetString
-+glGetStringi
-+glGetSynciv
-+glGetTexLevelParameterfv
-+glGetTexLevelParameteriv
-+glGetTexParameterIiv
-+glGetTexParameterIuiv
-+glGetTexParameterfv
-+glGetTexParameteriv
-+glGetTransformFeedbackVarying
-+glGetUniformBlockIndex
-+glGetUniformIndices
-+glGetUniformLocation
-+glGetUniformfv
-+glGetUniformiv
-+glGetUniformuiv
-+glGetVertexAttribIiv
-+glGetVertexAttribIuiv
-+glGetVertexAttribPointerv
-+glGetVertexAttribfv
-+glGetVertexAttribiv
-+glGetnUniformfv
-+glGetnUniformiv
-+glGetnUniformuiv
-+glHint
-+glInvalidateFramebuffer
-+glInvalidateSubFramebuffer
-+glIsBuffer
-+glIsEnabled
-+glIsEnabledi
-+glIsFramebuffer
-+glIsProgram
-+glIsProgramPipeline
-+glIsQuery
-+glIsRenderbuffer
-+glIsSampler
-+glIsShader
-+glIsSync
-+glIsTexture
-+glIsTransformFeedback
-+glIsVertexArray
-+glLineWidth
-+glLinkProgram
-+glMapBufferRange
-+glMemoryBarrier
-+glMemoryBarrierByRegion
-+glMinSampleShading
-+glObjectLabel
-+glObjectPtrLabel
-+glPatchParameteri
-+glPauseTransformFeedback
-+glPixelStorei
-+glPolygonOffset
-+glPopDebugGroup
-+glPrimitiveBoundingBox
-+glProgramBinary
-+glProgramParameteri
-+glProgramUniform1f
-+glProgramUniform1fv
-+glProgramUniform1i
-+glProgramUniform1iv
-+glProgramUniform1ui
-+glProgramUniform1uiv
-+glProgramUniform2f
-+glProgramUniform2fv
-+glProgramUniform2i
-+glProgramUniform2iv
-+glProgramUniform2ui
-+glProgramUniform2uiv
-+glProgramUniform3f
-+glProgramUniform3fv
-+glProgramUniform3i
-+glProgramUniform3iv
-+glProgramUniform3ui
-+glProgramUniform3uiv
-+glProgramUniform4f
-+glProgramUniform4fv
-+glProgramUniform4i
-+glProgramUniform4iv
-+glProgramUniform4ui
-+glProgramUniform4uiv
-+glProgramUniformMatrix2fv
-+glProgramUniformMatrix2x3fv
-+glProgramUniformMatrix2x4fv
-+glProgramUniformMatrix3fv
-+glProgramUniformMatrix3x2fv
-+glProgramUniformMatrix3x4fv
-+glProgramUniformMatrix4fv
-+glProgramUniformMatrix4x2fv
-+glProgramUniformMatrix4x3fv
-+glPushDebugGroup
-+glReadBuffer
-+glReadPixels
-+glReadnPixels
-+glReleaseShaderCompiler
-+glRenderbufferStorage
-+glRenderbufferStorageMultisample
-+glResumeTransformFeedback
-+glSampleCoverage
-+glSampleMaski
-+glSamplerParameterIiv
-+glSamplerParameterIuiv
-+glSamplerParameterf
-+glSamplerParameterfv
-+glSamplerParameteri
-+glSamplerParameteriv
-+glScissor
-+glShaderBinary
-+glShaderSource
-+glStencilFunc
-+glStencilFuncSeparate
-+glStencilMask
-+glStencilMaskSeparate
-+glStencilOp
-+glStencilOpSeparate
-+glTexBuffer
-+glTexBufferRange
-+glTexImage2D
-+glTexImage3D
-+glTexParameterIiv
-+glTexParameterIuiv
-+glTexParameterf
-+glTexParameterfv
-+glTexParameteri
-+glTexParameteriv
-+glTexStorage2D
-+glTexStorage2DMultisample
-+glTexStorage3D
-+glTexStorage3DMultisample
-+glTexSubImage2D
-+glTexSubImage3D
-+glTransformFeedbackVaryings
-+glUniform1f
-+glUniform1fv
-+glUniform1i
-+glUniform1iv
-+glUniform1ui
-+glUniform1uiv
-+glUniform2f
-+glUniform2fv
-+glUniform2i
-+glUniform2iv
-+glUniform2ui
-+glUniform2uiv
-+glUniform3f
-+glUniform3fv
-+glUniform3i
-+glUniform3iv
-+glUniform3ui
-+glUniform3uiv
-+glUniform4f
-+glUniform4fv
-+glUniform4i
-+glUniform4iv
-+glUniform4ui
-+glUniform4uiv
-+glUniformBlockBinding
-+glUniformMatrix2fv
-+glUniformMatrix2x3fv
-+glUniformMatrix2x4fv
-+glUniformMatrix3fv
-+glUniformMatrix3x2fv
-+glUniformMatrix3x4fv
-+glUniformMatrix4fv
-+glUniformMatrix4x2fv
-+glUniformMatrix4x3fv
-+glUnmapBuffer
-+glUseProgram
-+glUseProgramStages
-+glValidateProgram
-+glValidateProgramPipeline
-+glVertexAttrib1f
-+glVertexAttrib1fv
-+glVertexAttrib2f
-+glVertexAttrib2fv
-+glVertexAttrib3f
-+glVertexAttrib3fv
-+glVertexAttrib4f
-+glVertexAttrib4fv
-+glVertexAttribBinding
-+glVertexAttribDivisor
-+glVertexAttribFormat
-+glVertexAttribI4i
-+glVertexAttribI4iv
-+glVertexAttribI4ui
-+glVertexAttribI4uiv
-+glVertexAttribIFormat
-+glVertexAttribIPointer
-+glVertexAttribPointer
-+glVertexBindingDivisor
-+glViewport
-+glWaitSync
++glActiveShaderProgram@8
++glActiveTexture@4
++glAttachShader@8
++glBeginQuery@8
++glBeginTransformFeedback@4
++glBindAttribLocation@12
++glBindBuffer@8
++glBindBufferBase@12
++glBindBufferRange@20
++glBindFramebuffer@8
++glBindImageTexture@28
++glBindProgramPipeline@4
++glBindRenderbuffer@8
++glBindSampler@8
++glBindTexture@8
++glBindTransformFeedback@8
++glBindVertexArray@4
++glBindVertexBuffer@16
++glBlendBarrier@0
++glBlendColor@16
++glBlendEquation@4
++glBlendEquationSeparate@8
++glBlendEquationSeparatei@12
++glBlendEquationi@8
++glBlendFunc@8
++glBlendFuncSeparate@16
++glBlendFuncSeparatei@20
++glBlendFunci@12
++glBlitFramebuffer@40
++glBufferData@16
++glBufferSubData@16
++glCheckFramebufferStatus@4
++glClear@4
++glClearBufferfi@16
++glClearBufferfv@12
++glClearBufferiv@12
++glClearBufferuiv@12
++glClearColor@16
++glClearDepthf@4
++glClearStencil@4
++glClientWaitSync@16
++glColorMask@16
++glColorMaski@20
++glCompileShader@4
++glCompressedTexImage2D@32
++glCompressedTexImage3D@36
++glCompressedTexSubImage2D@36
++glCompressedTexSubImage3D@44
++glCopyBufferSubData@20
++glCopyImageSubData@60
++glCopyTexImage2D@32
++glCopyTexSubImage2D@32
++glCopyTexSubImage3D@36
++glCreateProgram@0
++glCreateShader@4
++glCreateShaderProgramv@12
++glCullFace@4
++glDebugMessageCallback@8
++glDebugMessageControl@24
++glDebugMessageInsert@24
++glDeleteBuffers@8
++glDeleteFramebuffers@8
++glDeleteProgram@4
++glDeleteProgramPipelines@8
++glDeleteQueries@8
++glDeleteRenderbuffers@8
++glDeleteSamplers@8
++glDeleteShader@4
++glDeleteSync@4
++glDeleteTextures@8
++glDeleteTransformFeedbacks@8
++glDeleteVertexArrays@8
++glDepthFunc@4
++glDepthMask@4
++glDepthRangef@8
++glDetachShader@8
++glDisable@4
++glDisableVertexAttribArray@4
++glDisablei@8
++glDispatchCompute@12
++glDispatchComputeIndirect@4
++glDrawArrays@12
++glDrawArraysIndirect@8
++glDrawArraysInstanced@16
++glDrawBuffers@8
++glDrawElements@16
++glDrawElementsBaseVertex@20
++glDrawElementsIndirect@12
++glDrawElementsInstanced@20
++glDrawElementsInstancedBaseVertex@24
++glDrawRangeElements@24
++glDrawRangeElementsBaseVertex@28
++glEnable@4
++glEnableVertexAttribArray@4
++glEnablei@8
++glEndQuery@4
++glEndTransformFeedback@0
++glFenceSync@8
++glFinish@0
++glFlush@0
++glFlushMappedBufferRange@12
++glFramebufferParameteri@12
++glFramebufferRenderbuffer@16
++glFramebufferTexture2D@20
++glFramebufferTexture@16
++glFramebufferTextureLayer@20
++glFrontFace@4
++glGenBuffers@8
++glGenFramebuffers@8
++glGenProgramPipelines@8
++glGenQueries@8
++glGenRenderbuffers@8
++glGenSamplers@8
++glGenTextures@8
++glGenTransformFeedbacks@8
++glGenVertexArrays@8
++glGenerateMipmap@4
++glGetActiveAttrib@28
++glGetActiveUniform@28
++glGetActiveUniformBlockName@20
++glGetActiveUniformBlockiv@16
++glGetActiveUniformsiv@20
++glGetAttachedShaders@16
++glGetAttribLocation@8
++glGetBooleani_v@12
++glGetBooleanv@8
++glGetBufferParameteri64v@12
++glGetBufferParameteriv@12
++glGetBufferPointerv@12
++glGetDebugMessageLog@32
++glGetError@0
++glGetFloatv@8
++glGetFragDataLocation@8
++glGetFramebufferAttachmentParameteriv@16
++glGetFramebufferParameteriv@12
++glGetGraphicsResetStatus@0
++glGetInteger64i_v@12
++glGetInteger64v@8
++glGetIntegeri_v@12
++glGetIntegerv@8
++glGetInternalformativ@20
++glGetMultisamplefv@12
++glGetObjectLabel@20
++glGetObjectPtrLabel@16
++glGetPointerv@8
++glGetProgramBinary@20
++glGetProgramInfoLog@16
++glGetProgramInterfaceiv@16
++glGetProgramPipelineInfoLog@16
++glGetProgramPipelineiv@12
++glGetProgramResourceIndex@12
++glGetProgramResourceLocation@12
++glGetProgramResourceName@24
++glGetProgramResourceiv@32
++glGetProgramiv@12
++glGetQueryObjectuiv@12
++glGetQueryiv@12
++glGetRenderbufferParameteriv@12
++glGetSamplerParameterIiv@12
++glGetSamplerParameterIuiv@12
++glGetSamplerParameterfv@12
++glGetSamplerParameteriv@12
++glGetShaderInfoLog@16
++glGetShaderPrecisionFormat@16
++glGetShaderSource@16
++glGetShaderiv@12
++glGetString@4
++glGetStringi@8
++glGetSynciv@20
++glGetTexLevelParameterfv@16
++glGetTexLevelParameteriv@16
++glGetTexParameterIiv@12
++glGetTexParameterIuiv@12
++glGetTexParameterfv@12
++glGetTexParameteriv@12
++glGetTransformFeedbackVarying@28
++glGetUniformBlockIndex@8
++glGetUniformIndices@16
++glGetUniformLocation@8
++glGetUniformfv@12
++glGetUniformiv@12
++glGetUniformuiv@12
++glGetVertexAttribIiv@12
++glGetVertexAttribIuiv@12
++glGetVertexAttribPointerv@12
++glGetVertexAttribfv@12
++glGetVertexAttribiv@12
++glGetnUniformfv@16
++glGetnUniformiv@16
++glGetnUniformuiv@16
++glHint@8
++glInvalidateFramebuffer@12
++glInvalidateSubFramebuffer@28
++glIsBuffer@4
++glIsEnabled@4
++glIsEnabledi@8
++glIsFramebuffer@4
++glIsProgram@4
++glIsProgramPipeline@4
++glIsQuery@4
++glIsRenderbuffer@4
++glIsSampler@4
++glIsShader@4
++glIsSync@4
++glIsTexture@4
++glIsTransformFeedback@4
++glIsVertexArray@4
++glLineWidth@4
++glLinkProgram@4
++glMapBufferRange@16
++glMemoryBarrier@4
++glMemoryBarrierByRegion@4
++glMinSampleShading@4
++glObjectLabel@16
++glObjectPtrLabel@12
++glPatchParameteri@8
++glPauseTransformFeedback@0
++glPixelStorei@8
++glPolygonOffset@8
++glPopDebugGroup@0
++glPrimitiveBoundingBox@32
++glProgramBinary@16
++glProgramParameteri@12
++glProgramUniform1f@12
++glProgramUniform1fv@16
++glProgramUniform1i@12
++glProgramUniform1iv@16
++glProgramUniform1ui@12
++glProgramUniform1uiv@16
++glProgramUniform2f@16
++glProgramUniform2fv@16
++glProgramUniform2i@16
++glProgramUniform2iv@16
++glProgramUniform2ui@16
++glProgramUniform2uiv@16
++glProgramUniform3f@20
++glProgramUniform3fv@16
++glProgramUniform3i@20
++glProgramUniform3iv@16
++glProgramUniform3ui@20
++glProgramUniform3uiv@16
++glProgramUniform4f@24
++glProgramUniform4fv@16
++glProgramUniform4i@24
++glProgramUniform4iv@16
++glProgramUniform4ui@24
++glProgramUniform4uiv@16
++glProgramUniformMatrix2fv@20
++glProgramUniformMatrix2x3fv@20
++glProgramUniformMatrix2x4fv@20
++glProgramUniformMatrix3fv@20
++glProgramUniformMatrix3x2fv@20
++glProgramUniformMatrix3x4fv@20
++glProgramUniformMatrix4fv@20
++glProgramUniformMatrix4x2fv@20
++glProgramUniformMatrix4x3fv@20
++glPushDebugGroup@16
++glReadBuffer@4
++glReadPixels@28
++glReadnPixels@32
++glReleaseShaderCompiler@0
++glRenderbufferStorage@16
++glRenderbufferStorageMultisample@20
++glResumeTransformFeedback@0
++glSampleCoverage@8
++glSampleMaski@8
++glSamplerParameterIiv@12
++glSamplerParameterIuiv@12
++glSamplerParameterf@12
++glSamplerParameterfv@12
++glSamplerParameteri@12
++glSamplerParameteriv@12
++glScissor@16
++glShaderBinary@20
++glShaderSource@16
++glStencilFunc@12
++glStencilFuncSeparate@16
++glStencilMask@4
++glStencilMaskSeparate@8
++glStencilOp@12
++glStencilOpSeparate@16
++glTexBuffer@12
++glTexBufferRange@20
++glTexImage2D@36
++glTexImage3D@40
++glTexParameterIiv@12
++glTexParameterIuiv@12
++glTexParameterf@12
++glTexParameterfv@12
++glTexParameteri@12
++glTexParameteriv@12
++glTexStorage2D@20
++glTexStorage2DMultisample@24
++glTexStorage3D@24
++glTexStorage3DMultisample@28
++glTexSubImage2D@36
++glTexSubImage3D@44
++glTransformFeedbackVaryings@16
++glUniform1f@8
++glUniform1fv@12
++glUniform1i@8
++glUniform1iv@12
++glUniform1ui@8
++glUniform1uiv@12
++glUniform2f@12
++glUniform2fv@12
++glUniform2i@12
++glUniform2iv@12
++glUniform2ui@12
++glUniform2uiv@12
++glUniform3f@16
++glUniform3fv@12
++glUniform3i@16
++glUniform3iv@12
++glUniform3ui@16
++glUniform3uiv@12
++glUniform4f@20
++glUniform4fv@12
++glUniform4i@20
++glUniform4iv@12
++glUniform4ui@20
++glUniform4uiv@12
++glUniformBlockBinding@12
++glUniformMatrix2fv@16
++glUniformMatrix2x3fv@16
++glUniformMatrix2x4fv@16
++glUniformMatrix3fv@16
++glUniformMatrix3x2fv@16
++glUniformMatrix3x4fv@16
++glUniformMatrix4fv@16
++glUniformMatrix4x2fv@16
++glUniformMatrix4x3fv@16
++glUnmapBuffer@4
++glUseProgram@4
++glUseProgramStages@12
++glValidateProgram@4
++glValidateProgramPipeline@4
++glVertexAttrib1f@8
++glVertexAttrib1fv@8
++glVertexAttrib2f@12
++glVertexAttrib2fv@8
++glVertexAttrib3f@16
++glVertexAttrib3fv@8
++glVertexAttrib4f@20
++glVertexAttrib4fv@8
++glVertexAttribBinding@8
++glVertexAttribDivisor@8
++glVertexAttribFormat@20
++glVertexAttribI4i@20
++glVertexAttribI4iv@8
++glVertexAttribI4ui@20
++glVertexAttribI4uiv@8
++glVertexAttribIFormat@16
++glVertexAttribIPointer@20
++glVertexAttribPointer@24
++glVertexBindingDivisor@8
++glViewport@16
++glWaitSync@16
 diff --git a/src/mapi/es2api/meson.build b/src/mapi/es2api/meson.build
 index 356c5760c495e5b8a52abc2c841741f9b2b47222..8b133daa131276025072b4a85318e423206981cc 100644
 --- a/src/mapi/es2api/meson.build
