@@ -13,7 +13,7 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Findfmt.cmake")
 
 vcpkg_cmake_configure(
-	SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_TESTING=OFF
 )
