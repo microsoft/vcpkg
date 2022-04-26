@@ -29,8 +29,8 @@ if("asm" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-FEATURES
-    asm WITH_ASM
+    FEATURES
+        asm WITH_ASM
 )
 
 vcpkg_cmake_configure(
