@@ -44,7 +44,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME FLAC)
+vcpkg_cmake_config_fixup(PACKAGE_NAME FLAC CONFIG_PATH share/FLAC/cmake)
 
 vcpkg_copy_pdbs()
 
