@@ -3009,7 +3009,7 @@
       "port-version": 1
     },
     "jansson": {
-      "baseline": "2.13.1",
+      "baseline": "2.14",
       "port-version": 2
     },
     "jasper": {
