@@ -2724,6 +2724,10 @@
       "baseline": "3.2.0",
       "port-version": 3
     },
+    "hash-library": {
+      "baseline": "8",
+      "port-version": 0
+    },
     "hayai": {
       "baseline": "2019-08-10",
       "port-version": 1
