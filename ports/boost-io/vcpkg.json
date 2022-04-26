@@ -1,8 +1,9 @@
 {
   "name": "boost-io",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost io module",
   "homepage": "https://github.com/boostorg/io",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-config",
     "boost-vcpkg-helpers"

@@ -1,0 +1,53 @@
+--- /dev/null
++++ b/build-aux/dumpbin-to-nm.awk
+@@ -0,0 +1,14 @@
++{last_section=section; section=$ 3};
++/^COFF SYMBOL TABLE/{for(i in hide) delete hide[i]};
++/Section length .*#relocs.*(pick any)/{hide[last_section]=1};
++/^ *Symbol name *: /{split($ 0,sn,":"); si=substr(sn[2],2)};
++/^ *Type *: code/{print "T",si,substr(si,length(prfx))};
++/^ *Type *: data/{print "I",si,substr(si,length(prfx))};
++$ 0!~/External *\|/{next};
++$ 0~/__local_stdio_printf_options/{next};
++/ 0+ UNDEF /{next}; / UNDEF \([^|]\)*()/{next};
++{if(hide[section]) next};
++{f="D"}; $ 0~/\(\).*\|/{f="T"};
++{split($ 0,a,/\||\r/); split(a[2],s)};
++s[1]~/^[@?]/{print f,s[1],s[1]; next};
++s[1]~prfx {split(s[1],t,"@"); print f,t[1],substr(t[1],length(prfx))}
+--- a/configure
++++ b/configure
+@@ -10274,21 +10274,7 @@
+     # D for any global variable and I for any imported variable.
+     # Also find C++ and __fastcall symbols from MSVC++,
+     # which start with @ or ?.
+-    lt_cv_sys_global_symbol_pipe="$AWK '"\
+-"     {last_section=section; section=\$ 3};"\
+-"     /^COFF SYMBOL TABLE/{for(i in hide) delete hide[i]};"\
+-"     /Section length .*#relocs.*(pick any)/{hide[last_section]=1};"\
+-"     /^ *Symbol name *: /{split(\$ 0,sn,\":\"); si=substr(sn[2],2)};"\
+-"     /^ *Type *: code/{print \"T\",si,substr(si,length(prfx))};"\
+-"     /^ *Type *: data/{print \"I\",si,substr(si,length(prfx))};"\
+-"     \$ 0!~/External *\|/{next};"\
+-"     / 0+ UNDEF /{next}; / UNDEF \([^|]\)*()/{next};"\
+-"     {if(hide[section]) next};"\
+-"     {f=\"D\"}; \$ 0~/\(\).*\|/{f=\"T\"};"\
+-"     {split(\$ 0,a,/\||\r/); split(a[2],s)};"\
+-"     s[1]~/^[@?]/{print f,s[1],s[1]; next};"\
+-"     s[1]~prfx {split(s[1],t,\"@\"); print f,t[1],substr(t[1],length(prfx))}"\
+-"     ' prfx=^$ac_symprfx"
++    lt_cv_sys_global_symbol_pipe="$AWK -f '$(realpath "$(dirname $0)")/build-aux/dumpbin-to-nm.awk' prfx=^$ac_symprfx"
+   else
+     lt_cv_sys_global_symbol_pipe="sed -n -e 's/^.*[	 ]\($symcode$symcode*\)[	 ][	 ]*$ac_symprfx$sympat$opt_cr$/$symxfrm/p'"
+   fi
+--- a/lib/Makefile.in
++++ b/lib/Makefile.in
+@@ -5934,7 +5938,7 @@
+ 	            test -f $$sf || sf=$(srcdir)/$$sf; \
+ 	            of=`echo "$$f" | sed -e 's,^.*/,,' -e 's,\\.[^.]*$$,,'`.$(OBJEXT); \
+ 	            echo "$(COMPILE) -c $$sf" 1>&6; \
+-	            $(COMPILE) -c $$sf || { rm -f config.h; exit 1; }; \
++	            $(COMPILE) -c $$sf 1>&6 || { rm -f config.h; exit 1; }; \
+ 	            sh ./exported.sh $$of 1>&5; \
+ 	            rm -f $$of `echo "$$of" | sed -e 's,\\.$(OBJEXT)$$,.lo,'`; \
+ 	            ;; \
