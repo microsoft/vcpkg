@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
-    REF v1.7.1
-    SHA512 93f8bd4b28f7568562b71abdfba89ca7f43133e6ebf6f80a46f2af81a88ec621420432c6e90a3dbd85944cecca57ec94e5bd25d896b0ffe9888f19ae4534f2f7
+    REF v1.7.2
+    SHA512 ea9671cab8a4cf641c413933bd7fb4f3b1f823ca1b17260b3217b13aff22513b4939ff722d74beada1730d47dca70858835733418593ed2df8abf5c1dea0b202
     HEAD_REF master
 )
 
