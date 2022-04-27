@@ -2561,7 +2561,7 @@
       "port-version": 1
     },
     "google-cloud-c": {
-      "baseline": "2022-02-27",
+      "baseline": "2022-04-27",
       "port-version": 0
     },
     "google-cloud-cpp": {
@@ -3449,7 +3449,7 @@
       "port-version": 1
     },
     "libcurl-simple-https": {
-      "baseline": "2022-02-14",
+      "baseline": "2022-03-28",
       "port-version": 0
     },
     "libdatachannel": {
