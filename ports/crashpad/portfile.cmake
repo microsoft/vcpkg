@@ -31,7 +31,7 @@ endfunction()
 checkout_into_path(
     DEST "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     URL "https://chromium.googlesource.com/chromium/mini_chromium"
-    REF "502930381b23c5fa3911c8b82ec3e4ba6ceb3658"
+    REF "5654edb4225bcad13901155c819febb5748e502b"
     PATCHES update-toolchain.patch
 )
 
@@ -39,7 +39,7 @@ checkout_into_path(
 checkout_into_path(
     DEST "${SOURCE_PATH}/third_party/lss/lss"
     URL "https://chromium.googlesource.com/linux-syscall-support.git"
-    REF "7bde79cc274d06451bf65ae82c012a5d3e476b5a"
+    REF "e1e7b0ad8ee99a875b272c8e33e308472e897660"
 )
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
@@ -169,7 +169,7 @@ elseif(VCPKG_TARGET_IS_OSX)
 endif()
 
 message(STATUS "Configuring GN")
-vcpkg_gn_configure(
+vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS "${GN_OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
@@ -188,7 +188,7 @@ list(PREPEND TARGETS
 if("generate-dump" IN_LIST FEATURES)
     list(APPEND TARGETS tools:generate_dump)
 endif()
-vcpkg_gn_install(
+vcpkg_install_gn(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${TARGETS}
 )

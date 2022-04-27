@@ -1,8 +1,8 @@
 diff --git a/build/config/BUILD.gn b/build/config/BUILD.gn
-index d6171ef..c5ecdf9 100644
+index e32e40d..654bffc 100644
 --- a/build/config/BUILD.gn
 +++ b/build/config/BUILD.gn
-@@ -411,7 +411,7 @@ toolchain("gcc_like_toolchain") {
+@@ -416,7 +416,7 @@ toolchain("gcc_like_toolchain") {
                                 "prebuilt", ndk_host_arch, "bin", ""])
  
       if (target_cpu == "arm") {
@@ -11,7 +11,7 @@ index d6171ef..c5ecdf9 100644
       } else if (target_cpu == "arm64") {
         tool_prefix = "aarch64-linux-android"
       } else if (target_cpu == "x86") {
-@@ -420,17 +420,21 @@ toolchain("gcc_like_toolchain") {
+@@ -425,17 +425,21 @@ toolchain("gcc_like_toolchain") {
         tool_prefix = "x86_64-linux-android"
       }
  
@@ -40,7 +40,7 @@ index d6171ef..c5ecdf9 100644
    } else {
      cc = "clang"
      cxx = "clang++"
-@@ -471,7 +475,7 @@ toolchain("gcc_like_toolchain") {
+@@ -476,7 +480,7 @@ toolchain("gcc_like_toolchain") {
  
    tool("cc") {
      depfile = "{{output}}.d"
@@ -49,7 +49,7 @@ index d6171ef..c5ecdf9 100644
      depsformat = "gcc"
      description = "CC {{output}}"
      outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -479,7 +483,7 @@ toolchain("gcc_like_toolchain") {
+@@ -484,7 +488,7 @@ toolchain("gcc_like_toolchain") {
  
    tool("cxx") {
      depfile = "{{output}}.d"
@@ -58,7 +58,7 @@ index d6171ef..c5ecdf9 100644
      depsformat = "gcc"
      description = "CXX {{output}}"
      outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -499,7 +503,7 @@ toolchain("gcc_like_toolchain") {
+@@ -504,7 +508,7 @@ toolchain("gcc_like_toolchain") {
  
      tool("objc") {
        depfile = "{{output}}.d"
@@ -67,7 +67,7 @@ index d6171ef..c5ecdf9 100644
        depsformat = "gcc"
        description = "OBJC {{output}}"
        outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -507,7 +511,7 @@ toolchain("gcc_like_toolchain") {
+@@ -512,7 +516,7 @@ toolchain("gcc_like_toolchain") {
  
      tool("objcxx") {
        depfile = "{{output}}.d"
@@ -76,7 +76,7 @@ index d6171ef..c5ecdf9 100644
        depsformat = "gcc"
        description = "OBJCXX {{output}}"
        outputs = [ "{{source_out_dir}}/{{label_name}}.{{source_name_part}}.o" ]
-@@ -539,7 +543,11 @@ toolchain("gcc_like_toolchain") {
+@@ -544,7 +548,11 @@ toolchain("gcc_like_toolchain") {
      if (mini_chromium_is_mac || mini_chromium_is_ios) {
        command = "libtool -static -no_warning_for_no_symbols {{arflags}}${extra_arflags} -o {{output}} {{inputs}}"
      } else {
@@ -89,7 +89,7 @@ index d6171ef..c5ecdf9 100644
      }
      description = "AR {{output}}"
      default_output_dir = "{{target_out_dir}}"
-@@ -563,7 +571,7 @@ toolchain("gcc_like_toolchain") {
+@@ -568,7 +576,7 @@ toolchain("gcc_like_toolchain") {
        start_whole_flag = "-Wl,--whole-archive"
        end_whole_flag = "-Wl,--no-whole-archive "
      }
@@ -98,7 +98,7 @@ index d6171ef..c5ecdf9 100644
      description = "SOLINK_MODULE $sofile"
  
      default_output_dir = "{{root_out_dir}}"
-@@ -582,7 +590,7 @@ toolchain("gcc_like_toolchain") {
+@@ -587,7 +595,7 @@ toolchain("gcc_like_toolchain") {
        start_group_flag = "-Wl,--start-group"
        end_group_flag = "-Wl,--end-group"
      }
@@ -107,7 +107,7 @@ index d6171ef..c5ecdf9 100644
      description = "LINK $outfile"
  
      default_output_dir = "{{root_out_dir}}"
-@@ -591,12 +599,20 @@ toolchain("gcc_like_toolchain") {
+@@ -596,12 +604,20 @@ toolchain("gcc_like_toolchain") {
    }
  
    tool("stamp") {
