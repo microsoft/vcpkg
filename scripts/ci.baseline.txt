@@ -584,11 +584,8 @@ libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
 # Conflicts with openssl
-boringssl:arm64-windows      = skip
-boringssl:arm-uwp            = skip
 boringssl:x64-linux          = skip
 boringssl:x64-osx            = skip
-boringssl:x64-uwp            = skip
 boringssl:x64-windows        = skip
 boringssl:x64-windows-static = skip
 boringssl:x64-windows-static-md=skip
