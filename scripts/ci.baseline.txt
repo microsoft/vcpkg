@@ -175,8 +175,10 @@ cppcoro:x64-uwp=fail
 # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
-crashpad:arm64-windows=fail
+cpuinfo:arm64-windows=fail
 crashpad:arm-uwp=fail
+crashpad:arm64-windows=fail
+crashpad:x64-linux=fail
 crashpad:x86-windows=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail

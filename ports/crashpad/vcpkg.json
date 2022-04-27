@@ -8,7 +8,7 @@
   ],
   "homepage": "https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md",
   "license": "Apache-2.0",
-  "supports": "(x64 & (osx | windows | linux | android)) | (arm & android) | (arm64 & (windows | linux | android))",
+  "supports": "(x64 & (osx | windows | linux | android)) | (arm & android) | (arm64 & (windows | android))",
   "dependencies": [
     {
       "name": "vcpkg-tool-gn",
