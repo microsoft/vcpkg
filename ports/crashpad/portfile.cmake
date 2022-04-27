@@ -146,6 +146,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
     )
     set_compiler_options(OPTIONS)
+    vcpkg_find_acquire_program(CLANG)
 elseif(VCPKG_TARGET_IS_OSX)
     message(STATUS "Setting GN options for OSX")
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
