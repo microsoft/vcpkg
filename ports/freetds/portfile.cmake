@@ -5,12 +5,13 @@ vcpkg_from_github(
     HEAD_REF master
     SHA512 78b494c04e3436bfdc4997e6f0196baef27246bb7ad825c487a16f247d13c99324a39d52bfe8f5306164ae3f5c7eb43ca83944b24a3ce6b4bcd733849b4064ad
     PATCHES
-        no-tests-and-exes.patch
+        disable-tests.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openssl WITH_OPENSSL
+        tools WITH_TOOLS
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -39,6 +40,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES bsqldb bsqlodbc datacopy defncopy freebcp tdspool tsql AUTO_CLEAN)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/etc")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/etc" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/etc")
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7ac6cc58..1538b6de 100644
+index 7ac6cc58..1a6a4f0e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -64,9 +64,9 @@ math(EXPR BUILD_NUMBER "${BUILD_NUMBER}")
@@ -15,15 +15,17 @@ index 7ac6cc58..1538b6de 100644
  
  # TODO depends on configure
  add_definitions(-D_REENTRANT -D_THREAD_SAFE)
-@@ -459,9 +459,9 @@ add_subdirectory(src/tds)
+@@ -459,9 +459,11 @@ add_subdirectory(src/tds)
  add_subdirectory(src/ctlib)
  add_subdirectory(src/dblib)
  add_subdirectory(src/odbc)
 -add_subdirectory(src/apps)
-+#add_subdirectory(src/apps)
++if(WITH_TOOLS)
++	add_subdirectory(src/apps)
++	add_subdirectory(src/pool)
++endif()
  add_subdirectory(src/server)
 -add_subdirectory(src/pool)
-+#add_subdirectory(src/pool)
  
  configure_file(${CMAKE_BINARY_DIR}/include/config.h.in ${CMAKE_BINARY_DIR}/include/config.h)
  configure_file(${CMAKE_SOURCE_DIR}/include/tds_sysdep_public.h.in ${CMAKE_BINARY_DIR}/include/tds_sysdep_public.h)

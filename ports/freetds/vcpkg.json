@@ -21,6 +21,9 @@
       "dependencies": [
         "openssl"
       ]
+    },
+    "tools": {
+      "description": "Build tools"
     }
   }
 }
