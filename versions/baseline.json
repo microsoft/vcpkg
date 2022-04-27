@@ -3437,8 +3437,8 @@
       "port-version": 2
     },
     "libcbor": {
-      "baseline": "0.8.0",
-      "port-version": 1
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "libcds": {
       "baseline": "2.3.3",
