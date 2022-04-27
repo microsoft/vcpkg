@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DENABLE_BENCHMARKS=OFF
         -DENABLE_FUZZ_TESTING=OFF
         -DBUILD_TESTING=OFF
+        -DCMAKE_INSTALL_RPATH='$ORIGIN'
         -DPython_EXECUTABLE=${PYTHON3}
 )
 
