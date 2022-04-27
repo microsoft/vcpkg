@@ -25,8 +25,8 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/vendor/nlohmann"
 )
 file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nanoflann.hpp" DESTINATION "${SOURCE_PATH}/vendor/nanoflann")
-file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann")
-file(APPEND "${SOURCE_PATH}/vendor/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann/nlohmann")
+file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
 
