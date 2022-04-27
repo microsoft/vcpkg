@@ -15,7 +15,8 @@ set(lapack_ver 3.10.0)
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
 x_vcpkg_find_fortran(FORTRAN_CMAKE)
 
-if(VCPKG_USE_INTERNAL_Fortran)
+if(VCPKG_USE_INTERNAL_Fortran OR VCPKG_DETECTED_CMAKE_Fortran_COMPILER MATCHES "ifort${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(PATCHES intel.patch)
 endif()
 
 vcpkg_from_github(
@@ -24,7 +25,7 @@ vcpkg_from_github(
     REF "v${lapack_ver}"
     SHA512 56055000c241bab8f318ebd79249ea012c33be0c4c3eca6a78e247f35ad9e8088f46605a0ba52fd5ad3e7898be3b7bc6c50ceb3af327c4986a266b06fe768cbf
     HEAD_REF master
-    PATCHES intel.patch
+    PATCHES ${PATCHES}
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

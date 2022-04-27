@@ -33,7 +33,9 @@ function(x_vcpkg_find_fortran out_var)
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
     include(CMakeDetermineFortranCompiler)
-
+    if(CMAKE_Fortran_COMPILER)
+        set(VCPKG_DETECTED_CMAKE_Fortran_COMPILER "${CMAKE_Fortran_COMPILER}" PARENT_SCOPE)
+    endif()
     if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
         # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out Fortran on their own. 
         if(WIN32)
