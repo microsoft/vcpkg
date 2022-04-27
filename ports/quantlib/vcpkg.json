@@ -1,6 +1,6 @@
 {
   "name": "quantlib",
-  "version": "1.25",
+  "version": "1.26",
   "description": "The QuantLib C++ library",
   "homepage": "https://www.quantlib.org/",
   "supports": "!(windows & !static)",

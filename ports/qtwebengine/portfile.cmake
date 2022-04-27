@@ -45,7 +45,6 @@ endif()
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(GPERF)
-vcpkg_find_acquire_program(PYTHON2)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
@@ -63,8 +62,16 @@ get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+
+if(NOT QT_IS_LATEST)
+    vcpkg_find_acquire_program(PYTHON2)
+    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
+    vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+    list(APPEND FEATURE_OPTIONS "-DPython2_EXECUTABLE=${PYTHON2}")
+else()
+    vcpkg_find_acquire_program(PYTHON3)
+    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
+endif()
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -74,6 +81,10 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
         file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
 endif()
+
+#set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # avoid long path issues in CI. 
+#cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
+#file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 
 ### Download third_party modules
 vcpkg_from_git(
@@ -103,7 +114,6 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
                         #-DGn_EXECUTABLE=${GN}
-                        -DPython2_EXECUTABLE=${PYTHON2}
                         -DNodejs_EXECUTABLE=${NODEJS}
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})

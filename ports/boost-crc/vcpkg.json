@@ -1,8 +1,9 @@
 {
   "name": "boost-crc",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost crc module",
   "homepage": "https://github.com/boostorg/crc",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost-array",
     "boost-config",
