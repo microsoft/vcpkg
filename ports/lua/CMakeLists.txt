@@ -28,12 +28,6 @@ src/lopcodes.c src/loslib.c src/lparser.c src/lstate.c src/lstring.c src/lstrlib
 src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/lzio.c
 )
 
-IF (COMPILE_AS_CPP)
-    SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
-ELSE ()
-    SET (CMAKE_C_STANDARD 99)
-ENDIF ()
-
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
 
@@ -51,7 +45,9 @@ IF (UNIX)
 ENDIF ()
 
 #DLL
+SET (CMAKE_C_STANDARD 99)
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
+TARGET_INCLUDE_DIRECTORIES(lua PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> PUBLIC $<INSTALL_INTERFACE:include>)
 SET_PROPERTY (TARGET lua PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 IF (BUILD_SHARED_LIBS AND WIN32)
@@ -80,8 +76,12 @@ INSTALL ( TARGETS lua
 install(EXPORT unofficial-lua-config DESTINATION share/unofficial-lua)
 
 IF (COMPILE_AS_CPP)
-    ADD_LIBRARY ( lua-cpp ${SRC_LIBLUA} )
+    file(COPY ${SRC_LIBLUA} DESTINATION ${CMAKE_BINARY_DIR}/luacpp)
+    file(GLOB SRC_LIBLUA_CXX ${CMAKE_BINARY_DIR}/luacpp/*.c)
+    SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA_CXX} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
+    ADD_LIBRARY ( lua-cpp ${SRC_LIBLUA_CXX} )
     SET_TARGET_PROPERTIES(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
+    TARGET_INCLUDE_DIRECTORIES(lua-cpp PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> PUBLIC $<INSTALL_INTERFACE:include>)
     IF (BUILD_SHARED_LIBS AND WIN32)
         TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_BUILD_AS_DLL )
     ENDIF ()
@@ -108,9 +108,20 @@ IF (COMPILE_AS_CPP)
 ENDIF()
 
 IF (INSTALL_TOOLS)
-    ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
+    if (COMPILE_AS_CPP)
+        ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA_CXX} ) # compiler uses non-exported APIs, so must include sources directly.
+        TARGET_INCLUDE_DIRECTORIES(luac PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+    else()
+        ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
+    endif()
     ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
-    TARGET_LINK_LIBRARIES ( luai lua )
+    if (COMPILE_AS_CPP)
+        TARGET_LINK_LIBRARIES ( luac PRIVATE lua-cpp )
+        TARGET_LINK_LIBRARIES ( luai PRIVATE lua-cpp )
+    else()
+        TARGET_LINK_LIBRARIES ( luac PRIVATE lua )
+        TARGET_LINK_LIBRARIES ( luai PRIVATE lua )
+    endif()
     SET_TARGET_PROPERTIES ( luai PROPERTIES OUTPUT_NAME lua PDB_NAME luai )
     IF (UNIX)
         IF (CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
