@@ -1,7 +1,6 @@
 {
   "name": "jansson",
-  "version-string": "2.13.1",
-  "port-version": 2,
+  "version": "2.14",
   "description": "Jansson is a C library for encoding, decoding and manipulating JSON data",
   "homepage": "https://github.com/akheron/jansson"
 }

@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-qmake",
-  "version-date": "2021-10-23",
+  "version-date": "2022-02-14",
+  "license": "MIT",
   "supports": "native",
   "dependencies": [
     "pkgconf",

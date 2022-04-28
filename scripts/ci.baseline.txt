@@ -47,8 +47,6 @@
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-# Requires ATL for ARM64 to be installed in CI
-azure-storage-cpp:arm64-windows=fail
 
 aubio:arm-uwp=fail
 aubio:x64-uwp=fail
@@ -59,8 +57,6 @@ blitz:x64-uwp=fail
 blitz:arm64-windows=fail
 blitz:arm-uwp=fail
 blosc:arm64-windows=fail
-blosc:arm-uwp=fail
-blosc:x64-uwp=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
@@ -72,8 +68,18 @@ caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-c-ares:arm-uwp=fail
-c-ares:x64-uwp=fail
+
+# file conflict with dbg-macro
+c-dbg-macro:x86-windows=skip
+c-dbg-macro:x64-windows=skip
+c-dbg-macro:x64-windows-static=skip
+c-dbg-macro:x64-windows-static-md=skip
+c-dbg-macro:x64-uwp=skip
+c-dbg-macro:arm64-windows=skip
+c-dbg-macro:arm-uwp=skip
+c-dbg-macro:x64-osx=skip
+c-dbg-macro:x64-linux=skip
+
 casclib:arm-uwp=fail
 casclib:x64-uwp=fail
 catch-classic:arm64-windows      = skip
@@ -85,8 +91,6 @@ catch-classic:x64-windows        = skip
 catch-classic:x64-windows-static = skip
 catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
-ccd:arm-uwp=fail
-ccd:x64-uwp=fail
 cctag:x64-windows-static-md=fail
 cello:arm-uwp=fail
 cello:x64-uwp=fail
@@ -106,18 +110,26 @@ charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
 # chartdir does not offer stable download URLs
-chartdir:arm64-windows=fail
-chartdir:arm-uwp=fail
-chartdir:x64-uwp=fail
-chartdir:x64-windows-static=fail
-chartdir:x86-windows=fail
-chartdir:x64-windows=fail
-chartdir:x64-windows-static-md=fail
-chartdir:x64-osx=fail
-chmlib:arm-uwp=fail
-chmlib:x64-uwp=fail
-# Chromium Base requires a recent version of Clang to be installed.
+chartdir:arm64-windows=skip
+chartdir:arm-uwp=skip
+chartdir:x64-uwp=skip
+chartdir:x64-windows-static=skip
+chartdir:x86-windows=skip
+chartdir:x64-windows=skip
+chartdir:x64-windows-static-md=skip
+chartdir:x64-osx=skip
+
+# chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
+#  broken on Windows because it does not yet support VS2022
+chromium-base:x64-windows=skip
+chromium-base:x64-windows-static=skip
+chromium-base:x64-windows-static-md=skip
+#  broken on Linux because
 chromium-base:x64-linux=skip
+#  broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache
+#  because the first attempt to build it fails, but subsequent attempts succeed
+chromium-base:x64-osx=skip
+
 civetweb:arm64-windows      = skip
 civetweb:arm-uwp            = skip
 civetweb:x64-uwp            = skip
@@ -136,8 +148,13 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-# https://github.com/colmap/colmap/issues/1421
-colmap:x64-osx=fail
+
+# there is an ICE in VS2022 with colmap in release mode
+colmap:x86-windows=fail
+colmap:x64-windows=fail
+colmap:x64-windows-static=fail
+colmap:x64-windows-static-md=fail
+
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
@@ -163,7 +180,6 @@ cppcoro:x64-uwp=fail
 # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
-cpuinfo:arm64-windows=fail
 crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
@@ -191,10 +207,15 @@ devicenameresolver:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip
+directxsdk:x64-windows-static-md=skip
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
+# requires g++11
+discordcoreapi:x64-linux=fail
+dlib:arm-uwp=fail
+dlib:x64-uwp=fail
 dmlc:arm-uwp=fail
 dmlc:x64-uwp=fail
 dpdk:arm-uwp=fail
@@ -206,15 +227,6 @@ dpdk:x64-windows-static=fail
 dpdk:x64-windows-static-md=fail
 dpdk:x64-windows=fail
 dpdk:x86-windows=fail
-duckx:arm64-windows      = skip
-duckx:arm-uwp            = skip
-duckx:x64-linux          = skip
-duckx:x64-osx            = skip
-duckx:x64-uwp            = skip
-duckx:x64-windows        = skip
-duckx:x64-windows-static = skip
-duckx:x64-windows-static-md=skip
-duckx:x86-windows        = skip
 
 # requires python@2 from brew, but that no longer exists
 # python2 EOL yay!
@@ -239,8 +251,6 @@ embree2:x64-windows-static-md=skip
 # embree2 conflicts with embree3
 embree2:x64-linux=skip
 embree2:x64-osx=skip
-enet:arm-uwp=fail
-enet:x64-uwp=fail
 epsilon:arm-uwp=fail
 epsilon:x64-uwp=fail
 epsilon:x64-windows-static=fail
@@ -249,10 +259,6 @@ fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
-fdlibm:arm-uwp=fail
-fdlibm:x64-uwp=fail
-fftw3:arm-uwp=fail
-fftw3:x64-uwp=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -264,8 +270,6 @@ fluidlite:x64-windows-static=skip
 fluidlite:x64-windows-static-md=skip
 fluidlite:x64-windows=skip
 fluidlite:x86-windows=skip
-fmem:arm-uwp=fail
-fmem:x64-uwp=fail
 fmi4cpp:arm-uwp=fail
 fmi4cpp:x64-uwp=fail
 fmilib:arm64-windows=fail
@@ -288,13 +292,7 @@ freetype-gl:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
-fuzzylite:arm-uwp=fail
-fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
-fuzzylite:x64-uwp=fail
-
-# Requires ATL for ARM64 to be installed in CI
-gdal:arm64-windows=fail
 
 # gsoap does not offer stable public source downloads
 gsoap:x64-windows        = skip
@@ -343,6 +341,7 @@ gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x64-windows-static-md=fail
 gmmlib:x86-windows=fail
+
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
 gppanel:x64-osx=fail
@@ -353,12 +352,6 @@ gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
 graphicsmagick:arm-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphite2:arm-uwp=fail
-graphite2:x64-uwp=fail
-graphqlparser:arm-uwp=fail
-graphqlparser:x64-uwp=fail
-gsl:arm-uwp=fail
-gsl:x64-uwp=fail
 gstreamer:x64-osx=fail
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
@@ -375,8 +368,6 @@ healpix:x64-uwp=fail
 healpix:arm64-windows=fail
 healpix:arm-uwp=fail
 healpix:x64-osx=fail
-hiredis:arm-uwp=fail
-hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:arm64-windows=fail
 hunspell:x64-windows-static-md=fail
@@ -410,7 +401,6 @@ intel-mkl:x64-windows-static=fail
 intel-mkl:x64-windows-static-md=fail
 intel-mkl:x86-windows=fail
 intelrdfpmathlib:arm-uwp=fail
-intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
@@ -423,8 +413,6 @@ isal:x64-windows=fail
 isal:x64-windows-static=fail
 isal:x64-windows-static-md=fail
 isal:x86-windows=fail
-jbig2dec:arm-uwp=fail
-jbig2dec:x64-uwp=fail
 jemalloc:arm64-windows=fail
 jemalloc:arm-uwp=fail
 jemalloc:x64-linux=fail
@@ -464,16 +452,11 @@ libbf:x64-windows-static-md=fail
 libbf:x86-windows=fail
 libbson:arm-uwp=fail
 libbson:x64-uwp=fail
-libcds:arm64-windows=fail
-libcds:arm-uwp=fail
-libcds:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-libdatrie:x64-linux=fail
-libdatrie:x64-osx=fail
 libepoxy:arm-uwp=fail
 libepoxy:x64-uwp=fail
 libepoxy:x64-windows-static=fail
@@ -489,17 +472,19 @@ libevhtp:arm-uwp=fail
 libexif:arm-uwp=fail
 libexif:x64-uwp=fail
 libfreenect2:arm64-windows=fail
-libfreenect2:x64-osx=fail
 libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
+
+# the msbuild for libgpg:x64-uwp and libgpg-error:x64-uwp are broken on VS2022 due to TargetPlatformMinVersion not existing
+libgpg:x64-uwp=fail
+libgpg-error:x64-uwp=fail
+
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
 libhydrogen:arm64-windows=fail
-libics:arm-uwp=fail
-libics:x64-uwp=fail
 libigl:arm64-windows=fail
 libigl:arm-uwp=fail
 libigl:x64-uwp=fail
@@ -511,11 +496,6 @@ liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
 liblo:x64-uwp=fail
-liblsl:arm64-windows=fail
-liblsl:arm-uwp=fail
-liblsl:x64-uwp=fail
-libmad:arm-uwp=fail
-libmad:x64-uwp=fail
 libmagic:x64-uwp=fail
 libmagic:arm64-windows=fail
 libmagic:arm-uwp=fail
@@ -537,6 +517,7 @@ libmesh:x64-windows-static-md=skip
 libmesh:x86-windows=skip
 libmesh:x64-osx=skip
 libmesh:x64-linux=skip
+libmikmod:x64-osx=fail
 libmodman:arm-uwp=fail
 libmodman:x64-uwp=fail
 libmodman:x64-windows-static=fail
@@ -552,12 +533,6 @@ libmysql:arm64-windows=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
-libpff:arm-uwp=fail
-libpff:x64-linux=fail
-libpff:x64-osx=fail
-libpff:x64-uwp=fail
-libpff:x64-windows-static=fail
-libpff:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libpng-apng:arm64-windows      = skip
 libpng-apng:arm-uwp            = skip
@@ -609,8 +584,6 @@ libsrt:x64-uwp=fail
 libssh:arm64-windows=fail
 libssh:arm-uwp=fail
 libssh:x64-uwp=fail
-libstk:arm-uwp=fail
-libstk:x64-uwp=fail
 libtcod:arm-uwp=fail
 libtcod:x64-uwp=fail
 libtins:arm-uwp=fail
@@ -622,6 +595,7 @@ libui:x64-linux=fail
 libui:x64-uwp=fail
 libusb:arm-uwp=fail
 libusb:x64-uwp=fail
+libusb:arm64-windows=fail
 libusbmuxd:arm-uwp=fail
 libusbmuxd:x64-uwp=fail
 libusbmuxd:x64-linux=fail
@@ -642,6 +616,7 @@ libvmdk:x64-windows-static-md=skip
 libvmdk:arm64=skip
 libvmdk:x64-linux=skip
 libvmdk:x64-osx=skip
+libvpx:arm-uwp=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -676,8 +651,6 @@ luajit:x86-windows        = skip
 luafilesystem:arm-uwp=fail
 luafilesystem:x64-uwp=fail
 luasec:x64-windows-static=fail
-luasocket:arm-uwp=fail
-luasocket:x64-uwp=fail
 lzfse:arm-uwp=fail
 magnum:arm64-windows=skip
 marble:x64-windows-static=fail
@@ -687,8 +660,6 @@ marble:arm-uwp=fail
 marble:x64-linux=fail
 marble:x64-osx=fail
 marble:x86-windows=fail
-marl:arm-uwp=fail
-marl:x64-uwp=fail
 mathgl:x64-osx=fail
 mathgl:x64-uwp=fail
 mecab:arm64-windows      = skip
@@ -705,10 +676,6 @@ mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-meschach:arm-uwp=fail
-meschach:x64-linux=fail
-meschach:x64-osx=fail
-meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
 mfl:x64-linux=skip
@@ -716,8 +683,6 @@ mfl:x64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-uwp=fail
 minifb:x64-uwp=fail
-minisat-master-keying:arm-uwp=fail
-minisat-master-keying:x64-uwp=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
@@ -753,6 +718,8 @@ mmx:x64-uwp=skip
 mmx:arm64-windows=skip
 # Flaky strange linker error
 mongo-c-driver:x64-osx=skip
+mongo-c-driver:arm-uwp=fail
+mongo-c-driver:x64-uwp=fail
 mongoose:arm-uwp=fail
 mongoose:x64-uwp=fail
 monkeys-audio:arm64-windows=fail
@@ -787,9 +754,6 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
-msix:x64-linux=fail
-msix:x64-osx=fail
-msix:x64-windows-static=fail
 msmpi:arm64-windows=fail
 msmpi:arm-uwp=fail
 msmpi:x64-linux=fail
@@ -805,15 +769,6 @@ nana:x64-uwp=fail
 nanodbc:arm-uwp=fail
 nanodbc:x64-uwp=fail
 nanodbc:x64-linux=skip
-nanorange:arm64-windows=fail
-nanorange:arm-uwp=fail
-nanorange:x64-linux=fail
-nanorange:x64-osx=fail
-nanorange:x64-uwp=fail
-nanorange:x64-windows=fail
-nanorange:x64-windows-static=fail
-nanorange:x64-windows-static-md=fail
-nanorange:x86-windows=fail
 nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 ngspice:x64-windows-static=fail
@@ -835,7 +790,6 @@ nvtt:x64-uwp=fail
 ocilib:arm-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:x64-uwp=fail
-ocilib:x64-windows-static=fail
 ocilib:x64-windows-static-md=fail
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
@@ -934,18 +888,12 @@ openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
 openscap:x64-osx=fail
-opentracing:arm-uwp=fail
-opentracing:x64-uwp=fail
 openvpn3:x64-osx=fail
 openvr:arm64-windows=fail
 openvr:arm-uwp=fail
 openvr:x64-osx=fail
 openvr:x64-uwp=fail
 openvr:x64-windows-static=fail
-openxr-loader:arm64-windows=fail
-openxr-loader:arm-uwp=fail
-openxr-loader:x64-osx=fail
-openxr-loader:x64-uwp=fail
 optional-bare:arm64-windows      = skip
 optional-bare:arm-uwp            = skip
 optional-bare:x64-linux          = skip
@@ -957,8 +905,6 @@ optional-bare:x64-windows-static-md=skip
 optional-bare:x86-windows        = skip
 opusfile:arm-uwp=fail
 opusfile:x64-uwp=fail
-orocos-kdl:arm-uwp=fail
-orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pango:x64-windows-static=fail
@@ -967,12 +913,6 @@ pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
-physx:arm64-windows=fail
-pixel:x64-uwp=fail
-pixel:x64-windows=fail
-pixel:x64-windows-static=fail
-pixel:x64-windows-static-md=fail
-pixel:x86-windows=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
@@ -991,24 +931,21 @@ pmdk:x64-osx=fail
 pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
-pngwriter:arm-uwp=fail
-pngwriter:x64-uwp=fail
 popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
-python2:arm64-windows=fail
-python2:arm-uwp=fail
-python2:x64-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
-qhull:x64-uwp=fail
-qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
+
+# qtwebengine:x64-windows has an ICE in VS2022
+qtwebengine:x64-windows=fail
+
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1039,19 +976,10 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
-quickfix:arm-uwp=fail
-quickfix:arm64-windows=fail
-quickfix:x64-uwp=fail
-quickfix:x64-windows-static=fail
-quickfix:x64-windows-static-md=fail
-quickfix:x64-windows=fail
-quickfix:x86-windows=fail
 qwt:x64-osx=fail
 qwt-qt6:x64-osx=fail
 qwtw:x64-windows=fail
 rabit:x64-osx=fail
-ragel:arm-uwp=fail
-ragel:x64-uwp=fail
 range-v3-vs2015:arm64-windows      = skip
 range-v3-vs2015:arm-uwp            = skip
 range-v3-vs2015:x64-linux          = skip
@@ -1131,12 +1059,12 @@ rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
 rttr:arm-uwp=fail
 rttr:x64-uwp=fail
-ryu:arm-uwp=fail
-ryu:x64-uwp=fail
+
+# ryu does not support VS2022 yet
+ryu:x64-windows=fail
 ryu:x64-windows-static=fail
 ryu:x64-windows-static-md=fail
-ryu:x86-windows=fail
-ryu::arm64-windows=fail
+
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-linux=fail
@@ -1157,9 +1085,6 @@ sdformat9:arm-uwp=fail
 sdformat9:x64-linux=fail
 sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
-sdl1:arm-uwp=fail
-sdl1:x64-uwp=fail
-sdl1:x64-osx=fail
 sdl2-mixer:arm-uwp=fail
 sdl2-mixer:x64-uwp=fail
 sdl2-net:arm-uwp=fail
@@ -1167,17 +1092,10 @@ sdl2-net:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/issues/10918
 seal:arm-uwp=fail
 seal:x64-uwp=fail
-sentencepiece:arm64-windows=fail
-sentencepiece:arm-uwp=fail
-sentencepiece:x64-uwp=fail
-sentencepiece:x64-windows=fail
-sentencepiece:x86-windows=fail
 septag-sx:arm64-windows=fail
 septag-sx:arm-uwp=fail
 septag-sx:x64-uwp=fail
 sfml:arm64-windows=fail
-shapelib:arm-uwp=fail
-shapelib:x64-uwp=fail
 shiva:x64-windows-static=fail
 shiva:x64-windows-static-md=fail
 shiva-sfml:x64-linux=fail
@@ -1194,11 +1112,8 @@ shogun:x64-windows-static-md=skip
 shogun:x86-windows        = skip
 signalrclient:x64-uwp=fail
 signalrclient:arm-uwp=fail
-skia:arm64-windows=fail
 skia:arm-uwp=fail
-skia:x64-linux=fail
 skia:x64-uwp=fail
-skia:x86-windows=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
@@ -1259,8 +1174,18 @@ tcl:arm64-windows=fail
 tcl:x64-uwp=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
+
+# tensorflow does not support VS2022
+tensorflow:x64-windows=fail
+tensorflow:x64-windows-static=fail
+tensorflow:x64-windows-static-md=fail
+tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows-static=fail
+tensorflow-cc:x64-windows-static-md=fail
+
 tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
+
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
 theia:x64-uwp            = skip
@@ -1330,7 +1255,6 @@ vxl:x64-windows        = skip
 vxl:x64-windows-static = skip
 vxl:x64-windows-static-md=skip
 vxl:x86-windows        = skip
-wampcc:arm64-windows=fail
 winpcap:arm64-windows      = skip
 winpcap:arm-uwp            = skip
 winpcap:x64-uwp            = skip
@@ -1356,13 +1280,8 @@ xerces-c:arm-uwp=fail
 xerces-c:x64-uwp=fail
 xmlsec:arm-uwp=fail
 xmlsec:x64-uwp=fail
-yajl:arm-uwp=fail
-yajl:x64-uwp=fail
 yara:arm-uwp=fail
 yara:x64-uwp=fail
-yato:arm64-windows=fail
-yato:arm-uwp=fail
-yato:x64-uwp=fail
 z3:arm-uwp=fail
 z3:x64-uwp=fail
 
@@ -1377,8 +1296,6 @@ ctp:x64-windows=skip
 ctp:x64-windows-static=skip
 ctp:x64-windows-static-md=skip
 ctp:x86-windows=skip
-protozero:arm-uwp=fail
-protozero:x64-uwp=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
 clapack:x64-linux=skip
@@ -1394,10 +1311,7 @@ lapack-reference:x64-uwp=skip
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 akali:x64-windows-static-md=fail
-chromium-base:x64-windows-static-md=fail
-clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
-gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 libcerf:x64-windows-static-md=fail
 libmicrohttpd:x64-windows-static-md=fail
@@ -1409,8 +1323,13 @@ quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
 symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
+
+# the version of v8 we have in the repo doesn't support VS2022
+v8:x86-windows=fail
+v8:x64-windows=fail
+v8:x64-windows-static=fail
 v8:x64-windows-static-md=fail
-yato:x64-windows-static-md=fail
+
 zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
@@ -1421,3 +1340,8 @@ workflow:arm-uwp=fail
 # See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
+
+# ZeroC doesn't provide ARM tagets in project files.
+zeroc-ice:arm64-windows=fail
+zeroc-ice:arm-uwp=fail
+zeroc-ice:x64-uwp=fail

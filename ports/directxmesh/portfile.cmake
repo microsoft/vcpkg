@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF feb2022
-    SHA512 7a34ff8a484e5693efbc3e3f1ecb32978b32d71c6d795c0de14ee29fc61230213448039ac30f74d9836e1703cbcd6026b285e85984f0e30d8005c034d5419809
+    REF mar2022
+    SHA512 ec5cfcbba0f361a2a7d572284c77a88464fcf38a10b113f12b1e51a1c0c42a651abd6f8bbf257a3470b35c62c8d25af9a79925f2e0c79eb33a8b1c9ca6a9191b
     HEAD_REF main
 )
 
@@ -35,9 +35,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(
     MESHCONVERT_EXE
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/feb2022/meshconvert.exe"
-    FILENAME "meshconvert-feb2022.exe"
-    SHA512 687bec9c9f6c5fc08fc86370bb5b247f751c96fbbf047293364c75c43ec63a769ad737898a3b36acd95f7c3f6b0e97c756043d7a7ccdf750090594e1e2b97271
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/mar2022/meshconvert.exe"
+    FILENAME "meshconvert-mar2022.exe"
+    SHA512 43b4305b73994eccc086bf1812147a5156359f5d927475b915bbf8edde70189cc419b96703aeb736f76d9d52037657f10ba0c104f9713c1f0defb28ce7a46ac1
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
@@ -46,7 +46,7 @@ if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
     ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
 
-  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-feb2022.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-mar2022.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 
 elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
 

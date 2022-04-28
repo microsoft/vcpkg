@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  1)
+set(PYTHON_VERSION_PATCH  2)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -14,6 +14,7 @@ set(PATCHES
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
     0009-python.pc.patch
+    0010-bz2d.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -40,7 +41,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 23f99b77c7978282d43a6e442811de1d6e8cc9597c6d1143ec65ae986f64805c36a0a033632a4d1a89053a55854904bcf11415d91e2a3b4a5308c4a21de80098
+    SHA512 14f0d1847d4361fa075adbe4dbf7339fb62be91d5419cf506abdf46b36dc5273564792d35e5a5e0608a8fa877a870152a593743c3b70a98c739d5bd028be9e18
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -217,6 +218,8 @@ else()
         "--with-ensurepip"
         "--with-suffix="
         "--with-system-expat"
+        "--without-readline"
+        "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")

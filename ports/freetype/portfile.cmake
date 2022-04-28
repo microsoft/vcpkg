@@ -72,26 +72,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if("zlib" IN_LIST FEATURES)
-        set(USE_ZLIB ON)
-    endif()
-
-    if("bzip2" IN_LIST FEATURES)
-        set(USE_BZIP2 ON)
-    endif()
-
-    if("png" IN_LIST FEATURES)
-        set(USE_PNG ON)
-    endif()
-
-    if("brotli" IN_LIST FEATURES)
-        set(USE_BROTLI ON)
-    endif()
-
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(COPY
     "${SOURCE_PATH}/docs/FTL.TXT"

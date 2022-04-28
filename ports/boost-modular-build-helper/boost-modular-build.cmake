@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
 
-set(BOOST_VERSION 1.78.0)
+set(BOOST_VERSION 1.79.0)
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
 if("${CMAKE_MATCH_3}" GREATER 0)
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
@@ -105,17 +105,28 @@ function(boost_modular_build)
         list(APPEND configure_options "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
     endif()
 
+    vcpkg_cmake_get_vars(cmake_vars_file)
+
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS feature_options
+        FEATURES
+            python2 WITH_PYTHON2
+            python3 WITH_PYTHON3
+    )
+
     vcpkg_cmake_configure(
         SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
         GENERATOR Ninja
         OPTIONS
             "-DPORT=${PORT}"
             "-DFEATURES=${FEATURES}"
+            ${feature_options}
             "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
             "-DB2_EXE=${B2_EXE}"
             "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+            "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES
