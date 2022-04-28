@@ -34,7 +34,7 @@
     },
     "aixlog": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "akali": {
       "baseline": "1.42",
