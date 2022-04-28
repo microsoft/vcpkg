@@ -1,10 +1,12 @@
 # Overlay triplets example
 
+`vcpkg` comes with many useful officially supported configurations in the box, including dynamic and static libraries for Windows as well as static libraries for MacOS and Linux. There are also a large number of community-supported triplets available, such as Emscripten or Android.
+
+For more advanced customization, users can provide their own triplets via the Overlay Triplets mechanism. See our [triplets documentation](../users/triplets.md) for an exhaustive reference of what can be configured in a triplet file.
+
 ## Building dynamic libraries on Linux
 
-Using **vcpkg** you can build libraries for many configurations out of the box. However, this doesn't currently include shared libraries on Linux and Mac OS.
-
-This doesn't mean that you cannot use **vcpkg** to build your dynamic libraries on these platforms! This document will guide you through creating your own custom triplets with `--overlay-triplets` to easily build dynamic libraries on Linux.
+As a concrete example, this document will guide you through creating your own custom triplets with `--overlay-triplets` to easily build dynamic libraries on Linux.
 
 ### Step 1: Create the custom triplet files
 
