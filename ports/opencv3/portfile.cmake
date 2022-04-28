@@ -377,6 +377,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME opencv CONFIG_PATH "share/opencv")
 vcpkg_copy_pdbs()
 
+# Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake"
+    "\${_IMPORT_PREFIX}/sdk"
+    "\${_IMPORT_PREFIX}/debug/sdk"
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
