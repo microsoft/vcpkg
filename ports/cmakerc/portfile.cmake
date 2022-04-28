@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO vector-of-bool/cmrc
@@ -10,5 +12,3 @@ file(INSTALL "${SOURCE_PATH}/CMakeRC.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
