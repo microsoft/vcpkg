@@ -1,7 +1,7 @@
 {
   "name": "opensubdiv",
   "version-semver": "3.4.3",
-  "port-version": 4,
+  "port-version": 5,
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
   "supports": "!arm & !uwp",
@@ -51,6 +51,12 @@
       "description": "Enable OpenCL backend",
       "dependencies": [
         "opencl"
+      ]
+    },
+    "opengl": {
+      "description": "Enable OpenGL backend",
+      "dependencies": [
+        "opengl"
       ]
     },
     "ptex": {

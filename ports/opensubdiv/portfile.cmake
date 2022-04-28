@@ -54,6 +54,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "glfw"      NO_GLFW_X11
         "omp"       NO_OMP
         "opencl"    NO_OPENCL
+        "opengl"    NO_OPENGL
         "ptex"      NO_PTEX
         "tbb"       NO_TBB
         "tutorials" NO_TUTORIALS
