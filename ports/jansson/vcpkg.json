@@ -5,6 +5,7 @@
   "description": "Jansson is a C library for encoding, decoding and manipulating JSON data",
   "homepage": "https://github.com/akheron/jansson",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
