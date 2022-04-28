@@ -95,7 +95,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if ("opencl" IN_LIST FEATURES OR "dx" IN_LIST FEATURES)
+if ("opencl" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES OR "dx" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES stringify AUTO_CLEAN)
 endif()
 
