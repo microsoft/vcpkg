@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-build-type.patch
         fix-mac-build.patch
         fix-dependencies.patch
+        add-cmake-config.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -118,6 +119,10 @@ if ("tutorials" IN_LIST FEATURES)
         vcpkg_copy_tools(TOOL_NAMES ${TUTORIALS_TOOL_NAMES} SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/tutorials/" AUTO_CLEAN)
     endif()
 endif()
+
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME OpenSubdiv)
+vcpkg_fixup_pkgconfig()
 
 # The header files are read only and can't remove when remove this port
 file(GLOB_RECURSE OSD_HDRS "${CURRENT_PACKAGES_DIR}/include/*.h")

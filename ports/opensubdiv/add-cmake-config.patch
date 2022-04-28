@@ -1,0 +1,346 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcde429..7ab3cdf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -842,3 +842,32 @@ endif()
+ if (NOT NO_DOC)
+     add_subdirectory(documentation)
+ endif()
++
++if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.0.2)
++    #
++    # CMake Config.
++    #
++    include(GNUInstallDirs)
++    include(CMakePackageConfigHelpers)
++
++    configure_package_config_file(
++        opensubdiv-config.cmake.in
++        ${CMAKE_CURRENT_BINARY_DIR}/opensubdiv-config.cmake
++        INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
++    )
++    write_basic_package_version_file(
++        ${CMAKE_CURRENT_BINARY_DIR}/opensubdiv-config-version.cmake
++        VERSION ${OSD_SONAME}
++        COMPATIBILITY SameMajorVersion
++    )
++
++    install(EXPORT opensubdiv-targets
++        NAMESPACE OpenSubdiv::
++        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})
++
++    install(FILES
++        ${CMAKE_CURRENT_BINARY_DIR}/opensubdiv-config.cmake
++        ${CMAKE_CURRENT_BINARY_DIR}/opensubdiv-config-version.cmake
++        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
++    )
++endif()
+diff --git a/examples/dxPtexViewer/CMakeLists.txt b/examples/dxPtexViewer/CMakeLists.txt
+index 81c8806..9c31747 100644
+--- a/examples/dxPtexViewer/CMakeLists.txt
++++ b/examples/dxPtexViewer/CMakeLists.txt
+@@ -81,4 +81,4 @@ target_link_libraries(dxPtexViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS dxPtexViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS dxPtexViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/dxViewer/CMakeLists.txt b/examples/dxViewer/CMakeLists.txt
+index 83b39b8..13e52df 100644
+--- a/examples/dxViewer/CMakeLists.txt
++++ b/examples/dxViewer/CMakeLists.txt
+@@ -75,4 +75,4 @@ target_link_libraries(dxViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS dxViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS dxViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/farViewer/CMakeLists.txt b/examples/farViewer/CMakeLists.txt
+index 839983e..e4b6e2e 100644
+--- a/examples/farViewer/CMakeLists.txt
++++ b/examples/farViewer/CMakeLists.txt
+@@ -67,4 +67,4 @@ target_link_libraries(farViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS farViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS farViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glEvalLimit/CMakeLists.txt b/examples/glEvalLimit/CMakeLists.txt
+index 8eaaccb..689203c 100644
+--- a/examples/glEvalLimit/CMakeLists.txt
++++ b/examples/glEvalLimit/CMakeLists.txt
+@@ -60,4 +60,4 @@ target_link_libraries(glEvalLimit
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glEvalLimit DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glEvalLimit EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glFVarViewer/CMakeLists.txt b/examples/glFVarViewer/CMakeLists.txt
+index e519447..bc66a8a 100644
+--- a/examples/glFVarViewer/CMakeLists.txt
++++ b/examples/glFVarViewer/CMakeLists.txt
+@@ -61,4 +61,4 @@ target_link_libraries(glFVarViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glFVarViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glFVarViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glImaging/CMakeLists.txt b/examples/glImaging/CMakeLists.txt
+index 95596de..38543a2 100644
+--- a/examples/glImaging/CMakeLists.txt
++++ b/examples/glImaging/CMakeLists.txt
+@@ -63,7 +63,7 @@ target_link_libraries(glImaging
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glImaging DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glImaging EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+ 
+ if (NOT NO_GLTESTS)
+     add_test(glImaging ${EXECUTABLE_OUTPUT_PATH}/glImaging -w test -l 3 -s 256 256 -a)
+diff --git a/examples/glPaintTest/CMakeLists.txt b/examples/glPaintTest/CMakeLists.txt
+index 310d972..dd46300 100644
+--- a/examples/glPaintTest/CMakeLists.txt
++++ b/examples/glPaintTest/CMakeLists.txt
+@@ -61,4 +61,4 @@ target_link_libraries(glPaintTest
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glPaintTest DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glPaintTest EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glPtexViewer/CMakeLists.txt b/examples/glPtexViewer/CMakeLists.txt
+index 3cf6e32..c724e66 100644
+--- a/examples/glPtexViewer/CMakeLists.txt
++++ b/examples/glPtexViewer/CMakeLists.txt
+@@ -66,4 +66,4 @@ target_link_libraries(glPtexViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glPtexViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glPtexViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glShareTopology/CMakeLists.txt b/examples/glShareTopology/CMakeLists.txt
+index b037a86..445d398 100644
+--- a/examples/glShareTopology/CMakeLists.txt
++++ b/examples/glShareTopology/CMakeLists.txt
+@@ -61,4 +61,4 @@ target_link_libraries(glShareTopology
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glShareTopology DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glShareTopology EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glStencilViewer/CMakeLists.txt b/examples/glStencilViewer/CMakeLists.txt
+index 93b5c0d..900395c 100644
+--- a/examples/glStencilViewer/CMakeLists.txt
++++ b/examples/glStencilViewer/CMakeLists.txt
+@@ -52,4 +52,4 @@ target_link_libraries(glStencilViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glStencilViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glStencilViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/glViewer/CMakeLists.txt b/examples/glViewer/CMakeLists.txt
+index 2df540b..3bd3020 100644
+--- a/examples/glViewer/CMakeLists.txt
++++ b/examples/glViewer/CMakeLists.txt
+@@ -62,4 +62,4 @@ target_link_libraries(glViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS glViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS glViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/mtlPtexViewer/CMakeLists.txt b/examples/mtlPtexViewer/CMakeLists.txt
+index f8e51ff..5dcdfaf 100644
+--- a/examples/mtlPtexViewer/CMakeLists.txt
++++ b/examples/mtlPtexViewer/CMakeLists.txt
+@@ -117,4 +117,4 @@ target_link_libraries(mtlPtexViewer
+ )
+ 
+ 
+-install(TARGETS mtlPtexViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS mtlPtexViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/examples/mtlViewer/CMakeLists.txt b/examples/mtlViewer/CMakeLists.txt
+index c144595..3e1765f 100644
+--- a/examples/mtlViewer/CMakeLists.txt
++++ b/examples/mtlViewer/CMakeLists.txt
+@@ -112,4 +112,4 @@ target_link_libraries(mtlViewer
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS mtlViewer DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS mtlViewer EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/opensubdiv-config.cmake.in b/opensubdiv-config.cmake.in
+new file mode 100644
+index 0000000..79e97f6
+--- /dev/null
++++ b/opensubdiv-config.cmake.in
+@@ -0,0 +1,6 @@
++@PACKAGE_INIT@
++
++set_and_check(OpenSubdiv_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
++set_and_check(OpenSubdiv_LIB_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@")
++
++include("${CMAKE_CURRENT_LIST_DIR}/opensubdiv-targets.cmake")
+diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
+index 0f90a37..58b8039 100644
+--- a/opensubdiv/CMakeLists.txt
++++ b/opensubdiv/CMakeLists.txt
+@@ -145,7 +145,7 @@ if (NOT NO_LIB)
+         ${PLATFORM_CPU_LIBRARIES}
+     )
+ 
+-    install( TARGETS osd_static_cpu DESTINATION "${CMAKE_LIBDIR_BASE}" )
++    install( TARGETS osd_static_cpu EXPORT opensubdiv-targets DESTINATION "${CMAKE_LIBDIR_BASE}" )
+     endif()
+ 
+     if( OSD_GPU )
+@@ -164,7 +164,7 @@ if (NOT NO_LIB)
+             ${PLATFORM_CPU_LIBRARIES} ${PLATFORM_GPU_LIBRARIES}
+         )
+ 
+-        install( TARGETS osd_static_gpu DESTINATION "${CMAKE_LIBDIR_BASE}" )
++        install( TARGETS osd_static_gpu EXPORT opensubdiv-targets DESTINATION "${CMAKE_LIBDIR_BASE}" )
+     endif()
+ 
+ 
+@@ -202,7 +202,7 @@ if (NOT NO_LIB)
+             ${PLATFORM_CPU_LIBRARIES}
+         )
+ 
+-        install( TARGETS osd_dynamic_cpu LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}" )
++        install( TARGETS osd_dynamic_cpu EXPORT opensubdiv-targets LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}" )
+ 
+         #---------------------------------------------------
+         if( OSD_GPU )
+@@ -234,7 +234,7 @@ if (NOT NO_LIB)
+                 ${PLATFORM_CPU_LIBRARIES} ${PLATFORM_GPU_LIBRARIES}
+             )
+ 
+-            install( TARGETS osd_dynamic_gpu LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}" )
++            install( TARGETS osd_dynamic_gpu EXPORT opensubdiv-targets LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}" )
+         endif()
+ 
+     endif()
+@@ -296,7 +296,7 @@ if (NOT NO_LIB)
+             ${PLATFORM_CPU_LIBRARIES} ${PLATFORM_GPU_LIBRARIES}
+         )
+ 
+-        install( TARGETS osd_static_framework
++        install( TARGETS osd_static_framework EXPORT opensubdiv-targets
+              LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}"
+              FRAMEWORK DESTINATION "${CMAKE_LIBDIR_BASE}"
+              PUBLIC_HEADER  DESTINATION "${CMAKE_INCDIR_BASE}"
+@@ -331,7 +331,7 @@ if (NOT NO_LIB)
+                 ${PLATFORM_CPU_LIBRARIES} ${PLATFORM_GPU_LIBRARIES}
+             )
+ 
+-            install( TARGETS osd_dynamic_framework
++            install( TARGETS osd_dynamic_framework EXPORT opensubdiv-targets
+                  FRAMEWORK DESTINATION "${CMAKE_LIBDIR_BASE}"
+                  LIBRARY DESTINATION "${CMAKE_LIBDIR_BASE}"
+                  PUBLIC_HEADER  DESTINATION "${CMAKE_INCDIR_BASE}"
+diff --git a/opensubdiv/tools/stringify/CMakeLists.txt b/opensubdiv/tools/stringify/CMakeLists.txt
+index ae0aad9..b00c2d2 100644
+--- a/opensubdiv/tools/stringify/CMakeLists.txt
++++ b/opensubdiv/tools/stringify/CMakeLists.txt
+@@ -32,5 +32,5 @@ if(NOT CMAKE_CROSSCOMPILING)
+ 	osd_add_executable(stringify "opensubdiv/tools"
+ 	    main.cpp
+ 	)
+-	install(TARGETS stringify DESTINATION ${CMAKE_BINDIR_BASE})
++	install(TARGETS stringify EXPORT opensubdiv-targets DESTINATION ${CMAKE_BINDIR_BASE})
+ endif() 
+diff --git a/regression/far_perf/CMakeLists.txt b/regression/far_perf/CMakeLists.txt
+index 1768e7b..f683577 100644
+--- a/regression/far_perf/CMakeLists.txt
++++ b/regression/far_perf/CMakeLists.txt
+@@ -42,7 +42,7 @@ osd_add_executable(far_perf "regression"
+     $<TARGET_OBJECTS:regression_common_obj>
+ )
+ 
+-install(TARGETS far_perf DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS far_perf EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+ 
+ add_test(far_perf ${EXECUTABLE_OUTPUT_PATH}/far_regression)
+ 
+diff --git a/regression/far_regression/CMakeLists.txt b/regression/far_regression/CMakeLists.txt
+index 90a589a..f944588 100644
+--- a/regression/far_regression/CMakeLists.txt
++++ b/regression/far_regression/CMakeLists.txt
+@@ -40,7 +40,7 @@ osd_add_executable(far_regression "regression"
+     $<TARGET_OBJECTS:regression_common_obj>
+ )
+ 
+-install(TARGETS far_regression DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS far_regression EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+ 
+ add_test(far_regression ${EXECUTABLE_OUTPUT_PATH}/far_regression)
+ 
+diff --git a/regression/hbr_regression/CMakeLists.txt b/regression/hbr_regression/CMakeLists.txt
+index c734c8a..0337a76 100644
+--- a/regression/hbr_regression/CMakeLists.txt
++++ b/regression/hbr_regression/CMakeLists.txt
+@@ -49,5 +49,5 @@ osd_add_executable(hbr_baseline "regression"
+     $<TARGET_OBJECTS:regression_common_obj>
+ )
+ 
+-install(TARGETS hbr_baseline DESTINATION "${CMAKE_BINDIR_BASE}")
+-install(TARGETS hbr_regression DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS hbr_baseline EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS hbr_regression EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+diff --git a/regression/osd_regression/CMakeLists.txt b/regression/osd_regression/CMakeLists.txt
+index dd64f2a..5049579 100644
+--- a/regression/osd_regression/CMakeLists.txt
++++ b/regression/osd_regression/CMakeLists.txt
+@@ -47,7 +47,7 @@ target_link_libraries(osd_regression
+     ${PLATFORM_LIBRARIES}
+ )
+ 
+-install(TARGETS osd_regression DESTINATION "${CMAKE_BINDIR_BASE}")
++install(TARGETS osd_regression EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}")
+ 
+ if (NOT NO_GLTESTS)
+     add_test(osd_regression ${EXECUTABLE_OUTPUT_PATH}/osd_regression)
+diff --git a/tutorials/hbr/tutorial_0/CMakeLists.txt b/tutorials/hbr/tutorial_0/CMakeLists.txt
+index 9f7a7e9..0c51fd6 100644
+--- a/tutorials/hbr/tutorial_0/CMakeLists.txt
++++ b/tutorials/hbr/tutorial_0/CMakeLists.txt
+@@ -30,5 +30,5 @@ osd_add_executable(hbr_tutorial_0 "tutorials/hbr"
+     ${SOURCE_FILES}
+ )
+ 
+-install(TARGETS hbr_tutorial_0 DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
++install(TARGETS hbr_tutorial_0 EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
+ 
+diff --git a/tutorials/hbr/tutorial_1/CMakeLists.txt b/tutorials/hbr/tutorial_1/CMakeLists.txt
+index 179aad1..c72958c 100644
+--- a/tutorials/hbr/tutorial_1/CMakeLists.txt
++++ b/tutorials/hbr/tutorial_1/CMakeLists.txt
+@@ -30,5 +30,5 @@ osd_add_executable(hbr_tutorial_1 "tutorials/hbr"
+     ${SOURCE_FILES}
+ )
+ 
+-install(TARGETS hbr_tutorial_1 DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
++install(TARGETS hbr_tutorial_1 EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
+ 
+diff --git a/tutorials/hbr/tutorial_2/CMakeLists.txt b/tutorials/hbr/tutorial_2/CMakeLists.txt
+index 5fc132e..b0c0486 100644
+--- a/tutorials/hbr/tutorial_2/CMakeLists.txt
++++ b/tutorials/hbr/tutorial_2/CMakeLists.txt
+@@ -30,5 +30,5 @@ osd_add_executable(hbr_tutorial_2 "tutorials/hbr"
+     ${SOURCE_FILES}
+ )
+ 
+-install(TARGETS hbr_tutorial_2 DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
++install(TARGETS hbr_tutorial_2 EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
+ 
+diff --git a/tutorials/osd/tutorial_0/CMakeLists.txt b/tutorials/osd/tutorial_0/CMakeLists.txt
+index 6edac1d..4d1d89c 100644
+--- a/tutorials/osd/tutorial_0/CMakeLists.txt
++++ b/tutorials/osd/tutorial_0/CMakeLists.txt
+@@ -35,5 +35,5 @@ target_link_libraries(osd_tutorial_0
+     osd_static_cpu
+ )
+ 
+-install(TARGETS osd_tutorial_0 DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
++install(TARGETS osd_tutorial_0 EXPORT opensubdiv-targets DESTINATION "${CMAKE_BINDIR_BASE}/tutorials")
+ 
