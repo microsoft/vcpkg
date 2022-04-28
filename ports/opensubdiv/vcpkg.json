@@ -30,16 +30,16 @@
       ]
     },
     "examples": {
-      "description": "Enable examples build"
+      "description": "Build examples"
     },
     "glew": {
-      "description": "Path to glew",
+      "description": "Enable GLEW wrapper library",
       "dependencies": [
         "glew"
       ]
     },
     "glfw": {
-      "description": "Path to glfw",
+      "description": "Build components depending on GLFW",
       "dependencies": [
         "glfw3"
       ]
@@ -60,7 +60,7 @@
       ]
     },
     "ptex": {
-      "description": "Path to Ptex",
+      "description": "Enable Ptex support",
       "dependencies": [
         "ptex"
       ]
