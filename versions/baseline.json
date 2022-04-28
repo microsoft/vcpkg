@@ -1350,7 +1350,7 @@
     },
     "check": {
       "baseline": "0.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "chipmunk": {
       "baseline": "7.0.3",
