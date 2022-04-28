@@ -1,12 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.10.0)
+set(LIBVPX_VERSION 1.11.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF v${LIBVPX_VERSION}
-    SHA512 f88c588145b5164e98531b75215e119056cd806a9dbe6599bb9dab35c0af0ecd4b3daabee7d795e412a58aeb543d5c7dc0107457c4bd8f4d434e966e8e22a32d
+    SHA512 7aa5d30afa956dccda60917fd82f6f9992944ca893437c8cd53a04d1b7a94e0210431954aa136594dc400340123cc166dcc855753e493c8d929667f4c42b65a5
     HEAD_REF master
     PATCHES
         0002-Fix-nasm-debug-format-flag.patch
