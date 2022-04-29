@@ -38,7 +38,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${corrade_rc_param}
+        "${corrade_rc_param}"
         -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
     MAYBE_UNUSED_VARIABLES
