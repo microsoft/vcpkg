@@ -17,7 +17,7 @@
   "features": {
     "generate-dump": {
       "description": [
-        "Builds and installs the generate_dump tool",
+        "Tool to generate a minidump file containing a snapshot of a running process",
         "https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/tools/generate_dump.md"
       ]
     }
