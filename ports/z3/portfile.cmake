@@ -1,17 +1,16 @@
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Z3Prover/z3
-  REF z3-4.8.15
-  SHA512 7b08dec5b035a38edc90c4c491f508fd9ed227357de94400169db53d4c59382bd6a81ae6615771023a06534a3aa92668844f0ebfcc2a3b5ef4bba957426a0c6c
+  REF z3-4.8.16
+  SHA512 385f6e1ee075b9eadb5aad338657a81f518eef382b99ce623448a630b79f5d414ebccfd1bb5e959626f0b82ef54a5f20326814ae988b5688d51578de6fb69615
   HEAD_REF master
   PATCHES
       fix-install-path.patch
       remove-flag-overrides.patch
-      fix-32-bit-build.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
