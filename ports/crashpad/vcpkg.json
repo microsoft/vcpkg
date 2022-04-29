@@ -7,13 +7,12 @@
   ],
   "homepage": "https://chromium.googlesource.com/crashpad/crashpad/+/master/README.md",
   "license": "Apache-2.0",
-  "supports": "(osx | windows | android) | (x64 & linux)",
+  "supports": "(windows | osx | android) | (x64 & linux)",
   "dependencies": [
     {
       "name": "vcpkg-tool-gn",
       "host": true
-    },
-    "zlib"
+    }
   ],
   "features": {
     "generate-dump": {

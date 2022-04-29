@@ -53,6 +53,3 @@ if(APPLE)
   set_property(TARGET crashpad_mig_output PROPERTY IMPORTED_LOCATION "${_IMPORT_LIB_DIR}/libmig_output.a")
   target_link_libraries(crashpad INTERFACE crashpad_mig_output)
 endif()
-
-find_package(ZLIB REQUIRED)
-target_link_libraries(crashpad INTERFACE ZLIB::ZLIB)

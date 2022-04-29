@@ -42,33 +42,11 @@ checkout_into_path(
     REF "e1e7b0ad8ee99a875b272c8e33e308472e897660"
 )
 
-function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
-    find_library(_LIBRARY_DEB 
-        NAMES ${LIBRARY_NAMES}
-        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
-        REQUIRED
-        NO_DEFAULT_PATH
-        NO_CACHE
-    )
-
-    find_library(_LIBRARY_REL 
-        NAMES ${LIBRARY_NAMES}
-        PATHS "${CURRENT_INSTALLED_DIR}/lib"
-        REQUIRED
-        NO_DEFAULT_PATH
-        NO_CACHE
-    )
-
-    set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
-
-    file(REMOVE "${OUTPUT_FILE}")
-    configure_file("${INPUT_FILE}" "${OUTPUT_FILE}" @ONLY)
-endfunction()
-
-replace_gn_dependency(
-    "${CMAKE_CURRENT_LIST_DIR}/zlib.gn"
-    "${SOURCE_PATH}/third_party/zlib/BUILD.gn"
-    "z;zlib;zlibd"
+#zlib
+checkout_into_path(
+    DEST "${SOURCE_PATH}/third_party/zlib/zlib"
+    URL "https://chromium.googlesource.com/chromium/src/third_party/zlib"
+    REF "13dc246a58e4b72104d35f9b1809af95221ebda7"
 )
 
 set(GN_OPTIONS "")
