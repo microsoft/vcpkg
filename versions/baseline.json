@@ -2974,7 +2974,7 @@
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
-      "port-version": 3
+      "port-version": 4
     },
     "io2d": {
       "baseline": "2020-09-14",
@@ -4162,7 +4162,7 @@
     },
     "libvpx": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -4266,7 +4266,7 @@
     },
     "lmdb": {
       "baseline": "0.9.29",
-      "port-version": 1
+      "port-version": 2
     },
     "lodepng": {
       "baseline": "2021-12-04",
