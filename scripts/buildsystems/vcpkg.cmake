@@ -438,7 +438,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
 
         file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" Z_VCPKG_BOOTSTRAP_LOG)
         execute_process(
-            COMMAND "\"${Z_VCPKG_BOOTSTRAP_SCRIPT}\"" ${VCPKG_BOOTSTRAP_OPTIONS}
+            COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
             OUTPUT_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             ERROR_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE Z_VCPKG_BOOTSTRAP_RESULT)
@@ -491,12 +491,12 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         endif()
 
         execute_process(
-            COMMAND "\"${Z_VCPKG_EXECUTABLE}\"" install
+            COMMAND "${Z_VCPKG_EXECUTABLE}" install
                 --triplet "${VCPKG_TARGET_TRIPLET}"
                 --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
                 "--x-wait-for-lock"
-                "\"--x-manifest-root=${VCPKG_MANIFEST_DIR}\""
-                "\"--x-install-root=${_VCPKG_INSTALLED_DIR}\""
+                "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
+                "--x-install-root=${_VCPKG_INSTALLED_DIR}"
                 "${Z_VCPKG_FEATURE_FLAGS}"
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
@@ -580,18 +580,20 @@ function(add_executable)
                     set(EXTRA_OPTIONS USES_TERMINAL)
                 endif()
                 add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND "\"${Z_VCPKG_POWERSHELL_PATH}\"" -noprofile -executionpolicy Bypass -file "\"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\""
-                        -targetBinary "\"$<TARGET_FILE:${target_name}>\""
-                        -installedDir "\"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\""
+                    COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                        -targetBinary "$<TARGET_FILE:${target_name}>"
+                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    VERBATIM
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND python "\"${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py\""
-                        "\"$<TARGET_FILE:${target_name}>\""
-                        "\"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>\""
+                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                            "$<TARGET_FILE:${target_name}>"
+                            "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        VERBATIM
                     )
                 endif()
             endif()
@@ -614,10 +616,11 @@ function(add_library)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             z_vcpkg_set_powershell_path()
             add_custom_command(TARGET "${target_name}" POST_BUILD
-                COMMAND "\"${Z_VCPKG_POWERSHELL_PATH}\"" -noprofile -executionpolicy Bypass -file "\"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\""
-                    -targetBinary "\"$<TARGET_FILE:${target_name}>\""
-                    -installedDir "\"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\""
+                COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                    -targetBinary "$<TARGET_FILE:${target_name}>"
+                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    VERBATIM
             )
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
