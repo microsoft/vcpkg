@@ -1,0 +1,4 @@
+The package crashpad provides CMake targets:
+
+    find_package(crashpad CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE crashpad::crashpad)

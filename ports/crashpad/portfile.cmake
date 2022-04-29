@@ -229,8 +229,9 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"
 
 vcpkg_copy_pdbs()
 
-# Install copyright file
+# Install copyright and usage files
 file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
