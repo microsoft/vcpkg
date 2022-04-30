@@ -41,6 +41,8 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+    MAYBE_UNUSED_VARIABLES
+        DSDL_FORCE_STATIC_VCRT
 )
 
 vcpkg_cmake_install()
