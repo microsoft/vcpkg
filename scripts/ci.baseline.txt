@@ -48,8 +48,6 @@
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 
-aubio:arm-uwp=fail
-aubio:x64-uwp=fail
 # broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
 bde:x64-linux=fail
 bitserializer:x64-osx=fail
@@ -288,7 +286,6 @@ freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
-freetype-gl:x64-uwp=fail
 ftgl:x64-uwp=fail
 # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 functions-framework-cpp:x64-uwp=fail
@@ -400,8 +397,6 @@ intel-mkl:x64-windows=fail
 intel-mkl:x64-windows-static=fail
 intel-mkl:x64-windows-static-md=fail
 intel-mkl:x86-windows=fail
-intelrdfpmathlib:arm-uwp=fail
-intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
 irrlicht:x64-uwp=fail
@@ -450,8 +445,6 @@ libbf:x64-windows=fail
 libbf:x64-windows-static=fail
 libbf:x64-windows-static-md=fail
 libbf:x86-windows=fail
-libbson:arm-uwp=fail
-libbson:x64-uwp=fail
 libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 # Missing system libraries on linux to run/prepare autoconf
@@ -584,8 +577,6 @@ libsrt:x64-uwp=fail
 libssh:arm64-windows=fail
 libssh:arm-uwp=fail
 libssh:x64-uwp=fail
-libtcod:arm-uwp=fail
-libtcod:x64-uwp=fail
 libtins:arm-uwp=fail
 libtins:x64-uwp=fail
 libtomcrypt:arm64-windows=fail
@@ -616,7 +607,6 @@ libvmdk:x64-windows-static-md=skip
 libvmdk:arm64=skip
 libvmdk:x64-linux=skip
 libvmdk:x64-osx=skip
-libvpx:arm-uwp=fail
 libwandio:x86-windows=fail
 libwandio:x64-windows=fail
 libwandio:x64-windows-static=fail
@@ -633,8 +623,6 @@ live555:x64-osx=fail
 live555:x64-uwp=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
-lmdb:arm-uwp=fail
-lmdb:x64-uwp=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
@@ -676,8 +664,6 @@ mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
-metis:arm-uwp=fail
-metis:x64-uwp=fail
 mfl:x64-linux=skip
 mfl:x64-osx=skip
 milerius-sfml-imgui:x64-windows-static=fail
@@ -933,8 +919,6 @@ pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
 popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
-pqp:arm-uwp=fail
-pqp:x64-uwp=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
@@ -1117,9 +1101,7 @@ skia:x64-uwp=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
-smpeg2:arm-uwp=fail
 smpeg2:x64-linux=fail
-smpeg2:x64-uwp=fail
 soci:arm-uwp=fail
 soci:x64-uwp=fail
 sockpp:arm-uwp=fail
