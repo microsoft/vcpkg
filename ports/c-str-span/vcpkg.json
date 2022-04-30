@@ -2,6 +2,7 @@
   "name": "c-str-span",
   "version": "0.0.1",
   "description": "UTF-8 replacement for C strings, supporting zero-copy use-cases (non-null-terminated)",
+  "homepage": "https://github.com/SamuelMarks/c-str-span",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
