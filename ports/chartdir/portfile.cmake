@@ -1,10 +1,10 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+# ChartDirector's DLL interface only contains primitive types, so it is CRT agnostic.
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    message(STATUS "Note: ${PORT} only supports dynamic library linkage. Building dynamic library.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
-
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
-elseif(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_win_7.0.0.zip"
