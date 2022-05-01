@@ -206,6 +206,10 @@ if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 endif()
 
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CHAINLOAD_TOOLCHAIN_FILE VCPKG_TARGET_TRIPLET VCPKG_HOST_TRIPLET VCPKG_INSTALLED_DIR VCPKG_PREFER_SYSTEM_LIBS)
+
+# TODO: Need to override try_compile and try_run to pass some variables in project mode vs src mode
+
 if(VCPKG_TOOLCHAIN)
     cmake_policy(POP)
     return()
