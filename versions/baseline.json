@@ -1857,8 +1857,8 @@
       "port-version": 3
     },
     "directx-headers": {
-      "baseline": "1.4.9",
-      "port-version": 1
+      "baseline": "1.600.10",
+      "port-version": 0
     },
     "directxmath": {
       "baseline": "2022-01-18",
