@@ -1,6 +1,6 @@
 {
   "name": "directx-headers",
-  "version": "1.600.10",
+  "version": "1.602.0",
   "description": "Official DirectX 12 Headers",
   "homepage": "https://devblogs.microsoft.com/directx/",
   "supports": "windows | linux"
