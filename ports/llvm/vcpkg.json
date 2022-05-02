@@ -61,7 +61,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "disable-abi-breaking-checks",
             "disable-assertions",
             "disable-clang-static-analyzer",
             "enable-bindings",
@@ -108,9 +107,6 @@
           "platform": "!x86 & !x64 & !arm & !arm64"
         }
       ]
-    },
-    "disable-abi-breaking-checks": {
-      "description": "Deprecated; this is the default"
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."
