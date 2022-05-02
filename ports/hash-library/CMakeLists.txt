@@ -23,10 +23,10 @@ set(SRCS
 
 add_library(hash-library ${SRCS})
 
-target_include_directories(hash-library PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+target_include_directories(hash-library PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include/hash-library>)
 
 if(NOT DISABLE_INSTALL_HEADERS)
-    install(FILES ${HEADERS} DESTINATION include)
+    install(FILES ${HEADERS} DESTINATION include/hash-library)
 endif()
 
 install(

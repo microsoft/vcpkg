@@ -34,7 +34,7 @@
     },
     "aixlog": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "akali": {
       "baseline": "1.42",
@@ -70,7 +70,7 @@
     },
     "ampl-mp": {
       "baseline": "2020-11-11",
-      "port-version": 2
+      "port-version": 3
     },
     "amqpcpp": {
       "baseline": "4.3.15",
@@ -102,7 +102,7 @@
     },
     "aom": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "approval-tests-cpp": {
       "baseline": "10.12.2",
@@ -157,8 +157,8 @@
       "port-version": 1
     },
     "aricpp": {
-      "baseline": "1.1.1",
-      "port-version": 1
+      "baseline": "1.1.2",
+      "port-version": 0
     },
     "armadillo": {
       "baseline": "10.6.2",
@@ -489,8 +489,8 @@
       "port-version": 0
     },
     "blas": {
-      "baseline": "2022-04-10",
-      "port-version": 0
+      "baseline": "1",
+      "port-version": 1
     },
     "blaze": {
       "baseline": "3.8",
@@ -1218,7 +1218,7 @@
     },
     "caf": {
       "baseline": "0.18.6",
-      "port-version": 0
+      "port-version": 1
     },
     "caffe2": {
       "baseline": "0.8.1",
@@ -1350,7 +1350,7 @@
     },
     "check": {
       "baseline": "0.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "chipmunk": {
       "baseline": "7.0.3",
@@ -1442,6 +1442,10 @@
     },
     "clue": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "cmakerc": {
+      "baseline": "2021-08-27",
       "port-version": 0
     },
     "cmark": {
@@ -1546,7 +1550,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 3
+      "port-version": 4
     },
     "cpp-base64": {
       "baseline": "V2.rc.08",
@@ -1654,7 +1658,7 @@
     },
     "cpu-features": {
       "baseline": "0.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cpuid": {
       "baseline": "0.5.1",
@@ -2220,10 +2224,6 @@
       "baseline": "2022.03.21.00",
       "port-version": 1
     },
-    "flang-fortran-runtime": {
-      "baseline": "2022-04-23",
-      "port-version": 0
-    },
     "flann": {
       "baseline": "2019-04-07",
       "port-version": 5
@@ -2250,7 +2250,7 @@
     },
     "fltk": {
       "baseline": "1.3.8",
-      "port-version": 1
+      "port-version": 2
     },
     "fluidlite": {
       "baseline": "2020-08-27",
@@ -2349,8 +2349,8 @@
       "port-version": 0
     },
     "fribidi": {
-      "baseline": "1.0.11",
-      "port-version": 3
+      "baseline": "1.0.12",
+      "port-version": 0
     },
     "frozen": {
       "baseline": "2021-04-22",
@@ -2390,7 +2390,7 @@
     },
     "g2o": {
       "baseline": "2020-02-07",
-      "port-version": 3
+      "port-version": 2
     },
     "g3log": {
       "baseline": "1.3.4",
@@ -2398,7 +2398,7 @@
     },
     "gainput": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "gamedev-framework": {
       "baseline": "0.20.0",
@@ -2441,8 +2441,8 @@
       "port-version": 1
     },
     "gdk-pixbuf": {
-      "baseline": "2.42.2",
-      "port-version": 2
+      "baseline": "2.42.8",
+      "port-version": 0
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2554,7 +2554,7 @@
     },
     "glog": {
       "baseline": "0.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "gloo": {
       "baseline": "20201203",
@@ -2725,12 +2725,12 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "3.2.0",
-      "port-version": 3
+      "baseline": "4.2.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
-      "port-version": 0
+      "port-version": 1
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2974,7 +2974,7 @@
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
-      "port-version": 3
+      "port-version": 4
     },
     "io2d": {
       "baseline": "2020-09-14",
@@ -3018,7 +3018,7 @@
     },
     "jansson": {
       "baseline": "2.14",
-      "port-version": 0
+      "port-version": 1
     },
     "jasper": {
       "baseline": "2.0.33",
@@ -3325,12 +3325,12 @@
       "port-version": 0
     },
     "lapack": {
-      "baseline": "2022-04-23",
+      "baseline": "2022-02-22",
       "port-version": 0
     },
     "lapack-reference": {
       "baseline": "3.10.0",
-      "port-version": 1
+      "port-version": 0
     },
     "lastools": {
       "baseline": "2020-05-09",
@@ -3441,8 +3441,8 @@
       "port-version": 2
     },
     "libcbor": {
-      "baseline": "0.8.0",
-      "port-version": 1
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "libcds": {
       "baseline": "2.3.3",
@@ -3462,7 +3462,7 @@
     },
     "libcopp": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libcpplocate": {
       "baseline": "2.3.0",
@@ -3650,7 +3650,7 @@
     },
     "libhydrogen": {
       "baseline": "2021-12-02",
-      "port-version": 0
+      "port-version": 1
     },
     "libical": {
       "baseline": "3.0.11",
@@ -4113,8 +4113,8 @@
       "port-version": 2
     },
     "libunibreak": {
-      "baseline": "4.3",
-      "port-version": 1
+      "baseline": "5.0",
+      "port-version": 0
     },
     "libunifex": {
       "baseline": "2021-12-07",
@@ -4162,7 +4162,7 @@
     },
     "libvpx": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -4266,7 +4266,7 @@
     },
     "lmdb": {
       "baseline": "0.9.29",
-      "port-version": 1
+      "port-version": 2
     },
     "lodepng": {
       "baseline": "2021-12-04",
@@ -4398,7 +4398,7 @@
     },
     "mapnik": {
       "baseline": "2022-01-28",
-      "port-version": 1
+      "port-version": 2
     },
     "marble": {
       "baseline": "19.08.2",
@@ -5057,8 +5057,8 @@
       "port-version": 4
     },
     "openblas": {
-      "baseline": "0.3.20",
-      "port-version": 0
+      "baseline": "0.3.19",
+      "port-version": 1
     },
     "opencascade": {
       "baseline": "7.6.0",
@@ -5230,7 +5230,7 @@
     },
     "orc": {
       "baseline": "1.6.4",
-      "port-version": 3
+      "port-version": 4
     },
     "orocos-kdl": {
       "baseline": "1.4",
@@ -5383,10 +5383,6 @@
     "pfultz2-linq": {
       "baseline": "2019-05-14",
       "port-version": 1
-    },
-    "pgmath": {
-      "baseline": "2022-04-23",
-      "port-version": 0
     },
     "phnt": {
       "baseline": "2020-12-21",
@@ -5610,7 +5606,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 1
+      "port-version": 2
     },
     "pthreads": {
       "baseline": "3.0.0",
@@ -5694,7 +5690,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.3",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6414,7 +6410,7 @@
     },
     "seal": {
       "baseline": "3.7.2",
-      "port-version": 2
+      "port-version": 3
     },
     "secp256k1": {
       "baseline": "2017-19-10",
@@ -6829,8 +6825,8 @@
       "port-version": 5
     },
     "symengine": {
-      "baseline": "0.7.0",
-      "port-version": 2
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "systemc": {
       "baseline": "2.3.3",
@@ -7306,7 +7302,7 @@
     },
     "vc": {
       "baseline": "1.4.2",
-      "port-version": 2
+      "port-version": 3
     },
     "vcglib": {
       "baseline": "1.0.1",
@@ -7318,10 +7314,6 @@
     },
     "vcpkg-cmake-config": {
       "baseline": "2022-02-06",
-      "port-version": 0
-    },
-    "vcpkg-fortran-flang": {
-      "baseline": "2022-02-22",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
@@ -7344,18 +7336,6 @@
       "baseline": "2022-02-14",
       "port-version": 0
     },
-    "vcpkg-tool-7zip": {
-      "baseline": "21.07",
-      "port-version": 0
-    },
-    "vcpkg-tool-flang": {
-      "baseline": "2022-04-23",
-      "port-version": 0
-    },
-    "vcpkg-tool-flang-llvm": {
-      "baseline": "2022-04-23",
-      "port-version": 0
-    },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
       "port-version": 0
@@ -7368,20 +7348,12 @@
       "baseline": "1.10.0",
       "port-version": 0
     },
-    "vcpkg-tool-llvm": {
-      "baseline": "13.0.1",
-      "port-version": 0
-    },
     "vcpkg-tool-meson": {
       "baseline": "0.60.2",
       "port-version": 2
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "3.3",
-      "port-version": 0
-    },
-    "vcpkg-tool-ninja": {
-      "baseline": "2022-03-31",
       "port-version": 0
     },
     "vcpkg-tool-nodejs": {
@@ -7466,7 +7438,7 @@
     },
     "wavpack": {
       "baseline": "5.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "websocketpp": {
       "baseline": "0.8.2",

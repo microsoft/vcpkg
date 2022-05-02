@@ -1,5 +1,5 @@
 diff --git a/build/make/configure.sh b/build/make/configure.sh
-index d4f19cd97..fb51368b1 100644
+index 325017e..5ab54e4 100644
 --- a/build/make/configure.sh
 +++ b/build/make/configure.sh
 @@ -1016,7 +1016,7 @@ EOF
@@ -47,10 +47,31 @@ index d4f19cd97..fb51368b1 100644
        *-win*-vs*)
          ;;
        *-android-gcc)
+diff --git a/build/make/gen_msvs_sln.sh b/build/make/gen_msvs_sln.sh
+index d1adfd7..a03ea59 100644
+--- a/build/make/gen_msvs_sln.sh
++++ b/build/make/gen_msvs_sln.sh
+@@ -219,6 +219,7 @@ for opt in "$@"; do
+         14) vs_year=2015 ;;
+         15) vs_year=2017 ;;
+         16) vs_year=2019 ;;
++        17) vs_year=2022 ;;
+         *) die Unrecognized Visual Studio Version in $opt ;;
+       esac
+     ;;
 diff --git a/build/make/gen_msvs_vcxproj.sh b/build/make/gen_msvs_vcxproj.sh
-index 6f91ad478..916851662 100755
+index 6f91ad4..b4cad6c 100644
 --- a/build/make/gen_msvs_vcxproj.sh
 +++ b/build/make/gen_msvs_vcxproj.sh
+@@ -170,7 +170,7 @@ for opt in "$@"; do
+         --ver=*)
+             vs_ver="$optval"
+             case "$optval" in
+-                1[4-6])
++                1[4-7])
+                 ;;
+                 *) die Unrecognized Visual Studio Version in $opt
+                 ;;
 @@ -296,7 +296,22 @@ generate_vcxproj() {
          tag_content ProjectGuid "{${guid}}"
          tag_content RootNamespace ${name}
@@ -75,7 +96,17 @@ index 6f91ad478..916851662 100755
              tag_content AppContainerApplication true
              # The application type can be one of "Windows Store",
              # "Windows Phone" or "Windows Phone Silverlight". The
-@@ -391,7 +406,7 @@ generate_vcxproj() {
+@@ -344,6 +359,9 @@ generate_vcxproj() {
+             if [ "$vs_ver" = "16" ]; then
+                 tag_content PlatformToolset v142
+             fi
++            if [ "$vs_ver" = "17" ]; then
++                tag_content PlatformToolset v143
++            fi
+             tag_content CharacterSet Unicode
+             if [ "$config" = "Release" ]; then
+                 tag_content WholeProgramOptimization true
+@@ -391,7 +409,7 @@ generate_vcxproj() {
                  Condition="'\$(Configuration)|\$(Platform)'=='$config|$plat'"
              if [ "$name" == "vpx" ]; then
                  hostplat=$plat
@@ -85,47 +116,63 @@ index 6f91ad478..916851662 100755
                  fi
              fi
 diff --git a/configure b/configure
-index da631a45e..da93474e5 100755
+index da631a4..2804678 100644
 --- a/configure
 +++ b/configure
-@@ -101,16 +101,20 @@ all_platforms="${all_platforms} arm64-android-gcc"
+@@ -101,16 +101,24 @@ all_platforms="${all_platforms} arm64-android-gcc"
  all_platforms="${all_platforms} arm64-darwin-gcc"
  all_platforms="${all_platforms} arm64-darwin20-gcc"
  all_platforms="${all_platforms} arm64-linux-gcc"
 +all_platforms="${all_platforms} arm64-uwp-vs16"
++all_platforms="${all_platforms} arm64-uwp-vs17"
  all_platforms="${all_platforms} arm64-win64-gcc"
  all_platforms="${all_platforms} arm64-win64-vs15"
 +all_platforms="${all_platforms} arm64-win64-vs16"
++all_platforms="${all_platforms} arm64-win64-vs17"
  all_platforms="${all_platforms} armv7-android-gcc"   #neon Cortex-A8
  all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-rvct"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-gcc"     #neon Cortex-A8
  all_platforms="${all_platforms} armv7-none-rvct"     #neon Cortex-A8
 +all_platforms="${all_platforms} armv7-uwp-vs16"
++all_platforms="${all_platforms} armv7-uwp-vs17"
  all_platforms="${all_platforms} armv7-win32-gcc"
  all_platforms="${all_platforms} armv7-win32-vs14"
  all_platforms="${all_platforms} armv7-win32-vs15"
 +all_platforms="${all_platforms} armv7-win32-vs16"
++all_platforms="${all_platforms} armv7-win32-vs17"
  all_platforms="${all_platforms} armv7s-darwin-gcc"
  all_platforms="${all_platforms} armv8-linux-gcc"
  all_platforms="${all_platforms} mips32-linux-gcc"
-@@ -135,6 +139,7 @@ all_platforms="${all_platforms} x86-linux-gcc"
+@@ -135,10 +143,13 @@ all_platforms="${all_platforms} x86-linux-gcc"
  all_platforms="${all_platforms} x86-linux-icc"
  all_platforms="${all_platforms} x86-os2-gcc"
  all_platforms="${all_platforms} x86-solaris-gcc"
 +all_platforms="${all_platforms} x86-uwp-vs16"
++all_platforms="${all_platforms} x86-uwp-vs17"
  all_platforms="${all_platforms} x86-win32-gcc"
  all_platforms="${all_platforms} x86-win32-vs14"
  all_platforms="${all_platforms} x86-win32-vs15"
-@@ -156,6 +161,7 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
+ all_platforms="${all_platforms} x86-win32-vs16"
++all_platforms="${all_platforms} x86-win32-vs17"
+ all_platforms="${all_platforms} x86_64-android-gcc"
+ all_platforms="${all_platforms} x86_64-darwin9-gcc"
+ all_platforms="${all_platforms} x86_64-darwin10-gcc"
+@@ -156,10 +167,13 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
  all_platforms="${all_platforms} x86_64-linux-gcc"
  all_platforms="${all_platforms} x86_64-linux-icc"
  all_platforms="${all_platforms} x86_64-solaris-gcc"
 +all_platforms="${all_platforms} x86_64-uwp-vs16"
++all_platforms="${all_platforms} x86_64-uwp-vs17"
  all_platforms="${all_platforms} x86_64-win64-gcc"
  all_platforms="${all_platforms} x86_64-win64-vs14"
  all_platforms="${all_platforms} x86_64-win64-vs15"
-@@ -476,11 +482,10 @@ process_targets() {
+ all_platforms="${all_platforms} x86_64-win64-vs16"
++all_platforms="${all_platforms} x86_64-win64-vs17"
+ all_platforms="${all_platforms} generic-gnu"
+ 
+ # all_targets is a list of all targets that can be configured
+@@ -476,11 +490,10 @@ process_targets() {
      ! enabled multithread && DIST_DIR="${DIST_DIR}-nomt"
      ! enabled install_docs && DIST_DIR="${DIST_DIR}-nodocs"
      DIST_DIR="${DIST_DIR}-${tgt_isa}-${tgt_os}"
@@ -141,7 +188,7 @@ index da631a45e..da93474e5 100755
      if [ -f "${source_path}/build/make/version.sh" ]; then
          ver=`"$source_path/build/make/version.sh" --bare "$source_path"`
          DIST_DIR="${DIST_DIR}-${ver}"
-@@ -569,6 +574,10 @@ process_detect() {
+@@ -569,6 +582,10 @@ process_detect() {
  
              # Specialize windows and POSIX environments.
              case $toolchain in
