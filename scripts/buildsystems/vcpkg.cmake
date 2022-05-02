@@ -206,11 +206,6 @@ if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 endif()
 
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CHAINLOAD_TOOLCHAIN_FILE VCPKG_TARGET_TRIPLET VCPKG_HOST_TRIPLET VCPKG_INSTALLED_DIR VCPKG_PREFER_SYSTEM_LIBS)
-
-# TODO: Need to override try_compile and try_run to pass some variables in project mode vs src mode
-
-
 if(VCPKG_TOOLCHAIN)
     cmake_policy(POP)
     return()
@@ -567,18 +562,21 @@ endif()
 cmake_policy(POP)
 
 # Any policies applied to the below macros and functions appear to leak into consumers
+
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CHAINLOAD_TOOLCHAIN_FILE VCPKG_TARGET_TRIPLET VCPKG_HOST_TRIPLET VCPKG_INSTALLED_DIR VCPKG_PREFER_SYSTEM_LIBS)
+# Need to override try_compile and try_run to pass some variables in project mode vs src mode
 get_property(in_try_compile GLOBAL PROPERTY IN_TRY_COMPILE)
 if(NOT in_try_compile)
     function(try_compile resultVar bindir srcdir)
         z_vcpkg_function_arguments(ARGS)
         if(IS_DIRECTORY "${srcdir}") # project try_compile
-            cmake_parse_arguments(PARSE_ARGV 2 "arg" "" "CMAKE_FLAGS;OUTPUT_VARIABLE" "")
-            if(arg_CMAKE_FLAGS)
+            cmake_parse_arguments(PARSE_ARGV 2 "arg" "" "OUTPUT_VARIABLE" "CMAKE_FLAGS")
+            if(DEFINED arg_CMAKE_FLAGS)
                 list(REMOVE_ITEM ARGS CMAKE_FLAGS ${arg_CMAKE_FLAGS})
             endif()
             foreach(try_compile_var IN LISTS CMAKE_TRY_COMPILE_PLATFORM_VARIABLES)
                 if(${try_compile_var})
-                    list(APPEND arg_CMAKE_FLAGS -D${try_compile_var}=${${try_compile_var}})
+                    list(APPEND arg_CMAKE_FLAGS "-D${try_compile_var}=${${try_compile_var}}")
                 endif()
             endforeach()
             if(arg_OUTPUT_VARIABLE)
