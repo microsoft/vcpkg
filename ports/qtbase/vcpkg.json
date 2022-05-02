@@ -5,6 +5,7 @@
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "freetype",
     {
