@@ -142,20 +142,11 @@ if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
 endif()
 if("openmp" IN_LIST FEATURES)
-    # Disable OpenMP on Windows (see https://bugs.llvm.org/show_bug.cgi?id=45074).
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Building OpenMP with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND FEATURE_OPTIONS
-            -DLIBOMP_DEFAULT_LIB_NAME=libompd
-        )
-    endif()
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
@@ -217,36 +208,10 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}")
-    # TODO: support more targets and OS
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        if(VCPKG_TARGET_IS_OSX)
-            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=arm64-apple-darwin20.3.0)
-            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=arm64-apple-darwin20.3.0)
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=arm64-pc-win32)
-            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=arm64-pc-win32)
-
-            # Remove if PR #16111 is merged
-            list(APPEND CROSS_OPTIONS -DCMAKE_CROSSCOMPILING=ON)
-            list(APPEND CROSS_OPTIONS -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64)
-            list(APPEND CROSS_OPTIONS -DCMAKE_SYSTEM_NAME:STRING=Windows)
-        endif()
-        list(APPEND CROSS_OPTIONS -DLLVM_TARGET_ARCH=AArch64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        if(VCPKG_TARGET_IS_OSX)
-            list(APPEND CROSS_OPTIONS -DLLVM_HOST_TRIPLE=x86_64-apple-darwin20.3.0)
-            list(APPEND CROSS_OPTIONS -DLLVM_DEFAULT_TARGET_TRIPLE=x86_64-apple-darwin20.3.0)
-        endif()
-        list(APPEND CROSS_OPTIONS -DLLVM_TARGET_ARCH=X86)
-    endif()
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/llvm
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${CROSS_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
