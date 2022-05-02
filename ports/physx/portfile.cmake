@@ -40,6 +40,7 @@ set(OPTIONS_DEBUG
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=uwp")
+    set(configure_options WINDOWS_USE_MSBUILD)
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=windows")
 elseif(VCPKG_TARGET_IS_OSX)
@@ -76,6 +77,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
+    ${configure_options}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
