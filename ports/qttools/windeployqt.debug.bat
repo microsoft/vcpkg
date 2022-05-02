@@ -1,10 +1,10 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 set mypath=%~dp0
 set mypath=%mypath:~0,-1%
-set BAKCD=%CD%
+set BAKCD=!CD!
 cd %mypath%\..\..\..\debug\bin
-set PATH=%CD%;%PATH%
+set PATH=!CD!;%PATH%
 "%mypath%\windeployqt.exe" --qmake "%mypath%\qmake.debug.bat" %*
 cd %BAKCD%
 endlocal
