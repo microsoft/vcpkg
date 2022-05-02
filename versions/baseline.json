@@ -2341,8 +2341,8 @@
       "port-version": 1
     },
     "freetype-gl": {
-      "baseline": "2020-09-14",
-      "port-version": 1
+      "baseline": "2022-01-17",
+      "port-version": 0
     },
     "freexl": {
       "baseline": "1.0.6",
