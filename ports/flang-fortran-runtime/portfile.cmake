@@ -24,9 +24,8 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_DIR})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
-    get_filename_component(COMPILER_FILENAME "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         vcpkg_list(SET OPTIONS 
                     "-DCMAKE_C_COMPILER=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/vcpkg-tool-llvm/bin/clang-cl.exe"
