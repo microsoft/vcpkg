@@ -13,7 +13,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
   OPTIONS
       -DENABLE_LIBCLAMAV_ONLY=ON
       -DENABLE_SHARED_LIB=ON
