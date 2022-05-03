@@ -1,0 +1,13 @@
+diff --git a/Library/CMake/DiscordCoreAPIConfig.cmake.in b/Library/CMake/DiscordCoreAPIConfig.cmake.in
+index a85e8ac..25f7d5b 100644
+--- a/Library/CMake/DiscordCoreAPIConfig.cmake.in
++++ b/Library/CMake/DiscordCoreAPIConfig.cmake.in
+@@ -1,8 +1,6 @@
+ @PACKAGE_INIT@ 
+ include(CMakeFindDependencyMacro)
+ @DiscordCoreAPI_FIND_DEPENDENCY_CALLS@
+-set_and_check(DISCORDCOREAPI_HEADER_DIR "@DISCORDCOREAPI_INCLUDE_DIR@")
+-set_and_check(DISCORDCOREAPI_SOURCE_DIR "@DISCORDCOREAPI_SOURCE_DIR@")
+ include ( ${CMAKE_CURRENT_LIST_DIR}/DiscordCoreAPITargets.cmake )
+ set(LIBRARY_NAMES "@LIBRARY_NAMES@")
+ set(RELEASE_LIBRARIES "@RELEASE_LIBRARIES@")
