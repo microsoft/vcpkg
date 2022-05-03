@@ -5341,8 +5341,8 @@
       "port-version": 2
     },
     "pcre2": {
-      "baseline": "10.39",
-      "port-version": 2
+      "baseline": "10.40",
+      "port-version": 0
     },
     "pdal": {
       "baseline": "2.3.0",
