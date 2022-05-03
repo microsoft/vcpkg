@@ -1448,10 +1448,6 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
-    "cmakerc": {
-      "baseline": "2021-08-27",
-      "port-version": 0
-    },
     "cmark": {
       "baseline": "0.30.1",
       "port-version": 0
@@ -2731,10 +2727,6 @@
     "harfbuzz": {
       "baseline": "3.2.0",
       "port-version": 3
-    },
-    "hash-library": {
-      "baseline": "8",
-      "port-version": 1
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -7340,10 +7332,6 @@
       "baseline": "2022-02-14",
       "port-version": 0
     },
-    "vcpkg-tool-gn": {
-      "baseline": "2022-04-16",
-      "port-version": 0
-    },
     "vcpkg-tool-gyp-nss": {
       "baseline": "2022-03-04",
       "port-version": 0
@@ -7527,10 +7515,6 @@
     "wxchartdir": {
       "baseline": "1.0.0",
       "port-version": 1
-    },
-    "wxcharts": {
-      "baseline": "2022-04-22",
-      "port-version": 0
     },
     "wxwidgets": {
       "baseline": "3.1.5",
