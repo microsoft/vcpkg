@@ -6782,7 +6782,7 @@
     },
     "stftpitchshift": {
       "baseline": "1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "stlab": {
       "baseline": "1.6.2",

@@ -1,5 +1,6 @@
 {
   "name": "stftpitchshift",
   "version": "1.3",
+  "port-version": 1,
   "description": "STFT based multi pitch shifting with optional formant preservation."
 }
