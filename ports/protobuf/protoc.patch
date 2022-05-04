@@ -6,7 +6,7 @@ index 7cb7a6375..e2716fd18 100644
  }  // namespace protobuf
  }  // namespace google
  
-+#include <stdio>
++#include <cstdio>
 +
  int main(int argc, char* argv[]) {
 -  return PROTOBUF_NAMESPACE_ID::compiler::ProtobufMain(argc, argv);
