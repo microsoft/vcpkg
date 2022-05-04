@@ -1,17 +1,16 @@
 set(GDK_PIXBUF_VERSION 2.42)
-set(GDK_PIXBUF_PATCH 2)
+set(GDK_PIXBUF_PATCH 8)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/gdk-pixbuf/${GDK_PIXBUF_VERSION}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
     FILENAME "gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
-    SHA512 f341d032ea410efed7a35f8ca6a7389bf988f663dae16e774d114d6f11611e9e182c835e90d752b71c258c905cc5c4c785ea697feed5e6921a2a676c9deaa5f2
+    SHA512 994a1374becec6235d347f4980afcc8b85f43ac373e4d7e00b7445880d0a51932e63b54429b28ab5af09e7c4437f9d6008e1c25b2d44a2c9ef7cc9821b478387
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        fix_build.patch
         fix_build_error_windows.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -23,18 +22,20 @@ vcpkg_configure_meson(
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Dpng=true                  # Enable PNG loader (requires libpng)
-        -Dtiff=true                 # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
-        -Djpeg=true                 # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
+        -Dpng=enabled               # Enable PNG loader (requires libpng)
+        -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
+        -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
         -Dintrospection=disabled    # Whether to generate the API introspection data (requires GObject-Introspection)
         -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located; 
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf
-    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+    ADDITIONAL_NATIVE_BINARIES glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
+                               glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+    ADDITIONAL_CROSS_BINARIES  glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
+                               glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
         )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
