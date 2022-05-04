@@ -7,7 +7,7 @@ if(ver_str STREQUAL "default")
     # OpenBLAS
     if(VCPKG_TARGET_IS_OSX)
         set(BLA_VENDOR Apple)
-        set(requires "") # TODO: figure out the flags required?
+        set(requires "")
         set(libs "-framework Accelerate")
         set(cflags "-framework Accelerate")
     else()
@@ -20,6 +20,8 @@ if(ver_str STREQUAL "default")
         if(NOT VCPKG_BUILD_TYPE)
             configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" @ONLY)
         endif()
+    else()
+        set(BLA_VENDOR Generic)
     endif()
 
     # For possible overlays:
