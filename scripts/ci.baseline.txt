@@ -923,9 +923,6 @@ qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
 
-# qtwebengine:x64-windows has an ICE in VS2022
-qtwebengine:x64-windows=fail
-
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
