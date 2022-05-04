@@ -39,7 +39,7 @@
       "description": "Example source code and CMake project"
     },
     "sound": {
-      "description": "",
+      "description": "Build wxSound support",
       "dependencies": [
         {
           "name": "sdl2",
