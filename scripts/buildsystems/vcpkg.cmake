@@ -564,10 +564,8 @@ cmake_policy(POP)
 # Any policies applied to the below macros and functions leak into consumers
 # Consumer policies are ignored for the below overriden functions since policies settings are recorded at the time function/macros are being defined
 
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CHAINLOAD_TOOLCHAIN_FILE VCPKG_TARGET_TRIPLET VCPKG_HOST_TRIPLET VCPKG_INSTALLED_DIR VCPKG_PREFER_SYSTEM_LIBS)
 # Need to override try_compile and try_run to pass some variables in project mode vs src mode
-get_property(in_try_compile GLOBAL PROPERTY IN_TRY_COMPILE)
-if(NOT in_try_compile)
+if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     function(try_compile resultVar bindir srcdir)
         cmake_policy(PUSH)
         if(POLICY CMP0056)
@@ -605,7 +603,6 @@ if(NOT in_try_compile)
         cmake_policy(POP)
     endfunction()
 endif()
-unset(in_try_compile)
 
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
@@ -884,10 +881,15 @@ if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE)
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
         VCPKG_TARGET_TRIPLET
         VCPKG_TARGET_ARCHITECTURE
-        VCPKG_APPLOCAL_DEPS
+        VCPKG_HOST_TRIPLET
+        VCPKG_INSTALLED_DIR
+        VCPKG_PREFER_SYSTEM_LIBS
+        # VCPKG_APPLOCAL_DEPS # This should be off within try_compile!
         VCPKG_CHAINLOAD_TOOLCHAIN_FILE
         Z_VCPKG_ROOT_DIR
     )
+else()
+    set(VCPKG_APPLOCAL_DEPS OFF)
 endif()
 
 if(Z_VCPKG_HAS_FATAL_ERROR)
