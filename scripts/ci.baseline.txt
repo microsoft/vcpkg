@@ -54,7 +54,6 @@ bitserializer:x64-osx=fail
 blitz:x64-uwp=fail
 blitz:arm64-windows=fail
 blitz:arm-uwp=fail
-blosc:arm64-windows=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
@@ -160,8 +159,6 @@ coolprop:x64-uwp=fail
 coroutine:arm-uwp=fail
 coroutine:x64-linux=fail
 coroutine:x64-uwp=fail
-corrade:arm-uwp=fail
-corrade:x64-uwp=fail
 cppcms:x64-linux=fail
 cppcms:x64-osx=fail
 cppcms:x64-windows-static=fail
@@ -477,7 +474,6 @@ libgpg-error:x64-uwp=fail
 
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
-libhydrogen:arm64-windows=fail
 libigl:arm64-windows=fail
 libigl:arm-uwp=fail
 libigl:x64-uwp=fail
@@ -926,9 +922,6 @@ qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-base:arm64-windows=fail
-
-# qtwebengine:x64-windows has an ICE in VS2022
-qtwebengine:x64-windows=fail
 
 # Skip deprecated Qt module
 # (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
