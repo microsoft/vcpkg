@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-register.patch
+        fix-zstd-zlib-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 9a929cd48bdf6b8e94765bd649e7ec42b10dea28e36eff288223d72cffa5f4fc8693e942aa3f780b42d8a0c1824fcabff22ec0622aa8ea5232c9123858b8bbbf
     HEAD_REF 1.4
     PATCHES
-        "correct_cmake_config_path.patch"
+        correct_cmake_config_path.patch
+        dont-use-uninit-var.patch
 )
 
 vcpkg_configure_cmake(

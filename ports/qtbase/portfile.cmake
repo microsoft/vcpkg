@@ -3,8 +3,10 @@
 # Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
-
-#set(QT_IS_LATEST ON)
+set(QT_IS_LATEST ON)
+if("latest" IN_LIST FEATURES)
+    set(QT_IS_LATEST ON)
+endif()
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
@@ -13,7 +15,6 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch
         clang-cl_source_location.patch
         config_install.patch
-        dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
@@ -24,7 +25,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
-    list(APPEND ${PORT}_PATCHES
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache.patch
+        )
+else()
+    list(APPEND ${PORT}_PATCHES 
+            dont_force_cmakecache_latest.patch
         )
 endif()
 
@@ -246,6 +252,8 @@ set(TOOL_NAMES
         uic
         qtpaths
         qtpaths6
+        windeployqt
+        macdeployqt
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

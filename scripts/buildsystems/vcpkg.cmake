@@ -620,14 +620,16 @@ function(${Z_VCPKG_ADD_EXECUTABLE})
                         -targetBinary "$<TARGET_FILE:${target_name}>"
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    VERBATIM
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
-                        "$<TARGET_FILE:${target_name}>"
-                        "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
+                            "$<TARGET_FILE:${target_name}>"
+                            "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>"
+                        VERBATIM
                     )
                 endif()
             endif()
@@ -664,6 +666,7 @@ function(${Z_VCPKG_ADD_LIBRARY})
                     -targetBinary "$<TARGET_FILE:${target_name}>"
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
+                    VERBATIM
             )
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
