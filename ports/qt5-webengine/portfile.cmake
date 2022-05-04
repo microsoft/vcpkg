@@ -47,7 +47,8 @@ vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 set(PATCHES common.pri.patch 
             gl.patch
             build_1.patch
-            build_2.patch)
+            build_2.patch
+            workaround-msvc2022-ice.patch)
 
 set(OPTIONS)
 if("proprietary-codecs" IN_LIST FEATURES)
