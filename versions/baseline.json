@@ -222,7 +222,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 7
+      "port-version": 8
     },
     "audiofile": {
       "baseline": "1.1.0",
@@ -2234,11 +2234,11 @@
     },
     "flashlight-cpu": {
       "baseline": "0.3",
-      "port-version": 2
+      "port-version": 3
     },
     "flashlight-cuda": {
       "baseline": "0.3",
-      "port-version": 2
+      "port-version": 4
     },
     "flatbuffers": {
       "baseline": "2.0.6",
@@ -2410,7 +2410,7 @@
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
-      "port-version": 3
+      "port-version": 4
     },
     "gasol": {
       "baseline": "2018-01-04",
@@ -6494,7 +6494,7 @@
     },
     "simage": {
       "baseline": "1.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "simbody": {
       "baseline": "2022-01-04",
@@ -7294,7 +7294,7 @@
     },
     "vamp-sdk": {
       "baseline": "2.10",
-      "port-version": 2
+      "port-version": 3
     },
     "variant-lite": {
       "baseline": "2.0.0",
