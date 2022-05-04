@@ -7577,7 +7577,7 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.2.33",
+      "baseline": "1.2.34",
       "port-version": 0
     },
     "xnnpack": {
