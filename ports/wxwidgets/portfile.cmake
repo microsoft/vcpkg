@@ -29,6 +29,12 @@ These development packages can be installed on Ubuntu systems via
     endforeach()
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sound   wxUSE_SOUND
+)
+
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
@@ -73,6 +79,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DwxUSE_REGEX=sys
         -DwxUSE_ZLIB=sys
         -DwxUSE_EXPAT=sys

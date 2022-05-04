@@ -31,9 +31,22 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "sound"
+  ],
   "features": {
     "example": {
       "description": "Example source code and CMake project"
+    },
+    "sound": {
+      "description": "",
+      "dependencies": [
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "platform": "!windows & !osx"
+        }
+      ]
     }
   }
 }
