@@ -37,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dinstalled_tests=false
         ${OPTIONS}
@@ -50,15 +50,15 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-set(GLIB_TOOLS  gdbus
-                gio
-                gio-querymodules
-                glib-compile-resources
-                glib-compile-schemas
-                gobject-query
-                gresource
-                gsettings
-                )
+set(GLIB_TOOLS gdbus
+               gio
+               gio-querymodules
+               glib-compile-resources
+               glib-compile-schemas
+               gobject-query
+               gresource
+               gsettings
+               )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(NOT VCPKG_TARGET_IS_OSX)
@@ -107,7 +107,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc")
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${SYSTEM_LIBRARIES})
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Fix python scripts
 set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")

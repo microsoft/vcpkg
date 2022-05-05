@@ -16,7 +16,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
@@ -66,6 +66,6 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
