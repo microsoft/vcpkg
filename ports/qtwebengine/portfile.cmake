@@ -1,4 +1,6 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
+set(NINJA "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja/ninja${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
@@ -82,18 +84,18 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length)
+# string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length)
 # We know that C:/buildrees/${PORT} is to long to build Release. Debug works however. Means 24 length is too much but 23 might work. 
-if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "Buildtree path '${CURRENT_BUILDTREES_DIR}' is too long.\nConsider passing --x-buildtrees-root=<shortpath> to vcpkg!\nTrying to use '${CURRENT_BUILDTREES_DIR}/../tmp'")
-    set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # activly avoid long path issues in CI. -> Means CI will not return logs
-    cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
-    string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length_new)
-    if(buildtree_length_new GREATER 22)
-         message(FATAL_ERROR "Buildtree path is too long. Build will fail! Pass --x-buildtrees-root=<shortpath> to vcpkg!")
-    endif()
-    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
-endif()
+# if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS)
+#    message(WARNING "Buildtree path '${CURRENT_BUILDTREES_DIR}' is too long.\nConsider passing --x-buildtrees-root=<shortpath> to vcpkg!\nTrying to use '${CURRENT_BUILDTREES_DIR}/../tmp'")
+#    set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # activly avoid long path issues in CI. -> Means CI will not return logs
+#    cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
+#    string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length_new)
+#    if(buildtree_length_new GREATER 22)
+#         message(FATAL_ERROR "Buildtree path is too long. Build will fail! Pass --x-buildtrees-root=<shortpath> to vcpkg!")
+#    endif()
+#    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+# endif()
 
 ### Download third_party modules
 vcpkg_from_git(

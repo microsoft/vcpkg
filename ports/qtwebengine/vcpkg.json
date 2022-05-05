@@ -109,11 +109,11 @@
       "host": true
     },
     {
-      "name": "vcpkg-tool-nodejs",
+      "name": "vcpkg-tool-ninja",
       "host": true
     },
     {
-      "name": "vcpkg-tool-python2",
+      "name": "vcpkg-tool-nodejs",
       "host": true
     },
     {
