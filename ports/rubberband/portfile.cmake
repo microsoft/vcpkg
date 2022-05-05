@@ -1,24 +1,51 @@
-vcpkg_download_distfile(
-  ARCHIVE URLS "https://breakfastquay.com/files/releases/rubberband-1.9.1.tar.bz2"
-  FILENAME "rubberband-1.9.1.tar.bz2"
-  SHA512 cb20ef8fb717a9e6b5b0b921541bd701e94326e12cdb20d50bed344d12fa1b4fd731335c3a0a7f2d2a5ce96031d965b209e7667c4d55fd8494b8e20d3409f0d3
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO breakfastquay/rubberband
+    REF v2.0.2
+    SHA512 56e33f3a6f5755242e46f9cb224e372bea7a367756f08d3322c8951a40b3907f1a2957775de6f2584a093e6adf82ca91015119650d5a624afe39086a47843ddc
+    HEAD_REF default
 )
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-)
-
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -Dfft=fftw                 # 'auto', 'builtin', 'kissfft', 'fftw', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
+        -Dresampler=libsamplerate  # 'auto', 'builtin', 'libsamplerate', 'speex', 'ipp' 'Resampler library to use. The default (auto) simply uses the builtin implementation.'
+        -Dipp_path=                # 'Path to Intel IPP libraries, if selected for any of the other options.'
+        -Dextra_include_dirs=      # 'Additional local header directories to search for dependencies.'
+        -Dextra_lib_dirs=          # 'Additional local library directories to search for dependencies.'
+    )
 
 vcpkg_install_meson()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+if(VCPKG_DETECTED_MSVC)
+  set(RUBBERBAND_PROGRAM_NAME rubberband-program)
+else()
+  set(RUBBERBAND_PROGRAM_NAME rubberband)
+endif()   
+
+# Features cli and lv2 are build whenever suficient dependencies are installed,
+# Remove them when not enabled. 
+if("cli" IN_LIST FEATURES)
+  vcpkg_copy_tools(TOOL_NAMES "${RUBBERBAND_PROGRAM_NAME}" AUTO_CLEAN)
+else()
+  vcpkg_clean_executables_in_bin(FILE_NAMES "${RUBBERBAND_PROGRAM_NAME}")
+endif()
+
+# lv2 feature is not supported on Windows yet because vcpkg can't isntall to 
+# %APPDATA%\LV2 or %COMMONPROGRAMFILES%\LV2 but also complains about dlls in "${CURRENT_PACKAGES_DIR}/lib/lv2"
+if(NOT "lv2" IN_LIST FEATURES)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/lv2" "${CURRENT_PACKAGES_DIR}/debug/lib/lv2")
 endif()
 
 file(
-  INSTALL ${SOURCE_PATH}/COPYING
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/rubberband
+  INSTALL "${SOURCE_PATH}/COPYING"
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   RENAME copyright
 )
