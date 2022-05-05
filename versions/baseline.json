@@ -2697,7 +2697,7 @@
       "port-version": 2
     },
     "guilite": {
-      "baseline": "2021-07-31",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "gumbo": {
@@ -4249,7 +4249,7 @@
       "port-version": 0
     },
     "live555": {
-      "baseline": "2021-12-18",
+      "baseline": "2022-05-05",
       "port-version": 0
     },
     "llfio": {
