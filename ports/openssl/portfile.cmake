@@ -11,7 +11,7 @@ It can be installed on alpine systems via apk add linux-headers.]]
     )
 endif()
 
-set(OPENSSL_VERSION 3.0.2)
+set(OPENSSL_VERSION 3.0.3)
 
 vcpkg_download_distfile(
     ARCHIVE
