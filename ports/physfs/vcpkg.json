@@ -1,7 +1,7 @@
 {
   "name": "physfs",
   "version-semver": "3.0.2",
-  "port-version": 6,
+  "port-version": 7,
   "description": "a library to provide abstract access to various archives",
   "homepage": "https://icculus.org/physfs/",
   "dependencies": [

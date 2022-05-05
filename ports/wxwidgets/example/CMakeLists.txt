@@ -19,3 +19,8 @@ if(USE_WXRC)
         message(FATAL_ERROR "Failed to run wxWidgets_wxrc_EXECUTABLE (${wxWidgets_wxrc_EXECUTABLE})")
     endif()
 endif()
+
+set(PRINT_VARS "" CACHE STRING "Variables to print at the end of configuration")
+foreach(var IN LISTS PRINT_VARS)
+    message(STATUS "${var}:=${${var}}")
+endforeach()

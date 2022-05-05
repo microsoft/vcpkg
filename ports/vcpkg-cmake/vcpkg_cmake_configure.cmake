@@ -160,9 +160,6 @@ function(vcpkg_cmake_configure)
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(ninja_can_be_used OFF)
         set(ninja_host OFF)
-    elseif(VCPKG_TARGET_IS_UWP)
-        # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
-        set(ninja_can_be_used OFF)
     endif()
 
     set(generator "Ninja")
