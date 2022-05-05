@@ -1157,7 +1157,7 @@
       "port-version": 7
     },
     "brunocodutra-metal": {
-      "baseline": "2.1.3",
+      "baseline": "2.1.4",
       "port-version": 0
     },
     "brynet": {
@@ -1857,8 +1857,8 @@
       "port-version": 3
     },
     "directx-headers": {
-      "baseline": "1.4.9",
-      "port-version": 1
+      "baseline": "1.602.0",
+      "port-version": 0
     },
     "directxmath": {
       "baseline": "2022-01-18",
@@ -5998,7 +5998,7 @@
     },
     "qtwebengine": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.3.0",
@@ -6821,7 +6821,7 @@
       "port-version": 1
     },
     "sundials": {
-      "baseline": "5.8.0",
+      "baseline": "6.2.0",
       "port-version": 0
     },
     "superlu": {
@@ -7581,7 +7581,7 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.2.33",
+      "baseline": "1.2.34",
       "port-version": 0
     },
     "xnnpack": {
