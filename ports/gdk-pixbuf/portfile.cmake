@@ -2,9 +2,9 @@ set(GDK_PIXBUF_VERSION 2.42)
 set(GDK_PIXBUF_PATCH 8)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/gdk-pixbuf/${GDK_PIXBUF_VERSION}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
-    FILENAME "gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
-    SHA512 994a1374becec6235d347f4980afcc8b85f43ac373e4d7e00b7445880d0a51932e63b54429b28ab5af09e7c4437f9d6008e1c25b2d44a2c9ef7cc9821b478387
+    URLS "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.gz"
+    FILENAME "gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.gz"
+    SHA512 ea3b7d47f2ef3dbb88f640629e03eb4fab4a371da2545c199274d75b993b176af0c69ea72b46d5fadf58f82dff9a809fe1e0a4802ad1f1f13eaa9d757ebfeb4c
 )
 
 vcpkg_extract_source_archive_ex(
