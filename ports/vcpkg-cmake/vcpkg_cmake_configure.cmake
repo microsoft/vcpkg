@@ -272,7 +272,7 @@ function(vcpkg_cmake_configure)
     # Sets configuration variables for macOS builds
     foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${config_var_value}")
+            vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
 
