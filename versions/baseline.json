@@ -5862,7 +5862,7 @@
     },
     "qtbase": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.3.0",
@@ -5978,7 +5978,7 @@
     },
     "qttools": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.3.0",
