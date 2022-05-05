@@ -2,16 +2,13 @@ diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
 index 8c9275974f..3758261299 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -615,3 +615,9 @@ if(wxBUILD_PRECOMP)
+@@ -615,3 +615,6 @@ if(wxBUILD_PRECOMP)
          wx_option_force_value(wxBUILD_PRECOMP OFF)
      endif()
  endif(wxBUILD_PRECOMP)
 +
-+find_package(nanosvg CONFIG REQUIRED)
-+
-+if(NANOSVG_FOUND)
-+    list(APPEND wxTOOLKIT_LIBRARIES unofficial::nanosvg)
-+endif()
++find_package(unofficial-nanosvg CONFIG REQUIRED)
++list(APPEND wxTOOLKIT_LIBRARIES unofficial::nanosvg::nanosvg)
 diff --git a/src/generic/bmpsvg.cpp b/src/generic/bmpsvg.cpp
 index 76f20dce4c..7a7c24b4dd 100644
 --- a/src/generic/bmpsvg.cpp
@@ -21,7 +18,7 @@ index 76f20dce4c..7a7c24b4dd 100644
  // and update the corresponding submodule.
  #ifdef __has_include
 -    #if ! __has_include("../../3rdparty/nanosvg/src/nanosvg.h")
-+    #if ! __has_include(<nanosvg.h>)
++    #if 0
          #error You need to run "git submodule update --init 3rdparty/nanosvg".
          #undef wxHAS_SVG
      #endif

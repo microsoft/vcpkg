@@ -6,15 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/nanosvgConfig.cmake DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-)
-
+set(VCPKG_BUILD_TYPE "release") # header-only
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
