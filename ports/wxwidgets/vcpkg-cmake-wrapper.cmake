@@ -1,7 +1,3 @@
-cmake_policy(PUSH)
-cmake_policy(SET CMP0012 NEW)
-cmake_policy(SET CMP0054 NEW)
-
 get_filename_component(_vcpkg_wx_root "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 set(wxWidgets_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 set(WX_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
@@ -67,5 +63,3 @@ if(WIN32 AND NOT MINGW AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         ${ZLIB_LIBRARIES}
     )
 endif()
-
-cmake_policy(POP)
