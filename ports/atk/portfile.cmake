@@ -2,16 +2,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 set(ATK_VERSION 2.38.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://gitlab.gnome.org/GNOME/atk/-/archive/${ATK_VERSION}/atk-${ATK_VERSION}.tar.gz"
-    FILENAME "atk-${ATK_VERSION}.tar.gz"
-    SHA512 f31951ecbdace6a18fb9f772616137cb8732163b37448fef4daf1af60ba8479c94d498dcdaf4880468c80012c77a446da585926a99704a9a940b80e546080cf3
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
+    REPO GNOME/atk
+    REF "${ATK_VERSION}"
+    HEAD_REF master
+    SHA512 f31951ecbdace6a18fb9f772616137cb8732163b37448fef4daf1af60ba8479c94d498dcdaf4880468c80012c77a446da585926a99704a9a940b80e546080cf3
 )
 
 vcpkg_configure_meson(

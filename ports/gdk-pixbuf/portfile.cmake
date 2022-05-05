@@ -1,18 +1,17 @@
 set(GDK_PIXBUF_VERSION 2.42)
 set(GDK_PIXBUF_PATCH 8)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.gz"
-    FILENAME "gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.gz"
-    SHA512 ea3b7d47f2ef3dbb88f640629e03eb4fab4a371da2545c199274d75b993b176af0c69ea72b46d5fadf58f82dff9a809fe1e0a4802ad1f1f13eaa9d757ebfeb4c
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO GNOME/gdk-pixbuf
+    REF "${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}"
+    SHA512 ea3b7d47f2ef3dbb88f640629e03eb4fab4a371da2545c199274d75b993b176af0c69ea72b46d5fadf58f82dff9a809fe1e0a4802ad1f1f13eaa9d757ebfeb4c
+    HEAD_REF master
     PATCHES
         fix_build_error_windows.patch
 )
+
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
@@ -29,7 +28,7 @@ vcpkg_configure_meson(
         -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
-        -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located; 
+        -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf
     ADDITIONAL_NATIVE_BINARIES glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
                                glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
@@ -40,7 +39,7 @@ vcpkg_configure_meson(
         )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-# Fix paths in pc file. 
+# Fix paths in pc file.
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc")
 if(EXISTS "${_file}")
     file(READ "${_file}" _contents)

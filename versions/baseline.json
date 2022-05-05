@@ -206,7 +206,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 0
+      "port-version": 1
     },
     "atkmm": {
       "baseline": "2.36.1",
@@ -2442,7 +2442,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.8",
-      "port-version": 1
+      "port-version": 2
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -2538,7 +2538,7 @@
     },
     "glib": {
       "baseline": "2.70.5",
-      "port-version": 1
+      "port-version": 2
     },
     "glibmm": {
       "baseline": "2.70.0",
