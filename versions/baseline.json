@@ -4114,7 +4114,7 @@
     },
     "libunibreak": {
       "baseline": "5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libunifex": {
       "baseline": "2021-12-07",
