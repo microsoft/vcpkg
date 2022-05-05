@@ -4922,7 +4922,7 @@
     },
     "nuspell": {
       "baseline": "5.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nvtt": {
       "baseline": "2.1.2",
