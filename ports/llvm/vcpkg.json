@@ -1,7 +1,7 @@
 {
   "name": "llvm",
   "version": "13.0.0",
-  "port-version": 3,
+  "port-version": 5,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -99,7 +99,7 @@
       ]
     },
     "disable-abi-breaking-checks": {
-      "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF."
+      "description": "Deprecated; this is the default"
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."

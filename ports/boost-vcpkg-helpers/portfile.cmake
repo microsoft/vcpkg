@@ -1,6 +1,6 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(BOOST_VERSION 1.78.0)
+set(BOOST_VERSION 1.79.0)
 
 file(INSTALL
     ${CMAKE_CURRENT_LIST_DIR}/boost-modular-headers.cmake

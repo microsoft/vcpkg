@@ -30,8 +30,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(EXTRA_CMAKE_OPTION "-DCMAKE_INSTALL_RPATH=${CURRENT_INSTALLED_DIR}/lib")
 endif()
 
-vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
-vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
@@ -42,11 +44,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DBISON_EXECUTABLE=${BISON}
-        -DFLEX_EXECUTABLE=${FLEX}
-        -DGIT_EXECUTABLE=${GIT}
-        -DPython3_EXECUTABLE=${PYTHON3}
-        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf
+        "-DBISON_EXECUTABLE=${BISON}"
+        "-DFLEX_EXECUTABLE=${FLEX}"
+        "-DGIT_EXECUTABLE=${GIT}"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf"
         ${EXTRA_CMAKE_OPTION}
 )
 
@@ -65,7 +67,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${PLUGINS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     vcpkg_execute_required_process(
         COMMAND dot -c
-        WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}
+        WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
         LOGNAME configure-plugins
     )
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/config6" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")

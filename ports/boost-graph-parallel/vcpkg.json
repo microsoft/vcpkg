@@ -1,8 +1,9 @@
 {
   "name": "boost-graph-parallel",
-  "version": "1.78.0",
+  "version": "1.79.0",
   "description": "Boost graph_parallel module",
   "homepage": "https://github.com/boostorg/graph_parallel",
+  "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "boost-algorithm",

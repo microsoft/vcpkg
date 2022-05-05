@@ -78,8 +78,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     execute_process(
         COMMAND "${JOM}" -k -j "${VCPKG_CONCURRENCY}" -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
+        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log"
+        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log"
     )
     vcpkg_execute_required_process(
         COMMAND "${JOM}" -j 1 -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
@@ -111,28 +111,41 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+    make_directory("${SOURCE_PATH_DEBUG}/inc32/openssl")
     execute_process(
         COMMAND "${JOM}" -k -j "${VCPKG_CONCURRENCY}" -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
+        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log"
+        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log"
     )
     vcpkg_execute_required_process(
         COMMAND "${JOM}" -j 1 -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+        message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.pdb")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.pdb" "${CURRENT_PACKAGES_DIR}/bin/legacy.pdb")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/certs")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/legacy.dll")
+endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ossl-modules/legacy.dll" "${CURRENT_PACKAGES_DIR}/bin/legacy.dll")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/ossl-modules")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/ossl-modules")
 
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"
@@ -169,4 +182,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
