@@ -1,11 +1,11 @@
-set(GTK_VERSION 4.6.0)
+set(GTK_VERSION 4.6.2)
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  70cb61fb7104c76a15bc6494a10e6ff1d470f6d8 #v4.6.0
-    SHA512 dba6ce5a8306f9dda290f3785d6d15aee67c66329ab0756b7b7573387c1a512e96d3b53b24ed342ce7376832dcac20fb24025f2b8986f74d91a88e4fcf3de6ae
+    REF  aec7ca82007dbe07faee6be084d20758ebac2b91 #v4.6.2
+    SHA512 05ebba53e71a997b4dc04bc018f420f62d569cb66a2f3e713bd2b48abd7c0051f67939e42c812388bd0565d12a3f82b45731a086d3ab0e75d16eee200a3be95f
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
@@ -109,7 +109,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
